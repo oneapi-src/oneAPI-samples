@@ -1,0 +1,60 @@
+CXX := dpcpp
+CXXFLAGS = -O2 -g -std=c++17
+
+SRC := src/simple-add-usm.cpp
+BUFFERS_SRC := src/simple-add-buffers.cpp
+
+.PHONY: fpga_emu run_emu clean 
+
+fpga_emu_buffers: simple-add-buffers.fpga_emu_buffers
+fpga_emu: simple-add-usm.fpga_emu
+
+hw_buffers: simple-add-buffers.fpga
+hw: simple-add-usm.fpga
+
+report_buffers: simple-add-buffers_report.a_buffers
+report: simple-add-usm_report.a
+
+simple-add-buffers.fpga_emu_buffers: $(BUFFERS_SRC)
+	$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -DFPGA_EMULATOR=1	
+simple-add-usm.fpga_emu: $(SRC)
+	$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -DFPGA_EMULATOR=1
+
+
+a_buffers.o: $(BUFFERS_SRC)
+	$(CXX) $(CXXFLAGS) -fintelfpga -c $^ -o $@ -DFPGA=1
+a.o: $(SRC)
+	$(CXX) $(CXXFLAGS) -fintelfpga -c $^ -o $@ -DFPGA=1
+
+
+simple-add-buffers.fpga: a_buffers.o
+	$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -Xshardware
+simple-add-usm.fpga: a.o
+	$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -Xshardware
+
+run_emu_buffers: simple-add-buffers.fpga_emu_buffers
+	./simple-add-buffers.fpga_emu_buffers
+run_emu: simple-add-usm.fpga_emu
+	./simple-add-usm.fpga_emu
+
+		
+run_hw_buffers: simple-add-buffers.fpga
+	./simple-add-buffers.fpga
+run_hw: simple-add-usm.fpga
+	./simple-add-usm.fpga
+
+
+dev_buffers.o: $(BUFFERS_SRC)
+	$(CXX) $(CXXFLAGS) -fintelfpga -c $^ -o $@ -DFPGA=1
+dev.o: $(SRC)
+	$(CXX) $(CXXFLAGS) -fintelfpga -c $^ -o $@ -DFPGA=1
+
+
+simple-add-buffers_report.a_buffers: dev_buffers.o
+	$(CXX) $(CXXFLAGS) -fintelfpga -fsycl-link $^ -o $@ -Xshardware
+simple-add-usm_report.a: dev.o
+	$(CXX) $(CXXFLAGS) -fintelfpga -fsycl-link $^ -o $@ -Xshardware
+
+
+clean:
+	rm -rf *.o *.d *.out *.mon *.emu *.aocr *.aoco *.prj *.fpga_emu *.fpga_emu_buffers simple-add-buffers.fpga  simple-add-usm.fpga *.a

@@ -1,0 +1,16 @@
+CXX = dpcpp-cl
+CXXFLAGS = -O2 -EHsc -Zi
+LDFLAGS = 
+EXE_NAME = vector-add-usm.exe
+SOURCES = src/vector-add-usm.cpp
+
+all: main
+
+main:
+	$(CXX) $(CXXFLAGS) -o $(EXE_NAME) $(SOURCES) $(LDFLAGS)
+
+run: 
+	$(EXE_NAME)
+
+clean: 
+	del -rf $(EXE_NAME)

@@ -1,0 +1,15 @@
+CXX = dpcpp-cl
+CXXFLAGS = -O2 -EHsc -Zi
+EXE_NAME = simple-add-usm.exe
+SOURCES = src/simple-add-usm.cpp
+
+all: main
+
+main:
+	$(CXX) $(CXXFLAGS) -o $(EXE_NAME) $(SOURCES)
+
+run: 
+	$(EXE_NAME)
+
+clean: 
+	del -rf $(EXE_NAME)

@@ -1,0 +1,16 @@
+CXX = dpcpp-cl
+CXXFLAGS = -O2 -EHsc -Zi
+LDFLAGS = 
+SOURCES = src/vector-add-usm.cpp
+EXE_NAME_FPGA_EMU = vector-add-usm.fpga_emu.exe
+
+all: fpga_emu
+
+fpga_emu:
+	$(CXX) $(CXXFLAGS) -fintelfpga $(SOURCES) -o $(EXE_NAME_FPGA_EMU) -DFPGA_EMULATOR=1
+
+run: 
+	$(EXE_NAME_FPGA_EMU)
+
+clean: 
+	del -rf $(EXE_NAME_FPGA_EMU)
