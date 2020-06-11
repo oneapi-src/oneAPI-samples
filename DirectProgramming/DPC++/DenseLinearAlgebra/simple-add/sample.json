@@ -6,5 +6,50 @@
   "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
   "targetDevice": ["CPU", "GPU", "FPGA"],
   "os": ["linux", "windows"],
-  "builder": ["ide", "make"]
+  "builder": ["ide", "make"],
+  "configurations": {
+      "linux": [
+          {
+              "id": "cpu_usm",
+              "build": [
+                  "make all"
+              ],
+              "run": [
+                  "make run"
+              ],
+              "clean": [
+                  "make clean"
+              ]
+          },
+          {
+              "id": "cpu_buffers",
+              "build": [
+                  "make build_buffers"
+              ],
+              "run": [
+                  "make run_buffers"
+              ],
+              "clean": [
+                  "make clean"
+              ]
+          },
+          {
+              "id": "fpga_emu_buffers",
+              "build": [
+                  "make clean -f Makefile.fpga",
+                  "make fpga_emu -f Makefile.fpga"
+              ],
+              "run": [
+                  "make run_emu -f Makefile.fpga"
+              ]
+          },
+          {
+              "id": "fpga_repots_buffers",
+              "build": [
+                  "make clean -f Makefile.fpga",
+                  "make report -f Makefile.fpga"
+              ]
+          }
+      ]
+  }
 }
