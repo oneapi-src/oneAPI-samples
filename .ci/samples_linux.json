@@ -1,0 +1,98 @@
+{
+  "samples": [
+    {
+      "path": "DirectProgramming/DPC++/DenseLinearAlgebra/vector-add",
+      "configurations": [
+        {
+          "id": "cpu_buffers",
+          "build": [
+            "make all"
+          ],
+          "run": [
+            "make run"
+          ],
+          "clean": [
+            "make clean"
+          ]
+        },
+        {
+          "id": "cpu_usm",
+          "build": [
+            "make build_usm"
+          ],
+          "run": [
+            "make run_usm"
+          ],
+          "clean": [
+            "make clean"
+          ]
+        },
+        {
+          "id": "fpga_emu_buffers",
+          "build": [
+            "make clean -f Makefile.fpga",
+            "make fpga_emu -f Makefile.fpga"
+          ],
+          "run": [
+            "make run_emu -f Makefile.fpga"
+          ]
+        },
+        {
+          "id": "fpga_report_buffers",
+          "build": [
+            "make report -f Makefile.fpga"
+          ],
+          "clean": [
+            "make clean -f Makefile.fpga"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "DirectProgramming/DPC++/DenseLinearAlgebra/simple-add",
+      "configurations": [
+        {
+          "id": "cpu_usm",
+          "build": [
+            "make all"
+          ],
+          "run": [
+            "make run"
+          ],
+          "clean": [
+            "make clean"
+          ]
+        },
+        {
+          "id": "cpu_buffers",
+          "build": [
+            "make build_buffers"
+          ],
+          "run": [
+            "make run_buffers"
+          ],
+          "clean": [
+            "make clean"
+          ]
+        },
+        {
+          "id": "fpga_emu_buffers",
+          "build": [
+            "make clean -f Makefile.fpga",
+            "make fpga_emu -f Makefile.fpga"
+          ],
+          "run": [
+            "make run_emu -f Makefile.fpga"
+          ]
+        },
+        {
+          "id": "fpga_repots_buffers",
+          "build": [
+            "make clean -f Makefile.fpga",
+            "make report -f Makefile.fpga"
+          ]
+        }
+      ]
+    }
+  ]
+}
