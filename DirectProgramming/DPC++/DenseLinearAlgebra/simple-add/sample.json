@@ -12,13 +12,13 @@
       {
         "id": "cpu_usm",
         "build": [
-            "make all"
+          "make all"
         ],
         "run": [
-            "make run"
+          "make run"
         ],
         "clean": [
-            "make clean"
+          "make clean"
         ]
       },
       {
