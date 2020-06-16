@@ -50,6 +50,30 @@
             "make report -f Makefile.fpga"
         ]
       }
-    ]
+    ],
+    "windows": [
+        {
+          "id": "cpu_usm",
+          "build": [
+            "nmake -f Makefile.win"
+          ],
+          "run": [
+            "nmake -f Makefile.win run"
+          ],
+          "clean": [
+            "nmake -f Makefile.win clean"
+          ]
+        },
+        {
+          "id": "fpga_emu_buffers",
+          "build": [
+            "nmake -f Makefile.win.fpga clean",
+            "nmake -f Makefile.win.fpga"
+          ],
+          "run": [
+            "nmake -f Makefile.win.fpga run"
+          ]
+        }
+      ]
   }
 }
