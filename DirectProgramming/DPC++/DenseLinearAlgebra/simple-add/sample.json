@@ -7,73 +7,55 @@
   "targetDevice": ["CPU", "GPU", "FPGA"],
   "os": ["linux", "windows"],
   "builder": ["ide", "make"],
-  "configurations": {
+  "ciTests": {
     "linux": [
       {
         "id": "cpu_usm",
-        "build": [
-          "make all"
-        ],
-        "run": [
-          "make run"
-        ],
-        "clean": [
-          "make clean"
+        "steps": [
+          [ "make all" ],
+          [ "make run" ],
+          [ "make clean" ]
         ]
       },
       {
         "id": "cpu_buffers",
-        "build": [
-            "make build_buffers"
-        ],
-        "run": [
-            "make run_buffers"
-        ],
-        "clean": [
-            "make clean"
+        "steps": [
+          [ "make build_buffers" ],
+          [ "make run_buffers"],
+          [ "make clean" ]
         ]
       },
       {
         "id": "fpga_emu_buffers",
-        "build": [
-            "make clean -f Makefile.fpga",
-            "make fpga_emu -f Makefile.fpga"
-        ],
-        "run": [
-            "make run_emu -f Makefile.fpga"
+        "steps": [
+          [ "make clean -f Makefile.fpga", "make fpga_emu -f Makefile.fpga" ],
+          [ "make run_emu -f Makefile.fpga" ]
         ]
       },
       {
         "id": "fpga_repots_buffers",
-        "build": [
-            "make clean -f Makefile.fpga",
-            "make report -f Makefile.fpga"
+        "steps": [
+          [ "make clean -f Makefile.fpga" ],
+          [ "make report -f Makefile.fpga" ]
         ]
       }
     ],
     "windows": [
-        {
-          "id": "cpu_usm",
-          "build": [
-            "nmake -f Makefile.win"
-          ],
-          "run": [
-            "nmake -f Makefile.win run"
-          ],
-          "clean": [
-            "nmake -f Makefile.win clean"
-          ]
-        },
-        {
-          "id": "fpga_emu_buffers",
-          "build": [
-            "nmake -f Makefile.win.fpga clean",
-            "nmake -f Makefile.win.fpga"
-          ],
-          "run": [
-            "nmake -f Makefile.win.fpga run"
-          ]
-        }
-      ]
+      {
+        "id": "cpu_usm",
+        "steps": [
+          [ "nmake -f Makefile.win" ],
+          [ "nmake -f Makefile.win run" ],
+          [ "nmake -f Makefile.win clean" ]
+        ]
+      },
+      {
+        "id": "fpga_emu_buffers",
+        "steps": [
+          [ "nmake -f Makefile.win.fpga clean", "nmake -f Makefile.win.fpga" ],
+          [ "nmake -f Makefile.win.fpga run" ]
+        ]
+      }
+    ]
   }
 }
