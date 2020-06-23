@@ -6,5 +6,9 @@
   "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
   "targetDevice": ["CPU", "GPU", "FPGA"],
   "os": ["linux", "windows"],
-  "builder": ["ide", "make"]
+  "builder": ["ide", "make"],
+  "ciTests": {
+    "linux": [],
+    "windows": []
+  }
 }
