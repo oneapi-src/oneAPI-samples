@@ -8,7 +8,23 @@
   "os": ["linux", "windows"],
   "builder": ["ide", "make"],
   "ciTests": {
-    "linux": [],
-    "windows": []
+    "linux": [
+      {
+        "steps": [
+          "make all",
+          "make run",
+          "make clean"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "nmake -f Makefile.win",
+          "nmake -f Makefile.win run",
+          "nmake -f Makefile.win clean"
+        ]
+      }
+    ]
   }
 }
