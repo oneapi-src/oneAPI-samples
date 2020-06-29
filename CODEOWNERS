@@ -4,7 +4,7 @@
 # the repo. Unless a later match takes precedence,
 # they will be requested for
 # review when someone opens a pull request.
-*       @JoeOster @anjgola
+*       @JoeOster @anjgola @mkitez
 
 # This owner owns any files in the given
 # directory at the root of the repository and any of its
