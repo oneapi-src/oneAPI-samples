@@ -53,7 +53,7 @@
       {
         "id": "cpu_usm",
         "steps": [
-          "nmake -f Makefile.win build_usm"
+          "nmake -f Makefile.win build_usm",
           "nmake -f Makefile.win run_usm",
           "nmake -f Makefile.win clean"
         ]
