@@ -1,0 +1,8 @@
+{
+  "name": "UP Squared Built-in LEDs",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
+  "description": "This sample shows how to use the LED class and APIs of the Eclipse* MRAA library. It is intended to run on the UP Squared board, and will utilize the 4 built-in color LEDs located under the Ethernet ports. No additional hardware is required.",
+  "dependencies": ["pkg|mraa|https://mraa.io"],
+  "languages": [{"cpp":{}}],
+  "os": ["linux"]
+}

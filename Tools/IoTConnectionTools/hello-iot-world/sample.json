@@ -1,0 +1,7 @@
+{
+  "name": "Hello IoT World",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/Intel® C++ Compiler"],
+  "description": "This is a basic sample that outputs the classic 'Hello World' message along with the compiler identification string.",
+  "toolchain": ["icc", "gcc"],
+  "languages": [{"cpp":{}}]
+}
