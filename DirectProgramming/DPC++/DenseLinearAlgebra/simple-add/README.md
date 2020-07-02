@@ -27,6 +27,9 @@ This code sample is licensed under MIT license.
 
 ## Building the `simple add DPC++` Program for CPU and GPU 
 
+## Include Files
+The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system".
+
 ### On a Linux* System
 Perform the following steps:
 1. Build the `simple-add-dpc++` program using the following make commands (default uses USM): 
@@ -123,15 +126,7 @@ Perform the following steps:
 2. Select the menu sequence **File** > **Open** > **Project/Solution**.
 3. Locate the `simple-add` folder.
 4. Select the `simple-add.sln` file.
-5. Select the configuration 'Debug-fpga' or 'Release-fpga' that have the necessary project settings already below:
- 
-            Under the 'Project Property' dialog:
- 
-     a. Select the **DPC++** tab.
-     b. In the **General** subtab, the **Perform ahead of time compilation for the FPGA** setting is set to **Yes**.
-     c. In the **Preprocessor** subtab, the **Preprocessor Definitions" setting has **FPGA_EMULATOR** added.
-     d. Close the dialog.
-
+5. Select the configuration 'Debug-fpga'
 6. Select **Project** > **Build** menu option to build the selected configuration.
 7. Select **Debug** > **Start Without Debugging** menu option to run the program.
 

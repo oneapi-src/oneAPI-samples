@@ -28,6 +28,7 @@
 #endif
 
 using namespace sycl;
+using namespace std;
 
 // Array size for this example.
 constexpr size_t array_size = 10000;
@@ -71,12 +72,12 @@ int main() {
   constexpr int value = 100000;
 
   try {
-    queue q(d_selector, dpc::exception_handler);
+    queue q(d_selector, dpc_common::exception_handler);
 
     // Print out the device information used for the kernel code.
-    std::cout << "Running on device: "
-              << q.get_device().get_info<info::device::name>() << "\n";
-    std::cout << "Array size: " << array_size << "\n";
+    cout << "Running on device: "
+         << q.get_device().get_info<info::device::name>() << "\n";
+    cout << "Array size: " << array_size << "\n";
 
     int *sequential = malloc_shared<int>(array_size, q);
     int *parallel = malloc_shared<int>(array_size, q);
@@ -85,7 +86,7 @@ int main() {
       if (sequential != nullptr) free(sequential, q);
       if (parallel != nullptr) free(parallel, q);
 
-      std::cout << "Shared memory allocation failure.\n";
+      cout << "Shared memory allocation failure.\n";
       return -1;
     }
 
@@ -98,7 +99,7 @@ int main() {
     // Verify two results are equal.
     for (size_t i = 0; i < array_size; i++) {
       if (parallel[i] != sequential[i]) {
-        std::cout << "Failed on device.\n";
+        cout << "Failed on device.\n";
         return -1;
       }
     }
@@ -110,17 +111,17 @@ int main() {
     for (int i = 0; i < indices_size; i++) {
       int j = indices[i];
       if (i == indices_size - 1) std::cout << "...\n";
-      std::cout << "[" << j << "]: " << j << " + " << value << " = "
-                << sequential[j] << "\n";
+      cout << "[" << j << "]: " << j << " + " << value << " = " 
+           << sequential[j] << "\n";
     }
 
     free(sequential, q);
     free(parallel, q);
-  } catch (exception const &e) {
-    std::cout << "An exception is caught while computing on device.\n";
-    std::terminate();
+  } catch (std::exception const &e) {
+      cout << "An exception is caught while computing on device.\n";
+      terminate();
   }
 
-  std::cout << "Successfully completed on device.\n";
+  cout << "Successfully completed on device.\n";
   return 0;
 }

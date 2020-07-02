@@ -28,10 +28,11 @@
 #endif
 
 using namespace sycl;
+using namespace std;
 
 // Array type and data size for this example.
 constexpr size_t array_size = 10000;
-typedef std::array<int, array_size> IntArray;
+typedef array<int, array_size> IntArray;
 
 //************************************
 // Iota in DPC++ on device.
@@ -85,24 +86,24 @@ int main() {
   for (size_t i = 0; i < sequential.size(); i++) sequential[i] = value + i;
 
   try {
-    queue q(d_selector, dpc::exception_handler);
+    queue q(d_selector, dpc_common::exception_handler);
 
     // Print out the device information used for the kernel code.
-    std::cout << "Running on device: "
-              << q.get_device().get_info<info::device::name>() << "\n";
-    std::cout << "Array size: " << parallel.size() << "\n";
+    cout << "Running on device: "
+         << q.get_device().get_info<info::device::name>() << "\n";
+    cout << "Array size: " << parallel.size() << "\n";
 
     // Parallel iota in DPC++.
     IotaParallel(q, parallel, value);
-  } catch (exception const &e) {
-    std::cout << "An exception is caught while computing on device.\n";
-    std::terminate();
+  } catch (std::exception const &e) {
+      cout << "An exception is caught while computing on device.\n";
+      terminate();
   }
 
   // Verify two results are equal.
   for (size_t i = 0; i < sequential.size(); i++) {
     if (parallel[i] != sequential[i]) {
-      std::cout << "Failed on device.\n";
+      cout << "Failed on device.\n";
       return -1;
     }
   }
@@ -114,10 +115,10 @@ int main() {
   for (int i = 0; i < indices_size; i++) {
     int j = indices[i];
     if (i == indices_size - 1) std::cout << "...\n";
-    std::cout << "[" << j << "]: " << j << " + " << value << " = "
-              << parallel[j] << "\n";
+    cout << "[" << j << "]: " << j << " + " << value << " = "
+         << parallel[j] << "\n";
   }
 
-  std::cout << "Successfully completed on device.\n";
+  cout << "Successfully completed on device.\n";
   return 0;
 }
