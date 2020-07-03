@@ -5,7 +5,7 @@
   "toolchain": ["dpcpp"],
   "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
   "targetDevice": ["CPU", "GPU", "FPGA"],
-  "os": ["linux", "windows"],
+  "os": ["linux", "windows", "darwin"],
   "builder": ["ide", "make"],
   "ciTests": {
     "linux": [
@@ -63,6 +63,13 @@
           "nmake -f Makefile.win.fpga",
           "nmake -f Makefile.win.fpga run",
           "nmake -f Makefile.win.fpga clean"
+        ]
+      }
+    ],
+    "darwin": [
+      {
+        "steps": [
+          "echo hello"
         ]
       }
     ]
