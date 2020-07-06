@@ -6,7 +6,7 @@ SRC = src/simple-add-buffers.cpp
 USM_SRC = src/simple-add-usm.cpp
 
 EXE = simple-add-buffers.fpga_emu.exe
-USM_EXE = simple-add-usm.fpga_emu.exe
+USM_EXE = simple-add-usm.fpga_emu_usm.exe
 
 all: fpga_emu
 
@@ -23,4 +23,4 @@ run_usm:
 	@echo USM is not supported for FPGAs, yet
 
 clean: 
-	del /f *.o *.d *.out *.mon *.emu *.aocr *.aoco *.prj *.fpga_emu *.fpga_emu_buffers *.a $(EXE) $(USM_EXE)
+	del /f *.o *.d *.out *.mon *.emu *.aocr *.aoco *.prj *.fpga_emu *.fpga_emu_usm *.a $(EXE) $(USM_EXE)
