@@ -6,5 +6,26 @@
     "builder": ["ide", "cmake"],
     "languages": [{"cpp":{}}],
     "toolchain": ["dpcpp"],
-    "guid": "54D189B9-2011-48ED-BFFC-E390D128EED5"
+    "guid": "54D189B9-2011-48ED-BFFC-E390D128EED5",
+    "ciTests": {
+        "linux": [
+            {
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "make",
+                    "make run",
+                    "make clean"
+                ]
+            }
+        ],
+        "windows": [ 
+            { 
+                "steps": [
+                    "MSBuild DCT.sln /t:Rebuild /p:Configuration=\"<Intel Release\""
+                ]
+            }
+        ]
+    }
 }
