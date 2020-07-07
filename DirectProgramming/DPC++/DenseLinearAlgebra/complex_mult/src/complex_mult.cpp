@@ -7,32 +7,32 @@
 #include <CL/sycl.hpp>
 #include <iomanip>
 #include <vector>
+#include "../common/dpc_common.hpp"
 #include "Complex.hpp"
-#include "dpc_common.hpp"
 
 using namespace sycl;
 using namespace std;
 
 // Number of complex numbers passing to the DPC++ code
-static const int num_elements = 16;
+static const int num_elements = 10000;
 
-class custom_device_selector : public device_selector {
+class CustomDeviceSelector : public device_selector {
  public:
-  custom_device_selector(std::string vendorName) : vendorName_(vendorName){};
+  CustomDeviceSelector(std::string vendorName) : vendorName_(vendorName){};
   int operator()(const device &dev) const override {
-    int rating = 0;
+    int device_rating = 0;
     // In the below code we are querying for the custom device specific to a
     // Vendor and if it is a GPU device we are giving the highest rating. The
     // second preference is given to any GPU device and the third preference is
     // given to CPU device.
     if (dev.is_gpu() & (dev.get_info<info::device::name>().find(vendorName_) !=
                         std::string::npos))
-      rating = 3;
+      device_rating = 3;
     else if (dev.is_gpu())
-      rating = 2;
+      device_rating = 2;
     else if (dev.is_cpu())
-      rating = 1;
-    return rating;
+      device_rating = 1;
+    return device_rating;
   };
 
  private:
@@ -62,10 +62,10 @@ void DpcppParallel(queue &q, std::vector<Complex2> &in_vect1,
     // Accessor set to Write mode
     auto V3 = bufout_vect.get_access<access::mode::write>(h);
 
-    h.parallel_for(R, [=](id<1> i) {
+    h.parallel_for(R, [=](id<1> idx) {
       // call the complex_mul function that computes the multiplication of the
-      // complex numberr
-      V3[i] = V1[i].complex_mul(V2[i]);
+      // complex number
+      V3[idx] = V1[idx].complex_mul(V2[idx]);
     });
   });
   q.wait_and_throw();
@@ -111,7 +111,7 @@ int main() {
     // std::string vendor_name = "AMD";
     // std::string vendor_name = "Nvidia";
     // queue constructor passed exception handler
-    custom_device_selector selector(vendor_name);
+    CustomDeviceSelector selector(vendor_name);
     queue q(selector, dpc::exception_handler);
     // Call the DpcppParallel with the required inputs and outputs
     DpcppParallel(q, input_vect1, input_vect2, out_vect_parallel);
@@ -121,40 +121,35 @@ int main() {
     std::terminate();
   }
 
-  cout << "****************************************Multiplying Complex numbers "
-          "in Parallel********************************************************"
-       << std::endl;
+  std::cout
+      << "****************************************Multiplying Complex numbers "
+         "in Parallel********************************************************"
+      << std::endl;
   // Print the outputs of the Parallel function
-  for (int i = 0; i < num_elements; i++) {
-    cout << out_vect_parallel[i] << ' ';
-    if (i == num_elements - 1) {
-      cout << "\n\n";
-    }
+  int indices[]{0, 1, 2, 3, 4, (num_elements - 1)};
+  constexpr size_t indices_size = sizeof(indices) / sizeof(int);
+
+  for (int i = 0; i < indices_size; i++) {
+    int j = indices[i];
+    if (i == indices_size - 1) std::cout << "...\n";
+    std::cout << "[" << j << "] " << input_vect1[j] << " * " << input_vect2[j]
+              << " = " << out_vect_parallel[j] << "\n";
   }
-  cout << "****************************************Multiplying Complex numbers "
-          "in Serial***********************************************************"
-       << std::endl;
   // Call the DpcppScalar function with the required input and outputs
   DpcppScalar(input_vect1, input_vect2, out_vect_scalar);
-  for (auto it = out_vect_scalar.begin(); it != out_vect_scalar.end(); it++) {
-    cout << *it << ' ';
-    if (it == out_vect_scalar.end() - 1) {
-      cout << "\n\n";
-    }
-  }
 
   // Compare the outputs from the parallel and the scalar functions. They should
   // be equal
 
   int ret_code = Compare(out_vect_parallel, out_vect_scalar);
   if (ret_code == 1) {
-    cout << "********************************************Success. Results are "
-            "matched******************************"
-         << "\n";
+    std::cout << "Complex multiplication successfully run on the device"
+              << "\n";
   } else
-    cout << "*********************************************Failed. Results are "
-            "not matched**************************"
-         << "\n";
+    std::cout
+        << "*********************************************Verification Failed. Results are "
+           "not matched**************************"
+        << "\n";
 
   return 0;
 }
