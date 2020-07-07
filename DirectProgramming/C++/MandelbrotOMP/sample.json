@@ -8,11 +8,11 @@
     "toolchain": ["icc"],
     "ciTests": {
         "linux": [
-            { "id": "standard", "env": [ ], "steps": [ "make", "make run", "make clean" ] },
+            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
             { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
         ],
         "darwin": [ 
-            { "id": "standard", "env": [ ], "steps": [ "make", "make run", "make clean" ] },
+            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
             { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
         ]
     }
