@@ -1,20 +1,18 @@
 {
-    "name": "Mandelbrot C++/OpenMP*",
-    "description": "Calculates the mandelbrot set and outputs a bmp image representation using OpenMP*",
+    "name": "Intrinsics C++",
+    "description": "Demonstrates the intrinsic functions of the Intel® C++ Compiler",
     "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
     "os": ["linux", "darwin"],
     "builder": ["cmake"],
     "languages": [{"cpp":{}}],
     "toolchain": ["icc"],
-    "guid": "DD113F58-4D91-41BB-B46E-6CF2C0D9F6F9",
+    "guid": "ACD0E89E-67CC-4CB4-87AB-B12B84962EAF",
     "ciTests": {
         "linux": [
-            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
-            { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
+            { "steps": [ "make", "make run", "make clean" ] }
         ],
         "darwin": [ 
-            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
-            { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
+            { "steps": [ "make", "make run", "make clean" ] }
         ]
     }
 }
