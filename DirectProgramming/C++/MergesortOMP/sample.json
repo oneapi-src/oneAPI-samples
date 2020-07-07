@@ -5,5 +5,15 @@
     "os": ["linux", "darwin"],
     "builder": ["cmake"],
     "languages": [{"cpp":{}}],
-    "toolchain": ["icc"]
+    "toolchain": ["icc"],
+    "ciTests": {
+        "linux": [
+            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
+            { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
+        ],
+        "darwin": [ 
+            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
+            { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
+        ]
+    }
 }
