@@ -23,7 +23,9 @@
         "windows": [ 
             { 
                 "steps": [
-                    "MSBuild DCT.sln /t:Rebuild /p:Configuration=\"Intel Release\""
+                    "MSBuild DCT.sln /t:Rebuild /p:Configuration=\"Intel Release\"",
+                    "cd x64/Intel Release",
+                    "./DCT.exe ../../res/willyriver.bmp ../../res/willyriver_processed.bmp"
                 ]
             }
         ]
