@@ -1,0 +1,10 @@
+Intrinsics samples
+
+License Information Follows
+---------------------------
+* src/intrin_dot_sample.c, src/intrin_double_sample.c, src/intrin_ftz_sample.c
+* readme.md, Makefile
+
+Copyright Intel Corporation
+
+* license: http://software.intel.com/en-us/articles/intel-sample-source-code-license-agreement/  
