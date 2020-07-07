@@ -1,0 +1,11 @@
+DCT Sample 
+
+License Information Follows
+---------------------------
+* src\DCT.cpp, src\DCT.hpp
+* src\dpc_common.hpp
+* readme.md, Makefile, Build.bat
+
+Copyright Intel Corporation
+
+* license: http://software.intel.com/en-us/articles/intel-sample-source-code-license-agreement/  
