@@ -4,7 +4,7 @@ License Information Follows
 ---------------------------
 * src\DCT.cpp, src\DCT.hpp
 * src\dpc_common.hpp
-* readme.md, Makefile, Build.bat
+* readme.md
 
 Copyright Intel Corporation
 
