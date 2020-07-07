@@ -1,0 +1,9 @@
+{
+    "name": "MergeSort C++/OpenMP*",
+    "description": "Classic sorting algorithm using OpenMP*",
+    "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
+    "os": ["linux", "darwin"],
+    "builder": ["cmake"],
+    "languages": [{"cpp":{}}],
+    "toolchain": ["icc"]
+}

@@ -1,0 +1,10 @@
+Merge Sort Sample
+
+License Information Follows
+---------------------------
+* src\merge_sort.cpp
+* readme.md
+
+Copyright Intel(R) Corporation
+
+* license: http://software.intel.com/en-us/articles/intel-sample-source-code-license-agreement/  
