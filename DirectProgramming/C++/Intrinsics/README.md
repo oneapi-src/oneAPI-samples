@@ -1,6 +1,6 @@
 # `Intrinsics` Sample
 
-The intrinsic samples are designed to show how to utilize the intrinsics supported by the Intel&reg; C++ compiler in a variety of applications. The intrinsic_cpp folder contains three .cpp source files each demonstrating different functionality of the intrinsics, including vector operations, complex numbers computations, and FTZ/DAZ flags.
+The intrinsic samples are designed to show how to utilize the intrinsics supported by the Intel&reg; C++ compiler in a variety of applications. The src folder contains three .cpp source files each demonstrating different functionality of the intrinsics, including vector operations, complex numbers computations, and FTZ/DAZ flags.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -22,7 +22,7 @@ Further information on intriniscs can be found here: https://software.intel.com/
 This sample makes use of intrinsic functions to perform common mathematical operations including:
 - Computing a dot product of two vectors
 - Computing the product of two complex numbers
-The implementations include multiple functions to accomplish these tasks, each one leveraging a different set of intrinsics available to Intel processors.
+The implementations include multiple functions to accomplish these tasks, each one leveraging a different set of intrinsics available to Intel&reg; processors.
 
  
 ## License  

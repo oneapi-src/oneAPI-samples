@@ -42,10 +42,10 @@ intrin_double_sample_dbg.exe: intrin_double_sample_dbg.o
 intrin_ftz_sample_dbg.exe: intrin_ftz_sample_dbg.o
 	$(CC) -O0 -g $^ -o $@
 
-%.o: src/%.c
+%.o: src/%.cpp
 	$(CC) -O2 -c -o $@  $<
 
-%_dbg.o: src/%.c
+%_dbg.o: src/%.cpp
 	$(CC) -O0 -g -c -o $@  $<
 
 clean:
