@@ -9,10 +9,12 @@
     "guid": "ACD0E89E-67CC-4CB4-87AB-B12B84962EAF",
     "ciTests": {
         "linux": [
-            { "steps": [ "make", "make run", "make clean" ] }
+            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
+            { "id": "debug", "steps": [ "make debug", "make debug_run", "make clean" ] }
         ],
         "darwin": [ 
-            { "steps": [ "make", "make run", "make clean" ] }
+            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
+            { "id": "debug", "steps": [ "make debug", "make debug_run", "make clean" ] }
         ]
     }
 }

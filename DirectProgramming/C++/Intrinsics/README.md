@@ -35,12 +35,12 @@ This code sample is licensed under MIT license.
 Perform the following steps:
 1. Build the program using the following `make` commands. 
 ``` 
-$ make
+$ make (or "make debug" to compile with the -g flag)
 ```
 
 2. Run the program:
     ```
-    make run
+    make run (or "make debug_run" to run the debug version)
     ```
 
 3. Clean the program using:
