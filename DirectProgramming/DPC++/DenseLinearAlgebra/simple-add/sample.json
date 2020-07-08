@@ -61,9 +61,9 @@
       {
         "id": "fpga_emu_buffers",
         "steps": [
+          "nmake -f Makefile.win.fpga clean",
           "nmake -f Makefile.win.fpga",
-          "nmake -f Makefile.win.fpga run",
-          "nmake -f Makefile.win.fpga clean"
+          "nmake -f Makefile.win.fpga run"
         ]
       }
     ]
