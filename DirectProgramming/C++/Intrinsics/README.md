@@ -60,18 +60,17 @@ These intrinsics samples have relatively few modifiable parameters. However, cer
 3. intrin_ftz_sample: This sample has no modifiable parameters.
 
 
-### Example of Output
-[_TEMPLATE: Always provide an example of the expected outcome. This is confirmation to the user that the application worked as expected. Also, be sure your application output is complete and supportive._]
 ```
-Platform Name: Intel(R) OpenCL HD Graphics
-  Platform Version: OpenCL 2.1 
-       Device Name: Intel(R) Gen9 HD Graphics NEO
-    Max Work Group: 256
- Max Compute Units: 24
-
-Parallel Mandelbrot set using buffers.
-Rendered image output to file: mandelbrot.png (output too large to display in text)
-       Serial time: 0.0430331s
-     Parallel time: 0.00224131s
-Successfully computed Mandelbrot set.
+Dot Product computed by C:  4324.000000
+Dot Product computed by Intel(R) SSE3 intrinsics:  4324.000000
+Dot Product computed by Intel(R) AVX2 intrinsics:  4324.000000
+Dot Product computed by Intel(R) AVX intrinsics:  4324.000000
+Dot Product computed by Intel(R) MMX(TM) intrinsics:  4324
+Complex Product(C):             23.00+ -2.00i
+Complex Product(Intel(R) AVX2): 23.00+ -2.00i
+Complex Product(Intel(R) AVX):  23.00+ -2.00i
+Complex Product(Intel(R) SSE3): 23.00+ -2.00i
+Complex Product(Intel(R) SSE2): 23.00+ -2.00i
+FTZ is set.
+DAZ is set.
 ```
