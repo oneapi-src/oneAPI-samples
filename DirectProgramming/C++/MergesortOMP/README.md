@@ -69,7 +69,23 @@ constexpr int n - This determines the size of the list used to test the merge so
 
 
 ### Example of Output
-[_TEMPLATE: Always provide an example of the expected outcome. This is confirmation to the user that the application worked as expected. Also, be sure your application output is complete and supportive._]
 ```
-bleep bloop i am the code executing
+N = 100000000
+Merge Sort Sample
+[0] all tests
+[1] serial
+[2] OpenMP Task
+0
+
+Running all tests
+
+Serial version:
+Shuffling the array
+Sorting
+Sort succeeded in 11.9732 seconds.
+
+OpenMP Task Version:
+Shuffling the array
+Sorting
+Sort succeeded in 3.17086 seconds.
 ```
