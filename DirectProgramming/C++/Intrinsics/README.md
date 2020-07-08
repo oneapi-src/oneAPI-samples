@@ -20,8 +20,8 @@ Further information on intriniscs can be found here: https://software.intel.com/
 ## Key Implementation Details 
 
 This sample makes use of intrinsic functions to perform common mathematical operations including:
-- Compute a dot product of two vectors
-- Compute the product of two complex numbers
+- Computing a dot product of two vectors
+- Computing the product of two complex numbers
 The implementations include multiple functions to accomplish these tasks, each one leveraging a different set of intrinsics available to Intel processors.
 
  
