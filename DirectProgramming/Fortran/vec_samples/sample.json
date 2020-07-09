@@ -1,0 +1,10 @@
+{
+  "name": "vec_samples",
+  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "description": "Fortran Tutorial - Using Auto Vectorization",
+  "toolchain": [ "ifort" ],
+  "languages": [ { "fortran": {} } ],
+  "targetDevice": [ "CPU" ],
+  "os": [ "darwin" ],
+  "builder": [ "make" ]
+}

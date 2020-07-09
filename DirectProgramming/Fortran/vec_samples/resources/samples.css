@@ -1,0 +1,164 @@
+﻿/* Colors used ===========================================================================
+Intel Blue: #0071C5 - banner and footer color, heading level color, links in body.
+White: #FFFFFF - body background, font color for banner and footer, link color in footer
+Black: #000000 - text color for all normal text
+Smoke: #F5F5F5 - alternate row color in tables
+Shadow: #888888 - drop shadows (alternate color is #999999, which is web safe)
+Unique gray: # EEEEEE - gray-ish background for code, menu hover link background
+Do not add any colors without testing them on all target operating systems.
+=========================================================================================== */
+/* -------------------------------------- */
+/* General classes - Use these classes as the foundation for clean, well-formed HTML. */
+/* -------------------------------------- */
+body {
+background-color:#FFFFFF;
+font-family: "Intel Clear", Verdana, Arial, sans-serif;
+font-size: 10pt;
+margin: 0px;
+padding: 0px;
+}
+p, td {
+font-family: inherit;
+font-size: inherit;
+margin-top: 0;
+line-height: 120%;
+margin-bottom: 5pt;
+}
+li, ul, ol {
+font-family: inherit;
+font-size: inherit;
+line-height: 120%;
+margin-bottom: 10px;
+}
+HR {
+color: #0071C5;
+background-color: #0071C5;
+height: 1px;
+margin-top: 15px;
+margin-bottom: 15px;
+margin-right: 10px;
+margin-left: 0px;
+border: none;
+}
+.codeph, code, .code {
+/* Class for code tags. */
+font-family:"Courier New", Courier, monospace;
+font-size: 100%;
+background-color: transparent;
+}
+
+/* -------------------------------------- */
+/* Divs and classes to control the banner */
+/* -------------------------------------- */
+#banner {
+/* Div for banner */
+float:left;
+margin: 0px;
+width: 100%;
+background-color: #0071C5;
+z-index: 0;
+}
+#banner h1.title {
+/* Add as class to H1 in banner */
+font-family: "Intel Clear", Verdana, Arial, sans-serif;
+font-weight:normal;
+color: #FFFFFF;
+font-size: 170%;
+margin-right: 60px;
+margin-left: 40px;
+text-indent: -80px;
+padding-right: 20px;
+text-indent: 20px;
+}
+#banner .logo {
+/* Apply to logo in banner. Add as class to image tag. */
+float: left;
+margin-right: 20px;
+margin-left: 20px;
+margin-top: 10px;
+padding-bottom: 5px;
+}
+/* -------------------------------------- */
+/* Classes to control tables */
+/* -------------------------------------- */
+#contentblock table.tablecontrol, table {
+border-collapse: collapse;
+border-spacing: 0px;
+width: 100%;
+}
+tr:nth-child(odd){ 
+background-color:#FFFFFF; 
+}
+tr:nth-child(even){
+background-color:#F5F5F5;
+}
+#contentblock th, th h3{
+    padding:1px;
+    text-align:left;
+	background-color: #0071C5;
+    font-weight:normal;
+    margin-top:0;
+    margin-bottom:0;
+    color:#FFFFFF;
+	font-size:100%;
+    border: 1px #DDDDDD solid;
+    padding: 5px;
+}
+#contentblock td, td p{
+    vertical-align:top;
+    font-size:inherit;
+    margin-bottom:0;
+    margin-top:0;
+    margin-left:0;
+    text-align:left;
+    font-size:inherit;
+    line-height:120%;
+    padding: 5px;
+}
+#contentblock td {
+   border: 1px #DDDDDD solid;
+}
+
+/* -------------------------------------- */
+/* Divs and classes to control main content */
+/* -------------------------------------- */
+#contentblock {
+/* Div for main content container. Everything not in the banner and footer should be wrapped in this container, including the menu. */
+float:left;
+margin-left: 70px;
+margin-right: 60px;
+margin-bottom: 10px;
+margin-top: 20px;
+z-index: 1;
+padding-bottom: 75px;
+}
+#contentblock h1 {
+font-family: "Intel Clear", Verdana, Arial, sans-serif;
+color: #0071C5;
+font-size: 170%;
+font-weight: normal;
+}
+#contentblock h2 {
+color: #0071C5;
+margin-top: 25px;
+margin-bottom: 15px;
+font-size: 120%;
+font-weight: normal;
+}
+#contentblock h3, h4, h5, h6 {
+color: #0071C5;
+margin-top: 30px;
+margin-bottom:5px;
+font-size: 100%;
+font-weight: bold;
+}
+#contentblock a:link, a:active, a:visited {
+font-size:inherit;
+text-decoration: none;
+color: #0071C5;
+}
+#contentblock a:hover {
+font-size: inherit;
+text-decoration: underline;
+color: #0071C5;
+}

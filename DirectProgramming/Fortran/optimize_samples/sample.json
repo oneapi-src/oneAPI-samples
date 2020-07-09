@@ -1,0 +1,10 @@
+{
+  "name": "optimization_samples",
+  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "description": "Fortran Sample - Simple Compiler Optimizations",
+  "toolchain": [ "ifort" ],
+  "languages": [ { "fortran": {} } ],
+  "targetDevice": [ "CPU" ],
+  "os": [ "darwin" ],
+  "builder": [ "make" ]
+}
