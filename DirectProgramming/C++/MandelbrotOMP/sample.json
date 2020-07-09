@@ -1,5 +1,5 @@
 {
-    "name": "Mandelbrot C++/OpenMP*",
+    "name": "Mandelbrot OpenMP*",
     "description": "Calculates the mandelbrot set and outputs a bmp image representation using OpenMP*",
     "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
     "os": ["linux", "darwin"],
