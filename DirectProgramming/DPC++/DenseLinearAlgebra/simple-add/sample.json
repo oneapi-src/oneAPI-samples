@@ -13,22 +13,23 @@
       {
         "id": "cpu_usm",
         "steps": [
+          "make clean",
           "make all",
-          "make run",
-          "make clean"
+          "make run"
         ]
       },
       {
         "id": "cpu_buffers",
         "steps": [
+          "make clean",
           "make build_buffers",
-          "make run_buffers",
-          "make clean"
+          "make run_buffers"
         ]
       },
       {
         "id": "fpga_emu_buffers",
         "steps": [
+          "make clean -f Makefile.fpga",
           "make fpga_emu -f Makefile.fpga",
           "make run_emu -f Makefile.fpga"
         ]
@@ -61,9 +62,9 @@
       {
         "id": "fpga_emu_buffers",
         "steps": [
-          "nmake -f Makefile.win.fpga clean",
           "nmake -f Makefile.win.fpga",
-          "nmake -f Makefile.win.fpga run"
+          "nmake -f Makefile.win.fpga run",
+          "nmake -f Makefile.win.fpga clean",
         ]
       }
     ]
