@@ -1,10 +1,10 @@
 CXX = dpcpp-cl
 CXXFLAGS = -O2 -EHsc -Zi
 
-EXE_NAME = simple-add-usm
+EXE_NAME = simple-add-usm.exe
 SOURCES = src/simple-add-usm.cpp
 
-BUFFERS_EXE_NAME = simple-add-buffers
+BUFFERS_EXE_NAME = simple-add-buffers.exe
 BUFFERS_SOURCES = src/simple-add-buffers.cpp
 
 all: main
