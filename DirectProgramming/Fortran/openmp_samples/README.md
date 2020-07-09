@@ -48,8 +48,8 @@ This code sample is licensed under MIT license
 ### Experiment 1 Default Optimized build and run 
    * Build openmp_samples 
 
-    cd openmp_samples &&
-    make clean &&
+    cd openmp_samples 
+    make clean
     make
 
    * Run the program
@@ -59,8 +59,8 @@ This code sample is licensed under MIT license
 ### Experiment 2 Unoptimized build and run
    * Build openmp_samples
 
-    cd openmp_samples &&
-    make clean &&
+    cd openmp_samples 
+    make clean 
     make debug
 
    * Run the program
@@ -76,3 +76,7 @@ This code sample is licensed under MIT license
    * Clean the program  
     make clean
 
+## Further Reading
+Interested in learning more?  We have a wealth of information 
+on using OpenMP with the Intel Fortran Compiler in our 
+[OpenMP section of Developer Guide and Reference][1]:<https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/optimization-and-programming-guide/openmp-support.html>"Developer Guide and Reference"
