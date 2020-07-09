@@ -79,4 +79,4 @@ This code sample is licensed under MIT license
 ## Further Reading
 Interested in learning more?  We have a wealth of information 
 on using OpenMP with the Intel Fortran Compiler in our 
-[OpenMP section of Developer Guide and Reference][1]:<https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/optimization-and-programming-guide/openmp-support.html>"Developer Guide and Reference"
+[OpenMP section of Developer Guide and Reference][1]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/optimization-and-programming-guide/openmp-support.html "Developer Guide and Reference"
