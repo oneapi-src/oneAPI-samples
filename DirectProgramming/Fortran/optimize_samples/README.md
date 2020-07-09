@@ -16,11 +16,13 @@ The source for this program also demonstrates recommended Fortran coding practic
 
 ## Compile the sample several times using different optimization options:
 
+   * O0 - No optimizations
    * O1 - Enables optimizations for speed and disables some optimizations that increase code size and affect speed.
    * O2 - Enables optimizations for speed. This is the generally recommended optimization level. Vectorization is enabled at O2 and higher levels.
    * O3 - Performs O2 optimizations and enables more aggressive loop transformations such as Fusion, Block-Unroll-and-Jam, and collapsing IF statements.
 
-Read the [Intel® Fortran Compiler Developer Guide and Reference][1]:<https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html>"Intel® Fortran Compiler Developer Guide and Reference" 
+Read the [Intel® Fortran Compiler Developer Guide and Reference][1]
+[1]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html "Intel® Fortran Compiler Developer Guide and Reference" 
  for more information about these options.
 
 Some of these automatic optimizations use features and options that can 
@@ -28,8 +30,8 @@ restrict program execution to specific architectures.
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | macOS* with Xcode installed (see Release Notes for details)
-| Software                          | Intel&reg; oneAPI Intel Fortran Compiler (beta)
+| OS                                | macOS* with Xcode* installed 
+| Software                          | Intel&reg; oneAPI Intel Fortran Compiler (Beta)
 | What you will learn               | Vectorization using Intel Fortran compiler
 | Time to complete                  | 15 minutes
 
@@ -43,119 +45,146 @@ Use the one of the following compiler options:
 
 ## macOS* : -O0 -O1, -O2, -O3 
 
-### STEP 1: Build and run at O0
-    cd optimize_samples 
-    edit Makefile
-    set optimization levels
-    uncomment FC = ifort -O0 like this 
+### STEP 1: Build and run with -O0
+cd optimize_samples 
+
+Edit 'Makefile' using your favorite editor
+
+To set optimization level uncomment FC = ifort -O0 like this 
+    
      FC = ifort -O0 
      #FC = ifort -O1 
      #FC = ifort -O2 
      #FC = ifort -O3  
-    make 
+   * Build the executable with 'make'     
+     
+     make 
 
    * Run the program
-    make run
+  
+     make run
 
    * Note the final run time (example)
     CPU Time = 3.776983 seconds
 
-   * Clean the program
+   * Clean the files we built
+   
     make clean
 
-### STEP 2: Build and run at O1
-    cd optimize_samples
-    edit Makefile
-    set optimization levels
-    uncomment FC = ifort -O1 like this
+
+### STEP 2: Build and run with -O1
+Edit 'Makefile' using your favorite editor
+
+To set optimization level uncomment FC = ifort -O1 like this
+    
      #FC = ifort -O0
      FC = ifort -O1
      #FC = ifort -O2
      #FC = ifort -O3
+   * Build the executable with 'make'
+  
     make
 
    * Run the program
+  
     make run
 
    * Note the final run time (example)
     CPU Time = 1.444569 seconds
 
-   * Clean the program
+   * Clean the files we built
+    
     make clean
+    
 
-### STEP 3: Build and run at O2
-    cd optimize_samples
-    edit Makefile
-    set optimization levels
-    uncomment FC = ifort -O2 like this
+### STEP 3: Build and run with -O2
+Edit 'Makefile' using your favorite editor
+
+To set optimization level uncomment FC = ifort -O2 like this
+    
      #FC = ifort -O0
      #FC = ifort -O1
      FC = ifort -O2
      #FC = ifort -O3
+   * Build the executable with 'make'
+   
     make
 
    * Run the program
+    
     make run
 
    * Note the final run time (example)
      CPU Time = 0.5143980 seconds
 
-   * Clean the program
+   * Clean the files we built
+  
     make clean
 
-### STEP 4: Build and run at O3
-    cd optimize_samples
-    edit Makefile
-    set optimization levels
-    uncomment FC = ifort -O3 like this
+### STEP 4: Build and run with -O3
+Edit 'Makefile' using your favorite editor
+
+To set optimization level uncomment FC = ifort -O3 like this
+
      #FC = ifort -O0
      #FC = ifort -O1
      #FC = ifort -O2
      FC = ifort -O3
+   * Build the executable with 'make'
+    
     make
 
    * Run the program
+    
     make run
 
    * Note the final run time (example)
      CPU Time = 0.5133380 seconds
 
-   * Clean the program
+   * Clean the files we built
+   
     make clean
 
 ## What did we learn?
 There are big jumps going from O0 to O1, and from O1 to O2. 
-but very little going from O2 to O3.
-This does vary by application but generally with Intel Compilers 
-O2 is has most aggressive optimizations.  Sometimes O3 can help, of course,
+But we see very little performance gain going from O2 to O3.
+This does vary by application but generally with Intel® Compilers 
+O2 is has most optimizations.  Sometimes O3 can help, of course,
 but generally O2 is sufficient for most applications. 
 
 ### Extra Exploration
 The Intel® Fortran Compiler has many options for optimization. 
-If you have a genuine Intel® Architecture process, try these additional options
-    edit Makefile
-    set optimization levels
-    uncomment FC = ifort -O3 and add additional options shown:
+If you have a genuine Intel® Architecture processor, try these additional options
+
+   edit 'Makefile' using your favorite editor. To set additional optimizations uncomment FC = ifort -O3 and add additional options shown:
+   
      #FC = ifort -O0
      #FC = ifort -O1
      #FC = ifort -O2
      FC = ifort -O3 -xhost -align array64byte
+   * Build the executable with the new options -xhost -align array64byte
+  
     make
 
    * Run the program
+   
     make run
 
    * Note the final run time (example)
      CPU Time = 0.2578490 seconds
 
    * Clean the program
-    make clean
-There are 2 additional compiler options here that are worth mentioning:
 
-Read the online [Developer Guide and Reference][1]:<https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html>"Developer Guide and Reference" for more information about
-the options
- 1. -xhost (sub option of -x option): [-x][1]:<https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/compiler-reference/compiler-options/compiler-option-details/code-generation-options/x-qx.html>"-x option"
- 2. -align array64byte [-align ][1]:<https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/compiler-reference/compiler-options/compiler-option-details/data-options/align.html>"-align option"
+    make clean
+    
+There are 2 additional compiler options here that are worth mentioning: Read the online 
+[Developer Guide and Reference][3] for more information about
+these options
+[3]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html "Developer Guide and Reference" 
+ 1. -xhost (sub option of -x option):  [-x][4]
+ [4]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/compiler-reference/compiler-options/compiler-option-details/code-generation-options/x-qx.html "-x option"
+ 2. -align array64byte: [-align][5]
+ [5]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/compiler-reference/compiler-options/compiler-option-details/data-options/align.html "-align option"
 
 ### Clean up 
    * Clean the program  

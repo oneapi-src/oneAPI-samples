@@ -38,7 +38,7 @@ program driver
 !DIR$ IF DEFINED(ALIGNED)
 !  aligning the start of each array is unimportant in this simple example.
 !  preserving the same alignment for all rows of the matrix is much more important.
-!DIR$ attributes align : 16 :: a,b,c
+!DIR$ attributes align : 32 :: a,b,c
 !DIR$ ENDIF
 
 !   initialize the matrix and vector

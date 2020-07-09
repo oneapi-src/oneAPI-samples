@@ -5,7 +5,7 @@
 ! =============================================================
 !
 ! [DESCRIPTION]
-! This code finds all primes in the first 10,000,000 integers, the number of
+! This code finds all primes in the first 40,000,000 integers, the number of
 ! 4n+1 primes, and the number of 4n-1 primes in the same range.
 !
 ! This source illustrates two OpenMP directives to help speed up 

@@ -2,12 +2,12 @@
 This sample is designed to illustrate how to use 
 the OpenMP* API with the Intel® Fortran Compiler.
 
-This program finds all primes in the first 10,000,000 integers, 
+This program finds all primes in the first 40,000,000 integers, 
 the number of 4n+1 primes, and the number of 4n-1 primes in the same range. 
 It illustrates two OpenMP* directives to help speed up the code.
 
 
-This program finds all primes in the first 10,000,000 integers, the number of 4n+1 primes, 
+This program finds all primes in the first 40,000,000 integers, the number of 4n+1 primes, 
 and the number of 4n-1 primes in the same range. It illustrates two OpenMP* directives 
 to help speed up the code.
 
@@ -34,8 +34,8 @@ Read the Intel® Fortran Compiler Documentation for more information about these
   
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | macOS* with Xcode installed (see Release Notes for details)
-| Software                          | Intel&reg; oneAPI Intel Fortran Compiler (beta)
+| OS                                | macOS* with Xcode* installed 
+| Software                          | Intel&reg; oneAPI Intel Fortran Compiler (Beta)
 | What you will learn               | How to build and run a Fortran OpenMP application using Intel Fortran compiler
 | Time to complete                  | 10 minutes
 
@@ -45,32 +45,42 @@ This code sample is licensed under MIT license
 
 ## How to Build  
 
-### Experiment 1 Default Optimized build and run 
-   * Build openmp_samples 
+### Experiment 1: Unoptimized build and run
+* Build openmp_samples
 
-    cd openmp_samples 
-    make clean
-    make
-
-   * Run the program
-
-    make run  
-
-### Experiment 2 Unoptimized build and run
-   * Build openmp_samples
-
-    cd openmp_samples 
-    make clean 
-    make debug
+        cd openmp_samples 
+        make clean 
+        make debug
 
    * Run the program
 
-    make debug_run
+        make debug_run
 
    * What did you see?
 
      Did the debug, unoptimized code run slower? 
+     
+### Experiment 2: Default Optimized build and run 
 
+   * Build openmp_samples
+
+    make 
+   * Run the program
+
+    make run  
+
+### Experiment 3: Controlling number of threads
+By default an OpenMP application creates and uses as many threads as there are "processors" in a system.  A "processor" is the number of logical processors which on hyperthreaded cores is twice the number of physical cores.
+
+OpenMP uses environment variable 'OMP_NUM_THREADS' to set number of threads to use.  Try this!
+
+    export OMP_NUM_THREADS=1
+    make run
+note the number of threads reported by the application.  Now try 2 threads:
+
+    export OMP_NUM_THREADS=2
+    make run
+Did the make the application run faster?  Experiment with the number of threads and see how it affects performance.
 
 ### Clean up 
    * Clean the program  
@@ -79,4 +89,6 @@ This code sample is licensed under MIT license
 ## Further Reading
 Interested in learning more?  We have a wealth of information 
 on using OpenMP with the Intel Fortran Compiler in our 
-[OpenMP section of Developer Guide and Reference][1]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/optimization-and-programming-guide/openmp-support.html "Developer Guide and Reference"
+[OpenMP section of Developer Guide and Reference][1]
+
+[1]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/optimization-and-programming-guide/openmp-support.html "Developer Guide and Reference"
