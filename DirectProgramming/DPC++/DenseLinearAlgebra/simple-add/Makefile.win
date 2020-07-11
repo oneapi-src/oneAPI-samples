@@ -1,15 +1,25 @@
 CXX = dpcpp-cl
 CXXFLAGS = -O2 -EHsc -Zi
+
 EXE_NAME = simple-add-usm.exe
 SOURCES = src/simple-add-usm.cpp
+
+BUFFERS_EXE_NAME = simple-add-buffers.exe
+BUFFERS_SOURCES = src/simple-add-buffers.cpp
 
 all: main
 
 main:
 	$(CXX) $(CXXFLAGS) -o $(EXE_NAME) $(SOURCES)
 
+build_buffers:
+	$(CXX) $(CXXFLAGS) -o $(BUFFERS_EXE_NAME) $(BUFFERS_SOURCES)
+
 run: 
 	$(EXE_NAME)
 
+run_buffers: 
+	$(BUFFERS_EXE_NAME)
+
 clean: 
-	del -rf $(EXE_NAME)
+	del -rf $(EXE_NAME) $(BUFFERS_EXE_NAME)
