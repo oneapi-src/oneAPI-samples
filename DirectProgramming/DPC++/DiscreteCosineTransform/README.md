@@ -78,11 +78,16 @@ Perform the following steps:
       Right-click on the solution file and open using either VS2017 or VS2019 IDE.
       Set the configuration to 'Intel Release' for normal execution or 'Intel Performance Test' to take performance metrics.
       Right-click on the project in Solution Explorer and select Rebuild.
-      From the  top menu, select Debug -> Start without Debugging.
+
+      To run:
+      From the top menu, select Debug -> Start without Debugging.
 
 * Build the program using MSBuild
-      Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019."
-      Run - MSBuild DCT.sln /t:Rebuild /p:Configuration="<Intel Release|Intel Performance Test>"
+      Open "Intel oneAPI command prompt for Microsoft Visual Studio 2019" and use your shell of choice to navigate to the DCT sample directory
+      Run command - MSBuild DCT.sln /t:Rebuild /p:Configuration="Intel Release"     (or Configuration="Intel Performance Test" for performance tabulation)
+
+      To run:
+      Run command - '.\x64\Intel Release\DCT.exe' ./res/willyriver.bmp ./res/willyriver_processed.bmp
 
 
 ## Running the Sample
