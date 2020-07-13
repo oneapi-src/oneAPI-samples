@@ -93,7 +93,6 @@
       <UseProcessorExtensions>AVX</UseProcessorExtensions>
       <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
       <EnableExpandedLineNumberInfo>true</EnableExpandedLineNumberInfo>
-      <OpenMP>GenerateParallelCode</OpenMP>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>
@@ -116,7 +115,6 @@
       <UseProcessorExtensions>AVX</UseProcessorExtensions>
       <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
       <EnableExpandedLineNumberInfo>true</EnableExpandedLineNumberInfo>
-      <OpenMP>GenerateParallelCode</OpenMP>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>
@@ -139,7 +137,6 @@
       <UseProcessorExtensions>AVX</UseProcessorExtensions>
       <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
       <EnableExpandedLineNumberInfo>true</EnableExpandedLineNumberInfo>
-      <OpenMP>GenerateParallelCode</OpenMP>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>
@@ -162,7 +159,6 @@
       <UseProcessorExtensions>AVX</UseProcessorExtensions>
       <InterproceduralOptimization>NoIPO</InterproceduralOptimization>
       <EnableExpandedLineNumberInfo>true</EnableExpandedLineNumberInfo>
-      <OpenMP>GenerateParallelCode</OpenMP>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>
