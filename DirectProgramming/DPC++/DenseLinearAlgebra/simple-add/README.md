@@ -28,7 +28,7 @@ This code sample is licensed under MIT license.
 ## Building the `simple add DPC++` Program for CPU and GPU 
 
 ## Include Files
-The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system".
+The include folder is located at "%ONEAPI_ROOT%\dev-utilities\latest\include" on your development system.
 
 ### On a Linux* System
 Perform the following steps:
