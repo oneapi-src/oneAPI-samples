@@ -4,7 +4,7 @@ Discrete Cosine Transform (DCT) and Quantization are the first two steps in the 
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
-| Optimized for                       | Description
+| Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
