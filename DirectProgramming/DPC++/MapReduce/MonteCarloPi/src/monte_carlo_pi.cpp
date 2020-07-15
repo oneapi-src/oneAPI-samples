@@ -11,15 +11,14 @@
 
 #define SIZE_N 1000 // number of simulated samples
 #define IMG_DIMENSIONS 512 //must be even
-#define RADIUS IMG_DIMENSIONS / 2
 #define CIRCLE_OUTLINE 0.025
 
-#define PI 3.14159265
+constexpr int radius = IMG_DIMENSIONS / 2;
 
 // Returns the pixel index corresponding to a set of simulation coordinates
 int GetIndex(float x, float y){
-    int img_x = x * RADIUS + RADIUS;
-    int img_y = y * RADIUS + RADIUS;
+    int img_x = x * radius + radius;
+    int img_y = y * radius + radius;
     return img_y * IMG_DIMENSIONS + img_x;
 }
 
@@ -33,8 +32,8 @@ rgb* CreatePlot(){
     rgb* plot = (rgb*) calloc(IMG_DIMENSIONS * IMG_DIMENSIONS, sizeof(rgb));
     for (int i = 0; i < IMG_DIMENSIONS * IMG_DIMENSIONS; ++i){
         // calculate unit coordinates relative to the center of the image
-        float x = (float)(i % IMG_DIMENSIONS - RADIUS) / RADIUS;
-        float y = (float)(i / IMG_DIMENSIONS - RADIUS) / RADIUS;
+        float x = (float)(i % IMG_DIMENSIONS - radius) / radius;
+        float y = (float)(i / IMG_DIMENSIONS - radius) / radius;
         // draw the circumference of the circle
         if ((x * x + y * y) > 1 - CIRCLE_OUTLINE && (x * x + y * y) < 1) {
             plot[i].red = 255;
