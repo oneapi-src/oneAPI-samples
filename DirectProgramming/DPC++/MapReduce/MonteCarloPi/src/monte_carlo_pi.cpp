@@ -8,6 +8,7 @@
 #include "../stb/stb_image_write.h"
 
 #define IMG_DIMENSIONS 512 //must be even
+#define CIRCLE_OUTLINE 0.025
 
 #define PI 3.14159265
 
@@ -16,14 +17,13 @@ int main(){
 
     // Create image plot, and draw the circle
     constexpr int radius = IMG_DIMENSIONS / 2;
-    constexpr float precision = 0.01;
     rgb* image_plot = (rgb*) calloc(IMG_DIMENSIONS * IMG_DIMENSIONS, sizeof(rgb));
     for (int i = 0; i < IMG_DIMENSIONS * IMG_DIMENSIONS; i++){
         // calculate unit coordinates relative to the center of the image
         float x = (float)(i % IMG_DIMENSIONS - radius) / radius;
         float y = (float)(i / IMG_DIMENSIONS - radius) / radius;
         // draw the circumference of the circle
-        if ((x * x + y * y) > 1 - precision && (x * x + y * y) < 1 + precision) {
+        if ((x * x + y * y) > 1 - CIRCLE_OUTLINE && (x * x + y * y) < 1) {
             image_plot[i].red = 255;
             image_plot[i].green = 255;
             image_plot[i].blue = 255;
