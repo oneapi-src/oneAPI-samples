@@ -19,7 +19,7 @@ int main(){
     for (int i = 0; i < IMG_DIMENSIONS * IMG_DIMENSIONS; i++){
         int x = i % IMG_DIMENSIONS - (IMG_DIMENSIONS / 2);
         int y = i / IMG_DIMENSIONS - (IMG_DIMENSIONS / 2);
-        if ((x * x + y * y) == IMG_DIMENSIONS / 2) {
+        if ((x * x + y * y) <= IMG_DIMENSIONS / 2) {
             image_plot[i].red = 255;
             image_plot[i].green = 255;
             image_plot[i].blue = 255;
