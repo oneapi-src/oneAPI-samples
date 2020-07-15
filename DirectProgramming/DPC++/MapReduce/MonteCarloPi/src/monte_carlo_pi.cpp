@@ -12,23 +12,30 @@
 
 #define PI 3.14159265
 
-int main(){
-    std::cout << "Hello World!" << std::endl;
-
-    // Create image plot, and draw the circle
+// Creates an array representing the image data and inscribes a circle
+rgb* CreatePlot(){
     constexpr int radius = IMG_DIMENSIONS / 2;
-    rgb* image_plot = (rgb*) calloc(IMG_DIMENSIONS * IMG_DIMENSIONS, sizeof(rgb));
+    rgb* plot = (rgb*) calloc(IMG_DIMENSIONS * IMG_DIMENSIONS, sizeof(rgb));
     for (int i = 0; i < IMG_DIMENSIONS * IMG_DIMENSIONS; i++){
         // calculate unit coordinates relative to the center of the image
         float x = (float)(i % IMG_DIMENSIONS - radius) / radius;
         float y = (float)(i / IMG_DIMENSIONS - radius) / radius;
         // draw the circumference of the circle
         if ((x * x + y * y) > 1 - CIRCLE_OUTLINE && (x * x + y * y) < 1) {
-            image_plot[i].red = 255;
-            image_plot[i].green = 255;
-            image_plot[i].blue = 255;
+            plot[i].red = 255;
+            plot[i].green = 255;
+            plot[i].blue = 255;
         }
     }
+    return plot;
+}
+
+int main(){
+    std::cout << "Hello World!" << std::endl;
+
+    // Create image plot, and draw the circle
+    constexpr int radius = IMG_DIMENSIONS / 2;
+    rgb* image_plot = CreatePlot();
 
 
 
