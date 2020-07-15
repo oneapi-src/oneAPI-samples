@@ -70,7 +70,7 @@ int main(){
         }
     }
 
-
+    std::cout << "The estimated value of pi is: " << 4.0 * (float) count / SIZE_N << std::endl;
 
 
     // Write image to file
