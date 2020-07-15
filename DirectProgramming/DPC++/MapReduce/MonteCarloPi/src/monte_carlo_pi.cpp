@@ -22,10 +22,7 @@ int main(){
         float x = (float)(i % IMG_DIMENSIONS - radius) / radius;
         float y = (float)(i / IMG_DIMENSIONS - radius) / radius;
         // draw the circumference of the circle
-        std::cout << "x is " << x << " y is " << y << std::endl;
-
-
-        if ((x * x + y * y) <= IMG_DIMENSIONS / 2) {
+        if ((x * x + y * y) > 0.95 && (x * x + y * y) < 1.05) {
             image_plot[i].red = 255;
             image_plot[i].green = 255;
             image_plot[i].blue = 255;
