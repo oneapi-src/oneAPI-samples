@@ -53,7 +53,7 @@ int main(){
     rgb* image_plot = CreatePlot();
 
     // Perform Monte Carlo simulation to estimate pi
-    int count = 0;
+    /*int count = 0;
     for (int i = 0; i < SIZE_N; ++i){
         float rand_x = GetRandCoordinate();
         float rand_y = GetRandCoordinate();
@@ -69,7 +69,7 @@ int main(){
             image_plot[GetIndex(rand_x, rand_y)].green = 0;
             image_plot[GetIndex(rand_x, rand_y)].blue = 0;
         }
-    }
+    }*/
 
 
 
