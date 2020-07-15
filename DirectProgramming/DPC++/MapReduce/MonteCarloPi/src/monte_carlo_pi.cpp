@@ -9,8 +9,8 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../stb/stb_image_write.h"
 
-#define SIZE_N 1000 // number of simulated samples
-#define IMG_DIMENSIONS 512 //must be even
+#define SIZE_N 10000 // number of simulated samples
+#define IMG_DIMENSIONS 1024 //must be even
 #define CIRCLE_OUTLINE 0.025
 
 constexpr int radius = IMG_DIMENSIONS / 2;
