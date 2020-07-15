@@ -19,8 +19,8 @@ int main(){
     rgb* image_plot = (rgb*) calloc(IMG_DIMENSIONS * IMG_DIMENSIONS, sizeof(rgb));
     for (int i = 0; i < IMG_DIMENSIONS * IMG_DIMENSIONS; i++){
         // calculate unit coordinates relative to the center of the image
-        float x = (i % IMG_DIMENSIONS - radius) / radius;
-        float y = (i / IMG_DIMENSIONS - radius) / radius;
+        float x = (float)(i % IMG_DIMENSIONS - radius) / radius;
+        float y = (float)(i / IMG_DIMENSIONS - radius) / radius;
         // draw the circumference of the circle
         std::cout << "x is " << x << " y is " << y << std::endl;
 
