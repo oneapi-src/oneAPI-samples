@@ -14,12 +14,14 @@
 int main(){
     std::cout << "Hello World!" << std::endl;
 
-    // Create image
+    // Create image plot, and draw the circle
     rgb* image_plot = (rgb*) calloc(IMG_DIMENSIONS * IMG_DIMENSIONS, sizeof(rgb));
     for (int i = 0; i < IMG_DIMENSIONS * IMG_DIMENSIONS; i++){
+        // calculate coordinates relative to the center of the image
         int x = i % IMG_DIMENSIONS - (IMG_DIMENSIONS / 2);
         int y = i / IMG_DIMENSIONS - (IMG_DIMENSIONS / 2);
-        if ((x * x + y * y) <= IMG_DIMENSIONS / 2) {
+        // draw the circumference of the circle
+        if (((x * x + y * y) <= IMG_DIMENSIONS / 2 + 1) && ((x * x + y * y) >= IMG_DIMENSIONS / 2 - 1)) {
             image_plot[i].red = 255;
             image_plot[i].green = 255;
             image_plot[i].blue = 255;
