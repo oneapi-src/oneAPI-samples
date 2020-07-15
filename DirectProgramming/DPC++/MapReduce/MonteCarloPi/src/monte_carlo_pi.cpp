@@ -16,7 +16,7 @@ int main(){
 
     // Create image plot, and draw the circle
     constexpr int radius = IMG_DIMENSIONS / 2;
-    constexpr float precision = 10 / IMG_DIMENSIONS;
+    constexpr float precision = 20 / IMG_DIMENSIONS;
     rgb* image_plot = (rgb*) calloc(IMG_DIMENSIONS * IMG_DIMENSIONS, sizeof(rgb));
     for (int i = 0; i < IMG_DIMENSIONS * IMG_DIMENSIONS; i++){
         // calculate unit coordinates relative to the center of the image
