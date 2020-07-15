@@ -15,6 +15,8 @@ int main(){
     rgb* image_plot = (rgb*) malloc(IMG_DIMENSIONS * IMG_DIMENSIONS * sizeof(rgb));
     for (int i = 0; i < IMG_DIMENSIONS; i++){
         image_plot[i * 512 + 20].red = 255;
+        image_plot[i * 512 + 40].green = 255;
+        image_plot[i * 512 + 60].blue = 255;
     }
 
 

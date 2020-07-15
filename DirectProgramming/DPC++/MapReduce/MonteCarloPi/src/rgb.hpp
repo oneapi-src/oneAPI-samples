@@ -1,5 +1,5 @@
 typedef struct {
-  unsigned char blue;
-  unsigned char green;
   unsigned char red;
+  unsigned char green;
+  unsigned char blue;
 } rgb;
