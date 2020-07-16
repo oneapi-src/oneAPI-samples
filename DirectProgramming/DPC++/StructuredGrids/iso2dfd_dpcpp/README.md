@@ -66,7 +66,7 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 Perform the following steps:
 1. Build the program using the following `cmake` commands. 
 
-  ```    
+   ```    
     cd iso2dfd_dpcpp &&  
     mkdir build &&  
     cd build &&  
