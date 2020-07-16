@@ -95,6 +95,7 @@
       <EnableExpandedLineNumberInfo>true</EnableExpandedLineNumberInfo>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,6 +118,7 @@
       <EnableExpandedLineNumberInfo>true</EnableExpandedLineNumberInfo>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,6 +141,7 @@
       <EnableExpandedLineNumberInfo>true</EnableExpandedLineNumberInfo>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,6 +164,7 @@
       <EnableExpandedLineNumberInfo>true</EnableExpandedLineNumberInfo>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
