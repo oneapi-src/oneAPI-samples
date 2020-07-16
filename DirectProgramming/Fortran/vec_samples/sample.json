@@ -7,4 +7,16 @@
   "targetDevice": [ "CPU" ],
   "os": [ "darwin" ],
   "builder": [ "make" ]
+  "ciTests":{
+    "darwin": [
+      {
+        "id": "fort_vecsample_cpu"
+        "steps": [
+          "make",
+          "make run",
+          "make clean"
+        ]
+       }
+    ]
+  }
 }

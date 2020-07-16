@@ -7,4 +7,24 @@
   "targetDevice": [ "CPU" ],
   "os": [ "darwin" ],
   "builder": [ "make" ]
+  "ciTests":{
+    "darwin": [
+      {
+        "id": "fort_release_cpu"
+        "steps": [
+          "make release",
+          "make run",
+          "make clean"
+        ]
+       },
+       { 
+        "id": "fort_debug_cpu"
+        "steps": [
+          "make debug",
+          "make debug_run",
+          "make clean"
+        ]
+       }
+    ]
+  }
 }
