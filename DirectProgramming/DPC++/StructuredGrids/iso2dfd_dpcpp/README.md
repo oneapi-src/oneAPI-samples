@@ -86,7 +86,6 @@ Perform the following steps:
     make clean  
     ```
 
-
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 * Build the program using VS2017 or VS2019
       Right click on the solution file and open using either VS2017 or VS2019 IDE.
