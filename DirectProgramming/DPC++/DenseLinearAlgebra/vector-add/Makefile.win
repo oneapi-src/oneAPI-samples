@@ -1,16 +1,25 @@
 CXX = dpcpp-cl
 CXXFLAGS = -O2 -EHsc -Zi
 LDFLAGS = 
-EXE_NAME = vector-add-usm.exe
-SOURCES = src/vector-add-usm.cpp
+EXE_NAME = vector-add-buffers.exe
+SOURCES = src/vector-add-buffers.cpp
+
+USM_EXE_NAME = vector-add-usm.exe
+USM_SOURCES = src/vector-add-usm.cpp
 
 all: main
 
 main:
 	$(CXX) $(CXXFLAGS) -o $(EXE_NAME) $(SOURCES) $(LDFLAGS)
 
+build_usm:
+	$(CXX) $(CXXFLAGS) -o $(USM_EXE_NAME) $(USM_SOURCES) $(LDFLAGS)
+
 run: 
 	$(EXE_NAME)
 
+run_usm: 
+	$(USM_EXE_NAME)
+
 clean: 
-	del -rf $(EXE_NAME)
+	del /f $(EXE_NAME) $(USM_EXE_NAME)

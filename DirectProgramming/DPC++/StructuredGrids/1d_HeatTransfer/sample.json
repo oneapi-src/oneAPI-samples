@@ -1,0 +1,29 @@
+{
+  "guid": "CDF82E46-91D4-46F6-B1E2-5C21443F41BC",
+  "name": "1d_HeatTransfer",
+  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "description": "1D_HEAT_TRANSFER: Simulating 1D Heat Transfer problem Using Intel® oneAPI DPC++ Language",
+  "toolchain": [ "dpcpp" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "languages": [ { "cpp": {} } ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 ]
+        }],
+        "windows": [{
+                "steps": [
+                        "MSBuild 1d_HeatTransfer.sln /t:Rebuild /p:Configuration=\"Release\"",
+                        "cd x64/Release",
+                        "1d_HeatTransfer.exe 100 1000"
+                ]
+        }]
+  }
+}
