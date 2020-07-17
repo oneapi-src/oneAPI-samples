@@ -30,32 +30,23 @@ double GetRandCoordinate(){
 }
 
 // Creates an array representing the image data and inscribes a circle
-rgb* DrawPlot(rgb * plot){
+rgb* Drawimage_plot(rgb * image_plot){
     for (int i = 0; i < img_dimensions * img_dimensions; ++i){
         // calculate unit coordinates relative to the center of the image
         double x = (double)(i % img_dimensions - radius) / radius;
         double y = (double)(i / img_dimensions - radius) / radius;
         // draw the circumference of the circle
         if ((x * x + y * y) > 1 - circle_outline && (x * x + y * y) < 1) {
-            plot[i].red = 255;
-            plot[i].green = 255;
-            plot[i].blue = 255;
+            image_plot[i].red = 255;
+            image_plot[i].green = 255;
+            image_plot[i].blue = 255;
         }
     }
-    return plot;
+    return image_plot;
 }
 
-int main(){
-    // Initialize random seed
-    srand(time(NULL));
-
-    // Create image plot
-    rgb* image_plot = (rgb*) calloc(img_dimensions * img_dimensions, sizeof(rgb));
-
-    // Draw the inscribed circle for the plot
-    DrawPlot(image_plot);
-
-    // Perform Monte Carlo simulation to estimate pi
+// performs the Monte Carlo simulation procedure for calculating pi, with size_n number of samples.
+void MonteCarloPi(rgb * image_plot){
     int count = 0;
     for (int i = 0; i < size_n; ++i){
         double rand_x = GetRandCoordinate();
@@ -74,8 +65,23 @@ int main(){
         }
     }
 
-    std::cout << "The estimated value of pi is: " << 4.0 * (double) count / size_n << std::endl;
+    // Print calculated value of pi
+    int pi = 4.0 * (double) count / size_n;
+    std::cout << "Computation complete. The estimated value of pi is: " << pi << std::endl;
+}
 
+int main(){
+    // Initialize random seed
+    srand(time(NULL));
+
+    // Allocate memory for the output image
+    rgb* image_plot = (rgb*) calloc(img_dimensions * img_dimensions, sizeof(rgb));
+
+    // Draw the inscribed circle for the image plot
+    Drawimage_plot(image_plot);
+
+    // Perform Monte Carlo simulation to estimate pi
+    MonteCarloPi(image_plot);
 
     // Write image to file
     stbi_write_bmp("MonteCarloPi.bmp", img_dimensions, img_dimensions, 3, image_plot);
