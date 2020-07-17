@@ -19,23 +19,23 @@
 constexpr int radius = IMG_DIMENSIONS / 2;
 
 // Returns the pixel index corresponding to a set of simulation coordinates
-int GetIndex(float x, float y){
+int GetIndex(double x, double y){
     int img_x = x * radius + radius;
     int img_y = y * radius + radius;
     return img_y * IMG_DIMENSIONS + img_x;
 }
 
-// Returns a random float between -1 and 1
-float GetRandCoordinate(){
-    return (float)rand() / (RAND_MAX / 2.0) - 1.0;
+// Returns a random double between -1 and 1
+double GetRandCoordinate(){
+    return (double)rand() / (RAND_MAX / 2.0) - 1.0;
 }
 
 // Creates an array representing the image data and inscribes a circle
 rgb* CreatePlot(rgb * plot){
     for (int i = 0; i < IMG_DIMENSIONS * IMG_DIMENSIONS; ++i){
         // calculate unit coordinates relative to the center of the image
-        float x = (float)(i % IMG_DIMENSIONS - radius) / radius;
-        float y = (float)(i / IMG_DIMENSIONS - radius) / radius;
+        double x = (double)(i % IMG_DIMENSIONS - radius) / radius;
+        double y = (double)(i / IMG_DIMENSIONS - radius) / radius;
         // draw the circumference of the circle
         if ((x * x + y * y) > 1 - CIRCLE_OUTLINE && (x * x + y * y) < 1) {
             plot[i].red = 255;
@@ -57,9 +57,9 @@ int main(){
     // Perform Monte Carlo simulation to estimate pi
     int count = 0;
     for (int i = 0; i < SIZE_N; ++i){
-        float rand_x = GetRandCoordinate();
-        float rand_y = GetRandCoordinate();
-        float hypotenuse_sqr = (rand_x * rand_x + rand_y * rand_y);
+        double rand_x = GetRandCoordinate();
+        double rand_y = GetRandCoordinate();
+        double hypotenuse_sqr = (rand_x * rand_x + rand_y * rand_y);
         if (hypotenuse_sqr <= 1.0){
             ++count;
             image_plot[GetIndex(rand_x, rand_y)].red = 0;
@@ -73,7 +73,7 @@ int main(){
         }
     }
 
-    std::cout << "The estimated value of pi is: " << 4.0 * (float) count / SIZE_N << std::endl;
+    std::cout << "The estimated value of pi is: " << 4.0 * (double) count / SIZE_N << std::endl;
 
 
     // Write image to file
