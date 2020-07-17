@@ -30,7 +30,7 @@ double GetRandCoordinate(){
 }
 
 // Creates an array representing the image data and inscribes a circle
-rgb* Drawimage_plot(rgb * image_plot){
+rgb* DrawPlot(rgb * image_plot){
     for (int i = 0; i < img_dimensions * img_dimensions; ++i){
         // calculate unit coordinates relative to the center of the image
         double x = (double)(i % img_dimensions - radius) / radius;
@@ -78,7 +78,7 @@ int main(){
     rgb* image_plot = (rgb*) calloc(img_dimensions * img_dimensions, sizeof(rgb));
 
     // Draw the inscribed circle for the image plot
-    Drawimage_plot(image_plot);
+    DrawPlot(image_plot);
 
     // Perform Monte Carlo simulation to estimate pi (with timing)
     std::cout << "Calculating estimated value of pi..." << std::endl;
