@@ -66,7 +66,7 @@ void MonteCarloPi(rgb * image_plot){
     }
 
     // Print calculated value of pi
-    int pi = 4.0 * (double) count / size_n;
+    double pi = 4.0 * (double) count / size_n;
     std::cout << "Computation complete. The estimated value of pi is: " << pi << std::endl;
 }
 
