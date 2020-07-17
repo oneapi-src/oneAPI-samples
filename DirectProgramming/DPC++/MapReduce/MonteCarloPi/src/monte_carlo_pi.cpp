@@ -82,7 +82,7 @@ int main(){
 
     // Perform Monte Carlo simulation to estimate pi (with timing)
     std::cout << "Calculating estimated value of pi..." << std::endl;
-    TimeInterval t;
+    dpc_common::TimeInterval t;
     MonteCarloPi(image_plot);
     double proc_time = t.Elapsed();
     std::cout << "Computation complete. The processing time was " << proc_time << " seconds." << std::endl;
