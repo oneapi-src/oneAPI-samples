@@ -1,9 +1,4 @@
-# Fortran Vectorization Sample
-
-The Intel® Compiler has an auto-vectorizer that detects operations in the application 
-that can be done in parallel and converts sequential operations 
-to parallel operations by using the 
-Single Instruction Multiple Data (SIMD) instruction set.
+# `Fortran Vectorization` sample
 
 In this sample, you will use the auto-vectorizer to improve the performance 
 of the sample application. You will compare the performance of the 
@@ -11,16 +6,18 @@ serial version and the version that was compiled with the auto-vectorizer.
   
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | macOS* with Xcode installed 
+| OS                                | macOS* with Xcode* installed 
+| Hardware							   | Intel-based Mac*
 | Software                          | Intel&reg; oneAPI Intel Fortran Compiler (beta)
 | What you will learn               | Vectorization using Intel Fortran compiler
 | Time to complete                  | 15 minutes
 
 
-## License  
-This code sample is licensed under MIT license  
-
-### Introduction to Auto Vectorization
+## Purpose
+The Intel® Compiler has an auto-vectorizer that detects operations in the application 
+that can be done in parallel and converts sequential operations 
+to parallel operations by using the 
+Single Instruction Multiple Data (SIMD) instruction set.
 
 For the Intel® compiler, vectorization is the unrolling of a loop combined with the generation of packed SIMD instructions. Because the packed instructions operate on more than one data element at a time, the loop can execute more efficiently. It is sometimes referred to as auto-vectorization to emphasize that the compiler automatically identifies and optimizes suitable loops on its own.
 
@@ -39,7 +36,7 @@ Vectorization is enabled with the compiler at optimization levels of O2 (default
 
 4. improve performance using Interprocedural Optimization
 
-### Preparing the Sample Application
+## Key Implementation Details
 
 In this sample, you will use the following files:
 
@@ -48,7 +45,20 @@ In this sample, you will use the following files:
     matvec.f90
 
 
-### Establishing a Performance Baseline
+## License  
+This code sample is licensed under MIT license  
+
+
+## Building the `Fortran Vectorization` sample
+
+This sample contains 2 Fortran source files, in subdirectory 'src/' under the main sample root directory oneAPI-samples/DirectProgramming/Fortran/vec_samples
+
+1. matvec.f90 is a Fortran source file with a matrix-times-vector algorithm
+2. driver.f90 is a Fortran source file with the main program calling matvec
+
+## Running the `Fortran Vectorization` sample
+
+### Step1 Establishing a Performance Baseline
 
 To set a performance baseline for the improvements that follow in this sample, compile your sources from the src directory with these compiler options:
 
@@ -60,7 +70,7 @@ Execute 'MatVector'
 and record the execution time reported in the output. This is the baseline against which subsequent improvements will be measured.
 
 
-### Generating a Vectorization Report
+### Step 2 Generating a Vectorization Report
 
 A vectorization report shows what loops in your code were vectorized and explains why other loops were not vectorized. To generate a vectorization report, use the **qopt-report-phase=vec** compiler options together with **qopt-report=1** or **qopt-report=2**.
 
@@ -149,7 +159,7 @@ For more information on the **qopt-report** and **qopt-report-phase** compiler o
 [3]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/compiler-reference/compiler-options/alphabetical-list-of-compiler-options.html "Options"
 
 
-### Improving Performance by Aligning Data
+### Step 3 Improving Performance by Aligning Data
 
 The vectorizer can generate faster code when operating on aligned data. In this activity you will improve the vectorizer performance by aligning the arrays a, b, and c in **driver.f90** on a 16-byte boundary so the vectorizer can use aligned load instructions for all arrays rather than the slower unaligned load instructions and can avoid runtime tests of alignment. Using the ALIGNED macro will insert an alignment directive for a, b, and c in driver.f90 with the following syntax:
 
@@ -172,7 +182,7 @@ Recompile the program after adding the ALIGNED macro to ensure consistently alig
     ifort -real-size 64 -qopt-report=2 -qopt-report-phase=vec -D ALIGNED matvec.f90 driver.f90 -o MatVector
 
 
-### Improving Performance with Interprocedural Optimization
+### Step 4 Improving Performance with Interprocedural Optimization
 
 The compiler may be able to perform additional optimizations if it is able to optimize across source line boundaries. These may include, but are not limited to, function inlining. This is enabled with the **-ipo** option.
 

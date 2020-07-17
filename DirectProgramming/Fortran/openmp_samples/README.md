@@ -1,4 +1,4 @@
-# Fortran OpenMP sample
+# `Fortran OpenMP*` sample
 This sample is designed to illustrate how to use 
 the OpenMP* API with the Intel® Fortran Compiler.
 
@@ -6,6 +6,15 @@ This program finds all primes in the first 40,000,000 integers,
 the number of 4n+1 primes, and the number of 4n-1 primes in the same range. 
 It illustrates two OpenMP* directives to help speed up the code.
 
+  
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | macOS* with Xcode* installed 
+| Software                          | Intel&reg; oneAPI Intel Fortran Compiler (Beta)
+| What you will learn               | How to build and run a Fortran OpenMP application using Intel Fortran compiler
+| Time to complete                  | 10 minutes
+
+## Purpose
 
 This program finds all primes in the first 40,000,000 integers, the number of 4n+1 primes, 
 and the number of 4n-1 primes in the same range. It illustrates two OpenMP* directives 
@@ -31,19 +40,14 @@ This option can also be omitted, in which case the generated executable will be 
 
 The option -fpp enables the Fortran preprocessor.
 Read the Intel® Fortran Compiler Documentation for more information about these options.
-  
-| Optimized for                     | Description
-|:---                               |:---
-| OS                                | macOS* with Xcode* installed 
-| Software                          | Intel&reg; oneAPI Intel Fortran Compiler (Beta)
-| What you will learn               | How to build and run a Fortran OpenMP application using Intel Fortran compiler
-| Time to complete                  | 10 minutes
 
+## Key Implementation Details
+The Intel&reg; oneAPI Intel Fortran Compiler (Beta) includes all libraries and headers   necessary to compile and run OpenMP* enabled Fortran applications. Users simply use the -qopenmp compiler option to compile and link their OpenMP enabled applications. 
 
 ## License  
 This code sample is licensed under MIT license  
 
-## How to Build  
+## Building the `Fortran OpenMP*` sample  
 
 ### Experiment 1: Unoptimized build and run
 * Build openmp_samples

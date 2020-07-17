@@ -1,7 +1,6 @@
-# Fortran Optimization Sample
+# `Fortran Optimization` sample
  
-This sample is designed to illustrate specific 
-compiler optimizations, features, tools, and programming concepts.
+This sample is designed to illustrate compiler optimization features and programming concepts.
 
 This program computes the integral (area under the curve) of a user-supplied function 
 over an interval in a stepwise fashion. 
@@ -14,7 +13,16 @@ more closely approximating the true value.
 
 The source for this program also demonstrates recommended Fortran coding practices.
 
-## Compile the sample several times using different optimization options:
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | macOS* with Xcode* installed 
+| Software                          | Intel&reg; oneAPI Intel® Fortran Compiler (Beta)
+| What you will learn               | Optimization using the Intel® Fortran compiler
+| Time to complete                  | 15 minutes
+
+## Purpose
+
+The Intel® Fortran Compiler can optimize applications for performance.  The primary compiler option is -O followed by a numeric optimizaiton "level" from 0 requesting no optimization to 3, which requests all compiler optimizations for the application. The -O optimizaition levels are:
 
    * O0 - No optimizations
    * O1 - Enables optimizations for speed and disables some optimizations that increase code size and affect speed.
@@ -23,27 +31,21 @@ The source for this program also demonstrates recommended Fortran coding practic
 
 Read the [Intel® Fortran Compiler Developer Guide and Reference][1]
 [1]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html "Intel® Fortran Compiler Developer Guide and Reference" 
- for more information about these options.
+for more information about these options.
 
-Some of these automatic optimizations use features and options that can 
+Some of these compiler optimizations use features and options that can 
 restrict program execution to specific architectures.  
-
-| Optimized for                     | Description
-|:---                               |:---
-| OS                                | macOS* with Xcode* installed 
-| Software                          | Intel&reg; oneAPI Intel Fortran Compiler (Beta)
-| What you will learn               | Vectorization using Intel Fortran compiler
-| Time to complete                  | 15 minutes
 
 
 ## License  
 This code sample is licensed under MIT license  
 
-## How to Build  
+## Building the `Fortran Optimization` sample
+  
 Use the one of the following compiler options:
 
 
-## macOS* : -O0 -O1, -O2, -O3 
+### macOS* : -O0 -O1, -O2, -O3 
 
 ### STEP 1: Build and run with -O0
 cd optimize_samples 
@@ -152,7 +154,7 @@ This does vary by application but generally with Intel® Compilers
 O2 is has most optimizations.  Sometimes O3 can help, of course,
 but generally O2 is sufficient for most applications. 
 
-### Extra Exploration
+### Further Exploration
 The Intel® Fortran Compiler has many options for optimization. 
 If you have a genuine Intel® Architecture processor, try these additional options
 
