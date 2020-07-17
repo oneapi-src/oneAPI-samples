@@ -67,7 +67,7 @@ void MonteCarloPi(rgb * image_plot){
 
     // Print calculated value of pi
     double pi = 4.0 * (double) count / size_n;
-    std::cout << "Computation complete. The estimated value of pi is: " << pi << std::endl;
+    std::cout << "The estimated value of pi is: " << pi << std::endl;
 }
 
 int main(){
@@ -80,8 +80,12 @@ int main(){
     // Draw the inscribed circle for the image plot
     Drawimage_plot(image_plot);
 
-    // Perform Monte Carlo simulation to estimate pi
+    // Perform Monte Carlo simulation to estimate pi (with timing)
+    std::cout << "Calculating estimated value of pi..." << std::endl;
+    TimeInterval t;
     MonteCarloPi(image_plot);
+    double proc_time = t.Elapsed();
+    std::cout << "Computation complete. The processing time was " << proc_time << " seconds." << std::endl;
 
     // Write image to file
     stbi_write_bmp("MonteCarloPi.bmp", img_dimensions, img_dimensions, 3, image_plot);
