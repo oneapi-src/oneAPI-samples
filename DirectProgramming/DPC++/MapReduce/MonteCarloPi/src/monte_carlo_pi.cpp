@@ -1,7 +1,10 @@
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+
+#include "dpc_common.hpp"
 
 #include "rgb.hpp"
 #define STB_IMAGE_IMPLEMENTATION
@@ -28,8 +31,7 @@ float GetRandCoordinate(){
 }
 
 // Creates an array representing the image data and inscribes a circle
-rgb* CreatePlot(){
-    rgb* plot = (rgb*) calloc(IMG_DIMENSIONS * IMG_DIMENSIONS, sizeof(rgb));
+rgb* CreatePlot(rgb * plot){
     for (int i = 0; i < IMG_DIMENSIONS * IMG_DIMENSIONS; ++i){
         // calculate unit coordinates relative to the center of the image
         float x = (float)(i % IMG_DIMENSIONS - radius) / radius;
@@ -49,7 +51,8 @@ int main(){
     srand(time(NULL));
 
     // Create image plot, and draw the circle
-    rgb* image_plot = CreatePlot();
+    rgb* image_plot = (rgb*) calloc(IMG_DIMENSIONS * IMG_DIMENSIONS, sizeof(rgb));
+    CreatePlot(image_plot);
 
     // Perform Monte Carlo simulation to estimate pi
     int count = 0;
