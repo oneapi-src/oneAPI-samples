@@ -77,15 +77,24 @@ int main(){
     // Allocate memory for the output image
     rgb* image_plot = (rgb*) calloc(img_dimensions * img_dimensions, sizeof(rgb));
 
-    // Draw the inscribed circle for the image plot
-    DrawPlot(image_plot);
+    sycl::queue q(default_selector{}, exception_handler);
+    std::cout << "Running on " << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
-    // Perform Monte Carlo simulation to estimate pi (with timing)
-    std::cout << "Calculating estimated value of pi..." << std::endl;
-    dpc_common::TimeInterval t;
-    MonteCarloPi(image_plot);
-    double proc_time = t.Elapsed();
-    std::cout << "Computation complete. The processing time was " << proc_time << " seconds." << std::endl;
+    try{
+        // Draw the inscribed circle for the image plot
+        DrawPlot(image_plot);
+
+        // Perform Monte Carlo simulation to estimate pi (with timing)
+        std::cout << "Calculating estimated value of pi..." << std::endl;
+        dpc_common::TimeInterval t;
+        MonteCarloPi(image_plot);
+        double proc_time = t.Elapsed();
+        std::cout << "Computation complete. The processing time was " << proc_time << " seconds." << std::endl;
+        
+    } catch (sycl::exception e) {
+        cout << "SYCL exception caught: " << e.what() << "\n";
+        return 1;
+    }
 
     // Write image to file
     stbi_write_bmp("MonteCarloPi.bmp", img_dimensions, img_dimensions, 3, image_plot);
