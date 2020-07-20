@@ -14,7 +14,6 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\dpc_common.hpp" />
     <ClInclude Include="src\mandel.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +109,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLWarningLevel>Level3</SYCLWarningLevel>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
