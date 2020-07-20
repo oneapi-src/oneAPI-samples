@@ -6,11 +6,11 @@
   "languages": [ { "fortran": {} } ],
   "targetDevice": [ "CPU" ],
   "os": [ "darwin" ],
-  "builder": [ "make" ]
+  "builder": [ "make" ],
   "ciTests":{
     "darwin": [
       {
-        "id": "fort_release_cpu"
+        "id": "fort_release_cpu",
         "steps": [
           "make release",
           "make run",
@@ -18,7 +18,7 @@
         ]
        },
        { 
-        "id": "fort_debug_cpu"
+        "id": "fort_debug_cpu",
         "steps": [
           "make debug",
           "make debug_run",
