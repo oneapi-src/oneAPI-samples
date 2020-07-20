@@ -141,7 +141,7 @@ The output grid show the cells indicating the number of times that particles hav
     The number of iterations is : 10000
     The number of particles is : 20
 
-    Offload: Time: 138
+    Offload: Time: 137
 
 
     ********************** OUTPUT GRID:
