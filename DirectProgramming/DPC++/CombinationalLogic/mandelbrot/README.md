@@ -25,7 +25,7 @@ This code sample is licensed under MIT license.
 
 ## Building the `Mandelbrot` Program for CPU and GPU
 
-###Include Files
+### Include Files
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ### Running Samples In DevCloud
