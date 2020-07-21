@@ -22,7 +22,6 @@
 #include <CL/sycl.hpp>
 #include <array>
 #include <iostream>
-#include "dpc_common.hpp"
 #if FPGA || FPGA_EMULATOR
 #include <CL/sycl/intel/fpga_extensions.hpp>
 #endif
@@ -32,6 +31,21 @@ using namespace sycl;
 // Array type and data size for this example.
 constexpr size_t array_size = 10000;
 typedef std::array<int, array_size> IntArray;
+
+// this exception handler with catch async exceptions
+static auto exception_handler = [](cl::sycl::exception_list eList) {
+	for (std::exception_ptr const &e : eList) {
+		try {
+			std::rethrow_exception(e);
+		}
+		catch (std::exception const &e) {
+#if _DEBUG
+			std::cout << "Failure" << std::endl;
+#endif
+			std::terminate();
+		}
+	}
+};
 
 //************************************
 // Vector add in DPC++ on device: returns sum in 4th parameter "sum_parallel".
@@ -100,7 +114,7 @@ int main() {
   InitializeArray(b);
 
   try {
-    queue q(d_selector, dpc::exception_handler);
+    queue q(d_selector, exception_handler);
 
     // Print out the device information used for the kernel code.
     std::cout << "Running on device: "
