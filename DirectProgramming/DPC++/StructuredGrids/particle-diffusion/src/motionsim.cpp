@@ -30,7 +30,7 @@
 #include <iomanip>
 #include <iostream>
 #include <mkl_rng/distributions.hpp>
-#include <mkl_sycl.hpp>
+#include <mkl_rng_sycl.hpp>
 #include <mkl_sycl_types.hpp>
 #include <mkl_vml_sycl.hpp>
 #include "dpc_common.hpp"
