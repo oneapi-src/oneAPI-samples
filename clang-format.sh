@@ -13,7 +13,7 @@ FAIL=0
 SOURCE_FILES=`find . -type f \( -name '*.h' -name '*.hpp' -o -name '*.cpp' -o -name '*.c' \)`
 for i in $SOURCE_FILES
 do
-    $CLANG_FORMAT -style=llvm $i | grep -c "<replacement " > /dev/null
+    $CLANG_FORMAT -style=google $i | grep -c "<replacement " > /dev/null
     if [ $? -ne 1 ]
     then
         echo "$i failed clang-format check."
