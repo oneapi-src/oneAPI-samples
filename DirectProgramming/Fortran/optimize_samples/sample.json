@@ -6,11 +6,11 @@
   "languages": [ { "fortran": {} } ],
   "targetDevice": [ "CPU" ],
   "os": [ "darwin" ],
-  "builder": [ "make" ]
+  "builder": [ "make" ],
   "ciTests":{
     "darwin": [
       {
-        "id": "fort_optsample_cpu"
+        "id": "fort_optsample_cpu",
         "steps": [
           "make",
           "make run",
