@@ -1,2 +1,2 @@
-# oneAPI-samples
+oneAPI-samples
 This is the readme.

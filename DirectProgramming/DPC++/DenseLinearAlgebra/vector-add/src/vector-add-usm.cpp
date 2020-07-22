@@ -76,7 +76,7 @@ int main() {
 #endif
 
   try {
-    queue q(default_selector{}, dpc::exception_handler);
+    queue q(d_selector, dpc::exception_handler);
 
     // Print out the device information used for the kernel code.
     std::cout << "Running on device: "
