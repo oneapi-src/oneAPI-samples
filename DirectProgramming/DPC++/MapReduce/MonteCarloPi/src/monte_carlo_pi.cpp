@@ -77,7 +77,7 @@ int main(){
     // Allocate memory for the output image
     rgb* image_plot = (rgb*) calloc(img_dimensions * img_dimensions, sizeof(rgb));
 
-    sycl::queue q(default_selector{}, exception_handler);
+    sycl::queue q(sycl::default_selector{}, dpc_common::exception_handler);
     std::cout << "Running on " << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
     try{
@@ -92,7 +92,7 @@ int main(){
         std::cout << "Computation complete. The processing time was " << proc_time << " seconds." << std::endl;
         
     } catch (sycl::exception e) {
-        cout << "SYCL exception caught: " << e.what() << "\n";
+        std::cout << "SYCL exception caught: " << e.what() << "\n";
         return 1;
     }
 
