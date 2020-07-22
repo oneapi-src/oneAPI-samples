@@ -22,4 +22,4 @@ run_usm:
 	$(USM_EXE_NAME)
 
 clean: 
-	del /f $(EXE_NAME) $(USM_EXE_NAME)
+	del /F /Q *.ilk *.pdb $(EXE_NAME) $(USM_EXE_NAME)
