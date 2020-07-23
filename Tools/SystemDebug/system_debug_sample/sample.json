@@ -3,6 +3,7 @@
   "name": "Intel System Debugger Tutorial (Overview)",
   "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/System Debugger"],
   "description": "Demonstrate basic functionality of the Intel System Debugger.",
+  "os": ["linux", "windows"],
   "languages": [{"python":{},"cpp":{}}],
   "ciTests": {
     "linux": [
