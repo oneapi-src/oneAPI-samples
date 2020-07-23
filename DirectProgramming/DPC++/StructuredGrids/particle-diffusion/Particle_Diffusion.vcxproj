@@ -99,7 +99,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\mkl\latest\include;$(ONEAPI_ROOT)\mkl\latest\include\rng; %(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include;$(ONEAPI_ROOT)\mkl\latest\include;$(ONEAPI_ROOT)\mkl\latest\include\rng; %(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,7 +138,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\mkl\latest\include;$(ONEAPI_ROOT)\mkl\latest\include\rng; %(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include;$(ONEAPI_ROOT)\mkl\latest\include;$(ONEAPI_ROOT)\mkl\latest\include\rng; %(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
