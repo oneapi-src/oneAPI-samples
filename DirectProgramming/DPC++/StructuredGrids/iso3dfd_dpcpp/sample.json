@@ -1,0 +1,30 @@
+{
+  "guid": "3A7DA713-6083-4CA3-B66E-A3DF21744EB4",
+  "name": "iso3dfd_dpcpp",
+  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "description": "A finite difference stencil kernel for solving 3D acoustic isotropic wave equation",
+  "toolchain": [ "dpcpp" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "languages": [ { "cpp": {} } ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+	"linux": [{
+            "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 ]
+        }],
+        "windows": [{
+                "steps": [
+                        "MSBuild iso3dfd_dpcpp.sln /t:Rebuild /p:Configuration=\"Release\"",
+                        "cd x64/Release",
+                        "iso3dfd_dpcpp.exe 256 256 256 32 8 64 10 gpu"
+                ]
+        }]
+
+  }
+}

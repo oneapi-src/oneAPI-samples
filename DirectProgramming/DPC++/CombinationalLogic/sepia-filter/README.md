@@ -21,7 +21,7 @@ The basic DPC++ implementation explained in the code includes device selector, b
 ## License  
 This code sample is licensed under MIT license 
 
-## Building the Program
+## Building the Program for CPU and GPU
 
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -34,7 +34,7 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 Perform the following steps:
 
 
-1.  Build sepia-filter program
+1.  Build the program using the following <code> cmake </code> commands.
 ```
     $ cd sepia-filter  
     $ mkdir build  
@@ -52,7 +52,7 @@ Perform the following steps:
 ### On a Windows* System Using Visual Studio* version 2017 or Newer
 
 * Build the program using VS2017 or VS2019: Right click on the solution file and open using either VS2017 or VS2019 IDE. Right click on the project in Solution explorer and select Rebuild. From top menu select Debug -> Start without Debugging.
-* Build the program using MSBuild: Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019". Run - MSBuild mandelbrot.sln /t:Rebuild /p:Configuration="Release"
+* Build the program using MSBuild: Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019". Run - MSBuild sepia-filter.sln /t:Rebuild /p:Configuration="Release"
 
 
 ## Running the sample

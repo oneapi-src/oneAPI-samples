@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iso3dfd_dpcpp", "iso3dfd_dpcpp.vcxproj", "{07DA0A96-CA76-4446-9586-99A145B9A9C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07DA0A96-CA76-4446-9586-99A145B9A9C8}.Debug|x64.ActiveCfg = Debug|x64
+		{07DA0A96-CA76-4446-9586-99A145B9A9C8}.Debug|x64.Build.0 = Debug|x64
+		{07DA0A96-CA76-4446-9586-99A145B9A9C8}.Release|x64.ActiveCfg = Release|x64
+		{07DA0A96-CA76-4446-9586-99A145B9A9C8}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3F515120-AC09-42A9-97D3-A26B1251EC9D}
+	EndGlobalSection
+EndGlobal
