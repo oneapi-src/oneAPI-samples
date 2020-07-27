@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Intel Release|Win32'">
+    <LocalDebuggerCommandArguments>..\res\willyriver.bmp ..\res\willyriver_processed.bmp</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Intel Performance Test|Win32'">
+    <LocalDebuggerCommandArguments>..\res\willyriver.bmp ..\res\willyriver_processed.bmp</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Intel Release|x64'">
+    <LocalDebuggerCommandArguments>..\res\willyriver.bmp ..\res\willyriver_processed.bmp</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Intel Performance Test|x64'">
+    <LocalDebuggerCommandArguments>..\res\willyriver.bmp ..\res\willyriver_processed.bmp</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+</Project>
