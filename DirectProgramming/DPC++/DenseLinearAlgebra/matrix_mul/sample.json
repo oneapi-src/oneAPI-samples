@@ -1,0 +1,41 @@
+{
+  "guid": "E6115777-E2CE-4839-8900-24DC3D1AD572",
+  "name": "Matrix Multiplication",
+  "categories": [ "Toolkit/Get Started", "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "toolchain": [ "dpcpp", "icc" ],
+  "dependencies": [ "compiler|icc" ],
+  "description": "Simple program that multiplies two large matrices in parallel using DPC++ and OpenMP.",
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "matrix_mul_dpcpp",
+        "steps": [
+          "make clean",
+          "make all",
+          "make run"
+        ]
+      },
+      {
+        "id": "matrix_mul_omp",
+        "steps": [
+          "make clean",
+          "make build_omp",
+          "make run_omp"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "matrix_mul_dpcpp",
+        "steps": [
+          "nmake -f Makefile.win build_dpcpp",
+          "nmake -f Makefile.win run_dpcpp"
+        ]
+      }
+    ]
+  }
+}
