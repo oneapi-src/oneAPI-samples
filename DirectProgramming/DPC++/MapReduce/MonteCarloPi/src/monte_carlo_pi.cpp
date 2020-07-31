@@ -81,8 +81,16 @@ int main(){
     std::cout << "Running on " << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
     try{
+
+        //create memory for reduction stage
+        float reduction_arr[size_n];
+
         // Draw the inscribed circle for the image plot
         DrawPlot(image_plot);
+
+        //create buffers
+        buffer<rgb, 1> img_buf((rgb*)image_plot, range<1>(img_dimensions * img_dimensions));
+        buffer<float, 1> reduction_buf((float*)reduction_arr, range<1>(size_n));
 
         // Perform Monte Carlo simulation to estimate pi (with timing)
         std::cout << "Calculating estimated value of pi..." << std::endl;
