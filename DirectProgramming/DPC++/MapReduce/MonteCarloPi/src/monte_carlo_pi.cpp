@@ -85,7 +85,7 @@ void MonteCarloPi(rgb * image_plot){
         double pi = 4.0 * (double) count / size_n;
         std::cout << "The estimated value of pi is: " << pi << std::endl;
     } catch (sycl::exception e) {
-        cout << "SYCL exception caught: " << e.what() << "\n";
+        std::cout << "SYCL exception caught: " << e.what() << std::endl;
         exit(1);
     }
 }
