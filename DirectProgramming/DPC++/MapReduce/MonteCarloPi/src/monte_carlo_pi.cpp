@@ -20,14 +20,14 @@ constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
 
 // Returns the pixel index corresponding to a set of simulation coordinates
-int GetIndex(double x, double y){
+SYCL_EXTERNAL int GetIndex(double x, double y){
     int img_x = x * radius + radius;
     int img_y = y * radius + radius;
     return img_y * img_dimensions + img_x;
 }
 
 // Returns a random double between -1 and 1
-double GetRandCoordinate(){
+SYCL_EXTERNAL double GetRandCoordinate(){
     return (double)rand() / (RAND_MAX / 2.0) - 1.0;
 }
 
@@ -61,6 +61,16 @@ void MonteCarloPi(rgb * image_plot){
         // Set up buffers
         buffer<rgb, 1> imgplot_buf((rgb*)image_plot, range<1>(img_dimensions * img_dimensions));
         buffer<float, 1> reduce_buf((float*)reduction_arr, range<1>(size_n));
+
+        // Set up sycl kernel
+        q.submit([&](handler& h)) {
+            auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
+            auto reduce_acc = reduce_buf.get_access<access::mode::read_write>(h);
+
+            h.parallel_for(range<1>(size_n), [=](id<1> idx){
+                imgplot_acc[idx].blue = 255;
+            })
+        }
 
         //Monte Carlo sim procedure
         int count = 0;
