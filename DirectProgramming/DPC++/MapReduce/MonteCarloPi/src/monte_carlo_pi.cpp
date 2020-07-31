@@ -12,6 +12,8 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../stb/stb_image_write.h"
 
+using namespace sycl;
+
 constexpr int size_n = 10000;
 constexpr int img_dimensions = 1024;
 constexpr int radius = img_dimensions / 2;
