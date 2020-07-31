@@ -28,7 +28,7 @@ SYCL_EXTERNAL int GetIndex(double x, double y){
 
 // Returns a random double between -1 and 1
 SYCL_EXTERNAL double GetRandCoordinate(){
-    return (double)rand() / (RAND_MAX / 2.0) - 1.0;
+    return (double)sycl::rand() / (sycl::RAND_MAX / 2.0) - 1.0;
 }
 
 // Creates an array representing the image data and inscribes a circle
