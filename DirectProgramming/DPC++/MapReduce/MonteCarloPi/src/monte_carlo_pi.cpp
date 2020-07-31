@@ -81,7 +81,6 @@ int main(){
     std::cout << "Running on " << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
     try{
-
         //create memory for reduction stage
         float reduction_arr[size_n];
 
