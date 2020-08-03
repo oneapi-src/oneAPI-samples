@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include "dpc_common.hpp"
+#include "mkl_rng_sycl.hpp"
 
 #include "rgb.hpp"
 #define STB_IMAGE_IMPLEMENTATION
@@ -28,7 +29,7 @@ SYCL_EXTERNAL int GetIndex(double x, double y){
 
 // Returns a random double between -1 and 1
 SYCL_EXTERNAL double GetRandCoordinate(){
-    return (double)sycl::rand() / (sycl::RAND_MAX / 2.0) - 1.0;
+    return (double)rand() / (RAND_MAX / 2.0) - 1.0;
 }
 
 // Creates an array representing the image data and inscribes a circle
@@ -56,11 +57,11 @@ void MonteCarloPi(rgb * image_plot){
     
     try{
         // Array for reduction stage
-        float reduction_arr[size_n];
+        double reduction_arr[size_n];
 
         // Set up buffers
         buffer<rgb, 1> imgplot_buf((rgb*)image_plot, range<1>(img_dimensions * img_dimensions));
-        buffer<float, 1> reduce_buf((float*)reduction_arr, range<1>(size_n));
+        buffer<double, 1> reduce_buf((double*)reduction_arr, range<1>(size_n));
 
         // Set up sycl kernel
         q.submit([&](handler& h)) {
