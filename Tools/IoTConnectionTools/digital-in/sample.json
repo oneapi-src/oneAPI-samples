@@ -1,0 +1,22 @@
+{
+  "guid": "8BBEBD41-DD09-4EFE-9156-694DC5D2DE6A",
+  "name": "Digital Input",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
+  "description": "Demonstrate how to read a digital value from an input pin using the Eclipse* MRAA library.",
+  "dependencies": ["pkg|mraa|https://mraa.io"],
+  "languages": [{"cpp":{}}],
+  "os": ["linux"],
+  "ciTests": {
+    "linux": [
+        { "id": "digital-in",
+          "env": [],
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake ..",
+            "make"
+            ]
+        }
+    ]
+  }
+}
