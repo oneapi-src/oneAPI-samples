@@ -4,5 +4,18 @@
   "description": "This project shows how-to develop a device code using Watson IoT Platform iot-c device client library, connect and interact with Watson IoT Platform Service.",
   "dependencies": ["iot-c|https://github.com/ibm-watson-iot/iot-c"],
   "languages": [{"cpp":{}}],
-  "os": ["linux"]
+  "os": ["linux"],
+  "ciTests": {
+    "linux": [
+        { "id": "ibm-device",
+          "env": [],
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake ..",
+            "make"
+            ]
+        }
+    ]
+  }
 }
