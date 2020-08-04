@@ -7,6 +7,8 @@
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 16.04, Linux* Ubuntu* 18.04
 | Software                          | C++ 11 or higher, CMake 3.1+, Clang 3.9+ or GCC 4.4+, AWS IoT Device SDK C++ v2
+| What you will learn               | Use the Message Broker for AWS IoT to send and receive messages through an MQTT connection
+
 
 This version of the sample has been tested on Ubuntu Linux. This sample requires additional system configuration when using Ubuntu OS. Instructions on how to install the custom provided all dependency libraries for Linux can be [found here]().
 
@@ -15,6 +17,9 @@ This version of the sample has been tested on Ubuntu Linux. This sample requires
 
 ## Key Implementation Details
 This sample uses the Message Broker for AWS IoT to send and receive messages through an MQTT connection.
+
+##License
+This sample is licensed under Apache License v2.0
 
 ## Building the `AWS Pub Sub` 
 
@@ -59,3 +64,6 @@ use_websocket: if specified, uses a websocket over https (optional)
 signing_region: used for websocket signer it should only be specific if websockets are used. (required for websockets)
 proxy_host: if you want to use a proxy with websockets, specify the host here (optional).
 proxy_port: defaults to 8080 is proxy_host is set. Set this to any value you'd like (optional).
+
+### Example of Output
+TBD
