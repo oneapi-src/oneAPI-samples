@@ -1,4 +1,4 @@
-# `Fortran OpenMP*` sample
+# `OpenMP Primes`
 This sample is designed to illustrate how to use 
 the OpenMP* API with the Intel® Fortran Compiler.
 

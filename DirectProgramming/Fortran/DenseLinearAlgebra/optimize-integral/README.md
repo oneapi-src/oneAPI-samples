@@ -1,4 +1,4 @@
-# `Fortran Optimization` sample
+# `Optimization Integral`
  
 This sample is designed to illustrate compiler optimization features and programming concepts.
 

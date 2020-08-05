@@ -1,4 +1,4 @@
-# `Fortran Vectorization` sample
+# `Vectorize VecMatMult`
 
 In this sample, you will use the auto-vectorizer to improve the performance 
 of the sample application. You will compare the performance of the 
