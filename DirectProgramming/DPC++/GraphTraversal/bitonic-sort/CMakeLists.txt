@@ -22,9 +22,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fsycl -std=c++17")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lOpenCL -lsycl")
 
 add_executable (bitonic-sort src/bitonic-sort.cpp)
+add_executable (bitonic-sort-buffer src/bitonic-sort-buffer.cpp)
 
 add_custom_target (run
         COMMAND bitonic-sort 21 47
+        COMMAND bitonic-sort-buffer 21 47
         WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
 )
 
