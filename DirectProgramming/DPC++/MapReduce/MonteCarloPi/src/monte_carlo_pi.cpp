@@ -27,7 +27,7 @@ SYCL_EXTERNAL int GetIndex(double x, double y){
     return img_y * img_dimensions + img_x;
 }
 
-// Returns a random double between -1 and 1
+// Returns a random double between -1.0 and 1.0
 SYCL_EXTERNAL double GetRandCoordinate(){
     return (double)rand() / (RAND_MAX / 2.0) - 1.0;
 }
