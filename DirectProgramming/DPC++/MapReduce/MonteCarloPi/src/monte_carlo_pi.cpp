@@ -5,9 +5,11 @@
 #include <time.h>
 
 #include "dpc_common.hpp"
-#include "mkl_rng_sycl.hpp"
+#include "mkl_sycl.hpp"
+#include "mkl.h"
 
 #include "rgb.hpp"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
