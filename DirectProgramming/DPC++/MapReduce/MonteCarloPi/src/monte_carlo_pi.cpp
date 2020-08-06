@@ -67,7 +67,7 @@ void MonteCarloPi(rgb * image_plot){
 
         // Set up buffers
         buffer<rgb, 1> imgplot_buf((rgb*)image_plot, range<1>(img_dimensions * img_dimensions));
-        buffer<double, 2> coordinate_buf((double*)coordinate_arr, range<2>(size_n, 2));
+        buffer<double, 1> coordinate_buf((double*)coordinate_arr, range<1>(size_n * 2));
         buffer<int, 1> reduce_buf((int*)reduction_arr, range<1>(size_n));
 
         // Generate random number array
