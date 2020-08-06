@@ -64,14 +64,14 @@ void MonteCarloPi(rgb * image_plot){
         buffer<double, 1> reduce_buf((double*)reduction_arr, range<1>(size_n));
 
         // Set up sycl kernel
-        q.submit([&](handler& h)) {
+        q.submit([&](handler& h){
             auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
             auto reduce_acc = reduce_buf.get_access<access::mode::read_write>(h);
 
             h.parallel_for(range<1>(size_n), [=](id<1> idx){
                 imgplot_acc[idx].blue = 255;
-            })
-        }
+            });
+        });
 
         //Monte Carlo sim procedure
         int count = 0;
