@@ -21,14 +21,14 @@ constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
 
 // Returns the pixel index corresponding to a set of simulation coordinates
-SYCL_EXTERNAL int GetIndex(double x, double y){
+int GetIndex(double x, double y){
     int img_x = x * radius + radius;
     int img_y = y * radius + radius;
     return img_y * img_dimensions + img_x;
 }
 
 // Returns a random double between -1.0 and 1.0
-SYCL_EXTERNAL double GetRandCoordinate(){
+double GetRandCoordinate(){
     return (double)rand() / (RAND_MAX / 2.0) - 1.0;
 }
 
@@ -50,22 +50,33 @@ rgb* DrawPlot(rgb * image_plot){
 
 // performs the Monte Carlo simulation procedure for calculating pi, with size_n number of samples.
 void MonteCarloPi(rgb * image_plot){
+    double coordinate_arr[size_n * 2]; // this array will hold the random coordinates for each simulated point
+    int reduction_arr[size_n]; // this array will be used in the reduction stage to sum all the simulated points which fall within the circle
+
+
     // Set up sycl queue
     queue q(default_selector{}, dpc_common::exception_handler);
     std::cout << "Running on "
             << q.get_device().get_info<sycl::info::device::name>() << std::endl;
     
     try{
-        // Array for reduction stage
-        double reduction_arr[size_n];
+        // Set up RNG
+        mkl::rng::philox4x32x10 engine(q, SEED);
+        mkl::rng::uniform<double, mkl::rng::uniform_method::by_default> distribution(-1.0, 1.0);
 
         // Set up buffers
         buffer<rgb, 1> imgplot_buf((rgb*)image_plot, range<1>(img_dimensions * img_dimensions));
-        buffer<double, 1> reduce_buf((double*)reduction_arr, range<1>(size_n));
+        buffer<double, 2> coordinate_buf((double*)coordinate_arr, range<1>(size_n, 2));
+        buffer<int, 1> reduce_buf((int*)reduction_arr, range<1>(size_n));
+
+        // Generate random number array
+        mkl::rng::generate(distribution, engine, size_n * 2, coordinate_buf);
+        q.wait_and_throw();
 
         // Set up sycl kernel
         q.submit([&](handler& h){
             auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
+            auto coordinate_acc = coordinate_buf.get_access<access::mode::read>(h);
             auto reduce_acc = reduce_buf.get_access<access::mode::read_write>(h);
 
             h.parallel_for(range<1>(size_n), [=](id<1> idx){
@@ -74,7 +85,7 @@ void MonteCarloPi(rgb * image_plot){
         });
 
         //Monte Carlo sim procedure
-        int count = 0;
+        /*int count = 0;
         for (int i = 0; i < size_n; ++i){
             double rand_x = GetRandCoordinate();
             double rand_y = GetRandCoordinate();
@@ -94,10 +105,13 @@ void MonteCarloPi(rgb * image_plot){
 
         // Print calculated value of pi
         double pi = 4.0 * (double) count / size_n;
-        std::cout << "The estimated value of pi is: " << pi << std::endl;
+        std::cout << "The estimated value of pi is: " << pi << std::endl;*/
     } catch (sycl::exception e) {
         std::cout << "SYCL exception caught: " << e.what() << std::endl;
         exit(1);
+    }
+    for (int i = 0; i < size_n; i++){
+        std::cout << "RANDO COORD: " << coordinate_arr[i] << ", " << coordinate_arr[i + size_n] << std::endl;
     }
 }
 
