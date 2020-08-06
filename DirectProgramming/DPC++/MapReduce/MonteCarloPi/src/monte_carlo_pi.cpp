@@ -19,6 +19,7 @@ constexpr int size_n = 100000;
 constexpr int img_dimensions = 1024;
 constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
+constexpr int seed = 777;
 
 // Returns the pixel index corresponding to a set of simulation coordinates
 int GetIndex(double x, double y){
@@ -61,12 +62,12 @@ void MonteCarloPi(rgb * image_plot){
     
     try{
         // Set up RNG
-        mkl::rng::philox4x32x10 engine(q, SEED);
+        mkl::rng::philox4x32x10 engine(q, seed);
         mkl::rng::uniform<double, mkl::rng::uniform_method::by_default> distribution(-1.0, 1.0);
 
         // Set up buffers
         buffer<rgb, 1> imgplot_buf((rgb*)image_plot, range<1>(img_dimensions * img_dimensions));
-        buffer<double, 2> coordinate_buf((double*)coordinate_arr, range<1>(size_n, 2));
+        buffer<double, 2> coordinate_buf((double*)coordinate_arr, range<2>(size_n, 2));
         buffer<int, 1> reduce_buf((int*)reduction_arr, range<1>(size_n));
 
         // Generate random number array
