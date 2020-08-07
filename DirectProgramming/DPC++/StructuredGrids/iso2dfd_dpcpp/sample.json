@@ -1,0 +1,30 @@
+{
+  "guid": "9483C0F0-7D63-4E99-86C5-37C40F77B2AE" ,
+  "name": "iso2dfd_dpcpp",
+  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "description": "ISO2DFD: Intel® oneAPI DPC++ Language Basics Using 2D Finite-Difference-Wave Propagation",
+  "toolchain": [ "dpcpp" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "languages": [ { "cpp": {} } ],
+  "os": [ "linux", "windows"],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 ]
+        }],
+        "windows": [{
+                "steps": [
+                        "MSBuild iso2dfd.sln /t:Rebuild /p:Configuration=\"Release\"",
+                        "cd x64/Release",
+                        "iso2dfd.exe 1000 1000 2000"
+                ]
+        }]
+
+  }
+}

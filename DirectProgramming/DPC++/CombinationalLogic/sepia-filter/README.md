@@ -21,7 +21,7 @@ The basic DPC++ implementation explained in the code includes device selector, b
 ## License  
 This code sample is licensed under MIT license 
 
-## Building the Program
+## Building the Program for CPU and GPU
 
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -34,7 +34,7 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 Perform the following steps:
 
 
-1.  Build sepia-filter program
+1.  Build the program using the following <code> cmake </code> commands.
 ```
     $ cd sepia-filter  
     $ mkdir build  

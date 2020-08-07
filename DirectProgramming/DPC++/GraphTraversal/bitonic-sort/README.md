@@ -58,6 +58,9 @@ This code sample is licensed under MIT license
 
 ## Building the `bitonic-sort` Program for CPU and GPU
 
+### Include Files
+The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
+
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU,
 FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI
