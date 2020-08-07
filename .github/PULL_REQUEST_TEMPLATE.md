@@ -30,8 +30,9 @@ Links and Details can be found in the samples WG Teams Files. Please mark as 'X'
 - [ ] Run jsonlint on sample.json to verify json syntax. www.jsonlint.com
 - [ ] Adhere to readme template 
 - [ ] Ensure/create CI test configurations for sample (ciTests field) https://github.com/oneapi-src/oneAPI-samples/wiki/sample-json-ci-test-object
-- [ ] Review DPC++ code with Paul Petersen.
-- [ ] Review readme with Tom Lenth.
+- [ ] Enforce format via clang-format config file
+- [ ] Review DPC++ code with Paul Petersen. (GitHub User: pmpeter1)
+- [ ] Review readme with Tom Lenth or Joe Oster. (GitHub User: JoeOster)
 - [ ] Test in new hardware (e.g. DG1) using Dev Cloud 
 - [ ] Implement fixes for ONSAM Jiras
 - [ ] If you have new dependencies/binaries, inform Samples PM of updates. 
