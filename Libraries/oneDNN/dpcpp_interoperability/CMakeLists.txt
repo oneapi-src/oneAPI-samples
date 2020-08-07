@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8.11)
+set(CMAKE_C_COMPILER "clang")
+set(CMAKE_CXX_COMPILER "dpcpp")
+project (oneDNN_SYCL_InterOp)
+file(COPY $ENV{DNNLROOT}/examples/sycl_interop.cpp DESTINATION src)
+file(COPY $ENV{DNNLROOT}/examples/CMakeLists.txt DESTINATION src)
+add_subdirectory (${PROJECT_BINARY_DIR}/src out)
