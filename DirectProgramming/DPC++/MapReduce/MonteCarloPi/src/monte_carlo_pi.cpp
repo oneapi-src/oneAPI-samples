@@ -5,10 +5,8 @@
 #include <time.h>
 
 #include "dpc_common.hpp"
-#include "mkl_sycl.hpp"
-#include "mkl.h"
 
-#include "rgb.hpp"
+#include "monte_carlo_pi.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb/stb_image.h"
@@ -17,7 +15,7 @@
 
 using namespace sycl;
 
-constexpr int size_n = 100000;
+constexpr int size_n = 10;
 constexpr int img_dimensions = 1024;
 constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
@@ -53,7 +51,7 @@ rgb* DrawPlot(rgb * image_plot){
 
 // performs the Monte Carlo simulation procedure for calculating pi, with size_n number of samples.
 void MonteCarloPi(rgb * image_plot){
-    double coordinate_arr[size_n * 2]; // this array will hold the random coordinates for each simulated point
+    coordinate coords[size_n]; // array for storing the RNG coordinates
     int reduction_arr[size_n]; // this array will be used in the reduction stage to sum all the simulated points which fall within the circle
 
 
@@ -63,35 +61,27 @@ void MonteCarloPi(rgb * image_plot){
             << q.get_device().get_info<sycl::info::device::name>() << std::endl;
     
     try{
-        // Set up RNG
-        mkl::rng::philox4x32x10 engine(q, seed);
-        mkl::rng::uniform<double, mkl::rng::uniform_method::by_default> distribution(-1.0, 1.0);
-
         // Set up buffers
         buffer<rgb, 1> imgplot_buf((rgb*)image_plot, range<1>(img_dimensions * img_dimensions));
-        buffer<double, 1> coordinate_buf((double*)coordinate_arr, range<1>(size_n * 2));
-        buffer<int, 1> reduce_buf((int*)reduction_arr, range<1>(size_n));
 
-        // Generate random number array
-        mkl::rng::generate(distribution, engine, size_n * 2, coordinate_buf);
-        q.wait_and_throw();
+        // Generate Random Coordinates
+        for (int i = 0; i < size_n; ++i){
+            coords[i].x = GetRandCoordinate();
+            coords[i].y = GetRandCoordinate();
+        }
 
         // Set up sycl kernel
         q.submit([&](handler& h){
             auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
-            auto coordinate_acc = coordinate_buf.get_access<access::mode::read>(h);
-            auto reduce_acc = reduce_buf.get_access<access::mode::read_write>(h);
 
             h.parallel_for(range<1>(size_n), [=](id<1> idx){
-                imgplot_acc[idx].blue = 255;
+                imgplot_acc[idx].blue = 127;
             });
         });
 
         //Monte Carlo sim procedure
         /*int count = 0;
         for (int i = 0; i < size_n; ++i){
-            double rand_x = GetRandCoordinate();
-            double rand_y = GetRandCoordinate();
             double hypotenuse_sqr = (rand_x * rand_x + rand_y * rand_y);
             if (hypotenuse_sqr <= 1.0){
                 ++count;
@@ -109,12 +99,13 @@ void MonteCarloPi(rgb * image_plot){
         // Print calculated value of pi
         double pi = 4.0 * (double) count / size_n;
         std::cout << "The estimated value of pi is: " << pi << std::endl;*/
+
     } catch (sycl::exception e) {
         std::cout << "SYCL exception caught: " << e.what() << std::endl;
         exit(1);
     }
     for (int i = 0; i < size_n; i++){
-        std::cout << "RANDO COORD: " << coordinate_arr[i] << ", " << coordinate_arr[i + size_n] << std::endl;
+        std::cout << "RANDO COORD: " << coords[i].x << ", " << coords[i].y << std::endl;
     }
 }
 
