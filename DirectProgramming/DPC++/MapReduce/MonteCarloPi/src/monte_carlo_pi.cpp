@@ -22,7 +22,7 @@ constexpr double circle_outline = 0.025;
 constexpr int seed = 777;
 
 // Returns the pixel index corresponding to a set of simulation coordinates
-int GetIndex(double x, double y){
+SYCL_EXTERNAL int GetIndex(double x, double y){
     int img_x = x * radius + radius;
     int img_y = y * radius + radius;
     return img_y * img_dimensions + img_x;
@@ -69,47 +69,43 @@ void MonteCarloPi(rgb * image_plot){
         // Set up buffers
         buffer<rgb, 1> imgplot_buf((rgb*)image_plot, range<1>(img_dimensions * img_dimensions));
         buffer<coordinate, 1> coords_buf((coordinate*)coords, range<1>(size_n));
+        buffer<int, 1> reduction_buf((int*)reduction_arr, range<1>(size_n));
 
         // Set up sycl kernel
         q.submit([&](handler& h){
             auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
             auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
+            auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
 
             h.parallel_for(range<1>(size_n), [=](id<1> idx){
-                double val = coords_acc[idx].x;
-                if (val < 0.15) val = 0.15;
-                imgplot_acc[idx].blue = 127 * val;
+                double x = coords_acc[idx].x;
+                double y = coords_acc[idx].y;
+                double hypotenuse_sqr = (x ** 2 + y ** 2);
+                if (hypotenuse_sqr <= 1.0){
+                    reduction_acc[idx] = 1;
+                    imgplot_acc[GetIndex(x, y)].red = 0;
+                    imgplot_acc[GetIndex(x, y)].green = 255;
+                    imgplot_acc[GetIndex(x, y)].blue = 0;
+                }
+                else{
+                    reduction_acc[idx] = 0;
+                    imgplot_acc[GetIndex(x, y)].red = 255;
+                    imgplot_acc[GetIndex(x, y)].green = 0;
+                    imgplot_acc[GetIndex(x, y)].blue = 0;
+                }
             });
         });
-
-        //Monte Carlo sim procedure
-        /*int count = 0;
-        for (int i = 0; i < size_n; ++i){
-            double hypotenuse_sqr = (rand_x * rand_x + rand_y * rand_y);
-            if (hypotenuse_sqr <= 1.0){
-                ++count;
-                image_plot[GetIndex(rand_x, rand_y)].red = 0;
-                image_plot[GetIndex(rand_x, rand_y)].green = 255;
-                image_plot[GetIndex(rand_x, rand_y)].blue = 0;
-            }
-            else{
-                image_plot[GetIndex(rand_x, rand_y)].red = 255;
-                image_plot[GetIndex(rand_x, rand_y)].green = 0;
-                image_plot[GetIndex(rand_x, rand_y)].blue = 0;
-            }
-        }
-
-        // Print calculated value of pi
-        double pi = 4.0 * (double) count / size_n;
-        std::cout << "The estimated value of pi is: " << pi << std::endl;*/
-
     } catch (sycl::exception e) {
         std::cout << "SYCL exception caught: " << e.what() << std::endl;
         exit(1);
     }
-    for (int i = 0; i < size_n; i++){
-        std::cout << "RANDO COORD: " << coords[i].x << ", " << coords[i].y << std::endl;
+    // Print calculated value of pi
+    int count = 0;
+    for (int i = 0; i < size_n; ++i){
+        count += reduction_arr[i];
     }
+    double pi = 4.0 * (double) count / size_n;
+    std::cout << "The estimated value of pi is: " << pi << std::endl;*/
 }
 
 int main(){
