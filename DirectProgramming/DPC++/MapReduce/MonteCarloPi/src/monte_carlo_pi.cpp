@@ -15,7 +15,7 @@
 
 using namespace sycl;
 
-constexpr int size_n = 10;
+constexpr int size_n = 100000;
 constexpr int img_dimensions = 1024;
 constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
