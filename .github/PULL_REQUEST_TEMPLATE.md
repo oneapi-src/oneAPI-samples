@@ -24,7 +24,7 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 
 # Checklist:
 Links and Details can be found in the samples WG Teams Files. Please mark as 'X' for those done and 'NA' for not applicable.
-- [ ] Review sample design with domain expert 
+- [ ] Review sample design with domain reviewers https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts 
 - [ ] Implement coding guidelines and ensure code quality.
 - [ ] Adhere to sample.json specification. https://github.com/oneapi-src/oneAPI-samples/wiki/sample-json-specification
 - [ ] Run jsonlint on sample.json to verify json syntax. www.jsonlint.com
@@ -35,5 +35,5 @@ Links and Details can be found in the samples WG Teams Files. Please mark as 'X'
 - [ ] Review readme with Tom Lenth or Joe Oster. (GitHub User: JoeOster)
 - [ ] Test in new hardware (e.g. DG1) using Dev Cloud 
 - [ ] Implement fixes for ONSAM Jiras
-- [ ] If you have new dependencies/binaries, inform Samples PM of updates. 
+- [ ] If you have new dependencies/binaries, inform Samples Project Manager or @JoeOster
 
