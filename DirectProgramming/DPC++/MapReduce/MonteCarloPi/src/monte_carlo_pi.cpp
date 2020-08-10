@@ -54,6 +54,11 @@ void MonteCarloPi(rgb * image_plot){
     coordinate coords[size_n]; // array for storing the RNG coordinates
     int reduction_arr[size_n]; // this array will be used in the reduction stage to sum all the simulated points which fall within the circle
 
+    // Generate Random Coordinates
+    for (int i = 0; i < size_n; ++i){
+        coords[i].x = GetRandCoordinate();
+        coords[i].y = GetRandCoordinate();
+    }
 
     // Set up sycl queue
     queue q(default_selector{}, dpc_common::exception_handler);
@@ -63,19 +68,17 @@ void MonteCarloPi(rgb * image_plot){
     try{
         // Set up buffers
         buffer<rgb, 1> imgplot_buf((rgb*)image_plot, range<1>(img_dimensions * img_dimensions));
-
-        // Generate Random Coordinates
-        for (int i = 0; i < size_n; ++i){
-            coords[i].x = GetRandCoordinate();
-            coords[i].y = GetRandCoordinate();
-        }
+        buffer<coordinate, 1> coords_buf((coordinate*)coords, range<1>(size_n));
 
         // Set up sycl kernel
         q.submit([&](handler& h){
             auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
+            auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
 
             h.parallel_for(range<1>(size_n), [=](id<1> idx){
-                imgplot_acc[idx].blue = std::rand() % 127;
+                double val = coords_acc[idx].x;
+                if (val < 0.15) val = 0.15;
+                imgplot_acc[idx].blue = 127 * val;
             });
         });
 
