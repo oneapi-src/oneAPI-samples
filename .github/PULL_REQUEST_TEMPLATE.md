@@ -35,5 +35,5 @@ Links and Details can be found in the samples WG Teams Files. Please mark as 'X'
 - [ ] Review readme with Tom Lenth or Joe Oster. (GitHub User: JoeOster)
 - [ ] Test in new hardware (e.g. DG1) using Dev Cloud 
 - [ ] Implement fixes for ONSAM Jiras
-- [ ] If you have new dependencies/binaries, inform Samples Project Manager or @JoeOster
+- [ ] If you have new dependencies/binaries, inform Samples Project Manager Swapna R Dontharaju (@srdontha) or @JoeOster
 
