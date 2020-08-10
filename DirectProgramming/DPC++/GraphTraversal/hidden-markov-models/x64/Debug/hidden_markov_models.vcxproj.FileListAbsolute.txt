@@ -1,0 +1,4 @@
+C:\temp\project\x64\Debug\hidden_markov_models.exe
+C:\temp\project\x64\Debug\hidden_markov_models.pdb
+C:\Users\andreyla\OneDrive - Intel Corporation\Documents\git_1API_fork\oneAPI-samples\DirectProgramming\DPC++\GraphTraversal\hidden-markov-models\x64\Debug\hidden_markov_models.exe
+C:\Users\andreyla\OneDrive - Intel Corporation\Documents\git_1API_fork\oneAPI-samples\DirectProgramming\DPC++\GraphTraversal\hidden-markov-models\x64\Debug\hidden_markov_models.pdb

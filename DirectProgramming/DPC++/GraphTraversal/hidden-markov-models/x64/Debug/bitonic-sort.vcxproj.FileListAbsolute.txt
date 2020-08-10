@@ -1,0 +1,2 @@
+C:\temp\project\x64\Debug\hidden_markov_models.exe
+C:\temp\project\x64\Debug\hidden_markov_models.pdb
