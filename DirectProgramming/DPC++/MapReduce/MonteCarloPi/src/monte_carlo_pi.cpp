@@ -75,7 +75,7 @@ void MonteCarloPi(rgb * image_plot){
             auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
 
             h.parallel_for(range<1>(size_n), [=](id<1> idx){
-                imgplot_acc[idx].blue = rand() % 127;
+                imgplot_acc[idx].blue = std::rand() % 127;
             });
         });
 
