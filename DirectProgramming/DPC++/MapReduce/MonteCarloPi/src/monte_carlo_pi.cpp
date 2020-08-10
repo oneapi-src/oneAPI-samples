@@ -80,7 +80,7 @@ void MonteCarloPi(rgb * image_plot){
             h.parallel_for(range<1>(size_n), [=](id<1> idx){
                 double x = coords_acc[idx].x;
                 double y = coords_acc[idx].y;
-                double hypotenuse_sqr = (x ** 2 + y ** 2);
+                double hypotenuse_sqr = (x * x + y * y);
                 if (hypotenuse_sqr <= 1.0){
                     reduction_acc[idx] = 1;
                     imgplot_acc[GetIndex(x, y)].red = 0;
@@ -99,6 +99,7 @@ void MonteCarloPi(rgb * image_plot){
         std::cout << "SYCL exception caught: " << e.what() << std::endl;
         exit(1);
     }
+    
     // Print calculated value of pi
     int count = 0;
     for (int i = 0; i < size_n; ++i){
