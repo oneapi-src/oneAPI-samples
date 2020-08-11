@@ -34,7 +34,7 @@ Links and Details can be found in the samples WG Teams Files.
 - [ ] Enforce format via clang-format config file
 - [ ] Review DPC++ code with Paul Peterseon. (GitHub User: pmpeter1)
 - [ ] Review readme with Tom Lenth or Joe Oster. (GitHub User: JoeOster)
-- [ ] Test in new hardware using Dev Cloud 
+- [ ] Tested using Dev Cloud when applicable
 - [ ] Implement fixes for ONSAM Jiras
 - [ ] If you have new dependencies/binaries, inform Samples Project Manager Swapna R Dontharaju (@srdontha) or @JoeOster
 
