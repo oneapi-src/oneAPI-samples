@@ -1,0 +1,22 @@
+{
+  "guid": "A377C93A-6D81-4030-B2AD-BE85B6CE8450",
+  "name": "Pulse Width Modulation (PWM)",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
+  "description": "Demonstrate how to use PWM with an output pin using the Eclipse* MRAA library. If the output is connected to a led, its brightness will vary depending on the duty cycle.",
+  "dependencies": ["pkg|mraa|https://mraa.io"],
+  "languages": [{"cpp":{}}],
+  "os": ["linux"],
+  "ciTests": {
+    "linux": [
+        { "id": "pwm",
+          "env": [],
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake ..",
+            "make"
+            ]
+        }
+    ]
+  }
+}
