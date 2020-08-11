@@ -23,7 +23,7 @@
     <ProjectGuid>{58ce1265-5b1d-4cba-9c84-c9e1f8fdfb54}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>vector_add_usm</RootNamespace>
-    <WindowsTargetPlatformVersion>$(WindowsSDKVersion)</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
