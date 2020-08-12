@@ -68,8 +68,8 @@ void MonteCarloPi(rgb * image_plot){
     try{
         // Set up buffers
         buffer imgplot_buf((rgb*)image_plot, range(img_dimensions * img_dimensions));
-        buffer<coordinate, 1> coords_buf((coordinate*)coords, range<1>(size_n));
-        buffer<int, 1> reduction_buf((int*)reduction_arr, range<1>(size_n));
+        buffer coords_buf((coordinate*)coords, range(size_n));
+        buffer reduction_buf((int*)reduction_arr, range(size_n));
 
         // Initialize random coordinates buffer on the host
         /*q.submit([=](handler& h){
