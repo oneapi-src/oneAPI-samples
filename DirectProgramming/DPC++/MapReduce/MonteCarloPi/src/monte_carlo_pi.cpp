@@ -15,12 +15,16 @@
 
 using namespace sycl;
 
-constexpr int size_wg = 64;
-constexpr int size_n = size_wg * 1000; // Must be a multiple of size_wg
+// size of parallel work groups
+constexpr int size_wg = 32;
+// Number of sample points
+constexpr int size_n = size_wg * 10000; // Must be a multiple of size_wg
+// Output image dimensions
 constexpr int img_dimensions = 1024;
+
+// Consts for drawing the image plot
 constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
-constexpr int seed = 777;
 
 // Returns the pixel index corresponding to a set of simulation coordinates
 SYCL_EXTERNAL int GetIndex(double x, double y){
