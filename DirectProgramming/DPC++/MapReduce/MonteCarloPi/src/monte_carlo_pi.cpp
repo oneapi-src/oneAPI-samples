@@ -96,13 +96,13 @@ void MonteCarloPi(rgb * image_plot){
                     double y = coords_acc[it.get_global_id()].y;
                     double hypotenuse_sqr = (x * x + y * y);
                     if (hypotenuse_sqr <= 1.0){
-                        reduction_acc[idx] = 1;
+                        reduction_acc[it.get_global_id()] = 1;
                         imgplot_acc[GetIndex(x, y)].red = 0;
                         imgplot_acc[GetIndex(x, y)].green = 255;
                         imgplot_acc[GetIndex(x, y)].blue = 0;
                     }
                     else{
-                        reduction_acc[idx] = 0;
+                        reduction_acc[it.get_global_id()] = 0;
                         imgplot_acc[GetIndex(x, y)].red = 255;
                         imgplot_acc[GetIndex(x, y)].green = 0;
                         imgplot_acc[GetIndex(x, y)].blue = 0;
