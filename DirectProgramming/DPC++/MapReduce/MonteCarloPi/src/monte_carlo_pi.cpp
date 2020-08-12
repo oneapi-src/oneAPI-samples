@@ -86,7 +86,7 @@ void MonteCarloPi(rgb * image_plot){
 
         // Perform Monte Carlo Procedure on the device
         q.submit([&](handler& h){
-            auto imgplot_acc = imgplot_buf.get_access(h);
+            auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
             auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
             auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
 
