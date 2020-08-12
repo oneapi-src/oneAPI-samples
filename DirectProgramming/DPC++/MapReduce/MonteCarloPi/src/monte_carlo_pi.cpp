@@ -92,7 +92,7 @@ void MonteCarloPi(rgb * image_plot){
 
             h.parallel_for_work_group(range<1>(size_n / 8), [=](group<1> gp){
                 gp.parallel_for_work_item(range<1>(8), [=](h_item<1> it){
-                    int index = gp.get_id() + it.get_local_id();
+                    int index = it.get_global_id();
                     reduction_acc[index] = 1;
                     /*double x = coords_acc[index].x;
                     double y = coords_acc[index].y;
