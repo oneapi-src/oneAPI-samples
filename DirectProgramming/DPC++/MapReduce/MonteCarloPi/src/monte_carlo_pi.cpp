@@ -94,6 +94,11 @@ void MonteCarloPi(rgb * image_plot){
                 gp.parallel_for_work_item(range<1>(8), [=](h_item<1> it){
                     reduction_acc[it.get_global_id()] = 1;
                 });
+
+                // Reduce workgroup's results
+                for (int i = 1; i < 8; ++i){
+                    reduction_acc[gp.get_global_id()] += reduction_acc[gp.get_global_id() + i];
+                }
             });
 
             /*h.parallel_for(size_n, [=](id<1> idx){
@@ -121,7 +126,7 @@ void MonteCarloPi(rgb * image_plot){
 
     // Print calculated value of pi
     int count = 0;
-    for (int i = 0; i < size_n; ++i){
+    for (int i = 0; i < size_n; i += 8){
         count += reduction_arr[i];
     }
     double pi = 4.0 * (double) count / size_n;
