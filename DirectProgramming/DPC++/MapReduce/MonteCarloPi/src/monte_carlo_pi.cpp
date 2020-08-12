@@ -29,7 +29,7 @@ SYCL_EXTERNAL int GetIndex(double x, double y){
 }
 
 // Returns a random double between -1.0 and 1.0
-double GetRandCoordinate(){
+SYCL_EXTERNAL double GetRandCoordinate(){
     return (double)rand() / (RAND_MAX / 2.0) - 1.0;
 }
 
