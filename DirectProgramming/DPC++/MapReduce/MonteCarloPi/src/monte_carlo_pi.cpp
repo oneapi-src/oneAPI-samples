@@ -90,8 +90,8 @@ void MonteCarloPi(rgb * image_plot){
             auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
             auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
 
-            h.parallel_for_work_group(size_n / 8, [=](group<1> gp){
-                gp.parallel_for_work_item(8, [=](h_item<1> it){
+            h.parallel_for_work_group(range<1>(size_n / 8), [=](group<1> gp){
+                gp.parallel_for_work_item(range<1>(8), [=](h_item<1> it){
                     reduction_acc[it.get_global_id()] = 1;
                 });
             });
