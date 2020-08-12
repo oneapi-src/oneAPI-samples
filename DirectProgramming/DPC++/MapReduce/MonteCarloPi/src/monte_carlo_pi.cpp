@@ -92,7 +92,21 @@ void MonteCarloPi(rgb * image_plot){
 
             h.parallel_for_work_group(range<1>(size_n / 8), [=](group<1> gp){
                 gp.parallel_for_work_item(range<1>(8), [=](h_item<1> it){
-                    reduction_acc[it.get_global_id()] = 1;
+                    double x = coords_acc[it.get_global_id()].x;
+                    double y = coords_acc[it.get_global_id()].y;
+                    double hypotenuse_sqr = (x * x + y * y);
+                    if (hypotenuse_sqr <= 1.0){
+                        reduction_acc[idx] = 1;
+                        imgplot_acc[GetIndex(x, y)].red = 0;
+                        imgplot_acc[GetIndex(x, y)].green = 255;
+                        imgplot_acc[GetIndex(x, y)].blue = 0;
+                    }
+                    else{
+                        reduction_acc[idx] = 0;
+                        imgplot_acc[GetIndex(x, y)].red = 255;
+                        imgplot_acc[GetIndex(x, y)].green = 0;
+                        imgplot_acc[GetIndex(x, y)].blue = 0;
+                    }
                 });
 
                 // Reduce workgroup's results
