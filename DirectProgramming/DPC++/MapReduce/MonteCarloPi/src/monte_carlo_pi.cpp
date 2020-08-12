@@ -100,18 +100,19 @@ void MonteCarloPi(rgb * image_plot){
 
             h.parallel_for_work_group(range<1>(size_n / size_wg), range<1>(size_wg), [=](group<1> gp){
                 gp.parallel_for_work_item([=](h_item<1> it){
-                    int index = it.get_global_id();
-                    double x = coords_acc[index].x;
-                    double y = coords_acc[index].y;
+                    int global_index = it.get_global_id();
+                    int local_index = it.get_local_id();
+                    double x = coords_acc[global_index].x;
+                    double y = coords_acc[global_index].y;
                     double hypotenuse_sqr = (x * x + y * y);
                     if (hypotenuse_sqr <= 1.0){
-                        local_mem[index] = 1;
+                        local_mem[local_index] = 1;
                         imgplot_acc[GetIndex(x, y)].red = 0;
                         imgplot_acc[GetIndex(x, y)].green = 255;
                         imgplot_acc[GetIndex(x, y)].blue = 0;
                     }
                     else{
-                        local_mem[index] = 0;
+                        local_mem[local_index] = 0;
                         imgplot_acc[GetIndex(x, y)].red = 255;
                         imgplot_acc[GetIndex(x, y)].green = 0;
                         imgplot_acc[GetIndex(x, y)].blue = 0;
