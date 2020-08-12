@@ -73,11 +73,11 @@ void MonteCarloPi(rgb * image_plot){
 
         // Set up sycl kernel
         q.submit([&](handler& h){
-            auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
-            auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
-            auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
+            auto imgplot_acc = imgplot_buf.get_access(h);
+            auto coords_acc = coords_buf.get_access(h);
+            auto reduction_acc = reduction_buf.get_access(h);
 
-            h.parallel_for(range<1>(size_n), [=](id<1> idx){
+            h.parallel_for(size_n, [=](id<1> idx){
                 double x = coords_acc[idx].x;
                 double y = coords_acc[idx].y;
                 double hypotenuse_sqr = (x * x + y * y);
