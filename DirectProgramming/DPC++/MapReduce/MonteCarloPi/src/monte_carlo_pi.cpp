@@ -73,7 +73,7 @@ void MonteCarloPi(rgb * image_plot){
 
         // Initialize random coordinates buffer on the host
         q.submit([&](handler& h){
-            auto coords_acc = coords_buf.get_host_access<access::mode::read_write>(h);
+            auto coords_acc = coords_buf.get_host_access(h);
 
             h.codeplay_host_task([=]() {
                 for (int i = 0; i < size_n; ++i){
