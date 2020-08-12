@@ -67,7 +67,7 @@ void MonteCarloPi(rgb * image_plot){
     
     try{
         // Set up buffers
-        buffer<rgb> imgplot_buf((rgb*)image_plot, range<1>(img_dimensions * img_dimensions));
+        buffer imgplot_buf((rgb*)image_plot, range(img_dimensions * img_dimensions));
         buffer<coordinate, 1> coords_buf((coordinate*)coords, range<1>(size_n));
         buffer<int, 1> reduction_buf((int*)reduction_arr, range<1>(size_n));
 
