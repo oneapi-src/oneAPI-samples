@@ -55,10 +55,10 @@ void MonteCarloPi(rgb * image_plot){
     int reduction_arr[size_n]; // this array will be used in the reduction stage to sum all the simulated points which fall within the circle
 
     // Generate Random Coordinates
-    for (int i = 0; i < size_n; ++i){
+    /*for (int i = 0; i < size_n; ++i){
         coords[i].x = GetRandCoordinate();
         coords[i].y = GetRandCoordinate();
-    }
+    }*/
 
     // Set up sycl queue
     queue q(default_selector{}, dpc_common::exception_handler);
@@ -71,7 +71,20 @@ void MonteCarloPi(rgb * image_plot){
         buffer<coordinate, 1> coords_buf((coordinate*)coords, range<1>(size_n));
         buffer<int, 1> reduction_buf((int*)reduction_arr, range<1>(size_n));
 
-        // Set up sycl kernel
+        // Initialize random coordinates buffer on the host
+        q.submit([&](handler& h){
+            auto coords_acc = coords_buf.get_host_access<access::mode::read_write>(h);
+
+            h.codeplay_host_task([=]() {
+                for (int i = 0; i < size_n; ++i){
+                    coords_acc[i].x = GetRandCoordinate();
+                    coords_acc[i].y = GetRandCoordinate();
+                }
+            });
+        });
+        q.wait_and_throw();
+
+        // Perform Monte Carlo Procedure on the device
         q.submit([&](handler& h){
             auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
             auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
