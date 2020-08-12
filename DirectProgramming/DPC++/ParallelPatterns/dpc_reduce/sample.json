@@ -10,21 +10,20 @@
  	"targetDevice": ["CPU", "GPU"],
  	"os": ["linux"],
  	"builder": ["cmake"],
+    "ciTests": {
+       "linux": [
+         {
+           "id": "dpc_reduce",
+           "steps": [
+ 			   "mkdir build",
+ 			   "cd build",
+ 			   "cmake ..",
+ 			   "make dpc_reduce", 
+               "./src/dpc_reduce"
+              ]
+            }
+      ]
+  }
+}
 
- 	"path": "DPC++Compiler/oneDPL/dpc_reduce",
- 	"configurations": [{
- 		"id": "dpc_reduce",
- 		"build": [
- 			"mkdir build",
- 			"cd build",
- 			"cmake ..",
- 			"make dpc_reduce"
- 		],
- 		"run": [
- 			"./src/dpc_reduce"
- 		],
- 		"clean": [
- 			"make clean"
- 		]
- 	}]
- }
+
