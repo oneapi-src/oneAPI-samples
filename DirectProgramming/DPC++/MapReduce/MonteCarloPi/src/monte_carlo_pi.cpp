@@ -97,7 +97,7 @@ void MonteCarloPi(rgb * image_plot){
 
                 // Reduce workgroup's results
                 for (int i = 1; i < 8; ++i){
-                    reduction_acc[gp.get_global_id()] += reduction_acc[gp.get_global_id() + i];
+                    reduction_acc[gp.get_id()] += reduction_acc[gp.get_id() + i];
                 }
             });
 
