@@ -72,7 +72,7 @@ void MonteCarloPi(rgb * image_plot){
         buffer<int, 1> reduction_buf((int*)reduction_arr, range<1>(size_n));
 
         // Initialize random coordinates buffer on the host
-        q.submit([&](handler& h){
+        q.submit([=](handler& h){
             auto coords_acc = coords_buf.get_host_access(h);
 
             h.codeplay_host_task([=]() {
