@@ -15,7 +15,7 @@
 
 using namespace sycl;
 
-constexpr int size_n = 8 * 10000; // Must be a multiple of 8
+constexpr int size_n = 8 * 3; // Must be a multiple of 8
 constexpr int img_dimensions = 1024;
 constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
@@ -93,7 +93,8 @@ void MonteCarloPi(rgb * image_plot){
             h.parallel_for_work_group(range<1>(size_n / 8), [=](group<1> gp){
                 gp.parallel_for_work_item(range<1>(8), [=](h_item<1> it){
                     int index = gp.get_id() + it.get_local_id();
-                    double x = coords_acc[index].x;
+                    reduction_acc[index] = 1;
+                    /*double x = coords_acc[index].x;
                     double y = coords_acc[index].y;
                     double hypotenuse_sqr = (x * x + y * y);
                     if (hypotenuse_sqr <= 1.0){
@@ -107,13 +108,13 @@ void MonteCarloPi(rgb * image_plot){
                         imgplot_acc[GetIndex(x, y)].red = 255;
                         imgplot_acc[GetIndex(x, y)].green = 0;
                         imgplot_acc[GetIndex(x, y)].blue = 0;
-                    }
+                    }*/
                 });
 
                 // Reduce workgroup's results
-                for (int i = 1; i < 8; ++i){
+                /*for (int i = 1; i < 8; ++i){
                     reduction_acc[gp.get_id() * 8] += reduction_acc[gp.get_id() * 8 + i];
-                }
+                }*/
             });
 
             /*h.parallel_for(size_n, [=](id<1> idx){
@@ -141,7 +142,7 @@ void MonteCarloPi(rgb * image_plot){
 
     std::cout << "\n---------------------\n" << std::endl;
     for (int i = 0; i < size_n; i++){
-        cout << "HYPO: " << coords[i].x * coords[i].x + coords[i].y * coords[i].y << " VAL: " << reduction_arr[i] << std::endl;
+        std::cout << "HYPO: " << coords[i].x * coords[i].x + coords[i].y * coords[i].y << " VAL: " << reduction_arr[i] << std::endl;
     }
     std::cout << "\n---------------------\n" << std::endl;
 
