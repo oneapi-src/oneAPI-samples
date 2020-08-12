@@ -141,7 +141,7 @@ void MonteCarloPi(rgb * image_plot){
 
     std::cout << "\n---------------------\n" << std::endl;
     for (int i = 0; i < size_n; i++){
-        cout << "HYPO: " << coords[i].x * coords[i].x + coords[i].y * coords[i].y << " VAL: " << reduction_arr[i] << std::endl;
+        std::cout << "HYPO: " << coords[i].x * coords[i].x + coords[i].y * coords[i].y << " VAL: " << reduction_arr[i] << std::endl;
     }
     std::cout << "\n---------------------\n" << std::endl;
 
