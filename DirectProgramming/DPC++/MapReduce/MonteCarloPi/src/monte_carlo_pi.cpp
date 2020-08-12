@@ -15,7 +15,7 @@
 
 using namespace sycl;
 
-constexpr int size_n = 100000;
+constexpr int size_n = 8 * 10000; // Must be a multiple of 8
 constexpr int img_dimensions = 1024;
 constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
@@ -90,7 +90,13 @@ void MonteCarloPi(rgb * image_plot){
             auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
             auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
 
-            h.parallel_for(size_n, [=](id<1> idx){
+            h.parallel_for_work_group(size_n / 8, [=](group<1> gp){
+                gp.parallel_for_work_item(8, [=]h_item<1> it){
+                    reduction_acc[it.get_global_id()] = 1;
+                }
+            });
+
+            /*h.parallel_for(size_n, [=](id<1> idx){
                 double x = coords_acc[idx].x;
                 double y = coords_acc[idx].y;
                 double hypotenuse_sqr = (x * x + y * y);
@@ -106,7 +112,7 @@ void MonteCarloPi(rgb * image_plot){
                     imgplot_acc[GetIndex(x, y)].green = 0;
                     imgplot_acc[GetIndex(x, y)].blue = 0;
                 }
-            });
+            });*/
         });
     } catch (sycl::exception e) {
         std::cout << "SYCL exception caught: " << e.what() << std::endl;
