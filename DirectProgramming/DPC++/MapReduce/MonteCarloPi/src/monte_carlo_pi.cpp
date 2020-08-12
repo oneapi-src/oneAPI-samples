@@ -120,7 +120,7 @@ void MonteCarloPi(rgb * image_plot){
                 });
 
                 // Reduce workgroup's results
-                for (int i = 0; i < size_wg; ++i){
+                for (int i = 1; i < size_wg; ++i){
                     local_mem[0] += local_mem[i];
                 }
                 // Write to global memory
