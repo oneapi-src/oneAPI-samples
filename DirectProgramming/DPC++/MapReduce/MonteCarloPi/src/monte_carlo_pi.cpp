@@ -15,7 +15,8 @@
 
 using namespace sycl;
 
-constexpr int size_n = 8 * 3; // Must be a multiple of 8
+constexpr int size_wg = 64;
+constexpr int size_n = size_wg * 1000; // Must be a multiple of size_wg
 constexpr int img_dimensions = 1024;
 constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
@@ -90,7 +91,7 @@ void MonteCarloPi(rgb * image_plot){
             auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
             auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
 
-            h.parallel_for_work_group(range<1>(size_n / 8), range<1>(8), [=](group<1> gp){
+            h.parallel_for_work_group(range<1>(size_n / size_wg), range<1>(size_wg), [=](group<1> gp){
                 gp.parallel_for_work_item([=](h_item<1> it){
                     int index = it.get_global_id();
                     double x = coords_acc[index].x;
@@ -111,28 +112,10 @@ void MonteCarloPi(rgb * image_plot){
                 });
 
                 // Reduce workgroup's results
-                for (int i = 1; i < 8; ++i){
-                    reduction_acc[gp.get_id() * 8] += reduction_acc[gp.get_id() * 8 + i];
+                for (int i = 1; i < size_wg; ++i){
+                    reduction_acc[gp.get_id() * size_wg] += reduction_acc[gp.get_id() * size_wg + i];
                 }
             });
-
-            /*h.parallel_for(size_n, [=](id<1> idx){
-                double x = coords_acc[idx].x;
-                double y = coords_acc[idx].y;
-                double hypotenuse_sqr = (x * x + y * y);
-                if (hypotenuse_sqr <= 1.0){
-                    reduction_acc[idx] = 1;
-                    imgplot_acc[GetIndex(x, y)].red = 0;
-                    imgplot_acc[GetIndex(x, y)].green = 255;
-                    imgplot_acc[GetIndex(x, y)].blue = 0;
-                }
-                else{
-                    reduction_acc[idx] = 0;
-                    imgplot_acc[GetIndex(x, y)].red = 255;
-                    imgplot_acc[GetIndex(x, y)].green = 0;
-                    imgplot_acc[GetIndex(x, y)].blue = 0;
-                }
-            });*/
         });
     } catch (sycl::exception e) {
         std::cout << "SYCL exception caught: " << e.what() << std::endl;
@@ -147,8 +130,8 @@ void MonteCarloPi(rgb * image_plot){
 
     // Print calculated value of pi
     int count = 0;
-    for (int i = 0; i < size_n; i += 8){
-        count += reduction_arr[i];
+    for (int i = 0; i < size_n; i += size_wg){
+        count += reduction_arr[i]; // Reduce workgroup's results into single sum
     }
     double pi = 4.0 * (double) count / size_n;
     std::cout << "The estimated value of pi is: " << pi << std::endl;
