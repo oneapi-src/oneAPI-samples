@@ -91,9 +91,12 @@ void MonteCarloPi(rgb * image_plot){
 
         // Perform Monte Carlo Procedure on the device
         q.submit([&](handler& h){
+            // Set up accessors
             auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
             auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
             auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
+            // Set up local memory for faster reduction
+            sycl::accessor<int, 1, access::mode::read_write, access::target::local> local_mem(range<1>(size_wg), h);
 
             h.parallel_for_work_group(range<1>(size_n / size_wg), range<1>(size_wg), [=](group<1> gp){
                 gp.parallel_for_work_item([=](h_item<1> it){
@@ -102,13 +105,13 @@ void MonteCarloPi(rgb * image_plot){
                     double y = coords_acc[index].y;
                     double hypotenuse_sqr = (x * x + y * y);
                     if (hypotenuse_sqr <= 1.0){
-                        reduction_acc[index] = 1;
+                        local_mem[index] = 1;
                         imgplot_acc[GetIndex(x, y)].red = 0;
                         imgplot_acc[GetIndex(x, y)].green = 255;
                         imgplot_acc[GetIndex(x, y)].blue = 0;
                     }
                     else{
-                        reduction_acc[index] = 0;
+                        local_mem[index] = 0;
                         imgplot_acc[GetIndex(x, y)].red = 255;
                         imgplot_acc[GetIndex(x, y)].green = 0;
                         imgplot_acc[GetIndex(x, y)].blue = 0;
@@ -116,9 +119,11 @@ void MonteCarloPi(rgb * image_plot){
                 });
 
                 // Reduce workgroup's results
-                for (int i = 1; i < size_wg; ++i){
-                    reduction_acc[gp.get_id() * size_wg] += reduction_acc[gp.get_id() * size_wg + i];
+                for (int i = 0; i < size_wg; ++i){
+                    local_mem[0] += local_mem[i];
                 }
+                // Write to global memory
+                reduction_acc[gp.get_id() * size_wg] = local_mem[0];
             });
         });
     } catch (sycl::exception e) {
