@@ -91,9 +91,9 @@ void MonteCarloPi(rgb * image_plot){
             auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
 
             h.parallel_for_work_group(size_n / 8, [=](group<1> gp){
-                gp.parallel_for_work_item(8, [=]h_item<1> it){
+                gp.parallel_for_work_item(8, [=](h_item<1> it){
                     reduction_acc[it.get_global_id()] = 1;
-                }
+                });
             });
 
             /*h.parallel_for(size_n, [=](id<1> idx){
