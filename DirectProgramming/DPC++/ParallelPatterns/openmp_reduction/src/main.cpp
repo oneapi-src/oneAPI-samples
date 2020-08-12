@@ -3,10 +3,9 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <chrono> 
 #include <iomanip>  // setprecision library
 #include <iostream>
-#include "omp_common.hpp"
+#include "dpc_common.hpp" 
 
 // cpu_seq_calc_pi is a simple sequential CPU routine
 // that calculates all the slices and then
@@ -73,21 +72,21 @@ int main(int argc, char** argv) {
   // time is measured the 2nd time you run it. 
   pi = openmp_device_calc_pi(num_steps);
 
-  TimeInterval T;
+  dpc_common::TimeInterval T;
   pi = cpu_seq_calc_pi(num_steps);
   auto stop = T.Elapsed();
   std::cout << "Cpu Seq calc: \t\t";
   std::cout << std::setprecision(3) << "PI =" << pi;
   std::cout << " in " << stop << " seconds" << std::endl;
 
-  TimeInterval T2;
+  dpc_common::TimeInterval T2;
   pi = openmp_host_calc_pi(num_steps);
   auto stop2 = T2.Elapsed();
   std::cout << "Host OpenMP:\t\t";
   std::cout << std::setprecision(3) << "PI =" << pi;
   std::cout << " in " << stop2 << " seconds" << std::endl;
 
-  TimeInterval T3;
+  dpc_common::TimeInterval T3;
   pi = openmp_device_calc_pi(num_steps);
   auto stop3 = T3.Elapsed();
   std::cout << "Offload OpenMP:\t\t";
