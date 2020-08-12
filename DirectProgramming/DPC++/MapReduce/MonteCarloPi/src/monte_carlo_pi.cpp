@@ -126,6 +126,7 @@ void MonteCarloPi(rgb * image_plot){
                 reduction_acc[gp.get_id() * size_wg] = local_mem[0];
             });
         });
+        q.wait_and_throw();
     } catch (sycl::exception e) {
         std::cout << "SYCL exception caught: " << e.what() << std::endl;
         exit(1);
