@@ -18,7 +18,7 @@ using namespace sycl;
 // Size of parallel work groups
 constexpr int size_wg = 32;
 // Number of parallel work groups
-constexpr int num_wg = 15000;
+constexpr int num_wg = 10000;
 // Number of sample points
 constexpr int size_n = size_wg * num_wg; // Must be a multiple of size_wg
 // Output image dimensions
@@ -147,7 +147,7 @@ void MonteCarloPi(rgb * image_plot){
         count += reduction_arr[i]; // Reduce workgroup's results into single sum
     }
     double pi = 4.0 * (double) count / size_n;
-    std::cout << "The estimated value of pi is: " << pi << std::endl;
+    std::cout << "The estimated value of pi (N = " << size_n << ") is: " << pi << std::endl;
 }
 
 int main(){
