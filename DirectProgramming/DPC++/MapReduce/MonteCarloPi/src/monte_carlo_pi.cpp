@@ -161,15 +161,15 @@ int main(){
     DrawPlot(image_plot);
 
     // Perform Monte Carlo simulation to estimate pi (with timing)
-    std::cout << "Calculating estimated value of pi..." << std::endl;
+    std::cout << "Calculating estimated value of pi...\n" << std::endl;
     dpc_common::TimeInterval t;
     MonteCarloPi(image_plot);
     double proc_time = t.Elapsed();
-    std::cout << "Computation complete. The processing time was " << proc_time << " seconds." << std::endl;
+    std::cout << "\nComputation complete. The processing time was " << proc_time << " seconds." << std::endl;
 
     // Write image to file
     stbi_write_bmp("MonteCarloPi.bmp", img_dimensions, img_dimensions, 3, image_plot);
-    std::cout << "The simulation plot graph has been written to 'MonteCarloPi.bmp'" << std::endl;
+    std::cout << "The simulation plot graph has been written to 'MonteCarloPi.bmp'\n" << std::endl;
     free(image_plot);
 
     return 0;
