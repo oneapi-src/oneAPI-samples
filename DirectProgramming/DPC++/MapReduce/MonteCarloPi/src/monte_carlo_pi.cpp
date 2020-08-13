@@ -59,7 +59,7 @@ rgb* DrawPlot(rgb * image_plot){
 // performs the Monte Carlo simulation procedure for calculating pi, with size_n number of samples.
 void MonteCarloPi(rgb * image_plot){
     coordinate coords[size_n]; // array for storing the RNG coordinates
-    int reduction_arr[size_n]; // this array will be used in the reduction stage to sum all the simulated points which fall within the circle
+    int reduction_arr[size_n / size_wg]; // this array will be used in the reduction stage to sum all the simulated points which fall within the circle
 
     // Generate Random Coordinates
     for (int i = 0; i < size_n; ++i){
@@ -76,7 +76,7 @@ void MonteCarloPi(rgb * image_plot){
         // Set up buffers
         buffer imgplot_buf((rgb*)image_plot, range(img_dimensions * img_dimensions));
         buffer coords_buf((coordinate*)coords, range(size_n));
-        buffer reduction_buf((int*)reduction_arr, range(size_n));
+        buffer reduction_buf((int*)reduction_arr, range(size_n / size_wg));
 
         // Perform Monte Carlo Procedure on the device
         q.submit([&](handler& h){
@@ -122,7 +122,7 @@ void MonteCarloPi(rgb * image_plot){
                     local_mem[0] += local_mem[i];
                 }
                 // Write to global memory
-                reduction_acc[gp.get_id() * size_wg] = local_mem[0];
+                reduction_acc[gp.get_id()] = local_mem[0];
             });
         });
         q.wait_and_throw();
@@ -133,7 +133,7 @@ void MonteCarloPi(rgb * image_plot){
 
     // Print calculated value of pi
     int count = 0;
-    for (int i = 0; i < size_n; i += size_wg){
+    for (int i = 0; i < size_n / size_wg; ++i){
         count += reduction_arr[i]; // Reduce workgroup's results into single sum
     }
     double pi = 4.0 * (double) count / size_n;
