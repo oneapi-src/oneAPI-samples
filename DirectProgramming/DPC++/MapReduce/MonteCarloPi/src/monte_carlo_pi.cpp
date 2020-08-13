@@ -15,10 +15,12 @@
 
 using namespace sycl;
 
-// size of parallel work groups
+// Size of parallel work groups
 constexpr int size_wg = 32;
+// Number of parallel work groups
+constexpr int num_wg = 15000
 // Number of sample points
-constexpr int size_n = size_wg * 20000; // Must be a multiple of size_wg
+constexpr int size_n = size_wg * num_wg; // Must be a multiple of size_wg
 // Output image dimensions
 constexpr int img_dimensions = 1024;
 
