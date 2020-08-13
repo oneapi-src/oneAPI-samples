@@ -4,7 +4,7 @@
   "categories": ["Toolkit/Get Started", "Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++ Compiler/CPU, GPU and FPGA"],
   "description": "Simple program that adds two large vectors in parallel. Provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using Data Parallel C++.",
   "toolchain": ["dpcpp"],
-  "languages123": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
+  "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
   "targetDevice": ["CPU", "GPU", "FPGA"],
   "os": ["linux", "windows"],
   "builder": ["ide", "make"],
@@ -41,7 +41,7 @@
           "make report -f Makefile.fpga"
         ]
       }
-    ],
+    ]
     "windows": [
       {
         "id": "cpu_usm",
