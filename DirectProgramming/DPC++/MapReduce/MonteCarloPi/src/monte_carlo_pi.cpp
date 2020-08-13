@@ -78,19 +78,6 @@ void MonteCarloPi(rgb * image_plot){
         buffer coords_buf((coordinate*)coords, range(size_n));
         buffer reduction_buf((int*)reduction_arr, range(size_n));
 
-        // Initialize random coordinates buffer on the host
-        /*q.submit([=](handler& h){
-            auto coords_acc = coords_buf.get_host_access<access::mode::read_write>(h);
-
-            h.codeplay_host_task([=]() {
-                for (int i = 0; i < size_n; ++i){
-                    coords_acc[i].x = GetRandCoordinate();
-                    coords_acc[i].y = GetRandCoordinate();
-                }
-            });
-        });
-        q.wait_and_throw();*/
-
         // Perform Monte Carlo Procedure on the device
         q.submit([&](handler& h){
             // Set up accessors
