@@ -29,7 +29,7 @@ constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
 
 // Returns the pixel index corresponding to a set of simulation coordinates
-SYCL_EXTERNAL int GetIndex(double x, double y){
+SYCL_EXTERNAL int GetPixelIndex(double x, double y){
     int img_x = x * radius + radius;
     int img_y = y * radius + radius;
     return img_y * img_dimensions + img_x;
@@ -100,24 +100,33 @@ void MonteCarloPi(rgb * image_plot){
             // Set up local memory for faster reduction
             sycl::accessor<int, 1, access::mode::read_write, access::target::local> local_mem(range<1>(size_wg), h);
 
+            // MC kernel code
             h.parallel_for_work_group(range<1>(size_n / size_wg), range<1>(size_wg), [=](group<1> gp){
                 gp.parallel_for_work_item([=](h_item<1> it){
-                    int global_index = it.get_global_id();
-                    int local_index = it.get_local_id();
+                    int global_index = it.get_global_id(); // Index for accessing external buffers
+                    int local_index = it.get_local_id(); // Index for accessing local_mem
+
+                    // Get random coords
                     double x = coords_acc[global_index].x;
                     double y = coords_acc[global_index].y;
+
+                    // Check if coordinates are bounded by a circle of radius 1
                     double hypotenuse_sqr = (x * x + y * y);
-                    if (hypotenuse_sqr <= 1.0){
+                    if (hypotenuse_sqr <= 1.0){ // If bounded
+                        // Write result to local_mem
                         local_mem[local_index] = 1;
-                        imgplot_acc[GetIndex(x, y)].red = 0;
-                        imgplot_acc[GetIndex(x, y)].green = 255;
-                        imgplot_acc[GetIndex(x, y)].blue = 0;
+                        // Draw sample point in image plot
+                        imgplot_acc[GetPixelIndex(x, y)].red = 0;
+                        imgplot_acc[GetPixelIndex(x, y)].green = 255;
+                        imgplot_acc[GetPixelIndex(x, y)].blue = 0;
                     }
                     else{
+                        // Write result to local_mem
                         local_mem[local_index] = 0;
-                        imgplot_acc[GetIndex(x, y)].red = 255;
-                        imgplot_acc[GetIndex(x, y)].green = 0;
-                        imgplot_acc[GetIndex(x, y)].blue = 0;
+                        // Draw sample point in image plot
+                        imgplot_acc[GetPixelIndex(x, y)].red = 255;
+                        imgplot_acc[GetPixelIndex(x, y)].green = 0;
+                        imgplot_acc[GetPixelIndex(x, y)].blue = 0;
                     }
                 });
 
