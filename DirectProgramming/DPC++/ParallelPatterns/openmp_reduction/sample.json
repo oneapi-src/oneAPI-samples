@@ -18,8 +18,8 @@
  			   "mkdir build",
  			   "cd build",
  			   "cmake ..",
- 			   "make dpc_reduce", 
-               "./src/dpc_reduce"
+ 			   "make ", 
+               "./src/openmp_reduction"
               ]
             }
       ]
