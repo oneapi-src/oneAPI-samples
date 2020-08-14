@@ -5,14 +5,11 @@
 // =============================================================
 
 #include <CL/sycl.hpp>
+#include "dpc_common.hpp"
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/algorithm>
 #include <random>
 #include <iostream>
-
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
 
 //Dense algorithm stores all the bins, even if bin has 0 entries
 //input array [4,4,1,0,1,2]
