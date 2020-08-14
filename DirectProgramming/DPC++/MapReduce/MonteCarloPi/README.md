@@ -1,8 +1,8 @@
 # `Monte Carlo Pi` Sample
 
-Monte Carlo Simulation is a broad category of computation which utlizes statistical analysis to reach a result. This sample utilizes the Monte Carlo Procedure to estimate the value of pi: By inscribing a circle of radius 1 inside a 2x2 square, and then sampling a large number of random coordinates falling uniformly within the square, we can determine the value of pi using the ratio of samples which fall inside the circle divided by the total number of samples.
+Monte Carlo Simulation is a broad category of computation which utlizes statistical analysis to reach a result. This sample utilizes the Monte Carlo Procedure to estimate the value of pi: By inscribing a circle of radius 1 inside a 2x2 square, and then sampling a large number of random coordinates falling uniformly within the square, the value of pi can be estimated using the ratio of samples which fall inside the circle divided by the total number of samples.
 
-This method of estimation works for calculating pi, because the ratio of samples is proportional to the ratio of a circle's area divided by the square's: a circle of radius 1 has an area of pi units squared, while a 2x2 square has an area of 4 units squared, yielding a ratio of pi/4. Therefore, to estimate the value of pi, our solution will be 4 times the sample ratio.
+This method of estimation works for calculating pi because the expected value of the sample ratio is equal to the ratio of a circle's area divided by the square's: a circle of radius 1 has an area of pi units squared, while a 2x2 square has an area of 4 units squared, yielding a ratio of pi/4. Therefore, to estimate the value of pi, our solution will be 4 times the sample ratio.
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
@@ -19,8 +19,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 
 The Monte Carlo estimation is prime for acceleration using parallelization and offloading, due to the nature of its procedure; it only requires generating a large number of random coordinates and then evaluating whether or not they fall within the circle. The challenge lies in the reduction stage: because the results of each test must be summed together to get the total number of coordinates inscribed 
 
-[_TEMPLATE: explictly note device use._]
-The code will attempt first to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected.  The device used for compilation is displayed in the output along with elapsed time to render the mandelbrot image. This is helpful for comparing different offload implementations based on complexity of the computation. 
+The code will attempt first to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected.  The device used for compilation is displayed in the output along with elapsed time to complete the computation. A rendered image plot of the computation is also written to a file.
 
 
 ## Key Implementation Details 
@@ -49,21 +48,17 @@ $ cmake ..
 $ make
 ```
 
-> Note: by default, exectables are created for both USM and buffers. You can build individually with the following: 
->    Create buffers executable: make mandelbrot
->    Create USM executable: make mandelbrot_usm
-
-2. Run the program (default uses buffers):
+2. Run the program:
     ```
     make run
     ```
-> Note: for USM use `make run_usm`
 
 3. Clean the program using:
     ```
     make clean
     ```
 
+#TODO::::::::::::::::::::::::::::::::
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 * Build the program using VS2017 or VS2019
       Right click on the solution file and open using either VS2017 or VS2019 IDE.
@@ -89,15 +84,11 @@ The default row and column size is 512.  Max interatins and repetions are both 1
 ### Example of Output
 [_TEMPLATE: Always provide an example of the expected outcome. This is confirmation to the user that the application worked as expected. Also, be sure your application output is complete and supportive._]
 ```
-Platform Name: Intel(R) OpenCL HD Graphics
-  Platform Version: OpenCL 2.1 
-       Device Name: Intel(R) Gen9 HD Graphics NEO
-    Max Work Group: 256
- Max Compute Units: 24
+Calculating estimated value of pi...
 
-Parallel Mandelbrot set using buffers.
-Rendered image output to file: mandelbrot.png (output too large to display in text)
-       Serial time: 0.0430331s
-     Parallel time: 0.00224131s
-Successfully computed Mandelbrot set.
+Running on Intel(R) Gen9
+The estimated value of pi (N = 320000) is: 3.13855
+
+Computation complete. The processing time was 0.441394 seconds.
+The simulation plot graph has been written to 'MonteCarloPi.bmp'
 ```
