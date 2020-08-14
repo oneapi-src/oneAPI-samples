@@ -82,7 +82,6 @@ You can modify the Mandelbrot parameters from within mandel.hpp. The configurabl
 The default row and column size is 512.  Max interatins and repetions are both 100.  By adjusting the parameters, you can observe how the performance varies using the different offload techniques.  Note that if the values drop below 128 for row and column, the output is limted to just text in the ouput window.
 
 ### Example of Output
-[_TEMPLATE: Always provide an example of the expected outcome. This is confirmation to the user that the application worked as expected. Also, be sure your application output is complete and supportive._]
 ```
 Calculating estimated value of pi...
 
