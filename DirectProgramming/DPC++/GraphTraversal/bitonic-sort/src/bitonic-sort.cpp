@@ -35,38 +35,90 @@
 // data to the kernel. The kernel swaps the elements accordingly in parallel.
 //
 #include <math.h>
-#include <dpc_common.hpp>
 #include <iostream>
+#include "dpc_common.hpp"
 
 using namespace sycl;
 using namespace std;
 
-void ParallelBitonicSort(int a[], int n, queue &q) {
+#define DEBUG 0
+
+void ParallelBitonicSort(int data_gpu[], int n, queue &q) {
   // n: the exponent used to set the array size. Array size = power(2, n)
   int size = pow(2, n);
-
+  int* a = data_gpu;
+  
   // step from 0, 1, 2, ...., n-1
   for (int step = 0; step < n; step++) {
     // for each step s, stage goes s, s-1, ..., 0
     for (int stage = step; stage >= 0; stage--) {
-      // In each state, construct a number (num_seq) of bitonic sequences of
-      // size seq_len (2, 4, ...) num_seq stores the number of bitonic sequences
-      // at each stage. seq_len stores the length of the bitonic sequence at
-      // each stage.
       int seq_len = pow(2, stage + 1);
-#if DEBUG
-      int num_seq = pow(2, (n - stage - 1));  // Used for debug purpose.
-      std::cout << "step num:" << step << " stage num:" << stage
-                << " num_seq:" << num_seq << "(" << seq_len << ") => ";
-#endif
+      
       // Constant used in the kernel: 2**(step-stage).
       int two_power = 1 << (step - stage);
 
       // Offload the work to kernel.
       q.submit([&](handler &h) {
-        h.parallel_for(range<1>(size), [=](id<1> i) {
+	h.parallel_for(range<1>(size), [=](id<1> i) {
           // Assign the bitonic sequence number.
-          int seq_num = i / seq_len;
+	  int seq_num = i / seq_len;
+
+          // Variable used to identified the swapped element.
+          int swapped_ele = -1;
+
+          // Because the elements in the first half in the bitonic
+          // sequence may swap with elements in the second half,
+          // only the first half of elements in each sequence is
+          // required (seq_len/2).
+          int h_len = seq_len / 2;
+
+          if (i < (seq_len * seq_num) + h_len) swapped_ele = i + h_len;
+
+          // Check whether increasing or decreasing order.
+          int odd = seq_num / two_power;
+
+          // Boolean variable used to determine "increasing" or
+          // "decreasing" order.
+          bool increasing = ((odd % 2) == 0);
+
+          // Swap the elements in the bitonic sequence if needed
+          if (swapped_ele != -1) {
+            if (((a[i] > a[swapped_ele]) && increasing) ||
+                ((a[i] < a[swapped_ele]) && !increasing)) {
+              int temp = a[i];
+              a[i] = a[swapped_ele];
+              a[swapped_ele] = temp;
+            }
+          }
+        });
+      });
+      q.wait();
+    }  // end stage
+  }    // end step
+}
+
+void ParallelBitonicSortBuffer(int data_gpu[], int n, queue &q) {
+  // n: the exponent used to set the array size. Array size = power(2, n)
+  int size = pow(2, n);
+
+  buffer<int, 1> input (data_gpu, size);
+  
+  // step from 0, 1, 2, ...., n-1
+  for (int step = 0; step < n; step++) {
+    // for each step s, stage goes s, s-1, ..., 0
+    for (int stage = step; stage >= 0; stage--) {
+      int seq_len = pow(2, stage + 1);
+      
+      // Constant used in the kernel: 2**(step-stage).
+      int two_power = 1 << (step - stage);
+
+      // Offload the work to kernel.
+      q.submit([&](handler &h) {
+        auto a = input.get_access<access::mode::read_write>(h);
+ 
+	h.parallel_for(range<1>(size), [=](id<1> i) {
+          // Assign the bitonic sequence number.
+	  int seq_num = i / seq_len;
 
           // Variable used to identified the swapped element.
           int swapped_ele = -1;
@@ -190,40 +242,62 @@ int main(int argc, char *argv[]) {
   std::cout << "Device: " << q.get_device().get_info<info::device::name>()
             << "\n";
 
+  // Memory allocated for host access only.
+  int *data_cpu = (int *)malloc(size * sizeof(int));
+
   // USM allocation using malloc_shared: data stores a sequence of random
   // numbers.
-  int *data = malloc_shared<int>(size, q);
+  int *data_usm = malloc_shared<int>(size, q);
 
-  // Memory allocated for host access only.
-  int *data2 = (int *)malloc(size * sizeof(int));
+  // Memory allocated to store gpu results using buffer allocation
+  int *data_gpu = (int *)malloc(size * sizeof(int));
 
   // Initialize the array randomly using a seed.
   srand(seed);
 
-  for (int i = 0; i < size; i++) data[i] = data2[i] = rand() % 1000;
+  for (int i = 0; i < size; i++)
+    data_usm[i] = data_gpu[i] = data_cpu[i] = rand() % 1000;
 
 #if DEBUG
   std::cout << "\ndata before:\n";
-  DisplayArray(data, size);
+  DisplayArray(data_usm, size);
 #endif
+
+  // Warm up
+  std::cout << "Warm up ...\n";
+  ParallelBitonicSort(data_usm, n, q);
 
   // Start timer
   dpc_common::TimeInterval t_par;
 
-  ParallelBitonicSort(data, n, q);
+  // Parallel sort using USM
+  ParallelBitonicSort(data_usm, n, q);
 
-  std::cout << "Kernel time: " << t_par.Elapsed() << " sec\n";
+  std::cout << "Kernel time using USM: " << t_par.Elapsed() << " sec\n";
 
 #if DEBUG
-  std::cout << "\ndata after sorting using parallel bitonic sort:\n";
-  DisplayArray(data, size);
+  std::cout << "\ndata_usm after sorting using parallel bitonic sort:\n";
+  DisplayArray(data_usm, size);
 #endif
 
+  // Start timer
+  dpc_common::TimeInterval t_par2;
+
+  // Parallel sort using buffer allocation
+  ParallelBitonicSortBuffer(data_gpu, n, q);
+
+  std::cout << "Kernel time using buffer allocation: " << t_par2.Elapsed() << " sec\n";
+
+#if DEBUG
+  std::cout << "\ndata_gpu after sorting using parallel bitonic sort:\n";
+  DisplayArray(data_gpu, size);
+#endif
+  
   // Start timer
   dpc_common::TimeInterval t_ser;
 
   // Bitonic sort in CPU (serial)
-  BitonicSort(data2, n);
+  BitonicSort(data_cpu, n);
 
   std::cout << "CPU serial time: " << t_ser.Elapsed() << " sec\n";
 
@@ -231,18 +305,22 @@ int main(int argc, char *argv[]) {
   bool pass = true;
   for (int i = 0; i < size - 1; i++) {
     // Validate the sequence order is increasing in both kernel and CPU.
-    if ((data[i] > data[i + 1]) || (data[i] != data2[i])) {
+    if ((data_usm[i] > data_usm[i + 1]) || (data_usm[i] != data_cpu[i])) {
       pass = false;
       break;
     }
+    
+    if ((data_gpu[i] > data_gpu[i + 1]) || (data_gpu[i] != data_cpu[i])) {
+    pass = false;
+    break;
+    }
   }
 
-  // Clean USM resources.
-  free(data, q);
-
-  // Clean CPU memory.
-  free(data2);
-
+  // Clean resources.
+  free(data_cpu);
+  free(data_usm, q);
+  free(data_gpu);
+  
   if (!pass) {
     std::cout << "\nFailed!\n";
     return -2;
