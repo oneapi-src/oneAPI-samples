@@ -1,5 +1,12 @@
+
 # oneAPI-samples/Common/
+
 
 ## `dpc_common.hpp`
 
-oneAPI code samples share a common include file.  This include file, `dpc_common.hpp`, is installed locally with the product installation and can be located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. The same `dpc_common.hpp` include file is provided here for your reference.
+Many oneAPI code samples share common include files.  These include files are installed locally with the product installation and can be located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. These same include files are provided here for your reference.
+
+| Common files/directory            | Description
+|:---                               |:---
+| dpc_common.hpp                    | Common macros and functions for oneAPI samples
+| STB                               | Image rendering library
