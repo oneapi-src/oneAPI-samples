@@ -14,10 +14,6 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <ClInclude Include="src\dpc_common.hpp" />
-=======
->>>>>>> 646c0545c8df6680d8d8a84b191ce56b698e346e
     <ClInclude Include="src\mandel.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -113,15 +109,11 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLWarningLevel>Level3</SYCLWarningLevel>
-<<<<<<< HEAD
-=======
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
->>>>>>> 646c0545c8df6680d8d8a84b191ce56b698e346e
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ONEAPI_ROOT)\compiler\latest\windows\bin\libsycl-complex.o</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -159,7 +151,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ONEAPI_ROOT)\compiler\latest\windows\bin\libsycl-complex.o</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

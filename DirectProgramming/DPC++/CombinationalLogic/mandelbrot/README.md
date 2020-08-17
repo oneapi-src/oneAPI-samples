@@ -25,12 +25,9 @@ This code sample is licensed under MIT license.
 
 ## Building the `Mandelbrot` Program for CPU and GPU
 
-<<<<<<< HEAD
-=======
 ### Include Files
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
->>>>>>> 646c0545c8df6680d8d8a84b191ce56b698e346e
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
@@ -65,15 +62,6 @@ $ make
       Right click on the project in Solution explorer and select Rebuild.
       From top menu select Debug -> Start without Debugging.
 
-<<<<<<< HEAD
->If you see the following error message when compiling this sample:
->
-```
-Error 'dpc_common.hpp' file not found
-```
->You need to add the following directory to the list of include folders, that are required by your project, in your project's Visual Studio project property panel. The missing include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
-=======
->>>>>>> 646c0545c8df6680d8d8a84b191ce56b698e346e
 
 * Build the program using MSBuild
       Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"

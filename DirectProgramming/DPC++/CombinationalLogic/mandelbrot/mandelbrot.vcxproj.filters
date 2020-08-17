@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <ClInclude Include="src\dpc_common.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-=======
->>>>>>> 646c0545c8df6680d8d8a84b191ce56b698e346e
     <ClInclude Include="src\mandel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
