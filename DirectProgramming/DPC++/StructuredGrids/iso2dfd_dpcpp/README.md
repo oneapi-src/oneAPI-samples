@@ -53,8 +53,11 @@ global ID variable) for a single time step.
 
 This code sample is licensed under MIT license.  
 
-
 ##  Building the `iso2dfd` Program for CPU and GPU
+
+### Include Files 
+
+The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ### Running Samples In DevCloud
 
