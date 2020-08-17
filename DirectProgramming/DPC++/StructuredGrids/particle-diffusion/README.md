@@ -104,18 +104,6 @@ Perform the following steps:
     Right click on the project in Solution explorer and select Rebuild  
     From top menu select Debug -> Start without Debugging  
 
->If you see the following error message when compiling this sample:
->
-```
-Error 'dpc_common.hpp' file not found
-```
->You need to add the following directory to the list of include folders, that are required by your project, in your project's Visual Studio project property panel. The missing include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
-
-   * Build the program using MSBuild  
-    Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"  
-    Run - MSBuild Particle_Diffusion.sln /t:Rebuild /p:Configuration="Release"  
-
-
 ## Running the Sample
 
 ### Application Parameters 
