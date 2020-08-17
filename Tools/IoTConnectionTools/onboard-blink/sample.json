@@ -1,0 +1,22 @@
+{
+  "guid": "892964F4-89DC-4E48-8511-8FCF6AE1A8D6",
+  "name": "On-Board LED Blink",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
+  "description": "Demonstrates how to blink the on board LED, by writing a digital value to an output pin using the Eclipse* MRAA library",
+  "dependencies": ["pkg|mraa|https://mraa.io"],
+  "languages": [{"cpp":{}}],
+  "os": ["linux"],
+  "ciTests": {
+    "linux": [
+        { "id": "onboard-blink",
+          "env": [],
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake ..",
+            "make"
+            ]
+        }
+    ]
+  }
+}

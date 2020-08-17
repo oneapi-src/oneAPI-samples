@@ -19,7 +19,7 @@ run:
 	./$(USM_EXE_NAME)
 
 run_buffers:
-	./$(BBUFFER_EXE_NAME)
+	./$(BUFFER_EXE_NAME)
 
 clean:
 	rm -rf $(USM_EXE_NAME) $(BUFFER_EXE_NAME)

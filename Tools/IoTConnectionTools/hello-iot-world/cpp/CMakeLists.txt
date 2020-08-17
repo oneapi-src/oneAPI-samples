@@ -1,0 +1,6 @@
+add_executable (hello-iot-world hello-iot-world.cpp)
+if(WIN32)
+    add_custom_target (run hello-iot-world.exe)
+else()
+    add_custom_target (run ./hello-iot-world)
+endif()
