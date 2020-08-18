@@ -14,11 +14,11 @@ and search based on relevant terms noted in the comments.
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; Windows 10 or Windows Server 2017
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel Data Parallel C++ Compiler (beta)
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | How to offload the computation to GPU using Intel&reg; oneAPI DPC++/C++ Compiler
 | Time to complete                  | 15 minutes
 
-Performance number tabulation [if applicable]
+Performance number tabulation
 
 | motionsim sample                      | Performance data
 |:---                               |:---
