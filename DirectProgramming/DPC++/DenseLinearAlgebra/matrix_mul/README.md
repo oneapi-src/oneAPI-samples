@@ -10,7 +10,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10*
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler beta, Intel&reg; C/C++ Compiler beta
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler, Intel&reg; C/C++ Compiler beta
 | What you will learn               | Offloads computations on 2D arrays to GPU using Intel DPC++ and OpenMP
 | Time to complete                  | 15 minutes  
 
