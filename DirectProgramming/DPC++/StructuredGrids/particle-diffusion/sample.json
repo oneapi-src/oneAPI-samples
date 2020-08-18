@@ -1,0 +1,30 @@
+{
+  "guid": "FF17715B-10DD-43E2-A408-67146A93702B",
+  "name": "Particle-Diffusion",
+  "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
+  "description": "This code sample shows a simple (non-optimized) implementation of a Monte Carlo simulation of the diffusion of water molecules in tissue.",
+  "toolchain": ["dpcpp"],
+  "languages": [{"cpp":{}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 ]
+        }],
+        "windows": [{
+                "steps": [
+                        "MSBuild Particle_Diffusion.sln /t:Rebuild /p:Configuration=\"Release\"",
+                        "cd x64/Release",
+                        "Particle_Diffusion.exe 10000 777"
+                ]
+        }]
+
+  }
+}

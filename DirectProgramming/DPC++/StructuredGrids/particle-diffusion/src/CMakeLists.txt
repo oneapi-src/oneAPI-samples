@@ -1,0 +1,11 @@
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -std=c++17 -O3")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS " -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lsycl -lOpenCL -lpthread -lm -ldl")
+
+add_executable (motionsim.exe motionsim.cpp )
+target_link_libraries(motionsim.exe OpenCL sycl)
+if(WIN32)
+        add_custom_target (run motionsim.exe 10000 777)
+else()
+        add_custom_target (run ./motionsim.exe 10000 777)
+endif()

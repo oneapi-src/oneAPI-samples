@@ -30,7 +30,7 @@ The implementations include multiple functions to accomplish these tasks, each o
 This code sample is licensed under MIT license. 
 
 
-## Building the `Mandelbrot` Program for CPU and GPU
+## Building the `Intrinsics` Program
 
 Perform the following steps:
 1. Build the program using the following `make` commands. 
@@ -59,7 +59,7 @@ These intrinsics samples have relatively few modifiable parameters. However, cer
 
 3. intrin_ftz_sample: This sample has no modifiable parameters.
 
-
+### Example of Output
 ```
 Dot Product computed by C:  4324.000000
 Dot Product computed by Intel(R) SSE3 intrinsics:  4324.000000
