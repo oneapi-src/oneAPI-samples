@@ -18,7 +18,7 @@ using namespace sycl;
 // Size of parallel work groups
 constexpr int size_wg = 32;
 // Number of parallel work groups
-constexpr int num_wg = 10000;
+constexpr int num_wg = 256;
 // Number of sample points
 constexpr int size_n = size_wg * num_wg; // Must be a multiple of size_wg
 // Output image dimensions
@@ -126,6 +126,20 @@ void MonteCarloPi(rgb * image_plot){
             });
         });
         q.wait_and_throw();
+
+        // Reduction Stage
+        q.submit([&](handler& h){
+            // Set up accessors
+            auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
+            // Set up local memory for faster reduction
+            sycl::accessor<int, 1, access::mode::read_write, access::target::local> local_mem(range<1>(size_wg), h);
+
+
+
+        });
+        q.wait_and_throw();
+
+
     } catch (sycl::exception e) {
         std::cout << "SYCL exception caught: " << e.what() << std::endl;
         exit(1);
