@@ -12,7 +12,7 @@ and search based on relevant terms noted in the comments.
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta); Intel C++ Compiler (beta)
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler; Intel&reg; C/C++ Compiler
 | What you will learn               | How to simulate 1D Heat Transfer using Intel DPC++ compiler
 | Time to complete                  | 10 minutes
 
