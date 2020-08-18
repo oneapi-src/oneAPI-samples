@@ -6,6 +6,11 @@
 #include <iomanip>  // setprecision library
 #include <iostream>
 #include "dpc_common.hpp"
+// Many oneAPI code samples share common include files. These
+// include files are installed locally with the product installation
+// and can be located at %ONEAPI_ROOT%\dev-utilities\latest\include
+// on your development system.
+
 
 // cpu_seq_calc_pi is a simple sequential CPU routine
 // that calculates all the slices and then
