@@ -20,7 +20,7 @@ using namespace sycl;
 // cpu_seq is a simple sequential CPU routine
 // that calculates all the slices and then
 // does a reduction.
-float cpu_seq(int num_steps) {
+float calc_pi_cpu_seq(int num_steps) {
   float step = 1.0 / (float)num_steps;
   float x;
   float sum = 0.0;
@@ -34,7 +34,7 @@ float cpu_seq(int num_steps) {
 // cpu_tbb is a simple parallel_reduce tbb routine
 // that calculates all the slices and then
 // uses tbb reduce to combine results.
-float cpu_tbb(int num_steps) {
+float calc_pi_cpu_tbb(int num_steps) {
   float step = 1.0 / (float)num_steps;
 
   auto tbbtotal =
@@ -58,7 +58,7 @@ float cpu_tbb(int num_steps) {
 // how to do calculations directly in dpc++ with
 // mininmal complexity.
 template <typename Policy>
-float dpstd_native(size_t num_steps, Policy&& policy) {
+float calc_pi_dpstd_native(size_t num_steps, Policy&& policy) {
   float step = 1.0 / (float)num_steps;
 
   float data[num_steps];
@@ -93,7 +93,7 @@ float dpstd_native(size_t num_steps, Policy&& policy) {
 // This option uses a parallel for to fill the array, and then use a single
 // task to reduce into groups and then use cpu for final reduction.
 template <typename Policy>
-float dpstd_native2(size_t num_steps, Policy&& policy, int group_size) {
+float calc_pi_dpstd_native2(size_t num_steps, Policy&& policy, int group_size) {
   float step = 1.0 / (float)num_steps;
 
   float data[num_steps];
@@ -166,7 +166,7 @@ struct slice_area {
 // uses a tranform_init with plus/no_op and then
 // a local reduction then global reduction.
 template <typename Policy>
-float dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
+float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
   float data[num_steps];
 
   // Create buffer using host allocated "data" array
@@ -276,7 +276,7 @@ float dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
 // calls transform_init to calculate the slices and then
 // does a reduction in two steps - global and then local.
 template <typename Policy>
-float dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
+float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
   std::vector<float> data(num_steps);
   float result = 0.0;
 
@@ -390,7 +390,7 @@ float dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
 // calculations of each small rectangle.   The second call is the reduce
 // call which sums up the results of all the elements in the buffer.
 template <typename Policy>
-float dpstd_two_steps_lib(int num_steps, Policy&& policy) {
+float calc_pi_dpstd_two_steps_lib(int num_steps, Policy&& policy) {
   float step = 1.0 / (float)num_steps;
 
   buffer<float> calc_values{num_steps};
@@ -422,7 +422,7 @@ float dpstd_two_steps_lib(int num_steps, Policy&& policy) {
 // transform reduce.  It does everything in one library
 // call.
 template <typename Policy>
-float dpstd_onestep(int num_steps, Policy& policy) {
+float calc_pi_dpstd_onestep(int num_steps, Policy& policy) {
   float step = 1.0f / (float)num_steps;
 
   float total = std::transform_reduce(
@@ -450,65 +450,65 @@ int main(int argc, char** argv) {
   // Since we are using JIT compiler for samples,
   // we need to run each step once to allow for compile
   // to occur before we time execution of function.
-  pi = dpstd_native(num_steps, policy);
-  pi = dpstd_native2(num_steps, policy, groups);
-  pi = dpstd_native3(num_steps, groups, policy);
-  pi = dpstd_native4(num_steps, groups, policy);
+  pi = calc_pi_dpstd_native(num_steps, policy);
+  pi = calc_pi_dpstd_native2(num_steps, policy, groups);
+  pi = calc_pi_dpstd_native3(num_steps, groups, policy);
+  pi = calc_pi_dpstd_native4(num_steps, groups, policy);
 
-  pi = dpstd_two_steps_lib(num_steps, policy);
-  pi = dpstd_onestep(num_steps, policy);
+  pi = calc_pi_dpstd_two_steps_lib(num_steps, policy);
+  pi = calc_pi_dpstd_onestep(num_steps, policy);
 
   dpc_common::TimeInterval T;
-  pi = cpu_seq(num_steps);
+  pi = calc_pi_cpu_seq(num_steps);
   auto stop = T.Elapsed();
   std::cout << "Cpu Seq calc: \t\t";
   std::cout << std::setprecision(3) << "PI =" << pi;
   std::cout << " in " << stop << " seconds\n";
 
   dpc_common::TimeInterval T2;
-  pi = cpu_tbb(num_steps);
+  pi = calc_pi_cpu_tbb(num_steps);
   auto stop2 = T2.Elapsed();
   std::cout << "Cpu TBB  calc: \t\t";
   std::cout << std::setprecision(3) << "PI =" << pi;
   std::cout << " in " << stop2 << " seconds\n";
 
   dpc_common::TimeInterval T3;
-  pi = dpstd_native(num_steps, policy);
+  pi = calc_pi_dpstd_native(num_steps, policy);
   auto stop3 = T3.Elapsed();
   std::cout << "dpstd native:\t\t";
   std::cout << std::setprecision(3) << "PI =" << pi;
   std::cout << " in " << stop3 << " seconds\n";
 
   dpc_common::TimeInterval T3a;
-  pi = dpstd_native2(num_steps, policy, groups);
+  pi = calc_pi_dpstd_native2(num_steps, policy, groups);
   auto stop3a = T3a.Elapsed();
   std::cout << "dpstd native2:\t\t";
   std::cout << std::setprecision(3) << "PI =" << pi;
   std::cout << " in " << stop3a << " seconds\n";
 
   dpc_common::TimeInterval T3b;
-  pi = dpstd_native3(num_steps, groups, policy);
+  pi = calc_pi_dpstd_native3(num_steps, groups, policy);
   auto stop3b = T3b.Elapsed();
   std::cout << "dpstd native3:\t\t";
   std::cout << std::setprecision(3) << "PI =" << pi;
   std::cout << " in " << stop3b << " seconds\n";
 
   dpc_common::TimeInterval T3c;
-  pi = dpstd_native4(num_steps, groups, policy);
+  pi = calc_pi_dpstd_native4(num_steps, groups, policy);
   auto stop3c = T3c.Elapsed();
   std::cout << "dpstd native4:\t\t";
   std::cout << std::setprecision(3) << "PI =" << pi;
   std::cout << " in " << stop3c << " seconds\n";
 
   dpc_common::TimeInterval T4;
-  pi = dpstd_two_steps_lib(num_steps, policy);
+  pi = calc_pi_dpstd_two_steps_lib(num_steps, policy);
   auto stop4 = T4.Elapsed();
   std::cout << "dpstd two steps:\t";
   std::cout << std::setprecision(3) << "PI =" << pi;
   std::cout << " in " << stop4 << " seconds\n";
 
   dpc_common::TimeInterval T5;
-  pi = dpstd_onestep(num_steps, policy);
+  pi = calc_pi_dpstd_onestep(num_steps, policy);
   auto stop5 = T5.Elapsed();
   std::cout << "dpstd transform_reduce: ";
   std::cout << std::setprecision(3) << "PI =" << pi;
