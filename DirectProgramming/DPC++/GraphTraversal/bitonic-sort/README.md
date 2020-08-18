@@ -13,8 +13,8 @@ and search based on relevant terms noted in the comments.
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta); Intel C++ Compiler (beta)
-| What you will learn               | Implement bitonic sort using Intel DPC++ compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler; Intel&reg; C/C++ Compiler
+| What you will learn               | Implement bitonic sort using Intel&reg; oneAPI DPC++/C++ Compiler
 | Time to complete                  | 15 minutes
 
 
