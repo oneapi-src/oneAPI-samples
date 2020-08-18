@@ -53,8 +53,11 @@ global ID variable) for a single time step.
 
 This code sample is licensed under MIT license.  
 
-
 ##  Building the `iso2dfd` Program for CPU and GPU
+
+### Include Files 
+
+The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ### Running Samples In DevCloud
 
@@ -91,18 +94,6 @@ Perform the following steps:
       Right click on the solution file and open using either VS2017 or VS2019 IDE.
       Right click on the project in Solution explorer and select Rebuild.
       From top menu select Debug -> Start without Debugging.
-
->If you see the following error message when compiling this sample:
->
-```
-Error 'dpc_common.hpp' file not found
-```
->You need to add the following directory to the list of include folders, that are required by your project, in your project's Visual Studio project property panel. The missing include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
-
-* Build the program using MSBuild
-      Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-      Run - MSBuild iso2dfd.sln /t:Rebuild /p:Configuration="Release"
-
 
 ## Running the Sample
 ### Application Parameters 
