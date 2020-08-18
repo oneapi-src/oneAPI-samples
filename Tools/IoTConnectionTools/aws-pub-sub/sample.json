@@ -1,5 +1,5 @@
 {
-  "guid": "479AD17C-27E9-42F0-8CB1-14B48D098829"
+  "guid": "479AD17C-27E9-42F0-8CB1-14B48D098829",
   "name": "AWS Pub Sub",
   "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
   "description": "This sample uses the Message Broker for AWS IoT to send and receive messages through an MQTT connection.",
