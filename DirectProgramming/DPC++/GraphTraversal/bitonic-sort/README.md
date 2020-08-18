@@ -51,7 +51,7 @@ if a compatible GPU is not detected.
 ## Key Implementation Details
 
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command g
-roups. Unified Shared Memory (USM) is used for data management.
+roups. Unified Shared Memory (USM) and Buffer Object are used for data management.
 
 ## License  
 This code sample is licensed under MIT license  
@@ -117,7 +117,10 @@ the ascending order is verified, the application will display a “Success!” m
 $ ./bitonic-sort 21 47
 Array size: 2097152, seed: 47
 Device: Intel(R) Gen9 HD Graphics NEO
-Kernel time: 0.416827 sec
-CPU serial time: 0.60523 sec
+Warm up ...
+Kernel time using USM: 0.248422 sec
+Kernel time using buffer allocation: 0.253364 sec
+CPU serial time: 0.628803 sec
+
 Success!
 ```
