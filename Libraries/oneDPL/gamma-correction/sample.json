@@ -1,6 +1,6 @@
 {
   "name": "Gamma Correction",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++ Compiler/oneAPI DPC++ Library/CPU and GPU"],
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler /oneAPI DPC++ Library/CPU and GPU"],
   "description": "gamma correction - a nonlinear operation used to encode and decode the luminance of each image pixel.",
   "toolchain": ["dpcpp"],
   "languages": [{"cpp":{}}],
