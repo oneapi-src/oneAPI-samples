@@ -1,7 +1,7 @@
 {
   "guid": "3228581F-9DF8-4696-9B1C-0B31286B97C3",
   "name": "QR Decomposition of Matrices on FPGA",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Reference Designs"],
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Example Designs"],
   "description": "Reference design demonstrating high-performance QR decomposition of complex matrices on FPGA",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
@@ -26,6 +26,9 @@
       {
         "id": "report",
         "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
           "make report"
         ]
       }

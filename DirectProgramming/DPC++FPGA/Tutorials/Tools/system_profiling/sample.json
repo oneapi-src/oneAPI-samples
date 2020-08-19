@@ -23,6 +23,9 @@
       {
         "id": "report",
         "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
           "make report"
         ]
       }

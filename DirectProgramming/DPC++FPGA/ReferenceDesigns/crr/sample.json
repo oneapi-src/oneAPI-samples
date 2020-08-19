@@ -1,7 +1,7 @@
 {
   "guid": "D725E06E-0ECE-44F8-910D-AD1A8C89ED89",
   "name": "CRR Binomial Tree Model for Option Pricing",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Reference Designs"],
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Example Designs"],
   "description": "FPGA-optimized reference design of the Cox-Ross-Rubinstein (CRR) binomial tree model with Greeks for American exercise options",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
@@ -23,6 +23,9 @@
       {
         "id": "report",
         "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
           "make report"
         ]
       }
