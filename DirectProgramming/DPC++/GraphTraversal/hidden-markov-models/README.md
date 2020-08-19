@@ -1,28 +1,27 @@
 #`DPC++ Hidden Markov Model` Sample
-HMM (Hidden Markov Model) is the statistical model in which the system is represented by a Markov process with the unobservable or so called "hidden" states. 
-States can be represented as nodes of directed graph. The directed edges of this graph are possible transitions beetween nodes defined with some probabilities.
-The number of states is N, the transition matrix A is a square matrix of size N. Each element with indexes (i,j) of this matrix determines the probability to move from 
-the state i to the state j on any step of the Markov process (i and j can be the same if the state does not change on the taken step).
-The main assumption of the HMM is that there are visible observations that depend on the current Markov process. 
-That dependency can be described as a conditional probability distribution (represented by emission matrix). The problem is to find out the chain of the hidden Markov states using the given observations set. 
+The HMM (Hidden Markov Model) sample presents a statistical model using a Markov process to present graphable nodes that are otherwise in an unobservable state or “hidden”.  This technique is helpful in pattern recognition such as speech, handwriting, gesture recognition, part-of-speech tagging, partial discharges and bioinformatics. The sample offloads the complexity of the Markov process to the GPU.
+
+The directed edges of this graph are possible transitions beetween nodes or states defined with the following parameters: the number of states is N, the transition matrix A is a square matrix of size N. Each element with indexes (i,j) of this matrix determines the probability to move from the state i to the state j on any step of the Markov process (i and j can be the same if the state does not change on the taken step).
+
+The main assumption of the HMM is that there are visible observations that depend on the current Markov process. That dependency can be described as a conditional probability distribution (represented by emission matrix). The problem is to find out the most likely chain of the hidden Markov states using the given observations set.
 
 ##Requirements and sample info
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04, Windows 10 
+| OS                                | Linux* Ubuntu* 18.04, Windows 10
 | Hardware                          | Skylake with GEN9 or newer,
 | Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)
-| What you will learn               | Implement Viterbi algorithm to get the most probable path that consists of the hidden states 
+| What you will learn               | Implement Viterbi algorithm to get the most likely path that consists of the hidden states
 | Time to complete                  | 1 minute
 
 ##Purpose
 
-This code sample implements the Viterbi algorithm which is a dynamic programming algorithm for finding
-the most likely sequence of hidden states—called the Viterbi path—that results in a sequence
-of observed events, especially in the context of Markov information sources and HMM.
+The sample can use GPU offload to compute sequential steps of multiple graph traversals simultaneously.
 
-- Initially, the dataset for algorithm processing is generated: initial states probability distribution Pi, transition matrix A, emission matrix B and the sequence or the observations produced by hidden Markov process. 
+This code sample implements the Viterbi algorithm which is a dynamic programming algorithm for finding the most likely sequence of hidden states—called the Viterbi path—that results in a sequence of observed events, especially in the context of Markov information sources and HMM.
+
+- Initially, the dataset for algorithm processing is generated: initial states probability distribution Pi, transition matrix A, emission matrix B and the sequence or the observations produced by hidden Markov process.
 - First, the matrix of Viterbi values on the first states are initialized using distribution Pi and emission matrix B. The matrix of back pointers is initialized with default values -1.
 - Then, for each time step the Viterbi matrix is set to the maximal possible value using A, B and Pi.
 - Finally, the state with maximum Viterbi value on the last step is set as a final state of the Viterbi path and the previous nodes of this path are detemined using the correspondent rows of back pointers matrix for each of the steps except the last one.
@@ -31,17 +30,16 @@ Note: The implementation uses logarithms of the probabilities to process small n
 
 ##Key Implementation details
 
-The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command g
-roups.
+The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
 
-## License  
-This code sample is licensed under MIT license. 
+## License
+This code sample is licensed under MIT license.
 
-## Building the `DPC++ Hidden Markov Model` Program for CPU and GPU 
+## Building the `DPC++ Hidden Markov Model` Program for CPU and GPU
 
 ### On a Linux* System
-1. Build the program using the following `cmake` commands. 
-    ``` 
+1. Build the program using the following `cmake` commands.
+    ```
     $ cd hidden-markov-models
     $ mkdir build
     $ cd build
@@ -72,13 +70,10 @@ This code sample is licensed under MIT license.
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 Perform the following steps:
-1. Launch the Visual Studio* 2017.
-2. Select the menu sequence **File** > **Open** > **Project/Solution**. 
-3. Locate the `hidden-markov-models` folder.
-4. Select the `hidden-markov-models.sln` file.
-5. Select the configuration 'Debug' or 'Release'  
-6. Select **Project** > **Build** menu option to build the selected configuration.
-7. Select **Debug** > **Start Without Debugging** menu option to run the program.
+1. Locate and select the `hidden-markov-models.sln` file.
+2. Select the configuration 'Debug' or 'Release'.
+3. Select **Project** > **Build** menu option to build the selected configuration.
+4. Select **Debug** > **Start Without Debugging** menu option to run the program.
 
 ## Running the Sample
 ### Application Parameters
@@ -86,5 +81,6 @@ There are no editable parameters for this sample.
 
 ### Example of Output
 Device: Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz Intel(R) OpenCL
-The Viterbi path is:  19 18 17 16 15 14 13 12 11 10
+The Viterbi path is:
+19 18 17 16 15 14 13 12 11 10
 The sample completed successfully!

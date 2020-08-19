@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -28,7 +28,7 @@
 #include <math.h>
 #include <iostream>
 #include <cstdio>
-#include <ctime>
+#include "dpc_common.hpp"
 
 using namespace sycl;
 using namespace std;
@@ -40,7 +40,7 @@ constexpr int N = 20;
 constexpr int M = 20;
 // The lenght of the hidden states sequence T.
 constexpr int T = 20;
-// The parameter for generatinf the sequence.
+// The parameter for generating the sequence.
 constexpr int seed = 0;
 // Minimal double to initialize  logarithms for Viterbi values equal to 0.
 constexpr double MIN_DOUBLE = -1.0 * std::numeric_limits<double>::max();
@@ -49,9 +49,9 @@ bool ViterbiCondition(double x, double y, double z, double compare);
 
 int main() {
     // Initializing and generating initial probabilities for the hidden states.
-    double(*Pi) = new double[N];
+    double(*pi) = new double[N];
     for (int i = 0; i < N; ++i) {
-        Pi[i] = sycl::log10(1.0f / N);
+        pi[i] = sycl::log10(1.0f / N);
     }
 
     // Сatch asynchronous exceptions.
@@ -73,30 +73,30 @@ int main() {
             << q.get_device().get_platform().get_info<info::platform::name>() << "\n";
 
         //Buffers initialization.
-        buffer<double, 2> Viterbi(range<2>(N, T));
-        buffer<int, 2> Back_pointer(range<2>(N, T));
-        buffer<double, 2> A(range<2>(N, N));
-        buffer<double, 2> B(range<2>(N, M));
+        buffer<double, 2> viterbi(range<2>(N, T));
+        buffer<int, 2> back_pointer(range<2>(N, T));
+        buffer<double, 2> a(range<2>(N, N));
+        buffer<double, 2> b(range<2>(N, M));
 
         // Generating transition matrix A for the Markov process.
         q.submit([&](handler& h) {
-            auto accessor = A.get_access<access::mode::write>(h);
+            auto a_acc = a.get_access<access::mode::write>(h);
             h.parallel_for(range<2>(N, N), [=](id<2> index) {
                 // The sum of the probabilities in each row of the matrix A  has to be equal to 1.
-                double Prob = 1.0f / N;
-                // The algorithm computes logarithms of the probability values to improve small numbers processing
-                accessor[index] = sycl::log10(Prob);
+                double prob = 1.0f / N;
+                // The algorithm computes logarithms of the probability values to improve small numbers processing.
+                a_acc[index] = sycl::log10(prob);
                 });
             });
 
         // Generating emission matrix B for the Markov process.
         q.submit([&](handler& h) {
-            auto accessor = B.get_access<access::mode::write>(h);
+            auto b_acc = b.get_access<access::mode::write>(h);
             h.parallel_for(range<2>(N, M), [=](id<2> index) {
                 // The sum of the probabilities in each row of the matrix B has to be equal to 1.
-                double Prob = ((index[0] + index[1]) % M) * 2.0f / M / (M - 1);
-                // The algorithm computes logarithms of the probability values to improve small numbers processing
-                accessor[index] = (Prob == 0.0f) ? MIN_DOUBLE : sycl::log10(Prob);
+                double prob = ((index[0] + index[1]) % M) * 2.0f / M / (M - 1);
+                // The algorithm computes logarithms of the probability values to improve small numbers processing.
+                b_acc[index] = (prob == 0.0f) ? MIN_DOUBLE : sycl::log10(prob);
                 });
             });
 
@@ -109,38 +109,39 @@ int main() {
 
         // Initialization of the Viterbi matrix and the matrix of back pointers.
         q.submit([&](handler& h) {
-            auto V = Viterbi.get_access<access::mode::read_write>(h);
-            auto BP = Back_pointer.get_access<access::mode::write>(h);
-            auto b = B.get_access<access::mode::read>(h);
+            auto v_acc = viterbi.get_access<access::mode::read_write>(h);
+            auto b_ptr_acc = back_pointer.get_access<access::mode::write>(h);
+            auto b_acc = b.get_access<access::mode::read>(h);
             h.parallel_for(range<2>(N, T), [=](id<2> index) {
                 int i = index[0];
                 int j = index[1];
                 // At starting point only the first Viterbi values are defined and these Values are substituted 
                 // with logarithms  due to the following equation: log(x*y) = log(x) + log(y).
-                V[index] = (j != 0) ? MIN_DOUBLE : Pi[i] + b[i][seq[0]];
+                v_acc[index] = (j != 0) ? MIN_DOUBLE : pi[i] + b_acc[i][seq[0]];
                 // Default values of all the back pointers are (-1) to show that they are not determined yet. 
-                BP[index] = -1;
+                b_ptr_acc[index] = -1;
                 });
             });
-        delete[] Pi;
+        delete[] pi;
 
         // The sequential steps of the Viterbi algorithm that define the Viterbi matrix and the matrix 
         // of back pointers. The product of the Viterbi values and the probabilities is substituted with the sum of 
-        // the logarithms due to the following equation: log (x*y*z) = log(x) + log(y) + log(z)
+        // the logarithms due to the following equation: log (x*y*z) = log(x) + log(y) + log(z).
         for (int j = 0; j < T - 1; ++j) {
             q.submit([&](handler& h) {
-                auto V = Viterbi.get_access<access::mode::read_write>(h);
-                auto BP = Back_pointer.get_access<access::mode::read_write>(h);
-                auto a = A.get_access <access::mode::read>(h);
-                auto b = B.get_access <access::mode::read>(h);
+                auto v_acc = viterbi.get_access<access::mode::read_write>(h);
+                auto b_ptr_acc = back_pointer.get_access<access::mode::read_write>(h);
+                auto a_acc = a.get_access <access::mode::read>(h);
+                auto b_acc = b.get_access <access::mode::read>(h);
                 auto seq_acc = seq_buf.get_access <access::mode::read>(h);
 
                 h.parallel_for(range<2>(N, N), [=](id<2> index) {
                     int i = index[0], k = index[1];
-                    // This conditional block finds the maximum possible Viterbi value on the current step j for the step i.
-                    if (ViterbiCondition(V[k][j], b[i][seq_acc[j + 1]], a[k][i], V[i][j + 1])) {
-                        V[i][j + 1] = V[k][j] + a[k][i] + b[i][seq_acc[j + 1]];
-                        BP[i][j + 1] = k;
+                    // This conditional block finds the maximum possible Viterbi value on 
+                    // the current step j for the state i.
+                    if (ViterbiCondition(v_acc[k][j], b_acc[i][seq_acc[j + 1]], a_acc[k][i], v_acc[i][j + 1])) {
+                        v_acc[i][j + 1] = v_acc[k][j] + a_acc[k][i] + b_acc[i][seq_acc[j + 1]];
+                        b_ptr_acc[i][j + 1] = k;
                     }
                 });
             });
@@ -148,26 +149,29 @@ int main() {
         delete[] seq;
 
         // Getting the Viterbi path based on the matrix of back pointers
-        buffer<int, 1> ViterbiPath(range<1> {T});
-        auto V = Viterbi.get_access<access::mode::read>();
-        auto BP = Back_pointer.get_access<access::mode::read>();
-        auto Path = ViterbiPath.get_access<access::mode::read_write>();
-        double Max = MIN_DOUBLE;
-        // Constructing the Viterbi path. The last state of this path is the one with the biggest Viterbi value (the most likely state).
+        buffer<int, 1> vit_path(range<1> {T});
+        auto v_acc = viterbi.get_access<access::mode::read>();
+        auto b_ptr_acc = back_pointer.get_access<access::mode::read>();
+        auto vit_path_acc = vit_path.get_access<access::mode::read_write>();
+        double v_max = MIN_DOUBLE;
+        // Constructing the Viterbi path. The last state of this path is the one with 
+        // the biggest Viterbi value (the most likely state).
         for (int i = 0; i < N; ++i) {
-            if (V[i][T - 1] > Max) {
-                Max = V[i][T - 1];
-                Path[T - 1] = i;
+            if (v_acc[i][T - 1] > v_max) {
+                v_max = v_acc[i][T - 1];
+                vit_path_acc[T - 1] = i;
             }
         }
 
         for (int i = T - 2; i >= 0; --i) {
-            Path[i] = BP[Path[i + 1]][i + 1];
+            // Every back pointer starting from the last one contains the index of the previous
+            // point in Viterbi path.
+            vit_path_acc[i] = b_ptr_acc[vit_path_acc[i + 1]][i + 1];
         }
 
-        cout << "The Viterbi path is: ";
+        cout << "The Viterbi path is: "<< std::endl;
         for (int k = 0; k < T; ++k) {
-            cout << Path[k] << " ";
+            cout << vit_path_acc[k] << " ";
         }
         cout << std::endl;
 
