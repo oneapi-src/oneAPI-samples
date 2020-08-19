@@ -3,7 +3,7 @@
     "description": "Demonstrates the intrinsic functions of the Intel® C++ Compiler",
     "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
     "os": ["linux", "darwin"],
-    "builder": ["cmake"],
+    "builder": ["make"],
     "languages": [{"cpp":{}}],
     "toolchain": ["icc"],
     "guid": "ACD0E89E-67CC-4CB4-87AB-B12B84962EAF",
