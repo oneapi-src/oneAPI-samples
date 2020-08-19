@@ -1,4 +1,4 @@
-|Code sample name   |Supported Intel(r)   Architecture(s)    	|Description 	| 
+|Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	| 
 |-----------------------|-------------------------------------------|---------------|
 |DirectPrograming/ |
 |../DPC++/CombinationalLogic/Mandelbrot 	|GPU, CPU  	|Example of a fractal in   mathematics 	|
@@ -14,29 +14,31 @@
 |../DPC++/StructuredGrids/ISO2DFD_DPCPP 	|GPU, CPU  	|A simple finite difference   stencil kernel for solving 2D acoustic isotropic wave equation using DPC++	|
 |../DPC++/StructuredGrids/ISO3DFD_DPCPP 	|GPU, CPU  	|A finite difference stencil   kernel for solving 3D acoustic isotropic wave equation using DPC++  	|
 |../DPC++/StructuredGrids/Particle-diffusion 	|GPU, CPU  	|A simple implementation of a   Monte Carlo simulation of the diffusion of water molecules in tissue    	|
+|../DPC++FPGA/ReferenceDesigns/crr                                    |FPGA |High-performance CRR binomial tree option pricing model using DPC++ on FPGA|
+|../DPC++FPGA/ReferenceDesigns/gzip                                   |FPGA |High-performance GZIP compression using DPC++ on FPGA|
+|../DPC++FPGA/ReferenceDesigns/qrd                                    |FPGA |High-performance QR decomposition of matrices using DPC++ on FPGA|
+|../DPC++FPGA/Tutorials/GettingStarted/fpga_compile                   |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
+|../DPC++FPGA/Tutorials/GettingStarted/fast_recompile                 |FPGA |Tutorial introducing host-only recompile to save DPC++ development time on FPGA |
+|../DPC++FPGA/Tutorials/Tools/use_library                             |FPGA |Tutorial showing how to use cross-language libraries in DPC++ on FPGA |
+|../DPC++FPGA/Tutorials/Tools/system_profiling                        |FPGA |Tutorial showing how to use the OpenCL Intercept Layer to profile DPC++ designs running on FPGA |
+|../DPC++FPGA/Tutorials/DesignPatterns/double_buffering               |FPGA |Tutorial demonstrating how to overlap kernel execution with buffer transfers and host processing |
+|../DPC++FPGA/Tutorials/DesignPatterns/n_way_buffering                |FPGA |Tutorial demonstrating an extension of double buffering to n-way buffering |
+|../DPC++FPGA/Tutorials/DesignPatterns/onchip_memory_cache            |FPGA |Tutorial demonstrating the caching of on-chip memory to reduce loop initiation interval on FPGA |
+|../DPC++FPGA/Tutorials/DesignPatterns/pipe_array                     |FPGA |Tutorial demonstrating how to create an array of pipes  |
+|../DPC++FPGA/Tutorials/DesignPatterns/remove_loop_carried_dependency |FPGA |Tutorial demonstrating a technique to optimize performance by removing loop carried dependencies |
+|../DPC++FPGA/Tutorials/DesignPatterns/triangular_loop                |FPGA |Tutorial demonstrating an advanced FPGA optimization technique for triangular loops |
+|../DPC++FPGA/Tutorials/Features/fpga_reg                             |FPGA |Tutorial demonstrating the use of the DPC++ FPGA power user extension intel::fpga_reg |
+|../DPC++FPGA/Tutorials/Features/kernel_args_restrict                 |FPGA |Tutorial demonstrating how to avoid performance penalties due to kernel argument aliasing |
+|../DPC++FPGA/Tutorials/Features/loop_coalesce                        |FPGA |Tutorial demonstrating the DPC++ FPGA loop_coalesce attribute |
+|../DPC++FPGA/Tutorials/Features/loop_ivdep                           |FPGA |Tutorial demonstrating the use of the loop ivdep attribute |
+|../DPC++FPGA/Tutorials/Features/loop_unroll                          |FPGA |Tutorial demonstrating the DPC++ unroll pragma and its performance trade-offs on FPGA |
+|../DPC++FPGA/Tutorials/Features/max_concurrency                      |FPGA |Tutorial demonstrating the DPC++ FPGA max_concurrency attribute |
+|../DPC++FPGA/Tutorials/Features/memory_attributes                    |FPGA |Tutorial demonstrating how to use DPC++ FPGA memory attributes |
+|../DPC++FPGA/Tutorials/Features/pipes                                |FPGA |Tutorial demonstrating the DPC++ FPGA pipes extension to transfer data between kernels |
+|../DPC++FPGA/Tutorials/Features/speculated_iterations                |FPGA |Tutorial demonstrating the DPC++ FPGA speculated_iterations attribute |
 |../C++/CombinationalLogic/Mandelbrot   	|CPU  	|Demonstrates how to accelerate   Mandelbrot performance with SIMD and parallelization using OpenMP*.   	|
 |../C++/CompilerInfrastructure/Intrinsics    	|CPU  	|Shows how to utilize the   intrinsics supported by C++ compiler in a variety of applications.	|
 |../C++/GraphTraversal/Mergesort   	|CPU  	|Shows how to accelerate scalar   merge sort program using OpenMP tasks   	|
-|../FPGA/FPGATutorials/BestPractices/double_buffering  	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/BestPractices/local_memory_cache	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/BestPractices/n_way_buffering   	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/BestPractices/remove_loop_carried_dependency   	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/BestPractices/triangular_loop   	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/Compilation/compile_flow   	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/Compilation/device_link    	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/Compilation/use_library    	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/FPGAExtensions/LoopAttributes/loop_ivdep  	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/FPGAExtensions/LoopAttributes/loop_unroll 	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/FPGAExtensions/LoopAttributes/max_concurrency  	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/FPGAExtensions/Other/fpga_register   	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/FPGAExtensions/Other/no_accessor_aliasing 	|FPGA, CPU 	|See details under FPGA Tutorials 	|
-|../FPGA/FPGATutorials/FPGAExtensions/Other/system_profiling	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/FPGAExtensions/MemoryAttributes/memory_attributes_overview    	|FPGA, CPU 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/FPGAExtensions/Pipes/pipe_array 	|FPGA 	|See details under FPGATutorials  	|
-|../FPGA/FPGATutorials/FPGAExtensions/Pipes/pipes 	|FPGA 	|See details under FPGATutorials  	|
-|../FPGA/FPGAExampleDesigns/crr    	|FPGA, CPU 	|See details under   FPGAExampleDesigns	|
-|../FPGA/FPGAExampleDesigns/gzip   	|FPGA 	|See details under   FPGAExampleDesigns	|
-|../FPGA/FPGAExampleDesigns/grd    	|FPGA, CPU 	|See details under   FPGAExampleDesigns	|
 |Libraries |
 |../oneDPL/Gamma-correction 	|GPU, CPU  	|gamma correction using Parallel   STL 	|
 |../oneDPL/Stable_sort_by_key    	|GPU, CPU  	|stable sort by key using   counting_iterator and zip_iterator  	|
