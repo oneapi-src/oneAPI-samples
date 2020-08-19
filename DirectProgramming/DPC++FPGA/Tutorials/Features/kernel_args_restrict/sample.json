@@ -23,7 +23,6 @@
       {
         "id": "report",
         "steps": [
-          "cd build",
           "make report"
         ]
       }

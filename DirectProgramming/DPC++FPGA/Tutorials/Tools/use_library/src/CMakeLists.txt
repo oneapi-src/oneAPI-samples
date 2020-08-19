@@ -1,7 +1,7 @@
 set(SOURCE_FILE use_library.cpp)
 set(HEADER_FILE lib.hpp)
 set(TARGET_NAME use_library)
-set(EMULATOR_TARGET ${TARGET_NAME}_emu.fpga)
+set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(REPORT_TARGET ${TARGET_NAME}_report.a)
 

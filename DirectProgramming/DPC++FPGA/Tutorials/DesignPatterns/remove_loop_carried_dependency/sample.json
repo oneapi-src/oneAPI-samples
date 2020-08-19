@@ -17,13 +17,12 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./remove_loop_carried_dependency.fpga_emu"
+          "./loop_carried_dependency.fpga_emu"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "cd build",
           "make report"
         ]
       }
@@ -34,7 +33,7 @@
         "steps": [
           "cd src",
           "ninja fpga_emu",
-          "remove_loop_carried_dependency.fpga_emu.exe"
+          "loop_carried_dependency.fpga_emu.exe"
         ]
       },
       {
