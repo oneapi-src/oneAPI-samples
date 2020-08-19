@@ -20,7 +20,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{d6a634e7-9f2b-46c2-a21c-2402f631a55a}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>memory_attributes_overview</RootNamespace>
+    <RootNamespace>memory_attributes</RootNamespace>
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -105,7 +105,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
       <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)memory_attributes_overview.obj</ObjectFileName>
+      <ObjectFileName>$(IntDir)memory_attributes.obj</ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -144,7 +144,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
       <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)memory_attributes_overview.obj</ObjectFileName>
+      <ObjectFileName>$(IntDir)memory_attributes.obj</ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
