@@ -218,16 +218,12 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+2. Compile the design through the generated `Makefile`. The following build targets are provided:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device): 
       ```
       make fpga_emu
       ```
-   * Generate the optimization report: 
-     ```
-     make report
-     ``` 
    * Compile for FPGA hardware (longer compile time, targets FPGA device): 
      ```
      make fpga
