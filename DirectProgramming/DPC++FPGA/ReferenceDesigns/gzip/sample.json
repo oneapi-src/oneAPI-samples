@@ -1,7 +1,7 @@
 {
   "guid": "D55081EB-669D-4832-BCE6-23EE2ACA9F0F",
   "name": "GZIP Compression",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Example Designs"],
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Reference Designs"],
   "description": "Reference design demonstrating high-performance GZIP compression on FPGA",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
