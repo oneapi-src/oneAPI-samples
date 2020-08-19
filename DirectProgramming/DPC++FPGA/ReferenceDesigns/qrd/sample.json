@@ -20,7 +20,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./qrd.fpga_emu",
+          "./qrd.fpga_emu"
         ]
       },
       {
