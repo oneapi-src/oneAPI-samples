@@ -21,7 +21,7 @@
    {
   		"id": "d4p_GS_ipynb",
   		"steps": [
-         "runipy daal4py_GettingStarted.ipynb"
+         "python daal4py_GettingStarted.ipynb"
 			  
   		 ]
   	}
