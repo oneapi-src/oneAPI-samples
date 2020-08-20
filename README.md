@@ -63,23 +63,10 @@ The code samples are licensed under MIT license
 #Known issues or limitations
  
 ##On Windows Platform
-1. If you are using Visual Studio 2019, Visual Studio 2019 version 16.3.0 or newer is required.
+1. If you are using Visual Studio 2019, Visual Studio 2019 version 16.4.0 or newer is required.
 2. To build samples on Windows, the required Windows SDK is ver. 10.0.17763.0. 
-
-  1. If the SDK is not installed, use the following instructions below to avoid build failure: 
-
-    1. Open the "code sample's" .sln from within Visual Studio 2017 or 2019,
-    2. Right-click on the project name in "Solution Explorer" and select "Properties"
-  
-  2. The project property dialog opens. 
-  
-    1. Select the "General" tab on the left,
-    2. Select on the right side of the dialog box "Windows SDK Version"(2nd Item".
-    3. Click on the drop-down icon to select a version that is installed on your system.
-    4. click on [Ok] to save.
-
 3. Now you should be able to build the code sample.
 4. For beta, FPGA samples support Windows through FPGA-emulator.
 5. If you encounter a compilation error like below when building a sample program, one reason is that the directory path of the sample is too long; the work around is to move the sample to a directory like "c:\temp\sample_name".
-  * Error MSB6003 The specified task executable "dpcpp-cl.exe" could not be run ......
+  * Error MSB6003 The specified task executable "dpcpp.exe" could not be run ......
 
