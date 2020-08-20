@@ -5,7 +5,7 @@
   "description": "This sample code shows how to train and predict with a distributed linear regression model with the Intel Distribution of Python using the python API package daal4py for oneDAL",
   "builder": ["cli"],
   "languages": [{"python":{}}],
-  "dependencies": ["oneDAL", "pickle"], 
+  "dependencies": ["oneDAL"], 
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {

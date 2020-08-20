@@ -5,7 +5,7 @@
   "description": "This Getting Started sample code shows how to do batch linear regression using the python API package daal4py for oneDAL",
   "builder": ["cli"],
   "languages": [{"python":{}}],
-  "dependencies": ["oneDAL", "pickle"],
+  "dependencies": ["oneDAL"],
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {

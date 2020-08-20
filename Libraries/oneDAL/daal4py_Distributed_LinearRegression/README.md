@@ -76,7 +76,7 @@ When using daal4py for distributed memory systems, the command needed to execute
 
 Run the Program
 
-`mpirun -n 4 python ./IntelPython_daal4py_Distributed_LinearRegression.py`
+`mpirun -n 4 python ./daal4py_Distributed_LinearRegression.py`
 
 The output of the script will be saved in the included models and results directories. 
 
