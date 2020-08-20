@@ -51,7 +51,7 @@ Then activate your conda environment with the following command:
 source activate user_base
 ```
 
-### _Install Jupyter Notebook_
+### Install Jupyter Notebook
 
 Launch Jupyter Notebook in the directory housing the code example
 
@@ -59,7 +59,7 @@ Launch Jupyter Notebook in the directory housing the code example
 conda install jupyter nb_conda_kernels
 ```
 
-#### _View in Jupyter Notebook_
+#### View in Jupyter Notebook
 
 _Note: This distributed execution cannot be launched from the jupyter notebook version, but you can still view inside the notebook to follow the included write-up and description._
 
