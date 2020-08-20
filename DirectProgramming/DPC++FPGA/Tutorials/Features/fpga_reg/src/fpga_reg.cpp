@@ -56,7 +56,7 @@ vector<int> GoldenResult(vector<int> vec) {
 
 // Forward declaration of the kernel name
 // (This will become unnecessary in a future compiler version.)
-class SimpleMath;
+class Test;
 
 void RunKernel(const device_selector &selector,
                const std::vector<int> &vec_a,
@@ -80,7 +80,7 @@ void RunKernel(const device_selector &selector,
       // FPGA-optimized kernel
       // Using kernel_args_restrict tells the compiler that the input 
       // and output buffers won't alias.
-      h.single_task<class SimpleMath>([=]() [[intel::kernel_args_restrict]] {         
+      h.single_task<class Test>([=]() [[intel::kernel_args_restrict]] {         
         
         // Force the compiler to implement the coefficient array in FPGA
         // pipeline registers rather than in on-chip memory.
