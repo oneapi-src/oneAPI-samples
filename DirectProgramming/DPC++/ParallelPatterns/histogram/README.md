@@ -50,6 +50,13 @@ Clean the program using:
 ```
 make clean
 ```
+If you see the following error message when compiling this sample:
+
+```
+Error 'dpc_common.hpp' file not found
+```
+You need to add the following directory to the list of include folders, that are required by your project, in your project's Visual Studio project property panel. The missing include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
+
 ## Running the Sample
 
 Application Parameters
