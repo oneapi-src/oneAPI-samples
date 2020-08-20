@@ -1,5 +1,5 @@
 source_file = loop_unroll.cpp
-target_name = loop_unroll
+target_name = unroll
 
 emulator_target = ${target_name}.fpga_emu.exe
 report_target = ${target_name}_report.a
