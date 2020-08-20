@@ -27,9 +27,9 @@ build ${emulator_target}: build_fpga_emu ${source_file}
 
 # report
 report_target = ${target_name}_report.a 
-report_reg_target = ${target_name}_registered_report.a
+report_reg_target = ${target_name}_r_report.a
 report_target_s10_pac = ${target_name}_s10_pac_report.a 
-report_reg_target_s10_pac = ${target_name}_registered_s10_pac_report.a
+report_reg_target_s10_pac = ${target_name}_r_s10_pac_report.a
 
 build report: phony ${report_target} ${report_reg_target}
 build ${report_target}: gen_report ${source_file} 
