@@ -1,0 +1,11 @@
+{
+ "name": "oneDNN Tutorials",
+ "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneDNN"],
+ "description": "oneDNN Tutorials among different features like Verbose Mode and CPU Dispatcher Control",
+ "toolchain": ["dpcpp","gcc"],
+ "languages": [{"cpp":{}}],
+ "dependencies": ["oneDNN"],
+ "os": ["linux"],
+ "builder": ["cli"],
+ "targetDevice": ["CPU", "GPU"]
+}
