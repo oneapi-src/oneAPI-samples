@@ -1,6 +1,8 @@
 # oneDNN DPC++ Interoperability Sample
 
-This sample is implemented in DPC++ language and runs on CPU and GPU.
+This C++ API example demonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN. 
+Users will know how to access SYCL buffer and queue via oneDNN SYCL interoperability interfaces,  
+and this interface also helps users to execute a custom SYCL kernel with oneDNN library.
 
 | Optimized for                      | Description
 | :---                               | :---
@@ -10,8 +12,11 @@ This sample is implemented in DPC++ language and runs on CPU and GPU.
 | What you will learn                | Using oneDNN in DPC++ application targeting Intel CPU or Intel GPU
 | Time to complete                   | 15 minutes
 
-## What You Will Learn
+## Purpose
 
+This sample demonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN.
+
+With this sample you will learn:
 * How to create a GPU or CPU engine.
 * How to create a memory descriptor/object.
 * How to create a SYCL kernel for data initialization.
@@ -22,107 +27,102 @@ This sample is implemented in DPC++ language and runs on CPU and GPU.
 * How to execute the primitive with the initialized memory.
 * How to validate the result through a host accessor.
 
-## Pre-requisites
+The sample executes on system's CPU by default and can be executed on Intel GPU
+using a command line parameter `gpu`.
 
-The sample below require the following components, which are part of 
-Intel oneAPI Base Toolkit (Base Kit):
+## Key Implementation Details
 
-* Intel oneAPI Deep Neural Network Library (oneDNN)
-* Intel oneAPI DPC++ Compiler
-* Intel oneAPI Threading Building Blocks (oneTBB)
-* Intel Graphics Compute Runtime for oneAPI Level Zero and OpenCL Driver
+This sample uses example file `${DNNLROOT}/examples/sycl_interop.cpp`
+from oneDNN distribution. You can find this code in
+[oneDNN Github repository](https://github.com/oneapi-src/oneDNN/blob/dev-v2/examples/sycl_interop.cpp).
 
-Refer to [Intel oneAPI Toolkits Installation Guide](https://software.intel.com/content/www/us/en/develop/articles/installation-guide-for-intel-oneapi-toolkits.html)
-for instructions on installing these components.
+Detailed code walkthrough is available in [oneDNN developer guide](https://oneapi-src.github.io/oneDNN/v2/sycl_interop_cpp.html)
+
+## License
+
+This code sample is licensed under MIT license.
 
 ## Building the sample for CPU and GPU
 
-### on a Linux* System
+### On a Linux System
 
-#### Using DPC++ Compiler
-
-When compiled with Intel oneAPI DPC++ Compiler this sample runs on Intel CPU
-or Intel GPU.
-
-Start with a clean console environment.
-
+Perform the following steps:
+1. Setup oneAPI development environment
 ```
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh
 ```
-
-Specific oneDNN configuration may be selected with
-`--dnnl-configuraition` option. Defailt configuration is `cpu_dpcpp_gpu_dpcpp`.
-
-Make sure that both the enviroments of compiler and oneDNN are properly set up
-before you process following steps.
-If setvars.sh complains "not found" for compiler or oneDNN, please check your
-installation first.
-
+2. Build the program using `cmake`
 ```
-cd oneapi-toolkit/oneDNN/oneDNN_SYCL_InterOp
-mkdir dpcpp
-cd dpcpp
-cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp
-make sycl-interop-cpp
+mkdir build
+cd build
+cmake ..
+make
+```
+3. Run the program
+```
+./bin/sycl-interop-cpp
 ```
 
-> NOTE: The source file `sycl_interop.cpp` will be in `dpcpp/src` folder. 
-> You can rebuild the sample by typing `make` in `dpcpp` folder.
+### On a Windows* System Using Visual Studio* Version 2017 or Newer
+
+Open "x64 Native Tools Command Prompt for VS2017" or 
+"x64 Native Tools Command Prompt for VS2019" and perform the following steps:
+1. Setup oneAPI development environment
+```
+C:\Program Files (x86)\intel\oneapi\setvars.bat
+```
+2. Build the program using `cmake`
+```
+mkdir build
+cd build
+cmake -G "Visual Studio 16 2019" ..
+cmake --build .
+```
+
+> Note: You can open the `dpcpp_interoperability.sln` in build folder to edit source
+> code with Microsoft Visual Studio integrated development environment.
+
+3. Run the program
+```
+./bin/Debug/sycl-interop-cpp.exe
+```
+
+### Include Files
+
+The include folder is located at ${DNNLROOT}\include on your development system".
 
 ## Running the Sample
 
-### on a Linux* System
-Run the program  on CPU:
+### Running Samples In DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
-```
-./out/sycl-interop-cpp cpu
-```
+### Application Parameters
 
-Run the program  on GPU
+You can specify target device for this sample using command line arguments:
+* `cpu` (default) directs the application to run on system's CPU
+* `gpu` directs the sample to run on Intel GPU
 
-```
-./out/sycl-interop-cpp gpu
-```
+> Note: When executed with `gpu` parameter the 
+> sample will return an error if there are no Intel GPUs are found in the system.
 
->  NOTE: Zero Level runtime is enabled by default. Please make sure proper
-> installation of Level Zero driver including level-zero-devel package following
-> installation guide. If you still encounter runtime issue such as "could not
-> create a primitive", please apply workaround to set SYCL_BE=PI_OPENCL before
-> running a DPC++ program. To apply the workaround in this sample add
-> `export SYCL_BE=PI_OPENCL` in CMakeLists.txt. After applying the worklaround,
-> the sample will use OpenCL runtime instead.
+You can get additional information during execution of this sample by setting
+environment variable `DNNL_VERBOSE=1`.
 
 ### Example of Output
 
-#### on a Linux* System
-
-Enable oneDNN verbose log:
-
 ```
-export DNNL_VERBOSE=1
+Example passed on CPU.
 ```
 
-Run the program on CPU or GPU following [How to Run Session](#how-to-run).
-
-CPU Results:
-
+When executed with `DNNL_VERBOSE=1`:
 ```
-dnnl_verbose,info,DNNL v1.90.1 (commit 9151ddc657e4c6775f17f3bcec46872e5fac47ee)
-dnnl_verbose,info,Detected ISA is Intel AVX2
-dnnl_verbose,exec,cpu,eltwise,jit:avx2,forward_training,data_f32::blocked:abcd:f0 diff_undef::undef::f0,,alg:eltwise_relu alpha:0 beta:0,2x3x4x5,700.608
-Example passes
-```
-
-GPU Results:
-
-```
-dnnl_verbose,info,DNNL v1.90.1 (commit 9151ddc657e4c6775f17f3bcec46872e5fac47ee)
-dnnl_verbose,info,Detected ISA is Intel AVX2
-dnnl_verbose,exec,gpu,eltwise,ocl:ref:any,forward_training,data_f32::blocked:abcd:f0 diff_undef::undef::f0,,alg:eltwise_relu alpha:0 beta:0,2x3x4x5
-Example passes
+dnnl_verbose,info,oneDNN v1.95.0 (commit ae08a30fff7f76759fd4c5093c01707d0ee12c4c)
+dnnl_verbose,info,cpu,runtime:DPC++
+dnnl_verbose,info,cpu,isa:Intel AVX2
+dnnl_verbose,info,gpu,runtime:DPC++
+dnnl_verbose,info,cpu,engine,0,backend:OpenCL,name:Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz,driver_version:2020.10.7
+dnnl_verbose,info,gpu,engine,0,backend:Level Zero,name:Intel(R) Gen12LP,driver_version:0.8.0
+dnnl_verbose,exec,cpu,eltwise,jit:avx2,forward_training,data_f32::blocked:abcd:f0 diff_undef::undef::f0,,alg:eltwise_relu alpha:0 beta:0,2x3x4x5,0.36499
+Example passed on CPU.
 ```
 
-## Implementation Details
-
-This sample uses example code from oneDNN distribution. You can find this code
-in [oneDNN Github repository](https://github.com/oneapi-src/oneDNN/blob/dev-v2/examples/sycl_interop.cpp).

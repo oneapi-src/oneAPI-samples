@@ -22,7 +22,8 @@ Users can use JupyterLab from DevCloud via "One-click Login in", and download sa
 Once users are in the JupyterLab with download jupytered notebook samples, they can start following the steps without further installion needed.
 
 ## Purpose
-The sample demonstrates how to compile the code with various oneCCL configurations in Intel oneAPI environment.
+The samples implement the allreduce collective operation with oneCCL APIs. 
+With the samples users will learn how to compile the code with various oneCCL configurations in Intel oneAPI environment.
 
 ## License  
 Those code samples are licensed under MIT license
@@ -96,6 +97,9 @@ Users can rebuild the cpu_allreduce_cpp_test.cpp by typing "make cpu_allreduce_c
   ```
 > NOTE: The source file "sycl_allreduce_cpp_test.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/ccl/latest/examples/sycl to build/src/sycl folder.
 Users can rebuild the sycl_allreduce_cpp_test.cpp by typing "make sycl_allreduce_cpp_test" under build folder.
+
+### Include Files
+The include folder is located at ${CCL_ROOT}}\include on your development system".
 
 ## Running the Sample  
 
