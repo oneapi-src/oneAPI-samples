@@ -9,10 +9,11 @@ This sample code shows how to train and predict with a distributed k-means model
 | What you will learn               | distributed oneDAL K-Means programming model for Intel CPU
 | Time to complete                  | 5 minutes
 
-## What You Will Learn
+## Purpose
 
-* How to run a distributed K-Means model with oneDAL daal4py library memory objects.
-* How to train a model and save the information to a file
+daal4py is a simplified API to Intel® DAAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users. Built to help provide an abstraction to Intel® DAAL for either direct usage or integration into one's own framework.
+
+In this sample you will run a distributed K-Means model with oneDAL daal4py library memory objects. You will also learn how to train a model and save the information to a file.
   
 ## Key implementation details 
 This distributed K-means sample code is implemented for CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel(R) Distribution for Python as part of the [oneAPI AI Analytics Toolkit powered by oneAPI](https://software.intel.com/en-us/oneapi/ai-kit). 

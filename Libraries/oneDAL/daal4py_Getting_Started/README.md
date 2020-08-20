@@ -9,37 +9,38 @@ This Getting Started sample code show how to do batch linear regression using th
 | What you will learn               | basic oneDAL programming model for Intel CPU
 | Time to complete                  | 5 minutes
 
-## What You Will Learn
+## Purpose
 
-* How to run a batch linear regression model with oneDAL daal4py library memory objects.
-* How to train a model and save the information to a file
+daal4py is a simplified API to Intel® DAAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users. Built to help provide an abstraction to Intel® DAAL for either direct usage or integration into one's own framework.
+
+In this sample you will run a batch Linear Regression model with oneDAL daal4py library memory objects. You will also learn how to train a model and save the information to a file.
   
-## Key implementation details 
+## Key Implementation Details 
 This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel(R) Distribution for Python as part of the [oneAPI AI Analytics Toolkit powered by oneAPI](https://software.intel.com/en-us/oneapi/ai-kit). 
 
 ## License  
 This code sample is licensed under MIT license
 
-## How to Build and Run 
+## Building daal4py for CPU
 
 oneAPI Data Analytics Library is ready for use once you finish the Intel AI Analytics Toolkit installation, and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation, and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
-## Activate conda environment With Root Access
+### Activate conda environment With Root Access
 
 Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the setvars.sh script. Then navigate in linux shell to your oneapi installation path, typically `~/intel/inteloneapi`. Intel Python environment will be activte by default. However, if you activated another environment, you can return with the following command:
 
-#### Linux
+#### On a Linux* System
 ```
 source activate base
 ```
 
-## Activate conda environment Without Root Access (Optional)
+### Activate conda environment Without Root Access (Optional)
 
 By default, the Intel AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
-#### Linux
+#### On a Linux* System
 ```
 conda create --name user_base --clone base
 ```
@@ -50,7 +51,7 @@ Then activate your conda environment with the following command:
 source activate user_base
 ```
 
-### Install _Jupyter Notebook_
+### _Install Jupyter Notebook_
 
 Launch Jupyter Notebook in the directory housing the code example
 
@@ -67,6 +68,9 @@ Launch Jupyter Notebook in the directory housing the code example
 ```
 jupyter notebook
 ```
+## Running the Sample
+
+### Running the Sample as a Jupyter Notebook
 
 Open .pynb file and run cells in Jupyter Notebook using the "Run" button (see image)
 
@@ -102,7 +106,7 @@ Here is one of our loaded model's features:
 ```
 
 
-#### _Run as Python File_
+### Running the Sample as a Python File
 
 Open notebook in Jupyter and download as python file
 
