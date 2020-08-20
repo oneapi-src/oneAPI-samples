@@ -1,5 +1,5 @@
 set(SOURCE_FILE loop_unroll.cpp)
-set(TARGET_NAME loop_unroll)
+set(TARGET_NAME unroll)
 
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)

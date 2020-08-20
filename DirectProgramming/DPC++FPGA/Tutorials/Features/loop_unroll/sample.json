@@ -17,7 +17,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./loop_unroll.fpga_emu"
+          "./unroll.fpga_emu"
         ]
       },
       {
@@ -36,7 +36,7 @@
         "steps": [
           "cd src",
           "ninja fpga_emu",
-          "loop_unroll.fpga_emu.exe"
+          "unroll.fpga_emu.exe"
         ]
       },
       {
