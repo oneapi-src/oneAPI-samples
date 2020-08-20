@@ -28,7 +28,10 @@
 #include <math.h>
 #include <iostream>
 #include <cstdio>
-#include "dpc_common.hpp"
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
+#include <dpc_common.hpp>
 
 using namespace sycl;
 using namespace std;
@@ -48,27 +51,15 @@ constexpr double MIN_DOUBLE = -1.0 * std::numeric_limits<double>::max();
 bool ViterbiCondition(double x, double y, double z, double compare);
 
 int main() {
-    // Initializing and generating initial probabilities for the hidden states.
-    double(*pi) = new double[N];
-    for (int i = 0; i < N; ++i) {
-        pi[i] = sycl::log10(1.0f / N);
-    }
-
-    // Сatch asynchronous exceptions.
-    auto exception_handler = [] (sycl::exception_list exceptions) {
-        for (std::exception_ptr const& e : exceptions) {
-            try {
-                std::rethrow_exception(e);
-            } catch(sycl::exception const& e) {
-                std::cout << "Caught asynchronous SYCL exception:\n"
-                << e.what() << std::endl;
-            }
-        }
-    };
-    
     try {
+    // Initializing and generating initial probabilities for the hidden states.
+        double(*pi) = new double[N];
+        for (int i = 0; i < N; ++i) {
+            pi[i] = sycl::log10(1.0f / N);
+        }
+
         //Device initialization.
-        queue q(default_selector{}, exception_handler);
+        queue q(default_selector{}, dpc_common::exception_handler);
         cout << "Device: " << q.get_device().get_info<info::device::name>() << " "
             << q.get_device().get_platform().get_info<info::platform::name>() << "\n";
 
