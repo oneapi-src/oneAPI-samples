@@ -16,9 +16,10 @@ The code samples are licensed under MIT license.
 
 | Type      | Name                                             | Description
 | --------- | ------------------------------------------------ | -
-| Component | [getting_started](getting_started)               | A C++ sample demonstrating basics of oneDNN programming model. The sample also includes a Jupyter notebook with step by step instructions on building code with different compilers and runtime configurations oneDNN support.
+| Component | [getting_started](getting_started)               | A C++ sample demonstrating basics of oneDNN programming model.
 | Component | [dpcpp_interoparibility](dpcpp_interoperability) | A DPC++ example demonstrating interoperaility of oneDNN with DPC++ application code.
-| Component | [simple_model](simple_model)                     | A C++ example demonstrating implmentation of simple convolutional model with oneDNN. The samples also include a Jupyter notebook with step by step instructions on running oneDNN-based application on a GPU.
+| Component | [simple_model](simple_model)                     | A C++ example demonstrating implmentation of simple convolutional model with oneDNN.
+| Component | [tutorials](tutorials)                           | Hands-on Jupyter notebook tutorials among different topics.
 
 # Using Samples in Intel oneAPI DevCloud
 

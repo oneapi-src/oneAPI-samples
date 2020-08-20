@@ -17,7 +17,7 @@ in Intel oneAPI DevCloud environment.
 | :---                               | :---
 | OS                                 | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                           | Skylake with GEN9 or newer
-| Software                           | Intel oneAPI Deep Neural Network Library (oneDNN), Intel oneAPI DPC++ Compiler, Intel oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel C++ Compiler
+| Software                           | Intel oneAPI Deep Neural Network Library (oneDNN), Intel oneAPI DPC++/C++ Compiler, Intel oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel C++ Compiler
 | What you will learn                | Running a simple convolutional model on Intel CPU or Intel GPU
 | Time to complete                   | 15 minutes
 
@@ -67,7 +67,7 @@ make
 ./bin/simple_model
 ```
 
-By default the sample uses oneAPI DPC++ Compiler and can execute on CPUs or
+By default the sample uses oneAPI DPC++/C++ Compiler and can execute on CPUs or
 Intel GPUs. You can build the sample with CPU support with other compilers
 and threading runtimes:
 * GNU C++ Compiler and GNU OpenMP runtime

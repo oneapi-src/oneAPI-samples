@@ -6,7 +6,7 @@ By using all reduce collective operation samples, users can understand how to co
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; 
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel oneAPI Collective Communications Library (oneCCL), Intel oneAPI DPC++ Compiler, Intel oneAPI DPC++ Library (oneDPL), GNU Compiler
+| Software                          | Intel oneAPI Collective Communications Library (oneCCL), Intel oneAPI DPC++/C++ Compiler, Intel oneAPI DPC++ Library (oneDPL), GNU Compiler
 | What you will learn               | basic oneCCL programming model for both Intel CPU and GPU
 | Time to complete                  | 15 minutes
 
@@ -15,7 +15,6 @@ By using all reduce collective operation samples, users can understand how to co
 | ------ | ------ | ------ |
 | sycl_allreduce_cpp_test.cpp | sycl_allreduce_test.cpp |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
 | cpu_allreduce_cpp_test.cpp | cpu_allreduce_test.cpp/cpu_allreduce_bfp16.c |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
-|oneCCL_Getting_Started.ipynb (check below Notice)| | |
 >  Notice : Please use Intel oneAPI DevCloud as the environment for jupyter notebook samples. \
 Users can refer to [DevCloud Getting Started](https://devcloud.intel.com/oneapi/get-started/) for using DevCloud \
 Users can use JupyterLab from DevCloud via "One-click Login in", and download samples via "git clone" or the "oneapi-cli" tool \
@@ -47,7 +46,7 @@ You can refer to this page [oneAPI](https://software.intel.com/en-us/oneapi) for
 
 The samples below require the following components, which are part of the [Intel oneAPI Base Tookit](https://software.intel.com/en-us/oneapi/oneapi-kit)
 *  Intel oneAPI Collective Communications Library (oneCCL)
-*  Intel oneAPI DPC++ Compiler
+*  Intel oneAPI DPC++/C++ Compiler
 *  Intel oneAPI DPC++ Library (oneDPL)
 
 The samples also require OpenCL driver. Please refer [System Requirements](https://software.intel.com/en-us/articles/intel-oneapi-base-toolkit-system-requirements) for OpenCL driver installation.
@@ -66,7 +65,7 @@ You can refer to this page [oneAPI](https://software.intel.com/en-us/oneapi) for
 
 - Build the samples  with GCC for CPU only \
   please replace ${ONEAPI_ROOT} for your installation path. \
-  ex : /opt/intel/inteloneapi \
+  ex : /opt/intel/oneapi \
   Don't need to replace {DPCPP_CMPLR_ROOT} 
   ```
   source ${ONEAPI_ROOT}/setvars.sh --ccl-configuration=cpu_icc
@@ -84,7 +83,7 @@ Users can rebuild the cpu_allreduce_cpp_test.cpp by typing "make cpu_allreduce_c
 
 - Build the samples  with SYCL for GPU and CPU \
   please replace ${ONEAPI_ROOT} for your installation path. \
-  ex : /opt/intel/inteloneapi \
+  ex : /opt/intel/oneapi \
   Don't need to replace {DPCPP_CMPLR_ROOT} 
   ```
   source ${ONEAPI_ROOT}/setvars.sh --ccl-configuration=cpu_gpu_dpcpp
