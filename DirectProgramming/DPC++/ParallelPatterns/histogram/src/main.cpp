@@ -5,11 +5,15 @@
 // =============================================================
 
 #include <CL/sycl.hpp>
-#include "dpc_common.hpp"
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/algorithm>
 #include <random>
 #include <iostream>
+#include "dpc_common.hpp"
+// Many oneAPI code samples share common include files. These
+// include files are installed locally with the product installation
+// and can be located at %ONEAPI_ROOT%\dev-utilities\latest\include
+// on your development system.
 
 //Dense algorithm stores all the bins, even if bin has 0 entries
 //input array [4,4,1,0,1,2]
