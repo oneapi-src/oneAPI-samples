@@ -3,7 +3,7 @@
     "description": "Classic sorting algorithm using OpenMP*",
     "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
     "os": ["linux", "darwin"],
-    "builder": ["cmake"],
+    "builder": ["make"],
     "languages": [{"cpp":{}}],
     "toolchain": ["icc"],
     "guid": "5AFED65F-F725-411D-B21C-B59008D1166D",
