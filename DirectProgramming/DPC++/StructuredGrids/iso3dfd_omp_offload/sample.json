@@ -7,7 +7,7 @@
   "targetDevice": [ "GPU" ],
   "languages": [ { "cpp": {} } ],
   "os": [ "linux" ],
-  "builder": [ "cmake" ]
+  "builder": [ "cmake" ],
   "ciTests": {
 	"linux": [{
             "steps": [
