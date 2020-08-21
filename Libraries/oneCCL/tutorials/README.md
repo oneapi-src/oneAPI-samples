@@ -11,8 +11,7 @@ The code samples are licensed under MIT license
 
 | Type      | Name                 | Description                                                  |
 | --------- | ----------------------- | ------------------------------------------------------------ |
-| Component | [oneCCL_Getting_Started](oneCCL_Getting_Started)     | Those C++ & C API example demonstrates basic of oneCCL programming model by invoking different collective operations such as allreduce. |
-| Component | [tutorials](tutorials)     | Hands-on Jupyter notebook tutorials among different topics. |
+| Component | [oneCCL_Getting_Started](oneCCL_Getting_Started.ipynb) |This Jupyter Notebook demonstrates how to compile a oneCCL sample with different releases and how to port a oneCCL sample from CPU-only version to CPU&GPU version by using DPC++ via batch jobs on the Intel oneAPI DevCloud (check below Notice)|
 >  Notice : Please use Intel oneAPI DevCloud as the environment for jupyter notebook samples. \
 Users can refer to [DevCloud Getting Started](https://devcloud.intel.com/oneapi/get-started/) for using DevCloud \
 Users can use JupyterLab from DevCloud via "One-click Login in", and download samples via "git clone" or the "oneapi-cli" tool \
