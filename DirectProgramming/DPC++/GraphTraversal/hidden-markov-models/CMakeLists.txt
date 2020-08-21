@@ -1,7 +1,7 @@
 # required cmake version
 cmake_minimum_required(VERSION 3.5)
 
-project (hidden-markov-model)
+project (hidden-markov-models)
 
 if(WIN32)
         set(CMAKE_CXX_COMPILER "dpcpp-cl")
@@ -21,10 +21,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fsycl -std=c++17")
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lOpenCL -lsycl")
 
-add_executable (hidden-markov-model src/hidden-markov-models.cpp)
+add_executable (hidden-markov-models src/hidden-markov-models.cpp)
 
 add_custom_target (run
-        COMMAND hidden-markov-model
+        COMMAND hidden-markov-models
         WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
 )
 

@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\hidden_markov_models.cpp">
+    <ClCompile Include="src\hidden-markov-models.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

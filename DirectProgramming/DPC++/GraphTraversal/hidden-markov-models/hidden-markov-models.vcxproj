@@ -11,15 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\hidden_markov_models.cpp" />
+    <ClCompile Include="src\hidden-markov-models.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{46454d0b-76f3-45eb-a186-f315a2e22dea}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>hidden_markov_models</RootNamespace>
+    <RootNamespace>hidden-markov-models</RootNamespace>
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
-    <ProjectName>hidden_markov_models</ProjectName>
+    <ProjectName>hidden-markov-models</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
