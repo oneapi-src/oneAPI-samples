@@ -5,7 +5,8 @@ The dpc_reduce is a simple program that calculates pi.  This program is implemen
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
-| Optimized for	        | Description
+| Optimized for                     | Description
+|:---                               |:--- 
 | OS	                | Linux* Ubuntu* 18.04, 
 | Hardware	            | Skylake with GEN9 or newer, 
 | Software	            | Intel® oneAPI DPC++ Compiler (beta)
