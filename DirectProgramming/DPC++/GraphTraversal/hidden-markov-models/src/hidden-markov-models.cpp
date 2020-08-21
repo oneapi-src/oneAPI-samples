@@ -59,6 +59,7 @@ int main() {
         for (int i = 0; i < N; ++i) {
             pi[i] = sycl::log10(1.0f / N);
         }
+        buffer<double, 1> pi_buf(pi, N);
 
         //Device initialization.
         queue q(default_selector{}, dpc_common::exception_handler);
@@ -79,8 +80,8 @@ int main() {
                 double prob = 1.0f / N;
                 // The algorithm computes logarithms of the probability values to improve small numbers processing.
                 a_acc[index] = sycl::log10(prob);
-                });
             });
+        });
 
         // Generating emission matrix B for the Markov process.
         q.submit([&](handler& h) {
@@ -90,8 +91,8 @@ int main() {
                 double prob = ((index[0] + index[1]) % M) * 2.0f / M / (M - 1);
                 // The algorithm computes logarithms of the probability values to improve small numbers processing.
                 b_acc[index] = (prob == 0.0f) ? MIN_DOUBLE : sycl::log10(prob);
-                });
             });
+        });
 
         // Generating the sequence of the observations produced by the hidden Markov chain.
         int(*seq) = new int[T];
@@ -102,20 +103,22 @@ int main() {
 
         // Initialization of the Viterbi matrix and the matrix of back pointers.
         q.submit([&](handler& h) {
-            auto v_acc = viterbi.get_access<access::mode::read_write>(h);
+            auto v_acc = viterbi.get_access<access::mode::write>(h);
             auto b_ptr_acc = back_pointer.get_access<access::mode::write>(h);
             auto b_acc = b.get_access<access::mode::read>(h);
+            auto pi_acc = pi_buf.get_access<access::mode::read>(h);
+            auto seq_acc = seq_buf.get_access<access::mode::read>(h);
             h.parallel_for(range<2>(N, T), [=](id<2> index) {
                 int i = index[0];
                 int j = index[1];
                 // At starting point only the first Viterbi values are defined and these Values are substituted 
                 // with logarithms  due to the following equation: log(x*y) = log(x) + log(y).
-                v_acc[index] = (j != 0) ? MIN_DOUBLE : pi[i] + b_acc[i][seq[0]];
+                v_acc[index] = (j != 0) ? MIN_DOUBLE : pi_acc[i] + b_acc[i][seq_acc[0]];
                 // Default values of all the back pointers are (-1) to show that they are not determined yet. 
                 b_ptr_acc[index] = -1;
-                });
             });
-        delete[] pi;
+        });
+        delete[] pi;        
 
         // The sequential steps of the Viterbi algorithm that define the Viterbi matrix and the matrix 
         // of back pointers. The product of the Viterbi values and the probabilities is substituted with the sum of 
