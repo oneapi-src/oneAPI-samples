@@ -1,0 +1,35 @@
+{
+  "guid": "1457B49A-2CD3-48E5-B3A9-753EAD2D18F7",
+  "name": "Separating Host and Device Code Compilation",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
+  "description": "FPGA tutorial demonstrating how to separate the compilation of host and device code to save development time.",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./fast_recompile.fpga_emu"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "cd src",
+          "ninja fpga_emu",
+          "fast_recompile.fpga_emu.exe"
+        ]
+      }
+    ]
+  }
+}

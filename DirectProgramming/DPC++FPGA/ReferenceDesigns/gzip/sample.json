@@ -1,0 +1,51 @@
+{
+  "guid": "D55081EB-669D-4832-BCE6-23EE2ACA9F0F",
+  "name": "GZIP Compression",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Reference Designs"],
+  "description": "Reference design demonstrating high-performance GZIP compression on FPGA",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./gzip.fpga_emu ../src/gzip.cpp -o=test.gz"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "cd src",
+          "ninja fpga_emu",
+          "gzip.fpga_emu.exe ../src/gzip.cpp -o=test.gz"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "cd src",
+          "ninja report"
+        ]
+      }
+    ]
+  }
+}
