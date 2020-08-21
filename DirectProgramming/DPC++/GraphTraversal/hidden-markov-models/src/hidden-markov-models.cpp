@@ -9,6 +9,8 @@
 // called the Viterbi path—that results in a sequence of observed events,
 // especially in the context of Markov information sources and HMM.
 //
+// The sample can use GPU offload to compute sequential steps of multiple graph traversals simultaneously.
+//
 // - Initially, the dataset for algorithm processing is generated : initial states probability 
 // distribution Pi, transition matrix A, emission matrix Band the sequence or the observations 
 // produced by hidden Markov process.
