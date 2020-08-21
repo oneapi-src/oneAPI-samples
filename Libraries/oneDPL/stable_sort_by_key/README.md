@@ -7,7 +7,7 @@ Stable sort by key is a sorting operation when sorting of 2 sequences (keys and 
 |---------------------------------|----------------------------------------------------------------------------------|
 | OS                              | Linux* Ubuntu* 18.04                                                             |
 | Hardware                        | Skylake with GEN9 or newer                                                       |
-| Software                        | Intel&reg; oneAPI DPC++ Compiler beta; Intel&reg; oneAPI DPC++ Library (oneDPL)  |
+| Software                        | Intel&reg; oneAPI DPC++/C++ Compiler; Intel&reg; oneAPI DPC++ Library (oneDPL)   |
 | What you will learn             | How to use `counting_iterator` and `zip_iterator`                                |
 | Time to complete                | At most 5 minutes                                                                |
 
