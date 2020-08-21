@@ -1,1 +1,0 @@
-dpcpp   -O3 --std=c++17 -O2 -g -DNDEBUG  -rdynamic CMakeFiles/iso3dfd.exe.dir/iso3dfd.cpp.o CMakeFiles/iso3dfd.exe.dir/iso3dfd_kernels.cpp.o CMakeFiles/iso3dfd.exe.dir/utils.cpp.o  -o iso3dfd.exe -lOpenCL -lsycl 
