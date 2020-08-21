@@ -5,9 +5,9 @@
 // =============================================================
 
 #include <malloc.h>
-#include <chrono>
 #include <iostream>
 
+#include "dpc_common.hpp"
 #include "multiply.hpp"
 
 typedef unsigned long long UINT64;
@@ -86,12 +86,10 @@ int main() {
   cout << "Using multiply kernel: "<<  xstr(MULTIPLY)<< "\n";
 
   // start timing the matrix multiply code
-  auto start = std::chrono::steady_clock::now();
+  dpc_common::TimeInterval matrix_time;;
   ParallelMultiply(NUM, a, b, c, t);
-  auto end = std::chrono::steady_clock::now();
-
-  std::chrono::duration<double> elapsed_seconds = end-start;
-  cout << "Elapsed Time: " << elapsed_seconds.count() << "s\n";
+  double matrix_elapsed = matrix_time.Elapsed();
+  cout << "Elapsed Time: " << matrix_elapsed << "s\n";
 
   // free memory
   free(buf1);
