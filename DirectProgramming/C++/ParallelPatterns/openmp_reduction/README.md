@@ -63,7 +63,11 @@ There are no editable parameters for this sample.
 
 ### Example of Output (result vary depending on hardware)
 Number of steps is 1000000
+
 Cpu Seq calc:           PI =3.14 in 0.00105 seconds
+
 Host OpenMP:            PI =3.14 in 0.0010 seconds
+
 Offload OpenMP:         PI =3.14 in 0.0005 seconds
+
 success
