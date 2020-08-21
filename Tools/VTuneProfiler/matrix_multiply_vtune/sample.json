@@ -1,5 +1,5 @@
 {
-"guid":"D5D48B97-C29C-4386-A6D2-DB84D006D6A9"
+"guid":"D5D48B97-C29C-4386-A6D2-DB84D006D6A9",
  "name": "Matrix Multiplication - Intel VTune Profiler",
  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/VTune Profiler"],
  "description": "Simple program that shows how to improve the DPC++ Matrix Multiplication program using VTune Profiler and Advisor.",
@@ -9,37 +9,22 @@
  "os": ["linux", "windows"],
  "targetDevice": ["CPU", "GPU"],
  "builder": ["ide", "cmake"]
-},
-{
-      "path": "VTuneProfiler/matrix_multiply_vtune",
-      "configurations": [
-        {
-          "build": [
-            "cmake .",
-            "make"
-          ],
-          "run": [
-            "./matrix.dpcpp"
-          ],
-          "clean": [
-            "make clean"
-          ]
-        }
-      ]
-    },
-{
-      "path": "VTuneProfiler/matrix_multiply_vtune",
-      "configurations": [
-        {
-          "build": [
-            "MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration=\"Release\""
-          ],
-          "run": [
-            "cd x64\\Release",
-            "matrix_multiply.exe"
-          ]
-        }
-      ]
-    }
-
-
+ "ciTests": {
+         "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 ]
+        }],
+        "windows": [{
+                "steps": [
+                        "MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration=\"Release\"",
+                       "cd x64/Release",
+                        "matrix_multiply.exe"
+                ]
+        }]
+}
+}
