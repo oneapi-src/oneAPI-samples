@@ -1,0 +1,51 @@
+{
+  "guid": "D725E06E-0ECE-44F8-910D-AD1A8C89ED89",
+  "name": "CRR Binomial Tree Model for Option Pricing",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Reference Designs"],
+  "description": "FPGA-optimized reference design of the Cox-Ross-Rubinstein (CRR) binomial tree model with Greeks for American exercise options",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./crr.fpga_emu ./src/data/ordered_inputs.csv -o=./src/data/ordered_outputs.csv"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "cd src",
+          "ninja fpga_emu",
+          "crr.fpga_emu.exe ./data/ordered_inputs.csv -o=./data/ordered_outputs.csv"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "cd src",
+          "ninja report"
+        ]
+      }
+    ]
+  }
+}

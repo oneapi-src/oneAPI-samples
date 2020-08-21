@@ -8,7 +8,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10 
 | Hardware                          | Skylake with GEN9 or newer, Intel(R) Programmable Acceleration Card with Intel(R) Arria(R) 10 GX FPGA
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)  
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler  
   
 ## Purpose
 The `vector-add` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators.
@@ -48,15 +48,17 @@ Perform the following steps:
 
 ### On a Windows* System Using a Command Line Interface
 1. Select **Programs** > **Intel oneAPI 2021** > **Intel oneAPI Command Prompt** to launch a command window.
-2. Build the program using the following `nmake` commands (Windows supports USM only):
+2. Build the program using the following `nmake` commands:
     ```
     nmake -f Makefile.win
     ```
+> Note: for USM use `nmake -f Makefile.win build_usm`
 
 3. Run the program using:
     ```
     nmake -f Makefile.win run
     ```
+> Note: for USM use `nmake -f Makefile.win run_usm`
 
 4. Clean the program using:
     ```
@@ -127,7 +129,7 @@ Perform the following steps:
  
      a. Select the **DPC++** tab.
      b. In the **General** subtab, the **Perform ahead of time compilation for the FPGA** setting is set to **Yes**.
-     c. In the **Preprocessor** subtab, the **Preprocessor Definitions" setting has **FPGA_EMULATOR** added.
+     c. In the **Preprocessor** subtab, the **Preprocessor Definitions" setting has **FPGA_EMULATOR=1** added.
      d. Close the dialog.
  
 6. Select **Project** > **Build** menu option to build the selected configuration.

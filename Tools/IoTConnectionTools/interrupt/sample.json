@@ -1,0 +1,22 @@
+{
+  "guid": "E2BDAFFF-FF3F-4C83-B31A-D79DB6F091D9",
+  "name": "Interrupt service routine (ISR)",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
+  "description": "Demonstrates how to react on an Eclipse* MRAA digital pin event with an ISR (Interrupt Service Routine), which will run independently of the main program flow.",
+  "dependencies": ["pkg|mraa|https://mraa.io"],
+  "languages": [{"cpp":{}}],
+  "os": ["linux"],
+  "ciTests": {
+    "linux": [
+        { "id": "interrupt",
+          "env": [],
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake ..",
+            "make"
+            ]
+        }
+    ]
+  }
+}

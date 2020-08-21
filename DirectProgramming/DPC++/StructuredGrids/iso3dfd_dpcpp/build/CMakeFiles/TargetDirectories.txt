@@ -1,0 +1,7 @@
+/nfs/pdx/home/slgogar/projects/codeSamples/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/iso3dfd_dpcpp/build/CMakeFiles/rebuild_cache.dir
+/nfs/pdx/home/slgogar/projects/codeSamples/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/iso3dfd_dpcpp/build/CMakeFiles/edit_cache.dir
+/nfs/pdx/home/slgogar/projects/codeSamples/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/iso3dfd_dpcpp/build/src/CMakeFiles/rebuild_cache.dir
+/nfs/pdx/home/slgogar/projects/codeSamples/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/iso3dfd_dpcpp/build/src/CMakeFiles/run_cpu.dir
+/nfs/pdx/home/slgogar/projects/codeSamples/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/iso3dfd_dpcpp/build/src/CMakeFiles/edit_cache.dir
+/nfs/pdx/home/slgogar/projects/codeSamples/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/iso3dfd_dpcpp/build/src/CMakeFiles/iso3dfd.exe.dir
+/nfs/pdx/home/slgogar/projects/codeSamples/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/iso3dfd_dpcpp/build/src/CMakeFiles/run.dir

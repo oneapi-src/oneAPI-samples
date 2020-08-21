@@ -1,6 +1,7 @@
 {
+  "guid":"b1b58be7-e22e-4ca2-ba59-6887b2f1be6c",
   "name": "Vector Add",
-  "categories": ["Toolkit/Get Started", "Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++ Compiler/CPU, GPU and FPGA"],
+  "categories": ["Toolkit/Get Started", "Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU, GPU and FPGA"],
   "description": "Simple program that adds two large vectors in parallel.  Provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using simple Data Parallel C++.",
   "toolchain": ["dpcpp"],
   "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],

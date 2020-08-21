@@ -1,0 +1,33 @@
+{
+    "name": "Discrete Cosine Transform",
+    "description": "An image processing algorithm as seen in the JPEG compression standard.",
+    "categories": ["Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU and GPU"],
+    "os": ["linux", "windows"],
+    "builder": ["ide", "cmake"],
+    "languages": [{"cpp":{}}],
+    "toolchain": ["dpcpp"],
+    "guid": "54D189B9-2011-48ED-BFFC-E390D128EED5",
+    "ciTests": {
+        "linux": [
+            {
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "make",
+                    "make run",
+                    "make clean"
+                ]
+            }
+        ],
+        "windows": [ 
+            { 
+                "steps": [
+                    "MSBuild DCT.sln /t:Rebuild /p:Configuration=\"Intel Release\"",
+                    "cd x64/Intel Release",
+                    "DCT.exe ../../res/willyriver.bmp ../../res/willyriver_processed.bmp"
+                ]
+            }
+        ]
+    }
+}

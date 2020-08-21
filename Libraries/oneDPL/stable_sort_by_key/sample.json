@@ -1,0 +1,24 @@
+{
+  "name": "Stable sort by key",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/oneAPI DPC++ Library/CPU and GPU"],
+  "description": "It models stable sort by key: during the sorting of 2 sequences (keys and values) only keys are compared but both keys and values are swapped",
+  "toolchain": ["dpcpp"],
+  "languages": [{"cpp":{}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux"],
+  "builder": ["cmake"],
+  "guid": "C78EEBD2-BF19-4DBC-9629-F2C8446CE47E",
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+            "mkdir -p build",
+            "cd build",
+            "cmake ..",
+            "make",
+            "make run"
+        ]
+      }
+    ]
+  }
+}

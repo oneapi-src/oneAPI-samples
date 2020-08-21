@@ -7,8 +7,8 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04, Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)
-| What you will learn               | The Sepia Filter sample demonstrates the following using the oneAPI DPC++ compiler <ul><li>Writing a custom device selector class</li><li>Offloading compute intensive parts of the application using both lamba and functor kernels</li><li>Measuring kernel execution time by enabling profiling</li></ul>
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | The Sepia Filter sample demonstrates the following using the Intel&reg; oneAPI DPC++/C++ Compiler <ul><li>Writing a custom device selector class</li><li>Offloading compute intensive parts of the application using both lamba and functor kernels</li><li>Measuring kernel execution time by enabling profiling</li></ul>
 | Time to complete                  | 20 minutes
 
 ## Purpose
@@ -21,7 +21,7 @@ The basic DPC++ implementation explained in the code includes device selector, b
 ## License  
 This code sample is licensed under MIT license 
 
-## Building the Program
+## Building the Program for CPU and GPU
 
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -34,7 +34,7 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 Perform the following steps:
 
 
-1.  Build sepia-filter program
+1.  Build the program using the following <code> cmake </code> commands.
 ```
     $ cd sepia-filter  
     $ mkdir build  
