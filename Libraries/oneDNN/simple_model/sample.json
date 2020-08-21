@@ -18,7 +18,7 @@
       		        "cd build",
            		"cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp",
            		"make cnn-inference-f32-cpp",
-			"./out/cnn-inference-f32-cpp cpu",
+			"./bin/cnn-inference-f32-cpp cpu",
 			"SYCL_BE=PI_OPENCL ./out/cnn-inference-f32-cpp gpu"
 		 ]
 	}]

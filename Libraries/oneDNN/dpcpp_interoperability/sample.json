@@ -18,8 +18,8 @@
       		        "cd build",
            		"cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp",
            		"make sycl-interop-cpp",
-			"./out/sycl-interop-cpp cpu",
-			"SYCL_BE=PI_OPENCL ./out/sycl-interop-cpp gpu"
+			"./bin/sycl-interop-cpp cpu",
+			"SYCL_BE=PI_OPENCL ./bin/sycl-interop-cpp gpu"
 		 ]
 	}]
  }

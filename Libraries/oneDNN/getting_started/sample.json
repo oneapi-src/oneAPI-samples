@@ -18,7 +18,7 @@
       		        "cd build",
            		"cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp",
            		"make getting-started-cpp",
-			"SYCL_BE=PI_OPENCL ./out/getting-started-cpp gpu"
+			"SYCL_BE=PI_OPENCL ./bin/getting-started-cpp gpu"
 		 ]
 	}]
  }
