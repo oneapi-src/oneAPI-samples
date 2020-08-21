@@ -9,7 +9,13 @@ A sample containing multiple implementations of matrix multiplication. This samp
 | What you will learn               | How to profile an application using Intel(R) Advisor
 | Time to complete                  | 15 minutes
 
- 
+## Purpose
+
+The Matrix Multiplication sample performs basic matrix multiplication. Three version are provided that use different features of DPC++.
+
+## Key Implementation details
+
+The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups. 
 
 ## License  
 This code sample is licensed under MIT license
@@ -49,7 +55,7 @@ Edit the line in multiply.h to select the version of the multiply function:
 
 ## Running the Sample
 
-# Example of Output
+### Example of Output
 
 ./matrix.dpcpp 
 Address of buf1 = 0x7f5e687eb010
