@@ -4,8 +4,10 @@ The openmp_reduction sample is a simple program that calculates pi.  This progra
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
-| Optimized for	        | Description
-| OS	                | Linux* Ubuntu* 18.04, 
+
+| Optimized for                     | Description
+|:---                               |:--- 
+| OS	                  | Linux* Ubuntu* 18.04, 
 | Hardware	            | Skylake with GEN9 or newer
 | Software	            | Intel® oneAPI DPC++ Compiler (beta)
 | What you will learn   | How to run openMP on cpu as well as GPU offload 
