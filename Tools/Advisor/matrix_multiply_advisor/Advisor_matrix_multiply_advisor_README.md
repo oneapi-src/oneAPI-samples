@@ -1,5 +1,5 @@
-# matrix multiply sample
-A sample containing multiple implementations of matrix multiplication. This sample code is implemented using C++ and SYCL language for CPU and GPU. 
+# Matrix Multiply Sample
+A sample containing multiple implementations of matrix multiplication. This sample code is implemented using DPC++ language for CPU and GPU. 
   
 | Optimized for                       | Description
 |:---                               |:---
@@ -26,7 +26,7 @@ Edit the line in multiply.h to select the version of the multiply function:
 #define MULTIPLY multiply1
 
 
-### on Linux  
+### On a Linux* System
 	To build DPC++ version:
 	cd <sample dir>
 	cmake .
@@ -35,7 +35,7 @@ Edit the line in multiply.h to select the version of the multiply function:
     Clean the program  
     make clean  
 
-### on Windows - Visual Studio 2017 or newer
+### On a Windows* System Using Visual Studio 2017 or newer
    * Open Visual Studio 2017
    * Select Menu "File > Open > Project/Solution", find "matrix_multiply" folder and select "matrix_multiply.sln"
    * Select Menu "Project > Build" to build the selected configuration
@@ -46,6 +46,23 @@ Edit the line in multiply.h to select the version of the multiply function:
     Release - MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Release"
     Debug - MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Debug"
 
+
+## Running the Sample
+
+# Example of Output
+
+./matrix.dpcpp 
+Address of buf1 = 0x7f5e687eb010
+Offset of buf1 = 0x7f5e687eb180
+Address of buf2 = 0x7f5e67fea010
+Offset of buf2 = 0x7f5e67fea1c0
+Address of buf3 = 0x7f5e677e9010
+Offset of buf3 = 0x7f5e677e9100
+Address of buf4 = 0x7f5e66fe8010
+Offset of buf4 = 0x7f5e66fe8140
+Using multiply kernel: multiply1
+Running on Intel(R) Gen9
+Elapsed Time: 0.539631s
 
 ## Running an Intel Advisor analysis
 ------------------------------------------
