@@ -29,14 +29,14 @@
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
 		"id": "verbose_jit",
 		"steps": [
-			"runipy oneDNN_Profiling_VerboseMode_JITDump.ipynb"
+			"runipy verbose_jitdump.ipynb"
 		 ]
 	},
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_gomp --force" ],
 		"id": "isa",
 		"steps": [
-			"runipy oneDNN_Analyze_ISA_with_DispatcherControl.ipynb"
+			"runipy analyze_isa_with_dispatcher_control.ipynb"
 		 ]
 	}
      ]
