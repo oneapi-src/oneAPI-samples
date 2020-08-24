@@ -10,7 +10,9 @@ PyTorch* is a very populiar framework for deep learning. Intel and Facebook* col
 | Time to complete                  | 15 minutes
 
 ## Purpose
-This sample code shows how to get started with Intel Optimization for PyTorch. It implements an example neural network with one convolution layer, one normalizaion layer and one ReLU layer.Deverlopers can quickly build and train a pyTorch neural network using simple python code. In addition, by controlling the build-in enviornment variable, the sample attempts to show explicitly how Intel® DNNL Primitives are called as well as their performance during pyTorch model training and inference.
+This sample code shows how to get started with Intel Optimization for PyTorch. It implements an example neural network with one convolution layer, one normalizaion layer and one ReLU layer.Deverlopers can quickly build and train a PyTorch* neural network using simple python code. In addition, by controlling the build-in enviornment variable, the sample attempts to show explicitly how Intel® DNNL Primitives are called as well as their performance during PyTorch* model training and inference.
+
+Intel-optimized PyTorch* is available as part of Intel® AI Analytics Toolkit. For more information on the optimizations as well as performance data, see this blog post http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance.
 
 ## Key implementation details
 This Hello World sample code is implemented for CPU using the Python language. 
