@@ -20,7 +20,7 @@ constexpr int size_wg = 32;
 // Number of parallel work groups
 constexpr int num_wg = 256;
 // Number of sample points
-constexpr int size_n = size_wg * num_wg; // Must be a multiple of size_wg
+constexpr int size_n = 10000 //size_wg * num_wg; // Must be a multiple of size_wg
 // Output image dimensions
 constexpr int img_dimensions = 1024;
 
@@ -61,6 +61,11 @@ void MonteCarloPi(rgb * image_plot){
     coordinate coords[size_n]; // array for storing the RNG coordinates
     int reduction_arr[size_n / size_wg]; // this array will be used in the reduction stage to sum all the simulated points which fall within the circle
 
+    int test_arr[size_n];
+    for (int i = 0; i < size_n; ++i){
+        test_arr[i] = 1;
+    }
+
     // Generate Random Coordinates
     for (int i = 0; i < size_n; ++i){
         coords[i].x = GetRandCoordinate();
@@ -78,8 +83,10 @@ void MonteCarloPi(rgb * image_plot){
         buffer coords_buf((coordinate*)coords, range(size_n));
         buffer reduction_buf((int*)reduction_arr, range(size_n / size_wg));
 
+        buffer test_buf((int*)test_arr, range(size_n));
+
         // Perform Monte Carlo Procedure on the device
-        q.submit([&](handler& h){
+        /*q.submit([&](handler& h){
             // Set up accessors
             auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
             auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
@@ -125,16 +132,19 @@ void MonteCarloPi(rgb * image_plot){
                 reduction_acc[gp.get_id()] = local_mem[0];
             });
         });
-        q.wait_and_throw();
+        q.wait_and_throw();*/
 
         // Reduction Stage
         q.submit([&](handler& h){
-            // Set up accessors
-            auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
-            // Set up local memory for faster reduction
-            sycl::accessor<int, 1, access::mode::read_write, access::target::local> local_mem(range<1>(size_wg), h);
+            // Read accessor
+            auto read_acc = reduction_buf.get_access<access::mode::read>(h);
+            // Write accessor
+            auto write_acc = reduction_buf.get_access<access::mode::write>(h);
+            // Local accessor
+            auto local_acc = reduction_buf.get_access<access::mode::write, access::target::local>(h);
 
-
+            // Reduction kernel
+            h.parallel_for(nd_range())
 
         });
         q.wait_and_throw();
