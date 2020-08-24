@@ -31,7 +31,6 @@
 #include <fstream>
 #include <iostream>
 #include <CL/sycl.hpp>
-#include <chrono>
 #include <cmath>
 #include <cstring>
 #include <stdio.h>

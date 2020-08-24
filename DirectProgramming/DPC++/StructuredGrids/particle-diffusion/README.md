@@ -14,11 +14,11 @@ and search based on relevant terms noted in the comments.
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; Windows 10 or Windows Server 2017
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel Data Parallel C++ Compiler (beta)
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | How to offload the computation to GPU using Intel&reg; oneAPI DPC++/C++ Compiler
 | Time to complete                  | 15 minutes
 
-Performance number tabulation [if applicable]
+Performance number tabulation
 
 | motionsim sample                      | Performance data
 |:---                               |:---
@@ -103,18 +103,6 @@ Perform the following steps:
     Right click on the solution file and open using either VS2017 or VS2019 IDE  
     Right click on the project in Solution explorer and select Rebuild  
     From top menu select Debug -> Start without Debugging  
-
->If you see the following error message when compiling this sample:
->
-```
-Error 'dpc_common.hpp' file not found
-```
->You need to add the following directory to the list of include folders, that are required by your project, in your project's Visual Studio project property panel. The missing include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
-
-   * Build the program using MSBuild  
-    Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"  
-    Run - MSBuild Particle_Diffusion.sln /t:Rebuild /p:Configuration="Release"  
-
 
 ## Running the Sample
 
