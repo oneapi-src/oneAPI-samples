@@ -8,7 +8,7 @@
  "languages": [{"cpp": { }}],
  "os": ["linux", "windows"],
  "targetDevice": ["CPU", "GPU"],
- "builder": ["ide", "cmake"]
+ "builder": ["ide", "cmake"],
  "ciTests": {
          "linux": [{
                 "steps": [
