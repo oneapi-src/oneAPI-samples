@@ -8,8 +8,6 @@
 | Software                          | Paho MQTT C library, OpenSSL development package
 | What you will learn               | Use protocol MQTT to send events from a device
 
-
-
 ## Purpose
 This is a simple sample you could use for a test of IBM device connection. This project shows how-to develop a device code using Watson IoT Platform iot-c device client library, connect and interact with Watson IoT Platform Service.
 
