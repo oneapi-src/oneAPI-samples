@@ -44,14 +44,14 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
   for (auto bz = kHalfLength; bz < n3_end; bz += n3_block) {
     for (auto by = kHalfLength; by < n2_end; by += n2_block) {
       for (auto bx = kHalfLength; bx < n1_end; bx += n1_block) {
-        auto izEnd = GetMin(bz + n3_block, n3_end);
-        auto iyEnd = GetMin(by + n2_block, n2_end);
-        auto ixEnd = GetMin(bx + n1_block, n1_end);
+        auto iz_end = GetMin(bz + n3_block, n3_end);
+        auto iy_end = GetMin(by + n2_block, n2_end);
+        auto ix_end = GetMin(bx + n1_block, n1_end);
 
 #pragma omp target parallel for simd collapse(3)
-        for (auto iz = bz; iz < izEnd; iz++) {
-          for (auto iy = by; iy < iyEnd; iy++) {
-            for (auto ix = bx; ix < ixEnd; ix++) {
+        for (auto iz = bz; iz < iz_end; iz++) {
+          for (auto iy = by; iy < iy_end; iy++) {
+            for (auto ix = bx; ix < ix_end; ix++) {
               float *ptr_next = ptr_next_base + iz * dimn1n2 + iy * n1;
               float *ptr_prev = ptr_prev_base + iz * dimn1n2 + iy * n1;
               float *ptr_vel = ptr_vel_base + iz * dimn1n2 + iy * n1;
@@ -107,14 +107,14 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
     for (auto bz = kHalfLength; bz < n3_end; bz += n3_block) {
       for (auto by = kHalfLength; by < n2_end; by += n2_block) {
         for (auto bx = kHalfLength; bx < n1_end; bx += n1_block) {
-          auto izEnd = GetMin(bz + n3_block, n3_end);
-          auto iyEnd = GetMin(by + n2_block, n2_end);
-          auto ixEnd = GetMin(bx + n1_block, n1_end);
+          auto iz_end = GetMin(bz + n3_block, n3_end);
+          auto iy_end = GetMin(by + n2_block, n2_end);
+          auto ix_end = GetMin(bx + n1_block, n1_end);
 
 #pragma omp parallel for simd collapse(2) schedule(static, 1)
-          for (auto iy = by; iy < iyEnd; iy++) {
-            for (auto ix = bx; ix < ixEnd; ix++) {
-              for (auto iz = bz; iz < izEnd; iz++) {
+          for (auto iy = by; iy < iy_end; iy++) {
+            for (auto ix = bx; ix < ix_end; ix++) {
+              for (auto iz = bz; iz < iz_end; iz++) {
                 float *ptr_next = ptr_next_base + iz * dimn1n2 + iy * n1;
                 float *ptr_prev = ptr_prev_base + iz * dimn1n2 + iy * n1;
                 float *ptr_vel = ptr_vel_base + iz * dimn1n2 + iy * n1;
@@ -172,13 +172,13 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
     for (auto bz = kHalfLength; bz < n3_end; bz += n3_block) {
       for (auto by = kHalfLength; by < n2_end; by += n2_block) {
         for (auto bx = kHalfLength; bx < n1_end; bx += n1_block) {
-          auto izEnd = GetMin(bz + n3_block, n3_end);
-          auto iyEnd = GetMin(by + n2_block, n2_end);
-          auto ixEnd = GetMin(bx + n1_block, n1_end);
+          auto iz_end = GetMin(bz + n3_block, n3_end);
+          auto iy_end = GetMin(by + n2_block, n2_end);
+          auto ix_end = GetMin(bx + n1_block, n1_end);
 
 #pragma omp parallel for simd collapse(2) schedule(static, 1)
-          for (auto iy = by; iy < iyEnd; iy++) {
-            for (auto ix = bx; ix < ixEnd; ix++) {
+          for (auto iy = by; iy < iy_end; iy++) {
+            for (auto ix = bx; ix < ix_end; ix++) {
               auto gid = ix + (iy * n1) + (bz * dimn1n2);
               float front[kHalfLength + 1];
               float back[kHalfLength];
@@ -190,7 +190,7 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
                 back[iter - 1] = ptr_prev_base[gid - iter * dimn1n2];
               }
 
-              for (auto iz = bz; iz < izEnd; iz++) {
+              for (auto iz = bz; iz < iz_end; iz++) {
                 front[kHalfLength] = ptr_prev_base[gid + kHalfLength * dimn1n2];
 
                 float value = front[0] * coeff[0];
@@ -261,13 +261,13 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
         thread_limit(n1_block *n2_block)
     for (auto by = kHalfLength; by < n2_end; by += n2_block) {
       for (auto bx = kHalfLength; bx < n1_end; bx += n1_block) {
-        auto izEnd = GetMin(bz + n3_block, n3_end);
-        auto iyEnd = GetMin(by + n2_block, n2_end);
-        auto ixEnd = GetMin(bx + n1_block, n1_end);
+        auto iz_end = GetMin(bz + n3_block, n3_end);
+        auto iy_end = GetMin(by + n2_block, n2_end);
+        auto ix_end = GetMin(bx + n1_block, n1_end);
 
 #pragma omp parallel for simd collapse(2) schedule(static, 1)
-        for (auto iy = by; iy < iyEnd; iy++) {
-          for (auto ix = bx; ix < ixEnd; ix++) {
+        for (auto iy = by; iy < iy_end; iy++) {
+          for (auto ix = bx; ix < ix_end; ix++) {
             auto gid = ix + (iy * n1) + (bz * dimn1n2);
             float front[kHalfLength + 1];
             float back[kHalfLength];
@@ -279,7 +279,7 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
               back[iter - 1] = ptr_prev_base[gid - iter * dimn1n2];
             }
 
-            for (auto iz = bz; iz < izEnd; iz++) {
+            for (auto iz = bz; iz < iz_end; iz++) {
               front[kHalfLength] = ptr_prev_base[gid + kHalfLength * dimn1n2];
 
               float value = front[0] * coeff[0];

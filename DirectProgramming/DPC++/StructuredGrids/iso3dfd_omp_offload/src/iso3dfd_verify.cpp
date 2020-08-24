@@ -18,25 +18,25 @@ void Iso3dfdVerifyIteration(float *ptr_next_base, float *ptr_prev_base,
                             unsigned int n2_block, unsigned int n3_block) {
   auto dimn1n2 = n1 * n2;
 
-  auto n3End = n3 - kHalfLength;
-  auto n2End = n2 - kHalfLength;
-  auto n1End = n1 - kHalfLength;
+  auto n3_end = n3 - kHalfLength;
+  auto n2_end = n2 - kHalfLength;
+  auto n1_end = n1 - kHalfLength;
 
 #pragma omp parallel default(shared)
 #pragma omp for schedule(static) collapse(3)
-  for (auto bz = kHalfLength; bz < n3End; bz += n3_block) {
-    for (auto by = kHalfLength; by < n2End; by += n2_block) {
-      for (auto bx = kHalfLength; bx < n1End; bx += n1_block) {
-        auto izEnd = std::min(bz + n3_block, n3End);
-        auto iyEnd = std::min(by + n2_block, n2End);
-        auto ixEnd = std::min(n1_block, n1End - bx);
-        for (auto iz = bz; iz < izEnd; iz++) {
-          for (auto iy = by; iy < iyEnd; iy++) {
+  for (auto bz = kHalfLength; bz < n3_end; bz += n3_block) {
+    for (auto by = kHalfLength; by < n2_end; by += n2_block) {
+      for (auto bx = kHalfLength; bx < n1_end; bx += n1_block) {
+        auto iz_end = std::min(bz + n3_block, n3_end);
+        auto iy_end = std::min(by + n2_block, n2_end);
+        auto ix_end = std::min(n1_block, n1_end - bx);
+        for (auto iz = bz; iz < iz_end; iz++) {
+          for (auto iy = by; iy < iy_end; iy++) {
             float *ptr_next = ptr_next_base + iz * dimn1n2 + iy * n1 + bx;
             float *ptr_prev = ptr_prev_base + iz * dimn1n2 + iy * n1 + bx;
             float *ptr_vel = ptr_vel_base + iz * dimn1n2 + iy * n1 + bx;
 #pragma omp simd
-            for (auto ix = 0; ix < ixEnd; ix++) {
+            for (auto ix = 0; ix < ix_end; ix++) {
               float value = 0.0f;
               value += ptr_prev[ix] * coeff[0];
               value += STENCIL_LOOKUP(1);
