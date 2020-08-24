@@ -16,6 +16,8 @@ The Matrix Multiplication sample performs basic matrix multiplication. Three ver
 ## Key Implementation details
 
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups. 
+Include Files
+The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ## License  
 This code sample is licensed under MIT license
@@ -60,13 +62,13 @@ Edit the line in multiply.h to select the version of the multiply function:
 ./matrix.dpcpp 
 Address of buf1 = 0x7f5e687eb010
 Offset of buf1 = 0x7f5e687eb180
-Address of buf2 = 0x7f5e67fea010
-Offset of buf2 = 0x7f5e67fea1c0
-Address of buf3 = 0x7f5e677e9010
-Offset of buf3 = 0x7f5e677e9100
-Address of buf4 = 0x7f5e66fe8010
-Offset of buf4 = 0x7f5e66fe8140
-Using multiply kernel: multiply1
+Address of buf2 = 0x7f5e67fea010 
+Offset of buf2 = 0x7f5e67fea1c0 
+Address of buf3 = 0x7f5e677e9010 
+Offset of buf3 = 0x7f5e677e9100 
+Address of buf4 = 0x7f5e66fe8010 
+Offset of buf4 = 0x7f5e66fe8140 
+Using multiply kernel: multiply1 
 Running on Intel(R) Gen9
 Elapsed Time: 0.539631s
 
