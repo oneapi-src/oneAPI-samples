@@ -5,7 +5,8 @@ The dpc_reduce is a simple program that calculates pi.  This program is implemen
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
-| Optimized for	        | Description
+| Optimized for                     | Description
+|:---                               |:--- 
 | OS	                | Linux* Ubuntu* 18.04, 
 | Hardware	            | Skylake with GEN9 or newer, 
 | Software	            | Intel® oneAPI DPC++ Compiler (beta)
@@ -65,12 +66,23 @@ There are no editable parameters for this sample.
 
 ### Example of Output
 Number of steps is 1000000
+
 Cpu Seq calc:           PI =3.14 in 0.00348 seconds
+
 Cpu TBB  calc:          PI =3.14 in 0.00178 seconds
+
 dpstd native:           PI =3.14 in 0.191 seconds
+
 dpstd native2:          PI =3.14 in 0.142 seconds
+
 dpstd native3:          PI =3.14 in 0.002 seconds
+
 dpstd native4:          PI =3.14 in 0.00234 seconds
+
 dpstd two steps:        PI =3.14 in 0.00138 seconds
+
 dpstd transform_reduce: PI =3.14 in 0.000442 seconds
+
 success
+
+
