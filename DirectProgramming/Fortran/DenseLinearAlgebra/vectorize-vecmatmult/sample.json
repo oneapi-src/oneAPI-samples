@@ -1,5 +1,5 @@
 {
-  "name": "vec_samples",
+  "name": "vectorize-vecmatmult",
   "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
   "description": "Fortran Tutorial - Using Auto Vectorization",
   "toolchain": [ "ifort" ],

@@ -1,5 +1,5 @@
 {
-  "name": "openmp_samples",
+  "name": "openmp-primes",
   "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
   "description": "Fortran Tutorial - Using OpenMP",
   "toolchain": [ "ifort" ],

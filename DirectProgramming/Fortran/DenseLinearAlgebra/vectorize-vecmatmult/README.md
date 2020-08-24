@@ -22,7 +22,7 @@ Single Instruction Multiple Data (SIMD) instruction set.
 For the Intel® compiler, vectorization is the unrolling of a loop combined with the generation of packed SIMD instructions. Because the packed instructions operate on more than one data element at a time, the loop can execute more efficiently. It is sometimes referred to as auto-vectorization to emphasize that the compiler automatically identifies and optimizes suitable loops on its own.
 
 Intel® Advisor can assist with vectorization and show optimization report messages with your source code. See [Intel Advisor][1] for details.
-[1]: https://software.intel.com/en-us/intel-advisor-xe "Intel Avisor"
+[1]: https://software.intel.com/content/www/us/en/develop/tools/advisor.html "Intel Avisor"
 
 Vectorization may call library routines that can result in additional performance gain on Intel microprocessors than on non-Intel microprocessors. The vectorization can also be affected by certain options, such as m or x.
 
@@ -51,7 +51,7 @@ This code sample is licensed under MIT license
 
 ## Building the `Fortran Vectorization` sample
 
-This sample contains 2 Fortran source files, in subdirectory 'src/' under the main sample root directory oneAPI-samples/DirectProgramming/Fortran/vec_samples
+This sample contains 2 Fortran source files, in subdirectory 'src/' under the main sample root directory oneAPI-samples/DirectProgramming/Fortran/vectorize-vecmatmult
 
 1. matvec.f90 is a Fortran source file with a matrix-times-vector algorithm
 2. driver.f90 is a Fortran source file with the main program calling matvec

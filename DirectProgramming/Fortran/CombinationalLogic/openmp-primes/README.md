@@ -21,7 +21,7 @@ and the number of 4n-1 primes in the same range. It illustrates two OpenMP* dire
 to help speed up the code.
 
 First, a dynamic schedule clause is used with the OpenMP* for directive. 
-Because the for loop's workload increases as its index gets bigger, 
+Because the DO loop's workload increases as its index gets bigger, 
 the default static scheduling does not work well. Instead, dynamic scheduling 
 is used to account for the increasing workload. 
 But dynamic scheduling itself has more overhead than static scheduling, 
@@ -29,7 +29,7 @@ so a chunk size of 10 is used to reduce the overhead for dynamic scheduling.
 
 Second, a reduction clause is used instead of an OpenMP* critical directive 
 to eliminate lock overhead. A critical directive would cause excessive lock overhead 
-due to the one-thread-at-time update of the shared variables each time through the for loop. 
+due to the one-thread-at-time update of the shared variables each time through the DO loop. 
 Instead the reduction clause causes only one update of the shared variables once at the end of the loop.
 
 The sample can be compiled unoptimized (-O0 ), or at any level of 
