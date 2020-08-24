@@ -1,0 +1,34 @@
+{
+  "guid": "9605DCBF-6DDB-4FD2-812F-1ECF252AE334",
+  "name": "Using FPGA Cross-Language Libraries",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
+  "description": "Tutorial demonstrating how to create FPGA libraries and to incorporate them in a DPC++ project",
+  "toolchain": ["dpcpp"],
+  "os": ["linux"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./use_library.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ]
+  }
+}

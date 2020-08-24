@@ -6,10 +6,10 @@ For more details about merge sort algorithm and top-down implementation, please 
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04; MacOS Catalina or newer
+| OS                                | MacOS Catalina or newer
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; C++ Compiler 19.1 or newer;
-| What you will learn               | How to accelerate a scalar program using OpenMP tasks
+| Software                          | Intel&reg; oneAPI C++ Compiler Classic
+| What you will learn               | How to accelerate a scalar program using OpenMP* tasks
 | Time to complete                  | 15 minutes
 
 Performance number tabulation
