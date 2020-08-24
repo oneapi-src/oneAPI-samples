@@ -1,0 +1,6 @@
+/localdisk/clevels/argonne/oneAPI-samples/Libraries/oneTBB/tbb-async-sycl/build/CMakeFiles/rebuild_cache.dir
+/localdisk/clevels/argonne/oneAPI-samples/Libraries/oneTBB/tbb-async-sycl/build/CMakeFiles/edit_cache.dir
+/localdisk/clevels/argonne/oneAPI-samples/Libraries/oneTBB/tbb-async-sycl/build/src/CMakeFiles/rebuild_cache.dir
+/localdisk/clevels/argonne/oneAPI-samples/Libraries/oneTBB/tbb-async-sycl/build/src/CMakeFiles/edit_cache.dir
+/localdisk/clevels/argonne/oneAPI-samples/Libraries/oneTBB/tbb-async-sycl/build/src/CMakeFiles/tbb-async-sycl.dir
+/localdisk/clevels/argonne/oneAPI-samples/Libraries/oneTBB/tbb-async-sycl/build/src/CMakeFiles/run.dir
