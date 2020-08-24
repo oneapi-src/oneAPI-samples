@@ -52,28 +52,12 @@ short MMX_dot_product(short *a, short *b);
 
 #define MMX_DOT_PROD_ENABLED (__INTEL_COMPILER || (_MSC_VER && !_WIN64))
 
-// Object to allow for measuring computation time
-class TimeInterval {
- public:
-  TimeInterval() : start_(std::chrono::steady_clock::now()) {}
-
-  double Elapsed() {
-    auto now = std::chrono::steady_clock::now();
-    return std::chrono::duration_cast<Duration>(now - start_).count();
-  }
-
- private:
-  using Duration = std::chrono::duration<double>;
-  std::chrono::steady_clock::time_point start_;
-};
-
 int main() {
   float x[SIZE], y[SIZE];
   short a[SIZE], b[SIZE];
   int i;
   float product;
   short mmx_product;
-  double time;
   for (i = 0; i < SIZE; i++) {
     x[i] = i;
     y[i] = i;
@@ -81,13 +65,8 @@ int main() {
     b[i] = i;
   }
 
-  {
-    TimeInterval t;
-    product = dot_product(x, y);
-    time = t.Elapsed();
-  }
+  product = dot_product(x, y);
   printf("Dot Product computed by C:  %f\n", product);
-  printf("---Computation time:  %f\n", time);
 
   product = dot_product_SIMD(x, y);
   printf("Dot Product computed by C + SIMD:  %f\n", product);
