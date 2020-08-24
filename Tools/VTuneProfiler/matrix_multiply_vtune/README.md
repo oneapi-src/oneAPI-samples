@@ -58,7 +58,7 @@ Edit the line in multiply.h to select the version of the multiply function:
 ## Example of Output
    ./matrix.dpcpp 
    Address of buf1 = 0x7f5e687eb010
-   Offset of buf1 = 0x7f5e687eb180
+   Offset of buf1 = 0x7f5e687eb010
    Address of buf2 = 0x7f5e67fea010 
    Offset of buf2 = 0x7f5e67fea1c0 
    Address of buf3 = 0x7f5e677e9010 
