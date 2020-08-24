@@ -55,10 +55,7 @@ Edit the line in multiply.h to select the version of the multiply function:
     Debug - MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Debug"
 
 
-## Running the Sample
-
 ## Example of Output
-
    ./matrix.dpcpp 
    Address of buf1 = 0x7f5e687eb010
    Offset of buf1 = 0x7f5e687eb180
