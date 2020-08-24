@@ -32,11 +32,15 @@
 #include <immintrin.h>
 #include <pmmintrin.h>
 #include <stdio.h>
+#include <omp.h>
+
 #define SIZE 24  // assumes size is a multiple of 8 because
 // Intel(R) AVX registers will store 8, 32bit elements.
 
 // Computes dot product using C
 float dot_product(float *a, float *b);
+// Computes dot product using SIMD
+float dot_product_SIMD(float *a, float *b);
 // Computes dot product using Intel(R) SSE intrinsics
 float dot_product_intrin(float *a, float *b);
 // Computes dot product using Intel(R) AVX intrinsics
@@ -61,6 +65,9 @@ int main() {
   }
   product = dot_product(x, y);
   printf("Dot Product computed by C:  %f\n", product);
+
+  product = dot_product_SIMD(x, y);
+  printf("Dot Product computed by C + SIMD:  %f\n", product);
 
   product = dot_product_intrin(x, y);
   printf("Dot Product computed by Intel(R) SSE3 intrinsics:  %f\n", product);
@@ -100,6 +107,16 @@ int main() {
 float dot_product(float *a, float *b) {
   int i;
   int sum = 0;
+  for (i = 0; i < SIZE; i++) {
+    sum += a[i] * b[i];
+  }
+  return sum;
+}
+
+float dot_product_SIMD(float *a, float *b) {
+  int i;
+  int sum = 0;
+  #pragma omp simd
   for (i = 0; i < SIZE; i++) {
     sum += a[i] * b[i];
   }
