@@ -35,7 +35,7 @@
 #include <omp.h>
 #include <chrono>
 
-#define SIZE 128  // assumes size is a multiple of 8 because
+#define SIZE 24  // assumes size is a multiple of 8 because
 // Intel(R) AVX registers will store 8, 32bit elements.
 
 // Computes dot product using C
