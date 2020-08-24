@@ -57,8 +57,11 @@ Edit the line in multiply.h to select the version of the multiply function:
 
 ## Example of Output
    ./matrix.dpcpp 
+
    Using multiply kernel: multiply1 
+
    Running on Intel(R) Gen9
+
    Elapsed Time: 0.539631s
 
 ## Running an Intel VTune Profiler analysis
