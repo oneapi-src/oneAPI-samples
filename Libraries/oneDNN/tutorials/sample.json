@@ -13,7 +13,7 @@
 	"linux": [
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
-		"id": "gsg",
+		"id": "dnn gsg",
 		"steps": [
 			"runipy getting_started.ipynb"
 		 ]
