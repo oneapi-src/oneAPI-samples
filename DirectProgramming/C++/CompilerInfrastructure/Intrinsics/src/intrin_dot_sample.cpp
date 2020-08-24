@@ -118,7 +118,7 @@ float dot_product(float *a, float *b) {
 float dot_product_SIMD(float *a, float *b) {
   int i;
   int sum = 0;
-  #pragma omp simd
+  #pragma omp simd reduction(+:sum)
   for (i = 0; i < SIZE; i++) {
     sum += a[i] * b[i];
   }
