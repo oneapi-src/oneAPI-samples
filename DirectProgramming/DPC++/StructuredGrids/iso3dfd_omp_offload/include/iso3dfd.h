@@ -17,8 +17,6 @@ constexpr float dxyz = 50.0f;
 constexpr unsigned int kHalfLength = 8;
 constexpr unsigned int kMaxTeamSizeLimit = 256;
 
-#define MIN(a, b) (a) < (b) ? (a) : (b)
-
 #define STENCIL_LOOKUP(ir)                                          \
   (coeff[ir] * ((ptr_prev[ix + ir] + ptr_prev[ix - ir]) +           \
                 (ptr_prev[ix + ir * n1] + ptr_prev[ix - ir * n1]) + \

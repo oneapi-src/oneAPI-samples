@@ -6,6 +6,16 @@
 // =============================================================
 
 #include "../include/iso3dfd.h"
+
+/*
+ * Inline device function to find minimum
+ */
+#pragma omp declare target
+inline unsigned int GetMin(unsigned int first, unsigned int second) {
+  return ((first < second) ? first : second);
+}
+#pragma omp end declare target
+
 #ifdef USE_BASELINE
 /*
  * Device-Code
@@ -24,19 +34,19 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
   auto dimn1n2 = n1 * n2;
   auto size = n3 * dimn1n2;
 
-  auto n3End = n3 - kHalfLength;
-  auto n2End = n2 - kHalfLength;
-  auto n1End = n1 - kHalfLength;
+  auto n3_end = n3 - kHalfLength;
+  auto n2_end = n2 - kHalfLength;
+  auto n1_end = n1 - kHalfLength;
 
   // Outer 3 loops just execute once if block sizes are same as the grid sizes,
   // which is enforced here to demonstrate the baseline version.
 
-  for (auto bz = kHalfLength; bz < n3End; bz += n3_block) {
-    for (auto by = kHalfLength; by < n2End; by += n2_block) {
-      for (auto bx = kHalfLength; bx < n1End; bx += n1_block) {
-        auto izEnd = MIN(bz + n3_block, n3End);
-        auto iyEnd = MIN(by + n2_block, n2End);
-        auto ixEnd = MIN(bx + n1_block, n1End);
+  for (auto bz = kHalfLength; bz < n3_end; bz += n3_block) {
+    for (auto by = kHalfLength; by < n2_end; by += n2_block) {
+      for (auto bx = kHalfLength; bx < n1_end; bx += n1_block) {
+        auto izEnd = GetMin(bz + n3_block, n3_end);
+        auto iyEnd = GetMin(by + n2_block, n2_end);
+        auto ixEnd = GetMin(bx + n1_block, n1_end);
 
 #pragma omp target parallel for simd collapse(3)
         for (auto iz = bz; iz < izEnd; iz++) {
@@ -86,20 +96,20 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
   auto dimn1n2 = n1 * n2;
   auto size = n3 * dimn1n2;
 
-  auto n3End = n3 - kHalfLength;
-  auto n2End = n2 - kHalfLength;
-  auto n1End = n1 - kHalfLength;
+  auto n3_end = n3 - kHalfLength;
+  auto n2_end = n2 - kHalfLength;
+  auto n1_end = n1 - kHalfLength;
 
 #pragma omp target teams distribute collapse(3)                    \
     num_teams((n3 / n3_block) * (n2 / n2_block) * (n1 / n1_block)) \
         thread_limit(n1_block *n2_block)
   {  // start of omp target
-    for (auto bz = kHalfLength; bz < n3End; bz += n3_block) {
-      for (auto by = kHalfLength; by < n2End; by += n2_block) {
-        for (auto bx = kHalfLength; bx < n1End; bx += n1_block) {
-          auto izEnd = MIN(bz + n3_block, n3End);
-          auto iyEnd = MIN(by + n2_block, n2End);
-          auto ixEnd = MIN(bx + n1_block, n1End);
+    for (auto bz = kHalfLength; bz < n3_end; bz += n3_block) {
+      for (auto by = kHalfLength; by < n2_end; by += n2_block) {
+        for (auto bx = kHalfLength; bx < n1_end; bx += n1_block) {
+          auto izEnd = GetMin(bz + n3_block, n3_end);
+          auto iyEnd = GetMin(by + n2_block, n2_end);
+          auto ixEnd = GetMin(bx + n1_block, n1_end);
 
 #pragma omp parallel for simd collapse(2) schedule(static, 1)
           for (auto iy = by; iy < iyEnd; iy++) {
@@ -152,19 +162,19 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
   auto dimn1n2 = n1 * n2;
   auto size = n3 * dimn1n2;
 
-  auto n3End = n3 - kHalfLength;
-  auto n2End = n2 - kHalfLength;
-  auto n1End = n1 - kHalfLength;
+  auto n3_end = n3 - kHalfLength;
+  auto n2_end = n2 - kHalfLength;
+  auto n1_end = n1 - kHalfLength;
 #pragma omp target teams distribute collapse(3)                    \
     num_teams((n3 / n3_block) * (n2 / n2_block) * (n1 / n1_block)) \
         thread_limit(n1_block *n2_block)
   {  // start of omp target
-    for (auto bz = kHalfLength; bz < n3End; bz += n3_block) {
-      for (auto by = kHalfLength; by < n2End; by += n2_block) {
-        for (auto bx = kHalfLength; bx < n1End; bx += n1_block) {
-          auto izEnd = MIN(bz + n3_block, n3End);
-          auto iyEnd = MIN(by + n2_block, n2End);
-          auto ixEnd = MIN(bx + n1_block, n1End);
+    for (auto bz = kHalfLength; bz < n3_end; bz += n3_block) {
+      for (auto by = kHalfLength; by < n2_end; by += n2_block) {
+        for (auto bx = kHalfLength; bx < n1_end; bx += n1_block) {
+          auto izEnd = GetMin(bz + n3_block, n3_end);
+          auto iyEnd = GetMin(by + n2_block, n2_end);
+          auto ixEnd = GetMin(bx + n1_block, n1_end);
 
 #pragma omp parallel for simd collapse(2) schedule(static, 1)
           for (auto iy = by; iy < iyEnd; iy++) {
@@ -241,19 +251,19 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
   auto dimn1n2 = n1 * n2;
   auto size = n3 * dimn1n2;
 
-  auto n3End = n3 - kHalfLength;
-  auto n2End = n2 - kHalfLength;
-  auto n1End = n1 - kHalfLength;
+  auto n3_end = n3 - kHalfLength;
+  auto n2_end = n2 - kHalfLength;
+  auto n1_end = n1 - kHalfLength;
 #pragma omp parallel for
-  for (auto bz = kHalfLength; bz < n3End; bz += n3_block) {
+  for (auto bz = kHalfLength; bz < n3_end; bz += n3_block) {
 #pragma omp target teams distribute collapse(2)  \
     num_teams((n2 / n2_block) * (n1 / n1_block)) \
         thread_limit(n1_block *n2_block)
-    for (auto by = kHalfLength; by < n2End; by += n2_block) {
-      for (auto bx = kHalfLength; bx < n1End; bx += n1_block) {
-        auto izEnd = MIN(bz + n3_block, n3End);
-        auto iyEnd = MIN(by + n2_block, n2End);
-        auto ixEnd = MIN(bx + n1_block, n1End);
+    for (auto by = kHalfLength; by < n2_end; by += n2_block) {
+      for (auto bx = kHalfLength; bx < n1_end; bx += n1_block) {
+        auto izEnd = GetMin(bz + n3_block, n3_end);
+        auto iyEnd = GetMin(by + n2_block, n2_end);
+        auto ixEnd = GetMin(bx + n1_block, n1_end);
 
 #pragma omp parallel for simd collapse(2) schedule(static, 1)
         for (auto iy = by; iy < iyEnd; iy++) {
