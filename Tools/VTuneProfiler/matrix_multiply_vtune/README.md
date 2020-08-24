@@ -57,7 +57,7 @@ Edit the line in multiply.h to select the version of the multiply function:
 
 ## Running the Sample
 
-### Example of Output
+## Example of Output
 
    ./matrix.dpcpp 
    Address of buf1 = 0x7f5e687eb010
