@@ -146,7 +146,7 @@ void MonteCarloPi(rgb * image_plot){
             //auto local_acc = reduction_buf.get_access<access::mode::write, access::target::local>(h);
 
             // Reduction kernel
-            auto a_acc = reduction_buf.get_access<access::mode::read>(h);
+            auto a_acc = test_buf.get_access<access::mode::read>(h);
             auto total_acc = total_buf.get_access<access::mode::read_write>(h);
             h.parallel_for(range(size_n), [=](auto it)
             {
