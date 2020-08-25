@@ -151,7 +151,7 @@ void MonteCarloPi(rgb * image_plot){
             h.parallel_for(range(size_n), [=](auto it)
             {
                 int i = it.get_global_id(0);
-                total_acc += a[i];
+                total_acc[0] = total_acc[0] + a[i];
             });
 
         });
@@ -165,10 +165,10 @@ void MonteCarloPi(rgb * image_plot){
 
     // Print calculated value of pi
     int count = 0;
-    for (int i = 0; i < size_n / size_wg; ++i){
+    /*for (int i = 0; i < size_n / size_wg; ++i){
         count += reduction_arr[i]; // Reduce workgroup's results into single sum
-    }
-    double pi = 4.0 * (double) count / size_n;
+    }*/
+    double pi = 4.0 * (double) total / size_n;
     std::cout << "The estimated value of pi (N = " << size_n << ") is: " << pi << std::endl;
 }
 
