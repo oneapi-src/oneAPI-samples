@@ -1,1 +1,0 @@
-dpcpp   -g -std=c++11 -cl-opt-disable   -g -ltbb -rdynamic CMakeFiles/tbb-task-sycl.dir/tbb-task-sycl.cpp.o  -o tbb-task-sycl 

@@ -1,1 +1,0 @@
-/opt/intel/oneapi/compiler/latest/linux/bin/dpcpp   -g -std=c++11 -cl-opt-disable -O2 -g -DNDEBUG   -g -ltbb -rdynamic CMakeFiles/tbb-async-sycl.dir/tbb-async-sycl.cpp.o  -o tbb-async-sycl  -lpthread 
