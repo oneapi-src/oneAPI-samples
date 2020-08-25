@@ -61,6 +61,7 @@ void MonteCarloPi(rgb * image_plot){
     coordinate coords[size_n]; // array for storing the RNG coordinates
     int reduction_arr[size_n / size_wg]; // this array will be used in the reduction stage to sum all the simulated points which fall within the circle
 
+    int sum = 0;
     int test_arr[size_n];
     for (int i = 0; i < size_n; ++i){
         test_arr[i] = 1;
@@ -84,6 +85,7 @@ void MonteCarloPi(rgb * image_plot){
         buffer reduction_buf((int*)reduction_arr, range(size_n / size_wg));
 
         buffer test_buf((int*)test_arr, range(size_n));
+        buffer sum_buf((int*)&sum, 1);
 
         // Perform Monte Carlo Procedure on the device
         /*q.submit([&](handler& h){
@@ -137,14 +139,20 @@ void MonteCarloPi(rgb * image_plot){
         // Reduction Stage
         q.submit([&](handler& h){
             // Read accessor
-            auto read_acc = reduction_buf.get_access<access::mode::read>(h);
+            //auto read_acc = reduction_buf.get_access<access::mode::read>(h);
             // Write accessor
-            auto write_acc = reduction_buf.get_access<access::mode::write>(h);
+            //auto write_acc = reduction_buf.get_access<access::mode::write>(h);
             // Local accessor
-            auto local_acc = reduction_buf.get_access<access::mode::write, access::target::local>(h);
+            //auto local_acc = reduction_buf.get_access<access::mode::write, access::target::local>(h);
 
             // Reduction kernel
-            h.parallel_for(nd_range())
+            auto a = reduction_buf.get_access<access::mode::read>(h);
+            auto sum = accessor<int,0,access::mode::write,access::target::global_buffer>(sum_buf, h);
+            h.parallel_for(nd_range<1>{size_n, 10}, reduction(sum, 0, plus<int>()), [=](nd_item<1> it, auto& sum)
+            {
+                int i = it.get_global_id(0);
+                sum += a[i];
+            });
 
         });
         q.wait_and_throw();
