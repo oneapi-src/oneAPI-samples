@@ -16,6 +16,9 @@
 #include <tbb/flow_graph.h>
 #include <tbb/global_control.h>
 #include <tbb/parallel_for.h>
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
+#include "dpc_common.hpp"
 
 using namespace cl::sycl;
 
@@ -24,20 +27,6 @@ constexpr cl::sycl::access::mode sycl_write = cl::sycl::access::mode::write;
 constexpr cl::sycl::access::mode sycl_read_write = cl::sycl::access::mode::read_write;
 
 struct done_tag{};
-
-// The exception_list parameter is an iterable list of std::exception_ptr objects.
-// But those pointers are not always directly readable.
-// So, we rethrow the pointer, catch it,  and then we have the exception itself.
-// Note: depending upon the operation there may be several exceptions.
-auto exception_handler = [](exception_list exceptionList) {
-  for (std::exception_ptr const& e : exceptionList) {
-    try {
-      std::rethrow_exception(e);
-    } catch (exception const& e) {
-      std::terminate();  // exit the process immediately.
-    }
-  }
-};
 
 const float ratio = 0.5;  // CPU to GPU offload ratio
 const float alpha = 0.5;  // coeff for triad calculation
@@ -82,7 +71,7 @@ class AsyncActivity {
         buffer<cl_float, 1> b_buffer(b_array.data(), n_items);
         buffer<cl_float, 1> c_buffer(c_array.data(), n_items);
 
-        queue q;
+        queue q(default_selector{}, dpc_common::exception_handler);
         q.submit([&](handler& h) {
               auto a_accessor = a_buffer.get_access<sycl_read>(h);
               auto b_accessor = b_buffer.get_access<sycl_read>(h);
