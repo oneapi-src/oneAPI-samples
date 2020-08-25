@@ -8,7 +8,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10 
 | Hardware                          | Skylake with GEN9 or newer, Intel(R) Programmable Acceleration Card with Intel(R) Arria(R) 10 GX FPGA
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)  
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler  
   
 ## Purpose
 The `vector-add` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators.

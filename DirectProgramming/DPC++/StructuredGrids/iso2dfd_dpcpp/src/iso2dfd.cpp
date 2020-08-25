@@ -31,7 +31,6 @@
 #include <fstream>
 #include <iostream>
 #include <CL/sycl.hpp>
-#include <chrono>
 #include <cmath>
 #include <cstring>
 #include <stdio.h>
@@ -327,7 +326,7 @@ int main(int argc, char* argv[]) {
   // Compute and display time used by device
   auto time = t_offload.Elapsed();
 
-  cout << "Offload time: " << time << " ms\n\n";
+  cout << "Offload time: " << time << " s\n\n";
 
   // Output final wavefield (computed by device) to binary file
   ofstream out_file;
@@ -351,7 +350,7 @@ int main(int argc, char* argv[]) {
   // Compute and display time used by CPU
   time = t_cpu.Elapsed();
 
-  cout << "CPU time: " << time << " ms\n\n";
+  cout << "CPU time: " << time << " s\n\n";
 
   // Compute error (difference between final wavefields computed in device and
   // CPU)
