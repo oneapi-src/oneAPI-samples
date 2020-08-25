@@ -146,11 +146,11 @@ void MonteCarloPi(rgb * image_plot){
             //auto local_acc = reduction_buf.get_access<access::mode::write, access::target::local>(h);
 
             // Reduction kernel
-            auto a = reduction_buf.get_access<access::mode::read>(h);
+            auto a_acc = reduction_buf.get_access<access::mode::read>(h);
             auto total_acc = total_buf.get_access<access::mode::read_write>(h);
             h.parallel_for(range(size_n), [=](auto it)
             {
-                total_acc[0] = total_acc[0] + a[it];
+                total_acc[0] = total_acc[0] + a_acc[it];
             });
 
         });
@@ -168,6 +168,7 @@ void MonteCarloPi(rgb * image_plot){
         count += reduction_arr[i]; // Reduce workgroup's results into single sum
     }*/
     double pi = 4.0 * (double) total / size_n;
+    std::cout << "The total monte carload was: " << total << std::endl;
     std::cout << "The estimated value of pi (N = " << size_n << ") is: " << pi << std::endl;
 }
 
