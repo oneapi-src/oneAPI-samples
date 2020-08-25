@@ -30,9 +30,9 @@
  *
  */
 #include <immintrin.h>
+#include <omp.h>
 #include <pmmintrin.h>
 #include <stdio.h>
-#include <omp.h>
 
 #define SIZE 24  // assumes size is a multiple of 8 because
 // Intel(R) AVX registers will store 8, 32bit elements.
@@ -117,7 +117,7 @@ float dot_product(float *a, float *b) {
 float dot_product_SIMD(float *a, float *b) {
   int i;
   int sum = 0;
-  #pragma omp simd reduction(+:sum)
+#pragma omp simd reduction(+ : sum)
   for (i = 0; i < SIZE; i++) {
     sum += a[i] * b[i];
   }
@@ -211,7 +211,7 @@ float dot_product_intrin(float *a, float *b) {
         b +
         i);  // loads unaligned array b into num2  num2= b[3]   b[2]   b[1] b[0]
     num3 = _mm_mul_ps(num1, num2);  // performs multiplication   num3 =
-                                    // a[3]*b[3]  a[2]*b[2]  a[1]*b[1]  a[0]*b[0]
+                                    // a[3]*b[3]  a[2]*b[2]  a[1]*b[1] a[0]*b[0]
     num3 = _mm_hadd_ps(num3, num3);  // performs horizontal addition
     // num3=  a[3]*b[3]+ a[2]*b[2]  a[1]*b[1]+a[0]*b[0]  a[3]*b[3]+ a[2]*b[2]
     // a[1]*b[1]+a[0]*b[0]
