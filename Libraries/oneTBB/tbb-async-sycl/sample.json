@@ -1,0 +1,32 @@
+{
+  "guid": "08F78756-4F3C-470C-9AE1-54DE09040799",
+  "name": "tbb-async-sycl",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneTBB"],
+  "toolchain": ["dpcpp"],
+  "description": "This sample illustrates how computational kernel can be split for execution between CPU and GPU using TBB Flow Graph asynchronous node and functional node. The Flow Graph asynchronous node uses SYCL to implement calculations on GPU while the functional node does CPU part of calculations. This tbb-async-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.",
+  "languages": [{"cpp":{}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os":["linux", "windows"],
+  "builder": ["ide", "cmake"], 
+  "ciTests": {
+         "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make VERBOSE=1",
+                        "make run"
+                 ]
+        }],
+        "windows": [{
+                "steps": [
+                        "MSBuild tbb-async-sycl.sln /t:Rebuild /p:Configuration=\"debug\"",
+                       "cd x64/Debug",
+                        "tbb-async-sycl.exe"
+                ]
+        }]
+} 
+ 
+  
+}
+
