@@ -10,7 +10,7 @@ TensorFlow* is a widely-used machine learning framework in the deep learning are
 | Time to complete                  | 10 minutes
 
 ## Purpose
-This sample code shows how to get started with Intel Optimization for TensorFlow*. It implements an example neural network with one convolution layer and one ReLU layer. Deverlopers can quickly build and train a Tensorflow neural network using simple python code. In addition, by controlling the build-in enviornment variable, the sample attempts to show explicitly how Intel® DNNL Primitives are called as well as their performance during the neural network training. 
+This sample code shows how to get started with Intel Optimization for TensorFlow*. It implements an example neural network with one convolution layer and one ReLU layer. Developers can quickly build and train a Tensorflow neural network using simple python code. In addition, by controlling the build-in environment variable, the sample attempts to show explicitly how Intel® DNNL Primitives are called as well as their performance during the neural network training. 
 
 Intel-optimized Tensorflow is available as part of Intel® AI Analytics Toolkit. For more information on the optimizations as well as performance data, see this blog post [TensorFlow* Optimizations on Modern Intel® Architecture](https://software.intel.com/content/www/us/en/develop/articles/tensorflow-optimizations-on-modern-intel-architecture.html).
 
