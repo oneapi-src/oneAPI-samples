@@ -234,8 +234,8 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
                        [=](nd_item<1> item_id) mutable {
                          auto global_idx = item_id.get_global_id(0);
                          // 1. Initialization (transform part).
-                         tf_init(item_id, global_idx, access_buf, num_steps,
-                                 temp_buf_local);
+                         tf_init(item_id, global_idx, num_steps,
+                                 temp_buf_local, access_buf);
                          // 2. Reduce within work group
                          float local_result = brick_reduce(
                              item_id, global_idx, num_steps, temp_buf_local);
@@ -347,8 +347,8 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
                          auto global_idx = item_id.get_global_id(0);
                          // 1. Initialization (transform part). Fill local
                          // memory
-                         tf_init(item_id, global_idx, access_buf, num_steps,
-                                 temp_buf_local);
+                         tf_init(item_id, global_idx, num_steps,
+                                 temp_buf_local, access_buf);
                          // 2. Reduce within work group
                          float local_result = brick_reduce(
                              item_id, global_idx, num_steps, temp_buf_local);
