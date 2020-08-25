@@ -1,4 +1,4 @@
-# tbb-async-sycl sample
+# TBB-Async-Sycl Sample
 This sample illustrates how computational kernel can be split for execution between CPU and GPU using TBB Flow Graph asynchronous node and functional node. The Flow Graph asynchronous node uses SYCL to implement calculations on GPU while the functional node does CPU part of calculations. This tbb-async-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.  
 | Optimized for                     | Description
 |:---                               |:---
@@ -8,16 +8,17 @@ This sample illustrates how computational kernel can be split for execution betw
 | What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
 | Time to complete                  | 15 minutes
 
+## Purpose
   
-## Key implementation details 
+## Key Implementation Details 
 TBB Flow Graph and DPC++ implementation explained. 
 
 ## License  
 This code sample is licensed under MIT license
 
-## How to Build
+## Building the TBB-Async-Sycl Program
 
-### On Linux
+### On a Linux System
     * Build tbb-async-sycl program
       cd tbb-async-sycl &&
       mkdir build &&
@@ -31,7 +32,7 @@ This code sample is licensed under MIT license
     * Clean the program
       make clean
 
-### On Windows
+### On a Windows System
 
 #### Command line using MSBuild
      * MSBuild tbb-async-sycl.sln /t:Rebuild /p:Configuration="debug"
@@ -41,3 +42,20 @@ This code sample is licensed under MIT license
      * Select Menu "File > Open > Project/Solution", find "tbb-async-sycl" folder and select "tbb-async-sycl.sln"
      * Select Menu "Project > Build" to build the selected configuration
      * Select Menu "Debug > Start Without Debugging" to run the program
+     
+## Running the Sample
+
+### Application Parameters
+None
+
+### Example of Output
+
+    start index for GPU = 0; end index for GPU = 8
+    start index for CPU = 8; end index for CPU = 16
+    Heterogenous triad correct.
+    c_array: 0 1.5 3 4.5 6 7.5 9 10.5 12 13.5 15 16.5 18 19.5 21 22.5
+    c_gold : 0 1.5 3 4.5 6 7.5 9 10.5 12 13.5 15 16.5 18 19.5 21 22.5
+    Built target run
+
+     
+    

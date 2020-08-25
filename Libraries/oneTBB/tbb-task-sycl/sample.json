@@ -1,5 +1,5 @@
 {
-  "guid": "035E3DCB-98D1-4F81-944D-5B1A5039DF1B"
+  "guid": "035E3DCB-98D1-4F81-944D-5B1A5039DF1B",
   "name": "tbb-task-sycl",
   "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneTBB"],
   "toolchain": ["dpcpp"],
