@@ -20,7 +20,7 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild tbb-async-sycl.sln /t:Rebuild /p:Configuration="debug"",
+                        "MSBuild tbb-async-sycl.sln /t:Rebuild /p:Configuration=\"debug\"",
                        "cd x64/Debug",
                         "tbb-async-sycl.exe"
                 ]
