@@ -150,8 +150,7 @@ void MonteCarloPi(rgb * image_plot){
             auto total_acc = total_buf.get_access<access::mode::write>(h);
             h.parallel_for(range(size_n), [=](auto it)
             {
-                int i = it.get_global_id(0);
-                total_acc[0] = total_acc[0] + a[i];
+                total_acc[0] = total_acc[0] + a[it];
             });
 
         });
