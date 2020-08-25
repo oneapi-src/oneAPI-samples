@@ -20,7 +20,7 @@ constexpr int size_wg = 32;
 // Number of parallel work groups
 constexpr int num_wg = 256;
 // Number of sample points
-constexpr int size_n = 10000 //size_wg * num_wg; // Must be a multiple of size_wg
+constexpr int size_n = 10000; //size_wg * num_wg; // Must be a multiple of size_wg
 // Output image dimensions
 constexpr int img_dimensions = 1024;
 
