@@ -85,7 +85,7 @@ void MonteCarloPi(rgb * image_plot){
         buffer reduction_buf((int*)reduction_arr, range(size_n / size_wg));
 
         buffer test_buf((int*)test_arr, range(size_n));
-        buffer total_buf((int*)(&total), 1);
+        buffer total_buf((int*)(&total), range(1));
 
         // Perform Monte Carlo Procedure on the device
         /*q.submit([&](handler& h){
