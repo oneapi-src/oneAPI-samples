@@ -62,6 +62,7 @@ These intrinsics samples have relatively few modifiable parameters. However, cer
 ### Example of Output
 ```
 Dot Product computed by C:  4324.000000
+Dot Product computed by C + SIMD:  4324.000000
 Dot Product computed by Intel(R) SSE3 intrinsics:  4324.000000
 Dot Product computed by Intel(R) AVX2 intrinsics:  4324.000000
 Dot Product computed by Intel(R) AVX intrinsics:  4324.000000
