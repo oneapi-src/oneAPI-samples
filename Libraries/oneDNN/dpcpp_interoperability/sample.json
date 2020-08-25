@@ -6,7 +6,7 @@
  "toolchain": ["dpcpp"],
  "languages": [{"cpp":{}}],
  "dependencies": ["oneDNN", "tbb"],
- "os": ["linux"],
+ "os": ["linux", "windows"],
  "builder": ["ide","cmake"],
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
@@ -21,6 +21,28 @@
 			"./bin/sycl-interop-cpp cpu",
 			"SYCL_BE=PI_OPENCL ./bin/sycl-interop-cpp gpu"
 		 ]
-	}]
+	}],
+	"windows": [
+	    {
+		"id": "interop cpu",
+		"steps": [
+			"mkdir build_cpu",
+                        "cd build_cpu",
+                        "cmake -G Ninja ..",
+                        "cmake --build .",
+                        "bin\\sycl-interop-cpp.exe"
+		 ]
+	    },
+	    {
+		"id": "interop gpu",
+		"steps": [
+			"mkdir build_gpu",
+                        "cd build_gpu",
+                        "cmake -G Ninja ..",
+                        "cmake --build .",
+                        "bin\\sycl-interop-cpp.exe gpu"
+		 ]
+	    }
+	]
  }
 }
