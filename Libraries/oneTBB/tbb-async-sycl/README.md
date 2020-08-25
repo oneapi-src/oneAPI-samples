@@ -9,7 +9,8 @@ This sample illustrates how computational kernel can be split for execution betw
 | Time to complete                  | 15 minutes
 
 ## Purpose
-  
+The purpose of this sample is to show how during execution, a computational kernel can be split be between CPU and GPU using TBB Flow Graph asynchronous node and functional node.
+
 ## Key Implementation Details 
 TBB Flow Graph and DPC++ implementation explained. 
 

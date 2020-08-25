@@ -9,7 +9,7 @@ This sample illustrates how 2 TBB tasks can execute similar computational kernel
 | Time to complete                  | 15 minutes
 
 ## Purpose
-
+The Purpose of this sample is to show how similar computational kernels can be executed by two TBB tasks with one excuting on SYCL code and another on TBB code. 
   
 ## Key Implementation Details 
 The implementation based on TBB tasks and SYCL explained. 
