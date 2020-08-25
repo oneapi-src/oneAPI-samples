@@ -99,6 +99,7 @@
       <AdditionalOptions>/I"$(ONEAPI_ROOT)/tbb/latest/include" %(AdditionalOptions)</AdditionalOptions>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
