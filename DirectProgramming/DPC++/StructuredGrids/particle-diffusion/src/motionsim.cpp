@@ -36,6 +36,8 @@
 
 using namespace sycl;
 using namespace std;
+namespace oneapi {}
+using namespace oneapi;
 
 // Helper functions
 
@@ -102,9 +104,9 @@ void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
 
   // Declare RNG object to compute vectors of random values
   // Basic random number generator object
-  oneapi::mkl::rng::philox4x32x10 engine(q, seed);
+  mkl::rng::philox4x32x10 engine(q, seed);
   // Distribution object
-  oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::box_muller2> distr(0.0, .03);
+  mkl::rng::gaussian<float, mkl::rng::gaussian_method::box_muller2> distr(0.0, .03);
 
   // Begin scope for buffers
   {
@@ -117,8 +119,8 @@ void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
 
     // Compute vectors of random values for X and Y directions using RNG engine
     // declared above
-    oneapi::mkl::rng::generate(distr, engine, n_moves, b_random_X);
-    oneapi::mkl::rng::generate(distr, engine, n_moves, b_random_Y);
+    mkl::rng::generate(distr, engine, n_moves, b_random_X);
+    mkl::rng::generate(distr, engine, n_moves, b_random_Y);
 
     // Submit command group for execution
     q.submit([&](handler& h) {
