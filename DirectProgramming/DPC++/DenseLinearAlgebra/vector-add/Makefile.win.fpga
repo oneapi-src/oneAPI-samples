@@ -1,4 +1,4 @@
-CXX = dpcpp-cl
+CXX = dpcpp
 CXXFLAGS = -O2 -EHsc -Zi
 LDFLAGS = 
 
@@ -23,8 +23,4 @@ run_usm:
 	@echo USM is not supported for FPGAs, yet
 
 clean: 
-<<<<<<< HEAD
-	del /f *.o *.d *.out *.mon *.emu *.aocr *.aoco *.prj *.fpga_emu *.fpga_emu_buffers *.a $(EXE) $(USM_EXE)
-=======
 	del /F /S /Q *.ilk *.pdb *.o *.d *.out *.mon *.emu *.aocr *.aoco *.prj *.fpga_emu *.fpga_emu_buffers *.a $(EXE) $(USM_EXE)
->>>>>>> upstream/master
