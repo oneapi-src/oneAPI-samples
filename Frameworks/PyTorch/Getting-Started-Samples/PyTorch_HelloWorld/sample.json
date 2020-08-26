@@ -9,7 +9,6 @@
   "ciTests": {
 	"linux": [
 	{
-		"env": ["source /opt/intel/oneapi/setvars.sh --force" ],
 		"id": "pytorch hello world",
 		"steps": [
 			"source activate pytorch",
