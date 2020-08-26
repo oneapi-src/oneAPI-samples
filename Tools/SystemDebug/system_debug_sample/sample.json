@@ -1,0 +1,27 @@
+{
+  "guid": "668A3FF9-12C3-4559-8AF4-54B6792122D3",
+  "name": "Intel System Debugger Tutorial (Overview)",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/System Debugger"],
+  "description": "Demonstrate basic functionality of the Intel System Debugger.",
+  "os": ["linux", "windows"],
+  "languages": [{"python":{},"cpp":{}}],
+  "ciTests": {
+    "linux": [
+        { "id": "system_debug_sample",
+          "env": [],
+          "steps": [
+            "[[ -f README.md ]]"
+            ]
+        }
+    ],
+    "windows": [
+        { "id": "system_debug_sample",
+          "env": [],
+          "steps": [
+            "if exist README.md ( exit /b 0 ) else ( exit /b 1 )"
+            ]
+        }
+    ]
+  }
+}
+

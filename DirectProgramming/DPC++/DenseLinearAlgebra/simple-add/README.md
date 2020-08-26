@@ -8,7 +8,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10 
 | Hardware                          | Skylake with GEN9 or newer, Intel(R) Programmable Acceleration Card with Intel(R) Arria(R) 10 GX FPGA
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)  
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 
 
 
@@ -26,6 +26,9 @@ The basic DPC++ implementation explained in the code includes device selector, U
 This code sample is licensed under MIT license. 
 
 ## Building the `simple add DPC++` Program for CPU and GPU 
+
+## Include Files
+The include folder is located at "%ONEAPI_ROOT%\dev-utilities\latest\include" on your development system.
 
 ### On a Linux* System
 Perform the following steps:
@@ -123,15 +126,7 @@ Perform the following steps:
 2. Select the menu sequence **File** > **Open** > **Project/Solution**.
 3. Locate the `simple-add` folder.
 4. Select the `simple-add.sln` file.
-5. Select the configuration 'Debug-fpga' or 'Release-fpga' that have the necessary project settings already below:
- 
-            Under the 'Project Property' dialog:
- 
-     a. Select the **DPC++** tab.
-     b. In the **General** subtab, the **Perform ahead of time compilation for the FPGA** setting is set to **Yes**.
-     c. In the **Preprocessor** subtab, the **Preprocessor Definitions" setting has **FPGA_EMULATOR** added.
-     d. Close the dialog.
-
+5. Select the configuration 'Debug-fpga'
 6. Select **Project** > **Build** menu option to build the selected configuration.
 7. Select **Debug** > **Start Without Debugging** menu option to run the program.
 

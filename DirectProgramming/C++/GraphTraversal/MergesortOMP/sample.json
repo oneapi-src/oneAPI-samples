@@ -1,0 +1,16 @@
+{
+    "name": "MergeSort C++/OpenMP*",
+    "description": "Classic sorting algorithm using OpenMP*",
+    "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
+    "os": ["darwin"],
+    "builder": ["make"],
+    "languages": [{"cpp":{}}],
+    "toolchain": ["icc"],
+    "guid": "5AFED65F-F725-411D-B21C-B59008D1166D",
+    "ciTests": {
+        "darwin": [ 
+            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
+            { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
+        ]
+    }
+}

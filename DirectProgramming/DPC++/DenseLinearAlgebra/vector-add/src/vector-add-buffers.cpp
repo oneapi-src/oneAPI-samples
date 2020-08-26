@@ -66,7 +66,11 @@ void VectorAdd(queue &q, const IntArray &a_array, const IntArray &b_array,
   // data access permission and device computation (kernel).
   q.submit([&](handler &h) {
     // Create an accessor for each buffer with access permission: read, write or
+<<<<<<< HEAD
     // read/write. The accessor is a mean to access the memory in the buffer.
+=======
+    // read/write. The accessor is a means to access the memory in the buffer.
+>>>>>>> upstream/master
     auto a = a_buf.get_access<access::mode::read>(h);
     auto b = b_buf.get_access<access::mode::read>(h);
 

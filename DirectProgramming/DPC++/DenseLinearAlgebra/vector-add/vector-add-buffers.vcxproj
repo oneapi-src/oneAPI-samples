@@ -23,7 +23,11 @@
     <ProjectGuid>{f11989d7-dcfe-404a-a893-e89084841327}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>vector_add_buffers</RootNamespace>
+<<<<<<< HEAD
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion)</WindowsTargetPlatformVersion>
+=======
+    <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
+>>>>>>> upstream/master
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">

@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrix_mul_dpcpp", "matrix_mul_dpcpp.vcxproj", "{D41BAFBF-46E8-4BF6-AC99-5A311221E7C5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8B26A6E-0121-4F4C-8FA9-9784852574C3}.Debug|x64.ActiveCfg = Debug|x64
+		{F8B26A6E-0121-4F4C-8FA9-9784852574C3}.Debug|x64.Build.0 = Debug|x64
+		{F8B26A6E-0121-4F4C-8FA9-9784852574C3}.Debug|x86.ActiveCfg = Debug|x64
+		{F8B26A6E-0121-4F4C-8FA9-9784852574C3}.Release|x64.ActiveCfg = Release|x64
+		{F8B26A6E-0121-4F4C-8FA9-9784852574C3}.Release|x64.Build.0 = Release|x64
+		{F8B26A6E-0121-4F4C-8FA9-9784852574C3}.Release|x86.ActiveCfg = Release|x64
+		{D41BAFBF-46E8-4BF6-AC99-5A311221E7C5}.Debug|x64.ActiveCfg = Debug|x64
+		{D41BAFBF-46E8-4BF6-AC99-5A311221E7C5}.Debug|x64.Build.0 = Debug|x64
+		{D41BAFBF-46E8-4BF6-AC99-5A311221E7C5}.Debug|x86.ActiveCfg = Debug|x64
+		{D41BAFBF-46E8-4BF6-AC99-5A311221E7C5}.Release|x64.ActiveCfg = Release|x64
+		{D41BAFBF-46E8-4BF6-AC99-5A311221E7C5}.Release|x64.Build.0 = Release|x64
+		{D41BAFBF-46E8-4BF6-AC99-5A311221E7C5}.Release|x86.ActiveCfg = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7AC5E5BB-5E3D-4F82-8BBD-90BE285EEE77}
+	EndGlobalSection
+EndGlobal

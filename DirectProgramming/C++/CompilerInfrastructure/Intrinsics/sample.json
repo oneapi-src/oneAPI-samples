@@ -1,0 +1,16 @@
+{
+    "name": "Intrinsics C++",
+    "description": "Demonstrates the intrinsic functions of the Intel® oneAPI C++ Compiler Classic",
+    "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
+    "os": ["darwin"],
+    "builder": ["make"],
+    "languages": [{"cpp":{}}],
+    "toolchain": ["icc"],
+    "guid": "ACD0E89E-67CC-4CB4-87AB-B12B84962EAF",
+    "ciTests": {
+        "darwin": [ 
+            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
+            { "id": "debug", "steps": [ "make debug", "make debug_run", "make clean" ] }
+        ]
+    }
+}

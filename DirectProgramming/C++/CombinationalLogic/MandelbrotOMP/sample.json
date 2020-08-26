@@ -1,0 +1,16 @@
+{
+    "name": "Mandelbrot OpenMP*",
+    "description": "Calculates the mandelbrot set and outputs a bmp image representation using OpenMP*",
+    "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
+    "os": ["darwin"],
+    "builder": ["make"],
+    "languages": [{"cpp":{}}],
+    "toolchain": ["icc"],
+    "guid": "DD113F58-4D91-41BB-B46E-6CF2C0D9F6F9",
+    "ciTests": {
+        "darwin": [ 
+            { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
+            { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
+        ]
+    }
+}

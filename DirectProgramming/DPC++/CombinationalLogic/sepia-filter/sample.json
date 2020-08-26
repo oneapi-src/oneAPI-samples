@@ -1,0 +1,31 @@
+{
+	"guid": "B9C425DB-A3AD-4FCB-9CA0-1909E5189FB7",
+	"name": "Sepia Filter",
+	"categories": ["Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU and GPU"],
+	"toolchain": ["dpcpp"],
+	"description": "A program that converts an image to sepia tone",
+	"languages": [{
+		"cpp": {}
+	}],
+	"targetDevice": ["CPU", "GPU"],
+	"os": ["linux", "windows"],
+	"builder": ["ide", "cmake"],
+	"ciTests": {
+		"linux": [{
+			"steps": [
+				"mkdir build",
+				"cd build",
+				"cmake ..",
+				"make",
+				"make run"
+			]
+		}],
+		"windows": [{
+			"steps": [
+				"MSBuild sepia-filter.sln /t:Rebuild /p:Configuration=\"debug\"",
+				"cd x64\\Debug",
+				"sepia-filter.exe ..\\..\\input\\silverfalls1.png"
+			]
+		}]
+	}
+}

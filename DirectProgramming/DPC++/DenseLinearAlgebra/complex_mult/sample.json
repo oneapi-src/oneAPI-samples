@@ -1,0 +1,31 @@
+{
+  "guid": "D725E06E-0ECE-44F8-910D-AD1A8C89ED89",
+  "name": "Complex number Multiplication",
+  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU and GPU" ],
+  "description": "program that computes the multiplication of a Complex number",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU"],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "make" ],
+  "ciTests": {
+    "linux": [
+      {        
+        "steps": [
+          "make all",
+          "make run",
+          "make clean"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "MSBuild complex_mult.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "cd x64\\Debug",
+          "complex_mult.exe"
+        ]
+      }
+    ]
+  }
+}

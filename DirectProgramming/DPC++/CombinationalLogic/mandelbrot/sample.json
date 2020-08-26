@@ -1,0 +1,30 @@
+{
+  "guid": "8572B85D-0B32-40B1-8112-538F480C8660",	
+  "name": "Mandelbrot",
+  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "description": "The Mandelbrot set - a fractal example in mathematics",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"mkdir build",
+      		        "cd build",
+           		"cmake ..",
+           		"make",
+			"make run"
+		 ]
+	}],
+	"windows": [{
+		"steps": [
+			"MSBuild mandelbrot.sln /t:Rebuild /p:Configuration=\"Release\"",
+			"cd x64/Release",
+            		"mandelbrot.exe"
+		]
+	}]
+
+  }
+}

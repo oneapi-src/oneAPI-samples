@@ -1,0 +1,29 @@
+{
+  "guid": "4D5B57B8-6F34-4A11-89F5-3F07E766DB39",
+  "name": "bitonic-sort",
+  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU and GPU" ],
+  "description": "Bitonic Sort using Intel® oneAPI DPC++ Language",
+  "toolchain": [ "dpcpp" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "languages": [ { "cpp": {} } ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 ]
+        }],
+        "windows": [{
+                "steps": [
+                        "MSBuild bitonic-sort.sln /t:Rebuild /p:Configuration=\"Release\"",
+                        "cd x64/Release",
+                        "bitonic-sort.exe 21 47"
+                ]
+        }]
+  }
+}

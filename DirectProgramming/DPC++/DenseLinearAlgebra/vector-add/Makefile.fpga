@@ -63,4 +63,8 @@ vector-add-usm_report.a_usm: dev_usm.o
 
 
 clean:
+<<<<<<< HEAD
 	rm -f *.o *.d *.out *.mon *.emu *.aocr *.aoco *.prj *.fpga_emu *.fpga_emu_buffers vector-add-buffers.fpga  vector-add-usm.fpga *.a
+=======
+	rm -rf *.o *.d *.out *.mon *.emu *.aocr *.aoco *.prj *.fpga_emu *.fpga_emu_buffers vector-add-buffers.fpga  vector-add-usm.fpga *.a
+>>>>>>> upstream/master
