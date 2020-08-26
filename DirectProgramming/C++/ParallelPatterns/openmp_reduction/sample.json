@@ -1,0 +1,29 @@
+ {
+ 	"guid": "ECF6C8EB-753B-4107-AF64-60662CE41726",
+ 	"name": "openmp_reduction",
+ 	"categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++ Compiler/oneAPI DPC++ Library/CPU and GPU"],
+ 	"description": "It models reduction in different ways showing capability of oneAPI.",
+ 	"toolchain": ["dpcpp"],
+ 	"languages": [{
+ 		"cpp": {}
+ 	}],
+ 	"targetDevice": ["CPU", "GPU"],
+ 	"os": ["linux"],
+ 	"builder": ["cmake"],
+    "ciTests": {
+       "linux": [
+         {
+           "id": "openmp_reduction",
+           "steps": [
+ 			   "mkdir build",
+ 			   "cd build",
+ 			   "cmake ..",
+ 			   "make ", 
+               "./src/openmp_reduction"
+              ]
+            }
+      ]
+  }
+}
+
+
