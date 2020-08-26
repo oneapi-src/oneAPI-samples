@@ -1,4 +1,4 @@
-DPCPP_CXX = dpcpp-cl
+DPCPP_CXX = dpcpp
 DPCPP_CXXFLAGS = /Zi /EHsc
 DPCPP_LDFLAGS = 
 DPCPP_EXE_NAME = matrix_mul_dpcpp.exe
