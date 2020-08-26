@@ -1,5 +1,5 @@
 {
-  "guid": "D5BFD7D5-737E-4CC9-84EE-FE94339B3DCA"
+  "guid": "D5BFD7D5-737E-4CC9-84EE-FE94339B3DCA",
   "name": "nbody",
   "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
   "toolchain": ["dpcpp"],

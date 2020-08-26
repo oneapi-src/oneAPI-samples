@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
   std::cout << "[ENV] SYCL_BE = " << (env ? env : "<not set>") << "\n";
 #endif
   int n;      // number of particles
-  int nStep;  // number ot integration steps
+  int nstep;  // number ot integration steps
 
   GSimulation sim;
 
@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
     n = atoi(argv[1]);
     sim.SetNumberOfParticles(n);
     if (argc == 3) {
-      nStep = atoi(argv[2]);
-      sim.SetNumberOfSteps(nStep);
+      nstep = atoi(argv[2]);
+      sim.SetNumberOfSteps(nstep);
     }
   }
 

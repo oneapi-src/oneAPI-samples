@@ -35,35 +35,35 @@ class GSimulation {
   void Start();
 
  private:
-  Particle *particles;
+  Particle *particles_;
 
-  int nPart;       // number of particles
-  int nSteps;      // number of integration steps
-  RealType tStep;  // time step of the simulation
+  int npart_;       // number of particles
+  int nsteps_;      // number of integration steps
+  RealType tstep_;  // time step of the simulation
 
-  int sFreq;  // sample frequency
+  int sfreq_;  // sample frequency
 
-  RealType kEnergy;  // kinetic energy
+  RealType kenergy_;  // kinetic energy
 
-  double totTime;   // total time of the simulation
-  double totFlops;  // total number of flops
+  double total_time_;   // total time of the simulation
+  double total_flops_;  // total number of flops
 
   void InitPos();
   void InitVel();
   void InitAcc();
   void InitMass();
 
-  inline void set_npart(const int &N) { nPart = N; }
-  inline int get_npart() const { return nPart; }
+  inline void set_npart(const int &N) { npart_ = N; }
+  inline int get_npart() const { return npart_; }
 
-  inline void set_tstep(const RealType &dt) { tStep = dt; }
-  inline RealType get_tstep() const { return tStep; }
+  inline void set_tstep(const RealType &dt) { tstep_ = dt; }
+  inline RealType get_tstep() const { return tstep_; }
 
-  inline void set_nsteps(const int &n) { nSteps = n; }
-  inline int get_nsteps() const { return nSteps; }
+  inline void set_nsteps(const int &n) { nsteps_ = n; }
+  inline int get_nsteps() const { return nsteps_; }
 
-  inline void set_sfreq(const int &sf) { sFreq = sf; }
-  inline int get_sfreq() const { return sFreq; }
+  inline void set_sfreq(const int &sf) { sfreq_ = sf; }
+  inline int get_sfreq() const { return sfreq_; }
 
   void PrintHeader();
 };
