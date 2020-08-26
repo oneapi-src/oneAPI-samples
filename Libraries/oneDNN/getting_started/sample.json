@@ -1,0 +1,47 @@
+{
+ "guid": "028AE3ED-2896-4C56-9066-42AA5D5FA973",
+ "name": "oneDNN Getting Started",
+ "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneDNN"],
+ "description": "Basic oneDNN programming model for both Intel CPU and GPU.",
+ "toolchain": ["dpcpp"],
+ "languages": [{"cpp":{}}],
+ "dependencies": ["oneDNN", "tbb"],
+ "os": ["linux","windows"],
+ "builder": ["ide","cmake"],
+ "targetDevice": ["CPU", "GPU"],
+ "ciTests": {
+	"linux": [{
+		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
+		"id": "gsg",
+		"steps": [
+			"mkdir build",
+      		        "cd build",
+           		"cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp",
+           		"make getting-started-cpp",
+			"SYCL_BE=PI_OPENCL ./bin/getting-started-cpp gpu"
+		 ]
+	}],
+	"windows": [
+	    {
+		"id": "gsg cpu",
+		"steps": [
+			"mkdir build_cpu",
+                        "cd build_cpu",
+                        "cmake -G Ninja ..",
+                        "cmake --build .",
+                        "bin\\getting-started-cpp.exe"
+		 ]
+	    },
+	    {
+		"id": "gsg gpu",
+		"steps": [
+			"mkdir build_gpu",
+                        "cd build_gpu",
+                        "cmake -G Ninja ..",
+                        "cmake --build .",
+                        "bin\\getting-started-cpp.exe gpu"
+		 ]
+	    }
+	]
+ }
+}

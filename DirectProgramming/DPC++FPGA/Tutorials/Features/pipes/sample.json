@@ -1,0 +1,51 @@
+{
+  "guid": "58CF1ABA-5D08-40B7-ACC2-5CB904261413",
+  "name": "Data Transfers Using Pipes",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
+  "description": "How to use pipes to transfer data between kernels on an FPGA",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./pipes.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "cd src",
+          "ninja fpga_emu",
+          "pipes.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "cd src",
+          "ninja report"
+        ]
+      }
+    ]
+  }
+}

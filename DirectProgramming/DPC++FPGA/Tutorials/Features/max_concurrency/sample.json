@@ -1,0 +1,51 @@
+{
+  "guid": "7909FAE1-D3D4-4E97-A963-14A884F33495",
+  "name": "Maximum Concurrency of a Loop",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
+  "description": "How to use the max_concurrency attribute for single_task loops",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./max_concurrency.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "cd src",
+          "ninja fpga_emu",
+          "max_concurrency.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "cd src",
+          "ninja report"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "guid": "4B3FDDD8-64CF-4CF3-9387-26E34F021E24",
+  "name": "Array Transform",
+  "categories": ["Toolkit/Get Started", "Toolkit/Intel® oneAPI Base Toolkit/Debugger"],
+  "description": "A small DPC++ example that is used in the \"Get Started Guide\" of the application debugger to exercise major debugger functionality.",
+  "toolchain": ["dpcpp"],
+  "dependencies": ["debugger"],
+  "languages": [{"cpp":{}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "cpu",
+        "steps": [
+          "mkdir -p build_cpu; cd build_cpu; cmake ..",
+          "make",
+          "./array-transform cpu",
+          "make clean"
+        ]
+      },
+      {
+        "id": "gpu",
+        "steps": [
+          "mkdir -p build_gpu; cd build_gpu; cmake ..",
+          "make",
+          "./array-transform gpu",
+          "make clean"
+        ]
+      },
+      {
+        "id": "fpga-emu",
+        "steps": [
+          "mkdir -p build_acc; cd build_acc; cmake ..",
+          "make",
+          "./array-transform accelerator",
+          "make clean"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "cpu",
+        "steps": [
+          "MSBuild array-transform.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "cd x64\\Debug",
+          "array-transform.exe cpu"
+        ]
+      },
+      {
+        "id": "gpu",
+        "steps": [
+          "MSBuild array-transform.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "cd x64\\Debug",
+          "array-transform.exe gpu"
+        ]
+      },
+      {
+        "id": "fpga-emu",
+        "steps": [
+          "MSBuild array-transform.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "cd x64\\Debug",
+          "array-transform.exe accelerator"
+        ]
+      }
+    ]
+  }
+}

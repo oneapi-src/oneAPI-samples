@@ -25,7 +25,6 @@
 //
 
 #include <mkl.h>
-#include <chrono>
 #include <cmath>
 #include <iomanip>
 #include <iostream>

@@ -5,7 +5,7 @@ Gamma correction is a nonlinear operation used to encode and decode the luminanc
 |---------------------------------|----------------------------------------------------------------------------------|
 | OS                              | Linux* Ubuntu* 18.04, Windows 10                                                 |
 | Hardware                        | Skylake with GEN9 or newer                                                       |
-| Software                        | Intel&reg; oneAPI DPC++ Compiler beta; Intel&reg; oneAPI DPC++ Library (oneDPL)  |
+| Software                        | Intel&reg; oneAPI DPC++/C++ Compiler; Intel&reg; oneAPI DPC++ Library (oneDPL)   |
 | What you will learn             | How to offload the computation to GPU using Intel&reg; oneAPI DPC++ Library      |
 | Time to complete                | At most 5 minutes                                                                |
 
