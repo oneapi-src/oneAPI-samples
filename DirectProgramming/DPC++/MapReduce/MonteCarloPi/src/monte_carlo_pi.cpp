@@ -17,11 +17,11 @@
 using namespace sycl;
 
 // Number of samples
-constexpr int size_n = 10000; // Must be greater than size_wg
+constexpr int size_n = 10000;  // Must be greater than size_wg
 // Size of parallel work groups
 constexpr int size_wg = 32;
 // Number of parallel work groups
-const int num_wg = (int) ceil((double) size_n / (double) size_wg);
+const int num_wg = (int)ceil((double)size_n / (double)size_wg);
 
 // Output image dimensions
 constexpr int img_dimensions = 1024;
@@ -88,34 +88,36 @@ void MonteCarloPi(rgb* image_plot) {
       auto total_acc = total_buf.get_access<access::mode::read_write>(h);
 
       // Monte Carlo Procedure + Reduction
-      h.parallel_for(
-          nd_range<1>(num_wg * size_wg, size_wg),
-          sycl::intel::reduction(total_acc, 0, std::plus<int>()),
-          [=](nd_item<1> it, auto& total_acc) {
-            int i = it.get_global_id();  // Index for accessing buffers
+      h.parallel_for(nd_range<1>(num_wg * size_wg, size_wg),
+                     sycl::intel::reduction(total_acc, 0, std::plus<int>()),
+                     [=](nd_item<1> it, auto& total_acc) {
+                       int i =
+                           it.get_global_id();  // Index for accessing buffers
 
-            if (i < size_n){ // only runs if a work item's ID has a corresponding sample coordinate
-              // Get random coords
-              double x = coords_acc[i].x;
-              double y = coords_acc[i].y;
+                       if (i < size_n) {  // only runs if a work item's ID has a
+                                          // corresponding sample coordinate
+                         // Get random coords
+                         double x = coords_acc[i].x;
+                         double y = coords_acc[i].y;
 
-              // Check if coordinates are bounded by a circle of radius 1
-              double hypotenuse_sqr = (x * x + y * y);
-              if (hypotenuse_sqr <= 1.0) {  // If bounded
-                // increment total
-                total_acc += 1;
-                // Draw sample point in image plot
-                imgplot_acc[GetPixelIndex(x, y)].red = 0;
-                imgplot_acc[GetPixelIndex(x, y)].green = 255;
-                imgplot_acc[GetPixelIndex(x, y)].blue = 0;
-              } else {
-                // Draw sample point in image plot
-                imgplot_acc[GetPixelIndex(x, y)].red = 255;
-                imgplot_acc[GetPixelIndex(x, y)].green = 0;
-                imgplot_acc[GetPixelIndex(x, y)].blue = 0;
-              }
-            }
-          });
+                         // Check if coordinates are bounded by a circle of
+                         // radius 1
+                         double hypotenuse_sqr = (x * x + y * y);
+                         if (hypotenuse_sqr <= 1.0) {  // If bounded
+                           // increment total
+                           total_acc += 1;
+                           // Draw sample point in image plot
+                           imgplot_acc[GetPixelIndex(x, y)].red = 0;
+                           imgplot_acc[GetPixelIndex(x, y)].green = 255;
+                           imgplot_acc[GetPixelIndex(x, y)].blue = 0;
+                         } else {
+                           // Draw sample point in image plot
+                           imgplot_acc[GetPixelIndex(x, y)].red = 255;
+                           imgplot_acc[GetPixelIndex(x, y)].green = 0;
+                           imgplot_acc[GetPixelIndex(x, y)].blue = 0;
+                         }
+                       }
+                     });
     });
     q.wait_and_throw();
 
@@ -132,8 +134,9 @@ void MonteCarloPi(rgb* image_plot) {
 
 int main() {
   // Validate constants
-  if (size_n < size_wg){
-    std::cout << "ERROR: size_n must be greater than or equal to size_wg\n" << std::endl;
+  if (size_n < size_wg) {
+    std::cout << "ERROR: size_n must be greater than or equal to size_wg\n"
+              << std::endl;
     exit(1);
   }
 
