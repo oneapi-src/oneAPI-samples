@@ -17,7 +17,7 @@
 using namespace sycl;
 
 // Number of samples
-constexpr int size_n = 10000;
+constexpr int size_n = 10000; // Must be greater than size_wg
 // Size of parallel work groups
 constexpr int size_wg = 32;
 // Number of parallel work groups
@@ -131,6 +131,9 @@ void MonteCarloPi(rgb* image_plot) {
 }
 
 int main() {
+  // Validate constants
+  assert(size_n > size_wg);
+
   // Initialize random seed
   srand(time(NULL));
 
