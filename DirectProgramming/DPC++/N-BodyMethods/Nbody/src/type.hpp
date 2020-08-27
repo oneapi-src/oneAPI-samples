@@ -1,1 +1,1 @@
-typedef float RealType;
+using RealType = float;

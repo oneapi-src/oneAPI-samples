@@ -18,10 +18,10 @@ The basic DPC++ implementation explained in the code includes device selector, b
 ## License  
 This code sample is licensed under MIT license. 
 
-## Building the `Nbody` Program for CPU and GPU
+## Building the Program for CPU and GPU
 
 ### Include Files  
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system".
+The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### On a Linux* System
 Perform the following steps:
@@ -69,7 +69,7 @@ Sample frequency (sfreq) is 1
      Target Device: Intel(R) Gen9
      nPart = 16000; nSteps = 10; dt = 0.1
     ------------------------------------------------
-     s       dt      kenergy     time (s)    GFlops
+     s       dt      kenergy     time (s)    GFLOPS
     ------------------------------------------------
      1       0.1     26.405      0.28029     26.488
      2       0.2     313.77      0.066867    111.03

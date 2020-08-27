@@ -11,9 +11,10 @@
 // =============================================================
 
 #include "GSimulation.hpp"
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities/latest/include/dpc_common.hpp
 #include "dpc_common.hpp"
 using namespace sycl;
-using namespace dpc_common;
 
 /* Default Constructor for the GSimulation class which sets up the default values for 
  * number of particles, number of integration steps, time steo and sample frequency */
@@ -83,10 +84,11 @@ void GSimulation::InitMass() {
 void GSimulation::Start() {
   RealType dt = get_tstep();
   int n = get_npart();
-  RealType* energy = new RealType[n];
-  for (int i = 0; i < n; i++) energy[i] = 0.f;
+  //RealType* energy = new RealType[n];
+  std::vector<RealType> energy(n,0.f);
   // allocate particles
-  particles_ = new Particle[n];
+  //particles_ = new Particle[n];
+  particles_.resize(n);
 
   InitPos();
   InitVel();
@@ -97,28 +99,26 @@ void GSimulation::Start() {
 
   total_time_ = 0.;
 
-  const float kSofteningSquared = 1e-3f;
+  constexpr float kSofteningSquared = 1e-3f;
   // prevents explosion in the case the particles are really close to each other
-  const float kG = 6.67259e-11f;
-
-  double nd = double(n);
-  double gflops = 1e-9 * ((11. + 18.) * nd * nd + nd * 19.);
-  double av = 0.0, dev = 0.0;
+  constexpr float kG = 6.67259e-11f;
+  double gflops = 1e-9 * ((11. + 18.) * n * n + n * 19.);
   int nf = 0;
+  double av = 0.0, dev = 0.0;
   auto r = range<1>(n);
   // Create a queue to the selected device and enabled asynchronous exception
   // handling for that queue
-  queue q(default_selector{}, exception_handler);
+  queue q(default_selector{}, dpc_common::exception_handler);
   // Create SYCL buffer for the Particle array of size "n"
-  buffer pbuf(particles_, r, {cl::sycl::property::buffer::use_host_ptr()});
+  buffer pbuf(particles_.data(), r, {cl::sycl::property::buffer::use_host_ptr()});
   // Create SYCL buffer for the ener array
-  buffer ebuf(energy, r, {cl::sycl::property::buffer::use_host_ptr()});
+  buffer ebuf(energy.data(), r, {cl::sycl::property::buffer::use_host_ptr()});
 
-  TimeInterval t0;
+  dpc_common::TimeInterval t0;
   int nsteps = get_nsteps();
   // Looping across integration steps
   for (int s = 1; s <= nsteps; ++s) {
-    TimeInterval ts0;
+    dpc_common::TimeInterval ts0;
     // Submitting first kernel to device which computes acceleration of all particles
     q.submit([&](handler& h) {
        auto p = pbuf.get_access<access::mode::read_write>(h);
@@ -150,8 +150,7 @@ void GSimulation::Start() {
          p[i].acc[1] = acc1;
          p[i].acc[2] = acc2;
        });
-     })
-        .wait_and_throw();
+     }).wait_and_throw();
 	// Second kernel updates the velocity and position for all particles
     q.submit([&](handler& h) {
        auto p = pbuf.get_access<access::mode::read_write>(h);
@@ -173,22 +172,21 @@ void GSimulation::Start() {
                 (p[i].vel[0] * p[i].vel[0] + p[i].vel[1] * p[i].vel[1] +
                  p[i].vel[2] * p[i].vel[2]);  // 7flops
        });
-     })
-        .wait_and_throw();
-	// Third kernel accumulates the energy of this Nbody system
+     }).wait_and_throw();
+	/* Third kernel accumulates the energy of this Nbody system
+	 * Reduction operation can be done using reducer interface in SYCL 2020 
+	 */
     q.submit([&](handler& h) {
        auto e = ebuf.get_access<access::mode::read_write>(h);
        h.single_task([=]() {
          for (int i = 1; i < n; i++) e[0] += e[i];
        });
-     })
-        .wait_and_throw();
+     }).wait_and_throw();
     auto a = ebuf.get_access<access::mode::read_write>();
     kenergy_ = 0.5 * a[0];
     a[0] = 0;
-
     double elapsed_seconds = ts0.Elapsed();
-    if (!(s % get_sfreq())) {
+    if ((s % get_sfreq()) == 0) {
       nf += 1;
       std::cout << " " << std::left << std::setw(8) << s << std::left
                 << std::setprecision(5) << std::setw(8) << s * get_tstep()
@@ -207,7 +205,6 @@ void GSimulation::Start() {
   }  // end of the time step loop
   total_time_ = t0.Elapsed();
   total_flops_ = gflops * get_nsteps();
-
   av /= (double)(nf - 2);
   dev = sqrt(dev / (double)(nf - 2) - av * av);
 
@@ -227,8 +224,7 @@ void GSimulation::PrintHeader() {
   std::cout << " " << std::left << std::setw(8) << "s" << std::left
             << std::setw(8) << "dt" << std::left << std::setw(12) << "kenergy"
             << std::left << std::setw(12) << "time (s)" << std::left
-            << std::setw(12) << "GFlops" << "\n";
+            << std::setw(12) << "GFLOPS" << "\n";
   std::cout << "------------------------------------------------" << "\n";
 }
 
-GSimulation::~GSimulation() { delete particles_; }
