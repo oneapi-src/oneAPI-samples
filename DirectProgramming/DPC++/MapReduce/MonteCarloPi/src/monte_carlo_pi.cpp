@@ -133,7 +133,7 @@ void MonteCarloPi(rgb* image_plot) {
 int main() {
   // Validate constants
   if (size_n < size_wg){
-    std::cout << "size_n must be greater than or equal to size_wg" << std::endl;
+    std::cout << "ERROR: size_n must be greater than or equal to size_wg\n" << std::endl;
     exit(1);
   }
 
