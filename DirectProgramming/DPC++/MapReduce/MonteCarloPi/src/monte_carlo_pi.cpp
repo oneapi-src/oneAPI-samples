@@ -132,7 +132,7 @@ void MonteCarloPi(rgb * image_plot){
             // Set up accessors
             auto imgplot_acc = imgplot_buf.get_access<access::mode::write>(h);
             auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
-            auto total_acc = total_buf.get_access<access::mode::write>(h);
+            auto total_acc = total_buf.get_access<access::mode::read_write>(h);
 
             // Monte Carlo Procedure + Reduction
             h.parallel_for(nd_range<1>(size_n, size_wg), sycl::intel::reduction(total_acc, 0, std::plus<int>()), [=](nd_item<1> it, auto& total_acc)
