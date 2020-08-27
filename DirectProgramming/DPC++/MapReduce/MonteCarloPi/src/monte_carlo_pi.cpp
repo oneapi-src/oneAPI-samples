@@ -21,7 +21,7 @@ constexpr int size_n = 10000;
 // Size of parallel work groups
 constexpr int size_wg = 32;
 // Number of parallel work groups
-constexpr int num_wg = (int) ceil((double) size_n / (double) size_wg);
+const int num_wg = (int) ceil((double) size_n / (double) size_wg);
 
 // Output image dimensions
 constexpr int img_dimensions = 1024;
