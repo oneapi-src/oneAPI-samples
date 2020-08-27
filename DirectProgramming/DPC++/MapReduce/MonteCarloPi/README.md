@@ -32,7 +32,7 @@ The basic DPC++ implementation explained in the code includes device selector, b
 This code sample is licensed under MIT license. 
 
 
-## Building the `Mandelbrot` Program for CPU and GPU
+## Building the `Monte Carlo Pi` Program for CPU and GPU
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
@@ -57,7 +57,6 @@ $ make
     make clean
     ```
 
-#TODO::::::::::::::::::::::::::::::::
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 * Build the program using VS2017 or VS2019
       Right click on the solution file and open using either VS2017 or VS2019 IDE.
@@ -87,9 +86,9 @@ circle_outline defines the thickness of the circular border in the output image 
 ```
 Calculating estimated value of pi...
 
-Running on Intel(R) Gen9
-The estimated value of pi (N = 320000) is: 3.13855
+Running on Intel(R) Gen9 HD Graphics NEO
+The estimated value of pi (N = 4096) is: 3.15137
 
-Computation complete. The processing time was 0.441394 seconds.
+Computation complete. The processing time was 0.446072 seconds.
 The simulation plot graph has been written to 'MonteCarloPi.bmp'
 ```
