@@ -58,7 +58,7 @@ rgb* DrawPlot(rgb* image_plot) {
 
 // Performs the Monte Carlo simulation procedure for calculating pi, with size_n
 // number of samples.
-void MonteCarloPi(rgb* image_plot) {
+double MonteCarloPi(rgb* image_plot) {
   int total = 0;  // Stores the total number of simulated points falling within
                   // the circle
   coordinate coords[size_n];  // Array for storing the RNG coordinates
@@ -127,10 +127,8 @@ void MonteCarloPi(rgb* image_plot) {
     exit(1);
   }
 
-  // Print calculated value of pi
-  double pi = 4.0 * (double)total / size_n;
-  std::cout << "The estimated value of pi (N = " << size_n << ") is: " << pi
-            << std::endl;
+  // return calculated value of pi
+  return 4.0 * (double)total / size_n;
 }
 
 int main() {
@@ -153,8 +151,10 @@ int main() {
   // Perform Monte Carlo simulation to estimate pi (with timing)
   std::cout << "Calculating estimated value of pi...\n" << std::endl;
   dpc_common::TimeInterval t;
-  MonteCarloPi(image_plot);
+  double pi = MonteCarloPi(image_plot);
   double proc_time = t.Elapsed();
+  std::cout << "The estimated value of pi (N = " << size_n << ") is: " << pi
+            << std::endl;
   std::cout << "\nComputation complete. The processing time was " << proc_time
             << " seconds." << std::endl;
 
