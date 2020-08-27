@@ -6,14 +6,16 @@
 #include <CL/sycl.hpp>
 #include <iomanip>  // setprecision library
 #include <iostream>
+
+// The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include 
+// on your development system.
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
-// Many oneAPI code samples share common include files. These 
-// include files are installed locally with the product installation 
-// and can be located at %ONEAPI_ROOT%\dev-utilities\latest\include 
-// on your development system.
 
 using namespace sycl;
 
