@@ -1,13 +1,13 @@
 # dpc_reduce Sample
 
-The dpc_reduce is a simple program that calculates pi.  This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators. This code sample also demonstrates how to incorporate Data Parallel PC++ into
-a MPI program.
+The dpc_reduce is a simple program that calculates pi.  This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators.
 
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
+
 | Optimized for                     | Description
-|:---                               |:---
+|:---                               |:--- 
 | OS	                | Linux* Ubuntu* 18.04, 
 | Hardware	            | Skylake with GEN9 or newer, 
 | Software	            | Intel® oneAPI DPC++ Compiler (beta)
@@ -31,12 +31,6 @@ tiny rectangles and then summing up the results.
 The parallel computations are performed using oneTBB and oneAPI DPC++ library 
 (oneDPL).
 
-This example also demonstrates how to incorporate Data Parallel PC++ into a MPI program.
-Using Data Parallel C++, the code sample runs multiple MPI ranks to distribute the
-calculation of the number Pi. Each rank offloads the computation to an accelerator
-(GPU/CPU) using Intel DPC++ compiler to compute a partial compution of the number Pi.
-
-
 ## Key Implementation Details
 The basic DPC++ implementation explained in the code includes accessor,
 kernels, queues, buffers as well as some oneDPL library calls. 
@@ -54,15 +48,14 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 
 ### On a Linux* System
 Perform the following steps:
-1. Build the program using the following 'cmake' commands
-export I_MPI_CXX=dpcpp 
+1. Build the program using the following 'cmake' commands 
 mkdir build 
 cd build 
 cmake .. 
 make 
 
 2. Run the program using:
-make run or './dpc_reduce' or 'mpirun ./dpc_reduce'
+make run or src/dpc_reduce 
 
 3. Clean the program using:
 make clean
@@ -70,26 +63,25 @@ make clean
 
 ## Running the Sample
 ### Application Parameters
-
-        Usage: mpirun -n <num> ./dpc_reduce
-
-where
-
-        <num> : number of MPI rank.
-
+There are no editable parameters for this sample.
 
 ### Example of Output
-Rank #0 runs on: lqnguyen-NUC1, uses device: Intel(R) Gen9 HD Graphics NEO
 Number of steps is 1000000
-Cpu Seq calc:           PI =3.14 in 0.00422 seconds
-Cpu TBB  calc:          PI =3.14 in 0.00177 seconds
-dpstd native:           PI =3.14 in 0.209 seconds
-dpstd native2:          PI =3.14 in 0.213 seconds
-dpstd native3:          PI =3.14 in 0.00222 seconds
-dpstd native4:          PI =3.14 in 0.00237 seconds
-dpstd two steps:        PI =3.14 in 0.0014 seconds
-dpstd transform_reduce: PI =3.14 in 0.000528 seconds
-mpi native:             PI =3.14 in 0.548 seconds
-mpi transform_reduce:   PI =3.14 in 0.000498 seconds
-succes
 
+Cpu Seq calc:           PI =3.14 in 0.00348 seconds
+
+Cpu TBB  calc:          PI =3.14 in 0.00178 seconds
+
+dpstd native:           PI =3.14 in 0.191 seconds
+
+dpstd native2:          PI =3.14 in 0.142 seconds
+
+dpstd native3:          PI =3.14 in 0.002 seconds
+
+dpstd native4:          PI =3.14 in 0.00234 seconds
+
+dpstd two steps:        PI =3.14 in 0.00138 seconds
+
+dpstd transform_reduce: PI =3.14 in 0.000442 seconds
+
+success
