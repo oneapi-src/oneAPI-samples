@@ -18,7 +18,7 @@ using namespace sycl;
 // Size of parallel work groups
 constexpr int size_wg = 32;
 // Number of parallel work groups
-constexpr int num_wg = 256;
+constexpr int num_wg = 128;
 // Number of sample points
 constexpr int size_n = size_wg * num_wg; // Must be a multiple of size_wg
 // Output image dimensions
@@ -78,56 +78,7 @@ void MonteCarloPi(rgb * image_plot){
         buffer coords_buf((coordinate*)coords, range(size_n));
         buffer total_buf((int*)(&total), range(1));
 
-        // Perform Monte Carlo Procedure on the device
-        /*q.submit([&](handler& h){
-            // Set up accessors
-            auto imgplot_acc = imgplot_buf.get_access<access::mode::read_write>(h);
-            auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
-            auto reduction_acc = reduction_buf.get_access<access::mode::read_write>(h);
-            // Set up local memory for faster reduction
-            sycl::accessor<int, 1, access::mode::read_write, access::target::local> local_mem(range<1>(size_wg), h);
-
-            // MC kernel code
-            h.parallel_for_work_group(range<1>(size_n / size_wg), range<1>(size_wg), [=](group<1> gp){
-                gp.parallel_for_work_item([=](h_item<1> it){
-                    int global_index = it.get_global_id(); // Index for accessing external buffers
-                    int local_index = it.get_local_id(); // Index for accessing local_mem
-
-                    // Get random coords
-                    double x = coords_acc[global_index].x;
-                    double y = coords_acc[global_index].y;
-
-                    // Check if coordinates are bounded by a circle of radius 1
-                    double hypotenuse_sqr = (x * x + y * y);
-                    if (hypotenuse_sqr <= 1.0){ // If bounded
-                        // Write result to local_mem
-                        local_mem[local_index] = 1;
-                        // Draw sample point in image plot
-                        imgplot_acc[GetPixelIndex(x, y)].red = 0;
-                        imgplot_acc[GetPixelIndex(x, y)].green = 255;
-                        imgplot_acc[GetPixelIndex(x, y)].blue = 0;
-                    }
-                    else{
-                        // Write result to local_mem
-                        local_mem[local_index] = 0;
-                        // Draw sample point in image plot
-                        imgplot_acc[GetPixelIndex(x, y)].red = 255;
-                        imgplot_acc[GetPixelIndex(x, y)].green = 0;
-                        imgplot_acc[GetPixelIndex(x, y)].blue = 0;
-                    }
-                });
-
-                // Reduce workgroup's results
-                for (int i = 1; i < size_wg; ++i){
-                    local_mem[0] += local_mem[i];
-                }
-                // Write to global memory
-                reduction_acc[gp.get_id()] = local_mem[0];
-            });
-        });
-        q.wait_and_throw();*/
-
-        // Reduction Stage
+        // Perform Monte Carlo simulation and reduce results
         q.submit([&](handler& h){
             // Set up accessors
             auto imgplot_acc = imgplot_buf.get_access<access::mode::write>(h);
@@ -172,7 +123,6 @@ void MonteCarloPi(rgb * image_plot){
 
     // Print calculated value of pi
     double pi = 4.0 * (double) total / size_n;
-    std::cout << "The total monte carload was: " << total << std::endl;
     std::cout << "The estimated value of pi (N = " << size_n << ") is: " << pi << std::endl;
 }
 
