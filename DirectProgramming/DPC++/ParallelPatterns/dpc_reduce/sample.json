@@ -19,7 +19,7 @@
  			   "cd build",
  			   "cmake ..",
  			   "make", 
-               "./src/dpc_reduce"
+               "./dpc_reduce"
               ]
             }
       ]
