@@ -135,7 +135,7 @@ void MonteCarloPi(rgb * image_plot){
             auto total_acc = total_buf.get_access<access::mode::write>(h);
 
             // Monte Carlo Procedure + Reduction
-            h.parallel_for(nd_range<1>(size_n, size_wg), sycl::intel::reduction(total_acc, 0, std::plus<int>()), [=](auto it, auto& total_acc)
+            h.parallel_for(nd_range<1>(size_n, size_wg), sycl::intel::reduction(total_acc, 0, std::plus<int>()), [=](nd_item<1> it, auto& total_acc)
             {
                 int i = it.get_global_id(); // Index for accessing external buffers
 
@@ -146,7 +146,7 @@ void MonteCarloPi(rgb * image_plot){
                 // Check if coordinates are bounded by a circle of radius 1
                 double hypotenuse_sqr = (x * x + y * y);
                 if (hypotenuse_sqr <= 1.0){ // If bounded
-                    // Write result to local_mem
+                    // increment total
                     total_acc += 1;
                     // Draw sample point in image plot
                     imgplot_acc[GetPixelIndex(x, y)].red = 0;
