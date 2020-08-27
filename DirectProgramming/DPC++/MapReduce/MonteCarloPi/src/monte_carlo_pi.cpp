@@ -148,7 +148,7 @@ void MonteCarloPi(rgb * image_plot){
             // Reduction kernel
             auto a_acc = test_buf.get_access<access::mode::read>(h);
             auto total_acc = total_buf.get_access<access::mode::read_write>(h);
-            h.parallel_for(nd_range<1>(size_n, 10), reduction(total_acc, 0, plus<int>()), [=](auto it, auto& total_acc)
+            h.parallel_for(nd_range<1>(size_n, 10), reduction(total_acc, 0, std::plus<int>()), [=](auto it, auto& total_acc)
             {
                 total_acc[0] += a_acc[it];
             });
