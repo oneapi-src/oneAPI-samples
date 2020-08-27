@@ -20,7 +20,7 @@ constexpr int size_wg = 32;
 // Number of parallel work groups
 constexpr int num_wg = 256;
 // Number of sample points
-constexpr int size_n = 10000; //size_wg * num_wg; // Must be a multiple of size_wg
+constexpr int size_n = size_wg * num_wg; // Must be a multiple of size_wg
 // Output image dimensions
 constexpr int img_dimensions = 1024;
 
@@ -56,16 +56,10 @@ rgb* DrawPlot(rgb * image_plot){
     return image_plot;
 }
 
-// performs the Monte Carlo simulation procedure for calculating pi, with size_n number of samples.
+// Performs the Monte Carlo simulation procedure for calculating pi, with size_n number of samples.
 void MonteCarloPi(rgb * image_plot){
-    coordinate coords[size_n]; // array for storing the RNG coordinates
-    int reduction_arr[size_n / size_wg]; // this array will be used in the reduction stage to sum all the simulated points which fall within the circle
-
-    int total = 0;
-    int test_arr[size_n];
-    for (int i = 0; i < size_n; ++i){
-        test_arr[i] = 1;
-    }
+    int total = 0; // Stores the total number of simulated points falling within the circle
+    coordinate coords[size_n]; // Array for storing the RNG coordinates
 
     // Generate Random Coordinates
     for (int i = 0; i < size_n; ++i){
@@ -82,9 +76,6 @@ void MonteCarloPi(rgb * image_plot){
         // Set up buffers
         buffer imgplot_buf((rgb*)image_plot, range(img_dimensions * img_dimensions));
         buffer coords_buf((coordinate*)coords, range(size_n));
-        buffer reduction_buf((int*)reduction_arr, range(size_n / size_wg));
-
-        buffer test_buf((int*)test_arr, range(size_n));
         buffer total_buf((int*)(&total), range(1));
 
         // Perform Monte Carlo Procedure on the device
@@ -138,19 +129,36 @@ void MonteCarloPi(rgb * image_plot){
 
         // Reduction Stage
         q.submit([&](handler& h){
-            // Read accessor
-            //auto read_acc = reduction_buf.get_access<access::mode::read>(h);
-            // Write accessor
-            //auto write_acc = reduction_buf.get_access<access::mode::write>(h);
-            // Local accessor
-            //auto local_acc = reduction_buf.get_access<access::mode::write, access::target::local>(h);
+            // Set up accessors
+            auto imgplot_acc = imgplot_buf.get_access<access::mode::write>(h);
+            auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
+            auto total_acc = total_buf.get_access<access::mode::write>(h);
 
-            // Reduction kernel
-            auto a_acc = test_buf.get_access<access::mode::read>(h);
-            auto total_acc = total_buf.get_access<access::mode::read_write>(h);
-            h.parallel_for(nd_range<1>(size_n, 10), sycl::intel::reduction(total_acc, 0, std::plus<int>()), [=](auto it, auto& total_acc)
+            // Monte Carlo Procedure + Reduction
+            h.parallel_for(nd_range<1>(size_n, size_wg), sycl::intel::reduction(total_acc, 0, std::plus<int>()), [=](auto it, auto& total_acc)
             {
-                total_acc += a_acc[it.get_global_id()];
+                int i = it.get_global_id(); // Index for accessing external buffers
+
+                // Get random coords
+                double x = coords_acc[i].x;
+                double y = coords_acc[i].y;
+
+                // Check if coordinates are bounded by a circle of radius 1
+                double hypotenuse_sqr = (x * x + y * y);
+                if (hypotenuse_sqr <= 1.0){ // If bounded
+                    // Write result to local_mem
+                    total_acc += 1;
+                    // Draw sample point in image plot
+                    imgplot_acc[GetPixelIndex(x, y)].red = 0;
+                    imgplot_acc[GetPixelIndex(x, y)].green = 255;
+                    imgplot_acc[GetPixelIndex(x, y)].blue = 0;
+                }
+                else{
+                    // Draw sample point in image plot
+                    imgplot_acc[GetPixelIndex(x, y)].red = 255;
+                    imgplot_acc[GetPixelIndex(x, y)].green = 0;
+                    imgplot_acc[GetPixelIndex(x, y)].blue = 0;
+                }
             });
 
         });
@@ -163,10 +171,6 @@ void MonteCarloPi(rgb * image_plot){
     }
 
     // Print calculated value of pi
-    int count = 0;
-    /*for (int i = 0; i < size_n / size_wg; ++i){
-        count += reduction_arr[i]; // Reduce workgroup's results into single sum
-    }*/
     double pi = 4.0 * (double) total / size_n;
     std::cout << "The total monte carload was: " << total << std::endl;
     std::cout << "The estimated value of pi (N = " << size_n << ") is: " << pi << std::endl;
