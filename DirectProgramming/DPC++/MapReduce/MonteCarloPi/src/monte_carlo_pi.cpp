@@ -89,7 +89,7 @@ void MonteCarloPi(rgb* image_plot) {
 
       // Monte Carlo Procedure + Reduction
       h.parallel_for(
-          nd_range<1>(size_n, size_wg),
+          nd_range<1>(num_wg * size_wg, size_wg),
           sycl::intel::reduction(total_acc, 0, std::plus<int>()),
           [=](nd_item<1> it, auto& total_acc) {
             int i = it.get_global_id();  // Index for accessing buffers
