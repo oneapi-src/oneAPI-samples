@@ -93,7 +93,14 @@ system.
 
 If running a sample in the Intel DevCloud, remember that you must
 specify the compute node (CPU, GPU, FPGA) as well whether to run in
-batch or interactive mode.  For more information see the Intel® oneAPI
+batch or interactive mode.  For the array transform sample, a node
+with GPU and an interactive shell is recommended.
+
+```
+$ qsub -I -l nodes=1:gpu:ppn=2
+```
+
+For more information see the Intel® oneAPI
 Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 

@@ -1,0 +1,22 @@
+{
+  "guid": "479AD17C-27E9-42F0-8CB1-14B48D098829",
+  "name": "AWS Pub Sub",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
+  "description": "This sample uses the Message Broker for AWS IoT to send and receive messages through an MQTT connection.",
+  "dependencies": ["aws-iot-device-sdk-cpp-v2|https://github.com/aws/aws-iot-device-sdk-cpp-v2"],
+  "languages": [{"cpp":{}}],
+  "os": ["linux"],
+  "ciTests": {
+    "linux": [
+        { "id": "aws-pub-sub",
+          "env": [],
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake ..",
+            "make"
+            ]
+        }
+    ]
+  }
+}
