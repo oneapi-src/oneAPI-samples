@@ -25,8 +25,8 @@ constexpr int size_n = size_wg * num_wg; // Must be a multiple of size_wg
 constexpr int img_dimensions = 1024;
 
 // Consts for drawing the image plot
-constexpr int radius = img_dimensions / 2;
 constexpr double circle_outline = 0.025;
+constexpr int radius = img_dimensions / 2;
 
 // Returns the pixel index corresponding to a set of simulation coordinates
 SYCL_EXTERNAL int GetPixelIndex(double x, double y){

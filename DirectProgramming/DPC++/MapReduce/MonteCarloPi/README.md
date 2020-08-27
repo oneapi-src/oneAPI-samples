@@ -10,22 +10,21 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler beta;
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
+| What you will learn               | How to utilize the DPC++ reduction extension
 | Time to complete                  | 15 minutes
 
 
 ## Purpose
 
-The Monte Carlo estimation is prime for acceleration using parallelization and offloading, due to the nature of its procedure; it only requires generating a large number of random coordinates and then evaluating whether or not they fall within the circle. The challenge lies in the reduction stage: because the results of each test must be summed together to get the total number of coordinates inscribed 
+The Monte Carlo procedure for estimating pi is easily parallelized, as each calculation of a random coordinate point can be considered a discrete work item. The computations involved with each work item are entirely independent of one another except for in summing the total number of points inscribed within the circle. This code sample demonstrates how to utilize the DPC++ reduction extension for this purpose.
 
 The code will attempt first to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected.  The device used for compilation is displayed in the output along with elapsed time to complete the computation. A rendered image plot of the computation is also written to a file.
 
 
 ## Key Implementation Details 
 
-[_TEMPLATE: short punch list of key terms._]
-The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
+The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and reduction.
 
  
 ## License  
@@ -67,19 +66,22 @@ $ make
 
 * Build the program using MSBuild
       Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-      Run - MSBuild mandelbrot.sln /t:Rebuild /p:Configuration="Release"
+      Run - MSBuild MonteCarloPi.sln /t:Rebuild /p:Configuration="Release"
 
 
 ## Running the Sample
 
 ### Application Parameters 
-[_TEMPLATE: this is an opportunity to provide pointers in the code for how the user can alter the application to adjust run times and compare performance._]
-You can modify the Mandelbrot parameters from within mandel.hpp. The configurable parameters include:
-    row_size = 
-    col_size =
-    max_iterations =
-    repetitions =
-The default row and column size is 512.  Max interatins and repetions are both 100.  By adjusting the parameters, you can observe how the performance varies using the different offload techniques.  Note that if the values drop below 128 for row and column, the output is limted to just text in the ouput window.
+constexpr int size_wg =
+constexpr int num_wg =
+constexpr int img_dimensions =
+constexpr double circle_outline =
+
+size_wg and num_wg define the work group size (number of work items) and number of work groups, respectively. The product of these parameters also subsequently defines the number of simulated samples, which will affect both computation time and the accuracy of the pi estimation.
+
+img_dimensions defines the size of the output image for data visualization.
+
+circle_outline defines the thickness of the circular border in the output image for data visualization. setting it to zero will remove it entirely.
 
 ### Example of Output
 ```
