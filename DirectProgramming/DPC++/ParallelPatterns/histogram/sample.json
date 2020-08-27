@@ -1,0 +1,25 @@
+{
+  "name": "Histogram",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++ Compiler/oneAPI DPC++ Library/CPU and GPU"],
+  "description": "This sample demonstrates histogram using dpstd APIs.",
+  "toolchain": ["dpcpp"],
+  "languages": [{"cpp":{}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux"],
+  "builder": ["cmake"],
+  "guid" : "4A088588-F4D3-4634-B864-FC0DE5BEE93B",
+  "ciTests": {
+  "linux": [
+      {
+          "steps": [
+              "mkdir -p build",
+              "cd build",
+              "cmake ..",
+              "make",
+              "make run"
+          ]
+      }
+  ]
+  }
+}
+      
