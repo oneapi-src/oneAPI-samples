@@ -132,7 +132,10 @@ void MonteCarloPi(rgb* image_plot) {
 
 int main() {
   // Validate constants
-  assert(size_n > size_wg);
+  if (size_n < size_wg){
+    std::cout << "size_n must be greater than or equal to size_wg" << std::endl;
+    exit(1);
+  }
 
   // Initialize random seed
   srand(time(NULL));
