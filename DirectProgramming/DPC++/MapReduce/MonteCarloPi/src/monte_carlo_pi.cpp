@@ -27,6 +27,7 @@ const int num_wg = (int)ceil((double)size_n / (double)size_wg);
 constexpr int img_dimensions = 1024;
 // Consts for drawing the image plot
 constexpr double circle_outline = 0.025;
+// Radius of the circle in the image plot
 constexpr int radius = img_dimensions / 2;
 
 // Returns the pixel index corresponding to a set of simulation coordinates

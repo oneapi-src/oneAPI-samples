@@ -70,24 +70,24 @@ $ make
 
 ## Running the Sample
 
-### Application Parameters 
+### Application Parameters
+constexpr int size_n =
 constexpr int size_wg =
-constexpr int num_wg =
+
 constexpr int img_dimensions =
 constexpr double circle_outline =
 
-size_wg and num_wg define the work group size (number of work items) and number of work groups, respectively. The product of these parameters also subsequently defines the number of simulated samples, which will affect both computation time and the accuracy of the pi estimation.
+size_n defines the sample size for the monte carlo procedure. size_wg defines the size of workgroups inside the kernel code. The number of workgroups is calculated by the division of size_n by size_wg, so size_n must be greater than or equal to size_wg. increasing size_n will increase computation time as well as the accuracy of the pi estimation. Changing size_wg will have different performance effects depending on the device used for offloading.
 
-img_dimensions defines the size of the output image for data visualization.
-
-circle_outline defines the thickness of the circular border in the output image for data visualization. setting it to zero will remove it entirely.
+- img_dimensions defines the size of the output image for data visualization.
+- circle_outline defines the thickness of the circular border in the output image for data visualization. setting it to zero will remove it entirely.
 
 ### Example of Output
 ```
 Calculating estimated value of pi...
 
 Running on Intel(R) Gen9 HD Graphics NEO
-The estimated value of pi (N = 4096) is: 3.15137
+The estimated value of pi (N = 10000) is: 3.15137
 
 Computation complete. The processing time was 0.446072 seconds.
 The simulation plot graph has been written to 'MonteCarloPi.bmp'
