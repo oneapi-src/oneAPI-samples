@@ -16,15 +16,15 @@
 
 using namespace sycl;
 
+// Number of samples
+constexpr int size_n = 10000;
 // Size of parallel work groups
 constexpr int size_wg = 32;
 // Number of parallel work groups
-constexpr int num_wg = 128;
-// Number of sample points
-constexpr int size_n = size_wg * num_wg;  // Must be a multiple of size_wg
+constexpr int num_wg = (int) ceil((double) size_n / (double) size_wg);
+
 // Output image dimensions
 constexpr int img_dimensions = 1024;
-
 // Consts for drawing the image plot
 constexpr double circle_outline = 0.025;
 constexpr int radius = img_dimensions / 2;
@@ -92,26 +92,28 @@ void MonteCarloPi(rgb* image_plot) {
           nd_range<1>(size_n, size_wg),
           sycl::intel::reduction(total_acc, 0, std::plus<int>()),
           [=](nd_item<1> it, auto& total_acc) {
-            int i = it.get_global_id();  // Index for accessing external buffers
+            int i = it.get_global_id();  // Index for accessing buffers
 
-            // Get random coords
-            double x = coords_acc[i].x;
-            double y = coords_acc[i].y;
+            if (i < size_n){ // only runs if a work item's ID has a corresponding sample coordinate
+              // Get random coords
+              double x = coords_acc[i].x;
+              double y = coords_acc[i].y;
 
-            // Check if coordinates are bounded by a circle of radius 1
-            double hypotenuse_sqr = (x * x + y * y);
-            if (hypotenuse_sqr <= 1.0) {  // If bounded
-              // increment total
-              total_acc += 1;
-              // Draw sample point in image plot
-              imgplot_acc[GetPixelIndex(x, y)].red = 0;
-              imgplot_acc[GetPixelIndex(x, y)].green = 255;
-              imgplot_acc[GetPixelIndex(x, y)].blue = 0;
-            } else {
-              // Draw sample point in image plot
-              imgplot_acc[GetPixelIndex(x, y)].red = 255;
-              imgplot_acc[GetPixelIndex(x, y)].green = 0;
-              imgplot_acc[GetPixelIndex(x, y)].blue = 0;
+              // Check if coordinates are bounded by a circle of radius 1
+              double hypotenuse_sqr = (x * x + y * y);
+              if (hypotenuse_sqr <= 1.0) {  // If bounded
+                // increment total
+                total_acc += 1;
+                // Draw sample point in image plot
+                imgplot_acc[GetPixelIndex(x, y)].red = 0;
+                imgplot_acc[GetPixelIndex(x, y)].green = 255;
+                imgplot_acc[GetPixelIndex(x, y)].blue = 0;
+              } else {
+                // Draw sample point in image plot
+                imgplot_acc[GetPixelIndex(x, y)].red = 255;
+                imgplot_acc[GetPixelIndex(x, y)].green = 0;
+                imgplot_acc[GetPixelIndex(x, y)].blue = 0;
+              }
             }
           });
     });
