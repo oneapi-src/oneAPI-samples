@@ -137,7 +137,7 @@ void MonteCarloPi(rgb * image_plot){
             // Monte Carlo Procedure + Reduction
             h.parallel_for(nd_range<1>(size_n, size_wg), sycl::intel::reduction(total_acc, 0, std::plus<int>()), [=](nd_item<1> it, auto& total_acc)
             {
-                /*int i = it.get_global_id(); // Index for accessing external buffers
+                int i = it.get_global_id(); // Index for accessing external buffers
 
                 // Get random coords
                 double x = coords_acc[i].x;
@@ -158,8 +158,7 @@ void MonteCarloPi(rgb * image_plot){
                     imgplot_acc[GetPixelIndex(x, y)].red = 255;
                     imgplot_acc[GetPixelIndex(x, y)].green = 0;
                     imgplot_acc[GetPixelIndex(x, y)].blue = 0;
-                }*/
-                total_acc += 1;
+                }
             });
 
         });
