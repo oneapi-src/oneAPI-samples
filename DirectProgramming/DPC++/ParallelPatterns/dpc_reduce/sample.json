@@ -15,7 +15,8 @@
          {
            "id": "dpc_reduce",
            "steps": [
- 			   "mkdir build",
+	       "export I_MPI_CXX=dpcpp",
+ 	       "mkdir build",
  			   "cd build",
  			   "cmake ..",
  			   "make", 
