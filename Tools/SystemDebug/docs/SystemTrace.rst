@@ -36,18 +36,9 @@ Launch the IDE
 ..............
 
 Windows
+Open the Intel System Debugger
+Using the Eclipse Quick Access control (Ctrl 3), open the System Trace perspective
 
-.. code-block:: console
-
-   > isd_eclipse-launcher.bat
-
-Linux
-
-.. code-block:: console
-
-   > isd_eclipse-launcher.sh
-
-Opening System Trace perspective
 ................................
 
 .. figure:: ./_traceimages/image-20200417112519429.png
@@ -95,7 +86,7 @@ Import a trace capture
 .. figure:: ./_traceimages/image-20200417115423377.png
    :alt: image-20200417115423377
 
-Select an example bin file (<isd install folder>\system_trace\examples\input\mipi_aet_fake_trace.bin.bin)
+Select an example bin file (<isd install folder>/system_trace/examples/input/mipi_aet_fake_trace.bin.bin)
 ....................................................
 
 .. figure:: ./_traceimages/image-20200417115643548.png

@@ -89,7 +89,9 @@ build Process
 
 To build the efi applcation, please clone the repository.
 
-``git clone https://github.com/intel/IoTKit-code-samples``
+``git clone https://github.com/oneapi-src/oneAPI-samples.gits``
+
+Then, cd to the folder `Tools/SystemDebug/`.
 
 Then cd to the location of the efi application.
 

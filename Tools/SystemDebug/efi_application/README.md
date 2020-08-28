@@ -35,7 +35,10 @@ The easiest way of getting this, is to use homebrew (https://brew.sh/) and insta
 ###build Process
 To build the efi applcation, please clone the repository.
 
-```git clone https://github.com/intel/IoTKit-code-samples```
+```git clone https://github.com/oneapi-src/oneAPI-samples.git```
+
+Then, go to the folder `Tools/SystemDebug/efi_appication`.
+
 
 Then - clone all of the submodules
 
