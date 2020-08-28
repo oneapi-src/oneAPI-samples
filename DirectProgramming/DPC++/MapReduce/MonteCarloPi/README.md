@@ -64,7 +64,7 @@ $ make
       From top menu select Debug -> Start without Debugging.
 
 * Build the program using MSBuild
-      Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
+      Open "Intel oneAPI command prompt for Microsoft Visual Studio 2019" or "Intel oneAPI command prompt for Microsoft Visual Studio 2017"
       Run - MSBuild MonteCarloPi.sln /t:Rebuild /p:Configuration="Release"
 
 
