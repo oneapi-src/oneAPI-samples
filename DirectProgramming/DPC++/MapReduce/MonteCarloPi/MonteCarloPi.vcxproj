@@ -41,6 +41,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </ClCompile>
   </ItemDefinitionGroup>
