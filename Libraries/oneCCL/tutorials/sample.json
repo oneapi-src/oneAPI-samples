@@ -1,0 +1,21 @@
+{
+ "guid": "70FAEF03-6509-4B6C-B995-D42A65CE36EE",
+ "name": "oneCCL Tutorials",
+ "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneCCL"],
+ "description": "oneCCL tutorials.",
+ "toolchain": ["dpcpp"],
+ "languages": [{"cpp":{}}],
+ "dependencies": ["ccl"],
+ "os": ["linux"],
+ "builder": ["cli","cmake"],
+ "targetDevice": ["CPU", "GPU"],
+ "ciTests": {
+	"linux": [{
+		"env": ["source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp --force" ],
+		"id": "ccl gsg",
+		"steps": [
+			"runipy oneCCL_Getting_Started.ipynb"
+		 ]
+	}]
+ }
+}
