@@ -13,9 +13,10 @@ This sample relates to the basic usage of components of the Intel System Debugge
 
 As a first step, please checkout the following git repository:
 
-```git clone https://github.com/intel/IoTKit-code-samples```
+```git clone https://github.com/oneapi-src/oneAPI-samples.git```
 
-The folder `system_debug_build` contains both source and documentation for how to use these components.
+Then, go to the folder `Tools/SystemDebug`.
+The folder contains both source and documentation for how to use these components.
 
  These are the following:
 
