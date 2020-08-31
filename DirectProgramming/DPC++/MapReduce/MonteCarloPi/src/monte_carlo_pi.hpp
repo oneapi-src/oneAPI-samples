@@ -1,10 +1,10 @@
-typedef struct {
+struct rgb {
   unsigned char red;
   unsigned char green;
   unsigned char blue;
-} rgb;
+};
 
-typedef struct {
+struct coordinate {
   double x;
   double y;
-} coordinate;
+};
