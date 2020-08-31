@@ -69,7 +69,7 @@ double MonteCarloPi(rgb image_plot[]) {
 
   // Set up sycl queue
   queue q(default_selector{}, dpc_common::exception_handler);
-  std::cout << "Running on "
+  std::cout << "\nRunning on "
             << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
   try {
