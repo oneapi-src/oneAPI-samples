@@ -4,23 +4,22 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// =============================================================
-// Copyright (c) 2019 Fabio Baruffa
-// Source: https://github.com/fbaru-dev/particle-sim
-// MIT License
-// =============================================================
-
 #include "GSimulation.hpp"
+
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/latest/include/dpc_common.hpp
 #include "dpc_common.hpp"
+
 using namespace sycl;
 
-/* Default Constructor for the GSimulation class which sets up the default values for 
- * number of particles, number of integration steps, time steo and sample frequency */
+/* Default Constructor for the GSimulation class which sets up the default
+ * values for number of particles, number of integration steps, time steo and
+ * sample frequency */
 GSimulation::GSimulation() {
-  std::cout << "===============================" << "\n";
-  std::cout << " Initialize Gravity Simulation" << "\n";
+  std::cout << "==============================="
+            << "\n";
+  std::cout << " Initialize Gravity Simulation"
+            << "\n";
   set_npart(16000);
   set_nsteps(10);
   set_tstep(0.1);
@@ -33,7 +32,8 @@ void GSimulation::SetNumberOfParticles(int N) { set_npart(N); }
 /* Set the number of integration steps */
 void GSimulation::SetNumberOfSteps(int N) { set_nsteps(N); }
 
-/* Initialize the position of all the particles using random number generator between 0 and 1.0 */
+/* Initialize the position of all the particles using random number generator
+ * between 0 and 1.0 */
 void GSimulation::InitPos() {
   std::random_device rd;  // random number generator
   std::mt19937 gen(42);
@@ -46,7 +46,8 @@ void GSimulation::InitPos() {
   }
 }
 
-/* Initialize the velocity of all the particles using random number generator between -1.0 and 1.0 */
+/* Initialize the velocity of all the particles using random number generator
+ * between -1.0 and 1.0 */
 void GSimulation::InitVel() {
   std::random_device rd;  // random number generator
   std::mt19937 gen(42);
@@ -68,7 +69,8 @@ void GSimulation::InitAcc() {
   }
 }
 
-/* Initialize the mass of all the particles using a random number generator between 0 and 1 */
+/* Initialize the mass of all the particles using a random number generator
+ * between 0 and 1 */
 void GSimulation::InitMass() {
   RealType n = static_cast<RealType>(get_npart());
   std::random_device rd;  // random number generator
@@ -84,10 +86,10 @@ void GSimulation::InitMass() {
 void GSimulation::Start() {
   RealType dt = get_tstep();
   int n = get_npart();
-  //RealType* energy = new RealType[n];
-  std::vector<RealType> energy(n,0.f);
+  // RealType* energy = new RealType[n];
+  std::vector<RealType> energy(n, 0.f);
   // allocate particles
-  //particles_ = new Particle[n];
+  // particles_ = new Particle[n];
   particles_.resize(n);
 
   InitPos();
@@ -110,7 +112,8 @@ void GSimulation::Start() {
   // handling for that queue
   queue q(default_selector{}, dpc_common::exception_handler);
   // Create SYCL buffer for the Particle array of size "n"
-  buffer pbuf(particles_.data(), r, {cl::sycl::property::buffer::use_host_ptr()});
+  buffer pbuf(particles_.data(), r,
+              {cl::sycl::property::buffer::use_host_ptr()});
   // Create SYCL buffer for the ener array
   buffer ebuf(energy.data(), r, {cl::sycl::property::buffer::use_host_ptr()});
 
@@ -119,7 +122,8 @@ void GSimulation::Start() {
   // Looping across integration steps
   for (int s = 1; s <= nsteps; ++s) {
     dpc_common::TimeInterval ts0;
-    // Submitting first kernel to device which computes acceleration of all particles
+    // Submitting first kernel to device which computes acceleration of all
+    // particles
     q.submit([&](handler& h) {
        auto p = pbuf.get_access<access::mode::read_write>(h);
        h.parallel_for(r, [=](id<1> i) {
@@ -137,7 +141,7 @@ void GSimulation::Start() {
 
            distance_sqr =
                dx * dx + dy * dy + dz * dz + kSofteningSquared;  // 6flops
-           distance_inv = 1.0f / sycl::sqrt(distance_sqr);         // 1div+1sqrt
+           distance_inv = 1.0f / sycl::sqrt(distance_sqr);       // 1div+1sqrt
 
            acc0 += dx * kG * p[j].mass * distance_inv * distance_inv *
                    distance_inv;  // 6flops
@@ -151,7 +155,7 @@ void GSimulation::Start() {
          p[i].acc[2] = acc2;
        });
      }).wait_and_throw();
-	// Second kernel updates the velocity and position for all particles
+    // Second kernel updates the velocity and position for all particles
     q.submit([&](handler& h) {
        auto p = pbuf.get_access<access::mode::read_write>(h);
        auto e = ebuf.get_access<access::mode::read_write>(h);
@@ -173,9 +177,9 @@ void GSimulation::Start() {
                  p[i].vel[2] * p[i].vel[2]);  // 7flops
        });
      }).wait_and_throw();
-	/* Third kernel accumulates the energy of this Nbody system
-	 * Reduction operation can be done using reducer interface in SYCL 2020 
-	 */
+    /* Third kernel accumulates the energy of this Nbody system
+     * Reduction operation can be done using reducer interface in SYCL 2020
+     */
     q.submit([&](handler& h) {
        auto e = ebuf.get_access<access::mode::read_write>(h);
        h.single_task([=]() {
@@ -190,11 +194,11 @@ void GSimulation::Start() {
       nf += 1;
       std::cout << " " << std::left << std::setw(8) << s << std::left
                 << std::setprecision(5) << std::setw(8) << s * get_tstep()
-                << std::left << std::setprecision(5) << std::setw(12) << kenergy_
                 << std::left << std::setprecision(5) << std::setw(12)
-                << elapsed_seconds << std::left << std::setprecision(5)
-                << std::setw(12) << gflops * get_sfreq() / elapsed_seconds
-                << "\n";
+                << kenergy_ << std::left << std::setprecision(5)
+                << std::setw(12) << elapsed_seconds << std::left
+                << std::setprecision(5) << std::setw(12)
+                << gflops * get_sfreq() / elapsed_seconds << "\n";
       if (nf > 2) {
         av += gflops * get_sfreq() / elapsed_seconds;
         dev += gflops * get_sfreq() * gflops * get_sfreq() /
@@ -211,20 +215,23 @@ void GSimulation::Start() {
   std::cout << "\n";
   std::cout << "# Total Time (s)     : " << total_time_ << "\n";
   std::cout << "# Average Performance : " << av << " +- " << dev << "\n";
-  std::cout << "===============================" << "\n";
+  std::cout << "==============================="
+            << "\n";
 }
 
-/* Print the headers for the output */ 
+/* Print the headers for the output */
 void GSimulation::PrintHeader() {
   std::cout << " nPart = " << get_npart() << "; "
             << "nSteps = " << get_nsteps() << "; "
             << "dt = " << get_tstep() << "\n";
 
-  std::cout << "------------------------------------------------" << "\n";
+  std::cout << "------------------------------------------------"
+            << "\n";
   std::cout << " " << std::left << std::setw(8) << "s" << std::left
             << std::setw(8) << "dt" << std::left << std::setw(12) << "kenergy"
             << std::left << std::setw(12) << "time (s)" << std::left
-            << std::setw(12) << "GFLOPS" << "\n";
-  std::cout << "------------------------------------------------" << "\n";
+            << std::setw(12) << "GFLOPS"
+            << "\n";
+  std::cout << "------------------------------------------------"
+            << "\n";
 }
-

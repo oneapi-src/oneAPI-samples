@@ -4,25 +4,20 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// =============================================================
-// Copyright (c) 2019 Fabio Baruffa
-// Source: https://github.com/fbaru-dev/particle-sim
-// MIT License
-// =============================================================
-
 #ifndef _GSIMULATION_HPP
 #define _GSIMULATION_HPP
 
-#include <cstdlib>
 #include <CL/sycl.hpp>
+#include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include "Particle.hpp"
 #include <random>
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include "Particle.hpp"
 
 class GSimulation {
  public:
@@ -34,7 +29,7 @@ class GSimulation {
   void Start();
 
  private:
-//  Particle *particles_;
+  //  Particle *particles_;
   std::vector<Particle> particles_;
   int npart_;       // number of particles
   int nsteps_;      // number of integration steps
