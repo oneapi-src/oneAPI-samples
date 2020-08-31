@@ -1,0 +1,32 @@
+{
+  "guid": "7F805BC5-F9A9-43B3-BBCB-580063CD59F8",
+  "name": "Monte Carlo Pi Estimation",
+  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit", "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "toolchain": [ "dpcpp" ],
+  "dependencies": [ "mkl" ],
+  "description": "Estimaing pi with oneMKL random number generators.",
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "monte_carlo_pi",
+        "steps": [
+          "make clean",
+          "make"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "monte_carlo_pi",
+        "steps": [
+          "nmake clean",
+          "nmake"
+        ]
+      }
+    ]
+  }
+}

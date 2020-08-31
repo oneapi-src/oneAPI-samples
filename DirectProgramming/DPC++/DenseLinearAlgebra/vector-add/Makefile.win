@@ -1,4 +1,4 @@
-CXX = dpcpp-cl
+CXX = dpcpp
 CXXFLAGS = -O2 -EHsc -Zi
 LDFLAGS = 
 EXE_NAME = vector-add-buffers.exe
