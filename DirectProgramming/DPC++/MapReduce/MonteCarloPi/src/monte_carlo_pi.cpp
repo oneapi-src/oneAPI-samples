@@ -1,5 +1,3 @@
-#include "monte_carlo_pi.hpp"
-
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
@@ -7,6 +5,7 @@
 #include <iostream>
 
 #include "dpc_common.hpp"
+#include "monte_carlo_pi.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
