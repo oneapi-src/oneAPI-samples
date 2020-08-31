@@ -103,7 +103,7 @@ double MonteCarloPi(rgb* image_plot) {
 
                          // Check if coordinates are bounded by a circle of
                          // radius 1
-                         double hypotenuse_sqr = (x * x + y * y);
+                         double hypotenuse_sqr = x * x + y * y;
                          if (hypotenuse_sqr <= 1.0) {  // If bounded
                            // increment total
                            total_acc += 1;
