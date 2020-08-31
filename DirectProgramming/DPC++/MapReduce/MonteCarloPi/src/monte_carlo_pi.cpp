@@ -41,7 +41,7 @@ SYCL_EXTERNAL int GetPixelIndex(double x, double y) {
 double GetRandCoordinate() { return (double)rand() / (RAND_MAX / 2.0) - 1.0; }
 
 // Creates an array representing the image data and inscribes a circle
-rgb* DrawPlot(rgb image_plot[]) {
+void DrawPlot(rgb image_plot[]) {
   for (int i = 0; i < img_dimensions * img_dimensions; ++i) {
     // calculate unit coordinates relative to the center of the image
     double x = (double)(i % img_dimensions - radius) / radius;
@@ -53,7 +53,6 @@ rgb* DrawPlot(rgb image_plot[]) {
       image_plot[i].blue = 255;
     }
   }
-  return image_plot;
 }
 
 // Performs the Monte Carlo simulation procedure for calculating pi, with size_n
