@@ -7,12 +7,11 @@
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
-#include "monte_carlo_pi.hpp"  
+#include "monte_carlo_pi.hpp"
+#define STB_IMAGE_IMPLEMENTATION 
 #include "stb/stb_image.h"
-#include "stb/stb_image_write.h"
-
-#define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb/stb_image_write.h"
 
 using namespace sycl;
 
