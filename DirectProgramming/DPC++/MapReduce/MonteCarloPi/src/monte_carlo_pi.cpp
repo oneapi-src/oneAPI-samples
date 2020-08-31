@@ -94,7 +94,7 @@ double MonteCarloPi(rgb image_plot[]) {
                        // Index for accessing buffers
                        int i = it.get_global_id();
 
-                       if (i < size_n) {  // only runs if a work item's ID has a
+                       if (i < size_n) {  // Only runs if a work item's ID has a
                                           // corresponding sample coordinate
                          // Get random coords
                          double x = coords_acc[i].x;
