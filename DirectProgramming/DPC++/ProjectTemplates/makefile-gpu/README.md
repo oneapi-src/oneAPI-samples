@@ -1,12 +1,6 @@
-# Make based GPU Project Template
+# `Make based GPU Project` Template
 
-This project is a template designed to help you create your own Data Parallel
-C++ application for GPU targets. The template assumes the use of make to
-build your application. See the supplied `Makefile` file for hints
-regarding the compiler options and libraries needed to compile a Data Parallel
-C++ application for GPU targets. And review the `main.cpp` source file for
-help with the header files you should include and how to implement
-"device selector" code for targeting your application's runtime device.
+This project is a template designed to help you create your own Data Parallel C++ application for GPU targets. The template assumes the use of make to build your application. See the supplied `Makefile` file for hints regarding the compiler options and libraries needed to compile a Data Parallel C++ application for GPU targets. And review the `main.cpp` source file for help with the header files you should include and how to implement "device selector" code for targeting your application's runtime device.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -16,12 +10,21 @@ help with the header files you should include and how to implement
 | What you will learn               | Get started with compile flow for GPU projects
 | Time to complete                  | n/a
 
+## Key Implementation Details
+The basic DPC++ project template for FPGA targets.
+
 ## License
+This code sample is licensed under the MIT license.
 
-This code sample is licensed under MIT license
+## Building the `Make based GPU` Program
 
-## How to Build  on Linux
+### Include Files
+The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
+### Running Samples In DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+
+### On a Linux* System
 The following instructions assume you are in the root of the project folder.
 
 To build the template using:
@@ -36,7 +39,3 @@ Clean the template using:
 ```
     make clean
 ```
-
-## Building the Tutorial in Third-Party Integrated Development Environments (IDEs)
-
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*).

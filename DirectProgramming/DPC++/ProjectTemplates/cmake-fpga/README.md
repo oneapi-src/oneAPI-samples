@@ -1,16 +1,8 @@
-# CMake based FPGA Project Template
+# `CMake based FPGA` Project Template
 
-This project is a template designed to help you quickly create your own Data Parallel
-C++ application for FPGA targets. The template assumes the use of CMake to
-build your application. See the supplied `CMakeLists.txt` file for hints
-regarding the compiler options and libraries needed to compile a Data Parallel
-C++ application for FPGA targets. Review the `main.cpp` source file for
-help with the header files you should include and how to implement
-"device selector" code for targeting your application's runtime device. 
+This project is a template designed to help you quickly create your own Data Parallel C++ application for FPGA targets. The template assumes the use of CMake to build your application. See the supplied `CMakeLists.txt` file for hints regarding the compiler options and libraries needed to compile a Data Parallel C++ application for FPGA targets. Review the `main.cpp` source file for help with the header files you should include and how to implement "device selector" code for targeting your application's runtime device.
 
-To see a simple FPGA kernel and an explanation of the recommended workflow with FPGA 
-targets, consult the "compile flow" FPGA Tutorial. 
-
+To see a simple FPGA kernel and an explanation of the recommended workflow with FPGA targets, consult the "compile flow" FPGA Tutorial.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -20,14 +12,22 @@ targets, consult the "compile flow" FPGA Tutorial.
 | What you will learn               | Get started with basic setup for FPGA projects
 | Time to complete                  | n/a
 
+## Key Implementation Details
+The basic DPC++ project template for FPGA targets.
+
 ## License
+This code sample is licensed under the MIT license.
 
-This code sample is licensed under the MIT license
+## Building the `CMake based FPGA` Program
 
-## How to Build on Linux
+### Include Files
+The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
-The following instructions assume you are in the project's root folder. 
-Since the template does not define a kernel, all code in "main" is executed on the host regardless of the make target.
+### Running Samples In DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+
+### On a Linux* System
+The following instructions assume you are in the project's root folder. Since the template does not define a kernel, all code in "main" is executed on the host regardless of the make target.
 
 1. Create a `build` directory for `cmake` build artifacts:
 
@@ -36,11 +36,9 @@ Since the template does not define a kernel, all code in "main" is executed on t
     cd build
     cmake ..
     ```
-2. Compile the design through the generated `Makefile`. The following 
-build targets are provided, matching the recommended development flow:
+2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * To build the template for FPGA Emulator (fast compile time,
-   targets a CPU-emulated FPGA device), and then run it:
+   * To build the template for FPGA Emulator (fast compile time, targets a CPU-emulated FPGA device), and then run it:
 
     ```
     make fpga_emu
@@ -52,16 +50,11 @@ build targets are provided, matching the recommended development flow:
     ```
     make report
     ```
-    Locate the FPGA optimization report, `report.html`, in the `fpga_report.prj/reports/` directory. 
-    
-   * To build and run the template for FPGA Hardware (takes about one hour,
-   system must have at least 32 GB of physical dynamic memory):
+    Locate the FPGA optimization report, `report.html`, in the `fpga_report.prj/reports/` directory.
+
+   * To build and run the template for FPGA Hardware (takes about one hour, system must have at least 32 GB of physical dynamic memory):
 
     ```
     make fpga
     ./cmake.fpga
     ```
-
-## Building the Tutorial in Third-Party Integrated Development Environments (IDEs)
-
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*).
