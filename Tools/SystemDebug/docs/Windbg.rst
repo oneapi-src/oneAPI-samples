@@ -1,6 +1,6 @@
 
-Windbg over DCI Basic Usage Sample
-==================================
+``Windbg over DCI`` Basic Usage Sample
+======================================
 
 +---------------+------------------------------------+
 | Optimized for | Description                        |
@@ -41,20 +41,21 @@ succeed.
 Thus, you must set the symbol file path beforehand.
 
 Launch **WinDbg** (not by using the batch script, as this will perform a
-connection) and set the symbol file path by selecting File > Symbol File
+connection) and set the symbol file path by selecting *File > Symbol File
 Path… and adding:
 
 ``srv*C:Symbols*http://msdl.microsoft.com/download/symbols``
 
 to the path or by setting the ``_NT_symbol_path`` global environment
 variable with a corresponding value. Save the workspace by selecting
-File -> Save Workspace, and then closing WinDbg.
+File -> Save Workspace, and then closing **WinDbg**.
 
-######Note You need to do this only once before the first use. Connect
+Note - You need to do this only once before the first use. Connect
 the host system to the target one with the **Intel® In-Target Probe
 (Intel® ITP)** or the **Intel® Direct Connect Interface (Intel® DCI)**.
 
-###Launching Windbg
+Launching Windbg
+~~~~~~~~~~~~~~~~
 
 *Intel® Debug Extensions for WinDbg* can be launched as follows:
 
@@ -79,30 +80,28 @@ At this point, two Python objects are available for debugging:
 
 **itpkd** - wrapper over WinDbg\* and kernel debug console
 
-.. figure:: ./_windbgimages/console.PNG
-   :alt: img
+|console|
 
-   img
-
-Execute windbg() to halt the target and run a **WinDbg** session. After
+Execute ``windbg()`` to halt the target and run a **WinDbg** session. After
 that, **WinDbg** starts connecting to the target.
 
-.. figure:: ./_windbgimages/windbg.png
-   :alt: img
+|windbg|
 
-   img
+From now on, you could use windbg commands to interact with target, for
+example:
 
-From now on, u could use windbg commands to interact with taret, for
-example set a breakpoints:
+Set a breakpoint:
 
-.. figure:: ./_windbgimages/windbg_break.png
-   :alt: img
+|windbgbreak|
 
-   img
+Debugging drivers:
 
-debugging drivers: |img|
+|driver|
 
-get pcitree: |img|
+Get pcitree:
+
+|driver|
+
 
 Note
 ~~~~
@@ -111,7 +110,7 @@ Connecting to the target can take several minutes. Do not enter any
 commands until the connection is fully established and the connection
 confirmation message is displayed (Target initialization succeeded). If
 the connection fails, you see an exception in the console. Check the
-network connection if KDVersionBlock is not found. Run the target for a
+network connection if *KDVersionBlock* is not found. Run the target for a
 while if the kernel is not found.
 
 Using Intel® Debug Extensions for *WinDbg* with *WinDbg Preview*
@@ -131,13 +130,11 @@ To start using Intel® Debug Extensions for **WinDbg** with **WinDbg
 Preview** follow the steps below:
 
 1. Connect to the target.
-2. Launch iss_shell.bat located in the installation root directory.
-3. Execute the windbg_preview command to start **WinDbg Preview**.
+2. Launch ``iss_shell.bat`` located in the installation root directory.
+3. Execute the ``windbg_preview`` command to start **WinDbg Preview**.
 
-.. figure:: ./_windbgimages/windbg_prev.png
-   :alt: img
+|windbgprev|
 
-   img
 
 Disclaimer
 ----------
@@ -152,5 +149,9 @@ commercial release. No regulatory approvals for the software have been
 obtained, and therefore software may not be certified for use in certain
 countries or environments.
 
-.. |img| image:: ./_windbgimages/_dbg_driver.PNG
-.. |img| image:: ./_windbgimages/windbg_2.png
+.. |windbgprev| image:: ./_windbgimages/windbg_prev.png
+.. |driver| image:: ./_windbgimages/_dbg_driver.PNG
+.. |windbg_2| image:: ./_windbgimages/windbg_2.png
+.. |windbgbreak| image:: ./_windbgimages/windbg_break.png
+.. |windbg| image:: ./_windbgimages/windbg.png
+.. |console| image:: ./_windbgimages/console.PNG
