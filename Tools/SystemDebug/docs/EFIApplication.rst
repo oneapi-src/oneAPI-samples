@@ -89,7 +89,7 @@ build Process
 
 To build the efi applcation, please clone the repository.
 
-``git clone https://github.com/oneapi-src/oneAPI-samples.gits``
+``git clone https://github.com/oneapi-src/oneAPI-samples.git``
 
 Then, cd to the folder `Tools/SystemDebug/`.
 
