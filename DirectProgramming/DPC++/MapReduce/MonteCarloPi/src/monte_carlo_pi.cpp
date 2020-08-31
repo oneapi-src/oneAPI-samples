@@ -71,7 +71,7 @@ double MonteCarloPi(rgb image_plot[]) {
   // Set up sycl queue
   queue q(default_selector{}, dpc_common::exception_handler);
   std::cout << "Running on "
-            << q.get_device().get_info<sycl::info::device::name>() << std::endl;
+            << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
   try {
     // Set up buffers
@@ -121,7 +121,7 @@ double MonteCarloPi(rgb image_plot[]) {
     q.wait_and_throw();
 
   } catch (sycl::exception e) {
-    std::cout << "SYCL exception caught: " << e.what() << std::endl;
+    std::cout << "SYCL exception caught: " << e.what() << "\n";
     exit(1);
   }
 
@@ -132,8 +132,7 @@ double MonteCarloPi(rgb image_plot[]) {
 int main() {
   // Validate constants
   if (size_n < size_wg) {
-    std::cout << "ERROR: size_n must be greater than or equal to size_wg\n"
-              << std::endl;
+    std::cout << "ERROR: size_n must be greater than or equal to size_wg\n";
     exit(1);
   }
 
@@ -147,21 +146,20 @@ int main() {
   DrawPlot(image_plot.data());
 
   // Perform Monte Carlo simulation to estimate pi (with timing)
-  std::cout << "Calculating estimated value of pi...\n" << std::endl;
+  std::cout << "Calculating estimated value of pi...\n";
   dpc_common::TimeInterval t;
   double pi = MonteCarloPi(image_plot.data());
   double proc_time = t.Elapsed();
   std::cout << "The estimated value of pi (N = " << size_n << ") is: " << pi
-            << std::endl;
+            << "\n";
   std::cout << "\nComputation complete. The processing time was " << proc_time
-            << " seconds." << std::endl;
+            << " seconds.\n";
 
   // Write image to file
   stbi_write_bmp("MonteCarloPi.bmp", img_dimensions, img_dimensions, 3,
                  image_plot.data());
   std::cout
-      << "The simulation plot graph has been written to 'MonteCarloPi.bmp'"
-      << std::endl;
+      << "The simulation plot graph has been written to 'MonteCarloPi.bmp'\n"
 
   return 0;
 }
