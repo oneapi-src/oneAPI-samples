@@ -161,7 +161,7 @@ int main() {
   stbi_write_bmp("MonteCarloPi.bmp", img_dimensions, img_dimensions, 3,
                  image_plot.data());
   std::cout
-      << "The simulation plot graph has been written to 'MonteCarloPi.bmp'\n"
+      << "The simulation plot graph has been written to 'MonteCarloPi.bmp'"
       << std::endl;
 
   return 0;
