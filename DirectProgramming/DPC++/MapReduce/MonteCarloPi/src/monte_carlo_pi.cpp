@@ -92,8 +92,8 @@ double MonteCarloPi(rgb* image_plot) {
       h.parallel_for(nd_range<1>(num_wg * size_wg, size_wg),
                      sycl::intel::reduction(total_acc, 0, std::plus<int>()),
                      [=](nd_item<1> it, auto& total_acc) {
-                       int i =
-                           it.get_global_id();  // Index for accessing buffers
+                       // Index for accessing buffers
+                       int i = it.get_global_id();
 
                        if (i < size_n) {  // only runs if a work item's ID has a
                                           // corresponding sample coordinate
