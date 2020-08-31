@@ -142,15 +142,15 @@ int main() {
   srand(time(NULL));
 
   // Allocate memory for the output image
-  rgb* image_plot = (rgb*)calloc(img_dimensions * img_dimensions, sizeof(rgb));
+  std::vector<rgb> image_plot(img_dimensions * img_dimensions);
 
   // Draw the inscribed circle for the image plot
-  DrawPlot(image_plot);
+  DrawPlot(image_plot.data());
 
   // Perform Monte Carlo simulation to estimate pi (with timing)
   std::cout << "Calculating estimated value of pi...\n" << std::endl;
   dpc_common::TimeInterval t;
-  double pi = MonteCarloPi(image_plot);
+  double pi = MonteCarloPi(image_plot.data());
   double proc_time = t.Elapsed();
   std::cout << "The estimated value of pi (N = " << size_n << ") is: " << pi
             << std::endl;
@@ -159,11 +159,10 @@ int main() {
 
   // Write image to file
   stbi_write_bmp("MonteCarloPi.bmp", img_dimensions, img_dimensions, 3,
-                 image_plot);
+                 image_plot.data());
   std::cout
       << "The simulation plot graph has been written to 'MonteCarloPi.bmp'\n"
       << std::endl;
-  free(image_plot);
 
   return 0;
 }
