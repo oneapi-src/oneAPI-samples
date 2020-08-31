@@ -75,8 +75,7 @@ double MonteCarloPi(rgb image_plot[]) {
 
   try {
     // Set up buffers
-    buffer imgplot_buf(image_plot,
-                       range(img_dimensions * img_dimensions));
+    buffer imgplot_buf(image_plot, range(img_dimensions * img_dimensions));
     buffer coords_buf(coords, range(size_n));
     buffer total_buf(&total, range(1));
 
