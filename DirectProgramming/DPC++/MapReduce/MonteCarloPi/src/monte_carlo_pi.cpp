@@ -1,18 +1,18 @@
-#include "monte_carlo_pi.hpp"
-
+#include <CL/sycl.hpp>
+#include <iostream>
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include <CL/sycl.hpp>
-#include <iostream>
-
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
+#include "monte_carlo_pi.hpp"  
+#include "stb/stb_image.h"
+#include "stb/stb_image_write.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb/stb_image_write.h"
 
 using namespace sycl;
 
