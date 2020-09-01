@@ -1,6 +1,5 @@
 # `Make based GPU Project` Template
-
-This project is a template designed to help you create your own Data Parallel C++ application for GPU targets. The template assumes the use of make to build your application. See the supplied `Makefile` file for hints regarding the compiler options and libraries needed to compile a Data Parallel C++ application for GPU targets. And review the `main.cpp` source file for help with the header files you should include and how to implement "device selector" code for targeting your application's runtime device.
+A minimal project template for GPU using make build system.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -9,6 +8,9 @@ This project is a template designed to help you create your own Data Parallel C+
 | Software                          | Intel(R) oneAPI DPC++ Compiler (beta)
 | What you will learn               | Get started with compile flow for GPU projects
 | Time to complete                  | n/a
+
+## Purpose
+This project is a template designed to help you create your own Data Parallel C++ application for GPU targets. The template assumes the use of make to build your application. See the supplied `Makefile` file for hints regarding the compiler options and libraries needed to compile a Data Parallel C++ application for GPU targets. And review the `main.cpp` source file for help with the header files you should include and how to implement "device selector" code for targeting your application's runtime device.
 
 ## Key Implementation Details
 The basic DPC++ project template for FPGA targets.

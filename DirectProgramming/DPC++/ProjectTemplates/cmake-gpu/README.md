@@ -1,6 +1,7 @@
 # `CMake based GPU Project` Template
+A minimal project template for GPU using CMake build system.
 
-This project is a template designed to help you create your own Data Parallel C++ application for GPU targets. The template assumes the use of CMake to build your application. See the supplied `CMakeLists.txt` file for hints regarding the compiler options and libraries needed to compile a Data Parallel C++ application for GPU targets. And review the `main.cpp` source file for help with the header files you should include and how to implement "device selector" code for targeting your application's runtime device.
+For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -9,6 +10,9 @@ This project is a template designed to help you create your own Data Parallel C+
 | Software                          | Intel(R) oneAPI DPC++ Compiler (beta)
 | What you will learn               | Get started with compile flow for GPU projects
 | Time to complete                  | n/a
+
+## Purpose
+This project is a template designed to help you create your own Data Parallel C++ application for GPU targets. The template assumes the use of CMake to build your application. See the supplied `CMakeLists.txt` file for hints regarding the compiler options and libraries needed to compile a Data Parallel C++ application for GPU targets. And review the `main.cpp` source file for help with the header files you should include and how to implement "device selector" code for targeting your application's runtime device.
 
 ## Key Implementation Details
 The basic DPC++ project template for FPGA targets.

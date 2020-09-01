@@ -1,8 +1,7 @@
 # `Visual Studio based GPU Project` Sample
+A minimal project template for GPU using for Visual Studio.
 
-This project is a template designed to help you create your own Data Parallel C++ application for GPU targets. The template assumes the use of make to build your application. Review the main.cpp source file for help with the header files you should include and how to implement "device selector" code for targeting your application's runtime device
-
-If GPU is not available on your system, you can fallback to cpu or default device.
+For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -11,6 +10,11 @@ If GPU is not available on your system, you can fallback to cpu or default devic
 | Software                          | Intel(R) oneAPI DPC++ Compiler (beta)
 | What you will learn               | Get started with DPC++ for GPU projects
 | Time to complete                  | n/a
+
+## Purpose
+This project is a template designed to help you create your own Data Parallel C++ application for GPU targets. The template assumes the use of make to build your application. Review the main.cpp source file for help with the header files you should include and how to implement "device selector" code for targeting your application's runtime device
+
+If GPU is not available on your system, you can fallback to cpu or default device.
 
 ## Key Implementation Details
 The basic DPC++ project template for FPGA targets.
