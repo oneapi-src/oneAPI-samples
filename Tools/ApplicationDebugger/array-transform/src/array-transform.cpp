@@ -47,8 +47,8 @@ int main(int argc, char *argv[]) {
     buffer buffer_out{output, data_range};
 
     q.submit([&](auto &h) {
-      auto in = buffer_in.get_access<access::mode::read>(h);
-      auto out = buffer_out.get_access<access::mode::write>(h);
+      accessor in(buffer_in, h, read_only);
+      accessor out(buffer_out, h, write_only);
 
       // kernel-start
       h.parallel_for(data_range, [=](auto index) {
