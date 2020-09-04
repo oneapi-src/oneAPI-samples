@@ -24,7 +24,7 @@ This code sample is licensed under MIT license
       cd tbb-async-sycl &&
       mkdir build &&
       cd build &&
-      cmake ../. &&
+      cmake .. &&
       make VERBOSE=1
 
     * Run the program
