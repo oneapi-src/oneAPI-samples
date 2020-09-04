@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
       auto out = buffer_out.get_access<access::mode::write>(h);
 
       // kernel-start
-      h.parallel_for(data_range, [=](id<1> index) {
+      h.parallel_for(data_range, [=](auto index) {
         int id0 = GetDim(index, 0);
         int element = in[index];  // breakpoint-here
         int result = element + 50;
