@@ -28,7 +28,7 @@ class Complex2 {
 
   // The function performs Complex number multiplication and returns a Complex2
   // object.
-  Complex2 complex_mul(const Complex2& obj) {
+  Complex2 complex_mul(const Complex2& obj) const{
     return Complex2(((m_real_ * obj.m_real_) - (m_imag_ * obj.m_imag_)),
                     ((m_real_ * obj.m_imag_) + (m_imag_ * obj.m_real_)));
   }

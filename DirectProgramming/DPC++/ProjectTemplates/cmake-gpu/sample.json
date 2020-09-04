@@ -1,0 +1,24 @@
+{
+  "guid": "A8C505CF-06F7-4869-9129-EA31038B0394",
+  "name": "Project Templates - Linux CMake project for GPU",
+  "categories": ["Toolkit/Project Templates"],
+  "description": "Template 'Hello World'",
+  "toolchain": ["dpcpp"],
+  "os": ["linux"],
+  "targetDevice": ["GPU"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+      }
+    ]
+  }
+}

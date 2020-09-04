@@ -1,0 +1,22 @@
+{
+  "guid": "A544224A-B5C0-462C-95F6-7C266A1DB2EB",
+  "name": "Digital Output",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
+  "description": "Demonstrate how to write a digital value to an output pin using the Eclipse* MRAA library.",
+  "dependencies": ["pkg|mraa|https://mraa.io"],
+  "languages": [{"cpp":{}}],
+  "os": ["linux"],
+  "ciTests": {
+    "linux": [
+        { "id": "digital-out",
+          "env": [],
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake ..",
+            "make"
+            ]
+        }
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-CXX = dpcpp-cl
+CXX = dpcpp
 CXXFLAGS = -O2 -EHsc -Zi
 LDFLAGS = 
 EXE_NAME = vector-add-buffers.exe
@@ -22,4 +22,4 @@ run_usm:
 	$(USM_EXE_NAME)
 
 clean: 
-	del /f $(EXE_NAME) $(USM_EXE_NAME)
+	del /F /Q *.ilk *.pdb $(EXE_NAME) $(USM_EXE_NAME)

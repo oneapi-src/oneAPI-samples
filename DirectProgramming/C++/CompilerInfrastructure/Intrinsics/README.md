@@ -4,10 +4,10 @@ The intrinsic samples are designed to show how to utilize the intrinsics support
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04; MacOS* Catalina* or newer
+| OS                                | MacOS* Catalina* or newer
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; C++ Compiler 2021.1 or newer;
-| What you will learn               | How to utlize intrinsics supported by the Intel&reg; C++ Compiler
+| Software                          | Intel&reg; oneAPI C++ Compiler Classic
+| What you will learn               | How to utlize intrinsics supported by the Intel&reg; oneAPI C++ Compiler Classic
 | Time to complete                  | 15 minutes
 
 
@@ -30,7 +30,7 @@ The implementations include multiple functions to accomplish these tasks, each o
 This code sample is licensed under MIT license. 
 
 
-## Building the `Mandelbrot` Program for CPU and GPU
+## Building the `Intrinsics` Program
 
 Perform the following steps:
 1. Build the program using the following `make` commands. 
@@ -59,9 +59,10 @@ These intrinsics samples have relatively few modifiable parameters. However, cer
 
 3. intrin_ftz_sample: This sample has no modifiable parameters.
 
-
+### Example of Output
 ```
 Dot Product computed by C:  4324.000000
+Dot Product computed by C + SIMD:  4324.000000
 Dot Product computed by Intel(R) SSE3 intrinsics:  4324.000000
 Dot Product computed by Intel(R) AVX2 intrinsics:  4324.000000
 Dot Product computed by Intel(R) AVX intrinsics:  4324.000000

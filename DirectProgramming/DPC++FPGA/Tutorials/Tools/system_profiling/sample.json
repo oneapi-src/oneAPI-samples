@@ -1,0 +1,25 @@
+{
+  "guid": "9D7E5A6D-A39B-4FF8-B553-4B85116FCD69",
+  "name": "Using the OpenCL Intercept Layer to Profile Designs running on the FPGA",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
+  "description": "FPGA tutorial demonstrating how to use the OpenCL Intercept Layer to improve a design with the double buffering optimization",
+  "toolchain": ["dpcpp"],
+  "os": ["linux"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./double_buffering.fpga_emu"
+        ]
+      }
+    ]
+  }
+}

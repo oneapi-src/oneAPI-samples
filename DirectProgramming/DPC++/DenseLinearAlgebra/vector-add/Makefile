@@ -22,4 +22,4 @@ run_usm:
 	./$(USM_EXE_NAME)
 
 clean: 
-	rm -rf $(BUFFER_EXE_NAME) $(USM_EXE_NAME)
+	rm -f $(BUFFER_EXE_NAME) $(USM_EXE_NAME)

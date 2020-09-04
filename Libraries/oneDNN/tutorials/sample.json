@@ -1,0 +1,44 @@
+{
+ "guid": "FC7A16DE-9594-4F40-AFA2-71ACABF366B3",
+ "name": "oneDNN Tutorials",
+ "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneDNN"],
+ "description": "oneDNN Tutorials.",
+ "toolchain": ["dpcpp"],
+ "languages": [{"cpp":{}}],
+ "dependencies": ["oneDNN", "tbb"],
+ "os": ["linux"],
+ "builder": ["ide","cmake"],
+ "targetDevice": ["CPU", "GPU"],
+ "ciTests": {
+	"linux": [
+	{
+		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
+		"id": "dnn gsg",
+		"steps": [
+			"runipy tutorial_getting_started.ipynb"
+		 ]
+	},
+	{
+		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
+		"id": "simple_model",
+		"steps": [
+			"runipy tutorial_simple_model.ipynb"
+		 ]
+	},
+	{
+		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
+		"id": "verbose_jit",
+		"steps": [
+			"runipy tutorial_verbose_jitdump.ipynb"
+		 ]
+	},
+	{
+		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_gomp --force" ],
+		"id": "isa",
+		"steps": [
+			"runipy tutorial_analyze_isa_with_dispatcher_control.ipynb"
+		 ]
+	}
+     ]
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "guid":"6F00053A-11DC-40D1-90C7-1CFF822B874B",
+ "name": "Matrix Multiplication - Intel Advisor",
+ "categories": ["Toolkit/Intel® oneAPI Base Toolkit/Advisor"],
+ "description": "Simple program that shows how to improve the DPC++ Matrix Multiplication program using VTune Profiler and Advisor. ",
+ "toolchain": ["dpcpp"],
+ "dependencies": ["advisor"],
+ "languages": [{"cpp": { }}],
+ "os": ["linux", "windows"],
+ "targetDevice": ["CPU", "GPU"],
+ "builder": ["ide", "cmake"],
+ "ciTests": {
+	 "linux": [{
+		"steps": [
+			"mkdir build",
+      		        "cd build",
+           		"cmake ..",
+           		"make",
+			"make run"
+		 ]
+	}],
+	"windows": [{
+		"steps": [
+                        "MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration=\"Release\"",
+		       "cd x64/Release",
+            		"matrix_multiply.exe"
+		]
+	}]
+}
+}
+

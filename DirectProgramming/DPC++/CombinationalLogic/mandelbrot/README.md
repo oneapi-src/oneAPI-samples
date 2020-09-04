@@ -8,8 +8,8 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler beta;
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | How to offload the computation to GPU using the Intel&reg; oneAPI DPC++/C++ Compiler
 | Time to complete                  | 15 minutes
 
 ## Purpose
@@ -24,6 +24,9 @@ The basic DPC++ implementation explained in the code includes device selector, b
 This code sample is licensed under MIT license. 
 
 ## Building the `Mandelbrot` Program for CPU and GPU
+
+### Include Files
+The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
@@ -59,12 +62,6 @@ $ make
       Right click on the project in Solution explorer and select Rebuild.
       From top menu select Debug -> Start without Debugging.
 
->If you see the following error message when compiling this sample:
->
-```
-Error 'dpc_common.hpp' file not found
-```
->You need to add the following directory to the list of include folders, that are required by your project, in your project's Visual Studio project property panel. The missing include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 * Build the program using MSBuild
       Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
