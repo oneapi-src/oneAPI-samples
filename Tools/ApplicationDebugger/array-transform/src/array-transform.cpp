@@ -20,7 +20,7 @@ using namespace std;
 using namespace sycl;
 
 // A device function, called from inside the kernel.
-static int GetDim(id<1> wi, int dim) {
+static size_t GetDim(id<1> wi, int dim) {
   return wi[dim];
 }
 
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 
       // kernel-start
       h.parallel_for(data_range, [=](auto index) {
-        int id0 = GetDim(index, 0);
+        size_t id0 = GetDim(index, 0);
         int element = in[index];  // breakpoint-here
         int result = element + 50;
         if (id0 % 2 == 0) {
