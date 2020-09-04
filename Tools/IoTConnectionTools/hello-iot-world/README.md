@@ -10,7 +10,7 @@ This project outputs the classic "Hello World" message along with the compiler i
 Any Intel® CPU
 
 ## Software requirements
-Intel® C++ Compiler
+Intel® C++ Compiler Classic
 
 ## How to build and run
 ### Linux CLI
@@ -43,7 +43,7 @@ nmake run
 ### IDE
 Use the Samples Plugin for Eclipse or Visual Studio to create and run the sample.
 
-You may need to source the `setvars` script distributed with oneAPI before launching the IDE to use the Intel® C++ Compiler or make it available as a toolchain in the IDE.
+You may need to source the `setvars` script distributed with oneAPI before launching the IDE to use the Intel® C++ Compiler Classic or make it available as a toolchain in the IDE.
 
 ### Additional Links
 Access the Getting Started Guides with the following links:

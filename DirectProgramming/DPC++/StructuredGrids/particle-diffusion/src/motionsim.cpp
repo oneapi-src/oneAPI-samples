@@ -36,6 +36,8 @@
 
 using namespace sycl;
 using namespace std;
+namespace oneapi {}
+using namespace oneapi;
 
 // Helper functions
 

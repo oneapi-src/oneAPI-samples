@@ -1,0 +1,22 @@
+{
+  "guid": "CF755377-7B46-47D3-89A3-AB624692B2E8",
+  "name": "IBM Device",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
+  "description": "This project shows how-to develop a device code using Watson IoT Platform iot-c device client library, connect and interact with Watson IoT Platform Service.",
+  "dependencies": ["iot-c|https://github.com/ibm-watson-iot/iot-c"],
+  "languages": [{"cpp":{}}],
+  "os": ["linux"],
+  "ciTests": {
+    "linux": [
+        { "id": "ibm-device",
+          "env": [],
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake ..",
+            "make"
+            ]
+        }
+    ]
+  }
+}

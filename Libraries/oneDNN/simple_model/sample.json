@@ -6,7 +6,7 @@
  "toolchain": ["dpcpp","gcc","icc"],
  "languages": [{"cpp":{}}],
  "dependencies": ["oneDNN", "tbb","compiler|icc"],
- "os": ["linux"],
+ "os": ["linux", "windows"],
  "builder": ["ide","cmake"],
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
@@ -21,7 +21,29 @@
 			"./bin/cnn-inference-f32-cpp cpu",
 			"SYCL_BE=PI_OPENCL ./bin/cnn-inference-f32-cpp gpu"
 		 ]
-	}]
+	}],
+	"windows": [
+	    {
+		"id": "infer cpu",
+		"steps": [
+			"mkdir build_cpu",
+                        "cd build_cpu",
+                        "cmake -G Ninja ..",
+                        "cmake --build .",
+                        "bin\\cnn-inference-f32-cpp.exe"
+		 ]
+	    },
+	    {
+		"id": "infer gpu",
+		"steps": [
+                        "mkdir build_gpu",
+                        "cd build_gpu",
+                        "cmake -G Ninja ..",
+                        "cmake --build .",
+                        "bin\\cnn-inference-f32-cpp.exe gpu"
+		 ]
+	    }
+	]
 
  }
 }

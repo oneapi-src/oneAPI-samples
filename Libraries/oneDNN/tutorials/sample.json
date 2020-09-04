@@ -15,28 +15,28 @@
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
 		"id": "dnn gsg",
 		"steps": [
-			"runipy getting_started.ipynb"
+			"runipy tutorial_getting_started.ipynb"
 		 ]
 	},
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
 		"id": "simple_model",
 		"steps": [
-			"runipy simple_model.ipynb"
+			"runipy tutorial_simple_model.ipynb"
 		 ]
 	},
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
 		"id": "verbose_jit",
 		"steps": [
-			"runipy verbose_jitdump.ipynb"
+			"runipy tutorial_verbose_jitdump.ipynb"
 		 ]
 	},
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_gomp --force" ],
 		"id": "isa",
 		"steps": [
-			"runipy analyze_isa_with_dispatcher_control.ipynb"
+			"runipy tutorial_analyze_isa_with_dispatcher_control.ipynb"
 		 ]
 	}
      ]

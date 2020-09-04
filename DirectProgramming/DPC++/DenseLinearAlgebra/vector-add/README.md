@@ -123,7 +123,7 @@ Perform the following steps:
 2. Select the menu sequence **File** > **Open** > **Project/Solution**.
 3. Locate the `vector-add` folder.
 4. Select the `vector-add.sln` file.
-5. Select the configuration 'Debug-fpga' or 'Release-fpga' that have the necessary project settings already below:
+5. Select the configuration 'Debug-fpga' that have the necessary project settings already below:
  
             Under the 'Project Property' dialog:
  
