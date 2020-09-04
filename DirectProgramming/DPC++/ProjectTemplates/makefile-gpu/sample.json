@@ -1,0 +1,21 @@
+{
+  "guid": "66A044D6-BBAE-45A5-B6C0-433E91FF29FC",
+  "name": "Project Templates - Linux Makefile project for GPU",
+  "categories": ["Toolkit/Project Templates"],
+  "description": "Template 'Hello World'",
+  "toolchain": ["dpcpp"],
+  "os": ["linux"],
+  "targetDevice": ["GPU"],
+  "builder": ["make"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "make all",
+          "make run"
+        ]
+      }
+    ]
+  }
+}

@@ -12,6 +12,7 @@ using namespace sycl;
 #include <cstring>
 #include <ctime>
 #include <fstream>
+#include <algorithm>
 /*
  * Parameters to define coefficients
  * kHalfLength: Radius of the stencil

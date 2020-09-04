@@ -1,13 +1,13 @@
 cmake_minimum_required (VERSION 3.0)
 project (HELLO-IOT-WORLD CXX)
 
-# Use the Intel C++ Compiler when available
+# Use Intel C++ Compiler Classic when available
 find_program(ICPC NAMES icpc icl)
 if(ICPC)
     set(CMAKE_CXX_COMPILER ${ICPC})
-    message(STATUS "Switching to the Intel(R) C++ Compiler from: ${ICPC}")
+    message(STATUS "Switching to the Intel(R) C++ Compiler Classic from: ${ICPC}")
 else()
-    message("-- Could not find the Intel(R) C++ Compiler on the system path. Did you setup the compiler environment?")
+    message("-- Could not find the Intel(R) C++ Compiler Classic on the system path. Did you setup the compiler environment?")
 endif()
 
 # Set default build type to RelWithDebInfo if not specified
