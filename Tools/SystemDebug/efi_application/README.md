@@ -55,6 +55,7 @@ To build the efi application, we use the `cmake` build system to generate the bu
 We do this with:
 
 ```cmake ..```
+> :warning: **If you are using Visual Studio 2017**: You will need to specify architecture. This can be done with `cmake .. -AX64`
 
 then - on windows you will see a Visual Studio solution in the `build` directory, uxdbgapp.sln, on POSIX systems you will see a MakeFile in the build folder.
 
@@ -63,19 +64,17 @@ You can then build this by issuing the following command:
 
 ```cmake --build .```
 
-Or,
-
 on Windows, you can open the visual studio solution, and build the uxdbgapp target.
 
 On POSIX, you can run the makefile with `make -j`.
 
 
-##### windows builders
+#### __windows builders__
 
 On windows, the output will be in the `Debug` folder in the build directory.
 
 
-#### Edk2 basetools
+#### __Edk2 basetools__
 
 On windows, you will either need to build edk2 basetools, or get the prebuilt binaries.
 
@@ -172,7 +171,7 @@ Then, select the .efi file using the file browser.
 
 Next, select the usb device you would like to flash to.
 
-
+> :warning: **If you recieve Execution Errors** You might have to change your powershell execution policy. This can be done with the following comman in powershell: `Set-ExecutionPolicy Unrestricted `
 
 ### Example Steps (Linux)
 
@@ -185,8 +184,7 @@ chmod +x make_boot_media.sh
 ../make_boot_media.sh uxdbgapp.efi /dev/sdb
 ```
 
-##### if you recieve execution errors
-You might have to change your powershell execution policy. This can be done with the following comman in powershell: `Set-ExecutionPolicy Unrestricted `
+
 
 ## Disclaimer
 IMPORTANT NOTICE: This software is sample software. It is not designed or intended for use in any medical, life-saving or life-sustaining systems, transportation systems, nuclear systems, or for any other mission-critical application in which the failure of the system could lead to critical injury or death. The software may not be fully tested and may contain bugs or errors; it may not be intended or suitable for commercial release. No regulatory approvals for the software have been obtained, and therefore software may not be certified for use in certain countries or environments.
