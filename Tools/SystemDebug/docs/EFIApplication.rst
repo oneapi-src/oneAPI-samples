@@ -163,6 +163,12 @@ We do this with:
 
 ``cmake ..``
 
+.. note::
+    On Windows, when using Visual Studio 2017 or older, you will need to specify the architecture.
+    Please use the following cmake command:
+
+    ``cmake .. -AX64``
+
 then - on windows you will see a Visual Studio solution in the ``build``
 directory, uxdbgapp.sln, on POSIX systems you will see a MakeFile in the
 build folder.
@@ -233,30 +239,30 @@ follows:
 ``./make_boot_media.sh uxdbgapp.efi <dev/disk>``
 
 
-NOTE
-----
+.. note::
+    if you have issues with permissions, you might have to make the script
+    executable.
 
-if you have issues with permissions, you might have to make the script
-executable.
+    you can do this by issueing the following command in terminal:
 
-you can do this by issueing the following command in terminal:
-
-``chmod +x make_boot_media.sh``
+    ``chmod +x make_boot_media.sh``
 
 you can find information on the disks by using the following:
 
 mac OS
---------
+^^^^^^^^^^^^^^
+
 
 ``diskutil list``
 
 linux
---------
+^^^^^^^^^^^^^^
+
 
 ``sudo fdisk -l``
 
 Windows
-------------
+^^^^^^^^^^^^^^
 
 Start the powershell script, from a powershell prompt.
 
