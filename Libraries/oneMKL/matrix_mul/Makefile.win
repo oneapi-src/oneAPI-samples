@@ -1,0 +1,24 @@
+DPCPP_CXX = dpcpp-cl
+DPCPP_CXXFLAGS = /Zi /EHsc
+
+MKL_CXXFLAGS = -I"$(MKLROOT)/include" -DMKL_ILP64
+MKL_LDFLAGS = /link /libpath:"$(MKLROOT)\lib\intel64" mkl_intel_ilp64.lib mkl_sequential.lib mkl_core.lib mkl_sycl.lib opencl.lib 
+MKL_EXE_NAME = matrix_mul_mkl.exe
+MKL_SOURCES = src/matrix_mul_mkl.cpp
+
+all:
+	$(DPCPP_CXX) $(MKL_CXXFLAGS) $(DPCPP_CXXFLAGS) -o $(MKL_EXE_NAME) $(MKL_SOURCES) $(MKL_LDFLAGS)
+
+build_mkl:
+	$(DPCPP_CXX) $(MKL_CXXFLAGS) $(DPCPP_CXXFLAGS) -o $(MKL_EXE_NAME) $(MKL_SOURCES) $(MKL_LDFLAGS)
+
+
+run:
+	$(MKL_EXE_NAME)
+
+run_mkl:
+	$(MKL_EXE_NAME)
+
+
+clean: 
+	del -rf $(MKL_EXE_NAME) *.pdb

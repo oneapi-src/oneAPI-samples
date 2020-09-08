@@ -1,0 +1,32 @@
+{
+  "guid": "5E72947A-B5C2-465A-8514-85671EDCADF8",
+  "name": "Matrix Multiplication using oneMKL",
+  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "toolchain": [ "dpcpp", "icc" ],
+  "dependencies": [ "mkl" ],
+  "description": "Simple program that multiplies two large matrices in parallel using oneMKL.",
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "make" ],
+  "ciTests": {
+    "linux": [{
+		"steps": [
+			"mkdir build",
+			"cd build",
+			"cmake ..",
+			"make",
+			"make run"
+		]
+	}],
+    "windows": [
+      { 
+        "steps": [
+            "MSBuild matrix_mul.sln /t:Rebuild /p:Configuration=\"release\"",
+            "cd x64/Release",
+			"matrix_mul_mkl.exe"
+			]
+        }
+    ]
+  }
+}
