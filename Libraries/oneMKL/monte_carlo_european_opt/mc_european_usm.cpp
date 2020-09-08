@@ -24,22 +24,31 @@
 namespace oneapi {}
 using namespace oneapi;
 
+// Temporary code for beta08 compatibility. Reduce routine is moved from intel::
+// to ONEAPI:: namespace
+#if __SYCL_COMPILER_VERSION < 20200902L
+using sycl::intel::reduce;
+#else
+using sycl::ONEAPI::reduce;
+#endif
+
 // Default number of options
-#define N_OPT  2048
+static const auto n_opt_default = 2048;
 // Default number of independent samples
-#define N_SAMPLES 262144
+static const auto n_samples_default = 262144;
 
 // Initialization value for random number generator
-#define SEED        7777
+static const auto seed = 7777;
 
-#define S0L     10.0
-#define S0H     50.0
-#define XL      10.0
-#define XH      50.0
-#define TLL      0.2
-#define TH       2.0
-#define RISK_FREE  0.05
-#define VOLATILITY  0.2
+// European options pricing parameters
+static const auto s0_l = 10.0;
+static const auto s0_h = 50.0;
+static const auto x_l = 10.0;
+static const auto x_h = 50.0;
+static const auto t_l = 0.2;
+static const auto t_h = 2.0;
+static const auto risk_free = 0.05;
+static const auto volatility = 0.2;
 
 void init_data(std::vector<double>& s0, std::vector<double>& x, std::vector<double>& t,
                 std::vector<double>& vcall, std::vector<double>& vput);
@@ -83,7 +92,7 @@ static void mc_kernel(sycl::queue& q, EngineType& engine, size_t n_samples,
             rng *= s0;
             sc = sycl::max(rng - x, 0.0);
 
-            count_sc[item.get_group_linear_id()] = sycl::intel::reduce(item.get_group(), sc, std::plus<double>());
+            count_sc[item.get_group_linear_id()] = reduce(item.get_group(), sc, std::plus<double>());
         });
     });
 
@@ -97,7 +106,7 @@ static void mc_kernel(sycl::queue& q, EngineType& engine, size_t n_samples,
             rng *= s0;
             sp = sycl::max(x - rng, 0.0);
 
-            count_sp[item.get_group_linear_id()] = sycl::intel::reduce(item.get_group(), sp, std::plus<double>());
+            count_sp[item.get_group_linear_id()] = reduce(item.get_group(), sp, std::plus<double>());
         });
     });
     q.wait_and_throw();
@@ -116,7 +125,7 @@ void mc_calculate(sycl::queue& q, size_t n_opt, size_t n_samples, double r, doub
     std::vector<double>& s0, std::vector<double>& x, std::vector<double>& t,
     std::vector<double>& vcall, std::vector<double>& vput) {
     // Creating random number engine
-    mkl::rng::philox4x32x10 engine(q, SEED);
+    mkl::rng::philox4x32x10 engine(q, seed);
     // Allocate memory for random numbers
     double* rng_ptr = sycl::malloc_device<double>(n_samples, q);
     // Price options
@@ -128,17 +137,22 @@ void mc_calculate(sycl::queue& q, size_t n_opt, size_t n_samples, double r, doub
 
 int main(int argc, char ** argv) {
 
-    size_t n_opt = N_OPT;
-    size_t n_samples = N_SAMPLES;
+    std::cout << std::endl;
+    std::cout << "Monte Carlo European Option Pricing Simulation" << std::endl;
+    std::cout << "Unified Shared Memory Api" << std::endl;
+    std::cout << "----------------------------------------------" << std::endl;
+
+    size_t n_opt = n_opt_default;
+    size_t n_samples = n_samples_default;
     if(argc >= 2) {
         n_opt = atol(argv[1]);
         if(n_opt == 0) {
-            n_opt = N_OPT;
+            n_opt = n_opt_default;
         }
         if(argc >= 3) {
             n_samples = atol(argv[2]);
             if(n_samples == 0) {
-                n_samples = N_SAMPLES;
+                n_samples = n_samples_default;
             }
         }
     }
@@ -174,8 +188,8 @@ int main(int argc, char ** argv) {
             return 0;
         }
         
-        // Launch calculation
-        mc_calculate(q, n_opt, n_samples, RISK_FREE, VOLATILITY, s0, x, t, vcall, vput);
+        // Launch Monte Carlo calculation
+        mc_calculate(q, n_opt, n_samples, risk_free, volatility, s0, x, t, vcall, vput);
     } catch (...) {
         // Some other exception detected
         std::cout << "Failure" << std::endl;
@@ -183,7 +197,7 @@ int main(int argc, char ** argv) {
     }
 
     // Validate results
-    bs_ref(RISK_FREE, VOLATILITY, s0, x, t, vcall_ref, vput_ref);
+    bs_ref(risk_free, volatility, s0, x, t, vcall_ref, vput_ref);
 
     std::cout << "put_abs_err  = " << estimate_error(vput_ref, vput) << std::endl;
     std::cout << "call_abs_err = " << estimate_error(vcall_ref, vcall) << std::endl;
@@ -198,13 +212,13 @@ static double RandDouble(double a, double b) {
 void init_data(std::vector<double>& s0, std::vector<double>& x, std::vector<double>& t,
     std::vector<double>& vcall, std::vector<double>& vput) {
 
-    srand(SEED);
+    srand(seed);
 
     // Initialize data
     for(size_t i = 0; i < s0.size(); i++) {
-        s0[i] = RandDouble(S0L, S0H);
-        x[i]  = RandDouble(XL, XH);
-        t[i]  = RandDouble(TLL, TH);
+        s0[i] = RandDouble(s0_l, s0_h);
+        x[i]  = RandDouble(x_l, x_h);
+        t[i]  = RandDouble(t_l, t_h);
 
         vcall[i] = 0.0;
         vput[i] = 0.0;
@@ -236,7 +250,7 @@ static double erf_ref(double x) {
     return 2.0 * CNDF(1.4142135623730950488016887242097*x) - 1.0;
 }
 
-#define INV_SQRT2 0.7071067811865475727373109293694142252207
+static const auto inv_sqrt2 = 0.7071067811865475727373109293694142252207;
 
 void bs_ref(double r, double sig, std::vector<double>& s0, std::vector<double>& x, std::vector<double>& t,
             std::vector<double>& vcall, std::vector<double>& vput) {
@@ -254,8 +268,8 @@ void bs_ref(double r, double sig, std::vector<double>& s0, std::vector<double>& 
                          
         w1 = (a + b + c) * y;
         w2 = (a + b - c) * y;
-        d1 = erf_ref(INV_SQRT2 * w1);
-        d2 = erf_ref(INV_SQRT2 * w2);
+        d1 = erf_ref(inv_sqrt2 * w1);
+        d2 = erf_ref(inv_sqrt2 * w2);
         d1 = 0.5 + 0.5 * d1;
         d2 = 0.5 + 0.5 * d2;
 
