@@ -36,6 +36,10 @@ Using Data Parallel C++, the code sample runs multiple MPI ranks to distribute t
 calculation of the number Pi. Each rank offloads the computation to an accelerator
 (GPU/CPU) using Intel DPC++ compiler to compute a partial compution of the number Pi.
 
+If you run the sample on a CPU as your default device,  you may need to increase 
+the memory allocation for openCL.  You can do this by setting an environment variable, 
+    "CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=16MB
+
 
 ## Key Implementation Details
 The basic DPC++ implementation explained in the code includes accessor,
