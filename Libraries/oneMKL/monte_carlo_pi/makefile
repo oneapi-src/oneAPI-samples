@@ -7,7 +7,7 @@ run_all: mc_pi.exe mc_pi_usm.exe mc_pi_device_api.exe
 	.\mc_pi_usm
 	.\mc_pi_device_api
 
-DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /DMKL_ILP64 /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
+DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /DMKL_ILP64 /EHsc -fsycl-device-code-split=per_kernel -fno-sycl-early-optimizations OpenCL.lib
 
 mc_pi.exe: mc_pi.cpp
 	dpcpp mc_pi.cpp /Femc_pi.exe $(DPCPP_OPTS)

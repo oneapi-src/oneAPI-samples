@@ -15,7 +15,7 @@
 N = 10000000
 ACC = ha
 
-CFLAGS = -I"$(MKLROOT)\include" -Qmkl -EHsc -O2 -fsycl-device-code-split=per_kernel -DACC_$(ACC)
+CFLAGS = -I"$(MKLROOT)\include" -Qmkl -EHsc -O2 -fsycl-device-code-split=per_kernel -DACC_$(ACC) -fno-sycl-early-optimizations
 LIBS = OpenCL.lib
 
 all: black_scholes.run
