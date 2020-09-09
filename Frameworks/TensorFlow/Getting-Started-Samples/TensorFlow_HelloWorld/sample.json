@@ -1,0 +1,20 @@
+{
+  "guid": "111213A0-C930-45B4-820F-02472BABBF34",
+  "name": "Tensorflow Hello World",
+  "categories": ["Toolkit/Intel® AI Analytics Toolkit/TensorFlow"],
+  "description": "This sample shows how to train a TensorFlow and run inference with oneMKL and oneDNN.",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "os":["linux"],
+  "ciTests": {
+	"linux": [
+	{
+		"id": "tensorflow hello world",
+		"steps": [
+			"source activate tensorflow",
+			"python TensorFlow_HelloWorld.py"
+		 ]
+	}
+     ]
+ }
+}

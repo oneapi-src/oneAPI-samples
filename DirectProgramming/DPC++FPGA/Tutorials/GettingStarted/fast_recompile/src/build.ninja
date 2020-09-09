@@ -1,0 +1,32 @@
+device_source_file = kernel.cpp
+host_source_file = main.cpp
+target_name = fast_recompile
+
+emulator_target = ${target_name}.fpga_emu.exe
+
+hardware_flags = -fintelfpga -Xshardware
+emulator_flags = -fintelfpga -DFPGA_EMULATOR
+
+rule parse_emu
+  command = dpcpp -c /EHcs ${emulator_flags} ${in} /Fo${out}	
+
+rule gen_image_obj
+  command = dpcpp -fintelfpga -fsycl-link=image ${in} -o ${out}
+
+rule link
+  command = dpcpp -fintelfpga  ${in} -o ${out} 
+
+# FPGA emulator
+build fpga_emu: phony ${emulator_target}
+
+host_emu_obj = host_emu.obj
+dev_emu_obj = dev_emu.obj
+dev_image_emu_obj = dev_image_emu.a
+
+build ${host_emu_obj}: parse_emu ${host_source_file}
+
+build ${dev_emu_obj}: parse_emu ${device_source_file}
+
+build ${dev_image_emu_obj}: gen_image_obj ${dev_emu_obj}
+
+build ${emulator_target}: link ${host_emu_obj} ${dev_image_emu_obj}

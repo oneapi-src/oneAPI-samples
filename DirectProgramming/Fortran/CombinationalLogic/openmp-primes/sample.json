@@ -1,0 +1,30 @@
+{
+  "name": "openmp-primes",
+  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "description": "Fortran Tutorial - Using OpenMP",
+  "toolchain": [ "ifort" ],
+  "languages": [ { "fortran": {} } ],
+  "targetDevice": [ "CPU" ],
+  "os": [ "darwin" ],
+  "builder": [ "make" ],
+  "ciTests":{
+    "darwin": [
+      {
+        "id": "fort_release_cpu",
+        "steps": [
+          "make release",
+          "make run",
+          "make clean"
+        ]
+       },
+       { 
+        "id": "fort_debug_cpu",
+        "steps": [
+          "make debug",
+          "make debug_run",
+          "make clean"
+        ]
+       }
+    ]
+  }
+}

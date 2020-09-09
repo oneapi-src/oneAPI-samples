@@ -1,7 +1,7 @@
 {
   "guid":"b1b58be7-e22e-4ca2-ba59-6887b2f1be6c",
   "name": "Vector Add",
-  "categories": ["Toolkit/Get Started", "Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++ Compiler/CPU, GPU and FPGA"],
+  "categories": ["Toolkit/Get Started", "Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU, GPU and FPGA"],
   "description": "Simple program that adds two large vectors in parallel.  Provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using simple Data Parallel C++.",
   "toolchain": ["dpcpp"],
   "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
@@ -11,7 +11,7 @@
   "ciTests": {
     "linux": [
       {
-        "id": "cpu_buffers",
+        "id": "buffer_default",
         "steps": [
           "make all",
           "make run",
@@ -19,7 +19,73 @@
         ]
       },
       {
-        "id": "cpu_usm",
+        "id": "buffer_cpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=CPU"
+        ],
+        "steps": [
+          "make all",
+          "make run",
+          "make clean"
+        ]
+      },
+      {
+        "id": "buffer_gpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=GPU"
+        ],
+        "steps": [
+          "make all",
+          "make run",
+          "make clean"
+        ]
+      },
+      {
+        "id": "buffer_host",
+        "env": [
+          "export SYCL_DEVICE_TYPE=HOST"
+        ],
+        "steps": [
+          "make all",
+          "make run",
+          "make clean"
+        ]
+      },
+      {
+        "id": "usm_default",
+        "steps": [
+          "make build_usm",
+          "make run_usm",
+          "make clean"
+        ]
+      },
+      {
+        "id": "usm_cpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=CPU"
+        ],
+        "steps": [
+          "make build_usm",
+          "make run_usm",
+          "make clean"
+        ]
+      },
+      {
+        "id": "usm_gpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=GPU"
+        ],
+        "steps": [
+          "make build_usm",
+          "make run_usm",
+          "make clean"
+        ]
+      },
+      {
+        "id": "usm_host",
+        "env": [
+          "export SYCL_DEVICE_TYPE=HOST"
+        ],
         "steps": [
           "make build_usm",
           "make run_usm",
@@ -44,7 +110,7 @@
     ],
     "windows": [
       {
-        "id": "cpu_buffers",
+        "id": "buffer_default",
         "steps": [
           "nmake -f Makefile.win",
           "nmake -f Makefile.win run",
@@ -52,7 +118,73 @@
         ]
       },
       {
-        "id": "cpu_usm",
+        "id": "buffer_cpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=CPU"
+        ],
+        "steps": [
+          "nmake -f Makefile.win",
+          "nmake -f Makefile.win run",
+          "nmake -f Makefile.win clean"
+        ]
+      },
+      {
+        "id": "buffer_gpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=GPU"
+        ],
+        "steps": [
+          "nmake -f Makefile.win",
+          "nmake -f Makefile.win run",
+          "nmake -f Makefile.win clean"
+        ]
+      },
+      {
+        "id": "buffer_host",
+        "env": [
+          "export SYCL_DEVICE_TYPE=HOST"
+        ],
+        "steps": [
+          "nmake -f Makefile.win",
+          "nmake -f Makefile.win run",
+          "nmake -f Makefile.win clean"
+        ]
+      },
+      {
+        "id": "usm_default",
+        "steps": [
+          "nmake -f Makefile.win build_usm",
+          "nmake -f Makefile.win run_usm",
+          "nmake -f Makefile.win clean"
+        ]
+      },
+      {
+        "id": "usm_cpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=CPU"
+        ],
+        "steps": [
+          "nmake -f Makefile.win build_usm",
+          "nmake -f Makefile.win run_usm",
+          "nmake -f Makefile.win clean"
+        ]
+      },
+      {
+        "id": "usm_gpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=GPU"
+        ],
+        "steps": [
+          "nmake -f Makefile.win build_usm",
+          "nmake -f Makefile.win run_usm",
+          "nmake -f Makefile.win clean"
+        ]
+      },
+      {
+        "id": "usm_host",
+        "env": [
+          "export SYCL_DEVICE_TYPE=HOST"
+        ],
         "steps": [
           "nmake -f Makefile.win build_usm",
           "nmake -f Makefile.win run_usm",

@@ -1,0 +1,57 @@
+{
+  "guid": "3228581F-9DF8-4696-9B1C-0B31286B97C3",
+  "name": "QR Decomposition of Matrices on FPGA",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Reference Designs"],
+  "description": "Reference design demonstrating high-performance QR decomposition of complex matrices on FPGA",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "env": [
+          "export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
+        ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./qrd.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "env": [
+          "set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
+        ],
+        "steps": [
+          "cd src",
+          "ninja fpga_emu",
+          "qrd.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "cd src",
+          "ninja report"
+        ]
+      }
+    ]
+  }
+}

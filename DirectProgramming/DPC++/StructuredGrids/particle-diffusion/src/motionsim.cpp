@@ -25,7 +25,6 @@
 //
 
 #include <mkl.h>
-#include <chrono>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
@@ -37,6 +36,8 @@
 
 using namespace sycl;
 using namespace std;
+namespace oneapi {}
+using namespace oneapi;
 
 // Helper functions
 
