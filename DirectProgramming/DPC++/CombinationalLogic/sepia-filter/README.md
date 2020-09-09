@@ -72,3 +72,6 @@ Lambda kernel time: 10.5153 milliseconds
 Functor kernel time: 9.99602 milliseconds
 Sepia tone successfully applied to image:[input/silverfalls1.png]
 ```
+## Known Limitations
+
+Due to a known issue in the Level0 driver sepia-filter fails with default Level0 backend. A workaround is in place to enable OpenCL backend.
