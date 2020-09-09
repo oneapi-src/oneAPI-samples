@@ -1,0 +1,28 @@
+{
+  "guid": "A962BCAA-7AA4-403A-9A5B-08964743FCBF",
+  "name": "Project Templates - Linux Makefile project for FPGA",
+  "categories": ["Toolkit/Project Templates"],
+  "description": "Template 'Hello World'",
+  "toolchain": ["dpcpp"],
+  "os": ["linux"],
+  "targetDevice": ["FPGA"],
+  "builder": ["make"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "make fpga_emu",
+          "make run_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "make report"
+        ]
+      }
+    ]
+  }
+}

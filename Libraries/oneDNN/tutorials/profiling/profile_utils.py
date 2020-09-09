@@ -100,23 +100,27 @@ class oneDNNUtils:
         ax = fig.add_subplot(111)
         figsize=(10,10)
         topk=50
-        if Type == "time":
-            print()
-            print(' breakdown:',Group)
-            time = data.groupby(Group)['time'].sum().sort_values().head(topk)
-            print(time)
-            title=Group + "Time Breakdown"
-            time[:topk].plot.pie(
-                ax=ax, title=title, figsize=figsize, logx=True, autopct='%1.1f%%')
-            ax.figure.savefig(title)
-        elif Type == "count":
-            print()
-            count = data[Group].value_counts().head(topk)
-            print(count)
-            title=Group+"Count Breakdown"
-            count[:topk].plot.bar(
-                ax=ax, title=title, figsize=figsize, logx=False, rot=45)
-            ax.figure.savefig(title)
+        try:
+            if Type == "time":
+                print()
+                print(' breakdown:',Group)
+                time = data.groupby(Group)['time'].sum().sort_values().head(topk)
+                print(time)
+                title=Group + "Time Breakdown"
+                time[:topk].plot.pie(
+                    ax=ax, title=title, figsize=figsize, logx=True, autopct='%1.1f%%')
+                ax.figure.savefig(title)
+            elif Type == "count":
+                print()
+                count = data[Group].value_counts().head(topk)
+                print(count)
+                title=Group+"Count Breakdown"
+                count[:topk].plot.bar(
+                    ax=ax, title=title, figsize=figsize, logx=False, rot=45)
+                ax.figure.savefig(title)
+        except:
+            print("Exception!")
+            pass
         return
 
     def stats_comp(self, name, Type,onednn_log1, onednn_log2, n=50):
