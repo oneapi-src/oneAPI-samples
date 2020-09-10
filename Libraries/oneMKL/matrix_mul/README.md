@@ -1,5 +1,5 @@
-# matrix_mul_mkl sample
-matrix_mul_mkl is a simple program that multiplies together two large matrices and verifies the results.
+# `Matrix Multiplication` sample
+Matrix Multiplication is a simple program that multiplies together two large matrices and verifies the results.
 This program is implemented using C++ with oneAPI Math Kernel Library (oneMKL):
 
 | Optimized for                       | Description
@@ -16,32 +16,44 @@ oneMKL implementation explained.
 ## License
 This code sample is licensed under MIT license.
 
-## How to Build for oneMKL
+## Bulding `Matrix Multiplication` for oneMKL
 
-### on Linux
-   * Build the program using Make
-    cd matrix_mul_mkl &&
-    make build_mkl
+### On a Linux* System
+Perform the following steps:
+1. Build the program using the following `cmake` commands. 
+``` 
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+```
 
-   * Run the program
-    make run_mkl
+> Note: by default, exectables are created for both USM and buffers. You can build individually with the following: 
+>    Create buffers executable: make mandelbrot
+>    Create USM executable: make mandelbrot_usm
 
-   * Clean the program
+2. Run the program (default uses buffers):
+    ```
+    make run
+    ```
+> Note: for USM use `make run_usm`
+
+3. Clean the program using:
+    ```
     make clean
+    ```
 
-### on Windows
+### On a Windows* System Using Visual Studio* Version 2017 or Newer
 
-#### Command Line using MSBuild
-   * MSBuild matrix_mul.sln /t:Rebuild /p:Configuration="release"
+* Build the program using VS2017 or VS2019
+      Right click on the solution file and open using either VS2017 or VS2019 IDE.
+      Right click on the project in Solution explorer and select Rebuild.
+      From top menu select Debug -> Start without Debugging.
 
-#### Command Line using nmake
-   Build matrix_mul_mkl oneMKL version
-   * nmake -f Makefile.win build_mkl
-   * nmake -f Makefile.win run_mkl
 
-   Build matrix_mul_mkl DPCPP version
-   * nmake -f Makefile.win build_dpcpp
-   * nmake -f Makefile.win run_dpcpp
+* Build the program using MSBuild
+      Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
+      Run - MSBuild matrix_mul.sln /t:Rebuild /p:Configuration="Release"
 
 #### Visual Studio IDE
    * Open Visual Studio 2017
