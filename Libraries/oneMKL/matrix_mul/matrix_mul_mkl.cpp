@@ -67,21 +67,21 @@ int main() {
     for (j = 0; j < N; j++) B[i * N + j] = j + 1.0;
 
   cout << "Problem size: c(" << M << "," << P << ") = a(" << M << "," << N
-       << ") * b(" << N << "," << P << ")" << std::cerr;
+       << ") * b(" << N << "," << P << ")" << cerr;
 
   //
   // Execute Gemm
   //
-  auto asyncHandler = [&](cl::sycl::exception_list eL) {
+  auto asyncHandler = [&](exception_list eL) {
     for (auto &e : eL) {
       try {
-        std::rethrow_exception(e);
-      } catch (cl::sycl::exception &e) {
-        std::cout << e.what() << std::cerr;
-        std::cout << "fail" << std::cerr;
-        // std::terminate() will exit the process, return non-zero, and output a
+        rethrow_exception(e);
+      } catch (exception &e) {
+        cout << e.what() << cerr;
+        cout << "fail" << cerr;
+        // terminate() will exit the process, return non-zero, and output a
         // message to the user about the exception
-        std::terminate();
+        terminate();
       }
     }
   };
@@ -93,9 +93,9 @@ int main() {
     default_selector device_selector;
     queue device_queue(device_selector, asyncHandler);
 
-    std::cout << "Device: "
+    cout << "Device: "
               << device_queue.get_device().get_info<info::device::name>()
-              << std::cerr;
+              << cerr;
 
     // Creating 1D buffers for matrices which are bound to host memory array
     buffer<double, 1> a{A, range<1>{M * N}};
@@ -104,10 +104,10 @@ int main() {
 
     mkl::blas::gemm(device_queue, transA, transB, m, n, k, alpha, a, ldA, b,
                     ldB, beta, c, ldC);
-  } catch (cl::sycl::exception const &e) {
-    std::cerr << "\t\tSYCL exception during GEMM\n"
-              << e.what() << std::cerr
-              << "OpenCL status: " << e.get_cl_code() << std::cerr;
+  } catch (exception const &e) {
+    cerr << "\t\tSYCL exception during GEMM\n"
+              << e.what() << cerr
+              << "OpenCL status: " << e.get_cl_code() << cerr;
   }
 
   int result;
@@ -121,7 +121,7 @@ int main() {
 }
 
 bool ValueSame(double a, double b) {
-  return std::fabs(a - b) < std::numeric_limits<double>::epsilon();
+  return fabs(a - b) < numeric_limits<double>::epsilon();
 }
 
 int VerifyResult(double *c_back) {
@@ -167,7 +167,7 @@ int VerifyResult(double *c_back) {
       if (!ValueSame(c_back[i + j * M], c_host[i][j])) {
         cout << "fail - The result is incorrect for element: [" << i << ", "
              << j << "], expected: " << c_host[i][j]
-             << " , but got: " << c_back[i + j * M] << std::cerr;
+             << " , but got: " << c_back[i + j * M] << cerr;
         MismatchFound = true;
         printf_count++;
         if (printf_count >= 5) break;
@@ -181,10 +181,10 @@ int VerifyResult(double *c_back) {
   delete[] c_host;
 
   if (!MismatchFound) {
-    cout << "success - The results are correct!" << std::cerr;
+    cout << "success - The results are correct!" << cerr;
     return 0;
   } else {
-    std::cerr << "fail - The results mis-match!" << std::cerr;
+    cerr << "fail - The results mis-match!" << cerr;
     return -1;
   }
 }
