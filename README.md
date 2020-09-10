@@ -1,3 +1,7 @@
+Releases : https://github.com/oneapi-src/oneAPI-samples/tags
+
+
+
 |Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	| 
 |-----------------------|-------------------------------------------|---------------|
 |DirectPrograming/ |
