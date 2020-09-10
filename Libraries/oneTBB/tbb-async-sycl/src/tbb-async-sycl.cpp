@@ -20,8 +20,6 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-using namespace cl::sycl;
-
 constexpr cl::sycl::access::mode sycl_read = cl::sycl::access::mode::read;
 constexpr cl::sycl::access::mode sycl_write = cl::sycl::access::mode::write;
 constexpr cl::sycl::access::mode sycl_read_write = cl::sycl::access::mode::read_write;
@@ -66,18 +64,18 @@ class AsyncActivity {
       // By including all the SYCL work in a {} block, we ensure
       // all SYCL tasks must complete before exiting the block
       {  // starting SYCL code
-        range<1> n_items{array_size_sycl};
-        buffer<cl_float, 1> a_buffer(a_array.data(), n_items);
-        buffer<cl_float, 1> b_buffer(b_array.data(), n_items);
-        buffer<cl_float, 1> c_buffer(c_array.data(), n_items);
+        cl::sycl::range<1> n_items{array_size_sycl};
+        cl::sycl::buffer<cl_float, 1> a_buffer(a_array.data(), n_items);
+        cl::sycl::buffer<cl_float, 1> b_buffer(b_array.data(), n_items);
+        cl::sycl::buffer<cl_float, 1> c_buffer(c_array.data(), n_items);
 
-        queue q(default_selector{}, dpc_common::exception_handler);
-        q.submit([&](handler& h) {
+        cl::sycl::queue q(cl::sycl::default_selector{}, dpc_common::exception_handler);
+        q.submit([&](cl::sycl::handler& h) {
               auto a_accessor = a_buffer.get_access<sycl_read>(h);
               auto b_accessor = b_buffer.get_access<sycl_read>(h);
               auto c_accessor = c_buffer.get_access<sycl_write>(h);
 
-              h.parallel_for( n_items, [=](id<1> index) {
+              h.parallel_for( n_items, [=](cl::sycl::id<1> index) {
                     c_accessor[index] = a_accessor[index] + b_accessor[index] * coeff;
                   });  // end of the kernel -- parallel for
             }).wait();
@@ -101,10 +99,8 @@ class AsyncActivity {
 
 int main() {
   // init input arrays
-  for (int i = 0; i < array_size; i++) {
-    a_array[i] = i;
-    b_array[i] = i;
-  }
+  std::iota(a_array.begin(), a_array.end(), 0);
+  std::iota(b_array.begin(), b_array.end(), 0);
 
   int nth = 4; // number of threads
 
