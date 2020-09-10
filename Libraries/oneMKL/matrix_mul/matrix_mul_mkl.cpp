@@ -48,9 +48,6 @@ int main() {
   double beta = 0.0;
 
   // 1D arrays on host side
-  double *A;
-  double *B;
-  double *C;
 
   auto A = new double[M * N];
   auto B = new double[N * P];
@@ -129,13 +126,10 @@ int VerifyResult(double *c_back) {
   int i, j, k;
 
   // 2D arrays on host side
-  double(*a_host)[N];
-  double(*b_host)[P];
-  double(*c_host)[P];
 
-  a_host = new double[M][N];
-  b_host = new double[N][P];
-  c_host = new double[M][P];
+  auto a_host = new double[M][N];
+  auto b_host = new double[N][P];
+  auto c_host = new double[M][P];
 
   // a_host is a matrix whose values are column number plus one
   for (i = 0; i < M; i++)
