@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright ï¿½ 2020 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -14,10 +14,10 @@ using namespace std;
 using namespace cl::sycl;
 
 // Matrix size constants
-#define SIZE 4800  // Must be a multiple of 8.
-#define M SIZE / 8
-#define N SIZE / 4
-#define P SIZE / 2
+auto constexpr SIZE = 4800  // Must be a multiple of 8.
+auto constexpr M = SIZE / 8
+auto constexpr N = SIZE / 4
+auto constexpr P = SIZE / 2
 
 /**
  * Perform the matrix multiplication on host to verify results from mkl.
@@ -52,9 +52,9 @@ int main() {
   double *B;
   double *C;
 
-  A = new double[M * N];
-  B = new double[N * P];
-  C = new double[M * P];
+  auto A = new double[M * N];
+  auto B = new double[N * P];
+  auto C = new double[M * P];
 
   // prepare matrix data with column-major style
   int i, j;
@@ -67,7 +67,7 @@ int main() {
     for (j = 0; j < N; j++) B[i * N + j] = j + 1.0;
 
   cout << "Problem size: c(" << M << "," << P << ") = a(" << M << "," << N
-       << ") * b(" << N << "," << P << ")" << std::endl;
+       << ") * b(" << N << "," << P << ")" << std::cerr;
 
   //
   // Execute Gemm
@@ -77,8 +77,8 @@ int main() {
       try {
         std::rethrow_exception(e);
       } catch (cl::sycl::exception &e) {
-        std::cout << e.what() << std::endl;
-        std::cout << "fail" << std::endl;
+        std::cout << e.what() << std::cerr;
+        std::cout << "fail" << std::cerr;
         // std::terminate() will exit the process, return non-zero, and output a
         // message to the user about the exception
         std::terminate();
@@ -95,7 +95,7 @@ int main() {
 
     std::cout << "Device: "
               << device_queue.get_device().get_info<info::device::name>()
-              << std::endl;
+              << std::cerr;
 
     // Creating 1D buffers for matrices which are bound to host memory array
     buffer<double, 1> a{A, range<1>{M * N}};
@@ -105,9 +105,9 @@ int main() {
     mkl::blas::gemm(device_queue, transA, transB, m, n, k, alpha, a, ldA, b,
                     ldB, beta, c, ldC);
   } catch (cl::sycl::exception const &e) {
-    std::cout << "\t\tSYCL exception during GEMM\n"
-              << e.what() << std::endl
-              << "OpenCL status: " << e.get_cl_code() << std::endl;
+    std::cerr << "\t\tSYCL exception during GEMM\n"
+              << e.what() << std::cerr
+              << "OpenCL status: " << e.get_cl_code() << std::cerr;
   }
 
   int result;
@@ -167,7 +167,7 @@ int VerifyResult(double *c_back) {
       if (!ValueSame(c_back[i + j * M], c_host[i][j])) {
         cout << "fail - The result is incorrect for element: [" << i << ", "
              << j << "], expected: " << c_host[i][j]
-             << " , but got: " << c_back[i + j * M] << std::endl;
+             << " , but got: " << c_back[i + j * M] << std::cerr;
         MismatchFound = true;
         printf_count++;
         if (printf_count >= 5) break;
@@ -181,10 +181,10 @@ int VerifyResult(double *c_back) {
   delete[] c_host;
 
   if (!MismatchFound) {
-    cout << "success - The results are correct!" << std::endl;
+    cout << "success - The results are correct!" << std::cerr;
     return 0;
   } else {
-    cout << "fail - The results mis-match!" << std::endl;
+    std::cerr << "fail - The results mis-match!" << std::cerr;
     return -1;
   }
 }
