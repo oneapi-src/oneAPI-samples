@@ -20,7 +20,7 @@
  			   "cd build",
  			   "cmake ..",
  			   "make", 
-               "CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=16MB  ./src/dpc_reduce"
+               "CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=16MB  ./dpc_reduce"
               ]
             }
       ]
