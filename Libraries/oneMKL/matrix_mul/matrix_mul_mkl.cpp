@@ -3,6 +3,9 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+//
+// Matrix Multiplication is a simple program that multiplies together two large matrices and verifies the results.
+// This program is implemented using C++ with oneAPI Math Kernel Library (oneMKL)
 
 #include <CL/sycl.hpp>
 #include <iostream>
@@ -11,13 +14,13 @@
 #include "mkl_blas_sycl.hpp"
 
 using namespace std;
-using namespace cl::sycl;
+using namespace sycl;
 
 // Matrix size constants
-auto constexpr SIZE = 4800  // Must be a multiple of 8.
-auto constexpr M = SIZE / 8
-auto constexpr N = SIZE / 4
-auto constexpr P = SIZE / 2
+auto constexpr size = (600 * 8)  // Must be a multiple of 8.
+auto constexpr M = size / 8
+auto constexpr N = size / 4
+auto constexpr P = size / 2
 
 /**
  * Perform the matrix multiplication on host to verify results from mkl.
@@ -33,17 +36,17 @@ int main() {
   mkl::transpose transA = mkl::transpose::nontrans;
   mkl::transpose transB = mkl::transpose::nontrans;
 
-  // matrix data sizes
+  // Matrix data sizes
   int m = M;
   int n = P;
   int k = N;
 
-  // leading dimensions of data
+  // Meading dimensions of data
   int ldA = m;
   int ldB = k;
   int ldC = m;
 
-  // set scalar fp values
+  // Set scalar fp values
   double alpha = 1.0;
   double beta = 0.0;
 
@@ -53,7 +56,7 @@ int main() {
   auto B = new double[N * P];
   auto C = new double[M * P];
 
-  // prepare matrix data with column-major style
+  // Prepare matrix data with column-major style
   int i, j;
   // A(M, N) is a matrix whose values are column number plus one
   for (i = 0; i < N; i++)
@@ -66,9 +69,7 @@ int main() {
   cout << "Problem size: c(" << M << "," << P << ") = a(" << M << "," << N
        << ") * b(" << N << "," << P << ")" << cerr;
 
-  //
   // Execute Gemm
-  //
   auto asyncHandler = [&](exception_list eL) {
     for (auto &e : eL) {
       try {
@@ -153,7 +154,7 @@ int VerifyResult(double *c_back) {
 
   bool MismatchFound = false;
 
-  // compare host side results with the result buffer from device side: print
+  // Compare host side results with the result buffer from device side: print
   // fail data 5 times only.
   int printf_count = 0;
   for (i = 0; i < M; i++) {
