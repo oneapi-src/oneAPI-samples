@@ -19,6 +19,6 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ltbb -lsycl")
 add_executable (dpc_reduce src/main.cpp)
 
 add_custom_target (run
-        COMMAND CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=16MB  dpc_reduce
+        COMMAND CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=16MB  ./dpc_reduce
         WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
 )
