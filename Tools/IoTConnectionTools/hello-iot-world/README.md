@@ -4,7 +4,8 @@
 This is a simple sample you could use for a quick compiler test.
 
 ## What it is
-This project outputs the classic "Hello World" message along with the compiler identification string.
+This project outputs a "Hello World" message and lets users know if the Intel® C++ Compiler Classic was used
+to compile the code sample.
 
 ## Hardware requirements
 Any Intel® CPU
