@@ -4,7 +4,6 @@ project(hello-encode)
 set(TARGET hello-encode)
 set(SOURCES src/hello-encode.cpp)
 set(VPL_NAME mfx)
-set(CMAKE_MSVCIDE_RUN_PATH $ENV{PATH})
 set(RUNARGS ${CMAKE_CURRENT_SOURCE_DIR}/content/cars_128x96.i420 128 96)
 
 # Set default build type to RelWithDebInfo if not specified
@@ -29,6 +28,9 @@ endif()
 
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  if(NOT DEFINED ENV{VSCMD_VER})
+    set(CMAKE_MSVCIDE_RUN_PATH $ENV{PATH})
+  endif()
 endif()
 
 if(TARGET mfx)
