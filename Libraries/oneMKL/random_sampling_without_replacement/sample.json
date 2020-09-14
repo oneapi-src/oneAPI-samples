@@ -1,0 +1,32 @@
+{
+    "guid": "7AC408C8-DF59-46AE-B970-178CF257F364",
+    "name": "Multiple Simple Random Sampling without replacement",
+    "categories": [ "Toolkit/Intel® oneAPI Base Toolkit", "Toolkit/Intel® oneAPI HPC Toolkit" ],
+    "toolchain": [ "dpcpp" ],
+    "dependencies": [ "mkl" ],
+    "description": "Multiple simple random sampling without replacement with oneMKL random number generators.",
+    "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "os": [ "linux", "windows" ],
+    "builder": [ "make" ],
+    "ciTests": {
+      "linux": [
+        {
+          "id": "random_sampling_without_replacement",
+          "steps": [
+            "make clean",
+            "make"
+          ]
+        }
+      ],
+      "windows": [
+        {
+          "id": "random_sampling_without_replacement",
+          "steps": [
+            "nmake clean",
+            "nmake"
+          ]
+        }
+      ]
+    }
+  }
