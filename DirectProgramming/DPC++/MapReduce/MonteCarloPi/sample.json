@@ -1,0 +1,33 @@
+{
+    "name": "MonteCarloPi",
+    "description": "Monte Carlo procedure for estimating pi",
+    "categories": ["Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU and GPU"],
+    "os": ["linux", "windows"],
+    "builder": ["ide", "cmake"],
+    "languages": [{"cpp":{}}],
+    "toolchain": ["dpcpp"],
+    "guid": "393622C0-7D69-4ECC-B9B1-4077316A135B",
+    "ciTests": {
+        "linux": [
+            {
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "make",
+                    "make run",
+                    "make clean"
+                ]
+            }
+        ],
+        "windows": [ 
+            { 
+                "steps": [
+                    "MSBuild MonteCarloPi.sln /t:Rebuild /p:Configuration=\"Release\"",
+                    "cd x64/Release",
+                    "MonteCarloPi.exe"
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,34 @@
+{
+  "guid": "6060B7B5-E8F6-4AB8-A43D-75693A9FA158",
+  "name": "Project Templates - Linux CMake project for FPGA",
+  "categories": ["Toolkit/Project Templates"],
+  "description": "Template 'Hello World'",
+  "toolchain": ["dpcpp"],
+  "os": ["linux"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "make run_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ]
+  }
+}

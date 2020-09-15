@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerCommandArguments>"content\cars_128x96.i420" 128 96</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerEnvironment>PATH=$(ONEAPI_ROOT)\vpl\latest\bin;$(ONEAPI_ROOT)\compiler\latest\windows\lib\oclfpga\windows64\bin;$(ONEAPI_ROOT)\compiler\latest\windows\bin;$(ONEAPI_ROOT)\compiler\latest\windows\redist\intel64_win\compiler;$(ONEAPI_ROOT)\compiler\latest\windows\lib\oclfpga\bin;$(ONEAPI_ROOT)\compiler\latest\windows\lib\oclfpga\windows64\bin;$(ONEAPI_ROOT)\compiler\latest\windows\lib\oclfpga\host\windows64\bin;$(ONEAPI_ROOT)\compiler\latest\windows\lib\oclfpga\board\intel_a10gx_pac\windows64\bin;$(ONEAPI_ROOT)\compiler\latest\windows..\lib\oclgpu;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\bin\intel64;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\redist\intel64_win\compiler;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\bin;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\lib;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\ioc\bin;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\lib\ocloc;$(ONEAPI_ROOT)\compiler\latest\windows......\tbb\latest\redist\intel64\vc_mt;%PATH%
+</LocalDebuggerEnvironment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArguments>"content\cars_128x96.i420" 128 96</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerEnvironment>PATH=$(ONEAPI_ROOT)\vpl\latest\bin;$(ONEAPI_ROOT)\compiler\latest\windows\lib\oclfpga\windows64\bin;$(ONEAPI_ROOT)\compiler\latest\windows\bin;$(ONEAPI_ROOT)\compiler\latest\windows\redist\intel64_win\compiler;$(ONEAPI_ROOT)\compiler\latest\windows\lib\oclfpga\bin;$(ONEAPI_ROOT)\compiler\latest\windows\lib\oclfpga\windows64\bin;$(ONEAPI_ROOT)\compiler\latest\windows\lib\oclfpga\host\windows64\bin;$(ONEAPI_ROOT)\compiler\latest\windows\lib\oclfpga\board\intel_a10gx_pac\windows64\bin;$(ONEAPI_ROOT)\compiler\latest\windows..\lib\oclgpu;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\bin\intel64;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\redist\intel64_win\compiler;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\bin;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\lib;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\ioc\bin;$(ONEAPI_ROOT)\compiler\latest\windows..\windows\lib\ocloc;$(ONEAPI_ROOT)\compiler\latest\windows......\tbb\latest\redist\intel64\vc_mt;%PATH%
+</LocalDebuggerEnvironment>
+  </PropertyGroup>
+</Project>
