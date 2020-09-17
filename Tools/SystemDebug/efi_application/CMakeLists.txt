@@ -70,7 +70,7 @@ if (CMAKE_HOST_UNIX)
     endif()
 
     set(EFI_LIB_DIR ${EFI_DIR}/${EFI_ARCH}/lib)
-    set(EFI_LIB_DIR_GNU ${EFI_DIR}/gnuefi)
+    set(EFI_LIB_DIR_GNU ${EFI_DIR}/gnu-efi-code)
 
     set(EFI_CRT ${EFI_LIB_DIR_GNU}/crt0-efi-${EFI_ARCH}.o)
 
@@ -113,7 +113,7 @@ elseif (CMAKE_HOST_WIN32)
      set(EFI_ARCH X64)
 
     if (NOT DEFINED EDK2_TOOLS)
-        set(EDK2_TOOLS ${CMAKE_SOURCE_DIR}/edk2/BaseTools/Win32)
+        set(EDK2_TOOLS ${CMAKE_SOURCE_DIR}/Win32)
     endif ()
 
     set(EFI_APP_DEFS -DEDK2)
