@@ -89,8 +89,11 @@ float calc_pi_dpstd_native(size_t num_steps, Policy&& policy) {
   });
   policy.queue().wait();
 
-  float mynewresult =
-      buf.get_access<access::mode::read>()[0] / (float)num_steps;
+
+  // float mynewresult = buf.get_access<access::mode::read>()[0] / (float)num_steps;
+  host_accessor answer(buf,read_only) ; 
+  float mynewresult = answer[0]/(float)num_steps; 
+  
   return mynewresult;
 }
 
@@ -386,10 +389,9 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
       countby2 *= 2;
     } while (countby2 < n_groups);
   }
-
-  float answer = temp_buf.template get_access<access::mode::read>()[0];
-  result = answer / (float)num_steps;
-  return result;
+  
+  host_accessor answer(temp_buf,read_only) ; 
+  return answer[0]/(float)num_steps; 
 }
 
 // dpstd_native4 fills a buffer with number 1...num_steps and then
@@ -495,10 +497,11 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
       countby2 *= 2;
     } while (countby2 < n_groups);
   }
-  float answer = temp_buf.template get_access<access::mode::read_write>()[0];
-  result = answer / (float)num_steps;
-
-  return result;
+  // float answer = temp_buf.template get_access<access::mode::read_write>()[0];
+  // result = answer / (float)num_steps;
+  
+  host_accessor answer(temp_buf,read_only) ; 
+  return answer[0]/(float)num_steps; 
 }
 
 // This function shows the use of two different DPC++ library calls.
