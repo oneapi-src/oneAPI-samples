@@ -497,9 +497,6 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
       countby2 *= 2;
     } while (countby2 < n_groups);
   }
-  // float answer = temp_buf.template get_access<access::mode::read_write>()[0];
-  // result = answer / (float)num_steps;
-  
   host_accessor answer(temp_buf,read_only) ; 
   return answer[0]/(float)num_steps; 
 }
