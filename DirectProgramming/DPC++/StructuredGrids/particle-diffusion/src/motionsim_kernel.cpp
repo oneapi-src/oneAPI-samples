@@ -26,7 +26,7 @@ void ParticleMotion(queue& q, const size_t seed, float* particle_X,
                     float* particle_Y, float* random_X, float* random_Y,
                     size_t* grid, const size_t grid_size, const size_t planes,
                     const size_t n_particles, const unsigned int n_iterations,
-                    const float radius, const unsigned int grid_output_flag) {
+                    const float radius) {
   auto device = q.get_device();
   auto maxBlockSize = device.get_info<info::device::max_work_group_size>();
   auto maxEUCount = device.get_info<info::device::max_compute_units>();

@@ -15,6 +15,8 @@
 //
 
 #include "particle_diffusion.hpp"
+#include "motionsim_kernel.cpp"
+#include "utils.cpp"
 
 // This function distributes simulation work across workers
 void CPUParticleMotion(const size_t seed, float* particle_X, float* particle_Y,
@@ -233,63 +235,20 @@ int main(int argc, char* argv[]) {
   if (argc == 1)
     cout << "**Running with default parameters**\n\n";
   else {
-// Read in command line arguments differently depending on OS type.
+    int rc = 0;
+// Detect OS type and read in command line arguments
 #if !defined(WINDOWS)
-    // Parse any user-specified parameters
-    int cl_option;
-    bool rv = false;
-    while ((cl_option = getopt(argc, argv, "i:p:g:r:c:o:h")) != -1) {
-      if (optarg) {
-        rv = IsNum(optarg);
-        if (!rv) goto usage_label;
-      }
-      switch (cl_option) {
-        case 'i':
-          n_iterations = stoi(optarg);
-          break;
-        case 'p':
-          n_particles = stoi(optarg);
-          break;
-        case 'g':
-          grid_size = stoi(optarg);
-          break;
-        case 'r':
-          seed = stoi(optarg);
-          break;
-        case 'c':
-          cpu_flag = stoul(optarg);
-          break;
-        case 'o':
-          grid_output_flag = stoul(optarg);
-          break;
-        case 'h':
-          cout << "Particle Diffusion DPC++ code sample help message:\n";
-        case ':':
-        case '?':
-        default:
-        usage_label : {
-          Usage(argv[0]);
-          return 1;
-        }
-      }
-    }
+    rc = parse_cl_args(argc, argv, &n_iterations, &n_particles, &grid_size,
+                       &seed, &cpu_flag, &grid_output_flag);
 #elif defined(WINDOWS)  // End if (!WINDOWS)
-    try {
-      n_iterations = stoi(argv[1]);
-      n_particles = stoi(argv[2]);
-      grid_size = stoi(argv[3]);
-      seed = stoi(argv[4]);
-      cpu_flag = stoul(argv[5]);
-      grid_output_flag = stoul(argv[6]);
-    } catch (...) {
-      Usage(argv[0]);
-      return 1;
-    }
+    rc = parse_cl_args_windows(argv, &n_iterations, &n_particles, &grid_size,
+                               &seed, &cpu_flag, &grid_output_flag);
 #else
     cout << "ERROR. Failed to detect operating system. Exiting.\n";
     return 1;
 #endif  // End if (!defined(WINDOWS))
-  }     // End else
+    if (rc != 0) return 1;
+  }  // End else
 
   // Allocate and initialize arrays
 
@@ -356,8 +315,7 @@ int main(int argc, char* argv[]) {
 
   // Call simulation function on device
   ParticleMotion(q, seed, particle_X, particle_Y, random_X, random_Y, grid,
-                 grid_size, planes, n_particles, n_iterations, radius,
-                 grid_output_flag);
+                 grid_size, planes, n_particles, n_iterations, radius);
   q.wait_and_throw();
 
   // End timers
@@ -367,7 +325,6 @@ int main(int argc, char* argv[]) {
        << "Device Offload time: " << device_time << " s\n\n";
 
   size_t* grid_cpu;
-  bool retv = true;
   if (cpu_flag == 1) {
     // Re-initialize arrays
     for (size_t i = 0; i < n_particles; i++) {
@@ -407,128 +364,16 @@ int main(int argc, char* argv[]) {
     // End timers
     auto cpu_time = t_offload_cpu.Elapsed();
 
-    retv = ValidateDeviceComputation(grid, grid_cpu, grid_size, planes);
-
     cout << "\n"
          << "CPU Offload time: " << cpu_time << " s\n\n";
   }
-
-  // Index variables for 3rd dimension of grid
-  size_t layer = 0;
-  const size_t gs2 = grid_size * grid_size;
-
-  // Displays final grid only if grid small
-  if (grid_size <= 45 && grid_output_flag == 1) {
-    cout << "\n**********************************************************\n";
-    cout << "*                           DEVICE                       *\n";
-    cout << "**********************************************************\n";
-
-    cout << "\n ********************** FULL GRID: **********************\n";
-
-    // Counter 1 layer of grid (0 * grid_size * grid_size)
-    layer = 0;
-    PrintVectorAsMatrix<size_t>(&grid[layer], grid_size, grid_size);
-
-    cout << "\n ***************** FINAL SNAPSHOT: *****************\n";
-
-    // Counter 2 layer of grid (1 * grid_size * grid_size)
-    layer = gs2;
-    PrintVectorAsMatrix<size_t>(&grid[layer], grid_size, grid_size);
-
-    cout << "\n ************* NUMBER OF PARTICLE ENTRIES: ************* \n";
-
-    // Counter 3 layer of grid (2 * grid_size * grid_size)
-    layer = gs2 + gs2;
-    PrintVectorAsMatrix<size_t>(&grid[layer], grid_size, grid_size);
-
-    cout << "**********************************************************\n";
-    cout << "*                        END DEVICE                      *\n";
-    cout << "**********************************************************\n\n\n";
-  }
-
-  bool retv2 = false;
-
-  if (cpu_flag == 1) {
-    // Displays final grid on cpu only if grid small
-    if (grid_size <= 45 && grid_output_flag == 1) {
-      cout << "\n";
-      cout << "**********************************************************\n";
-      cout << "*                           CPU                          *\n";
-      cout << "**********************************************************\n";
-
-      cout << "\n ********************** FULL GRID: **********************\n";
-
-      // Counter 1 layer of grid (0 * grid_size * grid_size)
-      layer = 0;
-      PrintVectorAsMatrix<size_t>(&grid_cpu[layer], grid_size, grid_size);
-
-      cout << "\n ***************** FINAL SNAPSHOT: *****************\n";
-
-      // Counter 2 layer of grid (1 * grid_size * grid_size)
-      layer = gs2;
-      PrintVectorAsMatrix<size_t>(&grid_cpu[layer], grid_size, grid_size);
-
-      cout << "\n ************* NUMBER OF PARTICLE ENTRIES: ************* \n";
-
-      // Counter 3 layer of grid (2 * grid_size * grid_size)
-      layer = gs2 + gs2;
-      PrintVectorAsMatrix<size_t>(&grid_cpu[layer], grid_size, grid_size);
-
-      cout << "**********************************************************\n";
-      cout << "*                          END CPU                       *\n";
-      cout << "**********************************************************\n";
-      cout << "\n"
-           << "\n";
-    }
-
-    /* ********** Counter 1: device v.s host comparison ********** */
-
-    // Counter 1 layer of grid (0 * grid_size * grid_size)
-    layer = 0;
-    retv2 = CompareMatrices(&grid[layer], &grid_cpu[layer], grid_size);
-
-    if (!retv2) {
-      cout << "Device: Counter 1 != CPU Counter 1\n";
-    }
-    if (retv2) {
-      cout << "Device: Counter 1 == CPU Counter 1\n";
-    }
-
-    /* ********** Counter 2: device v.s host comparison ********** */
-
-    // Counter 2 layer of grid (1 * grid_size * grid_size)
-    layer = gs2;
-    retv2 = CompareMatrices(&grid[layer], &grid_cpu[layer], grid_size);
-
-    if (!retv2) {
-      cout << "Device: Counter 2 != CPU Counter 2\n";
-    }
-    if (retv2) {
-      cout << "Device: Counter 2 == CPU Counter 2\n";
-    }
-
-    /* ********** Counter 3: device v.s host comparison ********** */
-
-    // Counter 3 layer of grid (2 * grid_size * grid_size)
-    layer = gs2 + gs2;
-    retv2 = CompareMatrices(&grid[layer], &grid_cpu[layer], grid_size);
-
-    if (!retv2) {
-      cout << "Device: Counter 3 != CPU Counter 3\n";
-    }
-    if (retv2) {
-      cout << "Device: Counter 3 == CPU Counter 3\n";
-    }
-
-    if (!retv)
-      cout << "ERROR cpu computation does not match that of the device\n";
-    if (retv) cout << "Success.\n";
-
-    delete[] grid_cpu;
-  }
+  print_grids(grid, grid_cpu, grid_size, cpu_flag, grid_output_flag);
+  print_validation_results(grid, grid_cpu, grid_size, planes, cpu_flag,
+                           grid_output_flag);
 
   // Cleanup
   delete[] grid;
+  if (cpu_flag) delete[] grid_cpu;
   delete[] random_X;
   delete[] random_Y;
   delete[] particle_X;

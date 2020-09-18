@@ -13,8 +13,6 @@
 
 #if defined(WIN32) || defined(WIN64)
 #define WINDOWS 1
-#else
-#define WINDOWS 0
 #endif
 
 // RNG Distribution parameters
@@ -34,29 +32,33 @@
 #include <mkl_rng_sycl.hpp> /* dist() function, mkl namespace */
 using namespace sycl;
 using namespace std;
-#include "motionsim_kernel.cpp"
-#include "utils.cpp"
 
 void ParticleMotion(queue&, const size_t, float*, float*, float*, float*,
                     size_t*, const size_t, const size_t, const size_t,
-                    const unsigned int, const float, const unsigned int);
+                    const unsigned int, const float);
 
 void CPUParticleMotion(const size_t, float*, float*, float*, float*, size_t*,
                        const size_t, const size_t, const size_t, unsigned int,
                        const float);
 void Usage(string);
-
-bool IsNum(const char*);
-
-template <typename T>
-void PrintVectorAsMatrix(T*, size_t, size_t);
-
-template <typename T>
-void PrintMatrix(T**, size_t, size_t);
+int IsNum(const char*);
+bool ValidateDeviceComputation(const size_t*, const size_t*, const size_t,
+                               const size_t);
+bool CompareMatrices(const size_t*, const size_t*, const size_t);
 
 template <typename T>
-void PrintVector(T*, size_t);
+void PrintVector(const T*, const size_t);
+template <typename T>
+void PrintMatrix(const T**, const size_t, const size_t);
+template <typename T>
+void PrintVectorAsMatrix(T*, const size_t, const size_t);
 
-bool ValidateDeviceComputation(size_t*, size_t*, size_t, const size_t);
-
-bool CompareMatrices(size_t*, size_t*, size_t);
+int parse_cl_args(const int, char* [], size_t*, size_t*, size_t*, size_t*,
+                  unsigned int*, unsigned int*);
+int parse_cl_args_windows(char* [], size_t*, size_t*, size_t*, size_t*,
+                          unsigned int*, unsigned int*);
+void print_grids(const size_t*, const size_t*, const size_t, const unsigned int,
+                 const unsigned int);
+void print_validation_results(const size_t*, const size_t*, const size_t,
+                              const size_t, const unsigned int,
+                              const unsigned int);
