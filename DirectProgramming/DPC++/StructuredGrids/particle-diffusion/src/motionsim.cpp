@@ -4,232 +4,348 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// motionsim: Intel® oneAPI DPC++ Language Basics Using a Monte Carlo
-// Simulation
+// motionsim:
+// Intel® oneAPI DPC++ Language Basics Using a Monte Carlo
+// Simulation (CPU)
 //
 // This code sample will implement a simple example of a Monte Carlo
 // simulation of the diffusion of water molecules in tissue.
 //
-// For comprehensive instructions regarding DPC++ Programming, go to
-// https://software.intel.com/en-us/oneapi-programming-guide
-// and search based on relevant terms noted in the comments.
-//
-// DPC++ material used in this code sample:
-//
-// Basic structures of DPC++:
-//   DPC++ Queues (including device selectors and exception handlers)
-//   DPC++ Buffers and accessors (communicate data between the host and the
-//   device) DPC++ Kernels (including parallel_for function and range<2>
-//   objects) API-based programming: Use oneMKL to generate random numbers
-//   (DPC++) DPC++ atomic operations for synchronization
+// For more details, see motionsim_kernel.cpp
 //
 
-#include <mkl.h>
-#include <cmath>
-#include <iomanip>
-#include <iostream>
-#include <mkl_rng/distributions.hpp>
-#include <mkl_rng_sycl.hpp>
-#include <mkl_sycl_types.hpp>
-#include <mkl_vml_sycl.hpp>
-#include "dpc_common.hpp"
-
-using namespace sycl;
-using namespace std;
-namespace oneapi {}
-using namespace oneapi;
-
-// Helper functions
-
-// This function displays correct usage and parameters
-void Usage(string program_name) {
-  cout << " Incorrect number of parameters \n Usage: ";
-  cout << program_name << " <Number of Iterations> <Seed for RNG> \n\n";
-}
-
-// This function prints a 1D vector as a matrix
-template <typename T>
-void PrintVectorAsMatrix(T* vector, size_t size_X, size_t size_Y) {
-  cout << "\n";
-  for (size_t j = 0; j < size_X; ++j) {
-    for (size_t i = 0; i < size_Y; ++i) {
-      cout << std::setw(3) << vector[j * size_Y + i] << " ";
-    }
-    cout << "\n";
-  }
-}
-
-// This function prints a 2D matrix
-template <typename T>
-void PrintMatrix(T** matrix, size_t size_X, size_t size_Y) {
-  cout << "\n";
-  for (size_t i = 0; i < size_X; ++i) {
-    for (size_t j = 0; j < size_Y; ++j) {
-      cout << std::setw(3) << matrix[i][j] << " ";
-    }
-    cout << "\n";
-  }
-}
-
-// This function prints a vector
-template <typename T>
-void PrintVector(T* vector, size_t n) {
-  cout << "\n";
-  for (size_t i = 0; i < n; ++i) {
-    cout << vector[i] << " ";
-  }
-  cout << "\n";
-}
+#include "particle_diffusion.hpp"
 
 // This function distributes simulation work across workers
-void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
-                    size_t* grid, size_t grid_size, size_t n_particles,
-                    unsigned int n_iterations, float radius) {
-  auto device = q.get_device();
-  auto maxBlockSize = device.get_info<info::device::max_work_group_size>();
-  auto maxEUCount = device.get_info<info::device::max_compute_units>();
+void CPUParticleMotion(const size_t seed, float* particle_X, float* particle_Y,
+                       float* random_X, float* random_Y, size_t* grid,
+                       const size_t grid_size, const size_t planes,
+                       const size_t n_particles, unsigned int n_iterations,
+                       const float radius) {
+  // Grid size squared
+  const size_t gs2 = grid_size * grid_size;
 
-  // Total number of motion events
-  const size_t n_moves = n_particles * n_iterations;
+  cout << "Running on: CPU\n";
+  cout << "Number of iterations: " << n_iterations << "\n";
+  cout << "Number of particles: " << n_particles << "\n";
+  cout << "Size of the grid: " << grid_size << "\n";
+  cout << "Random number seed: " << seed << "\n";
 
-  cout << " Running on:: " << device.get_info<info::device::name>() << "\n";
-  cout << " The Device Max Work Group Size is : " << maxBlockSize << "\n";
-  cout << " The Device Max EUCount is : " << maxEUCount << "\n";
-  cout << " The number of iterations is : " << n_iterations << "\n";
-  cout << " The number of particles is : " << n_particles << "\n";
+  // True if particle is inside the cell radius
+  bool within_radius;
+  float displacement_X = 0.0f, displacement_Y = 0.0f;
+  // Array of flags for each particle, true when particle is in cell.
+  bool* inside_cell = new bool[n_particles]();
+  // Operations flags
+  bool *increment_C1 = new bool[n_particles](),
+       *increment_C2 = new bool[n_particles](),
+       *increment_C3 = new bool[n_particles](),
+       *decrement_C2 = new bool[n_particles](),
+       *update_coordinates = new bool[n_particles]();
 
-  // Declare vectors to store random values for X and Y directions
-  float* random_X = new float[n_moves];
-  float* random_Y = new float[n_moves];
+  // Current coordinates of the particle
+  int iX, iY;
+  // Coordinates of the last known cell this particle resided in
+  unsigned int* prev_known_cell_coordinate_X = new unsigned int[n_particles];
+  unsigned int* prev_known_cell_coordinate_Y = new unsigned int[n_particles];
+  // Index variable for 3rd dimension of grid
+  size_t layer = 0;
+  // For matrix indexing
+  size_t curr_cell_coordinates, prev_cell_coordinates;
 
-  // Declare RNG object to compute vectors of random values
-  // Basic random number generator object
-  mkl::rng::philox4x32x10 engine(q, seed);
-  // Distribution object
-  mkl::rng::gaussian<float, mkl::rng::gaussian_method::box_muller2> distr(0.0, .03);
+  // All n_particles particles need to each be displaced once per iteration
+  // to match device algorithm
+  for (size_t iter = 0; iter < n_iterations; ++iter) {
+    for (unsigned int p = 0; p < n_particles; ++p) {
+      // --Start iterations--
+      // Each iteration:
+      //    1. Updates the position of all particles
+      //    2. Checks if particle is inside a cell or not.
+      //    3. Updates counters in cells array (grid)
+      //
+      // Compute random displacement for each particle.
+      // This example shows random displacements between
+      // -0.05 units and 0.05 units in X, Y directions.
+      // Moves each particle by a random vector
+      //
 
-  // Begin scope for buffers
-  {
-    // Create buffers using DPC++ class buffer
-    buffer b_random_X(random_X, range(n_moves));
-    buffer b_random_Y(random_Y, range(n_moves));
-    buffer b_particle_X(particle_X, range(n_particles));
-    buffer b_particle_Y(particle_Y, range(n_particles));
-    buffer b_grid(grid, range(grid_size * grid_size));
+      // Transform the random numbers into small displacements
+      displacement_X = random_X[iter * n_particles + p];
+      displacement_Y = random_Y[iter * n_particles + p];
 
-    // Compute vectors of random values for X and Y directions using RNG engine
-    // declared above
-    mkl::rng::generate(distr, engine, n_moves, b_random_X);
-    mkl::rng::generate(distr, engine, n_moves, b_random_Y);
+      // Displace particles
+      particle_X[p] += displacement_X;
+      particle_Y[p] += displacement_Y;
 
-    // Submit command group for execution
-    q.submit([&](handler& h) {
-      auto a_particle_X = b_particle_X.get_access<access::mode::read_write>(h);
-      auto a_particle_Y = b_particle_Y.get_access<access::mode::read_write>(h);
-      auto a_random_X = b_random_X.get_access<access::mode::read>(h);
-      auto a_random_Y = b_random_Y.get_access<access::mode::read>(h);
-      // Atomic accessors: Use DPC++ atomic access mode
-      auto a_grid = b_grid.get_access<access::mode::atomic>(h);
+      // Compute distances from particle position to grid point.
+      // I.e., the particle's distance from center of cell. Subtract the
+      // integer value from floating point value to get just
+      // the decimal portion. Use this value to later determine if the
+      // particle is in the cell or outside the cell.
+      float dX = particle_X[p] - sycl::trunc(particle_X[p]);
+      float dY = particle_Y[p] - sycl::trunc(particle_Y[p]);
 
-      // Send a DPC++ kernel (lambda) for parallel execution
-      h.parallel_for(range(n_particles), [=](id<1> index) {
-        int ii = index.get(0);
-        float displacement_X = 0.0f;
-        float displacement_Y = 0.0f;
+      // Compute grid point indices
+      iX = sycl::floor(particle_X[p]);
+      iY = sycl::floor(particle_Y[p]);
 
-        // Start iterations
-        // Each iteration:
-        //  1. Updates the position of all water molecules
-        //  2. Checks if water molecule is inside a cell or not.
-        //  3. Updates counter in cells array
-        //
-        for (size_t iter = 0; iter < n_iterations; iter++) {
-          // Computes random displacement for each molecule
-          // This example shows random distances between
-          // -0.05 units and 0.05 units in both X and Y directions
-          // Moves each water molecule by a random vector
+      /* There are 5 cases when considering particle movement about the
+         grid.
 
-          // Transform the random numbers into small displacements
-          displacement_X = a_random_X[iter * n_particles + ii];
-          displacement_Y = a_random_Y[iter * n_particles + ii];
+         All 5 cases are distinct from one another; i.e., any
+         particle's motion falls under one and only one of the following
+         cases:
 
-          // Move particles using random displacements
-          a_particle_X[ii] += displacement_X;
-          a_particle_Y[ii] += displacement_Y;
+           Case 1: Particle moves from outside cell to inside cell
+                   --Increment counters 1-3
+                   --Turn on inside_cell flag
+                   --Store the coordinates of the
+                     particle's new cell location
 
-          // Compute distances from particle position to grid point
-          float dX = a_particle_X[ii] - sycl::trunc(a_particle_X[ii]);
-          float dY = a_particle_Y[ii] - sycl::trunc(a_particle_Y[ii]);
+           Case 2: Particle moves from inside cell to outside
+                   cell (and possibly outside of the grid)
+                   --Decrement counter 2 for old cell
+                   --Turn off inside_cell flag
 
-          // Compute grid point indices
-          int iX = sycl::floor(a_particle_X[ii]);
-          int iY = sycl::floor(a_particle_Y[ii]);
+           Case 3: Particle moves from inside one cell to inside
+                   another cell
+                   --Decrement counter 2 for old cell
+                   --Increment counters 1-3 for new cell
+                   --Store the coordinates of the particle's new cell
+                     location
 
-          // Check if particle is still in computation grid
-          if ((a_particle_X[ii] < grid_size) &&
-              (a_particle_Y[ii] < grid_size) && (a_particle_X[ii] >= 0) &&
-              (a_particle_Y[ii] >= 0)) {
-            // Check if particle is (or remained) inside cell.
-            // Increment cell counter in map array if so
-            if ((dX * dX + dY * dY <= radius * radius)) {
-              // Use DPC++ atomic_fetch_add to add 1 to accessor using atomic
-              // mode
-              atomic_fetch_add<size_t>(a_grid[iY * grid_size + iX], 1);
-            }
+           Case 4: Particle moves and remains inside original
+                   cell (does not leave cell)
+                   --Increment counter 1
+
+           Case 5: Particle moves and remains outside of cell
+                   --No action.
+      */
+
+      // Check if particle is still in computation grid
+      if ((particle_X[p] < grid_size) && (particle_Y[p] < grid_size) &&
+          (particle_X[p] >= 0) && (particle_Y[p] >= 0)) {
+        // Compare the size of the radius to the particle's distance from center
+        // of cell
+        within_radius = radius >= sycl::sqrt(dX * dX + dY * dY) ? true : false;
+
+        // Check if particle is in cell
+        // Either case 1, 3, or 4
+        if (within_radius) {
+          // Completes this step for cases 1, 3, 4
+          increment_C1[p] = true;
+          // Case 1
+          if (!inside_cell[p]) {
+            increment_C2[p] = true;
+            increment_C3[p] = true;
+            inside_cell[p] = true;
+            update_coordinates[p] = true;
           }
-        }  // Next iteration
-      });  // End parallel for
-    });    // End queue submit.
 
-  }  // End scope for buffers
+          // Either case 3 or 4
+          // Note: Regardless of if this is case 3 or 4, counter 1 has
+          // already been incremented above
+          else if (inside_cell[p]) {
+            // Case 3
+            if (prev_known_cell_coordinate_X[p] != iX ||
+                prev_known_cell_coordinate_Y[p] != iY) {
+              decrement_C2[p] = true;
+              increment_C2[p] = true;
+              increment_C3[p] = true;
+              update_coordinates[p] = true;
+            }
+            // Case 4
+          }
+        }  // End inside cell if statement
 
-  delete[] random_X;
-  delete[] random_Y;
-}  // End of function ParticleMotion()
+        // Either case 2 or 5
+        else {
+          // Case 2
+          if (inside_cell[p]) {
+            inside_cell[p] = false;
+            decrement_C2[p] = true;
+          }
+          // Case 5
+        }
+      }  // End inside grid if statement
 
+      // Either case 2 or 5
+      else {
+        // Case 2
+        if (inside_cell[p]) {
+          inside_cell[p] = false;
+          decrement_C2[p] = true;
+        }
+        // Case 5
+      }
+
+      // Matrix index calculations for the current and previous cell
+      curr_cell_coordinates = iX + iY * grid_size;
+      prev_cell_coordinates = prev_known_cell_coordinate_X[p] +
+                              prev_known_cell_coordinate_Y[p] * grid_size;
+
+      // Counter 1 layer of the grid (0 * grid_size * grid_size)
+      layer = 0;
+      if (increment_C1[p]) ++(grid[curr_cell_coordinates + layer]);
+
+      // Counter 2 layer of the grid (1 * grid_size * grid_size)
+      layer = gs2;
+      if (increment_C2[p]) ++(grid[curr_cell_coordinates + layer]);
+
+      // Counter 3 layer of the grid (2 * grid_size * grid_size)
+      layer = gs2 + gs2;
+      if (increment_C3[p]) ++(grid[curr_cell_coordinates + layer]);
+
+      // Counter 2 layer of the grid (1 * grid_size * grid_size)
+      layer = gs2;
+      if (decrement_C2[p]) --(grid[prev_cell_coordinates + layer]);
+
+      if (update_coordinates[p]) {
+        prev_known_cell_coordinate_X[p] = iX;
+        prev_known_cell_coordinate_Y[p] = iY;
+      }
+      increment_C1[p] = false, increment_C2[p] = false, increment_C3[p] = false,
+      decrement_C2[p] = false, update_coordinates[p] = false;
+
+    }  // Next iteration inner for loop
+  }    // Next iteration outer for loop
+  delete[] inside_cell;
+  delete[] increment_C1;
+  delete[] increment_C2;
+  delete[] increment_C3;
+  delete[] decrement_C2;
+  delete[] update_coordinates;
+  delete[] prev_known_cell_coordinate_X;
+  delete[] prev_known_cell_coordinate_Y;
+}  // End of function CPUParticleMotion()
+
+// Main Function
 int main(int argc, char* argv[]) {
-  // Cell and Particle parameters
-  const size_t grid_size = 21;    // Size of square grid
-  const size_t n_particles = 20;  // Number of particles
-  const float radius = 0.5f;      // Cell radius = 0.5*(grid spacing)
-
-  // Default number of operations
-  size_t n_iterations = 50;
-  // Default seed for RNG
+  // Set parameters to their default values
+  size_t n_iterations = 10000;
+  size_t n_particles = 256;
+  size_t grid_size = 22;
   size_t seed = 777;
+  unsigned int cpu_flag = 0;
+  unsigned int grid_output_flag = 1;
 
-  // Read command-line arguments
-  try {
-    n_iterations = stoi(argv[1]);
-    seed = stoi(argv[2]);
-  } catch (...) {
-    Usage(argv[0]);
+  cout << "\n";
+  if (argc == 1)
+    cout << "**Running with default parameters**\n\n";
+  else {
+// Read in command line arguments differently depending on OS type.
+#if !defined(WINDOWS)
+    // Parse any user-specified parameters
+    int cl_option;
+    bool rv = false;
+    while ((cl_option = getopt(argc, argv, "i:p:g:r:c:o:h")) != -1) {
+      if (optarg) {
+        rv = IsNum(optarg);
+        if (!rv) goto usage_label;
+      }
+      switch (cl_option) {
+        case 'i':
+          n_iterations = stoi(optarg);
+          break;
+        case 'p':
+          n_particles = stoi(optarg);
+          break;
+        case 'g':
+          grid_size = stoi(optarg);
+          break;
+        case 'r':
+          seed = stoi(optarg);
+          break;
+        case 'c':
+          cpu_flag = stoul(optarg);
+          break;
+        case 'o':
+          grid_output_flag = stoul(optarg);
+          break;
+        case 'h':
+          cout << "Particle Diffusion DPC++ code sample help message:\n";
+        case ':':
+        case '?':
+        default:
+        usage_label : {
+          Usage(argv[0]);
+          return 1;
+        }
+      }
+    }
+#elif defined(WINDOWS)  // End if (!WINDOWS)
+    try {
+      n_iterations = stoi(argv[1]);
+      n_particles = stoi(argv[2]);
+      grid_size = stoi(argv[3]);
+      seed = stoi(argv[4]);
+      cpu_flag = stoul(argv[5]);
+      grid_output_flag = stoul(argv[6]);
+    } catch (...) {
+      Usage(argv[0]);
+      return 1;
+    }
+#else
+    cout << "ERROR. Failed to detect operating system. Exiting.\n";
     return 1;
-  }
+#endif  // End if (!defined(WINDOWS))
+  }     // End else
 
-  // Allocate arrays
-
-  // Stores a grid of cells
-  size_t* grid = new size_t[grid_size * grid_size];
+  // Allocate and initialize arrays
 
   // Stores X and Y position of particles in the cell grid
   float* particle_X = new float[n_particles];
   float* particle_Y = new float[n_particles];
 
-  // Initialize arrays
+  // Total number of motion events
+  const size_t n_moves = n_particles * n_iterations;
+  // Declare vectors to store random values for X and Y directions
+  float* random_X = new float[n_moves];
+  float* random_Y = new float[n_moves];
+
+  // Initialize the particle starting positions to the grid center
+  const float center = grid_size / 2;
   for (size_t i = 0; i < n_particles; i++) {
-    // Initial position of particles in cell grid
-    particle_X[i] = 10.0f;
-    particle_Y[i] = 10.0f;
+    particle_X[i] = center;
+    particle_Y[i] = center;
   }
 
-  for (size_t y = 0; y < grid_size; y++) {
-    for (size_t x = 0; x < grid_size; x++) {
-      grid[y * grid_size + x] = 0;
-    }
-  }
+  /*Each of the folowing counters represent a separate plane in the grid
+  variable. Each plane is of size: grid_size * grid_size. There are 3 planes.
 
-  // Create a device queue using default or host/gpu selectors
+  _________________________________________________________________________
+  |COUNTER                                                           PLANE|
+  |-----------------------------------------------------------------------|
+  |counter 1: Total number of 'guests' in a cell. This includes      z = 0|
+  |           particles that have been found to have remained             |
+  |            in the cell, as well as particles that have been           |
+  |            found to have returned to the cell.                        |
+  |                                                                       |
+  |counter 2: Current total number of particles in cell. Does        z = 1|
+  |           not increase if a particle remained in the cell.            |
+  |           An instantaneous snapshot of the grid of cells.             |
+  |                                                                       |
+  |counter 3: Total number entries into the cell.                    z = 2|
+  |_______________________________________________________________________|
+
+  The 3D matrix is implemented as a 1D matrix to improve efficiency.
+
+  For any given index j with coordinates (x, y, z) in a N x M x D (Row x
+  Column x Depth) 3D matrix, the same index j in an equivalently sized 1D
+  matrix is given by the following formula:
+
+  j = y + M * x + M * M * z                                              */
+
+  // Cell radius = 0.5*(grid spacing)
+  const float radius = 0.5f;
+
+  // Size of 3rd dimension of 3D grid (3D matrix). 3 counters => 3 planes
+  const size_t planes = 3;
+
+  // Stores a grid of cells, initialized to zero.
+  size_t* grid = new size_t[grid_size * grid_size * planes]();
+
+  // Create a device queue using default or host/device selectors
   default_selector device_selector;
 
   // Create a device queue using DPC++ class queue
@@ -238,27 +354,184 @@ int main(int argc, char* argv[]) {
   // Start timers
   dpc_common::TimeInterval t_offload;
 
-  // Call simulation function
-  ParticleMotion(q, seed, particle_X, particle_Y, grid, grid_size, n_particles,
-                 n_iterations, radius);
-
+  // Call simulation function on device
+  ParticleMotion(q, seed, particle_X, particle_Y, random_X, random_Y, grid,
+                 grid_size, planes, n_particles, n_iterations, radius,
+                 grid_output_flag);
   q.wait_and_throw();
 
   // End timers
-  auto time = t_offload.Elapsed();
+  auto device_time = t_offload.Elapsed();
 
-  cout << "\n Offload time: " << time << " s\n\n";
+  cout << "\n"
+       << "Device Offload time: " << device_time << " s\n\n";
 
-  // Displays final grid only if grid small.
-  if (grid_size <= 45) {
-    cout << "\n ********************** OUTPUT GRID: \n ";
-    PrintVectorAsMatrix<size_t>(grid, grid_size, grid_size);
+  size_t* grid_cpu;
+  bool retv = true;
+  if (cpu_flag == 1) {
+    // Re-initialize arrays
+    for (size_t i = 0; i < n_particles; i++) {
+      // Initialize the particle starting positions to the grid center
+      particle_X[i] = center;
+      particle_Y[i] = center;
+    }
+
+    // Create a CPU queue using DPC++ class queue
+    sycl::queue q_cpu(sycl::cpu_selector{});
+
+    // Declare basic random number generator (BRNG) for random vector
+    oneapi::mkl::rng::philox4x32x10 engine(q_cpu, seed);
+    // Distribution object
+    oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::icdf>
+        distr(ALPHA, SIGMA);
+
+    {  // Begin buffer scope
+      // Create buffers using DPC++ buffer class
+      buffer buf_random_X(random_X, range(n_moves));
+      buffer buf_random_Y(random_Y, range(n_moves));
+
+      // Compute random values using oneMKL RNG engine. Generates kernel
+      oneapi::mkl::rng::generate(distr, engine, n_moves, buf_random_X);
+      oneapi::mkl::rng::generate(distr, engine, n_moves, buf_random_Y);
+    }  // End buffer scope
+
+    grid_cpu = new size_t[grid_size * grid_size * planes]();
+
+    // Start timers
+    dpc_common::TimeInterval t_offload_cpu;
+
+    // Call cpu simulation function
+    CPUParticleMotion(seed, particle_X, particle_Y, random_X, random_Y,
+                      grid_cpu, grid_size, planes, n_particles, n_iterations,
+                      radius);
+    // End timers
+    auto cpu_time = t_offload_cpu.Elapsed();
+
+    retv = ValidateDeviceComputation(grid, grid_cpu, grid_size, planes);
+
+    cout << "\n"
+         << "CPU Offload time: " << cpu_time << " s\n\n";
+  }
+
+  // Index variables for 3rd dimension of grid
+  size_t layer = 0;
+  const size_t gs2 = grid_size * grid_size;
+
+  // Displays final grid only if grid small
+  if (grid_size <= 45 && grid_output_flag == 1) {
+    cout << "\n**********************************************************\n";
+    cout << "*                           DEVICE                       *\n";
+    cout << "**********************************************************\n";
+
+    cout << "\n ********************** FULL GRID: **********************\n";
+
+    // Counter 1 layer of grid (0 * grid_size * grid_size)
+    layer = 0;
+    PrintVectorAsMatrix<size_t>(&grid[layer], grid_size, grid_size);
+
+    cout << "\n ***************** FINAL SNAPSHOT: *****************\n";
+
+    // Counter 2 layer of grid (1 * grid_size * grid_size)
+    layer = gs2;
+    PrintVectorAsMatrix<size_t>(&grid[layer], grid_size, grid_size);
+
+    cout << "\n ************* NUMBER OF PARTICLE ENTRIES: ************* \n";
+
+    // Counter 3 layer of grid (2 * grid_size * grid_size)
+    layer = gs2 + gs2;
+    PrintVectorAsMatrix<size_t>(&grid[layer], grid_size, grid_size);
+
+    cout << "**********************************************************\n";
+    cout << "*                        END DEVICE                      *\n";
+    cout << "**********************************************************\n\n\n";
+  }
+
+  bool retv2 = false;
+
+  if (cpu_flag == 1) {
+    // Displays final grid on cpu only if grid small
+    if (grid_size <= 45 && grid_output_flag == 1) {
+      cout << "\n";
+      cout << "**********************************************************\n";
+      cout << "*                           CPU                          *\n";
+      cout << "**********************************************************\n";
+
+      cout << "\n ********************** FULL GRID: **********************\n";
+
+      // Counter 1 layer of grid (0 * grid_size * grid_size)
+      layer = 0;
+      PrintVectorAsMatrix<size_t>(&grid_cpu[layer], grid_size, grid_size);
+
+      cout << "\n ***************** FINAL SNAPSHOT: *****************\n";
+
+      // Counter 2 layer of grid (1 * grid_size * grid_size)
+      layer = gs2;
+      PrintVectorAsMatrix<size_t>(&grid_cpu[layer], grid_size, grid_size);
+
+      cout << "\n ************* NUMBER OF PARTICLE ENTRIES: ************* \n";
+
+      // Counter 3 layer of grid (2 * grid_size * grid_size)
+      layer = gs2 + gs2;
+      PrintVectorAsMatrix<size_t>(&grid_cpu[layer], grid_size, grid_size);
+
+      cout << "**********************************************************\n";
+      cout << "*                          END CPU                       *\n";
+      cout << "**********************************************************\n";
+      cout << "\n"
+           << "\n";
+    }
+
+    /* ********** Counter 1: device v.s host comparison ********** */
+
+    // Counter 1 layer of grid (0 * grid_size * grid_size)
+    layer = 0;
+    retv2 = CompareMatrices(&grid[layer], &grid_cpu[layer], grid_size);
+
+    if (!retv2) {
+      cout << "Device: Counter 1 != CPU Counter 1\n";
+    }
+    if (retv2) {
+      cout << "Device: Counter 1 == CPU Counter 1\n";
+    }
+
+    /* ********** Counter 2: device v.s host comparison ********** */
+
+    // Counter 2 layer of grid (1 * grid_size * grid_size)
+    layer = gs2;
+    retv2 = CompareMatrices(&grid[layer], &grid_cpu[layer], grid_size);
+
+    if (!retv2) {
+      cout << "Device: Counter 2 != CPU Counter 2\n";
+    }
+    if (retv2) {
+      cout << "Device: Counter 2 == CPU Counter 2\n";
+    }
+
+    /* ********** Counter 3: device v.s host comparison ********** */
+
+    // Counter 3 layer of grid (2 * grid_size * grid_size)
+    layer = gs2 + gs2;
+    retv2 = CompareMatrices(&grid[layer], &grid_cpu[layer], grid_size);
+
+    if (!retv2) {
+      cout << "Device: Counter 3 != CPU Counter 3\n";
+    }
+    if (retv2) {
+      cout << "Device: Counter 3 == CPU Counter 3\n";
+    }
+
+    if (!retv)
+      cout << "ERROR cpu computation does not match that of the device\n";
+    if (retv) cout << "Success.\n";
+
+    delete[] grid_cpu;
   }
 
   // Cleanup
   delete[] grid;
+  delete[] random_X;
+  delete[] random_Y;
   delete[] particle_X;
   delete[] particle_Y;
-
   return 0;
 }
