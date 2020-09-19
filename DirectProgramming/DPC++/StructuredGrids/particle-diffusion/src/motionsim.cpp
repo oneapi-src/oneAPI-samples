@@ -264,7 +264,7 @@ int main(int argc, char* argv[]) {
 
   // Initialize the particle starting positions to the grid center
   const float center = grid_size / 2;
-  for (size_t i = 0; i < n_particles; i++) {
+  for (size_t i = 0; i < n_particles; ++i) {
     particle_X[i] = center;
     particle_Y[i] = center;
   }
