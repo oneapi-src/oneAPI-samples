@@ -89,7 +89,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
         bool inside_cell = false;
         // Atomic operations flags
         bool increment_C1 = false, increment_C2 = false, increment_C3 = false,
-             decrement_C2 = false, update_coordinates = false;
+             decrement_C2_for_previous_cell = false, update_coordinates = false;
 
         // Current coordinates of the particle
         int iX, iY;
@@ -195,7 +195,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
                 // Case 3
                 if (prev_known_cell_coordinate_X != iX ||
                     prev_known_cell_coordinate_Y != iY) {
-                  decrement_C2 = true;
+                  decrement_C2_for_previous_cell = true;
                   increment_C2 = true;
                   increment_C3 = true;
                   update_coordinates = true;
@@ -209,7 +209,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
               // Case 2
               if (inside_cell) {
                 inside_cell = false;
-                decrement_C2 = true;
+                decrement_C2_for_previous_cell = true;
               }
               // Case 5
             }
@@ -220,7 +220,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
             // Case 2
             if (inside_cell) {
               inside_cell = false;
-              decrement_C2 = true;
+              decrement_C2_for_previous_cell = true;
             }
             // Case 5
           }
@@ -252,11 +252,11 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
 
           // Counter 2 layer of the grid (1 * grid_size * grid_size)
           layer = gs2;
-          if (decrement_C2)
+          if (decrement_C2_for_previous_cell)
             atomic_fetch_sub<size_t>(grid_a[prev_cell_coordinates + layer], 1);
 
           increment_C1 = false, increment_C2 = false, increment_C3 = false,
-          decrement_C2 = false, update_coordinates = false;
+          decrement_C2_for_previous_cell = false, update_coordinates = false;
 
         }  // Next iteration
       });  // End parallel for
