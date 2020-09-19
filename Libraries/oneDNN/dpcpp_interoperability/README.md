@@ -63,30 +63,6 @@ make
 ./bin/sycl-interop-cpp
 ```
 
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
-
-Open "x64 Native Tools Command Prompt for VS2017" or 
-"x64 Native Tools Command Prompt for VS2019" and perform the following steps:
-1. Setup oneAPI development environment
-```
-C:\Program Files (x86)\intel\oneapi\setvars.bat
-```
-2. Build the program using `cmake`
-```
-mkdir build
-cd build
-cmake -G "Visual Studio 16 2019" ..
-cmake --build .
-```
-
-> Note: You can open the `dpcpp_interoperability.sln` in build folder to edit source
-> code with Microsoft Visual Studio integrated development environment.
-
-3. Run the program
-```
-./bin/Debug/sycl-interop-cpp.exe
-```
-
 ### Include Files
 
 The include folder is located at ${DNNLROOT}\include on your development system".

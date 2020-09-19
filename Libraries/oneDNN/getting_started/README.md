@@ -92,7 +92,7 @@ Open "x64 Native Tools Command Prompt for VS2017" or
 "x64 Native Tools Command Prompt for VS2019" and perform the following steps:
 1. Setup oneAPI development environment
 ```
-C:\Program Files (x86)\intel\oneapi\setvars.bat
+C:\Program Files (x86)\intel\oneapi\setvars.bat --dnnl-configuration=cpu_vcomp
 ```
 2. Build the program using `cmake`
 ```
@@ -108,7 +108,7 @@ cmake --build .
 
 3. Run the program
 ```
-./bin/Debug/getting_started.exe
+bin\Debug\getting_started.exe
 ```
 
 ### Include Files
