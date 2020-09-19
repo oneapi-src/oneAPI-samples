@@ -14,8 +14,8 @@
 // For more details, see motionsim_kernel.cpp
 //
 
-#include "particle_diffusion.hpp"
 #include "motionsim_kernel.cpp"
+#include "particle_diffusion.hpp"
 #include "utils.cpp"
 
 // This function distributes simulation work across workers
@@ -368,8 +368,9 @@ int main(int argc, char* argv[]) {
          << "CPU Offload time: " << cpu_time << " s\n\n";
   }
   print_grids(grid, grid_cpu, grid_size, cpu_flag, grid_output_flag);
-  if (cpu_flag) print_validation_results(grid, grid_cpu, grid_size, planes, cpu_flag,
-                           grid_output_flag);
+  if (cpu_flag)
+    print_validation_results(grid, grid_cpu, grid_size, planes, cpu_flag,
+                             grid_output_flag);
 
   // Cleanup
   delete[] grid;
