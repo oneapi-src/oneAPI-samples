@@ -98,13 +98,14 @@ void PrintVectorAsMatrix(const T* vector, const size_t size_X,
 #if !defined(WINDOWS)
 // Command line argument parser
 int parse_cl_args(const int argc, char* argv[], size_t* n_iterations,
-                  size_t* n_particles, size_t* grid_size, size_t* seed,
+                  size_t* n_particles, size_t* grid_size, int* seed,
                   unsigned int* cpu_flag, unsigned int* grid_output_flag) {
-  int retv = 0, cl_option;
+  int retv = 0, negative_seed = 0, cl_option;
   // Parse user-specified parameters
   while ((cl_option = getopt(argc, argv, "i:p:g:r:c:o:h")) != -1 && retv == 0) {
     if (optarg) {
-      retv = IsNum(optarg);
+      if (cl_option == 'r' && optarg[0] == '-') negative_seed = 1;
+      if (negative_seed == 0) retv = IsNum(optarg);
       if (retv == 1) goto usage_label;
     }
     switch (cl_option) {
@@ -142,7 +143,7 @@ int parse_cl_args(const int argc, char* argv[], size_t* n_iterations,
 #else   // WINDOWS
 // Windows command line argument parser
 int parse_cl_args_windows(char* argv[], size_t* n_iterations,
-                          size_t* n_particles, size_t* grid_size, size_t* seed,
+                          size_t* n_particles, size_t* grid_size, int* seed,
                           unsigned int* cpu_flag,
                           unsigned int* grid_output_flag) {
   // Parse user-specified parameters

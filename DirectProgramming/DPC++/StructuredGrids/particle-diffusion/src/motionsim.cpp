@@ -18,7 +18,7 @@
 #include "utils.cpp"
 
 // This function distributes simulation work across workers
-void CPUParticleMotion(const size_t seed, float* particle_X, float* particle_Y,
+void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
                        float* random_X, float* random_Y, size_t* grid,
                        const size_t grid_size, const size_t planes,
                        const size_t n_particles, unsigned int n_iterations,
@@ -226,7 +226,7 @@ int main(int argc, char* argv[]) {
   size_t n_iterations = 10000;
   size_t n_particles = 256;
   size_t grid_size = 22;
-  size_t seed = 777;
+  int seed = 777;
   unsigned int cpu_flag = 0;
   unsigned int grid_output_flag = 1;
 
@@ -336,9 +336,9 @@ int main(int argc, char* argv[]) {
     sycl::queue q_cpu(sycl::cpu_selector{});
 
     // Declare basic random number generator (BRNG) for random vector
-    oneapi::mkl::rng::philox4x32x10 engine(q_cpu, seed);
+    mkl::rng::philox4x32x10 engine(q_cpu, seed);
     // Distribution object
-    oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::icdf>
+    mkl::rng::gaussian<float, mkl::rng::gaussian_method::icdf>
         distr(ALPHA, SIGMA);
 
     {  // Begin buffer scope
@@ -347,8 +347,8 @@ int main(int argc, char* argv[]) {
       buffer buf_random_Y(random_Y, range(n_moves));
 
       // Compute random values using oneMKL RNG engine. Generates kernel
-      oneapi::mkl::rng::generate(distr, engine, n_moves, buf_random_X);
-      oneapi::mkl::rng::generate(distr, engine, n_moves, buf_random_Y);
+      mkl::rng::generate(distr, engine, n_moves, buf_random_X);
+      mkl::rng::generate(distr, engine, n_moves, buf_random_Y);
     }  // End buffer scope
 
     grid_cpu = new size_t[grid_size * grid_size * planes]();

@@ -24,7 +24,7 @@
 #include "particle_diffusion.hpp"
 
 // This function distributes simulation work across workers
-void ParticleMotion(queue& q, const size_t seed, float* particle_X,
+void ParticleMotion(queue& q, const int seed, float* particle_X,
                     float* particle_Y, float* random_X, float* random_Y,
                     size_t* grid, const size_t grid_size, const size_t planes,
                     const size_t n_particles, const unsigned int n_iterations,
@@ -46,9 +46,9 @@ void ParticleMotion(queue& q, const size_t seed, float* particle_X,
   cout << "Random number seed: " << seed << "\n";
 
   // Declare basic random number generator (BRNG) for random vector
-  oneapi::mkl::rng::philox4x32x10 engine(q, seed);
+  mkl::rng::philox4x32x10 engine(q, seed);
   // Distribution object
-  oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::icdf>
+  mkl::rng::gaussian<float, mkl::rng::gaussian_method::icdf>
       distr(ALPHA, SIGMA);
   // Begin buffer scope
   {
@@ -60,8 +60,8 @@ void ParticleMotion(queue& q, const size_t seed, float* particle_X,
     buffer grid_buf(grid, range(grid_size * grid_size * planes));
 
     // Compute random values using oneMKL RNG engine. Generates separate kernel
-    oneapi::mkl::rng::generate(distr, engine, n_moves, random_X_buf);
-    oneapi::mkl::rng::generate(distr, engine, n_moves, random_Y_buf);
+    mkl::rng::generate(distr, engine, n_moves, random_X_buf);
+    mkl::rng::generate(distr, engine, n_moves, random_Y_buf);
 
     // Submit command group for execution
     // h is a handler type

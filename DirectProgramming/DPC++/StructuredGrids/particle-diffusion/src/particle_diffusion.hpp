@@ -30,14 +30,16 @@
 #include <iomanip> /* setw() function */
 #include <iostream>
 #include <mkl_rng_sycl.hpp> /* dist() function, mkl namespace */
+namespace oneapi {}
+using namespace oneapi;
 using namespace sycl;
 using namespace std;
 
-void ParticleMotion(queue&, const size_t, float*, float*, float*, float*,
+void ParticleMotion(queue&, const int, float*, float*, float*, float*,
                     size_t*, const size_t, const size_t, const size_t,
                     const unsigned int, const float);
 
-void CPUParticleMotion(const size_t, float*, float*, float*, float*, size_t*,
+void CPUParticleMotion(const int, float*, float*, float*, float*, size_t*,
                        const size_t, const size_t, const size_t, unsigned int,
                        const float);
 void Usage(string);
