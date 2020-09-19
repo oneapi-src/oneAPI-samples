@@ -21,6 +21,8 @@
 //   -Atomic operations: synchronization in device
 //
 
+#include "particle_diffusion.hpp"
+
 // This function distributes simulation work across workers
 void ParticleMotion(queue& q, const size_t seed, float* particle_X,
                     float* particle_Y, float* random_X, float* random_Y,

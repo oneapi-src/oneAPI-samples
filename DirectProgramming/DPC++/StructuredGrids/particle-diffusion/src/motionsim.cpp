@@ -15,7 +15,6 @@
 //
 
 #include "motionsim_kernel.cpp"
-#include "particle_diffusion.hpp"
 #include "utils.cpp"
 
 // This function distributes simulation work across workers
