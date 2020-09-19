@@ -223,6 +223,11 @@ void ParticleMotion(queue& q, const size_t seed, float* particle_X,
             // Case 5
           }
 
+          if (update_coordinates) {
+            prev_known_cell_coordinate_X = iX;
+            prev_known_cell_coordinate_Y = iY;
+          }
+
           // Matrix index calculations for the current and previous cell
           curr_cell_coordinates = iX + iY * grid_size;
           prev_cell_coordinates = prev_known_cell_coordinate_X +
@@ -248,10 +253,6 @@ void ParticleMotion(queue& q, const size_t seed, float* particle_X,
           if (decrement_C2)
             atomic_fetch_sub<size_t>(grid_a[prev_cell_coordinates + layer], 1);
 
-          if (update_coordinates) {
-            prev_known_cell_coordinate_X = iX;
-            prev_known_cell_coordinate_Y = iY;
-          }
           increment_C1 = false, increment_C2 = false, increment_C3 = false,
           decrement_C2 = false, update_coordinates = false;
 
