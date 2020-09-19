@@ -48,8 +48,8 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
   // Declare basic random number generator (BRNG) for random vector
   mkl::rng::philox4x32x10 engine(q, seed);
   // Distribution object
-  mkl::rng::gaussian<float, mkl::rng::gaussian_method::icdf>
-      distr(ALPHA, SIGMA);
+  mkl::rng::gaussian<float, mkl::rng::gaussian_method::icdf> distr(ALPHA,
+                                                                   SIGMA);
   // Begin buffer scope
   {
     // Create buffers using DPC++ buffer class

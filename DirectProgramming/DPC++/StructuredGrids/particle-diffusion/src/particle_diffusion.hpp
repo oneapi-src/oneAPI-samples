@@ -35,8 +35,8 @@ using namespace oneapi;
 using namespace sycl;
 using namespace std;
 
-void ParticleMotion(queue&, const int, float*, float*, float*, float*,
-                    size_t*, const size_t, const size_t, const size_t,
+void ParticleMotion(queue&, const int, float*, float*, float*, float*, size_t*,
+                    const size_t, const size_t, const size_t,
                     const unsigned int, const float);
 
 void CPUParticleMotion(const int, float*, float*, float*, float*, size_t*,
