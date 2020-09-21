@@ -5,8 +5,8 @@ emulator_target = ${target_name}.fpga_emu.exe
 report_target = ${target_name}_report.a
 report_target_s10_pac = ${target_name}_s10_pac_report.a
 
-hardware_flags = -fintelfpga -Xshardware -std=c++14
-emulator_flags = -fintelfpga -DFPGA_EMULATOR -std=c++14
+hardware_flags = -fintelfpga -Xshardware
+emulator_flags = -fintelfpga -DFPGA_EMULATOR
 
 rule build_fpga_emu
   command = dpcpp /GX ${emulator_flags} $in -o $out

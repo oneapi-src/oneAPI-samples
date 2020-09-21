@@ -35,7 +35,7 @@ struct PipeArray {
                       idxs...>::IsValid(),
                   "Index out of bounds");
     using VerifiedPipe =
-        cl::sycl::INTEL::pipe<StructId<idxs...>, BaseTy, depth>;
+        INTEL::pipe<StructId<idxs...>, BaseTy, depth>;
   };
 
   template <size_t... idxs>
