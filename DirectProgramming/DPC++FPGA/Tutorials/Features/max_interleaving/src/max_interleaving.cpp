@@ -34,7 +34,7 @@ using FloatScalar = std::array<float, 1>;
 
 // an example complicated operation that creates a long critical path of
 // combinational logic from the use of the parameter values to the result
-float SomethingComplicated(float x, float y) { return sqrt(x) * sqrt(y); }
+float SomethingComplicated(float x, float y) { return sycl::sqrt(x) * sycl::sqrt(y); }
 
 template <int interleaving>
 class KernelCompute;
