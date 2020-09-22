@@ -37,7 +37,7 @@ template<int Version> class ProduceBPipeClass;
 // different versions of the kernel.
 //
 template <int Version, int II, class APipe, class BPipe>
-struct IntersectionKernel{
+struct IntersectionKernel {
   int operator()(int a_size, int b_size) const;
 };
 

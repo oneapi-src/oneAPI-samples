@@ -29,7 +29,7 @@ using namespace sycl;
 //
 // print the usage
 //
-void usage() {
+void Usage() {
   std::cout
       << "USAGE: ./intersection [--A=<size of list A>] [--B=<size of list B>]"
       << "[--iters=<number of times to run the kernel>] [-h --help]\n";
@@ -38,7 +38,7 @@ void usage() {
 //
 // helper to check if string 'str' starts with 'prefix'
 //
-bool strStartsWith(std::string& str, std::string prefix) {
+bool StrStartsWith(std::string& str, std::string prefix) {
   return str.find(prefix) == 0;
 }
 
@@ -65,7 +65,7 @@ unsigned int countSorted(std::vector<unsigned int>& v, int x) {
 // Submit the three kernels that make up the whole design
 //
 template <int Version, int II>
-event submitKernels(queue& q, std::vector<unsigned int>& a,
+event SubmitKernels(queue& q, std::vector<unsigned int>& a,
                     std::vector<unsigned int>& b, int& n) {
   // static asserts
   static_assert(Version >= 0 && Version <= 3, "Invalid kernel version");
@@ -155,7 +155,7 @@ bool Intersection(queue& q, std::vector<unsigned int>& a,
   for (size_t i = 0; i < iterations && success; i++) {
     // run kernel
     int n = 0;
-    event e = submitKernels<Version,II>(q, a, b, n);
+    event e = SubmitKernels<Version,II>(q, a, b, n);
 
     // check output
     if (golden_n != n) {
@@ -215,9 +215,9 @@ int main(int argc, char** argv) {
     } else {
       std::string str_after_equals = arg.substr(arg.find("=") + 1);
 
-      if (strStartsWith(arg, "--A=")) {
+      if (StrStartsWith(arg, "--A=")) {
         a_size = std::stoi(str_after_equals);
-      } else if (strStartsWith(arg, "--B=")) {
+      } else if (StrStartsWith(arg, "--B=")) {
         b_size = std::stoi(str_after_equals);
       } else {
         std::cout << "WARNING: ignoring unknown argument '" << arg << "'\n";
@@ -239,7 +239,7 @@ int main(int argc, char** argv) {
 
   // print help if needed or asked
   if (need_help) {
-    usage();
+    Usage();
     return 0;
   }
 
