@@ -45,7 +45,7 @@ bool StrStartsWith(std::string& str, std::string prefix) {
 //
 // helper to count instances of an element 'x' in a sorted vector 'v'
 //
-unsigned int countSorted(std::vector<unsigned int>& v, int x) {
+unsigned int CountSorted(std::vector<unsigned int>& v, int x) {
   // find first occurrence of 'x' in 'v'
   auto low = std::lower_bound(v.begin(), v.end(), x);
 
@@ -259,7 +259,7 @@ int main(int argc, char** argv) {
   // compute the golden result
   int golden_n = 0;
   for (int i = 0; i < a_size; i++) {
-    golden_n += countSorted(b, a[i]);
+    golden_n += CountSorted(b, a[i]);
   }
 
   try {
