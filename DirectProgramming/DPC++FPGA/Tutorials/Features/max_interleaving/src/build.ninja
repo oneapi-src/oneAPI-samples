@@ -1,5 +1,5 @@
-source_file = max_concurrency.cpp
-target_name = max_concurrency
+source_file = max_interleaving.cpp
+target_name = max_interleaving
 
 emulator_target = ${target_name}.fpga_emu.exe
 cpu_host_target = ${target_name}.cpu_host.exe
