@@ -14,6 +14,7 @@
   namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
 #else
   #include <CL/sycl/INTEL/fpga_extensions.hpp>
+  using namespace sycl;
 #endif
 
 

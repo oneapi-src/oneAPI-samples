@@ -42,7 +42,7 @@ The `Source` kernel reads data from host memory and writes it to the first pipe:
 void SourceKernel(queue &q, float data) {
 
   q.submit([&](handler &h) {
-    h.single_task<Source>([=]() { Pipes::PipeAt<0>::write(data); });
+    h.single_task<Source>([=] { Pipes::PipeAt<0>::write(data); });
   });
 }
 ```
@@ -50,14 +50,17 @@ void SourceKernel(queue &q, float data) {
 At the end of the chain, the `Sink` kernel reads data from the last pipe and returns it to the host:
 
 ``` c++
-void SinkKernel(queue &q, std::array<float, 1> &out_data) {
+void SinkKernel(queue &q, float *out_data) {
 
-  buffer<float, 1> out_buf(out_data.data(), 1);
+  // The verbose buffer syntax is necessary here,
+  // since out_data is just a single scalar value
+  // and its size can not be inferred automatically
+  buffer<float, 1> out_buf(out_data, 1);
 
   q.submit([&](handler &h) {
     auto out_accessor = out_buf.get_access<access::mode::write>(h);
     h.single_task<Sink>(
-        [=]() { out_accessor[0] = Pipes::PipeAt<kEngines>::read(); });
+        [=] { out_accessor[0] = Pipes::PipeAt<kEngines>::read(); });
   });
 }
 ```
@@ -66,7 +69,7 @@ void SinkKernel(queue &q, std::array<float, 1> &out_data) {
 
 ``` c++
 intelfpga::submit_compute_units<kEngines, ChainComputeUnit>(q, [=](auto ID) {
-    float f = Pipes::PipeAt<ID>::read();
+    auto f = Pipes::PipeAt<ID>::read();
     Pipes::PipeAt<ID + 1>::write(f);
   });
 ```

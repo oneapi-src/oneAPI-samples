@@ -45,11 +45,12 @@ void SourceKernel(queue &q, float data) {
 }
 
 // Get the data out of the chain and return it to the host
-void SinkKernel(queue &q, std::array<float, 1> &out_data) {
+void SinkKernel(queue &q, float *out_data) {
 
-  // Use verbose SYCL 1.2 syntax for the output buffer.
-  // (This will become unnecessary in a future compiler version.)
-  buffer<float, 1> out_buf(out_data.data(), 1);
+  // The verbose buffer syntax is necessary here,
+  // since out_data is just a single scalar value
+  // and its size can not be inferred automatically
+  buffer<float, 1> out_buf(out_data, 1);
 
   q.submit([&](handler &h) {
     auto out_accessor = out_buf.get_access<access::mode::write>(h);
@@ -66,7 +67,7 @@ int main() {
   INTEL::fpga_selector device_selector;
 #endif
 
-  std::array<float, 1> out_data = {0};
+  float out_data = 0;
 
   try {
     queue q(device_selector, dpc_common::exception_handler);
@@ -77,12 +78,12 @@ int main() {
     // Enqueue the chain of kEngines compute units
     // Compute unit must take a single argument, its ID
     submit_compute_units<kEngines, ChainComputeUnit>(q, [=](auto ID) {
-      float f = Pipes::PipeAt<ID>::read();
+      auto f = Pipes::PipeAt<ID>::read();
       Pipes::PipeAt<ID + 1>::write(f);
     });
 
     // Enqueue the Sink kernel
-    SinkKernel(q, out_data);
+    SinkKernel(q, &out_data);
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
@@ -99,9 +100,9 @@ int main() {
   }
 
   // Verify result
-  if (out_data[0] != kTestData) {
+  if (out_data != kTestData) {
     std::cout << "FAILED: The results are incorrect\n";
-    std::cout << "Expected: " << kTestData << " Got: " << out_data[0] << "\n";
+    std::cout << "Expected: " << kTestData << " Got: " << out_data << "\n";
     return 1;
   }
 
