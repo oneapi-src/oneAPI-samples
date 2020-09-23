@@ -1,17 +1,17 @@
 //==============================================================
-// Copyright © 2019 Intel Corporation
+// Copyright © 2020 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <cmath>
 #include <array>
-#include <thread>
-#include <iostream>
 #include <atomic>
+#include <cmath>
+#include <iostream>
 #include <sstream>
+#include <thread>
 
-#include <CL/sycl.hpp>
+#include <SYCL/sycl.hpp>
 
 #include <tbb/blocked_range.h>
 #include <tbb/global_control.h>
@@ -19,11 +19,8 @@
 #include <tbb/task_group.h>
 #include <tbb/parallel_for.h>
 
-constexpr cl::sycl::access::mode sycl_read = cl::sycl::access::mode::read;
-constexpr cl::sycl::access::mode sycl_write = cl::sycl::access::mode::write;
-
-const float ratio = 0.5; // CPU or GPU offload ratio
-const float alpha = 0.5; // coeff for triad calculation
+constexpr float ratio = 0.5; // CPU or GPU offload ratio
+constexpr float alpha = 0.5; // coeff for triad calculation
 
 constexpr std::size_t array_size = 16;
 std::array<float, array_size> a_array; // input array
@@ -45,9 +42,9 @@ class AsyncActivity {
 public:
     AsyncActivity() : offload_ratio(0), submit_flag(false),
         service_thread([this] {
-            while(!submit_flag) {
+            while(!submit_flag)
                 std::this_thread::yield();
-            }
+
             std::size_t array_size_sycl = std::ceil(array_size * offload_ratio);
             std::stringstream sstream;
             sstream << "start index for GPU = 0; end index for GPU = "
@@ -56,18 +53,18 @@ public:
             const float coeff = alpha; // coeff is a local variable
 
             { // starting SYCL code
-                cl::sycl::range<1> n_items{array_size_sycl};
-                cl::sycl::buffer<cl_float, 1> a_buffer(a_array.data(), n_items);
-                cl::sycl::buffer<cl_float, 1> b_buffer(b_array.data(), n_items);
-                cl::sycl::buffer<cl_float, 1> c_buffer(c_array.data(), n_items);
+                sycl::range<1> n_items{array_size_sycl};
+                sycl::buffer a_buffer(a_array.data(), n_items);
+                sycl::buffer b_buffer(b_array.data(), n_items);
+                sycl::buffer c_buffer(c_array.data(), n_items);
 
-                cl::sycl::queue q;
-                q.submit([&](cl::sycl::handler& h) {
-                    auto a_accessor = a_buffer.get_access<sycl_read>(h);
-                    auto b_accessor = b_buffer.get_access<sycl_read>(h);
-                    auto c_accessor = c_buffer.get_access<sycl_write>(h);
+                sycl::queue q;
+                q.submit([&](sycl::handler& h) {
+                    auto a_accessor = a_buffer.get_access<sycl::access::mode::read>(h);
+                    auto b_accessor = b_buffer.get_access<sycl::access::mode::read>(h);
+                    auto c_accessor = c_buffer.get_access<sycl::access::mode::write>(h);
 
-                    h.parallel_for(n_items, [=](cl::sycl::id<1> index) {
+                    h.parallel_for(n_items, [=](sycl::id<1> index) {
                         c_accessor[index] = a_accessor[index] + coeff * b_accessor[index];
                     }); // end of the kernel
                 }).wait();
@@ -126,7 +123,7 @@ int main() {
     }
 
     // Compare golden triad with heterogeneous triad
-    if (!std::equal(c_array.begin(), c_array.end(), c_gold.begin())) {
+    if (c_array != c_gold) {
         std::cout << "Heterogeneous triad error." << std::endl;
     } else {
         std::cout << "Heterogeneous triad correct." << std::endl;
