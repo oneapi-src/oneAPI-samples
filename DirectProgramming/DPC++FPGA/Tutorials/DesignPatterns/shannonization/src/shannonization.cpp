@@ -254,7 +254,7 @@ int main(int argc, char** argv) {
   // initialize input data
   std::vector<unsigned int> a(a_size), b(b_size);
   std::iota(a.begin(), a.end(), 0);
-  std::generate(b.begin(), b.end(), [=]() { return rand() % a_size; });
+  std::generate(b.begin(), b.end(), [=] { return rand() % a_size; });
   std::sort(b.begin(), b.end());
 
   std::cout << "Computing golden result\n";
