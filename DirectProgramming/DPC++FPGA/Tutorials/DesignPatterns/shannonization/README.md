@@ -20,8 +20,8 @@ Shannonization is the process of removing operations from the critical path of a
 int A[SIZE] = {/*...*/};
 int v = /*some dynamic value*/
 int c = 0;
-for(int i = 0; i < SIZE; i++) {
-  if(A[i] < v) {
+for (int i = 0; i < SIZE; i++) {
+  if (A[i] < v) {
     c++;
   }
 }
@@ -37,8 +37,8 @@ int A[SIZE] = {/*...*/};
 int v = /*some dynamic value*/
 int c = 0;
 int c_next = 1;
-for(int i = 0; i < SIZE; i++) {
-  if(A[i] < v) {
+for (int i = 0; i < SIZE; i++) {
+  if (A[i] < v) {
     // these operations can happen in parallel!
     c = c_next;
     c++;
@@ -86,24 +86,24 @@ void intersection(int A_size, int B_size, int& intersection_size) {
   A_count = 1;
   B_count = 1;
 
-  while(A_count < A_size || B_count < B_size) {
+  while (A_count < A_size || B_count < B_size) {
     // values match increment counter
-    if(a == b) {
+    if (a == b) {
       intersection_size++;
     }
 
     // read in new element
-    if(a < b && A_count < A_size) {
+    if (a < b && A_count < A_size) {
       a = APipe::read();
       A_count++;
-    } else if(B_count < B_size) {
+    } else if (B_count < B_size) {
       b = BPipe::read();
       B_count++;
     }
   };
 
   // check the last values
-  if(a == b) {
+  if (a == b) {
     intersection_size++;
   }
 }
@@ -198,11 +198,11 @@ The first version of the kernel, `Intersection<0>`, is the baseline implementati
 The second version of the kernel, `Intersection<1>`, uses the shannonization optimization to remove the increment of `A_count` and `B_count` from the critical path. To do this, we create two new variables, `A_count_next` and `B_count_next` which will store the value of `A_count` and `B_count` **for the next iteration of the loop**. The code snippet below shows how `A_count` and `B_count` are updated using `A_count_next` and `B_count_next`:
 ```c++
   ...
-  if(a < b && A_count < A_size) {
+  if (a < b && A_count < A_size) {
     a = APipe::read();
     A_count = A_count_next;
     A_count_next++;
-  } else if(B_count < B_size) {
+  } else if (B_count < B_size) {
     b = BPipe::read();
     B_count = B_count_next;
     B_count_next++;
@@ -217,7 +217,7 @@ The third version of the kernel, `Intersection<2>`, extends the previous optimiz
 
 ```c++
   ...
-  if(a < b && A_count_inrange) {
+  if (a < b && A_count_inrange) {
     a = APipe::read();
 
     A_count = A_count_next;
@@ -225,7 +225,7 @@ The third version of the kernel, `Intersection<2>`, extends the previous optimiz
 
     A_count_inrange = A_count_next_inrange;
     A_count_next_inrange = A_count_next < A_size;
-  } else if(B_count_inrange) {
+  } else if (B_count_inrange) {
     b = BPipe::read();
 
     B_count = B_count_next;
@@ -240,7 +240,7 @@ However, this places a 32-bit Integer Add Operation back into the critical path 
 
 ```c++
   ...
-  if(a < b && A_count_inrange) {
+  if (a < b && A_count_inrange) {
     a = APipe::read();
 
     A_count_inrange = A_count_next_inrange;
@@ -249,7 +249,7 @@ However, this places a 32-bit Integer Add Operation back into the critical path 
     A_count = A_count_next;
     A_count_next = A_count_next_next;
     A_count_next_next++;
-  } else if(B_count_inrange) {
+  } else if (B_count_inrange) {
     b = BPipe::read();
 
     B_count_inrange = B_count_next_inrange;

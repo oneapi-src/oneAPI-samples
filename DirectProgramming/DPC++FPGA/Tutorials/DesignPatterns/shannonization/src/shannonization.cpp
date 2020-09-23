@@ -3,10 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <algorithm>
 #include <vector>
 #include <type_traits>
+
+#include <CL/sycl.hpp>
 
 // Header locations and some DPC++ extensions changed between beta09 and beta10
 // Temporarily modify the code sample to accept either version
@@ -43,7 +44,9 @@ bool StrStartsWith(std::string& str, std::string prefix) {
 }
 
 //
-// helper to count instances of an element 'x' in a sorted vector 'v'
+// Helper to count instances of an element 'x' in a sorted vector 'v'.
+// Since the vector is sorted, this algorithm has O(logn) complexity,
+// rather than the naive O(n) complexity.
 //
 unsigned int CountSorted(std::vector<unsigned int>& v, int x) {
   // find first occurrence of 'x' in 'v'
@@ -84,7 +87,7 @@ event SubmitKernels(queue& q, std::vector<unsigned int>& a,
   buffer b_buf(b);
 
   // setup the output buffer
-  buffer<int, 1> n_buf(&n, 1);
+  buffer<int,1> n_buf(&n, 1);
 
   // submit the kernel that produces table A
   q.submit([&](handler& h) {
@@ -167,13 +170,13 @@ bool Intersection(queue& q, std::vector<unsigned int>& a,
     // get profiling info
     auto start = e.get_profiling_info<info::event_profiling::command_start>();
     auto end = e.get_profiling_info<info::event_profiling::command_end>();
-    kernel_latency[i] = (end - start) / 1000000000.0f;
+    kernel_latency[i] = (end - start) / 1e9;
   }
 
   // If all the iterations were successful, print the throughput results.
   // The FPGA emulator does not accurately represent the hardware performance
   // so we don't print performance results when running with the emulator
-  if(success) {
+  if (success) {
 #ifndef FPGA_EMULATOR
     // Compute the average throughput across all iterations.
     // We use the first iteration as a 'warmup' for the FPGA,
@@ -226,12 +229,12 @@ int main(int argc, char** argv) {
   }
 
   // ensure the arrays have more than 3 elements
-  if(a_size <= 3) {
+  if (a_size <= 3) {
     std::cout << "WARNING: array A must have more than 3 "
                   "elements, increasing its size\n";
     a_size = 4;
   }
-  if(b_size <= 3) {
+  if (b_size <= 3) {
     std::cout << "WARNING: array A must have more than 3"
                   "elements, increasing its size\n";
     b_size = 4;
@@ -250,8 +253,8 @@ int main(int argc, char** argv) {
 
   // initialize input data
   std::vector<unsigned int> a(a_size), b(b_size);
-  std::generate(a.begin(), a.end(), [n = 0]() mutable { return n++; });
-  std::generate(b.begin(), b.end(), [=]() mutable { return rand() % a_size; });
+  std::iota(a.begin(), a.end(), 0);
+  std::generate(b.begin(), b.end(), [=]() { return rand() % a_size; });
   std::sort(b.begin(), b.end());
 
   std::cout << "Computing golden result\n";
