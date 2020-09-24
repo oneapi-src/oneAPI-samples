@@ -1,0 +1,8 @@
+{
+  "name": "Intel Model Zoo with TensorFlow",
+  "categories": ["Toolkit/Intel® AI Analytics Toolkit/TensorFlow"],
+  "description": "This code example shows you how to run FP32 inference on Resnet50 with TensorFlow using Intel Model Zoo",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "os":["linux"]
+}
