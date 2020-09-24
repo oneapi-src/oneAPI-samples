@@ -169,107 +169,125 @@ struct slice_area {
   };
 };
 
-// a way to get value_type from both accessors and USM that is needed for
-// transform_init
-template <typename Unknown>
-struct accessor_traits {};
 
-template <typename T, int Dim, sycl::access::mode AccMode,
-          sycl::access::target AccTarget, sycl::access::placeholder Placeholder>
-struct accessor_traits<
-    sycl::accessor<T, Dim, AccMode, AccTarget, Placeholder>> {
-  using value_type = typename sycl::accessor<T, Dim, AccMode, AccTarget,
-                                             Placeholder>::value_type;
+// a way to get value_type from both accessors and USM that is needed for transform_init
+template <typename Unknown>
+struct accessor_traits
+{
+};
+
+template <typename T, int Dim, sycl::access::mode AccMode, sycl::access::target AccTarget,
+          sycl::access::placeholder Placeholder>
+struct accessor_traits<sycl::accessor<T, Dim, AccMode, AccTarget, Placeholder>>
+{
+    using value_type = typename sycl::accessor<T, Dim, AccMode, AccTarget, Placeholder>::value_type;
 };
 
 template <typename RawArrayValueType>
-struct accessor_traits<RawArrayValueType*> {
-  using value_type = RawArrayValueType;
+struct accessor_traits<RawArrayValueType*>
+{
+    using value_type = RawArrayValueType;
 };
 
 // calculate shift where we should start processing on current item
-template <typename NDItemId, typename GlobalIdx, typename SizeNIter,
-          typename SizeN>
-SizeN calc_shift(const NDItemId item_id, const GlobalIdx global_idx,
-                 SizeNIter& n_iter, const SizeN n) {
-  auto global_range_size = item_id.get_global_range().size();
+template <typename NDItemId, typename GlobalIdx, typename SizeNIter, typename SizeN>
+SizeN
+calc_shift(const NDItemId item_id, const GlobalIdx global_idx, SizeNIter& n_iter, const SizeN n)
+{
+    auto global_range_size = item_id.get_global_range().size();
 
-  auto start = n_iter * global_idx;
-  auto global_shift = global_idx + n_iter * global_range_size;
-  if (n_iter > 0 && global_shift > n) {
-    start += n % global_range_size - global_idx;
-  } else if (global_shift < n) {
-    n_iter++;
-  }
-  return start;
+    auto start = n_iter * global_idx;
+    auto global_shift = global_idx + n_iter * global_range_size;
+    if (n_iter > 0 && global_shift > n)
+    {
+        start += n % global_range_size - global_idx;
+    }
+    else if (global_shift < n)
+    {
+        n_iter++;
+    }
+    return start;
 }
 
+
 template <typename ExecutionPolicy, typename Operation1, typename Operation2>
-struct transform_init {
-  Operation1 binary_op;
-  Operation2 unary_op;
+struct transform_init
+{
+    Operation1 binary_op;
+    Operation2 unary_op;
 
-  template <typename NDItemId, typename GlobalIdx, typename Size,
-            typename AccLocal, typename... Acc>
-  void operator()(const NDItemId item_id, const GlobalIdx global_idx, Size n,
-                  AccLocal& local_mem, const Acc&... acc) {
-    auto local_idx = item_id.get_local_id(0);
-    auto global_range_size = item_id.get_global_range().size();
-    auto n_iter = n / global_range_size;
-    auto start = calc_shift(item_id, global_idx, n_iter, n);
-    auto shifted_global_idx = global_idx + start;
+    template <typename NDItemId, typename GlobalIdx, typename Size, typename AccLocal, typename... Acc>
+    void
+    operator()(const NDItemId item_id, const GlobalIdx global_idx, Size n, AccLocal& local_mem,
+               const Acc&... acc)
+    {
+        auto local_idx = item_id.get_local_id(0);
+        auto global_range_size = item_id.get_global_range().size();
+        auto n_iter = n / global_range_size;
+        auto start = calc_shift(item_id, global_idx, n_iter, n);
+        auto shifted_global_idx = global_idx + start;
 
-    typename accessor_traits<AccLocal>::value_type res;
-    if (global_idx < n) {
-      res = unary_op(shifted_global_idx, acc...);
+        typename accessor_traits<AccLocal>::value_type res;
+        if (global_idx < n)
+        {
+            res = unary_op(shifted_global_idx, acc...);
+        }
+        // Add neighbour to the current local_mem
+        for (decltype(n_iter) i = 1; i < n_iter; ++i)
+        {
+            res = binary_op(res, unary_op(shifted_global_idx + i, acc...));
+        }
+        if (global_idx < n)
+        {
+            local_mem[local_idx] = res;
+        }
     }
-    // Add neighbour to the current local_mem
-    for (decltype(n_iter) i = 1; i < n_iter; ++i) {
-      res = binary_op(res, unary_op(shifted_global_idx + i, acc...));
-    }
-    if (global_idx < n) {
-      local_mem[local_idx] = res;
-    }
-  }
 };
+
 
 // Reduce on local memory
 template <typename ExecutionPolicy, typename BinaryOperation1, typename Tp>
-struct reduce {
-  BinaryOperation1 bin_op1;
+struct reduce
+{
+    BinaryOperation1 bin_op1;
 
-  template <typename NDItemId, typename GlobalIdx, typename Size,
-            typename AccLocal>
-  Tp operator()(const NDItemId item_id, const GlobalIdx global_idx,
-                const Size n, AccLocal& local_mem) {
-    auto local_idx = item_id.get_local_id(0);
-    auto group_size = item_id.get_local_range().size();
+    template <typename NDItemId, typename GlobalIdx, typename Size, typename AccLocal>
+    Tp
+    operator()(const NDItemId item_id, const GlobalIdx global_idx, const Size n, AccLocal& local_mem)
+    {
+        auto local_idx = item_id.get_local_id(0);
+        auto group_size = item_id.get_local_range().size();
 
-    auto k = 1;
-    do {
-      item_id.barrier(sycl::access::fence_space::local_space);
-      if (local_idx % (2 * k) == 0 && local_idx + k < group_size &&
-          global_idx < n && global_idx + k < n) {
-        local_mem[local_idx] =
-            bin_op1(local_mem[local_idx], local_mem[local_idx + k]);
-      }
-      k *= 2;
-    } while (k < group_size);
-    return local_mem[local_idx];
-  }
+        auto k = 1;
+        do
+        {
+            item_id.barrier(sycl::access::fence_space::local_space);
+            if (local_idx % (2 * k) == 0 && local_idx + k < group_size && global_idx < n &&
+                global_idx + k < n)
+            {
+                local_mem[local_idx] = bin_op1(local_mem[local_idx], local_mem[local_idx + k]);
+            }
+            k *= 2;
+        } while (k < group_size);
+        return local_mem[local_idx];
+    }
 };
+
 
 // walk through the data
 template <typename ExecutionPolicy, typename F>
-struct walk_n {
-  F f;
+struct walk_n
+{
+    F f;
 
-  template <typename ItemId, typename... Ranges>
-  auto operator()(const ItemId idx, Ranges&&... rngs)
-      -> decltype(f(rngs[idx]...)) {
-    return f(rngs[idx]...);
-  }
+    template <typename ItemId, typename... Ranges>
+    auto
+    operator()(const ItemId idx, Ranges&&... rngs) -> decltype(f(rngs[idx]...))
+    {
+        return f(rngs[idx]...);
+    }
 };
+
 
 // This option uses a parallel for to fill the buffer and then
 // uses a tranform_init with plus/no_op and then
@@ -304,12 +322,12 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
   // In this example we have done the calculation and filled the buffer above
   // The way transform_init works is that you need to have the value already
   // populated in the buffer.
-  auto tf_init = transform_init<Policy, std::plus<float>, Functor>{
-      std::plus<float>(), Functor{my_no_op()}};
+  auto tf_init = transform_init<Policy, std::plus<float>,
+                   Functor>{std::plus<float>(), Functor{my_no_op()}};
 
   auto combine = std::plus<float>();
-  auto brick_reduce =
-      reduce<Policy, std::plus<float>, float>{std::plus<float>()};
+  auto brick_reduce = reduce<Policy, std::plus<float>, float>{
+          std::plus<float>()};
   auto workgroup_size =
       policy.queue()
           .get_device()
@@ -338,8 +356,8 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
                        [=](nd_item<1> item_id) mutable {
                          auto global_idx = item_id.get_global_id(0);
                          // 1. Initialization (transform part).
-                         tf_init(item_id, global_idx, num_steps, temp_buf_local,
-                                 access_buf);
+                         tf_init(item_id, global_idx, num_steps,
+                                 temp_buf_local, access_buf);
                          // 2. Reduce within work group
                          float local_result = brick_reduce(
                              item_id, global_idx, num_steps, temp_buf_local);
@@ -402,12 +420,13 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
   // The buffer has 1...num it at and now we will use that as an input
   // to the slice structue which will calculate the area of each
   // rectangle.
-  auto tf_init = transform_init<Policy, std::plus<float>, Functor2>{
-      std::plus<float>(), Functor2{slice_area(num_steps)}};
+  auto tf_init = transform_init<Policy, std::plus<float>,
+                                                 Functor2>{
+          std::plus<float>(), Functor2{slice_area(num_steps)}};
 
   auto combine = std::plus<float>();
-  auto brick_reduce =
-      reduce<Policy, std::plus<float>, float>{std::plus<float>()};
+  auto brick_reduce = reduce<Policy, std::plus<float>, float>{
+          std::plus<float>()};
 
   // get workgroup_size from the device
   auto workgroup_size =
@@ -445,8 +464,8 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
                          auto global_idx = item_id.get_global_id(0);
                          // 1. Initialization (transform part). Fill local
                          // memory
-                         tf_init(item_id, global_idx, num_steps, temp_buf_local,
-                                 access_buf);
+                         tf_init(item_id, global_idx, num_steps,
+                                 temp_buf_local, access_buf);
                          // 2. Reduce within work group
                          float local_result = brick_reduce(
                              item_id, global_idx, num_steps, temp_buf_local);
