@@ -11,7 +11,7 @@
 #include <sstream>
 #include <thread>
 
-#include <SYCL/sycl.hpp>
+#include <CL/sycl.hpp>
 
 #include <tbb/blocked_range.h>
 #include <tbb/global_control.h>
@@ -42,10 +42,14 @@ class AsyncActivity {
 public:
     AsyncActivity() : offload_ratio(0), submit_flag(false),
         service_thread([this] {
+            // Wait until the job will be submitted into the async activity
             while(!submit_flag)
                 std::this_thread::yield();
 
             std::size_t array_size_sycl = std::ceil(array_size * offload_ratio);
+
+            // Note that this lambda will be executed concurrently with the task
+            // passed into tbb::task_group
             std::stringstream sstream;
             sstream << "start index for GPU = 0; end index for GPU = "
                     << array_size_sycl << std::endl;
@@ -54,9 +58,9 @@ public:
 
             { // starting SYCL code
                 sycl::range<1> n_items{array_size_sycl};
-                sycl::buffer a_buffer(a_array.data(), n_items);
-                sycl::buffer b_buffer(b_array.data(), n_items);
-                sycl::buffer c_buffer(c_array.data(), n_items);
+                sycl::buffer<cl_float, 1> a_buffer(a_array.data(), n_items);
+                sycl::buffer<cl_float, 1> b_buffer(b_array.data(), n_items);
+                sycl::buffer<cl_float, 1> c_buffer(c_array.data(), n_items);
 
                 sycl::queue q;
                 q.submit([&](sycl::handler& h) {
@@ -70,6 +74,7 @@ public:
                 }).wait();
             }
 
+            // Pass a signal into the main thread that the GPU work is completed
             tbb::task::resume(suspend_point);
         }) {}
 
@@ -97,6 +102,7 @@ int main() {
     AsyncActivity activity;
 
     // Run CPU part
+    // tg.run is a non- blocking call
     tg.run([&]{
         std::size_t i_start = static_cast<std::size_t>(std::ceil(array_size * ratio));
         std::size_t i_end = array_size;

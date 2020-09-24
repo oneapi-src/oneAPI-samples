@@ -22,8 +22,7 @@ TBB resumable tasks and DPC++ implementation explained.
       cd tbb-resumable-tasks-sycl &&
       mkdir build &&
       cd build &&
-      cmake ../. &&
-      make VERBOSE=1
+      cmake .. && make VERBOSE=1
 
     * Run the program
       make run
