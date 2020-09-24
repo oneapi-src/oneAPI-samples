@@ -1,5 +1,5 @@
 # Intel Model Zoo Sample
-This code example provides a sample code to run ResNet50 inference on Intel's pretrained FP32 model
+This code example provides a sample code to run ResNet50 inference on Intel's pretrained FP32 and Int8 model
 
 ## Purpose
   - Demonstrate the AI workloads and deep learning models Intel has optimized and validated to run on Intel hardware
@@ -22,17 +22,17 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 
 ## Activate conda environment With Root Access
 
-Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the setvars.sh script. Then navigate in linux shell to your oneapi installation path, typically `/opt/intel/inteloneapi`. Activate the conda environment with the following command:
+Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the setvars.sh script. Then navigate in linux shell to your oneapi installation path, typically `/opt/intel/oneapi`. Activate the conda environment with the following command:
 
 #### Linux
 ```
-source activate tensorflow
+conda activate tensorflow
 ```
 
 
 ## Activate conda environment Without Root Access (Optional)
 
-By default, the Intel AI Analytics toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel AI Analytics toolkit is installed in the `/opt/intel/oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### Linux
 ```
@@ -42,20 +42,20 @@ conda create --name user_tensorflow --clone tensorflow
 Then activate your conda environment with the following command:
 
 ```
-source activate user_tensorflow
+conda activate user_tensorflow
 ```
 
 ## Navigate to Intel Model Zoo
 
-Navigate to the Intel Model Zoo source directory. It's located in your oneapi installation path, typically `/opt/intel/inteloneapi/modelzoo`.
+Navigate to the Intel Model Zoo source directory. It's located in your oneapi installation path, typically `/opt/intel/oneapi/modelzoo`.
 You can view the available Model Zoo release versions for the Intel AI Analytics toolkit:
 ```
-ls /opt/intel/inteloneapi/modelzoo
-1.6.0  latest
+ls /opt/intel/oneapi/modelzoo
+1.8.0  latest
 ```
 Then browse to the preferred [Intel Model Zoo](https://github.com/IntelAI/models/tree/master/benchmarks) release version location to run inference for ResNet50 or another supported topology.
 ```
-cd /opt/intel/inteloneapi/modelzoo/latest
+cd /opt/intel/oneapi/modelzoo/latest
 ```
 
 ## Install Jupyter Notebook 
