@@ -71,6 +71,6 @@ or<br>
 2b. Open the command prompt where you have GUI support, and forward the port from host to client<br>
 2c. Enter `ssh -N -f -L localhost:8888:localhost:8888 <userid@hostname>`<br>
 2d. Copy-paste the URL address from the host into your local browser to open the jupyter console<br>
-3. Go to `ResNet50_FP32_Inference.ipynb` and run each cell to create sythetic data and run int8 inference
+3. Go to `ResNet50_Inference.ipynb` and run each cell to create sythetic data and run int8 inference
 
 Note, In jupyter page, please choose the right 'kernel'. In this case, please choose it in menu 'Kernel' -> 'Change kernel' -> Python [conda env:tensorflow]
