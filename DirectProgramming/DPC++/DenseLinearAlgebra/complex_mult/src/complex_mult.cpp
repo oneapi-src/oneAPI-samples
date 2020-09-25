@@ -49,23 +49,22 @@ void DpcppParallel(queue &q, std::vector<Complex2> &in_vect1,
   buffer bufin_vect1(in_vect1);
   buffer bufin_vect2(in_vect2);
 
-  // Setup Output buffers
-  buffer bufout_vect(out_vect.data(), R);
+  // Setup Output buffers 
+  buffer bufout_vect(out_vect);
 
   std::cout << "Target Device: "
             << q.get_device().get_info<info::device::name>() << "\n";
   // Submit Command group function object to the queue
   q.submit([&](auto &h) {
     // Accessors set as read mode
-    auto V1 = bufin_vect1.get_access<access::mode::read>(h);
-    auto V2 = bufin_vect2.get_access<access::mode::read>(h);
+    accessor V1(bufin_vect1,h,read_only);
+    accessor V2(bufin_vect2,h,read_only);
     // Accessor set to Write mode
-    auto V3 = bufout_vect.get_access<access::mode::write>(h);
-
-    h.parallel_for(R, [=](id<1> idx) {
+    accessor V3 (bufout_vect,h,write_only);
+    h.parallel_for(R, [=](auto i) {
       // call the complex_mul function that computes the multiplication of the
       // complex number
-      V3[idx] = V1[idx].complex_mul(V2[idx]);
+      V3[i] = V1[i].complex_mul(V2[i]);
     });
   });
   q.wait_and_throw();
