@@ -43,10 +43,10 @@ class CustomDeviceSelector : public device_selector {
 // are inputs to the parallel function
 void DpcppParallel(queue &q, std::vector<Complex2> &in_vect1,
                    std::vector<Complex2> &in_vect2,
-                   std::vector<Complex2> &out_vect) { 
+                   std::vector<Complex2> &out_vect) {
   auto R = range(in_vect1.size());
-  if (in_vect1.size() != in_vect2.size()){ 
-	  std::cout << "ERROR: Vector sizes didnt match"<< "\n";
+  if (in_vect2.size() != in_vect1.size() || out_vect.size() != in_vect1.size()){ 
+	  std::cout << "ERROR: Vector sizes do not  match"<< "\n";
 	  return;
   }
   // Setup input buffers
@@ -76,8 +76,8 @@ void DpcppParallel(queue &q, std::vector<Complex2> &in_vect1,
 void DpcppScalar(std::vector<Complex2> &in_vect1,
                  std::vector<Complex2> &in_vect2,
                  std::vector<Complex2> &out_vect) {
-  if (in_vect1.size() != in_vect2.size()){
-	  std::cout<<"ERROR: Vector sizes didnt match"<<"\n";
+  if ((in_vect2.size() != in_vect1.size()) || (out_vect.size() != in_vect1.size())){
+	  std::cout<<"ERROR: Vector sizes do not match"<<"\n";
 	  return;
   }		 
   for (int i = 0; i < in_vect1.size(); i++) {
