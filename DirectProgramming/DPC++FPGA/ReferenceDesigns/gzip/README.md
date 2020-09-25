@@ -71,7 +71,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    Alternatively, to compile for the Intel® PAC with Intel Stratix® 10 SX FPGA, run `cmake` using the command:
  
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
+   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
  
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -130,7 +130,6 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
      ```
 2. Run the sample on the FPGA device:
      ```
-     aocl initialize acl0 pac_s10_usm
      ./gzip.fpga <input_file> [-o=<output_file>]         (Linux)
      ```
  ### Application Parameters
@@ -170,7 +169,7 @@ PASSED
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsparallel=2` | Uses 2 cores when compiling the bitstream through Quartus
-`-Xsseed=19` | Uses seed 19 during Quartus, yields slightly higher fmax
+`-Xsseed=1` | Uses seed 1 during Quartus, yields slightly higher fmax
 `-Xsnum-reorder=6` | On Intel Stratix® 10 SX only, specify a wider data path for read data from global memory 
 `-DNUM_ENGINES=<1|2>` | Specifies that 1 GZIP engine should be compiled when targeting Arria® 10 GX and 2 engines when targeting Intel Stratix® 10 SX
 

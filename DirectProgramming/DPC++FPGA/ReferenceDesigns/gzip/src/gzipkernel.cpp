@@ -752,8 +752,8 @@ void SubmitGzipTasksSingleEngine(
     buffer<struct GzipOutInfo, 1> *gzip_out_buf,
     buffer<unsigned, 1> *result_crc, bool last_block, event &e_crc, event &e_lz,
     event &e_huff) {
-  using acc_dist_channel = INTEL::pipe<class some_pipe, struct DistLen>;
-  using acc_dist_channel_last = INTEL::pipe<class some_pipe2, struct DistLen>;
+  using acc_dist_channel = intel::pipe<class some_pipe, struct DistLen>;
+  using acc_dist_channel_last = intel::pipe<class some_pipe2, struct DistLen>;
 
   e_crc = q.submit([&](handler &h) {
     auto accessor_isz = block_size;
