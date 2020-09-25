@@ -4,11 +4,23 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
 #include <array>
 #include <iomanip>
 #include <iostream>
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 
 using namespace sycl;
 
@@ -20,7 +32,7 @@ constexpr size_t kMaxValue = 128;
 using FloatArray = std::array<float, kSize>;
 using FloatScalar = std::array<float, 1>;
 
-template <int concurrency> class Compute;
+template <int concurrency> class Kernel;
 
 // Launch a kernel on the device specified by selector.
 // The kernel's functionality is designed to show the
@@ -43,7 +55,7 @@ void PartialSumWithShift(const device_selector &selector,
       auto accessor_array = buffer_array.get_access<access::mode::read>(h);
       auto accessor_result = buffer_result.get_access<access::mode::discard_write>(h);
 
-      h.single_task<Compute<concurrency>>([=]()
+      h.single_task<Kernel<concurrency>>([=]()
                                           [[intel::kernel_args_restrict]] {
         float r = 0;
 
@@ -95,7 +107,7 @@ void PartialSumWithShift(const device_selector &selector,
 }
 
 // Calculates the expected results. Used to verify that the kernel
-// is functionally correct. 
+// is functionally correct.
 float GoldenResult(const FloatArray &A, float shift) {
   float gr = 0;
   for (size_t i = 0; i < kMaxIter; i++) {
@@ -121,14 +133,14 @@ int main() {
     A[i] = rand() % kMaxValue;
 
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector selector;
+  INTEL::fpga_emulator_selector selector;
 #else
-  intel::fpga_selector selector;
+  INTEL::fpga_selector selector;
 #endif
 
   // Run the kernel with different values of the max_concurrency
-  // attribute, to determine the optimal concurrency. 
-  // In this case, the optimal max_concurrency is 2 since this 
+  // attribute, to determine the optimal concurrency.
+  // In this case, the optimal max_concurrency is 2 since this
   // achieves the highest GFlops. Higher values of max_concurrency
   // consume additional RAM without increasing GFlops.
   PartialSumWithShift<0>(selector, A, shift, R0);

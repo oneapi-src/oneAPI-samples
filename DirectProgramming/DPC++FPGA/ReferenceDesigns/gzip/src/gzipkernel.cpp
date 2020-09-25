@@ -36,6 +36,13 @@
 #include "gzipkernel.hpp"
 #include "kernels.hpp"
 
+// Some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#endif
+
 using namespace sycl;
 
 // This reference design uses a template-based unroller. It's also possible

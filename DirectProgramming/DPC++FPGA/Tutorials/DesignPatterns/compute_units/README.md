@@ -50,12 +50,12 @@ void SourceKernel(queue &q, float data) {
 At the end of the chain, the `Sink` kernel reads data from the last pipe and returns it to the host:
 
 ``` c++
-void SinkKernel(queue &q, float *out_data) {
+void SinkKernel(queue &q, float &out_data) {
 
   // The verbose buffer syntax is necessary here,
   // since out_data is just a single scalar value
   // and its size can not be inferred automatically
-  buffer<float, 1> out_buf(out_data, 1);
+  buffer<float, 1> out_buf(&out_data, 1);
 
   q.submit([&](handler &h) {
     auto out_accessor = out_buf.get_access<access::mode::write>(h);
@@ -65,10 +65,10 @@ void SinkKernel(queue &q, float *out_data) {
 }
 ```
 
- The following line defines the functionality of each compute unit, and submits each compute unit to the given queue `q`. The number of copies to submit is provided by the first template parameter of `submit_compute_units`, while the second template parameter allows you to give the compute units a shared base name, e.g., `ChainComputeUnit`. The functionality of each compute unit must be specified by a generic lambda expression, that takes a single argument (with type `auto`) that provides an ID for each compute unit:
+ The following line defines the functionality of each compute unit, and submits each compute unit to the given queue `q`. The number of copies to submit is provided by the first template parameter of `SubmitComputeUnits`, while the second template parameter allows you to give the compute units a shared base name, e.g., `ChainComputeUnit`. The functionality of each compute unit must be specified by a generic lambda expression, that takes a single argument (with type `auto`) that provides an ID for each compute unit:
 
 ``` c++
-intelfpga::submit_compute_units<kEngines, ChainComputeUnit>(q, [=](auto ID) {
+SubmitComputeUnits<kEngines, ChainComputeUnit>(q, [=](auto ID) {
     auto f = Pipes::PipeAt<ID>::read();
     Pipes::PipeAt<ID + 1>::write(f);
   });
@@ -124,11 +124,37 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ``` 
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://software.intel.com/content/dam/develop/external/us/en/documents/compute_units.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/compute_units.fpga.tar.gz" download>here</a>.
 
+### On a Windows* System
+Note: `cmake` is not yet supported on Windows. A build.ninja file is provided instead. 
+
+1. Enter the source file directory.
+   ```
+   cd src
+   ```
+
+2. Compile the design. The following build targets are provided, matching the recommended development flow:
+
+   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+      ```
+      ninja fpga_emu
+      ```
+      **NOTE:** For the FPGA emulator target, the device link method is used. 
+   * Generate the optimization report:
+
+     ```
+     ninja report
+     ```
+     If you are targeting Intel® PAC with Intel Stratix® 10 SX FPGA, instead use:
+     ```
+     ninja report_s10_pac
+     ```     
+   * Compiling for FPGA hardware is not yet supported on Windows.
+ 
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 
 ## Examining the Reports

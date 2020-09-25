@@ -17,7 +17,6 @@
   using namespace sycl;
 #endif
 
-
 #include "pipe_array_internal.hpp"
 
 template <class Id, typename BaseTy, size_t depth, size_t... dims>

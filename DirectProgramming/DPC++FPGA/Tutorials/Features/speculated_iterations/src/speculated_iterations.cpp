@@ -4,12 +4,24 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
 #include <array>
 #include <iomanip>
 #include <iostream>
 #include <type_traits>
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 
 // Use smaller values if run on the emulator to keep the CPU runtime reasonable
 // Use the largest possible int values on the FPGA to show the difference in
@@ -42,24 +54,24 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
 
     event e = q.submit([&](handler &h) {
       auto accessor_res = buffer_res.get_access<access::mode::discard_write>(h);
-      
+
       h.single_task<class KernelCompute<spec_iter>>([=]() {
         int x = 1;
-        
+
         // Computing the exit condition of this loop is a complex operation.
         // Since the value of var is not known at compile time, the loop
         // trip count is variable and the exit condition must be evaluated at
         // each iteration.
-        [[intelfpga::speculated_iterations(spec_iter)]] 
+        [[intelfpga::speculated_iterations(spec_iter)]]
         while (sycl::log10((float)(x)) < bound) {
           x++;
         }
-        
+
         accessor_res[0] = x;
       });
     });
 
-    // get the kernel time in milliseconds 
+    // get the kernel time in milliseconds
     // this excludes memory transfer and queuing overhead
     double startk =
         e.template get_profiling_info<info::event_profiling::command_start>();
@@ -73,7 +85,7 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
       std::cout << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cout << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR.\n"; 
+                   "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
   }
@@ -91,9 +103,9 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
 
 int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector selector;
+  INTEL::fpga_emulator_selector selector;
 #else
-  intel::fpga_selector selector;
+  INTEL::fpga_selector selector;
 #endif
 
   float bound = kUpper;
@@ -103,7 +115,7 @@ int main(int argc, char *argv[]) {
     std::string option(argv[1]);
     bound = std::stoi(option);
   }
-  
+
   // result variables
   int r0, r1, r2;
 
@@ -135,14 +147,14 @@ int main(int argc, char *argv[]) {
               << " not within 0.00001 of " << bound << "\n";
     passed = false;
   }
-  
+
   if (std::fabs(std::log10(r2) - bound) > 1e-5) {
     std::cout << "Test 2 result mismatch " << std::log10(r2)
               << " not within 0.00001 of " << bound << "\n";
     passed = false;
   }
-  
-  
+
+
   std::cout << (passed ? "PASSED: The results are correct" : "FAILED") << "\n";
 
   return passed ? 0 : -1;
