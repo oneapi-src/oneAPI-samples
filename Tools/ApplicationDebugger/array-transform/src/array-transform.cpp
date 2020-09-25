@@ -20,7 +20,7 @@ using namespace std;
 using namespace sycl;
 
 // A device function, called from inside the kernel.
-static size_t GetDim(id<1> wi, int dim) {
+static size_t GetDim(item<1> wi, int dim) {
   return wi[dim];
 }
 
