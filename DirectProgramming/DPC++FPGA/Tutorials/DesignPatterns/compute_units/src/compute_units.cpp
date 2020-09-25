@@ -6,8 +6,8 @@
 #include <CL/sycl.hpp>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder,
-// e.g., $ONEAPI_ROOT/dev-utilities/latest/include/dpc_common.hpp
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 #include "compute_units.hpp"
 #include "pipe_array.hpp"
@@ -45,12 +45,12 @@ void SourceKernel(queue &q, float data) {
 }
 
 // Get the data out of the chain and return it to the host
-void SinkKernel(queue &q, float *out_data) {
+void SinkKernel(queue &q, float &out_data) {
 
   // The verbose buffer syntax is necessary here,
   // since out_data is just a single scalar value
   // and its size can not be inferred automatically
-  buffer<float, 1> out_buf(out_data, 1);
+  buffer<float, 1> out_buf(&out_data, 1);
 
   q.submit([&](handler &h) {
     auto out_accessor = out_buf.get_access<access::mode::write>(h);
@@ -77,23 +77,26 @@ int main() {
 
     // Enqueue the chain of kEngines compute units
     // Compute unit must take a single argument, its ID
-    submit_compute_units<kEngines, ChainComputeUnit>(q, [=](auto ID) {
+    SubmitComputeUnits<kEngines, ChainComputeUnit>(q, [=](auto ID) {
       auto f = Pipes::PipeAt<ID>::read();
+      // Pass the data to the next compute unit in the chain
+      // The compute unit with ID k reads from pipe k and writes to pipe
+      // k + 1
       Pipes::PipeAt<ID + 1>::write(f);
     });
 
     // Enqueue the Sink kernel
-    SinkKernel(q, &out_data);
+    SinkKernel(q, out_data);
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();

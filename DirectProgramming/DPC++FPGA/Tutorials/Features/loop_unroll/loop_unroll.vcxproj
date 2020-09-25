@@ -11,20 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\qrd.cpp" />
-    <ClCompile Include="src\qrd_demo.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\qrd.h" />
+    <ClCompile Include="src\loop_unroll.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{acde6b7a-6f9a-428e-b040-cedc5b1e2c79}</ProjectGuid>
+    <ProjectGuid>{565eaa85-f49c-43fe-b951-3fd2187cc3fe}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>qrd</RootNamespace>
+    <RootNamespace>loop_unroll</RootNamespace>
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -108,17 +104,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
-      <AdditionalOptions>-DFPGA_EMULATOR -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>
-      </ObjectFileName>
+      <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>$(IntDir)loop_unroll.obj</ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SpecifyDevCmplAdditionalOptions>-Xsclock=330MHz;-Xsfp-relaxed;-Xsparallel=2</SpecifyDevCmplAdditionalOptions>
     </Link>
-    <Manifest />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -150,9 +143,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
-      <AdditionalOptions>-DFPGA_EMULATOR -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>
-      </ObjectFileName>
+      <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>$(IntDir)loop_unroll.obj</ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -160,7 +152,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SpecifyDevCmplAdditionalOptions>-Xsclock=330MHz;-Xsfp-relaxed;-Xsparallel=2</SpecifyDevCmplAdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -4,10 +4,22 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 
 constexpr size_t kRowLength = 128;
 constexpr size_t kMinSafelen = 1;
@@ -41,7 +53,7 @@ void TransposeAndFold(const device_selector &selector,
         float in_buffer[kRowLength][kRowLength];
         float temp_buffer[kRowLength][kRowLength];
 
-        // Initialize local buffers 
+        // Initialize local buffers
         for (size_t i = 0; i < kMatrixSize; i++) {
           in_buffer[i / kRowLength][i % kRowLength] = accessor_input[i];
           temp_buffer[i / kRowLength][i % kRowLength] = 0;
@@ -49,17 +61,17 @@ void TransposeAndFold(const device_selector &selector,
 
         // No iterations of the following loop store data into the same memory
         // location that are less than kRowLength iterations apart.
-        // The ivdep here instructs the compiler that it can safely assume no 
+        // The ivdep here instructs the compiler that it can safely assume no
         // loop-carried dependencies over safe_len consecutive iterations.
-        [[intelfpga::ivdep(safe_len)]] 
-        for (size_t j = 0; j < kMatrixSize * kRowLength; j++) {                                
+        [[intelfpga::ivdep(safe_len)]]
+        for (size_t j = 0; j < kMatrixSize * kRowLength; j++) {
           #pragma unroll
           for (size_t i = 0; i < kRowLength; i++) {
             temp_buffer[j % kRowLength][i] += in_buffer[i][j % kRowLength];
           }
         }
 
-        // Write result to output 
+        // Write result to output
         for (size_t i = 0; i < kMatrixSize; i++) {
           accessor_output[i] = temp_buffer[i / kRowLength][i % kRowLength];
         }
@@ -103,16 +115,16 @@ int main() {
   }
 
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector selector;
+  INTEL::fpga_emulator_selector selector;
 #else
-  intel::fpga_selector selector;
+  INTEL::fpga_selector selector;
 #endif
 
   // Instantiate kernel logic with the min and max correct safelen parameter
   // to compare performance.
   TransposeAndFold<kMinSafelen>(selector, A, B);
   TransposeAndFold<kMaxSafelen>(selector, A, C);
-  // You can also try removing the ivdep from the kernel entirely and 
+  // You can also try removing the ivdep from the kernel entirely and
   // recompiling to see what effect this has on performance.
 
   // Verify result
