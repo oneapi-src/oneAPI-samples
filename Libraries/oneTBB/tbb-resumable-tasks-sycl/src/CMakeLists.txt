@@ -12,4 +12,7 @@ endif()
 
 add_executable (tbb-resumable-tasks-sycl tbb-resumable-tasks-sycl.cpp)
 
+find_package(Threads REQUIRED)
+target_link_libraries(tbb-resumable-tasks-sycl Threads::Threads)
+
 add_custom_target (run ./tbb-resumable-tasks-sycl)
