@@ -43,7 +43,7 @@ SYCL implementation explained in further detail in source code.
 Intel® Math Kernel Library (MKL) is used for random number generation on the cpu and device. Precise generators are used within this library to ensure that the numbers generated on the cpu and device are relatively equivalent (relative accurracy 10E-07).  
 ## License
 This code sample is licensed under MIT license. Please see the `License.txt` file for more information.  
-## Building the `Particle_Diffusion` Program for CPU and GPU
+## Building the `particle_diffusion` Program for CPU and GPU
 
 ### Include Files  
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your 
@@ -75,7 +75,7 @@ From the particle diffusion Project directory:
 ### On a Linux\* System Using CMake
 
 #### 1. Enter Particle Diffusion Directory
-    $ cd Particle_Diffusion
+    $ cd particle_diffusion
 #### 2. Build motionsim Program Using CMake
     $ mkdir build && cd build && cmake .. && make -s -j
 #### 3. Run
