@@ -11,20 +11,19 @@
 // Particle Diffusion application.
 //
 
-#if defined(_WIN32) || defined(_WIN64)
+#if _WIN32 || _WIN64
 #define WINDOWS 1
-#endif
+#endif  // _WIN32 || _WIN64
 
-// RNG Distribution parameters
+// Random Number Generation (RNG) Distribution parameters
 #define ALPHA 0.0f   // Mean
 #define SIGMA 0.03f  // Standard Deviation
 
-#if !defined(WINDOWS)  // unistd.h not available on windows platforms.
-#include <unistd.h>    /* getopt() function */
-#endif
+#if !WINDOWS        // unistd.h not available on windows platforms.
+#include <unistd.h> /* getopt() function */
+#endif              // !WINDOWS
 
 #include <mkl.h> /* oneMKL, mkl libraries */
-
 #include <CL/sycl.hpp>
 #include <dpc_common.hpp>
 #include <iomanip> /* setw() function */
@@ -36,13 +35,12 @@ using namespace sycl;
 using namespace std;
 
 void ParticleMotion(queue&, const int, float*, float*, float*, float*, size_t*,
-                    const size_t, const size_t, const size_t,
-                    const unsigned int, const float);
-
+                    const size_t, const size_t, const size_t, const size_t,
+                    const float);
 void CPUParticleMotion(const int, float*, float*, float*, float*, size_t*,
                        const size_t, const size_t, const size_t, unsigned int,
                        const float);
-void Usage(string);
+void Usage(const string);
 int IsNum(const char*);
 bool ValidateDeviceComputation(const size_t*, const size_t*, const size_t,
                                const size_t);
@@ -57,10 +55,11 @@ void PrintVectorAsMatrix(T*, const size_t, const size_t);
 
 int parse_cl_args(const int, char* [], size_t*, size_t*, size_t*, size_t*,
                   unsigned int*, unsigned int*);
-int parse_cl_args_windows(char* [], size_t*, size_t*, size_t*, size_t*,
+int parse_cl_args_windows(int, char* [], size_t*, size_t*, size_t*, size_t*,
                           unsigned int*, unsigned int*);
 void print_grids(const size_t*, const size_t*, const size_t, const unsigned int,
                  const unsigned int);
 void print_validation_results(const size_t*, const size_t*, const size_t,
                               const size_t, const unsigned int,
                               const unsigned int);
+void CheckVslError(int);

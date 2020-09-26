@@ -9,25 +9,35 @@
 //
 
 // This function displays correct usage and parameters
-void Usage(string program_name) {
-#if !defined(WINDOWS)
-  cout << "\nUsage: ";
-  cout << "./<binary_name> "
-       << "-i <Number of Iterations> "
-       << "-p <Number of Particles> "
-       << "-g <Size of Square Grid> "
-       << "-r <Seed for RNG> "
-       << "-c <1/0 Flag for CPU Comparison> "
-       << "-o <1/0 Flag for Grid Output>\n\n";
+void Usage(const string program_name) {
+  cout << "Particle Diffusion DPC++ code sample help message:\n";
+#if !WINDOWS
+  cout << "\nUsage: ./<binary_name> <flags>"
+       << "\n--------------------------------------------------------"
+       << "\n|Flag | Variable name    | Range      | Default value  |"
+       << "\n|-----|------------------|------------|----------------|"
+       << "\n|-i   | n_iterations     | [1, inf]   | [default=10000]|"
+       << "\n|-p   | n_particles      | [1, inf]   | [default=256]  |"
+       << "\n|-g   | grid_size        | [1, inf]   | [default=22]   |"
+       << "\n|-r   | seed             | [-inf, inf]| [default=777]  |"
+       << "\n|-c   | cpu_flag         | [0, 1]     | [default=0]    |"
+       << "\n|-o   | grid_output_flag | [0, 1]     | [default=1]    |"
+       << "\n--------------------------------------------------------\n\n";
 #else   // WINDOWS
   cout << "\nUsage: ";
-  cout << "./<binary_name> "
-       << "<Number of Iterations> "
-       << "<Number of Particles> "
-       << "<Size of Square Grid> "
-       << "<Seed for RNG> "
-       << "<1/0 Flag for CPU Comparison> "
-       << "<1/0 Flag for Grid Output>\n\n";
+  cout << "./<binary_name> <Number of Iterations> <Number of Particles> "
+       << "<Size of Square Grid> <Seed for RNG> <1/0 Flag for CPU Comparison> "
+       << "<1/0 Flag for Grid Output>"
+       << "\n--------------------------------------------------------"
+       << "\n|Argument name           | Range      | Default value  |"
+       << "\n|------------------------|------------|----------------|"
+       << "\n|Number of Iterations    | [1, inf]   | [default=10000]|"
+       << "\n|Number of Particles     | [1, inf]   | [default=256]  |"
+       << "\n|Size of Square Grid     | [1, inf]   | [default=22]   |"
+       << "\n|Seed for RNG            | [-inf, inf]| [default=777]  |"
+       << "\n|Flag for CPU comparison | [0, 1]     | [default=0]    |"
+       << "\n|Flag for Grid Output    | [0, 1]     | [default=1]    |"
+       << "\n--------------------------------------------------------\n\n";
 #endif  // WINDOWS
 }
 
@@ -38,7 +48,7 @@ int IsNum(const char* str) {
   return 0;
 }
 
-// This function checks the two matricies to see if their computations are equal
+// Examines two matricies and returns true if they are equivalent.
 bool ValidateDeviceComputation(const size_t* grid_device,
                                const size_t* grid_cpu, const size_t grid_size,
                                const size_t planes) {
@@ -95,7 +105,7 @@ void PrintVectorAsMatrix(const T* vector, const size_t size_X,
   }
 }
 
-#if !defined(WINDOWS)
+#if !WINDOWS
 // Command line argument parser
 int parse_cl_args(const int argc, char* argv[], size_t* n_iterations,
                   size_t* n_particles, size_t* grid_size, int* seed,
@@ -128,37 +138,43 @@ int parse_cl_args(const int argc, char* argv[], size_t* n_iterations,
         *grid_output_flag = stoul(optarg);
         break;
       case 'h':
-        cout << "Particle Diffusion DPC++ code sample help message:\n";
       case ':':
       case '?':
       default:
       usage_label : {
-        Usage(argv[0]);
+        retv = 1;
         break;
       }
     }
   }
+  if ((*cpu_flag != 1 && *cpu_flag != 0) ||
+      (*grid_output_flag != 1 && *grid_output_flag != 0))
+    retv = 1;
+  if (retv == 1) Usage(argv[0]);
   return retv;
-}
+}  // End of function parse_cl_args()
 #else   // WINDOWS
 // Windows command line argument parser
-int parse_cl_args_windows(char* argv[], size_t* n_iterations,
+int parse_cl_args_windows(int argc, char* argv[], size_t* n_iterations,
                           size_t* n_particles, size_t* grid_size, int* seed,
                           unsigned int* cpu_flag,
                           unsigned int* grid_output_flag) {
+  int usage = 0;
   // Parse user-specified parameters
   try {
-    *n_iterations = stoi(argv[1]);
-    *n_particles = stoi(argv[2]);
-    *grid_size = stoi(argv[3]);
-    *seed = stoi(argv[4]);
-    *cpu_flag = stoul(argv[5]);
-    *grid_output_flag = stoul(argv[6]);
+    for (int i = 1; i < argc; ++i)
+      if (stoi(argv[i]) < 0 && i != 4) usage = 1;
+    *n_iterations = stoi(argv[1]), *n_particles = stoi(argv[2]);
+    *grid_size = stoi(argv[3]), *seed = stoi(argv[4]);
+    *cpu_flag = stoul(argv[5]), *grid_output_flag = stoul(argv[6]);
   } catch (...) {
-    Usage(argv[0]);
-    return 1;
+    usage = 1;
   }
-  return 0;
+  if ((*cpu_flag != 1 && *cpu_flag != 0) ||
+      (*grid_output_flag != 1 && *grid_output_flag != 0))
+    usage = 1;
+  if (usage == 1) Usage(argv[0]);
+  return usage;
 }
 #endif  // WINDOWS
 
@@ -176,7 +192,7 @@ void print_grids(const size_t* grid, const size_t* grid_cpu,
     cout << "*                           DEVICE                       *\n";
     cout << "**********************************************************\n";
 
-    cout << "\n ********************** FULL GRID: **********************\n";
+    cout << "\n **************** PARTICLE ACCUMULATION: ****************\n";
 
     // Counter 1 layer of grid (0 * grid_size * grid_size)
     layer = 0;
@@ -207,7 +223,7 @@ void print_grids(const size_t* grid, const size_t* grid_cpu,
       cout << "*                           CPU                          *\n";
       cout << "**********************************************************\n";
 
-      cout << "\n ********************** FULL GRID: **********************\n";
+      cout << "\n **************** PARTICLE ACCUMULATION: ****************\n";
 
       // Counter 1 layer of grid (0 * grid_size * grid_size)
       layer = 0;
@@ -231,7 +247,7 @@ void print_grids(const size_t* grid, const size_t* grid_cpu,
       cout << "\n\n";
     }
   }
-}
+}  // End of function print_grids()
 
 // Compares the matrices generated by the CPU and device and prints results.
 void print_validation_results(const size_t* grid, const size_t* grid_cpu,
@@ -243,48 +259,52 @@ void print_validation_results(const size_t* grid, const size_t* grid_cpu,
   const size_t gs2 = grid_size * grid_size;
   bool retv = false;
 
-  /* ********** Counter 1: device v.s host comparison ********** */
+  /* ********** Counter 1: device v.s cpu comparison ********** */
 
   // Counter 1 layer of grid (0 * grid_size * grid_size)
   layer = 0;
   retv = CompareMatrices(&grid[layer], &grid_cpu[layer], grid_size);
 
-  if (!retv) {
-    cout << "Device Counter 1 != CPU Counter 1\n";
-  }
-  if (retv) {
-    cout << "Device Counter 1 == CPU Counter 1\n";
-  }
+  if (!retv)
+    cout << "MISMATCH. Device Counter 1 != CPU Counter 1\n";
+  else
+    cout << "MATCH. Device Counter 1 = CPU Counter 1\n";
 
-  /* ********** Counter 2: device v.s host comparison ********** */
+  /* ********** Counter 2: device v.s cpu comparison ********** */
 
   // Counter 2 layer of grid (1 * grid_size * grid_size)
   layer = gs2;
   retv = CompareMatrices(&grid[layer], &grid_cpu[layer], grid_size);
 
-  if (!retv) {
-    cout << "Device Counter 2 != CPU Counter 2\n";
-  }
-  if (retv) {
-    cout << "Device Counter 2 == CPU Counter 2\n";
-  }
+  if (!retv)
+    cout << "MISMATCH. Device Counter 2 != CPU Counter 2\n";
+  else
+    cout << "MATCH. Device Counter 2 = CPU Counter 2\n";
 
-  /* ********** Counter 3: device v.s host comparison ********** */
+  /* ********** Counter 3: device v.s cpu comparison ********** */
 
   // Counter 3 layer of grid (2 * grid_size * grid_size)
   layer = gs2 + gs2;
   retv = CompareMatrices(&grid[layer], &grid_cpu[layer], grid_size);
 
-  if (!retv) {
-    cout << "Device Counter 3 != CPU Counter 3\n";
-  }
-  if (retv) {
-    cout << "Device Counter 3 == CPU Counter 3\n";
-  }
+  if (!retv)
+    cout << "MISMATCH. Device Counter 3 != CPU Counter 3\n";
+  else
+    cout << "MATCH. Device Counter 3 = CPU Counter 3\n";
 
   retv = ValidateDeviceComputation(grid, grid_cpu, grid_size, planes);
 
   if (!retv)
-    cout << "ERROR cpu computation does not match that of the device\n";
-  if (retv) cout << "Success.\n";
+    cout << "\nError. CPU computation does not match that of the device.\n";
+  else
+    cout << "\nSuccess.\n";
+}  // End of function print_validation_results()
+
+// Error checks mkl RNG function during CPU random number generation
+void CheckVslError(int err_code) {
+  if (err_code != VSL_ERROR_OK && err_code != VSL_STATUS_OK) {
+    cout << "Encountered VSL Error during random number generation on CPU. "
+            "Exiting.\n";
+    exit(EXIT_FAILURE);
+  }
 }

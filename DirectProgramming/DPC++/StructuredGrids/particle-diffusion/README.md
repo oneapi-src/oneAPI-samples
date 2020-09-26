@@ -19,7 +19,7 @@ and search based on relevant terms noted in the comments.
 | Hardware                          | Kaby Lake with GEN9 or newer
 | Software                          | Intel Data Parallel C++ Compiler (beta)
 | What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
-| Time to complete                  | 15 minutes
+| Time to complete                  | 20 minutes
 
 Performance number tabulation [if applicable]
 
@@ -28,87 +28,92 @@ Performance number tabulation [if applicable]
 | Scalar baseline -O2               | 1.0
 | SYCL                              | 
 | OpenMP offload                    | 
-
-  
+ 
 ## Key Implementation Details
 
-### SYCL
+SYCL implementation explained. 
 
-  -Queues: device selectors and exception handlers
-  -Buffers and accessors: communication between host and device
-  -Kernels: parallel\_for function and range<n> objects
-  -API-based programming: Use of oneMKL to generate random numbers
-  -Atomic operations: synchronization in device
+* DPC++ queues (including device selectors and exception handlers).
+* DPC++ buffers and accessors.  
+* The ability to call a function inside a kernel definition and pass accessor arguments as pointers.
+* Optimization using API-based programming and Atomic Functions.
 
 SYCL implementation explained in further detail in source code.
-
 ## How Other Tools (Intel Libraries or Intel Tools) are used
-Intel® Math Kernel Library (MKL) is used for random number generation on the cpu and device. Precise generators were used within this library to ensure that the numbers generated were relatively equivalent (relative accurracy 10E-07)
-
+Intel® Math Kernel Library (MKL) is used for random number generation on the cpu and device. Precise generators are used within this library to ensure that the numbers generated on the cpu and device are relatively equivalent (relative accurracy 10E-07).  
 ## License
-This code sample is licensed under MIT license  
+This code sample is licensed under MIT license. Please see the `License.txt` file for more information.  
+## Building the `Particle_Diffusion` Program for CPU and GPU
+
+### Include Files  
+The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your 
+development system".  
+
+### Running Samples In DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, 
+FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI 
+Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ## Build and run
 
-### On a Windows\* System Using Visual Studio 2017 or Newer
+### On a Windows\* System Using Microsoft Visual Studio 2017 or Newer
 
-#### Build the motionsim Program Using VS 2017 or VS 2019
+#### Build the motionsim Program Using Visual Studio 2017 or Visual Studio 2019
 
-##### 1. Right Click on the Solution file and open Using Either VS2017 or VS2019 IDE
-##### 2. Right Click on the Project in Solution Explorer and Select Rebuild
-##### 3. From top menu Select Debug -> Start Without Debugging
+##### 1. Right click on the solution file (.sln) and open it using either Visual Studio 2017 or Visual Studio 2019
+##### 2. From Visual Studio, right click on the project solution file in solution explorer and select rebuild
+##### 3. From top menu select Debug -> Start Without Debugging
 
 #### Build the motionsim Program Using MSBuild
 
-##### 1. Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS 2019"
-##### 2. Run - MSBuild Particle\_Diffusion.sln /t:Rebuild /p:Configuration="Release"
+##### 1. Open "x64 Native Tools Command Prompt for VS 2017" or "x64 Native Tools Command Prompt for VS 2019" as Administrator (right click application and select Run as Administrator)
+##### 2. Build
+From the particle diffusion Project directory:  
+
+    > MSBuild Particle_Diffusion.sln /t:Rebuild /p:Configuration="Release"
 
 ### On a Linux\* System Using CMake
 
-#### 1. Enter Particle Diffusion directory
+#### 1. Enter Particle Diffusion Directory
     $ cd Particle_Diffusion
 #### 2. Build motionsim Program Using CMake
     $ mkdir build && cd build && cmake .. && make -s -j
 #### 3. Run
 ##### 3a. Run Using make (Default Parameters)
     $ make run
-##### 3b. Run Using Binary file (Custom Parameters)
-The following table describes each command line parameter
+##### 3b. Run Using Binary File (Custom Parameters)
+The following table describes each command line parameter (applies to Linux\* based builds only)
 
-|    Argument Flag and Value    |    Description               |    Range of Possible Values    |    Default    
+|    Flag and Argument          |    Description               |    Range of Possible Values    |    Default    
 |:---                           |:---                          |:---                            |:---    
-| `-p num_particles`            | Number of particles          | [1, &#8734;]                   | 256    
 | `-i num_iterations`           | Number of iterations         | [1, &#8734;]                   | 10000    
+| `-p num_particles`            | Number of particles          | [1, &#8734;]                   | 256    
 | `-g grid_size`                | Size of square grid          | [1, &#8734;]                   | 22
-| `-r rng_seed`                 | Random number generator seed | [1, &#8734;]                   | 777    
-| `-c cpu_flag`                 | Turns cpu comparison on/off  | [0 \| 1]                       | 0    
-| `-o output_flag`              | Turns grid output on/off     | [0 \| 1]                       | 1    
+| `-r rng_seed`                 | Random number generator seed | [-&#8734;, &#8734;]            | 777    
+| `-c cpu_flag`                 | Turns cpu comparison on/off  | [1 \| 0]                       | 0    
+| `-o output_flag`              | Turns grid output on/off     | [1 \| 0]                       | 1    
 | `-h`                          | Help message.                |                                |    
 
 You can run the program using the above parameters with the application binary:  
 
     $ ./src/motionsim.exe
 
-Example Usage:  
+Example usage:  
 
-    $ ./src/motionsim.exe -p 200 -i 1000 -g 30 -r 777 -c 1 -o 0
+    $ ./src/motionsim.exe -i 1000 -p 200 -g 30 -r 777 -c 1 -o 0
 
 Note:
 
-* If the grid size specified is greater than 44, the application will not print the grid even if the grid output flag is on.
+* If the grid size specified is greater than 44, the application will not print the grid even if the grid output flag is on
 
 * If a particular parameter is not specified, the application will choose the default value for that parameter
 
-* Typing `$ ./src/motionsim.exe -h` displays a brief help message and exits the program.
+* Typing `$ ./src/motionsim.exe -h` displays a brief help message and exits the program
 
 #### 4. Clean up
-    cd .. && rm -r build
+    $ cd .. && rm -r build
+## Example Execution (Linux\* System)
 
-## Example Execution
-
-### On a Windows\* System
-
-### On a Linux\* System
     $ make run
 
     Scanning dependencies of target run
@@ -210,4 +215,4 @@ Note:
 
 
     Built target run
-
+    $
