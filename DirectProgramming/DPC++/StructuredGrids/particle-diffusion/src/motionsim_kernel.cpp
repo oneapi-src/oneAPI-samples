@@ -95,7 +95,6 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
 
         // Each particle performs this loop
         for (size_t iter = 0; iter < n_iterations; ++iter) {
-
           // Set the displacements to the random numbers
           displacement_X = random_X_a[iter * n_particles + p];
           displacement_Y = random_Y_a[iter * n_particles + p];

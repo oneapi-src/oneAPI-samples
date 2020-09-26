@@ -83,7 +83,6 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
   // to match device's algorithm
   for (size_t iter = 0; iter < n_iterations; ++iter) {
     for (unsigned int p = 0; p < n_particles; ++p) {
-
       // Set the displacements to the random numbers
       displacement_X = random_X[iter * n_particles + p];
       displacement_Y = random_Y[iter * n_particles + p];
@@ -336,7 +335,8 @@ int main(int argc, char* argv[]) {
   if (cpu_flag)
     print_validation_results(grid, grid_cpu, grid_size, planes, cpu_flag,
                              grid_output_flag);
-  else cout << "Success.\n";
+  else
+    cout << "Success.\n";
 
   // Cleanup
   if (cpu_flag) delete[] grid_cpu;
