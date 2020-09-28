@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// particle_diffusion: Header file for motionsim.cpp,
+// motionsim.hpp: Header file for motionsim.cpp,
 // motionsim_kernel.cpp, and utils.cpp
 //
 // Declares defines, includes, and prototypes needed by the
@@ -29,18 +29,14 @@
 #include <iomanip> /* setw() function */
 #include <iostream>
 #include <mkl_rng_sycl.hpp> /* dist() function, mkl namespace */
-namespace oneapi {}
-using namespace oneapi;
-using namespace sycl;
-using namespace std;
 
-void ParticleMotion(queue&, const int, float*, float*, float*, float*, size_t*,
-                    const size_t, const size_t, const size_t, const size_t,
-                    const float);
+void ParticleMotion(sycl::queue&, const int, float*, float*, float*, float*,
+                    size_t*, const size_t, const size_t, const size_t,
+                    const size_t, const float);
 void CPUParticleMotion(const int, float*, float*, float*, float*, size_t*,
                        const size_t, const size_t, const size_t, unsigned int,
                        const float);
-void Usage(const string);
+void Usage(const std::string);
 int IsNum(const char*);
 bool ValidateDeviceComputation(const size_t*, const size_t*, const size_t,
                                const size_t);

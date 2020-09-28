@@ -110,7 +110,9 @@ void PrintVectorAsMatrix(const T* vector, const size_t size_X,
 int parse_cl_args(const int argc, char* argv[], size_t* n_iterations,
                   size_t* n_particles, size_t* grid_size, int* seed,
                   unsigned int* cpu_flag, unsigned int* grid_output_flag) {
-  int retv = 0, negative_seed = 0, cl_option;
+  int retv = 0;
+  int negative_seed = 0;
+  int cl_option;
   // Parse user-specified parameters
   while ((cl_option = getopt(argc, argv, "i:p:g:r:c:o:h")) != -1 && retv == 0) {
     if (optarg) {

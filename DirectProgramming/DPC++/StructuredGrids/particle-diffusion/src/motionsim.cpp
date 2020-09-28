@@ -24,15 +24,13 @@
 //   (DPC++) DPC++ atomic operations for synchronization
 //
 
-#include "particle_diffusion.hpp"
-#include "utils.cpp"
-
+#include "motionsim.hpp"
+namespace oneapi {}
+using namespace oneapi;
+using namespace sycl;
+using namespace std;
 #include "motionsim_kernel.cpp"
-
-// Current and previous cell coordinates
-#define CURR_COORDINATES iX + iY* grid_size
-#define PREV_COORDINATES \
-  prev_known_cell_coordinate_X[p] + prev_known_cell_coordinate_Y[p] * grid_size
+#include "utils.cpp"
 
 // This function distributes simulation work across workers
 void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
@@ -49,28 +47,18 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
   cout << "Size of the grid: " << grid_size << "\n";
   cout << "Random number seed: " << seed << "\n";
 
-  // Current coordinates of the particle
-  int iX, iY;
-  // True if particle is numerically within the cell radius
-  bool within_radius;
-
   // Array of flags for each particle
-  // Flag is set to true when particle is found to be in a cell
+  // True when particle is found to be in a cell
   bool* inside_cell = new bool[n_particles]();
   // Operations flags
-  bool *increment_C1 = new bool[n_particles](),
-       *increment_C2 = new bool[n_particles](),
-       *increment_C3 = new bool[n_particles](),
-       *decrement_C2_for_previous_cell = new bool[n_particles](),
-       *update_coordinates = new bool[n_particles]();
+  bool* increment_C1 = new bool[n_particles]();
+  bool* increment_C2 = new bool[n_particles]();
+  bool* increment_C3 = new bool[n_particles]();
+  bool* decrement_C2_for_previous_cell = new bool[n_particles]();
+  bool* update_coordinates = new bool[n_particles]();
   // Coordinates of the last known cell this particle resided in
   unsigned int* prev_known_cell_coordinate_X = new unsigned int[n_particles];
   unsigned int* prev_known_cell_coordinate_Y = new unsigned int[n_particles];
-
-  // Particle displacements
-  float displacement_X = 0.0f, displacement_Y = 0.0f;
-  // Index variable for 3rd dimension of grid
-  size_t layer = 0;
 
   // --Start iterations--
   // Each iteration:
@@ -82,13 +70,14 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
   // All n_particles particles need to each be displaced once per iteration
   // to match device's algorithm
   for (size_t iter = 0; iter < n_iterations; ++iter) {
-    for (unsigned int p = 0; p < n_particles; ++p) {
+    for (size_t p = 0; p < n_particles; ++p) {
       // Set the displacements to the random numbers
-      displacement_X = random_X[iter * n_particles + p];
-      displacement_Y = random_Y[iter * n_particles + p];
+      float displacement_X = random_X[iter * n_particles + p];
+      float displacement_Y = random_Y[iter * n_particles + p];
 
       // Displace particles
-      particle_X[p] += displacement_X, particle_Y[p] += displacement_Y;
+      particle_X[p] += displacement_X;
+      particle_Y[p] += displacement_Y;
 
       // Compute distances from particle position to grid point i.e.,
       // the particle's distance from center of cell. Subtract the
@@ -99,7 +88,8 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
       float dY = particle_Y[p] - sycl::trunc(particle_Y[p]);
 
       // Compute grid point indices
-      iX = sycl::floor(particle_X[p]), iY = sycl::floor(particle_Y[p]);
+      int iX = sycl::floor(particle_X[p]);
+      int iY = sycl::floor(particle_Y[p]);
 
       /* There are 5 cases when considering particle movement about the
          grid.
@@ -133,6 +123,9 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
                    --No action.
       */
 
+      // True if particle is numerically within the cell radius
+      bool within_radius = false;
+
       // Check if particle is still in computation grid
       if ((particle_X[p] < grid_size) && (particle_Y[p] < grid_size) &&
           (particle_X[p] >= 0) && (particle_Y[p] >= 0)) {
@@ -144,68 +137,99 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
           // Satisfies counter 1 requirement for cases 1, 3, 4
           increment_C1[p] = true;
           // Case 1
-          if (!inside_cell[p])
-            increment_C2[p] = true, increment_C3[p] = true,
-            inside_cell[p] = true, update_coordinates[p] = true;
-          else if (inside_cell[p])
-            // Case 3
-            if (prev_known_cell_coordinate_X[p] != iX ||
-                prev_known_cell_coordinate_Y[p] != iY)
-              decrement_C2_for_previous_cell[p] = true, increment_C2[p] = true,
-              increment_C3[p] = true, update_coordinates[p] = true;
-          // Else: Case 4
+          if (!inside_cell[p]) {
+            increment_C2[p] = true;
+            increment_C3[p] = true;
+            inside_cell[p] = true;
+            update_coordinates[p] = true;
+          }
+          // Case 3
+          else if (prev_known_cell_coordinate_X[p] != iX ||
+                   prev_known_cell_coordinate_Y[p] != iY) {
+            increment_C2[p] = true;
+            increment_C3[p] = true;
+            update_coordinates[p] = true;
+            decrement_C2_for_previous_cell[p] = true;
+          }
+          // Else: Case 4 --No action required. Counter 1 already updated
 
         }  // End inside cell if statement
 
         // Case 2a --Particle remained inside grid and moved outside cell
-        else if (inside_cell[p])
-          inside_cell[p] = false, decrement_C2_for_previous_cell[p] = true;
+        else if (inside_cell[p]) {
+          inside_cell[p] = false;
+          decrement_C2_for_previous_cell[p] = true;
+        }
         // Else: Case 5a --Particle remained inside grid and outside cell
+        // --No action required
 
       }  // End inside grid if statement
 
       // Case 2b --Particle moved outside grid and outside cell
-      else if (inside_cell[p])
-        inside_cell[p] = false, decrement_C2_for_previous_cell[p] = true;
+      else if (inside_cell[p]) {
+        inside_cell[p] = false;
+        decrement_C2_for_previous_cell[p] = true;
+      }
       // Else: Case 5b --Particle remained outside of grid
+      // --No action required
 
-      if (update_coordinates[p])
-        prev_known_cell_coordinate_X[p] = iX,
+      // Index variable for 3rd dimension of grid
+      size_t layer;
+      // Current and previous cell coordinates
+      int curr_coordinates = iX + iY * grid_size;
+      int prev_coordinates = prev_known_cell_coordinate_X[p] +
+                             prev_known_cell_coordinate_Y[p] * grid_size;
+      // gs2 (used below) equals grid_size * grid_size
+      //
+
+      // Counter 2 layer of the grid (1 * grid_size * grid_size)
+      layer = gs2;
+      if (decrement_C2_for_previous_cell[p]) --(grid[prev_coordinates + layer]);
+
+      if (update_coordinates[p]) {
+        prev_known_cell_coordinate_X[p] = iX;
         prev_known_cell_coordinate_Y[p] = iY;
+      }
 
       // Counter 1 layer of the grid (0 * grid_size * grid_size)
       layer = 0;
-      if (increment_C1[p]) ++(grid[CURR_COORDINATES + layer]);
+      if (increment_C1[p]) ++(grid[curr_coordinates + layer]);
 
       // Counter 2 layer of the grid (1 * grid_size * grid_size)
       layer = gs2;
-      if (increment_C2[p]) ++(grid[CURR_COORDINATES + layer]);
+      if (increment_C2[p]) ++(grid[curr_coordinates + layer]);
 
       // Counter 3 layer of the grid (2 * grid_size * grid_size)
       layer = gs2 + gs2;
-      if (increment_C3[p]) ++(grid[CURR_COORDINATES + layer]);
+      if (increment_C3[p]) ++(grid[curr_coordinates + layer]);
 
-      // Counter 2 layer of the grid (1 * grid_size * grid_size)
-      layer = gs2;
-      if (decrement_C2_for_previous_cell[p]) --(grid[PREV_COORDINATES + layer]);
-
-      increment_C1[p] = false, increment_C2[p] = false, increment_C3[p] = false,
-      decrement_C2_for_previous_cell[p] = false, update_coordinates[p] = false;
+      increment_C1[p] = false;
+      increment_C2[p] = false;
+      increment_C3[p] = false;
+      decrement_C2_for_previous_cell[p] = false;
+      update_coordinates[p] = false;
 
     }  // Next iteration inner for loop
   }    // Next iteration outer for loop
-  delete[] inside_cell, delete[] increment_C1, delete[] increment_C2;
-  delete[] increment_C3, delete[] decrement_C2_for_previous_cell;
-  delete[] update_coordinates, delete[] prev_known_cell_coordinate_X;
+  delete[] inside_cell;
+  delete[] increment_C1;
+  delete[] increment_C2;
+  delete[] increment_C3;
+  delete[] decrement_C2_for_previous_cell;
+  delete[] update_coordinates;
+  delete[] prev_known_cell_coordinate_X;
   delete[] prev_known_cell_coordinate_Y;
 }  // End of function CPUParticleMotion()
 
 // Main Function
 int main(int argc, char* argv[]) {
   // Set command line arguments to their default values
-  size_t n_iterations = 10000, n_particles = 256, grid_size = 22;
+  size_t n_iterations = 10000;
+  size_t n_particles = 256;
+  size_t grid_size = 22;
   int seed = 777;
-  unsigned int cpu_flag = 0, grid_output_flag = 1;
+  unsigned int cpu_flag = 0;
+  unsigned int grid_output_flag = 1;
 
   cout << "\n";
   if (argc == 1)
@@ -226,26 +250,26 @@ int main(int argc, char* argv[]) {
     if (rc != 0) return 1;
   }  // End else
 
-  // Total number of motion events
-  const size_t n_moves = n_particles * n_iterations;
-  // Grid center
-  const float center = grid_size / 2;
-  // Cell radius = 0.5*(grid spacing)
-  const float radius = 0.5f;
-
   // Allocate and initialize arrays
   //
 
   // Stores X and Y position of particles in the cell grid
   float* particle_X = new float[n_particles];
   float* particle_Y = new float[n_particles];
+  // Total number of motion events
+  const size_t n_moves = n_particles * n_iterations;
   // Declare vectors to store random values for X and Y directions
-  float *random_X = new float[n_moves], *random_Y = new float[n_moves];
+  float* random_X = new float[n_moves];
+  float* random_Y = new float[n_moves];
+  // Grid center
+  const float center = grid_size / 2;
   // Initialize the particle starting positions to the grid center
-  for (size_t i = 0; i < n_particles; ++i)
-    particle_X[i] = center, particle_Y[i] = center;
+  for (size_t i = 0; i < n_particles; ++i) {
+    particle_X[i] = center;
+    particle_Y[i] = center;
+  }
 
-  /*Each of the folowing counters represent a separate plane in the grid
+  /*  Each of the folowing counters represent a separate plane in the grid
   variable (described below).
   Each plane is of size: grid_size * grid_size. There are 3 planes.
 
@@ -276,6 +300,8 @@ int main(int argc, char* argv[]) {
   const size_t planes = 3;
   // Stores a grid of cells, initialized to zero.
   size_t* grid = new size_t[grid_size * grid_size * planes]();
+  // Cell radius = 0.5*(grid spacing)
+  const float radius = 0.5f;
 
   // Create a device queue using default or host/device selectors
   default_selector device_selector;
@@ -298,8 +324,10 @@ int main(int argc, char* argv[]) {
   // Off by default
   if (cpu_flag == 1) {
     // Re-initialize arrays
-    for (size_t i = 0; i < n_particles; ++i)
-      particle_X[i] = center, particle_Y[i] = center;
+    for (size_t i = 0; i < n_particles; ++i) {
+      particle_X[i] = center;
+      particle_Y[i] = center;
+    }
 
     // Use Math Kernel Library (MKL) VSL Gaussian function for RNG with
     // mean of ALPHA and standard deviation of SIGMA
@@ -340,7 +368,10 @@ int main(int argc, char* argv[]) {
 
   // Cleanup
   if (cpu_flag) delete[] grid_cpu;
-  delete[] grid, delete[] random_X, delete[] random_Y;
-  delete[] particle_X, delete[] particle_Y;
+  delete[] grid;
+  delete[] random_X;
+  delete[] random_Y;
+  delete[] particle_X;
+  delete[] particle_Y;
   return 0;
 }  // End of function main()
