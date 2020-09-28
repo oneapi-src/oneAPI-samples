@@ -14,7 +14,7 @@
   		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],
   		"id": "d4p_GS_py",
   		"steps": [
-         "python daal4py_GettingStarted.py" 
+         "python IntelPython_daal4py_GettingStarted.py" 
   		 ]
   	}
     ]

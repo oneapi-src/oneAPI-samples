@@ -14,7 +14,7 @@
   		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],
   		"id": "d4p_Linear_Regression_Dist",
   		"steps": [
-         "mpirun -n 4 python ./daal4py_Distributed_LinearRegression.py"
+         "mpirun -n 4 python ./IntelPython_daal4py_Distributed_LinearRegression.py"
   		 ]
   	}
     ]

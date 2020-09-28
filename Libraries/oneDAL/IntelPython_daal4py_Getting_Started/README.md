@@ -1,11 +1,11 @@
-# daal4py Getting Started
+# Intel Python daal4py Getting Started
 This Getting Started sample code show how to do batch linear regression using the python API package daal4py from oneDAL. It demonstrates how to use software products that can be found in the [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or the [Intel AI Analytics Toolkit powered by oneAPI](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
-| Software                          | oneDAL Software Library, Python version 2.7 or >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
+| Software                          | oneDAL Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
 | What you will learn               | basic oneDAL programming model for Intel CPU
 | Time to complete                  | 5 minutes
 
@@ -114,7 +114,7 @@ Open notebook in Jupyter and download as python file
 
 Run the Program
 
-`python IntelPython_GettingStarted.py`
+`python IntelPython_daal4py_GettingStarted.py`
 
 The output files of the script will be saved in the included models and results directories. 
 
