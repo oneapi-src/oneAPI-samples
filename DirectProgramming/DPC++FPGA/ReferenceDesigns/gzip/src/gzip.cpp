@@ -27,7 +27,6 @@
 // California and by the laws of the United States of America.
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
 #include <chrono>
 #include <fstream>
 #include <string>
@@ -157,9 +156,9 @@ int main(int argc, char *argv[]) {
 
   try {
 #ifdef FPGA_EMULATOR
-    intel::fpga_emulator_selector device_selector;
+    INTEL::fpga_emulator_selector device_selector;
 #else
-    intel::fpga_selector device_selector;
+    INTEL::fpga_selector device_selector;
 #endif
     auto prop_list = property_list{property::queue::enable_profiling()};
     queue q(device_selector, dpc_common::exception_handler, prop_list);
