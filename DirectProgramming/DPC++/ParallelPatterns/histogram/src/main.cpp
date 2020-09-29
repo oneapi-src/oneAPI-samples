@@ -31,7 +31,7 @@ void dense_histogram(std::vector<uint64_t> &input)
     //num_bins is maximum value + 1
     int num_bins;
     {
-      auto histogram = histogram_buf.template get_access<cl::sycl::access::mode::read>();
+      sycl::host_accessor histogram(histogram_buf, sycl::read_only);
       num_bins =  histogram[N-1] + 1;
     }
     cl::sycl::buffer<uint64_t, 1> histogram_new_buf{ cl::sycl::range<1>(num_bins) };
@@ -45,7 +45,7 @@ void dense_histogram(std::vector<uint64_t> &input)
 
     std::cout << "Dense Histogram:\n";
     {
-      auto histogram_new = histogram_new_buf.template get_access<cl::sycl::access::mode::read>();
+      sycl::host_accessor histogram_new(histogram_new_buf, sycl::read_only);
       std::cout << "[";
       for(int i = 0; i < num_bins; i++)
       {	
@@ -82,9 +82,9 @@ void sparse_histogram(std::vector<uint64_t> &input)
     std::cout << "[";
     for(int i = 0; i < num_bins-1; i++)
     {
-        auto histogram_value = histogram_values_buf.template get_access<cl::sycl::access::mode::read>();
-        auto histogram_count = histogram_counts_buf.template get_access<cl::sycl::access::mode::read>();
-        std::cout << "(" << histogram_value[i] << ", " << histogram_count[i] << ") " ;
+        sycl::host_accessor histogram_value(histogram_values_buf, sycl::read_only);
+	sycl::host_accessor histogram_count(histogram_counts_buf, sycl::read_only);
+	std::cout << "(" << histogram_value[i] << ", " << histogram_count[i] << ") " ;
     }
     std::cout << "]\n";
 }
