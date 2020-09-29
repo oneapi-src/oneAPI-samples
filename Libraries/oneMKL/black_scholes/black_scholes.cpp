@@ -148,6 +148,10 @@ void run(int64_t nopt, sycl::device & dev) {
 
     for (int var = 0; var < 4; ++var) {
 
+#ifdef _WIN32
+        if (var & 1) continue; // Skip RNG device APIs on Windows for now.
+#endif
+
         std::fill(s0.begin(), s0.end(), static_cast<T>(0.0));
         std::fill(x.begin(), x.end(), static_cast<T>(0.0));
         std::fill(t.begin(), t.end(), static_cast<T>(0.0));

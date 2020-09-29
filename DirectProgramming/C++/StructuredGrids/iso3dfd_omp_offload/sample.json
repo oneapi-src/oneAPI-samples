@@ -3,7 +3,7 @@
   "name": "iso3dfd_omp_offload",
   "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
   "description": "A finite difference stencil kernel for solving 3D acoustic isotropic wave equation",
-  "toolchain": [ "icpx" ],
+  "toolchain": [ "icc" ],
   "targetDevice": [ "GPU" ],
   "languages": [ { "cpp": {} } ],
   "os": [ "linux" ],

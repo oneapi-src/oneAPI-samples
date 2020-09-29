@@ -36,6 +36,10 @@ Using Data Parallel C++, the code sample runs multiple MPI ranks to distribute t
 calculation of the number Pi. Each rank offloads the computation to an accelerator
 (GPU/CPU) using Intel DPC++ compiler to compute a partial compution of the number Pi.
 
+If you run the sample on a CPU as your default device,  you may need to increase 
+the memory allocation for openCL.  You can do this by setting an environment variable, 
+    "CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=16MB
+
 
 ## Key Implementation Details
 The basic DPC++ implementation explained in the code includes accessor,
@@ -79,17 +83,18 @@ where
 
 
 ### Example of Output
-Rank #0 runs on: lqnguyen-NUC1, uses device: Intel(R) Gen9 HD Graphics NEO
-Number of steps is 1000000
-Cpu Seq calc:           PI =3.14 in 0.00422 seconds
-Cpu TBB  calc:          PI =3.14 in 0.00177 seconds
-dpstd native:           PI =3.14 in 0.209 seconds
-dpstd native2:          PI =3.14 in 0.213 seconds
-dpstd native3:          PI =3.14 in 0.00222 seconds
-dpstd native4:          PI =3.14 in 0.00237 seconds
-dpstd two steps:        PI =3.14 in 0.0014 seconds
-dpstd transform_reduce: PI =3.14 in 0.000528 seconds
-mpi native:             PI =3.14 in 0.548 seconds
-mpi transform_reduce:   PI =3.14 in 0.000498 seconds
-succes
-
+```c++
+Rank #0 runs on: lqnguyen-NUC1, uses device: Intel(R) Gen9 HD Graphics NEO \
+Number of steps is 1000000 \
+Cpu Seq calc:           PI =3.14 in 0.00422 seconds \
+Cpu TBB  calc:          PI =3.14 in 0.00177 seconds \
+dpstd native:           PI =3.14 in 0.209 seconds \
+dpstd native2:          PI =3.14 in 0.213 seconds \
+dpstd native3:          PI =3.14 in 0.00222 seconds \
+dpstd native4:          PI =3.14 in 0.00237 seconds \
+dpstd two steps:        PI =3.14 in 0.0014 seconds \
+dpstd transform_reduce: PI =3.14 in 0.000528 seconds \
+mpi native:             PI =3.14 in 0.548 seconds \
+mpi transform_reduce:   PI =3.14 in 0.000498 seconds \
+succes \
+```

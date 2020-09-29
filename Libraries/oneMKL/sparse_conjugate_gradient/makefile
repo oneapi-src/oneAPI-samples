@@ -3,7 +3,7 @@
 default: run
 
 run: sparse_cg.exe
-	./sparse_cg.exe
+	.\sparse_cg
 
 DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
 
