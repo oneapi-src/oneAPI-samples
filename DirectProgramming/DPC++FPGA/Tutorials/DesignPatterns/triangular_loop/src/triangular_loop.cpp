@@ -4,9 +4,21 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
 #include <chrono>
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 
 using namespace sycl;
 
@@ -121,13 +133,13 @@ int main() {
   double time_kernel;
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector device_selector;
+  INTEL::fpga_emulator_selector device_selector;
   std::cout << "\nEmulator output does not demonstrate true hardware "
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
 #else
-  intel::fpga_selector device_selector;
+  INTEL::fpga_selector device_selector;
 #endif
 
   try {

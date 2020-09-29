@@ -4,9 +4,21 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
-#include "dpc_common.hpp"
 #include "lib.hpp"
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
+#include "dpc_common.hpp"
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 
 using namespace sycl;
 
@@ -23,9 +35,9 @@ int main() {
 
   // Select either the FPGA emulator (CPU) or FPGA device
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector device_selector;
+  INTEL::fpga_emulator_selector device_selector;
 #else
-  intel::fpga_selector device_selector;
+  INTEL::fpga_selector device_selector;
 #endif
 
   try {
@@ -49,14 +61,14 @@ int main() {
         // HlsSqrtf is an Intel HLS component, defined in lib_hls.cpp.
         // (Intel HLS is a C++ based High Level Synthesis language for FPGA.)
         float a_sq_sqrt = HlsSqrtf(a_sq);
-        
+
         // SyclSquare is a SYCL library function, defined in lib_sycl.cpp.
         float b_sq = SyclSquare(kB);
 
         // RtlByteswap is an RTL library.
         //  - When compiled for FPGA, Verilog module byteswap_uint in lib_rtl.v
         //    is instantiated in the datapath by the compiler.
-        //  - When compiled for FPGA emulator (CPU), the C model of RtlByteSwap 
+        //  - When compiled for FPGA emulator (CPU), the C model of RtlByteSwap
         //    in lib_rtl_model.cpp is used instead.
         accessor_c[0] = RtlByteswap((unsigned)(a_sq_sqrt + b_sq));
       });
