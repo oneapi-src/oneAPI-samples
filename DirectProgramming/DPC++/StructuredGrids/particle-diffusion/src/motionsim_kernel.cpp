@@ -69,13 +69,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
         // Coordinates of the last known cell this particle resided in
         unsigned int prev_known_cell_coordinate_X;
         unsigned int prev_known_cell_coordinate_Y;
-        // Atomic operations flags
-        bool increment_C1 = false;
-        bool increment_C2 = false;
-        bool increment_C3 = false;
-        bool decrement_C2_for_previous_cell = false;
-        bool update_coordinates = false;
-
+        
         // --Start iterations--
         // Each iteration:
         //    1. Updates the position of all particles
@@ -136,9 +130,16 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
                Case 5: Particle moves and remains outside of cell
                        --No action.
           */
-
+       
           // True when particle is numerically within cell radius
           bool within_radius = false;
+          // Atomic operations flags
+          bool increment_C1 = false;
+          bool increment_C2 = false;
+          bool increment_C3 = false;
+          bool decrement_C2_for_previous_cell = false;
+          bool update_coordinates = false;
+
           // Check if particle is still in computation grid
           if ((particle_X_a[p] < grid_size) && (particle_Y_a[p] < grid_size) &&
               (particle_X_a[p] >= 0) && (particle_Y_a[p] >= 0)) {
@@ -190,8 +191,8 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
           // Index variable for 3rd dimension of grid
           size_t layer;
           // Current and previous cell coordinates
-          int curr_coordinates = iX + iY * grid_size;
-          int prev_coordinates = prev_known_cell_coordinate_X +
+          size_t curr_coordinates = iX + iY * grid_size;
+          size_t prev_coordinates = prev_known_cell_coordinate_X +
                                  prev_known_cell_coordinate_Y * grid_size;
           // gs2 (used below) equals grid_size * grid_size
           //
@@ -220,12 +221,6 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
           layer = gs2 + gs2;
           if (increment_C3)
             atomic_fetch_add<size_t>(grid_a[curr_coordinates + layer], 1);
-
-          increment_C1 = false;
-          increment_C2 = false;
-          increment_C3 = false;
-          decrement_C2_for_previous_cell = false;
-          update_coordinates = false;
 
         }  // Next iteration
       });  // End parallel for
