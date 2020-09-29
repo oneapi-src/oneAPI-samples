@@ -27,7 +27,6 @@ project(dpcpp-blur LANGUAGES CXX)
 set(TARGET dpcpp-blur)
 set(SOURCES src/dpcpp-blur.cpp)
 set(VPL_NAME mfx)
-set(CMAKE_MSVCIDE_RUN_PATH $ENV{PATH})
 set(RUNARGS ${CMAKE_CURRENT_SOURCE_DIR}/content/cars_128x96.i420 128 96)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -36,6 +35,9 @@ add_executable(${TARGET} ${SOURCES})
 
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  if(NOT DEFINED ENV{VSCMD_VER})
+    set(CMAKE_MSVCIDE_RUN_PATH $ENV{PATH})
+  endif()
 endif()
 
 if(DPCPP_COMPILER)

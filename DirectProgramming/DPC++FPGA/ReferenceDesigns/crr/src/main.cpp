@@ -91,7 +91,6 @@
 //
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
 #include <cstddef>
 #include <cstdlib>
 #include <fstream>
@@ -102,7 +101,20 @@
 #include <string>
 
 #include "CRR_common.hpp"
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 
 using namespace std;
 using namespace sycl;
@@ -119,12 +131,27 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
       (((n_items + (OUTER_UNROLL - 1)) / OUTER_UNROLL) * OUTER_UNROLL) * 3;
 
   {
-    buffer<CRRMeta, 1> i_params(in_params.data(), in_params.size());
-    buffer<CRRResParams, 1> r_params(res_params.data(), res_params.size());
-    buffer<CRRPerStepMeta, 1> a_params(in_params2.data(), in_params2.size());
+    buffer<CRRMeta, 1> i_params(in_params.size());
+    buffer<CRRPerStepMeta, 1> a_params(in_params2.size());
+    buffer<CRRResParams, 1> r_params(res_params.size());
+    r_params.set_final_data(res_params.data());
 
     event e;
     {
+      // copy the input buffers
+      q.submit([&](handler& h) {
+        auto accessor_v =
+          i_params.template get_access<access::mode::discard_write>(h);
+        h.copy(in_params.data(), accessor_v);
+      });
+
+      q.submit([&](handler& h) {
+        auto accessor_v2 =
+          a_params.template get_access<access::mode::discard_write>(h);
+        h.copy(in_params2.data(), accessor_v2);
+      });
+
+      // start the main kernel
       e = q.submit([&](handler &h) {
         auto accessor_v =
             i_params.template get_access<access::mode::read_write>(h);
@@ -315,7 +342,7 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
       });
     }
   }
-  
+
   double diff = timer.Elapsed();
   return diff;
 }
@@ -500,7 +527,7 @@ void PrepareKernelData(vector<CRRInParams> &in_params,
   }
 }
 
-// Takes in the result from the kernel and stores the 3 option prices 
+// Takes in the result from the kernel and stores the 3 option prices
 // belonging to the same CRR problem in one InterRes element
 void ProcessKernelResult(const vector<CRRResParams> &res_params,
                          vector<InterRes> &postp_buff, const int n_crrs) {
@@ -716,9 +743,9 @@ int main(int argc, char *argv[]) {
 
   try {
 #if defined(FPGA_EMULATOR)
-    intel::fpga_emulator_selector device_selector;
+    INTEL::fpga_emulator_selector device_selector;
 #else
-    intel::fpga_selector device_selector;
+    INTEL::fpga_selector device_selector;
 #endif
 
     queue q(device_selector, dpc_common::exception_handler);
