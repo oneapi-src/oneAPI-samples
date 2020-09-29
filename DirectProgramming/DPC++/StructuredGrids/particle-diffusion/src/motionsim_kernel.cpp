@@ -131,8 +131,6 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
                        --No action.
           */
        
-          // True when particle is numerically within cell radius
-          bool within_radius = false;
           // Atomic operations flags
           bool increment_C1 = false;
           bool increment_C2 = false;
@@ -143,12 +141,8 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
           // Check if particle is still in computation grid
           if ((particle_X_a[p] < grid_size) && (particle_Y_a[p] < grid_size) &&
               (particle_X_a[p] >= 0) && (particle_Y_a[p] >= 0)) {
-            // Compare radius to particle's distance from center of cell
-            within_radius =
-                radius >= sycl::sqrt(dX * dX + dY * dY) ? true : false;
-
-            // Check if particle is in cell
-            if (within_radius) {
+            // Compare the radius to particle's distance from center of cell
+            if (radius >= sycl::sqrt(dX * dX + dY * dY)) {
               // Satisfies counter 1 requirement for cases 1, 3, 4
               increment_C1 = true;
               // Case 1

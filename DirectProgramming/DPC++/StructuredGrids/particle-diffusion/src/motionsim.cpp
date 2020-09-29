@@ -123,17 +123,11 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
                    --No action.
       */
 
-      // True if particle is numerically within the cell radius
-      bool within_radius = false;
-
       // Check if particle is still in computation grid
       if ((particle_X[p] < grid_size) && (particle_Y[p] < grid_size) &&
           (particle_X[p] >= 0) && (particle_Y[p] >= 0)) {
-        // Compare radius to particle's distance from center of cell
-        within_radius = radius >= sycl::sqrt(dX * dX + dY * dY) ? true : false;
-
-        // Check if particle is in cell
-        if (within_radius) {
+        // Compare the radius to particle's distance from center of cell
+        if (radius >= sycl::sqrt(dX * dX + dY * dY)) {
           // Satisfies counter 1 requirement for cases 1, 3, 4
           increment_C1[p] = true;
           // Case 1
