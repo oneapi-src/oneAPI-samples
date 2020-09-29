@@ -1,0 +1,8 @@
+{
+  "name": "Getting Started",
+  "categories": ["Toolkit/Intel® AI Analytics Toolkit/XGBoost"],
+  "description": "This Getting Started sample code shows how to do define and train an XGBoost model ",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "os":["linux"]
+}
