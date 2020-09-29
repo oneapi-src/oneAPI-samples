@@ -2,7 +2,7 @@
   "guid": "AE280EFE-9EB1-406D-B32D-5991F707E195",
   "name": "Intel Python Modin Getting Started",
   "categories": ["Toolkit/Intel® AI Analytics Toolkit/Modin"],
-  "description": "This getting started samples shows you how to run Modin-accelerated Pandas functions and note the performance gain when compared to "stock" (aka standard) Pandas functions",
+  "description": "This samples illustrates how to use Modin accelerated Pandas functions and notes the performance gain when compared to standard Pandas functions",
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "dependencies": ["Modin, AI Analytics Toolkit"],
@@ -14,7 +14,7 @@
   		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate modin_env"],
   		"id": "IDP_Modin_GS_py",
   		"steps": [
-         "runipy IntelPython_Modin_GettingStarted.py" 
+         "runipy IntelPython_Modin_GettingStarted.ipynb" 
   		 ]
   	}
     ]
