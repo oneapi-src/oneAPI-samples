@@ -11,7 +11,9 @@
  "ciTests": {
 	"linux": [
 	{
-		"env": ["source /opt/intel/oneapi/setvars.sh --force" ],
+		"env": ["source activate tensorflow",
+		        "bash $ONEAPI_ROOT/iLiT/latest/install_iLiT.sh",
+		        "python -m pip install notebook matplotlib runipy"],
 		"id": "ilit tensorflow",
 		"steps": [
 			"runipy ilit_sample_tensorflow.ipynb"
