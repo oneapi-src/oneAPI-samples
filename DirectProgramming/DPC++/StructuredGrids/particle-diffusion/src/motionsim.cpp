@@ -176,8 +176,8 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
       // Index variable for 3rd dimension of grid
       size_t layer;
       // Current and previous cell coordinates
-      int curr_coordinates = iX + iY * grid_size;
-      int prev_coordinates = prev_known_cell_coordinate_X[p] +
+      size_t curr_coordinates = iX + iY * grid_size;
+      size_t prev_coordinates = prev_known_cell_coordinate_X[p] +
                              prev_known_cell_coordinate_Y[p] * grid_size;
       // gs2 (used below) equals grid_size * grid_size
       //
