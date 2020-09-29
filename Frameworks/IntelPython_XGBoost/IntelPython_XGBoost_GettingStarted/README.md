@@ -78,7 +78,8 @@ Open .pynb file and run cells in Jupyter Notebook using the "Run" button (see im
 
 ##### Expected Printed Output for Cells (with similar numbers):
 ```
-Fill in
+RMSE: 11.113036205909719
+[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 ```
 
 
@@ -96,6 +97,7 @@ The output files of the script will be saved in the included models and results 
 
 ##### Expected Printed Output (with similar numbers):
 ```
-fill in
+RMSE: 11.113036205909719
+[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 ```
 
