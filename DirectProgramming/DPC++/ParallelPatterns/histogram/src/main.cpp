@@ -31,8 +31,8 @@ void dense_histogram(std::vector<uint64_t> &input)
     //num_bins is maximum value + 1
     int num_bins;
     {
-      sycl::host_accessor histogram(histogram_buf, sycl::read_only);
-      num_bins =  histogram[N-1] + 1;
+        sycl::host_accessor histogram(histogram_buf, sycl::read_only);
+	num_bins =  histogram[N-1] + 1;
     }
     cl::sycl::buffer<uint64_t, 1> histogram_new_buf{ cl::sycl::range<1>(num_bins) };
     auto val_begin = oneapi::dpl::counting_iterator<int>{0};
@@ -45,15 +45,15 @@ void dense_histogram(std::vector<uint64_t> &input)
 
     std::cout << "Dense Histogram:\n";
     {
-      sycl::host_accessor histogram_new(histogram_new_buf, sycl::read_only);
-      std::cout << "[";
-      for(int i = 0; i < num_bins; i++)
-      {	
-	  std::cout <<"("<< i << ", " << histogram_new[i] <<  ") ";
-      }
-      std::cout << "]\n";
-      }
-
+        sycl::host_accessor histogram_new(histogram_new_buf, sycl::read_only);
+	std::cout << "[";
+	for(int i = 0; i < num_bins; i++)
+	{	
+	    std::cout <<"("<< i << ", " << histogram_new[i] <<  ") ";
+	}
+	std::cout << "]\n";
+    }
+    
 }
 
 void sparse_histogram(std::vector<uint64_t> &input)
