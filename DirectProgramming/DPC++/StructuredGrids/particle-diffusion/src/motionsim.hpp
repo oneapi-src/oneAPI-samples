@@ -25,11 +25,11 @@ constexpr float sigma = 0.03f;  // Standard Deviation
 
 #include <mkl.h> /* oneMKL, mkl libraries */
 #include <CL/sycl.hpp>
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include <iomanip> /* setw() function */
 #include <iostream>
 #include <mkl_rng_sycl.hpp> /* dist() function, mkl namespace */
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 void ParticleMotion(sycl::queue&, const int, float*, float*, float*, float*,
