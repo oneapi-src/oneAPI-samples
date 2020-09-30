@@ -12,7 +12,7 @@
 		"id": "tensorflow horovod",
 		"steps": [
 			"source activate tensorflow",
-			"python TensorFlow_Multinode_Training_with_Horovod.py"
+			"mpirun -n 2 python TensorFlow_Multinode_Training_with_Horovod.py"
 		 ]
 	}
      ]

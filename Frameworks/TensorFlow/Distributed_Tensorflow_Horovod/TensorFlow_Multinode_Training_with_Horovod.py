@@ -138,8 +138,7 @@ def cnn_model_fn(feature, target, mode):
   return tf.argmax(logits, 1), loss
 
 def train_input_generator(x_train, y_train, batch_size=64):
-    assert len(x_train) == len(y_train)
-    while True:
+    if len(x_train) == len(y_train):
         p = np.random.permutation(len(x_train))
         x_train, y_train = x_train[p], y_train[p]
         index = 0
@@ -147,6 +146,8 @@ def train_input_generator(x_train, y_train, batch_size=64):
             yield x_train[index:index + batch_size], \
                   y_train[index:index + batch_size],
             index += batch_size
+    else:
+        None
 
 def main(unused_argv):
   # Initialize Horovod
