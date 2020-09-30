@@ -67,11 +67,11 @@ void VectorAdd(queue &q, const IntArray &a_array, const IntArray &b_array,
   q.submit([&](handler &h) {
     // Create an accessor for each buffer with access permission: read, write or
     // read/write. The accessor is a mean to access the memory in the buffer.
-	accessor a(a_buf, h, read_only);
-	accessor b(b_buf, h, read_only);
+    accessor a(a_buf, h, read_only);
+    accessor b(b_buf, h, read_only);
 
     // The sum_accessor is used to store (with write permission) the sum data.
-	accessor sum(sum_buf, h, write_only);
+    accessor sum(sum_buf, h, write_only);
 
     // Use parallel_for to run vector addition in parallel on device. This
     // executes the kernel.
@@ -79,7 +79,7 @@ void VectorAdd(queue &q, const IntArray &a_array, const IntArray &b_array,
     //    2nd parameter is the kernel, a lambda that specifies what to do per
     //    work item. The parameter of the lambda is the work item id.
     // DPC++ supports unnamed lambda kernel by default.
-	h.parallel_for(num_items, [=](auto i) { sum[i] = a[i] + b[i]; });
+    h.parallel_for(num_items, [=](auto i) { sum[i] = a[i] + b[i]; });
   });
 }
 

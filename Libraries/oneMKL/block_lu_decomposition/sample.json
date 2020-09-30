@@ -1,0 +1,32 @@
+{
+  "guid": "3EC851D1-056A-4973-A2F7-9FC7EFEDA785",
+  "name": "Block LU Decomposition",
+  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit", "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "toolchain": [ "dpcpp" ],
+  "dependencies": [ "mkl" ],
+  "description": "Block LU decomposition using oneMKL BLAS and LAPACK.",
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "block_lu_decomposition",
+        "steps": [
+          "make clean",
+          "make"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "block_lu_decomposition",
+        "steps": [
+          "nmake clean",
+          "nmake"
+        ]
+      }
+    ]
+  }
+}

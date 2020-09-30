@@ -1,0 +1,32 @@
+{
+  "guid": "C7FEBFF7-9067-456E-BE79-98CE22AE3B6B",
+  "name": "Monte Carlo European Options Pricing",
+  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit", "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "toolchain": [ "dpcpp" ],
+  "dependencies": [ "mkl" ],
+  "description": "Monte Carlo simulation of European options pricing with oneMKL random number generators",
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "monte_carlo_european_opt",
+        "steps": [
+          "make clean",
+          "make"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "monte_carlo_european_opt",
+        "steps": [
+          "nmake clean",
+          "nmake"
+        ]
+      }
+    ]
+  }
+}

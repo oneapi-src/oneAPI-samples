@@ -1,0 +1,22 @@
+{
+  "guid": "6D067BD9-28EE-4ABE-A59A-4F91ADA9ED75",
+  "name": "Hello_World_GPU",
+  "categories": ["Toolkit/Project Templates"],
+  "toolchain": ["dpcpp"],
+  "description": "Template 'Hello World' on GPU",
+  "languages": [{"cpp":{}}],
+  "targetDevice": ["GPU"],
+  "os": ["windows"],
+  "builder": ["ide"],
+  "ciTests": {
+    "windows": [
+      {
+        "steps": [
+          "MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration=\"Release\"",
+          "cd x64\\Release",
+          "Hello_World_GPU.exe"
+        ]
+      }
+    ]
+  }
+}
