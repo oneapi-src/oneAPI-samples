@@ -12,10 +12,13 @@
 	"linux": [
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --force",
+			"conda env remove -n user_tensorflow",
 			"conda create --name user_tensorflow --clone tensorflow",
 			"conda activate user_tensorflow",
-		        "bash $ONEAPI_ROOT/iLiT/latest/install_iLiT.sh",
-		        "python -m pip install notebook matplotlib runipy"],
+		        "python -m pip install pyyaml scikit-learn schema ilit",
+			"python -m pip install notebook matplotlib",
+		        "conda install runipy -y"
+                        ],
 		"id": "ilit tensorflow",
 		"steps": [
 			"runipy ilit_sample_tensorflow.ipynb"
