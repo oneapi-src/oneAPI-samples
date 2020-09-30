@@ -150,7 +150,10 @@
       <SpecifyStaticLibrary>$(ONEAPI_ROOT)/mkl/latest/lib/intel64/mkl_sycl.lib</SpecifyStaticLibrary>
     </Link>
   </ItemDefinitionGroup>
-    <ClCompile Include="src\*.cpp" />
+  <ItemGroup>
+    <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\motionsim_kernel.cpp" />
+    <ClCompile Include="src\motionsim.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="License.txt" />

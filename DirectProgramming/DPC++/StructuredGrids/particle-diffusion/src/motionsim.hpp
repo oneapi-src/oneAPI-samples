@@ -53,7 +53,7 @@ void PrintVectorAsMatrix(T*, const size_t, const size_t);
 
 int ParseArgs(const int, char* [], size_t*, size_t*, size_t*, int*,
               unsigned int*, unsigned int*);
-int ParseArgsWindows(int, char* [], size_t*, size_t*, size_t*, size_t*,
+int ParseArgsWindows(int, char* [], size_t*, size_t*, size_t*, int*,
                      unsigned int*, unsigned int*);
 void PrintGrids(const size_t*, const size_t*, const size_t, const unsigned int,
                 const unsigned int);
