@@ -16,8 +16,8 @@
 #endif  // _WIN32 || _WIN64
 
 // Random Number Generation (RNG) Distribution parameters
-#define ALPHA 0.0f   // Mean
-#define SIGMA 0.03f  // Standard Deviation
+constexpr float alpha = 0.0f;   // Mean
+constexpr float sigma = 0.03f;  // Standard Deviation
 
 #if !WINDOWS        // unistd.h not available on windows platforms.
 #include <unistd.h> /* getopt() function */
@@ -25,10 +25,12 @@
 
 #include <mkl.h> /* oneMKL, mkl libraries */
 #include <CL/sycl.hpp>
-#include <dpc_common.hpp>
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include <iomanip> /* setw() function */
 #include <iostream>
 #include <mkl_rng_sycl.hpp> /* dist() function, mkl namespace */
+#include "dpc_common.hpp"
 
 void ParticleMotion(sycl::queue&, const int, float*, float*, float*, float*,
                     size_t*, const size_t, const size_t, const size_t,
@@ -36,7 +38,7 @@ void ParticleMotion(sycl::queue&, const int, float*, float*, float*, float*,
 void CPUParticleMotion(const int, float*, float*, float*, float*, size_t*,
                        const size_t, const size_t, const size_t, unsigned int,
                        const float);
-void Usage(const std::string);
+void Usage();
 int IsNum(const char*);
 bool ValidateDeviceComputation(const size_t*, const size_t*, const size_t,
                                const size_t);
@@ -49,13 +51,13 @@ void PrintMatrix(const T**, const size_t, const size_t);
 template <typename T>
 void PrintVectorAsMatrix(T*, const size_t, const size_t);
 
-int parse_cl_args(const int, char* [], size_t*, size_t*, size_t*, size_t*,
-                  unsigned int*, unsigned int*);
-int parse_cl_args_windows(int, char* [], size_t*, size_t*, size_t*, size_t*,
-                          unsigned int*, unsigned int*);
-void print_grids(const size_t*, const size_t*, const size_t, const unsigned int,
-                 const unsigned int);
-void print_validation_results(const size_t*, const size_t*, const size_t,
-                              const size_t, const unsigned int,
-                              const unsigned int);
+int ParseArgs(const int, char* [], size_t*, size_t*, size_t*, int*,
+              unsigned int*, unsigned int*);
+int ParseArgsWindows(int, char* [], size_t*, size_t*, size_t*, size_t*,
+                     unsigned int*, unsigned int*);
+void PrintGrids(const size_t*, const size_t*, const size_t, const unsigned int,
+                const unsigned int);
+void PrintValidationResults(const size_t*, const size_t*, const size_t,
+                            const size_t, const unsigned int,
+                            const unsigned int);
 void CheckVslError(int);

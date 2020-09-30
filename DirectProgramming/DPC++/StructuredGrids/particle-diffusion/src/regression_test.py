@@ -80,10 +80,10 @@ elif testType == testTypes[5]:
 
 # Compile
 print("Compiling ...\n")
-print("dpcpp -fsycl -std=c++17 -O3 motionsim.cpp -o pd -lmkl_sycl -lmkl_intel_ilp64"+
+print("dpcpp -fsycl -std=c++17 -O3 utils.cpp motionsim_kernel.cpp motionsim.cpp -o pd -lmkl_sycl -lmkl_intel_ilp64"+
           " -lmkl_sequential -lmkl_core\n")
 
-os.system("dpcpp -fsycl -std=c++17 -O3 motionsim.cpp -o pd -lmkl_sycl -lmkl_intel_ilp64"+
+os.system("dpcpp -fsycl -std=c++17 -O3 utils.cpp motionsim_kernel.cpp motionsim.cpp -o pd -lmkl_sycl -lmkl_intel_ilp64"+
           " -lmkl_sequential -lmkl_core")
 
 # *******************************************************************

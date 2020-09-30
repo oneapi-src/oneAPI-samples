@@ -29,8 +29,6 @@ namespace oneapi {}
 using namespace oneapi;
 using namespace sycl;
 using namespace std;
-#include "motionsim_kernel.cpp"
-#include "utils.cpp"
 
 // This function distributes simulation work across workers
 void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
@@ -47,7 +45,8 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
   cout << "Size of the grid: " << grid_size << "\n";
   cout << "Random number seed: " << seed << "\n";
 
-  // Array of flags for each particle
+  // Array of flags for each particle.
+  // Each array initialized to false/zero with new array zero initializer.
   // True when particle is found to be in a cell
   bool* inside_cell = new bool[n_particles]();
   // Operations flags
@@ -56,10 +55,13 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
   bool* increment_C3 = new bool[n_particles]();
   bool* decrement_C2_for_previous_cell = new bool[n_particles]();
   bool* update_coordinates = new bool[n_particles]();
-  // Coordinates of the last known cell this particle resided in
+  // Coordinates of the last known cell this particle resided in.
+  // Initialized in motion simulation algorithm below and presumably not used
+  // before initialization. Thus, avoid spending computation time initializing
   unsigned int* prev_known_cell_coordinate_X = new unsigned int[n_particles];
   unsigned int* prev_known_cell_coordinate_Y = new unsigned int[n_particles];
 
+  // Motion simulation algorithm
   // --Start iterations--
   // Each iteration:
   //    1. Updates the position of all particles
@@ -172,7 +174,7 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
       // Current and previous cell coordinates
       size_t curr_coordinates = iX + iY * grid_size;
       size_t prev_coordinates = prev_known_cell_coordinate_X[p] +
-                             prev_known_cell_coordinate_Y[p] * grid_size;
+                                prev_known_cell_coordinate_Y[p] * grid_size;
       // gs2 (used below) equals grid_size * grid_size
       //
 
@@ -232,11 +234,11 @@ int main(int argc, char* argv[]) {
     int rc = 0;
 // Detect OS type and read in command line arguments
 #if !WINDOWS
-    rc = parse_cl_args(argc, argv, &n_iterations, &n_particles, &grid_size,
-                       &seed, &cpu_flag, &grid_output_flag);
+    rc = ParseArgs(argc, argv, &n_iterations, &n_particles, &grid_size, &seed,
+                   &cpu_flag, &grid_output_flag);
 #elif WINDOWS  // WINDOWS
-    rc = parse_cl_args_windows(argc, argv, &n_iterations, &n_particles,
-                               &grid_size, &seed, &cpu_flag, &grid_output_flag);
+    rc = ParseArgsWindows(argc, argv, &n_iterations, &n_particles, &grid_size,
+                          &seed, &cpu_flag, &grid_output_flag);
 #else          // WINDOWS
     cout << "Error. Failed to detect operating system. Exiting.\n";
     return 1;
@@ -324,7 +326,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Use Math Kernel Library (MKL) VSL Gaussian function for RNG with
-    // mean of ALPHA and standard deviation of SIGMA
+    // mean of alpha and standard deviation of sigma
     //
 
     VSLStreamStatePtr stream;
@@ -332,11 +334,11 @@ int main(int argc, char* argv[]) {
     CheckVslError(vsl_retv);
 
     vsl_retv = vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, n_moves,
-                             random_X, ALPHA, SIGMA);
+                             random_X, alpha, sigma);
     CheckVslError(vsl_retv);
 
     vsl_retv = vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, n_moves,
-                             random_Y, ALPHA, SIGMA);
+                             random_Y, alpha, sigma);
     CheckVslError(vsl_retv);
 
     grid_cpu = new size_t[grid_size * grid_size * planes]();
@@ -353,10 +355,10 @@ int main(int argc, char* argv[]) {
     cout << "\nCPU Offload time: " << cpu_time << " s\n\n";
   }
   if (grid_output_flag)
-    print_grids(grid, grid_cpu, grid_size, cpu_flag, grid_output_flag);
+    PrintGrids(grid, grid_cpu, grid_size, cpu_flag, grid_output_flag);
   if (cpu_flag)
-    print_validation_results(grid, grid_cpu, grid_size, planes, cpu_flag,
-                             grid_output_flag);
+    PrintValidationResults(grid, grid_cpu, grid_size, planes, cpu_flag,
+                           grid_output_flag);
   else
     cout << "Success.\n";
 

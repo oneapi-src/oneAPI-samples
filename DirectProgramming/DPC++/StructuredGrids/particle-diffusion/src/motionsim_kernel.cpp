@@ -9,6 +9,12 @@
 // Simulation (Device)
 //
 
+#include "motionsim.hpp"
+namespace oneapi {}
+using namespace oneapi;
+using namespace sycl;
+using namespace std;
+
 // This function distributes simulation work across workers
 void ParticleMotion(queue& q, const int seed, float* particle_X,
                     float* particle_Y, float* random_X, float* random_Y,
@@ -34,8 +40,8 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
   // Declare basic random number generator (BRNG) for random vector
   mkl::rng::philox4x32x10 engine(q, seed);
   // Distribution object
-  mkl::rng::gaussian<float, mkl::rng::gaussian_method::icdf> distr(ALPHA,
-                                                                   SIGMA);
+  mkl::rng::gaussian<float, mkl::rng::gaussian_method::icdf> distr(alpha,
+                                                                   sigma);
   // Begin buffer scope
   {
     // Create buffers using DPC++ buffer class
@@ -60,7 +66,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
       // Use DPC++ atomic access mode to create atomic accessors
       accessor grid_a = grid_buf.get_access<access::mode::atomic>(h);
 
-      // Send a DPC++ kernel (lambda) for parallel execution.
+      // Send a DPC++ kernel (lambda) for parallel execution
       h.parallel_for(range(n_particles), [=](auto item) {
         // Particle number (used for indexing)
         size_t p = item.get_id(0);
@@ -69,7 +75,8 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
         // Coordinates of the last known cell this particle resided in
         unsigned int prev_known_cell_coordinate_X;
         unsigned int prev_known_cell_coordinate_Y;
-        
+
+        // Motion simulation algorithm
         // --Start iterations--
         // Each iteration:
         //    1. Updates the position of all particles
@@ -130,7 +137,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
                Case 5: Particle moves and remains outside of cell
                        --No action.
           */
-       
+
           // Atomic operations flags
           bool increment_C1 = false;
           bool increment_C2 = false;
@@ -187,7 +194,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
           // Current and previous cell coordinates
           size_t curr_coordinates = iX + iY * grid_size;
           size_t prev_coordinates = prev_known_cell_coordinate_X +
-                                 prev_known_cell_coordinate_Y * grid_size;
+                                    prev_known_cell_coordinate_Y * grid_size;
           // gs2 (used below) equals grid_size * grid_size
           //
 
