@@ -12,8 +12,9 @@
 	"linux": [
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --force",
-			"source activate tensorflow",
-		        "sudo bash $ONEAPI_ROOT/iLiT/latest/install_iLiT.sh",
+			"conda create --name user_tensorflow --clone tensorflow",
+			"conda activate user_tensorflow",
+		        "bash $ONEAPI_ROOT/iLiT/latest/install_iLiT.sh",
 		        "python -m pip install notebook matplotlib runipy"],
 		"id": "ilit tensorflow",
 		"steps": [
