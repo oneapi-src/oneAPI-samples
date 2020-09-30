@@ -1,8 +1,0 @@
-{
-  "name": "Getting Started",
-  "categories": ["Toolkit/Intel® AI Analytics Toolkit/PyTorch"],
-  "description": "This sample shows how to train a PyTorch model and run inference with oneMKL and oneDNN.",
-  "builder": ["cli"],
-  "languages": [{"python":{}}],
-  "os":["linux"]
-}
