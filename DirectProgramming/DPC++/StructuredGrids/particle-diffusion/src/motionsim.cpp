@@ -24,14 +24,18 @@
 //   (DPC++) DPC++ atomic operations for synchronization
 //
 
+//For backwards compatibility with MKL-Beta09
+#if __has_include("oneapi/mkl.hpp")
+#include "oneapi/mkl.hpp"
+#include "oneapi/rng.hpp"
+#else
 #include <mkl.h>
+#include "mkl_sycl.hpp"
+#endif
+
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-#include <mkl_rng/distributions.hpp>
-#include <mkl_rng_sycl.hpp>
-#include <mkl_sycl_types.hpp>
-#include <mkl_vml_sycl.hpp>
 #include "dpc_common.hpp"
 
 using namespace sycl;
@@ -113,9 +117,9 @@ void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
     // Create buffers using DPC++ class buffer
     buffer random_X_buf(random_X, range(n_moves));
     buffer random_Y_buf(random_Y, range(n_moves));
-    buffer b_particle_X(particle_X, range(n_particles));
-    buffer b_particle_Y(particle_Y, range(n_particles));
-    buffer b_grid(grid, range(grid_size * grid_size));
+    buffer particle_X_buf(particle_X, range(n_particles));
+    buffer particle_Y_buf(particle_Y, range(n_particles));
+    buffer grid_buf(grid, range(grid_size * grid_size));
 
     // Compute vectors of random values for X and Y directions using RNG engine
     // declared above
@@ -124,12 +128,12 @@ void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
 
     // Submit command group for execution
     q.submit([&](handler& h) {
-      auto a_particle_X = b_particle_X.get_access<access::mode::read_write>(h);
-      auto a_particle_Y = b_particle_Y.get_access<access::mode::read_write>(h);
+      auto particle_X_a = particle_X_buf.get_access<access::mode::read_write>(h);
+      auto particle_Y_a = particle_Y_buf.get_access<access::mode::read_write>(h);
       auto random_X_a = random_X_buf.get_access<access::mode::read>(h);
       auto random_Y_a = random_Y_buf.get_access<access::mode::read>(h);
       // Atomic accessors: Use DPC++ atomic access mode
-      auto a_grid = b_grid.get_access<access::mode::atomic>(h);
+      auto grid_a = grid_buf.get_access<access::mode::atomic>(h);
 
       // Send a DPC++ kernel (lambda) for parallel execution
       h.parallel_for(range(n_particles), [=](id<1> index) {
@@ -154,27 +158,27 @@ void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
           displacement_Y = random_Y_a[iter * n_particles + ii];
 
           // Move particles using random displacements
-          a_particle_X[ii] += displacement_X;
-          a_particle_Y[ii] += displacement_Y;
+          particle_X_a[ii] += displacement_X;
+          particle_Y_a[ii] += displacement_Y;
 
           // Compute distances from particle position to grid point
-          float dX = a_particle_X[ii] - sycl::trunc(a_particle_X[ii]);
-          float dY = a_particle_Y[ii] - sycl::trunc(a_particle_Y[ii]);
+          float dX = sycl::abs(particle_X_a[ii] - sycl::round(particle_X_a[ii]));
+          float dY = sycl::abs(particle_Y_a[ii] - sycl::round(particle_Y_a[ii]));
 
           // Compute grid point indices
-          int iX = sycl::floor(a_particle_X[ii]);
-          int iY = sycl::floor(a_particle_Y[ii]);
+          int iX = sycl::floor(particle_X_a[ii] + 0.5f);
+          int iY = sycl::floor(particle_Y_a[ii] + 0.5f);
 
           // Check if particle is still in computation grid
-          if ((a_particle_X[ii] < grid_size) &&
-              (a_particle_Y[ii] < grid_size) && (a_particle_X[ii] >= 0) &&
-              (a_particle_Y[ii] >= 0)) {
+          if ((particle_X_a[ii] < grid_size) &&
+              (particle_Y_a[ii] < grid_size) && (particle_X_a[ii] >= 0) &&
+              (particle_Y_a[ii] >= 0)) {
             // Check if particle is (or remained) inside cell.
             // Increment cell counter in map array if so
             if ((dX * dX + dY * dY <= radius * radius)) {
               // Use DPC++ atomic_fetch_add to add 1 to accessor using atomic
               // mode
-              atomic_fetch_add<size_t>(a_grid[iY * grid_size + iX], 1);
+              atomic_fetch_add<size_t>(grid_a[iY * grid_size + iX], 1);
             }
           }
         }  // Next iteration
@@ -190,7 +194,7 @@ void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
 int main(int argc, char* argv[]) {
   // Cell and Particle parameters
   const size_t grid_size = 21;    // Size of square grid
-  const size_t n_particles = 20;  // Number of particles
+  const size_t n_particles = 1000;  // Number of particles
   const float radius = 0.5f;      // Cell radius = 0.5*(grid spacing)
 
   // Default number of operations
