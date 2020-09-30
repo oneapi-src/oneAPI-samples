@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/nfs/home/jaustin/mscllanous_prjcts/OneApi/jeffs-oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/src/motionsim.cpp
+motionsim.hpp
+/nfs/home/jaustin/mscllanous_prjcts/OneApi/jeffs-oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/src/motionsim.hpp
+
+/nfs/home/jaustin/mscllanous_prjcts/OneApi/jeffs-oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/src/motionsim.hpp
+unistd.h
+-
+mkl.h
+-
+CL/sycl.hpp
+-
+iomanip
+-
+iostream
+-
+mkl_rng_sycl.hpp
+-
+dpc_common.hpp
+/nfs/home/jaustin/mscllanous_prjcts/OneApi/jeffs-oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/src/dpc_common.hpp
+
+/nfs/home/jaustin/mscllanous_prjcts/OneApi/jeffs-oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/src/motionsim_kernel.cpp
+motionsim.hpp
+/nfs/home/jaustin/mscllanous_prjcts/OneApi/jeffs-oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/src/motionsim.hpp
+
+/nfs/home/jaustin/mscllanous_prjcts/OneApi/jeffs-oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/src/utils.cpp
+motionsim.hpp
+/nfs/home/jaustin/mscllanous_prjcts/OneApi/jeffs-oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/src/motionsim.hpp
+
