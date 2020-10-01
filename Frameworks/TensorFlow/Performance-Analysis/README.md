@@ -1,7 +1,5 @@
 # TensorFlow Performance Analysis by using Intel Model Zoo
-This sample contains two Jupyter notebooks from Intel Model Zoo, and those Jupyter notebooks help users analyze the performance difference among 
-Stock Tensorflow and Intel Tensorflow steps by steps.  
-[Intel Model Zoo](https://github.com/IntelAI/models) contains links to pre-trained models, sample scripts, best practices, and step-by-step tutorials for many popular open-source machine learning models optimized by Intel to run on Intel® Xeon® Scalable processors.
+This sample contains two Jupyter notebooks from Intel Model Zoo to help users analyze the performance difference among Stock Tensorflow and Intel Tensorflow.  
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -12,7 +10,10 @@ Stock Tensorflow and Intel Tensorflow steps by steps.
 | Time to complete                  | 40 minutes
 
 ## Purpose
-Analyze the performance benefit from Intel Optimizations for Tensorflow* and oneDNN among different layers by using Tensorflow Timeline.
+[Intel Model Zoo](https://github.com/IntelAI/models) contains links to pre-trained models, sample scripts, best practices, and step-by-step tutorials for many popular open-source machine learning models optimized by Intel to run on Intel® Xeon® Scalable processors.
+
+This sample helps to demonstrate AI workloads and deep learning models that have been optimized by Intel and validated to run on Intel hardware. Using the Tensorflow Timeline, you can analyze the performance benefits from Intel Optimizations for Tensorflow* and oneDNN among different layers to efficiently execute, train, and deploy Intel-optimized models
+
 
 ## Key implementation details
 ### Jupyter Notebooks 
