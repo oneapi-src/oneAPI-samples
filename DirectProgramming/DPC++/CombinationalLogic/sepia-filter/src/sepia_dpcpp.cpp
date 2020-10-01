@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
     exit(1);
   }
   cout << "Loaded image with a width of " << img_width << ", a height of "
-            << img_height << " and " << channels << " channels\n";
+       << img_height << " and " << channels << " channels\n";
 
   size_t num_pixels = img_width * img_height;
   size_t img_size = img_width * img_height * channels;
@@ -132,7 +132,7 @@ int main(int argc, char **argv) {
 
     // See what device was actually selected for this queue.
     cout << "Running on " << q.get_device().get_info<info::device::name>()
-              << "\n";
+         << "\n";
 
     // Create SYCL buffer representing source data .
     // By default, this buffers will be created with global_buffer access
@@ -163,8 +163,8 @@ int main(int argc, char **argv) {
       // the kernel will be enqueued.
       // A command group can contain at most one parallel_for, single_task or
       // parallel_for_workgroup construct.
-        accessor image_acc(image_buf, h, read_only);
-        accessor image_exp_acc(image_buf_exp1, h, write_only);
+      accessor image_acc(image_buf, h, read_only);
+      accessor image_exp_acc(image_buf_exp1, h, write_only);
 
       // This is the simplest form cl::sycl::handler::parallel_for -
       // - it specifies "flat" 1D ND range(num_pixels), runtime will select
@@ -232,7 +232,7 @@ int main(int argc, char **argv) {
   delete[] image_ref;
   delete[] image_exp1;
   delete[] image_exp2;
-  
+
   cout << "Sepia tone successfully applied to image:[" << argv[1] << "]\n";
   return 0;
 }
