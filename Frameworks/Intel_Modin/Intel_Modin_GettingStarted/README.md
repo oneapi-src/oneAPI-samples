@@ -1,4 +1,4 @@
-# Intel Python Modin Getting Started
+# Intel Modin Getting Started
 This Getting Started sample code show how to use distributed Pandas using the Modin package. It demonstrates how to use software products that can be found in the [Intel AI Analytics Toolkit powered by oneAPI](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
@@ -47,11 +47,9 @@ Activate the conda environment with the following command:
 source activate intel-aikit-modin
 ```
 
-please replace ~/intel/inteloneapi for your oneapi installation path.
-
 ### Activate conda environment Without Root Access (Optional)
 
-By default, the Intel AI Analytics toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel AI Analytics toolkit is installed in the `oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### Linux
 ```
@@ -98,7 +96,7 @@ Open notebook in Jupyter and download as python file (see image using "daal4py H
 
 Run the Program
 
-`python IntelPython_Modin_GettingStarted.py`
+`python Intel_Modin_GettingStarted.py`
 
-##### Expected Printed Output (with similar numbers):
-Expected Cell Output shown in IntelPython_Modin_GettingStarted.ipynb
+##### Expected Printed Output:
+Expected Cell Output shown in Intel_Modin_GettingStarted.ipynb

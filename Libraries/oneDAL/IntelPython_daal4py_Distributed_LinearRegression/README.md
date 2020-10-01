@@ -49,13 +49,13 @@ By default, the Intel AI Analytics toolkit is installed in the inteloneapi folde
 
 #### On a Linux* System
 ```
-conda create --name user_base --clone base
+conda create --name usr_intelpython --clone base
 ```
 
 Then activate your conda environment with the following command:
 
 ```
-source activate user_base
+source activate usr_intelpython
 ```
 
 ### Install Jupyter Notebook
