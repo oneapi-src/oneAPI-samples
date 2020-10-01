@@ -87,7 +87,7 @@ RMSE: 11.113036205909719
 
 ### Running the Sample as a Python File
 
-Open notebook in Jupyter and download as python file (see image using "Modin Getting Started"  sample)
+Open notebook in Jupyter and download as python file (see image using "daal4py Hello World"  sample)
 
 ![Download as python file in the Jupyter Notebook](Jupyter_Save_Py.jpg "Download as python file in the Jupyter Notebook")
 
