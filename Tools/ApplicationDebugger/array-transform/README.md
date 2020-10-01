@@ -142,7 +142,7 @@ option to the desired device during configuration.  For CPU, use the
 assumed to be for GPU, and are passed directly to the GPU AoT
 compiler.
 
-> Hint: Run `ocloc compile --help` to see available GPU device options.
+> *Hint:* Run `ocloc compile --help` to see available GPU device options.
 
 For example, to do AoT compilation for a `kbl` GPU device:
 
@@ -155,6 +155,10 @@ or for the Gen12 family:
 ```
 $ cmake .. -DDPCPP_COMPILE_TARGET=gen12LP
 ```
+
+> *Note:* AoT compilation is particularly helpful in larger
+> applications where compiling with debug information takes
+> considerably longer time.
 
 For instructions about starting and using the debugger, please
 see the
