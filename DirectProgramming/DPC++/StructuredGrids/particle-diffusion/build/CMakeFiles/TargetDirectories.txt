@@ -1,0 +1,6 @@
+/nfs/home/avillarr/oneAPISamples/AV-fork-Sept30/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/build/CMakeFiles/rebuild_cache.dir
+/nfs/home/avillarr/oneAPISamples/AV-fork-Sept30/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/build/CMakeFiles/edit_cache.dir
+/nfs/home/avillarr/oneAPISamples/AV-fork-Sept30/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/build/src/CMakeFiles/rebuild_cache.dir
+/nfs/home/avillarr/oneAPISamples/AV-fork-Sept30/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/build/src/CMakeFiles/edit_cache.dir
+/nfs/home/avillarr/oneAPISamples/AV-fork-Sept30/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/build/src/CMakeFiles/motionsim.exe.dir
+/nfs/home/avillarr/oneAPISamples/AV-fork-Sept30/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/particle-diffusion/build/src/CMakeFiles/run.dir
