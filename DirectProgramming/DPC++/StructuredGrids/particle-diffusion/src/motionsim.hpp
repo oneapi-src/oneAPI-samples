@@ -7,30 +7,36 @@
 // motionsim.hpp: Header file for motionsim.cpp,
 // motionsim_kernel.cpp, and utils.cpp
 //
-// Declares defines, includes, and prototypes needed by the
-// Particle Diffusion application.
+// Constant expressions, includes, and prototypes needed by the application.
 //
-
-#if _WIN32 || _WIN64
-#define WINDOWS 1
-#endif  // _WIN32 || _WIN64
 
 // Random Number Generation (RNG) Distribution parameters
 constexpr float alpha = 0.0f;   // Mean
 constexpr float sigma = 0.03f;  // Standard Deviation
 
-#if !WINDOWS        // unistd.h not available on windows platforms.
-#include <unistd.h> /* getopt() function */
-#endif              // !WINDOWS
+#if _WIN32 || _WIN64
+#define WINDOWS 1
+#endif  // _WIN32 || _WIN64
+// unistd.h not available on windows platforms
+#if !WINDOWS
+#include <unistd.h>
+#endif  // !WINDOWS
 
-#include <mkl.h> /* oneMKL, mkl libraries */
 #include <CL/sycl.hpp>
-#include <iomanip> /* setw() function */
+#include <cmath>
+#include <iomanip>
 #include <iostream>
-#include <mkl_rng_sycl.hpp> /* dist() function, mkl namespace */
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
+// For backwards compatibility with MKL-Beta09
+#if __has_include("oneapi/mkl.hpp")
+#include "oneapi/mkl.hpp"
+#include "oneapi/rng.hpp"
+#else  // __has_include("oneapi/mkl.hpp")
+#include <mkl.h>
+#include "mkl_sycl.hpp"
+#endif  // __has_include("oneapi/mkl.hpp")
 
 void ParticleMotion(sycl::queue&, const int, float*, float*, float*, float*,
                     size_t*, const size_t, const size_t, const size_t,
