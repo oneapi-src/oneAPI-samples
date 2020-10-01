@@ -153,7 +153,8 @@ int ParseArgs(const int argc, char* argv[], size_t* n_iterations,
     }
   }
   if ((*cpu_flag != 1 && *cpu_flag != 0) ||
-      (*grid_output_flag != 1 && *grid_output_flag != 0))
+      (*grid_output_flag != 1 && *grid_output_flag != 0) ||
+      (*n_iterations == 0))
     retv = 1;
   if (retv == 1) Usage();
   return retv;
@@ -163,22 +164,23 @@ int ParseArgs(const int argc, char* argv[], size_t* n_iterations,
 int ParseArgsWindows(int argc, char* argv[], size_t* n_iterations,
                      size_t* n_particles, size_t* grid_size, int* seed,
                      unsigned int* cpu_flag, unsigned int* grid_output_flag) {
-  int usage = 0;
+  int retv = 0;
   // Parse user-specified parameters
   try {
     for (int i = 1; i < argc; ++i)
-      if (stoi(argv[i]) < 0 && i != 4) usage = 1;
+      if (stoi(argv[i]) < 0 && i != 4) retv = 1;
     *n_iterations = stoi(argv[1]), *n_particles = stoi(argv[2]);
     *grid_size = stoi(argv[3]), *seed = stoi(argv[4]);
     *cpu_flag = stoul(argv[5]), *grid_output_flag = stoul(argv[6]);
   } catch (...) {
-    usage = 1;
+    retv = 1;
   }
   if ((*cpu_flag != 1 && *cpu_flag != 0) ||
-      (*grid_output_flag != 1 && *grid_output_flag != 0))
-    usage = 1;
-  if (usage == 1) Usage();
-  return usage;
+      (*grid_output_flag != 1 && *grid_output_flag != 0) ||
+      (*n_iterations == 0))
+    retv = 1;
+  if (retv == 1) Usage();
+  return retv;
 }
 #endif  // WINDOWS
 
@@ -207,6 +209,9 @@ void PrintGrids(const size_t* grid, const size_t* grid_cpu,
     // Counter 2 layer of grid (1 * grid_size * grid_size)
     layer = gs2;
     PrintVectorAsMatrix<size_t>(&grid[layer], grid_size, grid_size);
+    unsigned int psum = 0;
+    for (unsigned int i = layer; i < layer + gs2; ++i) psum += grid[i];
+    cout << "Number of particles inside snapshot: " << psum << "\n";
 
     cout << "\n ************* NUMBER OF PARTICLE ENTRIES: ************* \n";
 
@@ -238,6 +243,10 @@ void PrintGrids(const size_t* grid, const size_t* grid_cpu,
       // Counter 2 layer of grid (1 * grid_size * grid_size)
       layer = gs2;
       PrintVectorAsMatrix<size_t>(&grid_cpu[layer], grid_size, grid_size);
+      // Calculate and print the total number of particles in the snapshot
+      unsigned int psum = 0;
+      for (unsigned int i = layer; i < layer + gs2; ++i) psum += grid_cpu[i];
+      cout << "Number of particles inside snapshot: " << psum << "\n";
 
       cout << "\n ************* NUMBER OF PARTICLE ENTRIES: ************* \n";
 

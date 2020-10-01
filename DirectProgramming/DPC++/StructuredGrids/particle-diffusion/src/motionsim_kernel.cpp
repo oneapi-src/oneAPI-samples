@@ -89,22 +89,19 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
           // Set the displacements to the random numbers
           float displacement_X = random_X_a[iter * n_particles + p];
           float displacement_Y = random_Y_a[iter * n_particles + p];
-
           // Displace particles
           particle_X_a[p] += displacement_X;
           particle_Y_a[p] += displacement_Y;
-
           // Compute distances from particle position to grid point i.e.,
           // the particle's distance from center of cell. Subtract the
           // integer value from floating point value to get just the
           // decimal portion. Use this value to later determine if the
-          // particle is in the cell or outside the cell
-          float dX = particle_X_a[p] - sycl::trunc(particle_X_a[p]);
-          float dY = particle_Y_a[p] - sycl::trunc(particle_Y_a[p]);
-
-          // Compute grid point indices
-          int iX = sycl::floor(particle_X_a[p]);
-          int iY = sycl::floor(particle_Y_a[p]);
+          // particle is inside or outside of the cell
+          float dX = sycl::abs(particle_X_a[p] - sycl::round(particle_X_a[p]));
+          float dY = sycl::abs(particle_Y_a[p] - sycl::round(particle_Y_a[p]));
+          // Grid point indices closest the particle
+          int iX = sycl::floor(particle_X_a[p] + 0.5);
+          int iY = sycl::floor(particle_Y_a[p] + 0.5);
 
           /* There are 5 cases when considering particle movement about the
              grid.
@@ -135,8 +132,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
                        --Increment counter 1
 
                Case 5: Particle moves and remains outside of cell
-                       --No action.
-          */
+                       --No action.                                      */
 
           // Atomic operations flags
           bool increment_C1 = false;
@@ -145,9 +141,8 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
           bool decrement_C2_for_previous_cell = false;
           bool update_coordinates = false;
 
-          // Check if particle is still in computation grid
-          if ((particle_X_a[p] < grid_size) && (particle_Y_a[p] < grid_size) &&
-              (particle_X_a[p] >= 0) && (particle_Y_a[p] >= 0)) {
+          // Check if particle's grid indices are still inside computation grid
+          if ((iX < grid_size) && (iY < grid_size) && (iX >= 0) && (iY >= 0)) {
             // Compare the radius to particle's distance from center of cell
             if (radius >= sycl::sqrt(dX * dX + dY * dY)) {
               // Satisfies counter 1 requirement for cases 1, 3, 4
@@ -195,7 +190,7 @@ void ParticleMotion(queue& q, const int seed, float* particle_X,
           size_t curr_coordinates = iX + iY * grid_size;
           size_t prev_coordinates = prev_known_cell_coordinate_X +
                                     prev_known_cell_coordinate_Y * grid_size;
-          // gs2 (used below) equals grid_size * grid_size
+          // gs2 variable (used below) equals grid_size * grid_size
           //
 
           // Counter 2 layer of the grid (1 * grid_size * grid_size)

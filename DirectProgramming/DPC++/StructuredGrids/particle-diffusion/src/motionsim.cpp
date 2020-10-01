@@ -76,22 +76,19 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
       // Set the displacements to the random numbers
       float displacement_X = random_X[iter * n_particles + p];
       float displacement_Y = random_Y[iter * n_particles + p];
-
       // Displace particles
       particle_X[p] += displacement_X;
       particle_Y[p] += displacement_Y;
-
       // Compute distances from particle position to grid point i.e.,
       // the particle's distance from center of cell. Subtract the
       // integer value from floating point value to get just the
       // decimal portion. Use this value to later determine if the
-      // particle is in the cell or outside the cell
-      float dX = particle_X[p] - sycl::trunc(particle_X[p]);
-      float dY = particle_Y[p] - sycl::trunc(particle_Y[p]);
-
-      // Compute grid point indices
-      int iX = sycl::floor(particle_X[p]);
-      int iY = sycl::floor(particle_Y[p]);
+      // particle is inside or outside of the cell
+      float dX = sycl::abs(particle_X[p] - sycl::round(particle_X[p]));
+      float dY = sycl::abs(particle_Y[p] - sycl::round(particle_Y[p]));
+      // Grid point indices closest the particle
+      int iX = sycl::floor(particle_X[p] + 0.5);
+      int iY = sycl::floor(particle_Y[p] + 0.5);
 
       /* There are 5 cases when considering particle movement about the
          grid.
@@ -122,12 +119,10 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
                    --Increment counter 1
 
            Case 5: Particle moves and remains outside of cell
-                   --No action.
-      */
+                   --No action.                                       */
 
       // Check if particle is still in computation grid
-      if ((particle_X[p] < grid_size) && (particle_Y[p] < grid_size) &&
-          (particle_X[p] >= 0) && (particle_Y[p] >= 0)) {
+      if ((iX < grid_size) && (iY < grid_size) && (iX >= 0) && (iY >= 0)) {
         // Compare the radius to particle's distance from center of cell
         if (radius >= sycl::sqrt(dX * dX + dY * dY)) {
           // Satisfies counter 1 requirement for cases 1, 3, 4
@@ -175,7 +170,7 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
       size_t curr_coordinates = iX + iY * grid_size;
       size_t prev_coordinates = prev_known_cell_coordinate_X[p] +
                                 prev_known_cell_coordinate_Y[p] * grid_size;
-      // gs2 (used below) equals grid_size * grid_size
+      // gs2 variable (used below) equals grid_size * grid_size
       //
 
       // Counter 2 layer of the grid (1 * grid_size * grid_size)
