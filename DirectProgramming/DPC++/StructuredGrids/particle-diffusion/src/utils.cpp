@@ -209,6 +209,7 @@ void PrintGrids(const size_t* grid, const size_t* grid_cpu,
     // Counter 2 layer of grid (1 * grid_size * grid_size)
     layer = gs2;
     PrintVectorAsMatrix<size_t>(&grid[layer], grid_size, grid_size);
+    // Calculate and print the total number of particles in the snapshot
     unsigned int psum = 0;
     for (unsigned int i = layer; i < layer + gs2; ++i) psum += grid[i];
     cout << "Number of particles inside snapshot: " << psum << "\n";

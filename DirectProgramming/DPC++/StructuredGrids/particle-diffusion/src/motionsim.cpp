@@ -86,7 +86,18 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
       // particle is inside or outside of the cell
       float dX = sycl::abs(particle_X[p] - sycl::round(particle_X[p]));
       float dY = sycl::abs(particle_Y[p] - sycl::round(particle_Y[p]));
-      // Grid point indices closest the particle
+      /* Grid point indices closest the particle, defined by the following:
+      ------------------------------------------------------------------
+      |               Condition               |         Result         |
+      |---------------------------------------|------------------------|
+      |particle_X + 0.5 >= ceiling(particle_X)|iX = ceiling(particle_X)|
+      |---------------------------------------|------------------------|
+      |particle_Y + 0.5 >= ceiling(particle_Y)|iY = ceiling(particle_Y)|
+      |---------------------------------------|------------------------|
+      |particle_X + 0.5 < ceiling(particle_X) |iX = floor(particle_X)  |
+      |---------------------------------------|------------------------|
+      |particle_Y + 0.5 < ceiling(particle_Y) |iY = floor(particle_Y)  |
+      ------------------------------------------------------------------  */
       int iX = sycl::floor(particle_X[p] + 0.5);
       int iY = sycl::floor(particle_Y[p] + 0.5);
 
