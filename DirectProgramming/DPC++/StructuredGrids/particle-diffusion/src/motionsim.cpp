@@ -111,23 +111,23 @@ void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
   // Begin scope for buffers
   {
     // Create buffers using DPC++ class buffer
-    buffer b_random_X(random_X, range(n_moves));
-    buffer b_random_Y(random_Y, range(n_moves));
+    buffer random_X_buf(random_X, range(n_moves));
+    buffer random_Y_buf(random_Y, range(n_moves));
     buffer b_particle_X(particle_X, range(n_particles));
     buffer b_particle_Y(particle_Y, range(n_particles));
     buffer b_grid(grid, range(grid_size * grid_size));
 
     // Compute vectors of random values for X and Y directions using RNG engine
     // declared above
-    mkl::rng::generate(distr, engine, n_moves, b_random_X);
-    mkl::rng::generate(distr, engine, n_moves, b_random_Y);
+    mkl::rng::generate(distr, engine, n_moves, random_X_buf);
+    mkl::rng::generate(distr, engine, n_moves, random_Y_buf);
 
     // Submit command group for execution
     q.submit([&](handler& h) {
       auto a_particle_X = b_particle_X.get_access<access::mode::read_write>(h);
       auto a_particle_Y = b_particle_Y.get_access<access::mode::read_write>(h);
-      auto a_random_X = b_random_X.get_access<access::mode::read>(h);
-      auto a_random_Y = b_random_Y.get_access<access::mode::read>(h);
+      auto random_X_a = random_X_buf.get_access<access::mode::read>(h);
+      auto random_Y_a = random_Y_buf.get_access<access::mode::read>(h);
       // Atomic accessors: Use DPC++ atomic access mode
       auto a_grid = b_grid.get_access<access::mode::atomic>(h);
 
@@ -150,8 +150,8 @@ void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
           // Moves each water molecule by a random vector
 
           // Transform the random numbers into small displacements
-          displacement_X = a_random_X[iter * n_particles + ii];
-          displacement_Y = a_random_Y[iter * n_particles + ii];
+          displacement_X = random_X_a[iter * n_particles + ii];
+          displacement_Y = random_Y_a[iter * n_particles + ii];
 
           // Move particles using random displacements
           a_particle_X[ii] += displacement_X;
