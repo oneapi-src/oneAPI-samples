@@ -30,7 +30,7 @@ using namespace oneapi;
 using namespace sycl;
 using namespace std;
 
-// This function distributes simulation work across workers
+// This function distributes simulation work
 void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
                        float* random_X, float* random_Y, size_t* grid,
                        const size_t grid_size, const size_t planes,
