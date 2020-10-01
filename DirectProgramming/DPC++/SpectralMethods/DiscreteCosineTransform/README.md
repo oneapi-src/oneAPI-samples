@@ -8,7 +8,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler beta;
+| Software                          | Intel® oneAPI DPC++/C++ Compiler;
 | What you will learn               | How to parallel process image data using DPC++ for producing a Discrete Cosine Transform
 | Time to complete                  | 15 minutes
 

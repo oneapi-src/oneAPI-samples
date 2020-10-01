@@ -1,0 +1,6 @@
+set(CMAKE_CXX_COMPILER dpcpp)
+cmake_minimum_required(VERSION 3.0)
+project(matrix_multiply)
+set(CMAKE_CXX_FLAGS "-g -O3 -fsycl -Wno-write-strings -w -D_Linux")
+add_executable(matrix.dpcpp  src/matrix.cpp src/multiply.cpp)
+add_custom_target(run ./matrix.dpcpp)

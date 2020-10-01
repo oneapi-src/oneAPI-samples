@@ -77,7 +77,7 @@ class SepiaFunctor {
       : image_acc(image_acc_), image_exp_acc(image_exp_acc_) {}
 
   // The '()' operator is the actual kernel
-  void operator()(id<1> i) {
+  void operator()(id<1> i) const {
     ApplyFilter(image_acc.get_pointer(), image_exp_acc.get_pointer(), i.get(0));
   }
 

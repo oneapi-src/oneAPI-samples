@@ -1,0 +1,29 @@
+{
+  "guid": "5D274319-02EE-44B0-B055-71E4C50D05E0",
+  "name": "PrefixSum",
+  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU and GPU" ],
+  "description": "Compute Prefix Sum using Intel® oneAPI DPC++ Language",
+  "toolchain": [ "dpcpp" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "languages": [ { "cpp": {} } ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 ]
+        }],
+        "windows": [{
+                "steps": [
+                        "MSBuild PrefixSum.sln /t:Rebuild /p:Configuration=\"Release\"",
+                        "cd x64/Release",
+                        "PrefixSum.exe 21 47"
+                ]
+        }]
+  }
+}

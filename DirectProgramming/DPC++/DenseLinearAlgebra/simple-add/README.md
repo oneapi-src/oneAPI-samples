@@ -8,7 +8,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10 
 | Hardware                          | Skylake with GEN9 or newer, Intel(R) Programmable Acceleration Card with Intel(R) Arria(R) 10 GX FPGA
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)  
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 
 
 

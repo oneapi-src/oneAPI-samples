@@ -1,21 +1,21 @@
 # `array-transform` Sample
 
-This is a small DPC++ example for exercising the application debugger (GDB\*)
-of DPC++.  It is highly recommended that you go through this sample *after*
-you familiarize yourself with the basics of DPC++, and *before* you start
-using the debugger.
+This is a small DPC++ example for exercising application debugging using
+Intel&reg; Distribution for GDB\*.  It is highly recommended that you go
+through this sample *after* you familiarize yourself with the basics of
+DPC++, and *before* you start using the debugger.
 
 This sample accompanies the
 [Get Started Guide](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
 of the application debugger.
 
-| Optimized for                   | Description
-|---------------------------------|--------------
-| OS                              | Linux Ubuntu 18.04 to 20.04, CentOS* 8, Fedora* 30, SLES 15; Windows* 10
-| Hardware                        | Kaby Lake with GEN9 (on GPU) or newer (on CPU)
-| Software                        | Intel&reg; oneAPI DPC++ Compiler (beta) 
-| What you will learn             | Essential debugger features for effective debugging of DPC++ on CPU, GPU, and FPGA emulator
-| Time to complete                | 20 minutes for CPU or FPGA emulator; 30 minutes for GPU
+| Optimized for       | Description
+|---------------------|--------------
+| OS                  | Linux Ubuntu 18.04 to 20.04, CentOS* 8, Fedora* 30, SLES 15; Windows* 10
+| Hardware            | Kaby Lake with GEN9 (on GPU) or newer (on CPU)
+| Software            | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn | Essential debugger features for effective debugging of DPC++ on CPU, GPU, and FPGA emulator
+| Time to complete    | 20 minutes for CPU or FPGA emulator; 30 minutes for GPU
 
 ## Purpose
 
@@ -52,34 +52,10 @@ This code sample is licensed under MIT license.
 ### Setup
 
 Preliminary setup steps are needed for the debugger to function.
-In the instructions below `<ONEAPI_ROOT>` refers to the path
-where oneAPI toolkit has been installed.  Typically it is
-`/opt/intel/oneapi` or `~/intel/oneapi`.
-
-*   Set your oneAPI environment variables:
-    ```
-    $ source <ONEAPI_ROOT>/setvars.sh
-    ```
-*   Add the following line to your `~/.gdbinit` file:
-    ```
-    add-auto-load-safe-path <ONEAPI_ROOT>/compiler
-    ```
-*   Check if the Debug Companion Driver (DCD) is installed:
-    ```
-    $ modinfo igfxdcd
-    ```
-*   Install and load DCD if necessary:
-    ```
-    $ sudo dpkg -i <ONEAPI_ROOT>/debugger/latest/igfxdcd-*-Linux.deb
-    $ sudo modprobe igfxdcd
-    ```
-    Or
-    ```
-    $ sudo dpkg -i <ONEAPI_ROOT>/debugger/latest/igfxdcd-*-Linux.rpm
-    $ sudo modprobe igfxdcd
-    ```
-*   Finally, check that your user is in the `video`
-    (or, in some distributions, `render`) group.
+Please see the setup instructions in the Get Started Guide based on
+your OS:
+[Linux](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-linux),
+[Windows](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-windows).
 
 
 ### Include Files
@@ -93,7 +69,14 @@ system.
 
 If running a sample in the Intel DevCloud, remember that you must
 specify the compute node (CPU, GPU, FPGA) as well whether to run in
-batch or interactive mode.  For more information see the Intel® oneAPI
+batch or interactive mode.  For the array transform sample, a node
+with GPU and an interactive shell is recommended.
+
+```
+$ qsub -I -l nodes=1:gpu:ppn=2
+```
+
+For more information see the Intel® oneAPI
 Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
@@ -150,6 +133,37 @@ Perform the following steps:
     $ make clean
     ```
 
+By default, CMake configures the build for Just-in-Time (JIT)
+compilation of the kernel.  However, it also offers an option for
+*Ahead-of-Time* (AoT) compilation.  To compile the kernel
+ahead-of-time for a specific device, set the `DPCPP_COMPILE_TARGET`
+option to the desired device during configuration.  For CPU, use the
+`cpu` value; for FPGA-emu, use the `fpga-emu` value.  Other values are
+assumed to be for GPU, and are passed directly to the GPU AoT
+compiler.
+
+> *Hint:* Run `ocloc compile --help` to see available GPU device options.
+
+For example, to do AoT compilation for a `kbl` GPU device:
+
+```
+$ cmake .. -DDPCPP_COMPILE_TARGET=kbl
+```
+
+or for the Gen12 family:
+
+```
+$ cmake .. -DDPCPP_COMPILE_TARGET=gen12LP
+```
+
+> *Note:* AoT compilation is particularly helpful in larger
+> applications where compiling with debug information takes
+> considerably longer time.
+
+For instructions about starting and using the debugger, please
+see the
+[Get Started Guide (Linux)](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-linux).
+
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 
 #### Command line using MSBuild
@@ -177,27 +191,67 @@ Perform the following steps:
    Use `gpu` or `accelerator` to target the GPU or the FPGA emulator device,
    respectively.
 
+For detailed instructions about starting and using the debugger,
+please see the
+[Get Started Guide (Windows)](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-windows).
+
+
 ### Example Outputs
 
 ```
-$ ./array-transform cpu
+$ gdb-oneapi -q --args ./array-transform cpu
+Reading symbols from ./array-transform...
+(gdb) break 56
+Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
+(gdb) run
+...<snip>...
 [SYCL] Using device: [Intel(R) Core(TM) i9-7900X CPU @ 3.30GHz] from [Intel(R) OpenCL]
-success; result is correct.
+[Switching to Thread 0x7fffe3bfe700 (LWP 925)]
+
+Thread 16 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
+(cl::sycl::handler&) const::{lambda(auto:1)#1}::operator()<cl::sycl::item<1, true> >
+(cl::sycl::item<1, true>) const (this=0x7fffe3bfcfa8, index=...) at array-transform.cpp:56
+56              int element = in[index];  // breakpoint-here
+(gdb)
 ```
 
 ```
-$ ./array-transform gpu
-[SYCL] Using device: [Intel(R) Gen9] from [Intel(R) Level-Zero]
-success; result is correct.
-```
-
-```
-$ ./array-transform accelerator
+$ gdb-oneapi -q --args ./array-transform accelerator
+Reading symbols from ./array-transform...
+(gdb) break 56
+Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
+(gdb) run
+...<snip>...
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM)]
-success; result is correct.
+[Switching to Thread 0x7fffe1ffb700 (LWP 2387)]
+
+Thread 9 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
+(cl::sycl::handler&) const::{lambda(auto:1)#1}::operator()<cl::sycl::item<1, true> >
+(cl::sycl::item<1, true>) const (this=0x7fffe1ff9fa8, index=...) at array-transform.cpp:56
+56              int element = in[index];  // breakpoint-here
+(gdb)
 ```
 
-## Useful GDB Commands
+```
+$ gdb-oneapi -q --args ./array-transform gpu
+Reading symbols from ./array-transform...
+(gdb) break 56
+Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
+(gdb) run
+...<snip>...
+[SYCL] Using device: [Intel(R) Gen9] from [Intel(R) Level-Zero]
+...<snip>...
+[Switching to Thread 1073741824 lane 0]
+
+Thread 2.2 hit Breakpoint 1,  with SIMD lanes [0-7], main::$_1::operator()
+<cl::sycl::handler>(cl::sycl::handler&) const::{lambda(auto:1)#1}::operator()
+<cl::sycl::item<1, true> >(cl::sycl::item<1, true>) const (this=0x2f690c0, index=...)
+at array-transform.cpp:56
+56              int element = in[index];  // breakpoint-here
+(gdb)
+```
+
+## Useful Commands
 
 `help <cmd>`
 : Print help info about the command `cmd`.
@@ -284,3 +338,8 @@ success; result is correct.
   even when `exp` is invalid for the current locations of the breakpoint.
   Useful for defining conditions involving JIT-produced artificial variables.
   E.g.: `cond -force 1 __ocl_dbg_gid0 == 19`.
+
+---
+
+\* Intel is a trademark of Intel Corporation or its subsidiaries.  Other
+names and brands may be claimed as the property of others.

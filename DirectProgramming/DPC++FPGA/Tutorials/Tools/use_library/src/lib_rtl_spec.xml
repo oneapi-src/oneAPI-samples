@@ -1,0 +1,25 @@
+<RTL_SPEC>
+  <FUNCTION name="RtlByteswap" module="byteswap_uint">
+    <ATTRIBUTES>
+      <IS_STALL_FREE value="yes"/>
+      <IS_FIXED_LATENCY value="yes"/>
+      <EXPECTED_LATENCY value="0"/>
+      <CAPACITY value="0"/>
+      <HAS_SIDE_EFFECTS value="no"/>
+      <ALLOW_MERGING value="yes"/>
+    </ATTRIBUTES>
+    <INTERFACE>
+      <AVALON port="clock" type="clock"/>
+      <AVALON port="resetn" type="resetn"/>
+      <AVALON port="ivalid" type="ivalid"/>
+      <AVALON port="iready" type="iready"/>
+      <AVALON port="ovalid" type="ovalid"/>
+      <AVALON port="oready" type="oready"/>
+      <INPUT  port="datain" width="32"/>
+      <OUTPUT port="dataout" width="32"/>
+    </INTERFACE>
+    <REQUIREMENTS>
+      <FILE name="lib_rtl.v" />
+    </REQUIREMENTS>
+  </FUNCTION>
+</RTL_SPEC>

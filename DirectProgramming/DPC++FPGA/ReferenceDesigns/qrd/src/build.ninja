@@ -1,0 +1,32 @@
+device_source_file = qrd.cpp
+device_header_file = qrd.hpp
+host_source_file = qrd_demo.cpp
+target_name = qrd
+
+emulator_target = ${target_name}.fpga_emu.exe
+report_target = ${target_name}_report.a
+report_target_s10_pac = ${target_name}_s10_pac_report.a
+
+hardware_flags = -fintelfpga -Xshardware -Xsfp-relaxed -Xsparallel=2
+emulator_flags = -fintelfpga -DFPGA_EMULATOR -Xsfast-emulator
+
+rule build_fpga_emu
+  command = dpcpp /GX ${emulator_flags} ${device_source_file} ${host_source_file} ${design_flags} -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 -o $out
+
+rule gen_report
+  command = dpcpp /GX ${hardware_flags} -Xsboard=intel_a10gx_pac:pac_a10 ${device_source_file} ${host_source_file} -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 -Xsseed=9 -fsycl-link -Xsclock=360MHz -o $out
+
+rule gen_report_s10_pac
+  command = dpcpp /GX ${hardware_flags} -Xsboard=intel_s10sx_pac:pac_s10 ${device_source_file} ${host_source_file} -DFIXED_ITERATIONS=105 -DROWS_COMPONENT=256 -DCOLS_COMPONENT=256 -Xsseed=9 -fsycl-link -Xsclock=480MHz -o $out
+
+# FPGA emulator
+build fpga_emu: phony ${emulator_target}
+build ${emulator_target}: build_fpga_emu 
+
+# report
+build report: phony ${report_target}
+build ${report_target}: gen_report
+
+# report (S10 PAC)
+build report_s10_pac: phony ${report_target_s10_pac}
+build ${report_target_s10_pac}: gen_report_s10_pac

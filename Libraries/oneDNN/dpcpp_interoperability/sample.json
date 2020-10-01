@@ -1,0 +1,26 @@
+{
+ "guid": "EF50CE31-C467-4374-8BCC-4E5F93B4D1C1",
+ "name": "oneDNN SYCL Interop",
+ "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneDNN"],
+ "description": "oneDNN SYCL extensions API programming for both Intel CPU and GPU.",
+ "toolchain": ["dpcpp"],
+ "languages": [{"cpp":{}}],
+ "dependencies": ["oneDNN", "tbb"],
+ "os": ["linux"],
+ "builder": ["ide","cmake"],
+ "targetDevice": ["CPU", "GPU"],
+ "ciTests": {
+	"linux": [{
+		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
+		"id": "interop",
+		"steps": [
+			"mkdir build",
+      		        "cd build",
+           		"cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp",
+           		"make sycl-interop-cpp",
+			"./bin/sycl-interop-cpp cpu",
+			"SYCL_BE=PI_OPENCL ./bin/sycl-interop-cpp gpu"
+		 ]
+	}]
+ }
+}

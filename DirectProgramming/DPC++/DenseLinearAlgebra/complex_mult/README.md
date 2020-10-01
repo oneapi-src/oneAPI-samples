@@ -8,10 +8,10 @@ The Complex class is a custom class and this program shows how we can use
 custom types of classes in a DPC++ program
   
 | Optimized for                       | Description
-|:---                               |:---
+ii|:---                               |:---
 | OS                                | Linux Ubuntu 18.04, Windows 10 
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | Using custom type classes and offloads complex number computations to GPU using Intel DPC++
 | Time to complete                  | 15 minutes  
   
@@ -49,6 +49,9 @@ selector, buffer, accessor, kernel and command group.
 This code sample is licensed under MIT license. 
 
 ## Building the complex_mult Program for CPU and GPU 
+
+Include Files
+The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify 
