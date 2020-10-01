@@ -176,7 +176,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ``` 
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://software.intel.com/content/dam/develop/external/us/en/documents/memory_attributes.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/memory_attributes.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 Note: `cmake` is not yet supported on Windows. A build.ninja file is provided instead. 
@@ -211,7 +211,7 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ## Examining the Reports
 Locate `report.html` in the `memory_attributes_report.prj/reports/` or `memory_attributes_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Navigate to the Kernel Memory Viewer (System Viewers > Kernel Memory Viewer). In the Kernel Memory List pane, click on `dict_offset` under the function `KernelCompute<N>`, for each of
+Navigate to the Kernel Memory Viewer (System Viewers > Kernel Memory Viewer). In the Kernel Memory List pane, click on `dict_offset` under the function `Kernel<N>`, for each of
 * N=0 : unconstrained configuration (compiler's choice)
 * N=1 : single-pumped configuration
 * N=2 : double-pumped configuration

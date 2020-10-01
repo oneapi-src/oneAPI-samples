@@ -1,13 +1,13 @@
-oneAPI Trace Example
-====================
+Intel®  System Debugger - System Trace Example
+==============================================
 
 Introduction
 ------------
 
-The ISD component of oneAPI includes a python-based command line
-interface for capturing/decoding system trace called TraceCLI.
-Developers can use the TraceCLI python package for automating trace
-capture and the ISD trace UI for development and manual trace capture.
+Intel® System Debugger component of Intel® oneAPI includes a Python*-based command line
+interface for capturing and decoding system trace called TraceCLI.
+Developers can use the TraceCLI Python package for automating trace
+capture and the Intel System Debugger - System Trace UI for development and manual trace capture.
 
 What it is
 ----------
@@ -18,97 +18,93 @@ mentioned above (trace UI and TraceCLI).
 Software requirements
 ---------------------
 
-This sample works on both Linux and Windows.
+This sample works on both Linux* and Windows* OS.
 
-This sample has been tested on Windows 10, and requires a working OneAPI
-IOT Kit or OneAPI System Bring up installed.
+This sample has been tested on Windows 10, and requires a working Intel® System Bring-up toolkit installed.
 
-Using the ISD Trace UI
-----------------------
+Using the System Trace UI
+-------------------------
 
-oneAPI is shipped with the Intel® System Debugger which provides an
-Eclipse-based UI for capturing/decoding system trace.
+Intel® oneAPI is shipped with the Intel® System Debugger, which provides an
+Eclipse*-based UI for capturing/decoding system trace.
 
-Decoding an example trace .bin file offline with ISD
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Decoding an example trace .bin file offline with Intel System Debugger
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Launch the IDE
 ..............
 
-Windows
-Open the Intel System Debugger
-Using the Eclipse Quick Access control (Ctrl 3), open the System Trace perspective
+1. Launch Intel® System Debugger
+
+2. Using the Eclipse Quick Access control (Ctrl+3), open the System Trace perspective:
 
 ................................
 
 .. figure:: ./_traceimages/image-20200417112519429.png
    :alt: image-20200417112519429
 
-Use the System Trace wizard
-...........................
+3. In the System Trace wizard, select **Set up project**.
 
 .. figure:: ./_traceimages/image-20200417112603072.png
    :alt: image-20200417112603072
 
-Enter a project name
-....................
+4. Enter a project name
 
 .. figure:: ./_traceimages/image-20200417115209456.png
    :alt: image-20200417115209456
 
-Select a connection
-...................
-
-.. figure:: ./_traceimages/image-20200417115225732.png
-   :alt: image-20200417115225732
-
-Select '10th Gen Intel® Core Processor (Comet Lake) ...' and 'Intel(R) DCI USB Debug Class'
-.........................................................................................
+5. Choose **Manually select target**. Select "Generic 10th Gen Intel® Core Processor (Comet Lake)"
+and click Next.
 
 .. figure:: ./_traceimages/image-20200417115253978.png
    :alt: image-20200417115253978
 
-Since this is a file decode, uncheck 'Update provider configuration for current connection' as well as 'Connect on finish'
-..........................................................................................................................
+6. Select the **Intel® SVT DbC USB Debug Cable** and click Next.
+
+.. figure:: ./_traceimages/image-20201001115999999.png
+   :alt: image-20201001115999999
+
+7. Since this is a file decode, uncheck 'Configure provider' as well as 'Connect to target on finish'.
 
 .. figure:: ./_traceimages/image-20200417115316277.png
    :alt: image-20200417115316277
 
-Provide a trace configuration name
-..................................
+8. Provide a trace configuration name
 
 .. figure:: ./_traceimages/image-20200417115329153.png
    :alt: image-20200417115329153
 
-Import a trace capture
-......................
+9. Import Trace Capture.
 
 .. figure:: ./_traceimages/image-20200417115423377.png
    :alt: image-20200417115423377
 
-Select an example bin file (<isd install folder>/system_trace/examples/input/mipi_aet_fake_trace.bin.bin)
-....................................................
+Alternatively, in the Project Explorer, expand the 'capture' node and click **Import Trace Capture**.
+
+.. figure:: ./_traceimages/image-20201001115999990.png
+   :alt: image-20201001115999990
+
+10. Select an example file at ``<isd install folder>/system_trace/examples/input/mipi_aet_fake_trace.bin.bin``
 
 .. figure:: ./_traceimages/image-20200417115643548.png
    :alt: image-20200417115643548
 
-Select the imported capture for decoding
-........................................
+11. Select the imported capture for decoding
 
 .. figure:: ./_traceimages/image-20200417115806272.png
    :alt: image-20200417115806272
 
-CMP General decode
+12. Ensure that **CMP General decode** use case is selected and click OK.
 
 .. figure:: ./_traceimages/image-20200417115848009.png
    :alt: image-20200417115848009
 
-A 'MessageView001' will open showing decoded trace
-..................................................
+'MessageView001' opens showing decoded trace
 
 .. figure:: ./_traceimages/image-20200417115934739.png
    :alt: image-20200417115934739
    :width: 150 %
+
 
 Using the TraceCLI
 ------------------
