@@ -303,13 +303,13 @@ int main(int argc, char* argv[]) {
         //    alternating the 'next' and 'prev' parameters which effectively
         //    swaps their content at every iteration.
         if (k % 2 == 0)
-          h.parallel_for(global_range, [=](id<2> it) {
+          h.parallel_for(global_range, [=](auto it) {
                 Iso2dfdIterationGlobal(it, next_a.get_pointer(),
                                           prev_a.get_pointer(), vel_a.get_pointer(),
                                           dtDIVdxy, n_rows, n_cols);
               });
         else
-          h.parallel_for(global_range, [=](id<2> it) {
+          h.parallel_for(global_range, [=](auto it) {
                 Iso2dfdIterationGlobal(it, prev_a.get_pointer(),
                                           next_a.get_pointer(), vel_a.get_pointer(),
                                           dtDIVdxy, n_rows, n_cols);
