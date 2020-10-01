@@ -1,1 +1,0 @@
-/opt/intel/oneapi/compiler/2021.1-beta09/linux/bin/dpcpp   -fsycl -std=c++17 -O3 -O2 -g -DNDEBUG   -L/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lsycl -lOpenCL -lpthread -lm -ldl -rdynamic CMakeFiles/motionsim.exe.dir/motionsim.cpp.o  -o motionsim.exe -lOpenCL -lsycl 

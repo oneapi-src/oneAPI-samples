@@ -36,6 +36,8 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 using namespace sycl;
@@ -88,7 +90,7 @@ void PrintVector(T* vector, size_t n) {
 // This function distributes simulation work across workers
 void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
                     size_t* grid, size_t grid_size, size_t n_particles,
-                    unsigned int n_iterations, float radius) {
+                    size_t n_iterations, float radius) {
   auto device = q.get_device();
   auto maxBlockSize = device.get_info<info::device::max_work_group_size>();
   auto maxEUCount = device.get_info<info::device::max_compute_units>();
@@ -194,7 +196,7 @@ void ParticleMotion(queue& q, size_t seed, float* particle_X, float* particle_Y,
 int main(int argc, char* argv[]) {
   // Cell and Particle parameters
   const size_t grid_size = 21;    // Size of square grid
-  const size_t n_particles = 1000;  // Number of particles
+  const size_t n_particles = 20;  // Number of particles
   const float radius = 0.5f;      // Cell radius = 0.5*(grid spacing)
 
   // Default number of operations
