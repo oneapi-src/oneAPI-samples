@@ -6,7 +6,7 @@ file(COPY ../input/silverfalls1.png DESTINATION .)
 if(WIN32)
 add_custom_target (run sepia.exe silverfalls1.png)
 else()
-add_custom_target (run ./sepia silverfalls1.png)
+add_custom_target (run ${CMAKE_COMMAND} -E env SYCL_BE=PI_OPENCL ./sepia silverfalls1.png)
 endif()
 
 

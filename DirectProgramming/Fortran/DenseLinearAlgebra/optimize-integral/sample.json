@@ -1,0 +1,22 @@
+{
+  "name": "optimization-integral",
+  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "description": "Fortran Sample - Simple Compiler Optimizations",
+  "toolchain": [ "ifort" ],
+  "languages": [ { "fortran": {} } ],
+  "targetDevice": [ "CPU" ],
+  "os": [ "darwin" ],
+  "builder": [ "make" ],
+  "ciTests":{
+    "darwin": [
+      {
+        "id": "fort_optsample_cpu",
+        "steps": [
+          "make",
+          "make run",
+          "make clean"
+        ]
+       }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "guid": "8EBFB820-A80C-4CC5-97DB-09B6161DDE1F",
+  "name": "Hello IoT World",
+  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/Intel® C++ Compiler Classic"],
+  "description": "This is a basic sample that outputs the classic 'Hello World' message along with the compiler identification string.",
+  "os": ["linux", "windows"],
+  "toolchain": ["icc", "gcc"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+        { "id": "hello-iot-world",
+          "env": [],
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake ..",
+            "make",
+            "make run"
+            ]
+        }
+    ],
+    "windows": [
+        { "id": "hello-iot-world",
+          "env": [],
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake -G \"NMake Makefiles\" ..",
+            "nmake",
+            "nmake run"
+            ]
+        }
+    ]
+  }
+}

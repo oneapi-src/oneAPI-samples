@@ -1,0 +1,22 @@
+DPCPP_CXX = dpcpp
+DPCPP_CXXFLAGS = /Zi /EHsc
+DPCPP_LDFLAGS = 
+DPCPP_EXE_NAME = matrix_mul_dpcpp.exe
+DPCPP_SOURCES = src/matrix_mul_dpcpp.cpp
+
+all:
+	$(DPCPP_CXX) $(DPCPP_CXXFLAGS) -o $(DPCPP_EXE_NAME) $(DPCPP_SOURCES) $(DPCPP_LDFLAGS)
+
+build_dpcpp:
+	$(DPCPP_CXX) $(DPCPP_CXXFLAGS) -o $(DPCPP_EXE_NAME) $(DPCPP_SOURCES) $(DPCPP_LDFLAGS)
+
+
+run:
+	$(DPCPP_EXE_NAME)
+
+run_dpcpp:
+	$(DPCPP_EXE_NAME)
+
+
+clean: 
+	del -rf $(DPCPP_EXE_NAME) *.pdb
