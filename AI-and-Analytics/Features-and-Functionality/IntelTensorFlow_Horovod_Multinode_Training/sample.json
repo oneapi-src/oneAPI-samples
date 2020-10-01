@@ -13,7 +13,7 @@
 		"steps": [
 			"source activate tensorflow",
             "export HOROVOD_WITHOUT_MPI=1",
-            "pip install horovod"
+            "pip install horovod",
 			"horovodrun -np 2 python TensorFlow_Multinode_Training_with_Horovod.py"
 		 ]
 	}
