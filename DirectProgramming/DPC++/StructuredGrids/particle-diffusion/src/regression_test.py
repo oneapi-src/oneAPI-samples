@@ -210,6 +210,13 @@ if itest == 1:
   # os.system(backend_device_string + "./pd -i 100000 -p 25 -g 50" + claFlags)
   # print("-----------------------------------------------------\n\n")
 
+print("Other tests:")
+print("-----------------------------------------------------\n\n")
+print("0 iteration test:")
+print("\n" + backend_device_string + "./pd -i 0 -p 25 -g 50" + claFlags)
+os.system(backend_device_string + "./pd -i 0 -p 25 -g 50" + claFlags)
+print("-----------------------------------------------------\n\n")
+
 os.system("rm pd ")
 
 # *******************************************************************
