@@ -74,7 +74,7 @@ jupyter notebook
 
 ### Running the Sample as a Jupyter Notebook
 
-Open .pynb file and run cells in Jupyter Notebook using the "Run" button (see image using "daal4py Hello World" sample)
+Open .pynb file and run cells in Jupyter Notebook using the "Run" button (see image using "Modin Getting Started" sample)
 
 ![Click the Run Button in the Jupyter Notebook](Jupyter_Run.jpg "Run Button on Jupyter Notebook")
 
@@ -87,7 +87,7 @@ RMSE: 11.113036205909719
 
 ### Running the Sample as a Python File
 
-Open notebook in Jupyter and download as python file (see image using "daal4py Hello World" sample)
+Open notebook in Jupyter and download as python file (see image using "Modin Getting Started"  sample)
 
 ![Download as python file in the Jupyter Notebook](Jupyter_Save_Py.jpg "Download as python file in the Jupyter Notebook")
 
