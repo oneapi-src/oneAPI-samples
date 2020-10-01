@@ -1,6 +1,7 @@
 # TensorFlow Performance Analysis by using Intel Model Zoo
 This sample contains two Jupyter notebooks from Intel Model Zoo, and those Jupyter notebooks help users analyze the performance difference among 
-Stock Tensorflow and Intel Tensorflow steps by steps.
+Stock Tensorflow and Intel Tensorflow steps by steps.  
+[Intel Model Zoo](https://github.com/IntelAI/models) contains links to pre-trained models, sample scripts, best practices, and step-by-step tutorials for many popular open-source machine learning models optimized by Intel to run on Intel® Xeon® Scalable processors.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -35,8 +36,8 @@ This code sample is licensed under MIT license.
   Please refer to [Intel oneAPI DevCloud](https://intelsoftwaresites.secure.force.com/devcloud/oneapi) for Intel DevCloud.
 
  1. **Intel AI Analytics Toolkit**  
-       You can refer to the oneAPI main page for toolkit installation,   
-       and the Toolkit Getting Started Guide for Linux for post-installation steps and scripts.
+       You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation,   
+       and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
  2. **Jupyter Notebook**
        Users can install via PIP by `$pip install notebook`.
@@ -44,8 +45,8 @@ This code sample is licensed under MIT license.
 
 #### **Conda Environment Creation**  
 
-##### 1. Intel oneAPI DevCloud
-
+##### **1. Intel oneAPI DevCloud**
+---
 ###### **Stock TensorFlow**
 
 1. Create conda env: `$conda create -n stock-tensorflow python matplotlib ipykernel psutil pandas gitpython`
@@ -73,8 +74,8 @@ This code sample is licensed under MIT license.
 > NOTE: Please change the python path if you have a different folder path for anaconda3. 
   After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall intel-tensorflow`.
 
-##### 2. Linux with Intel oneAPI AI Analytics Toolkit  
-
+##### **2. Linux with Intel oneAPI AI Analytics Toolkit**  
+---
 ###### **Stock TensorFlow**
 
 1. Create conda env: `$conda create -n stock-tensorflow python matplotlib ipykernel psutil pandas gitpython`
@@ -120,8 +121,8 @@ This code sample is licensed under MIT license.
 ### Example of Output
 Users should be able to see some diagrams for performance comparison and analysis.  
 One example of performance comparison diagrams:
-<br><img src="images/perf_comparison.png" width="300" height="300"><br>
+<br><img src="images/perf_comparison.png" width="400" height="300"><br>
 
 For performance analysis, users can also see pie charts for top hotspots of Tensorflow* operations among Stock and Intel Tensorflow.  
 One example of performance analysis diagrams:
-<br><img src="images/compared_tf_op_duration_pie.png" width="600" height="300"><br>
+<br><img src="images/compared_tf_op_duration_pie.png" width="900" height="400"><br>
