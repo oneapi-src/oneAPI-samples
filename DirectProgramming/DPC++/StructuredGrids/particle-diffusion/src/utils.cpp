@@ -169,9 +169,12 @@ int ParseArgsWindows(int argc, char* argv[], size_t* n_iterations,
   try {
     for (int i = 1; i < argc; ++i)
       if (stoi(argv[i]) < 0 && i != 4) retv = 1;
-    *n_iterations = stoi(argv[1]), *n_particles = stoi(argv[2]);
-    *grid_size = stoi(argv[3]), *seed = stoi(argv[4]);
-    *cpu_flag = stoul(argv[5]), *grid_output_flag = stoul(argv[6]);
+    *n_iterations = stoi(argv[1]);
+    *n_particles = stoi(argv[2]);
+    *grid_size = stoi(argv[3]);
+    *seed = stoi(argv[4]);
+    *cpu_flag = stoul(argv[5]);
+    *grid_output_flag = stoul(argv[6]);
   } catch (...) {
     retv = 1;
   }
