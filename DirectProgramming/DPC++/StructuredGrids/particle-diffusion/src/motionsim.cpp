@@ -21,7 +21,7 @@
 //   DPC++ Buffers and accessors (communicate data between the host and the
 //   device) DPC++ Kernels (including parallel_for function and range<2>
 //   objects) API-based programming: Use oneMKL to generate random numbers
-//   (DPC++) DPC++ atomic operations for synchronization
+//   (DPC++) DPC++ atomic operations 
 //
 
 //For backwards compatibility with MKL-Beta09
