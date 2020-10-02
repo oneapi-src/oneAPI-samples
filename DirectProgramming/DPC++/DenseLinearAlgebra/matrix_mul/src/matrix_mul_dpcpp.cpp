@@ -58,8 +58,8 @@ int main() {
 
     // Create 2D buffers for matrices, buffer c is bound with host memory c_back
 
-    buffer<float> a_buf(range(M, N));
-    buffer<float> b_buf(range(N, P));
+    buffer<float, 2> a_buf(range(M, N));
+    buffer<float, 2> b_buf(range(N, P));
     buffer c_buf(reinterpret_cast<float *>(c_back), range(M, P));
 
     cout << "Problem size: c(" << M << "," << P << ") = a(" << M << "," << N
