@@ -66,13 +66,13 @@ int* ParallelPrefixSum(int* current, int* next, unsigned int nb, queue& q) {
     // Iterate over the necessary iterations.
     for (unsigned int iter = 0; iter < num_iter; iter++, two_power *= 2) {
       // Submit command group for execution
-      q.submit([&](auto &h) {
+      q.submit([&](auto& h) {
         // Create accessors
         accessor sequence(sequence_buf, h);
         accessor sequence_next(sequence_next_buf, h);
 
         if (iter % 2 == 0) {
-	  h.parallel_for(nb, [=](id<1> j) {
+          h.parallel_for(nb, [=](id<1> j) {
             if (j < two_power) {
               sequence_next[j] = sequence[j];
             } else {
@@ -81,7 +81,7 @@ int* ParallelPrefixSum(int* current, int* next, unsigned int nb, queue& q) {
           });  // end parallel for loop in kernel
           result = next;
         } else {
-	  h.parallel_for(nb, [=](id<1> j) {
+          h.parallel_for(nb, [=](id<1> j) {
             if (j < two_power) {
               sequence[j] = sequence_next[j];
             } else {
@@ -124,12 +124,10 @@ void PrefixSum(int* x, unsigned int nb)
 void Usage(string prog_name, int exponent) {
   cout << " Incorrect parameters\n";
   cout << " Usage: " << prog_name << " n k \n\n";
-  cout <<
-    " n: Integer exponent presenting the size of the input array. The number of\n";
-  cout <<
-    "    element in the array must be power of 2 (e.g., 1, 2, 4, ...). Please\n";
-  cout << "    enter the corresponding exponent betwwen 0 and "
-	    << exponent - 1 << ".\n";
+  cout << " n: Integer exponent presenting the size of the input array.\n";
+  cout << "    The number of element in the array must be power of 2\n";
+  cout << "    (e.g., 1, 2, 4, ...). Please enter the corresponding exponent\n";
+  cout << "    betwwen 0 and " << exponent - 1 << ".\n";
   cout << " k: Seed used to generate a random sequence.\n";
 }
 
@@ -162,22 +160,10 @@ int main(int argc, char* argv[]) {
   // Define device selector as 'default'
   default_selector device_selector;
 
-  // exception handler
-  auto exception_handler = [](exception_list exceptionList) {
-    for (exception_ptr const& e : exceptionList) {
-      try {
-        rethrow_exception(e);
-      } catch (cl::sycl::exception const& e) {
-        terminate();
-      }
-    }
-  };
-
   // Create a device queue using DPC++ class queue
-  queue q(device_selector, exception_handler);
+  queue q(device_selector, dpc_common::exception_handler);
 
-  cout << "Device: " << q.get_device().get_info<info::device::name>()
-            << "\n";
+  cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
 
   int* data = new int[nb];
   int* prefix_sum1 = new int[nb];
