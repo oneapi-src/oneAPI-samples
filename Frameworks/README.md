@@ -14,16 +14,12 @@ Python has become the most popular and fastest growing programming language for 
 ### Data Analytics
 Implement data science and analytics pipelines—preprocessing through machine learning—and scale-out efficiently using the high-performing oneAPI Data Analytics Library, part of the foundational Intel(R) oneAPI Base Toolkit. The library’s set of high-speed algorithms (such as analysis functions, math functions, and training and prediction functions) enable applications to analyze large data sets with available compute resources and make better predictions faster.
 
-### Low Precision Optimization Tool (iLiT)
-Intel(R) Low Precision Optimization Tool (iLiT) helps user to simple the processing to convert fp32 model to int8/bf16 model to speed up the inference performance. In same time, iLiT will tune the quanization method to reduce the accuracy loss, which is big blocker for low-precision inference.
-
 Ai Analytics Toolkit contains different examples listed in below table:
 
 | Type      | Name                                                         | Language |
 | --------- | ------------------------------------------------------------ | ----------- |
 | Component | Tensorflow Hello World                                       | Python      |
 | Component | PyTorch Hello World                                          | Python      |
-| Component | iLiT Sample for Tensorflow                                   | Python      |
 
 ## 
 
