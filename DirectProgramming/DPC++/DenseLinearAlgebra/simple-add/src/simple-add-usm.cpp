@@ -24,7 +24,7 @@
 #include <iostream>
 #include "dpc_common.hpp"
 #if FPGA || FPGA_EMULATOR
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #endif
 
 using namespace sycl;
