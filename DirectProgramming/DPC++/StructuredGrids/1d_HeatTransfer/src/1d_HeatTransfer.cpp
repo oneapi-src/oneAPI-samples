@@ -34,12 +34,13 @@
 //
 //******************************************************************************
 #include <CL/sycl.hpp>
-#include <dpc_common.hpp>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include "dpc_common.hpp"
 
 using namespace sycl;
+using namespace std;
 
 constexpr float dt = 0.002f;
 constexpr float dx = 0.01f;
@@ -49,12 +50,12 @@ constexpr float temp = 100.0f;  // Initial temperature.
 //************************************
 // Function description: display input parameters used for this sample.
 //************************************
-void Usage(std::string programName) {
-  std::cout << " Incorrect parameters \n";
-  std::cout << " Usage: ";
-  std::cout << programName << " <n> <i>\n\n";
-  std::cout << " n : Number of points to simulate \n";
-  std::cout << " i : Number of timesteps \n";
+void Usage(string programName) {
+  cout << " Incorrect parameters \n";
+  cout << " Usage: ";
+  cout << programName << " <n> <i>\n\n";
+  cout << " n : Number of points to simulate \n";
+  cout << " i : Number of timesteps \n";
 }
 
 //************************************
@@ -75,43 +76,40 @@ float* ComputeHeatDeviceParallel(float* arr, float* arr_next, float C,
   try {
     // Define the device queue
     queue q = default_selector{};
-    std::cout << "Kernel runs on "
-              << q.get_device().get_info<info::device::name>() << "\n";
+    cout << "Kernel runs on " << q.get_device().get_info<info::device::name>()
+         << "\n";
 
     // Set boundary condition at one end.
     arr[0] = arr_next[0] = temp;
 
     float* current_data_ptr = arr;
     float* next_data_ptr = arr_next;
-    //    current_data_ptr = arr;
-    // next_data_ptr = arr_next;
 
     // Buffer scope
     {
-      buffer<float, 1> arr_buf(current_data_ptr, range<1>{num_p + 2});
-      buffer<float, 1> arr_next_buf(next_data_ptr, range<1>{num_p + 2});
+      buffer temperature_buf(current_data_ptr, range(num_p + 2));
+      buffer temperature_next_buf(next_data_ptr, range(num_p + 2));
 
       // Iterate over timesteps
       for (i = 1; i <= num_iter; i++) {
         if (i % 2 != 0) {
-          q.submit([&](handler& h) {
+          q.submit([&](auto& h) {
             // The size of memory amount that will be given to the buffer.
             range<1> num_items{num_p + 2};
 
-            auto arr_acc = arr_buf.get_access<access::mode::read_write>(h);
-            auto arr_next_acc =
-                arr_next_buf.get_access<access::mode::read_write>(h);
+            accessor temperature(temperature_buf, h);
+            accessor temperature_next(temperature_next_buf, h);
 
             h.parallel_for(num_items, [=](id<1> k) {
               size_t gid = k.get(0);
 
               if (gid == 0) {
               } else if (gid == num_p + 1) {
-                arr_next_acc[k] = arr_acc[k - 1];
+                temperature_next[k] = temperature[k - 1];
               } else {
-                arr_next_acc[k] =
-                    C * (arr_acc[k + 1] - 2 * arr_acc[k] + arr_acc[k - 1]) +
-                    arr_acc[k];
+                temperature_next[k] =
+                    C * (temperature[k + 1] - 2 * temperature[k] + temperature[k - 1]) +
+                    temperature[k];
               }
             });  // end parallel for loop in kernel1
           });    // end device queue
@@ -121,20 +119,19 @@ float* ComputeHeatDeviceParallel(float* arr, float* arr_next, float C,
             // The size of memory amount that will be given to the buffer.
             range<1> num_items{num_p + 2};
 
-            auto arr_acc = arr_buf.get_access<access::mode::read_write>(h);
-            auto arr_next_acc =
-                arr_next_buf.get_access<access::mode::read_write>(h);
+            accessor temperature(temperature_buf, h);
+            accessor temperature_next(temperature_next_buf, h);
 
             h.parallel_for(num_items, [=](id<1> k) {
               size_t gid = k.get(0);
 
               if (gid == 0) {
               } else if (gid == num_p + 1) {
-                arr_acc[k] = arr_next_acc[k - 1];
+                temperature[k] = temperature_next[k - 1];
               } else {
-                arr_acc[k] = C * (arr_next_acc[k + 1] - 2 * arr_next_acc[k] +
-                                  arr_next_acc[k - 1]) +
-                             arr_next_acc[k];
+                temperature[k] = C * (temperature_next[k + 1] - 2 * temperature_next[k] +
+                                  temperature_next[k - 1]) +
+                             temperature_next[k];
               }
             });  // end parallel for loop in kernel2
           });    // end device queue
@@ -144,8 +141,8 @@ float* ComputeHeatDeviceParallel(float* arr, float* arr_next, float C,
 
     q.wait_and_throw();
 
-  } catch (cl::sycl::exception e) {
-    std::cout << "SYCL exception caught: " << e.what() << "\n";
+  } catch (sycl::exception e) {
+    cout << "SYCL exception caught: " << e.what() << "\n";
   }
 
   if (i % 2 != 0)
@@ -197,7 +194,7 @@ bool CompareResults(float* device_results, float* host_results,
   double norm2 = 0;
   bool err = false;
 
-  std::ofstream err_file;
+  ofstream err_file;
   err_file.open("error_diff.txt");
 
   err_file << " \t idx\theat[i]\t\theat_CPU[i] \n";
@@ -225,16 +222,16 @@ int main(int argc, char* argv[]) {
 
   // Read input parameters
   try {
-    n_point = std::stoi(argv[1]);
-    n_iteration = std::stoi(argv[2]);
+    n_point = stoi(argv[1]);
+    n_iteration = stoi(argv[2]);
 
   } catch (...) {
     Usage(argv[0]);
     return (-1);
   }
 
-  std::cout << "Number of points: " << n_point << "\n";
-  std::cout << "Number of iterations: " << n_iteration << "\n";
+  cout << "Number of points: " << n_point << "\n";
+  cout << "Number of iterations: " << n_iteration << "\n";
 
   // Array heat and heat_next arrays store temperatures of the current and next
   // iteration of n_point (calculated in kernel)
@@ -260,7 +257,7 @@ int main(int argc, char* argv[]) {
       ComputeHeatDeviceParallel(heat, heat_next, C, n_point, n_iteration, temp);
 
   // Display time used by device
-  std::cout << "Kernel time: " << t_par.Elapsed() << " sec\n";
+  cout << "Elapsed time: " << t_par.Elapsed() << " sec\n";
 
   // Compute heat in CPU in (for comparision)
   float* final_CPU = NULL;
@@ -273,10 +270,10 @@ int main(int argc, char* argv[]) {
   bool err = CompareResults(final_device, final_CPU, n_point, C);
 
   if (err == true)
-    std::cout << "Please check the error_diff.txt file ...\n";
+    cout << "Please check the error_diff.txt file ...\n";
   else
-    std::cout << "PASSED! There is no difference between the results computed "
-                 "in host and in kernel.\n";
+    cout << "PASSED! There is no difference between the results computed "
+            "in host and in kernel.\n";
 
   // Cleanup
   delete[] heat;
