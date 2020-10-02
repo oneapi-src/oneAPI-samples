@@ -81,9 +81,9 @@ double MonteCarloPi(rgb image_plot[]) {
     // Perform Monte Carlo simulation and reduce results
     q.submit([&](handler& h) {
       // Set up accessors
-      auto imgplot_acc = imgplot_buf.get_access<access::mode::write>(h);
-      auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
-      auto total_acc = total_buf.get_access<access::mode::read_write>(h);
+      auto imgplot_acc = imgplot_buf.get_access(h);
+      auto coords_acc = coords_buf.get_access(h);
+      auto total_acc = total_buf.get_access(h);
 
       // Monte Carlo Procedure + Reduction
       h.parallel_for(nd_range<1>(num_wg * size_wg, size_wg),
