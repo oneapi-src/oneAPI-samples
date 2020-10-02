@@ -44,7 +44,7 @@ set(HARDWARE_COMPILE_FLAGS -MMD -fsycl-link-targets=spir64_fpga-unknown-unknown-
 
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 separate_arguments(USER_HARDWARE_FLAGS)
-set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=1 ${NUM_REORDER} -Xsboard=${_FPGA_BOARD}  ${USER_HARDWARE_FLAGS} -DNUM_ENGINES=${NUM_ENGINES})
+set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=7 ${NUM_REORDER} -Xsboard=${_FPGA_BOARD}  ${USER_HARDWARE_FLAGS} -DNUM_ENGINES=${NUM_ENGINES})
 set(FINAL_LINK_FLAGS -fintelfpga -DNUM_ENGINES=${NUM_ENGINES})
 
 set(EMULATOR_COMPILE_FLAGS "-v -v -v -g0 -fintelfpga -DFPGA_EMULATOR -DNUM_ENGINES=${NUM_ENGINES}")

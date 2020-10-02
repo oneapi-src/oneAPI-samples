@@ -22,7 +22,7 @@
                 "steps": [
                         "MSBuild Particle_Diffusion.sln /t:Rebuild /p:Configuration=\"Release\"",
                         "cd x64/Release",
-                        "Particle_Diffusion.exe 10000 777"
+                        "Particle_Diffusion.exe 10000 256 22 777 0 1"
                 ]
         }]
 

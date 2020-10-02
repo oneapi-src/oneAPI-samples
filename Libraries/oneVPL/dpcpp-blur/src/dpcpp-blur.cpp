@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
     mfxI32 input_height = isize;
 
     // initialize  session
-    mfxInitParam init_params   = { 0 };
+    mfxInitParam init_params   = {};
     init_params.Version.Major  = 2;
     init_params.Version.Minor  = 0;
     init_params.Implementation = MFX_IMPL_SOFTWARE;
@@ -294,7 +294,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Prepare bit stream buffer
-    mfxBitstream bitstream = { 0 };
+    mfxBitstream bitstream = {};
     bitstream.MaxLength    = 2000000;
     std::vector<mfxU8> bitstream_data(bitstream.MaxLength);
     bitstream.Data = bitstream_data.data();
