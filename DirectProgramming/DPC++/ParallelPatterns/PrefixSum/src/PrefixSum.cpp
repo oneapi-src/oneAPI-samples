@@ -43,56 +43,52 @@ using namespace std;
 
 void Show(int a[], int arraysize) {
   for (int i = 0; i < arraysize; ++i) {
-    std::cout << a[i] << " ";
-    if ((i % 16) == 15) std::cout << "\n";
+    cout << a[i] << " ";
+    if ((i % 16) == 15) cout << "\n";
   }
 
-  std::cout << "\n";
+  cout << "\n";
   return;
 }
 
-int* ParallelPrefixSum(int* prefix1, int* prefix2, unsigned int nb, queue& q) {
+int* ParallelPrefixSum(int* current, int* next, unsigned int nb, queue& q) {
   unsigned int two_power = 1;
   unsigned int num_iter = log2(nb);
   // unsigned int uintmax = UINT_MAX;
   int* result = NULL;
 
-  //  std::cout << "uintmax " << uintmax << " " << log2(uintmax) << "\n";
+  //  cout << "uintmax " << uintmax << " " << log2(uintmax) << "\n";
   // Buffer scope
   {
-    buffer prefix1_buf(prefix1, range(nb));
-    buffer prefix2_buf(prefix2, range(nb));
+    buffer sequence_buf(current, range(nb));
+    buffer sequence_next_buf(next, range(nb));
 
     // Iterate over the necessary iterations.
     for (unsigned int iter = 0; iter < num_iter; iter++, two_power *= 2) {
       // Submit command group for execution
       q.submit([&](auto &h) {
         // Create accessors
-        accessor prefix1_acc(prefix1_buf, h);
-        accessor prefix2_acc(prefix2_buf, h);
+        accessor sequence(sequence_buf, h);
+        accessor sequence_next(sequence_next_buf, h);
 
         if (iter % 2 == 0) {
-          //h.parallel_for(range<1>(nb), [=](id<1> j) {
 	  h.parallel_for(nb, [=](id<1> j) {
             if (j < two_power) {
-              prefix2_acc[j] = prefix1_acc[j];
+              sequence_next[j] = sequence[j];
             } else {
-              prefix2_acc[j] = prefix1_acc[j] + prefix1_acc[j - two_power];
+              sequence_next[j] = sequence[j] + sequence[j - two_power];
             }
           });  // end parallel for loop in kernel
-          result = prefix2;
-          // std::cout << "return prefix2\n";
+          result = next;
         } else {
-          //h.parallel_for(range<1>(nb), [=](id<1> j) {
 	  h.parallel_for(nb, [=](id<1> j) {
             if (j < two_power) {
-              prefix1_acc[j] = prefix2_acc[j];
+              sequence[j] = sequence_next[j];
             } else {
-              prefix1_acc[j] = prefix2_acc[j] + prefix2_acc[j - two_power];
+              sequence[j] = sequence_next[j] + sequence_next[j - two_power];
             }
           });  // end parallel for loop in kernel
-          result = prefix1;
-          // std::cout << "return prefix1\n";
+          result = current;
         }
       });  // end device queue
     }      // end iteration
@@ -113,7 +109,7 @@ void PrefixSum(int* x, unsigned int nb)
   // Iterate over the necessary iterations
   for (unsigned int iter = 0; iter < num_iter; iter++, two_power*=2) {
     //Show(x, nb);
-    //    std::cout << "two_power: " << two_power << "\n";
+    //    cout << "two_power: " << two_power << "\n";
     for (unsigned int j = nb; j > 0; j--) {
       if (j < two_power) {
         x[j] = x[j];
@@ -125,26 +121,25 @@ void PrefixSum(int* x, unsigned int nb)
   }
 }
 */
-void Usage(std::string prog_name, int exponent) {
-  std::cout << " Incorrect parameters\n";
-  std::cout << " Usage: " << prog_name << " n k \n\n";
-  std::cout
-      << " n: Integer exponent presenting the size of the input array. The number of el\
-ement in\n";
-  std::cout
-      << "    the array must be power of 2 (e.g., 1, 2, 4, ...). Please enter the corre\
-sponding\n";
-  std::cout << "    exponent betwwen 0 and " << exponent - 1 << ".\n";
-  std::cout << " k: Seed used to generate a random sequence.\n";
+void Usage(string prog_name, int exponent) {
+  cout << " Incorrect parameters\n";
+  cout << " Usage: " << prog_name << " n k \n\n";
+  cout <<
+    " n: Integer exponent presenting the size of the input array. The number of\n";
+  cout <<
+    "    element in the array must be power of 2 (e.g., 1, 2, 4, ...). Please\n";
+  cout << "    enter the corresponding exponent betwwen 0 and "
+	    << exponent - 1 << ".\n";
+  cout << " k: Seed used to generate a random sequence.\n";
 }
 
 int main(int argc, char* argv[]) {
   unsigned int nb, seed;
-  int n, exp_max = log2(std::numeric_limits<int>::max());
+  int n, exp_max = log2(numeric_limits<int>::max());
 
   // Read parameters.
   try {
-    n = std::stoi(argv[1]);
+    n = stoi(argv[1]);
 
     // Verify the boundary of acceptance.
     if (n < 0 || n >= exp_max) {
@@ -152,28 +147,28 @@ int main(int argc, char* argv[]) {
       return -1;
     }
 
-    seed = std::stoi(argv[2]);
+    seed = stoi(argv[2]);
     nb = pow(2, n);
   } catch (...) {
     Usage(argv[0], exp_max);
     return -1;
   }
 
-  std::cout << "\nSequence size: " << nb << ", seed: " << seed;
+  cout << "\nSequence size: " << nb << ", seed: " << seed;
 
   int num_iter = log2(nb);
-  std::cout << "\nNum iteration: " << num_iter << "\n";
+  cout << "\nNum iteration: " << num_iter << "\n";
 
   // Define device selector as 'default'
   default_selector device_selector;
 
   // exception handler
   auto exception_handler = [](exception_list exceptionList) {
-    for (std::exception_ptr const& e : exceptionList) {
+    for (exception_ptr const& e : exceptionList) {
       try {
-        std::rethrow_exception(e);
+        rethrow_exception(e);
       } catch (cl::sycl::exception const& e) {
-        std::terminate();
+        terminate();
       }
     }
   };
@@ -181,7 +176,7 @@ int main(int argc, char* argv[]) {
   // Create a device queue using DPC++ class queue
   queue q(device_selector, exception_handler);
 
-  std::cout << "Device: " << q.get_device().get_info<info::device::name>()
+  cout << "Device: " << q.get_device().get_info<info::device::name>()
             << "\n";
 
   int* data = new int[nb];
@@ -202,12 +197,11 @@ int main(int argc, char* argv[]) {
 
   result = ParallelPrefixSum(prefix_sum1, prefix_sum2, nb, q);
 
-  // auto end = std::chrono::steady_clock::now();
   auto elapsed_time = t.Elapsed();
 
-  std::cout << "Kernel time: " << elapsed_time << " s\n";
+  cout << "Elapsed time: " << elapsed_time << " s\n";
 
-  // std::cout << "\ndata after transforming using parallel prefix sum result:";
+  // cout << "\ndata after transforming using parallel prefix sum result:";
   // Show(result, nb);
 
   bool equal = true;
@@ -228,10 +222,10 @@ int main(int argc, char* argv[]) {
   delete[] prefix_sum2;
 
   if (!equal) {
-    std::cout << "\nFailed: " << std::endl;
+    cout << "\nFailed: " << std::endl;
     return -2;
   } else {
-    std::cout << "\nSuccess!" << std::endl;
+    cout << "\nSuccess!" << std::endl;
     return 0;
   }
 }
