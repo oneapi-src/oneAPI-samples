@@ -23,8 +23,17 @@
 #include <array>
 #include <iostream>
 #include "dpc_common.hpp"
+
 #if FPGA || FPGA_EMULATOR
-#include <CL/sycl/intel/fpga_extensions.hpp>
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 #endif
 
 using namespace sycl;
@@ -60,10 +69,10 @@ int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // DPC++ extension: FPGA emulator selector on systems without FPGA card.
-  intel::fpga_emulator_selector d_selector;
+  INTEL::fpga_emulator_selector d_selector;
 #elif FPGA
   // DPC++ extension: FPGA selector on systems with FPGA card.
-  intel::fpga_selector d_selector;
+  INTEL::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
   default_selector d_selector;
