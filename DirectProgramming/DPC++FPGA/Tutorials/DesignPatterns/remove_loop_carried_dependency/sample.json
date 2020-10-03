@@ -4,7 +4,7 @@
   "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
   "description": "FPGA tutorial design demonstrating performance optimization by removing loop carried dependencies",
   "toolchain": ["dpcpp"],
-  "os": ["linux", "windows"],
+  "os": ["linux"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
@@ -27,23 +27,6 @@
           "cd build",
           "cmake ..",
           "make report"
-        ]
-      }
-    ],
-    "windows": [
-      {
-        "id": "fpga_emu",
-        "steps": [
-          "cd src",
-          "ninja fpga_emu",
-          "loop_carried_dependency.fpga_emu.exe"
-        ]
-      },
-      {
-        "id": "report",
-        "steps": [
-          "cd src",
-          "ninja report"
         ]
       }
     ]

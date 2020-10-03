@@ -21,7 +21,7 @@
 #else
   #include <CL/sycl/INTEL/fpga_extensions.hpp>
 #endif
-
+  
 using namespace sycl;
 
 constexpr size_t kSize = 8;

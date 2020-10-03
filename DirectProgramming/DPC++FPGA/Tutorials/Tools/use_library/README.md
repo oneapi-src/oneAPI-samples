@@ -102,7 +102,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ``` 
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://software.intel.com/content/dam/develop/external/us/en/documents/use_library.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/use_library.fpga.tar.gz" download>here</a>.
 
  ### In Third-Party Integrated Development Environments (IDEs)
 

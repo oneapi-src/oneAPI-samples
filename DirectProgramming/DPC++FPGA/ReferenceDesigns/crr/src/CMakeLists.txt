@@ -16,7 +16,7 @@ set(OUTER_UNROLL_S10 2)
 set(INNER_UNROLL_S10 64)
 set(OUTER_UNROLL_POW2_S10 2)
 set(SEED_A10 1)
-set(SEED_S10 2)
+set(SEED_S10 4)
 
 # Assume target is the Intel(R) PAC with Intel Arria(R) 10 GX FPGA 
 SET(_FPGA_BOARD ${A10_PAC_BOARD_NAME})

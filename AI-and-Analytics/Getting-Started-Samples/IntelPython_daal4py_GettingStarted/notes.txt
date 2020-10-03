@@ -1,0 +1,1 @@
+This is placeholder for daal4py getting started samples
