@@ -11,16 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\loop_carried_dependency.cpp" />
+    <ClCompile Include="src\fpga_reg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{49e7063b-56da-4acf-b153-5b56a98645be}</ProjectGuid>
+    <ProjectGuid>{73fcad5c-4c93-4786-b662-a7273c515e22}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>loop_carried_dependency</RootNamespace>
+    <RootNamespace>fpga_reg</RootNamespace>
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -105,7 +105,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
       <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)loop_carried_dependency.obj</ObjectFileName>
+      <ObjectFileName>$(IntDir)fpga_reg.obj</ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -144,7 +144,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
       <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)loop_carried_dependency.obj</ObjectFileName>
+      <ObjectFileName>$(IntDir)fpga_reg.obj</ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
