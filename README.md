@@ -25,29 +25,29 @@ The latest versions of code samples on the master branch are not guaranteed to b
 |../DPC++FPGA/ReferenceDesigns/crr                  |FPGA |High-performance CRR binomial tree option pricing model using DPC++ on FPGA|
 |../DPC++FPGA/ReferenceDesigns/gzip                 |FPGA |High-performance GZIP compression using DPC++ on FPGA|
 |../DPC++FPGA/ReferenceDesigns/qrd                  |FPGA |High-performance QR decomposition of matrices using DPC++ on FPGA|
-|DirectPrograming/DPC++FPGA/Tutorials/              |
-|..../GettingStarted/fpga_compile                   |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
-|..../GettingStarted/fast_recompile                 |FPGA |Tutorial introducing host-only recompile to save DPC++ development time on FPGA |
-|..../Tools/use_library                             |FPGA |Tutorial showing how to use cross-language libraries in DPC++ on FPGA |
-|..../Tools/system_profiling                        |FPGA |Tutorial showing how to use the OpenCL Intercept Layer to profile DPC++ designs running on FPGA |
-|..../DesignPatterns/double_buffering               |FPGA |Tutorial demonstrating how to overlap kernel execution with buffer transfers and host processing |
-|..../DesignPatterns/n_way_buffering                |FPGA |Tutorial demonstrating an extension of double buffering to n-way buffering |
-|..../DesignPatterns/onchip_memory_cache            |FPGA |Tutorial demonstrating the caching of on-chip memory to reduce loop initiation interval on FPGA |
-|..../DesignPatterns/pipe_array                     |FPGA |Tutorial demonstrating how to create an array of pipes  |
-|..../DesignPatterns/compute_units                  |FPGA |Tutorial demonstrating how to efficiently make multiple copies of a kernel, called compute units  |
-|..../DesignPatterns/remove_loop_carried_dependency |FPGA |Tutorial demonstrating a technique to optimize performance by removing loop carried dependencies |
-|..../DesignPatterns/triangular_loop                |FPGA |Tutorial demonstrating an advanced FPGA optimization technique for triangular loops |
-|..../DesignPatterns/shannonization                 |FPGA |Tutorial demonstrating an optimization for removing computation from the critical path |
-|..../Features/fpga_reg                             |FPGA |Tutorial demonstrating the use of the DPC++ FPGA power user extension intel::fpga_reg |
-|..../Features/kernel_args_restrict                 |FPGA |Tutorial demonstrating how to avoid performance penalties due to kernel argument aliasing |
-|..../Features/loop_coalesce                        |FPGA |Tutorial demonstrating the DPC++ FPGA loop_coalesce attribute |
-|..../Features/loop_ivdep                           |FPGA |Tutorial demonstrating the use of the loop ivdep attribute |
-|..../Features/loop_unroll                          |FPGA |Tutorial demonstrating the DPC++ unroll pragma and its performance trade-offs on FPGA |
-|..../Features/max_concurrency                      |FPGA |Tutorial demonstrating the DPC++ FPGA max_concurrency attribute |
-|..../Features/max_interleaving                     |FPGA |Tutorial demonstrating the DPC++ FPGA max_interleaving attribute |
-|..../Features/memory_attributes                    |FPGA |Tutorial demonstrating how to use DPC++ FPGA memory attributes |
-|..../Features/pipes                                |FPGA |Tutorial demonstrating the DPC++ FPGA pipes extension to transfer data between kernels |
-|..../Features/speculated_iterations                |FPGA |Tutorial demonstrating the DPC++ FPGA speculated_iterations attribute |
+|../DPC++FPGA/Tutorials/                            |
+|...../GettingStarted/fpga_compile                   |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
+|...../GettingStarted/fast_recompile                 |FPGA |Tutorial introducing host-only recompile to save DPC++ development time on FPGA |
+|...../Tools/use_library                             |FPGA |Tutorial showing how to use cross-language libraries in DPC++ on FPGA |
+|...../Tools/system_profiling                        |FPGA |Tutorial showing how to use the OpenCL Intercept Layer to profile DPC++ designs running on FPGA |
+|...../DesignPatterns/double_buffering               |FPGA |Tutorial demonstrating how to overlap kernel execution with buffer transfers and host processing |
+|...../DesignPatterns/n_way_buffering                |FPGA |Tutorial demonstrating an extension of double buffering to n-way buffering |
+|...../DesignPatterns/onchip_memory_cache            |FPGA |Tutorial demonstrating the caching of on-chip memory to reduce loop initiation interval on FPGA |
+|...../DesignPatterns/pipe_array                     |FPGA |Tutorial demonstrating how to create an array of pipes  |
+|...../DesignPatterns/compute_units                  |FPGA |Tutorial demonstrating how to efficiently make multiple copies of a kernel, called compute units  |
+|...../DesignPatterns/remove_loop_carried_dependency |FPGA |Tutorial demonstrating a technique to optimize performance by removing loop carried dependencies |
+|...../DesignPatterns/triangular_loop                |FPGA |Tutorial demonstrating an advanced FPGA optimization technique for triangular loops |
+|...../DesignPatterns/shannonization                 |FPGA |Tutorial demonstrating an optimization for removing computation from the critical path |
+|...../Features/fpga_reg                             |FPGA |Tutorial demonstrating the use of the DPC++ FPGA power user extension intel::fpga_reg |
+|...../Features/kernel_args_restrict                 |FPGA |Tutorial demonstrating how to avoid performance penalties due to kernel argument aliasing |
+|...../Features/loop_coalesce                        |FPGA |Tutorial demonstrating the DPC++ FPGA loop_coalesce attribute |
+|...../Features/loop_ivdep                           |FPGA |Tutorial demonstrating the use of the loop ivdep attribute |
+|...../Features/loop_unroll                          |FPGA |Tutorial demonstrating the DPC++ unroll pragma and its performance trade-offs on FPGA |
+|...../Features/max_concurrency                      |FPGA |Tutorial demonstrating the DPC++ FPGA max_concurrency attribute |
+|...../Features/max_interleaving                     |FPGA |Tutorial demonstrating the DPC++ FPGA max_interleaving attribute |
+|...../Features/memory_attributes                    |FPGA |Tutorial demonstrating how to use DPC++ FPGA memory attributes |
+|...../Features/pipes                                |FPGA |Tutorial demonstrating the DPC++ FPGA pipes extension to transfer data between kernels |
+|...../Features/speculated_iterations                |FPGA |Tutorial demonstrating the DPC++ FPGA speculated_iterations attribute |
 |../C++/CombinationalLogic/Mandelbrot   	|CPU  	|Demonstrates how to accelerate   Mandelbrot performance with SIMD and parallelization using OpenMP*.   	|
 |../C++/CompilerInfrastructure/Intrinsics    	|CPU  	|Shows how to utilize the   intrinsics supported by C++ compiler in a variety of applications.	|
 |../C++/GraphTraversal/Mergesort   	|CPU  	|Shows how to accelerate scalar   merge sort program using OpenMP tasks   	|
@@ -80,5 +80,5 @@ The code samples are licensed under MIT license
 3. Now you should be able to build the code sample.
 4. For beta, FPGA samples support Windows through FPGA-emulator.
 5. If you encounter a compilation error like below when building a sample program, one reason is that the directory path of the sample is too long; the work around is to move the sample to a directory like "c:\temp\sample_name".
-  * Error MSB6003 The specified task executable "dpcpp.exe" could not be run ......
+  * Error MSB6003 The specified task executable "dpcpp.exe" could not be run .......
 
