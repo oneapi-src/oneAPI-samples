@@ -1,0 +1,33 @@
+{
+  "name": "Gamma Correction",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/oneAPI DPC++ Library/CPU and GPU"],
+  "description": "gamma correction - a nonlinear operation used to encode and decode the luminance of each image pixel.",
+  "toolchain": ["dpcpp"],
+  "languages": [{"cpp":{}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "guid": "E249AFB8-6580-4CC3-8EF8-5D33C9A41A2C",
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "mkdir -p build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "MSBuild gamma-correction.sln /t:Rebuild /p:Configuration=\"Release\"",
+          "cd x64\\Release",
+          "gamma-correction.exe"
+        ]
+      }
+    ]
+  }
+}

@@ -25,7 +25,7 @@ int main() {
       //# query sub_group and print sub_group info once per sub_group
       if (sg.get_local_id()[0] == 0) {
         out << "sub_group id: " << sg.get_group_id()[0] << " of "
-            << sg.get_group_range() << ", size=" << sg.get_local_range()[0]
+            << sg.get_group_range()[0] << ", size=" << sg.get_local_range()[0]
             << endl;
       }
     });
