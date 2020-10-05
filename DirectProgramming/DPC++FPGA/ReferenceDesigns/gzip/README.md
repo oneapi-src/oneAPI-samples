@@ -20,7 +20,6 @@ Please refer to performance disclaimer at the end of this README.
 |:---                                                   |:---
 | Intel® PAC with Intel Arria® 10 GX FPGA               | 1 engine @ 3.4 GB/s
 | Intel® PAC with Intel Stratix® 10 SX FPGA             | 2 engines @ 5.5 GB/s each = 11.0 GB/s total
-
  
 ## Purpose
 
