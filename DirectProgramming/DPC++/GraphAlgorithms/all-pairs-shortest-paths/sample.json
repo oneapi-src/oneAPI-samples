@@ -20,7 +20,7 @@
           }],
           "windows": [{
                   "steps": [
-                          "MSBuild apsp.sln /t:Rebuild /p:Configuration=\"Release\"",
+                          "MSBuild all-pairs-shortest-paths.sln /t:Rebuild /p:Configuration=\"Release\"",
                           "cd x64/Release",
                           "apsp.exe"
                   ]

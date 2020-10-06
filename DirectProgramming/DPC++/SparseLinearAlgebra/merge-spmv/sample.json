@@ -20,7 +20,7 @@
           }],
           "windows": [{
                   "steps": [
-                          "MSBuild spmv.sln /t:Rebuild /p:Configuration=\"Release\"",
+                          "MSBuild merge-spmv.sln /t:Rebuild /p:Configuration=\"Release\"",
                           "cd x64/Release",
                           "spmv.exe"
                   ]
