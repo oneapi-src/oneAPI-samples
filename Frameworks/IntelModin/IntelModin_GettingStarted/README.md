@@ -96,7 +96,7 @@ Open notebook in Jupyter and download as python file (see image using "daal4py H
 
 Run the Program
 
-`python Intel_Modin_GettingStarted.py`
+`python IntelModin_GettingStarted.py`
 
 ##### Expected Printed Output:
-Expected Cell Output shown in Intel_Modin_GettingStarted.ipynb
+Expected Cell Output shown in IntelModin_GettingStarted.ipynb
