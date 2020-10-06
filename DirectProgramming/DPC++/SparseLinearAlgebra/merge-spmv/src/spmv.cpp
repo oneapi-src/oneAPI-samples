@@ -161,7 +161,7 @@ void InitializeSparseMatrixAndVector(CompressedSparseRow *matrix, float *x) {
 // A sequential implementation of merge based sparse matrix and vector
 // multiplication algorithm.
 //
-// Both row offsets and values indices can be though of as sorted arrays. The
+// Both row offsets and values indices can be thought of as sorted arrays. The
 // progression of the computation is similar to that of merging two sorted
 // arrays at a conceptual level.
 //

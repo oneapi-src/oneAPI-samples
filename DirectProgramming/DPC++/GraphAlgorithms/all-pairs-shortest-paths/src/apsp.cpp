@@ -277,9 +277,17 @@ void BlockedFloydWarshall(queue &q, int *graph) {
 int main() {
   try {
     queue q{default_selector{}, dpc_common::exception_handler};
+    auto device = q.get_device();
+    auto work_group_size = device.get_info<info::device::max_work_group_size>();
+    auto block_size = block_length * block_length;
 
-    std::cout << "Device: " << q.get_device().get_info<info::device::name>()
-              << "\n";
+    cout << "Device: " << device.get_info<info::device::name>() << "\n";
+
+    if (work_group_size < block_size) {
+      cout << "Work group size " << work_group_size
+           << " is less than required size " << block_size << "\n";
+      return -1;
+    }
 
     // Allocate unified shared memory so that graph data is accessible to both
     // the CPU and the device (e.g., a GPU).
