@@ -1,8 +1,4 @@
-**IMPORTANT NOTICE:**
-*This sample and any necessary extra files/data needed to run it are already located in the [AI-and-Analytics](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics) folder of this repository. Please go to the [IntelPython_daal4py_GettingStarted](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelPython_daal4py_GettingStarted)  folder within the AI-and-Analytics folder to get everything you need to build and run this sample.*
-
 # Intel Python daal4py Getting Started
-
 This Getting Started sample code show how to do batch linear regression using the python API package daal4py from oneDAL. It demonstrates how to use software products that can be found in the [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or the [Intel AI Analytics Toolkit powered by oneAPI](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
