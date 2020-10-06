@@ -4,8 +4,8 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <algorithm>
-#include <vector>
 #include <type_traits>
+#include <vector>
 
 #include <CL/sycl.hpp>
 
@@ -323,15 +323,13 @@ int main(int argc, char** argv) {
 
   } catch (exception const& e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << std::endl;
+    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
       std::cout << "If you are targeting an FPGA, please ensure that your "
-                   "system has a correctly configured FPGA board."
-                << std::endl;
+                   "system has a correctly configured FPGA board.\n";
       std::cout << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR."
-                << std::endl;
+                   "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
   }

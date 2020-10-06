@@ -4,13 +4,25 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>
-#include "dpc_common.hpp"
 #include "pipe_array.hpp"
 #include "unroller.hpp"
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
+#include "dpc_common.hpp"
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 
 using namespace sycl;
 
@@ -115,14 +127,14 @@ int main(int argc, char *argv[]) {
   for (auto &output : consumer_output)
     output.resize(items_per_consumer, -1);
 
-  // Initialize producer input 
+  // Initialize producer input
   for (size_t i = 0; i < array_size; i++)
     producer_input[i] = i;
 
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector device_selector;
+  INTEL::fpga_emulator_selector device_selector;
 #else
-  intel::fpga_selector device_selector;
+  INTEL::fpga_selector device_selector;
 #endif
 
   try {

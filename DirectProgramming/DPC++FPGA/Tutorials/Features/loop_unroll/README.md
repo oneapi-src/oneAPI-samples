@@ -6,13 +6,13 @@ This FPGA tutorial demonstrates a simple example of unrolling loops to improve t
 
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux* Ubuntu* 18.04
+| OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) with Intel Stratix® 10 SX FPGA
 | Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               |  Basics of loop unrolling <br> How to unroll loops in your program <br> Determining the optimal unroll factor for your program
 | Time to complete                  | 15 minutes
 
-_Notice: This code sample is not yet supported in Windows*_
+_Notice: Limited support in Windows*; compiling for FPGA hardware is not supported in Windows*_
 
 ## Purpose
 
@@ -131,12 +131,37 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ``` 
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://software.intel.com/content/dam/develop/external/us/en/documents/loop_unroll.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_unroll.fpga.tar.gz" download>here</a>.
 
+### On a Windows* System
+Note: `cmake` is not yet supported on Windows. A build.ninja file is provided instead. 
+
+1. Enter the source file directory.
+   ```
+   cd src
+   ```
+
+2. Compile the design. The following build targets are provided, matching the recommended development flow:
+
+   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+      ```
+      ninja fpga_emu
+      ```
+
+   * Generate the optimization report:
+
+     ```
+     ninja report
+     ```
+     If you are targeting Intel® PAC with Intel Stratix® 10 SX FPGA, instead use:
+     ```
+     ninja report_s10_pac
+     ```     
+   * Compiling for FPGA hardware is not yet supported on Windows.
  
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Examining the Reports
 Locate `report.html` in the `loop_unroll_report.prj/reports/` or `loop_unroll_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
@@ -150,6 +175,7 @@ You can also check the achieved system f<sub>MAX</sub> in order to verify the ea
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
      ./loop_unroll.fpga_emu     (Linux)
+     loop_unroll.fpga_emu.exe   (Windows)
      ```
 2. Run the sample on the FPGA device:
      ```

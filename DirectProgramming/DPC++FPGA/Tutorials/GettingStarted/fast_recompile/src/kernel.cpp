@@ -3,7 +3,20 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl/intel/fpga_extensions.hpp>
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#include <CL/sycl.hpp>
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 #include "kernel.hpp"
@@ -17,9 +30,9 @@ void RunKernel(std::vector<float> &vec_a, std::vector<float> &vec_b,
 
   // Select either the FPGA emulator or FPGA device
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector device_selector;
+  INTEL::fpga_emulator_selector device_selector;
 #else
-  intel::fpga_selector device_selector;
+  INTEL::fpga_selector device_selector;
 #endif
 
   try {

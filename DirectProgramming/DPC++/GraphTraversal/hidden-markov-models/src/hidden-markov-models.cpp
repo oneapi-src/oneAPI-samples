@@ -5,20 +5,20 @@
 // =============================================================
 //
 // Hidden Markov Models: this code sample implements the Viterbi algorithm which is a dynamic 
-// programming algorithm for findingthe most likely sequence of hidden states—
+// programming algorithm for finding the most likely sequence of hidden states—
 // called the Viterbi path—that results in a sequence of observed events,
 // especially in the context of Markov information sources and HMM.
 //
 // The sample can use GPU offload to compute sequential steps of multiple graph traversals simultaneously.
 //
 // - Initially, the dataset for algorithm processing is generated : initial states probability 
-// distribution Pi, transition matrix A, emission matrix Band the sequence or the observations 
+// distribution Pi, transition matrix A, emission matrix B and the sequence or the observations 
 // produced by hidden Markov process.
 // - First, the matrix of Viterbi values on the first states are initialized using distribution Pi 
-// and emission matrix B.The matrix of back pointers is initialized with default values - 1.
+// and emission matrix B. The matrix of back pointers is initialized with default values -1.
 // - Then, for each time step the Viterbi matrix is set to the maximal possible value using A, B and Pi.
 // - Finally, the state with maximum Viterbi value on the last step is set as a final state of 
-// the Viterbi pathand the previous nodes of this path are detemined using the correspondent rows 
+// the Viterbi path and the previous nodes of this path are detemined using the correspondent rows 
 // of back pointers matrix for each of the steps except the last one.
 //
 // Note: The implementation uses logarithms of the probabilities to process small numbers correctly
@@ -117,8 +117,7 @@ int main() {
                 // Default values of all the back pointers are (-1) to show that they are not determined yet. 
                 b_ptr_acc[index] = -1;
             });
-        });
-        delete[] pi;        
+        });    
 
         // The sequential steps of the Viterbi algorithm that define the Viterbi matrix and the matrix 
         // of back pointers. The product of the Viterbi values and the probabilities is substituted with the sum of 
@@ -142,7 +141,6 @@ int main() {
                 });
             });
         }
-        delete[] seq;
 
         // Getting the Viterbi path based on the matrix of back pointers
         buffer<int, 1> vit_path(range<1> {T});

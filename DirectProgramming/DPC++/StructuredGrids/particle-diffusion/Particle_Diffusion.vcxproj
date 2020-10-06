@@ -151,6 +151,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\motionsim_kernel.cpp" />
     <ClCompile Include="src\motionsim.cpp" />
   </ItemGroup>
   <ItemGroup>

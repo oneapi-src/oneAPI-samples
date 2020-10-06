@@ -281,18 +281,18 @@ int main(int argc, char* argv[]) {
 
   {  // Begin buffer scope
     // Create buffers using DPC++ class buffer
-    buffer b_next(next_base, range(n_size));
-    buffer b_prev(prev_base, range(n_size));
-    buffer b_vel(vel_base, range(n_size));
+    buffer next_buf(next_base, range(n_size));
+    buffer prev_buf(prev_base, range(n_size));
+    buffer vel_buf(vel_base, range(n_size));
 
     // Iterate over time steps
     for (unsigned int k = 0; k < n_iterations; k += 1) {
       // Submit command group for execution
       q.submit([&](auto &h) {
         // Create accessors
-        auto next = b_next.get_access<access::mode::read_write>(h);
-        auto prev = b_prev.get_access<access::mode::read_write>(h);
-        auto vel = b_vel.get_access<access::mode::read>(h);
+        accessor next_a(next_buf, h);
+        accessor prev_a(prev_buf, h);
+        accessor vel_a(vel_buf, h, read_only);
 
         // Define local and global range
         auto global_range = range<2>(n_rows, n_cols);
@@ -303,15 +303,15 @@ int main(int argc, char* argv[]) {
         //    alternating the 'next' and 'prev' parameters which effectively
         //    swaps their content at every iteration.
         if (k % 2 == 0)
-          h.parallel_for(global_range, [=](id<2> it) {
-                Iso2dfdIterationGlobal(it, next.get_pointer(),
-                                          prev.get_pointer(), vel.get_pointer(),
+          h.parallel_for(global_range, [=](auto it) {
+                Iso2dfdIterationGlobal(it, next_a.get_pointer(),
+                                          prev_a.get_pointer(), vel_a.get_pointer(),
                                           dtDIVdxy, n_rows, n_cols);
               });
         else
-          h.parallel_for(global_range, [=](id<2> it) {
-                Iso2dfdIterationGlobal(it, prev.get_pointer(),
-                                          next.get_pointer(), vel.get_pointer(),
+          h.parallel_for(global_range, [=](auto it) {
+                Iso2dfdIterationGlobal(it, prev_a.get_pointer(),
+                                          next_a.get_pointer(), vel_a.get_pointer(),
                                           dtDIVdxy, n_rows, n_cols);
               });
       });
