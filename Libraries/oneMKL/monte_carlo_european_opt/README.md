@@ -52,12 +52,20 @@ If everything is working correctly, both buffer and USM versions of the program 
 
 ```
 ./mc_european
+
+Monte Carlo European Option Pricing Simulation
+Buffer Api
+----------------------------------------------
 Number of options = 2048
 Number of samples = 262144
 put_abs_err  = 0.0372205
 call_abs_err = 0.0665814
 
 ./mc_european_usm
+
+Monte Carlo European Option Pricing Simulation
+Unified Shared Memory Api
+----------------------------------------------
 Number of options = 2048
 Number of samples = 262144
 put_abs_err  = 0.0372205

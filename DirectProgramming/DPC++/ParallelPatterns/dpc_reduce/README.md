@@ -86,17 +86,18 @@ where
 
 
 ### Example of Output
-Rank #0 runs on: lqnguyen-NUC1, uses device: Intel(R) Gen9 HD Graphics NEO
-Number of steps is 1000000
-Cpu Seq calc:           PI =3.14 in 0.00422 seconds
-Cpu TBB  calc:          PI =3.14 in 0.00177 seconds
-dpstd native:           PI =3.14 in 0.209 seconds
-dpstd native2:          PI =3.14 in 0.213 seconds
-dpstd native3:          PI =3.14 in 0.00222 seconds
-dpstd native4:          PI =3.14 in 0.00237 seconds
-dpstd two steps:        PI =3.14 in 0.0014 seconds
-dpstd transform_reduce: PI =3.14 in 0.000528 seconds
-mpi native:             PI =3.14 in 0.548 seconds
-mpi transform_reduce:   PI =3.14 in 0.000498 seconds
-succes
-
+```c++
+Rank #0 runs on: lqnguyen-NUC1, uses device: Intel(R) Gen9 HD Graphics NEO \
+Number of steps is 1000000 \
+Cpu Seq calc:           PI =3.14 in 0.00422 seconds \
+Cpu TBB  calc:          PI =3.14 in 0.00177 seconds \
+dpstd native:           PI =3.14 in 0.209 seconds \
+dpstd native2:          PI =3.14 in 0.213 seconds \
+dpstd native3:          PI =3.14 in 0.00222 seconds \
+dpstd native4:          PI =3.14 in 0.00237 seconds \
+dpstd two steps:        PI =3.14 in 0.0014 seconds \
+dpstd transform_reduce: PI =3.14 in 0.000528 seconds \
+mpi native:             PI =3.14 in 0.548 seconds \
+mpi transform_reduce:   PI =3.14 in 0.000498 seconds \
+succes \
+```

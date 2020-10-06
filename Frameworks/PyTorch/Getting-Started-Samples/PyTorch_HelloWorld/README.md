@@ -42,7 +42,7 @@ If running a sample in the Intel DevCloud, please follow the below steps to buil
     Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the setvars.sh script. Then navigate in linux shell to your oneapi installation path, typically `~/intel/inteloneapi`. Activate the conda environment with the following command:
 
     ```
-    source activate pytorch
+    conda activate pytorch
     ```
 
 3. Activate conda environment Without Root Access (Optional)
@@ -56,7 +56,7 @@ If running a sample in the Intel DevCloud, please follow the below steps to buil
     Then activate your conda environment with the following command:
 
     ```
-    source activate user_pytorch
+    conda activate user_pytorch
     ```
 
 4. Run the Python script
