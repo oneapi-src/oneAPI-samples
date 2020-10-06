@@ -22,7 +22,7 @@ The parallel implementation of blocked Floyd Warshall algorithm has three phases
 The inner loop of the sequential implementation is:
   g[i][j] = min(g[i][j], g[i][k] + g[k][j])
 
-A careful observation shows that for the kth iteration of the outer loop, the computation depends on cells either on the kth column, g[i][k] or on the kth row, g[k][j] of the graph. Phase 1 handles g[k][k], phase 2 handles g[*][k] and g[k][*], and phase 3 handles g[*][*] in that sequence. This cell level observations largely propagate to the blocks as well.
+A careful observation shows that for the kth iteration of the outer loop, the computation depends on cells either on the kth column, g[i][k] or on the kth row, g[k][j] of the graph. Phase 1 handles g[k][k], phase 2 handles g[\*][k] and g[k][\*], and phase 3 handles g[\*][\*] in that sequence. This cell level observations largely propagate to the blocks as well.
 
 In each phase computation within a block can proceed independently in parallel.
 
