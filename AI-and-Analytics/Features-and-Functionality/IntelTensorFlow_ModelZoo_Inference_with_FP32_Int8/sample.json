@@ -13,6 +13,7 @@
 			"id": "model_zoo_sample_test",
 			"steps": [
 				"source activate tensorflow",
+                                "pip install runipy",
 				"runipy ResNet50_Inference.ipynb"
 			]
 		}]
