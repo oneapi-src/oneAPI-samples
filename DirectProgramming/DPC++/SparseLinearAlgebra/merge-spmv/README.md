@@ -13,7 +13,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 
 
 ## Purpose
-Sparse linear algebra algorithms are common in HPC, in fields as machine learning and computational science. In this sample, a merge based sparse matrix and vector multiplication algorithm is implemented. The input matrix is in compressed sparse row format. Use a parallel merge model enables the application to efficiently offload compute intensive operation to the GPU. For comparison, the application is run sequentially and parallel with run times for each displayed in the application's output. The device where the code us run is also identified.
+Sparse linear algebra algorithms are common in HPC, in fields as machine learning and computational science. In this sample, a merge based sparse matrix and vector multiplication algorithm is implemented. The input matrix is in compressed sparse row format. Use a parallel merge model enables the application to efficiently offload compute intensive operation to the GPU. For comparison, the application is run sequentially and parallelly with run times for each displayed in the application's output. The device where the code is run is also identified.
 
 The workgroup size requirement is 256.  If your hardware cannot support this, the application will present an error.
 
