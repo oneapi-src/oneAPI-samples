@@ -1,0 +1,20 @@
+{
+  "guid": "3E6FD81F-76A0-430C-AD82-0F94A45F93DC",
+  "name": "PyTorch Hello World",
+  "categories": ["Toolkit/Intel® AI Analytics Toolkit/PyTorch"],
+  "description": "This sample shows how to train a PyTorch model and run inference with oneMKL and oneDNN.",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "os":["linux"],
+  "ciTests": {
+	"linux": [
+	{
+		"id": "pytorch hello world",
+		"steps": [
+			"source activate pytorch",
+			"python PyTorch_Hello_World.py"
+		 ]
+	}
+     ]
+ }
+}
