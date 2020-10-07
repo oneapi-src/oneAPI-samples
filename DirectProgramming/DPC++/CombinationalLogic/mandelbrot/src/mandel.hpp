@@ -234,10 +234,10 @@ class MandelParallel : public Mandel {
     // We submit a command group to the queue.
     q.submit([&](handler &h) {
       // Get access to the buffer.
-      auto b = data_buf.get_access<access::mode::write>(h);
+      auto b = data_buf.get_access(h,write_only);
 
       // Iterate over image and compute mandel for each point.
-      h.parallel_for(range(rows, cols), [=](id<2> index) {
+      h.parallel_for(range<2>(rows, cols), [=](auto index) {
         int i = int(index[0]);
         int j = int(index[1]);
         auto c = MandelParameters::ComplexF(p.ScaleRow(i), p.ScaleCol(j));
