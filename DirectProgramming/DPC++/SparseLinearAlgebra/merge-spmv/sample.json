@@ -1,0 +1,29 @@
+{
+    "guid": "C573751F-C04C-4EE0-A868-941EF460F944",
+    "name": "merge-spmv",
+    "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++/C++ Compiler/CPU and GPU" ],
+    "description": "merge-spmv using Intel® oneAPI DPC++ Language",
+    "toolchain": [ "dpcpp" ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "languages": [ { "cpp": {} } ],
+    "os": [ "linux", "windows" ],
+    "builder": [ "ide", "cmake" ],
+    "ciTests": {
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make",
+                          "make run"
+                   ]
+          }],
+          "windows": [{
+                  "steps": [
+                          "MSBuild merge-spmv.sln /t:Rebuild /p:Configuration=\"Release\"",
+                          "cd x64/Release",
+                          "spmv.exe"
+                  ]
+          }]
+    }
+  }

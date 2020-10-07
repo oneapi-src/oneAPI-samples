@@ -3,10 +3,10 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include<dpstd/execution>
-#include<dpstd/algorithm>
+#include <oneapi/dpl/algorithm>
+#include <oneapi/dpl/execution>
 using namespace sycl;
-using namespace dpstd::execution;
+using namespace oneapi::dpl::execution;
 const int N = 4;
 
 int main() {
