@@ -22,7 +22,7 @@
                   "steps": [
                           "MSBuild merge-spmv.sln /t:Rebuild /p:Configuration=\"Release\"",
                           "cd x64/Release",
-                          "spmv.exe"
+                          "merge-spmv.exe"
                   ]
           }]
     }
