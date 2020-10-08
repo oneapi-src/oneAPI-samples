@@ -44,7 +44,7 @@
     ],
     "windows": [
       {
-        "id": "cpu_usm",
+        "id": "usm",
         "steps": [
           "nmake -f Makefile.win",
           "nmake -f Makefile.win run",
@@ -52,7 +52,7 @@
         ]
       },
       {
-        "id": "cpu_buffers",
+        "id": "buffers",
         "steps": [
           "nmake -f Makefile.win build_buffers",
           "nmake -f Makefile.win run_buffers",
