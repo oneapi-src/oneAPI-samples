@@ -24,6 +24,7 @@
 			"steps": [
 				"MSBuild sepia-filter.sln /t:Rebuild /p:Configuration=Debug",
 				"cd x64\\Debug",
+				"set SYCL_BE=PI_OPENCL",
 				"sepia-filter.exe ..\\..\\input\\silverfalls1.png"
 			]
 		}]
