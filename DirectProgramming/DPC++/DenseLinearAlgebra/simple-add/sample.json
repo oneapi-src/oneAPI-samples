@@ -11,7 +11,7 @@
   "ciTests": {
     "linux": [
       {
-        "id": "cpu_usm",
+        "id": "usm",
         "steps": [
           "make clean",
           "make all",
@@ -19,7 +19,7 @@
         ]
       },
       {
-        "id": "cpu_buffers",
+        "id": "buffers",
         "steps": [
           "make clean",
           "make build_buffers",

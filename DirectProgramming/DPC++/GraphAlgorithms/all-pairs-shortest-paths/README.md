@@ -13,7 +13,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 
 
 ## Purpose
-This sample uses blocked Floyd-Warshall all pairs shortest paths algorithm to compute a matrix that represents the minimum distance from any node to all other nodes in the graph. Using parallel blocked processing, blocks can be calculated simultaneously by distributing task computations to the GPU. For comparison, the application is run sequentially and parallel with run times for each displayed in the application's output. The device where the code us run is also identified.
+This sample uses blocked Floyd-Warshall all pairs shortest paths algorithm to compute a matrix that represents the minimum distance from any node to all other nodes in the graph. Using parallel blocked processing, blocks can be calculated simultaneously by distributing task computations to the GPU. For comparison, the application is run sequentially and parallelly with run times for each displayed in the application's output. The device where the code is run is also identified.
 
 The parallel implementation of blocked Floyd-Warshall algorithm has three phases. Given a prior round of these computation phases are complete, phase 1 is independent; Phase 2 can only execute after phase 1 completes; Similarly phase 3 depends on phase 2 so can only execute after phase 2 is complete.
 
