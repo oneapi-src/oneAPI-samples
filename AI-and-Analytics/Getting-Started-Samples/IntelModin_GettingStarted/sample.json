@@ -1,7 +1,7 @@
 {
   "guid": "AE280EFE-9EB1-406D-B32D-5991F707E195",
   "name": "Intel Modin Getting Started",
-  "categories": ["Toolkit/Intel® AI Analytics Toolkit/Modin"],
+  "categories": ["Toolkit/IntelÂ® AI Analytics Toolkit/Modin"],
   "description": "This samples illustrates how to use Modin accelerated Pandas functions and notes the performance gain when compared to standard Pandas functions",
   "builder": ["cli"],
   "languages": [{"python":{}}],
@@ -11,15 +11,10 @@
   "ciTests": {
   	"linux": [
     {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base", "conda create -n aikit-modin-test -c intel/label/oneapibeta matplotlib runipy intel-aikit-modin", "conda deactivate", "source activate aikit-modin-test"],
   		"id": "Intel_Modin_GS_py",
   		"steps": [
-        "source activate base",
-        "conda create -n aikit-modin -c intel/label/oneapibeta intel-aikit-modin",
-        "conda deactivate",
-        "source activate aikit-modin",
-        "pip install runipy",
-        "pip install matplotlib",
-        "runipy IntelModin_GettingStarted.ipynb" 
+         "runipy IntelModin_GettingStarted.ipynb" 
   		 ]
   	}
     ]
