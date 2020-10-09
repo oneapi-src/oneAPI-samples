@@ -5,7 +5,7 @@
 #include <CL/sycl.hpp>
 #include <dpstd/execution>
 #include <dpstd/algorithm>
-#include <dpstd/iterators>
+#include <dpstd/iterator>
 int main(){
   sycl::queue Q;
   sycl::buffer<int> buf { 1000 };
