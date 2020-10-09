@@ -7,9 +7,19 @@ This repository accompanies [*Data Parallel C++: Mastering DPC++ for Programming
 
 Many of the samples in the book are snips from the more complete files in this repository.  The full files contain supporting code, such as header inclusions, which are not shown in every listing within the book.  The complete listings are intended to compile and be modifiable for experimentation.
 
+> :warning: Samples in this repository are updated to align with the most recent changes to the language and
+toolchains, and are more current than captured in the book text due to lag between finalization and actual
+publication of a print book.  If experimenting with the code samples, start with the versions in this
+repository.  DPC++ and SYCL are evolving to be more powerful and easier to use, and updates to the sample code
+in this repository are a good sign of forward progress!
+
 Download the files as a zip using the green button, or clone the repository to your machine using Git.
 
 ## How to Build the Samples
+
+> :warning: The samples in this repository are intended to compile with the open source project toolchain linked below, or
+with the Beta 10 release or newer of the DPC++ toolchain.  If you have an older toolchain installed, you may encounter
+compilation errors due to evolution of the features and extensions.
 
 To build and use these examples, you will need an installed DPC++ toolchain.  For one such toolchain, please visit:
 
