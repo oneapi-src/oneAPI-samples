@@ -24,7 +24,7 @@
 			"steps": [
 				"MSBuild sepia-filter.sln /t:Rebuild /p:Configuration=Debug",
 				"cd x64\\Debug",
-				"sepia-filter.exe ..\\..\\input\\silverfalls1.png"
+				"sepia-filter.exe ..\\..\\input\\silver512.png"
 			]
 		}]
 	}
