@@ -1,0 +1,22 @@
+{
+  "guid": "3B164041-12CD-4429-A1AB-0F35EFE521FF",
+  "name": "Intel Python XGBoost Getting Started",
+  "categories": ["Toolkit/Intel® AI Analytics Toolkit/XGBoost"],
+  "description": "The sample illustrates how to setup and train an XGBoost model on datasets for prediction",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "dependencies": ["AI Analytics Toolkit"],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],
+  		"id": "IDP_XGBoost_GS_py",
+  		"steps": [
+         "python IntelPython_XGBoost_GettingStarted.py" 
+  		 ]
+  	}
+    ]
+}
+}
