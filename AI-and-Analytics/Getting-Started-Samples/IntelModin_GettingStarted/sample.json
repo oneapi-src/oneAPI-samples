@@ -1,7 +1,7 @@
 {
   "guid": "AE280EFE-9EB1-406D-B32D-5991F707E195",
   "name": "Intel Modin Getting Started",
-  "categories": ["Toolkit/IntelÂ® AI Analytics Toolkit/Modin"],
+  "categories": ["Toolkit/Intel® AI Analytics Toolkit/Modin"],
   "description": "This samples illustrates how to use Modin accelerated Pandas functions and notes the performance gain when compared to standard Pandas functions",
   "builder": ["cli"],
   "languages": [{"python":{}}],
