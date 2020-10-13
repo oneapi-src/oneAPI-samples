@@ -21,12 +21,14 @@
 
 #include <CL/sycl.hpp>
 
+#if __has_include("oneapi/mkl.hpp")
+#include "oneapi/mkl.hpp"
+#include "oneapi/mkl/rng/device.hpp"
+#else
+// Beta09 compatibility -- not needed for new code.
 #include "mkl_sycl.hpp"
 #include "mkl_rng_sycl_device.hpp"
-
-namespace oneapi {
-
-} // namespace oneapi
+#endif
 
 using namespace oneapi;
 
@@ -147,6 +149,10 @@ void run(int64_t nopt, sycl::device & dev) {
 
 
     for (int var = 0; var < 4; ++var) {
+
+#ifdef _WIN32
+        if (var & 1) continue; // Skip RNG device APIs on Windows for now.
+#endif
 
         std::fill(s0.begin(), s0.end(), static_cast<T>(0.0));
         std::fill(x.begin(), x.end(), static_cast<T>(0.0));

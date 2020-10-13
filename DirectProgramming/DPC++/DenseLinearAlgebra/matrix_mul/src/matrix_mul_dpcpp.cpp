@@ -58,9 +58,9 @@ int main() {
 
     // Create 2D buffers for matrices, buffer c is bound with host memory c_back
 
-    buffer<float, 2> a(range(M, N));
-    buffer<float, 2> b(range(N, P));
-    buffer c(reinterpret_cast<float *>(c_back), range(M, P));
+    buffer<float, 2> a_buf(range(M, N));
+    buffer<float, 2> b_buf(range(N, P));
+    buffer c_buf(reinterpret_cast<float *>(c_back), range(M, P));
 
     cout << "Problem size: c(" << M << "," << P << ") = a(" << M << "," << N
          << ") * b(" << N << "," << P << ")\n";
@@ -71,40 +71,40 @@ int main() {
     // execution ordering.
 
     // Submit command group to queue to initialize matrix a
-    q.submit([&](handler &h) {
+    q.submit([&](auto &h) {
       // Get write only access to the buffer on a device.
-      auto accessor = a.get_access<access::mode::write>(h);
+      accessor a(a_buf, h, write_only);
 
       // Execute kernel.
-      h.parallel_for(range(M, N), [=](id<2> index) {
+      h.parallel_for(range(M, N), [=](auto index) {
         // Each element of matrix a is 1.
-        accessor[index] = 1.0f;
+        a[index] = 1.0f;
       });
     });
 
     // Submit command group to queue to initialize matrix b
-    q.submit([&](handler &h) {
+    q.submit([&](auto &h) {
       // Get write only access to the buffer on a device
-      auto accessor = b.get_access<access::mode::write>(h);
+      accessor b(b_buf, h, write_only);
 
       // Execute kernel.
-      h.parallel_for(range(N, P), [=](id<2> index) {
+      h.parallel_for(range(N, P), [=](auto index) {
         // Each column of b is the sequence 1,2,...,N
-        accessor[index] = index[0] + 1.0f;
+        b[index] = index[0] + 1.0f;
       });
     });
 
     // Submit command group to queue to multiply matrices: c = a * b
-    q.submit([&](handler &h) {
+    q.submit([&](auto &h) {
       // Read from a and b, write to c
-      auto A = a.get_access<access::mode::read>(h);
-      auto B = b.get_access<access::mode::read>(h);
-      auto C = c.get_access<access::mode::write>(h);
+      accessor a(a_buf, h, read_only);
+      accessor b(b_buf, h, read_only);
+      accessor c(c_buf, h, write_only);
 
-      int width_a = a.get_range()[1];
+      int width_a = a_buf.get_range()[1];
 
       // Execute kernel.
-      h.parallel_for(range(M, P), [=](id<2> index) {
+      h.parallel_for(range(M, P), [=](auto index) {
         // Get global position in Y direction.
         int row = index[0];
         // Get global position in X direction.
@@ -114,10 +114,10 @@ int main() {
 
         // Compute the result of one element of c
         for (int i = 0; i < width_a; i++) {
-          sum += A[row][i] * B[i][col];
+          sum += a[row][i] * b[i][col];
         }
 
-        C[index] = sum;
+        c[index] = sum;
       });
     });
   } catch (sycl::exception const &e) {
