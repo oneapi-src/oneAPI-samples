@@ -103,8 +103,11 @@ void GSimulation::Start() {
   double gflops = 1e-9 * ((11. + 18.) * n * n + n * 19.);
   int nf = 0;
   double av = 0.0, dev = 0.0;
+  // Create global range
   auto r = range<1>(n);
-  auto lr = range<1>(256);
+  // Create local range
+  auto lr = range<1>(128);
+  // Create ndrange 
   auto ndrange = nd_range<1>(r, lr);
   // Create a queue to the selected device and enabled asynchronous exception
   // handling for that queue
@@ -113,7 +116,7 @@ void GSimulation::Start() {
   buffer pbuf(particles_.data(), r,
               {cl::sycl::property::buffer::use_host_ptr()});
   // Allocate energy using USM allocator shared
-  RealType *energy = (RealType *)malloc_shared(sizeof(RealType),q);
+  RealType *energy = malloc_shared<RealType>(1,q);
   *energy = 0.f;
 
   dpc_common::TimeInterval t0;
@@ -124,7 +127,7 @@ void GSimulation::Start() {
     // Submitting first kernel to device which computes acceleration of all
     // particles
     q.submit([&](handler& h) {
-       auto p = pbuf.get_access<access::mode::read_write>(h);
+       auto p = pbuf.get_access(h);
        h.parallel_for(ndrange, [=](nd_item<1> it) {
 	 auto i = it.get_global_id();
          RealType acc0 = p[i].acc[0];
@@ -157,8 +160,12 @@ void GSimulation::Start() {
      }).wait_and_throw();
     // Second kernel updates the velocity and position for all particles
     q.submit([&](handler& h) {
-       auto p = pbuf.get_access<access::mode::read_write>(h);
+       auto p = pbuf.get_access(h);
+       #if(__SYCL_COMPILER_VERSION <= 20200827)
        h.parallel_for(ndrange, intel::reduction(energy, 0.f, std::plus<RealType>()), [=](nd_item<1> it, auto& energy) {
+       #else
+       h.parallel_for(ndrange, ONEAPI::reduction(energy, 0.f, std::plus<RealType>()), [=](nd_item<1> it, auto& energy) {
+       #endif
 	 auto i = it.get_global_id();
          p[i].vel[0] += p[i].acc[0] * dt;  // 2flops
          p[i].vel[1] += p[i].acc[1] * dt;  // 2flops
