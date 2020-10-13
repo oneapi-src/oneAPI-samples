@@ -32,19 +32,19 @@ using namespace sycl;
 constexpr size_t array_size = 10000;
 typedef std::array<int, array_size> IntArray;
 
-// this exception handler with catch async exceptions
-static auto exception_handler = [](cl::sycl::exception_list eList) {
-	for (std::exception_ptr const &e : eList) {
-		try {
-			std::rethrow_exception(e);
-		}
-		catch (std::exception const &e) {
+// Create an exception handler for asynchronous SYCL exceptions
+static auto exception_handler = [](sycl::exception_list e_list) {
+  for (std::exception_ptr const &e : e_list) {
+    try {
+      std::rethrow_exception(e);
+    }
+    catch (std::exception const &e) {
 #if _DEBUG
-			std::cout << "Failure" << std::endl;
+      std::cout << "Failure" << std::endl;
 #endif
-			std::terminate();
-		}
-	}
+      std::terminate();
+    }
+  }
 };
 
 //************************************
