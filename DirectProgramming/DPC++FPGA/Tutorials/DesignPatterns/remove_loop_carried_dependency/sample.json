@@ -40,7 +40,7 @@
         ]
       },
       {
-        "id": "report",
+        "id": "r",
         "steps": [
           "cd src",
           "ninja report"
