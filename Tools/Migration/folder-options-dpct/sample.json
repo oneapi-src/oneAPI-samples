@@ -5,5 +5,6 @@
   "description": "Multi-folder project that illustrates migration of a CUDA project that has files located in multiple folders in a directory tree. Uses the `--in-root` and `--out-root` options to tell the Intel® DPC++ Compatibility Tool where to locate source code to be migrated.",
   "languages": [ { "cpp": {} } ],
   "os": [ "linux", "windows" ],
-  "builder": [ "cli" ]
+  "builder": [ "cli" ],
+  "ciTests": { "linux": [], "windows": [] }
 }

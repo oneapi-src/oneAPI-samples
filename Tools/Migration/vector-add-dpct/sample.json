@@ -5,5 +5,6 @@
   "description": "Simple project to illustrate the basic migration of CUDA code. Use this sample to ensure your environment is configured correctly and to understand the basics of migrating existing CUDA projects to Data Parallel C++.",
   "languages": [ { "cpp": {} } ],
   "os": [ "linux", "windows" ],
-  "builder": [ "ide", "make" ]
+  "builder": [ "ide", "make" ],
+  "ciTests": { "linux": [], "windows": [] }
 }

@@ -5,5 +5,6 @@
   "description": "Migrate a CUDA project using the DPCT intercept-build feature to create a compilation database. The compilation database provides compilation options, settings, macro definitions and include paths that the Intel® DPC++ Compatibility Tool will use during migration of the project.",
   "languages": [ { "cpp": {} } ],
   "os": [ "linux", "windows" ],
-  "builder": [ "ide", "make" ]
+  "builder": [ "ide", "make" ],
+  "ciTests": { "linux": [], "windows": [] }
 }
