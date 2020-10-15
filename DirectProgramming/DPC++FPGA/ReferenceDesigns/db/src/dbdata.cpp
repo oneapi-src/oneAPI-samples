@@ -127,12 +127,12 @@ bool Database::Parse(std::string db_root_dir) {
   bool success = true;
 
   // parse each table
-  success &= ParseLineItemTable(db_root_dir + kSeparator + "lineitem.tbl", l_);
-  success &= ParseOrdersTable(db_root_dir + kSeparator +"orders.tbl", o_);
-  success &= ParsePartsTable(db_root_dir + kSeparator + "part.tbl", p_);
-  success &= ParseSupplierTable(db_root_dir + kSeparator + "supplier.tbl", s_);
-  success &= ParsePartSupplierTable(db_root_dir + kSeparator + "partsupp.tbl", ps_);
-  success &= ParseNationTable(db_root_dir + kSeparator + "nation.tbl", n_);
+  success &= ParseLineItemTable(db_root_dir + kSeparator + "lineitem.tbl", l);
+  success &= ParseOrdersTable(db_root_dir + kSeparator +"orders.tbl", o);
+  success &= ParsePartsTable(db_root_dir + kSeparator + "part.tbl", p);
+  success &= ParseSupplierTable(db_root_dir + kSeparator + "supplier.tbl", s);
+  success &= ParsePartSupplierTable(db_root_dir + kSeparator + "partsupp.tbl", ps);
+  success &= ParseNationTable(db_root_dir + kSeparator + "nation.tbl", n);
 
   return success;
 }
@@ -398,38 +398,38 @@ bool Database::ParseNationTable(std::string f, NationTable& tbl) {
 bool Database::ValidateSF() {
   bool ret = true;
 
-  if (l_.rows != kLineItemTableSize) {
-    std::cerr << "LineItem table size has " << l_.rows << " rows"
+  if (l.rows != kLineItemTableSize) {
+    std::cerr << "LineItem table size has " << l.rows << " rows"
               << " when it should have " << kLineItemTableSize << "\n";
     ret = false;
   }
 
-  if (o_.rows != kOrdersTableSize) {
-    std::cerr << "Orders table size has " << o_.rows << " rows"
+  if (o.rows != kOrdersTableSize) {
+    std::cerr << "Orders table size has " << o.rows << " rows"
               << " when it should have " << kOrdersTableSize << "\n";
     ret = false;
   }
 
-  if (p_.rows != kPartTableSize) {
-    std::cerr << "Parts table size has " << p_.rows << " rows"
+  if (p.rows != kPartTableSize) {
+    std::cerr << "Parts table size has " << p.rows << " rows"
               << " when it should have " << kPartTableSize << "\n";
     ret = false;
   }
 
-  if (s_.rows != kSupplierTableSize) {
-    std::cerr << "Supplier table size has " << s_.rows << " rows"
+  if (s.rows != kSupplierTableSize) {
+    std::cerr << "Supplier table size has " << s.rows << " rows"
               << " when it should have " << kSupplierTableSize << "\n";
     ret = false;
   }
 
-  if (ps_.rows != kPartSupplierTableSize) {
-    std::cerr << "PartSupplier table size has " << ps_.rows << " rows"
+  if (ps.rows != kPartSupplierTableSize) {
+    std::cerr << "PartSupplier table size has " << ps.rows << " rows"
               << " when it should have " << kPartSupplierTableSize << "\n";
     ret = false;
   }
 
-  if (n_.rows != kNationTableSize) {
-    std::cerr << "Nation table size has " << n_.rows << " rows"
+  if (n.rows != kNationTableSize) {
+    std::cerr << "Nation table size has " << n.rows << " rows"
               << " when it should have " << kNationTableSize << "\n";
     ret = false;
   }
@@ -599,9 +599,9 @@ bool Database::ValidateQ9(std::string db_root_dir,
     transform(nationname_gold.begin(), nationname_gold.end(),
               nationname_gold.begin(), ::toupper);
 
-    assert(n_.name_key_map.find(nationname_gold) != n_.name_key_map.end());
+    assert(n.name_key_map.find(nationname_gold) != n.name_key_map.end());
 
-    unsigned char nationkey_gold = n_.name_key_map[nationname_gold];
+    unsigned char nationkey_gold = n.name_key_map[nationname_gold];
 
     unsigned int year_gold = std::stoi(column_data[1]);
     double sum_profit_gold = std::stod(column_data[2]);
@@ -783,38 +783,38 @@ void Database::PrintQ1(std::array<DBDecimal, 3 * 2>& sum_qty,
 void Database::PrintQ9(std::array<DBDecimal, 25 * 2020>& sum_profit) {
   // row of Q9 output for local sorting
   struct Row {
-    Row(std::string& nation, int year, DBDecimal sumProfit)
-        : nation_(nation), year_(year), sumProfit_(sumProfit) {}
-    std::string nation_;
-    int year_;
-    DBDecimal sumProfit_;
+    Row(std::string& nation, int year, DBDecimal sum_profit)
+        : nation(nation), year(year), sum_profit(sum_profit) {}
+    std::string nation;
+    int year;
+    DBDecimal sum_profit;
 
     void print() {
-      std::cout << nation_ << "|" << year_ << "|"
-                << (double)(sumProfit_) / (100.0 * 100.0) << "\n";
+      std::cout << nation << "|" << year << "|"
+                << (double)(sum_profit) / (100.0 * 100.0) << "\n";
     }
   };
 
   // create the rows
   std::vector<Row> outrows;
-  for (unsigned char n = 0; n < kNationTableSize; n++) {
-    std::string nation = n_.key_name_map[n];
+  for (unsigned char nat = 0; nat < kNationTableSize; nat++) {
+    std::string nation_name = n.key_name_map[nat];
     for (int y = 1992; y <= 1998; y++) {
-      outrows.push_back(Row(nation, y, sum_profit[y * 25 + n]));
+      outrows.push_back(Row(nation_name, y, sum_profit[y * 25 + nat]));
     }
   }
 
   // sort rows by year
   std::sort(outrows.begin(), outrows.end(),
     [](const Row& a, const Row& b) -> bool {
-      return a.year_ > b.year_;
+      return a.year > b.year;
   });
 
   // sort rows by nation
   // stable_sort() preserves the order of the previous sort
   std::stable_sort(outrows.begin(), outrows.end(),
     [](const Row& a, const Row& b) -> bool {
-      return a.nation_ < b.nation_;
+      return a.nation < b.nation;
   });
 
   // print the header

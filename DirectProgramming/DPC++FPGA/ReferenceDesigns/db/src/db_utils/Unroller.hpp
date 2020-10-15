@@ -12,27 +12,27 @@
 // However they allow you to specificy a range and can either increment
 // or decrement, rather than a strict increasing sequence
 //
-template <typename T, typename, T Begin, bool Increase>
+template <typename T, typename, T begin, bool increase>
 struct integer_range_impl;
 
 // incrementing case
-template <typename T, T... N, T Begin>
-struct integer_range_impl<T, std::integer_sequence<T, N...>, Begin, true> {
-  using type = std::integer_sequence<T, N + Begin...>;
+template <typename T, T... N, T begin>
+struct integer_range_impl<T, std::integer_sequence<T, N...>, begin, true> {
+  using type = std::integer_sequence<T, N + begin...>;
 };
 
 // decrementing case
-template <typename T, T... N, T Begin>
-struct integer_range_impl<T, std::integer_sequence<T, N...>, Begin, false> {
-  using type = std::integer_sequence<T, Begin - N...>;
+template <typename T, T... N, T begin>
+struct integer_range_impl<T, std::integer_sequence<T, N...>, begin, false> {
+  using type = std::integer_sequence<T, begin - N...>;
 };
 
 // integer_range
-template <typename T, T Begin, T End>
+template <typename T, T begin, T end>
 using integer_range = typename integer_range_impl<T,
-    std::make_integer_sequence<T, (Begin < End) ? End - Begin : Begin - End>,
-    Begin,
-    (Begin < End)>::type;
+    std::make_integer_sequence<T, (begin < end) ? end - begin : begin - end>,
+    begin,
+    (begin < end)>::type;
 
 //
 // make_integer_range
@@ -41,8 +41,8 @@ using integer_range = typename integer_range_impl<T,
 //    make_integer_range<int,1,10>{} ==> 1,2,...,9
 //    make_integer_range<int,10,1>{} ==> 10,9,...,2
 //
-template <class T, T Begin, T End>
-using make_integer_range = integer_range<T, Begin, End>;
+template <class T, T begin, T end>
+using make_integer_range = integer_range<T, begin, end>;
 
 //
 // make_index_range
@@ -51,8 +51,8 @@ using make_integer_range = integer_range<T, Begin, End>;
 //    make_index_range<1,10>{} ==> 1,2,...,9
 //    make_index_range<10,1>{} ==> 10,9,...,2
 //
-template <std::size_t Begin, std::size_t End>
-using make_index_range = integer_range<std::size_t, Begin, End>;
+template <std::size_t begin, std::size_t end>
+using make_index_range = integer_range<std::size_t, begin, end>;
 
 //
 // The code below creates the constexprs 'make_integer_pow2_sequence'

@@ -17,8 +17,8 @@ using namespace sycl;
 class OrdersRow {
  public:
   OrdersRow() : valid(false), orderkey(0), orderpriority(0) {}
-  OrdersRow(bool _valid, DBIdentifier _key, int _orderpriority)
-      : valid(_valid), orderkey(_key), orderpriority(_orderpriority) {}
+  OrdersRow(bool v_valid, DBIdentifier v_key, int v_orderpriority)
+      : valid(v_valid), orderkey(v_key), orderpriority(v_orderpriority) {}
 
   DBIdentifier PrimaryKey() const { return orderkey; }
 
@@ -41,14 +41,14 @@ class LineItemRow {
         shipdate(0),
         receiptdate(0) {}
 
-  LineItemRow(bool _valid, DBIdentifier _key, int _shipmode,
-              DBDate _commitdate, DBDate _shipdate, DBDate _receiptdate)
-      : valid(_valid),
-        orderkey(_key),
-        shipmode(_shipmode),
-        commitdate(_commitdate),
-        shipdate(_shipdate),
-        receiptdate(_receiptdate) {}
+  LineItemRow(bool v_valid, DBIdentifier v_key, int v_shipmode,
+              DBDate v_commitdate, DBDate v_shipdate, DBDate v_receiptdate)
+      : valid(v_valid),
+        orderkey(v_key),
+        shipmode(v_shipmode),
+        commitdate(v_commitdate),
+        shipdate(v_shipdate),
+        receiptdate(v_receiptdate) {}
 
   DBIdentifier PrimaryKey() const { return orderkey; }
 
@@ -73,14 +73,14 @@ class JoinedRow {
         shipdate(0),
         receiptdate(0) {}
     
-  JoinedRow(bool _valid, DBIdentifier _key, int _orderpriority, int _shipmode,
-            DBDate _commitdate, DBDate _shipdate, DBDate _receiptdate)
-      : valid(_valid),
-        orderpriority(_orderpriority),
-        shipmode(_shipmode),
-        commitdate(_commitdate),
-        shipdate(_shipdate),
-        receiptdate(_receiptdate) {}
+  JoinedRow(bool v_valid, DBIdentifier v_key, int v_orderpriority, int v_shipmode,
+            DBDate v_commitdate, DBDate v_shipdate, DBDate v_receiptdate)
+      : valid(v_valid),
+        orderpriority(v_orderpriority),
+        shipmode(v_shipmode),
+        commitdate(v_commitdate),
+        shipdate(v_shipdate),
+        receiptdate(v_receiptdate) {}
 
   void Join(const OrdersRow& o_row, const LineItemRow& l_row) {
     orderpriority = o_row.orderpriority;

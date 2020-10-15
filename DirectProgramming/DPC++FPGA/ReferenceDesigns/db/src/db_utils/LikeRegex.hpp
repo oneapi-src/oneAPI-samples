@@ -7,17 +7,17 @@
 
 //
 // Regex LIKE engine that can match: *WORD*, *WORD and WORD*
-// where the string has MaxStrLength words or length at most MaxWordLength.
-// If words are shorter than MaxWordLength, they are padded with '\0'.
+// where the string has max_str_length words or length at most max_word_length.
+// If words are shorter than max_word_length, they are padded with '\0'.
 //
-template <unsigned int MaxWordLength, unsigned int MaxStrLength>
+template <unsigned int max_word_length, unsigned int max_str_length>
 class LikeRegex {
   // static asserts
-  static_assert(MaxWordLength < MaxStrLength,
+  static_assert(max_word_length < max_str_length,
     "The maximum word length must be less than the maximum string length");
-  static_assert(MaxWordLength > 0,
+  static_assert(max_word_length > 0,
     "The word must have a positive non-zero maximum length");
-  static_assert(MaxStrLength > 0,
+  static_assert(max_str_length > 0,
     "The string must have a positive non-zero maximum length");
 
  public:
@@ -29,17 +29,17 @@ class LikeRegex {
     word_true_len = GetWordLength();
 
     // determine if there is a match
-    match_start_idx = MaxStrLength;
-    match_end = MaxStrLength;
+    match_start_idx = max_str_length;
+    match_end = max_str_length;
 
     #pragma unroll
-    for (unsigned int i = 0; i < MaxStrLength; i++) {
-      // check if str[i:i+MaxWordLength] matches word
+    for (unsigned int i = 0; i < max_str_length; i++) {
+      // check if str[i:i+max_word_length] matches word
       bool matches = true;
 
       #pragma unroll
-      for (unsigned int j = 0; j < MaxWordLength; j++) {
-        if ((i + j < MaxStrLength) && (word[j] != '\0') &&
+      for (unsigned int j = 0; j < max_word_length; j++) {
+        if ((i + j < max_str_length) && (word[j] != '\0') &&
             (str[i + j] != '\0') && (word[j] != str[i + j])) {
           matches = false;
           break;
@@ -59,7 +59,7 @@ class LikeRegex {
     unsigned int len = 0;
 
     #pragma unroll
-    for (unsigned int i = 0; i < MaxStrLength; i++) {
+    for (unsigned int i = 0; i < max_str_length; i++) {
       if (len == 0 && str[i] == '\0') {
         len = i;
       }
@@ -73,7 +73,7 @@ class LikeRegex {
     unsigned int len = 0;
 
     #pragma unroll
-    for (unsigned int i = 0; i < MaxWordLength; i++) {
+    for (unsigned int i = 0; i < max_word_length; i++) {
       if (len == 0 && word[i] == '\0') {
         len = i;
       }
@@ -84,7 +84,7 @@ class LikeRegex {
 
   // does the string contain the word (i.e. matches %WORD%)
   bool Contains() {
-    return (match_start_idx < MaxStrLength) && (match_end < MaxStrLength);
+    return (match_start_idx < max_str_length) && (match_end < max_str_length);
   }
 
   // does the string start with the word (i.e. matches WORD%)
@@ -97,8 +97,8 @@ class LikeRegex {
     return match_end == str_true_len;
   }
 
-  char word[MaxWordLength];
-  char str[MaxStrLength];
+  char word[max_word_length];
+  char str[max_str_length];
 
   unsigned int match_start_idx, match_end;
   unsigned int word_true_len, str_true_len;

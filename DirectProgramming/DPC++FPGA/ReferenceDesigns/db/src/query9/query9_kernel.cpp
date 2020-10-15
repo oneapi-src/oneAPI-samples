@@ -52,28 +52,28 @@ static_assert(kLineItemTableSize * 0.06 <= kSortSize,
 
 //
 // Helper function to shuffle the valid values in 'input' into 'output' using
-// the Bits template
+// the bits template
 // For example, consider this simple case:
 //  input = {7,8}
-//  if Bits = 1 (2'b01), then output = {0,7}
-//  if Bits = 2 (2'b01), then output = {0,8}
-//  if Bits = 3 (2'b01), then output = {7,8}
+//  if bits = 1 (2'b01), then output = {0,7}
+//  if bits = 2 (2'b01), then output = {0,8}
+//  if bits = 3 (2'b01), then output = {7,8}
 //
-template <char Bits, int TupleSize, typename TupleType>
-void Shuffle(NTuple<TupleSize, TupleType>& input,
-             NTuple<TupleSize, TupleType>& output) {
+template <char bits, int tuple_size, typename TupleType>
+void Shuffle(NTuple<tuple_size, TupleType>& input,
+             NTuple<tuple_size, TupleType>& output) {
   // get number of ones (number of valid entries) in the input
-  constexpr char kNumOnes = CountOnes<char>(Bits);
+  constexpr char kNumOnes = CountOnes<char>(bits);
 
   // static asserts
-  static_assert(TupleSize > 0,
-      "TupleSize must strictly positive");
-  static_assert(kNumOnes <= TupleSize,
-      "Number of valid bits in Bits cannot exceed the size of the tuple");
+  static_assert(tuple_size > 0,
+      "tuple_size must strictly positive");
+  static_assert(kNumOnes <= tuple_size,
+      "Number of valid bits in bits cannot exceed the size of the tuple");
 
   // full crossbar to reorder valid entries of 'input'
   UnrolledLoop<0, kNumOnes>([&](auto i) {
-    constexpr char pos = PositionOfNthOne<char>(i + 1, Bits) - 1;
+    constexpr char pos = PositionOfNthOne<char>(i + 1, bits) - 1;
     output.template get<i>() = input.template get<pos>();
   });
 }
@@ -92,26 +92,26 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   buffer regex_word_buf(regex_word);
 
   // PARTS
-  buffer p_name_buf(dbinfo.p_.name);
+  buffer p_name_buf(dbinfo.p.name);
 
   // SUPPLIER
-  buffer s_nationkey_buf(dbinfo.s_.nationkey);
+  buffer s_nationkey_buf(dbinfo.s.nationkey);
   // PARTSUPPLIER
-  buffer ps_partkey_buf(dbinfo.ps_.partkey);
-  buffer ps_suppkey_buf(dbinfo.ps_.suppkey);
-  buffer ps_supplycost_buf(dbinfo.ps_.supplycost);
+  buffer ps_partkey_buf(dbinfo.ps.partkey);
+  buffer ps_suppkey_buf(dbinfo.ps.suppkey);
+  buffer ps_supplycost_buf(dbinfo.ps.supplycost);
 
   // ORDERS
-  buffer o_orderkey_buf(dbinfo.o_.orderkey);
-  buffer o_orderdate_buf(dbinfo.o_.orderdate);
+  buffer o_orderkey_buf(dbinfo.o.orderkey);
+  buffer o_orderdate_buf(dbinfo.o.orderdate);
 
   // LINEITEM
-  buffer l_orderkey_buf(dbinfo.l_.orderkey);
-  buffer l_partkey_buf(dbinfo.l_.partkey);
-  buffer l_suppkey_buf(dbinfo.l_.suppkey);
-  buffer l_quantity_buf(dbinfo.l_.quantity);
-  buffer l_extendedprice_buf(dbinfo.l_.extendedprice);
-  buffer l_discount_buf(dbinfo.l_.discount);
+  buffer l_orderkey_buf(dbinfo.l.orderkey);
+  buffer l_partkey_buf(dbinfo.l.partkey);
+  buffer l_suppkey_buf(dbinfo.l.suppkey);
+  buffer l_quantity_buf(dbinfo.l.quantity);
+  buffer l_extendedprice_buf(dbinfo.l.extendedprice);
+  buffer l_discount_buf(dbinfo.l.discount);
 
   // setup the output buffers (the profit for each nation and year)
   // constructing the output buffers WITHOUT a backed host pointer allows
@@ -133,11 +133,11 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     accessor regex_word_accessor(regex_word_buf, h, read_only);
 
     // PARTS table accessors
-    size_t p_rows = dbinfo.p_.rows;
+    size_t p_rows = dbinfo.p.rows;
     accessor p_name_accessor(p_name_buf, h, read_only);
 
     // LINEITEM table accessors
-    size_t l_rows = dbinfo.l_.rows;
+    size_t l_rows = dbinfo.l.rows;
     accessor l_orderkey_accessor(l_orderkey_buf, h, read_only);
     accessor l_partkey_accessor(l_partkey_buf, h, read_only);
     accessor l_suppkey_accessor(l_suppkey_buf, h, read_only);
@@ -219,7 +219,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   //// ProducerOrders Kernel: produce the ORDERS table
   auto producer_orders_event = q.submit([&](handler& h) {
     // ORDERS table accessors
-    size_t o_rows = dbinfo.o_.rows;
+    size_t o_rows = dbinfo.o.rows;
     accessor o_orderkey_accessor(o_orderkey_buf, h, read_only);
     accessor o_orderdate_accessor(o_orderdate_buf, h, read_only);
 
@@ -249,10 +249,10 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   //// JoinLineItemOrders Kernel: join the LINEITEM and ORDERS table
   auto join_lineitem_orders_event = q.submit([&](handler& h) {
     // ORDERS table accessors
-    size_t o_rows = dbinfo.o_.rows;
+    size_t o_rows = dbinfo.o.rows;
 
     // LINEITEM table accessors
-    size_t l_rows = dbinfo.l_.rows;
+    size_t l_rows = dbinfo.l.rows;
 
     // kernel to join LINEITEM and ORDERS table
     h.single_task<JoineLineItemOrders>([=]() [[intel::kernel_args_restrict]] {
@@ -287,11 +287,11 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   //// JoinPartSupplierSupplier Kernel: join the PARTSUPPLIER and SUPPLIER tables
   auto join_partsupplier_supplier_event = q.submit([&](handler& h) {
     // SUPPLIER table accessors
-    size_t s_rows = dbinfo.s_.rows;
+    size_t s_rows = dbinfo.s.rows;
     accessor s_nationkey_accessor(s_nationkey_buf, h, read_only);
 
     // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps_.rows;
+    size_t ps_rows = dbinfo.ps.rows;
 
     // kernel to join partsupplier and supplier tables
     h.single_task<JoinPartSupplierSupplier>(
@@ -343,7 +343,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   //// ProducePartSupplier Kernel: produce the PARTSUPPLIER table
   auto produce_part_supplier_event = q.submit([&](handler& h) {
     // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps_.rows;
+    size_t ps_rows = dbinfo.ps.rows;
     accessor ps_partkey_accessor(ps_partkey_buf, h, read_only);
     accessor ps_suppkey_accessor(ps_suppkey_buf, h, read_only);
     accessor ps_supplycost_accessor(ps_supplycost_buf, h, read_only);
@@ -597,10 +597,10 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   ////    LINEITEM+ORDERS with SUPPLIER+PARTSUPPLIER
   auto join_li_o_s_ps_event = q.submit([&](handler& h) {
     // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps_.rows;
+    size_t ps_rows = dbinfo.ps.rows;
 
     // LINEITEM table accessors
-    size_t l_rows = dbinfo.l_.rows;
+    size_t l_rows = dbinfo.l.rows;
 
     h.single_task<JoinEverything>([=]() [[intel::kernel_args_restrict]] {
       // callbacks for reading and writing data

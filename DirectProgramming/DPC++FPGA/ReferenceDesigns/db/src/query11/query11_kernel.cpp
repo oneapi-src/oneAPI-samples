@@ -47,8 +47,8 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
                     std::vector<DBDecimal>& values,
                     double& kernel_latency, double& total_latency) {
   // find the nationkey based on the nation name
-  assert(dbinfo.n_.name_key_map.find(nation) != dbinfo.n_.name_key_map.end());
-  unsigned char nationkey = dbinfo.n_.name_key_map[nation];
+  assert(dbinfo.n.name_key_map.find(nation) != dbinfo.n.name_key_map.end());
+  unsigned char nationkey = dbinfo.n.name_key_map[nation];
 
   // ensure correctly sized output buffers
   partkeys.resize(kPartTableSize);
@@ -56,14 +56,14 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
   // setup the input buffers
   // SUPPLIER
-  buffer s_suppkey_buf(dbinfo.s_.suppkey);
-  buffer s_nationkey_buf(dbinfo.s_.nationkey);
+  buffer s_suppkey_buf(dbinfo.s.suppkey);
+  buffer s_nationkey_buf(dbinfo.s.nationkey);
   
   // PARTSUPPLIER
-  buffer ps_partkey_buf(dbinfo.ps_.partkey);
-  buffer ps_suppkey_buf(dbinfo.ps_.suppkey);
-  buffer ps_availqty_buf(dbinfo.ps_.availqty);
-  buffer ps_supplycost_buf(dbinfo.ps_.supplycost);
+  buffer ps_partkey_buf(dbinfo.ps.partkey);
+  buffer ps_suppkey_buf(dbinfo.ps.suppkey);
+  buffer ps_availqty_buf(dbinfo.ps.availqty);
+  buffer ps_supplycost_buf(dbinfo.ps.supplycost);
 
   // setup the output buffers
   // constructing the output buffers WITHOUT a backed host pointer allows
@@ -84,7 +84,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   //// ProducePartSupplier Kernel
   auto produce_ps_event = q.submit([&](handler& h) {
     // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps_.rows;
+    size_t ps_rows = dbinfo.ps.rows;
     accessor ps_partkey_accessor(ps_partkey_buf, h, read_only);
     accessor ps_suppkey_accessor(ps_suppkey_buf, h, read_only);
     accessor ps_availqty_accessor(ps_availqty_buf, h, read_only);
@@ -119,10 +119,10 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   //// JoinPartSupplierParts Kernel
   auto join_event = q.submit([&](handler& h) {
     // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps_.rows;
+    size_t ps_rows = dbinfo.ps.rows;
 
     // SUPPLIER table accessors
-    size_t s_rows = dbinfo.s_.rows;
+    size_t s_rows = dbinfo.s.rows;
     accessor s_suppkey_accessor(s_suppkey_buf, h, read_only);
     accessor s_nationkey_accessor(s_nationkey_buf, h, read_only);
 
@@ -166,7 +166,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   //// Compute Kernel
   auto compute_event = q.submit([&](handler& h) {
     // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps_.rows;
+    size_t ps_rows = dbinfo.ps.rows;
 
     // kernel to produce the PARTSUPPLIER table
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {

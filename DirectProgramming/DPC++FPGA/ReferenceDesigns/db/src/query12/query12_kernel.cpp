@@ -24,15 +24,15 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
                     double& kernel_latency, double& total_latency) {
   // setup the input buffers
   // LINEITEM table
-  buffer l_orderkey_buf(dbinfo.l_.orderkey);
-  buffer l_shipmode_buf(dbinfo.l_.shipmode);
-  buffer l_commitdate_buf(dbinfo.l_.commitdate);
-  buffer l_shipdate_buf(dbinfo.l_.shipdate);
-  buffer l_receiptdate_buf(dbinfo.l_.receiptdate);
+  buffer l_orderkey_buf(dbinfo.l.orderkey);
+  buffer l_shipmode_buf(dbinfo.l.shipmode);
+  buffer l_commitdate_buf(dbinfo.l.commitdate);
+  buffer l_shipdate_buf(dbinfo.l.shipdate);
+  buffer l_receiptdate_buf(dbinfo.l.receiptdate);
 
   // ORDERS table
-  buffer o_orderkey_buf(dbinfo.o_.orderkey);
-  buffer o_orderpriority_buf(dbinfo.o_.orderpriority);
+  buffer o_orderkey_buf(dbinfo.o.orderkey);
+  buffer o_orderpriority_buf(dbinfo.o.orderpriority);
 
   // setup the output buffers
   // constructing the output buffers WITHOUT a backed host pointer allows
@@ -52,7 +52,7 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// LineItemProducer Kernel: produce the LINEITEM table
   auto produce_lineitem_event = q.submit([&](handler& h) {
-    size_t l_rows = dbinfo.l_.rows;
+    size_t l_rows = dbinfo.l.rows;
     accessor l_orderkey_accessor(l_orderkey_buf, h, read_only);
     accessor l_shipmode_accessor(l_shipmode_buf, h, read_only);
     accessor l_commitdate_accessor(l_commitdate_buf, h, read_only);
@@ -87,7 +87,7 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// OrdersProducer Kernel: produce the ORDERS table
   auto produce_orders_event = q.submit([&](handler& h) {
-    size_t o_rows = dbinfo.o_.rows;
+    size_t o_rows = dbinfo.o.rows;
     accessor o_orderkey_accessor(o_orderkey_buf, h, read_only);
     accessor o_orderpriority_accessor(o_orderpriority_buf, h, read_only);
 
@@ -116,8 +116,8 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   //// Join kernel
   auto join_event = q.submit([&](handler& h) {
     // read accessors
-    int o_rows = dbinfo.o_.rows;
-    int l_rows = dbinfo.l_.rows;
+    int o_rows = dbinfo.o.rows;
+    int l_rows = dbinfo.l.rows;
 
     // streaming query12 computation
     h.single_task<Join>([=]() [[intel::kernel_args_restrict]] {

@@ -25,13 +25,13 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
                   std::array<DBDecimal, kQuery1OutSize>& count,
                   double& kernel_latency, double& total_latency) {
   // setup the input buffers
-  buffer quantity_buf(dbinfo.l_.quantity);
-  buffer extendedprice_buf(dbinfo.l_.extendedprice);
-  buffer discount_buf(dbinfo.l_.discount);
-  buffer tax_buf(dbinfo.l_.tax);
-  buffer returnflag_buf(dbinfo.l_.returnflag);
-  buffer linestatus_buf(dbinfo.l_.linestatus);
-  buffer shipdate_buf(dbinfo.l_.shipdate);
+  buffer quantity_buf(dbinfo.l.quantity);
+  buffer extendedprice_buf(dbinfo.l.extendedprice);
+  buffer discount_buf(dbinfo.l.discount);
+  buffer tax_buf(dbinfo.l.tax);
+  buffer returnflag_buf(dbinfo.l.returnflag);
+  buffer linestatus_buf(dbinfo.l.linestatus);
+  buffer shipdate_buf(dbinfo.l.shipdate);
 
   // setup the output buffers
   // constructing the output buffers WITHOUT a backed host pointer allows
@@ -70,7 +70,7 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
   //// Query1 Kernel
   auto event = q.submit([&](handler& h) {
     // read accessors
-    int rows = dbinfo.l_.rows;
+    int rows = dbinfo.l.rows;
     accessor quantity_accessor(quantity_buf, h, read_only);
     accessor extendedprice_accessor(extendedprice_buf, h, read_only);
     accessor discount_accessor(discount_buf, h, read_only);

@@ -19,8 +19,8 @@ class SupplierRow {
   SupplierRow() {}
   // SupplierRow()
   //    : valid(false), suppkey(0), nationkey(0) {}
-  SupplierRow(bool _valid, DBIdentifier _suppkey, unsigned char _nationkey)
-      : valid(_valid), suppkey(_suppkey), nationkey(_nationkey) {}
+  SupplierRow(bool v_valid, DBIdentifier v_suppkey, unsigned char v_nationkey)
+      : valid(v_valid), suppkey(v_suppkey), nationkey(v_nationkey) {}
 
   DBIdentifier PrimaryKey() const { return suppkey; }
 
@@ -36,12 +36,12 @@ class SupplierRow {
 class PartSupplierRow {
  public:
   PartSupplierRow() : valid(false), partkey(0), suppkey(0), supplycost(0) {}
-  PartSupplierRow(bool _valid, DBIdentifier _partkey, DBIdentifier _suppkey,
-                  DBDecimal _supplycost)
-      : valid(_valid),
-        partkey(_partkey),
-        suppkey(_suppkey),
-        supplycost(_supplycost) {}
+  PartSupplierRow(bool v_valid, DBIdentifier v_partkey, DBIdentifier v_suppkey,
+                  DBDecimal v_supplycost)
+      : valid(v_valid),
+        partkey(v_partkey),
+        suppkey(v_suppkey),
+        supplycost(v_supplycost) {}
 
   // NOTE: this is not true, but is key to be used by MapJoin
   DBIdentifier PrimaryKey() const { return suppkey; }
@@ -59,14 +59,14 @@ class SupplierPartSupplierJoined {
  public:
   SupplierPartSupplierJoined()
       : valid(false), partkey(0), suppkey(0), supplycost(0), nationkey(0) {}
-  SupplierPartSupplierJoined(bool _valid, DBIdentifier _partkey,
-                             DBIdentifier _suppkey, DBDecimal _supplycost,
-                             unsigned char _nationkey)
-      : valid(_valid),
-        partkey(_partkey),
-        suppkey(_suppkey),
-        supplycost(_supplycost),
-        nationkey(_nationkey) {}
+  SupplierPartSupplierJoined(bool v_valid, DBIdentifier v_partkey,
+                             DBIdentifier v_suppkey, DBDecimal v_supplycost,
+                             unsigned char v_nationkey)
+      : valid(v_valid),
+        partkey(v_partkey),
+        suppkey(v_suppkey),
+        supplycost(v_supplycost),
+        nationkey(v_nationkey) {}
 
   DBIdentifier PrimaryKey() const { return partkey; }
 
@@ -91,8 +91,8 @@ class SupplierPartSupplierJoined {
 class OrdersRow {
  public:
   OrdersRow() : valid(false), orderkey(0), orderdate(0) {}
-  OrdersRow(bool _valid, DBIdentifier _orderkey, DBDate _orderdate)
-      : valid(_valid), orderkey(_orderkey), orderdate(_orderdate) {}
+  OrdersRow(bool v_valid, DBIdentifier v_orderkey, DBDate v_orderdate)
+      : valid(v_valid), orderkey(v_orderkey), orderdate(v_orderdate) {}
 
   DBIdentifier PrimaryKey() const { return orderkey; }
 
@@ -109,13 +109,13 @@ class LineItemMinimalRow {
  public:
   LineItemMinimalRow()
       : valid(false), idx(0), orderkey(0), partkey(0), suppkey(0) {}
-  LineItemMinimalRow(bool _valid, unsigned int _idx, DBIdentifier _orderkey,
-                     DBIdentifier _partkey, DBIdentifier _suppkey)
-      : valid(_valid),
-        idx(_idx),
-        orderkey(_orderkey),
-        partkey(_partkey),
-        suppkey(_suppkey) {}
+  LineItemMinimalRow(bool v_valid, unsigned int v_idx, DBIdentifier v_orderkey,
+                     DBIdentifier v_partkey, DBIdentifier v_suppkey)
+      : valid(v_valid),
+        idx(v_idx),
+        orderkey(v_orderkey),
+        partkey(v_partkey),
+        suppkey(v_suppkey) {}
 
   DBIdentifier PrimaryKey() const { return orderkey; }
 
@@ -131,14 +131,14 @@ class LineItemOrdersMinimalJoined {
  public:
   LineItemOrdersMinimalJoined()
       : valid(false), lineitemIdx(0), partkey(0), suppkey(0), orderdate(0) {}
-  LineItemOrdersMinimalJoined(bool _valid, unsigned int _lineitem_idx,
-                              DBIdentifier _partkey, DBIdentifier _suppkey,
-                              DBDate _orderdate)
-      : valid(_valid),
-        lineitemIdx(_lineitem_idx),
-        partkey(_partkey),
-        suppkey(_suppkey),
-        orderdate(_orderdate) {}
+  LineItemOrdersMinimalJoined(bool v_valid, unsigned int v_lineitem_idx,
+                              DBIdentifier v_partkey, DBIdentifier v_suppkey,
+                              DBDate v_orderdate)
+      : valid(v_valid),
+        lineitemIdx(v_lineitem_idx),
+        partkey(v_partkey),
+        suppkey(v_suppkey),
+        orderdate(v_orderdate) {}
 
   DBIdentifier PrimaryKey() { return partkey; }
 
@@ -162,12 +162,12 @@ class LineItemOrdersMinimalJoined {
 class SortData {
  public:
   SortData() {}
-  SortData(unsigned int _lineitem_idx, DBIdentifier _partkey,
-           DBIdentifier _suppkey, DBDate _orderdate)
-      : lineitemIdx(_lineitem_idx),
-        partkey(_partkey),
-        suppkey(_suppkey),
-        orderdate(_orderdate) {}
+  SortData(unsigned int v_lineitem_idx, DBIdentifier v_partkey,
+           DBIdentifier v_suppkey, DBDate v_orderdate)
+      : lineitemIdx(v_lineitem_idx),
+        partkey(v_partkey),
+        suppkey(v_suppkey),
+        orderdate(v_orderdate) {}
   SortData(const LineItemOrdersMinimalJoined& d)
       : lineitemIdx(d.lineitemIdx),
         partkey(d.partkey),
@@ -200,15 +200,15 @@ class FinalData {
         supplycost(0),
         nationkey(0) {}
   
-  FinalData(bool _valid, DBIdentifier _partkey, unsigned int _lineitem_idx,
-            DBDate _orderdate, DBDecimal _supplycost,
-            unsigned char _nationkey)
-      : valid(_valid),
-        partkey(_partkey),
-        lineitemIdx(_lineitem_idx),
-        orderdate(_orderdate),
-        supplycost(_supplycost),
-        nationkey(_nationkey) {}
+  FinalData(bool v_valid, DBIdentifier v_partkey, unsigned int v_lineitem_idx,
+            DBDate v_orderdate, DBDecimal v_supplycost,
+            unsigned char v_nationkey)
+      : valid(v_valid),
+        partkey(v_partkey),
+        lineitemIdx(v_lineitem_idx),
+        orderdate(v_orderdate),
+        supplycost(v_supplycost),
+        nationkey(v_nationkey) {}
 
   DBIdentifier PrimaryKey() { return partkey; }
 

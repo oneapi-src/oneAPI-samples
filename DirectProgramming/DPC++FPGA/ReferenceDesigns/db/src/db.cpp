@@ -32,6 +32,8 @@
 #include "db_utils/LikeRegex.hpp"
 #include "dbdata.hpp"
 
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 using namespace sycl;
@@ -144,7 +146,7 @@ int main(int argc, char* argv[]) {
       if (StrStartsWith(arg, "--dbroot=")) {
         db_root_dir = str_after_equals;
       } else if (StrStartsWith(arg, "--query=")) {
-        query = std::stoi(str_after_equals);
+        query = atoi(str_after_equals.c_str());
       } else if (StrStartsWith(arg, "--args=")) {
         args = str_after_equals;
       } else if (StrStartsWith(arg, "--test")) {
@@ -155,10 +157,10 @@ int main(int argc, char* argv[]) {
 #ifndef FPGA_EMULATOR
         // for hardware, ensure at least two iterations to ensure we can run
         // a 'warmup' iteration
-        runs = std::max(2, std::stoi(str_after_equals) + 1);
+        runs = std::max(2, atoi(str_after_equals.c_str()) + 1);
 #else
         // for emulation, allow a single iteration and don't add a 'warmup' run
-        runs = std::max(1, std::stoi(str_after_equals));
+        runs = std::max(1, atoi(str_after_equals.c_str()));
 #endif
       } else {
         std::cout << "WARNING: ignoring unknown argument '" << arg << "'\n";
@@ -208,7 +210,7 @@ int main(int argc, char* argv[]) {
       return 1;
     }
 
-    std::cout << "Database SF = " << kSF << std::endl;
+    std::cout << "Database SF = " << kSF << "\n";
 
     // make sure the parsed database files match the set scale factor
     if (!dbinfo.ValidateSF()) {
@@ -312,7 +314,7 @@ bool DoQuery1(queue& q, Database& dbinfo, std::string& db_root_dir,
     std::stringstream ss(args);
     std::string tmp;
     std::getline(ss, tmp, ',');
-    DELTA = std::stoi(tmp);
+    DELTA = atoi(tmp.c_str());
   } else {
     if (!args.empty()) {
       std::cout << "Testing query 1, therefore ignoring the '--args' flag\n";
@@ -429,7 +431,7 @@ bool DoQuery11(queue& q, Database& dbinfo, std::string& db_root_dir,
   transform(nation.begin(), nation.end(), nation.begin(), ::toupper);
 
   std::cout << "Running Q11 for nation " << nation.c_str()
-            << " (key=" << (int)(dbinfo.n_.name_key_map[nation]) << ")\n";
+            << " (key=" << (int)(dbinfo.n.name_key_map[nation]) << ")\n";
 
   // the query output
   std::vector<DBIdentifier> partkeys(kPartTableSize);
@@ -460,7 +462,7 @@ bool DoQuery12(queue& q, Database& dbinfo, std::string& db_root_dir,
                std::string& args, bool test, bool print, double& kernel_latency,
                double& total_latency) {
   // the default query date and shipmodes, based on the TPCH documents
-  Date date = Date(1994, 01, 01);
+  Date date = Date("1994-01-01");
   std::string shipmode1 = "MAIL", shipmode2 = "SHIP";
 
   // parse the query arguments

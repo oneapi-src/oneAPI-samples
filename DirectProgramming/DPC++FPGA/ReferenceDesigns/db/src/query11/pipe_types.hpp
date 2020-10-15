@@ -18,8 +18,8 @@ class SupplierRow {
  public:
   // SupplierRow() : valid(false), suppkey(0), nationkey(0) {}
   SupplierRow() {}
-  SupplierRow(bool _valid, DBIdentifier _suppkey, unsigned char _nationkey)
-      : valid(_valid), suppkey(_suppkey), nationkey(_nationkey) {}
+  SupplierRow(bool v_valid, DBIdentifier v_suppkey, unsigned char v_nationkey)
+      : valid(v_valid), suppkey(v_suppkey), nationkey(v_nationkey) {}
 
   DBIdentifier PrimaryKey() const { return suppkey; }
 
@@ -36,13 +36,13 @@ class PartSupplierRow {
  public:
   PartSupplierRow()
       : valid(false), partkey(0), suppkey(0), availqty(0), supplycost(0) {}
-  PartSupplierRow(bool _valid, DBIdentifier _partkey, DBIdentifier _suppkey,
-                  int _availqty, DBDecimal _supplycost)
-      : valid(_valid),
-        partkey(_partkey),
-        suppkey(_suppkey),
-        availqty(_availqty),
-        supplycost(_supplycost) {}
+  PartSupplierRow(bool v_valid, DBIdentifier v_partkey, DBIdentifier v_suppkey,
+                  int v_availqty, DBDecimal v_supplycost)
+      : valid(v_valid),
+        partkey(v_partkey),
+        suppkey(v_suppkey),
+        availqty(v_availqty),
+        supplycost(v_supplycost) {}
 
   // NOTE: this is not true, but is key to be used by MapJoin
   DBIdentifier PrimaryKey() const { return suppkey; }
@@ -61,13 +61,13 @@ class SupplierPartSupplierJoined {
  public:
   SupplierPartSupplierJoined()
       : valid(false), partkey(0), supplycost(0), nationkey(0) {}
-  SupplierPartSupplierJoined(bool _valid, DBIdentifier _partkey, int _availqty,
-                             DBDecimal _supplycost, unsigned char _nationkey)
-      : valid(_valid),
-        partkey(_partkey),
-        availqty(_availqty),
-        supplycost(_supplycost),
-        nationkey(_nationkey) {}
+  SupplierPartSupplierJoined(bool v_valid, DBIdentifier v_partkey, int v_availqty,
+                             DBDecimal v_supplycost, unsigned char v_nationkey)
+      : valid(v_valid),
+        partkey(v_partkey),
+        availqty(v_availqty),
+        supplycost(v_supplycost),
+        nationkey(v_nationkey) {}
 
   DBIdentifier PrimaryKey() const { return partkey; }
 
@@ -93,8 +93,8 @@ class OutputData {
  public:
   OutputData() {}
   // OutputData() : partkey(0), partvalue(0) {}
-  OutputData(DBIdentifier _partkey, DBDecimal _partvalue)
-      : partkey(_partkey), partvalue(_partvalue) {}
+  OutputData(DBIdentifier v_partkey, DBDecimal v_partvalue)
+      : partkey(v_partkey), partvalue(v_partvalue) {}
 
   bool operator<(const OutputData& t) const { return partvalue < t.partvalue; }
   bool operator>(const OutputData& t) const { return partvalue > t.partvalue; }

@@ -39,6 +39,7 @@ constexpr int kPartSupplierTableSize = kSF * 800000;
 constexpr int kOrdersTableSize = kSF * 1500000;
 constexpr int kSupplierTableSize = kSF * 10000;
 constexpr int kCustomerTableSize = kSF * 150000;
+
 // LINEITEM table is not a strict multiple of kSF
 constexpr int LineItemTableSizeFnc() {
   if (kSF == 0.01f) {
@@ -49,6 +50,7 @@ constexpr int LineItemTableSizeFnc() {
     return 0;  // error, should be caught by kSF static_assert
   }
 }
+
 constexpr int kLineItemTableSize = LineItemTableSizeFnc();
 constexpr int kNationTableSize = 25;
 constexpr int kRegionTableSize = 5;
@@ -151,12 +153,12 @@ struct NationTable {
 
 // the database
 struct Database {
-  LineItemTable l_;
-  OrdersTable o_;
-  PartsTable p_;
-  SupplierTable s_;
-  PartSupplierTable ps_;
-  NationTable n_;
+  LineItemTable l;
+  OrdersTable o;
+  PartsTable p;
+  SupplierTable s;
+  PartSupplierTable ps;
+  NationTable n;
 
   bool Parse(std::string db_root_dir);
 

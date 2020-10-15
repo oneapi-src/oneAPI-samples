@@ -23,14 +23,14 @@
 // More information and pseudocode can be found here:
 // https://en.wikipedia.org/wiki/Sort-merge_join
 //
-template <typename T1Type, int T1WinSize, typename T2Type, int T2WinSize,
-          typename JoinType, bool Drain=false>
+template <typename T1Type, int t1_win_size, typename T2Type, int t2_win_size,
+          typename JoinType, bool drain=false>
 class MergeJoiner {
   //////////////////////////////////////////////////////////////////////////////
   // static asserts
-  static_assert(T1WinSize > 0,
+  static_assert(t1_win_size > 0,
     "Table 1 window size must be positive and non-zero");
-  static_assert(T2WinSize > 0,
+  static_assert(t2_win_size > 0,
     "Table 2 window size must be positive and non-zero");
   static_assert(
       std::is_same<unsigned int, decltype(T1Type().PrimaryKey())>::value,
@@ -61,23 +61,23 @@ class MergeJoiner {
           JoinWriteCallback out_writer) {
     ////////////////////////////////////////////////////////////////////////////
     // static asserts
-    static_assert(std::is_invocable_r<StreamingData<T1Type, T1WinSize>,
+    static_assert(std::is_invocable_r<StreamingData<T1Type, t1_win_size>,
                                       JoinTable1ReadCallback>::value,
         "JoinTable1ReadCallback must be invocable and return "
-        "StreamingData<T1Type,T1WinSize>");
-    static_assert(std::is_invocable_r<StreamingData<T2Type, T2WinSize>,
+        "StreamingData<T1Type,t1_win_size>");
+    static_assert(std::is_invocable_r<StreamingData<T2Type, t2_win_size>,
                                       JoinTable2ReadCallback>::value,
         "JoinTable2ReadCallback must be invocable and return "
-        "StreamingData<T2Type,T2WinSize>");
+        "StreamingData<T2Type,t2_win_size>");
     static_assert(std::is_invocable<JoinWriteCallback,
-                                    StreamingData<JoinType, T2WinSize>>::value,
+                                    StreamingData<JoinType, t2_win_size>>::value,
         "JoinWriteCallback must be invocable and accept one "
-        "StreamingData<JoinType,T2WinSize> argument");
+        "StreamingData<JoinType,t2_win_size> argument");
     ////////////////////////////////////////////////////////////////////////////
 
     // iterators for the two tables
-    ShannonIterator<int,3,T1WinSize> t1_win_idx(0,t1_size_);
-    ShannonIterator<int,3,T2WinSize> t2_win_idx(0,t2_size_);
+    ShannonIterator<int,3,t1_win_size> t1_win_idx(0,t1_size_);
+    ShannonIterator<int,3,t2_win_size> t2_win_idx(0,t2_size_);
 
     // whether to move table 1 or table 2 window
     bool move_t1_win_prev = false;
@@ -87,8 +87,8 @@ class MergeJoiner {
     bool keep_going = true;
 
     // table window data
-    StreamingData<T1Type, T1WinSize> t1_win;
-    StreamingData<T2Type, T2WinSize> t2_win;
+    StreamingData<T1Type, t1_win_size> t1_win;
+    StreamingData<T2Type, t2_win_size> t2_win;
 
     // track whether the data read for tables 1 and 2 are valid
     bool t1_data_valid = false, t2_data_valid = false;
@@ -130,21 +130,21 @@ class MergeJoiner {
       } else {
         //////////////////////////////////////////////////////
         //// join the input data windows into output data
-        StreamingData<JoinType, T2WinSize> join_data(false, true);
+        StreamingData<JoinType, t2_win_size> join_data(false, true);
 
         // initialize all outputs to false
-        UnrolledLoop<0, T2WinSize>([&](auto i) {
+        UnrolledLoop<0, t2_win_size>([&](auto i) {
           join_data.data.template get<i>().valid = false;
         });
 
         // crossbar join
-        UnrolledLoop<0, T2WinSize>([&](auto i) {
+        UnrolledLoop<0, t2_win_size>([&](auto i) {
           bool written = false;
 
           const bool t2_win_valid = t2_win.data.template get<i>().valid;
           const unsigned int t2_key = t2_win.data.template get<i>().PrimaryKey();
 
-          UnrolledLoop<0, T1WinSize>([&](auto j) {
+          UnrolledLoop<0, t1_win_size>([&](auto j) {
             const bool t1_win_valid = t1_win.data.template get<j>().valid;
             const unsigned int t1_key =
                 t1_win.data.template get<j>().PrimaryKey();
@@ -200,7 +200,7 @@ class MergeJoiner {
     } while (keep_going);
 
     // drain the input if told to by template parameter
-    if (Drain) {
+    if (drain) {
       while (!t1_done && t1_win_idx.InRange()) {
         t1_win = t1_reader();
         if(t1_win.valid) {
@@ -230,22 +230,22 @@ class MergeJoiner {
 // Assumptions:
 //      - Both tables sorted by same 'primary' key (PrimaryKey() function of
 //      table types)
-//      - Table 1 has a maximum of 'T1MaxDuplicates' rows with the same primary
+//      - Table 1 has a maximum of 't1_max_duplicates' rows with the same primary
 //      key (sorted by this key, so consecutive)
 //      - Table 2 can have unlimited numbers of rows with same primary key
 //
-// NOTE: If T1MaxDuplicates == 1, MergeJoin should be used as it will be more
+// NOTE: If t1_max_duplicates == 1, MergeJoin should be used as it will be more
 // efficient More information and pseudocode can be found here:
 // https://en.wikipedia.org/wiki/Sort-merge_join
 //
-template <typename T1Type, int T1MaxDuplicates, typename T2Type, int T2WinSize,
-          typename JoinType, bool Drain=false>
+template <typename T1Type, int t1_max_duplicates, typename T2Type, int t2_win_size,
+          typename JoinType, bool drain=false>
 class DuplicateMergeJoiner {
   //////////////////////////////////////////////////////////////////////////////
   // static asserts
-  static_assert(T1MaxDuplicates > 0,
+  static_assert(t1_max_duplicates > 0,
                 "Table 1 maximum duplicates be positive and non-zero");
-  static_assert(T2WinSize > 0,
+  static_assert(t2_win_size > 0,
                 "Table 2 window size must be positive and non-zero");
   static_assert(
       std::is_same<unsigned int, decltype(T1Type().PrimaryKey())>::value,
@@ -279,23 +279,23 @@ class DuplicateMergeJoiner {
           JoinWriteCallback out_writer) {
     ////////////////////////////////////////////////////////////////////////////
     // static asserts
-    static_assert(std::is_invocable_r<StreamingData<T1Type, T1MaxDuplicates>,
+    static_assert(std::is_invocable_r<StreamingData<T1Type, t1_max_duplicates>,
                                       JoinTable1ReadCallback>::value,
                   "JoinTable1ReadCallback must be invocable and return "
-                  "StreamingData<T1Type,T1MaxDuplicates>");
-    static_assert(std::is_invocable_r<StreamingData<T2Type, T2WinSize>,
+                  "StreamingData<T1Type,t1_max_duplicates>");
+    static_assert(std::is_invocable_r<StreamingData<T2Type, t2_win_size>,
                                       JoinTable2ReadCallback>::value,
                   "JoinTable2ReadCallback must be invocable and return "
-                  "StreamingData<T2Type,T2WinSize>");
+                  "StreamingData<T2Type,t2_win_size>");
     static_assert(std::is_invocable<JoinWriteCallback,
-                  StreamingData<JoinType, T1MaxDuplicates * T2WinSize>>::value,
+                  StreamingData<JoinType, t1_max_duplicates * t2_win_size>>::value,
         "JoinWriteCallback must be invocable and accept one "
-        "StreamingData<JoinType,T1MaxDuplicates*T2WinSize> argument");
+        "StreamingData<JoinType,t1_max_duplicates*t2_win_size> argument");
     ////////////////////////////////////////////////////////////////////////////
 
     // iterators for the two tables
-    ShannonIterator<int,3,T1MaxDuplicates> t1_win_idx(0,t1_size_);
-    ShannonIterator<int,3,T2WinSize> t2_win_idx(0,t2_size_);
+    ShannonIterator<int,3,t1_max_duplicates> t1_win_idx(0,t1_size_);
+    ShannonIterator<int,3,t2_win_size> t2_win_idx(0,t2_size_);
 
     // whether to move table 1 or table 2 window
     bool move_t1_win_prev = false;
@@ -305,8 +305,8 @@ class DuplicateMergeJoiner {
     bool keep_going = true;
 
     // table window data
-    StreamingData<T1Type, T1MaxDuplicates> t1_win;
-    StreamingData<T2Type, T2WinSize> t2_win;
+    StreamingData<T1Type, t1_max_duplicates> t1_win;
+    StreamingData<T2Type, t2_win_size> t2_win;
 
     // track whether the data read for tables 1 and 2 are valid
     bool t1_data_valid = false;
@@ -351,27 +351,27 @@ class DuplicateMergeJoiner {
       } else {
         //////////////////////////////////////////////////////
         //// join the input data windows into output data
-        StreamingData<JoinType, T1MaxDuplicates*T2WinSize> join_data(false,true);
+        StreamingData<JoinType, t1_max_duplicates*t2_win_size> join_data(false,true);
 
         // initialize all validity to false
-        UnrolledLoop<0, T1MaxDuplicates * T2WinSize>([&](auto i) {
+        UnrolledLoop<0, t1_max_duplicates * t2_win_size>([&](auto i) {
           join_data.data.template get<i>().valid = false;
         });
 
-        // full crossbar join producing up to T1MaxDuplicates*T2WinSize outputs
-        UnrolledLoop<0, T1MaxDuplicates>([&](auto i) {
+        // full crossbar join producing up to t1_max_duplicates*t2_win_size outputs
+        UnrolledLoop<0, t1_max_duplicates>([&](auto i) {
           const bool t1_win_valid = t1_win.data.template get<i>().valid;
           const unsigned int t1_key = t1_win.data.template get<i>().PrimaryKey();
 
-          UnrolledLoop<0, T2WinSize>([&](auto j) {
+          UnrolledLoop<0, t2_win_size>([&](auto j) {
             const bool t2_win_valid = t2_win.data.template get<j>().valid;
             const unsigned int t2_key =
                 t2_win.data.template get<j>().PrimaryKey();
 
             if (t1_win_valid && t2_win_valid && (t1_key == t2_key)) {
               // NOTE: order below important if Join() overrides valid
-              join_data.data.template get<i * T2WinSize + j>().valid = true;
-              join_data.data.template get<i * T2WinSize + j>().Join(
+              join_data.data.template get<i * t2_win_size + j>().valid = true;
+              join_data.data.template get<i * t2_win_size + j>().Join(
                   t1_win.data.template get<i>(), t2_win.data.template get<j>());
             }
           });
@@ -417,7 +417,7 @@ class DuplicateMergeJoiner {
     } while (keep_going);
 
     // drain the input if told to by template parameter
-    if (Drain) {
+    if (drain) {
       while (!t1_done && t1_win_idx.InRange()) {
         t1_win = t1_reader();
         if(t1_win.valid) {
