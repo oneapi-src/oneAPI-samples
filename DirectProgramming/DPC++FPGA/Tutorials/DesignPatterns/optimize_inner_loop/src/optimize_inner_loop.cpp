@@ -26,38 +26,38 @@ using namespace sycl;
 //// constants
 constexpr int kNumKernels = 3;
 constexpr int kRandRangeMax = RAND_RANGE_MAX;
-constexpr double kProbSuccess = 1.0 / (double)(kRandRangeMax);
+constexpr double kProbSuccess = 1.0 / kRandRangeMax;
 
-// Declare the kernel class names globally to avoid name mangling.
+// Declare the kernel class names globally to reduce name mangling.
 // Templating allows us to instantiate multiple versions of the kernel.
-template <int Version> class Producer;
-template <int Version> class Consumer;
+template <int version> class Producer;
+template <int version> class Consumer;
 
-// Declare the pipe class name globally to avoid name mangling.
+// Declare the pipe class name globally to reduce name mangling.
 // Templating allows us to instantiate multiple versions of pipes for each 
 // version of the kernel.
-template <int Version> class PipeClass;
+template <int version> class PipeClass;
 
 //
 // Submits the kernel, which is templated on the variables:
-//    Version             - The version ID of the kernel
-//    InElementUpperBound - The upperbound (inclusive) on the elements of the
+//    version             - The version ID of the kernel
+//    in_element_upper_bound - The upperbound (inclusive) on the elements of the
 //                          'in' vector (a negative value implies no bound). In
-//                          other words: if InElementUpperBound >= 0, then
-//                          in[i] <= InElementUpperBound, for all elements
+//                          other words: if in_element_upper_bound >= 0, then
+//                          in[i] <= in_element_upper_bound, for all elements
 //                          of 'in'
-//    SpecIters           - The number of speculated iterations to set for the
+//    spec_iters           - The number of speculated iterations to set for the
 //                          inner loop
 //
-template <int Version, int InElementUpperBound, int SpecIters>
+template <int version, int in_element_upper_bound, int spec_iters>
 void SubmitKernels(const device_selector &selector, std::vector<int> &in,
                    int &res, double &kernel_time_ms) {
   // static asserts: these cause the compiler to fail if the conditions fail
-  static_assert(Version >= 0, "Invalid kernel version");
-  static_assert(SpecIters >= 0, "SpecIters must be positive");
+  static_assert(version >= 0, "Invalid kernel version");
+  static_assert(spec_iters >= 0, "spec_iters must be positive");
 
   // the pipe
-  using Pipe = pipe<PipeClass<Version>, bool>;
+  using Pipe = pipe<PipeClass<version>, bool>;
 
   kernel_time_ms = 0.0;
   int size = in.size();
@@ -78,40 +78,40 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
     // submit the Producer kernel
     event p_e = q.submit([&](handler &h) {
       // the input buffer accessor
-      accessor in_accessor{ in_buf, h, read_only };
+      accessor in_a(in_buf, h, read_only);
 
-      h.single_task<Producer<Version>>([=]() [[intel::kernel_args_restrict]] {
+      h.single_task<Producer<version>>([=]() [[intel::kernel_args_restrict]] {
         for (int i = 0; i < size; i++) {
           // read the input value, which is in the range [0,InnerLoopBound]
-          int val = in_accessor[i];
+          int val = in_a[i];
 
-          // 'InElementUpperBound' is a constant (a template variable).
-          // Therefore, the condition 'InElementUpperBound < 0', and therefore
+          // 'in_element_upper_bound' is a constant (a template variable).
+          // Therefore, the condition 'in_element_upper_bound < 0', and therefore
           // the taken branch of this if-else statement, can be determined at
           // compile time. This results in the branch that is NOT taken being
           // optimized away. Both versions of the inner loop apply the
           // speculated_iterations attribute, where the number of speculated
-          // iterations is determined by the template variable 'SpecIters'.
-          if (InElementUpperBound < 0) {
+          // iterations is determined by the template variable 'spec_iters'.
+          if (in_element_upper_bound < 0) {
             // In this version of the inner loop, we do NOT provide an
             // upperbound on the loop index variable 'j'. While it may be easy
-            // for you to read the code and reason that 'j<InElementUpperBound'
+            // for you to read the code and reason that 'j<in_element_upper_bound'
             // is always true by looking at the rest of the program, it is much
             // more difficult for the compiler. As a result, the compiler will
             // be conservative and assume this inner loop may have a large trip
             // count and decide to make (or not make) optimizations accordingly.
-            [[intelfpga::speculated_iterations(SpecIters)]]
+            [[intelfpga::speculated_iterations(spec_iters)]]
             for (int j = 0; j < val; j++) {
               Pipe::write(true);
             }
           } else {
             // In this version of the inner loop, we provide an upper bound
             // on the loop index variable 'j' by adding the
-            // 'j<InElementUpperBound' loop exit condition. This provides the
+            // 'j<in_element_upper_bound' loop exit condition. This provides the
             // compiler with a constant upperbound on the trip count and allows
             // it to make optimizations accordingly.
-            [[intelfpga::speculated_iterations(SpecIters)]]
-            for (int j = 0; j < val && j <= InElementUpperBound; j++) {
+            [[intelfpga::speculated_iterations(spec_iters)]]
+            for (int j = 0; j < val && j <= in_element_upper_bound; j++) {
               Pipe::write(true);
             }
           }
@@ -125,9 +125,9 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
     // submit the Consumer kernel
     event c_e = q.submit([&](handler &h) {
       // the output buffer accessor
-      accessor res_accessor{res_buf, h, write_only, noinit};
+      accessor res_a(res_buf, h, write_only, noinit);
 
-      h.single_task<Consumer<Version>>([=]() [[intel::kernel_args_restrict]] {
+      h.single_task<Consumer<version>>([=]() [[intel::kernel_args_restrict]] {
         // local register to accumulate into
         int local_sum = 0;
 
@@ -137,7 +137,7 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
         }
 
         // copy back the result to global memory
-        res_accessor[0] = local_sum;
+        res_a[0] = local_sum;
       });
     });
 
@@ -184,7 +184,7 @@ int main(int argc, char *argv[]) {
 
   // Allow the size to be changed by a command line argument
   if (argc > 1) {
-    size = std::stoi(std::string(argv[1]));
+    size = atoi(argv[1]);
   }
 
   // check that the size makes sense
@@ -208,7 +208,7 @@ int main(int argc, char *argv[]) {
   // We have set these constants such that the expected value is 1. This
   // means that the number of inner loop iterations in the Producer kernel
   // is in the range [0,kRandRangeMax], but is 1 on average. For more info see:
-  //    http://www.cplusplus.com/reference/random/binomial_distribution/
+  //    https://en.cppreference.com/w/cpp/numeric/random/binomial_distribution
   std::binomial_distribution<int> bin_dist(kRandRangeMax, kProbSuccess);
 
   // generate the random input data
@@ -221,23 +221,23 @@ int main(int argc, char *argv[]) {
   std::array<int, kNumKernels> result;
   std::array<double, kNumKernels> ktime;
 
-  // Version 0
+  // version 0
   //
   // For the inner loop, this version has the bounding of the inner loop
-  // disabled (-1 for InElementUpperBound disables inner loop bounding)
+  // disabled (-1 for in_element_upper_bound disables inner loop bounding)
   // and sets 2 speculated iterations.
   std::cout << "Running kernel 0\n";
   SubmitKernels<0, -1, 2>(selector, in, result[0], ktime[0]);
 
-  // Version 1
+  // version 1
   //
   // For the inner loop, this version has the bounding of the inner loop
-  // disabled (-1 for InElementUpperBound disables inner loop bounding)
+  // disabled (-1 for in_element_upper_bound disables inner loop bounding)
   // and sets 0 speculated iterations.
   std::cout << "Running kernel 1\n";
   SubmitKernels<1, -1, 0>(selector, in, result[1], ktime[1]);
 
-  // Version 2
+  // version 2
   //
   // For the inner loop, this version bounds the inner loop (the max value
   // generated by our RNG above, kRandRangeMax) and has 0 speculated iterations.
@@ -258,7 +258,7 @@ int main(int argc, char *argv[]) {
     // the emulator does not accurately represent real hardware performance.
     // Therefore, we don't show performance results when running in emulation.
 #if !defined(FPGA_EMULATOR)
-    double input_size_bytes = (double)(size * sizeof(int));
+    double input_size_bytes = size * sizeof(int);
 
     // only display two decimal points
     std::cout << std::fixed << std::setprecision(2);
