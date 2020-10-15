@@ -36,12 +36,12 @@ double SubmitImplicitKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
 
     // launch the computation kernel
     auto kernel_event = q.submit([&](handler& h) {
-      accessor in_accessor(in_buf, h, read_only);
-      accessor out_accessor(out_buf, h, write_only, noinit);
+      accessor in_a(in_buf, h, read_only);
+      accessor out_a(out_buf, h, write_only, noinit);
 
       h.single_task<ImplicitKernel>([=]() [[intel::kernel_args_restrict]] {
         for (size_t  i = 0; i < size; i ++) {
-          out_accessor[i] = in_accessor[i] * i;
+          out_a[i] = in_a[i] * i;
         }
       });
     });
@@ -86,9 +86,7 @@ double SubmitExplicitKernel(queue& q, std::vector<T>& in,
   auto start = high_resolution_clock::now();
 
   // copy host input data to the device's memory
-  auto copy_host_to_device_event = q.submit([&](handler& h) {
-    h.memcpy(in_ptr, in.data(), size*sizeof(T));
-  });
+  auto copy_host_to_device_event = q.memcpy(in_ptr, in.data(), size*sizeof(T));
 
   // launch the the computation kernel
   auto kernel_event = q.submit([&](handler& h) {
@@ -99,8 +97,8 @@ double SubmitExplicitKernel(queue& q, std::vector<T>& in,
     h.single_task<ExplicitKernel>([=]() [[intel::kernel_args_restrict]] {
       // create device pointers to explicitly inform the compiler these
       // pointer reside in the device's address space
-      device_ptr<T> in_ptr_d = device_ptr<T>(in_ptr);
-      device_ptr<T> out_ptr_d = device_ptr<T>(out_ptr);
+      device_ptr<T> in_ptr_d(in_ptr);
+      device_ptr<T> out_ptr_d(out_ptr);
 
       for (size_t  i = 0; i < size; i ++) {
         out_ptr_d[i] = in_ptr_d[i] * i;
@@ -124,8 +122,8 @@ double SubmitExplicitKernel(queue& q, std::vector<T>& in,
   duration<double, std::milli> diff = end - start;
 
   // free the device memory
-  sycl::free(in_ptr, q.get_context());
-  sycl::free(out_ptr, q.get_context());
+  sycl::free(in_ptr, q);
+  sycl::free(out_ptr, q);
 
   return diff.count();
 }
@@ -150,7 +148,7 @@ int main(int argc, char *argv[]) {
 
   // Allow the size to be changed by a command line argument
   if (argc > 1) {
-    size = std::stoi(std::string(argv[1]));
+    size = atoi(argv[1]);
   }
 
   // check the size
