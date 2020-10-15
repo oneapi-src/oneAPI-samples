@@ -298,25 +298,24 @@ bool Iso3dfdDevice(sycl::queue &q, float *ptr_next, float *ptr_prev,
   // Display information about the selected device
   PrintTargetInfo(q, n1_block, n2_block);
 
-  auto sizeTotal = nxy * n3;
+  auto grid_size = nxy * n3;
 
   {  // Begin buffer scope
     // Create buffers using DPC++ class buffer
-    buffer<float, 1> b_ptr_next(ptr_next, sizeTotal);
-    buffer<float, 1> b_ptr_prev(ptr_prev, sizeTotal);
-    buffer<float, 1> b_ptr_vel(ptr_vel, sizeTotal);
-    buffer<float, 1> b_ptr_coeff(ptr_coeff, kHalfLength + 1);
+    buffer b_ptr_next(ptr_next, range(grid_size));
+    buffer b_ptr_prev(ptr_prev, range(grid_size));
+    buffer b_ptr_vel(ptr_vel, range(grid_size));
+    buffer b_ptr_coeff(ptr_coeff, range(kHalfLength + 1));
 
     // Iterate over time steps
     for (auto i = 0; i < nIterations; i += 1) {
       // Submit command group for execution
       q.submit([&](auto &h) {
         // Create accessors
-        auto next = b_ptr_next.get_access<access::mode::read_write>(h);
-        auto prev = b_ptr_prev.get_access<access::mode::read_write>(h);
-        auto vel = b_ptr_vel.get_access<access::mode::read>(h);
-        auto coeff = b_ptr_coeff.get_access<access::mode::read,
-                                            access::target::constant_buffer>(h);
+        accessor next(b_ptr_next, h);
+        accessor prev(b_ptr_prev, h);
+        accessor vel(b_ptr_vel, h, read_only);
+        accessor coeff(b_ptr_coeff, h, read_only);
 
         // Define local and global range
 
@@ -370,7 +369,7 @@ bool Iso3dfdDevice(sycl::queue &q, float *ptr_next, float *ptr_prev,
         // swaps their content at every iteration.
         if (i % 2 == 0)
           h.parallel_for(
-              nd_range(global_nd_range, local_nd_range), [=](nd_item<3> it) {
+              nd_range(global_nd_range, local_nd_range), [=](auto it) {
                 Iso3dfdIterationSLM(it, next.get_pointer(), prev.get_pointer(),
                                     vel.get_pointer(), coeff.get_pointer(),
                                     tab.get_pointer(), nx, nxy, bx, by,
@@ -378,7 +377,7 @@ bool Iso3dfdDevice(sycl::queue &q, float *ptr_next, float *ptr_prev,
               });
         else
           h.parallel_for(
-              nd_range(global_nd_range, local_nd_range), [=](nd_item<3> it) {
+              nd_range(global_nd_range, local_nd_range), [=](auto it) {
                 Iso3dfdIterationSLM(it, prev.get_pointer(), next.get_pointer(),
                                     vel.get_pointer(), coeff.get_pointer(),
                                     tab.get_pointer(), nx, nxy, bx, by,
@@ -397,7 +396,7 @@ bool Iso3dfdDevice(sycl::queue &q, float *ptr_next, float *ptr_prev,
         // swaps their content at every iteration.
         if (i % 2 == 0)
           h.parallel_for(
-              nd_range(global_nd_range, local_nd_range), [=](nd_item<3> it) {
+              nd_range(global_nd_range, local_nd_range), [=](auto it) {
                 Iso3dfdIterationGlobal(it, next.get_pointer(),
                                        prev.get_pointer(), vel.get_pointer(),
                                        coeff.get_pointer(), nx, nxy, bx, by,
@@ -405,7 +404,7 @@ bool Iso3dfdDevice(sycl::queue &q, float *ptr_next, float *ptr_prev,
               });
         else
           h.parallel_for(
-              nd_range(global_nd_range, local_nd_range), [=](nd_item<3> it) {
+              nd_range(global_nd_range, local_nd_range), [=](auto it) {
                 Iso3dfdIterationGlobal(it, prev.get_pointer(),
                                        next.get_pointer(), vel.get_pointer(),
                                        coeff.get_pointer(), nx, nxy, bx, by,

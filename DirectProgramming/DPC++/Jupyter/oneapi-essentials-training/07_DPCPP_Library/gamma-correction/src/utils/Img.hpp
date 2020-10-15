@@ -14,26 +14,28 @@
 #include <iostream>
 #include <vector>
 
+using namespace std;
+
 // Image class definition
 template <typename Format>
 class Img {
  private:
   Format _format;
-  std::int32_t _width;
-  std::int32_t _height;
-  std::vector<ImgPixel> _pixels;
+  int32_t _width;
+  int32_t _height;
+  vector<ImgPixel> _pixels;
 
-  using Iterator = std::vector<ImgPixel>::iterator;
-  using ConstIterator = std::vector<ImgPixel>::const_iterator;
+  using Iterator = vector<ImgPixel>::iterator;
+  using ConstIterator = vector<ImgPixel>::const_iterator;
 
  public:
   /////////////////////
   // SPECIAL METHODS //
   /////////////////////
 
-  Img(std::int32_t width, std::int32_t height);
+  Img(int32_t width, int32_t height);
 
-  void reset(std::int32_t width, std::int32_t height);
+  void reset(int32_t width, int32_t height);
 
   ///////////////
   // ITERATORS //
@@ -50,8 +52,8 @@ class Img {
   // GETTERS //
   /////////////
 
-  std::int32_t width() const noexcept;
-  std::int32_t height() const noexcept;
+  int32_t width() const noexcept;
+  int32_t height() const noexcept;
 
   ImgPixel const* data() const noexcept;
   ImgPixel* data() noexcept;
@@ -60,12 +62,12 @@ class Img {
   // FUNCTIONALITY //
   ///////////////////
 
-  void write(std::string const& filename) const;
+  void write(string const& filename) const;
 
   template <typename Functor>
   void fill(Functor f);
   void fill(ImgPixel pixel);
-  void fill(ImgPixel pixel, std::int32_t row, std::int32_t col);
+  void fill(ImgPixel pixel, int32_t row, int32_t col);
 };
 
 ///////////////////////////////////////////////
@@ -73,8 +75,7 @@ class Img {
 ///////////////////////////////////////////////
 
 template <typename Format>
-Img<Format>::Img(std::int32_t width, std::int32_t height)
-    : _format(width, height) {
+Img<Format>::Img(int32_t width, int32_t height) : _format(width, height) {
   _pixels.resize(width * height);
 
   _width = width;
@@ -82,7 +83,7 @@ Img<Format>::Img(std::int32_t width, std::int32_t height)
 }
 
 template <typename Format>
-void Img<Format>::reset(std::int32_t width, std::int32_t height) {
+void Img<Format>::reset(int32_t width, int32_t height) {
   _pixels.resize(width * height);
 
   _width = width;
@@ -130,12 +131,12 @@ typename Img<Format>::ConstIterator Img<Format>::cend() const noexcept {
 ///////////////////////////////////////
 
 template <typename Format>
-std::int32_t Img<Format>::width() const noexcept {
+int32_t Img<Format>::width() const noexcept {
   return _width;
 }
 
 template <typename Format>
-std::int32_t Img<Format>::height() const noexcept {
+int32_t Img<Format>::height() const noexcept {
   return _height;
 }
 
@@ -154,13 +155,13 @@ ImgPixel* Img<Format>::data() noexcept {
 /////////////////////////////////////////////
 
 template <typename Format>
-void Img<Format>::write(std::string const& filename) const {
+void Img<Format>::write(string const& filename) const {
   if (_pixels.empty()) {
-    std::cerr << "Img::write:: image is empty" << std::endl;
+    cerr << "Img::write:: image is empty\n";
     return;
   }
 
-  std::ofstream filestream(filename, std::ios::binary);
+  ofstream filestream(filename, ios::binary);
 
   _format.write(filestream, *this);
 }
@@ -169,7 +170,7 @@ template <typename Format>
 template <typename Functor>
 void Img<Format>::fill(Functor f) {
   if (_pixels.empty()) {
-    std::cerr << "Img::fill(Functor): image is empty" << std::endl;
+    cerr << "Img::fill(Functor): image is empty\n";
     return;
   }
 
@@ -179,22 +180,22 @@ void Img<Format>::fill(Functor f) {
 template <typename Format>
 void Img<Format>::fill(ImgPixel pixel) {
   if (_pixels.empty()) {
-    std::cerr << "Img::fill(ImgPixel): image is empty" << std::endl;
+    cerr << "Img::fill(ImgPixel): image is empty\n";
     return;
   }
 
-  std::fill(_pixels.begin(), _pixels.end(), pixel);
+  fill(_pixels.begin(), _pixels.end(), pixel);
 }
 
 template <typename Format>
 void Img<Format>::fill(ImgPixel pixel, int row, int col) {
   if (_pixels.empty()) {
-    std::cerr << "Img::fill(ImgPixel): image is empty" << std::endl;
+    cerr << "Img::fill(ImgPixel): image is empty\n";
     return;
   }
 
   if (row >= _height || row < 0 || col >= _width || col < 0) {
-    std::cerr << "Img::fill(ImgPixel, int, int): out of range" << std::endl;
+    cerr << "Img::fill(ImgPixel, int, int): out of range\n";
     return;
   }
 
