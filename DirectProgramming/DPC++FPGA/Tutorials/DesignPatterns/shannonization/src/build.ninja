@@ -1,0 +1,32 @@
+source_file = shannonization.cpp
+target_name = shannonization
+
+emulator_target = ${target_name}.fpga_emu.exe
+report_target = ${target_name}_report.a
+report_target_s10 = ${target_name}_s10_pac_report.a
+
+hardware_flags = -fintelfpga -Xshardware
+emulator_flags = -fintelfpga -DFPGA_EMULATOR
+
+rule build_fpga_emu
+  command = dpcpp /GX ${emulator_flags} -DA10 $in -o $out
+
+rule gen_report
+  command = dpcpp /GX ${hardware_flags} -DA10 -Xsboard=intel_a10gx_pac:pac_a10 -fsycl-link $in -o $out
+
+rule gen_report_s10_pac
+  command = dpcpp /GX ${hardware_flags} -DS10 -Xsboard=intel_s10sx_pac:pac_s10 -fsycl-link $in -o $out
+
+# FPGA emulator 
+build fpga_emu: phony ${emulator_target}
+build ${emulator_target}: build_fpga_emu ${source_file}
+
+# report
+# A10
+build report: phony ${report_target}
+build ${report_target}: gen_report ${source_file}
+
+# S10
+build report_s10_pac: phony ${report_target_s10}
+build ${report_target_s10}: gen_report_s10_pac ${source_file}
+

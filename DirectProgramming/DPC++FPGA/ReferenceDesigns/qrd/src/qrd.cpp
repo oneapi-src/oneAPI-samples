@@ -27,12 +27,22 @@
 // California and by the laws of the United States of America.
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
 #include <chrono>
 #include <cstring>
 #include <vector>
 
 #include "qrd.hpp"
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#include <CL/sycl.hpp>
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 
 using std::vector;
 using namespace sycl;
@@ -164,11 +174,11 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
 
                   // Delay data signals to create a vine-based data distribution
                   // to lower signal fanout.
-                  tmp[t].xx = intel::fpga_reg(tmp[t].xx);
-                  tmp[t].yy = intel::fpga_reg(tmp[t].yy);
+                  tmp[t].xx = INTEL::fpga_reg(tmp[t].xx);
+                  tmp[t].yy = INTEL::fpga_reg(tmp[t].yy);
                 });
 
-                jtmp = intel::fpga_reg(jtmp);
+                jtmp = INTEL::fpga_reg(jtmp);
               });
             }
 
@@ -189,13 +199,13 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
                   i_lt_0[kNumBanks];
 
               Unroller<0, kNumBanks>::Step([&](int k) {
-                i_gt_0[k] = intel::fpga_reg(i > 0);
-                i_lt_0[k] = intel::fpga_reg(i < 0);
-                j_eq_i[k] = intel::fpga_reg(j == i);
-                i_ge_0_j_eq_i[k] = intel::fpga_reg(i >= 0 && j >= i);
-                j_eq_i_plus_1[k] = intel::fpga_reg(j == i + 1);
-                sori[k].xx = intel::fpga_reg(s_or_i[j].xx);
-                sori[k].yy = intel::fpga_reg(s_or_i[j].yy);
+                i_gt_0[k] = INTEL::fpga_reg(i > 0);
+                i_lt_0[k] = INTEL::fpga_reg(i < 0);
+                j_eq_i[k] = INTEL::fpga_reg(j == i);
+                i_ge_0_j_eq_i[k] = INTEL::fpga_reg(i >= 0 && j >= i);
+                j_eq_i_plus_1[k] = INTEL::fpga_reg(j == i + 1);
+                sori[k].xx = INTEL::fpga_reg(s_or_i[j].xx);
+                sori[k].yy = INTEL::fpga_reg(s_or_i[j].yy);
               });
 
               Unroller<0, ROWS_COMPONENT>::Step([&](int k) {
@@ -274,7 +284,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
               bool get[kNumBanks];
               Unroller<0, kNumBanks>::Step([&](int k) {
                 get[k] = desired == k;
-                desired = intel::fpga_reg(desired);
+                desired = INTEL::fpga_reg(desired);
               });
 
               MyComplex tmp[kNumElementsPerBank];
@@ -283,11 +293,11 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
                   tmp[k].xx = get[t] ? ap_matrix[si / (kNumBanks)]
                                             .d[t * kNumElementsPerBank + k]
                                             .xx
-                                      : intel::fpga_reg(tmp[k].xx);
+                                      : INTEL::fpga_reg(tmp[k].xx);
                   tmp[k].yy = get[t] ? ap_matrix[si / (kNumBanks)]
                                             .d[t * kNumElementsPerBank + k]
                                             .yy
-                                      : intel::fpga_reg(tmp[k].yy);
+                                      : INTEL::fpga_reg(tmp[k].yy);
                 });
               });
 
