@@ -1,0 +1,21 @@
+{
+	"guid": "B213F6A5-E0C3-4267-8D0B-DDA5073A3F23",
+	"name": "Intel Model Zoo with TensorFlow",
+	"categories": ["Toolkit/Intel® AI Analytics Toolkit/TensorFlow"],
+	"description": "This code example shows you how to run FP32 and Int8 inference on Resnet50 with TensorFlow using Intel Model Zoo",
+	"builder": ["cli"],
+	"languages": [{
+		"python": {}
+	}],
+	"os": ["linux"],
+	"ciTests": {
+		"linux": [{
+			"id": "model_zoo_sample_test",
+			"steps": [
+				"source activate tensorflow",
+                                "pip install runipy",
+				"runipy ResNet50_Inference.ipynb"
+			]
+		}]
+	}
+}

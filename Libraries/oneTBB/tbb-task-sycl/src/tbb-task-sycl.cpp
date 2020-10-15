@@ -17,10 +17,6 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-constexpr cl::sycl::access::mode sycl_read = cl::sycl::access::mode::read;
-constexpr cl::sycl::access::mode sycl_write = cl::sycl::access::mode::write;
-constexpr cl::sycl::access::mode sycl_read_write = cl::sycl::access::mode::read_write;
-
 #define VERBOSE
 
 const float alpha = 0.5;  // coeff for triad calculation
@@ -44,18 +40,18 @@ class ExecuteOnGpu {
     {  // starting SYCL code
 
       const float coeff = alpha;  // coeff is a local varaible
-      cl::sycl::range<1> n_items{array_size};
-      cl::sycl::buffer<cl_float, 1> a_buffer(a_array.data(), n_items);
-      cl::sycl::buffer<cl_float, 1> b_buffer(b_array.data(), n_items);
-      cl::sycl::buffer<cl_float, 1> c_buffer(c_array.data(), n_items);
+      sycl::range<1> n_items{array_size};
+      sycl::buffer a_buffer(a_array);
+      sycl::buffer b_buffer(b_array);
+      sycl::buffer c_buffer(c_array);
 
-      cl::sycl::queue q(cl::sycl::default_selector{}, dpc_common::exception_handler);
-      q.submit([&](cl::sycl::handler& h) {
-            auto a_accessor = a_buffer.get_access<sycl_read>(h);
-            auto b_accessor = b_buffer.get_access<sycl_read>(h);
-            auto c_accessor = c_buffer.get_access<sycl_write>(h);
+      sycl::queue q(sycl::default_selector{}, dpc_common::exception_handler);
+      q.submit([&](sycl::handler& h) {            
+            sycl::accessor a_accessor(a_buffer, h, sycl::read_only);
+            sycl::accessor b_accessor(b_buffer, h, sycl::read_only);
+            sycl::accessor c_accessor(c_buffer, h, sycl::write_only);
 
-            h.parallel_for(n_items, [=](cl::sycl::id<1> index) {
+            h.parallel_for(n_items, [=](sycl::id<1> index) {
               c_accessor[index] = a_accessor[index] + b_accessor[index] * coeff;
             });  // end of the kernel -- parallel for
           })

@@ -86,10 +86,6 @@ void GSimulation::InitMass() {
 void GSimulation::Start() {
   RealType dt = get_tstep();
   int n = get_npart();
-  // RealType* energy = new RealType[n];
-  std::vector<RealType> energy(n, 0.f);
-  // allocate particles
-  // particles_ = new Particle[n];
   particles_.resize(n);
 
   InitPos();
@@ -107,15 +103,21 @@ void GSimulation::Start() {
   double gflops = 1e-9 * ((11. + 18.) * n * n + n * 19.);
   int nf = 0;
   double av = 0.0, dev = 0.0;
+  // Create global range
   auto r = range<1>(n);
+  // Create local range
+  auto lr = range<1>(128);
+  // Create ndrange 
+  auto ndrange = nd_range<1>(r, lr);
   // Create a queue to the selected device and enabled asynchronous exception
   // handling for that queue
   queue q(default_selector{}, dpc_common::exception_handler);
   // Create SYCL buffer for the Particle array of size "n"
   buffer pbuf(particles_.data(), r,
               {cl::sycl::property::buffer::use_host_ptr()});
-  // Create SYCL buffer for the ener array
-  buffer ebuf(energy.data(), r, {cl::sycl::property::buffer::use_host_ptr()});
+  // Allocate energy using USM allocator shared
+  RealType *energy = malloc_shared<RealType>(1,q);
+  *energy = 0.f;
 
   dpc_common::TimeInterval t0;
   int nsteps = get_nsteps();
@@ -125,8 +127,9 @@ void GSimulation::Start() {
     // Submitting first kernel to device which computes acceleration of all
     // particles
     q.submit([&](handler& h) {
-       auto p = pbuf.get_access<access::mode::read_write>(h);
-       h.parallel_for(r, [=](id<1> i) {
+       auto p = pbuf.get_access(h);
+       h.parallel_for(ndrange, [=](nd_item<1> it) {
+	 auto i = it.get_global_id();
          RealType acc0 = p[i].acc[0];
          RealType acc1 = p[i].acc[1];
          RealType acc2 = p[i].acc[2];
@@ -157,9 +160,13 @@ void GSimulation::Start() {
      }).wait_and_throw();
     // Second kernel updates the velocity and position for all particles
     q.submit([&](handler& h) {
-       auto p = pbuf.get_access<access::mode::read_write>(h);
-       auto e = ebuf.get_access<access::mode::read_write>(h);
-       h.parallel_for(r, [=](id<1> i) {
+       auto p = pbuf.get_access(h);
+       #if(__SYCL_COMPILER_VERSION <= 20200827)
+       h.parallel_for(ndrange, intel::reduction(energy, 0.f, std::plus<RealType>()), [=](nd_item<1> it, auto& energy) {
+       #else
+       h.parallel_for(ndrange, ONEAPI::reduction(energy, 0.f, std::plus<RealType>()), [=](nd_item<1> it, auto& energy) {
+       #endif
+	 auto i = it.get_global_id();
          p[i].vel[0] += p[i].acc[0] * dt;  // 2flops
          p[i].vel[1] += p[i].acc[1] * dt;  // 2flops
          p[i].vel[2] += p[i].acc[2] * dt;  // 2flops
@@ -172,23 +179,13 @@ void GSimulation::Start() {
          p[i].acc[1] = 0.f;
          p[i].acc[2] = 0.f;
 
-         e[i] = p[i].mass *
+         energy += (p[i].mass *
                 (p[i].vel[0] * p[i].vel[0] + p[i].vel[1] * p[i].vel[1] +
-                 p[i].vel[2] * p[i].vel[2]);  // 7flops
+                 p[i].vel[2] * p[i].vel[2]));  // 7flops
        });
      }).wait_and_throw();
-    /* Third kernel accumulates the energy of this Nbody system
-     * Reduction operation can be done using reducer interface in SYCL 2020
-     */
-    q.submit([&](handler& h) {
-       auto e = ebuf.get_access<access::mode::read_write>(h);
-       h.single_task([=]() {
-         for (int i = 1; i < n; i++) e[0] += e[i];
-       });
-     }).wait_and_throw();
-    auto a = ebuf.get_access<access::mode::read_write>();
-    kenergy_ = 0.5 * a[0];
-    a[0] = 0;
+    kenergy_ = 0.5 * (*energy);
+    *energy = 0.f;
     double elapsed_seconds = ts0.Elapsed();
     if ((s % get_sfreq()) == 0) {
       nf += 1;
