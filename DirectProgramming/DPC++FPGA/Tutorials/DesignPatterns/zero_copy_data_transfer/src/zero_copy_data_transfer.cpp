@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 
   // Allow the size to be changed by a command line argument
   if (argc > 1) {
-    size = std::stoi(std::string(argv[1]));
+    size = atoi(argv[1]);
   }
 
   // check the size
@@ -148,11 +148,11 @@ int main(int argc, char* argv[]) {
     // so we ignore its results.
     double buffer_avg_lat = std::accumulate(buffer_kernel_latency.begin() + 1,
                                             buffer_kernel_latency.end(), 0.0) /
-                            (double)(iterations - 1);
+                                        (iterations - 1);
     double restricted_usm_avg_lat =
         std::accumulate(restricted_usm_latency.begin() + 1,
                         restricted_usm_latency.end(), 0.0) /
-        (double)(iterations - 1);
+                    (iterations - 1);
 
     std::cout << "Average latency for the buffer kernel: " << buffer_avg_lat
               << " ms\n";

@@ -67,7 +67,7 @@ event SubmitProducer(queue& q, T* in_data, size_t size) {
       host_ptr<T> h_in_data(in_data);
 
       for (size_t i = 0; i < size; i++) {
-        const T data_from_host_memory = *(h_in_data + i);
+        T data_from_host_memory = *(h_in_data + i);
         ProducePipe<T>::write(data_from_host_memory);
       }
     });
@@ -87,8 +87,8 @@ event SubmitWorker(queue& q, size_t size) {
   auto e = q.submit([&](handler& h) {
     h.single_task<RestrictedUSM>([=]() [[intel::kernel_args_restrict]] {
       for (size_t i = 0; i < size; i++) {
-        const T data = ProducePipe<T>::read();
-        const T value = data * i; // perform computation
+        T data = ProducePipe<T>::read();
+        T value = data * i; // perform computation
         ConsumePipe<T>::write(value);
       }
     });
@@ -110,7 +110,7 @@ event SubmitConsumer(queue& q, T* out_data, size_t size) {
 
     h.single_task<Consumer>([=]() [[intel::kernel_args_restrict]] {
       for (size_t i = 0; i < size; i++) {
-        const T data_to_host_memory = ConsumePipe<T>::read();
+        T data_to_host_memory = ConsumePipe<T>::read();
         *(h_out_data + i) = data_to_host_memory;
       }
     });
