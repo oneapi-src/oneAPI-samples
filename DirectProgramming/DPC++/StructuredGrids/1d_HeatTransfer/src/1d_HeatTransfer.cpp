@@ -47,11 +47,11 @@ using namespace std;
 constexpr float dt = 0.002f;
 constexpr float dx = 0.01f;
 constexpr float k = 0.025f;
-constexpr float temp = 100.0f;  // Initial temperature.
+constexpr float initial_temperature = 100.0f;  // Initial temperature.
 
-//************************************
-// Function description: display input parameters used for this sample.
-//************************************
+//
+// Display input parameters used for this sample.
+//
 void Usage(string programName) {
   cout << " Incorrect parameters \n";
   cout << " Usage: ";
@@ -60,144 +60,28 @@ void Usage(string programName) {
   cout << " i : Number of timesteps \n";
 }
 
-//************************************
-// Function description: initialize the array.
-//************************************
-void Initialize(float* array, unsigned int num, unsigned int idx) {
-  for (unsigned int i = idx; i < num; i++) array[i] = 0.0f;
+//
+// Initialize the temperature arrays
+//
+void Initialize(float* arr, float* arr_next, unsigned int num) {
+  for (unsigned int i = 1; i < num; i++)
+    arr[i] = arr_next[i] = 0.0f;
+  arr[0] = arr_next[0] = initial_temperature;
 }
 
-//************************************
-// Function description: compute the heat in the device (in parallel).
-//************************************
-float* ComputeHeatDeviceParallel(float* arr, float* arr_next, float C,
-                                 unsigned int num_p, unsigned int num_iter,
-                                 float temp) {
-  unsigned int i;
-
-  try {
-    // Define the device queue
-    queue q = default_selector{};
-    cout << "Kernel runs on " << q.get_device().get_info<info::device::name>()
-         << "\n";
-
-    // Set boundary condition at one end.
-    arr[0] = arr_next[0] = temp;
-
-    float* current_data_ptr = arr;
-    float* next_data_ptr = arr_next;
-
-    // Buffer scope
-    {
-      buffer temperature_buf(current_data_ptr, range(num_p + 2));
-      buffer temperature_next_buf(next_data_ptr, range(num_p + 2));
-
-      // Iterate over timesteps
-      for (i = 1; i <= num_iter; i++) {
-        if (i % 2 != 0) {
-          q.submit([&](auto& h) {
-            // The size of memory amount that will be given to the buffer.
-            range<1> num_items{num_p + 2};
-
-            accessor temperature(temperature_buf, h);
-            accessor temperature_next(temperature_next_buf, h);
-
-            h.parallel_for(num_items, [=](id<1> k) {
-              size_t gid = k.get(0);
-
-              if (gid == 0) {
-              } else if (gid == num_p + 1) {
-                temperature_next[k] = temperature[k - 1];
-              } else {
-                temperature_next[k] =
-                    C * (temperature[k + 1] - 2 * temperature[k] + temperature[k - 1]) +
-                    temperature[k];
-              }
-            });  // end parallel for loop in kernel1
-          });    // end device queue
-
-        } else {
-          q.submit([&](handler& h) {
-            // The size of memory amount that will be given to the buffer.
-            range<1> num_items{num_p + 2};
-
-            accessor temperature(temperature_buf, h);
-            accessor temperature_next(temperature_next_buf, h);
-
-            h.parallel_for(num_items, [=](id<1> k) {
-              size_t gid = k.get(0);
-
-              if (gid == 0) {
-              } else if (gid == num_p + 1) {
-                temperature[k] = temperature_next[k - 1];
-              } else {
-                temperature[k] = C * (temperature_next[k + 1] - 2 * temperature_next[k] +
-                                  temperature_next[k - 1]) +
-                             temperature_next[k];
-              }
-            });  // end parallel for loop in kernel2
-          });    // end device queue
-        }        // end if %2
-      }          // end iteration
-    }            // end buffer scope
-
-    q.wait_and_throw();
-
-  } catch (sycl::exception e) {
-    cout << "SYCL exception caught: " << e.what() << "\n";
-  }
-
-  if (i % 2 != 0)
-    return arr;
-  else
-    return arr_next;
-}
-
-//************************************
-// Function description: compute the heat in the host (in serial).
-//************************************
-float* ComputeHeatHostSerial(float* arr, float* arr_next, float C,
-                             unsigned int num_p, unsigned int num_iter,
-                             float temp) {
-  unsigned int i, k;
-  float* swap;
-
-  // Set initial condition
-  Initialize(arr, num_p + 2, 0);
-  Initialize(arr_next, num_p + 2, 0);
-
-  // Set boundary condition at one end.
-  arr[0] = arr_next[0] = temp;
-
-  // Iterate over timesteps
-  for (i = 1; i <= num_iter; i++) {
-    for (k = 1; k <= num_p; k++)
-      arr_next[k] = C * (arr[k + 1] - 2 * arr[k] + arr[k - 1]) + arr[k];
-
-    arr_next[num_p + 1] = arr[num_p];
-
-    // Swap the buffers at every iteration.
-    swap = arr;
-    arr = arr_next;
-    arr_next = swap;
-  }
-
-  return arr;
-}
-
-//************************************
-// Function description: calculate the results computed by the host and by the
-// device.
-//************************************
-bool CompareResults(float* device_results, float* host_results,
+//
+// Compare host and device results
+//
+bool CompareResults(string prefix, float* device_results, float* host_results,
                     unsigned int num_point, float C) {
+  string path = prefix + "_error_diff.txt";
   float delta = 0.001f;
   float difference = 0.00f;
   double norm2 = 0;
   bool err = false;
 
   ofstream err_file;
-  err_file.open("error_diff.txt");
+  err_file.open(path);
 
   err_file << " \t idx\theat[i]\t\theat_CPU[i] \n";
 
@@ -214,13 +98,165 @@ bool CompareResults(float* device_results, float* host_results,
     }
   }
 
+  if (err == true)
+    cout << "  FAIL! Please check " << path << "\n";
+  else
+    cout << "  PASSED!\n";
   return err;
 }
 
+//
+// Compute heat on the device
+//
+void ComputeHeatDevice(float C, unsigned int num_p, unsigned int num_iter,
+		       float* arr_CPU) {
+  // Define the device queue
+  queue q;
+  cout << "Device\n";
+  cout << "  Kernel runs on " << q.get_device().get_info<info::device::name>() << "\n";
+
+  // Temperatures of the current and next iteration
+  float* arr_host = new float[num_p + 2];
+  float* arr_host_next = new float[num_p + 2];
+
+  Initialize(arr_host, arr_host_next, num_p + 2);
+
+  buffer arr_buf(arr_host, range(num_p + 2));
+  buffer arr_buf_next(arr_host_next, range(num_p + 2));
+
+  // Start timer
+  dpc_common::TimeInterval t_par;
+
+  // Iterate over timesteps
+  for (int i = 0; i < num_iter; i++) {
+    auto handler =
+      [&](auto& h) {
+	// Swap buffers on each step
+	bool even = ((i % 2) == 0);
+	accessor arr(even ? arr_buf : arr_buf_next, h);
+	accessor arr_next(even ? arr_buf_next : arr_buf, h);
+
+	auto step =
+	  [=](id<1> idx) {
+	    int k = idx + 1;
+
+	    if (k == num_p + 1) {
+	      arr_next[k] = arr[k - 1];
+	    } else {
+	      arr_next[k] =
+		C * (arr[k + 1] - 2 * arr[k] + arr[k - 1]) + arr[k];
+	    }
+	  };
+
+	h.parallel_for(range{num_p + 1}, step);
+      };
+    q.submit(handler);
+  }
+
+  // Wait for tasks to complete and then force writeback to host
+  q.wait();
+  float* result;
+  if ((num_iter % 2) == 0) {
+    arr_buf.set_write_back(true);
+    result = arr_host;
+  } else {
+    arr_buf_next.set_write_back(true);
+    result = arr_host_next;
+  }
+
+  // Display time used to process all time steps
+  cout << "  Elapsed time: " << t_par.Elapsed() << " sec\n";
+
+  CompareResults("parallel", result, arr_CPU, num_p, C);
+
+  delete [] arr_host;
+  delete [] arr_host_next;
+}
+
+//
+// Compute heat on the device using USM
+//
+void ComputeHeatDeviceUSM(float C, unsigned int num_p, unsigned int num_iter,
+			  float* arr_CPU) {
+  // Timesteps depend on each other, so make the queue inorder
+  sycl::property_list properties{sycl::property::queue::in_order()};
+  queue q(properties);
+  cout << "Device with USM\n";
+  cout << "  Kernel runs on " << q.get_device().get_info<info::device::name>() << "\n";
+
+  // Temperatures of the current and next iteration
+  float* arr = malloc_shared<float>(num_p + 2, q);
+  float* arr_next = malloc_shared<float>(num_p + 2, q);
+
+  Initialize(arr, arr_next, num_p + 2);
+
+  // Start timer
+  dpc_common::TimeInterval time;
+
+  // for each timesteps
+  for (int i = 0; i < num_iter; i++) {
+    auto step =
+      [=](id<1> idx) {
+	int k = idx + 1;
+	if (k == num_p + 1)
+	  arr_next[k] = arr[k - 1];
+	else
+	  arr_next[k] =
+	    C * (arr[k + 1] - 2 * arr[k] + arr[k - 1]) + arr[k];
+      };
+
+    q.parallel_for(range{num_p+1}, step);
+
+    // Swap arrays for next step
+    float* swap = arr;
+    arr = arr_next;
+    arr_next = swap;
+  }
+
+  // Wait for all the timesteps to complete
+  q.wait_and_throw();
+  
+  // Display time used to process all time steps
+  cout << "  Elapsed time: " << time.Elapsed() << " sec\n";
+
+  CompareResults("parallel_usm", arr, arr_CPU, num_p, C);
+
+  sycl::free(arr, q);
+  sycl::free(arr_next, q);
+}
+
+
+//
+// Compute heat serially on the host
+//
+float* ComputeHeatHostSerial(float* arr, float* arr_next, float C,
+                             unsigned int num_p, unsigned int num_iter) {
+  unsigned int i, k;
+
+  // Set initial condition
+  Initialize(arr, arr_next, num_p + 2);
+
+  // Iterate over timesteps
+  for (i = 0; i < num_iter; i++) {
+    for (k = 1; k <= num_p; k++)
+      arr_next[k] =
+	C * (arr[k + 1] - 2 * arr[k] + arr[k - 1]) + arr[k];
+
+    arr_next[num_p + 1] = arr[num_p];
+
+    // Swap the buffers at every iteration.
+    float* swap = arr;
+    arr = arr_next;
+    arr_next = swap;
+  }
+
+  return arr;
+}
+
+
 int main(int argc, char* argv[]) {
-  unsigned int n_point;  // The number of point in 1D space
-  unsigned int
-      n_iteration;  // The number of iteration to simulate the heat propagation
+  unsigned int n_point;      // The number of point in 1D space
+  unsigned int n_iteration;  // The number of iteration to simulate the heat propagation
 
   // Read input parameters
   try {
@@ -235,51 +271,24 @@ int main(int argc, char* argv[]) {
   cout << "Number of points: " << n_point << "\n";
   cout << "Number of iterations: " << n_iteration << "\n";
 
-  // Array heat and heat_next arrays store temperatures of the current and next
-  // iteration of n_point (calculated in kernel)
-  float* heat = new float[n_point + 2];
-  float* heat_next = new float[n_point + 2];
-
-  // heat_CPU and heat_next_CPU store temperatures of the current and next
-  // iteration of n_point (calculated in CPU or comparison)
-  float* heat_CPU = new float[n_point + 2];
-  float* heat_CPU_next = new float[n_point + 2];
-
   // Constant used in the simulation
   float C = (k * dt) / (dx * dx);
 
-  // Heat initial condition at t = 0
-  Initialize(heat, n_point + 2, 0);
-  Initialize(heat_next, n_point + 2, 0);
+  // Temperatures of the current and next iteration
+  float* heat_CPU = new float[n_point + 2];
+  float* heat_CPU_next = new float[n_point + 2];
 
-  // Start timer
-  dpc_common::TimeInterval t_par;
+  // Compute heat serially on CPU for comparision
+  float* final_CPU = 
+    final_CPU = ComputeHeatHostSerial(heat_CPU, heat_CPU_next, C, n_point, n_iteration);
 
-  float* final_device =
-      ComputeHeatDeviceParallel(heat, heat_next, C, n_point, n_iteration, temp);
+  try {
+    ComputeHeatDevice(C, n_point, n_iteration, final_CPU);
+    ComputeHeatDeviceUSM(C, n_point, n_iteration, final_CPU);
+  } catch (sycl::exception e) {
+    cout << "SYCL exception caught: " << e.what() << "\n";
+  }
 
-  // Display time used by device
-  cout << "Elapsed time: " << t_par.Elapsed() << " sec\n";
-
-  // Compute heat in CPU in (for comparision)
-  float* final_CPU = NULL;
-
-  final_CPU = ComputeHeatHostSerial(heat_CPU, heat_CPU_next, C, n_point,
-                                    n_iteration, temp);
-
-  // Compare the results computed in device (in parallel) and in host (in
-  // serial)
-  bool err = CompareResults(final_device, final_CPU, n_point, C);
-
-  if (err == true)
-    cout << "Please check the error_diff.txt file ...\n";
-  else
-    cout << "PASSED! There is no difference between the results computed "
-            "in host and in kernel.\n";
-
-  // Cleanup
-  delete[] heat;
-  delete[] heat_next;
   delete[] heat_CPU;
   delete[] heat_CPU_next;
 
