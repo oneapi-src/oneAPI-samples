@@ -45,13 +45,13 @@ using std::size_t;
 
 
 #if (defined (ACC_ep))
-uint64_t vml_accuracy = mkl::vm::mode::ep;
+auto vml_accuracy = mkl::vm::mode::ep;
 #elif (defined (ACC_la))
-uint64_t vml_accuracy = mkl::vm::mode::la;
+auto vml_accuracy = mkl::vm::mode::la;
 #elif(defined (ACC_ha))
-uint64_t vml_accuracy = mkl::vm::mode::ha;
+auto vml_accuracy = mkl::vm::mode::ha;
 #else
-uint64_t vml_accuracy = mkl::vm::mode::not_defined;
+auto vml_accuracy = mkl::vm::mode::not_defined;
 #endif
 
 enum class dev_select : int {
