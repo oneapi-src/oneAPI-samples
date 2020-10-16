@@ -22,12 +22,12 @@ and search based on relevant terms noted in the comments.
 1D-Heat-Transfer is a DPC++ application that simulates the heat propagation on a one-dimensional 
 isotropic and homogeneous medium. The following equation is used in the simulation of heat propagation:
 
-dU/dt = k * d2U/dx2
+dU/dt = k * d<sup>2</sup>U/dx<sup>2</sup>
 
 Where:
 dU/dt is the rate of change of temperature at a point.
 k is the thermal difusivity.
-d2U/dx2 is the second spatial derivative.
+d<sup>2</sup>U/dx<sup>2</sup> is the second spatial derivative.
 
 Or
 
@@ -62,36 +62,38 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 
 ### On a Linux* System  
   1. Build the program using the following `cmake` commands. 
-    ```
-    $ cd 1d_HeatTransfer
-    $ mkdir build
-    $ cd build
-    $ cmake ..
-    $ make -j
-   ```
+  
+  ```
+  $ cd 1d_HeatTransfer
+  $ mkdir build
+  $ cd build
+  $ cmake ..
+  $ make -j
+  ```
 
   2. Run the program
-    
-    ```
-    make run  
-    ```
-   
+  
+  ```
+  make run  
+  ```
+  
   3. Clean the program  
-    
-    ```
-    make clean
-    ```
-
+  
+  ```
+  make clean
+  ```
+  
 ### On a Windows* System
-    * Build the program using VS2017 or VS2019
-      Right click on the solution file and open using either VS2017 or VS2019 IDE.
-      Right click on the project in Solution explorer and select Rebuild.
-      From top menu select Debug -> Start without Debugging.
 
-    * Build the program using MSBuild
-      Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for
+* Build the program using VS2017 or VS2019
+  Right click on the solution file and open using either VS2017 or VS2019 IDE.
+  Right click on the project in Solution explorer and select Rebuild.
+  From top menu select Debug -> Start without Debugging.
+
+* Build the program using MSBuild
+  Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for
  VS2019"
-      Run - MSBuild 1d_HeatTransfer.sln /t:Rebuild /p:Configuration="Release"
+  Run - MSBuild 1d_HeatTransfer.sln /t:Rebuild /p:Configuration="Release"
 
 
 ## Running the sample

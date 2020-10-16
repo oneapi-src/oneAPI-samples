@@ -10,11 +10,13 @@
 #include <cmath>
 #include <cstdint>
 
+using namespace std;
+
 // struct to store fractal that image will fill from
 class ImgFractal {
  private:
-  const std::int32_t _width;
-  const std::int32_t _height;
+  const int32_t _width;
+  const int32_t _height;
 
   double _cx = -0.7436;
   double _cy = 0.1319;
@@ -23,10 +25,9 @@ class ImgFractal {
   int _maxIterations = 1000;
 
  public:
-  ImgFractal(std::int32_t width, std::int32_t height)
-      : _width(width), _height(height) {}
+  ImgFractal(int32_t width, int32_t height) : _width(width), _height(height) {}
 
-  double operator()(std::int32_t x, std::int32_t y) const {
+  double operator()(int32_t x, int32_t y) const {
     double fx = (double(x) - double(_width) / 2) * (1 / _magn) + _cx;
     double fy = (double(y) - double(_height) / 2) * (1 / _magn) + _cy;
 
@@ -40,7 +41,7 @@ class ImgFractal {
       ny = 2 * nx * ny + fy;
       nx = val;
 
-      res += std::exp(-std::sqrt(nx * nx + ny * ny));
+      res += exp(-sqrt(nx * nx + ny * ny));
     }
 
     return res;

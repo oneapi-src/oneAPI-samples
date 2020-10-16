@@ -15,7 +15,7 @@
 // •	A one dimensional array of data.
 // •	A device queue, buffer, accessor, and kernel.
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -23,7 +23,7 @@
 #include <array>
 #include <iostream>
 #if FPGA || FPGA_EMULATOR
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #endif
 
 using namespace sycl;
@@ -32,19 +32,19 @@ using namespace sycl;
 constexpr size_t array_size = 10000;
 typedef std::array<int, array_size> IntArray;
 
-// this exception handler with catch async exceptions
-static auto exception_handler = [](cl::sycl::exception_list eList) {
-	for (std::exception_ptr const &e : eList) {
-		try {
-			std::rethrow_exception(e);
-		}
-		catch (std::exception const &e) {
+// Create an exception handler for asynchronous SYCL exceptions
+static auto exception_handler = [](sycl::exception_list e_list) {
+  for (std::exception_ptr const &e : e_list) {
+    try {
+      std::rethrow_exception(e);
+    }
+    catch (std::exception const &e) {
 #if _DEBUG
-			std::cout << "Failure" << std::endl;
+      std::cout << "Failure" << std::endl;
 #endif
-			std::terminate();
-		}
-	}
+      std::terminate();
+    }
+  }
 };
 
 //************************************
@@ -67,11 +67,11 @@ void VectorAdd(queue &q, const IntArray &a_array, const IntArray &b_array,
   q.submit([&](handler &h) {
     // Create an accessor for each buffer with access permission: read, write or
     // read/write. The accessor is a mean to access the memory in the buffer.
-    auto a = a_buf.get_access<access::mode::read>(h);
-    auto b = b_buf.get_access<access::mode::read>(h);
+    accessor a(a_buf, h, read_only);
+    accessor b(b_buf, h, read_only);
 
     // The sum_accessor is used to store (with write permission) the sum data.
-    auto sum = sum_buf.get_access<access::mode::write>(h);
+    accessor sum(sum_buf, h, write_only);
 
     // Use parallel_for to run vector addition in parallel on device. This
     // executes the kernel.
@@ -79,7 +79,7 @@ void VectorAdd(queue &q, const IntArray &a_array, const IntArray &b_array,
     //    2nd parameter is the kernel, a lambda that specifies what to do per
     //    work item. The parameter of the lambda is the work item id.
     // DPC++ supports unnamed lambda kernel by default.
-    h.parallel_for(num_items, [=](id<1> i) { sum[i] = a[i] + b[i]; });
+    h.parallel_for(num_items, [=](auto i) { sum[i] = a[i] + b[i]; });
   });
 }
 
@@ -97,10 +97,10 @@ int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // DPC++ extension: FPGA emulator selector on systems without FPGA card.
-  intel::fpga_emulator_selector d_selector;
+  INTEL::fpga_emulator_selector d_selector;
 #elif FPGA
   // DPC++ extension: FPGA selector on systems with FPGA card.
-  intel::fpga_selector d_selector;
+  INTEL::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
   default_selector d_selector;

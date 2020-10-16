@@ -9,7 +9,7 @@ set(REPORTS_TARGET ${TARGET_NAME}_report)
 
 # Intel supported FPGA Boards and their names
 set(A10_PAC_BOARD_NAME "intel_a10gx_pac:pac_a10")
-set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10")
+set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10_usm")
 
 # Design specific constant values
 
@@ -44,7 +44,7 @@ set(HARDWARE_COMPILE_FLAGS -MMD -fsycl-link-targets=spir64_fpga-unknown-unknown-
 
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 separate_arguments(USER_HARDWARE_FLAGS)
-set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=7 ${NUM_REORDER} -Xsboard=${_FPGA_BOARD}  ${USER_HARDWARE_FLAGS} -DNUM_ENGINES=${NUM_ENGINES})
+set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=12 ${NUM_REORDER} -Xsboard=${_FPGA_BOARD} ${USER_HARDWARE_FLAGS} -DNUM_ENGINES=${NUM_ENGINES})
 set(FINAL_LINK_FLAGS -fintelfpga -DNUM_ENGINES=${NUM_ENGINES})
 
 set(EMULATOR_COMPILE_FLAGS "-v -v -v -g0 -fintelfpga -DFPGA_EMULATOR -DNUM_ENGINES=${NUM_ENGINES}")

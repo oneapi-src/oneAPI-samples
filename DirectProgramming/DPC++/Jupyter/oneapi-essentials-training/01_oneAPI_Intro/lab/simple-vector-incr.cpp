@@ -22,27 +22,28 @@ void work(queue &q) {
   // is allocated. The associated with vector1_accessor set to read/write gets
   // the contents of the buffer.
   int vector1[N] = {10, 10};
+  auto R = range(N);
+  
   std::cout << "Input  : " << vector1[0] << ", " << vector1[1] << std::endl;
 
   // ### Step 2 - Add another input vector - vector2
   // Uncomment the following line to add input vector2
-  //int vector2[N] = {20,20};
+  //int vector2[N] = {20, 20};
 
   // ### Step 3 - Print out for vector2
   // Uncomment the following line
   //std::cout << "Input  : " << vector2[0] << ", " << vector2[1] << std::endl;
-  buffer<int, 1> vector1_buffer(vector1, range<1>(N));
+  buffer vector1_buffer(vector1,R);
 
   // ### Step 4 - Add another Sycl buffer - vector2_buffer
   // Uncomment the following line
-  //buffer<int, 1> vector2_buffer(vector2, range<1>(N));
+  //buffer vector2_buffer(vector2,R);
   q.submit([&](handler &h) {
-    auto vector1_accessor =
-        vector1_buffer.get_access<access::mode::read_write>(h);
+    accessor vector1_accessor (vector1_buffer,h);
 
     // Step 5 - add an accessor for vector2_buffer
-    // Look in the source code for the comment
-    //auto vector2_accessor = vector2_buffer.get_access <access::mode::read >(h);
+    // Uncomment the following line to add an accessor for vector 2
+    //accessor vector2_accessor (vector2_buffer,h,read_only);
 
     h.parallel_for<class test>(range<1>(N), [=](id<1> index) {
       // ### Step 6 - Replace the existing vector1_accessor to accumulate
@@ -55,7 +56,7 @@ void work(queue &q) {
     });
   });
   q.wait();
-  vector1_buffer.get_access<access::mode::read>();
+  host_accessor h_a(vector1_buffer,read_only);
   std::cout << "Output : " << vector1[0] << ", " << vector1[1] << std::endl;
 }
 

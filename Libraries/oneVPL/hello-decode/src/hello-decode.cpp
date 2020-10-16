@@ -5,36 +5,44 @@
 //==============================================================================
 
 ///
-/// A minimal oneAPI Video Processing Library (oneVPL) decode application.
+/// A minimal oneAPI Video Processing Library (oneVPL) decode application,
+/// using oneVPL internal memory management
 ///
 /// @file
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <vector>
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "vpl/mfxdispatcher.h"
 #include "vpl/mfxvideo.h"
 
-#define MAX_PATH    260
-#define OUTPUT_FILE "out.i420"
+#define MAX_PATH              260
+#define OUTPUT_FILE           "out.i420"
+#define WAIT_100_MILLSECONDS  100
+#define BITSTREAM_BUFFER_SIZE 2000000
 
-mfxStatus ReadEncodedStream(mfxBitstream &bs, mfxU32 codecid, FILE *f);
+#define VERIFY(x, y)       \
+    if (!(x)) {            \
+        printf("%s\n", y); \
+        goto end;          \
+    }
+
+#define ALIGN16(value) (((value + 15) >> 4) << 4)
+
+mfxStatus ReadEncodedStream(mfxBitstream &bs, FILE *f);
 void WriteRawFrame(mfxFrameSurface1 *surface, FILE *f);
-mfxU32 GetSurfaceSize(mfxU32 fourcc, mfxU32 width, mfxU32 height);
-int GetFreeSurfaceIndex(mfxFrameSurface1 *surface_pool, mfxU16 pool_size);
 char *ValidateFileName(char *in);
 
-// Print usage message
 void Usage(void) {
-    printf("Usage: hello-decode SOURCE\n\n"
-           "Decode H265/HEVC video in SOURCE "
-           "to I420 raw video in %s\n\n"
-           "To view:\n"
-           " ffplay -video_size [width]x[height] "
-           "-pixel_format yuv420p -f rawvideo %s\n",
-           OUTPUT_FILE,
-           OUTPUT_FILE);
+    printf("\n");
+    printf("   Usage  :  hello-decode InputBitstream\n\n");
+    printf("             InputBitstream   ... input file name (HEVC/H265 elementary stream)\n\n");
+    printf("   Example:  hello-decode in.h265\n");
+    printf(
+        "   To view:  ffplay -f rawvideo -pixel_format yuv420p -video_size [width]x[height] %s\n\n",
+        OUTPUT_FILE);
+    printf(" * Decode HEVC/H265 elementary stream to I420 raw frames in %s\n\n", OUTPUT_FILE);
+    return;
 }
 
 int main(int argc, char *argv[]) {
@@ -43,229 +51,162 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    char *in_filename = NULL;
+    char *in_filename                 = NULL;
+    FILE *source                      = NULL;
+    FILE *sink                        = NULL;
+    mfxStatus sts                     = MFX_ERR_NONE;
+    mfxLoader loader                  = NULL;
+    mfxConfig cfg                     = NULL;
+    mfxVariant impl_value             = { 0 };
+    mfxSession session                = NULL;
+    mfxBitstream bitstream            = { 0 };
+    mfxFrameSurface1 *dec_surface_out = NULL;
+    mfxSyncPoint syncp                = { 0 };
+    mfxU32 framenum                   = 0;
+    bool is_draining                  = false;
+    bool is_stillgoing                = true;
 
+    // Setup input and output files
     in_filename = ValidateFileName(argv[1]);
-    if (!in_filename) {
-        printf("Input filename is not valid\n");
-        Usage();
-        return 1;
-    }
+    VERIFY(in_filename, "Input filename is not valid");
 
-    FILE *source = fopen(in_filename, "rb");
+    source = fopen(in_filename, "rb");
+    VERIFY(source, "Could not open input file");
 
-    if (!source) {
-        printf("could not open input file, %s\n", in_filename);
-        return 1;
-    }
-    FILE *sink = fopen(OUTPUT_FILE, "wb");
-    if (!sink) {
-        fclose(source);
-        printf("could not create output file, \"%s\"\n", OUTPUT_FILE);
-        return 1;
-    }
+    sink = fopen(OUTPUT_FILE, "wb");
+    VERIFY(sink, "Could not create output file");
 
-    // initialize  session
-    mfxInitParam init_params   = { 0 };
-    init_params.Version.Major  = 2;
-    init_params.Version.Minor  = 0;
-    init_params.Implementation = MFX_IMPL_SOFTWARE;
+    // Initialize VPL session for any implementation of HEVC/H265 decode
+    loader = MFXLoad();
+    VERIFY(NULL != loader, "MFXLoad failed");
 
-    mfxSession session;
-    mfxStatus sts = MFXInitEx(init_params, &session);
-    if (sts != MFX_ERR_NONE) {
-        fclose(source);
-        fclose(sink);
-        puts("MFXInitEx error.  Could not initialize session");
-        return 1;
-    }
+    cfg = MFXCreateConfig(loader);
+    VERIFY(NULL != cfg, "MFXCreateConfig failed")
 
-    // prepare input bitstream
-    mfxBitstream bitstream = { 0 };
-    bitstream.MaxLength    = 2000000;
-    std::vector<mfxU8> input_buffer;
-    input_buffer.resize(bitstream.MaxLength);
-    bitstream.Data = input_buffer.data();
+    impl_value.Type     = MFX_VARIANT_TYPE_U32;
+    impl_value.Data.U32 = MFX_CODEC_HEVC;
+    sts                 = MFXSetConfigFilterProperty(
+        cfg,
+        (mfxU8 *)"mfxImplDescription.mfxDecoderDescription.decoder.CodecID",
+        impl_value);
+    VERIFY(MFX_ERR_NONE == sts, "MFXSetConfigFilterProperty failed");
 
-    mfxU32 codec_id = MFX_CODEC_HEVC;
-    ReadEncodedStream(bitstream, codec_id, source);
+    sts = MFXCreateSession(loader, 0, &session);
+    VERIFY(MFX_ERR_NONE == sts, "Not able to create VPL session supporting HEVC/H265 decode");
 
-    // initialize decode parameters from stream header
-    mfxVideoParam decode_params;
-    memset(&decode_params, 0, sizeof(decode_params));
-    decode_params.mfx.CodecId = codec_id;
-    decode_params.IOPattern   = MFX_IOPATTERN_OUT_SYSTEM_MEMORY;
-    sts = MFXVideoDECODE_DecodeHeader(session, &bitstream, &decode_params);
-    if (sts != MFX_ERR_NONE) {
-        fclose(source);
-        fclose(sink);
-        printf("Problem decoding header.  DecodeHeader sts=%d\n", sts);
-        return 1;
-    }
-
-    // Query number required surfaces for decoder
-    mfxFrameAllocRequest decode_request = { 0 };
-    MFXVideoDECODE_QueryIOSurf(session, &decode_params, &decode_request);
-
-    // Determine the required number of surfaces for decoder output
-    mfxU16 num_decode_surfaces = decode_request.NumFrameSuggested;
-
-    std::vector<mfxFrameSurface1> decode_surfaces;
-    decode_surfaces.resize(num_decode_surfaces);
-    mfxFrameSurface1 *decode_surfaces_data = decode_surfaces.data();
-    if (decode_surfaces_data == NULL) {
-        fclose(source);
-        fclose(sink);
-        puts("Fail to allocate decode frame memory surface");
-        return 1;
-    }
-    // initialize surface pool for decode (I420 format)
-    mfxU32 surface_size = GetSurfaceSize(decode_params.mfx.FrameInfo.FourCC,
-                                         decode_params.mfx.FrameInfo.Width,
-                                         decode_params.mfx.FrameInfo.Height);
-    if (surface_size == 0) {
-        fclose(source);
-        fclose(sink);
-        puts("Surface size is wrong");
-        return 1;
-    }
-    size_t frame_pool_buffer_size =
-        static_cast<size_t>(surface_size) * num_decode_surfaces;
-    std::vector<mfxU8> output_buffer;
-    output_buffer.resize(frame_pool_buffer_size);
-    mfxU8 *output_buffer_data = output_buffer.data();
-
-    mfxU16 surface_w = (decode_params.mfx.FrameInfo.FourCC == MFX_FOURCC_I010)
-                           ? decode_params.mfx.FrameInfo.Width * 2
-                           : decode_params.mfx.FrameInfo.Width;
-    mfxU16 surface_h = decode_params.mfx.FrameInfo.Height;
-
-    for (mfxU32 i = 0; i < num_decode_surfaces; i++) {
-        decode_surfaces_data[i]        = { 0 };
-        decode_surfaces_data[i].Info   = decode_params.mfx.FrameInfo;
-        size_t buf_offset              = static_cast<size_t>(i) * surface_size;
-        decode_surfaces_data[i].Data.Y = output_buffer_data + buf_offset;
-        decode_surfaces_data[i].Data.U =
-            output_buffer_data + buf_offset + (surface_w * surface_h);
-        decode_surfaces_data[i].Data.V = decode_surfaces_data[i].Data.U +
-                                         ((surface_w / 2) * (surface_h / 2));
-        decode_surfaces_data[i].Data.Pitch = surface_w;
-    }
-
-    // input parameters finished, now initialize decode
-    sts = MFXVideoDECODE_Init(session, &decode_params);
-    if (sts != MFX_ERR_NONE) {
-        fclose(source);
-        fclose(sink);
-        puts("Could not initialize decode");
-        exit(1);
-    }
-    // ------------------
-    // main loop
-    // ------------------
-    int framenum                     = 0;
-    mfxSyncPoint syncp               = { 0 };
-    mfxFrameSurface1 *output_surface = nullptr;
+    // Prepare input bitstream and start decoding
+    bitstream.MaxLength = BITSTREAM_BUFFER_SIZE;
+    bitstream.Data      = (mfxU8 *)malloc(bitstream.MaxLength * sizeof(mfxU8));
+    VERIFY(bitstream.Data, "Not able to allocate input buffer");
+    memset(bitstream.Data, 0, bitstream.MaxLength * sizeof(mfxU8));
+    bitstream.CodecId = MFX_CODEC_HEVC;
 
     printf("Decoding %s -> %s\n", in_filename, OUTPUT_FILE);
-    for (;;) {
-        bool stillgoing = true;
-        int index =
-            GetFreeSurfaceIndex(decode_surfaces_data, num_decode_surfaces);
-        while (stillgoing) {
-            // submit async decode request
-            sts = MFXVideoDECODE_DecodeFrameAsync(session,
-                                                  &bitstream,
-                                                  &decode_surfaces_data[index],
-                                                  &output_surface,
-                                                  &syncp);
 
-            // next step actions provided by application
-            switch (sts) {
-                case MFX_ERR_MORE_DATA: // more data is needed to decode
-                    ReadEncodedStream(bitstream, codec_id, source);
-                    if (bitstream.DataLength == 0)
-                        stillgoing = false; // stop if end of file
-                    break;
-                case MFX_ERR_MORE_SURFACE: // feed a fresh surface to decode
-                    index = GetFreeSurfaceIndex(decode_surfaces_data,
-                                                num_decode_surfaces);
-                    break;
-                case MFX_ERR_NONE: // no more steps needed, exit loop
-                    stillgoing = false;
-                    break;
-                default: // state is not one of the cases above
-                    printf("Error in DecodeFrameAsync: sts=%d\n", sts);
-                    exit(1);
-                    break;
-            }
+    while (is_stillgoing == true) {
+        // Load encoded stream if not draining
+        if (is_draining == false) {
+            sts = ReadEncodedStream(bitstream, source);
+            if (sts != MFX_ERR_NONE)
+                is_draining = true;
         }
-
-        if (sts < 0)
-            break;
-
-        // data available to app only after sync
-        MFXVideoCORE_SyncOperation(session, syncp, 60000);
-
-        // write output if output file specified
-        if (sink)
-            WriteRawFrame(output_surface, sink);
-
-        framenum++;
-    }
-
-    sts = MFX_ERR_NONE;
-    memset(&syncp, 0, sizeof(mfxSyncPoint));
-    output_surface = nullptr;
-
-    // retrieve the buffered decoded frames
-    while (MFX_ERR_NONE <= sts || MFX_ERR_MORE_SURFACE == sts) {
-        int index =
-            GetFreeSurfaceIndex(decode_surfaces_data,
-                                num_decode_surfaces); // Find free frame surface
-
-        // Decode a frame asynchronously (returns immediately)
 
         sts = MFXVideoDECODE_DecodeFrameAsync(session,
+                                              (is_draining) ? NULL : &bitstream,
                                               NULL,
-                                              &decode_surfaces_data[index],
-                                              &output_surface,
+                                              &dec_surface_out,
                                               &syncp);
 
-        // Ignore warnings if output is available, if no output and no action
-        // required just repeat the DecodeFrameAsync call
-        if (MFX_ERR_NONE < sts && syncp)
-            sts = MFX_ERR_NONE;
+        switch (sts) {
+            case MFX_ERR_NONE:
+                do {
+                    sts = dec_surface_out->FrameInterface->Synchronize(dec_surface_out,
+                                                                       WAIT_100_MILLSECONDS);
+                    if (MFX_ERR_NONE == sts) {
+                        sts = dec_surface_out->FrameInterface->Map(dec_surface_out, MFX_MAP_READ);
+                        VERIFY(MFX_ERR_NONE == sts, "mfxFrameSurfaceInterface->Map failed");
 
-        if (sts == MFX_ERR_NONE) {
-            sts = MFXVideoCORE_SyncOperation(
-                session,
-                syncp,
-                60000); // Synchronize. Waits until decoded frame is ready
+                        WriteRawFrame(dec_surface_out, sink);
+                        framenum++;
 
-            // write output if output file specified
-            if (sink)
-                WriteRawFrame(output_surface, sink);
+                        sts = dec_surface_out->FrameInterface->Unmap(dec_surface_out);
+                        VERIFY(MFX_ERR_NONE == sts, "mfxFrameSurfaceInterface->Unmap failed");
 
-            framenum++;
+                        sts = dec_surface_out->FrameInterface->Release(dec_surface_out);
+                        VERIFY(MFX_ERR_NONE == sts, "mfxFrameSurfaceInterface->Release failed");
+                    }
+                } while (sts == MFX_WRN_IN_EXECUTION);
+                break;
+            case MFX_ERR_MORE_DATA:
+                // The function requires more bitstream at input before decoding can proceed
+                if (is_draining)
+                    is_stillgoing = false;
+                break;
+            case MFX_ERR_MORE_SURFACE:
+                // The function requires more frame surface at output before decoding can proceed.
+                // This applies to external memory allocations and should not be expected for
+                // a simple internal allocation case like this
+                break;
+            case MFX_ERR_DEVICE_LOST:
+                // For non-CPU implementations,
+                // Cleanup if device is lost
+                break;
+            case MFX_WRN_DEVICE_BUSY:
+                // For non-CPU implementations,
+                // Wait a few milliseconds then try again
+                break;
+            case MFX_WRN_VIDEO_PARAM_CHANGED:
+                // The decoder detected a new sequence header in the bitstream.
+                // Video parameters may have changed.
+                // In external memory allocation case, might need to reallocate the output surface
+                break;
+            case MFX_ERR_INCOMPATIBLE_VIDEO_PARAM:
+                // The function detected that video parameters provided by the application
+                // are incompatible with initialization parameters.
+                // The application should close the component and then reinitialize it
+                break;
+            case MFX_ERR_REALLOC_SURFACE:
+                // Bigger surface_work required. May be returned only if
+                // mfxInfoMFX::EnableReallocRequest was set to ON during initialization.
+                // This applies to external memory allocations and should not be expected for
+                // a simple internal allocation case like this
+                break;
+            default:
+                printf("unknown status %d\n", sts);
+                is_stillgoing = false;
+                break;
         }
     }
 
+end:
     printf("Decoded %d frames\n", framenum);
 
-    fclose(sink);
-    fclose(source);
-    MFXVideoDECODE_Close(session);
+    // Clean up resources - It is recommended to close components first, before
+    // releasing allocated surfaces, since some surfaces may still be locked by
+    // internal resources.
+    if (loader)
+        MFXUnload(loader);
+
+    if (bitstream.Data)
+        free(bitstream.Data);
+
+    if (source)
+        fclose(source);
+
+    if (sink)
+        fclose(sink);
 
     return 0;
 }
 
 // Read encoded stream from file
-mfxStatus ReadEncodedStream(mfxBitstream &bs, mfxU32 codecid, FILE *f) {
+mfxStatus ReadEncodedStream(mfxBitstream &bs, FILE *f) {
     memmove(bs.Data, bs.Data + bs.DataOffset, bs.DataLength);
     bs.DataOffset = 0;
-    bs.DataLength += static_cast<mfxU32>(
-        fread(bs.Data + bs.DataLength, 1, bs.MaxLength - bs.DataLength, f));
+    bs.DataLength += (mfxU32)fread(bs.Data + bs.DataLength, 1, bs.MaxLength - bs.DataLength, f);
+    if (bs.DataLength == 0)
+        return MFX_ERR_MORE_DATA;
+
     return MFX_ERR_NONE;
 }
 
@@ -298,34 +239,13 @@ void WriteRawFrame(mfxFrameSurface1 *surface, FILE *f) {
                 fwrite(data->V + i * pitch, 1, w, f);
             }
             break;
+
         default:
+            printf("Unsupported FourCC code, skip WriteRawFrame\n");
             break;
     }
 
     return;
-}
-
-// Return the surface size in bytes given format and dimensions
-mfxU32 GetSurfaceSize(mfxU32 fourcc, mfxU32 width, mfxU32 height) {
-    mfxU32 bytes = 0;
-    switch (fourcc) {
-        case MFX_FOURCC_I420:
-            bytes = width * height + (width >> 1) * (height >> 1) +
-                    (width >> 1) * (height >> 1);
-            break;
-        default:
-            break;
-    }
-    return bytes;
-}
-
-// Return index of free surface in given pool
-int GetFreeSurfaceIndex(mfxFrameSurface1 *surface_pool, mfxU16 pool_size) {
-    for (mfxU16 i = 0; i < pool_size; i++) {
-        if (0 == surface_pool[i].Data.Locked)
-            return i;
-    }
-    return MFX_ERR_NOT_FOUND;
 }
 
 char *ValidateFileName(char *in) {
