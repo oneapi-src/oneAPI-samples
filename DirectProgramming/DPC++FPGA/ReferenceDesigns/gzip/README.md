@@ -169,7 +169,7 @@ PASSED
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsparallel=2` | Uses 2 cores when compiling the bitstream through Quartus
-`-Xsseed=19` | Uses seed 19 during Quartus, yields slightly higher fmax
+`-Xsseed=12` | Uses seed 12 during Quartus, yields slightly higher fmax
 `-Xsnum-reorder=6` | On Intel Stratix® 10 SX only, specify a wider data path for read data from global memory 
 `-DNUM_ENGINES=<1|2>` | Specifies that 1 GZIP engine should be compiled when targeting Arria® 10 GX and 2 engines when targeting Intel Stratix® 10 SX
 
