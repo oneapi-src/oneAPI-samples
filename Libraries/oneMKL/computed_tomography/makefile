@@ -2,6 +2,8 @@
 
 default: run
 
+all: run
+
 run: computed_tomography.exe
 	.\computed_tomography.exe 400 400 input.bmp radon.bmp restored.bmp
 
@@ -13,4 +15,4 @@ computed_tomography.exe: computed_tomography.cpp
 clean:
 	del /q computed_tomography.exe computed_tomography.exp computed_tomography.lib
 
-pseudo: clean run
+pseudo: clean run all

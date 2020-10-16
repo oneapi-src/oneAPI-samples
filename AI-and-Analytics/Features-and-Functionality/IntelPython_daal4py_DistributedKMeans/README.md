@@ -1,11 +1,11 @@
-# daal4py Distributed K-Means 
+# Intel Python daal4py Distributed K-Means 
 This sample code shows how to train and predict with a distributed k-means model using the python API package daal4py for oneAPI Data Analytics Library. It assumes you have a working version of MPI library installed and it demonstrates how to use software products that can be found in the [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or [Intel AI Analytics Toolkit powered by oneAPI](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
-| Software                          | oneDAL Software Library, Python version 2.7 or >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
+| Software                          | oneDAL Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
 | What you will learn               | distributed oneDAL K-Means programming model for Intel CPU
 | Time to complete                  | 5 minutes
 
@@ -32,7 +32,9 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 
 ### Activate conda environment With Root Access
 
-Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the setvars.sh script. Then navigate in linux shell to your oneapi installation path, typically `~/intel/inteloneapi`. Intel Python environment will be activte by default. However, if you activated another environment, you can return with the following command:
+Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the `setvars.sh` script. Then navigate in Linux shell to your oneapi installation path, typically `/opt/intel/oneapi/` when installed as root or sudo, and `~/intel/oneapi/` when not installed as a super user. If you customized the installation folder, the `setvars.sh` file is in your custom folder. 
+
+Intel Python environment will be active by default. However, if you activated another environment, you can return with the following command:
 
 #### On a Linux* System
 ```
@@ -45,13 +47,13 @@ By default, the Intel AI Analytics toolkit is installed in the inteloneapi folde
 
 #### On a Linux* System
 ```
-conda create --name user_base --clone base
+conda create --name usr_intelpython --clone base
 ```
 
 Then activate your conda environment with the following command:
 
 ```
-source activate user_base
+source activate usr_intelpython 
 ```
 
 ### Install Jupyter Notebook
@@ -76,7 +78,7 @@ When using daal4py for distributed memory systems, the command needed to execute
 
 Run the Program
 
-`mpirun -n 4 python ./daal4py_Distributed_Kmeans.py`
+`mpirun -n 4 python ./IntelPython_daal4py_Distributed_Kmeans.py`
 
 The output of the script will be saved in the included models and results directories. 
 

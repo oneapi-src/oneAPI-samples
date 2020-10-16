@@ -18,8 +18,8 @@
       		        "cd build",
            		"cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp",
            		"make",
-			"mpirun -n 2 ./out/sycl/sycl_allreduce_cpp_test cpu",
-			"mpirun -n 2 ./out/sycl/sycl_allreduce_cpp_test gpu"
+			"mpirun -n 2 ./out/sycl/sycl_allreduce_test cpu",
+			"mpirun -n 2 ./out/sycl/sycl_allreduce_test gpu"
 		 ]
 	}]
  }

@@ -32,9 +32,9 @@ using a command line parameter `gpu`.
 
 ## Key Implementation Details
 
-This sample uses example file `${DNNLROOT}/examples/sycl_interop.cpp`
+This sample uses example file `${DNNLROOT}/examples/sycl_interop_buffer.cpp`
 from oneDNN distribution. You can find this code in
-[oneDNN Github repository](https://github.com/oneapi-src/oneDNN/blob/dev-v2/examples/sycl_interop.cpp).
+[oneDNN Github repository](https://github.com/oneapi-src/oneDNN/blob/dev-v2/examples/sycl_interop_buffer.cpp).
 
 Detailed code walkthrough is available in [oneDNN developer guide](https://oneapi-src.github.io/oneDNN/v2/sycl_interop_cpp.html)
 
@@ -60,7 +60,7 @@ make
 ```
 3. Run the program
 ```
-./bin/sycl-interop-cpp
+./bin/sycl-interop-buffer-cpp
 ```
 
 ### Include Files

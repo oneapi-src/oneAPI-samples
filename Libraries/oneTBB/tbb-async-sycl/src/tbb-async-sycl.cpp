@@ -20,10 +20,6 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-constexpr sycl::access::mode sycl_read = sycl::access::mode::read;
-constexpr sycl::access::mode sycl_write = sycl::access::mode::write;
-constexpr sycl::access::mode sycl_read_write = sycl::access::mode::read_write;
-
 struct done_tag{};
 
 const float ratio = 0.5;  // CPU to GPU offload ratio
