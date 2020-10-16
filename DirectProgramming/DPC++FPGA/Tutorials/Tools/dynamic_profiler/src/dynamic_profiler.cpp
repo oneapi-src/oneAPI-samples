@@ -75,11 +75,11 @@ float ConsumerWork2(float f) {
 void ProducerBefore(queue &q, buffer<float, 1>& buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
-    accessor accessor_a{buffer_a, h, read_only};
+    accessor a{buffer_a, h, read_only};
 
     h.single_task<ProducerBeforeKernel>([=]() {
       for (int i = 0; i < kSize; i++) {
-        ProducerToConsumerBeforePipe::write(accessor_a[i]);
+        ProducerToConsumerBeforePipe::write(a[i]);
       }
     });
   });
@@ -88,14 +88,14 @@ void ProducerBefore(queue &q, buffer<float, 1>& buffer_a) {
 void ConsumerBefore(queue &q, buffer<float, 1>& buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
-    accessor accessor_a{buffer_a, h, write_only, noinit};
+    accessor a{buffer_a, h, write_only, noinit};
 
     h.single_task<ConsumerBeforeKernel>([=]() {
       for (int i = 0; i < kSize; i++) {
         auto input = ProducerToConsumerBeforePipe::read();
         auto output = ConsumerWork1(input);
         output = ConsumerWork2(output);
-        accessor_a[i] = output;
+        a[i] = output;
       }
     });
   });
@@ -114,11 +114,11 @@ void ConsumerBefore(queue &q, buffer<float, 1>& buffer_a) {
 void ProducerAfter(queue &q, buffer<float, 1>& buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
-    accessor accessor_a{buffer_a, h, read_only};
+    accessor a{buffer_a, h, read_only};
 
     h.single_task<ProducerAfterKernel>([=]() {
       for (int i = 0; i < kSize; i++) {
-        auto input = accessor_a[i];
+        auto input = a[i];
         auto output = ConsumerWork1(input);
         ProducerToConsumerAfterPipe::write(output);
       }
@@ -129,13 +129,13 @@ void ProducerAfter(queue &q, buffer<float, 1>& buffer_a) {
 void ConsumerAfter(queue &q, buffer<float, 1>& buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
-    accessor accessor_a{buffer_a, h, write_only, noinit};
+    accessor a{buffer_a, h, write_only, noinit};
 
     h.single_task<ConsumerAfterKernel>([=]() {
       for (int i = 0; i < kSize; i++) {
         auto buffer1_data = ProducerToConsumerAfterPipe::read();
         auto output = ConsumerWork2(buffer1_data);
-        accessor_a[i] = output;
+        a[i] = output;
       }
     });
   });
