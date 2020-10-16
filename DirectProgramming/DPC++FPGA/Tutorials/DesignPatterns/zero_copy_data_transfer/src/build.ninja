@@ -4,8 +4,8 @@ target_name = zero_copy_data_transfer
 emulator_target = ${target_name}.fpga_emu.exe
 report_target = ${target_name}_report.a
 
-hardware_flags = -fintelfpga -Xshardware -fsycl-enable-usm-address-space
-emulator_flags = -fintelfpga -fsycl-enable-usm-address-space -DFPGA_EMULATOR
+hardware_flags = -fintelfpga -Xshardware
+emulator_flags = -fintelfpga -DFPGA_EMULATOR
 
 rule build_fpga_emu
   command = dpcpp /GX ${emulator_flags} $in -o $out
