@@ -4,9 +4,21 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
 #include <chrono>
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 
 using namespace sycl;
 
@@ -107,18 +119,18 @@ int main() {
 
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector device_selector;
+  INTEL::fpga_emulator_selector device_selector;
   std::cout << "\nEmulator output does not demonstrate true hardware "
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
 #else
-  intel::fpga_selector device_selector;
+  INTEL::fpga_selector device_selector;
 #endif
   try {
     auto prop_list =
         property_list{property::queue::enable_profiling()};
-    
+
     std::unique_ptr<queue> q;
     q.reset(new queue(device_selector, dpc_common::exception_handler, prop_list));
 
@@ -221,13 +233,13 @@ int main() {
   } catch (sycl::exception const& e) {
     // Catches exceptions in the host code
     std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
-    
+
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
       std::cout << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cout << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR.\n"; 
+                   "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
   }
