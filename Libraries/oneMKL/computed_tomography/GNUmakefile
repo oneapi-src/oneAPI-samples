@@ -2,6 +2,8 @@
 
 default: run
 
+all: run
+
 run: computed_tomography
 	./computed_tomography 400 400 input.bmp radon.bmp restored.bmp
 
@@ -13,4 +15,4 @@ computed_tomography: computed_tomography.cpp
 clean:
 	-rm -f computed_tomography radon.bmp restored.bmp
 
-.PHONY: clean run
+.PHONY: clean run all
