@@ -1,5 +1,7 @@
 default: run_all
 
+all: run_all
+
 run_all: mc_european.exe mc_european_usm.exe
 	.\mc_european
 	.\mc_european_usm
@@ -17,5 +19,4 @@ clean:
 	del /q mc_european.exp mc_european_usm.exp
 	del /q mc_european.lib mc_european_usm.lib
 
-pseudo: run_all clean
-
+pseudo: run_all clean all
