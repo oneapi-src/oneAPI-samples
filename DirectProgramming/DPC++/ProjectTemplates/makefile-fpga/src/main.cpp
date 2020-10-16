@@ -6,7 +6,7 @@
 
 // located in $ONEAPI_ROOT/compiler/latest/linux/include/sycl/
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <cstdlib>
 #include <iostream>
 
