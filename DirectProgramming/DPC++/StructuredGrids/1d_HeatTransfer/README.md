@@ -118,7 +118,7 @@ n is the number of points you want to simulate the heat transfer.
 
 i is the number of timesteps in the simulation. 
 
-To simulate 100 pointer for 1000 timesteps:
+To simulate 100 points for 1000 timesteps:
 
         ./1d_HeatTransfer 100 1000
 
@@ -130,16 +130,18 @@ display a “PASSED” message.
 
 ### Example of Output
 ```
-$ ./1d_HeatTransfer 100 1000
+$ make run
+[100%] Built target 1d_HeatTransfer
 Number of points: 100
 Number of iterations: 1000
-Device
+Using buffers
   Kernel runs on Intel(R) Core(TM) i5-7300U CPU @ 2.60GHz
-  Elapsed time: 0.27718 sec
+  Elapsed time: 0.439238 sec
   PASSED!
-Device with USM
+Using USM
   Kernel runs on Intel(R) Core(TM) i5-7300U CPU @ 2.60GHz
-  Elapsed time: 0.433605 sec
+  Elapsed time: 0.193435 sec
   PASSED!
+[100%] Built target run
 $
 ```

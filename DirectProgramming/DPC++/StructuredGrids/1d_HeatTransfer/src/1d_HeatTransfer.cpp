@@ -115,7 +115,7 @@ void ComputeHeatBuffer(float C, size_t num_p, size_t num_iter,
 
   // Create a device queue using DPC++ class queue
   queue q(device_selector, dpc_common::exception_handler);
-  cout << "Device\n";
+  cout << "Using buffers\n";
   cout << "  Kernel runs on " << q.get_device().get_info<info::device::name>() << "\n";
 
   // Temperatures of the current and next iteration
@@ -181,7 +181,7 @@ void ComputeHeatUSM(float C, size_t num_p, size_t num_iter,
 
   // Create a device queue using DPC++ class queue
   queue q(device_selector, dpc_common::exception_handler, properties);
-  cout << "Device with USM\n";
+  cout << "Using USM\n";
   cout << "  Kernel runs on " << q.get_device().get_info<info::device::name>() << "\n";
 
   // Temperatures of the current and next iteration
