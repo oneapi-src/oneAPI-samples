@@ -105,8 +105,9 @@ void CompareResults(string prefix, float* device_results, float* host_results,
     cout << "  PASSED!\n";
 }
 
+
 //
-// Compute heat on the device
+// Compute heat on the device using DPC++ buffer
 //
 void ComputeHeatBuffer(float C, size_t num_p, size_t num_iter,
 		       float* arr_CPU) {
@@ -124,41 +125,41 @@ void ComputeHeatBuffer(float C, size_t num_p, size_t num_iter,
 
   Initialize(arr_host, arr_host_next, num_p + 2);
 
-  buffer arr_buf(arr_host, range(num_p + 2));
-  buffer arr_buf_next(arr_host_next, range(num_p + 2));
-
   // Start timer
   dpc_common::TimeInterval t_par;
 
-  // Iterate over timesteps
-  for (size_t i = 0; i < num_iter; i++) {
-    auto handler =
-      [&](auto& h) {
-	accessor arr(arr_buf, h);
-	accessor arr_next(arr_buf_next, h);
+  // scope for buffer writeback
+  {
+    buffer arr_buf_data(arr_host, range(num_p + 2));
+    buffer arr_buf_data_next(arr_host_next, range(num_p + 2));
+    buffer<float>* arr_buf = &arr_buf_data;
+    buffer<float>* arr_buf_next = &arr_buf_data_next;
+
+    // Iterate over timesteps
+    for (size_t i = 0; i < num_iter; i++) {
+      auto handler =
+	[&](auto& h) {
+	accessor arr(*arr_buf, h);
+	accessor arr_next(*arr_buf_next, h);
 	auto step =
-	  [=](id<1> idx) {
-	    size_t k = idx + 1;
+	[=](id<1> idx) {
+	  size_t k = idx + 1;
 
-	    if (k == num_p + 1) {
-	      arr_next[k] = arr[k - 1];
-	    } else {
-	      arr_next[k] =
-		C * (arr[k + 1] - 2 * arr[k] + arr[k - 1]) + arr[k];
-	    }
-	  };
-
+	  if (k == num_p + 1) {
+	    arr_next[k] = arr[k - 1];
+	  } else {
+	    arr_next[k] =
+	    C * (arr[k + 1] - 2 * arr[k] + arr[k - 1]) + arr[k];
+	  }
+	};
+      
 	h.parallel_for(range{num_p + 1}, step);
       };
-    q.submit(handler);
+      q.submit(handler);
 
-    swap(arr_buf, arr_buf_next);
-  }
-
-  // Wait for tasks to complete and then force writeback to host for
-  // the result
-  q.wait_and_throw();
-  arr_buf.set_write_back(true);
+      swap(arr_buf, arr_buf_next);
+    } // end timesteps
+  }  // end buffer scope to trigger writeback
 
   // Display time used to process all time steps
   cout << "  Elapsed time: " << t_par.Elapsed() << " sec\n";
