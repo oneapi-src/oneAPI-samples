@@ -128,39 +128,41 @@ void ComputeHeatBuffer(float C, size_t num_p, size_t num_iter,
   // Start timer
   dpc_common::TimeInterval t_par;
 
-  // scope for buffer writeback
-  {
-    buffer arr_buf_data(arr_host, range(num_p + 2));
-    buffer arr_buf_data_next(arr_host_next, range(num_p + 2));
-    buffer<float>* arr_buf = &arr_buf_data;
-    buffer<float>* arr_buf_next = &arr_buf_data_next;
+  auto* arr_buf = new buffer<float>(arr_host, range(num_p + 2));
+  auto* arr_buf_next = new buffer<float>(arr_host_next, range(num_p + 2));
 
-    // Iterate over timesteps
-    for (size_t i = 0; i < num_iter; i++) {
-      auto handler =
-	[&](auto& h) {
+  // Iterate over timesteps
+  for (size_t i = 0; i < num_iter; i++) {
+    auto handler =
+      [&](auto& h) {
 	accessor arr(*arr_buf, h);
 	accessor arr_next(*arr_buf_next, h);
 	auto step =
-	[=](id<1> idx) {
-	  size_t k = idx + 1;
+	  [=](id<1> idx) {
+	    size_t k = idx + 1;
 
-	  if (k == num_p + 1) {
-	    arr_next[k] = arr[k - 1];
-	  } else {
-	    arr_next[k] =
-	    C * (arr[k + 1] - 2 * arr[k] + arr[k - 1]) + arr[k];
-	  }
-	};
+	    if (k == num_p + 1) {
+	      arr_next[k] = arr[k - 1];
+	    } else {
+	      arr_next[k] =
+		C * (arr[k + 1] - 2 * arr[k] + arr[k - 1]) + arr[k];
+	      }
+	  };
       
 	h.parallel_for(range{num_p + 1}, step);
       };
-      q.submit(handler);
+    q.submit(handler);
 
-      swap(arr_buf, arr_buf_next);
-    } // end timesteps
-  }  // end buffer scope to trigger writeback
+    // Swap arrays for next step
+    swap(arr_buf, arr_buf_next);
+  }
 
+  // Deleting will wait for tasks to complete and write data back to host
+  // Write back is not needed for arr_buf_next
+  arr_buf_next->set_write_back(false);
+  delete arr_buf;
+  delete arr_buf_next;
+  
   // Display time used to process all time steps
   cout << "  Elapsed time: " << t_par.Elapsed() << " sec\n";
 
