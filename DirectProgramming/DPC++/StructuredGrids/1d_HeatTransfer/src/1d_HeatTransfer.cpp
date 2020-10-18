@@ -50,6 +50,8 @@ constexpr float dx = 0.01f;
 constexpr float k = 0.025f;
 constexpr float initial_temperature = 100.0f;  // Initial temperature.
 
+int failures = 0;
+
 //
 // Display input parameters used for this sample.
 //
@@ -99,9 +101,10 @@ void CompareResults(string prefix, float* device_results, float* host_results,
     }
   }
 
-  if (err == true)
+  if (err) {
     cout << "  FAIL! Please check " << path << "\n";
-  else
+    failures++;
+  } else
     cout << "  PASSED!\n";
 }
 
@@ -262,7 +265,6 @@ int main(int argc, char* argv[]) {
   try {
     n_point = stoi(argv[1]);
     n_iteration = stoi(argv[2]);
-
   } catch (...) {
     Usage(argv[0]);
     return (-1);
@@ -287,10 +289,11 @@ int main(int argc, char* argv[]) {
     ComputeHeatUSM(C, n_point, n_iteration, final_CPU);
   } catch (sycl::exception e) {
     cout << "SYCL exception caught: " << e.what() << "\n";
+    failures++;
   }
 
   delete [] heat_CPU;
   delete [] heat_CPU_next;
   
-  return 0;
+  return failures;
 }
