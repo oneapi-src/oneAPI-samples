@@ -12,7 +12,7 @@
 
 using namespace sycl;
 
-// Declare Kernel class names globally to avoid name mangling in reports
+// Declare Kernel class names globally to reduce name mangling in reports
 class KernelPrefetch;
 class KernelBurst;
 class KernelDefault;
@@ -64,13 +64,13 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
     buffer input_buffer(input_data);
 
     auto e_p = q.submit([&](handler &h) {
-      accessor output_accessor(output_buffer, h, write_only, noinit);
-      accessor input_accessor(input_buffer, h, read_only);
+      accessor output_a(output_buffer, h, write_only, noinit);
+      accessor input_a(input_buffer, h, read_only);
 
       // Kernel that uses the prefetch LSU
       h.single_task<KernelPrefetch>([=]() [[intel::kernel_args_restrict]] {
-        auto input_ptr = input_accessor.get_pointer();
-        auto output_ptr = output_accessor.get_pointer();
+        auto input_ptr = input_a.get_pointer();
+        auto output_ptr = output_a.get_pointer();
 
         int total = 0;
         for (size_t i = 0; i < input_size; i++) {
@@ -81,13 +81,13 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
     });
 
     auto e_b = q.submit([&](handler &h) {
-      accessor output_accessor(output_buffer, h, write_only, noinit);
-      accessor input_accessor(input_buffer, h, read_only);
+      accessor output_a(output_buffer, h, write_only, noinit);
+      accessor input_a(input_buffer, h, read_only);
       
       // Kernel that uses the burst-coalesced LSU
       h.single_task<KernelBurst>([=]() [[intel::kernel_args_restrict]] {
-        auto input_ptr = input_accessor.get_pointer();
-        auto output_ptr = output_accessor.get_pointer();
+        auto input_ptr = input_a.get_pointer();
+        auto output_ptr = output_a.get_pointer();
 
         int total = 0;
         for (size_t i = 0; i < input_size; i++) {
@@ -98,13 +98,13 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
     });
 
     auto e_d = q.submit([&](handler &h) {
-      accessor output_accessor(output_buffer, h, write_only, noinit);
-      accessor input_accessor(input_buffer, h, read_only);
+      accessor output_a(output_buffer, h, write_only, noinit);
+      accessor input_a(input_buffer, h, read_only);
       
       // Kernel that uses the default LSUs
       h.single_task<KernelDefault>([=]() [[intel::kernel_args_restrict]] {
-        auto input_ptr = input_accessor.get_pointer();
-        auto output_ptr = output_accessor.get_pointer();
+        auto input_ptr = input_a.get_pointer();
+        auto output_ptr = output_a.get_pointer();
 
         int total = 0;
         for (size_t i = 0; i < input_size; i++) {
