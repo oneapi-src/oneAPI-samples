@@ -55,7 +55,7 @@ int failures = 0;
 //
 // Display input parameters used for this sample.
 //
-void Usage(string programName) {
+void Usage(const string& programName) {
   cout << " Incorrect parameters \n";
   cout << " Usage: ";
   cout << programName << " <n> <i>\n\n";
@@ -89,8 +89,8 @@ void CompareResults(string prefix, float* device_results, float* host_results,
   err_file << " \t idx\theat[i]\t\theat_CPU[i] \n";
 
   for (size_t i = 0; i < num_point + 2; i++) {
-    err_file << "\n RESULT: " << i << "\t" << std::setw(12) << std::left
-             << device_results[i] << "\t" << host_results[i];
+    err_file << " RESULT: " << i << "\t" << std::setw(12) << std::left
+             << device_results[i] << "\t" << host_results[i] << "\n";
 
     difference = fabsf(host_results[i] - device_results[i]);
     norm2 += difference * difference;
@@ -263,8 +263,14 @@ int main(int argc, char* argv[]) {
 
   // Read input parameters
   try {
-    n_point = stoi(argv[1]);
-    n_iteration = stoi(argv[2]);
+    int np = stoi(argv[1]);
+    int ni = stoi(argv[2]);
+    if (np < 0 || ni < 0) {
+      Usage(argv[0]);
+      return -1;
+    }
+    n_point = np;
+    n_iteration = ni;
   } catch (...) {
     Usage(argv[0]);
     return (-1);
