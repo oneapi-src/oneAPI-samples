@@ -25,7 +25,7 @@ using ProducerToConsumerAfterPipe =
     INTEL::pipe<class ProducerConsumerAfterPipe, float, 20>;
 
 // Forward declare the kernel names
-// (This prevents unwanted name mangling in the optimization report.)
+// (This reduces unwanted name mangling in the optimization report.)
 class ProducerBeforeKernel;
 class ConsumerBeforeKernel;
 class ProducerAfterKernel;
@@ -75,7 +75,7 @@ float ConsumerWork2(float f) {
 void ProducerBefore(queue &q, buffer<float, 1>& buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
-    accessor a{buffer_a, h, read_only};
+    accessor a(buffer_a, h, read_only);
 
     h.single_task<ProducerBeforeKernel>([=]() {
       for (int i = 0; i < kSize; i++) {
@@ -88,7 +88,7 @@ void ProducerBefore(queue &q, buffer<float, 1>& buffer_a) {
 void ConsumerBefore(queue &q, buffer<float, 1>& buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
-    accessor a{buffer_a, h, write_only, noinit};
+    accessor a(buffer_a, h, write_only, noinit);
 
     h.single_task<ConsumerBeforeKernel>([=]() {
       for (int i = 0; i < kSize; i++) {
@@ -114,7 +114,7 @@ void ConsumerBefore(queue &q, buffer<float, 1>& buffer_a) {
 void ProducerAfter(queue &q, buffer<float, 1>& buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
-    accessor a{buffer_a, h, read_only};
+    accessor a(buffer_a, h, read_only);
 
     h.single_task<ProducerAfterKernel>([=]() {
       for (int i = 0; i < kSize; i++) {
@@ -129,7 +129,7 @@ void ProducerAfter(queue &q, buffer<float, 1>& buffer_a) {
 void ConsumerAfter(queue &q, buffer<float, 1>& buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
-    accessor a{buffer_a, h, write_only, noinit};
+    accessor a(buffer_a, h, write_only, noinit);
 
     h.single_task<ConsumerAfterKernel>([=]() {
       for (int i = 0; i < kSize; i++) {
@@ -148,8 +148,8 @@ void ConsumerAfter(queue &q, buffer<float, 1>& buffer_a) {
 // intentionally/artificially to keep host-processing time shorter than kernel
 // execution time. Grabs kernel output data from its SYCL buffers.
 bool ProcessOutput(buffer<float, 1>& input_buf, buffer<float, 1>& output_buf) {
-  auto input_buf_acc = input_buf.get_access<access::mode::read>();
-  auto output_buf_acc = output_buf.get_access<access::mode::read>();
+  host_accessor input_buf_acc(input_buf, read_only);
+  host_accessor output_buf_acc(output_buf, read_only);
   int num_errors = 0;
   int num_errors_to_print = 5;
   bool pass = true;
@@ -193,7 +193,7 @@ int main() {
     std::vector<float> consumer_output_after(kSize, -1);
 
     // Initialize the input data
-    for (size_t i = 0; i < kSize; i++) producer_input[i] = i + 1;
+    std::iota(producer_input.begin(), producer_input.end(), 1);
 
     buffer producer_buffer(producer_input);
     buffer consumer_buffer_before(consumer_output_before);
