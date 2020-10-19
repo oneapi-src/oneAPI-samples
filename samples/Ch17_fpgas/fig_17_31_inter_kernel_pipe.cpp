@@ -49,14 +49,14 @@ int main() {
 
 // END CODE SNIP
 
-      auto A = accessor(B_out);
-    for (int i=0; i < count; i++) {
-      if (A[i] != i) {
-        std::cout << "Failure on element " << i << "\n";
-        return 1;
-      }
+  auto A = host_accessor(B_out);
+  for (int i=0; i < count; i++) {
+    if (A[i] != i) {
+      std::cout << "Failure on element " << i << "\n";
+      return 1;
     }
-    std::cout << "Passed!\n";
+  }
+  std::cout << "Passed!\n";
   return 0;
 }
 
