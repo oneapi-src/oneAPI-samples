@@ -27,8 +27,11 @@ This code sample is licensed under MIT license.
 
 ## Building the `simple add DPC++` Program for CPU and GPU 
 
-## Include Files
+### Include Files
 The include folder is located at "%ONEAPI_ROOT%\dev-utilities\latest\include" on your development system.
+
+### Running Samples in DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 ### On a Linux* System
 Perform the following steps:
