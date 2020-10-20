@@ -120,7 +120,7 @@
       {
         "id": "buffer_cpu",
         "env": [
-          "export SYCL_DEVICE_TYPE=CPU"
+          "set SYCL_DEVICE_TYPE=CPU"
         ],
         "steps": [
           "nmake -f Makefile.win",
@@ -131,7 +131,7 @@
       {
         "id": "buffer_gpu",
         "env": [
-          "export SYCL_DEVICE_TYPE=GPU"
+          "set SYCL_DEVICE_TYPE=GPU"
         ],
         "steps": [
           "nmake -f Makefile.win",
@@ -142,7 +142,7 @@
       {
         "id": "buffer_host",
         "env": [
-          "export SYCL_DEVICE_TYPE=HOST"
+          "set SYCL_DEVICE_TYPE=HOST"
         ],
         "steps": [
           "nmake -f Makefile.win",
@@ -161,7 +161,7 @@
       {
         "id": "usm_cpu",
         "env": [
-          "export SYCL_DEVICE_TYPE=CPU"
+          "set SYCL_DEVICE_TYPE=CPU"
         ],
         "steps": [
           "nmake -f Makefile.win build_usm",
@@ -172,7 +172,7 @@
       {
         "id": "usm_gpu",
         "env": [
-          "export SYCL_DEVICE_TYPE=GPU"
+          "set SYCL_DEVICE_TYPE=GPU"
         ],
         "steps": [
           "nmake -f Makefile.win build_usm",
@@ -183,7 +183,7 @@
       {
         "id": "usm_host",
         "env": [
-          "export SYCL_DEVICE_TYPE=HOST"
+          "set SYCL_DEVICE_TYPE=HOST"
         ],
         "steps": [
           "nmake -f Makefile.win build_usm",

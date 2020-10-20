@@ -748,8 +748,8 @@ int main(int argc, char** argv) {
 
   // Use the DPC++ library call to reduce the array using plus
   buffer<float> calc_values(results_per_rank, num_step_per_rank);
-  auto calc_begin2 = dpstd::begin(calc_values);
-  auto calc_end2 = dpstd::end(calc_values);
+  auto calc_begin2 = oneapi::dpl::begin(calc_values);
+  auto calc_end2 =  oneapi::dpl::end(calc_values);
 
   local_sum =
       std::reduce(policy, calc_begin2, calc_end2, 0.0f, std::plus<float>());

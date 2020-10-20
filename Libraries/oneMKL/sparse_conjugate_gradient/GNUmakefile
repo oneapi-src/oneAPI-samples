@@ -2,6 +2,8 @@
 
 default: run
 
+all: run
+
 run: sparse_cg
 	./sparse_cg
 
@@ -13,4 +15,4 @@ sparse_cg: sparse_cg.cpp
 clean:
 	-rm -f sparse_cg
 
-.PHONY: clean run
+.PHONY: clean run all

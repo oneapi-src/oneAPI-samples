@@ -2,6 +2,8 @@
 
 default: run
 
+all: run
+
 run: matrix_mul_mkl.exe
 	.\matrix_mul_mkl.exe
 
@@ -13,4 +15,4 @@ matrix_mul_mkl.exe: matrix_mul_mkl.cpp
 clean:
 	del /q matrix_mul_mkl.exe matrix_mul_mkl.exp matrix_mul_mkl.lib
 
-pseudo: clean run
+pseudo: clean run all

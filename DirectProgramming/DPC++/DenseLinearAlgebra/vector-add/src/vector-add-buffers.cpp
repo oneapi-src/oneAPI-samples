@@ -23,7 +23,7 @@
 #include <array>
 #include <iostream>
 #if FPGA || FPGA_EMULATOR
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #endif
 
 using namespace sycl;
@@ -32,19 +32,19 @@ using namespace sycl;
 constexpr size_t array_size = 10000;
 typedef std::array<int, array_size> IntArray;
 
-// this exception handler with catch async exceptions
-static auto exception_handler = [](cl::sycl::exception_list eList) {
-	for (std::exception_ptr const &e : eList) {
-		try {
-			std::rethrow_exception(e);
-		}
-		catch (std::exception const &e) {
+// Create an exception handler for asynchronous SYCL exceptions
+static auto exception_handler = [](sycl::exception_list e_list) {
+  for (std::exception_ptr const &e : e_list) {
+    try {
+      std::rethrow_exception(e);
+    }
+    catch (std::exception const &e) {
 #if _DEBUG
-			std::cout << "Failure" << std::endl;
+      std::cout << "Failure" << std::endl;
 #endif
-			std::terminate();
-		}
-	}
+      std::terminate();
+    }
+  }
 };
 
 //************************************
@@ -97,10 +97,10 @@ int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // DPC++ extension: FPGA emulator selector on systems without FPGA card.
-  intel::fpga_emulator_selector d_selector;
+  INTEL::fpga_emulator_selector d_selector;
 #elif FPGA
   // DPC++ extension: FPGA selector on systems with FPGA card.
-  intel::fpga_selector d_selector;
+  INTEL::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
   default_selector d_selector;

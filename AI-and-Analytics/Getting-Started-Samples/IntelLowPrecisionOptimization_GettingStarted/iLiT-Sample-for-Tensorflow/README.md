@@ -111,7 +111,7 @@ conda activate tensorflow
             
 ```
 
-### Install iLiT
+### Install iLiT by Local Channel
 
 ```
 cd /opt/intel/oneapi/iLiT/latest

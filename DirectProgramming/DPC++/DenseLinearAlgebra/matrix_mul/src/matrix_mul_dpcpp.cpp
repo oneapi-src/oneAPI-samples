@@ -97,9 +97,9 @@ int main() {
     // Submit command group to queue to multiply matrices: c = a * b
     q.submit([&](auto &h) {
       // Read from a and b, write to c
-      accessor A(a_buf, h, read_only);
-      accessor B(b_buf, h, read_only);
-      accessor C(c_buf, h, write_only);
+      accessor a(a_buf, h, read_only);
+      accessor b(b_buf, h, read_only);
+      accessor c(c_buf, h, write_only);
 
       int width_a = a_buf.get_range()[1];
 
@@ -114,10 +114,10 @@ int main() {
 
         // Compute the result of one element of c
         for (int i = 0; i < width_a; i++) {
-          sum += A[row][i] * B[i][col];
+          sum += a[row][i] * b[i][col];
         }
 
-        C[index] = sum;
+        c[index] = sum;
       });
     });
   } catch (sycl::exception const &e) {

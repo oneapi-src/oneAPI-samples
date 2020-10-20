@@ -11,10 +11,10 @@ By using all reduce collective operation samples, users can understand how to co
 | Time to complete                  | 15 minutes
 
 ## List of Samples
-| C++ API | C API | Collective Operation |
-| ------ | ------ | ------ |
-| sycl_allreduce_cpp_test.cpp | sycl_allreduce_test.cpp |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
-| cpu_allreduce_cpp_test.cpp | cpu_allreduce_test.cpp/cpu_allreduce_bfp16.c |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
+| C++ API | Collective Operation |
+| ------ | ------ |
+| sycl_allreduce_test.cpp |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
+| cpu_allreduce_test.cpp/cpu_allreduce_bf16_test.c |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
 >  Notice : Please use Intel oneAPI DevCloud as the environment for jupyter notebook samples. \
 Users can refer to [DevCloud Getting Started](https://devcloud.intel.com/oneapi/get-started/) for using DevCloud \
 Users can use JupyterLab from DevCloud via "One-click Login in", and download samples via "git clone" or the "oneapi-cli" tool \
@@ -74,10 +74,10 @@ You can refer to this page [oneAPI](https://software.intel.com/en-us/oneapi) for
   mkdir build  
   cd build 
   cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
-  make cpu_allreduce_cpp_test
+  make cpu_allreduce_test
   ```
-> NOTE: The source file "cpu_allreduce_cpp_test.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/ccl/latest/examples/cpu to build/src/cpu folder.
-Users can rebuild the cpu_allreduce_cpp_test.cpp by typing "make cpu_allreduce_cpp_test" under build folder.
+> NOTE: The source file "cpu_allreduce_test.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/ccl/latest/examples/cpu to build/src/cpu folder.
+Users can rebuild the cpu_allreduce_test.cpp by typing "make cpu_allreduce_test" under build folder.
 
 #### GPU and CPU:
 
@@ -92,10 +92,10 @@ Users can rebuild the cpu_allreduce_cpp_test.cpp by typing "make cpu_allreduce_c
   mkdir build  
   cd build 
   cmake ..  -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp
-  make sycl_allreduce_cpp_test
+  make sycl_allreduce_test
   ```
-> NOTE: The source file "sycl_allreduce_cpp_test.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/ccl/latest/examples/sycl to build/src/sycl folder.
-Users can rebuild the sycl_allreduce_cpp_test.cpp by typing "make sycl_allreduce_cpp_test" under build folder.
+> NOTE: The source file "sycl_allreduce_test.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/ccl/latest/examples/sycl to build/src/sycl folder.
+Users can rebuild the sycl_allreduce_test.cpp by typing "make sycl_allreduce_test" under build folder.
 
 ### Include Files
 The include folder is located at ${CCL_ROOT}}\include on your development system".
@@ -106,33 +106,33 @@ The include folder is located at ${CCL_ROOT}}\include on your development system
 
 #### CPU only:
 - Run the program \
-  take cpu_allreduce_cpp_test for example. \
+  take cpu_allreduce_test for example. \
   you can apply those steps for all other sample binaries. \
   please replace the {NUMBER_OF_PROCESSES} with integer number accordingly
 
   ```
-  mpirun -n ${NUMBER_OF_PROCESSES} ./out/cpu/cpu_allreduce_cpp_test 
+  mpirun -n ${NUMBER_OF_PROCESSES} ./out/cpu/cpu_allreduce_test 
   ```
   
   ex: 
   ```
-  mpirun -n 2 ./out/cpu/cpu_allreduce_cpp_test
+  mpirun -n 2 ./out/cpu/cpu_allreduce_test
   ``` 
   
 
 #### GPU and CPU:
 - Run the program \
-  take sycl_allreduce_cpp_test for example. \
+  take sycl_allreduce_test for example. \
   you can apply those steps for all other sample binaries. \
   please replace the {NUMBER_OF_PROCESSES} with integer number accordingly
 
   ```
-  mpirun -n ${NUMBER_OF_PROCESSES} ./out/sycl/sycl_allreduce_cpp_test gpu|cpu|host|default
+  mpirun -n ${NUMBER_OF_PROCESSES} ./out/sycl/sycl_allreduce_test gpu|cpu|host|default
   ```
   
   ex: run on GPU
   ```
-  mpirun -n 2 ./out/sycl/sycl_allreduce_cpp_test gpu
+  mpirun -n 2 ./out/sycl/sycl_allreduce_test gpu
   ``` 
   
 
