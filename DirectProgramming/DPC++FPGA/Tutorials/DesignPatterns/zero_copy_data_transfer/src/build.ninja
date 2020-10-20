@@ -21,5 +21,4 @@ build ${emulator_target}: build_fpga_emu ${source_file}
 build report: phony ${report_target}
 build ${report_target}: gen_report ${source_file}
 
-build report_s10: phony ${report_target}
-build ${report_target}: gen_report ${source_file}
+build report_s10_pac: phony report
