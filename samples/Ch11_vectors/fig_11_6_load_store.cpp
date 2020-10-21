@@ -7,7 +7,8 @@
 using namespace sycl;
 
 int main() {
-  constexpr int size = 1024;
+  constexpr int workers = 64;
+  constexpr int size = workers * 16;
 
 // BEGIN CODE SNIP
   std::array<float, size> fpData;
@@ -21,12 +22,11 @@ int main() {
   Q.submit([&](handler& h) {
     accessor buf{fpBuf, h};
 
-    h.parallel_for(size, [=](id<1> idx) {
-      size_t offset = idx[0]/16;
+    h.parallel_for(workers, [=](id<1> idx) {
       float16 inpf16;
-      inpf16.load(offset, buf.get_pointer());
+      inpf16.load(idx, buf.get_pointer());
       float16 result = inpf16 * 2.0f;
-      result.store(offset, buf.get_pointer());
+      result.store(idx, buf.get_pointer());
     });
   });
 // END CODE SNIP
