@@ -7,6 +7,7 @@
 #include <CL/sycl.hpp>
 #include <iomanip>  // setprecision library
 #include <iostream>
+#include <numeric> 
 
 // The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include
 // on your development system.
@@ -171,27 +172,26 @@ struct slice_area {
 
 
 // a way to get value_type from both accessors and USM that is needed for transform_init
-template <typename _Unknown>
+template <typename Unknown>
 struct accessor_traits_impl
 {
 };
 
-template <typename _T, int _Dim, sycl::access::mode _AccMode, sycl::access::target _AccTarget,
-          sycl::access::placeholder _Placeholder>
-struct accessor_traits_impl<sycl::accessor<_T, _Dim, _AccMode, _AccTarget, _Placeholder>>
+template <typename T, int Dim, sycl::access::mode AccMode, sycl::access::target AccTarget,
+          sycl::access::placeholder Placeholder>
+struct accessor_traits_impl<sycl::accessor<T, Dim, AccMode, AccTarget, Placeholder>>
 {
-    using value_type = typename sycl::accessor<_T, _Dim, _AccMode, _AccTarget, _Placeholder>::value_type;
+    using value_type = typename sycl::accessor<T, Dim, AccMode, AccTarget, Placeholder>::value_type;
 };
 
-template <typename _RawArrayValueType>
-struct accessor_traits_impl<_RawArrayValueType*>
+template <typename RawArrayValueType>
+struct accessor_traits_impl<RawArrayValueType*>
 {
-    using value_type = _RawArrayValueType;
+    using value_type = RawArrayValueType;
 };
 
-template <typename _Unknown>
-using accessor_traits = accessor_traits_impl<typename std::decay<_Unknown>::type>;
-
+template <typename Unknown>
+using accessor_traits = accessor_traits_impl<typename std::decay<Unknown>::type>;
 
 // calculate shift where we should start processing on current item
 template <typename NDItemId, typename GlobalIdx, typename SizeNIter, typename SizeN>
@@ -314,11 +314,6 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
   });
   policy.queue().wait();
 
-  // Calc_begin and calc_end are iterators pointing to
-  // beginning and end of the buffer
-  auto calc_begin = oneapi::dpl::begin(buf);
-  auto calc_end = oneapi::dpl::end(buf);
-
   using Functor = walk_n<Policy, my_no_op>;
 
   // Functor will do nothing for tranform_init and will use plus for reduce.
@@ -414,9 +409,6 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
                    [=](id<1> idx) { writeresult[idx[0]] = (float)idx[0]; });
   });
   policy.queue().wait();
-
-  auto calc_begin = oneapi::dpl::begin(buf2);
-  auto calc_end = oneapi::dpl::end(buf2);
 
   using Functor2 = walk_n<Policy, slice_area>;
 
@@ -756,7 +748,6 @@ int main(int argc, char** argv) {
 
   local_sum =
       std::reduce(policy, calc_begin2, calc_end2, 0.0f, std::plus<float>());
-  policy.queue().wait();
 
   // Master rank performs a reduce operation to get the sum of all partial Pi.
   MPI_Reduce(&local_sum, &pi, 1, MPI_FLOAT, MPI_SUM, master, MPI_COMM_WORLD);
