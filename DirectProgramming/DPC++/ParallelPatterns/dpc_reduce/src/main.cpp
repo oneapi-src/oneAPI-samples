@@ -7,6 +7,7 @@
 #include <CL/sycl.hpp>
 #include <iomanip>  // setprecision library
 #include <iostream>
+#include <numeric> 
 
 // The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include
 // on your development system.
@@ -163,7 +164,7 @@ struct slice_area {
   slice_area(int num_steps) { num = num_steps; }
 
   template <typename T>
-  float operator()(T&& i) {
+  float operator()(T&& i) const {
     float x = ((float)i - 0.5) / (float)num;
     return 4.0f / (1.0f + (x * x));
   };
@@ -172,22 +173,25 @@ struct slice_area {
 
 // a way to get value_type from both accessors and USM that is needed for transform_init
 template <typename Unknown>
-struct accessor_traits
+struct accessor_traits_impl
 {
 };
 
 template <typename T, int Dim, sycl::access::mode AccMode, sycl::access::target AccTarget,
           sycl::access::placeholder Placeholder>
-struct accessor_traits<sycl::accessor<T, Dim, AccMode, AccTarget, Placeholder>>
+struct accessor_traits_impl<sycl::accessor<T, Dim, AccMode, AccTarget, Placeholder>>
 {
     using value_type = typename sycl::accessor<T, Dim, AccMode, AccTarget, Placeholder>::value_type;
 };
 
 template <typename RawArrayValueType>
-struct accessor_traits<RawArrayValueType*>
+struct accessor_traits_impl<RawArrayValueType*>
 {
     using value_type = RawArrayValueType;
 };
+
+template <typename Unknown>
+using accessor_traits = accessor_traits_impl<typename std::decay<Unknown>::type>;
 
 // calculate shift where we should start processing on current item
 template <typename NDItemId, typename GlobalIdx, typename SizeNIter, typename SizeN>
@@ -219,7 +223,7 @@ struct transform_init
     template <typename NDItemId, typename GlobalIdx, typename Size, typename AccLocal, typename... Acc>
     void
     operator()(const NDItemId item_id, const GlobalIdx global_idx, Size n, AccLocal& local_mem,
-               const Acc&... acc)
+               const Acc&... acc) const 
     {
         auto local_idx = item_id.get_local_id(0);
         auto global_range_size = item_id.get_global_range().size();
@@ -253,7 +257,7 @@ struct reduce
 
     template <typename NDItemId, typename GlobalIdx, typename Size, typename AccLocal>
     Tp
-    operator()(const NDItemId item_id, const GlobalIdx global_idx, const Size n, AccLocal& local_mem)
+    operator()(const NDItemId item_id, const GlobalIdx global_idx, const Size n, AccLocal& local_mem) const 
     {
         auto local_idx = item_id.get_local_id(0);
         auto group_size = item_id.get_local_range().size();
@@ -282,7 +286,7 @@ struct walk_n
 
     template <typename ItemId, typename... Ranges>
     auto
-    operator()(const ItemId idx, Ranges&&... rngs) -> decltype(f(rngs[idx]...))
+    operator()(const ItemId idx, Ranges&&... rngs) const -> decltype(f(rngs[idx]...))
     {
         return f(rngs[idx]...);
     }
@@ -310,13 +314,7 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
   });
   policy.queue().wait();
 
-  // Calc_begin and calc_end are iterators pointing to
-  // beginning and end of the buffer
-  auto calc_begin = oneapi::dpl::begin(buf);
-  auto calc_end = oneapi::dpl::end(buf);
-
   using Functor = walk_n<Policy, my_no_op>;
-  float result;
 
   // Functor will do nothing for tranform_init and will use plus for reduce.
   // In this example we have done the calculation and filled the buffer above
@@ -353,7 +351,7 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
             temp_buf_local(range<1>(workgroup_size), h);
         h.parallel_for(nd_range<1>(range<1>(n_groups * workgroup_size),
                                    range<1>(workgroup_size)),
-                       [=](nd_item<1> item_id) mutable {
+                       [=](nd_item<1> item_id) {
                          auto global_idx = item_id.get_global_id(0);
                          // 1. Initialization (transform part).
                          tf_init(item_id, global_idx, num_steps,
@@ -376,7 +374,7 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
                                             countby2, n_groups](handler& h) {
         h.depends_on(reduce_event);
         accessor temp_acc(temp_buf,h);
-        h.parallel_for(range<1>(n_groups), [=](item<1> item_id) mutable {
+        h.parallel_for(range<1>(n_groups), [=](item<1> item_id) {
           auto global_idx = item_id.get_linear_id();
 
           if (global_idx % (2 * countby2) == 0 &&
@@ -411,9 +409,6 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
                    [=](id<1> idx) { writeresult[idx[0]] = (float)idx[0]; });
   });
   policy.queue().wait();
-
-  auto calc_begin = oneapi::dpl::begin(buf2);
-  auto calc_end = oneapi::dpl::end(buf2);
 
   using Functor2 = walk_n<Policy, slice_area>;
 
@@ -460,7 +455,7 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
             temp_buf_local(range<1>(workgroup_size), h);
         h.parallel_for(nd_range<1>(range<1>(n_groups * workgroup_size),
                                    range<1>(workgroup_size)),
-                       [=](nd_item<1> item_id) mutable {
+                       [=](nd_item<1> item_id) {
                          auto global_idx = item_id.get_global_id(0);
                          // 1. Initialization (transform part). Fill local
                          // memory
@@ -484,7 +479,7 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
                                             countby2, n_groups](handler& h) {
         h.depends_on(reduce_event);
         accessor temp_acc(temp_buf,h);
-        h.parallel_for(range<1>(n_groups), [=](item<1> item_id) mutable {
+        h.parallel_for(range<1>(n_groups), [=](item<1> item_id) {
           auto global_idx = item_id.get_linear_id();
 
           if (global_idx % (2 * countby2) == 0 &&
@@ -636,10 +631,10 @@ int main(int argc, char** argv) {
   int num_steps = 1000000;
   int groups = 10000;
   char machine_name[MPI_MAX_PROCESSOR_NAME];
-  int name_len;
-  int id;
-  int num_procs;
-  float pi;
+  int name_len=0;
+  int id=0;
+  int num_procs=0;
+  float pi=0.0;
   queue myQueue{property::queue::in_order()};
   auto policy = oneapi::dpl::execution::make_device_policy(
       queue(default_selector{}, dpc_common::exception_handler));
@@ -753,7 +748,6 @@ int main(int argc, char** argv) {
 
   local_sum =
       std::reduce(policy, calc_begin2, calc_end2, 0.0f, std::plus<float>());
-  policy.queue().wait();
 
   // Master rank performs a reduce operation to get the sum of all partial Pi.
   MPI_Reduce(&local_sum, &pi, 1, MPI_FLOAT, MPI_SUM, master, MPI_COMM_WORLD);
