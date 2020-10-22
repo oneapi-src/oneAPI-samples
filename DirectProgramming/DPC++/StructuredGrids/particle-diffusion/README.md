@@ -58,19 +58,7 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 
 ### On a Windows\* System Using Microsoft Visual Studio 2017 or Newer
 
-#### Build the motionsim Program Using Visual Studio 2017 or Visual Studio 2019
-
-##### 1. Right click on the solution file (.sln) and open it using either Visual Studio 2017 or Visual Studio 2019
-##### 2. From Visual Studio, right click on the project solution file in solution explorer and select rebuild
-##### 3. From top menu select Debug -> Start Without Debugging
-
-#### Build the motionsim Program Using MSBuild
-
-##### 1. Open "x64 Native Tools Command Prompt for VS 2017" or "x64 Native Tools Command Prompt for VS 2019" as Administrator (right click application and select Run as Administrator)
-##### 2. Build
-From the particle diffusion Project directory:  
-
-    > MSBuild Particle_Diffusion.sln /t:Rebuild /p:Configuration="Release"
+Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
 ### On a Linux\* System Using CMake
 
