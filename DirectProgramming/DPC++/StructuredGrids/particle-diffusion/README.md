@@ -56,7 +56,7 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 
 ## Build and run
 
-### On a Windows\* System Using Microsoft Visual Studio 2017 or Newer
+### On a Windows\* System Using NMAKE 
 
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
