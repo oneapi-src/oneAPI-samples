@@ -6,6 +6,7 @@
   "dependencies": ["iot-c|https://github.com/ibm-watson-iot/iot-c"],
   "languages": [{"cpp":{}}],
   "os": ["linux"],
+  "builder": ["cmake"],
   "ciTests": {
     "linux": [
         { "id": "ibm-device",
