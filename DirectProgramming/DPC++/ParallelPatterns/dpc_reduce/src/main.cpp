@@ -64,7 +64,6 @@ float calc_pi_cpu_tbb(int num_steps) {
 // mininmal complexity.
 template <typename Policy>
 float calc_pi_dpstd_native(size_t num_steps, Policy&& policy) {
-  float step = 1.0 / (float)num_steps;
 
   float data[num_steps];
 
@@ -102,10 +101,8 @@ float calc_pi_dpstd_native(size_t num_steps, Policy&& policy) {
 // task to reduce into groups and then use cpu for final reduction.
 template <typename Policy>
 float calc_pi_dpstd_native2(size_t num_steps, Policy&& policy, int group_size) {
-  float step = 1.0 / (float)num_steps;
 
   float data[num_steps];
-  float myresult = 0.0;
 
   // Create buffer using host allocated "data" array
   buffer<float, 1> buf{data, range<1>{num_steps}};
@@ -398,7 +395,6 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
 template <typename Policy>
 float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
   std::vector<float> data(num_steps);
-  float result = 0.0;
 
   buffer<float, 1> buf2{data.data(), range<1>{num_steps}};
 
@@ -502,7 +498,6 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
 // call which sums up the results of all the elements in the buffer.
 template <typename Policy>
 float calc_pi_dpstd_two_steps_lib(int num_steps, Policy&& policy) {
-  float step = 1.0 / (float)num_steps;
 
   buffer<float> calc_values{num_steps};
   auto calc_begin2 = oneapi::dpl::begin(calc_values);
@@ -556,7 +551,6 @@ float calc_pi_dpstd_onestep(int num_steps, Policy& policy) {
 ////////////////////////////////////////////////////////////////////////
 void mpi_native(float* results, int rank_num, int num_procs,
                 long total_num_steps, queue& q) {
-  int num_step_per_rank = total_num_steps / num_procs;
   float dx, dx2;
 
   dx = 1.0f / (float)total_num_steps;
@@ -570,17 +564,17 @@ void mpi_native(float* results, int rank_num, int num_procs,
   // objects. But those pointers are not always directly readable. So, we
   // rethrow the pointer, catch it,  and then we have the exception itself.
   // Note: depending upon the operation there may be several exceptions.
-  auto exception_handler = [&](exception_list exceptionList) {
-    for (std::exception_ptr const& e : exceptionList) {
-      try {
-        std::rethrow_exception(e);
-      } catch (cl::sycl::exception const& e) {
-        std::cout << "Failure"
-                  << "\n";
-        std::terminate();
-      }
-    }
-  };
+  // auto exception_handler = [&](exception_list exceptionList) {
+    // for (std::exception_ptr const& e : exceptionList) {
+      // try {
+        // std::rethrow_exception(e);
+      // } catch (cl::sycl::exception const& e) {
+        // std::cout << "Failure"
+                  // << "\n";
+        // std::terminate();
+      // }
+    // }
+  // };
 
   try {
     // The size of amount of memory that will be given to the buffer.
@@ -771,8 +765,6 @@ int main(int argc, char** argv) {
   MPI_Reduce(&local_sum, &pi, 1, MPI_FLOAT, MPI_SUM, master, MPI_COMM_WORLD);
 
   if (id == master) {
-    auto stop6 = T7.Elapsed();
-
     std::cout << "mpi transform_reduce:\t";
     std::cout << std::setprecision(3) << "PI =" << pi;
     std::cout << " in " << stop7 << " seconds\n";
