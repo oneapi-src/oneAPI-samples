@@ -7,8 +7,8 @@ emulator_target = ${target_name}.fpga_emu.exe
 report_target = ${target_name}_report.a
 report_target_s10_pac = ${target_name}_s10_pac_report.a
 
-hardware_flags = -fintelfpga -fsycl-enable-usm-address-spaces -Xshardware -Xsclock=280MHz -Xsparallel=2 -Xsseed=19
-emulator_flags = -fintelfpga -fsycl-enable-usm-address-spaces -DFPGA_EMULATOR
+hardware_flags = -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=12
+emulator_flags = -fintelfpga -DFPGA_EMULATOR
 
 rule build_fpga_emu
   command = dpcpp /GX ${emulator_flags} ${device_source_file} ${host_source_file} -o $out
