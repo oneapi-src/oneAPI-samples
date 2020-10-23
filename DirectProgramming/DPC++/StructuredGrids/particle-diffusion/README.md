@@ -61,9 +61,8 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
 Run executable with select parameters:
-####
-motionsim.exe 10000 256 22 777 0 1
-####
+
+`motionsim.exe 10000 256 22 777 0 1`
 
 ### On a Linux\* System Using CMake
 
