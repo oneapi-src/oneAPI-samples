@@ -160,9 +160,10 @@ int main(int argc, char* argv[]) {
               << restricted_usm_avg_lat << " ms\n";
 #endif
 
-    // free the manually allocated USM memory
-    sycl::free(in_restricted_usm, q.get_context());
-    sycl::free(out_restricted_usm, q.get_context());
+    // free the allocated host usm memory
+    // note that these are calls to sycl::free()
+    free(in_restricted_usm, q);
+    free(out_restricted_usm, q);
 
   } catch (exception const& e) {
     // Catches exceptions in the host code
