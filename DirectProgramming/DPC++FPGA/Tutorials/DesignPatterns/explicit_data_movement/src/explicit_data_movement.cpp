@@ -123,8 +123,8 @@ double SubmitExplicitKernel(queue& q, std::vector<T>& in,
 
   // free the device memory
   // note that these are calls to sycl::free()
-  sycl::free(in_ptr, q);
-  sycl::free(out_ptr, q);
+  free(in_ptr, q);
+  free(out_ptr, q);
 
   return diff.count();
 }
