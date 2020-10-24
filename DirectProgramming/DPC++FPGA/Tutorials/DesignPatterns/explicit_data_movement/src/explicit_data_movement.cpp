@@ -69,8 +69,8 @@ template<typename T>
 double SubmitExplicitKernel(queue& q, std::vector<T>& in,
                             std::vector<T>& out, size_t size) {
   // allocate the device memory
-  T* in_ptr = malloc_device<T>(size, q.get_device(), q.get_context());
-  T* out_ptr = malloc_device<T>(size, q.get_device(), q.get_context());
+  T* in_ptr = malloc_device<T>(size, q);
+  T* out_ptr = malloc_device<T>(size, q);
 
   // ensure we successfully allocated the device memory
   if(in_ptr == nullptr) {
@@ -122,6 +122,7 @@ double SubmitExplicitKernel(queue& q, std::vector<T>& in,
   duration<double, std::milli> diff = end - start;
 
   // free the device memory
+  // note that these are calls to sycl::free()
   sycl::free(in_ptr, q);
   sycl::free(out_ptr, q);
 
