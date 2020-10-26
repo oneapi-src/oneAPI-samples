@@ -1,0 +1,10 @@
+{
+  "guid": "83A48E69-C1FC-4D9E-8123-2E79D7385DEF",
+  "name": "Vector Add DPCT",
+  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/Intel DPC++ Compatibility Tool" ],
+  "description": "Simple project to illustrate the basic migration of CUDA code. Use this sample to ensure your environment is configured correctly and to understand the basics of migrating existing CUDA projects to Data Parallel C++.",
+  "languages": [ { "cpp": {} } ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "make" ],
+  "ciTests": { "linux": [], "windows": [] }
+}

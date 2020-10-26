@@ -6,6 +6,7 @@
   "dependencies": ["azure-iot-sdk-c|https://github.com/Azure/azure-iot-sdk-c"],
   "languages": [{"cpp":{}}],
   "os": ["linux"],
+  "builder": ["cmake"],
   "ciTests": {
     "linux": [
         { "id": "azure-iothub-telemetry",

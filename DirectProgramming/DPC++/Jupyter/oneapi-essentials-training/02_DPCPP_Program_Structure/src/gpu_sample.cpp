@@ -8,7 +8,7 @@
 using namespace cl::sycl;
 
 int main() {
-  // Create a queue and with device selector 
+  //# Create a device queue with device selector
   
   gpu_selector selector;
   //cpu_selector selector;
@@ -17,7 +17,7 @@ int main() {
   
   queue q(selector);
 
-  // Print the device name
+  //# Print the device name
   std::cout << "Device: " << q.get_device().get_info<info::device::name>() << std::endl;
 
   return 0;

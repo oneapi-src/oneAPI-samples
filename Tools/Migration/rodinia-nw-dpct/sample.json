@@ -1,0 +1,10 @@
+{
+  "guid": "D61397C9-59F0-4701-A55E-6EF9397C4E16",
+  "name": "Rodinia NW DPCT",
+  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/Intel DPC++ Compatibility Tool" ],
+  "description": "Migrate a CUDA project using the DPCT intercept-build feature to create a compilation database. The compilation database provides compilation options, settings, macro definitions and include paths that the Intel® DPC++ Compatibility Tool will use during migration of the project.",
+  "languages": [ { "cpp": {} } ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "make" ],
+  "ciTests": { "linux": [], "windows": [] }
+}

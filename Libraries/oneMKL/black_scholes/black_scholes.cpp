@@ -21,12 +21,14 @@
 
 #include <CL/sycl.hpp>
 
+#if __has_include("oneapi/mkl.hpp")
+#include "oneapi/mkl.hpp"
+#include "oneapi/mkl/rng/device.hpp"
+#else
+// Beta09 compatibility -- not needed for new code.
 #include "mkl_sycl.hpp"
 #include "mkl_rng_sycl_device.hpp"
-
-namespace oneapi {
-
-} // namespace oneapi
+#endif
 
 using namespace oneapi;
 
@@ -43,13 +45,13 @@ using std::size_t;
 
 
 #if (defined (ACC_ep))
-uint64_t vml_accuracy = mkl::vm::mode::ep;
+auto vml_accuracy = mkl::vm::mode::ep;
 #elif (defined (ACC_la))
-uint64_t vml_accuracy = mkl::vm::mode::la;
+auto vml_accuracy = mkl::vm::mode::la;
 #elif(defined (ACC_ha))
-uint64_t vml_accuracy = mkl::vm::mode::ha;
+auto vml_accuracy = mkl::vm::mode::ha;
 #else
-uint64_t vml_accuracy = mkl::vm::mode::not_defined;
+auto vml_accuracy = mkl::vm::mode::not_defined;
 #endif
 
 enum class dev_select : int {
