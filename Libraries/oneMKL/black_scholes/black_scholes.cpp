@@ -59,16 +59,6 @@ enum class dev_select : int {
     gpu = 2
 };
 
-double uniform(double a, double b, std::mt19937_64 & rng) {
-    union {
-        double d;
-        uint64_t w;
-    } arg;
-
-    arg.w = (UINT64_C(0x3FF) << 52) | (rng() >> 12);
-    return (arg.d - 1.0) * (b - a) + a;
-}
-
 constexpr uint64_t seed = UINT64_C(0x1234'5678'09ab'cdef);
 
 constexpr double s0_low  = 10.0;
@@ -102,17 +92,6 @@ void async_sycl_error(sycl::exception_list el) {
         } catch(const sycl::exception & e) {
             std::cerr << "SYCL exception occured with code " << e.get_cl_code() << " with " << e.what() << std::endl;
         }
-    }
-}
-
-template <typename T>
-void generate_inputs_ref(int64_t nopt, T * s0, T * x, T * t) {
-    std::mt19937_64 rng { seed };
-
-    for (int64_t i = 0; i < nopt; ++i) {
-        s0[i] = uniform(s0_low, s0_high, rng);
-        x[i]  = uniform(x_low, x_high, rng);
-        t[i]  = uniform(t_low, t_high, rng);
     }
 }
 
