@@ -5,6 +5,7 @@
   "description": "Demonstrate basic functionality of the Intel System Debugger.",
   "languages": [{"python":{},"cpp":{}}],
   "os": ["linux", "windows"],
+  "builder": ["cmake"],
   "ciTests": {
     "linux": [
         { "id": "system_debug_sample",

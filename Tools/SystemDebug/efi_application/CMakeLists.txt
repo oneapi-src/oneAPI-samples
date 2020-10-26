@@ -22,7 +22,7 @@ if(APPLE) # Use crosscompiler toolchain
     SET(CMAKE_RANLIB ${RANLIB})
     SET(MAKE_PREFIX x86_64-elf-)
 
-    set(CREATE_ELF_HEADER ln -f -s /usr/local/include/elf.h .)
+    set(CREATE_ELF_HEADER ln -f -s /usr/local/include/elf.h ./gnuefi)
     set(CMAKE_C_COMPILER_WORKS 1)
     set(CMAKE_CXX_COMPILER_WORKS 1)
     set(CMAKE_C_COMPILER_ID GNU)
@@ -70,7 +70,7 @@ if (CMAKE_HOST_UNIX)
     endif()
 
     set(EFI_LIB_DIR ${EFI_DIR}/${EFI_ARCH}/lib)
-    set(EFI_LIB_DIR_GNU ${EFI_DIR}/gnu-efi-code)
+    set(EFI_LIB_DIR_GNU ${EFI_DIR}/gnuefi)
 
     set(EFI_CRT ${EFI_LIB_DIR_GNU}/crt0-efi-${EFI_ARCH}.o)
 
@@ -90,7 +90,7 @@ if (CMAKE_HOST_UNIX)
     if (CMAKE_C_COMPILER_ID MATCHES "Intel")
         set(EFI_CFLAGS -debug -ffreestanding -O0 -c -fPIC -fno-stack-protector -fshort-wchar -mno-red-zone )
     else ()
-        set(EFI_CFLAGS -g -ffreestanding -Og -fPIC -fno-stack-protector -fshort-wchar -mno-red-zone)
+        set(EFI_CFLAGS -g -Wall -Wformat-security -Werror=format-security -ffreestanding -Og -fPIC -fno-stack-protector -fshort-wchar -mno-red-zone)
     endif()
     if (CMAKE_C_COMPILER_ID MATCHES "Clang")
         # setjmp is a builtin for Clang but present in the EFI lib headers...
