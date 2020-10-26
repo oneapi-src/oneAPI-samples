@@ -1,0 +1,154 @@
+{
+  "guid": "EC4A8B82-A2A4-4B03-9F26-1D1E7170D492",
+  "name": "Database Query Acceleration",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Reference Designs"],
+  "description": "An FPGA reference design that demonstrates high-performance database query acceleration on an Intel FPGAs.",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu_q1",
+        "steps": [
+          "mkdir build-q1",
+          "cd build-q1",
+          "cmake .. -DQUERY=1",
+          "make fpga_emu",
+          "./db.fpga_emu --dbroot=../data/sf0.01 --test"
+        ]
+      },
+      {
+        "id": "fpga_emu_q9",
+        "steps": [
+          "mkdir build-q9",
+          "cd build-q9",
+          "cmake .. -DQUERY=9",
+          "make fpga_emu",
+          "./db.fpga_emu --dbroot=../data/sf0.01 --test"
+        ]
+      },
+      {
+        "id": "fpga_emu_q11",
+        "steps": [
+          "mkdir build-q11",
+          "cd build-q11",
+          "cmake .. -DQUERY=11",
+          "make fpga_emu",
+          "./db.fpga_emu --dbroot=../data/sf0.01 --test"
+        ]
+      },
+      {
+        "id": "fpga_emu_q12",
+        "steps": [
+          "mkdir build-q12",
+          "cd build-q12",
+          "cmake .. -DQUERY=12",
+          "make fpga_emu",
+          "./db.fpga_emu --dbroot=../data/sf0.01 --test"
+        ]
+      },
+      {
+        "id": "report_q1",
+        "steps": [
+          "mkdir build-q1",
+          "cd build-q1",
+          "cmake .. -DQUERY=1",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_q9",
+        "steps": [
+          "mkdir build-q9",
+          "cd build-q9",
+          "cmake .. -DQUERY=9",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_q11",
+        "steps": [
+          "mkdir build-q11",
+          "cd build-q11",
+          "cmake .. -DQUERY=11",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_q12",
+        "steps": [
+          "mkdir build-q12",
+          "cd build-q12",
+          "cmake .. -DQUERY=12",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu_q1",
+        "steps": [
+          "cd src",
+          "ninja fpga_emu_q1",
+          "db.q1.fpga_emu.exe --dbroot=../data/sf0.01 --test"
+        ]
+      },
+      {
+        "id": "fpga_emu_q9",
+        "steps": [
+          "cd src",
+          "ninja fpga_emu_q9",
+          "db.q9.fpga_emu.exe --dbroot=../data/sf0.01 --test"
+        ]
+      },
+      {
+        "id": "fpga_emu_q11",
+        "steps": [
+          "cd src",
+          "ninja fpga_emu_q11",
+          "db.q11.fpga_emu.exe --dbroot=../data/sf0.01 --test"
+        ]
+      },
+      {
+        "id": "fpga_emu_q12",
+        "steps": [
+          "cd src",
+          "ninja fpga_emu_q12",
+          "db.q12.fpga_emu.exe --dbroot=../data/sf0.01 --test"
+        ]
+      },
+      {
+        "id": "report_q1",
+        "steps": [
+          "cd src",
+          "ninja report_q1"
+        ]
+      },
+      {
+        "id": "report_q9",
+        "steps": [
+          "cd src",
+          "ninja report_q9"
+        ]
+      },
+      {
+        "id": "report_q11",
+        "steps": [
+          "cd src",
+          "ninja report_q11"
+        ]
+      },
+      {
+        "id": "report_q12",
+        "steps": [
+          "cd src",
+          "ninja report_q12"
+        ]
+      }
+    ]
+  }
+}
+
