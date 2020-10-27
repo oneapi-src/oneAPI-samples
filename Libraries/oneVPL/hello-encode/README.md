@@ -16,7 +16,7 @@ perform a simple video encode.
 
 This sample is a command line application that takes a file containing a raw
 I420 format video elementary stream as an argument, encodes it with oneVPL and
-writes the decoded output to `out.h265` in H.265 format.
+writes the encoded output to `out.h265` in H.265 format.
 
 
 ## Key Implementation details
@@ -124,7 +124,7 @@ The instructions given above run the sample executable with the arguments
 
 ```
 Encoding hello-encode/content/cars_128x96.i420 -> out.h265
-  Encoded 60 frames
+Encoded 60 frames
 ```
 
 You can find the output file `out.h265` in the build directory.
