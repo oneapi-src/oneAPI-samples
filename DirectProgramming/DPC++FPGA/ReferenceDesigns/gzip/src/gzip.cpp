@@ -203,13 +203,14 @@ int main(int argc, char *argv[]) {
 #endif
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
