@@ -187,7 +187,7 @@ int main(int argc, char *argv[]) {
       outfilenames[i] = outfilenames[0] + std::to_string(i+1);
     }
 
-    std::cout << "Launching GZIP application with " << kNumEngines
+    std::cout << "Launching High-Bandwidth DMA GZIP application with " << kNumEngines
               << " engines\n";
 
 #ifdef FPGA_EMULATOR
