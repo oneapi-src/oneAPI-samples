@@ -13,7 +13,17 @@ class Date {
  public:
   Date(const int y, const int m, const int d) : year(y), month(m), day(d) {}
   Date(std::string date_str) {
-    sscanf(date_str.c_str(), "%4d-%2d-%2d", &year, &month, &day);
+    // parse money string
+    std::istringstream ss(date_str);
+    std::string year_str, month_str, day_str;
+
+    std::getline(ss, year_str, '-');
+    std::getline(ss, month_str, '-');
+    std::getline(ss, day_str, '-');
+
+    year = atoi(year_str.c_str());
+    month = atoi(month_str.c_str());
+    day = atoi(day_str.c_str());
   }
 
   //

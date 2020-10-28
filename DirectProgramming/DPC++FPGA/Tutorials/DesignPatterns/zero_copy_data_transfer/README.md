@@ -6,13 +6,13 @@ This tutorial demonstrates how to use zero-copy host memory via the SYCL restric
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Stratix® 10 SX FPGA
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
 | Software                          | Intel&reg; oneAPI DPC++ Compiler (Beta)
 | What you will learn               | How to use Restricted USM for the FPGA
 | Time to complete                  | 15 minutes
 
-_Notice: Limited support in Windows*, Compiling for FPGA hardware is not supported in Windows*_</br>
-_Notice: Restricted USM (and therefore this tutorial) is only supported for the Intel® Programmable Acceleration Card (PAC) with Intel Stratix 10 SX FPGA_
+
+_Notice: Restricted USM (and therefore this tutorial) is only supported for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA)_
 
 ## Purpose
 The purpose of this tutorial is to show you how to take advantage of zero-copy host memory for the FPGA to improve the performance of your design. On an FPGA, all host and shared allocations are implemented as *zero-copy* data in host memory. This means that the FPGA will access the data directly over PCIe, which can improve performance in cases where there is little or no temporal reuse of data in the FPGA kernel. This tutorial includes two different kernels: one using traditional SYCL buffers (`src/buffer_kernel.hpp`) and one using restricted USM (`src/restricted_usm_kernel.hpp`) that takes advantage of zero-copy host memory. Before completing this tutorial, it is suggested you review the **Explicit USM** (explicit_usm) tutorial.
@@ -67,7 +67,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Stratix® 10 SX FPGA, run `cmake` using the command:  
+   To compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:  
     ```
     cmake ..
    ```
@@ -86,30 +86,38 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Stratix® 10 SX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/zero_copy_data_transfer.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) precompiled binary (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/zero_copy_data_transfer.fpga.tar.gz" download>here</a>.
  
 ### On a Windows* System
-Note: `cmake` is not yet supported on Windows. A build.ninja file is provided instead. 
- 
-1. Enter the source file directory.
-   ```
-   cd src
-   ```
- 
-2. Compile the design. The following build targets are provided, matching the recommended development flow:
- 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
-      ```
-      ninja fpga_emu
-      ```
- 
-   * Generate the optimization report:
- 
-     ```
-     ninja report
-     ```
 
-   * Compiling for FPGA hardware is not yet supported on Windows.
+1. Generate the `Makefile` by running `cmake`.
+     ```
+   mkdir build
+   cd build
+   ```
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+    ```
+    cmake -G "NMake Makefiles" ..
+   ```
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   ```
+
+2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+
+   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+     ```
+     nmake fpga_emu
+     ```
+   * Generate the optimization report: 
+     ```
+     nmake report
+     ``` 
+   * An FPGA hardware target is not provided on Windows*. 
+
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
 ### In Third-Party Integrated Development Environments (IDEs)
 
