@@ -27,7 +27,7 @@
 using namespace dpc_common;
 using namespace sycl;
 
-constexpr int num_tests = 5;
+//constexpr int num_tests = 5;
 
 constexpr int block_dims = 8;
 constexpr int block_size = 64;
