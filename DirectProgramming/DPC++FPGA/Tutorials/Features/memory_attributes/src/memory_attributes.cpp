@@ -4,20 +4,11 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
 
 using namespace sycl;
 
@@ -84,8 +75,8 @@ template<int AttrType>
 event submitKernel(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
                       buffer<unsigned, 1>& r_buf) {
   auto e = q.submit([&](handler &h) {
-    accessor d_accessor { d_buf, h, read_only };
-    accessor r_accessor { r_buf, h, write_only, noinit };
+    accessor d_accessor(d_buf, h, read_only);
+    accessor r_accessor(r_buf, h, write_only, noinit);
 
     h.single_task<Kernel<AttrType>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType
@@ -113,8 +104,8 @@ template<>
 event submitKernel<1>(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
                       buffer<unsigned, 1>& r_buf) {
   auto e = q.submit([&](handler &h) {
-    accessor d_accessor { d_buf, h, read_only };
-    accessor r_accessor { r_buf, h, write_only, noinit };
+    accessor d_accessor(d_buf, h, read_only);
+    accessor r_accessor(r_buf, h, write_only, noinit);
 
     h.single_task<Kernel<1>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType
@@ -146,8 +137,8 @@ template<>
 event submitKernel<2>(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
                       buffer<unsigned, 1>& r_buf) {
   auto e = q.submit([&](handler &h) {
-    accessor d_accessor { d_buf, h, read_only };
-    accessor r_accessor { r_buf, h, write_only, noinit };
+    accessor d_accessor(d_buf, h, read_only);
+    accessor r_accessor(r_buf, h, write_only, noinit);
 
     h.single_task<Kernel<2>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType
@@ -198,13 +189,14 @@ unsigned RunKernel(unsigned init, const unsigned dict_offset_init[]) {
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
@@ -227,8 +219,6 @@ unsigned GoldenRun(unsigned init, unsigned const dict_offset_init[]) {
 
 int main() {
   srand(0);
-
-  unsigned dict_offset_init[kRows*kVec];
 
   bool passed = true;
 

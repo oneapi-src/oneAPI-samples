@@ -20,9 +20,8 @@
         }],
         "windows": [{
                 "steps": [
-                        "MSBuild Particle_Diffusion.sln /t:Rebuild /p:Configuration=\"Release\"",
-                        "cd x64/Release",
-                        "Particle_Diffusion.exe 10000 777"
+                        "nmake clean",
+                        "nmake"
                 ]
         }]
 

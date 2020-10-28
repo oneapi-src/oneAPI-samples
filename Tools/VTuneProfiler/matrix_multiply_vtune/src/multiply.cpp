@@ -4,18 +4,13 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
+#include <array>
+#include <CL/sycl.hpp>
 // matrix multiply routines
 #include "multiply.hpp"
 
-#include <CL/sycl.hpp>
-#include <array>
-
 using namespace cl::sycl;
 using namespace std;
-
-constexpr cl::sycl::access::mode sycl_read = cl::sycl::access::mode::read;
-constexpr cl::sycl::access::mode sycl_write = cl::sycl::access::mode::write;
-constexpr cl::sycl::access::mode sycl_read_write = cl::sycl::access::mode::read_write;
 
 template <typename T>
 class Matrix1;
@@ -39,16 +34,17 @@ void multiply1(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
   range<2> matrix_range{NUM, NUM};
 
   // Declare 3 buffers and Initialize them
-  buffer<TYPE, 2> bufferA((TYPE*)a, matrix_range);
-  buffer<TYPE, 2> bufferB((TYPE*)b, matrix_range);
-  buffer<TYPE, 2> bufferC((TYPE*)c, matrix_range);
+  buffer bufferA((TYPE*)a, range(matrix_range));
+  buffer bufferB((TYPE*)b, range(matrix_range));
+  buffer bufferC((TYPE*)c, range(matrix_range));
+  
   // Submit our job to the queue
   q.submit([&](cl::sycl::handler& h) {
     // Declare 3 accessors to our buffers. The first 2 read and the last
-    // read_write
-    auto accessorA = bufferA.get_access<sycl_read>(h);
-    auto accessorB = bufferB.get_access<sycl_read>(h);
-    auto accessorC = bufferC.get_access<sycl_read_write>(h);
+    // read_write  
+    accessor accessorA(bufferA, h, read_only);
+    accessor accessorB(bufferB, h, read_only);
+    accessor accessorC(bufferC, h);
 
     // Execute matrix multiply in parallel over our matrix_range
     // ind is an index into this range
@@ -75,18 +71,18 @@ void multiply1_1(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],TYP
   // Declare a 2 dimensional range
   range<2> matrix_range{NUM, NUM};
 
-  // Declare 3 buffers and Initialize them
-  buffer<TYPE, 2> bufferA((TYPE*)a, matrix_range);
-  buffer<TYPE, 2> bufferB((TYPE*)b, matrix_range);
-  buffer<TYPE, 2> bufferC((TYPE*)c, matrix_range);
+  // Declare 3 buffers and Initialize them 
+  buffer bufferA((TYPE*)a, range(matrix_range));
+  buffer bufferB((TYPE*)b, range(matrix_range));
+  buffer bufferC((TYPE*)c, range(matrix_range));
 
   // Submit our job to the queue
   q.submit([&](cl::sycl::handler& h) {
     // Declare 3 accessors to our buffers. The first 2 read and the last
-    // read_write
-    auto accessorA = bufferA.get_access<sycl_read>(h);
-    auto accessorB = bufferB.get_access<sycl_read>(h);
-    auto accessorC = bufferC.get_access<sycl_read_write>(h);
+    // read_write   
+    accessor accessorA(bufferA, h, read_only);
+    accessor accessorB(bufferB, h, read_only);
+    accessor accessorC(bufferC, h);
 
     // Execute matrix multiply in parallel over our matrix_range
     // ind is an index into this range
@@ -117,17 +113,17 @@ void multiply1_2(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
   range<2> tile_range{MATRIXTILESIZE, MATRIXTILESIZE};
 
   // Declare 3 buffers and Initialize them
-  buffer<TYPE, 2> bufferA((TYPE*)a, matrix_range);
-  buffer<TYPE, 2> bufferB((TYPE*)b, matrix_range);
-  buffer<TYPE, 2> bufferC((TYPE*)c, matrix_range);
+  buffer bufferA((TYPE*)a, range(matrix_range));
+  buffer bufferB((TYPE*)b, range(matrix_range));
+  buffer bufferC((TYPE*)c, range(matrix_range));
 
   // Submit our job to the queue
   q.submit([&](cl::sycl::handler& h) {
     // Declare 3 accessors to our buffers. The first 2 read and the last
-    // read_write
-    auto accessorA = bufferA.get_access<sycl_read>(h);
-    auto accessorB = bufferB.get_access<sycl_read>(h);
-    auto accessorC = bufferC.get_access<sycl_read_write>(h);
+    // read_write   
+    accessor accessorA(bufferA, h, read_only);
+    accessor accessorB(bufferB, h, read_only);
+    accessor accessorC(bufferC, h);
 
     // Create matrix tiles
     accessor<TYPE, 2, cl::sycl::access::mode::read_write, cl::sycl::access::target::local> aTile(cl::sycl::range<2>(MATRIXTILESIZE, MATRIXTILESIZE), h);

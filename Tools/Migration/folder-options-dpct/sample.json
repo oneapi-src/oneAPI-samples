@@ -1,0 +1,10 @@
+{
+  "guid": "E0894F44-8350-4775-9192-A192E794A546",
+  "name": "Folder Options DPCT",
+  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/Intel DPC++ Compatibility Tool" ],
+  "description": "Multi-folder project that illustrates migration of a CUDA project that has files located in multiple folders in a directory tree. Uses the `--in-root` and `--out-root` options to tell the Intel® DPC++ Compatibility Tool where to locate source code to be migrated.",
+  "languages": [ { "cpp": {} } ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "cli" ],
+  "ciTests": { "linux": [], "windows": [] }
+}

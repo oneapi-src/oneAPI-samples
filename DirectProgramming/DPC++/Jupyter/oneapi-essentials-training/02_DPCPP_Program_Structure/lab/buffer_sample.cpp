@@ -17,33 +17,31 @@ using namespace sycl;
   //Submit Kernel 1
   Q.submit([&](handler& h) {
     //Accessor for buffer A
-    auto out = A.get_access<access::mode::write>(h);
-    h.parallel_for(R, [=](id<1> idx) {
+    accessor out(A,h,write_only);
+    h.parallel_for(R, [=](auto idx) {
       out[idx] = idx[0]; }); });
   //Submit Kernel 2
   Q.submit([&](handler& h) {
     //This task will wait till the first queue is complete
-    auto out = A.get_access<access::mode::write>(h);
-    h.parallel_for(R, [=](id<1> idx) {
+    accessor out(A,h,write_only);
+    h.parallel_for(R, [=](auto idx) {
       out[idx] += idx[0]; }); });
   //Submit Kernel 3
   Q.submit([&](handler& h) { 
     //Accessor for Buffer B
-    auto out = B.get_access<access::mode::write>(h);
-    h.parallel_for(R, [=](id<1> idx) {
+    accessor out(B,h,write_only);
+    h.parallel_for(R, [=](auto idx) {
       out[idx] = idx[0]; }); });
   //Submit task 4
   Q.submit([&](handler& h) {
    //This task will wait till kernel 2 and 3 are complete
-   auto in = A.get_access<access::mode::read>(h);
-   auto inout =
-    B.get_access<access::mode::read_write>(h);
-  h.parallel_for(R, [=](id<1> idx) {
+   accessor in (A,h,read_only);
+   accessor inout(B,h);
+  h.parallel_for(R, [=](auto idx) {
     inout[idx] *= in[idx]; }); }); 
       
  // And the following is back to device code
- auto result =
-    B.get_access<access::mode::read>();
+ host_accessor result(B,read_only);
   for (int i=0; i<num; ++i)
     std::cout << result[i] << "\n";      
   return 0;
