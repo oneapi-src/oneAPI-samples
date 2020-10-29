@@ -55,17 +55,19 @@ endif()
 if(WIN32)
     set(REPORT ${TARGET_NAME}_report.a)
     add_custom_target(report DEPENDS ${REPORT})
-    separate_arguments(HARDWARE_LINK_FLAGS_LIST WINDOWS_COMMAND "${HARDWARE_LINK_FLAGS}")
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} ${CMAKE_BINARY_DIR}/${TARGET_NAME}/${SOURCE_FILE} COPYONLY)
+    separate_arguments(HARDWARE_LINK_FLAGS_LIST WINDOWS_COMMAND "${HARDWARE_LINK_FLAGS}")
+    separate_arguments(CMAKE_CXX_FLAGS_LIST WINDOWS_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${REPORT}
-                       COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${CMAKE_CXX_FLAGS} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${CMAKE_BINARY_DIR}/${TARGET_NAME}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORT}
+                       COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${CMAKE_BINARY_DIR}/${TARGET_NAME}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORT}
                        DEPENDS ${SOURCE_FILE})
 else()
     set(REPORT ${TARGET_NAME}_report.a)
     add_custom_target(report DEPENDS ${REPORT})
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} ${SOURCE_FILE} COPYONLY)
     separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}")
+    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${REPORT}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORT}
+                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORT}
                        DEPENDS ${SOURCE_FILE})
 endif()

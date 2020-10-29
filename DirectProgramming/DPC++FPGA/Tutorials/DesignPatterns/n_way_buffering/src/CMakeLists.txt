@@ -46,12 +46,13 @@ if(WIN32)
 else()
     set(FPGA_OBJ_FILE "dev_fpga.o")
     add_custom_target(fpga DEPENDS ${FPGA_TARGET})
+    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${FPGA_OBJ_FILE} 
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} -fintelfpga -c ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${FPGA_OBJ_FILE} 
+                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} -fintelfpga -c ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${FPGA_OBJ_FILE} 
                        DEPENDS ${SOURCE_FILE})
     separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}")
     add_custom_command(OUTPUT ${FPGA_TARGET} 
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${HARDWARE_LINK_FLAGS_LIST} ${FPGA_OBJ_FILE} -o  ${CMAKE_BINARY_DIR}/${FPGA_TARGET} -lpthread
+                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} ${FPGA_OBJ_FILE} -o  ${CMAKE_BINARY_DIR}/${FPGA_TARGET} -lpthread
                        DEPENDS ${FPGA_OBJ_FILE})
 endif()
 
@@ -60,16 +61,18 @@ if(WIN32)
     set(DEVICE_OBJ_FILE ${TARGET_NAME}_report.a)
     add_custom_target(report DEPENDS ${DEVICE_OBJ_FILE})
     separate_arguments(HARDWARE_LINK_FLAGS_LIST WINDOWS_COMMAND "${HARDWARE_LINK_FLAGS}")
+    separate_arguments(CMAKE_CXX_FLAGS_LIST WINDOWS_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${DEVICE_OBJ_FILE} 
-                       COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${CMAKE_CXX_FLAGS} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${DEVICE_OBJ_FILE}
+                       COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${DEVICE_OBJ_FILE}
                        DEPENDS ${SOURCE_FILE})
 else()
     set(DEVICE_OBJ_FILE ${TARGET_NAME}_report.a)
     add_custom_target(report DEPENDS ${DEVICE_OBJ_FILE})
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} ${SOURCE_FILE} COPYONLY)
     separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}")
+    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${DEVICE_OBJ_FILE} 
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${DEVICE_OBJ_FILE}
+                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${DEVICE_OBJ_FILE}
                        DEPENDS ${SOURCE_FILE})
 endif()
 
