@@ -272,9 +272,9 @@ class Preloader {
   // preloaded_data_: registers for storing the preloaded data
   // data_in_flight_: data in flight
   // valids_in_flight_: load decisions in flight
-  [[intel::register]] T preloaded_data_[sz_preload];
-  [[intel::register]] T data_in_flight_[ld_dist];
-  [[intel::register]] bool valids_in_flight_[ld_dist];
+  [[intel::fpga_register]] T preloaded_data_[sz_preload];
+  [[intel::fpga_register]] T data_in_flight_[ld_dist];
+  [[intel::fpga_register]] bool valids_in_flight_[ld_dist];
 
   // preload_count_ stores the address where to insert the next item in
   // preloaded_data_.
@@ -312,12 +312,12 @@ class Preloader {
 
   // Computation of each index of preloaded_data_ == preload_count_, precomputed
   // in advance of EnqueueFront to remove compare from the critical path
-  [[intel::register]] bool preload_count_equal_indices_[sz_preload];
+  [[intel::fpga_register]] bool preload_count_equal_indices_[sz_preload];
 
   // Computation of each index of preloaded_data_ == preload_count_dec_,
   // precomputed in advance of EnqueueFront to remove compare from the critical
   // path
-  [[intel::register]] bool preload_count_dec_equal_indices_[sz_preload];
+  [[intel::fpga_register]] bool preload_count_dec_equal_indices_[sz_preload];
 
   bool CheckEmpty() { return empty_counter_ < 0; }
 
@@ -327,7 +327,7 @@ class Preloader {
     // Equivalent to preloaded_data_[preload_count_] = data;
     // Implemented this way to convince the compiler to implement
     // preloaded_data_ in registers because it wouldn't cooperate even with the
-    // intel::register attribute.
+    // intel::fpga_register attribute.
     unroller<0, sz_preload>::step([&](auto s) {
       if (preload_count_equal_indices_[s]) preloaded_data_[s] = data;
     });
@@ -731,7 +731,7 @@ void sort(Compare compare) {
   bool is_receiving_b[num_stages];
 
   // The data transfered between the sort stages
-  [[intel::register]] SortType stream_data[num_stages + 1];
+  [[intel::fpga_register]] SortType stream_data[num_stages + 1];
 
   // Used in stage unroller to determine when a stage should begin, and when
   // a stage should start outputting data.
@@ -769,7 +769,6 @@ void sort(Compare compare) {
   constexpr int kTotalIter = kOutputStartLastStage + sort_size;
 
   // Sort
-  //[[intel::ii(1)]]
   for (int i = 0; i < kTotalIter; i++) {
 #ifdef DEBUG
     std::cout << "I: " << i << std::endl;
