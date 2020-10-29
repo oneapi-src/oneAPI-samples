@@ -72,9 +72,9 @@ else()
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/IntersectionKernel.hpp IntersectionKernel.hpp COPYONLY)
 
     separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}")
-    
+    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${REPORTS_TARGET}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
+                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
                        DEPENDS ${SOURCE_FILE} IntersectionKernel.hpp)
     add_custom_target(report DEPENDS ${REPORTS_TARGET})
 endif()

@@ -42,11 +42,17 @@ set(HARDWARE_COMPILE_FLAGS "-fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${SELECTED_BOARD} ${LIBRARY_DEVICE_LINK_FLAGS} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
+# Flag lists for custom commands
+separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
+separate_arguments(EMULATOR_COMPILE_FLAGS_LIST UNIX_COMMAND "${EMULATOR_COMPILE_FLAGS}")
+separate_arguments(EMULATOR_LINK_FLAGS_LIST UNIX_COMMAND "${EMULATOR_LINK_FLAGS}")
+separate_arguments(HARDWARE_COMPILE_FLAGS_LIST UNIX_COMMAND "${HARDWARE_COMPILE_FLAGS}")
+separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}")
 
 # Create HLS source object
 add_custom_target(
     create_hls_source_object 
-    COMMAND fpga_crossgen ${HLS_SOURCE} --source hls --target sycl -o ${HLS_SOURCE_OBJECT} ${CMAKE_CXX_FLAGS}
+    COMMAND fpga_crossgen ${HLS_SOURCE} --source hls --target sycl -o ${HLS_SOURCE_OBJECT} ${CMAKE_CXX_FLAGS_LIST}
 )
 
 # Create OCL source object
@@ -58,7 +64,7 @@ add_custom_target(
 # Create SYCL source object
 add_custom_target(
     create_sycl_source_object 
-    COMMAND fpga_crossgen ${SYCL_SOURCE} --source sycl --target sycl -o ${SYCL_SOURCE_OBJECT} ${CMAKE_CXX_FLAGS}
+    COMMAND fpga_crossgen ${SYCL_SOURCE} --source sycl --target sycl -o ${SYCL_SOURCE_OBJECT} ${CMAKE_CXX_FLAGS_LIST}
 )
 
 # Create RTL source object
@@ -77,35 +83,31 @@ add_custom_target(
 # FPGA emulator
 set(SOURCE_OBJ_FILE_EMU ${SOURCE_FILE}.emu.o)
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
-separate_arguments(EMULATOR_COMPILE_FLAGS_LIST UNIX_COMMAND "${EMULATOR_COMPILE_FLAGS}")
 add_custom_command(OUTPUT ${SOURCE_OBJ_FILE_EMU}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${SOURCE_FILE} ${EMULATOR_COMPILE_FLAGS_LIST} -c -o ${SOURCE_OBJ_FILE_EMU}
+                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${SOURCE_FILE} ${EMULATOR_COMPILE_FLAGS_LIST} -c -o ${SOURCE_OBJ_FILE_EMU}
                    DEPENDS ${SOURCE_FILE} ${HEADER_FILE})
-separate_arguments(EMULATOR_LINK_FLAGS_LIST UNIX_COMMAND "${EMULATOR_LINK_FLAGS}")
 add_custom_command(OUTPUT ${EMULATOR_TARGET}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${SOURCE_OBJ_FILE_EMU} ${EMULATOR_LINK_FLAGS_LIST} -o ${CMAKE_BINARY_DIR}/${EMULATOR_TARGET}
+                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${SOURCE_OBJ_FILE_EMU} ${EMULATOR_LINK_FLAGS_LIST} -o ${CMAKE_BINARY_DIR}/${EMULATOR_TARGET}
                    DEPENDS ${SOURCE_OBJ_FILE_EMU} create_library_archive)
 
 # FPGA hardware
 set(SOURCE_OBJ_FILE_FPGA ${SOURCE_FILE}.fpga.o)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
-separate_arguments(HARDWARE_COMPILE_FLAGS_LIST UNIX_COMMAND "${HARDWARE_COMPILE_FLAGS}")
 add_custom_command(OUTPUT ${SOURCE_OBJ_FILE_FPGA}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${SOURCE_FILE} ${HARDWARE_COMPILE_FLAGS_LIST} -c -o ${SOURCE_OBJ_FILE_FPGA}
+                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${SOURCE_FILE} ${HARDWARE_COMPILE_FLAGS_LIST} -c -o ${SOURCE_OBJ_FILE_FPGA}
                    DEPENDS ${SOURCE_FILE} ${HEADER_FILE})
-separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}")
 add_custom_command(OUTPUT ${FPGA_TARGET}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${SOURCE_OBJ_FILE_FPGA} ${HARDWARE_LINK_FLAGS_LIST} -o ${CMAKE_BINARY_DIR}/${FPGA_TARGET}
+                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${SOURCE_OBJ_FILE_FPGA} ${HARDWARE_LINK_FLAGS_LIST} -o ${CMAKE_BINARY_DIR}/${FPGA_TARGET}
                    DEPENDS ${SOURCE_OBJ_FILE_FPGA} create_library_archive)
 
 # Generate report
 set(SOURCE_OBJ_FILE_REPORT ${SOURCE_FILE}.report.o)
 add_custom_target(report DEPENDS ${REPORT_TARGET})
 add_custom_command(OUTPUT ${SOURCE_OBJ_FILE_REPORT}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${SOURCE_FILE} ${HARDWARE_COMPILE_FLAGS_LIST} -c -o ${SOURCE_OBJ_FILE_REPORT}
+                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${SOURCE_FILE} ${HARDWARE_COMPILE_FLAGS_LIST} -c -o ${SOURCE_OBJ_FILE_REPORT}
                    DEPENDS ${SOURCE_FILE} ${HEADER_FILE})
 add_custom_command(OUTPUT ${REPORT_TARGET} 
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${SOURCE_OBJ_FILE_REPORT} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link -o ${CMAKE_BINARY_DIR}/${REPORT_TARGET}
+                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${SOURCE_OBJ_FILE_REPORT} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link -o ${CMAKE_BINARY_DIR}/${REPORT_TARGET}
                    DEPENDS ${SOURCE_OBJ_FILE_REPORT} create_library_archive)
 
 # Copy files
