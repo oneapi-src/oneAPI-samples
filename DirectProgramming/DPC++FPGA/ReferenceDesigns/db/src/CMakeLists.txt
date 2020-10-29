@@ -141,9 +141,10 @@ else()
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/query12/pipe_types.hpp query12/pipe_types.hpp COPYONLY)
 
     separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}")
+    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
     
     add_custom_command(OUTPUT ${REPORTS_TARGET}
-                 COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link
+                 COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link
                  ${DEVICE_SOURCE} ${HOST_SOURCE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
                  DEPENDS ${DEVICE_SOURCE} ${DEVICE_HEADER} ${DB_UTILITY_HEADERS})
 

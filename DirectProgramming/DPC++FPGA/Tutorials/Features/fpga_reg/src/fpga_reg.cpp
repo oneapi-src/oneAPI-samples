@@ -85,7 +85,7 @@ void RunKernel(const device_selector &selector,
 
         // Force the compiler to implement the coefficient array in FPGA
         // pipeline registers rather than in on-chip memory.
-        [[intelfpga::register]] std::array coeff = kCoeff;
+        [[intel::fpga_register]] std::array coeff = kCoeff;
 
         // The compiler will pipeline the outer loop.
         for (size_t i = 0; i < input_size; ++i) {
@@ -120,7 +120,7 @@ void RunKernel(const device_selector &selector,
           }
 
           // Rotate the values of the coefficient array.
-          // The loop is fully unrolled. This is a cannonical code structure;
+          // The loop is fully unrolled. This is a canonical code structure;
           // the DPC++ compiler's FPGA backend infers a shift register here.
           int tmp = coeff[0];
           #pragma unroll

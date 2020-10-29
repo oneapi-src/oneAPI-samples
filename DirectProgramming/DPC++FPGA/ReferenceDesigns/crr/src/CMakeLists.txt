@@ -70,12 +70,13 @@ if(WIN32)
 else()
     add_custom_target(fpga DEPENDS ${FPGA_TARGET})
     set(DEVICE_FPGA_OBJ "crr_fpga.o")
+    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${DEVICE_FPGA_OBJ}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${HARDWARE_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${DEVICE_FPGA_OBJ}
+                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${DEVICE_FPGA_OBJ}
                        DEPENDS ${SOURCE_FILE})
 
     add_custom_command(OUTPUT ${FPGA_TARGET}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${HARDWARE_LINK_FLAGS} ${DEVICE_FPGA_OBJ} -o  ${CMAKE_BINARY_DIR}/${FPGA_TARGET}
+                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} ${DEVICE_FPGA_OBJ} -o  ${CMAKE_BINARY_DIR}/${FPGA_TARGET}
                        DEPENDS ${DEVICE_FPGA_OBJ})
 endif()
                    
@@ -83,15 +84,17 @@ endif()
 if(WIN32)
     add_custom_target(report DEPENDS ${REPORTS_TARGET} )
     separate_arguments(WIN_FLAGS WINDOWS_COMMAND)
+    separate_arguments(CMAKE_CXX_FLAGS_LIST WINDOWS_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${REPORTS_TARGET}
-                       COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${CMAKE_CXX_FLAGS} ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
+                       COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${CMAKE_CXX_FLAGS_LIST} ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
                        DEPENDS ${SOURCE_FILE})
 else()
     add_custom_target(report DEPENDS ${REPORTS_TARGET} )
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} ${SOURCE_FILE} COPYONLY)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CRR_common.hpp CRR_common.hpp COPYONLY)
+    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${REPORTS_TARGET}
-                      COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link ${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
+                      COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} -fsycl-link ${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
                       DEPENDS ${SOURCE_FILE} CRR_common.hpp)
 endif()
 

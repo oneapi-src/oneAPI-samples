@@ -62,7 +62,7 @@ void MatrixMultiply(const device_selector &selector,
         // The loop_coalesce instructs the compiler to attempt to "merge"
         // coalesce_factor loop levels of this nested loop together.
         // For example, a coalesce_factor of 2 turns this into a single loop.
-        [[intelfpga::loop_coalesce(coalesce_factor)]]
+        [[intel::loop_coalesce(coalesce_factor)]]
         for (size_t i = 0; i < kNumRows; ++i) {
           for (size_t j = 0; j < kNumCols; ++j) {
             a[i][j] = accessor_matrix_a[idx];
@@ -76,7 +76,7 @@ void MatrixMultiply(const device_selector &selector,
         // loop results coalescing from the outside in.
         // For example, a coalesce_factor of 2 coalesces the "i" and "j" loops,
         // making a doubly nested loop.
-        [[intelfpga::loop_coalesce(coalesce_factor)]]
+        [[intel::loop_coalesce(coalesce_factor)]]
         for (size_t i = 0; i < kNumRows; ++i) {
           for (size_t j = 0; j < kNumCols; ++j) {
             float sum = 0.0f;
@@ -88,7 +88,7 @@ void MatrixMultiply(const device_selector &selector,
         }
 
         idx = 0;
-        [[intelfpga::loop_coalesce(coalesce_factor)]]
+        [[intel::loop_coalesce(coalesce_factor)]]
         for (size_t i = 0; i < kNumRows; ++i) {
           for (size_t j = 0; j < kNumCols; ++j) {
             accessor_res[idx] = tmp[i][j];

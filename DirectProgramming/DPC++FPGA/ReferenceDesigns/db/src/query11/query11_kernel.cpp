@@ -145,7 +145,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
       // populate MapJoiner map
       // why a map? keys may not be sequential
-      [[intelfpga::ivdep]]
+      [[intel::ivdep]]
       for (size_t i = 0; i < s_rows; i++) {
         // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed to be unique
@@ -179,7 +179,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
       // initialize accumulator
       partkey_values.Init();
 
-      [[intelfpga::ivdep]]
+      [[intel::ivdep]]
       for (size_t i = 0; i < ps_rows; i += kJoinWinSize) {
         SupplierPartSupplierJoinedPipeData pipe_data = 
             PartSupplierPartsPipe::read();

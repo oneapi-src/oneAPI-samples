@@ -109,10 +109,10 @@ event submitKernel<1>(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
 
     h.single_task<Kernel<1>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType
-      [[intelfpga::singlepump,
-        intelfpga::memory("MLAB"),
-        intelfpga::numbanks(kVec),
-        intelfpga::max_replicates(kVec)]]
+      [[intel::singlepump,
+        intel::fpga_memory("MLAB"),
+        intel::numbanks(kVec),
+        intel::max_replicates(kVec)]]
       unsigned dict_offset[kRows][kVec];
 
       // Initialize 'dict_offset' with values from global memory.
@@ -142,10 +142,10 @@ event submitKernel<2>(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
 
     h.single_task<Kernel<2>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType
-      [[intelfpga::doublepump,
-        intelfpga::memory("MLAB"),
-        intelfpga::numbanks(kVec),
-        intelfpga::max_replicates(kVec)]]
+      [[intel::doublepump,
+        intel::fpga_memory("MLAB"),
+        intel::numbanks(kVec),
+        intel::max_replicates(kVec)]]
       unsigned dict_offset[kRows][kVec];
 
       // Initialize 'dict_offset' with values from global memory.
