@@ -4,9 +4,9 @@
 
 #include <iostream>
 #include <CL/sycl.hpp>
-#include <dpstd/execution>
-#include <dpstd/algorithm>
-#include <dpstd/iterator>
+#include <oneapi/dpl/execution>
+#include <oneapi/dpl/algorithm>
+#include <oneapi/dpl/iterator>
 
 using namespace sycl;
 

@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: MIT
 
 #include <CL/sycl.hpp>
-#include <dpstd/execution>
-#include <dpstd/algorithm>
+#include <oneapi/dpl/execution>
+#include <oneapi/dpl/algorithm>
 
 int main(){
   sycl::queue Q;
