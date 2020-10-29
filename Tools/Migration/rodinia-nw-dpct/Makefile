@@ -7,6 +7,8 @@ DEPS = src/needle_kernel.cu src/needle.h
 %.o: %.cu
 	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) $< -o $@
 
+all: $(TARGET)
+
 $(TARGET): $(SRCS) $(DEPS)
 	$(CXX) $(SRCS) -o $@
 

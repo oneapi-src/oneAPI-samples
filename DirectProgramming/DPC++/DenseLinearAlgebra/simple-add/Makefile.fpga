@@ -18,49 +18,42 @@ report_usm: simple-add-usm_report.a_usm
 simple-add-buffers.fpga_emu: $(SRC)
 	$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -DFPGA_EMULATOR=1	
 simple-add-usm.fpga_emu_usm: $(USM_SRC)
-	@#$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -DFPGA_EMULATOR=1
-	@echo USM is not supported for FPGAs, yet
+	$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -DFPGA_EMULATOR=1
 
 
 a_buffers.o: $(SRC)
 	$(CXX) $(CXXFLAGS) -fintelfpga -c $^ -o $@ -DFPGA=1
 a_usm.o: $(USM_SRC)
-	@#$(CXX) $(CXXFLAGS) -fintelfpga -c $^ -o $@ -DFPGA=1
-	@echo USM is not supported for FPGAs, yet
+	$(CXX) $(CXXFLAGS) -fintelfpga -c $^ -o $@ -DFPGA=1
 
 
 simple-add-buffers.fpga: a_buffers.o
 	$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -Xshardware
 simple-add-usm.fpga: a_usm.o
-	@#$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -Xshardware
-	@echo USM is not supported for FPGAs, yet
+	$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -Xshardware
 
 run_emu: simple-add-buffers.fpga_emu
 	./simple-add-buffers.fpga_emu
 run_emu_usm: simple-add-usm.fpga_emu_usm
-	@#./simple-add-usm.fpga_emu_usm
-	@echo USM is not supported for FPGAs, yet
+	./simple-add-usm.fpga_emu_usm
 
 		
 run_hw: simple-add-buffers.fpga
 	./simple-add-buffers.fpga
 run_hw_usm: simple-add-usm.fpga
-	@#./simple-add-usm.fpga
-	@echo USM is not supported for FPGAs, yet
+	./simple-add-usm.fpga
 
 
 dev_buffers.o: $(SRC)
 	$(CXX) $(CXXFLAGS) -fintelfpga -c $^ -o $@ -DFPGA=1
 dev_usm.o: $(USM_SRC)
-	@#$(CXX) $(CXXFLAGS) -fintelfpga -c $^ -o $@ -DFPGA=1
-	@echo USM is not supported for FPGAs, yet
+	$(CXX) $(CXXFLAGS) -fintelfpga -c $^ -o $@ -DFPGA=1
 
 
 simple-add-buffers_report.a_buffers: dev_buffers.o
 	$(CXX) $(CXXFLAGS) -fintelfpga -fsycl-link $^ -o $@ -Xshardware
 simple-add-usm_report.a_usm: dev_usm.o
-	@#$(CXX) $(CXXFLAGS) -fintelfpga -fsycl-link $^ -o $@ -Xshardware
-	@echo USM is not supported for FPGAs, yet
+	$(CXX) $(CXXFLAGS) -fintelfpga -fsycl-link $^ -o $@ -Xshardware
 
 
 clean:
