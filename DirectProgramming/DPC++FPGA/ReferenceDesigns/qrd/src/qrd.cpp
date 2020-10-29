@@ -125,8 +125,8 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
         auto out_matrix2 = out_matrix;
         h.single_task<class QRD>([=]() [[intel::kernel_args_restrict]] {
           for (int l = 0; l < matrices; l++) {
-            [[intelfpga::bankwidth(kBankwidth),
-              intelfpga::numbanks(kNumBanks)]] struct {
+            [[intel::bankwidth(kBankwidth),
+              intel::numbanks(kNumBanks)]] struct {
               MyComplex d[ROWS_COMPONENT];
             } a_matrix[COLS_COMPONENT], ap_matrix[COLS_COMPONENT],
                 aload_matrix[COLS_COMPONENT];
@@ -175,7 +175,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                           : 0;
             int qr_idx = l * kOutputMatrixSize / 2;
 
-            [[intelfpga::ii(1)]] [[intelfpga::ivdep(
+            [[intel::ii(1)]] [[intel::ivdep(
                 FIXED_ITERATIONS)]] for (int s = 0; s < ITERATIONS; s++) {
               MyComplex vector_t[ROWS_COMPONENT];
               MyComplex sori[kNumBanks];

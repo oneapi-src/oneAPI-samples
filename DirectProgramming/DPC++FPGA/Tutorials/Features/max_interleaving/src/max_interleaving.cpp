@@ -70,7 +70,7 @@ void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
           // inner loop at a time so that accesses to temp_r occur
           // in the correct order -- use max_interleaving to simplify
           // the datapath and reduce hardware resource usage
-          [[intelfpga::max_interleaving(interleaving)]] 
+          [[intel::max_interleaving(interleaving)]] 
           for (size_t j = 0; j < kSize; j++) {
             temp_r[j] = SomethingComplicated(temp_a[i*kSize+j], temp_r[j]);
           }

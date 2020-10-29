@@ -156,13 +156,13 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       // initialize regex word
       for (size_t i = 0; i < 11; i++) {
         const char c = regex_word_accessor[i];
-        UnrolledLoop<0, kRegexFilterElementsPerCycle>([&](auto re) { 
+        UnrolledLoop<0, kRegexFilterElementsPerCycle>([&](auto re) {
           regex[re].word[i] = c;
         });
       }
 
       // stream in rows of PARTS table and check partname against REGEX
-      [[intelfpga::ivdep]]
+      [[intel::ivdep]]
       for (size_t i = 0; i < p_rows; i += kRegexFilterElementsPerCycle) {
         UnrolledLoop<0, kRegexFilterElementsPerCycle>([&](auto re) {
           const size_t idx = i + re;
@@ -314,7 +314,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       //// Stage 1
       // populate MapJoiner map
       // why a map? keys may not be sequential
-      [[intelfpga::ivdep]]
+      [[intel::ivdep]]
       for (size_t i = 0; i < s_rows; i++) {
         // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed
@@ -360,7 +360,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           DBIdentifier suppkey = in_range ? ps_suppkey_accessor[i + j] : 0;
           DBDecimal supplycost = in_range ? ps_supplycost_accessor[i + j] : 0;
 
-          data.get<j>() = 
+          data.get<j>() =
               PartSupplierRow(in_range, partkey, suppkey, supplycost);
         });
 
@@ -395,7 +395,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
       bool done = false;
 
-      [[intelfpga::ivdep(ACCUM_CACHE_SIZE)]]
+      [[intel::ivdep(ACCUM_CACHE_SIZE)]]
       do {
         bool valid;
         FinalPipeData pipe_data = FinalPipe::read(valid);
@@ -464,7 +464,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       do {
         // get data from upstream
         bool valid;
-        LineItemOrdersMinimalJoinedPipeData pipe_data = 
+        LineItemOrdersMinimalJoinedPipeData pipe_data =
             LineItemOrdersPipe::read(valid);
         done = pipe_data.done && valid;
 
@@ -500,12 +500,11 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           // this loop will, on average, execute ONCE per outer loop iteration
           // (i.e. statistically, valid_count=1 for every 16 pieces of data).
           // NOTE: for this loop to get good throughput it is VERY important to:
-          //    A) Apply the [[intelfpga::speculated_iterations(0)]] attribute
+          //    A) Apply the [[intel::speculated_iterations(0)]] attribute
           //    B) Explicitly bound the loop iterations
           // For an explanation why, see the optimize_inner_loops tutorial.
-          //[[intelfpga::ii(1)]]
-          [[intelfpga::speculated_iterations(0)]]
-          for (char i = 0; i < valid_count && 
+          [[intel::speculated_iterations(0)]]
+          for (char i = 0; i < valid_count &&
                 i < kLineItemOrdersJoinWinSize; i++) {
             UnrolledLoop<0, kLineItemOrdersJoinWinSize>([&](auto j) {
               if (j == i) {
@@ -513,7 +512,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
               }
             });
           }
-          
+
           num_rows += valid_count;
         }
       } while (!done);
@@ -531,7 +530,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       // drain the input pipe
       while (!done) {
         bool valid;
-        LineItemOrdersMinimalJoinedPipeData pipe_data = 
+        LineItemOrdersMinimalJoinedPipeData pipe_data =
             LineItemOrdersPipe::read(valid);
         done = pipe_data.done && valid;
       }

@@ -53,7 +53,7 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
         // Since the value of var is not known at compile time, the loop
         // trip count is variable and the exit condition must be evaluated at
         // each iteration.
-        [[intelfpga::speculated_iterations(spec_iter)]]
+        [[intel::speculated_iterations(spec_iter)]]
         while (sycl::log10((float)(x)) < bound) {
           x++;
         }
