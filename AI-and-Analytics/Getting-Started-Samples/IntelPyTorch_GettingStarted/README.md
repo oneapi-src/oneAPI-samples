@@ -75,4 +75,4 @@ If running a sample in the Intel DevCloud, please follow the below steps to buil
     Please find more information about the mkldnn log [here](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html).
 
 ## Example of Output
-With successful execution, it will print out `PASSED_CICD` in the terminal.
+With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.
