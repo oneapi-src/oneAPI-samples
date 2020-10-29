@@ -87,7 +87,7 @@ void TriangularLoop(std::unique_ptr<queue>& q, buffer<uint32_t>& input_buf,
         // Specify that the minimum dependence-distance of loop-carried
         // variables is kM iterations. We ensure this is true by modifying the y
         // index such that a minimum of kM iterations are always executed.
-        [[intelfpga::ivdep(kM)]] for (int i = 0; i < loop_bound; i++) {
+        [[intel::ivdep(kM)]] for (int i = 0; i < loop_bound; i++) {
           // Determine if this iteration is a dummy iteration or a real
           // iteration in which the computation should be performed.
           bool compute = y > x;

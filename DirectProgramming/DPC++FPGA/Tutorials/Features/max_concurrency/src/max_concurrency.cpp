@@ -54,7 +54,7 @@ void PartialSumWithShift(const device_selector &selector,
         // active at one time.
         // This limits memory usage, since each iteration of the outer
         // loop requires its own copy of a1.
-        [[intelfpga::max_concurrency(concurrency)]]
+        [[intel::max_concurrency(concurrency)]]
         for (size_t i = 0; i < kMaxIter; i++) {
           float a1[kSize];
           for (size_t j = 0; j < kSize; j++)
