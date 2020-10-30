@@ -50,6 +50,8 @@ language as well as some basic optimizations as generating random numbers in the
 functionality from the oneAPI oneMKL library), as well as atomic functions to prevent memory 
 access inconsistencies. 
 
+A detailed code walk through can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP5_PART_DIFF. 
+
 
 ## Key implementation details 
 
@@ -67,6 +69,13 @@ This code sample is licensed under MIT license.
 
 
 ## Building the `Particle_Diffusion` Program for CPU and GPU
+
+ Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
 
 ### Include Files  
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your 
