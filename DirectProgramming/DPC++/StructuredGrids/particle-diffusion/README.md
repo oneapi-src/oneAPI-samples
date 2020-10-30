@@ -3,6 +3,10 @@ motionsim: Intel® oneAPI DPC++ Language Basics Using a Monte Carlo Simulation
 
 This code sample implements a simple example of a Monte Carlo simulation of the diffusion of water molecules in tissue. This kind of computational experiment can be used to simulate acquisition of a diffusion signal for dMRI.
 
+The model for the simulation consists of water molecules moving through a 2D array of cells in a tissue sample (water molecule diffusion). In this code sample, we use a uniform rectilinear 2D array of digital cells, where cells are spaced regularly along each direction and are represented by circles.
+
+Water molecule diffusion is simulated by defining a number of particles P (simulated water molecules) at random positions in the grid, followed by random walks of these particles in the ensemble of cells in the grid. During the random walks, particles can move randomly inside or outside simulated cells. The positions of these particles at every time step in the simulation, the number of times they go through a cell membrane (in/out), as well as the time every particle spends inside and outside cells can be recorded. These measurements are a simple example of useful information that can be used to simulate an MR signal. 
+
 For comprehensive instructions regarding DPC++ Programming, go to
 https://software.intel.com/en-us/oneapi-programming-guide
 and search based on relevant terms noted in the comments.
@@ -27,6 +31,9 @@ Performance number tabulation [if applicable]
 
 
 ## Purpose
+Using the Monte Carlo simulation, the Particle Diffusion sample provides simulation of the 
+diffusion of water molecules in tissue  This kind of computational experiment can be used to 
+simulate acquisition of a diffusion signal for dMRI.
 
 The model for the simulation consists of water molecules moving through a 2D array of cells in a 
 tissue sample (water molecule diffusion). In this code sample, we use a uniform rectilinear 2D 
