@@ -19,6 +19,8 @@ The code will attempt first to execute on an available GPU and fallback to the s
 
 In addition, you can target an FPGA device using build scripts described below.  If you do not have FPGA hardware, the sample will run in emulation mode, which includes static optimization reports for design analysis.
 
+A detailed code walk through can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP1_VECTOR_ADD. 
+
 ## Key Implementation Details 
 The basic DPC++ implementation explained in the code includes device selector, USM, buffer, accessor, kernel, and command groups.
 
@@ -27,8 +29,17 @@ This code sample is licensed under MIT license.
 
 ## Building the `vector-add` Program for CPU and GPU 
 
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+
 ### On a Linux* System
 Perform the following steps:
+
 1. Build the program using the following `make` commands (default uses buffers):
     ```
     make all
@@ -47,6 +58,7 @@ Perform the following steps:
     ```
 
 ### On a Windows* System Using a Command Line Interface
+
 1. Select **Programs** > **Intel oneAPI 2021** > **Intel oneAPI Command Prompt** to launch a command window.
 2. Build the program using the following `nmake` commands:
     ```
