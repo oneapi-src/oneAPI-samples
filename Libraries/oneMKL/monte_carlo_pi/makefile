@@ -2,6 +2,8 @@
 
 default: run_all
 
+all: run_all
+
 run_all: mc_pi.exe mc_pi_usm.exe mc_pi_device_api.exe
 	.\mc_pi
 	.\mc_pi_usm
@@ -23,5 +25,5 @@ clean:
 	del /q mc_pi.exp mc_pi_usm.exp mc_pi_device_api.exp
 	del /q mc_pi.lib mc_pi_usm.lib mc_pi_device_api.lib
 
-pseudo: run_all clean
+pseudo: run_all clean all
 

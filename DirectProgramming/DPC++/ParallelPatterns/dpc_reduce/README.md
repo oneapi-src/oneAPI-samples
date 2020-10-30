@@ -64,6 +64,9 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
+NOTE:  Location of some include files changed between Beta09 and Beta10. 
+See the CMakeLists.txt and uncomment out line if you want Beta09 to build. 
+
 Perform the following steps:
 1. Build the program using the following 'cmake' commands
 export I_MPI_CXX=dpcpp 

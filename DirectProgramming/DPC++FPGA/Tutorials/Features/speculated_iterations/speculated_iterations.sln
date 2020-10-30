@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "speculated_iterations", "speculated_iterations.vcxproj", "{CF6A576B-665D-4F24-BB62-0DAE7A7B3C64}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "speculated_iterations_a10", "speculated_iterations_a10.vcxproj", "{CF6A576B-665D-4F24-BB62-0DAE7A7B3C64}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "speculated_iterations_s10", "speculated_iterations_s10.vcxproj", "{CF6A576B-665D-4F24-BB62-0DAE7A7B3C65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{CF6A576B-665D-4F24-BB62-0DAE7A7B3C64}.Debug|x64.Build.0 = Debug|x64
 		{CF6A576B-665D-4F24-BB62-0DAE7A7B3C64}.Release|x64.ActiveCfg = Release|x64
 		{CF6A576B-665D-4F24-BB62-0DAE7A7B3C64}.Release|x64.Build.0 = Release|x64
+		{CF6A576B-665D-4F24-BB62-0DAE7A7B3C65}.Debug|x64.ActiveCfg = Debug|x64
+		{CF6A576B-665D-4F24-BB62-0DAE7A7B3C65}.Debug|x64.Build.0 = Debug|x64
+		{CF6A576B-665D-4F24-BB62-0DAE7A7B3C65}.Release|x64.ActiveCfg = Release|x64
+		{CF6A576B-665D-4F24-BB62-0DAE7A7B3C65}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

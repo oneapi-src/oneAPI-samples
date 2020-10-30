@@ -29,6 +29,7 @@ This code sample is licensed under MIT license.
 
 ## Building the `vector-add` Program for CPU and GPU 
 
+
 > Note: if you have not already done so, set up your CLI 
 > environment by sourcing  the setvars script located in 
 > the root of your oneAPI installation. 
@@ -36,6 +37,10 @@ This code sample is licensed under MIT license.
 > Linux Sudo: . /opt/intel/oneapi/setvars.sh  
 > Linux User: . ~/intel/oneapi/setvars.sh  
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+=======
+### Running Samples in DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+
 
 ### On a Linux* System
 Perform the following steps:

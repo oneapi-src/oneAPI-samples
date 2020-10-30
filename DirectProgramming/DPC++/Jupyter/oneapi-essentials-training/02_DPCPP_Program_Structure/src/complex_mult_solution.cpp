@@ -1,13 +1,13 @@
-
 //==============================================================
 // Copyright © 2020 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-
 #include <CL/sycl.hpp>
 #include <iomanip>
 #include <vector>
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 #include "Complex.hpp"
 
@@ -45,29 +45,32 @@ class CustomDeviceSelector : public device_selector {
 void DpcppParallel(queue &q, std::vector<Complex2> &in_vect1,
                    std::vector<Complex2> &in_vect2,
                    std::vector<Complex2> &out_vect) {
-  auto R = range(num_elements);
+  auto R = range(in_vect1.size());
+  if (in_vect2.size() != in_vect1.size() || out_vect.size() != in_vect1.size()){ 
+    std::cout << "ERROR: Vector sizes do not  match"<< "\n";
+    return;
+  }
   // Setup input buffers
   buffer bufin_vect1(in_vect1);
   buffer bufin_vect2(in_vect2);
 
-  // Setup Output buffers
-  buffer bufout_vect(out_vect.data(), R);
+  // Setup Output buffers 
+  buffer bufout_vect(out_vect);
 
   std::cout << "Target Device: "
             << q.get_device().get_info<info::device::name>() << "\n";
   // Submit Command group function object to the queue
   q.submit([&](auto &h) {
     // Accessors set as read mode
-    auto V1 = bufin_vect1.get_access<access::mode::read>(h);
-    auto V2 = bufin_vect2.get_access<access::mode::read>(h);
+    accessor V1(bufin_vect1,h,read_only);
+    accessor V2(bufin_vect2,h,read_only);
     // Accessor set to Write mode
-    //**************STEP 2: Uncomment the below line to set the Write Accessor********************  
-    auto V3 = bufout_vect.get_access<access::mode::write>(h);
-
-    h.parallel_for(R, [=](id<1> idx) {
+    //**************STEP 2: Uncomment the below line to set the Write Accessor******************** 
+    accessor V3 (bufout_vect,h,write_only);
+    h.parallel_for(R, [=](auto i) {
       //**************STEP 3: Uncomment the below line to call the complex_mul function that computes the multiplication
       //of the  complex numbers********************
-      V3[idx] = V1[idx].complex_mul(V2[idx]);
+      V3[i] = V1[i].complex_mul(V2[i]);
     });
   });
   q.wait_and_throw();
@@ -75,7 +78,11 @@ void DpcppParallel(queue &q, std::vector<Complex2> &in_vect1,
 void DpcppScalar(std::vector<Complex2> &in_vect1,
                  std::vector<Complex2> &in_vect2,
                  std::vector<Complex2> &out_vect) {
-  for (int i = 0; i < num_elements; i++) {
+  if ((in_vect2.size() != in_vect1.size()) || (out_vect.size() != in_vect1.size())){
+    std::cout<<"ERROR: Vector sizes do not match"<<"\n";
+    return;
+    }
+  for (int i = 0; i < in_vect1.size(); i++) {
     out_vect[i] = in_vect1[i].complex_mul(in_vect2[i]);
   }
 }
@@ -83,7 +90,10 @@ void DpcppScalar(std::vector<Complex2> &in_vect1,
 // should be equal
 int Compare(std::vector<Complex2> &v1, std::vector<Complex2> &v2) {
   int ret_code = 1;
-  for (int i = 0; i < num_elements; i++) {
+  if(v1.size() != v2.size()){
+    ret_code = -1;
+  }
+  for (int i = 0; i < v1.size(); i++) {
     if (v1[i] != v2[i]) {
       ret_code = -1;
       break;
