@@ -31,7 +31,6 @@ Performance number tabulation [if applicable]
 
 
 ## Purpose
-
 Using the Monte Carlo simulation, the Particle Diffusion sample provides simulation of the 
 diffusion of water molecules in tissue  This kind of computational experiment can be used to 
 simulate acquisition of a diffusion signal for dMRI.
