@@ -162,10 +162,11 @@ NOTE: The design is optimized to perform best when run on a large number of matr
 
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+ Increase the amount of memory that the emulator runtime is permitted to allocate by setting the CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE environment variable before running the executable.
      ```
+     export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      ./qrd.fpga_emu           (Linux)
 
-     # On Windows, set the CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE environment variable before running the executable
      set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      qrd.fpga_emu.exe         (Windows)
      ```
