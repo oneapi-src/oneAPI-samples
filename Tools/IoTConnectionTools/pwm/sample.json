@@ -6,6 +6,7 @@
   "dependencies": ["pkg|mraa|https://mraa.io"],
   "languages": [{"cpp":{}}],
   "os": ["linux"],
+  "builder": ["cmake"],
   "ciTests": {
     "linux": [
         { "id": "pwm",

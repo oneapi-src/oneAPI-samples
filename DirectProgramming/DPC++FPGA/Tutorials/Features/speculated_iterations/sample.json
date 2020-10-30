@@ -34,16 +34,20 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "cd src",
-          "ninja fpga_emu",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
           "speculated_iterations.fpga_emu.exe"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "cd src",
-          "ninja report"
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake report"
         ]
       }
     ]

@@ -4,6 +4,7 @@
   "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/Intel® C++ Compiler Classic"],
   "description": "This is a basic sample that outputs the classic 'Hello World' message along with the compiler identification string.",
   "os": ["linux", "windows"],
+  "builder": ["cmake"],
   "toolchain": ["icc", "gcc"],
   "languages": [{"cpp":{}}],
   "ciTests": {
