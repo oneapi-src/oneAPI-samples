@@ -11,6 +11,7 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 constexpr float dt = 0.002f;
 constexpr float dxyz = 50.0f;

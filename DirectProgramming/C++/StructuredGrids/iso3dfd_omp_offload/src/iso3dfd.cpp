@@ -249,7 +249,6 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
                              const unsigned int n2_block,
                              const unsigned int n3_block) {
   auto dimn1n2 = n1 * n2;
-  auto size = n3 * dimn1n2;
 
   auto n3_end = n3 - kHalfLength;
   auto n2_end = n2 - kHalfLength;
@@ -364,13 +363,13 @@ int main(int argc, char *argv[]) {
   unsigned int num_iterations;
 
   try {
-    n1 = std::stoi(argv[1]) + (2 * kHalfLength);
-    n2 = std::stoi(argv[2]) + (2 * kHalfLength);
-    n3 = std::stoi(argv[3]) + (2 * kHalfLength);
-    n1_block = std::stoi(argv[4]);
-    n2_block = std::stoi(argv[5]);
-    n3_block = std::stoi(argv[6]);
-    num_iterations = std::stoi(argv[7]);
+    n1 = std::atoi(argv[1]) + (2 * kHalfLength);
+    n2 = std::atoi(argv[2]) + (2 * kHalfLength);
+    n3 = std::atoi(argv[3]) + (2 * kHalfLength);
+    n1_block = std::atoi(argv[4]);
+    n2_block = std::atoi(argv[5]);
+    n3_block = std::atoi(argv[6]);
+    num_iterations = std::atoi(argv[7]);
   }
 
   catch (...) {
@@ -378,7 +377,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  if (ValidateInput(std::stoi(argv[1]), std::stoi(argv[2]), std::stoi(argv[3]),
+  if (ValidateInput(std::atoi(argv[1]), std::atoi(argv[2]), std::atoi(argv[3]),
                     n1_block, n2_block, n3_block, num_iterations)) {
     Usage(argv[0]);
     return 1;
