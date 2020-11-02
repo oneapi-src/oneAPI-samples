@@ -71,9 +71,9 @@ typedef oneapi::mkl::dft::descriptor<oneapi::mkl::dft::precision::DOUBLE,
 // A simple transparent matrix class, row-major layout
 template <typename T>
 struct matrix {
+    sycl::queue q;
     T *data;
     int h, w, ldw;
-    sycl::queue q;
     matrix(sycl::queue &main_queue) : q{main_queue}, data{NULL} {}
     matrix(const matrix &);
     matrix &operator=(const matrix &);

@@ -71,7 +71,7 @@ void VectorAdd(queue &q, const IntArray &a_array, const IntArray &b_array,
     accessor b(b_buf, h, read_only);
 
     // The sum_accessor is used to store (with write permission) the sum data.
-    accessor sum(sum_buf, h, write_only);
+    accessor sum(sum_buf, h, write_only, noinit);
 
     // Use parallel_for to run vector addition in parallel on device. This
     // executes the kernel.

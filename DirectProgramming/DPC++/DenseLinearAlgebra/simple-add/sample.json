@@ -35,10 +35,25 @@
         ]
       },
       {
+        "id": "fpga_emu_usm",
+        "steps": [
+          "make clean -f Makefile.fpga",
+          "make fpga_emu_usm -f Makefile.fpga",
+          "make run_emu_usm -f Makefile.fpga"
+        ]
+      },
+      {
         "id": "fpga_report_buffers",
         "steps": [
           "make clean -f Makefile.fpga",
           "make report -f Makefile.fpga"
+        ]
+      },
+      {
+        "id": "fpga_report_usm",
+        "steps": [
+          "make clean -f Makefile.fpga",
+          "make report_usm -f Makefile.fpga"
         ]
       }
     ],
@@ -64,6 +79,14 @@
         "steps": [
           "nmake -f Makefile.win.fpga",
           "nmake -f Makefile.win.fpga run",
+          "nmake -f Makefile.win.fpga clean"
+        ]
+      },
+      {
+        "id": "fpga_emu_usm",
+        "steps": [
+          "nmake -f Makefile.win.fpga fpga_emu_usm",
+          "nmake -f Makefile.win.fpga run_usm",
           "nmake -f Makefile.win.fpga clean"
         ]
       }

@@ -6,6 +6,7 @@
   "dependencies": ["aws-iot-device-sdk-cpp-v2|https://github.com/aws/aws-iot-device-sdk-cpp-v2"],
   "languages": [{"cpp":{}}],
   "os": ["linux"],
+  "builder": ["cmake"],
   "ciTests": {
     "linux": [
         { "id": "aws-pub-sub",
