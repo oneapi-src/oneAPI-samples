@@ -2,6 +2,8 @@
 
 default: run
 
+all: run
+
 run: matrix_mul_mkl
 	./matrix_mul_mkl
 
@@ -13,4 +15,4 @@ matrix_mul_mkl: matrix_mul_mkl.cpp
 clean:
 	-rm -f matrix_mul_mkl
 
-.PHONY: clean run
+.PHONY: clean run all

@@ -6,7 +6,7 @@
 
 // located in $ONEAPI_ROOT/compiler/latest/linux/include/sycl/
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <cstdlib>
 #include <iostream>
 
@@ -17,10 +17,10 @@ int main() {
   // FPGA_EMULATOR defined in cmake-fpga/src/CMakeLists.txt
 #if defined(FPGA_EMULATOR)
   // DPC++ extension: FPGA emulator selector on systems without FPGA card
-  intel::fpga_emulator_selector device_selector;
+  INTEL::fpga_emulator_selector device_selector;
 #else
   // DPC++ extension: FPGA selector on systems with FPGA card
-  intel::fpga_selector device_selector;
+  INTEL::fpga_selector device_selector;
 #endif
 
   // create a buffer

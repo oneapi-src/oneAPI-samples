@@ -1,8 +1,8 @@
 {
   "guid": "FBEC48E6-F5C5-478F-9DB2-E7FA5E158429",
-  "name": "Shannonization to Improve Fmax/II",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
-  "description": "An FPGA tutorial design that demonstrates an optimization for removing computation from the critical path and improves Fmax/II.",
+  "name": "Shannonization",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "description": "An Intel® FPGA tutorial design that demonstrates an optimization for removing computation from the critical path and improves Fmax/II",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],

@@ -1,9 +1,9 @@
 {
   "guid": "035E3DCB-98D1-4F81-944D-5B1A5039DF1B",
-  "name": "tbb-task-sycl",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneTBB"],
+  "name": "TBB Task SYCL",
+  "categories": ["Toolkit/oneAPI Libraries/oneTBB"],
+  "description": "This sample illustrates how 2 Intel® oneTBB tasks can execute similar computational kernels with one task executing SYCL code and another one executing the Intel® oneTBB code. This TBB Task SYCL sample code is implemented using C++ and SYCL language for Intel® CPU and GPU",
   "toolchain": ["dpcpp"],
-  "description": "This sample illustrates how 2 TBB tasks can execute similar computational kernels with one task executing SYCL code and another one the TBB code. This tbb-task-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.",
   "languages": [{"cpp":{}}],
   "targetDevice": ["CPU", "GPU"],
   "os":["linux", "windows"],

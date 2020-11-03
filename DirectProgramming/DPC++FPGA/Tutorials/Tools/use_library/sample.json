@@ -1,8 +1,8 @@
 {
   "guid": "9605DCBF-6DDB-4FD2-812F-1ECF252AE334",
-  "name": "Using FPGA Cross-Language Libraries",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
-  "description": "Tutorial demonstrating how to create FPGA libraries and to incorporate them in a DPC++ project",
+  "name": "Use Library",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Tools"],
+  "description": "An Intel® FPGA Tutorial demonstrating how to create Intel® FPGA libraries and to incorporate them in a Intel® oneAPI Data Parallel C++ (DPC++) project",
   "toolchain": ["dpcpp"],
   "os": ["linux"],
   "targetDevice": ["FPGA"],
