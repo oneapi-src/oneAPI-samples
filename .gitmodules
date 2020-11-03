@@ -1,0 +1,9 @@
+[submodule "Tools/SystemDebug/efi_application/Win32"]
+	path = Tools/SystemDebug/efi_application/Win32
+	url = https://github.com/tianocore/edk2-BaseTools-win32.git
+[submodule "Tools/SystemDebug/efi_application/edk2"]
+	path = Tools/SystemDebug/efi_application/edk2
+	url = https://github.com/tianocore/edk2.git
+[submodule "Tools/SystemDebug/efi_application/gnu-efi-code"]
+	path = Tools/SystemDebug/efi_application/gnu-efi-code
+	url = https://git.code.sf.net/p/gnu-efi/code

@@ -2,6 +2,8 @@
 
 default: run
 
+all: run
+
 run: sparse_cg.exe
 	.\sparse_cg
 
@@ -13,4 +15,4 @@ sparse_cg.exe: sparse_cg.cpp
 clean:
 	del /q sparse_cg.exe sparse_cg.exp sparse_cg.lib
 
-pseudo: clean run
+pseudo: clean run all

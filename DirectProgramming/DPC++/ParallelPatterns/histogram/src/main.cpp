@@ -64,7 +64,7 @@ void sparse_histogram(std::vector<uint64_t> &input)
     //Combine the equal values together
     std::sort(oneapi::dpl::execution::dpcpp_default,  oneapi::dpl::begin(histogram_buf), oneapi::dpl::end(histogram_buf));
 
-    auto num_bins = std::transform_reduce(oneapi::dpl::execution::dpcpp_default, dpstd::begin(histogram_buf),  dpstd::end(histogram_buf),  dpstd::begin(histogram_buf)+1, 1 , std::plus<int>(), std::not_equal_to<int>());
+    auto num_bins = std::transform_reduce(oneapi::dpl::execution::dpcpp_default, oneapi::dpl::begin(histogram_buf),  oneapi::dpl::end(histogram_buf),  oneapi::dpl::begin(histogram_buf)+1, 1 , std::plus<int>(), std::not_equal_to<int>());
 
     //Create new buffer to store the unique values and their count
     cl::sycl::buffer<uint64_t, 1> histogram_values_buf{ cl::sycl::range<1>(num_bins) };
@@ -74,11 +74,11 @@ void sparse_histogram(std::vector<uint64_t> &input)
     std::fill(oneapi::dpl::execution::dpcpp_default,  oneapi::dpl::begin(_const_buf),  oneapi::dpl::end(_const_buf), 1);
 
     //Find the count of each value
-     oneapi::dpl::reduce_by_segment(oneapi::dpl::execution::dpcpp_default,  oneapi::dpl::begin(histogram_buf),  oneapi::dpl::end(histogram_buf),
+    oneapi::dpl::reduce_by_segment(oneapi::dpl::execution::dpcpp_default,  oneapi::dpl::begin(histogram_buf),  oneapi::dpl::end(histogram_buf),
                               oneapi::dpl::begin(_const_buf),
                               oneapi::dpl::begin(histogram_values_buf),  oneapi::dpl::begin(histogram_counts_buf));
 
-     std::cout << "Sparse Histogram:\n";
+    std::cout << "Sparse Histogram:\n";
     std::cout << "[";
     for(int i = 0; i < num_bins-1; i++)
     {

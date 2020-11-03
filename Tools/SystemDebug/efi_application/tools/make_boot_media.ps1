@@ -5,33 +5,33 @@
 #Following code taken off https://docs.microsoft.com/en-us/archive/blogs/virtual_pc_guy/a-self-elevating-powershell-script
 $myWindowsID=[System.Security.Principal.WindowsIdentity]::GetCurrent()
 $myWindowsPrincipal=new-object System.Security.Principal.WindowsPrincipal($myWindowsID)
-  
+
 # Get the security principal for the Administrator role
 $adminRole=[System.Security.Principal.WindowsBuiltInRole]::Administrator
-  
+
  # Check to see if we are currently running "as Administrator"
  if (-Not $myWindowsPrincipal.IsInRole($adminRole))
     {
     # We are not running "as Administrator" - so relaunch as administrator
-    
+
     # Create a new process object that starts PowerShell
     $newProcess = new-object System.Diagnostics.ProcessStartInfo "PowerShell";
-    
+
     # Specify the current script path and name as a parameter
     $newProcess.Arguments = $myInvocation.MyCommand.Definition + $args;
-    
+
     # Indicate that the process should be elevated
     $newProcess.Verb = "runas";
     # Start the new process
-    [System.Diagnostics.Process]::Start($newProcess);    
+    [System.Diagnostics.Process]::Start($newProcess);
     # Exit from the current, unelevated, process
     exit
     }
 
 
 Add-Type -AssemblyName System.Windows.Forms
-$FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
-    InitialDirectory = [Environment]::GetFolderPath('Desktop') 
+$FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{
+    InitialDirectory = [Environment]::GetFolderPath('Desktop')
     Title = 'Select EFI Application to flash'
 }
 $null = $FileBrowser.ShowDialog()
@@ -41,18 +41,27 @@ $EFI = $FileBrowser.FileName;
 if ([string]::IsNullOrWhitespace($EFI)) {
     Write-Error "Error: no file selected"
     exit
-} 
+}
+
 $Results = Get-Disk |
 Where-Object BusType -eq USB |
 Out-GridView -Title 'Select USB Drive to Format' -OutputMode Single |
-Clear-Disk -RemoveData -PassThru |
+Clear-Disk -RemoveData -PassThru
+
+if ([string]::IsNullOrWhitespace($Results.DiskNumber)) {
+    Write-Error "Error: no drive selected"
+    exit
+}
+
+if ($Results.PartitionStyle -eq "MBR") {
+    Write-Error "Please convert disk to GPT first"
+    exit
+}
+
+Initialize-Disk -FriendlyName $Results.FriendlyName -PartitionStyle GPT -PassThru |
 New-Partition -UseMaximumSize -GptType "{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}" -AssignDriveLetter |
 Format-Volume -NewFileSystemLabel "EFI" -FileSystem FAT32 -Force
 
-if ([string]::IsNullOrWhitespace($Results.DriveLetter)) {
-    Write-Error "Error: no file selected"
-    exit
-} 
 $USBDrive = ($Results.DriveLetter + ':\')
 
 $RelativePath = "\\EFI\\Boot"
