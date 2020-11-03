@@ -17,9 +17,9 @@
 			"mkdir build",
       		        "cd build",
            		"cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp",
-           		"make sycl-interop-cpp",
-			"./bin/sycl-interop-cpp cpu",
-			"SYCL_BE=PI_OPENCL ./bin/sycl-interop-cpp gpu"
+           		"make sycl-interop-buffer-cpp",
+			"./bin/sycl-interop-buffer-cpp cpu",
+			"SYCL_BE=PI_OPENCL ./bin/sycl-interop-buffer-cpp gpu"
 		 ]
 	}]
  }

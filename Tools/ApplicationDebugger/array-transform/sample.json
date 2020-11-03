@@ -21,6 +21,15 @@
         ]
       },
       {
+        "id": "cpu-aot",
+        "steps": [
+          "mkdir -p build_cpu_aot; cd build_cpu_aot; cmake .. -DDPCPP_COMPILE_TARGET=cpu",
+          "make",
+          "./array-transform cpu",
+          "make clean"
+        ]
+      },
+      {
         "id": "gpu",
         "steps": [
           "mkdir -p build_gpu; cd build_gpu; cmake ..",
@@ -30,9 +39,27 @@
         ]
       },
       {
+        "id": "gpu-aot",
+        "steps": [
+          "mkdir -p build_gpu_aot; cd build_gpu_aot; cmake .. -DDPCPP_COMPILE_TARGET=gen9,gen12LP",
+          "make",
+          "./array-transform gpu",
+          "make clean"
+        ]
+      },
+      {
         "id": "fpga-emu",
         "steps": [
           "mkdir -p build_acc; cd build_acc; cmake ..",
+          "make",
+          "./array-transform accelerator",
+          "make clean"
+        ]
+      },
+      {
+        "id": "fpga-emu-aot",
+        "steps": [
+          "mkdir -p build_acc_aot; cd build_acc_aot; cmake .. -DDPCPP_COMPILE_TARGET=fpga-emu",
           "make",
           "./array-transform accelerator",
           "make clean"

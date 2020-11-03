@@ -1,0 +1,29 @@
+{
+ "guid": "82e7612f-2810-4d12-9c75-c17fcbb946fa",
+ "name": "Intel® Low Precision Optimization Tool (iLiT) Sample for Tensorflow",
+ "categories": ["Toolkit/Intel® AI Analytics Toolkit/iLiT"],
+ "description": "This code example shows you how to run iLiT to quantize the FP32 model trained by Keras on Tensorflow to INT8 model to speed up the inference.",
+ "languages": [{"python":{}}],
+ "dependencies": ["tensoflow","notebook","matplotlib"],
+ "os": ["linux"],
+ "builder": ["cli"],
+ "targetDevice": ["CPU"],
+ "ciTests": {
+	"linux": [
+	{
+		"env": ["source ${ONEAPI_ROOT}/setvars.sh --force",
+			"conda env remove -n user_tensorflow",
+			"conda create --name user_tensorflow --clone tensorflow",
+			"conda activate user_tensorflow",
+			"conda install -c ${ONEAPI_ROOT}/conda_channel pyyaml scikit-learn schema ilit -y",
+			"python -m pip install notebook matplotlib",
+		        "conda install runipy -y"
+                        ],
+		"id": "ilit tensorflow",
+		"steps": [
+			"runipy ilit_sample_tensorflow.ipynb"
+		 ]
+	}
+    ]
+ }
+}

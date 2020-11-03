@@ -2020,13 +2020,13 @@ void SubmitGzipTasksSingleEngine(
       //   Hash Table(s)
       //-------------------------------------
 
-      [[intelfpga::singlepump]] [[intelfpga::numbanks(kVec)]] [
-          [intelfpga::max_replicates(kVec)]] struct {
+      [[intel::singlepump]] [[intel::numbanks(kVec)]] [
+          [intel::max_replicates(kVec)]] struct {
         unsigned char s[kLen];
       } dictionary[kDepth][kVec];
 
-      [[intelfpga::singlepump]] [[intelfpga::numbanks(kVec)]] [
-          [intelfpga::max_replicates(
+      [[intel::singlepump]] [[intel::numbanks(kVec)]] [
+          [intel::max_replicates(
               kVec)]] unsigned int dict_offset[kDepth][kVec];
 
       // Initialize history to empty.

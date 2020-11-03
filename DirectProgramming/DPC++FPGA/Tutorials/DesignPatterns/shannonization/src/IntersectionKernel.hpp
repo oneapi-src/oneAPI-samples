@@ -56,7 +56,7 @@ struct IntersectionKernel<0, II, APipe, BPipe> {
     int b_count = 1;
     int n = 0;
 
-    [[intelfpga::ii(II)]]
+    [[intel::ii(II)]]
     while (a_count < a_size || b_count < b_size) {
       // increment the intersection counter if the table elements match
       if (a == b) {
@@ -106,7 +106,7 @@ struct IntersectionKernel<1, II, APipe, BPipe> {
     int b_count_next = 2;
     int n = 0;
 
-    [[intelfpga::ii(II)]]
+    [[intel::ii(II)]]
     while (a_count < a_size || b_count < b_size) {
       // increment the intersection counter if the table elements match
       if (a == b) {
@@ -168,7 +168,7 @@ struct IntersectionKernel<2, II, APipe, BPipe> {
     bool b_count_next_inrange = true;
     bool keep_going = true;
 
-    [[intelfpga::ii(II)]]
+    [[intel::ii(II)]]
     while (keep_going) {
       // increment the intersection counter if the table elements match
       if (a == b) {
@@ -260,7 +260,7 @@ struct IntersectionKernel<3, II, APipe, BPipe> {
       b = BPipe::read(b_valid);
     } while (!b_valid);
 
-    [[intelfpga::ii(II)]]
+    [[intel::ii(II)]]
     while (keep_going) {
       if (a == b && a_valid && b_valid) {
         n++;

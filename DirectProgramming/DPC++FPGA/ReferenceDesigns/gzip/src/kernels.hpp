@@ -34,7 +34,21 @@
   #define NUM_ENGINES 1
 #endif
 
+// BATCH_SIZE is the number of input files the kernel should be capable of
+// compressing per invocation of the GZIP engine. This is a compile time
+// constant so that hardware is built to support this number. To ensure maximum
+// throughput, the minimum batch size should be chosen to cover the latency of
+// re-launching the gzip engine, which requires some experimentation on the
+// given system. The maximum batch size should be chosen to ensure the gzip
+// engine completes execution within the desired execution time (also considered
+// the latency to the receive the compile result).
+constexpr int BATCH_SIZE = 12;
+
 constexpr int kNumEngines = NUM_ENGINES;
+
+constexpr int kCRCIndex = 0;
+constexpr int kLZReductionIndex = 1;
+constexpr int kStaticHuffmanIndex = 2;
 
 // kVecPow == 2 means kVec == 4.
 // kVecPow == 3 means kVec == 8.
@@ -57,6 +71,10 @@ struct Uint2Gzip {
 struct LzInput {
   unsigned char data[kVec];
 };
+
+typedef struct char_arr_32 {
+  unsigned char arr[32];
+} char_arr_32;
 
 typedef struct DistLen {
   unsigned char data[kVec];

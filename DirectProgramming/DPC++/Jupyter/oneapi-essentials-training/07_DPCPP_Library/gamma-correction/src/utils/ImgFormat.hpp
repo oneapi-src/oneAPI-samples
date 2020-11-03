@@ -11,6 +11,8 @@
 
 #include <fstream>
 
+using namespace std;
+
 namespace ImgFormat {
 
 // struct to store an image in BMP format
@@ -20,40 +22,38 @@ struct BMP {
     // not from specification
     // was added for alignemt
     // store size of rest of the fields
-    std::uint16_t sizeRest;  // file header size in bytes
+    uint16_t sizeRest;  // file header size in bytes
 
-    std::uint16_t type;
-    std::uint32_t size;  // file size in bytes
-    std::uint32_t reserved;
-    std::uint32_t offBits;  // cumulative header size in bytes
+    uint16_t type;
+    uint32_t size;  // file size in bytes
+    uint32_t reserved;
+    uint32_t offBits;  // cumulative header size in bytes
   };
 
   using InfoHeader = struct {
     // from specification
     // store size of rest of the fields
-    std::uint32_t size;  // info header size in bytes
+    uint32_t size;  // info header size in bytes
 
-    std::int32_t width;   // image width in pixels
-    std::int32_t height;  // image height in pixels
-    std::uint16_t planes;
-    std::uint16_t bitCount;      // color depth
-    std::uint32_t compression;   // compression
-    std::uint32_t sizeImage;     // image map size in bytes
-    std::int32_t xPelsPerMeter;  // pixel per metre (y axis)
-    std::int32_t yPelsPerMeter;  // pixel per metre (y axis)
-    std::uint32_t clrUsed;       // color pallete (0 is default)
-    std::uint32_t clrImportant;
+    int32_t width;   // image width in pixels
+    int32_t height;  // image height in pixels
+    uint16_t planes;
+    uint16_t bitCount;      // color depth
+    uint32_t compression;   // compression
+    uint32_t sizeImage;     // image map size in bytes
+    int32_t xPelsPerMeter;  // pixel per metre (y axis)
+    int32_t yPelsPerMeter;  // pixel per metre (y axis)
+    uint32_t clrUsed;       // color pallete (0 is default)
+    uint32_t clrImportant;
   };
 
   FileHeader _fileHeader;
   InfoHeader _infoHeader;
 
  public:
-  BMP(std::int32_t width, std::int32_t height) noexcept {
-    reset(width, height);
-  }
+  BMP(int32_t width, int32_t height) noexcept { reset(width, height); }
 
-  void reset(std::int32_t width, std::int32_t height) noexcept {
+  void reset(int32_t width, int32_t height) noexcept {
     uint32_t padSize = (4 - (width * sizeof(ImgPixel)) % 4) % 4;
     uint32_t mapSize = width * height * sizeof(ImgPixel) + height * padSize;
     uint32_t allSize = mapSize + _fileHeader.sizeRest + _infoHeader.size;
@@ -78,7 +78,7 @@ struct BMP {
   }
 
   template <template <class> class Image, typename Format>
-  void write(std::ofstream& ostream, Image<Format> const& image) const {
+  void write(ofstream& ostream, Image<Format> const& image) const {
     ostream.write(reinterpret_cast<char const*>(&_fileHeader.type),
                   _fileHeader.sizeRest);
 

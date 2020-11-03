@@ -49,6 +49,14 @@ This code sample is licensed under MIT license.
 
 ## Building and Running the `array-transform` Program
 
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+
 ### Setup
 
 Preliminary setup steps are needed for the debugger to function.
@@ -132,6 +140,33 @@ Perform the following steps:
     ```
     $ make clean
     ```
+
+By default, CMake configures the build for Just-in-Time (JIT)
+compilation of the kernel.  However, it also offers an option for
+*Ahead-of-Time* (AoT) compilation.  To compile the kernel
+ahead-of-time for a specific device, set the `DPCPP_COMPILE_TARGET`
+option to the desired device during configuration.  For CPU, use the
+`cpu` value; for FPGA-emu, use the `fpga-emu` value.  Other values are
+assumed to be for GPU, and are passed directly to the GPU AoT
+compiler.
+
+> *Hint:* Run `ocloc compile --help` to see available GPU device options.
+
+For example, to do AoT compilation for a `kbl` GPU device:
+
+```
+$ cmake .. -DDPCPP_COMPILE_TARGET=kbl
+```
+
+or for the Gen12 family:
+
+```
+$ cmake .. -DDPCPP_COMPILE_TARGET=gen12LP
+```
+
+> *Note:* AoT compilation is particularly helpful in larger
+> applications where compiling with debug information takes
+> considerably longer time.
 
 For instructions about starting and using the debugger, please
 see the

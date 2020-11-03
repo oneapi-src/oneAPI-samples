@@ -1,0 +1,22 @@
+{
+  "guid": "ED2952EA-04CB-4353-9FE6-80E0F7DCA098",
+  "name": "Intel Python daal4py Distributed Linear Regression",
+  "categories": ["Toolkit/Intel® AI Analytics Toolkit/oneDAL"],
+  "description": "This sample code shows how to train and predict with a distributed linear regression model with the Intel Distribution of Python using the python API package daal4py for oneDAL",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "dependencies": ["oneDAL"], 
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],
+  		"id": "idp_d4p_Linear_Regression_Dist",
+  		"steps": [
+         "mpirun -n 4 python ./IntelPython_daal4py_Distributed_LinearRegression.py"
+  		 ]
+  	}
+    ]
+}
+}
