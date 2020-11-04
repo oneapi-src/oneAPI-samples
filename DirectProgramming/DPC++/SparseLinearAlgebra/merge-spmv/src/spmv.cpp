@@ -265,8 +265,12 @@ void MergeSparseMatrixVectorThread(int thread_count, int tid,
                          thread_count;  // Merge items per thread.
 
   // Find start and end merge path coordinates for this thread.
-  int diagonal = ((items_per_thread * tid) < path_length) ? (items_per_thread * tid) : path_length;
-  int diagonal_end = ((diagonal + items_per_thread) < path_length) ? (diagonal + items_per_thread) : path_length;
+  int diagonal = ((items_per_thread * tid) < path_length)
+                     ? (items_per_thread * tid)
+                     : path_length;
+  int diagonal_end = ((diagonal + items_per_thread) < path_length)
+                         ? (diagonal + items_per_thread)
+                         : path_length;
 
   MergeCoordinate path = MergePathBinarySearch(diagonal, matrix.row_offsets);
   MergeCoordinate path_end =
