@@ -13,7 +13,7 @@
 #include "db_utils/Date.hpp"
 
 // choose a file separator based on the platform (Windows or Linux)
-#if defined(WIN32) || defined(_WIN32) 
+#if defined(WIN32) || defined(_WIN32) || defined(_MSC_VER)
 constexpr char kSeparator = '\\';
 #else 
 constexpr char kSeparator = '/';
@@ -52,8 +52,14 @@ void AppendStringToCharVec(std::vector<char>& v, const std::string& str,
 //
 DBDecimal MoneyFloatToCents(const std::string& money_float_str) {
   // parse money string
-  DBDecimal dollars, cents;
-  sscanf(money_float_str.c_str(), "%lld.%lld", &dollars, &cents);
+  std::istringstream ss(money_float_str);
+  std::string dollars_str, cents_str;
+
+  std::getline(ss, dollars_str, '.');
+  std::getline(ss, cents_str, '.');
+  
+  DBDecimal dollars = atoi(dollars_str.c_str());
+  DBDecimal cents = atoi(cents_str.c_str());
 
   // convert to fixed point format (i.e. in cents)
   return dollars * 100 + cents;

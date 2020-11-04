@@ -1,7 +1,6 @@
-# oneAPI training Jupyter notebooks
-This repository is both standalone and a GitLab sub-module to the larger oneAPI training repo at https://gitlab.devtools.intel.com/ecosystem-dev-programs/oneapi-training-development.
+# oneAPI training Jupyter notebooks 
 
-The purpose of this repo is to be the central aggregation, curation, and distribution point for Juypter notebooks that are developed in support of oneAPI training programs (e.g. oneAPI Essentials Series).  These are the hands-on components to be used in conjunction with training slides.
+The purpose of this repo is to be the central aggregation, curation, and distribution point for Juypter notebooks that are developed in support of oneAPI training programs (e.g. oneAPI Essentials Series). 
 
 The Jupyter notebooks are tested and can be run on Intel Devcloud.
 Below are the steps to access these Jupyter notebooks on Intel Devcloud

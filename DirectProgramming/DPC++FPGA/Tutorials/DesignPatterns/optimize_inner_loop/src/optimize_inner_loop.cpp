@@ -34,7 +34,7 @@ template <int version> class Producer;
 template <int version> class Consumer;
 
 // Declare the pipe class name globally to reduce name mangling.
-// Templating allows us to instantiate multiple versions of pipes for each 
+// Templating allows us to instantiate multiple versions of pipes for each
 // version of the kernel.
 template <int version> class PipeClass;
 
@@ -100,7 +100,7 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
             // more difficult for the compiler. As a result, the compiler will
             // be conservative and assume this inner loop may have a large trip
             // count and decide to make (or not make) optimizations accordingly.
-            [[intelfpga::speculated_iterations(spec_iters)]]
+            [[intel::speculated_iterations(spec_iters)]]
             for (int j = 0; j < val; j++) {
               Pipe::write(true);
             }
@@ -110,7 +110,7 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
             // 'j<in_element_upper_bound' loop exit condition. This provides the
             // compiler with a constant upperbound on the trip count and allows
             // it to make optimizations accordingly.
-            [[intelfpga::speculated_iterations(spec_iters)]]
+            [[intel::speculated_iterations(spec_iters)]]
             for (int j = 0; j < val && j <= in_element_upper_bound; j++) {
               Pipe::write(true);
             }

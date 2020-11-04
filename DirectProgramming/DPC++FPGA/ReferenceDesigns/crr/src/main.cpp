@@ -91,6 +91,7 @@
 //
 
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <cstddef>
 #include <cstdlib>
 #include <fstream>
@@ -105,16 +106,6 @@
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
 
 using namespace std;
 using namespace sycl;
@@ -173,41 +164,41 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
           int oc = 0;
           do {
             // Metadata of CRR problems
-            [[intelfpga::register]] double u[OUTER_UNROLL];
-            [[intelfpga::register]] double c1[OUTER_UNROLL];
-            [[intelfpga::register]] double c2[OUTER_UNROLL];
-            [[intelfpga::register]] double param_1[OUTER_UNROLL];
-            [[intelfpga::register]] double param_2[OUTER_UNROLL];
-            [[intelfpga::register]] short n_steps[OUTER_UNROLL];
+            [[intel::fpga_register]] double u[OUTER_UNROLL];
+            [[intel::fpga_register]] double c1[OUTER_UNROLL];
+            [[intel::fpga_register]] double c2[OUTER_UNROLL];
+            [[intel::fpga_register]] double param_1[OUTER_UNROLL];
+            [[intel::fpga_register]] double param_2[OUTER_UNROLL];
+            [[intel::fpga_register]] short n_steps[OUTER_UNROLL];
 
             // Current values in binomial tree.  We only need to keep track of
             // one level worth of data, not the entire tree.
-            [[intelfpga::memory, intelfpga::singlepump,
-              intelfpga::bankwidth(sizeof(double)),
-              intelfpga::numbanks(INNER_UNROLL * OUTER_UNROLL_POW2),
-              intelfpga::private_copies(
+            [[intel::fpga_memory, intel::singlepump,
+              intel::bankwidth(sizeof(double)),
+              intel::numbanks(INNER_UNROLL * OUTER_UNROLL_POW2),
+              intel::private_copies(
                   8)]] double optval[kMaxNSteps3][OUTER_UNROLL_POW2];
 
             // Initial values in binomial tree, which correspond to the last
             // level of the binomial tree.
-            [[intelfpga::memory, intelfpga::singlepump,
-              intelfpga::bankwidth(sizeof(double)),
-              intelfpga::numbanks(INNER_UNROLL * OUTER_UNROLL_POW2),
-              intelfpga::private_copies(
+            [[intel::fpga_memory, intel::singlepump,
+              intel::bankwidth(sizeof(double)),
+              intel::numbanks(INNER_UNROLL * OUTER_UNROLL_POW2),
+              intel::private_copies(
                   8)]] double init_optval[kMaxNSteps3][OUTER_UNROLL_POW2];
 
             // u2_array precalculates the power function of u2.
-            [[intelfpga::memory, intelfpga::singlepump,
-              intelfpga::bankwidth(sizeof(double)),
-              intelfpga::numbanks(INNER_UNROLL * OUTER_UNROLL_POW2),
-              intelfpga::private_copies(
+            [[intel::fpga_memory, intel::singlepump,
+              intel::bankwidth(sizeof(double)),
+              intel::numbanks(INNER_UNROLL * OUTER_UNROLL_POW2),
+              intel::private_copies(
                   8)]] double u2_array[kMaxNSteps3][OUTER_UNROLL_POW2];
 
             // p1powu_array precalculates p1 multipy the power of u.
-            [[intelfpga::memory, intelfpga::singlepump,
-              intelfpga::bankwidth(sizeof(double)),
-              intelfpga::numbanks(INNER_UNROLL * OUTER_UNROLL_POW2),
-              intelfpga::private_copies(
+            [[intel::fpga_memory, intel::singlepump,
+              intel::bankwidth(sizeof(double)),
+              intel::numbanks(INNER_UNROLL * OUTER_UNROLL_POW2),
+              intel::private_copies(
                   8)]] double p1powu_array[kMaxNSteps3][OUTER_UNROLL_POW2];
 
             // n0_optval stores the binomial tree value corresponding to node 0
@@ -218,9 +209,9 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
             // of n0_optval that stores the node 0 value for a specific layer of
             // the tree. pgreek is the array saving values for post-calculating
             // Greeks.
-            [[intelfpga::register]] double n0_optval[OUTER_UNROLL];
-            [[intelfpga::register]] double n0_optval_2[OUTER_UNROLL];
-            [[intelfpga::register]] double pgreek[4][OUTER_UNROLL];
+            [[intel::fpga_register]] double n0_optval[OUTER_UNROLL];
+            [[intel::fpga_register]] double n0_optval_2[OUTER_UNROLL];
+            [[intel::fpga_register]] double pgreek[4][OUTER_UNROLL];
 
             // L1 + L2:
             // Populate init_optval -- calculate the last level of the binomial
@@ -261,9 +252,9 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
             // Update optval[] -- calculate each level of the binomial tree.
             // reg[] helps to achieve updating INNER_UNROLL elements in optval[]
             // simultaneously.
-            [[intelfpga::disable_loop_pipelining]] for (short t = 0;
+            [[intel::disable_loop_pipelining]] for (short t = 0;
                                                         t <= steps - 1; ++t) {
-              [[intelfpga::register]] double reg[INNER_UNROLL + 1][OUTER_UNROLL];
+              [[intel::fpga_register]] double reg[INNER_UNROLL + 1][OUTER_UNROLL];
 
               double val_1, val_2;
 
@@ -275,7 +266,7 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
               // L4:
               // Calculate all the elements in optval[] -- all the tree nodes
               // for one level of the tree
-              [[intelfpga::ivdep]] for (int n = 0; n <= steps - 1 - t;
+              [[intel::ivdep]] for (int n = 0; n <= steps - 1 - t;
                                         n += INNER_UNROLL) {
 
                 #pragma unroll
@@ -864,11 +855,11 @@ int main(int argc, char *argv[]) {
     TestThroughput(time, n_crrs);
 
   } catch (sycl::exception const &e) {
-    std::cout << "Caught a synchronous SYCL exception: " << e.what() << "\n";
-    std::cout << "   If you are targeting an FPGA hardware, "
+    std::cerr << "Caught a synchronous SYCL exception: " << e.what() << "\n";
+    std::cerr << "   If you are targeting an FPGA hardware, "
                  "ensure that your system is plugged to an FPGA board that is "
                  "set up correctly\n";
-    std::cout << "   If you are targeting the FPGA emulator, compile with "
+    std::cerr << "   If you are targeting the FPGA emulator, compile with "
                  "-DFPGA_EMULATOR\n";
     return 1;
   }

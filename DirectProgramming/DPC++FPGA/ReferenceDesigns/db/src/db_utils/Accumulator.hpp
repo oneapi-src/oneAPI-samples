@@ -137,10 +137,10 @@ class BRAMAccumulator {
   StorageType mem[size];
 
   // internal cache for hiding write latency
-  [[intelfpga::register]]
+  [[intel::fpga_register]]
   StorageType cache_value[cache_size + 1];
 
-  [[intelfpga::register]]
+  [[intel::fpga_register]]
   IndexType cache_tag[cache_size + 1];
 };
 ///////////////////////////////////////////////////////

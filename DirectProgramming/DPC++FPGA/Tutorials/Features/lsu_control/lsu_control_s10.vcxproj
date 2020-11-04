@@ -18,7 +18,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{d6a634e7-9f2b-46c2-a21c-2402f631a55a}</ProjectGuid>
+    <ProjectGuid>{d6a634e7-9f2b-46c2-a21c-2402f631a55b}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>lsu_control</RootNamespace>
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
