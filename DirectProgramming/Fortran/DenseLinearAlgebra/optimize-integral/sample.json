@@ -1,6 +1,6 @@
 {
-  "name": "optimization-integral",
-  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "name": "Optimize Integral",
+  "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"],
   "description": "Fortran Sample - Simple Compiler Optimizations",
   "toolchain": [ "ifort" ],
   "languages": [ { "fortran": {} } ],

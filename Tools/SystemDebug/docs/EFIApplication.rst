@@ -99,7 +99,9 @@ Then cd to the location of the efi application.
 
 Then - clone all of the submodules
 
-``git submodule update --init``
+``git clone https://git.code.sf.net/p/gnu-efi/code  gnu-efi-code``
+``git clone https://github.com/tianocore/edk2.git``
+``git clone https://github.com/tianocore/edk2-BaseTools-win32.git Win32``
 
 Edk2 basetools
 ^^^^^^^^^^^^^^^^
