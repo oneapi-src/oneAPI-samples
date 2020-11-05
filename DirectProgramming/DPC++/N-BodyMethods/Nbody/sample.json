@@ -1,9 +1,9 @@
 {
   "guid": "D5BFD7D5-737E-4CC9-84EE-FE94339B3DCA",
-  "name": "N-Body",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/N-Body Methods"],
-  "description": "An N-Body simulation is a simulation of a dynamical system of particles, usually under the influence of physical forces, such as gravity. This N-Body sample code is implemented using Intel® oneAPI Data Parallel C++ (DPC++) for CPU and GPU",
+  "name": "Nbody",
+  "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
   "toolchain": ["dpcpp"],
+  "description": "An N-body simulation is a simulation of a dynamical system of particles, usually under the influence of physical forces, such as gravity. This nbody sample code is implemented using C++ and SYCL language for CPU and GPU.",
   "languages": [{"cpp":{}}],
   "targetDevice": ["CPU","GPU"],
   "os": ["linux", "windows"],

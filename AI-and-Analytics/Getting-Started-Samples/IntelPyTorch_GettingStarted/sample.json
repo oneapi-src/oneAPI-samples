@@ -1,8 +1,8 @@
 {
   "guid": "3E6FD81F-76A0-430C-AD82-0F94A45F93DC",
-  "name": "Intel® PyTorch Getting Started",
-  "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
-  "description": "This sample illustrates how to train a PyTorch model and run inference with Intel® oneMKL and Intel® oneDNN",
+  "name": "PyTorch Hello World",
+  "categories": ["Toolkit/Intel® AI Analytics Toolkit/PyTorch"],
+  "description": "This sample shows how to train a PyTorch model and run inference with oneMKL and oneDNN.",
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "os":["linux"],

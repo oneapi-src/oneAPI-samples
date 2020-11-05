@@ -1,8 +1,8 @@
 {
   "guid": "111213A0-C930-45B4-820F-02472BABBF34",
-  "name": "Intel® Tensorflow Getting Started",
-  "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
-  "description": "This sample illustrates how to train a TensorFlow model and run inference with oneMKL and oneDNN.",
+  "name": "Tensorflow Hello World",
+  "categories": ["Toolkit/Intel® AI Analytics Toolkit/TensorFlow"],
+  "description": "This sample shows how to train a TensorFlow and run inference with oneMKL and oneDNN.",
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "os":["linux"],

@@ -1,8 +1,8 @@
 {
   "guid": "2013EC16-5BB7-4EBF-9F55-E224A1C8CB73",
-  "name": "Max Interleaving",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
-  "description": "An Intel® FPGA tutorial demonstrating the usage of the loop max_interleaving attribute",
+  "name": "Loop Max Interleaving Attribute",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
+  "description": "FPGA tutorial demonstrating the usage of the loop max_interleaving attribute",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],

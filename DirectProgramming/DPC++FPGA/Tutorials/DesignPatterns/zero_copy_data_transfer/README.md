@@ -67,7 +67,6 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-
    To compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:  
     ```
     cmake ..
@@ -87,7 +86,6 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ```
-
 3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) precompiled binary (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/zero_copy_data_transfer.fpga.tar.gz" download>here</a>.
  
 ### On a Windows* System

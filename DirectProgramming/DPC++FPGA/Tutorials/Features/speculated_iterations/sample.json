@@ -1,8 +1,8 @@
 {
   "guid": "66A57127-1F8D-4769-8CCB-16ECC56A446F",
-  "name": "Speculated Iterations",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
-  "description": "An Intel® FPGA tutorial demonstrating the speculated_iterations attribute",
+  "name": "Speculated Iterations of a Loop",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
+  "description": "FPGA tutorial demonstrating the speculated_iterations attribute",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],

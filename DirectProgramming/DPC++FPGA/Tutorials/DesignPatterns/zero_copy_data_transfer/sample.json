@@ -1,8 +1,8 @@
 {
   "guid": "EEF0B7DA-BB7A-482D-AACB-0F5E45CDCB0D",
-  "name": "Zero Copy Data Transfer",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
-  "description": "An Intel® FPGA tutorial demonstrating zero-copy host memory using the SYCL restricted Unified Shared Memory (USM) model",
+  "name": "Zero-copy Data Transfer",
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
+  "description": "An FPGA tutorial demonstrating zero-copy host memory using the SYCL restricted Unified Shared Memory (USM) model",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -53,3 +53,4 @@
     ]
   }
 }
+
