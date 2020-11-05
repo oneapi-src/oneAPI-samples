@@ -1,8 +1,8 @@
 {
   "guid": "3A777FCA-2FFA-4A15-965F-A1125FE8051E",
   "name": "Explicit Data Movement",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
-  "description": "An FPGA tutorial demonstrating an alternative coding style, explicit USM, in which all data movement is controlled explicitly by the author.",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "description": "An Intel® FPGA tutorial demonstrating an alternative coding style, explicit USM, in which all data movement is controlled explicitly by the author",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -53,5 +53,3 @@
     ]
   }
 }
-
-

@@ -1,8 +1,8 @@
 {
   "guid": "4D5B57B8-6F34-4A11-89F5-3F07E766DB39",
-  "name": "bitonic-sort",
-  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU and GPU" ],
-  "description": "Bitonic Sort using Intel® oneAPI DPC++ Language",
+  "name": "Bitonic Sort",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Graph Traversal"],
+  "description": "Bitonic Sort using Intel® oneAPI Data Parallel C++ (DPC++)",
   "toolchain": [ "dpcpp" ],
   "targetDevice": [ "CPU", "GPU" ],
   "languages": [ { "cpp": {} } ],
