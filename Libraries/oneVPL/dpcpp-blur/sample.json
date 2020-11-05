@@ -28,8 +28,8 @@
           "mkdir build",
           "cd build",
           "cmake .. -T \"Intel(R) oneAPI DPC++ Compiler\"",
-          "cmake --build .",
-          "cmake --build . --target run"
+          "cmake --build . --config Release",
+          "cmake --build . --target run --config Release"
         ] }
     ]
   }

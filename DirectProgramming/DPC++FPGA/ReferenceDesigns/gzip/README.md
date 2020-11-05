@@ -6,12 +6,11 @@ Reference design demonstrating high-performance GZIP compression on FPGA.
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC)  with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC)  with Intel Stratix® 10 SX FPGA
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
 | Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | How to implement a high performance multi-engine compression algorithm on FPGA
 | Time to complete                  | 1 hr (not including compile time)
  
-_Notice: Limited support in Windows*; compiling for FPGA hardware is not supported in Windows*_
  
 **Performance**
 Please refer to performance disclaimer at the end of this README.
@@ -19,7 +18,8 @@ Please refer to performance disclaimer at the end of this README.
 | Device                                                | Throughput
 |:---                                                   |:---
 | Intel® PAC with Intel Arria® 10 GX FPGA               | 1 engine @ 3.4 GB/s
-| Intel® PAC with Intel Stratix® 10 SX FPGA             | 2 engines @ 5.5 GB/s each = 11.0 GB/s total
+| Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA)             | 2 engines @ 5.5 GB/s each = 11.0 GB/s total (High Bandwidth variant) using 120MB+ input, 2 engines @ 3.5 GB/s = 7.0 GB/s (Low Latency variant) using 80kB input
+
  
 ## Purpose
 
@@ -27,7 +27,11 @@ This DPC++ reference design implements a compression algorithm. The implementati
 
 The algorithm uses a GZIP-compatible Limpel-Ziv 77 (LZ77) algorithm for data de-duplication, and a GZIP-compatible Static Huffman algorithm for bit reduction. The implementation includes three FPGA accelerated tasks (LZ77, Static Huffman and CRC). 
 
-The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The number of engines is constrained by the available FPGA resources. By default, the design is parameterized to create a single engine when the design is compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. Two engines are created when targeting Intel® PAC with Intel Stratix® 10 SX FPGA, a larger device.
+The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The number of engines is constrained by the available FPGA resources. By default, the design is parameterized to create a single engine when the design is compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. Two engines are created when targeting Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), a larger device.
+
+This reference design contains 2 variants: "High Bandwidth" and "Low-Latency".
+The High Bandwidth variant maximizes system throughput without regard for latency. It transfers input/output SYCL Buffers to FPGA-attached DDR. The kernel then operates on these buffers.
+The Low-Latency variant takes advantage of Universal Shared Memory (USM) to avoid these copy operations, allowing the GZIP engine to directly access input/output buffers in host-memory. This reduces latency but throughput is also reduced. "Latency" in this context is defined as the duration of time between when the input buffer is available in host memory to when the output buffer (i.e. the compressed result) is available in host memory.
  
 ## Key Implementation Details
 
@@ -67,53 +71,64 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC with Intel Stratix® 10 SX FPGA, run `cmake` using the command:
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
  
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
    ```
- 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
  
    * Compile for emulation (fast compile time, targets emulated FPGA device): 
       ```
       make fpga_emu
       ```
+    > Note: for the Low Latency variant use `make fpga_emu_ll`
+
    * Generate the optimization report: 
      ```
      make report
      ``` 
+    > Note: for the Low Latency variant use `make report_ll`
+
    * Compile for FPGA hardware (longer compile time, targets FPGA device): 
      ```
      make fpga
      ``` 
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/gzip.fpga.tar.gz" download>here</a>.
+    > Note: for the Low Latency variant use `make fpga_ll`
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/gzip.fpga.tar.gz" download>here</a>.
  
 ### On a Windows* System
-Note: `cmake` is not yet supported on Windows. A build.ninja file is provided instead. 
- 
-1. Enter the source file directory.
+
+1. Generate the `Makefile` by running `cmake`.
+     ```
+   mkdir build
+   cd build
    ```
-   cd src
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+    ```
+    cmake -G "NMake Makefiles" ..
    ```
- 
-2. Compile the design. The following build targets are provided, matching the recommended development flow:
- 
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
+   ```
+
+2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+
    * Compile for emulation (fast compile time, targets emulated FPGA device): 
-      ```
-      ninja fpga_emu
-      ```
- 
-   * Generate the optimization report:
- 
      ```
-     ninja report
+     nmake fpga_emu
      ```
-     If you are targeting Intel® PAC with Intel Stratix® 10 SX FPGA, instead use:
+    > Note: for the Low Latency variant use `nmake fpga_emu_ll`     
+   * Generate the optimization report: 
      ```
-     ninja report_s10_pac
-     ```     
-   * Compiling for FPGA hardware is not yet supported on Windows.
+     nmake report
+     ``` 
+    > Note: for the Low Latency variant use `nmake report_ll`          
+   * An FPGA hardware target is not provided on Windows*. 
+
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
  
@@ -127,17 +142,19 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
      ./gzip.fpga_emu <input_file> [-o=<output_file>]     (Linux)
      gzip.fpga_emu.exe <input_file> [-o=<output_file>]   (Windows)
      ```
+    > Note: for the Low Latency variant use `gzip.fpga_emu_ll`     
 2. Run the sample on the FPGA device:
      ```
      aocl initialize acl0 pac_s10_usm
      ./gzip.fpga <input_file> [-o=<output_file>]         (Linux)
      ```
+     > Note: for the Low Latency variant use `gzip.fpga_ll`     
  ### Application Parameters
 
 | Argument | Description
 ---        |---
-| `<input_file>` | Mandatory argument that specifies the file to be compressed. Use a 120+ MB file to achieve peak performance.
-| `-o=<output_file>` | Optional argument that specifies the name of the output file. The default name of the output file is `<input_file>.gz`. When targeting Intel Stratix® 10 SX, the single `<input_file>` is fed to both engines, yielding two identical output files, using `<output_file>` as the basis for the filenames.
+| `<input_file>` | Mandatory argument that specifies the file to be compressed. Use a 120+ MB file to achieve peak performance (80kB for Low Latency variant).
+| `-o=<output_file>` | Optional argument that specifies the name of the output file. The default name of the output file is `<input_file>.gz`. When targeting Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), the single `<input_file>` is fed to both engines, yielding two identical output files, using `<output_file>` as the basis for the filenames.
  
 ### Example of Output
  
@@ -153,14 +170,19 @@ PASSED
 | File                         | Description 
 ---                            |---
 | `gzip.cpp`                   | Contains the `main()` function and the top-level interfaces to the SYCL* GZIP functions.
-| `gzipkernel.cpp`            | Contains the SYCL* kernels used to implement GZIP. 
+| `gzip_ll.cpp`                | Low latency variant of the top level file.
+| `gzipkernel.cpp`             | Contains the SYCL* kernels used to implement GZIP. 
+| `gzipkernel_ll.cpp`          | Low-latency variant of kernels.
 | `CompareGzip.cpp`            | Contains code to compare a GZIP-compatible file with the original input.
 | `WriteGzip.cpp`              | Contains code to write a GZIP compatible file. 
 | `crc32.cpp`                  | Contains code to calculate a 32-bit CRC that is compatible with the GZIP file format and to combine multiple 32-bit CRC values. It is used to account only for the CRC of the last few bytes in the file, which are not processed by the accelerated CRC kernel. 
 | `kernels.hpp`                  | Contains miscellaneous defines and structure definitions required by the LZReduction and Static Huffman kernels.
 | `crc32.hpp`                    | Header file for `crc32.cpp`.
 | `gzipkernel.hpp`              | Header file for `gzipkernels.cpp`.
+| `gzipkernel)ll.hpp`              | Header file for `gzipkernels_ll.cpp`.
 | `CompareGzip.hpp`              | Header file for `CompareGzip.cpp`.
+| `pipe_array.hpp`                | Header file containing definition of an array of pipes. 
+| `pipe_array_internal.hpp`       | Helper for pipe_array.hpp. 
 | `WriteGzip.hpp`                | Header file for `WriteGzip.cpp`. 
 
 ### Compiler Flags Used
@@ -169,9 +191,10 @@ PASSED
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsparallel=2` | Uses 2 cores when compiling the bitstream through Quartus
-`-Xsseed=12` | Uses seed 12 during Quartus, yields slightly higher fmax
+`-Xsseed=22` | Uses seed 22 (seed 22 for Low latency Variant) during Quartus, yields slightly higher fmax
 `-Xsnum-reorder=6` | On Intel Stratix® 10 SX only, specify a wider data path for read data from global memory 
-`-DNUM_ENGINES=<1|2>` | Specifies that 1 GZIP engine should be compiled when targeting Arria® 10 GX and 2 engines when targeting Intel Stratix® 10 SX
+`-Xsopt-arg="-nocaching"` | Specifies that cached LSUs should not be used.
+`-DNUM_ENGINES=<1|2>` | Specifies that 1 GZIP engine should be compiled when targeting Intel Arria® 10 GX and 2 engines when targeting Intel Stratix® 10 SX
 
 
 ### Performance disclaimers

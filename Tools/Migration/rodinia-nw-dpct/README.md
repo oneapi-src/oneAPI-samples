@@ -1,7 +1,7 @@
 # Intel DPC++ Compatibility Tool: Needleman-Wunsch
 
 This project demonstrates how to migrate a Make/CMake project from CUDA to
-Intel Data Parallel C++ using the Intel DPC++ Compatibility Tool.
+Data Parallel C++ using the Intel DPC++ Compatibility Tool.
 
 | Optimized for         | Description
 |:---                   |:---

@@ -6,12 +6,12 @@ This FPGA tutorial introduces how to compile DPC++ for FPGA through a simple vec
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) with Intel Stratix® 10 SX FPGA
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
 | Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and why compiling DPC++ to FPGA differs from CPU or GPU <br> FPGA device image types and when to use them <br> The compile flags used to target FPGA
 | Time to complete                  | 15 minutes
 
-_Notice: Limited support in Windows*; compiling for FPGA hardware is not supported in Windows*_
+
 
 ## Purpose
 Field-programmable gate arrays (FPGAs) are configurable integrated circuits that can be programmed to implement arbitrary circuit topologies. Classified as *spatial* compute architectures, FPGAs differ significantly from fixed Instruction Set Architecture (ISA) devices like CPUs and GPUs, and offer a different set of optimization trade-offs from these traditional accelerator devices.
@@ -58,7 +58,7 @@ Optimization reports are generated after both stages. The optimization report ge
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design.html) contains a chapter on how to analyze the reports generated after the FPGA early image and FPGA image.
 
 #### FPGA Hardware
-This is a full compile through to the FPGA hardware image. You can target the Intel® PAC with Intel Arria® 10 GX FPGA, the Intel® Programmable Acceleration Card (PAC) with Intel Stratix® 10 SX FPGA, or a custom board.
+This is a full compile through to the FPGA hardware image. You can target the Intel® PAC with Intel Arria® 10 GX FPGA, the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), or a custom board.
 
 ### Device Selectors
 The following code  snippet demonstrates how you can specify the target device in your source code. The selector is used to specify the target device at runtime.
@@ -143,7 +143,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC with Intel Stratix® 10 SX FPGA, run `cmake` using the command:
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -163,32 +163,38 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/pipe_array.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/pipe_array.fpga.tar.gz" download>here</a>.
+
 ### On a Windows* System
-Note: `cmake` is not yet supported on Windows. A build.ninja file is provided instead. 
 
-1. Enter the source file directory.
+1. Generate the `Makefile` by running `cmake`.
+     ```
+   mkdir build
+   cd build
    ```
-   cd src
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+    ```
+    cmake -G "NMake Makefiles" ..
+   ```
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 
-2. Compile the design. The following build targets are provided, matching the recommended development flow:
+2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device): 
-      ```
-      ninja fpga_emu
-      ```
-      **NOTE:** For the FPGA emulator target, the device link method is used. 
-   * Generate the optimization report:
+     ```
+     nmake fpga_emu
+     ```
+   * Generate the optimization report: 
+     ```
+     nmake report
+     ``` 
+   * An FPGA hardware target is not provided on Windows*. 
 
-     ```
-     ninja report
-     ```
-     If you are targeting Intel® PAC with Intel Stratix® 10 SX FPGA, instead use:
-     ```
-     ninja report_s10_pac
-     ```     
-   * Compiling for FPGA hardware is not yet supported on Windows.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
 ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -216,3 +222,4 @@ Browse the reports that were generated for the `VectorAdd` kernel's FPGA early i
 ```
 PASSED: results are correct
 ```
+

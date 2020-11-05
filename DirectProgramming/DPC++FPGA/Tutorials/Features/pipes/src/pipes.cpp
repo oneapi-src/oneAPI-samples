@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -12,15 +13,6 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
 
 using namespace sycl;
 
@@ -30,7 +22,7 @@ using ProducerToConsumerPipe = INTEL::pipe<  // Defined in the SYCL headers.
     4>;                                      // The capacity of the pipe.
 
 // Forward declare the kernel names
-// (This will become unnecessary in a future compiler version.)
+// (This prevents unwanted name mangling in the optimization report.)
 class ProducerTutorial;
 class ConsumerTutorial;
 
@@ -41,7 +33,7 @@ void Producer(queue &q, buffer<int, 1> &input_buffer) {
   std::cout << "Enqueuing producer...\n";
 
   auto e = q.submit([&](handler &h) {
-    auto input_accessor = input_buffer.get_access<access::mode::read>(h);
+    accessor input_accessor(input_buffer, h, read_only);
     size_t num_elements = input_buffer.get_count();
 
     h.single_task<ProducerTutorial>([=]() {
@@ -63,7 +55,7 @@ void Consumer(queue &q, buffer<int, 1> &out_buf) {
   std::cout << "Enqueuing consumer...\n";
 
   auto e = q.submit([&](handler &h) {
-    auto out_accessor = out_buf.get_access<access::mode::discard_write>(h);
+    accessor out_accessor(out_buf, h, write_only, noinit);
     size_t num_elements = out_buf.get_count();
 
     h.single_task<ConsumerTutorial>([=]() {
@@ -108,9 +100,7 @@ int main(int argc, char *argv[]) {
     queue q(device_selector, dpc_common::exception_handler);
 
     buffer producer_buffer(producer_input);
-    // Use verbose SYCL 1.2 syntax for the output buffer.
-    // (This will become unnecessary in a future compiler version.)
-    buffer<int, 1> consumer_buffer(consumer_output.data(), array_size);
+    buffer consumer_buffer(consumer_output);
 
     // Run the two kernels concurrently. The Producer kernel sends
     // data via a pipe to the Consumer kernel.
@@ -119,13 +109,14 @@ int main(int argc, char *argv[]) {
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();

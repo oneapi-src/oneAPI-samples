@@ -8,77 +8,86 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(REPORTS_TARGET ${TARGET_NAME}_report)
 
 # set SEED variable
-IF (NOT DEFINED SEED)
-    SET(SEED 1)
-ENDIF()
+if(NOT DEFINED SEED)
+    set(SEED 1)
+endif()
 
 # set number of CPU cores to use for quartus compile
-IF (NOT DEFINED QUARTUS_CORES)
-    SET(QUARTUS_CORES 4)
-ENDIF()
+if(NOT DEFINED QUARTUS_CORES)
+    set(QUARTUS_CORES 4)
+endif()
 
 # check if they want to use the small database
-IF (DEFINED SF_SMALL)
-    MESSAGE(STATUS "\tManual override for database size - building for small database (SF=0.01)")
-    SET(SF_SMALL_ARG -DSF_SMALL)
-ELSE()
-    SET(SF_SMALL_ARG )
-ENDIF()
+if(DEFINED SF_SMALL)
+    message(STATUS "\tManual override for database size - building for small database (SF=0.01)")
+    set(SF_SMALL_ARG -DSF_SMALL)
+else()
+    set(SF_SMALL_ARG )
+endif()
 
 # which query are we doing?
-IF (NOT DEFINED QUERY)
-    MESSAGE(STATUS "\t!!QUERY variable is NOT set, defaulting to QUERY=1!!")
-    SET(QUERY 1)
-ELSE()
-    MESSAGE(STATUS "\tQUERY=${QUERY}")
-ENDIF()
+if(NOT DEFINED QUERY)
+    message(STATUS "\t!!QUERY variable is NOT set, defaulting to QUERY=1!!")
+    set(QUERY 1)
+else()
+    message(STATUS "\tQUERY=${QUERY}")
+endif()
 
 # setting source file based on query version
-IF(${QUERY} EQUAL 1)
+if(${QUERY} EQUAL 1)
     set(DEVICE_SOURCE query1/query1_kernel.cpp)
     set(DEVICE_HEADER query1/query1_kernel.hpp)
-ELSEIF(${QUERY} EQUAL 9)
+elseif(${QUERY} EQUAL 9)
     set(DEVICE_SOURCE query9/query9_kernel.cpp)
     set(DEVICE_HEADER query9/query9_kernel.hpp)
-ELSEIF(${QUERY} EQUAL 11)
+elseif(${QUERY} EQUAL 11)
     set(DEVICE_SOURCE query11/query11_kernel.cpp)
     set(DEVICE_HEADER query11/query11_kernel.hpp)
-ELSEIF(${QUERY} EQUAL 12)
+elseif(${QUERY} EQUAL 12)
     set(DEVICE_SOURCE query12/query12_kernel.cpp)
     set(DEVICE_HEADER query12/query12_kernel.hpp)
-ELSE()
-    MESSAGE(FATAL_ERROR "\tQUERY ${QUERY} not supported (supported queries are 1, 9, 11 and 12)")
-ENDIF()
+else()
+    message(FATAL_ERROR "\tQUERY ${QUERY} not supported (supported queries are 1, 9, 11 and 12)")
+endif()
 
 # Intel supported FPGA Boards and their names
 set(A10_PAC_BOARD_NAME "intel_a10gx_pac:pac_a10")
 set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10")
 
-# Assume target is the Intel(R) PAC with Intel Stratix(R) 10 SX FPGA 
-SET(_FPGA_BOARD ${S10_PAC_BOARD_NAME})
+# Assume target is the Intel(R) PAC D5005 (with Intel Stratix(R) 10 SX FPGA) 
+set(SELECTED_BOARD ${S10_PAC_BOARD_NAME})
 
-# Check if target is the Intel(R) PAC with Intel Stratix(R) 10 SX FPGA
-IF (NOT DEFINED FPGA_BOARD)
-    MESSAGE(STATUS "\tConfiguring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Stratix(R) 10 SX FPGA.")
-ELSEIF(FPGA_BOARD STREQUAL ${A10_PAC_BOARD_NAME})
-    MESSAGE(FATAL_ERROR "\tThis example design ONLY supports the Intel(R) Programmable Acceleration Card (PAC) with Intel Stratix(R) 10 SX FPGA.")
-ELSEIF(FPGA_BOARD STREQUAL ${S10_PAC_BOARD_NAME})
-    MESSAGE(STATUS "\tConfiguring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Stratix(R) 10 SX FPGA.")
-ELSE()
-    MESSAGE(FATAL_ERROR "\tAn invalid board name was passed in using the FPGA_BOARD flag. Please refer to the README for the list of valid board names.")
-ENDIF()
+# Check if target is the Intel(R) PAC D5005 (with Intel Stratix(R) 10 SX FPGA)
+if(NOT DEFINED FPGA_BOARD)
+    message(STATUS "\tConfiguring the design to run on the Intel(R) Programmable Acceleration Card (PAC) D5005 (with Intel Stratix(R) 10 SX FPGA).")
+elseif(FPGA_BOARD STREQUAL ${A10_PAC_BOARD_NAME})
+    message(FATAL_ERROR "\tThis example design ONLY supports the Intel(R) Programmable Acceleration Card (PAC) D5005 (with Intel Stratix(R) 10 SX FPGA).")
+elseif(FPGA_BOARD STREQUAL ${S10_PAC_BOARD_NAME})
+    message(STATUS "\tConfiguring the design to run on the Intel(R) Programmable Acceleration Card (PAC) D5005 (with Intel Stratix(R) 10 SX FPGA).")
+else()
+    message(FATAL_ERROR "\tAn invalid board name was passed in using the FPGA_BOARD flag. Please refer to the README for the list of valid board names.")
+endif()
 
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga -c -DQUERY=${QUERY} ${SF_SMALL_ARG}")
 
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Wall -Xshardware -Xsboard=${_FPGA_BOARD} -Xsopt-arg=\"-nocaching\" -Xsforce-single-store-ring -Xsparallel=${QUARTUS_CORES} -Xsseed=${SEED} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Wall -Xshardware -Xsboard=${SELECTED_BOARD} -Xsopt-arg=\"-nocaching\" -Xsforce-single-store-ring -Xsparallel=${QUARTUS_CORES} -Xsseed=${SEED} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
 
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall -DFPGA_EMULATOR -DQUERY=${QUERY} ${SF_SMALL_ARG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 
-# fpga emulator
+# FPGA emulator
 if(WIN32)
-    message(FATAL_ERROR "No CMake support for Windows, yet")
+    set(WIN_EMULATOR_TARGET ${EMULATOR_TARGET}.exe)
+    add_custom_target(fpga_emu DEPENDS ${WIN_EMULATOR_TARGET})
+    separate_arguments(WIN_EMULATOR_COMPILE_FLAGS WINDOWS_COMMAND "${EMULATOR_COMPILE_FLAGS}")
+    add_custom_command(OUTPUT ${WIN_EMULATOR_TARGET} 
+                    COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_EMULATOR_COMPILE_FLAGS}
+                    ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE}
+                    ${CMAKE_CURRENT_SOURCE_DIR}/db.cpp
+                    ${CMAKE_CURRENT_SOURCE_DIR}/dbdata.cpp
+                    -o ${CMAKE_BINARY_DIR}/${WIN_EMULATOR_TARGET}
+                    DEPENDS ${DEVICE_SOURCE} ${DEVICE_HEADER} ${HOST_HEADER_FILES})
 else()
     add_executable(${EMULATOR_TARGET} ${DEVICE_SOURCE} ${HOST_SOURCE} ${HOST_HEADERS} ${DB_UTILITY_HEADERS})
     set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS ${EMULATOR_COMPILE_FLAGS})
@@ -86,9 +95,9 @@ else()
     add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 endif()
 
-# fpga
+# FPGA hardware
 if(WIN32)
-    message(FATAL_ERROR "No CMake support for Windows, yet")
+    add_custom_target(fpga COMMAND echo "An FPGA hardware target is not provided on Windows. See README for details.")
 else()
     add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${HOST_SOURCE} ${DEVICE_SOURCE})
     set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS ${HARDWARE_COMPILE_FLAGS})
@@ -96,9 +105,14 @@ else()
     add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 endif()
 
-# fpga report
+# FPGA hardware report
 if(WIN32)
-    message(FATAL_ERROR "No CMake support for Windows, yet")
+    add_custom_target(report DEPENDS ${REPORTS_TARGET})
+    separate_arguments(WIN_FLAGS WINDOWS_COMMAND)
+    add_custom_command(OUTPUT ${REPORTS_TARGET}
+                    COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link 
+                    ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
+                    DEPENDS ${DEVICE_SOURCE} ${DEVICE_HEADER} ${DB_UTILITY_HEADERS})
 else()
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db.cpp db.cpp COPYONLY)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dbdata.cpp dbdata.cpp COPYONLY)
@@ -127,10 +141,12 @@ else()
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/query12/pipe_types.hpp query12/pipe_types.hpp COPYONLY)
 
     separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}")
+    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
     
     add_custom_command(OUTPUT ${REPORTS_TARGET}
-                 COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${DEVICE_SOURCE} ${HOST_SOURCE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
-                 DEPENDS ${DEVICE_SOURCE} ${HOST_SOURCE} ${HOST_HEADERS} ${DB_UTILITY_HEADERS})
+                 COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link
+                 ${DEVICE_SOURCE} ${HOST_SOURCE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
+                 DEPENDS ${DEVICE_SOURCE} ${DEVICE_HEADER} ${DB_UTILITY_HEADERS})
 
     add_custom_target(report DEPENDS ${REPORTS_TARGET})
 endif()
