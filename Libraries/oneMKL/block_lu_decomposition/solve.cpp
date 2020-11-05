@@ -92,8 +92,14 @@ int main() {
     sycl::queue queue(device, error_handler);
     sycl::context context = queue.get_context();
 
+    if (device.is_gpu() && device.get_platform().get_backend() != sycl::backend::level_zero) {
+        std::cerr << "This sample requires Level Zero when running on GPUs." << std::endl;
+        std::cerr << "Please check your system configuration." << std::endl;
+        return 0;
+    }
+
     if (device.get_info<sycl::info::device::double_fp_config>().empty()) {
-        std::cerr << "The sample uses double precision, which is not supported" << std::endl;
+        std::cerr << "This sample uses double precision, which is not supported" << std::endl;
         std::cerr << "by the selected device. Quitting." << std::endl;
         return 0;
     }
@@ -129,7 +135,7 @@ int main() {
     std::cout << "Testing accuracy of solution of linear equations system" << std::endl;
     std::cout << "with randomly generated block tridiagonal coefficient" << std::endl;
     std::cout << "matrix by calculating ratios of residuals" << std::endl;
-    std::cout << "to RHS vectors norms." << std::endl;
+    std::cout << "to RHS vectors' norms." << std::endl;
 
     // LU factorization of the coefficient matrix      
     info = dgeblttrf(queue, n, nb, d.data(), dl.data(), du1.data(), du2.data(), ipiv.data());
