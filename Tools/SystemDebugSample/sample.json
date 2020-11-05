@@ -4,8 +4,6 @@
   "categories": ["Toolkit/oneAPI Tools/System Debug"],
   "description": "Demonstrate basic functionality of the Intel® System Debugger",
   "os": ["linux", "windows"],
-  "languages": [{"python":{},"cpp":{}}],
-  "os": ["linux", "windows"],
   "builder": ["cmake"],
   "ciTests": {
     "linux": [
