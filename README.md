@@ -1,10 +1,14 @@
-# [Stable Releases](https://github.com/oneapi-src/oneAPI-samples/tags)
+# Intel oneAPI Toolkit Samples
 
-We recommend checking out a release version of the repository. Releases are available [here](https://github.com/oneapi-src/oneAPI-samples/tags).
+The oneAPI-samples repository provides code samples for Intel oneAPI toolkits.
 
-The latest versions of code samples on the master branch are not guaranteed to be stable.
+We recommend checking out a specific release version of the repository.
+[View available releases](https://github.com/oneapi-src/oneAPI-samples/tags).
 
-# Index
+The latest versions of code samples on the master branch are not guaranteed to
+be stable.
+
+## Code Samples
 
 |Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	| 
 |-----------------------|-------------------------------------------|---------------|
@@ -74,13 +78,13 @@ The latest versions of code samples on the master branch are not guaranteed to b
 |../IoTConnectionTools/Up2   LEDs    	|CPU  	|Built-in   LED example for UP* Squared using Eclipse* MRAA	|
 |../SystemDebug/System Debug   Sample Build    	|UEFI 	|Basic example that   showcases the features of the Intel® System Debugger	|
 
-# License
- 
+## License
+
 The code samples are licensed under MIT license
- 
-# Known issues or limitations
- 
-## On Windows Platform
+
+## Known issues or limitations
+
+### On Windows Platform
 1. If you are using Visual Studio 2019, Visual Studio 2019 version 16.4.0 or newer is required.
 2. To build samples on Windows, the required Windows SDK is ver. 10.0.17763.0. 
 3. Now you should be able to build the code sample.
