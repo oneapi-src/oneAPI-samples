@@ -12,8 +12,6 @@ This FPGA tutorial demonstrates how to configure the load-store units (LSU) in y
 | What you will learn               | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU
 | Time to complete                  | 30 minutes
 
-
-
 ## Purpose
 
 The Intel® oneAPI DPC++ Compiler creates load-store units (LSU) to access off-chip data. The compiler has many options to choose from when configuring each LSU. The DPC++ LSU controls extension allows you to override the compiler's internal heuristics and control the architecture of each LSU. An introduction to the extension in this tutorial will explain the available options, extension defaults, appropriate use cases, and area trade-offs. 

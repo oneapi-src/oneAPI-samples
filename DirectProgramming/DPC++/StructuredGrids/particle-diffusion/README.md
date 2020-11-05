@@ -54,13 +54,8 @@ functionality from the oneAPI oneMKL library), as well as atomic functions to pr
 access inconsistencies. 
 
 A detailed code walk through can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP5_PART_DIFF. 
-
-
-## Key implementation details 
-=======
  
 ## Key Implementation Details
-
 
 SYCL implementation explained. 
 

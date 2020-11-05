@@ -163,7 +163,6 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     cmake ..
    ```
    Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
-
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
