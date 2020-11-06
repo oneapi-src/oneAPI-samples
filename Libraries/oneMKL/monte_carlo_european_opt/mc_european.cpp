@@ -17,11 +17,13 @@
 
 #include <CL/sycl.hpp>
 
+#if __has_include("oneapi/mkl.hpp")
+#include "oneapi/mkl.hpp"
+#else
+// Beta09 compatibility -- not needed for new code.
 #include "mkl_rng_sycl.hpp"
+#endif
 
-// Temporary code for compatibility with beta08.
-// oneMKL moves to the oneapi namespace in beta09.
-namespace oneapi {}
 using namespace oneapi;
 
 // Temporary code for beta08 compatibility. Reduce routine is moved from intel::
@@ -67,7 +69,6 @@ static void mc_kernel(sycl::queue& q, EngineType& engine, size_t num_samples,
                       sycl::buffer<double>& rng_buf) {
     double a, nu;
     double sc_dp, sp_dp;
-    double st;
 
     a = (risk_neutral_rate - volatility * volatility * 0.5) * t;
     nu = volatility * sqrt(t);

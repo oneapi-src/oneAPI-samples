@@ -2,6 +2,8 @@
 
 default: run_all
 
+all: run_all
+
 run_all: lottery.exe lottery_usm.exe lottery_device_api.exe
 	.\lottery
 	.\lottery_usm
@@ -23,4 +25,4 @@ clean:
 	del /q lottery.exp lottery_usm.exp lottery_device_api.exp
 	del /q lottery.lib lottery_usm.lib lottery_device_api.lib
 
-pseudo: run_all clean
+pseudo: run_all clean all

@@ -22,7 +22,7 @@ if(APPLE) # Use crosscompiler toolchain
     SET(CMAKE_RANLIB ${RANLIB})
     SET(MAKE_PREFIX x86_64-elf-)
 
-    set(CREATE_ELF_HEADER ln -f -s /usr/local/include/elf.h .)
+    set(CREATE_ELF_HEADER ln -f -s /usr/local/include/elf.h ./gnuefi)
     set(CMAKE_C_COMPILER_WORKS 1)
     set(CMAKE_CXX_COMPILER_WORKS 1)
     set(CMAKE_C_COMPILER_ID GNU)
@@ -90,7 +90,7 @@ if (CMAKE_HOST_UNIX)
     if (CMAKE_C_COMPILER_ID MATCHES "Intel")
         set(EFI_CFLAGS -debug -ffreestanding -O0 -c -fPIC -fno-stack-protector -fshort-wchar -mno-red-zone )
     else ()
-        set(EFI_CFLAGS -g -ffreestanding -Og -fPIC -fno-stack-protector -fshort-wchar -mno-red-zone)
+        set(EFI_CFLAGS -g -Wall -Wformat-security -Werror=format-security -ffreestanding -Og -fPIC -fno-stack-protector -fshort-wchar -mno-red-zone)
     endif()
     if (CMAKE_C_COMPILER_ID MATCHES "Clang")
         # setjmp is a builtin for Clang but present in the EFI lib headers...
@@ -113,7 +113,7 @@ elseif (CMAKE_HOST_WIN32)
      set(EFI_ARCH X64)
 
     if (NOT DEFINED EDK2_TOOLS)
-        set(EDK2_TOOLS ${CMAKE_SOURCE_DIR}/edk2/BaseTools/Win32)
+        set(EDK2_TOOLS ${CMAKE_SOURCE_DIR}/Win32)
     endif ()
 
     set(EFI_APP_DEFS -DEDK2)

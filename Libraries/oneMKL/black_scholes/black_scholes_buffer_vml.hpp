@@ -30,7 +30,7 @@ void run(
         T * t,
         T * opt_call,
         T * opt_put,
-        uint64_t vml_accuracy,
+        mkl::vm::mode vml_accuracy,
         sycl::queue & q
     ) {
 

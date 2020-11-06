@@ -37,6 +37,7 @@ the SU Seismic processing library, which  has utilities to display seismic wavef
 downloaded from John Stockwell’s SeisUnix GitHub* (https://github.com/JohnWStockwellJr/SeisUnix/wiki/
 Seismic-Unix-install-on-Ubuntu)
 
+A detailed code walk through can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP3_ISO2DFD. 
 
 ## Key implementation details
 
@@ -54,6 +55,14 @@ global ID variable) for a single time step.
 This code sample is licensed under MIT license.  
 
 ##  Building the `iso2dfd` Program for CPU and GPU
+
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Include Files 
 

@@ -32,7 +32,6 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
                              const unsigned int n2_block,
                              const unsigned int n3_block) {
   auto dimn1n2 = n1 * n2;
-  auto size = n3 * dimn1n2;
 
   auto n3_end = n3 - kHalfLength;
   auto n2_end = n2 - kHalfLength;
@@ -94,7 +93,6 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
                              const unsigned int n2_block,
                              const unsigned int n3_block) {
   auto dimn1n2 = n1 * n2;
-  auto size = n3 * dimn1n2;
 
   auto n3_end = n3 - kHalfLength;
   auto n2_end = n2 - kHalfLength;
@@ -160,7 +158,6 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
                              const unsigned int n2_block,
                              const unsigned int n3_block) {
   auto dimn1n2 = n1 * n2;
-  auto size = n3 * dimn1n2;
 
   auto n3_end = n3 - kHalfLength;
   auto n2_end = n2 - kHalfLength;
@@ -249,7 +246,6 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
                              const unsigned int n2_block,
                              const unsigned int n3_block) {
   auto dimn1n2 = n1 * n2;
-  auto size = n3 * dimn1n2;
 
   auto n3_end = n3 - kHalfLength;
   auto n2_end = n2 - kHalfLength;

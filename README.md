@@ -1,10 +1,14 @@
-# [Stable Releases](https://github.com/oneapi-src/oneAPI-samples/tags)
+# Intel oneAPI Toolkit Samples
 
-We recommend checking out a release version of the repository. Releases are available [here](https://github.com/oneapi-src/oneAPI-samples/tags).
+The oneAPI-samples repository provides code samples for Intel oneAPI toolkits.
 
-The latest versions of code samples on the master branch are not guaranteed to be stable.
+We recommend checking out a specific release version of the repository.
+[View available releases](https://github.com/oneapi-src/oneAPI-samples/tags).
 
-# Index
+The latest versions of code samples on the master branch are not guaranteed to
+be stable.
+
+## Code Samples
 
 |Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	| 
 |-----------------------|-------------------------------------------|---------------|
@@ -22,32 +26,38 @@ The latest versions of code samples on the master branch are not guaranteed to b
 |../DPC++/StructuredGrids/ISO2DFD_DPCPP 	|GPU, CPU  	|A simple finite difference   stencil kernel for solving 2D acoustic isotropic wave equation using DPC++	|
 |../DPC++/StructuredGrids/ISO3DFD_DPCPP 	|GPU, CPU  	|A finite difference stencil   kernel for solving 3D acoustic isotropic wave equation using DPC++  	|
 |../DPC++/StructuredGrids/Particle-diffusion 	|GPU, CPU  	|A simple implementation of a   Monte Carlo simulation of the diffusion of water molecules in tissue    	|
-|../DPC++FPGA/ReferenceDesigns/crr                  |FPGA |High-performance CRR binomial tree option pricing model using DPC++ on FPGA|
-|../DPC++FPGA/ReferenceDesigns/gzip                 |FPGA |High-performance GZIP compression using DPC++ on FPGA|
-|../DPC++FPGA/ReferenceDesigns/qrd                  |FPGA |High-performance QR decomposition of matrices using DPC++ on FPGA|
+|../DPC++FPGA/ReferenceDesigns/gzip                 |FPGA |High-performance GZIP compression using DPC++ on FPGA |
+|../DPC++FPGA/ReferenceDesigns/db                   |FPGA |High-performance database query acceleration for FPGA-attached memory using DPC++ |
+|../DPC++FPGA/ReferenceDesigns/qrd                  |FPGA |High-performance QR decomposition of matrices using DPC++ on FPGA |
+|../DPC++FPGA/ReferenceDesigns/crr                  |FPGA |High-performance CRR binomial tree option pricing model using DPC++ on FPGA |
 |../DPC++FPGA/Tutorials/                            |
-|...../GettingStarted/fpga_compile                   |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
-|...../GettingStarted/fast_recompile                 |FPGA |Tutorial introducing host-only recompile to save DPC++ development time on FPGA |
-|...../Tools/use_library                             |FPGA |Tutorial showing how to use cross-language libraries in DPC++ on FPGA |
-|...../Tools/system_profiling                        |FPGA |Tutorial showing how to use the OpenCL Intercept Layer to profile DPC++ designs running on FPGA |
-|...../DesignPatterns/double_buffering               |FPGA |Tutorial demonstrating how to overlap kernel execution with buffer transfers and host processing |
-|...../DesignPatterns/n_way_buffering                |FPGA |Tutorial demonstrating an extension of double buffering to n-way buffering |
-|...../DesignPatterns/onchip_memory_cache            |FPGA |Tutorial demonstrating the caching of on-chip memory to reduce loop initiation interval on FPGA |
-|...../DesignPatterns/pipe_array                     |FPGA |Tutorial demonstrating how to create an array of pipes  |
-|...../DesignPatterns/compute_units                  |FPGA |Tutorial demonstrating how to efficiently make multiple copies of a kernel, called compute units  |
-|...../DesignPatterns/remove_loop_carried_dependency |FPGA |Tutorial demonstrating a technique to optimize performance by removing loop carried dependencies |
-|...../DesignPatterns/triangular_loop                |FPGA |Tutorial demonstrating an advanced FPGA optimization technique for triangular loops |
-|...../DesignPatterns/shannonization                 |FPGA |Tutorial demonstrating an optimization for removing computation from the critical path |
-|...../Features/fpga_reg                             |FPGA |Tutorial demonstrating the use of the DPC++ FPGA power user extension intel::fpga_reg |
-|...../Features/kernel_args_restrict                 |FPGA |Tutorial demonstrating how to avoid performance penalties due to kernel argument aliasing |
-|...../Features/loop_coalesce                        |FPGA |Tutorial demonstrating the DPC++ FPGA loop_coalesce attribute |
-|...../Features/loop_ivdep                           |FPGA |Tutorial demonstrating the use of the loop ivdep attribute |
-|...../Features/loop_unroll                          |FPGA |Tutorial demonstrating the DPC++ unroll pragma and its performance trade-offs on FPGA |
-|...../Features/max_concurrency                      |FPGA |Tutorial demonstrating the DPC++ FPGA max_concurrency attribute |
-|...../Features/max_interleaving                     |FPGA |Tutorial demonstrating the DPC++ FPGA max_interleaving attribute |
-|...../Features/memory_attributes                    |FPGA |Tutorial demonstrating how to use DPC++ FPGA memory attributes |
-|...../Features/pipes                                |FPGA |Tutorial demonstrating the DPC++ FPGA pipes extension to transfer data between kernels |
-|...../Features/speculated_iterations                |FPGA |Tutorial demonstrating the DPC++ FPGA speculated_iterations attribute |
+|...../GettingStarted/fpga_compile                  |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
+|...../GettingStarted/fast_recompile                |FPGA |Tutorial introducing host-only recompile to save DPC++ development time on FPGA |
+|...../Tools/use_library                            |FPGA |Tutorial showing how to use cross-language libraries in DPC++ on FPGA |
+|...../Tools/system_profiling                       |FPGA |Tutorial showing how to use the OpenCL Intercept Layer to profile DPC++ designs running on FPGA at the system level |
+|...../Tools/dynamic_profiler                       |FPGA |Tutorial showing how to use the Intel® FPGA Dynamic Profiler for DPC++ for detailed FPGA kernel profiling|
+|...../DesignPatterns/double_buffering              |FPGA |Tutorial demonstrating how to overlap kernel execution with buffer transfers and host processing |
+|...../DesignPatterns/n_way_buffering               |FPGA |Tutorial demonstrating how to extend double buffering to n-way buffering |
+|...../DesignPatterns/zero_copy_data_transfer       |FPGA |Tutorial demonstrating how to use zero-copy host-device memory transfer for FPGA kernels with no temporal data reuse  |
+|...../DesignPatterns/onchip_memory_cache           |FPGA |Tutorial explaining the caching of on-chip memory to reduce loop initiation interval on FPGA |
+|...../DesignPatterns/optimize_inner_loop           |FPGA |Tutorial explaining how to optimize the throughput of an inner loop with a low trip count |
+|...../DesignPatterns/carried_dependency            |FPGA |Tutorial explaining a technique to optimize performance by removing loop carried dependencies |
+|...../DesignPatterns/triangular_loop               |FPGA |Tutorial explaining an advanced FPGA optimization technique for triangular loops |
+|...../DesignPatterns/shannonization                |FPGA |Tutorial explaining an optimization for removing computation from the critical path |
+|...../DesignPatterns/pipe_array                    |FPGA |Tutorial showing how to create an array of pipes  |
+|...../DesignPatterns/compute_units                 |FPGA |Tutorial showing how to efficiently make multiple copies of a kernel, called compute units |
+|...../DesignPatterns/explicit_data_movement        |FPGA |Tutorial showing an alternative coding (explicit USM) in which data movement between host and device is controlled explicitly in code |
+|...../Features/fpga_reg                            |FPGA |Tutorial demonstrating the use of the DPC++ FPGA power user extension intel::fpga_reg |
+|...../Features/kernel_args_restrict                |FPGA |Tutorial demonstrating how to avoid performance penalties due to kernel argument aliasing |
+|...../Features/loop_coalesce                       |FPGA |Tutorial demonstrating the DPC++ FPGA loop_coalesce attribute |
+|...../Features/loop_ivdep                          |FPGA |Tutorial demonstrating the use of the loop ivdep attribute |
+|...../Features/loop_unroll                         |FPGA |Tutorial demonstrating the DPC++ unroll pragma and its performance trade-offs on FPGA |
+|...../Features/lsu_control                         |FPGA |Tutorial demonstrating how to configure the load-store units (LSUs) in your DPC++ program for FPGA |
+|...../Features/max_concurrency                     |FPGA |Tutorial demonstrating the DPC++ FPGA max_concurrency attribute |
+|...../Features/max_interleaving                    |FPGA |Tutorial demonstrating the DPC++ FPGA max_interleaving attribute |
+|...../Features/memory_attributes                   |FPGA |Tutorial demonstrating how to use DPC++ FPGA memory attributes |
+|...../Features/pipes                               |FPGA |Tutorial demonstrating the DPC++ FPGA pipes extension to transfer data between kernels |
+|...../Features/speculated_iterations               |FPGA |Tutorial demonstrating the DPC++ FPGA speculated_iterations attribute |
 |../C++/CombinationalLogic/Mandelbrot   	|CPU  	|Demonstrates how to accelerate   Mandelbrot performance with SIMD and parallelization using OpenMP*.   	|
 |../C++/CompilerInfrastructure/Intrinsics    	|CPU  	|Shows how to utilize the   intrinsics supported by C++ compiler in a variety of applications.	|
 |../C++/GraphTraversal/Mergesort   	|CPU  	|Shows how to accelerate scalar   merge sort program using OpenMP tasks   	|
@@ -68,13 +78,13 @@ The latest versions of code samples on the master branch are not guaranteed to b
 |../IoTConnectionTools/Up2   LEDs    	|CPU  	|Built-in   LED example for UP* Squared using Eclipse* MRAA	|
 |../SystemDebug/System Debug   Sample Build    	|UEFI 	|Basic example that   showcases the features of the Intel® System Debugger	|
 
-# License
- 
+## License
+
 The code samples are licensed under MIT license
- 
-# Known issues or limitations
- 
-## On Windows Platform
+
+## Known issues or limitations
+
+### On Windows Platform
 1. If you are using Visual Studio 2019, Visual Studio 2019 version 16.4.0 or newer is required.
 2. To build samples on Windows, the required Windows SDK is ver. 10.0.17763.0. 
 3. Now you should be able to build the code sample.

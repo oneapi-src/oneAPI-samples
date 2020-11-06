@@ -43,14 +43,17 @@
 #include <list>
 #include <vector>
 
+#if __has_include("oneapi/mkl.hpp")
+#include "oneapi/mkl.hpp"
+#else
+// Beta09 compatibility -- not needed for new code.
 #include "mkl_sycl.hpp"
+#endif
+
 #include <CL/sycl.hpp>
 
 #include "utils.hpp"
 
-// Temporary code for beta08 compatibility. oneMKL routines
-//  move to the oneapi namespace in beta09.
-namespace oneapi {}
 using namespace oneapi;
 
 

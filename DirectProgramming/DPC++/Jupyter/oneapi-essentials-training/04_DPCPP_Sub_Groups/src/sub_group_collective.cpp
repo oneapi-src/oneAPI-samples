@@ -20,11 +20,11 @@ int main() {
   std::cout << std::endl << std::endl;
 
   q.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item) {
-    intel::sub_group sg = item.get_sub_group();
+    ONEAPI::sub_group sg = item.get_sub_group();
     size_t i = item.get_global_id(0);
 
     //# Adds all elements in sub_group using sub_group collectives
-    int sum = reduce(sg, data[i], intel::plus<>());
+    int sum = reduce(sg, data[i], ONEAPI::plus<>());
 
     //# write sub_group sum in first location for each sub_group
     if (sg.get_local_id()[0] == 0) {
