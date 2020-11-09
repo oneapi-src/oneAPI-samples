@@ -1,9 +1,9 @@
 {
 	"guid": "B9C425DB-A3AD-4FCB-9CA0-1909E5189FB7",
 	"name": "Sepia Filter",
-	"categories": ["Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU and GPU"],
+	"categories": ["Toolkit/oneAPI Direct Programming/DPC++/Combinational Logic"],
+	"description": "A program that converts an image to Sepia Tone",
 	"toolchain": ["dpcpp"],
-	"description": "A program that converts an image to sepia tone",
 	"languages": [{
 		"cpp": {}
 	}],

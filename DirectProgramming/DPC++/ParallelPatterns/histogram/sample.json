@@ -1,7 +1,7 @@
 {
   "name": "Histogram",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++ Compiler/oneAPI DPC++ Library/CPU and GPU"],
-  "description": "This sample demonstrates histogram using dpstd APIs.",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Parallel Patterns"],
+  "description": "This sample demonstrates Histogram using Dpstd APIs",
   "toolchain": ["dpcpp"],
   "languages": [{"cpp":{}}],
   "targetDevice": ["CPU", "GPU"],

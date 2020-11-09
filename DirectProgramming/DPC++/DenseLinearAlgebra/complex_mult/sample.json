@@ -1,8 +1,8 @@
 {
   "guid": "D725E06E-0ECE-44F8-910D-AD1A8C89ED89",
-  "name": "Complex number Multiplication",
-  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU and GPU" ],
-  "description": "program that computes the multiplication of a Complex number",
+  "name": "Complex Mult",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra"],
+  "description": "This sample computes Complex Number Multiplication",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
   "targetDevice": [ "CPU", "GPU"],

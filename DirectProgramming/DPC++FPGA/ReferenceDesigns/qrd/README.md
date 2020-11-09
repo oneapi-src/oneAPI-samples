@@ -147,10 +147,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this code sample in third-party IDEs. Please use the links below for instructions on how to compile this sample and other designs in your preferred IDE:
-* [Eclipse* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-eclipse-with-intel-oneapi/top.html) (Linux*)
-* [Microsoft* Visual Studio* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-visual-studio-with-intel-oneapi/top.html) (Windows*)
-* [Visual Studio* Code](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html) (Linux* and Windows*)
+You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Running the Reference Design
 You can apply QR decomposition to a number of matrices as shown below. This step performs the following:
@@ -160,13 +157,12 @@ You can apply QR decomposition to a number of matrices as shown below. This step
 NOTE: The design is optimized to perform best when run on a large number of matrices, where the total number of matrices is a power of 2.
 
 
-
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
  Increase the amount of memory that the emulator runtime is permitted to allocate by setting the CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE environment variable before running the executable.
      ```
      export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      ./qrd.fpga_emu           (Linux)
-
+ 
      set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      qrd.fpga_emu.exe         (Windows)
      ```
