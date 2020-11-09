@@ -476,9 +476,9 @@ int CompressFile(queue &q, std::string &input_file,
 #ifndef FPGA_EMULATOR
   double diff_total = perf_timer.Elapsed();
   if (report) {
-    std::cout << "Total execution time = " << (double)diff_total * 1000000
+    std::cout << "Total execution time: " << (double)diff_total * 1000000
               << "us \n";
-    std::cout << "Average execution time per batch = "
+    std::cout << "Average per-batch latency: "
               << (double)diff_total * 1000000 / iterations << " us \n";
   }
   double gbps = BATCH_SIZE * iterations * isz / (double)diff_total /

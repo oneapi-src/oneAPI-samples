@@ -1,0 +1,24 @@
+source_file = zero_copy_data_transfer.cpp
+target_name = zero_copy_data_transfer
+
+emulator_target = ${target_name}.fpga_emu.exe
+report_target = ${target_name}_report.a
+
+hardware_flags = -fintelfpga -Xshardware
+emulator_flags = -fintelfpga -DFPGA_EMULATOR
+
+rule build_fpga_emu
+  command = dpcpp /GX ${emulator_flags} $in -o $out
+
+rule gen_report
+  command = dpcpp /GX ${hardware_flags} -Xsboard=intel_s10sx_pac:pac_s10_usm -fsycl-link $in -o $out
+
+# FPGA emulator 
+build fpga_emu: phony ${emulator_target}
+build ${emulator_target}: build_fpga_emu ${source_file}
+
+# report
+build report: phony ${report_target}
+build ${report_target}: gen_report ${source_file}
+
+build report_s10_pac: phony report

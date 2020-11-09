@@ -817,7 +817,7 @@ event SubmitCRC(queue &q, size_t block_size, uint32_t *result_crc,
       host_ptr<uint32_t> accresult_crc(result_crc);
 
       // See comments at top of file, regarding batching.
-      [[intelfpga::disable_loop_pipelining]]
+      [[intel::disable_loop_pipelining]]
       for (int iter=0;iter<BatchSize;iter++) {
         const unsigned int table64[64][16] = {
             {
@@ -2116,7 +2116,7 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
           [&](auto i) { host_pibuf[i] = host_ptr<char>(get<i>(ptrs...)); });
 
       // See comments at top of file, regarding batching
-      [[intelfpga::disable_loop_pipelining]] for (int iter = 0;
+      [[intel::disable_loop_pipelining]] for (int iter = 0;
                                                   iter < BatchSize; iter++) {
         const int iter_masked =
             iter % BatchSize;  // Hint to the compiler that the access to
@@ -2129,13 +2129,13 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
         //   Hash Table(s)
         //-------------------------------------
 
-        [[intelfpga::singlepump]] [[intelfpga::numbanks(kVec)]] [
-            [intelfpga::max_replicates(kVec)]] struct {
+        [[intel::singlepump]] [[intel::numbanks(kVec)]] [
+            [intel::max_replicates(kVec)]] struct {
           unsigned char s[kLen];
         } dictionary[kDepth][kVec];
 
-        [[intelfpga::singlepump]] [[intelfpga::numbanks(kVec)]] [
-            [intelfpga::max_replicates(
+        [[intel::singlepump]] [[intel::numbanks(kVec)]] [
+            [intel::max_replicates(
                 kVec)]] unsigned int dict_offset[kDepth][kVec];
 
         // Initialize history to empty.
@@ -2493,7 +2493,7 @@ event SubmitStaticHuffman(queue &q, size_t block_size,
       auto acc_eof = last_block ? 1 : 0;
 
       // See comments at top of file regarding batching.
-      [[intelfpga::disable_loop_pipelining]]
+      [[intel::disable_loop_pipelining]]
       for (int iter=0; iter < BatchSize; iter++) {
         host_ptr<char> accessor_output = host_pobuf[iter % BatchSize];
 

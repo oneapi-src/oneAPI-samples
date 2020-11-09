@@ -1,7 +1,7 @@
 {
-    "name": "MergeSort C++/OpenMP*",
-    "description": "Classic sorting algorithm using OpenMP*",
-    "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
+    "name": "MergeSort OMP",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++/Graph Traversal"],
+    "description": "Classic OpenMP* (OMP) Mergesort algorithm",
     "os": ["darwin"],
     "builder": ["make"],
     "languages": [{"cpp":{}}],

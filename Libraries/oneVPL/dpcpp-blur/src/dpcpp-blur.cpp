@@ -139,14 +139,14 @@ int main(int argc, char *argv[]) {
     mfxStatus sts                       = MFX_ERR_NONE;
     mfxLoader loader                    = NULL;
     mfxConfig cfg                       = NULL;
-    mfxVariant impl_value               = { 0 };
+    mfxVariant impl_value               = {};
     mfxSession session                  = NULL;
     mfxU16 input_width                  = 0;
     mfxU16 input_height                 = 0;
     mfxU16 out_width                    = 0;
     mfxU16 out_height                   = 0;
     mfxVideoParam vpp_params            = { 0 };
-    mfxFrameAllocRequest vpp_request[2] = { 0 };
+    mfxFrameAllocRequest vpp_request[2] = {};
     mfxU16 num_surfaces_in              = 0;
     mfxU16 num_surfaces_out             = 0;
     mfxU32 surface_size                 = 0;
