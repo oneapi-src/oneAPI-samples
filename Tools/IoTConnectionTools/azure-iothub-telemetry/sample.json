@@ -1,7 +1,7 @@
 {
   "guid": "F8F830DE-3660-4478-B2FA-22EE492D7120",
   "name": "Azure IoTHub Telemetry",
-  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
+  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++ Compiler/CPU and GPU"],
   "description": "Demonstrate how to send messages from a single device to Microsoft Azure IoT Hub via chosen protocol.",
   "dependencies": ["azure-iot-sdk-c|https://github.com/Azure/azure-iot-sdk-c"],
   "languages": [{"cpp":{}}],
