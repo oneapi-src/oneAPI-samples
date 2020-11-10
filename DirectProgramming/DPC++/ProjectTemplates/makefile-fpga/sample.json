@@ -1,8 +1,8 @@
 {
   "guid": "A962BCAA-7AA4-403A-9A5B-08964743FCBF",
-  "name": "Project Templates - Linux Makefile project for FPGA",
-  "categories": ["Toolkit/Project Templates"],
-  "description": "Template 'Hello World'",
+  "name": "Makefile FPGA",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Project Templates"],
+  "description": "Project Templates - Linux Makefile project for FPGA",
   "toolchain": ["dpcpp"],
   "os": ["linux"],
   "targetDevice": ["FPGA"],

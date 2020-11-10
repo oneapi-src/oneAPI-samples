@@ -27,7 +27,9 @@
 using namespace dpc_common;
 using namespace sycl;
 
+#ifdef PERF_NUM
 constexpr int num_tests = 5;
+#endif
 
 constexpr int block_dims = 8;
 constexpr int block_size = 64;

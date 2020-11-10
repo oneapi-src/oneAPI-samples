@@ -28,6 +28,32 @@ Performance number tabulation [if applicable]
 | Scalar baseline -O2               | 1.0
 | SYCL                              | 
 | OpenMP offload                    | 
+
+
+## Purpose
+Using the Monte Carlo simulation, the Particle Diffusion sample provides simulation of the 
+diffusion of water molecules in tissue  This kind of computational experiment can be used to 
+simulate acquisition of a diffusion signal for dMRI.
+
+The model for the simulation consists of water molecules moving through a 2D array of cells in a 
+tissue sample (water molecule diffusion). In this code sample, we use a uniform rectilinear 2D 
+array of digital cells, where cells are spaced regularly along each direction and are represented 
+by circles.
+
+Water molecule diffusion is simulated by defining a number of particles P (simulated water 
+molecules) at random positions in the grid, followed by random walks of these particles in the 
+ensemble of cells in the grid. During the random walks, particles can move randomly inside or 
+outside simulated cells. The positions of these particles at every time step in the simulation, 
+the number of times they go through a cell membrane (in/out), as well as the time every particle 
+spends inside and outside cells can be recorded. These measurements are a simple example of 
+useful information that can be used to simulate an MR signal. 
+
+The Particle Diffusion sample is intended to show the basic elements of the DPC++ programming 
+language as well as some basic optimizations as generating random numbers in the device (using 
+functionality from the oneAPI oneMKL library), as well as atomic functions to prevent memory 
+access inconsistencies. 
+
+A detailed code walk through can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP5_PART_DIFF. 
  
 ## Key Implementation Details
 
@@ -45,6 +71,13 @@ Intel® Math Kernel Library (MKL) is used for random number generation on the cp
 This code sample is licensed under MIT license. Please see the `License.txt` file for more information.  
 ## Building the `particle-diffusion` Program for CPU and GPU
 
+ Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+
 ### Include Files  
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your 
 development system".  
@@ -56,21 +89,13 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 
 ## Build and run
 
-### On a Windows\* System Using Microsoft Visual Studio 2017 or Newer
+### On a Windows\* System Using NMAKE 
 
-#### Build the motionsim Program Using Visual Studio 2017 or Visual Studio 2019
+Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
-##### 1. Right click on the solution file (.sln) and open it using either Visual Studio 2017 or Visual Studio 2019
-##### 2. From Visual Studio, right click on the project solution file in solution explorer and select rebuild
-##### 3. From top menu select Debug -> Start Without Debugging
+Run executable with select parameters:
 
-#### Build the motionsim Program Using MSBuild
-
-##### 1. Open "x64 Native Tools Command Prompt for VS 2017" or "x64 Native Tools Command Prompt for VS 2019" as Administrator (right click application and select Run as Administrator)
-##### 2. Build
-From the particle diffusion Project directory:  
-
-    > MSBuild Particle_Diffusion.sln /t:Rebuild /p:Configuration="Release"
+`motionsim.exe 10000 256 22 777 0 1`
 
 ### On a Linux\* System Using CMake
 

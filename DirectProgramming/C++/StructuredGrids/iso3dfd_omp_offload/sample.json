@@ -1,8 +1,8 @@
 {
   "guid": "E3407632-7F3D-4B5B-A956-5155408D7468",
-  "name": "iso3dfd_omp_offload",
-  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
-  "description": "A finite difference stencil kernel for solving 3D acoustic isotropic wave equation",
+  "name": "ISO3DFD OMP Offload",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++/Structured Grids"],
+  "description": "A Finite Difference Stencil Kernel for solving 3D Acoustic Isotropic Wave Equation using OpenMP* (OMP)",
   "toolchain": [ "icc" ],
   "targetDevice": [ "GPU" ],
   "languages": [ { "cpp": {} } ],

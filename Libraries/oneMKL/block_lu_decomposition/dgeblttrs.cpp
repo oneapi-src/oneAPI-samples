@@ -82,12 +82,15 @@
 ***********************************************************************/
 #include <cstdint>
 #include <CL/sycl.hpp>
-#include "mkl_sycl.hpp"
 #include "mkl.h"
 
-// Temporary code for beta08 compatibility. oneMKL routines
-//  move to the oneapi namespace in beta09.
-namespace oneapi {}
+#if __has_include("oneapi/mkl.hpp")
+#include "oneapi/mkl.hpp"
+#else
+// Beta09 compatibility -- not needed for new code.
+#include "mkl_sycl.hpp"
+#endif
+
 using namespace oneapi;
 
 int64_t dgeblttrs(sycl::queue queue, int64_t n, int64_t nb, int64_t nrhs, double* d, double* dl, double* du1, double* du2, int64_t* ipiv, double* f, int64_t ldf) {

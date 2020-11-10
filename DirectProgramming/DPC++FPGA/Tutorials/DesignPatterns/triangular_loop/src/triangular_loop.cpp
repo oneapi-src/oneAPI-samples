@@ -4,21 +4,12 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <chrono>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
 
 using namespace sycl;
 
@@ -61,8 +52,8 @@ void TriangularLoop(std::unique_ptr<queue>& q, buffer<uint32_t>& input_buf,
   // Enqueue kernel
   e = q->submit([&](handler& h) {
     // Get accessors to the SYCL buffers
-    auto input = input_buf.get_access<access::mode::read>(h);
-    auto output = output_buf.get_access<access::mode::discard_write>(h);
+    accessor input(input_buf, h, read_only);
+    accessor output(output_buf, h, write_only, noinit);
 
     h.single_task<Task>([=]() [[intel::kernel_args_restrict]] {
       // See README for description of the loop_bound calculation.
@@ -96,7 +87,7 @@ void TriangularLoop(std::unique_ptr<queue>& q, buffer<uint32_t>& input_buf,
         // Specify that the minimum dependence-distance of loop-carried
         // variables is kM iterations. We ensure this is true by modifying the y
         // index such that a minimum of kM iterations are always executed.
-        [[intelfpga::ivdep(kM)]] for (int i = 0; i < loop_bound; i++) {
+        [[intel::ivdep(kM)]] for (int i = 0; i < loop_bound; i++) {
           // Determine if this iteration is a dummy iteration or a real
           // iteration in which the computation should be performed.
           bool compute = y > x;
@@ -167,7 +158,7 @@ int main() {
 
     {
       // Get host-side accessors to the SYCL buffers.
-      auto input_host = input_buf.get_access<access::mode::write>();
+      host_accessor input_host(input_buf, write_only);
 
       // Initialize random input
       for (int i = 0; i < kSize; ++i) {
@@ -217,7 +208,7 @@ int main() {
 
       // Get accessor to output buffer. Accessing the buffer at this point in
       // the code will block on kernel completion.
-      auto output_host = output_buf.get_access<access::mode::read>();
+      host_accessor output_host(output_buf, read_only);
 
       // Verify output and print pass/fail
       bool passed = true;
@@ -252,13 +243,14 @@ int main() {
     }
   } catch (sycl::exception const& e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
     
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n"; 
     }
     std::terminate();

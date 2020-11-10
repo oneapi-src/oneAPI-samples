@@ -4,22 +4,13 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <iostream>
 #include <vector>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
 
 using namespace sycl;
 
@@ -65,9 +56,7 @@ int main() {
       // when the kernel is launched.
       buffer buf_a(vec_a);
       buffer buf_b(vec_b);
-      // Use verbose SYCL 1.2 syntax for the output buffer.
-      // (This will become unnecessary in a future compiler version.)
-      buffer<int,1> buf_r(vec_r.data(), kSize);
+      buffer buf_r(vec_r);
 
 
       // Submit a command group to the device queue.
@@ -75,10 +64,10 @@ int main() {
 
         // The SYCL runtime uses the accessors to infer data dependencies.
         // A "read" accessor must wait for data to be copied to the device
-        // before the kernel can start. A "write discard" accessor does not.
-        auto a = buf_a.get_access<access::mode::read>(h);
-        auto b = buf_b.get_access<access::mode::read>(h);
-        auto r = buf_r.get_access<access::mode::discard_write>(h);
+        // before the kernel can start. A "write noinit" accessor does not.
+        accessor a(buf_a, h, read_only);
+        accessor b(buf_b, h, read_only);
+        accessor r(buf_r, h, write_only, noinit);
 
         // The kernel uses single_task rather than parallel_for.
         // The task's for loop is executed in pipeline parallel on the FPGA,
@@ -99,13 +88,14 @@ int main() {
   }
   catch (sycl::exception const& e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
