@@ -3,17 +3,17 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <mpi.h>
-#include <CL/sycl.hpp>
-#include <iomanip>  // setprecision library
-#include <iostream>
-#include <numeric> 
-
 // The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include
 // on your development system.
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
+
+#include <mpi.h>
+#include <CL/sycl.hpp>
+#include <iomanip>  // setprecision library
+#include <iostream>
+#include <numeric> 
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
