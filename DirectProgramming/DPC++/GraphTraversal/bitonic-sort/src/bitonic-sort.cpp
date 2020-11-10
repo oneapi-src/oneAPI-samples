@@ -265,35 +265,31 @@ int main(int argc, char *argv[]) {
   DisplayArray(data_usm, size);
 #endif
 
-  // Warm up
-  cout << "Warm up ...\n";
-  ParallelBitonicSort(data_usm, n, q);
-
   // Start timer
-  dpc_common::TimeInterval t_par;
-
-  // Parallel sort using USM
-  ParallelBitonicSort(data_usm, n, q);
-
-  cout << "Kernel time using USM: " << t_par.Elapsed() << " sec\n";
-
-#if DEBUG
-  cout << "\ndata_usm after sorting using parallel bitonic sort:\n";
-  DisplayArray(data_usm, size);
-#endif
-
-  // Start timer
-  dpc_common::TimeInterval t_par2;
+  dpc_common::TimeInterval t_par1;
 
   // Parallel sort using buffer allocation
   ParallelBitonicSortBuffer(data_gpu, n, q);
 
-  cout << "Kernel time using buffer allocation: " << t_par2.Elapsed()
+  cout << "Kernel time using buffer allocation: " << t_par1.Elapsed()
        << " sec\n";
 
 #if DEBUG
   cout << "\ndata_gpu after sorting using parallel bitonic sort:\n";
   DisplayArray(data_gpu, size);
+#endif
+
+  // Start timer
+  dpc_common::TimeInterval t_par2;
+
+  // Parallel sort using USM
+  ParallelBitonicSort(data_usm, n, q);
+
+  cout << "Kernel time using USM: " << t_par2.Elapsed() << " sec\n";
+
+#if DEBUG
+  cout << "\ndata_usm after sorting using parallel bitonic sort:\n";
+  DisplayArray(data_usm, size);
 #endif
 
   // Start timer
