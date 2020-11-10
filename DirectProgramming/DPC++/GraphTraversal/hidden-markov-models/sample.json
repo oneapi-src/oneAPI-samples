@@ -1,7 +1,7 @@
 {
   "guid": "A63E408B-75ED-4379-A6B5-AF013C0EBA58",
   "name": "hidden-markov-models",
-  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++/C++ Compiler/CPU and GPU" ],
+  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++ Compiler/CPU and GPU" ],
   "description": "Bitonic Sort using Intel® oneAPI DPC++ Language",
   "toolchain": [ "dpcpp" ],
   "targetDevice": [ "CPU", "GPU" ],
