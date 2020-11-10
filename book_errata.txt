@@ -1,4 +1,6 @@
-The following are known errors in the book Data Parallel C++: Mastering DPC++ for Programming of Heterogeneous Systems using C++ and SYCL by James Reinders, Ben Ashbaugh, James Brodman, Michael Kinsner, John Pennycook, Xinmin Tian (Apress, 2020).
+The following are known errors in the book Data Parallel C++: Mastering DPC++ for
+Programming of Heterogeneous Systems using C++ and SYCL by James Reinders, Ben Ashbaugh,
+James Brodman, Michael Kinsner, John Pennycook, Xinmin Tian (Apress, 2020).
 
 p.421 - Fig 17-1 - The text at the top should be “ISA-based” instead of “SA-based”
 
