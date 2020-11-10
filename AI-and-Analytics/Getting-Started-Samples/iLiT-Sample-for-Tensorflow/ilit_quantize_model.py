@@ -30,10 +30,10 @@ class Dataloader(object):
 
 def auto_tune(input_graph_path, yaml_config, batch_size):
     fp32_graph = alexnet.load_pb(input_graph_path)
-    tuner = ilit.Tuner(yaml_config)
+    quan = ilit.Quantization(yaml_config)
     dataloader = Dataloader(batch_size)
 
-    q_model = tuner.tune(
+    q_model = quan(
         fp32_graph,
         q_dataloader=dataloader,
         eval_func=None,

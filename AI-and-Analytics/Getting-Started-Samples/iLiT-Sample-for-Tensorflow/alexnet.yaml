@@ -1,18 +1,17 @@
-framework:
-  - name: tensorflow                              # possible values are tensorflow, mxnet and pytorch
-    inputs: x
-    outputs: Identity
+model:
+  name: hello_world
+  framework: tensorflow                          # possible values are tensorflow, mxnet and pytorch
+  inputs: x
+  outputs: Identity
 
-calibration:                                         
-  - iterations: 5, 10
-    algorithm:
-        activation: minmax
+evaluation:
+  accuracy:
+    metric:
+      topk: 1
 
 tuning:
-    metric:  
-      - topk: 1
-    accuracy_criterion:
-      - relative: 0.01                              # the tuning target of accuracy loss percentage: 1%
-    timeout: 0                                      # tuning timeout (seconds)
-    random_seed: 9527                               # random seed                       
-
+  accuracy_criterion:
+    relative: 0.01                              # the tuning target of accuracy loss percentage: 1%
+  exit_policy:
+    timeout: 100                                   # tuning timeout (seconds)
+  random_seed: 100                               # random seed
