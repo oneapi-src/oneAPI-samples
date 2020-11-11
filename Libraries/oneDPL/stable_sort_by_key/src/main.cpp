@@ -4,12 +4,13 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <CL/sycl.hpp>
-#include <iostream>
-
+// oneDPL headers should be included before standard headers
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
+
+#include <CL/sycl.hpp>
+#include <iostream>
 
 using namespace sycl;
 using namespace std;
