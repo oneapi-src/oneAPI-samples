@@ -80,15 +80,20 @@ be stable.
 
 ## License
 
-The code samples are licensed under MIT license
+The code samples are licensed under the MIT license. See
+[LICENSE](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+for more information.
 
-## Known issues or limitations
+## Known Issues or Limitations
 
 ### On Windows Platform
-1. If you are using Visual Studio 2019, Visual Studio 2019 version 16.4.0 or newer is required.
-2. To build samples on Windows, the required Windows SDK is ver. 10.0.17763.0. 
-3. Now you should be able to build the code sample.
-4. For beta, FPGA samples support Windows through FPGA-emulator.
-5. If you encounter a compilation error like below when building a sample program, one reason is that the directory path of the sample is too long; the work around is to move the sample to a directory like "c:\temp\sample_name".
-  * Error MSB6003 The specified task executable "dpcpp.exe" could not be run .......
+- If you are using Visual Studio 2019, Visual Studio 2019 version 16.4.0 or newer is required.
+- Windows SDK version 10.0.17763.0 is required to build samples on Windows.
+- For beta, FPGA samples support Windows through the FPGA-emulator.
+- If you encounter a compilation error when building a sample program, such as the example error below, the directory path of the sample may be too long. The work around is to move the sample to a directory such as "c:\temp\sample_name".
+    - Example error: *Error MSB6003 The specified task executable "dpcpp.exe" could not be run .......*
 
+## Contribute
+
+See [CONTRIBUTING](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md)
+for more information.
