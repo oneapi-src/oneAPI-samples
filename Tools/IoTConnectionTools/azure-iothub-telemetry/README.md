@@ -1,33 +1,84 @@
-# Azure IoTHub Telemetry
+# `Azure Telemetry` Sample
 
-## Introduction
-This is a simple sample you could use for a quick test of Azure cloud services.
+`Azure Telemetry` sample demonstrates how to send messages from a single device to Microsoft Azure IoT Hub via selected protocol.
 
-## What it is
-This project demonstrates how to send messages from a single device to Microsoft Azure IoT Hub via chosen protocol.
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | Linux* Ubuntu* 16.04, Linux* Ubuntu* 18.04,
+| What you will learn               | Use one of the protocols to send events from a device
 
-## Hardware requirements
-The minimum requirements are for the device platform to support can be [found here](https://github.com/Azure/azure-iot-sdk-c).
+## Purpose
+This is a simple code sample that helps user to test the advantages of the Azure cloud services.
 
-## Software requirements
-This sample is supported on Linux systems only.
+## Key Implementation Details
+This sample tests Azure Cloud IoT Hub. There are five protocols to choose from: MQTT, AMQP, HTTP, MQTT over Websockets and AMQP over Websockets.
+The sample requires Azure account and created Azure IoT Hub.
 
-This version of the sample has been tested on Ubuntu Linux. This sample requires additional system configuration when using Ubuntu OS. Instructions on how to install the custom provided all dependency libraries for Linux can be [found here](https://github.com/Azure/azure-iot-sdk-c/blob/master/doc/ubuntu_apt-get_sample_setup.md).
+##License
+Code sample uses MIT License.
 
-## Setup
-Create and configure Azure IoTHub on [Microsoft Azure page](https://portal.azure.com/#home).
-Detailed instructions are on [Microsoft website](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-create-through-portal).
+##Building the `Azure Telemetry` Sample
 
-Paste the Device Connection String into the following line:
-`static const char* connectionString = "[device connection string]"`
+### On a Linux* System
 
-Choose one of the protocols to connect: MQTT over websockets, AMQP, AMQP over websockets or HTTP by uncommenting one of the following strings (MQTT protocol is chosen by default):
-`//#define SAMPLE_MQTT_OVER_WEBSOCKETS`
-`//#define SAMPLE_AMQP`
-`//#define SAMPLE_AMQP_OVER_WEBSOCKETS`
-`//#define SAMPLE_HTTP`
+Perform the following steps:
 
-Build and run the sample.
+1. Create Azure IoT Hub using [the instruction](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-create-through-portal) and copy the Primary Connection String.
 
-## Disclaimer
-IMPORTANT NOTICE: This software is sample software. It is not designed or intended for use in any medical, life-saving or life-sustaining systems, transportation systems, nuclear systems, or for any other mission-critical application in which the failure of the system could lead to critical injury or death. The software may not be fully tested and may contain bugs or errors; it may not be intended or suitable for commercial release. No regulatory approvals for the software have been obtained, and therefore software may not be certified for use in certain countries or environments.
+2. Paste the Primary Connection String into the following line in the sample folder's file cpp/iothub_ll_telemetry_sample.c instead of the string in quotes:
+    ```
+    static const char* connectionString = "[device connection string]"
+    ```
+3. Run in the terminal:
+    ```
+    cd $ENV{HOME}
+    git clone https://github.com/Azure/azure-iot-sdk-c.git
+    cd azure-iot-sdk-c
+    git submodule update --init
+    mkdir cmake
+    cd cmake
+    cmake ..
+    ```
+
+4. Run the following lines from the sample folder 'azure-iot-telemetry':
+    ```
+    mkdir build
+    cd build
+    cmake ..
+    make all
+    ```
+5. Run the program using:  
+    ```
+    make run
+    ```
+6. Clean the program using:
+    ```
+    make clean
+    ```
+## Running the Sample
+
+### Application Parameters
+
+There are no editable parameters for this sample.
+
+### Example of Output
+    ```
+    Creating IoTHub Device handle
+    The device client is connected to iothub
+
+    Sending Message 1 to IoTHub
+    Message:{"temperature": 24.716, "humidity":71.651, "scale":Celsius}
+    confirmation callback received for message 1 with result IOTHUB_CLIENT_CONFIRMATION_OK
+
+    Sending Message 2 to IoTHub
+    Message:{"temperature": 31.408, "humidity":64.724, "scale":Celsius}
+    confirmation callback received for message 2 with result IOTHUB_CLIENT_CONFIRMATION_OK
+
+    Sending Message 3 to IoTHub
+    Message:{"temperature": 26.158, "humidity":73.844, "scale":Celsius}
+    confirmation callback received for message 3 with result IOTHUB_CLIENT_CONFIRMATION_OK
+
+    Sending Message 4 to IoTHub
+    Message:{"temperature": 21.599, "humidity":71.308, "scale":Celsius}
+    confirmation callback received for message 4 with result IOTHUB_CLIENT_CONFIRMATION_OK
+    ```

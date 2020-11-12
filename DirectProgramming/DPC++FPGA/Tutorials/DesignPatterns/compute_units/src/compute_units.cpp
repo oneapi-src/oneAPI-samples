@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <iostream>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -11,16 +12,6 @@
 #include "dpc_common.hpp"
 #include "compute_units.hpp"
 #include "pipe_array.hpp"
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
 
 
 using namespace sycl;
@@ -53,7 +44,7 @@ void SinkKernel(queue &q, float &out_data) {
   buffer<float, 1> out_buf(&out_data, 1);
 
   q.submit([&](handler &h) {
-    auto out_accessor = out_buf.get_access<access::mode::write>(h);
+    accessor out_accessor(out_buf, h, write_only, noinit);
     h.single_task<Sink>(
         [=] { out_accessor[0] = Pipes::PipeAt<kEngines>::read(); });
   });
@@ -96,6 +87,7 @@ int main() {
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
       std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }

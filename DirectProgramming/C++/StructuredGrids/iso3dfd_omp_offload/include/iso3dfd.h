@@ -5,12 +5,14 @@
 // =============================================================
 
 #include <omp.h>
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstring>
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 constexpr float dt = 0.002f;
 constexpr float dxyz = 50.0f;

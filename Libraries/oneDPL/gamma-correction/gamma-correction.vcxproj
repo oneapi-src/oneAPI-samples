@@ -114,7 +114,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\tbb\latest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)tbb\latest\include;$(ONEAPI_ROOT)dpl\latest\windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,7 +157,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\tbb\latest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)tbb\latest\include;$(ONEAPI_ROOT)dpl\latest\windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -1,0 +1,32 @@
+{
+  "guid": "1C2AD9C2-D977-4586-9584-BF65A1AED0A2",
+  "name": "Computed Tomography",
+  "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
+  "description": "Reconstruct an image from simulated CT data with Intel® oneMKL",
+  "toolchain": [ "dpcpp" ],
+  "dependencies": [ "mkl" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "computed_tomography",
+        "steps": [
+          "make clean",
+          "make"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "computed_tomography",
+        "steps": [
+          "nmake clean",
+          "nmake"
+        ]
+      }
+    ]
+  }
+}

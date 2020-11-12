@@ -1,11 +1,12 @@
 {
   "guid": "EEED3DAC-8D4E-4F4B-9C15-2B73CF0AC718",
-  "name": "Analog Input",
-  "categories": ["Toolkit/Intel® oneAPI IoT Toolkit/IoT Connection Tools"],
-  "description": "Demonstrate how to read an analog voltage value from an input pin using the Eclipse* MRAA library.",
+  "name": "Analog In",
+  "categories": ["Toolkit/oneAPI Tools/IoT Connection Tools"],
+  "description": "Demonstrate how to read an analog voltage value from an input pin using the Eclipse* MRAA library",
   "dependencies": ["pkg|mraa|https://mraa.io"],
   "languages": [{"cpp":{}}],
   "os": ["linux"],
+  "builder": ["cmake"],
   "ciTests": {
     "linux": [
         { "id": "analog-in",

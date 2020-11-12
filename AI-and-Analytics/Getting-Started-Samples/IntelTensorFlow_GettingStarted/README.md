@@ -88,7 +88,7 @@ With successful execution, it will print out the following results:
     2 0.33979267
     3 0.33283564
     4 0.32920069
-    PASSED_CICD 
+    [CODE_SAMPLE_COMPLETED_SUCCESSFULLY] 
 ```
 
 The mkldnn run-time verbose trace should look similar to what is shown below:

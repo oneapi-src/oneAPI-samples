@@ -3,7 +3,6 @@ project(hello-encode)
 
 set(TARGET hello-encode)
 set(SOURCES src/hello-encode.cpp)
-set(VPL_NAME mfx)
 set(RUNARGS ${CMAKE_CURRENT_SOURCE_DIR}/content/cars_128x96.i420 128 96)
 
 # Set default build type to RelWithDebInfo if not specified
@@ -20,12 +19,6 @@ endif()
 
 add_executable(${TARGET} ${SOURCES})
 
-get_directory_property(has_parent PARENT_DIRECTORY)
-if(NOT has_parent)
-  # only make run target available for stand-alone build
-  add_custom_target(run ${TARGET} ${RUNARGS})
-endif()
-
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   if(NOT DEFINED ENV{VSCMD_VER})
@@ -33,28 +26,20 @@ if(MSVC)
   endif()
 endif()
 
-if(TARGET mfx)
-  target_link_libraries(${TARGET} mfx)
-else()
-  if(WIN32)
-    set(VPL_NAME libmfx.lib)
-  endif()
-  message(STATUS "Check for required environment variables")
-  if(NOT DEFINED ENV{VPL_LIB})
-    message(FATAL_ERROR "Expected environment variable not defined: VPL_LIB")
-  endif()
-  if(NOT DEFINED ENV{VPL_INCLUDE})
-    message(
-      FATAL_ERROR "Expected environment variable not defined: VPL_INCLUDE")
-  endif()
+if(POLICY CMP0074)
+  # ignore warning of VPL_ROOT in find_package search path
+  cmake_policy(SET CMP0074 OLD)
+endif()
 
-  message(STATUS "Check for presence of library")
-  find_library(VPL_LIB ${VPL_NAME} HINTS $ENV{VPL_LIB})
-  if(NOT VPL_LIB)
-    message(FATAL_ERROR "vpl library not found. Looked in $ENV{VPL_LIB}")
-  else()
-    message(STATUS "Using vpl library: ${VPL_LIB}")
-  endif()
-  target_include_directories(${TARGET} PRIVATE $ENV{VPL_INCLUDE})
-  target_link_libraries(${TARGET} ${VPL_LIB})
+if(TARGET VPL)
+  target_link_libraries(${TARGET} VPL)
+else()
+  find_package(VPL REQUIRED)
+  target_link_libraries(${TARGET} VPL::dispatcher)
+endif()
+
+get_directory_property(has_parent PARENT_DIRECTORY)
+if(NOT has_parent)
+  # only make run target available for stand-alone build
+  add_custom_target(run ${TARGET} ${RUNARGS})
 endif()

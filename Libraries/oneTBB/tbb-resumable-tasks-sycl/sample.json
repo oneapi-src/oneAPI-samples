@@ -1,9 +1,9 @@
 {
   "guid": "17B9CB18-EAC1-4D08-8BBE-96F5D777C303",
-  "name": "tbb-resumable-tasks-sycl",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneTBB"],
+  "name": "TBB Resumable Tasks SYCL",
+  "categories": ["Toolkit/oneAPI Libraries/oneTBB"],
+  "description": "This sample illustrates how computational kernel can be split for execution between CPU and GPU using Intel® oneTBB Resumable Task and parallel_for. The Intel® oneTBB resumable task uses SYCL to implement calculations on GPU while the parallel_for algorithm does CPU part of calculations. This TBB Resumable Tasks SYCL sample code is implemented using C++ and SYCL language for Intel® CPU and GPU",
   "toolchain": ["dpcpp"],
-  "description": "This sample illustrates how computational kernel can be split for execution between CPU and GPU using TBB resumable task and parallel_for. The TBB resumable task uses SYCL to implement calculations on GPU while the parallel_for algorithm does CPU part of calculations. This tbb-resumable-tasks-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.",
   "languages": [{"cpp":{}}],
   "targetDevice": ["CPU", "GPU"],
   "os":["linux", "windows"],
