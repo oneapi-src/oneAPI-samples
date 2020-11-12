@@ -11,10 +11,10 @@ using namespace sycl;
 // Buffer creation happens within a separate function scope.
 void dpcpp_code(std::vector<int> &v, queue &q) {
   auto R = range<1>(N);
-  buffer<int, 1> buf(v.data(), R);
+  buffer buf(v);
   q.submit([&](handler &h) {
-    auto a = buf.get_access<access::mode::read_write>(h);
-    h.parallel_for(R, [=](id<1> i) { a[i] -= 2; });
+    accessor a(buf,h);
+    h.parallel_for(R, [=](auto i) { a[i] -= 2; });
   });
 }
 int main() {

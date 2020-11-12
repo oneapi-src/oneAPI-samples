@@ -9,7 +9,7 @@ set(REPORTS_TARGET ${TARGET_NAME}_report)
 
 # Intel supported FPGA Boards and their names
 set(A10_PAC_BOARD_NAME "intel_a10gx_pac:pac_a10")
-set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10")
+set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10_usm")
 
 # Design specific constant values
 
@@ -40,14 +40,14 @@ ELSE()
 ENDIF()
 
 #specify -MMD -fsycl-link-targets=... instead of -fintelfpga to workaround known issue; lower report quality 
-set(HARDWARE_COMPILE_FLAGS -MMD -fsycl-link-targets=spir64_fpga-unknown-unknown-sycldevice -c -DNUM_ENGINES=${NUM_ENGINES})
+set(HARDWARE_COMPILE_FLAGS -MMD -fsycl-link-targets=spir64_fpga-unknown-unknown-sycldevice -c -fsycl-enable-usm-address-spaces -DNUM_ENGINES=${NUM_ENGINES})
 
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 separate_arguments(USER_HARDWARE_FLAGS)
-set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=1 ${NUM_REORDER} -Xsboard=${_FPGA_BOARD}  ${USER_HARDWARE_FLAGS} -DNUM_ENGINES=${NUM_ENGINES})
+set(HARDWARE_LINK_FLAGS -fintelfpga -fsycl-enable-usm-address-spaces -Xshardware -Xsparallel=2 -Xsseed=19 ${NUM_REORDER} -Xsboard=${_FPGA_BOARD} ${USER_HARDWARE_FLAGS} -DNUM_ENGINES=${NUM_ENGINES})
 set(FINAL_LINK_FLAGS -fintelfpga -DNUM_ENGINES=${NUM_ENGINES})
 
-set(EMULATOR_COMPILE_FLAGS "-v -v -v -g0 -fintelfpga -DFPGA_EMULATOR -DNUM_ENGINES=${NUM_ENGINES}")
+set(EMULATOR_COMPILE_FLAGS "-v -v -v -g0 -fintelfpga -fsycl-enable-usm-address-spaces  -DFPGA_EMULATOR -DNUM_ENGINES=${NUM_ENGINES}")
 set(EMULATOR_LINK_FLAGS -fintelfpga)
 
 # fpga emulator
@@ -103,7 +103,7 @@ if(WIN32)
 
     separate_arguments(WIN_FLAGS WINDOWS_COMMAND)
     add_custom_command(OUTPUT ${REPORTS_TARGET}
-        COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
+        COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link -fsycl-enable-usm-address-spaces  ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
                       DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE})
 
 else()

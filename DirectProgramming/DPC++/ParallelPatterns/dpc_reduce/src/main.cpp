@@ -3,21 +3,23 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+#include <mpi.h>
 #include <CL/sycl.hpp>
 #include <iomanip>  // setprecision library
 #include <iostream>
 
-// The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include 
+// The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include
 // on your development system.
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
+// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 using namespace sycl;
+constexpr int master = 0;
 
 // cpu_seq is a simple sequential CPU routine
 // that calculates all the slices and then
@@ -69,7 +71,7 @@ float calc_pi_dpstd_native(size_t num_steps, Policy&& policy) {
   buffer<float, 1> buf{data, range<1>{num_steps}};
 
   policy.queue().submit([&](handler& h) {
-    auto writeresult = buf.get_access<access::mode::write>(h);
+    accessor writeresult(buf,h,write_only);
     h.parallel_for(range<1>{num_steps}, [=](id<1> idx) {
       float x = ((float)idx[0] - 0.5) / (float)num_steps;
       writeresult[idx[0]] = 4.0f / (1.0 + x * x);
@@ -80,15 +82,18 @@ float calc_pi_dpstd_native(size_t num_steps, Policy&& policy) {
   // Single task is needed here to make sure
   // data is not written over.
   policy.queue().submit([&](handler& h) {
-    auto a = buf.get_access<access::mode::read_write>(h);
+    accessor a(buf,h);
     h.single_task([=]() {
       for (int i = 1; i < num_steps; i++) a[0] += a[i];
     });
   });
   policy.queue().wait();
 
-  float mynewresult =
-      buf.get_access<access::mode::read>()[0] / (float)num_steps;
+
+  // float mynewresult = buf.get_access<access::mode::read>()[0] / (float)num_steps;
+  host_accessor answer(buf,read_only) ; 
+  float mynewresult = answer[0]/(float)num_steps; 
+  
   return mynewresult;
 }
 
@@ -106,7 +111,7 @@ float calc_pi_dpstd_native2(size_t num_steps, Policy&& policy, int group_size) {
 
   // fill buffer with calculations
   policy.queue().submit([&](handler& h) {
-    auto writeresult = buf.get_access<access::mode::write>(h);
+    accessor writeresult(buf, h, write_only); 
     h.parallel_for(range<1>{num_steps}, [=](id<1> idx) {
       float x = ((float)idx[0] - 0.5) / (float)num_steps;
       writeresult[idx[0]] = 4.0f / (1.0 + x * x);
@@ -123,8 +128,8 @@ float calc_pi_dpstd_native2(size_t num_steps, Policy&& policy, int group_size) {
   buffer<float, 1> bufc{c, range<1>{num_groups}};
   for (int j = 0; j < num_groups; j++) {
     policy.queue().submit([&](handler& h) {
-      auto my_a = buf.get_access<access::mode::read>(h);
-      auto my_c = bufc.get_access<access::mode::write>(h);
+      accessor my_a(buf,h,read_only);
+      accessor my_c(bufc,h,write_only); 
       h.single_task([=]() {
         for (int i = 0 + group_size * j; i < group_size + group_size * j; i++)
           my_c[j] += my_a[i];
@@ -133,7 +138,7 @@ float calc_pi_dpstd_native2(size_t num_steps, Policy&& policy, int group_size) {
   }
   policy.queue().wait();
 
-  auto src = bufc.get_access<access::mode::read>();
+  host_accessor src(bufc,read_only);
 
   // Sum up results on CPU
   float mynewresult = 0.0;
@@ -296,7 +301,8 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
 
   // fill the buffer with the calculation using parallel for
   policy.queue().submit([&](handler& h) {
-    auto writeresult = buf.get_access<access::mode::write>(h);
+    accessor writeresult(buf,h,write_only);
+
     h.parallel_for(range<1>{num_steps}, [=](id<1> idx) {
       float x = (float)idx[0] / (float)num_steps;
       writeresult[idx[0]] = 4.0f / (1.0f + x * x);
@@ -340,9 +346,8 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
   auto local_reduce_event =
       policy.queue().submit([&buf, &temp_buf, &brick_reduce, &tf_init,
                              num_steps, n_groups, workgroup_size](handler& h) {
-        auto access_buf = buf.template get_access<access::mode::read_write>(h);
-        auto temp_acc =
-            temp_buf.template get_access<access::mode::discard_write>(h);
+        accessor access_buf(buf,h);
+        accessor temp_acc(temp_buf,h,write_only);
         // Create temporary local buffer
         accessor<float, 1, access::mode::read_write, access::target::local>
             temp_buf_local(range<1>(workgroup_size), h);
@@ -370,8 +375,7 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
       reduce_event = policy.queue().submit([&reduce_event, &temp_buf, &combine,
                                             countby2, n_groups](handler& h) {
         h.depends_on(reduce_event);
-        auto temp_acc =
-            temp_buf.template get_access<access::mode::read_write>(h);
+        accessor temp_acc(temp_buf,h);
         h.parallel_for(range<1>(n_groups), [=](item<1> item_id) mutable {
           auto global_idx = item_id.get_linear_id();
 
@@ -385,10 +389,9 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
       countby2 *= 2;
     } while (countby2 < n_groups);
   }
-
-  float answer = temp_buf.template get_access<access::mode::read>()[0];
-  result = answer / (float)num_steps;
-  return result;
+  
+  host_accessor answer(temp_buf,read_only) ; 
+  return answer[0]/(float)num_steps; 
 }
 
 // dpstd_native4 fills a buffer with number 1...num_steps and then
@@ -403,7 +406,7 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
 
   // fill buffer with 1...num_steps
   policy.queue().submit([&](handler& h) {
-    auto writeresult = buf2.get_access<access::mode::write>(h);
+    accessor writeresult(buf2,h);
     h.parallel_for(range<1>{num_steps},
                    [=](id<1> idx) { writeresult[idx[0]] = (float)idx[0]; });
   });
@@ -450,9 +453,8 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
       policy.queue().submit([&buf2, &temp_buf, &brick_reduce, &tf_init,
                              num_steps, n_groups, workgroup_size](handler& h) {
         // grab access to the previous input
-        auto access_buf = buf2.template get_access<access::mode::read_write>(h);
-        auto temp_acc =
-            temp_buf.template get_access<access::mode::discard_write>(h);
+        accessor access_buf(buf2,h);
+        accessor temp_acc(temp_buf,h,write_only);
         // Create temporary local buffer
         accessor<float, 1, access::mode::read_write, access::target::local>
             temp_buf_local(range<1>(workgroup_size), h);
@@ -481,8 +483,7 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
       reduce_event = policy.queue().submit([&reduce_event, &temp_buf, &combine,
                                             countby2, n_groups](handler& h) {
         h.depends_on(reduce_event);
-        auto temp_acc =
-            temp_buf.template get_access<access::mode::read_write>(h);
+        accessor temp_acc(temp_buf,h);
         h.parallel_for(range<1>(n_groups), [=](item<1> item_id) mutable {
           auto global_idx = item_id.get_linear_id();
 
@@ -496,10 +497,8 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
       countby2 *= 2;
     } while (countby2 < n_groups);
   }
-  float answer = temp_buf.template get_access<access::mode::read_write>()[0];
-  result = answer / (float)num_steps;
-
-  return result;
+  host_accessor answer(temp_buf,read_only) ; 
+  return answer[0]/(float)num_steps; 
 }
 
 // This function shows the use of two different DPC++ library calls.
@@ -554,83 +553,239 @@ float calc_pi_dpstd_onestep(int num_steps, Policy& policy) {
   return total;
 }
 
+////////////////////////////////////////////////////////////////////////
+//
+// Each MPI ranks compute the number Pi partially on target device using DPC++.
+// The partial result of number Pi is returned in "results".
+//
+////////////////////////////////////////////////////////////////////////
+void mpi_native(float* results, int rank_num, int num_procs,
+                long total_num_steps, queue& q) {
+  int num_step_per_rank = total_num_steps / num_procs;
+  float dx, dx2;
+
+  dx = 1.0f / (float)total_num_steps;
+  dx2 = dx / 2.0f;
+
+  default_selector device_selector;
+
+  // exception handler
+  //
+  // The exception_list parameter is an iterable list of std::exception_ptr
+  // objects. But those pointers are not always directly readable. So, we
+  // rethrow the pointer, catch it,  and then we have the exception itself.
+  // Note: depending upon the operation there may be several exceptions.
+  auto exception_handler = [&](exception_list exceptionList) {
+    for (std::exception_ptr const& e : exceptionList) {
+      try {
+        std::rethrow_exception(e);
+      } catch (cl::sycl::exception const& e) {
+        std::cout << "Failure"
+                  << "\n";
+        std::terminate();
+      }
+    }
+  };
+
+  try {
+    // The size of amount of memory that will be given to the buffer.
+    range<1> num_items{total_num_steps / size_t(num_procs)};
+
+    // Buffers are used to tell SYCL which data will be shared between the host
+    // and the devices.
+    buffer<float, 1> results_buf(results,
+                                 range<1>(total_num_steps / size_t(num_procs)));
+
+    // Submit takes in a lambda that is passed in a command group handler
+    // constructed at runtime.
+    q.submit([&](handler& h) {
+      // Accessors are used to get access to the memory owned by the buffers.
+      accessor results_accessor(results_buf,h,write_only);
+      // Each kernel calculates a partial of the number Pi in parallel.
+      h.parallel_for(num_items, [=](id<1> k) {
+        float x = ((float)rank_num / (float)num_procs) + (float)k * dx + dx2;
+        results_accessor[k] = (4.0f * dx) / (1.0f + x * x);
+      });
+    });
+  } catch (...) {
+    std::cout << "Failure" << std::endl;
+  }
+}
+
+// This function uses the DPC++ library call transform reduce.
+// It does everything in one library call.
+template <typename Policy>
+float mpi_dpstd_onestep(int id, int num_procs, long total_num_steps,
+                        Policy& policy) {
+  int num_step_per_rank = total_num_steps / num_procs;
+  float step = 1.0f / (float)total_num_steps;
+
+  float total = std::transform_reduce(
+      policy, oneapi::dpl::counting_iterator<int>(1),
+      oneapi::dpl::counting_iterator<int>(num_step_per_rank), 0.0f,
+      std::plus<float>(), [=](int i) {
+        float x = ((float)id / (float)num_procs) + i * step - step / 2;
+        return (4.0f / (1.0f + x * x));
+      });
+  total = total * (float)step;
+
+  return total;
+}
+
 int main(int argc, char** argv) {
   int num_steps = 1000000;
-  printf("Number of steps is %d\n", num_steps);
   int groups = 10000;
-
+  char machine_name[MPI_MAX_PROCESSOR_NAME];
+  int name_len;
+  int id;
+  int num_procs;
   float pi;
   queue myQueue{property::queue::in_order()};
   auto policy = oneapi::dpl::execution::make_device_policy(
       queue(default_selector{}, dpc_common::exception_handler));
 
-  // Since we are using JIT compiler for samples,
-  // we need to run each step once to allow for compile
-  // to occur before we time execution of function.
-  pi = calc_pi_dpstd_native(num_steps, policy);
-  pi = calc_pi_dpstd_native2(num_steps, policy, groups);
-  pi = calc_pi_dpstd_native3(num_steps, groups, policy);
-  pi = calc_pi_dpstd_native4(num_steps, groups, policy);
+  // Start MPI.
+  if (MPI_Init(&argc, &argv) != MPI_SUCCESS) {
+    std::cout << "Failed to initialize MPI\n";
+    exit(-1);
+  }
 
-  pi = calc_pi_dpstd_two_steps_lib(num_steps, policy);
-  pi = calc_pi_dpstd_onestep(num_steps, policy);
+  // Create the communicator, and retrieve the number of MPI ranks.
+  MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
-  dpc_common::TimeInterval T;
-  pi = calc_pi_cpu_seq(num_steps);
-  auto stop = T.Elapsed();
-  std::cout << "Cpu Seq calc: \t\t";
-  std::cout << std::setprecision(3) << "PI =" << pi;
-  std::cout << " in " << stop << " seconds\n";
+  // Determine the rank number.
+  MPI_Comm_rank(MPI_COMM_WORLD, &id);
 
-  dpc_common::TimeInterval T2;
-  pi = calc_pi_cpu_tbb(num_steps);
-  auto stop2 = T2.Elapsed();
-  std::cout << "Cpu TBB  calc: \t\t";
-  std::cout << std::setprecision(3) << "PI =" << pi;
-  std::cout << " in " << stop2 << " seconds\n";
+  // Get the machine name.
+  MPI_Get_processor_name(machine_name, &name_len);
 
-  dpc_common::TimeInterval T3;
-  pi = calc_pi_dpstd_native(num_steps, policy);
-  auto stop3 = T3.Elapsed();
-  std::cout << "dpstd native:\t\t";
-  std::cout << std::setprecision(3) << "PI =" << pi;
-  std::cout << " in " << stop3 << " seconds\n";
+  std::cout << "Rank #" << id << " runs on: " << machine_name
+            << ", uses device: "
+            << myQueue.get_device().get_info<info::device::name>() << "\n";
 
-  dpc_common::TimeInterval T3a;
-  pi = calc_pi_dpstd_native2(num_steps, policy, groups);
-  auto stop3a = T3a.Elapsed();
-  std::cout << "dpstd native2:\t\t";
-  std::cout << std::setprecision(3) << "PI =" << pi;
-  std::cout << " in " << stop3a << " seconds\n";
+  if (id == master) {
+    printf("Number of steps is %d\n", num_steps);
 
-  dpc_common::TimeInterval T3b;
-  pi = calc_pi_dpstd_native3(num_steps, groups, policy);
-  auto stop3b = T3b.Elapsed();
-  std::cout << "dpstd native3:\t\t";
-  std::cout << std::setprecision(3) << "PI =" << pi;
-  std::cout << " in " << stop3b << " seconds\n";
+    // Since we are using JIT compiler for samples,
+    // we need to run each step once to allow for compile
+    // to occur before we time execution of function.
+    pi = calc_pi_dpstd_native(num_steps, policy);
+    pi = calc_pi_dpstd_native2(num_steps, policy, groups);
+    pi = calc_pi_dpstd_native3(num_steps, groups, policy);
+    pi = calc_pi_dpstd_native4(num_steps, groups, policy);
 
-  dpc_common::TimeInterval T3c;
-  pi = calc_pi_dpstd_native4(num_steps, groups, policy);
-  auto stop3c = T3c.Elapsed();
-  std::cout << "dpstd native4:\t\t";
-  std::cout << std::setprecision(3) << "PI =" << pi;
-  std::cout << " in " << stop3c << " seconds\n";
+    pi = calc_pi_dpstd_two_steps_lib(num_steps, policy);
+    pi = calc_pi_dpstd_onestep(num_steps, policy);
 
-  dpc_common::TimeInterval T4;
-  pi = calc_pi_dpstd_two_steps_lib(num_steps, policy);
-  auto stop4 = T4.Elapsed();
-  std::cout << "dpstd two steps:\t";
-  std::cout << std::setprecision(3) << "PI =" << pi;
-  std::cout << " in " << stop4 << " seconds\n";
+    dpc_common::TimeInterval T;
+    pi = calc_pi_cpu_seq(num_steps);
+    auto stop = T.Elapsed();
+    std::cout << "Cpu Seq calc: \t\t";
+    std::cout << std::setprecision(3) << "PI =" << pi;
+    std::cout << " in " << stop << " seconds\n";
 
-  dpc_common::TimeInterval T5;
-  pi = calc_pi_dpstd_onestep(num_steps, policy);
-  auto stop5 = T5.Elapsed();
-  std::cout << "dpstd transform_reduce: ";
-  std::cout << std::setprecision(3) << "PI =" << pi;
-  std::cout << " in " << stop5 << " seconds\n";
+    dpc_common::TimeInterval T2;
+    pi = calc_pi_cpu_tbb(num_steps);
+    auto stop2 = T2.Elapsed();
+    std::cout << "Cpu TBB  calc: \t\t";
+    std::cout << std::setprecision(3) << "PI =" << pi;
+    std::cout << " in " << stop2 << " seconds\n";
 
-  std::cout << "success\n";
+    dpc_common::TimeInterval T3;
+    pi = calc_pi_dpstd_native(num_steps, policy);
+    auto stop3 = T3.Elapsed();
+    std::cout << "dpstd native:\t\t";
+    std::cout << std::setprecision(3) << "PI =" << pi;
+    std::cout << " in " << stop3 << " seconds\n";
+
+    dpc_common::TimeInterval T3a;
+    pi = calc_pi_dpstd_native2(num_steps, policy, groups);
+    auto stop3a = T3a.Elapsed();
+    std::cout << "dpstd native2:\t\t";
+    std::cout << std::setprecision(3) << "PI =" << pi;
+    std::cout << " in " << stop3a << " seconds\n";
+
+    dpc_common::TimeInterval T3b;
+    pi = calc_pi_dpstd_native3(num_steps, groups, policy);
+    auto stop3b = T3b.Elapsed();
+    std::cout << "dpstd native3:\t\t";
+    std::cout << std::setprecision(3) << "PI =" << pi;
+    std::cout << " in " << stop3b << " seconds\n";
+
+    dpc_common::TimeInterval T3c;
+    pi = calc_pi_dpstd_native4(num_steps, groups, policy);
+    auto stop3c = T3c.Elapsed();
+    std::cout << "dpstd native4:\t\t";
+    std::cout << std::setprecision(3) << "PI =" << pi;
+    std::cout << " in " << stop3c << " seconds\n";
+
+    dpc_common::TimeInterval T4;
+    pi = calc_pi_dpstd_two_steps_lib(num_steps, policy);
+    auto stop4 = T4.Elapsed();
+    std::cout << "dpstd two steps:\t";
+    std::cout << std::setprecision(3) << "PI =" << pi;
+    std::cout << " in " << stop4 << " seconds\n";
+
+    dpc_common::TimeInterval T5;
+    pi = calc_pi_dpstd_onestep(num_steps, policy);
+    auto stop5 = T5.Elapsed();
+    std::cout << "dpstd transform_reduce: ";
+    std::cout << std::setprecision(3) << "PI =" << pi;
+    std::cout << " in " << stop5 << " seconds\n";
+  }
+
+  int num_step_per_rank = num_steps / num_procs;
+  float* results_per_rank = new float[num_step_per_rank];
+
+  // Initialize an array to store a partial result per rank.
+  for (size_t i = 0; i < num_step_per_rank; i++) results_per_rank[i] = 0.0;
+
+  dpc_common::TimeInterval T6;
+  // Calculate the Pi number partially by multiple MPI ranks.
+  mpi_native(results_per_rank, id, num_procs, num_steps, myQueue);
+
+  float local_sum = 0.0;
+
+  // Use the DPC++ library call to reduce the array using plus
+  buffer<float> calc_values(results_per_rank, num_step_per_rank);
+  auto calc_begin2 = dpstd::begin(calc_values);
+  auto calc_end2 = dpstd::end(calc_values);
+
+  local_sum =
+      std::reduce(policy, calc_begin2, calc_end2, 0.0f, std::plus<float>());
+  policy.queue().wait();
+
+  // Master rank performs a reduce operation to get the sum of all partial Pi.
+  MPI_Reduce(&local_sum, &pi, 1, MPI_FLOAT, MPI_SUM, master, MPI_COMM_WORLD);
+
+  if (id == master) {
+    auto stop6 = T6.Elapsed();
+
+    std::cout << "mpi native:\t\t";
+    std::cout << std::setprecision(3) << "PI =" << pi;
+    std::cout << " in " << stop6 << " seconds\n";
+  }
+
+  delete[] results_per_rank;
+
+  // mpi_dpstd_onestep
+  dpc_common::TimeInterval T7;
+  local_sum = mpi_dpstd_onestep(id, num_procs, num_steps, policy);
+  auto stop7 = T7.Elapsed();
+
+  // Master rank performs a reduce operation to get the sum of all partial Pi.
+  MPI_Reduce(&local_sum, &pi, 1, MPI_FLOAT, MPI_SUM, master, MPI_COMM_WORLD);
+
+  if (id == master) {
+    auto stop6 = T7.Elapsed();
+
+    std::cout << "mpi transform_reduce:\t";
+    std::cout << std::setprecision(3) << "PI =" << pi;
+    std::cout << " in " << stop7 << " seconds\n";
+    std::cout << "success\n";
+  }
+
+  MPI_Finalize();
+
   return 0;
 }

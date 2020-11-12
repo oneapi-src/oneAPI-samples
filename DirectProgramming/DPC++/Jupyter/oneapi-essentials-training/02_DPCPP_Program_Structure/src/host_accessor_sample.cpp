@@ -12,11 +12,11 @@ int main() {
   auto R = range<1>(N);
   std::vector<int> v(N, 10);
   queue q;
-  // Buffer takes ownership of the data stored in vector.__
-  buffer<int, 1> buf(v.data(), R);
+  // Buffer takes ownership of the data stored in vector.  
+  buffer buf(v);
   q.submit([&](handler& h) {
-    auto a = buf.get_access<access::mode::read_write>(h);
-    h.parallel_for(R, [=](id<1> i) { a[i] -= 2; });
+    accessor a(buf,h);
+    h.parallel_for(R, [=](auto i) { a[i] -= 2; });
   });
   // Creating host accessor is a blocking call and will only return after all
   // enqueued DPC++ kernels that modify the same buffer in any queue completes

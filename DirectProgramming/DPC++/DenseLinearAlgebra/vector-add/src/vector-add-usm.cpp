@@ -15,7 +15,7 @@
 // •	A one dimensional array of data shared between CPU and offload device.
 // •	A device queue and kernel.
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -59,7 +59,7 @@ void VectorAdd(queue &q, const int *a, const int *b, int *sum, size_t size) {
   //    2nd parameter is the kernel, a lambda that specifies what to do per
   //    work item. the parameter of the lambda is the work item id.
   // DPC++ supports unnamed lambda kernel by default.
-  auto e = q.parallel_for(num_items, [=](id<1> i) { sum[i] = a[i] + b[i]; });
+  auto e = q.parallel_for(num_items, [=](auto i) { sum[i] = a[i] + b[i]; });
 
   // q.parallel_for() is an asynchronous call. DPC++ runtime enqueues and runs
   // the kernel asynchronously. Wait for the asynchronous call to complete.

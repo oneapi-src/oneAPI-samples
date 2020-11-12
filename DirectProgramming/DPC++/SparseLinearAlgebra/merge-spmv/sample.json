@@ -1,0 +1,29 @@
+{
+    "guid": "C573751F-C04C-4EE0-A868-941EF460F944",
+    "name": "merge-spmv",
+    "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++/C++ Compiler/CPU and GPU" ],
+    "description": "Sparse Matrix Vector sample provides a parallel implementation of a merge based sparse matrix and vector multiplication algorithm using DPC++.",
+    "toolchain": [ "dpcpp" ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "languages": [ { "cpp": {} } ],
+    "os": [ "linux", "windows" ],
+    "builder": [ "ide", "cmake" ],
+    "ciTests": {
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make",
+                          "make run"
+                   ]
+          }],
+          "windows": [{
+                  "steps": [
+                          "MSBuild merge-spmv.sln /t:Rebuild /p:Configuration=\"Release\"",
+                          "cd x64/Release",
+                          "merge-spmv.exe"
+                  ]
+          }]
+    }
+  }

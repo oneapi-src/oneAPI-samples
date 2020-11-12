@@ -4,9 +4,21 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
 #include <vector>
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
+
+// Header locations and some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  #include <CL/sycl/intel/fpga_extensions.hpp>
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#else
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#endif
 
 using namespace sycl;
 
@@ -32,9 +44,9 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
                 std::vector<int> &r_out) {
 
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector device_selector;
+  INTEL::fpga_emulator_selector device_selector;
 #else
-  intel::fpga_selector device_selector;
+  INTEL::fpga_selector device_selector;
 #endif
 
   try {
@@ -72,7 +84,7 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
       });
     });
 
-    // measure the execution time of each kernel 
+    // measure the execution time of each kernel
     double nr_time = GetExecutionTime(e_nr);
     double r_time = GetExecutionTime(e_r);
 

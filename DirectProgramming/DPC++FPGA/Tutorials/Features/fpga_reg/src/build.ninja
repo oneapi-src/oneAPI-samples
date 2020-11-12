@@ -1,0 +1,41 @@
+source_file = fpga_reg.cpp
+target_name = fpga_reg
+
+emulator_target = ${target_name}.fpga_emu.exe
+
+hardware_flags = -fintelfpga -Xshardware
+emulator_flags = -fintelfpga -DFPGA_EMULATOR
+
+rule build_fpga_emu
+  command = dpcpp /GX ${emulator_flags} $in -o $out
+
+rule gen_report
+  command = dpcpp /GX ${hardware_flags} -Xsboard=intel_a10gx_pac:pac_a10 -fsycl-link $in -o $out
+
+rule gen_report_registered
+  command = dpcpp /GX ${hardware_flags} -Xsboard=intel_a10gx_pac:pac_a10 -fsycl-link $in -DUSE_FPGA_REG -o $out
+
+rule gen_report_s10_pac
+  command = dpcpp /GX ${hardware_flags} -Xsboard=intel_s10sx_pac:pac_s10 -fsycl-link $in -o $out
+
+rule gen_report_registered_s10_pac
+  command = dpcpp /GX ${hardware_flags} -Xsboard=intel_s10sx_pac:pac_s10 -fsycl-link $in -DUSE_FPGA_REG -o $out
+
+# FPGA emulator 
+build fpga_emu: phony ${emulator_target}
+build ${emulator_target}: build_fpga_emu ${source_file}
+
+# report
+report_target = ${target_name}_report.a 
+report_reg_target = ${target_name}_registered_report.a
+report_target_s10_pac = ${target_name}_s10_pac_report.a 
+report_reg_target_s10_pac = ${target_name}_registered_s10_pac_report.a
+
+build report: phony ${report_target} ${report_reg_target}
+build ${report_target}: gen_report ${source_file} 
+build ${report_reg_target}: gen_report_registered ${source_file} 
+
+# report (S10 PAC)
+build report_s10_pac: phony ${report_target_s10_pac} ${report_reg_target_s10_pac}
+build ${report_target_s10_pac}: gen_report_s10_pac ${source_file} 
+build ${report_reg_target_s10_pac}: gen_report_registered_s10_pac ${source_file} 

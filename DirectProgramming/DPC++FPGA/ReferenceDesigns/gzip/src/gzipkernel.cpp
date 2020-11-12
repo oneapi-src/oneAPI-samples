@@ -36,6 +36,13 @@
 #include "gzipkernel.hpp"
 #include "kernels.hpp"
 
+// Some DPC++ extensions changed between beta09 and beta10
+// Temporarily modify the code sample to accept either version
+#define BETA09 20200827
+#if __SYCL_COMPILER_VERSION <= BETA09
+  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
+#endif
+
 using namespace sycl;
 
 // This reference design uses a template-based unroller. It's also possible
@@ -745,8 +752,8 @@ void SubmitGzipTasksSingleEngine(
     buffer<struct GzipOutInfo, 1> *gzip_out_buf,
     buffer<unsigned, 1> *result_crc, bool last_block, event &e_crc, event &e_lz,
     event &e_huff) {
-  using acc_dist_channel = intel::pipe<class some_pipe, struct DistLen>;
-  using acc_dist_channel_last = intel::pipe<class some_pipe2, struct DistLen>;
+  using acc_dist_channel = INTEL::pipe<class some_pipe, struct DistLen>;
+  using acc_dist_channel_last = INTEL::pipe<class some_pipe2, struct DistLen>;
 
   e_crc = q.submit([&](handler &h) {
     auto accessor_isz = block_size;
