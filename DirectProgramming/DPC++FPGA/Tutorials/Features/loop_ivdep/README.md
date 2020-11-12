@@ -9,7 +9,7 @@ This FPGA tutorial demonstrates how to applying the `ivdep` attribute to a loop 
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               |  Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a *safe* dependence distance <br> How to aid the compiler's dependence analysis to maximize performance
 | Time to complete                  | 30 minutes
 
@@ -24,7 +24,7 @@ A *loop-carried memory dependency* refers to a situation where memory access in 
 * **Anti-dependence (Write-After-Read)** - A memory location read must occur before a future iteration writes to the same memory location.
 * **Output-dependence (Write-After-Write)** - A memory location write must occur before a future iteration writes to the same memory location.
 
-The Intel® oneAPI DPC++ Compiler (Beta) employs static analysis to scan the program's code to establish the dependence relationships between all memory accesses in a loop. However, depending on the complexity of the addressing expressions and the loop's stride or upper bound, the compiler may not be able to statically determine precise dependence information. 
+The Intel® oneAPI DPC++ Compiler employs static analysis to scan the program's code to establish the dependence relationships between all memory accesses in a loop. However, depending on the complexity of the addressing expressions and the loop's stride or upper bound, the compiler may not be able to statically determine precise dependence information. 
 
 In such scenarios, the compiler must conservatively assume some statements to be dependent in order to guarantee functional correctness of the generated hardware. Precise dependence information is crucially important to generate an efficient pipelined datapath. Such information reduces the number of assumed dependencies, allowing the hardware schedule to extract as much pipeline parallelism from loops as possible.
 
@@ -244,7 +244,7 @@ PASSED: The results are correct
 
 ### Discussion of Results
 
-The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA and the Intel® oneAPI DPC++ Compiler (Beta).
+The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA and the Intel® oneAPI DPC++ Compiler.
 
 Safelen | Kernel Time (ms) | Throughput (KB/s)
 ------------- | ------------- | -----------------------

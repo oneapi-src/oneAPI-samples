@@ -7,7 +7,7 @@ This tutorial demonstrates how to use zero-copy host memory via the SYCL restric
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (Beta)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | How to use Restricted USM for the FPGA
 | Time to complete                  | 15 minutes
 
