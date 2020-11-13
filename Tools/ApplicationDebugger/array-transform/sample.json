@@ -1,6 +1,6 @@
 {
   "guid": "4B3FDDD8-64CF-4CF3-9387-26E34F021E24",
-  "name": "Array Transform",
+  "name": "Debugger: Array Transform",
   "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Tools/Application Debugger"],
   "description": "A small Intel® oneAPI Data Parallel C++ (DPC++) example that is used in the \"Get Started Guide\" of the Application Debugger to exercise major debugger functionality",
   "toolchain": ["dpcpp"],
