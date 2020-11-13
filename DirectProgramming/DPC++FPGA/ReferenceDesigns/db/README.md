@@ -7,7 +7,7 @@ This reference design demonstrates how to accelerate [TPC-H](http://www.tpc.org/
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (Beta) 
+| Software                          | Intel&reg; oneAPI DPC++ Compiler 
 | What you will learn               | How to accelerate database queries using an Intel FPGA
 | Time to complete                  | 1 hour
 

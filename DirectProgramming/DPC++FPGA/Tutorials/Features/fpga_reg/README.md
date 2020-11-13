@@ -8,7 +8,7 @@ This FPGA tutorial demonstrates how a power user can apply the DPC++ extension  
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to use the `INTEL::fpga_reg` extension <br> How `INTEL::fpga_reg` can be used to re-structure the compiler-generated hardware <br> Situations in which applying  `INTEL::fpga_reg` might be beneficial
 | Time to complete                  | 20 minutes
 
