@@ -83,7 +83,7 @@ void VerifyResults(const vector<float> &a, const vector<float> &b,
 }
 
 int main() {
-  constexpr size_t n = 1 << 26;
+  constexpr size_t n = 1 << 25;
   cout << "Input array size: " << n << "\n";
 
   // Input vectors.

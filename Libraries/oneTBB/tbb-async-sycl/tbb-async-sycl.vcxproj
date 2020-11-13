@@ -108,7 +108,7 @@
       <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib/intel64/vc14" %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb12.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,7 +152,7 @@
       <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib/intel64/vc14" %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb12.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
