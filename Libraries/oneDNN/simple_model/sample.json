@@ -7,7 +7,7 @@
  "languages": [{"cpp":{}}],
  "dependencies": ["oneDNN", "tbb","compiler|icc"],
  "os": ["linux", "windows"],
- "builder": ["ide","cmake"],
+ "builder": ["cmake"],
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
 	"linux": [{
