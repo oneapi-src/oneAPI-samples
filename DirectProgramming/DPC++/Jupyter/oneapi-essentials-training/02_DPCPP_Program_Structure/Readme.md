@@ -5,7 +5,7 @@ The Complex class is a custom class and this program shows how we can use custom
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04, CPU, GPU 
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel Data Parallel C++ (Intel DPC++) Compiler beta
+| Software                          | Intel Data Parallel C++ (Intel DPC++) Compiler
 | What you will learn               | Using custom type classes and offloads complex number computations to GPU using Intel DPC++
 | Time to complete                  | 15 minutes  
   
