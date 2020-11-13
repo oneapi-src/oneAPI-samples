@@ -26,6 +26,8 @@
 	    {
 		"id": "infer cpu",
 		"steps": [
+			"set CC=clang",
+			"set CXX=clang++",
 			"mkdir build_cpu",
                         "cd build_cpu",
                         "cmake -G Ninja ..",
@@ -36,6 +38,8 @@
 	    {
 		"id": "infer gpu",
 		"steps": [
+			"set CC=clang",
+			"set CXX=clang++",
                         "mkdir build_gpu",
                         "cd build_gpu",
                         "cmake -G Ninja ..",
