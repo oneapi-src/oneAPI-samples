@@ -49,7 +49,7 @@ There are two important caveats to remember when using the FPGA emulator.
 * **Undefined behavior may differ.** If your code produces different results when compiled for the FPGA emulator versus FPGA hardware, it is likely that your code is exercising undefined behavior. By definition, undefined behavior is not specified by the language specification, and may manifest differently on different targets.
 
 #### Optimization Report
-An full FPGA compilation occurs in two stages:
+A full FPGA compilation occurs in two stages:
 1. **FPGA early image:** The DPC++ device code is optimized and converted into an FPGA design specified in Verilog RTL (a low-level, native entry language for FPGAs). This intermediate compilation result is the FPGA early device image, which is *not* executable. This FPGA early image compilation process takes minutes.
 2. **FPGA hardware image:** The Verilog RTL specifying the design's circuit topology is mapped onto the FPGA's sea of primitive hardware resources by the Intel® Quartus® Prime software.  Intel® Quartus® Prime is included in the Intel® FPGA Add-On, which is required for this compilation stage. The result is an FPGA hardware binary (also referred to as a bitstream). This compilation process takes hours.
 
