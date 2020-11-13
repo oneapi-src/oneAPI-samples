@@ -9,7 +9,7 @@ Compatibility Tool (dpct).
 | Optimized for         | Description
 |:---                   |:---
 | OS                    | Linux* Ubuntu* 18.04; Windows 10
-| Software              | Intel&reg; DPC++ Compatibility Tool beta;
+| Software              | Intel&reg; DPC++ Compatibility Tool;
 | What you will learn   | Simple invocation of dpct to migrate CUDA code
 | Time to complete      | 10 minutes
 

@@ -8,7 +8,7 @@ This FPGA tutorial demonstrates how to build DPC++ device libraries from various
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | How to create and use libraries in DPC++ FPGA projects <br> How power users can incorporate RTL source code in DPC++ for FPGA
 | Time to complete                  | 15 minutes
 
