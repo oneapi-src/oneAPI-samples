@@ -84,7 +84,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
        ```
        make report
        ```
-       _Note:_ If you are compiling Query 9 (`-DQUERY=9`), the report generation time is unusually long. Pre-generated reports can be downloaded  <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz" download>here</a>.
+       _Note:_ If you are compiling Query 9 (`-DQUERY=9`), the report generation time is unusually long. Pre-generated reports can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz" download>here</a>.
 
     * Compile for FPGA hardware (longer compile time, targets FPGA device).
 
