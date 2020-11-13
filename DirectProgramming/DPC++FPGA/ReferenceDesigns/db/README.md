@@ -56,7 +56,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 ### On a Linux* System
 
-1. Install the design into a directory `build` from the design directory by running `cmake`:
+1. Generate the `Makefile` by running `cmake`.
 
    ```
    mkdir build
@@ -71,7 +71,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
    Where `<QUERY_NUMBER>` can be one of `1`, `9`, `11` or `12`.
 
-2. Compile the design through the generated `Makefile`. The following targets are provided and they match the recommended development flow:
+2. Compile the design through the generated `Makefile`. The following targets are provided, matching the recommended development flow:
 
     * Compile for emulation (fast compile time, targets emulated FPGA device).
 
@@ -79,11 +79,12 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
        make fpga_emu
        ```
 
-    * Generate the optimization report. Find the report in `db_report.prj/reports/report.html`directory.
+    * Generate the optimization report. Find the report in the `db_report.prj/reports/report.html` directory.
 
        ```
        make report
        ```
+       _Note:_ If you are compiling Query 9 (`-DQUERY=9`), the report generation time is unusually long. Pre-generated reports can be downloaded  <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz" download>here</a>.
 
     * Compile for FPGA hardware (longer compile time, targets FPGA device).
 
@@ -92,36 +93,43 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
        ```
       When building for hardware, the default scale factor is 1. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=9 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
 
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) precompiled binary (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz" download>here</a>.
+3. (Optional) As the hardware compile may take several hours to complete, an Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) precompiled binary (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
-Note: `cmake` is not yet supported on Windows. A `build.ninja` file is provided instead. 
 
-Note: Ensure that Microsoft Visual Studio* (2017, or 2019 Version 16.4 or newer) with "Desktop development with C++" workload is installed on your system.
+1. Generate the `Makefile` by running `cmake`.
 
-1. Enter source file directory.
+   ```
+   mkdir build
+   cd build
+   ```
 
-```
-cd src
-```
+   Run `cmake` using the command:
 
-2. Compile the design. The following targets are provided and they match the recommended development flow:
+   ```
+   cmake -G "NMake Makefiles" .. -DQUERY=<QUERY_NUMBER>
+   ```
+
+   Where `<QUERY_NUMBER>` can be one of `1`, `9`, `11` or `12`.
+
+2. Compile the design through the generated `Makefile`. The following targets are provided, matching the recommended development flow:
 
     * Compile for emulation (fast compile time, targets emulated FPGA device).
 
-      ```
-      ninja fpga_emu_q<QUERY_NUMBER>
-      ```
+       ```
+       nmake fpga_emu
+       ```
 
-    * Generate HTML performance report. Find the report in `../src/db_<QUERY_NUMBER>_report.prj/reports/report.html`directory.
+    * Generate the optimization report. Find the report in the `db_report.prj/reports/report.html` directory.
 
-      ```
-      ninja report_q<QUERY_NUMBER>
-      ```
+       ```
+       nmake report
+       ```
+       _Note:_ If you are compiling Query 9 (`-DQUERY=9`), the report generation time is unusually long. 
 
-    Where `<QUERY_NUMBER>` can be one of `1`, `9`, `11` or `12`.
-
-    * Compiling for FPGA hardware is not yet supported on Windows.
+    * An FPGA hardware target is not provided on Windows*.
+  
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
