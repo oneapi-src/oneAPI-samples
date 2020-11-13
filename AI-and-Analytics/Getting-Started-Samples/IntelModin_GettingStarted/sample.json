@@ -11,7 +11,7 @@
   "ciTests": {
   	"linux": [
     {
-  		"env": ["source activate base", "conda create -n aikit-modin-test -c intel/label/oneapibeta -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "conda deactivate", "source activate aikit-modin-test"],
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n aikit-modin-test -c intel/label/oneapibeta -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
   		"id": "Intel_Modin_GS_py",
   		"steps": [
          "runipy IntelModin_GettingStarted.ipynb" 
