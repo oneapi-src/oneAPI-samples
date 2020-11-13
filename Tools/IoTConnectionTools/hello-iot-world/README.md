@@ -32,7 +32,7 @@ Use the `oneapi-cli.exe` utility from a `Developer Command Prompt for VS` to dow
 *Note:* On Windows systems you will need "MSBuild Tools", "Windows 10 SDK" and "C++ CMake tools for Windows" as part of your installed Visual Studio components.
 
 Source the `setvars.bat` script distributed with oneAPI to configure the compiler. By default this can be found under
-`"C:\Program Files (x86)\IntelOneAPI\inteloneapi"`.
+`"C:\Program Files (x86)\Intel\oneAPI"`.
 Use the following commands to build and run the sample:
 ```
 mkdir build

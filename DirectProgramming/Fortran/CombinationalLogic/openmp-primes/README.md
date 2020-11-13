@@ -10,7 +10,7 @@ It illustrates two OpenMP* directives to help speed up the code.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | macOS* with Xcode* installed 
-| Software                          | Intel&reg; oneAPI Intel Fortran Compiler (Beta)
+| Software                          | Intel&reg; oneAPI Intel Fortran Compiler
 | What you will learn               | How to build and run a Fortran OpenMP application using Intel Fortran compiler
 | Time to complete                  | 10 minutes
 
@@ -42,7 +42,7 @@ The option -fpp enables the Fortran preprocessor.
 Read the Intel® Fortran Compiler Documentation for more information about these options.
 
 ## Key Implementation Details
-The Intel&reg; oneAPI Intel Fortran Compiler (Beta) includes all libraries and headers   necessary to compile and run OpenMP* enabled Fortran applications. Users simply use the -qopenmp compiler option to compile and link their OpenMP enabled applications. 
+The Intel&reg; oneAPI Intel Fortran Compiler includes all libraries and headers   necessary to compile and run OpenMP* enabled Fortran applications. Users simply use the -qopenmp compiler option to compile and link their OpenMP enabled applications. 
 
 ## License  
 This code sample is licensed under MIT license  
