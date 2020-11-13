@@ -13,14 +13,14 @@ all: fpga_emu
 fpga_emu: $(SRC)
 	$(CXX) $(CXXFLAGS) -fintelfpga $(SRC) -o $(EXE) -DFPGA_EMULATOR=1
 
-fpga_emu_usm: $(SRC)
-	@echo USM is not supported for FPGAs, yet
+fpga_emu_usm: $(USM_SRC)
+	$(CXX) $(CXXFLAGS) -fintelfpga $(USM_SRC) -o $(USM_EXE) -DFPGA_EMULATOR=1
 
 run: 
 	$(EXE)
 
 run_usm:
-	@echo USM is not supported for FPGAs, yet
+	$(USM_EXE)
 
 clean: 
 	del /F /S /Q *.ilk *.pdb *.o *.d *.out *.mon *.emu *.aocr *.aoco *.prj *.fpga_emu *.fpga_emu_buffers *.a $(EXE) $(USM_EXE)

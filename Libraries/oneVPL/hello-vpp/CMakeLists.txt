@@ -26,6 +26,11 @@ if(MSVC)
   endif()
 endif()
 
+if(POLICY CMP0074)
+  # ignore warning of VPL_ROOT in find_package search path
+  cmake_policy(SET CMP0074 OLD)
+endif()
+
 if(TARGET VPL)
   target_link_libraries(${TARGET} VPL)
 else()

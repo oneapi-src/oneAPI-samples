@@ -1,7 +1,7 @@
 {
-    "name": "Intrinsics C++",
-    "description": "Demonstrates the intrinsic functions of the Intel® oneAPI C++ Compiler Classic",
-    "categories": ["Toolkit/Intel® oneAPI HPC Toolkit"],
+    "name": "Intrinsics",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++/Compiler Infrastructure"],
+    "description": "Demonstrates the Intrinsic functions of the Intel® oneAPI C++ Compiler Classic",
     "os": ["darwin"],
     "builder": ["make"],
     "languages": [{"cpp":{}}],

@@ -1,8 +1,8 @@
 {
 "guid":"D5D48B97-C29C-4386-A6D2-DB84D006D6A9",
- "name": "Matrix Multiplication - Intel VTune Profiler",
- "categories": ["Toolkit/Intel® oneAPI Base Toolkit/VTune Profiler"],
- "description": "Simple program that shows how to improve the DPC++ Matrix Multiplication program using VTune Profiler and Advisor.",
+ "name": "Matrix Multiply Vtune",
+ "categories": ["Toolkit/oneAPI Tools/VTune Profiler"],
+ "description": "Simple program that shows how to improve the Intel® oneAPI Data Parallel C++ (DPC++) Matrix Multiplication program using Intel® VTune Profiler and Intel® Advisor",
  "toolchain": ["dpcpp"],
  "dependencies": ["vtune"],
  "languages": [{"cpp": { }}],

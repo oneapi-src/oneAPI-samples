@@ -1,6 +1,6 @@
 {
-  "name": "vectorize-vecmatmult",
-  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "name": "Vectorize VecMatMult",
+  "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"],
   "description": "Fortran Tutorial - Using Auto Vectorization",
   "toolchain": [ "ifort" ],
   "languages": [ { "fortran": {} } ],

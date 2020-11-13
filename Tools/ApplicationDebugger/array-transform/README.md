@@ -49,6 +49,14 @@ This code sample is licensed under MIT license.
 
 ## Building and Running the `array-transform` Program
 
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+
 ### Setup
 
 Preliminary setup steps are needed for the debugger to function.
