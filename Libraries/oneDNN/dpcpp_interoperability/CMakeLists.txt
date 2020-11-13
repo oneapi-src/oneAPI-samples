@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 if("${CMAKE_CXX_COMPILER}" STREQUAL "")
-    set(CMAKE_CXX_COMPILER "dpcpp")
+    set(CMAKE_CC_COMPILER "clang")
+    set(CMAKE_CXX_COMPILER "clang++")
 endif()
 project (dpcpp_interoperability)
 file(COPY $ENV{DNNLROOT}/examples/sycl_interop_buffer.cpp DESTINATION src)
