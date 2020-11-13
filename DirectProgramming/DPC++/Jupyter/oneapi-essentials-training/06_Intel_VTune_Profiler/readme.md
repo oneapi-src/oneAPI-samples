@@ -5,7 +5,7 @@ ISO3DFD is a finite difference stencil kernel for solving 3D acoustic isotropic 
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; Windows 10 or Windows Server 2017
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel Data Parallel C++ Compiler; Intel C++ Compiler xxx
+| Software                          | Intel Data Parallel C++ Compiler; Intel C++ Compiler
 | What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler and OpenMP offload pragmas
 | Time to complete                  | 15 minutes
 
@@ -25,7 +25,7 @@ You're encourage to use any infographics to increase readibility and clarity whi
    
 
 ## License  
-This code sample is licensed under MIT license under xxx  
+This code sample is licensed under MIT license
 
 ## How to Build  
 
