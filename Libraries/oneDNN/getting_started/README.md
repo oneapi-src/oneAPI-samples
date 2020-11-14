@@ -64,7 +64,7 @@ make
 ```
 3. Run the program
 ```
-./bin/simple_model
+./bin/getting-started-cpp
 ```
 
 By default the sample uses oneAPI DPC++/C++ Compiler and can execute on CPUs or
@@ -86,29 +86,25 @@ source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_tbb
 CC=icc CXX=icpc cmake ..
 ```
 
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
+### On a Windows* System 
 
-Open "x64 Native Tools Command Prompt for VS2017" or 
-"x64 Native Tools Command Prompt for VS2019" and perform the following steps:
+Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or 
+"Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
 1. Setup oneAPI development environment
 ```
-C:\Program Files (x86)\intel\oneapi\setvars.bat --dnnl-configuration=cpu_vcomp
+C:\Program Files (x86)\intel\oneapi\setvars.bat
 ```
 2. Build the program using `cmake`
 ```
 mkdir build
 cd build
-cmake -G "Visual Studio 16 2019" ..
+cmake -G Ninja ..
 cmake --build .
 ```
 
-> Note: You can open the `getting_started.sln` in build folder to edit source
-> code with Microsoft Visual Studio integrated development environment.
-
-
 3. Run the program
 ```
-bin\Debug\getting_started.exe
+bin\getting-started-cpp.exe
 ```
 
 ### Include Files
@@ -132,6 +128,15 @@ You can specify target device for this sample using command line arguments:
 
 You can get additional information during execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
+
+#### On a Linux System
+```
+export DNNL_VERBOSE=1
+```
+#### On a Windows* System
+```
+set DNNL_VERBOSE=1
+```
 
 ### Example of Output
 

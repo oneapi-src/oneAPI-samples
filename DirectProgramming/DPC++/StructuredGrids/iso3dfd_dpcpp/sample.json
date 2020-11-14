@@ -1,8 +1,8 @@
 {
   "guid": "3A7DA713-6083-4CA3-B66E-A3DF21744EB4",
-  "name": "iso3dfd_dpcpp",
-  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
-  "description": "A finite difference stencil kernel for solving 3D acoustic isotropic wave equation",
+  "name": "ISO3DFD DPCPP",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Structured Grids"],
+  "description": "The ISO3DFD Sample illustrates Intel® oneAPI Data Parallel C++ (DPC++) using Finite Difference Stencil Kernel for solving 3D Acoustic Isotropic Wave Equation",
   "toolchain": [ "dpcpp" ],
   "targetDevice": [ "CPU", "GPU" ],
   "languages": [ { "cpp": {} } ],

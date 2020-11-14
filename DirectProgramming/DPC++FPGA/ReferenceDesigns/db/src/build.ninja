@@ -1,0 +1,69 @@
+host_source_file = db.cpp dbdata.cpp
+target_name = db
+
+emulator_flags = -fintelfpga -DFPGA_EMULATOR
+hardware_flags = -fintelfpga -Xshardware -Xsforce-single-store-ring -Xsseed=1
+
+emulator_target_q1 = ${target_name}.q1.fpga_emu.exe
+report_target_q1 = ${target_name}_q1_report.a
+
+emulator_target_q9 = ${target_name}.q9.fpga_emu.exe
+report_target_q9 = ${target_name}_q9_report.a
+
+emulator_target_q11 = ${target_name}.q11.fpga_emu.exe
+report_target_q11 = ${target_name}_q11_report.a
+
+emulator_target_q12 = ${target_name}.q12.fpga_emu.exe
+report_target_q12 = ${target_name}_q12_report.a
+
+# emulation rules
+rule build_fpga_emu_q1
+  command = dpcpp /GX ${emulator_flags} -D_CRT_SECURE_NO_WARNINGS -DQUERY=1 query1/query1_kernel.cpp ${host_source_file} -o $out
+
+rule build_fpga_emu_q9
+  command = dpcpp /GX ${emulator_flags} -D_CRT_SECURE_NO_WARNINGS -DQUERY=9 query9/query9_kernel.cpp ${host_source_file} -o $out
+
+rule build_fpga_emu_q11
+  command = dpcpp /GX ${emulator_flags} -D_CRT_SECURE_NO_WARNINGS -DQUERY=11 query11/query11_kernel.cpp ${host_source_file} -o $out
+
+rule build_fpga_emu_q12
+  command = dpcpp /GX ${emulator_flags} -D_CRT_SECURE_NO_WARNINGS -DQUERY=12 query12/query12_kernel.cpp ${host_source_file} -o $out
+
+# report rules
+rule gen_report_q1
+  command = dpcpp /GX ${hardware_flags} -D_CRT_SECURE_NO_WARNINGS -Xsboard=intel_s10sx_pac:pac_s10 -DQUERY=1 query1/query1_kernel.cpp ${host_source_file} -fsycl-link -o $out
+
+rule gen_report_q9
+  command = dpcpp /GX ${hardware_flags} -D_CRT_SECURE_NO_WARNINGS -Xsboard=intel_s10sx_pac:pac_s10 -DQUERY=9 query9/query9_kernel.cpp ${host_source_file} -fsycl-link -o $out
+
+rule gen_report_q11
+  command = dpcpp /GX ${hardware_flags} -D_CRT_SECURE_NO_WARNINGS -Xsboard=intel_s10sx_pac:pac_s10 -DQUERY=11 query11/query11_kernel.cpp ${host_source_file} -fsycl-link -o $out
+
+rule gen_report_q12
+  command = dpcpp /GX ${hardware_flags} -D_CRT_SECURE_NO_WARNINGS -Xsboard=intel_s10sx_pac:pac_s10 -DQUERY=12 query12/query12_kernel.cpp ${host_source_file} -fsycl-link -o $out
+
+# FPGA emulator
+build fpga_emu_q1: phony ${emulator_target_q1}
+build ${emulator_target_q1}: build_fpga_emu_q1
+
+build fpga_emu_q9: phony ${emulator_target_q9}
+build ${emulator_target_q9}: build_fpga_emu_q9
+
+build fpga_emu_q11: phony ${emulator_target_q11}
+build ${emulator_target_q11}: build_fpga_emu_q11
+
+build fpga_emu_q12: phony ${emulator_target_q12}
+build ${emulator_target_q12}: build_fpga_emu_q12
+
+# report
+build report_q1: phony ${report_target_q1}
+build ${report_target_q1}: gen_report_q1
+
+build report_q9: phony ${report_target_q9}
+build ${report_target_q9}: gen_report_q9
+
+build report_q11: phony ${report_target_q11}
+build ${report_target_q11}: gen_report_q11
+
+build report_q12: phony ${report_target_q12}
+build ${report_target_q12}: gen_report_q12

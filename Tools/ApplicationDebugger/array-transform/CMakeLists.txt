@@ -9,11 +9,11 @@ endif ()
 # This project requires the "Debug" build type.
 if (NOT CMAKE_BUILD_TYPE MATCHES Debug)
   set (CMAKE_BUILD_TYPE Debug)
-  message (WARNING "Build Type is changed to 'Debug'.")
+  message (STATUS "Build Type is changed to 'Debug'.")
 endif ()
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
-message (WARNING "Optimization level is set to -O0.")
+message (STATUS "Optimization level is set to -O0.")
 
 # Check that debugger executables exist in PATH
 find_program(GDB gdb-oneapi)

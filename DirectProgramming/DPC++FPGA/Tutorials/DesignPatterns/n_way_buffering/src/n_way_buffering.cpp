@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <iomanip>
 #include <random>
 #include <thread>
@@ -11,16 +12,6 @@
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
 
 using namespace sycl;
 
@@ -71,8 +62,8 @@ void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
   // Submit to the queue and execute the kernel
   e = q->submit([&](handler &h) {
     // Get kernel access to the buffers
-    auto accessor_a = buffer_a.get_access<access::mode::read>(h);
-    auto accessor_b = buffer_b.get_access<access::mode::discard_read_write>(h);
+    accessor accessor_a(buffer_a, h, read_only);
+    accessor accessor_b(buffer_b, h, read_write, noinit);
 
     const int num = kSize;
     const int p = kPow - 1;  // Assumes pow >= 2;
@@ -95,7 +86,7 @@ void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
 
   event update_host_event;
   update_host_event = q->submit([&](handler &h) {
-    auto accessor_b = buffer_b.get_access<access::mode::read>(h);
+    accessor accessor_b(buffer_b, h, read_only);
 
     /*
       Explicitly instruct the SYCL runtime to copy the kernel's output buffer
@@ -139,7 +130,7 @@ float MyPow(float input, int pow) {
 void ProcessOutput(buffer<float, 1> &output_buf,
                    std::vector<float> &input_copy, int exec_number, event e,
                    ulong &total_kernel_time_per_slot) {
-  auto output_buf_acc = output_buf.get_access<access::mode::read>();
+  host_accessor output_buf_acc(output_buf, read_only);
   int num_errors = 0;
   int num_errors_to_print = 10;
 
@@ -179,9 +170,9 @@ void ProcessOutput(buffer<float, 1> &output_buf,
    ProcessOutput().
 */
 void ProcessInput(buffer<float, 1> &buf, std::vector<float> &copy) {
-  // We are generating completely new input data, so can use discard_write()
+  // We are generating completely new input data, so can use the noinit property
   // here to indicate we don't care about the SYCL buffer's current contents.
-  auto buf_acc = buf.get_access<access::mode::discard_write>();
+  host_accessor buf_acc(buf, write_only, noinit);
 
   // RNG seed
   auto seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -434,13 +425,14 @@ int main() {
     }
   } catch (sycl::exception const& e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();

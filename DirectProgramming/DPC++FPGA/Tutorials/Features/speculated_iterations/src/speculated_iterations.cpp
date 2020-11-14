@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <array>
 #include <iomanip>
 #include <iostream>
@@ -12,16 +13,6 @@
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
 
 // Use smaller values if run on the emulator to keep the CPU runtime reasonable
 // Use the largest possible int values on the FPGA to show the difference in
@@ -53,7 +44,7 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
     buffer<int, 1> buffer_res(&res, 1);
 
     event e = q.submit([&](handler &h) {
-      auto accessor_res = buffer_res.get_access<access::mode::discard_write>(h);
+      accessor accessor_res(buffer_res, h, write_only, noinit);
 
       h.single_task<class KernelCompute<spec_iter>>([=]() {
         int x = 1;
@@ -62,7 +53,7 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
         // Since the value of var is not known at compile time, the loop
         // trip count is variable and the exit condition must be evaluated at
         // each iteration.
-        [[intelfpga::speculated_iterations(spec_iter)]]
+        [[intel::speculated_iterations(spec_iter)]]
         while (sycl::log10((float)(x)) < bound) {
           x++;
         }
@@ -80,11 +71,12 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
     kernel_time_ms = (endk - startk) * 1e-6;
 
   } catch (exception const &exc) {
-    std::cout << "Caught synchronous SYCL exception:\n" << exc.what() << "\n";
+    std::cerr << "Caught synchronous SYCL exception:\n" << exc.what() << "\n";
     if (exc.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();

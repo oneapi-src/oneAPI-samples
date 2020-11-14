@@ -1,7 +1,7 @@
 {
-    "name": "MonteCarloPi",
-    "description": "Monte Carlo procedure for estimating pi",
-    "categories": ["Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU and GPU"],
+    "name": "Monte Carlo Pi",
+    "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Map Reduce"],
+    "description": "Monte Carlo procedure for estimating Pi",
     "os": ["linux", "windows"],
     "builder": ["ide", "cmake"],
     "languages": [{"cpp":{}}],

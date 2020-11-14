@@ -1,9 +1,9 @@
 {
   "guid": "6D067BD9-28EE-4ABE-A59A-4F91ADA9ED75",
-  "name": "Hello_World_GPU",
-  "categories": ["Toolkit/Project Templates"],
-  "toolchain": ["dpcpp"],
+  "name": "Hello World GPU",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Project Templates"],
   "description": "Template 'Hello World' on GPU",
+  "toolchain": ["dpcpp"],
   "languages": [{"cpp":{}}],
   "targetDevice": ["GPU"],
   "os": ["windows"],

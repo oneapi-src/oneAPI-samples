@@ -5,7 +5,6 @@
 #include <math.h>
 #include "needle.h"
 #include <cuda.h>
-#include <sys/time.h>
 
 // includes, kernels
 #include "needle_kernel.cu"
@@ -41,12 +40,6 @@ int blosum62[24][24] = {
 { 0, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2,  0,  0, -2, -1, -1, -1, -1, -1, -4},
 {-4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4,  1}
 };
-
-double gettime() {
-    struct timeval t;
-    gettimeofday(&t,NULL);
-    return t.tv_sec+t.tv_usec*1e-6;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Program main

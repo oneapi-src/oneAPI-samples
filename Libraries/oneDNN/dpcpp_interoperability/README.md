@@ -63,6 +63,27 @@ make
 ./bin/sycl-interop-buffer-cpp
 ```
 
+### On a Windows* System 
+
+Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or 
+"Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
+1. Setup oneAPI development environment
+```
+C:\Program Files (x86)\intel\oneapi\setvars.bat
+```
+2. Build the program using `cmake`
+```
+mkdir build
+cd build
+cmake -G Ninja ..
+cmake --build .
+```
+
+3. Run the program
+```
+bin\sycl-interop-buffer-cpp.exe
+```
+
 ### Include Files
 
 The include folder is located at ${DNNLROOT}\include on your development system".
@@ -83,6 +104,15 @@ You can specify target device for this sample using command line arguments:
 
 You can get additional information during execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
+
+#### On a Linux System
+```
+export DNNL_VERBOSE=1
+```
+#### On a Windows* System
+```
+set DNNL_VERBOSE=1
+```
 
 ### Example of Output
 
