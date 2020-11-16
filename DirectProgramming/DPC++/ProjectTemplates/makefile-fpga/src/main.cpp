@@ -17,10 +17,10 @@ int main() {
   // FPGA_EMULATOR defined in makefile-fpga/Makefile
 #if defined(FPGA_EMULATOR)
   // DPC++ extension: FPGA emulator selector on systems without FPGA card
-  intel::fpga_emulator_selector device_selector;
+  INTEL::fpga_emulator_selector device_selector;
 #else
   // DPC++ extension: FPGA selector on systems with FPGA card
-  intel::fpga_selector device_selector;
+  INTEL::fpga_selector device_selector;
 #endif
 
   // create a buffer

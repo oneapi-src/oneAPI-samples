@@ -1,8 +1,8 @@
 {
   "guid": "93DA332C-5490-4E4B-8038-BDEC1662A2D0",
-  "name": "Caching On-Chip Memory to Improve Loop Performance",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
-  "description": "FPGA tutorial demonstrating the caching of on-chip memory to reduce loop initiation interval.",
+  "name": "On-Chip Memory Cache",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "description": "Intel® FPGA tutorial demonstrating the caching of on-chip memory to reduce loop initiation interval",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
@@ -34,16 +34,20 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "cd src",
-          "ninja fpga_emu",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
           "onchip_memory_cache.fpga_emu.exe"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "cd src",
-          "ninja report"
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake report"
         ]
       }
     ]

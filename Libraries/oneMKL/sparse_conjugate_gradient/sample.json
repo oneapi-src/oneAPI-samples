@@ -1,10 +1,10 @@
 {
   "guid": "3814C3C8-6CD1-40C9-A94B-CB4D4F58E2B9",
   "name": "Sparse Conjugate Gradient",
-  "categories": [ "Toolkit/Intel® oneAPI Base Toolkit", "Toolkit/Intel® oneAPI HPC Toolkit" ],
+  "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
+  "description": "Solve Sparse linear systems with the Conjugate Gradient method using Intel® oneMKL sparse BLAS",
   "toolchain": [ "dpcpp" ],
   "dependencies": [ "mkl" ],
-  "description": "Solve sparse linear systems with the conjugate gradient method using oneMKL sparse BLAS.",
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
   "targetDevice": [ "CPU", "GPU" ],
   "os": [ "linux", "windows" ],

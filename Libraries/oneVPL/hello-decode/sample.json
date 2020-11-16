@@ -1,8 +1,8 @@
 {
   "guid": "AEDAA6EC-B6E0-4D5F-A97C-0B8312C4D86D",
-  "name": "Hello decode",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneVPL"],
-  "description": "Sample that shows how to use the oneAPI Video Processing Library to perform a simple video decode",
+  "name": "Hello Decode",
+  "categories": ["Toolkit/oneAPI Libraries/oneVPL"],
+  "description": "Sample that shows how to use the Intel® oneAPI Video Processing Library (VPL) to perform a simple video decode",
   "dependencies": ["vpl"],
   "os": ["linux", "windows"],
   "languages": [{"cpp":{}}],

@@ -8,12 +8,12 @@ This FPGA tutorial demonstrates how to applying the `ivdep` attribute to a loop 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) with Intel Stratix® 10 SX FPGA
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               |  Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a *safe* dependence distance <br> How to aid the compiler's dependence analysis to maximize performance
 | Time to complete                  | 30 minutes
 
-_Notice: Limited support in Windows*; compiling for FPGA hardware is not supported in Windows*_
+
 
 ## Purpose
 In order to understand and apply `ivdep` to loops in your design, it is necessary to understand the concepts of loop-carried memory dependencies. Unlike many other attributes that can be used to improve a design's performance, `ivdep` has functional implications. Using it incorrectly will result in undefined behavior for your design!
@@ -24,7 +24,7 @@ A *loop-carried memory dependency* refers to a situation where memory access in 
 * **Anti-dependence (Write-After-Read)** - A memory location read must occur before a future iteration writes to the same memory location.
 * **Output-dependence (Write-After-Write)** - A memory location write must occur before a future iteration writes to the same memory location.
 
-The Intel® oneAPI DPC++ Compiler (Beta) employs static analysis to scan the program's code to establish the dependence relationships between all memory accesses in a loop. However, depending on the complexity of the addressing expressions and the loop's stride or upper bound, the compiler may not be able to statically determine precise dependence information. 
+The Intel® oneAPI DPC++ Compiler employs static analysis to scan the program's code to establish the dependence relationships between all memory accesses in a loop. However, depending on the complexity of the addressing expressions and the loop's stride or upper bound, the compiler may not be able to statically determine precise dependence information. 
 
 In such scenarios, the compiler must conservatively assume some statements to be dependent in order to guarantee functional correctness of the generated hardware. Precise dependence information is crucially important to generate an efficient pipelined datapath. Such information reduces the number of assumed dependencies, allowing the hardware schedule to extract as much pipeline parallelism from loops as possible.
 
@@ -154,7 +154,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC with Intel Stratix® 10 SX FPGA, run `cmake` using the command:
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -174,33 +174,38 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ``` 
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_ivdep.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_ivdep.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
-Note: `cmake` is not yet supported on Windows. A build.ninja file is provided instead. 
 
-1. Enter the source file directory.
+1. Generate the `Makefile` by running `cmake`.
+     ```
+   mkdir build
+   cd build
    ```
-   cd src
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+    ```
+    cmake -G "NMake Makefiles" ..
+   ```
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 
-2. Compile the design. The following build targets are provided, matching the recommended development flow:
+2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device): 
-      ```
-      ninja fpga_emu
-      ```
+     ```
+     nmake fpga_emu
+     ```
+   * Generate the optimization report: 
+     ```
+     nmake report
+     ``` 
+   * An FPGA hardware target is not provided on Windows*. 
 
-   * Generate the optimization report:
-
-     ```
-     ninja report
-     ```
-     If you are targeting Intel® PAC with Intel Stratix® 10 SX FPGA, instead use:
-     ```
-     ninja report_s10_pac
-     ```     
-   * Compiling for FPGA hardware is not yet supported on Windows.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -239,7 +244,7 @@ PASSED: The results are correct
 
 ### Discussion of Results
 
-The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA and the Intel® oneAPI DPC++ Compiler (Beta).
+The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA and the Intel® oneAPI DPC++ Compiler.
 
 Safelen | Kernel Time (ms) | Throughput (KB/s)
 ------------- | ------------- | -----------------------
