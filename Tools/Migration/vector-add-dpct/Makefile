@@ -6,6 +6,8 @@ SRCS = src/vector_add.cu
 %.o: %.cu
 	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) $< -o $@
 
+all: $(TARGET)
+
 $(TARGET): $(SRCS) $(DEPS)
 	$(CXX) $(SRCS) -o $@
 

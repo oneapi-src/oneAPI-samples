@@ -68,7 +68,6 @@ static void mc_kernel(sycl::queue& q, EngineType& engine, size_t num_samples,
                       double strike_price, double t, double& vcall, double& vput, double* rng_ptr) {
     double a, nu;
     double sc_dp, sp_dp;
-    double st;
 
     a = (risk_neutral_rate - volatility * volatility * 0.5) * t;
     nu = volatility * sqrt(t);

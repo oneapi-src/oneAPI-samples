@@ -21,7 +21,7 @@ int main() {
   // Creating host accessor is a blocking call and will only return after all
   // enqueued DPC++ kernels that modify the same buffer in any queue completes
   // execution and the data is available to the host via this host accessor.
-  auto b = buf.get_access<access::mode::read>();
-  for (int i = 0; i < N; i++) std::cout << v[i] << "\n";
+  host_accessor b(buf,read_only);
+  for (int i = 0; i < N; i++) std::cout << b[i] << " ";
   return 0;
 }

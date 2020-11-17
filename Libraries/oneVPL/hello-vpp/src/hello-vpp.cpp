@@ -79,7 +79,6 @@ int main(int argc, char *argv[]) {
     mfxU16 out_height                   = 0;
     mfxVideoParam vpp_params            = {};
     mfxFrameAllocRequest vpp_request[2] = { 0 };
-    mfxU16 num_surfaces_in              = 0;
     mfxU16 num_surfaces_out             = 0;
     mfxU32 surface_size                 = 0;
     mfxU8 *vpp_data_out                 = NULL;
@@ -154,7 +153,6 @@ int main(int argc, char *argv[]) {
     sts = MFXVideoVPP_QueryIOSurf(session, &vpp_params, vpp_request);
     VERIFY(MFX_ERR_NONE == sts, "QueryIOSurf error");
 
-    num_surfaces_in  = vpp_request[0].NumFrameSuggested;
     num_surfaces_out = vpp_request[1].NumFrameSuggested;
 
     // Allocate surfaces for VPP out

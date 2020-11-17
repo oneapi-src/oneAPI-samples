@@ -1,0 +1,55 @@
+{
+  "guid": "207061A0-CBDD-449C-A3AF-0BACB4A63D57",
+  "name": "Optimize Inner Loop",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "description": "An Intel® FPGA tutorial design demonstrating how to optimize the throughput of inner loops with low trip counts",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./optimize_inner_loop.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
+          "optimize_inner_loop.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake report"
+        ]
+      }
+    ]
+  }
+}

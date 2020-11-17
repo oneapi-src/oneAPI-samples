@@ -1,9 +1,25 @@
-# Contributing
+# How to Contribute
+
+We welcome community contributions to the oneAPI-samples project. You can:
+
+- Submit your changes directly as a [pull request](#pull-requests)
+- Log a bug or feature request with an [issue](#issues)
+
+## Pull requests
+
+We accept contributions as pull requests on GitHub. To contribute your changes
+directly to the repository, please do the following:
+
+* Follow the [Git Steps for contribution](https://github.com/oneapi-src/oneAPI-samples/wiki/Git-Steps-for-Contribution).
+* Make sure your PR has a clear purpose, and does one thing only, and nothing more. This will enable us review your PR more quickly.
+* Make sure each commit in your PR is a small, atomic change representing one step in development.
+* Squash intermediate steps within PR for bug fixes, style cleanups, reversions, etc., so they do not appear in merged PR history.
+* Explain anything non-obvious from the code in comments, commit messages, or the PR description, as appropriate.
 
 ## Issues
 
 GitHub Issues tracks sample development issues, bugs, and feature requests.
-For usage, installation, or other requests for help, please use the [Intel® oneAPI Forums](https://software.intel.com/en-us/forums/intel-oneapi-forums) instead. 
+For usage, installation, or other requests for help, please use the [Intel® oneAPI Forums](https://software.intel.com/en-us/forums/intel-oneapi-forums) instead.
 
 When reporting a bug, please provide the following information, where applicable:
 
@@ -11,22 +27,11 @@ When reporting a bug, please provide the following information, where applicable
 * Can you reproduce the bug using the latest [master](https://github.com/samples-ci/oneAPI-samples) and the latest oneAPI toolkit related to the sample?
 * What CPU/GPU, platform, operating system/distribution are you running? The more specific, the better.
 
-
-### Contribution Guide
-
-We accept contributions as pull requests on GitHub. Please follow these simple rules and [Git Steps for contribution](https://github.com/oneapi-src/oneAPI-samples/wiki/Git-Steps-for-Contribution)
-
-* A PR should have a clear purpose, and do one thing only, and nothing more. This will enable us review your PR more quickly.
-* Each commit in PR should be a small, atomic change representing one step in development.
-* Please squash intermediate steps within PR for bugfixes, style cleanups, reversions, etc., so they would not appear in merged PR history.
-* Please explain anything non-obvious from the code in comments, commit messages, or the PR description, as appropriate.
-* Please follow [Git Steps for contribution](https://github.com/oneapi-src/oneAPI-samples/wiki/Git-Steps-for-Contribution).
-
-### License
+## License
 
 The code samples are licensed under the terms in [LICENSE](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt). By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.
 
-### Sign your work
+## Sign your work
 
 Please use the sign-off line at the end of the patch. Your signature certifies that you wrote the patch or otherwise have the right to pass it on as an open-source patch. The rules are pretty simple: if you can certify
 the below (from [developercertificate.org](http://developercertificate.org/)):

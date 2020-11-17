@@ -24,6 +24,6 @@ int main() {
   // When execution advances beyond this function scope, buffer destructor is
   // invoked which relinquishes the ownership of data and copies back the data to
   // the host memory.
-  for (int i = 0; i < N; i++) std::cout << v[i] << "\n";
+  for (int i = 0; i < N; i++) std::cout << v[i] << " ";
   return 0;
 }

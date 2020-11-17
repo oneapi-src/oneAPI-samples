@@ -5,6 +5,7 @@
 // =============================================================
 #include <array>
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 
@@ -12,16 +13,6 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
-  
 using namespace sycl;
 
 constexpr size_t kSize = 8;
@@ -56,9 +47,9 @@ void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
     buffer array_r_buffer(array_r);
 
     event e = q.submit([&](handler &h) {
-      auto array_a_accessor = accessor(array_a_buffer, h, read_only);
-      auto array_b_accessor = accessor(array_b_buffer, h, read_only);
-      auto accessor_array_r = accessor(array_r_buffer, h, write_only, noinit);
+      accessor array_a_accessor(array_a_buffer, h, read_only);
+      accessor array_b_accessor(array_b_buffer, h, read_only);
+      accessor accessor_array_r(array_r_buffer, h, write_only, noinit);
 
       h.single_task<KernelCompute<interleaving>>([=]() 
                                                  [[intel::kernel_args_restrict]] {
@@ -79,7 +70,7 @@ void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
           // inner loop at a time so that accesses to temp_r occur
           // in the correct order -- use max_interleaving to simplify
           // the datapath and reduce hardware resource usage
-          [[intelfpga::max_interleaving(interleaving)]] 
+          [[intel::max_interleaving(interleaving)]] 
           for (size_t j = 0; j < kSize; j++) {
             temp_r[j] = SomethingComplicated(temp_a[i*kSize+j], temp_r[j]);
           }
@@ -99,13 +90,14 @@ void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
 
   } catch (cl::sycl::exception const &e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:" << '\n' << e.what() << '\n';
+    std::cerr << "Caught a SYCL host exception:" << '\n' << e.what() << '\n';
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
@@ -136,7 +128,6 @@ void GoldenResult(const TwoDimFloatArray &A, const FloatArray &B,
 }
 
 int main() {
-  bool success = true;
 
   TwoDimFloatArray indata_A;
   FloatArray indata_B;

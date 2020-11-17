@@ -34,6 +34,15 @@ This code sample is licensed under MIT license.
 
 ## Building the `Monte Carlo Pi` Program for CPU and GPU
 
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+
+
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 

@@ -7,12 +7,12 @@ This FPGA tutorial demonstrates a simple example of unrolling loops to improve t
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) with Intel Stratix® 10 SX FPGA
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               |  Basics of loop unrolling <br> How to unroll loops in your program <br> Determining the optimal unroll factor for your program
 | Time to complete                  | 15 minutes
 
-_Notice: Limited support in Windows*; compiling for FPGA hardware is not supported in Windows*_
+
 
 ## Purpose
 
@@ -54,7 +54,7 @@ for(i = 0 ; i < 5; i++){
   a[i * 4 + 3] += 1;
 }
 ```
-Each loop iteration in the "equivalent code" contains four unrolled invocations of the first. The Intel® oneAPI DPC++ Compiler (Beta) for FPGA instantiates four adders instead of one adder. Because there is no data dependency between iterations in the loop in this case, the compiler schedules all four adds in parallel.
+Each loop iteration in the "equivalent code" contains four unrolled invocations of the first. The Intel® oneAPI DPC++ Compiler for FPGA instantiates four adders instead of one adder. Because there is no data dependency between iterations in the loop in this case, the compiler schedules all four adds in parallel.
 
 ### Determining the optimal unroll factor
 In an FPGA design, unrolling loops is a common strategy to directly trade off on-chip resources for increased throughput. When selecting the unroll factor for specific loop, the intent is to improve throughput while minimizing resource utilization. It is also important to be mindful of other throughput constraints in your system, such as memory bandwidth.
@@ -111,7 +111,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC with Intel Stratix® 10 SX FPGA, run `cmake` using the command:
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -131,33 +131,38 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ``` 
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_unroll.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_unroll.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
-Note: `cmake` is not yet supported on Windows. A build.ninja file is provided instead. 
 
-1. Enter the source file directory.
+1. Generate the `Makefile` by running `cmake`.
+     ```
+   mkdir build
+   cd build
    ```
-   cd src
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+    ```
+    cmake -G "NMake Makefiles" ..
+   ```
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 
-2. Compile the design. The following build targets are provided, matching the recommended development flow:
+2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device): 
-      ```
-      ninja fpga_emu
-      ```
+     ```
+     nmake fpga_emu
+     ```
+   * Generate the optimization report: 
+     ```
+     nmake report
+     ``` 
+   * An FPGA hardware target is not provided on Windows*. 
 
-   * Generate the optimization report:
-
-     ```
-     ninja report
-     ```
-     If you are targeting Intel® PAC with Intel Stratix® 10 SX FPGA, instead use:
-     ```
-     ninja report_s10_pac
-     ```     
-   * Compiling for FPGA hardware is not yet supported on Windows.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
 

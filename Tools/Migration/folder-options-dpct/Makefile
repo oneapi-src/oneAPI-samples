@@ -15,6 +15,8 @@ CPPFLAGS += $(INC_FLAGS)
 %.o: %.cu
 	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) $< -o $@
 
+all: $(TARGET)
+
 $(TARGET): $(OBJS)
 	$(CXX) $(LDFLAGS) $(OBJS) -o $@ $(LOADLIBES) $(LDLIBS)
 

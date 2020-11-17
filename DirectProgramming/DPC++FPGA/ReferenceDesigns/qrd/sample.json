@@ -1,8 +1,8 @@
 {
   "guid": "3228581F-9DF8-4696-9B1C-0B31286B97C3",
-  "name": "QR Decomposition of Matrices on FPGA",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Reference Designs"],
-  "description": "Reference design demonstrating high-performance QR decomposition of complex matrices on FPGA",
+  "name": "QRD",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "description": "Reference design demonstrating high-performance QR Decomposition (QRD) of complex matrices on a Intel® FPGA",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
@@ -40,16 +40,20 @@
           "set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
         ],
         "steps": [
-          "cd src",
-          "ninja fpga_emu",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
           "qrd.fpga_emu.exe"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "cd src",
-          "ninja report"
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake report"
         ]
       }
     ]

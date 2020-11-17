@@ -222,8 +222,8 @@ typedef struct {
 // coordinate (row index and value index pair) on the path.
 MergeCoordinate MergePathBinarySearch(int diagonal, int *row_offsets) {
   // Diagonal search range (in row index space).
-  int row_min = std::max(diagonal - nonzero, 0);
-  int row_max = std::min(diagonal, n);
+  int row_min = (diagonal - nonzero > 0) ? (diagonal - nonzero) : 0;
+  int row_max = (diagonal < n) ? diagonal : n;
 
   // 2D binary search along the diagonal search range.
   while (row_min < row_max) {
@@ -240,7 +240,7 @@ MergeCoordinate MergePathBinarySearch(int diagonal, int *row_offsets) {
 
   MergeCoordinate coordinate;
 
-  coordinate.row_index = std::min(row_min, n);
+  coordinate.row_index = (row_min < n) ? row_min : n;
   coordinate.val_index = diagonal - row_min;
 
   return coordinate;
@@ -265,8 +265,12 @@ void MergeSparseMatrixVectorThread(int thread_count, int tid,
                          thread_count;  // Merge items per thread.
 
   // Find start and end merge path coordinates for this thread.
-  int diagonal = std::min(items_per_thread * tid, path_length);
-  int diagonal_end = std::min(diagonal + items_per_thread, path_length);
+  int diagonal = ((items_per_thread * tid) < path_length)
+                     ? (items_per_thread * tid)
+                     : path_length;
+  int diagonal_end = ((diagonal + items_per_thread) < path_length)
+                         ? (diagonal + items_per_thread)
+                         : path_length;
 
   MergeCoordinate path = MergePathBinarySearch(diagonal, matrix.row_offsets);
   MergeCoordinate path_end =

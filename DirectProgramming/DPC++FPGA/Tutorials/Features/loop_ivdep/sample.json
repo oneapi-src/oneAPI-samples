@@ -1,8 +1,8 @@
 {
   "guid": "CD8FE0A5-B31A-4906-8386-27416361FE24",
-  "name": "Loop IVDep Attribute",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
-  "description": "FPGA tutorial demonstrating the usage of the loop ivdep attribute",
+  "name": "Loop IVDEP",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "description": "An Intel® FPGA tutorial demonstrating the usage of the loop_ivdep attribute",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -34,16 +34,20 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "cd src",
-          "ninja fpga_emu",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
           "loop_ivdep.fpga_emu.exe"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "cd src",
-          "ninja report"
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake report"
         ]
       }
     ]

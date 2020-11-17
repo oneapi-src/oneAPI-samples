@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
     exit(1);
   }
   cout << "Loaded image with a width of " << img_width << ", a height of "
-            << img_height << " and " << channels << " channels\n";
+       << img_height << " and " << channels << " channels\n";
 
   size_t num_pixels = img_width * img_height;
   size_t img_size = img_width * img_height * channels;
@@ -132,7 +132,7 @@ int main(int argc, char **argv) {
 
     // See what device was actually selected for this queue.
     cout << "Running on " << q.get_device().get_info<info::device::name>()
-              << "\n";
+         << "\n";
 
     // Create SYCL buffer representing source data .
     // By default, this buffers will be created with global_buffer access
@@ -156,15 +156,15 @@ int main(int argc, char **argv) {
 
     // Submit a command group for execution. Returns immediately, not waiting
     // for command group completion.
-    e1 = q.submit([&](handler &h) {
+    e1 = q.submit([&](auto &h) {
       // This lambda defines a "command group" - a set of commands for the
       // device sharing some state and executed in-order - i.e. creation of
       // accessors may lead to on-device memory allocation, only after that
       // the kernel will be enqueued.
       // A command group can contain at most one parallel_for, single_task or
       // parallel_for_workgroup construct.
-      auto image_acc = image_buf.get_access<sycl_read>(h);
-      auto image_exp_acc = image_buf_exp1.get_access<sycl_write>(h);
+      accessor image_acc(image_buf, h, read_only);
+      accessor image_exp_acc(image_buf_exp1, h, write_only);
 
       // This is the simplest form cl::sycl::handler::parallel_for -
       // - it specifies "flat" 1D ND range(num_pixels), runtime will select
@@ -173,9 +173,8 @@ int main(int argc, char **argv) {
       //   limited API; see the spec for more complex forms
       // the lambda parameter of the parallel_for is the kernel, which
       // actually executes on device
-      h.parallel_for(range<1>(num_pixels), [=](id<1> i) {
-        ApplyFilter(image_acc.get_pointer(), image_exp_acc.get_pointer(),
-                    i.get(0));
+      h.parallel_for(range<1>(num_pixels), [=](auto i) {
+        ApplyFilter(image_acc.get_pointer(), image_exp_acc.get_pointer(), i);
       });
     });
     q.wait_and_throw();
@@ -186,9 +185,9 @@ int main(int argc, char **argv) {
 
     // Submit another command group. This time kernel is represented as a
     // functor object.
-    e2 = q.submit([&](handler &h) {
-      auto image_acc = image_buf.get_access<sycl_read>(h);
-      auto image_exp_acc = image_buf_exp2.get_access<sycl_write>(h);
+    e2 = q.submit([&](auto &h) {
+      accessor image_acc(image_buf, h, read_only);
+      accessor image_exp_acc(image_buf_exp2, h, write_only);
 
       SepiaFunctor kernel(image_acc, image_exp_acc);
 
@@ -233,7 +232,7 @@ int main(int argc, char **argv) {
   delete[] image_ref;
   delete[] image_exp1;
   delete[] image_exp2;
-  
+
   cout << "Sepia tone successfully applied to image:[" << argv[1] << "]\n";
   return 0;
 }

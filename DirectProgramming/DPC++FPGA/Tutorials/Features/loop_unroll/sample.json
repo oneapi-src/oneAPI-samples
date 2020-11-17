@@ -1,8 +1,8 @@
 {
   "guid": "2760C1B6-25E5-4280-9F8F-34CA8DDEDA7C",
-  "name": "Unrolling Loops",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
-  "description": "FPGA tutorial design demonstrating the loop_unroll pragma",
+  "name": "Loop Unroll",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "description": "An Intel® FPGA tutorial design demonstrating the loop_unroll attribute",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -34,16 +34,20 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "cd src",
-          "ninja fpga_emu",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
           "loop_unroll.fpga_emu.exe"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "cd src",
-          "ninja report"
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake report"
         ]
       }
     ]
