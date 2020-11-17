@@ -94,7 +94,7 @@ The compilation is a 3-step process:
 
 The following graph depicts device link compilation process:
 
-![](fast_recompile.png)
+![](device_link.png)
 
 ### Which method to use?
 Of the two methods described, `-reuse-exe` is easier to use. It also allows you to keep your host and device code as single source, which is preferred for small programs. 

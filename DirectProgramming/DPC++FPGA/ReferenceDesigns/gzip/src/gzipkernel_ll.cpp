@@ -70,24 +70,15 @@
 */
 
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <vector>
-
-#include "pipe_array.hpp"
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
-
-using namespace sycl;
 
 #include "gzipkernel_ll.hpp"
 #include "kernels.hpp"
+#include "pipe_array.hpp"
+
+
+using namespace sycl;
 
 // Pipes, for inter-kernel data transfer..
 using acc_dist_channel_array = PipeArray<  // Defined in "pipe_array.h".
@@ -2038,7 +2029,6 @@ event SubmitCRC(queue &q, size_t block_size, uint32_t *result_crc,
         };
 
         const int num_nibbles_parallel = 64;
-        const int num_bytes = num_nibbles_parallel / 2;
 
         // this section of code should be on the hardware accelerator
         const int num_sections =
@@ -2188,8 +2178,6 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
                            // a pipe. input_data is used to gang the data
                            // together into a wider word.
         });
-
-        int num_writes_to_channel = 0;
 
         Unroller<0, kVec>::step(
             [&](int i) { current_window[i + kVec] = in.data[i]; });

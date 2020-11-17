@@ -27,7 +27,7 @@
 // California and by the laws of the United States of America.
 
 // The values for FIXED_ITERATIONS, ROWS_COMPONENT and COLS_COMPONENT will be
-// supplied by the build system (cmake/build.ninja)
+// supplied by the build system
 
 // Architecture/Design Parameters used to implement the triagular loop
 // structure of the design. See the tutorial on triangular loop optimization
