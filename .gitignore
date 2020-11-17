@@ -1,0 +1,6 @@
+# CMAKE build directories
+build/
+
+# emacs save files
+*~
+

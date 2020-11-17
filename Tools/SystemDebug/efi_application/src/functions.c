@@ -215,11 +215,18 @@ inline int in_buffer(EFI_VIRTUAL_ADDRESS addr, const void *buf, unsigned size) {
 unsigned int cpu_dead_loop()
 {
     post(0xdead);
-
+    static const uint64_t manual_load_cookie = 0xf00f5;
     volatile unsigned int wait = 1;
     volatile unsigned long dummy = 0;
     while (wait) {                                       /* hardware_breakpoint marker */
         dummy += 0xcafe;
+
+        int r11 = read_r11();
+        if (r11 == manual_load_cookie) {
+            fibo(5);
+            test_print();
+            test_primitive_types(10, 5);
+        }
     }
 
     return wait;

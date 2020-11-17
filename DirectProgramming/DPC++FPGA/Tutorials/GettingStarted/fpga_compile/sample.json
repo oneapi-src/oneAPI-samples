@@ -1,8 +1,8 @@
 {
   "guid": "A211FDE2-B037-4069-BD84-C45E354798B7",
-  "name": "Compiling DPC++ for FPGA",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
-  "description": "FPGA tutorial introducing how to compile DPC++ for FPGA.",
+  "name": "FPGA Compile",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Getting Started Tutorials"],
+  "description": "Intel® FPGA tutorial introducing how to compile Intel® oneAPI Data Parallel C++ (DPC++) for Intel® FPGA",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -34,16 +34,20 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "cd src",
-          "ninja fpga_emu",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
           "fpga_compile.fpga_emu.exe"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "cd src",
-          "ninja report"
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake report"
         ]
       }
     ]

@@ -32,9 +32,9 @@ using a command line parameter `gpu`.
 
 ## Key Implementation Details
 
-This sample uses example file `${DNNLROOT}/examples/sycl_interop.cpp`
+This sample uses example file `${DNNLROOT}/examples/sycl_interop_buffer.cpp`
 from oneDNN distribution. You can find this code in
-[oneDNN Github repository](https://github.com/oneapi-src/oneDNN/blob/dev-v2/examples/sycl_interop.cpp).
+[oneDNN Github repository](https://github.com/oneapi-src/oneDNN/blob/dev-v2/examples/sycl_interop_buffer.cpp).
 
 Detailed code walkthrough is available in [oneDNN developer guide](https://oneapi-src.github.io/oneDNN/v2/sycl_interop_cpp.html)
 
@@ -60,7 +60,28 @@ make
 ```
 3. Run the program
 ```
-./bin/sycl-interop-cpp
+./bin/sycl-interop-buffer-cpp
+```
+
+### On a Windows* System 
+
+Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or 
+"Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
+1. Setup oneAPI development environment
+```
+C:\Program Files (x86)\intel\oneapi\setvars.bat
+```
+2. Build the program using `cmake`
+```
+mkdir build
+cd build
+cmake -G Ninja ..
+cmake --build .
+```
+
+3. Run the program
+```
+bin\sycl-interop-buffer-cpp.exe
 ```
 
 ### Include Files
@@ -83,6 +104,15 @@ You can specify target device for this sample using command line arguments:
 
 You can get additional information during execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
+
+#### On a Linux System
+```
+export DNNL_VERBOSE=1
+```
+#### On a Windows* System
+```
+set DNNL_VERBOSE=1
+```
 
 ### Example of Output
 

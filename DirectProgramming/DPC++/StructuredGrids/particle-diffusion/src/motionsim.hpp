@@ -32,7 +32,7 @@ constexpr float sigma = 0.03f;  // Standard Deviation
 // For backwards compatibility with MKL-Beta09
 #if __has_include("oneapi/mkl.hpp")
 #include "oneapi/mkl.hpp"
-#include "oneapi/rng.hpp"
+#include "oneapi/mkl/rng.hpp"
 #else  // __has_include("oneapi/mkl.hpp")
 #include <mkl.h>
 #include "mkl_sycl.hpp"

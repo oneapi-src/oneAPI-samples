@@ -66,7 +66,7 @@ For hardware, it's recommended to choose the Second Generation Intel(R) Xeon(R) 
 
 For devcloud user, it is already installed. Please skip it.
 
-Please install Intel(R) AI Analytics Toolkit by refer to [Intel(R) AI Analytics Toolkit(Beta) Powered by oneAPI](
+Please install Intel(R) AI Analytics Toolkit by refer to [Intel(R) AI Analytics Toolkit Powered by oneAPI](
 https://software.intel.com/content/www/us/en/develop/articles/installation-guide-for-intel-oneapi-toolkits.html). 
 
 
