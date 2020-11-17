@@ -9,7 +9,7 @@ This FPGA tutorial demonstrates an advanced technique to improve the performance
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | How and when to apply the triangular loop optimization technique
 | Time to complete                  | 30 minutes
  

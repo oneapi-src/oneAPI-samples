@@ -8,7 +8,7 @@
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10, Fedora 32, MacOS 10.15
 | Hardware                          | Any machine which has an EFI based bios
-| Software                          | Intel&reg; oneAPI C++ Compiler (beta), Visual Studio, GCC-9, GCC-10, Clang-10
+| Software                          | Intel&reg; oneAPI C++ Compiler, Visual Studio, GCC-9, GCC-10, Clang-10
 
 ## License
 This code sample is licensed under MIT license.

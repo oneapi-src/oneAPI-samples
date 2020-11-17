@@ -16,7 +16,7 @@ The source for this program also demonstrates recommended Fortran coding practic
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | macOS* with Xcode* installed 
-| Software                          | Intel&reg; oneAPI Intel® Fortran Compiler (Beta)
+| Software                          | Intel&reg; oneAPI Intel® Fortran Compiler
 | What you will learn               | Optimization using the Intel® Fortran compiler
 | Time to complete                  | 15 minutes
 
