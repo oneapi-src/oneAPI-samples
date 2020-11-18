@@ -44,6 +44,9 @@
       <Optimization>Disabled</Optimization>
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </ClCompile>
+    <Link>
+      <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -51,6 +54,9 @@
       <SYCLOptimization>MaxSpeed</SYCLOptimization>
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </ClCompile>
+    <Link>
+      <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\monte_carlo_pi.cpp" />
