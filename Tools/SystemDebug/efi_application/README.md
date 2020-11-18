@@ -8,7 +8,7 @@
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10, Fedora 32, MacOS 10.15
 | Hardware                          | Any machine which has an EFI based bios
-| Software                          | Intel&reg; oneAPI C++ Compiler (beta), Visual Studio, GCC-9, GCC-10, Clang-10
+| Software                          | Intel&reg; oneAPI C++ Compiler, Visual Studio, GCC-9, GCC-10, Clang-10
 
 ## License
 This code sample is licensed under MIT license.
@@ -42,7 +42,9 @@ Then, go to the folder `Tools/SystemDebug/efi_appication`.
 
 Then - clone all of the submodules
 
-```git submodule update --init```
+``git clone https://git.code.sf.net/p/gnu-efi/code  gnu-efi-code``
+``git clone https://github.com/tianocore/edk2.git``
+``git clone https://github.com/tianocore/edk2-BaseTools-win32.git Win32``
 
 Now - make the cmake project, making sure to specify it is a 64 bit architecture.
 

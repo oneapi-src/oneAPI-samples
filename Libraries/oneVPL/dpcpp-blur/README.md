@@ -101,12 +101,12 @@ Perform the following steps:
    mkdir build
    cd build
    cmake .. -T "Intel(R) oneAPI DPC++ Compiler"
-   cmake --build .
+   cmake --build . --config Release
    ```
 
 4. Run the program using the following command:
    ```
-   cmake --build . --target run
+   cmake --build . --target run --config Release
    ```
 
 

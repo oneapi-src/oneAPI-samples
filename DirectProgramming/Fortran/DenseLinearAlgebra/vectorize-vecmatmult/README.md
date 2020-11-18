@@ -8,7 +8,7 @@ serial version and the version that was compiled with the auto-vectorizer.
 |:---                               |:---
 | OS                                | macOS* with Xcode* installed 
 | Hardware							   | Intel-based Mac*
-| Software                          | Intel&reg; oneAPI Intel Fortran Compiler (beta)
+| Software                          | Intel&reg; oneAPI Intel Fortran Compiler
 | What you will learn               | Vectorization using Intel Fortran compiler
 | Time to complete                  | 15 minutes
 

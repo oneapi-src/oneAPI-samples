@@ -32,7 +32,6 @@ ELSE()
     set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR")
 ENDIF()
 
-
 # FPGA emulator
 if(WIN32)
     set(WIN_EMULATOR_TARGET ${EMULATOR_TARGET}.exe)

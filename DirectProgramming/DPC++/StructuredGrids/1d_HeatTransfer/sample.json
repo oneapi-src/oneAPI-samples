@@ -1,8 +1,8 @@
 {
   "guid": "CDF82E46-91D4-46F6-B1E2-5C21443F41BC",
-  "name": "1d_HeatTransfer",
-  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
-  "description": "1D_HEAT_TRANSFER: Simulating 1D Heat Transfer problem Using Intel® oneAPI DPC++ Language",
+  "name": "1D Heat Transfer",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Structured Grids"],
+  "description": "The 1D Heat Transfer sample simulates 1D Heat Transfer problem using Intel® oneAPI Data Parallel C++ (DPC++)",
   "toolchain": [ "dpcpp" ],
   "targetDevice": [ "CPU", "GPU" ],
   "languages": [ { "cpp": {} } ],

@@ -1,10 +1,14 @@
-# [Stable Releases](https://github.com/oneapi-src/oneAPI-samples/tags)
+# Intel oneAPI Toolkit Samples
 
-We recommend checking out a release version of the repository. Releases are available [here](https://github.com/oneapi-src/oneAPI-samples/tags).
+The oneAPI-samples repository provides code samples for Intel oneAPI toolkits.
 
-The latest versions of code samples on the master branch are not guaranteed to be stable.
+We recommend checking out a specific release version of the repository.
+[View available releases](https://github.com/oneapi-src/oneAPI-samples/tags).
 
-# Index
+The latest versions of code samples on the master branch are not guaranteed to
+be stable.
+
+## Code Samples
 
 |Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	| 
 |-----------------------|-------------------------------------------|---------------|
@@ -74,17 +78,21 @@ The latest versions of code samples on the master branch are not guaranteed to b
 |../IoTConnectionTools/Up2   LEDs    	|CPU  	|Built-in   LED example for UP* Squared using Eclipse* MRAA	|
 |../SystemDebug/System Debug   Sample Build    	|UEFI 	|Basic example that   showcases the features of the Intel® System Debugger	|
 
-# License
- 
-The code samples are licensed under MIT license
- 
-# Known issues or limitations
- 
-## On Windows Platform
-1. If you are using Visual Studio 2019, Visual Studio 2019 version 16.4.0 or newer is required.
-2. To build samples on Windows, the required Windows SDK is ver. 10.0.17763.0. 
-3. Now you should be able to build the code sample.
-4. For beta, FPGA samples support Windows through FPGA-emulator.
-5. If you encounter a compilation error like below when building a sample program, one reason is that the directory path of the sample is too long; the work around is to move the sample to a directory like "c:\temp\sample_name".
-  * Error MSB6003 The specified task executable "dpcpp.exe" could not be run .......
+## License
 
+The code samples are licensed under the MIT license. See
+[LICENSE](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+for more information.
+
+## Known Issues or Limitations
+
+### On Windows Platform
+- If you are using Visual Studio 2019, Visual Studio 2019 version 16.4.0 or newer is required.
+- Windows support for the FPGA code samples is limited to the FPGA emulator and optimization reports. Compile targets for FPGA hardware are provided on Linux only. See any FPGA code sample for more details.
+- If you encounter a compilation error when building a sample program, such as the example error below, the directory path of the sample may be too long. The work around is to move the sample to a directory such as "c:\temp\sample_name".
+    - Example error: *Error MSB6003 The specified task executable "dpcpp.exe" could not be run .......*
+
+## Contribute
+
+See [CONTRIBUTING](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md)
+for more information.

@@ -7,7 +7,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux Ubuntu LTS 18.04
 | Hardware                          | Intel Programmable Acceleration Card with Intel Arria10 GX FPGA or Stratix(R) 10 SX FPGA
-| Software                          | Intel(R) oneAPI DPC++ Compiler (beta), Intel(R) FPGA Add-on for oneAPI Base Toolkit
+| Software                          | Intel(R) oneAPI DPC++ Compiler, Intel(R) FPGA Add-on for oneAPI Base Toolkit
 | What you will learn               | Get started with basic setup for FPGA projects
 | Time to complete                  | n/a
 

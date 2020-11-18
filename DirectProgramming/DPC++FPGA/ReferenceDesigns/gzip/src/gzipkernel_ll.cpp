@@ -70,24 +70,15 @@
 */
 
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <vector>
-
-#include "pipe_array.hpp"
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
-
-using namespace sycl;
 
 #include "gzipkernel_ll.hpp"
 #include "kernels.hpp"
+#include "pipe_array.hpp"
+
+
+using namespace sycl;
 
 // Pipes, for inter-kernel data transfer..
 using acc_dist_channel_array = PipeArray<  // Defined in "pipe_array.h".
@@ -817,7 +808,7 @@ event SubmitCRC(queue &q, size_t block_size, uint32_t *result_crc,
       host_ptr<uint32_t> accresult_crc(result_crc);
 
       // See comments at top of file, regarding batching.
-      [[intelfpga::disable_loop_pipelining]]
+      [[intel::disable_loop_pipelining]]
       for (int iter=0;iter<BatchSize;iter++) {
         const unsigned int table64[64][16] = {
             {
@@ -2038,7 +2029,6 @@ event SubmitCRC(queue &q, size_t block_size, uint32_t *result_crc,
         };
 
         const int num_nibbles_parallel = 64;
-        const int num_bytes = num_nibbles_parallel / 2;
 
         // this section of code should be on the hardware accelerator
         const int num_sections =
@@ -2116,7 +2106,7 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
           [&](auto i) { host_pibuf[i] = host_ptr<char>(get<i>(ptrs...)); });
 
       // See comments at top of file, regarding batching
-      [[intelfpga::disable_loop_pipelining]] for (int iter = 0;
+      [[intel::disable_loop_pipelining]] for (int iter = 0;
                                                   iter < BatchSize; iter++) {
         const int iter_masked =
             iter % BatchSize;  // Hint to the compiler that the access to
@@ -2129,13 +2119,13 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
         //   Hash Table(s)
         //-------------------------------------
 
-        [[intelfpga::singlepump]] [[intelfpga::numbanks(kVec)]] [
-            [intelfpga::max_replicates(kVec)]] struct {
+        [[intel::singlepump]] [[intel::numbanks(kVec)]] [
+            [intel::max_replicates(kVec)]] struct {
           unsigned char s[kLen];
         } dictionary[kDepth][kVec];
 
-        [[intelfpga::singlepump]] [[intelfpga::numbanks(kVec)]] [
-            [intelfpga::max_replicates(
+        [[intel::singlepump]] [[intel::numbanks(kVec)]] [
+            [intel::max_replicates(
                 kVec)]] unsigned int dict_offset[kDepth][kVec];
 
         // Initialize history to empty.
@@ -2188,8 +2178,6 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
                            // a pipe. input_data is used to gang the data
                            // together into a wider word.
         });
-
-        int num_writes_to_channel = 0;
 
         Unroller<0, kVec>::step(
             [&](int i) { current_window[i + kVec] = in.data[i]; });
@@ -2493,7 +2481,7 @@ event SubmitStaticHuffman(queue &q, size_t block_size,
       auto acc_eof = last_block ? 1 : 0;
 
       // See comments at top of file regarding batching.
-      [[intelfpga::disable_loop_pipelining]]
+      [[intel::disable_loop_pipelining]]
       for (int iter=0; iter < BatchSize; iter++) {
         host_ptr<char> accessor_output = host_pobuf[iter % BatchSize];
 
