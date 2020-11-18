@@ -198,6 +198,7 @@
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
       <LanguageStandard>Default</LanguageStandard>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
