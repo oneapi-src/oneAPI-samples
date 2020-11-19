@@ -86,6 +86,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -106,6 +107,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
       <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib/intel64/vc14" %(AdditionalOptions)</AdditionalOptions>
+      <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb12.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
