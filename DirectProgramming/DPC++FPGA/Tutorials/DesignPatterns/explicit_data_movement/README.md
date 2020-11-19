@@ -7,7 +7,7 @@ An FPGA tutorial demonstrating an alternative coding style, explicit unified sha
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (Beta)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | How to explicitly manage the movement of data for the FPGA
 | Time to complete                  | 15 minutes
 

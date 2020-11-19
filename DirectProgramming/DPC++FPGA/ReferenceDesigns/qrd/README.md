@@ -7,7 +7,7 @@ This DPC++ reference design demonstrates high-performance QR decomposition of co
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm.
 | Time to complete                  | 1 hr (not including compile time)
 

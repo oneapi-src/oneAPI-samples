@@ -8,7 +8,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS	                | Linux* Ubuntu* 18.04, 
 | Hardware	            | Skylake with GEN9 or newer, 
-| Software	            | Intel® oneAPI DPC++ Compiler (beta)
+| Software	            | Intel® oneAPI DPC++ Compiler
 | What you will learn   | how to perform reduction with oneAPI on cpu and gpu
 | Time to complete      | 30 min 
 

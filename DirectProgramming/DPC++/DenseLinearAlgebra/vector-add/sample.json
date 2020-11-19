@@ -1,6 +1,6 @@
 {
   "guid":"b1b58be7-e22e-4ca2-ba59-6887b2f1be6c",
-  "name": "Vector Add",
+  "name": "Base: Vector Add",
   "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra"],
   "description": "This simple sample adds two large vectors in parallel. Provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using simple Intel® oneAPI Data Parallel C++ (DPC++)",
   "toolchain": ["dpcpp"],
