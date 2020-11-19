@@ -41,6 +41,8 @@ Run `make` to build and run the factor and solve programs. You can remove all ge
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
+
 ## Running the Block Cholesky Decomposition Sample
 
 ### Example of Output

@@ -53,6 +53,7 @@ You can remove all generated files with `make clean`.
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
 
 ## Running the Black-Scholes Sample
 If everything is working correctly, the program will exercise different combinations of APIs for both single and double precision (if available), and print a summary of its computations.
