@@ -11,7 +11,7 @@ The main assumption of the HMM is that there are visible observations that depen
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10
 | Hardware                          | Skylake with GEN9 or newer,
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | Implement Viterbi algorithm to get the most likely path that consists of the hidden states
 | Time to complete                  | 1 minute
 

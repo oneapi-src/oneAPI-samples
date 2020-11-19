@@ -7,7 +7,7 @@ Reference design demonstrating high-performance GZIP compression on FPGA.
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | How to implement a high performance multi-engine compression algorithm on FPGA
 | Time to complete                  | 1 hr (not including compile time)
  
@@ -32,6 +32,7 @@ The FPGA implementation of the algorithm enables either one or two independent G
 This reference design contains 2 variants: "High Bandwidth" and "Low-Latency".
 The High Bandwidth variant maximizes system throughput without regard for latency. It transfers input/output SYCL Buffers to FPGA-attached DDR. The kernel then operates on these buffers.
 The Low-Latency variant takes advantage of Universal Shared Memory (USM) to avoid these copy operations, allowing the GZIP engine to directly access input/output buffers in host-memory. This reduces latency but throughput is also reduced. "Latency" in this context is defined as the duration of time between when the input buffer is available in host memory to when the output buffer (i.e. the compressed result) is available in host memory.
+The Low-Latency variant is only supported on Stratix® 10 SX.
  
 ## Key Implementation Details
 
@@ -82,19 +83,19 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
       ```
       make fpga_emu
       ```
-    > Note: for the Low Latency variant use `make fpga_emu_ll`
+    > Note: for the Low Latency variant use `make fpga_emu_ll`. Only supported on Stratix® 10 SX.
 
    * Generate the optimization report: 
      ```
      make report
      ``` 
-    > Note: for the Low Latency variant use `make report_ll`
+    > Note: for the Low Latency variant use `make report_ll`. Only supported on Stratix® 10 SX.
 
    * Compile for FPGA hardware (longer compile time, targets FPGA device): 
      ```
      make fpga
      ``` 
-    > Note: for the Low Latency variant use `make fpga_ll`
+    > Note: for the Low Latency variant use `make fpga_ll`. Only supported on Stratix® 10 SX.
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/gzip.fpga.tar.gz" download>here</a>.
  
 ### On a Windows* System
@@ -120,22 +121,19 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      nmake fpga_emu
      ```
-    > Note: for the Low Latency variant use `nmake fpga_emu_ll`     
+    > Note: for the Low Latency variant use `nmake fpga_emu_ll`. Only supported on Stratix® 10 SX.
    * Generate the optimization report: 
      ```
      nmake report
      ``` 
-    > Note: for the Low Latency variant use `nmake report_ll`          
+    > Note: for the Low Latency variant use `nmake report_ll`. Only supported on Stratix® 10 SX.   
    * An FPGA hardware target is not provided on Windows*. 
 
 *Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
  
-You can compile and run this code sample in third-party IDEs. Please use the links below for instructions on how to compile this sample and other designs in your preferred IDE:
-* [Eclipse* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-eclipse-with-intel-oneapi/top.html) (Linux*)
-* [Microsoft* Visual Studio* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-visual-studio-with-intel-oneapi/top.html) (Windows*)
-* [Visual Studio* Code](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html) (Linux* and Windows*)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
  
  
 ## Running the Reference Design
@@ -145,13 +143,13 @@ You can compile and run this code sample in third-party IDEs. Please use the lin
      ./gzip.fpga_emu <input_file> [-o=<output_file>]     (Linux)
      gzip.fpga_emu.exe <input_file> [-o=<output_file>]   (Windows)
      ```
-    > Note: for the Low Latency variant use `gzip.fpga_emu_ll`     
+    > Note: for the Low Latency variant use `gzip.fpga_emu_ll`. Only supported on Stratix® 10 SX.
 2. Run the sample on the FPGA device:
      ```
      aocl initialize acl0 pac_s10_usm
      ./gzip.fpga <input_file> [-o=<output_file>]         (Linux)
      ```
-     > Note: for the Low Latency variant use `gzip.fpga_ll`     
+     > Note: for the Low Latency variant use `gzip.fpga_ll`. Only supported on Stratix® 10 SX.
  ### Application Parameters
 
 | Argument | Description

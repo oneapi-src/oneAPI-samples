@@ -7,7 +7,7 @@ This tutorial describes the process of _Shannonization_ (named after [Claude Sha
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (Beta)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | How to make FPGA-specific optimizations to remove computation from the critical path and improve f<sub>MAX</sub>/II
 | Time to complete                  | 45 minutes
 
@@ -189,10 +189,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
  
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this code sample in third-party IDEs. Please use the links below for instructions on how to compile this sample and other designs in your preferred IDE:
-* [Eclipse* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-eclipse-with-intel-oneapi/top.html) (Linux*)
-* [Microsoft* Visual Studio* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-visual-studio-with-intel-oneapi/top.html) (Windows*)
-* [Visual Studio* Code](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html) (Linux* and Windows*)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide).
 
 ## Examining the Reports
 This section will walk through how the HTML reports show the result of the optimizations we made in each version of the kernel, the definition of which can be found in `src/IntersectionKernel.hpp`. Start by locating `report.html` in the `shannonization_report.prj/reports/` or `shannonization_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*. The f<sub>MAX</sub> numbers mentioned in these sections assume that the Arria® 10 GX FPGA is the target. However, the discussion is similar for the Stratix® 10 SX FPGA.

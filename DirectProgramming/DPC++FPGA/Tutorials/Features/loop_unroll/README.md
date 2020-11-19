@@ -8,7 +8,7 @@ This FPGA tutorial demonstrates a simple example of unrolling loops to improve t
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               |  Basics of loop unrolling <br> How to unroll loops in your program <br> Determining the optimal unroll factor for your program
 | Time to complete                  | 15 minutes
 
@@ -54,7 +54,7 @@ for(i = 0 ; i < 5; i++){
   a[i * 4 + 3] += 1;
 }
 ```
-Each loop iteration in the "equivalent code" contains four unrolled invocations of the first. The Intel® oneAPI DPC++ Compiler (Beta) for FPGA instantiates four adders instead of one adder. Because there is no data dependency between iterations in the loop in this case, the compiler schedules all four adds in parallel.
+Each loop iteration in the "equivalent code" contains four unrolled invocations of the first. The Intel® oneAPI DPC++ Compiler for FPGA instantiates four adders instead of one adder. Because there is no data dependency between iterations in the loop in this case, the compiler schedules all four adds in parallel.
 
 ### Determining the optimal unroll factor
 In an FPGA design, unrolling loops is a common strategy to directly trade off on-chip resources for increased throughput. When selecting the unroll factor for specific loop, the intent is to improve throughput while minimizing resource utilization. It is also important to be mindful of other throughput constraints in your system, such as memory bandwidth.
@@ -166,10 +166,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
  
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this code sample in third-party IDEs. Please use the links below for instructions on how to compile this sample and other designs in your preferred IDE:
-* [Eclipse* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-eclipse-with-intel-oneapi/top.html) (Linux*)
-* [Microsoft* Visual Studio* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-visual-studio-with-intel-oneapi/top.html) (Windows*)
-* [Visual Studio* Code](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html) (Linux* and Windows*)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Examining the Reports
 Locate `report.html` in the `loop_unroll_report.prj/reports/` or `loop_unroll_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.

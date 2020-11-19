@@ -1,7 +1,7 @@
 {
-  "name": "openmp-primes",
-  "categories": [ "Toolkit/Intel® oneAPI HPC Toolkit" ],
-  "description": "Fortran Tutorial - Using OpenMP",
+  "name": "OpenMP* Primes",
+  "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Combinational Logic"],
+  "description": "Fortran Tutorial - Using OpenMP* (OMP)",
   "toolchain": [ "ifort" ],
   "languages": [ { "fortran": {} } ],
   "targetDevice": [ "CPU" ],

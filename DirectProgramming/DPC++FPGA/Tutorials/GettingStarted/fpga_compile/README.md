@@ -7,7 +7,7 @@ This FPGA tutorial introduces how to compile DPC++ for FPGA through a simple vec
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and why compiling DPC++ to FPGA differs from CPU or GPU <br> FPGA device image types and when to use them <br> The compile flags used to target FPGA
 | Time to complete                  | 15 minutes
 
@@ -49,7 +49,7 @@ There are two important caveats to remember when using the FPGA emulator.
 * **Undefined behavior may differ.** If your code produces different results when compiled for the FPGA emulator versus FPGA hardware, it is likely that your code is exercising undefined behavior. By definition, undefined behavior is not specified by the language specification, and may manifest differently on different targets.
 
 #### Optimization Report
-An full FPGA compilation occurs in two stages:
+A full FPGA compilation occurs in two stages:
 1. **FPGA early image:** The DPC++ device code is optimized and converted into an FPGA design specified in Verilog RTL (a low-level, native entry language for FPGAs). This intermediate compilation result is the FPGA early device image, which is *not* executable. This FPGA early image compilation process takes minutes.
 2. **FPGA hardware image:** The Verilog RTL specifying the design's circuit topology is mapped onto the FPGA's sea of primitive hardware resources by the Intel® Quartus® Prime software.  Intel® Quartus® Prime is included in the Intel® FPGA Add-On, which is required for this compilation stage. The result is an FPGA hardware binary (also referred to as a bitstream). This compilation process takes hours.
 
@@ -198,10 +198,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
  
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this code sample in third-party IDEs. Please use the links below for instructions on how to compile this sample and other designs in your preferred IDE:
-* [Eclipse* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-eclipse-with-intel-oneapi/top.html) (Linux*)
-* [Microsoft* Visual Studio* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-visual-studio-with-intel-oneapi/top.html) (Windows*)
-* [Visual Studio* Code](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html) (Linux* and Windows*)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 
 ## Examining the Reports

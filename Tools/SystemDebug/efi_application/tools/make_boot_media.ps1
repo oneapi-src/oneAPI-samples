@@ -57,12 +57,19 @@ if ($Results.PartitionStyle -eq "MBR") {
     Write-Error "Please convert disk to GPT first"
     exit
 }
+Reset-PhysicalDisk -FriendlyName $Results.FriendlyName
 
-Initialize-Disk -FriendlyName $Results.FriendlyName -PartitionStyle GPT -PassThru |
-New-Partition -UseMaximumSize -GptType "{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}" -AssignDriveLetter |
+try {
+    Initialize-Disk -FriendlyName $Results.FriendlyName -PartitionStyle GPT -PassThru
+}
+catch {
+    Write-Output "Disk cannot be initialised"
+}
+
+$Drive = New-Partition -DiskNumber $Results.DiskNumber -UseMaximumSize -GptType "{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}" -AssignDriveLetter |
 Format-Volume -NewFileSystemLabel "EFI" -FileSystem FAT32 -Force
 
-$USBDrive = ($Results.DriveLetter + ':\')
+$USBDrive = ($Drive.DriveLetter + ':\')
 
 $RelativePath = "\\EFI\\Boot"
 $DestPath = $USBDrive + $RelativePath
