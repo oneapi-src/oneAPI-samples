@@ -9,7 +9,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:--- 
 | OS	                  | Linux* Ubuntu* 18.04, 
 | Hardware	            | Skylake with GEN9 or newer
-| Software	            | Intel® oneAPI DPC++ Compiler (beta)
+| Software	            | Intel® oneAPI DPC++ Compiler
 | What you will learn   | How to run openMP on cpu as well as GPU offload 
 | Time to complete      | 10 min
 

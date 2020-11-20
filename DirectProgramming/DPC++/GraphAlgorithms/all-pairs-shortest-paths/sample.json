@@ -1,7 +1,7 @@
 {
     "guid": "4F0F5FBD-C237-4A9F-B259-2C56ABFB40D9",
-    "name": "all-pairs-shortest-paths",
-    "categories": [ "Toolkit/Intel® oneAPI Base Toolkit/oneAPI DPC++/C++ Compiler/CPU and GPU" ],
+    "name": "All Pairs Shortest Paths",
+    "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Graph Algorithms"],
     "description": "All Pairs Shortest Paths finds the shortest paths between pairs of vertices in a graph using a parallel blocked algorithm that enables the application to efficiently offload compute intensive work to the GPU.",
     "toolchain": [ "dpcpp" ],
     "targetDevice": [ "CPU", "GPU" ],

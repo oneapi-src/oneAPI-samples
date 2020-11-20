@@ -1,7 +1,7 @@
 # Intel DPC++ Compatibility Tool: Vector Add Sample
 
-This sample demonstrates how to migrate a simple program from CUDA to Intel®
-Data Parallel C++ (dpcpp). Vector Add provides an easy way to verify that
+This sample demonstrates how to migrate a simple program from CUDA to 
+Data Parallel C++. Vector Add provides an easy way to verify that
 your development environment is setup correctly to use the Intel® DPC++
 Compatibility Tool (dpct).
 
@@ -9,7 +9,7 @@ Compatibility Tool (dpct).
 | Optimized for         | Description
 |:---                   |:---
 | OS                    | Linux* Ubuntu* 18.04; Windows 10
-| Software              | Intel&reg; DPC++ Compatibility Tool beta;
+| Software              | Intel&reg; DPC++ Compatibility Tool;
 | What you will learn   | Simple invocation of dpct to migrate CUDA code
 | Time to complete      | 10 minutes
 

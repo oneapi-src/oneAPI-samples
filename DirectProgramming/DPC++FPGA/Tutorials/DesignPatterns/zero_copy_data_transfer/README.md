@@ -7,7 +7,7 @@ This tutorial demonstrates how to use zero-copy host memory via the SYCL restric
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (Beta)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | How to use Restricted USM for the FPGA
 | Time to complete                  | 15 minutes
 
@@ -67,6 +67,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
+
    To compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:  
     ```
     cmake ..
@@ -86,6 +87,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ```
+
 3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) precompiled binary (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/zero_copy_data_transfer.fpga.tar.gz" download>here</a>.
  
 ### On a Windows* System
@@ -121,10 +123,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
  
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this code sample in third-party IDEs. Please use the links below for instructions on how to compile this sample and other designs in your preferred IDE:
-* [Eclipse* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-eclipse-with-intel-oneapi/top.html) (Linux*)
-* [Microsoft* Visual Studio* IDE](https://software.intel.com/content/www/us/en/develop/documentation/using-visual-studio-with-intel-oneapi/top.html) (Windows*)
-* [Visual Studio* Code](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html) (Linux* and Windows*)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide).
 
 ## Examining the Reports
 Locate `report.html` in the `zero_copy_data_transfer_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
