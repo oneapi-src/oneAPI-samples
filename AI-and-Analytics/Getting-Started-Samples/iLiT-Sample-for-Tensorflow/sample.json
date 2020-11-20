@@ -4,7 +4,6 @@
  "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
  "description": "This sample illustrates how to run ILIT to quantize the FP32 model trained by Keras on Tensorflow to INT8 model to speed up the inference.",
  "languages": [{"python":{}}],
- "dependencies": ["tensoflow","notebook","matplotlib"],
  "os": ["linux"],
  "builder": ["cli"],
  "targetDevice": ["CPU"],
