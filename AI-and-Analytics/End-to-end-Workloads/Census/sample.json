@@ -1,11 +1,11 @@
 {
   "guid": "AA055D7B-290C-4FCA-990B-B9FC88AF18D4",
   "name": "Census end-to-end workload",
-  "categories": ["Toolkit/Intel® AI Analytics Toolkit"],
+  "categories": ["Toolkit/oneAPI AI And Analytics/End-to-end-Workloads/Census"],
   "description": "This sample illustrates using Modin and daal optimized scikit-learn to build and run an end-to-end machine learning workload",
   "builder": ["cli"],
   "languages": [{"python":{}}],
-  "dependencies": ["Modin, Ray, daal4py, Scikit-Learn, NumPy, AI Analytics Toolkit"],
+  "dependencies": ["intelpython"],
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {
