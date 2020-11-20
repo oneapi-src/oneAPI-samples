@@ -5,7 +5,7 @@
   "description": "The sample illustrates how to setup and train an XGBoost model on datasets for prediction",
   "builder": ["cli"],
   "languages": [{"python":{}}],
-  "dependencies": ["AI Analytics Toolkit"],
+  "dependencies": ["intelpython"],
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {
