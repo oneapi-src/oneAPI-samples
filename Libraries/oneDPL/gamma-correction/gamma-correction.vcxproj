@@ -120,12 +120,13 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/link /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib/intel64/vc14" %(AdditionalOptions)</AdditionalOptions>
+      <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb12_debug.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>copy tbb.dll to binary folder </Message>
+      <Message>copy tbb12_debug.dll to binary folder </Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -167,10 +168,10 @@
       <AdditionalOptions>/link /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib/intel64/vc14" %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb12.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>copy tbb.dll to binary folder </Message>
+      <Message>copy tbb12.dll to binary folder </Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
