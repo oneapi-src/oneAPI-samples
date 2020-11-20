@@ -57,14 +57,14 @@ float calc_pi_cpu_tbb(int num_steps) {
   return tbbtotal / (float)num_steps;
 }
 
-// dpstd_native uses a parallel_for to fill
+// onedpl_native uses a parallel_for to fill
 // a buffer with all the slice calculations and
 // then uses a single_task to combine all the results
 // This is not the highest performing example but shows
 // how to do calculations directly in dpc++ with
 // mininmal complexity.
 template <typename Policy>
-float calc_pi_dpstd_native(size_t num_steps, Policy&& policy) {
+float calc_pi_onedpl_native(size_t num_steps, Policy&& policy) {
 
   float data[num_steps];
 
@@ -101,7 +101,7 @@ float calc_pi_dpstd_native(size_t num_steps, Policy&& policy) {
 // This option uses a parallel for to fill the array, and then use a single
 // task to reduce into groups and then use cpu for final reduction.
 template <typename Policy>
-float calc_pi_dpstd_native2(size_t num_steps, Policy&& policy, int group_size) {
+float calc_pi_onedpl_native2(size_t num_steps, Policy&& policy, int group_size) {
 
   float data[num_steps];
 
@@ -295,7 +295,7 @@ struct walk_n
 // uses a tranform_init with plus/no_op and then
 // a local reduction then global reduction.
 template <typename Policy>
-float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
+float calc_pi_onedpl_native3(size_t num_steps, int groups, Policy&& policy) {
   float data[num_steps];
 
   // Create buffer using host allocated "data" array
@@ -390,11 +390,11 @@ float calc_pi_dpstd_native3(size_t num_steps, int groups, Policy&& policy) {
   return answer[0]/(float)num_steps; 
 }
 
-// dpstd_native4 fills a buffer with number 1...num_steps and then
+// onedpl_native4 fills a buffer with number 1...num_steps and then
 // calls transform_init to calculate the slices and then
 // does a reduction in two steps - global and then local.
 template <typename Policy>
-float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
+float calc_pi_onedpl_native4(size_t num_steps, int groups, Policy&& policy) {
   std::vector<float> data(num_steps);
 
   buffer<float, 1> buf2{data.data(), range<1>{num_steps}};
@@ -498,7 +498,7 @@ float calc_pi_dpstd_native4(size_t num_steps, int groups, Policy&& policy) {
 // calculations of each small rectangle.   The second call is the reduce
 // call which sums up the results of all the elements in the buffer.
 template <typename Policy>
-float calc_pi_dpstd_two_steps_lib(int num_steps, Policy&& policy) {
+float calc_pi_onedpl_two_steps_lib(int num_steps, Policy&& policy) {
 
   buffer<float> calc_values{num_steps};
   auto calc_begin2 = oneapi::dpl::begin(calc_values);
@@ -529,7 +529,7 @@ float calc_pi_dpstd_two_steps_lib(int num_steps, Policy&& policy) {
 // transform reduce.  It does everything in one library
 // call.
 template <typename Policy>
-float calc_pi_dpstd_onestep(int num_steps, Policy& policy) {
+float calc_pi_onedpl_onestep(int num_steps, Policy& policy) {
   float step = 1.0f / (float)num_steps;
 
   float total = std::transform_reduce(
@@ -605,7 +605,7 @@ void mpi_native(float* results, int rank_num, int num_procs,
 // This function uses the DPC++ library call transform reduce.
 // It does everything in one library call.
 template <typename Policy>
-float mpi_dpstd_onestep(int id, int num_procs, long total_num_steps,
+float mpi_onedpl_onestep(int id, int num_procs, long total_num_steps,
                         Policy& policy) {
   int num_step_per_rank = total_num_steps / num_procs;
   float step = 1.0f / (float)total_num_steps;
@@ -659,13 +659,13 @@ int main(int argc, char** argv) {
     // Since we are using JIT compiler for samples,
     // we need to run each step once to allow for compile
     // to occur before we time execution of function.
-    pi = calc_pi_dpstd_native(num_steps, policy);
-    pi = calc_pi_dpstd_native2(num_steps, policy, groups);
-    pi = calc_pi_dpstd_native3(num_steps, groups, policy);
-    pi = calc_pi_dpstd_native4(num_steps, groups, policy);
+    pi = calc_pi_onedpl_native(num_steps, policy);
+    pi = calc_pi_onedpl_native2(num_steps, policy, groups);
+    pi = calc_pi_onedpl_native3(num_steps, groups, policy);
+    pi = calc_pi_onedpl_native4(num_steps, groups, policy);
 
-    pi = calc_pi_dpstd_two_steps_lib(num_steps, policy);
-    pi = calc_pi_dpstd_onestep(num_steps, policy);
+    pi = calc_pi_onedpl_two_steps_lib(num_steps, policy);
+    pi = calc_pi_onedpl_onestep(num_steps, policy);
 
     dpc_common::TimeInterval T;
     pi = calc_pi_cpu_seq(num_steps);
@@ -682,44 +682,44 @@ int main(int argc, char** argv) {
     std::cout << " in " << stop2 << " seconds\n";
 
     dpc_common::TimeInterval T3;
-    pi = calc_pi_dpstd_native(num_steps, policy);
+    pi = calc_pi_onedpl_native(num_steps, policy);
     auto stop3 = T3.Elapsed();
-    std::cout << "dpstd native:\t\t";
+    std::cout << "oneDPL native:\t\t";
     std::cout << std::setprecision(3) << "PI =" << pi;
     std::cout << " in " << stop3 << " seconds\n";
 
     dpc_common::TimeInterval T3a;
-    pi = calc_pi_dpstd_native2(num_steps, policy, groups);
+    pi = calc_pi_onedpl_native2(num_steps, policy, groups);
     auto stop3a = T3a.Elapsed();
-    std::cout << "dpstd native2:\t\t";
+    std::cout << "oneDPL native2:\t\t";
     std::cout << std::setprecision(3) << "PI =" << pi;
     std::cout << " in " << stop3a << " seconds\n";
 
     dpc_common::TimeInterval T3b;
-    pi = calc_pi_dpstd_native3(num_steps, groups, policy);
+    pi = calc_pi_onedpl_native3(num_steps, groups, policy);
     auto stop3b = T3b.Elapsed();
-    std::cout << "dpstd native3:\t\t";
+    std::cout << "oneDPL native3:\t\t";
     std::cout << std::setprecision(3) << "PI =" << pi;
     std::cout << " in " << stop3b << " seconds\n";
 
     dpc_common::TimeInterval T3c;
-    pi = calc_pi_dpstd_native4(num_steps, groups, policy);
+    pi = calc_pi_onedpl_native4(num_steps, groups, policy);
     auto stop3c = T3c.Elapsed();
-    std::cout << "dpstd native4:\t\t";
+    std::cout << "oneDPL native4:\t\t";
     std::cout << std::setprecision(3) << "PI =" << pi;
     std::cout << " in " << stop3c << " seconds\n";
 
     dpc_common::TimeInterval T4;
-    pi = calc_pi_dpstd_two_steps_lib(num_steps, policy);
+    pi = calc_pi_onedpl_two_steps_lib(num_steps, policy);
     auto stop4 = T4.Elapsed();
-    std::cout << "dpstd two steps:\t";
+    std::cout << "oneDPL two steps:\t";
     std::cout << std::setprecision(3) << "PI =" << pi;
     std::cout << " in " << stop4 << " seconds\n";
 
     dpc_common::TimeInterval T5;
-    pi = calc_pi_dpstd_onestep(num_steps, policy);
+    pi = calc_pi_onedpl_onestep(num_steps, policy);
     auto stop5 = T5.Elapsed();
-    std::cout << "dpstd transform_reduce: ";
+    std::cout << "oneDPL transform_reduce: ";
     std::cout << std::setprecision(3) << "PI =" << pi;
     std::cout << " in " << stop5 << " seconds\n";
   }
@@ -757,9 +757,9 @@ int main(int argc, char** argv) {
 
   delete[] results_per_rank;
 
-  // mpi_dpstd_onestep
+  // mpi_onedpl_onestep
   dpc_common::TimeInterval T7;
-  local_sum = mpi_dpstd_onestep(id, num_procs, num_steps, policy);
+  local_sum = mpi_onedpl_onestep(id, num_procs, num_steps, policy);
   auto stop7 = T7.Elapsed();
 
   // Master rank performs a reduce operation to get the sum of all partial Pi.
