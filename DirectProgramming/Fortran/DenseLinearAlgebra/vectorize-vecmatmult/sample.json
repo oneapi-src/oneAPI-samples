@@ -1,0 +1,22 @@
+{
+  "name": "Vectorize VecMatMult",
+  "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"],
+  "description": "Fortran Tutorial - Using Auto Vectorization",
+  "toolchain": [ "ifort" ],
+  "languages": [ { "fortran": {} } ],
+  "targetDevice": [ "CPU" ],
+  "os": [ "darwin" ],
+  "builder": [ "make" ],
+  "ciTests":{
+    "darwin": [
+      {
+        "id": "fort_vecsample_cpu",
+        "steps": [
+          "make",
+          "make run",
+          "make clean"
+        ]
+       }
+    ]
+  }
+}

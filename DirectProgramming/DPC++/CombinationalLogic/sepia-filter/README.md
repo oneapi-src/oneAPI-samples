@@ -7,8 +7,8 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04, Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)
-| What you will learn               | The Sepia Filter sample demonstrates the following using the oneAPI DPC++ compiler <ul><li>Writing a custom device selector class</li><li>Offloading compute intensive parts of the application using both lamba and functor kernels</li><li>Measuring kernel execution time by enabling profiling</li></ul>
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | The Sepia Filter sample demonstrates the following using the Intel&reg; oneAPI DPC++/C++ Compiler <ul><li>Writing a custom device selector class</li><li>Offloading compute intensive parts of the application using both lamba and functor kernels</li><li>Measuring kernel execution time by enabling profiling</li></ul>
 | Time to complete                  | 20 minutes
 
 ## Purpose
@@ -22,6 +22,14 @@ The basic DPC++ implementation explained in the code includes device selector, b
 This code sample is licensed under MIT license 
 
 ## Building the Program for CPU and GPU
+
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -72,3 +80,6 @@ Lambda kernel time: 10.5153 milliseconds
 Functor kernel time: 9.99602 milliseconds
 Sepia tone successfully applied to image:[input/silverfalls1.png]
 ```
+## Known Limitations
+
+Due to a known issue in the Level0 driver sepia-filter fails with default Level0 backend. A workaround is in place to enable OpenCL backend.

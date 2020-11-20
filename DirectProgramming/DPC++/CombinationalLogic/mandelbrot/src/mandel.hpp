@@ -33,6 +33,10 @@ struct MandelParameters {
   int max_iterations_;
 
   typedef std::complex<float> ComplexF;
+  static std::complex<float> complex_square( std::complex<float> c)
+  {
+    return std::complex<float>( c.real()*c.real() - c.imag()*c.imag(), c.real()*c.imag()*2 );
+  }
 
   MandelParameters(int row_count, int col_count, int max_iterations)
       : row_count_(row_count),
@@ -41,7 +45,7 @@ struct MandelParameters {
 
   int row_count() const { return row_count_; }
   int col_count() const { return col_count_; }
-  int max_iterations() const { return max_iterations_; }
+int max_iterations() const { return max_iterations_; }
 
   // Scale from 0..row_count to -1.5..0.5
   float ScaleRow(int i) const { return -1.5f + (i * (2.0f / row_count_)); }
@@ -63,7 +67,8 @@ struct MandelParameters {
         break;
       }
 
-      z = z * z + c;
+     // z = z * z + c;
+      z = complex_square(z) + c;
       count++;
     }
 
@@ -229,10 +234,10 @@ class MandelParallel : public Mandel {
     // We submit a command group to the queue.
     q.submit([&](handler &h) {
       // Get access to the buffer.
-      auto b = data_buf.get_access<access::mode::write>(h);
+      auto b = data_buf.get_access(h,write_only);
 
       // Iterate over image and compute mandel for each point.
-      h.parallel_for(range(rows, cols), [=](id<2> index) {
+      h.parallel_for(range<2>(rows, cols), [=](auto index) {
         int i = int(index[0]);
         int j = int(index[1]);
         auto c = MandelParameters::ComplexF(p.ScaleRow(i), p.ScaleCol(j));

@@ -17,8 +17,8 @@ and search based on relevant terms noted in the comments.
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta); Intel C++ Compiler (beta)
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | How to offload the computation to GPU using Intel® oneAPI DPC++/C++ Compiler
 | Time to complete                  | 10 minutes
 
 
@@ -37,6 +37,7 @@ the SU Seismic processing library, which  has utilities to display seismic wavef
 downloaded from John Stockwell’s SeisUnix GitHub* (https://github.com/JohnWStockwellJr/SeisUnix/wiki/
 Seismic-Unix-install-on-Ubuntu)
 
+A detailed code walk through can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP3_ISO2DFD. 
 
 ## Key implementation details
 
@@ -53,8 +54,19 @@ global ID variable) for a single time step.
 
 This code sample is licensed under MIT license.  
 
-
 ##  Building the `iso2dfd` Program for CPU and GPU
+
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+
+### Include Files 
+
+The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ### Running Samples In DevCloud
 
@@ -91,18 +103,6 @@ Perform the following steps:
       Right click on the solution file and open using either VS2017 or VS2019 IDE.
       Right click on the project in Solution explorer and select Rebuild.
       From top menu select Debug -> Start without Debugging.
-
->If you see the following error message when compiling this sample:
->
-```
-Error 'dpc_common.hpp' file not found
-```
->You need to add the following directory to the list of include folders, that are required by your project, in your project's Visual Studio project property panel. The missing include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
-
-* Build the program using MSBuild
-      Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-      Run - MSBuild iso2dfd.sln /t:Rebuild /p:Configuration="Release"
-
 
 ## Running the Sample
 ### Application Parameters 

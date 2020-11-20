@@ -13,8 +13,8 @@ and search based on relevant terms noted in the comments.
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta); Intel C++ Compiler (beta)
-| What you will learn               | Implement bitonic sort using Intel DPC++ compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | Implement bitonic sort using Intel&reg; oneAPI DPC++/C++ Compiler
 | Time to complete                  | 15 minutes
 
 
@@ -51,12 +51,20 @@ if a compatible GPU is not detected.
 ## Key Implementation Details
 
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command g
-roups. Unified Shared Memory (USM) is used for data management.
+roups. Unified Shared Memory (USM) and Buffer Object are used for data management.
 
 ## License  
 This code sample is licensed under MIT license  
 
 ## Building the `bitonic-sort` Program for CPU and GPU
+
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -117,7 +125,10 @@ the ascending order is verified, the application will display a “Success!” m
 $ ./bitonic-sort 21 47
 Array size: 2097152, seed: 47
 Device: Intel(R) Gen9 HD Graphics NEO
-Kernel time: 0.416827 sec
-CPU serial time: 0.60523 sec
+Warm up ...
+Kernel time using USM: 0.248422 sec
+Kernel time using buffer allocation: 0.253364 sec
+CPU serial time: 0.628803 sec
+
 Success!
 ```

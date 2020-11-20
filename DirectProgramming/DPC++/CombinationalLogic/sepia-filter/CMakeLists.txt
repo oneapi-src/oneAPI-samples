@@ -1,8 +1,4 @@
-if(WIN32)
-        set(CMAKE_CXX_COMPILER "dpcpp-cl")
-else()
-        set(CMAKE_CXX_COMPILER "dpcpp")
-endif()
+set(CMAKE_CXX_COMPILER "dpcpp")
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)
     message (STATUS "Default CMAKE_BUILD_TYPE not set using Release with Debug Info")

@@ -12,23 +12,20 @@ Global
 		Debug|x64 = Debug|x64
 		Debug-fpga|x64 = Debug-fpga|x64
 		Release|x64 = Release|x64
-		Release-fpga|x64 = Release-fpga|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{58CE1265-5B1D-4CBA-9C84-C9E1F8FDFB54}.Debug|x64.ActiveCfg = Debug|x64
 		{58CE1265-5B1D-4CBA-9C84-C9E1F8FDFB54}.Debug|x64.Build.0 = Debug|x64
-		{58CE1265-5B1D-4CBA-9C84-C9E1F8FDFB54}.Debug-fpga|x64.ActiveCfg = Debug-fpga|x64
+		{58CE1265-5B1D-4CBA-9C84-C9E1F8FDFB54}.Debug-fpga|x64.ActiveCfg = Debug|x64
+		{58CE1265-5B1D-4CBA-9C84-C9E1F8FDFB54}.Debug-fpga|x64.Build.0 = Debug|x64
 		{58CE1265-5B1D-4CBA-9C84-C9E1F8FDFB54}.Release|x64.ActiveCfg = Release|x64
 		{58CE1265-5B1D-4CBA-9C84-C9E1F8FDFB54}.Release|x64.Build.0 = Release|x64
-		{58CE1265-5B1D-4CBA-9C84-C9E1F8FDFB54}.Release-fpga|x64.ActiveCfg = Release-fpga|x64
 		{F11989D7-DCFE-404A-A893-E89084841327}.Debug|x64.ActiveCfg = Debug|x64
 		{F11989D7-DCFE-404A-A893-E89084841327}.Debug|x64.Build.0 = Debug|x64
 		{F11989D7-DCFE-404A-A893-E89084841327}.Debug-fpga|x64.ActiveCfg = Debug-fpga|x64
 		{F11989D7-DCFE-404A-A893-E89084841327}.Debug-fpga|x64.Build.0 = Debug-fpga|x64
 		{F11989D7-DCFE-404A-A893-E89084841327}.Release|x64.ActiveCfg = Release|x64
 		{F11989D7-DCFE-404A-A893-E89084841327}.Release|x64.Build.0 = Release|x64
-		{F11989D7-DCFE-404A-A893-E89084841327}.Release-fpga|x64.ActiveCfg = Release-fpga|x64
-		{F11989D7-DCFE-404A-A893-E89084841327}.Release-fpga|x64.Build.0 = Release-fpga|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

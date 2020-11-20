@@ -1,0 +1,29 @@
+{
+  "guid": "A63E408B-75ED-4379-A6B5-AF013C0EBA58",
+  "name": "Hidden Markov Models",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Graph Traversal"],
+  "description": "Hidden Markov Models using Intel® oneAPI Data Parallel C++",
+  "toolchain": [ "dpcpp" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "languages": [ { "cpp": {} } ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 ]
+        }],
+        "windows": [{
+                "steps": [
+                        "MSBuild hidden-markov-models.sln /t:Rebuild /p:Configuration=\"Release\"",
+                        "cd x64/Release",
+                        "hidden-markov-models.exe"
+                ]
+        }]
+  }
+}

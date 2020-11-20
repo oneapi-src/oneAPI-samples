@@ -8,7 +8,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10 
 | Hardware                          | Skylake with GEN9 or newer, Intel(R) Programmable Acceleration Card with Intel(R) Arria(R) 10 GX FPGA
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)  
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler  
   
 ## Purpose
 The `vector-add` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators.
@@ -19,6 +19,8 @@ The code will attempt first to execute on an available GPU and fallback to the s
 
 In addition, you can target an FPGA device using build scripts described below.  If you do not have FPGA hardware, the sample will run in emulation mode, which includes static optimization reports for design analysis.
 
+A detailed code walk through can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP1_VECTOR_ADD. 
+
 ## Key Implementation Details 
 The basic DPC++ implementation explained in the code includes device selector, USM, buffer, accessor, kernel, and command groups.
 
@@ -27,8 +29,20 @@ This code sample is licensed under MIT license.
 
 ## Building the `vector-add` Program for CPU and GPU 
 
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+
+### Running Samples in DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+
 ### On a Linux* System
 Perform the following steps:
+
 1. Build the program using the following `make` commands (default uses buffers):
     ```
     make all
@@ -47,6 +61,7 @@ Perform the following steps:
     ```
 
 ### On a Windows* System Using a Command Line Interface
+
 1. Select **Programs** > **Intel oneAPI 2021** > **Intel oneAPI Command Prompt** to launch a command window.
 2. Build the program using the following `nmake` commands:
     ```
@@ -123,7 +138,7 @@ Perform the following steps:
 2. Select the menu sequence **File** > **Open** > **Project/Solution**.
 3. Locate the `vector-add` folder.
 4. Select the `vector-add.sln` file.
-5. Select the configuration 'Debug-fpga' or 'Release-fpga' that have the necessary project settings already below:
+5. Select the configuration 'Debug-fpga' that have the necessary project settings already below:
  
             Under the 'Project Property' dialog:
  

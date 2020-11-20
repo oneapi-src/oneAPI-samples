@@ -8,8 +8,8 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler beta;
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | How to offload the computation to GPU using the Intel&reg; oneAPI DPC++/C++ Compiler
 | Time to complete                  | 15 minutes
 
 ## Purpose
@@ -24,6 +24,14 @@ The basic DPC++ implementation explained in the code includes device selector, b
 This code sample is licensed under MIT license. 
 
 ## Building the `Mandelbrot` Program for CPU and GPU
+
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Include Files
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.

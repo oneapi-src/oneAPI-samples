@@ -188,7 +188,7 @@ int main(int argc, char* argv[]) {
   // Read optional arguments to select version and device
   for (auto arg = 8; arg < argc; arg++) {
     std::string arg_value = argv[arg];
-    transform(arg_value.begin(), arg_value.end(), arg_value.begin(), ::tolower);
+    std::transform(arg_value.begin(), arg_value.end(), arg_value.begin(), ::tolower);
 
     if (arg_value == "omp") {
       omp = true;

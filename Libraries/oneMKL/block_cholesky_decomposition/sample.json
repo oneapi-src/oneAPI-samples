@@ -1,0 +1,32 @@
+{
+  "guid": "54F991CC-F04C-443A-9C3E-0AAF98A8FD65",
+  "name": "Block Cholesky Decomposition",
+  "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
+  "description": "Block Cholesky Decomposition using Intel® oneMKL BLAS and LAPACK",
+  "toolchain": [ "dpcpp" ],
+  "dependencies": [ "mkl" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "block_cholesky_decomposition",
+        "steps": [
+          "make clean",
+          "make"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "block_cholesky_decomposition",
+        "steps": [
+          "nmake clean",
+          "nmake"
+        ]
+      }
+    ]
+  }
+}

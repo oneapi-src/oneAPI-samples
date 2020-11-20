@@ -1,0 +1,24 @@
+{
+  "guid": "A8C505CF-06F7-4869-9129-EA31038B0394",
+  "name": "CMake GPU",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Project Templates"],
+  "description": "Project Templates - Linux CMake project for GPU",
+  "toolchain": ["dpcpp"],
+  "os": ["linux"],
+  "targetDevice": ["GPU"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+      }
+    ]
+  }
+}

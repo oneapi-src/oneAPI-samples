@@ -1,0 +1,25 @@
+{
+  "guid": "51713811-2E33-43D8-A064-4D711160EA05",
+  "name": "Dynamic Profiler",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Tools"],
+  "description": "An Intel® FPGA tutorial demonstrating how to use the Intel® FPGA Dynamic Profiler for Intel® oneAPI Data Parallel C++ (DPC++) to dynamically collect performance data and reveal areas for optimization",
+  "toolchain": ["dpcpp"],
+  "os": ["linux"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./dynamic_profiler.fpga_emu"
+        ]
+      }
+    ]
+  }
+}

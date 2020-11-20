@@ -15,7 +15,7 @@
 // •	A one dimensional array of data shared between CPU and offload device.
 // •	A device queue and kernel.
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -23,7 +23,7 @@
 #include <array>
 #include <iostream>
 #if FPGA || FPGA_EMULATOR
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #endif
 
 using namespace sycl;
@@ -31,19 +31,19 @@ using namespace sycl;
 // Array size for this example.
 constexpr size_t array_size = 10000;
 
-// this exception handler with catch async exceptions
-static auto exception_handler = [](cl::sycl::exception_list eList) {
-	for (std::exception_ptr const &e : eList) {
-		try {
-			std::rethrow_exception(e);
-		}
-		catch (std::exception const &e) {
+// Create an exception handler for asynchronous SYCL exceptions
+static auto exception_handler = [](sycl::exception_list e_list) {
+  for (std::exception_ptr const &e : e_list) {
+    try {
+      std::rethrow_exception(e);
+    }
+    catch (std::exception const &e) {
 #if _DEBUG
-			std::cout << "Failure" << std::endl;
+      std::cout << "Failure" << std::endl;
 #endif
-			std::terminate();
-		}
-	}
+      std::terminate();
+    }
+  }
 };
 
 //************************************
@@ -59,7 +59,7 @@ void VectorAdd(queue &q, const int *a, const int *b, int *sum, size_t size) {
   //    2nd parameter is the kernel, a lambda that specifies what to do per
   //    work item. the parameter of the lambda is the work item id.
   // DPC++ supports unnamed lambda kernel by default.
-  auto e = q.parallel_for(num_items, [=](id<1> i) { sum[i] = a[i] + b[i]; });
+  auto e = q.parallel_for(num_items, [=](auto i) { sum[i] = a[i] + b[i]; });
 
   // q.parallel_for() is an asynchronous call. DPC++ runtime enqueues and runs
   // the kernel asynchronously. Wait for the asynchronous call to complete.
@@ -80,10 +80,10 @@ int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // DPC++ extension: FPGA emulator selector on systems without FPGA card.
-  intel::fpga_emulator_selector d_selector;
+  INTEL::fpga_emulator_selector d_selector;
 #elif FPGA
   // DPC++ extension: FPGA selector on systems with FPGA card.
-  intel::fpga_selector d_selector;
+  INTEL::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
   default_selector d_selector;

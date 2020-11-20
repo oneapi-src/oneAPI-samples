@@ -22,9 +22,12 @@
 #include <CL/sycl.hpp>
 #include <array>
 #include <iostream>
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 #if FPGA || FPGA_EMULATOR
-#include <CL/sycl/intel/fpga_extensions.hpp>
+  #include <CL/sycl/INTEL/fpga_extensions.hpp>
 #endif
 
 using namespace sycl;
@@ -38,7 +41,7 @@ constexpr size_t array_size = 10000;
 //************************************
 void IotaParallel(queue &q, int *a, size_t size, int value) {
   // Create the range object for the array.
-  range<1> num_items{size};
+  range num_items{size};
 
   // Use parallel_for to populate consecutive numbers starting with a specified
   // value in parallel on device. This executes the kernel.
@@ -46,7 +49,7 @@ void IotaParallel(queue &q, int *a, size_t size, int value) {
   //    2nd parameter is the kernel, a lambda that specifies what to do per
   //    work item. The parameter of the lambda is the work item id.
   // DPC++ supports unnamed lambda kernel by default.
-  auto e = q.parallel_for(num_items, [=](id<1> i) { a[i] = value + i; });
+  auto e = q.parallel_for(num_items, [=](auto i) { a[i] = value + i; });
 
   // q.parallel_for() is an asynchronous call. DPC++ runtime enqueues and runs
   // the kernel asynchronously. Wait for the asynchronous call to complete.
@@ -60,10 +63,10 @@ int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // DPC++ extension: FPGA emulator selector on systems without FPGA card.
-  intel::fpga_emulator_selector d_selector;
+  INTEL::fpga_emulator_selector d_selector;
 #elif FPGA
   // DPC++ extension: FPGA selector on systems with FPGA card.
-  intel::fpga_selector d_selector;
+  INTEL::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
   default_selector d_selector;
@@ -110,16 +113,16 @@ int main() {
     // Print out iota result.
     for (int i = 0; i < indices_size; i++) {
       int j = indices[i];
-      if (i == indices_size - 1) std::cout << "...\n";
-      cout << "[" << j << "]: " << j << " + " << value << " = " 
+      if (i == indices_size - 1) cout << "...\n";
+      cout << "[" << j << "]: " << j << " + " << value << " = "
            << sequential[j] << "\n";
     }
 
     free(sequential, q);
     free(parallel, q);
   } catch (std::exception const &e) {
-      cout << "An exception is caught while computing on device.\n";
-      terminate();
+    cout << "An exception is caught while computing on device.\n";
+    terminate();
   }
 
   cout << "Successfully completed on device.\n";

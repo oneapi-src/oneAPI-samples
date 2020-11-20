@@ -8,11 +8,11 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler beta;
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler;
+| What you will learn               | How to offload the computation to GPU using Intel&reg; oneAPI DPC++/C++ Compiler
 | Time to complete                  | 15 minutes
 
-Performance number tabulation [if applicable -- **NO for beta**]
+Performance number tabulation
 
 | iso3dfd sample                      | Performance data
 |:---                               |:---
@@ -26,6 +26,7 @@ ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic isotro
 
 The code will attempt first to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected. By default, the output will print the device name where the DPC++ code ran along with the grid computation metrics - flops and effective throughput. For validating results, a serial version of the application will be run on CPU and results will be compared to the DPC++ version.
 
+A detailed code walk through can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP4_ISO3DFD. 
 
 ## Key Implementation Details 
 
@@ -42,6 +43,14 @@ This code sample is licensed under MIT license.
 
 
 ## Building the `ISO3DFD` Program for CPU and GPU
+
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Include Files  
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system".  

@@ -1,0 +1,25 @@
+{
+  "name": "Histogram",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Parallel Patterns"],
+  "description": "This sample demonstrates Histogram using Dpstd APIs",
+  "toolchain": ["dpcpp"],
+  "languages": [{"cpp":{}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux"],
+  "builder": ["cmake"],
+  "guid" : "4A088588-F4D3-4634-B864-FC0DE5BEE93B",
+  "ciTests": {
+  "linux": [
+      {
+          "steps": [
+              "mkdir -p build",
+              "cd build",
+              "cmake ..",
+              "make",
+              "make run"
+          ]
+      }
+  ]
+  }
+}
+      
