@@ -145,6 +145,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
+      <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
