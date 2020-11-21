@@ -5,7 +5,7 @@
  "description": "Run a simple CNN on both Intel® CPU and GPU with sample C++ codes",
  "toolchain": ["dpcpp","gcc","icc"],
  "languages": [{"cpp":{}}],
- "dependencies": ["oneDNN", "tbb","compiler|icc"],
+ "dependencies": ["dnnl", "tbb","compiler|icc"],
  "os": ["linux", "windows"],
  "builder": ["cli","cmake"],
  "targetDevice": ["CPU", "GPU"],
