@@ -5,7 +5,7 @@
  "description": "Intel® oneDNN SYCL extensions API programming for both Intel® CPU and GPU",
  "toolchain": ["dpcpp"],
  "languages": [{"cpp":{}}],
- "dependencies": ["oneDNN", "tbb"],
+ "dependencies": ["dnnl", "tbb"],
  "os": ["linux"],
  "builder": ["cli","cmake"],
  "targetDevice": ["CPU", "GPU"],
