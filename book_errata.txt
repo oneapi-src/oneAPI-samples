@@ -2,5 +2,8 @@ The following are known errors in the book Data Parallel C++: Mastering DPC++ fo
 Programming of Heterogeneous Systems using C++ and SYCL by James Reinders, Ben Ashbaugh,
 James Brodman, Michael Kinsner, John Pennycook, Xinmin Tian (Apress, 2020).
 
-p.421 - Fig 17-1 - The text at the top should be “ISA-based” instead of “SA-based”
+p.183 - Fig. 7-6 - In the first column, there should be no capitalization,
+                   therefore "Write" should be "write"
+                   and "read_Write" should be "read_write"
 
+p.421 - Fig 17-1 - The text at the top should be “ISA-based” instead of “SA-based”
