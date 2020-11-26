@@ -5,68 +5,34 @@
 // =============================================================
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
-
 #include "kernel.hpp"
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declaration of the kernel name reduces name mangling
 class VectorAdd;
 
-void RunKernel(std::vector<float> &vec_a, std::vector<float> &vec_b,
-               std::vector<float> &vec_r) {
-
-  // Select either the FPGA emulator or FPGA device
-#if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
-#else
-  INTEL::fpga_selector device_selector;
-#endif
-
-  try {
-
-    // Create a queue bound to the chosen device.
-    // If the device is unavailable, a SYCL runtime exception is thrown.
-    queue q(device_selector, dpc_common::exception_handler);
-
-    // Print out the device information.
-    std::cout << "Running on device: "
-              << q.get_device().get_info<info::device::name>() << "\n";
-
-    // Device buffers
-    buffer device_a(vec_a);
-    buffer device_b(vec_b);
-    buffer device_r(vec_r);
-
+// This file contains 'almost' exclusively device code. The single-source SYCL
+// code has been refactored between host.cpp and kernel.cpp to separate host and
+// device code to the extent that the language permits.
+// Note that ANY change in either this file or kernel.hpp will be detected
+// by the build system as a difference in the dependencies of device.o,
+// triggering the full recompilation of the device code. This is true even of
+// a trivial change, e.g. tweaking the function definition or the names of
+// variables like 'q' or 'h', EVEN THOUGH these are not truly "device code".
+void RunKernel(queue& q, buffer<float,1>& buf_a, buffer<float,1>& buf_b,
+               buffer<float,1>& buf_r, size_t size){
+    // submit the kernel
     q.submit([&](handler &h) {
       // Data accessors
-      accessor a(device_a, h, read_only);
-      accessor b(device_b, h, read_only);
-      accessor r(device_r, h, write_only, noinit);
+      accessor a(buf_a, h, read_only);
+      accessor b(buf_b, h, read_only);
+      accessor r(buf_r, h, write_only, noinit);
 
       // Kernel executes with pipeline parallelism on the FPGA.
       // Use kernel_args_restrict to specify that a, b, and r do not alias.
       h.single_task<VectorAdd>([=]() [[intel::kernel_args_restrict]] {
-        for (size_t i = 0; i < kArraySize; ++i) {
+        for (size_t i = 0; i < size; ++i) {
           r[i] = a[i] + b[i];
         }
       });
     });
-
-  } catch (sycl::exception const &e) {
-    // Catches exceptions in the host code
-    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
-
-    // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cerr << "If you are targeting an FPGA, please ensure that your "
-                   "system has a correctly configured FPGA board.\n";
-      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
-      std::cerr << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR.\n";
-    }
-    std::terminate();
-  }
 }
