@@ -247,9 +247,47 @@ Navigate to the "System Viewer" to visualize the structure of the kernel system.
      ```
 
 ### Example of Output
-```
-Input Array Size:  1024
-Enqueuing producer...
-Enqueuing consumer...
-PASSED: The results are correct
-```
+You should see the following output in the console:
+
+1. When running on the FPGA emulator
+    ```
+    Input Array Size: 8192
+    Enqueuing producer...
+    Enqueuing consumer...
+
+    Profiling Info
+      Producer:
+        Start time: 0 ms
+        End time: +8.18174 ms
+        Kernel Duration: 8.18174 ms
+      Consumer:
+        Start time: +7.05307 ms
+        End time: +8.18231 ms
+        Kernel Duration: 1.12924 ms
+      Design Duration: 8.18231 ms
+      Design Throughput: 4.00474 MB/s
+
+    PASSED: The results are correct
+    ```
+    NOTE: The FPGA emulator does not accurately represent the performance nor the relative timing of the kernels (i.e. the start and end times).
+
+2. When running on the FPGA device
+    ```
+    Input Array Size: 1048576
+    Enqueuing producer...
+    Enqueuing consumer...
+
+    Profiling Info
+      Producer:
+        Start time: 0 ms
+        End time: +4.481 ms
+        Kernel Duration: 4.481 ms
+      Consumer:
+        Start time: +0.917 ms
+        End time: +4.484 ms
+        Kernel Duration: 3.568 ms
+      Design Duration: 4.484 ms
+      Design Throughput: 935.348 MB/s
+
+    PASSED: The results are correct
+    ```
