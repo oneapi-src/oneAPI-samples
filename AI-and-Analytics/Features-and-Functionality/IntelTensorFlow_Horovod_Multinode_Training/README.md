@@ -28,7 +28,7 @@ Runtime settings for `OMP_NUM_THREADS`, `KMP_AFFINITY`, and `Inter/Intra-op` Thr
 This code sample is licensed under MIT license.
 
 ## Build and Run the Sample
-Note: Dependencies and prerequisites security management is out of this project's scope. Please keep your system at the latest stable version.
+#### Note: Dependencies and prerequisites security management is out of this project's scope. Please keep your system at the latest stable version.
 
 ### Running Samples In DevCloud (Optional)
 If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
