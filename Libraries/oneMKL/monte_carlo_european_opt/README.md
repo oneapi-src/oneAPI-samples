@@ -8,7 +8,7 @@ For more information on oneMKL, and complete documentation of all oneMKL routine
 |:---                 |:---
 | OS                  | Linux* Ubuntu* 18.04; Windows 10
 | Hardware            | Skylake with Gen9 or newer
-| Software            | Intel&reg; oneMKL beta
+| Software            | Intel&reg; oneMKL
 | What you will learn | How to use oneMKL's random number generation functionality
 | Time to complete    | 15 minutes
 
@@ -46,6 +46,7 @@ You can remove all generated files with `make clean`.
 ### On a Windows* System
 Run `nmake` to build and run the sample programs. `nmake clean` removes temporary files.
 
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
 
 ## Running the Monte Carlo European Options Sample
 If everything is working correctly, both buffer and USM versions of the program will run the Monte Carlo simulation. After simulation, results will be checked against the known true values given by the Black-Scholes formula, and the absolute error is output.

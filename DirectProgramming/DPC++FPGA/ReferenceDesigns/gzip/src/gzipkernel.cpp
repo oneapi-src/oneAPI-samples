@@ -36,12 +36,6 @@
 #include "gzipkernel.hpp"
 #include "kernels.hpp"
 
-// Some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#endif
 
 using namespace sycl;
 
@@ -2020,13 +2014,13 @@ void SubmitGzipTasksSingleEngine(
       //   Hash Table(s)
       //-------------------------------------
 
-      [[intelfpga::singlepump]] [[intelfpga::numbanks(kVec)]] [
-          [intelfpga::max_replicates(kVec)]] struct {
+      [[intel::singlepump]] [[intel::numbanks(kVec)]] [
+          [intel::max_replicates(kVec)]] struct {
         unsigned char s[kLen];
       } dictionary[kDepth][kVec];
 
-      [[intelfpga::singlepump]] [[intelfpga::numbanks(kVec)]] [
-          [intelfpga::max_replicates(
+      [[intel::singlepump]] [[intel::numbanks(kVec)]] [
+          [intel::max_replicates(
               kVec)]] unsigned int dict_offset[kDepth][kVec];
 
       // Initialize history to empty.

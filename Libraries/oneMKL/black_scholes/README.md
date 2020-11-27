@@ -8,7 +8,7 @@ For more information on oneMKL, and complete documentation of all oneMKL routine
 |:---                 |:---
 | OS                  | Linux* Ubuntu* 18.04; Windows 10
 | Hardware            | Skylake with Gen9 or newer
-| Software            | Intel&reg; oneMKL beta
+| Software            | Intel&reg; oneMKL
 | What you will learn | How to use oneMKL's vector math and random number generation functionality
 | Time to complete    | 15 minutes
 
@@ -53,6 +53,7 @@ You can remove all generated files with `make clean`.
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
 
 ## Running the Black-Scholes Sample
 If everything is working correctly, the program will exercise different combinations of APIs for both single and double precision (if available), and print a summary of its computations.

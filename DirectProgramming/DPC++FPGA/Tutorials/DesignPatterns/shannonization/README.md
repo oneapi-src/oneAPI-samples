@@ -6,8 +6,8 @@ This tutorial describes the process of _Shannonization_ (named after [Claude Sha
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® Programmable Acceleration Card (PAC) with Intel Stratix® 10 SX FPGA
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (Beta)
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | How to make FPGA-specific optimizations to remove computation from the critical path and improve f<sub>MAX</sub>/II
 | Time to complete                  | 45 minutes
 
@@ -134,7 +134,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC with Intel Stratix® 10 SX FPGA, run `cmake` using the command:
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
  
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -154,35 +154,38 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, an Intel® PAC with Intel Arria® 10 GX FPGA precompiled binary can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/shannonization.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/shannonization.fpga.tar.gz" download>here</a>.
  
 ### On a Windows* System
-Note: `cmake` is not yet supported on Windows. A build.ninja file is provided instead. 
- 
-1. Enter the source file directory.
+
+1. Generate the `Makefile` by running `cmake`.
+     ```
+   mkdir build
+   cd build
    ```
-   cd src
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+    ```
+    cmake -G "NMake Makefiles" ..
    ```
- 
-2. Compile the design. The following build targets are provided, matching the recommended development flow:
- 
+   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   ```
+
+2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+
    * Compile for emulation (fast compile time, targets emulated FPGA device): 
-      ```
-      ninja fpga_emu
-      ```
- 
-   * Generate the optimization report:
- 
      ```
-     ninja report
+     nmake fpga_emu
      ```
+   * Generate the optimization report: 
+     ```
+     nmake report
+     ``` 
+   * An FPGA hardware target is not provided on Windows*. 
 
-     If you are targeting Intel® PAC with Intel Stratix® 10 SX FPGA, instead use:
-     ```
-     ninja report_s10_pac
-     ```
-
-   * Compiling for FPGA hardware is not yet supported on Windows.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
 ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -315,4 +318,4 @@ You should see the following output in the console:
     Kernel 2 average throughput: 742.257 MB/s
     PASSED
     ```
-    NOTE: These throughput numbers were collected using the Intel® PAC with Intel Stratix® 10 SX FPGA.
+    NOTE: These throughput numbers were collected using the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA).

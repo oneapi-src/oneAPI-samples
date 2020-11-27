@@ -12,7 +12,13 @@
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <limits>
+
+#if __has_include("oneapi/mkl.hpp")
+#include "oneapi/mkl.hpp"
+#else
+// Beta09 compatibility -- not needed for new code.
 #include "mkl_sycl.hpp"
+#endif
 
 double rand_uniform();
 bool verify_result(int m, int n, int k, int ldc, double *C, double *C_reference);

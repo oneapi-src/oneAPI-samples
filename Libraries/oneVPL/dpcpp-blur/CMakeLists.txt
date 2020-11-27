@@ -3,12 +3,20 @@ cmake_minimum_required(VERSION 3.10.2)
 # with the dpcpp compiler to use dpcpp features
 set(DPCPP_COMPILER_NAME "dpcpp")
 find_program(DPCPP_COMPILER ${DPCPP_COMPILER_NAME})
+
 if(DPCPP_COMPILER)
   set(CMAKE_CXX_COMPILER ${DPCPP_COMPILER_NAME})
-  message("-- DPCPP compiler found, blur feature enabled")
+  message(STATUS "DPCPP compiler found, blur feature enabled")
 else()
-  message("-- DPCPP compiler not found, blur feature disabled")
+  message(STATUS "DPCPP compiler not found, blur feature disabled")
 endif()
+
+project(dpcpp-blur LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+
+set(TARGET dpcpp-blur)
+set(SOURCES src/dpcpp-blur.cpp)
+set(RUNARGS ${CMAKE_CURRENT_SOURCE_DIR}/content/cars_128x96.i420 128 96)
 
 # Set default build type to RelWithDebInfo if not specified
 if(NOT CMAKE_BUILD_TYPE)
@@ -22,15 +30,6 @@ if(NOT CMAKE_BUILD_TYPE)
         FORCE)
 endif()
 
-project(dpcpp-blur LANGUAGES CXX)
-
-set(TARGET dpcpp-blur)
-set(SOURCES src/dpcpp-blur.cpp)
-set(VPL_NAME mfx)
-set(RUNARGS ${CMAKE_CURRENT_SOURCE_DIR}/content/cars_128x96.i420 128 96)
-
-set(CMAKE_CXX_STANDARD 17)
-
 add_executable(${TARGET} ${SOURCES})
 
 if(MSVC)
@@ -40,37 +39,21 @@ if(MSVC)
   endif()
 endif()
 
+if(POLICY CMP0074)
+  # ignore warning of VPL_ROOT in find_package search path
+  cmake_policy(SET CMP0074 OLD)
+endif()
+
 if(DPCPP_COMPILER)
   add_definitions(-DBUILD_DPCPP)
   target_link_libraries(${TARGET} OpenCL sycl)
 endif()
 
-target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/api)
-
-if(TARGET mfx)
-  target_link_libraries(${TARGET} mfx)
+if(TARGET VPL)
+  target_link_libraries(${TARGET} VPL)
 else()
-  if(WIN32)
-    set(VPL_NAME libmfx.lib)
-  endif()
-  message(STATUS "Check for required environment variables")
-  if(NOT DEFINED ENV{VPL_LIB})
-    message(FATAL_ERROR "Expected environment variable not defined: VPL_LIB")
-  endif()
-  if(NOT DEFINED ENV{VPL_INCLUDE})
-    message(
-      FATAL_ERROR "Expected environment variable not defined: VPL_INCLUDE")
-  endif()
-
-  message(STATUS "Check for presence of library")
-  find_library(VPL_LIB ${VPL_NAME} HINTS $ENV{VPL_LIB})
-  if(NOT VPL_LIB)
-    message(FATAL_ERROR "vpl library not found. Looked in $ENV{VPL_LIB}")
-  else()
-    message(STATUS "Using vpl library: ${VPL_LIB}")
-  endif()
-  target_include_directories(${TARGET} PRIVATE $ENV{VPL_INCLUDE})
-  target_link_libraries(${TARGET} ${VPL_LIB})
+  find_package(VPL REQUIRED)
+  target_link_libraries(${TARGET} VPL::dispatcher)
 endif()
 
 get_directory_property(has_parent PARENT_DIRECTORY)

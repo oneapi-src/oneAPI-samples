@@ -4,11 +4,12 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <dpstd/execution>
-#include <dpstd/algorithm>
-#include <dpstd/iterators.h>
+#include <oneapi/dpl/algorithm>
+#include <oneapi/dpl/execution>
+#include <oneapi/dpl/iterator>
 using namespace sycl;
-using namespace dpstd::execution;
+using namespace oneapi::dpl::execution;
+
 
 int main(){
   queue q;
@@ -17,10 +18,12 @@ int main(){
     
   //# Create a buffer and use buffer iterators in Parallel STL algorithms
   {
-    buffer<int> buf{v.data(), v.size()};
+    buffer buf(v);
+    auto buf_begin = oneapi::dpl::begin(buf);
+    auto buf_end   = oneapi::dpl::end(buf);
 
-    std::for_each(make_device_policy(q), dpstd::begin(buf), dpstd::end(buf), [](int &a){ a *= 2; });
-    std::sort(make_device_policy(q), dpstd::begin(buf), dpstd::end(buf));
+    std::for_each(make_device_policy(q), buf_begin, buf_end, [](int &a){ a *= 3; });
+    std::sort(make_device_policy(q), buf_begin, buf_end);
   }
     
   for(int i = 0; i < v.size(); i++) std::cout << v[i] << std::endl;

@@ -1,8 +1,8 @@
 {
   "guid": "B210B44F-FB86-4F42-BA4A-9980805350FF",
-  "name": "Overlapping Kernel Execution with Buffer Transfers and Host Processing through Double Buffering",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
-  "description": "FPGA tutorial design to demonstrate overlapping kernel execution with buffer transfers and host-processing to improve system performance",
+  "name": "Double Buffering",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "description": "Intel® FPGA tutorial design to demonstrate overlapping kernel execution with buffer transfers and host-processing to improve system performance",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -34,16 +34,20 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "cd src",
-          "ninja fpga_emu",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
           "double_buffering.fpga_emu.exe"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "cd src",
-          "ninja report"
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake report"
         ]
       }
     ]

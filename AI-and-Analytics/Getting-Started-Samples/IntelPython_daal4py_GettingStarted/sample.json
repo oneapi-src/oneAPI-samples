@@ -1,0 +1,22 @@
+{
+  "guid": "2E6A2E22-035F-493B-B471-DFD8CF8F8256",
+  "name": "Intel® Python Daal4py Getting Started",
+  "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+  "description": "This sample illustrates how to do Batch Linear Regression using the Python API package Daal4py for Intel® oneDAL",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "dependencies": ["intelpython"],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],
+  		"id": "idp_d4p_GS_py",
+  		"steps": [
+         "python IntelPython_daal4py_GettingStarted.py" 
+  		 ]
+  	}
+    ]
+}
+}

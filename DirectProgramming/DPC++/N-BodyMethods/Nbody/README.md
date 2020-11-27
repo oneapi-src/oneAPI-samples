@@ -5,12 +5,12 @@ An N-body simulation is a simulation of a dynamical system of particles, usually
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler beta;
+| Software                          | Intel&reg; oneAPI DPC++ Compiler;
 | What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
 | Time to complete                  | 15 minutes
 
 ## Purpose
-Nbody sample code simulates 16000 particles and for 10 integration steps. Each particles position, velocity and acceleration parameters are dependent on other (N-1) particles. This algorithm is highly data parallel and a perfect candidate to offload to GPU. The code demonstartes how to deal with multiple device kernels which can be enqueued into a DPC++ queue for execution. 
+Nbody sample code simulates 16000 particles and for 10 integration steps. Each particles position, velocity and acceleration parameters are dependent on other (N-1) particles. This algorithm is highly data parallel and a perfect candidate to offload to GPU. The code demonstartes how to deal with multiple device kernels which can be enqueued into a DPC++ queue for execution and how to handle parallel reductions.
 
 ## Key Implementation Details 
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.

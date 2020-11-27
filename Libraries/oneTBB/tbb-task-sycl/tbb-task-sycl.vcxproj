@@ -86,6 +86,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -99,16 +100,17 @@
       <AdditionalOptions>/I"$(ONEAPI_ROOT)/tbb/latest/include" %(AdditionalOptions)</AdditionalOptions>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
       <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib/intel64/vc14" %(AdditionalOptions)</AdditionalOptions>
+      <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb12.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,6 +144,7 @@
       <AdditionalOptions>/I"$(ONEAPI_ROOT)/tbb/latest/include" %(AdditionalOptions)</AdditionalOptions>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,7 +155,7 @@
       <AdditionalOptions>/link tbb.lib /libpath:"$(ONEAPI_ROOT)/tbb/latest/lib/intel64/vc14" %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>copy /y "$(ONEAPI_ROOT)\tbb\latest\redist\intel64\vc14\tbb12.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

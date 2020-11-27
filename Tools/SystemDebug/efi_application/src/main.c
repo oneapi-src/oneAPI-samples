@@ -18,10 +18,7 @@ const EFI_SYSTEM_TABLE *g_st;
 int var = 0;
 
 EFI_STATUS EFIAPI efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *st) {
-    static const uint32_t msr_addr = IA32_SYSENTER_EIP;
 
-    volatile unsigned app_size = 0;
-    void *app_buf = NULL;
     uint64_t base;
     if (!st) {
         return EFI_INVALID_PARAMETER;

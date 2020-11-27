@@ -21,12 +21,14 @@
 
 #include <CL/sycl.hpp>
 
+#if __has_include("oneapi/mkl.hpp")
+#include "oneapi/mkl.hpp"
+#include "oneapi/mkl/rng/device.hpp"
+#else
+// Beta09 compatibility -- not needed for new code.
 #include "mkl_sycl.hpp"
 #include "mkl_rng_sycl_device.hpp"
-
-namespace oneapi {
-
-} // namespace oneapi
+#endif
 
 using namespace oneapi;
 
@@ -43,29 +45,19 @@ using std::size_t;
 
 
 #if (defined (ACC_ep))
-uint64_t vml_accuracy = mkl::vm::mode::ep;
+auto vml_accuracy = mkl::vm::mode::ep;
 #elif (defined (ACC_la))
-uint64_t vml_accuracy = mkl::vm::mode::la;
+auto vml_accuracy = mkl::vm::mode::la;
 #elif(defined (ACC_ha))
-uint64_t vml_accuracy = mkl::vm::mode::ha;
+auto vml_accuracy = mkl::vm::mode::ha;
 #else
-uint64_t vml_accuracy = mkl::vm::mode::not_defined;
+auto vml_accuracy = mkl::vm::mode::not_defined;
 #endif
 
 enum class dev_select : int {
     cpu = 1,
     gpu = 2
 };
-
-double uniform(double a, double b, std::mt19937_64 & rng) {
-    union {
-        double d;
-        uint64_t w;
-    } arg;
-
-    arg.w = (UINT64_C(0x3FF) << 52) | (rng() >> 12);
-    return (arg.d - 1.0) * (b - a) + a;
-}
 
 constexpr uint64_t seed = UINT64_C(0x1234'5678'09ab'cdef);
 
@@ -100,17 +92,6 @@ void async_sycl_error(sycl::exception_list el) {
         } catch(const sycl::exception & e) {
             std::cerr << "SYCL exception occured with code " << e.get_cl_code() << " with " << e.what() << std::endl;
         }
-    }
-}
-
-template <typename T>
-void generate_inputs_ref(int64_t nopt, T * s0, T * x, T * t) {
-    std::mt19937_64 rng { seed };
-
-    for (int64_t i = 0; i < nopt; ++i) {
-        s0[i] = uniform(s0_low, s0_high, rng);
-        x[i]  = uniform(x_low, x_high, rng);
-        t[i]  = uniform(t_low, t_high, rng);
     }
 }
 

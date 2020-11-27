@@ -10,7 +10,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS	                | Linux* Ubuntu* 18.04, 
 | Hardware	            | Skylake with GEN9 or newer, 
-| Software	            | Intel® oneAPI DPC++ Compiler (beta)
+| Software	            | Intel® oneAPI DPC++ Compiler
 | What you will learn   | how to perform reduction with oneAPI on cpu and gpu
 | Time to complete      | 30 min 
 
@@ -50,6 +50,13 @@ This code sample is licensed under MIT license.
 
 ## Building the dpc_reduce program for CPU and GPU
 
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system".
 
@@ -86,15 +93,15 @@ where
 ```c++
 Rank #0 runs on: lqnguyen-NUC1, uses device: Intel(R) Gen9 HD Graphics NEO \
 Number of steps is 1000000 \
-Cpu Seq calc:           PI =3.14 in 0.00422 seconds \
-Cpu TBB  calc:          PI =3.14 in 0.00177 seconds \
-dpstd native:           PI =3.14 in 0.209 seconds \
-dpstd native2:          PI =3.14 in 0.213 seconds \
-dpstd native3:          PI =3.14 in 0.00222 seconds \
-dpstd native4:          PI =3.14 in 0.00237 seconds \
-dpstd two steps:        PI =3.14 in 0.0014 seconds \
-dpstd transform_reduce: PI =3.14 in 0.000528 seconds \
-mpi native:             PI =3.14 in 0.548 seconds \
-mpi transform_reduce:   PI =3.14 in 0.000498 seconds \
+Cpu Seq calc:               PI =3.14 in 0.00422 seconds \
+Cpu TBB  calc:              PI =3.14 in 0.00177 seconds \
+oneDPL native:              PI =3.14 in 0.209 seconds \
+oneDPL native2:             PI =3.14 in 0.213 seconds \
+oneDPL native3:             PI =3.14 in 0.00222 seconds \
+oneDPL native4:             PI =3.14 in 0.00237 seconds \
+oneDPL two steps:           PI =3.14 in 0.0014 seconds \
+oneDPL transform_reduce:    PI =3.14 in 0.000528 seconds \
+mpi native:                 PI =3.14 in 0.548 seconds \
+mpi transform_reduce:       PI =3.14 in 0.000498 seconds \
 succes \
 ```

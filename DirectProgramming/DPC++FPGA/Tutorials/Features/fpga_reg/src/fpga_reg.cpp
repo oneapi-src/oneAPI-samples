@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -12,27 +13,17 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
-
 using namespace sycl;
 using namespace std;
 
 // Artificial coefficient and offset data for our math function
 constexpr size_t kSize = 64;
-constexpr std::array<int, kSize> kCoeff = {
+constexpr int kCoeff[kSize] = {
             1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16,
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
             33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
             49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64};
-constexpr std::array<int, kSize> kOffset = {
+constexpr int kOffset[kSize] = {
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
             49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64,
             33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
@@ -43,7 +34,10 @@ constexpr std::array<int, kSize> kOffset = {
 vector<int> GoldenResult(vector<int> vec) {
 
   // The coefficients will be modified with each iteration of the outer loop.
-  std::array coeff = kCoeff;
+  int coeff[kSize];
+  for (size_t i = 0; i < kSize; i++) {
+    coeff[i] = kCoeff[i];
+  }
 
   for (int &val : vec) {
     // Do some arithmetic
@@ -81,13 +75,11 @@ void RunKernel(const device_selector &selector,
             property::queue::enable_profiling{});
 
     buffer device_a(vec_a);
-    // Use verbose SYCL 1.2 syntax for the output buffer.
-    // (This will become unnecessary in a future compiler version.)
-    buffer<int, 1> device_r(vec_r.data(), input_size);
+    buffer device_r(vec_r);
 
     event e = q.submit([&](handler &h) {
-      auto a = device_a.get_access<access::mode::read>(h);
-      auto r = device_r.get_access<access::mode::discard_write>(h);
+      accessor a(device_a, h, read_only);
+      accessor r(device_r, h, write_only, noinit);
 
       // FPGA-optimized kernel
       // Using kernel_args_restrict tells the compiler that the input
@@ -96,7 +88,10 @@ void RunKernel(const device_selector &selector,
 
         // Force the compiler to implement the coefficient array in FPGA
         // pipeline registers rather than in on-chip memory.
-        [[intelfpga::register]] std::array coeff = kCoeff;
+        [[intel::fpga_register]] int coeff[kSize];
+        for (size_t i = 0; i < kSize; i++) {
+          coeff[i] = kCoeff[i];
+        }
 
         // The compiler will pipeline the outer loop.
         for (size_t i = 0; i < input_size; ++i) {
@@ -131,7 +126,7 @@ void RunKernel(const device_selector &selector,
           }
 
           // Rotate the values of the coefficient array.
-          // The loop is fully unrolled. This is a cannonical code structure;
+          // The loop is fully unrolled. This is a canonical code structure;
           // the DPC++ compiler's FPGA backend infers a shift register here.
           int tmp = coeff[0];
           #pragma unroll
@@ -162,13 +157,14 @@ void RunKernel(const device_selector &selector,
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();

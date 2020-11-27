@@ -27,6 +27,7 @@
 // California and by the laws of the United States of America.
 
 #include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <chrono>
 #include <fstream>
 #include <string>
@@ -34,19 +35,13 @@
 #include "CompareGzip.hpp"
 #include "WriteGzip.hpp"
 #include "crc32.hpp"
-#include "dpc_common.hpp"
 #include "gzipkernel.hpp"
 #include "kernels.hpp"
 
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
+#include "dpc_common.hpp"
+
 
 using namespace sycl;
 
@@ -184,7 +179,7 @@ int main(int argc, char *argv[]) {
       outfilenames[i] = outfilenames[0] + std::to_string(i+1);
     }
 
-    std::cout << "Launching GZIP application with " << kNumEngines
+    std::cout << "Launching High-Bandwidth DMA GZIP application with " << kNumEngines
               << " engines\n";
 
 #ifdef FPGA_EMULATOR
@@ -200,13 +195,14 @@ int main(int argc, char *argv[]) {
 #endif
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
@@ -241,14 +237,19 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
   // Read the input file
   std::string device_string =
       q.get_device().get_info<info::device::name>().c_str();
-  bool prepin =
-      (device_string.find("s10") !=
-       std::string::npos);  // Check if "s10" is found in the device string. If
-                            // the device is S10, we pre-pin some buffers to
-                            // improve DMA performance, which is needed to
-                            // achieve peak kernel throughput. Pre-pinning is
-                            // only supported on the PAC-S10 BSP. It's not
-                            // needed on PAC-A10 to achieve peak performance.
+
+  // If
+  // the device is S10, we pre-pin some buffers to
+  // improve DMA performance, which is needed to
+  // achieve peak kernel throughput. Pre-pinning is
+  // only supported on the PAC-S10-USM BSP. It's not
+  // needed on PAC-A10 to achieve peak performance.
+  bool isS10 =  (device_string.find("s10") != std::string::npos);
+  bool prepin = q.get_device().get_info<info::device::usm_host_allocations>();
+
+  if (isS10 && !prepin) {
+    std::cout << "Warning: Host allocations are not supported on this platform, which means that pre-pinning is not supported. DMA transfers may be slower than expected which may reduce application throughput.\n\n";
+  }
 
   std::ifstream file(input_file,
                      std::ios::in | std::ios::binary | std::ios::ate);
