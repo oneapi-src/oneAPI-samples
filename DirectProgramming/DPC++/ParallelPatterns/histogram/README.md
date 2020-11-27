@@ -8,7 +8,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |---------------------------------|------------------------------------------------------------------------------------------------------|
 | OS                              | Linux Ubuntu 18.04                                                                                   |
 | Hardware                        | Skylake with GEN9 or newer, Intel(R) Programmable Acceleration Card with Intel(R) Arria(R) 10 GX FPGA|
-| Software                        | Intel® oneAPI DPC++ Compiler (beta)                                                                  |
+| Software                        | Intel® oneAPI DPC++ Compiler                                                                         |
 
 
 ## Purpose
@@ -56,15 +56,6 @@ If you see the following error message when compiling this sample:
 Error 'dpc_common.hpp' file not found
 ```
 You need to add the following directory to the list of include folders, that are required by your project, in your project's Visual Studio project property panel. The missing include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
-
-## Known issues
-
-The sample is prone to ``Floating point exception`` and `CL_INVALID_WORK_GROUP_SIZE` errors on GPU with DPC++ L0 backend, which can be avoided
-by setting `_PSTL_COMPILE_KERNEL` macro to `0`. You can do it using the following command before running `cmake`:
-
-```
-export CXXFLAGS=-D_PSTL_COMPILE_KERNEL=0
-```
 
 ## Running the Sample
 

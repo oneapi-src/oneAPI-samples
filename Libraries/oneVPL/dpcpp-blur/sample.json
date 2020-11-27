@@ -1,8 +1,8 @@
 {
   "guid": "8E31124E-3F21-4A8F-A14A-950B7F008480",
-  "name": "Hello DPC++ interop",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneVPL"],
-  "description": "Sample that shows how to use a DPC++ kernel together with oneAPI Video Processing Library to perform a simple video content blur",
+  "name": "DPCPP Blur",
+  "categories": ["Toolkit/oneAPI Libraries/oneVPL"],
+  "description": "Sample that shows how to use Intel® Video Processing Library (VPL) and Intel® oneAPI Data Parallel C++ (DPC++) to convert I420 raw video file in to BGRA and blur each frame",
   "dependencies": ["vpl"],
   "os": ["linux", "windows"],
   "languages": [{"cpp":{}}],
@@ -28,8 +28,8 @@
           "mkdir build",
           "cd build",
           "cmake .. -T \"Intel(R) oneAPI DPC++ Compiler\"",
-          "cmake --build .",
-          "cmake --build . --target run"
+          "cmake --build . --config Release",
+          "cmake --build . --target run --config Release"
         ] }
     ]
   }

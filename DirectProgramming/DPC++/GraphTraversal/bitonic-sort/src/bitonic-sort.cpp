@@ -49,22 +49,22 @@ using namespace std;
 void ParallelBitonicSort(int data_gpu[], int n, queue &q) {
   // n: the exponent used to set the array size. Array size = power(2, n)
   int size = pow(2, n);
-  int* a = data_gpu;
-  
+  int *a = data_gpu;
+
   // step from 0, 1, 2, ...., n-1
   for (int step = 0; step < n; step++) {
     // for each step s, stage goes s, s-1, ..., 0
     for (int stage = step; stage >= 0; stage--) {
       int seq_len = pow(2, stage + 1);
-      
+
       // Constant used in the kernel: 2**(step-stage).
       int two_power = 1 << (step - stage);
 
       // Offload the work to kernel.
-      q.submit([&](handler &h) {
-	h.parallel_for(range<1>(size), [=](id<1> i) {
+      q.submit([&](auto &h) {
+        h.parallel_for(range<1>(size), [=](id<1> i) {
           // Assign the bitonic sequence number.
-	  int seq_num = i / seq_len;
+          int seq_num = i / seq_len;
 
           // Variable used to identified the swapped element.
           int swapped_ele = -1;
@@ -104,24 +104,24 @@ void ParallelBitonicSortBuffer(int data_gpu[], int n, queue &q) {
   // n: the exponent used to set the array size. Array size = power(2, n)
   int size = pow(2, n);
 
-  buffer<int, 1> input (data_gpu, size);
-  
+  buffer input(data_gpu, range(size));
+
   // step from 0, 1, 2, ...., n-1
   for (int step = 0; step < n; step++) {
     // for each step s, stage goes s, s-1, ..., 0
     for (int stage = step; stage >= 0; stage--) {
       int seq_len = pow(2, stage + 1);
-      
+
       // Constant used in the kernel: 2**(step-stage).
       int two_power = 1 << (step - stage);
 
       // Offload the work to kernel.
-      q.submit([&](handler &h) {
-        auto a = input.get_access<access::mode::read_write>(h);
- 
-	h.parallel_for(range<1>(size), [=](id<1> i) {
+      q.submit([&](auto &h) {
+        accessor a(input, h);
+
+	h.parallel_for(size, [=](id<1> i) {
           // Assign the bitonic sequence number.
-	  int seq_num = i / seq_len;
+          int seq_num = i / seq_len;
 
           // Variable used to identified the swapped element.
           int swapped_ele = -1;
@@ -201,28 +201,28 @@ inline void BitonicSort(int a[], int n) {
 
 // Function showing the array.
 void DisplayArray(int a[], int array_size) {
-  for (int i = 0; i < array_size; ++i) std::cout << a[i] << " ";
-  std::cout << "\n";
+  for (int i = 0; i < array_size; ++i) cout << a[i] << " ";
+  cout << "\n";
 }
 
-void Usage(std::string prog_name, int exponent) {
-  std::cout << " Incorrect parameters\n";
-  std::cout << " Usage: " << prog_name << " n k \n\n";
-  std::cout << " n: Integer exponent presenting the size of the input array. "
-               "The number of element in\n";
-  std::cout << "    the array must be power of 2 (e.g., 1, 2, 4, ...). Please "
-               "enter the corresponding\n";
-  std::cout << "    exponent betwwen 0 and " << exponent - 1 << ".\n";
-  std::cout << " k: Seed used to generate a random sequence.\n";
+void Usage(string prog_name, int exponent) {
+  cout << " Incorrect parameters\n";
+  cout << " Usage: " << prog_name << " n k \n\n";
+  cout << " n: Integer exponent presenting the size of the input array. "
+          "The number of element in\n";
+  cout << "    the array must be power of 2 (e.g., 1, 2, 4, ...). Please "
+          "enter the corresponding\n";
+  cout << "    exponent betwwen 0 and " << exponent - 1 << ".\n";
+  cout << " k: Seed used to generate a random sequence.\n";
 }
 
 int main(int argc, char *argv[]) {
   int n, seed, size;
-  int exp_max = log2(std::numeric_limits<int>::max());
+  int exp_max = log2(numeric_limits<int>::max());
 
   // Read parameters.
   try {
-    n = std::stoi(argv[1]);
+    n = stoi(argv[1]);
 
     // Verify the boundary of acceptance.
     if (n < 0 || n >= exp_max) {
@@ -230,20 +230,19 @@ int main(int argc, char *argv[]) {
       return -1;
     }
 
-    seed = std::stoi(argv[2]);
+    seed = stoi(argv[2]);
     size = pow(2, n);
   } catch (...) {
     Usage(argv[0], exp_max);
     return -1;
   }
 
-  std::cout << "\nArray size: " << size << ", seed: " << seed << "\n";
+  cout << "\nArray size: " << size << ", seed: " << seed << "\n";
 
   // Create queue on implementation-chosen default device.
   queue q;
 
-  std::cout << "Device: " << q.get_device().get_info<info::device::name>()
-            << "\n";
+  cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
 
   // Memory allocated for host access only.
   int *data_cpu = (int *)malloc(size * sizeof(int));
@@ -262,47 +261,44 @@ int main(int argc, char *argv[]) {
     data_usm[i] = data_gpu[i] = data_cpu[i] = rand() % 1000;
 
 #if DEBUG
-  std::cout << "\ndata before:\n";
+  cout << "\ndata before:\n";
   DisplayArray(data_usm, size);
 #endif
 
-  // Warm up
-  std::cout << "Warm up ...\n";
-  ParallelBitonicSort(data_usm, n, q);
-
   // Start timer
-  dpc_common::TimeInterval t_par;
+  dpc_common::TimeInterval t_par1;
 
-  // Parallel sort using USM
-  ParallelBitonicSort(data_usm, n, q);
+  // Parallel sort using buffer allocation
+  ParallelBitonicSortBuffer(data_gpu, n, q);
 
-  std::cout << "Kernel time using USM: " << t_par.Elapsed() << " sec\n";
+  cout << "Kernel time using buffer allocation: " << t_par1.Elapsed()
+       << " sec\n";
 
 #if DEBUG
-  std::cout << "\ndata_usm after sorting using parallel bitonic sort:\n";
-  DisplayArray(data_usm, size);
+  cout << "\ndata_gpu after sorting using parallel bitonic sort:\n";
+  DisplayArray(data_gpu, size);
 #endif
 
   // Start timer
   dpc_common::TimeInterval t_par2;
 
-  // Parallel sort using buffer allocation
-  ParallelBitonicSortBuffer(data_gpu, n, q);
+  // Parallel sort using USM
+  ParallelBitonicSort(data_usm, n, q);
 
-  std::cout << "Kernel time using buffer allocation: " << t_par2.Elapsed() << " sec\n";
+  cout << "Kernel time using USM: " << t_par2.Elapsed() << " sec\n";
 
 #if DEBUG
-  std::cout << "\ndata_gpu after sorting using parallel bitonic sort:\n";
-  DisplayArray(data_gpu, size);
+  cout << "\ndata_usm after sorting using parallel bitonic sort:\n";
+  DisplayArray(data_usm, size);
 #endif
-  
+
   // Start timer
   dpc_common::TimeInterval t_ser;
 
   // Bitonic sort in CPU (serial)
   BitonicSort(data_cpu, n);
 
-  std::cout << "CPU serial time: " << t_ser.Elapsed() << " sec\n";
+  cout << "CPU serial time: " << t_ser.Elapsed() << " sec\n";
 
   // Verify both bitonic sort algorithms in kernel and in CPU.
   bool pass = true;
@@ -312,10 +308,10 @@ int main(int argc, char *argv[]) {
       pass = false;
       break;
     }
-    
+
     if ((data_gpu[i] > data_gpu[i + 1]) || (data_gpu[i] != data_cpu[i])) {
-    pass = false;
-    break;
+      pass = false;
+      break;
     }
   }
 
@@ -323,12 +319,12 @@ int main(int argc, char *argv[]) {
   free(data_cpu);
   free(data_usm, q);
   free(data_gpu);
-  
+
   if (!pass) {
-    std::cout << "\nFailed!\n";
+    cout << "\nFailed!\n";
     return -2;
   }
 
-  std::cout << "\nSuccess!\n";
+  cout << "\nSuccess!\n";
   return 0;
 }

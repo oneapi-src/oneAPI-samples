@@ -1,0 +1,29 @@
+{
+    "guid": "EB08D6D9-84ED-4C64-BA0F-69D3B9C5A136",
+    "name": "Loop Unroll",
+    "categories": [ "Toolkit/oneAPI Direct Programming/DPC++/Parallel Patterns" ],
+    "description": "Demonstrates the use of loop unrolling as a simple optimization technique to speed up compute and increase memory access throughput.",
+    "toolchain": [ "dpcpp" ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "languages": [ { "cpp": {} } ],
+    "os": [ "linux", "windows" ],
+    "builder": [ "ide", "cmake" ],
+    "ciTests": {
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make",
+                          "make run"
+                   ]
+          }],
+          "windows": [{
+                  "steps": [
+                          "MSBuild loop-unroll.sln /t:Rebuild /p:Configuration=\"Release\"",
+                          "cd x64/Release",
+                          "loop-unroll.exe"
+                  ]
+          }]
+    }
+  }

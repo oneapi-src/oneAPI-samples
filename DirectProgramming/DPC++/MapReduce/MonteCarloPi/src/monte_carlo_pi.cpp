@@ -81,13 +81,13 @@ double MonteCarloPi(rgb image_plot[]) {
     // Perform Monte Carlo simulation and reduce results
     q.submit([&](handler& h) {
       // Set up accessors
-      auto imgplot_acc = imgplot_buf.get_access<access::mode::write>(h);
-      auto coords_acc = coords_buf.get_access<access::mode::read_write>(h);
-      auto total_acc = total_buf.get_access<access::mode::read_write>(h);
+      auto imgplot_acc = imgplot_buf.get_access(h);
+      auto coords_acc = coords_buf.get_access(h);
+      auto total_acc = total_buf.get_access(h);
 
       // Monte Carlo Procedure + Reduction
       h.parallel_for(nd_range<1>(num_wg * size_wg, size_wg),
-                     sycl::intel::reduction(total_acc, 0, std::plus<int>()),
+                     sycl::ONEAPI::reduction(total_acc, 0, std::plus<int>()),
                      [=](nd_item<1> it, auto& total_acc) {
                        // Index for accessing buffers
                        int i = it.get_global_id();
@@ -160,5 +160,6 @@ int main() {
   std::cout
       << "The simulation plot graph has been written to 'MonteCarloPi.bmp'\n";
 
+  getchar();
   return 0;
 }

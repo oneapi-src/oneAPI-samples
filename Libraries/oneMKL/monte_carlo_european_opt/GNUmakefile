@@ -1,5 +1,7 @@
 default: run_all
 
+all: run_all
+
 run_all: mc_european mc_european_usm
 	./mc_european
 	@echo
@@ -16,4 +18,4 @@ mc_european_usm: mc_european_usm.cpp
 clean:
 	-rm -f mc_european mc_european_usm
 
-.PHONY: run_all clean
+.PHONY: run_all clean all

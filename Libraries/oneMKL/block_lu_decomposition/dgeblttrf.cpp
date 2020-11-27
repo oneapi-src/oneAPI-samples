@@ -15,11 +15,14 @@
 #include <cstdint>
 #include <CL/sycl.hpp>
 #include "mkl.h"
-#include "mkl_sycl.hpp"
 
-// Temporary code for beta08 compatibility. oneMKL routines
-//  move to the oneapi namespace in beta09.
-namespace oneapi {}
+#if __has_include("oneapi/mkl.hpp")
+#include "oneapi/mkl.hpp"
+#else
+// Beta09 compatibility -- not needed for new code.
+#include "mkl_sycl.hpp"
+#endif
+
 using namespace oneapi;
 
 int64_t ptldgetrf(sycl::queue queue, int64_t m, int64_t n, int64_t k, double* a, int64_t lda, int64_t* ipiv);
@@ -226,7 +229,7 @@ int64_t dgeblttrf(sycl::queue queue, int64_t n, int64_t nb, double* d, double* d
         sycl::free(scratchpad, context);
     } catch(mkl::lapack::exception const& e) {
         // Handle LAPACK related exceptions happened during synchronous call
-        std::cout << "Unexpected exception caught during synchronous call to LAPACK API:\nreason: " << e.reason() << "\ninfo: " << e.info() << std::endl;
+        std::cout << "Unexpected exception caught during synchronous call to LAPACK API:\ninfo: " << e.info() << std::endl;
         if (e.info() > 0) {
         // INFO is equal to the 'global' index of the element u_ii of the factor  
         // U which is equal to zero
@@ -349,7 +352,7 @@ int64_t ptldgetrf(sycl::queue queue, int64_t m, int64_t n, int64_t k, double* a,
                 sycl::free(scratchpad, context);
             } catch(mkl::lapack::exception const& e) {
                 // Handle LAPACK related exceptions happened during synchronous call
-                std::cout << "Unexpected exception caught during synchronous call to LAPACK API:\nreason: " << e.reason() << "\ninfo: " << e.info() << std::endl;
+                std::cout << "Unexpected exception caught during synchronous call to LAPACK API:\ninfo: " << e.info() << std::endl;
                 if (e.info() > 0) {
                     info = e.info();
                 }

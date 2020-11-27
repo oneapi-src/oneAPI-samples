@@ -1,8 +1,8 @@
 {
   "guid" : "49C65CB6-F9FA-4E3C-B8BE-4A141E4E0F07",
   "name": "Simple Add",
-  "categories": ["Toolkit/Get Started", "Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU, GPU and FPGA"],
-  "description": "Simple program that adds two large vectors in parallel. Provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using Data Parallel C++.",
+  "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra"],
+  "description": "This simple sample adds two large vectors in parallel and provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using Intel® oneAPI Data Parallel C++ (DPC++)",
   "toolchain": ["dpcpp"],
   "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
   "targetDevice": ["CPU", "GPU", "FPGA"],
@@ -11,7 +11,7 @@
   "ciTests": {
     "linux": [
       {
-        "id": "cpu_usm",
+        "id": "usm",
         "steps": [
           "make clean",
           "make all",
@@ -19,7 +19,7 @@
         ]
       },
       {
-        "id": "cpu_buffers",
+        "id": "buffers",
         "steps": [
           "make clean",
           "make build_buffers",
@@ -35,16 +35,31 @@
         ]
       },
       {
+        "id": "fpga_emu_usm",
+        "steps": [
+          "make clean -f Makefile.fpga",
+          "make fpga_emu_usm -f Makefile.fpga",
+          "make run_emu_usm -f Makefile.fpga"
+        ]
+      },
+      {
         "id": "fpga_report_buffers",
         "steps": [
           "make clean -f Makefile.fpga",
           "make report -f Makefile.fpga"
         ]
+      },
+      {
+        "id": "fpga_report_usm",
+        "steps": [
+          "make clean -f Makefile.fpga",
+          "make report_usm -f Makefile.fpga"
+        ]
       }
     ],
     "windows": [
       {
-        "id": "cpu_usm",
+        "id": "usm",
         "steps": [
           "nmake -f Makefile.win",
           "nmake -f Makefile.win run",
@@ -52,7 +67,7 @@
         ]
       },
       {
-        "id": "cpu_buffers",
+        "id": "buffers",
         "steps": [
           "nmake -f Makefile.win build_buffers",
           "nmake -f Makefile.win run_buffers",
@@ -64,6 +79,14 @@
         "steps": [
           "nmake -f Makefile.win.fpga",
           "nmake -f Makefile.win.fpga run",
+          "nmake -f Makefile.win.fpga clean"
+        ]
+      },
+      {
+        "id": "fpga_emu_usm",
+        "steps": [
+          "nmake -f Makefile.win.fpga fpga_emu_usm",
+          "nmake -f Makefile.win.fpga run_usm",
           "nmake -f Makefile.win.fpga clean"
         ]
       }

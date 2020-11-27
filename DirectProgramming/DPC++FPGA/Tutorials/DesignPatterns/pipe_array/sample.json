@@ -1,8 +1,8 @@
 {
   "guid": "11A61AF6-727E-4241-B5A0-CCCD0EF160B9",
-  "name": "Data Transfers Using Pipe Arrays",
-  "categories": ["Toolkit/Intel® oneAPI Base Toolkit/FPGA/Tutorials"],
-  "description": "FPGA tutorial showcasing a design pattern to enables the creation of arrays of pipes.",
+  "name": "Pipe Array",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "description": "An Intel® FPGA tutorial showcasing a design pattern to enables the creation of arrays of pipes",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -34,16 +34,20 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "cd src",
-          "ninja fpga_emu",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
           "pipe_array.fpga_emu.exe"
         ]
       },
       {
         "id": "report",
         "steps": [
-          "cd src",
-          "ninja report"
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake report"
         ]
       }
     ]

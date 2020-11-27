@@ -4,7 +4,7 @@ The simple-vector-incr and simple-vector-add programs are simpler implementation
 |:---                               |:---
 | OS                                | Linux* Ubuntu 18.04, Windows* 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | The developer will learn about buffers, accessors, and command group handlers.
 | Time to complete                  | 15 minutes  
   

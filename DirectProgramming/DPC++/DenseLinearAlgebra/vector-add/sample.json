@@ -1,8 +1,8 @@
 {
   "guid":"b1b58be7-e22e-4ca2-ba59-6887b2f1be6c",
-  "name": "Vector Add",
-  "categories": ["Toolkit/Get Started", "Toolkit/Intel® oneAPI Base Toolkit/Intel® oneAPI DPC++/C++ Compiler/CPU, GPU and FPGA"],
-  "description": "Simple program that adds two large vectors in parallel.  Provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using simple Data Parallel C++.",
+  "name": "Base: Vector Add",
+  "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra"],
+  "description": "This simple sample adds two large vectors in parallel. Provides a ‘Hello World!’ like sample to ensure your environment is setup correctly using simple Intel® oneAPI Data Parallel C++ (DPC++)",
   "toolchain": ["dpcpp"],
   "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
   "targetDevice": ["CPU", "GPU", "FPGA"],
@@ -101,9 +101,24 @@
         ]
       },
       {
+        "id": "fpga_emu_usm",
+        "steps": [
+          "make fpga_emu_usm -f Makefile.fpga",
+          "make run_emu_usm -f Makefile.fpga",
+          "make clean -f Makefile.fpga"
+        ]
+      },
+      {
         "id": "fpga_report_buffers",
         "steps": [
           "make report -f Makefile.fpga",
+          "make clean -f Makefile.fpga"
+        ]
+      },
+      {
+        "id": "fpga_report_usm",
+        "steps": [
+          "make report_usm -f Makefile.fpga",
           "make clean -f Makefile.fpga"
         ]
       }
@@ -120,7 +135,7 @@
       {
         "id": "buffer_cpu",
         "env": [
-          "export SYCL_DEVICE_TYPE=CPU"
+          "set SYCL_DEVICE_TYPE=CPU"
         ],
         "steps": [
           "nmake -f Makefile.win",
@@ -131,7 +146,7 @@
       {
         "id": "buffer_gpu",
         "env": [
-          "export SYCL_DEVICE_TYPE=GPU"
+          "set SYCL_DEVICE_TYPE=GPU"
         ],
         "steps": [
           "nmake -f Makefile.win",
@@ -142,7 +157,7 @@
       {
         "id": "buffer_host",
         "env": [
-          "export SYCL_DEVICE_TYPE=HOST"
+          "set SYCL_DEVICE_TYPE=HOST"
         ],
         "steps": [
           "nmake -f Makefile.win",
@@ -161,7 +176,7 @@
       {
         "id": "usm_cpu",
         "env": [
-          "export SYCL_DEVICE_TYPE=CPU"
+          "set SYCL_DEVICE_TYPE=CPU"
         ],
         "steps": [
           "nmake -f Makefile.win build_usm",
@@ -172,7 +187,7 @@
       {
         "id": "usm_gpu",
         "env": [
-          "export SYCL_DEVICE_TYPE=GPU"
+          "set SYCL_DEVICE_TYPE=GPU"
         ],
         "steps": [
           "nmake -f Makefile.win build_usm",
@@ -183,7 +198,7 @@
       {
         "id": "usm_host",
         "env": [
-          "export SYCL_DEVICE_TYPE=HOST"
+          "set SYCL_DEVICE_TYPE=HOST"
         ],
         "steps": [
           "nmake -f Makefile.win build_usm",
@@ -196,6 +211,14 @@
         "steps": [
           "nmake -f Makefile.win.fpga",
           "nmake -f Makefile.win.fpga run",
+          "nmake -f Makefile.win.fpga clean"
+        ]
+      },
+      {
+        "id": "fpga_emu_usm",
+        "steps": [
+          "nmake -f Makefile.win.fpga fpga_emu_usm",
+          "nmake -f Makefile.win.fpga run_usm",
           "nmake -f Makefile.win.fpga clean"
         ]
       }

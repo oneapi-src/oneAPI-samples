@@ -14,15 +14,17 @@
     <ClCompile Include="src\CompareGzip.cpp" />
     <ClCompile Include="src\crc32.cpp" />
     <ClCompile Include="src\gzip.cpp" />
-    <ClCompile Include="src\gzipkernel.cpp" />
+    <ClCompile Include="src\gzipkernel.cpp" />    
     <ClCompile Include="src\WriteGzip.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\CompareGzip.h" />
-    <ClInclude Include="src\crc32.h" />
-    <ClInclude Include="src\gzipkernel.h" />
-    <ClInclude Include="src\kernels.h" />
-    <ClInclude Include="src\WriteGzip.h" />
+    <ClInclude Include="src\CompareGzip.hpp" />
+    <ClInclude Include="src\crc32.hpp" />
+    <ClInclude Include="src\gzipkernel.hpp" />
+    <ClInclude Include="src\kernels.hpp" />
+    <ClInclude Include="src\pipe_array.hpp" />
+    <ClInclude Include="src\pipe_array_internal.hpp" />
+    <ClInclude Include="src\WriteGzip.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

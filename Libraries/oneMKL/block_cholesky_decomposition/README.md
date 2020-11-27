@@ -8,7 +8,7 @@ For more information on oneMKL, and complete documentation of all oneMKL routine
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with Gen9 or newer
-| Software                          | Intel&reg; oneMKL beta
+| Software                          | Intel&reg; oneMKL
 | What you will learn               | How to use oneMKL BLAS and LAPACK routines with pointer-based (USM) programming
 | Time to complete                  | 15 minutes
 
@@ -40,6 +40,8 @@ Run `make` to build and run the factor and solve programs. You can remove all ge
 
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
+
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
 
 ## Running the Block Cholesky Decomposition Sample
 

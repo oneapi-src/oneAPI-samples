@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SpecifyDevCmplAdditionalOptions>-Xsclock=330MHz;-Xsfp-relaxed;-Xsparallel=2</SpecifyDevCmplAdditionalOptions>
+      <SpecifyDevCmplAdditionalOptions>-Xsclock=360MHz;-Xsfp-relaxed;-Xsparallel=2</SpecifyDevCmplAdditionalOptions>
     </Link>
     <Manifest />
   </ItemDefinitionGroup>
