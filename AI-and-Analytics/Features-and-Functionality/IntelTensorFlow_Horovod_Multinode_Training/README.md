@@ -10,7 +10,7 @@ Today's modern computer systems are becoming heavily distributed and it is impor
 | Time to complete                  | 10 minutes
 
 ## Purpose
-This sample code shows how to get started with scaling out the training of a neural network in TensorFlow on multiple compute nodes in a cluster. The sample uses  [Horovod](https://github.com/horovod/horovod)*, which is a distributed deep learning training framework, to  facilitate the task of distributing the workload. Horovod's  core principles are based on MPI concepts such as size, rank, local rank, allreduce, allgather and, broadcast.
+This sample code shows how to get started with scaling out the training of a neural network in TensorFlow on multiple compute nodes in a cluster. The sample uses  [Horovod](https://github.com/horovod/horovod)*, which is a distributed deep learning training framework, to  facilitate the task of distributing the workload. Horovod's  core principles are based on MPI concepts such as size, rank, local rank, allreduce, allgather and, broadcast.
 
 Intel-optimized Tensorflow is available as part of Intel® AI Analytics Toolkit. For more information on the optimizations as well as performance data, see this blog post [TensorFlow* Optimizations on Modern Intel® Architecture](https://software.intel.com/content/www/us/en/develop/articles/tensorflow-optimizations-on-modern-intel-architecture.html).
 
@@ -28,6 +28,7 @@ Runtime settings for `OMP_NUM_THREADS`, `KMP_AFFINITY`, and `Inter/Intra-op` Thr
 This code sample is licensed under MIT license.
 
 ## Build and Run the Sample
+Note: Dependencies and prerequisites security management is out of this project's scope. Please keep your system at the latest stable version.
 
 ### Running Samples In DevCloud (Optional)
 If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
