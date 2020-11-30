@@ -11,16 +11,16 @@
 
 This sample relates to the basic usage of components of the Intel System Debugger.
 
-As a first step, please checkout the following git repository:
+As a first step, please check out the following git repository:
 
 ```git clone https://github.com/oneapi-src/oneAPI-samples.git```
 
-Then, go to the folder `Tools/SystemDebug`.
+Then, go to the folder `Tools/SystemDebug`
 The folder contains both source and documentation for how to use these components.
 
  These are the following:
 
-`efi_application` : example efi application that can be used to demo the functionality of source level debugging.
+`efi_application` : example EFI application that can be used to demo the functionality of source-level debugging.
 
 `docs` : RST documentation for tutorials of components.
 
@@ -35,9 +35,9 @@ The folder contains both source and documentation for how to use these component
 
 `TCASample.rst` : Sample of how to use the `Intel® System Debugger` to connect to a real target.
 
-`SysTraceSample.rst` : Sample of how to use the `Intel® System Debugger for System Trace` to work with a precollected trace file.
+`SysTraceSample.rst` : Sample of how to use the `Intel® System Debugger for System Trace` to work with a pre-collected trace file.
 
-`SysDbgSample.rst` : Sample of how to use the `Intel® System Debugger for System Debug` to work with the example UEFI application provided to debug bare metal applications.
+`SysDbgSample.rst` : Sample of how to use the `Intel® System Debugger for System Debug` to work with the example UEFI application provided to debug bare-metal applications.
 
 ## Licence
 

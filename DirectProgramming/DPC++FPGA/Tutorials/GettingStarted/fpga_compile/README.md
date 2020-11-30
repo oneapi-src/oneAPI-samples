@@ -14,12 +14,12 @@ This FPGA tutorial introduces how to compile DPC++ for FPGA through a simple vec
 
 
 ## Purpose
-Field-programmable gate arrays (FPGAs) are configurable integrated circuits that can be programmed to implement arbitrary circuit topologies. Classified as *spatial* compute architectures, FPGAs differ significantly from fixed Instruction Set Architecture (ISA) devices like CPUs and GPUs, and offer a different set of optimization trade-offs from these traditional accelerator devices.
+Field-programmable gate arrays (FPGAs) are configurable integrated circuits that can be programmed to implement arbitrary circuit topologies. Classified as *spatial* compute architectures, FPGAs differ significantly from fixed Instruction Set Architecture (ISA) devices like CPUs and GPUs. They offer a different set of optimization trade-offs from these traditional accelerator devices.
 
-While DPC++ can be compiled for CPU, GPU or for FPGA, the process for compiling to FPGA is somewhat different than for CPU or GPU. This tutorial motivates these differences and explains how to compile a "Hello World"-style vector addition kernel for FPGA.
+While DPC++ can be compiled for CPU, GPU, or FPGA, compiling to FPGA is somewhat different. This tutorial identifies these differences and explains how to compile a "Hello World" style vector addition kernel for FPGA.
 
-### Why is FPGA compilation different?
-FPGAs differ from CPUs and GPUs in many interesting ways. However, in the scope of this tutorial, there is only one difference that matters: compared to CPU or GPU, generating a device image for FPGA hardware is a computationally intensive and time-consuming process. It is normal for an FPGA compile to take several hours to complete.
+### Why is the FPGA compilation different?
+FPGAs differ from CPUs and GPUs in many interesting ways. However, in this tutorial's scope, there is only one difference that matters: compared to CPU or GPU, generating a device image for FPGA hardware is a computationally intensive and time-consuming process. It is usual for an FPGA compile to take several hours to complete.
 
 For this reason, only ahead-of-time (or "offline") kernel compilation mode is supported for FPGA. The long compile time for FPGA hardware makes just-in-time (or "online") compilation impractical.
 
@@ -37,23 +37,23 @@ The three types of FPGA compilation are summarized in the table below.
 
 The typical FPGA DPC++ development workflow is to iterate in each of these stages, refining the code using the feedback provided by that stage. Intel® recommends relying on emulation and the optimization report whenever possible.
 
-Compiling for FPGA emulation or to generate the FPGA optimization report requires only the Intel® oneAPI DPC++ Compiler (part of the Intel® oneAPI Base Toolkit). An FPGA hardware compile requires the Intel® FPGA Add-On for oneAPI Base Toolkit.
+Compiling for FPGA emulation or generating the FPGA optimization report requires only the Intel® oneAPI DPC++ Compiler (part of the Intel® oneAPI Base Toolkit). An FPGA hardware compile requires the Intel® FPGA Add-On for oneAPI Base Toolkit.
 
 
 #### FPGA Emulator
 
-The FPGA emulator is the fastest method to verify the correctness of your code. The FPGA emulator executes DPC++ device code on the CPU. The emulator is similar to the SYCL* host device, but unlike the host device the FPGA emulator device supports FPGA extensions such as FPGA pipes and `fpga_reg`.
+The FPGA emulator is the fastest method to verify the correctness of your code. The FPGA emulator executes the DPC++ device code on the CPU. The emulator is similar to the SYCL* host device, but unlike the host device, the FPGA emulator device supports FPGA extensions such as FPGA pipes and `fpga_reg`.
 
 There are two important caveats to remember when using the FPGA emulator.
-*  **Performance is not representative.** It is not meaningful to evaluate performance on the FPGA emulator, as it is not representative of the behavior of the FPGA device. For example, an optimization that yields a 100x performance improvement on the FPGA may show no impact on the emulator performance, or it may show an unrelated increase or decrease.
-* **Undefined behavior may differ.** If your code produces different results when compiled for the FPGA emulator versus FPGA hardware, it is likely that your code is exercising undefined behavior. By definition, undefined behavior is not specified by the language specification, and may manifest differently on different targets.
+*  **Performance is not representative.** It is not meant to evaluate performance on the FPGA emulator, as it is not representative of the FPGA device's behavior. For example, an optimization that yields a 100x performance improvement on the FPGA may show no impact on the emulator performance or show an unrelated increase or decrease.
+* **Undefined behavior may differ.** If your code produces different results when compiled for the FPGA emulator versus FPGA hardware, your code is likely to exercise undefined behavior. By definition, undefined behavior is not specified by the language specification and may manifest differently on different targets.
 
 #### Optimization Report
 A full FPGA compilation occurs in two stages:
 1. **FPGA early image:** The DPC++ device code is optimized and converted into an FPGA design specified in Verilog RTL (a low-level, native entry language for FPGAs). This intermediate compilation result is the FPGA early device image, which is *not* executable. This FPGA early image compilation process takes minutes.
 2. **FPGA hardware image:** The Verilog RTL specifying the design's circuit topology is mapped onto the FPGA's sea of primitive hardware resources by the Intel® Quartus® Prime software.  Intel® Quartus® Prime is included in the Intel® FPGA Add-On, which is required for this compilation stage. The result is an FPGA hardware binary (also referred to as a bitstream). This compilation process takes hours.
 
-Optimization reports are generated after both stages. The optimization report generated after the FPGA early device image, sometimes called the "static report", contains significant information about how the compiler has transformed your DPC++ device code into an FPGA design. The report contains visualizations of structures generated on the FPGA, performance and expected performance bottleneck information, and estimated resource utilization.
+Optimization reports are generated after both stages. The optimization report generated after the FPGA early device image, sometimes called the "static report," contains significant information about how the compiler has transformed your DPC++ device code into an FPGA design. The report includes visualizations of structures generated on the FPGA, performance and expected performance bottleneck information, and estimated resource utilization.
 
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design.html) contains a chapter on how to analyze the reports generated after the FPGA early image and FPGA image.
 
@@ -61,7 +61,7 @@ The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/ww
 This is a full compile through to the FPGA hardware image. You can target the Intel® PAC with Intel Arria® 10 GX FPGA, the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), or a custom board.
 
 ### Device Selectors
-The following code  snippet demonstrates how you can specify the target device in your source code. The selector is used to specify the target device at runtime.
+The following code snippet demonstrates how you can specify the target device in your source code. The selector is used to specify the target device at runtime.
 
 ```c++
 // FPGA device selectors are defined in this utility header
@@ -85,7 +85,7 @@ Notice that the FPGA emulator and the FPGA are are different target devices. It 
 
 
 ### Compiler Flags
-Here is a cheat sheet of the DPC++ compiler commands to compile for the FPGA emulator, to generate the FPGA early image optimization reports, and to compile for FPGA hardware.
+Here is a cheat sheet of the DPC++ compiler commands to compile for the FPGA emulator, generate the FPGA early image optimization reports, and compile for FPGA hardware.
 ```
 # FPGA emulator
 dpcpp -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu
@@ -106,11 +106,11 @@ The compiler flags used to achieve this are explained below.
 ---                 |---
 | `-fintelfpga`     | Perform ahead-of-time compilation for FPGA.
 | `-DFPGA_EMULATOR` | Adds a preprocessor define (see code snippet above).
-| `-Xshardware`     | `-Xs` is used to pass arguments to the FPGA backend. <br> Since emulator is the default FPGA target, you must pass `Xshardware` to instruct the compiler to target FPGA hardware.
+| `-Xshardware`     | `-Xs` is used to pass arguments to the FPGA backend. <br> Since the emulator is the default FPGA target, you must pass `Xshardware` to instruct the compiler to target FPGA hardware.
 | `-Xsboard`        | Optional argument to specify the FPGA board target. <br> If omitted, a default FPGA board is chosen.
 | `-fsycl-link`     | This is synonymous with `-fsycl-link=early`. <br> It instructs the compile to stop after creating the FPGA early image (and associated optimization report).
 
-Notice that whether you are targeting the FPGA emulator or FPGA hardware must be specified twice: through compiler flags for the ahead-of-time compilation, and through the device selector for the runtime.
+Notice that whether you target the FPGA emulator or FPGA hardware must be specified twice: through compiler flags for the ahead-of-time compilation and through the runtime device selector.
 
 
 ## Key Concepts
@@ -128,7 +128,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -184,7 +184,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile-time, targets emulated FPGA device): 
      ```
      nmake fpga_emu
      ```

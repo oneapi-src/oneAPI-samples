@@ -2,7 +2,7 @@
 
 This C++ API example demonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN. 
 Users will know how to access SYCL buffer and queue via oneDNN SYCL interoperability interfaces,  
-and this interface also helps users to execute a custom SYCL kernel with oneDNN library.
+and this interface also helps users to execute a custom SYCL kernel with an oneDNN library.
 
 | Optimized for                      | Description
 | :---                               | :---
@@ -16,7 +16,7 @@ and this interface also helps users to execute a custom SYCL kernel with oneDNN 
 
 This sample demonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN.
 
-With this sample you will learn:
+With this code sample, you will learn:
 * How to create a GPU or CPU engine.
 * How to create a memory descriptor/object.
 * How to create a SYCL kernel for data initialization.
@@ -27,7 +27,7 @@ With this sample you will learn:
 * How to execute the primitive with the initialized memory.
 * How to validate the result through a host accessor.
 
-The sample executes on system's CPU by default and can be executed on Intel GPU
+The sample executes on the system's CPU by default and can be executed on Intel GPU
 using a command line parameter `gpu`.
 
 ## Key Implementation Details
@@ -91,18 +91,18 @@ The include folder is located at ${DNNLROOT}\include on your development system"
 ## Running the Sample
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### Application Parameters
 
-You can specify target device for this sample using command line arguments:
-* `cpu` (default) directs the application to run on system's CPU
+You can specify the target device for this sample using command-line arguments:
+* `cpu` (default) directs the application to run on the system's CPU
 * `gpu` directs the sample to run on Intel GPU
 
 > Note: When executed with `gpu` parameter the 
 > sample will return an error if there are no Intel GPUs are found in the system.
 
-You can get additional information during execution of this sample by setting
+You can get additional information during the execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
 
 #### On a Linux System

@@ -6,4 +6,4 @@
 
 
 ## License  
-The code samples are licensed under MIT license 
+The code samples are licensed under the MIT license 

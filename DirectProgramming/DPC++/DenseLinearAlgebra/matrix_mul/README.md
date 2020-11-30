@@ -19,7 +19,7 @@ matrix_mul is a slightly more complex computation than vector_add by
 multiplying two large matrices.  The code will attempt to run the calculation
 on both the GPU and CPU, and then verifies the results. The size of the
 computation can be adjusted for heavier workloads (defined below). If
-successful, the name of the offload device and a success message are
+successful, the name of the offload device and a success message is
 displayed.
 
 This sample uses buffers to manage memory.  For more information regarding
@@ -32,7 +32,7 @@ relatively simple sample. The default will build the DPC++ application.
 Separate OpenMP build instructions are provided below. Note: matrix_mul does not
 support OpenMP on Windows.
 
-The code will attempt first to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected.  The device used for compilation is displayed in the output.
+The code will attempt to execute on an available GPU first and fallback to the system's CPU if a compatible GPU is not detected.  The device used for the compilation is displayed in the output.
 
 ## Key implementation details
 SYCL implementation explained.
@@ -55,7 +55,7 @@ This code sample is licensed under MIT license.
 The include folder is located at "%ONEAPI_ROOT%\dev-utilities\latest\include" on your development system.
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
 
 ### How to build for DPC++ on Linux  
    * Build the program using Make  
@@ -102,7 +102,7 @@ The OpenMP offload target is not supported on Windows at this time.
 ## Running the Sample
 
 ### Application Parameters 
-You can modify the size of the computation by adjusting the size parameter
+You can modify the computation size by adjusting the size parameter
 (must be in multiples of 8) in the dpcpp and omp .cpp files. The configurable parameters include:
    size = m_size = 150*8; // Must be a multiple of 8.
    M = m_size / 8;

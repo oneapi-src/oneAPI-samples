@@ -15,7 +15,7 @@ For more information on oneMKL, and complete documentation of all oneMKL routine
 
 ## Purpose
 
-This sample uses a Monte Carlo (randomized) method to estimate European call and put option values, based on a stochastic model of stock prices. A large number of possible realizations of the stock price over time are generated, and an estimation of the call and put options is made by averaging their values in each realization.
+This sample uses a Monte Carlo (randomized) method to estimate European call and put option values based on a stochastic stock price model. A large number of possible realizations of the stock price over time are generated, and an estimation of the call and put options is made by averaging their values in each realization.
 
 This sample performs its computations on the default DPC++ device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
 
@@ -24,9 +24,9 @@ This sample performs its computations on the default DPC++ device. You can set t
 
 This sample illustrates how to create an RNG engine object (the source of pseudo-randomness), a distribution object (specifying the desired probability distribution), and finally generate the random numbers themselves. Random number generation can be done from the host, storing the results in a DPC++ buffer or USM pointer, or directly in a DPC++ kernel.
 
-In this sample, a Philox 4x32x10 generator is used, and a log-normal distribution is the basis for the Monte Carlo simulation. oneMKL provides many other generators and distributions to suit a range of applications. After generating the random number input for the simulation, prices are calculated, and then averaged using DPC++ reduction functions.
+In this sample, a Philox 4x32x10 generator is used, and a log-normal distribution is the basis for the Monte Carlo simulation. oneMKL provides many other generators and distributions to suit a range of applications. After generating the random number input for the simulation, prices are calculated and then averaged using DPC++ reduction functions.
 
-Two versions of the sample are provided: one using DPC++ buffer objects, and one using raw pointers (Unified Shared Memory).
+Two versions of the sample are provided: one using DPC++ buffer objects and one using raw pointers (Unified Shared Memory).
 
 
 ## License
@@ -49,13 +49,13 @@ Run `nmake` to build and run the sample programs. `nmake clean` removes temporar
 *Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
 
 ## Running the Monte Carlo European Options Sample
-If everything is working correctly, both buffer and USM versions of the program will run the Monte Carlo simulation. After simulation, results will be checked against the known true values given by the Black-Scholes formula, and the absolute error is output.
+If everything is working correctly, both buffer and USM versions of the program will run the Monte Carlo simulation. After the simulation, results will be checked against the known true values given by the Black-Scholes formula, and the absolute error is output.
 
 ```
 ./mc_european
 
 Monte Carlo European Option Pricing Simulation
-Buffer Api
+Buffer API
 ----------------------------------------------
 Number of options = 2048
 Number of samples = 262144
@@ -65,7 +65,7 @@ call_abs_err = 0.0665814
 ./mc_european_usm
 
 Monte Carlo European Option Pricing Simulation
-Unified Shared Memory Api
+Unified Shared Memory API
 ----------------------------------------------
 Number of options = 2048
 Number of samples = 262144
