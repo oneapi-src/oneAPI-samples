@@ -1,5 +1,5 @@
 # Matrix Multiply Sample
-A sample containing multiple implementations of matrix multiplication. This sample code is implemented using DPC++ language for CPU and GPU. 
+A sample containing multiple implementations of matrix multiplication code sample and  is implemented using the DPC++ language for CPU and GPU. 
   
 | Optimized for                       | Description
 |:---                               |:---
@@ -11,7 +11,7 @@ A sample containing multiple implementations of matrix multiplication. This samp
 
 ## Purpose
 
-The Matrix Multiplication sample performs basic matrix multiplication. Three version are provided that use different features of DPC++.
+The Matrix Multiplication sample performs basic matrix multiplication. Three versions are provided that use different features of DPC++.
 
 ## Key Implementation details
 
@@ -27,7 +27,7 @@ This sample contains 3 version of matrix multiplication using DPC++:
 
     multiply1 – basic implementation of matrix multiply using DPC++
     multiply1_1 – basic implementation that replaces the buffer store with a local accessor “acc” to reduce memory traffic
-    multiply1_2 – basic implementation plus the local accessor and matrix tiling
+    multiply1_2 – the basic implementation, plus adding the local accessor and matrix tiling
 
 Edit the line in multiply.h to select the version of the multiply function:
 #define MULTIPLY multiply1

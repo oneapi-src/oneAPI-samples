@@ -1,40 +1,40 @@
 # Intel(R) Low Precision Optimization Tool (iLiT) Sample for Tensorflow
 
 ## Background
-Low-precision inference can speed up infernece obviously, by converting fp32 model to int8 or bf16 model. Intel provides Intel(R) Deep Learning Boost techonoloy in the Second Generation Intel(R) Xeon(R) Scalable Processors and newer Xeon(R), which supports to speed up int8 and bf16 model by hardware.
+Low-precision inference can speed up inference obviously, by converting the fp32 model to int8 or bf16 model. Intel provides Intel(R) Deep Learning Boost technology in the Second Generation Intel(R) Xeon(R) Scalable Processors and newer Xeon(R), which supports to speed up int8 and bf16 model by hardware.
 
-Intel(R) Low Precision Optimization Tool (iLiT) helps user to simple the processing to convert fp32 model to int8/bf16.
+Intel(R) Low Precision Optimization Tool (iLiT) helps the user to simplify the processing to convert the fp32 model to int8/bf16.
 
-In same time, iLiT will tune the quanization method to reduce the accuracy loss, which is big blocker for low-precision inference.
+At the same time, iLiT will tune the quanization method to reduce the accuracy loss, which is a big blocker for low-precision inference.
 
-iLiT is released in Intel(R) AI Analytics Toolkit and works with Intel(R) Optimizition of Tensorflow*.
+iLiT is released in Intel(R) AI Analytics Toolkit and works with Intel(R) Optimization of Tensorflow*.
 
-Please refer to official website for detailed info and news: [https://github.com/intel/lp-opt-tool](https://github.com/intel/lp-opt-tool)
+Please refer to the official website for detailed info and news: [https://github.com/intel/lp-opt-tool](https://github.com/intel/lp-opt-tool)
 
 ## License
 
 This code sample is licensed under MIT license.
 
 ## Purpose
-In this sample, we will show a whole process to build up a CNN model to recognize hand writing number and speed up it by iLiT.
+This sample will show a whole process to build up a CNN model to recognize handwriting number and speed up it by iLiT.
 
-We will learn how to train a CNN model based on Keras with Tensorflow, use iLiT to quantize the model and compare the performance, to learn the benefit of iLiT.
+We will learn how to train a CNN model based on Keras with Tensorflow, use iLiT to quantize the model and compare the performance to understand the benefit of iLiT.
 
 ## Key Implementation Details
 
-- Use Keras on Tensorflow to build and train CNN model.
+- Use Keras on Tensorflow to build and train the CNN model.
 
 
 - Define function and class for iLiT to quantize the CNN model.
 
   The iLiT can run on any Intel(R) CPU to quantize the AI model.
   
-  The quantized AI model has better inference performance than FP32 model on Intel CPU.
+  The quantized AI model has better inference performance than the FP32 model on Intel CPU.
   
-  Speically, it could be speeded up by the Second Generation Intel(R) Xeon(R) Scalable Processors and newer Xeon(R).
+  Specifically, it could be speeded up by the Second Generation Intel(R) Xeon(R) Scalable Processors and newer Xeon(R).
   
   
-- Test the performance of FP32 model and INT8 (quantization) model.
+- Test the performance of the FP32 model and INT8 (quantization) model.
 
 
 ## Pre-requirement
@@ -51,32 +51,32 @@ We will learn how to train a CNN model based on Keras with Tensorflow, use iLiT 
 
 ### Running in Devcloud
 
-If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also remember that you must specify the compute node (CPU) as well whether to run in batch or interactive mode. For more information see the [Intel(R) oneAPI AI Analytics Toolkit Get Started Guide] https://devcloud.intel.com/oneapi/get-started/analytics-toolkit/)
+If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also, remember that you must specify the compute node (CPU) as well as whether to run in batch or interactive mode. For more information, see the [Intel(R) oneAPI AI Analytics Toolkit Get Started Guide] https://devcloud.intel.com/oneapi/get-started/analytics-toolkit/)
 
 ### Running in Local Server
 
-Please make sure the local server is installed with Ubuntu 18.04 and following software as below guide.
+Please make sure the local server is installed with Ubuntu 18.04 and the following software as below guide.
 
-For hardware, it's recommended to choose the Second Generation Intel(R) Xeon(R) Scalable Processors and newer Xeon(R). It will speed up the quantized model specially. 
+For hardware, it's recommended to choose the Second Generation Intel(R) Xeon(R) Scalable Processors and newer Xeon(R). It will speed up the quantized model significantly. 
 
 ## Prepare Software Environment
 
 
 ### oneAPI
 
-For devcloud user, it is already installed. Please skip it.
+For the devcloud user, it is already installed. Please skip it.
 
-Please install Intel(R) AI Analytics Toolkit by refer to [Intel(R) AI Analytics Toolkit Powered by oneAPI](
+Please install Intel(R) AI Analytics Toolkit by referring to [Intel(R) AI Analytics Toolkit Powered by oneAPI](
 https://software.intel.com/content/www/us/en/develop/articles/installation-guide-for-intel-oneapi-toolkits.html). 
 
 
-Intel(R) Optimizition of Tensorflow* are included in Intel(R) AI Analytics Toolkit. So, no need to install them seperately.
+Intel(R) Optimization of Tensorflow* are included in Intel(R) AI Analytics Toolkit. So, no need to install them separately.
 
 This sample depends on **Tensorflow* 2.2**.
 
 ### Activate Intel(R) AI Analytics Toolkit
 
-Please change the oneAPI installed path in following cmd, according to your installation.
+Please change the oneAPI installed path in the following cmd, according to your installation.
 
 In this case, we use "/opt/intel/oneapi" as exapmle.
 
@@ -86,7 +86,7 @@ In this case, we use "/opt/intel/oneapi" as exapmle.
    source /opt/intel/oneapi/setvars.sh
 ```
 
-- Activate Conda Env. of Intel(R) Optimizition of Tensorflow*
+- Activate Conda Env. of Intel(R) Optimization of Tensorflow*
 
   1. Show Conda Env.
   
@@ -132,7 +132,7 @@ python -m pip install matplotlib
 
 ## Running the Sample
 
-### Start up Jupyter Notebook
+### Startup Jupyter Notebook
 
 The sample is drafted based on Jupyter Notebook, please run it firstly.
 

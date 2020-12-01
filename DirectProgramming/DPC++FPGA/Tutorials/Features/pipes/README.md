@@ -32,7 +32,7 @@ This tutorial focuses on kernel-kernel pipes, but
 the concepts discussed here apply to other kinds of pipes as well.
 
 The `read` and `write` operations have two variants: 
-* Blocking variant: Blocking operations may not return immediately, but are always successful.
+* Blocking variant: Blocking operations may not return immediately but are always successful.
 * Non-blocking variant: Non-blocking operations take an extra boolean parameter
 that is set to `true` if the operation happened successfully. 
 
@@ -48,13 +48,13 @@ consider a pipe `P` with capacity 3, and two kernels `K1` and `K2` using
 
  `write(1)`, `write(2)`, `write(3)`
 
-In this situation, the pipe is full, because three (the `capacity` of
+In this situation, the pipe is full because three (the `capacity` of
 `P`) `write` operations were performed without any `read` operation. In this
 situation, a `read` must occur before any other `write` is allowed.
 
 If a `write` is attempted to a full pipe, one of two behaviors occur:
 
-  * If the operation is non-blocking, it returns immediately and its
+  * If the operation is non-blocking, it returns immediately, and its
   boolean parameter is set to `false`. The `write` does not have any effect.
   * If the operation is blocking, it does not return until a `read` is
   performed by the other endpoint. Once the `read` is performed, the `write`
@@ -76,7 +76,7 @@ using ProducerToConsumerPipe = pipe<  // Defined in the DPC++ headers.
 ```
 
 The `class ProducerToConsumerPipe` template parameter is important to the
-uniqueness of the pipe. This class need not be defined, but must be distinct
+uniqueness of the pipe. This class need not be defined but must be distinct
 for each pipe. Consider another type alias with the exact same parameters:
 
 ```c++
@@ -157,7 +157,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (FPGA) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -269,7 +269,7 @@ You should see the following output in the console:
 
     PASSED: The results are correct
     ```
-    NOTE: The FPGA emulator does not accurately represent the performance nor the relative timing of the kernels (i.e. the start and end times).
+    NOTE: The FPGA emulator does not accurately represent the performance nor the kernels' relative timing (i.e., the start and end times).
 
 2. When running on the FPGA device
     ```
