@@ -1,7 +1,7 @@
 # oneDNN Simple Model Sample
 
 This sample is implemented in C++ and DPC++ and runs on CPU or GPU. The sample
-also includes [a Jupyter Notebook](simple_model.ipynb) that
+also includes [Jupyer notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_simple_model.ipynb) that
 demonstrates how to port a oneDNN sample from CPU-only version to CPU & GPU
 in Intel oneAPI DevCloud environment.
 
