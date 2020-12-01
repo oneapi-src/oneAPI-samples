@@ -1,5 +1,5 @@
 # Compiling DPC++ for FPGA
-This FPGA tutorial introduces how to compile DPC++ for FPGA through a simple vector addition example.
+This FPGA tutorial introduces how to compile DPC++ for FPGA through a simple vector addition example. If you are new to DPC++ for FPGA, start here!
 
 ***Documentation***: The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
 
@@ -14,11 +14,11 @@ This FPGA tutorial introduces how to compile DPC++ for FPGA through a simple vec
 
 
 ## Purpose
-Field-programmable gate arrays (FPGAs) are configurable integrated circuits that can be programmed to implement arbitrary circuit topologies. Classified as *spatial* compute architectures, FPGAs differ significantly from fixed Instruction Set Architecture (ISA) devices like CPUs and GPUs. They offer a different set of optimization trade-offs from these traditional accelerator devices.
+Field-programmable gate arrays (FPGAs) are configurable integrated circuits that can be programmed to implement arbitrary circuit topologies. Classified as *spatial* compute architectures, FPGAs differ significantly from fixed Instruction Set Architecture (ISA) devices like CPUs and GPUs. FPGAs offer a different set of optimization trade-offs from these traditional accelerator devices.
 
-While DPC++ can be compiled for CPU, GPU, or FPGA, compiling to FPGA is somewhat different. This tutorial identifies these differences and explains how to compile a "Hello World" style vector addition kernel for FPGA.
+While DPC++ can be compiled for CPU, GPU, or FPGA, compiling to FPGA is somewhat different. This tutorial explains these differences and shows how to compile a "Hello World" style vector addition kernel for FPGA, following the recommended workflow.
 
-### Why is the FPGA compilation different?
+### Why is compilation different for FPGA?
 FPGAs differ from CPUs and GPUs in many interesting ways. However, in this tutorial's scope, there is only one difference that matters: compared to CPU or GPU, generating a device image for FPGA hardware is a computationally intensive and time-consuming process. It is usual for an FPGA compile to take several hours to complete.
 
 For this reason, only ahead-of-time (or "offline") kernel compilation mode is supported for FPGA. The long compile time for FPGA hardware makes just-in-time (or "online") compilation impractical.
@@ -45,8 +45,8 @@ Compiling for FPGA emulation or generating the FPGA optimization report requires
 The FPGA emulator is the fastest method to verify the correctness of your code. The FPGA emulator executes the DPC++ device code on the CPU. The emulator is similar to the SYCL* host device, but unlike the host device, the FPGA emulator device supports FPGA extensions such as FPGA pipes and `fpga_reg`.
 
 There are two important caveats to remember when using the FPGA emulator.
-*  **Performance is not representative.** It is not meant to evaluate performance on the FPGA emulator, as it is not representative of the FPGA device's behavior. For example, an optimization that yields a 100x performance improvement on the FPGA may show no impact on the emulator performance or show an unrelated increase or decrease.
-* **Undefined behavior may differ.** If your code produces different results when compiled for the FPGA emulator versus FPGA hardware, your code is likely to exercise undefined behavior. By definition, undefined behavior is not specified by the language specification and may manifest differently on different targets.
+*  **Performance is not representative.** _Never_ draw inferences about FPGA performance from the FPGA emulator. The FPGA emulator's timing behavior is uncorrelated to that of the physical FPGA hardware. For example, an optimization that yields a 100x performance improvement on the FPGA may show no impact on the emulator performance. It may show an unrelated increase or even a decrease. 
+* **Undefined behavior may differ.** If your code produces different results when compiled for the FPGA emulator versus FPGA hardware, your code most likely exercises undefined behavior. By definition, undefined behavior is not specified by the language specification and may manifest differently on different targets.
 
 #### Optimization Report
 A full FPGA compilation occurs in two stages:
@@ -151,15 +151,15 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for [emulation](#fpga-emulator) (fast compile time, targets emulated FPGA device):
+   * Compile for [emulation](#fpga-emulator) (compiles quickly, targets emulated FPGA device):
       ```
       make fpga_emu
       ```
-   * Generate the [optimization report](#optimization-report):
+   * Generate the [optimization report](#optimization-report): 
      ```
      make report
      ```
-   * Compile for [FPGA hardware](#fpga-hardware) (longer compile time, targets FPGA device):
+   * Compile for [FPGA hardware](#fpga-hardware) (takes longer to compile, targets FPGA device):
      ```
      make fpga
      ```
@@ -184,7 +184,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile-time, targets emulated FPGA device): 
+   * Compile for emulation (compiles quickly, targets emulated FPGA device): 
      ```
      nmake fpga_emu
      ```
