@@ -151,15 +151,15 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for [emulation](#fpga-emulator) (fast compile time, targets emulated FPGA device):
+   * Compile for [emulation](#fpga-emulator) (compiles quickly, targets emulated FPGA device):
       ```
       make fpga_emu
       ```
-   * Generate the [optimization report](#optimization-report):
+   * Generate the [optimization report](#optimization-report): 
      ```
      make report
      ```
-   * Compile for [FPGA hardware](#fpga-hardware) (longer compile time, targets FPGA device):
+   * Compile for [FPGA hardware](#fpga-hardware) (takes longer to compile, targets FPGA device):
      ```
      make fpga
      ```
@@ -184,7 +184,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (compiles quickly, targets emulated FPGA device): 
      ```
      nmake fpga_emu
      ```
