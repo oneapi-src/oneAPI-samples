@@ -1,0 +1,22 @@
+{
+    "guid": "63C2CFFD-3203-4EF9-BA9F-EC51364401E8",
+    "name": "GEMM",
+    "categories": ["Toolkit/oneAPI Tools/Benchmarks"],
+    "description": "The simple-dgemm is a simple program that adds multiplies two matrices of double precision floats and verifies the results",
+    "toolchain": [ "dpcpp" ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "languages": [ { "cpp": {} } ],
+    "os": [ "linux" ],
+    "builder": [ "ide", "cmake" ],
+    "ciTests": {
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make",
+                          "make run"
+                   ]
+          }]
+    }
+  }
