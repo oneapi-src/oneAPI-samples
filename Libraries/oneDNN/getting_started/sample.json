@@ -5,9 +5,9 @@
  "description": "Basic Intel® oneDNN programming model for both Intel® CPU and GPU",
  "toolchain": ["dpcpp"],
  "languages": [{"cpp":{}}],
- "dependencies": ["oneDNN", "tbb"],
+ "dependencies": ["dnnl", "tbb"],
  "os": ["linux","windows"],
- "builder": ["cmake"],
+ "builder": ["cli","cmake"],
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
 	"linux": [{

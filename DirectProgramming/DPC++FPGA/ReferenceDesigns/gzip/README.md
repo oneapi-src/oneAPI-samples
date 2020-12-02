@@ -143,13 +143,13 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
      ./gzip.fpga_emu <input_file> [-o=<output_file>]     (Linux)
      gzip.fpga_emu.exe <input_file> [-o=<output_file>]   (Windows)
      ```
-    > Note: for the Low Latency variant use `gzip.fpga_emu_ll`. Only supported on Stratix® 10 SX.
+    > Note: for the Low Latency variant use `gzip_ll.fpga_emu`. Only supported on Stratix® 10 SX.
 2. Run the sample on the FPGA device:
      ```
      aocl initialize acl0 pac_s10_usm
      ./gzip.fpga <input_file> [-o=<output_file>]         (Linux)
      ```
-     > Note: for the Low Latency variant use `gzip.fpga_ll`. Only supported on Stratix® 10 SX.
+     > Note: for the Low Latency variant use `gzip_ll.fpga`. Only supported on Stratix® 10 SX.
  ### Application Parameters
 
 | Argument | Description
