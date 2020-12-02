@@ -4,7 +4,7 @@
  "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
  "description": "This sample illustrates how to run ILIT to quantize the FP32 model trained by Keras on Tensorflow to INT8 model to speed up the inference.",
  "languages": [{"python":{}}],
- "dependencies": ["tensoflow","notebook","matplotlib"],
+ "dependencies": ["tensorflow","iLiT"],
  "os": ["linux"],
  "builder": ["cli"],
  "targetDevice": ["CPU"],
@@ -13,11 +13,10 @@
 	{
 		"env": ["source ${ONEAPI_ROOT}/setvars.sh --force",
 			"conda env remove -n user_tensorflow",
-			"conda create --name user_tensorflow --clone tensorflow",
+			"conda create --name user_tensorflow -y",
 			"conda activate user_tensorflow",
-			"conda install -c ${ONEAPI_ROOT}/conda_channel pyyaml scikit-learn schema ilit -y",
-			"python -m pip install notebook matplotlib",
-		        "conda install runipy -y"
+			"conda install -c ${ONEAPI_ROOT}/conda_channel tensorflow numpy pyyaml scikit-learn schema ilit matplotlib -y --offline",
+		        "conda install runipy notebook -y"
                         ],
 		"id": "ilit tensorflow",
 		"steps": [

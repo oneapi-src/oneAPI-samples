@@ -1,6 +1,6 @@
 set(DEVICE_SOURCE_FILE kernel.cpp)
 set(KERNEL_HEADER_FILE kernel.hpp)
-set(HOST_SOURCE_FILE main.cpp)
+set(HOST_SOURCE_FILE host.cpp)
 set(TARGET_NAME fast_recompile)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
