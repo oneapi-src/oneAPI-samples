@@ -10,7 +10,7 @@ be stable.
 
 ## Code Samples
 
-|Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	| 
+|Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	|
 |-----------------------|-------------------------------------------|---------------|
 |DirectPrograming/ |
 |../DPC++/CombinationalLogic/Mandelbrot 	|GPU, CPU  	|Example of a fractal in   mathematics 	|
@@ -76,7 +76,6 @@ be stable.
 |../IoTConnectionTools/Onboard   Blink    	|CPU  	|Built-in   LED blink for common IoT boards using Eclipse* MRAA 	|
 |../IoTConnectionTools/PWM 	|CPU  	|Pulse   Width Modulation pin output using Eclipse* MRAA   	|
 |../IoTConnectionTools/Up2   LEDs    	|CPU  	|Built-in   LED example for UP* Squared using Eclipse* MRAA	|
-|../SystemDebug/System Debug   Sample Build    	|UEFI 	|Basic example that   showcases the features of the Intel® System Debugger	|
 
 ## License
 
