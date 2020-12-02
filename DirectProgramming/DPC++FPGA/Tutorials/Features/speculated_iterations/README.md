@@ -15,9 +15,9 @@ This FPGA tutorial demonstrates applying the `speculated_iterations` attribute t
 
 
 ## Purpose
-Loop speculation is an advanced loop pipelining optimization technique. It enables loop iterations to be initiated before determining whether they should have been initiated. "Speculated iterations" are those iterations that launch before the exit condition computation has completed. This is beneficial when the computation of the exit condition is preventing effective loop pipelining.
+Loop speculation is an advanced loop pipelining optimization technique. It enables loop iterations to be initiated before determining whether they should have been initiated. "Speculated iterations" are those iterations that launch before the exit condition computation has been completed. This is beneficial when the computation of the exit condition is preventing effective loop pipelining.
 
-The `speculated_iterations` attribute is a loop attribute that enables you to directly control the number of speculated iterations for a loop.  The attribute  `[[intelfpga::speculated_iterations(N)]]` takes an integer argument `N` to specify the permissible number of iterations to speculate.
+The `speculated_iterations` attribute is a loop attribute that enables you to control the number of speculated iterations for a loop directly.  The attribute  `[[intelfpga::speculated_iterations(N)]]` takes an integer argument `N` to specify the permissible number of iterations to speculate.
 
 ### Simple example
 ```
@@ -32,7 +32,7 @@ The loop in this example will have one speculated iteration.
 When launching speculated iterations, operations with side-effects (such as stores to memory) must be predicated by the exit condition to ensure functional correctness. For this reason, operations with side-effects must be scheduled until after the exit condition has been computed.
 
 ### Optimizing the number of speculated iterations
-Loop speculation is beneficial when the computation of the loop exit condition is the bottleneck preventing the compiler from achieving a smaller initiation interval (II). In such instances, increasing the number of speculated iterations often improves the II.  Note that this may also uncover additional bottlenecks preventing the further optimization of the loop.
+Loop speculation is beneficial when the loop exit condition's computation is the bottleneck preventing the compiler from achieving a smaller initiation interval (II). In such instances, increasing the number of speculated iterations often improves the II.  Note that this may also uncover additional bottlenecks preventing the further optimization of the loop.
 
 However, adding speculated iterations is not without cost. They introduce overhead in nested loops, reducing overall loop occupancy. Consider the code snippet below:
 ```c++
@@ -43,14 +43,14 @@ for (size_t i = 0; i < kMany; ++i) {
   }
 }
 ```
-The *i+1*th  invocation of the inner loop cannot begin until all real and speculated iterations of its *i*th invocation have completed. This overhead is negligible if the number of speculated iterations is much less than the number of real iterations. However, when the inner loop's trip count is small on average, the overhead becomes non-negligible and the speculated iterations can become detrimental to throughput. In such circumstances, the `speculated_iterations` attribute can be used to *reduce* the number of speculated iterations chosen by the compiler's heuristics. 
+The *i+1*th invocation of the inner loop cannot begin until all real and speculated iterations of its *i*th invocation have been completed. This overhead is negligible if the number of speculated iterations is much less than the number of real iterations. However, when the inner loop's trip count is small on average, the overhead becomes non-negligible, and the speculated iterations can become detrimental to throughput. In such circumstances, the `speculated_iterations` attribute can be used to *reduce* the number of speculated iterations chosen by the compiler's heuristics. 
 
-In both increasing and decreasing cases, some experimentation is usually necessary. Choosing too new speculated iterations can increase the II because multiple cycles are required to evaluate the exit condition. Choosing too many speculated iterations creates unneeded "dead space" between sequential invocations of an inner loop.
+In both increasing and decreasing cases, some experimentation is usually necessary. Choosing too new speculated iterations could increase the II because multiple cycles are required to evaluate the exit condition. Choosing too many speculated iterations creates unneeded "dead space" between sequential invocations of an inner loop.
 
 ### Tutorial example
-In the tutorial design's kernel, the exit condition of the loop involves a logarithm and a compare operation. This complex exit condition prevents the loop from achieving ```II=1```. 
+In the tutorial design's kernel, the loop's exit condition involves a logarithm and a compare operation. This complex exit condition prevents the loop from achieving ```II=1```. 
 
-The design enqueues variants of the kernel with 0, 10 and 27 speculated iterations respectively to demonstrate the effect of the `speculated_iterations` attribute on the Intel® PAC with Intel Arria® 10 GX FPGA. Different numbers are chosen for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) accordingly.
+The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on the Intel® PAC with Intel Arria® 10 GX FPGA. Different numbers are chosen for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) accordingly.
 
 ## Key Concepts
 * Description of the `speculated_iterations` attribute. 
@@ -67,7 +67,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -142,14 +142,14 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ## Examining the Reports
 Locate `report.html` in the `speculated_iterations_report.prj/reports/` or `speculated_iterations_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-In the "Loop Analysis" section of the report, check the II of the loop in each version of the kernel. Use the kernel with 0 speculated iteration as a base version, check its loop II as a hint for the ideal number for speculated iterations. The information shown below is from compiling on the Intel® PAC with Intel Arria® 10 GX FPGA.
+In the "Loop Analysis" section of the report, check the II of the loop in each kernel version. Use the kernel with 0 speculated iteration as a base version, check its loop II as a hint for the ideal number for speculated iterations. The information shown below is from compiling on the Intel® PAC with Intel Arria® 10 GX FPGA.
 
-* When the number of  `speculated iterations` is set to 0, the loop II is 27.
+* When the number of  `speculated iterations` is set to 0, loop II is 27.
 * Setting the `speculated iterations` to 27 yielded an II of 1.
 * Setting the `speculated iterations` to an intermediate value of 10 results in an II of 3. 
 
 
-These results make sense when you recall that the loop exit computation has a latency of 27 cycles (suggested by looking at the loop II with 0 speculation). With no speculation, a new iteration can only be launched every 27 cycles. Increasing the speculation to 27 enables a new iteration to launch every cycle. Reducing the speculation to 10 results in an II of 3 because 10 speculated iteration multipled by 3 cycles between iterations leaves 30 cycles in which to compute the exit condition, sufficient to cover the 27-cycle exit condition. 
+These results make sense when you recall that the loop exit computation has a latency of 27 cycles (suggested by looking at loop II with 0 speculations). With no speculation, a new iteration can only be launched every 27 cycles. Increasing the speculation to 27 enables a new iteration to launch every cycle. Reducing the speculation to 10 results in an II of 3 because 10 speculated iterations multiplied by 3 cycles between iterations leaves 30 cycles in which to compute the exit condition, sufficient to cover the 27-cycle exit condition. 
 
 ## Running the Sample
 
@@ -173,7 +173,7 @@ Speculated Iterations: 27 -- kernel time: 317 ms
 Performance for kernel with 27 speculated iterations: 315181 MFLOPs
 PASSED: The results are correct
 ```
-The execution time and throughput for each kernel is displayed. 
+The execution time and throughput for each kernel are displayed. 
 
 Note that this performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
      

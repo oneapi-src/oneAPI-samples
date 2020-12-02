@@ -15,13 +15,13 @@ This FPGA tutorial demonstrates how to use on-chip memory attributes to control 
 
 
 ## Purpose
-For each private or local array in your DPC++ FPGA device code, the Intel® oneAPI DPC++ Compiler creates a custom memory system in your program's datapath to contain the contents of that array. The compiler has many options to choose from when architecting this on-chip memory structure. Memory attributes are a set of DPC++ extensions for FPGA that enable you to override the compiler's internal heuristics and to control the architecture of kernel memory.
+For each private or local array in your DPC++ FPGA device code, the Intel® oneAPI DPC++ Compiler creates a custom memory system in your program's datapath to contain the contents of that array. The compiler has many options to choose from when architecting this on-chip memory structure. Memory attributes are a set of DPC++ extensions for FPGA that enable you to override the compiler's internal heuristics and control kernel memory architecture.
 
 ### Introduction to Memory Attributes
 
-To maximize kernel throughput, your design's datapath should have stall-free accesses to all of its memory systems. A memory read or write is said to be *stall-free* if the compiler can prove that it has contention-free access to a memory port. A memory system is stall-free if all of its accesses have this property. Wherever possible, the compiler will try to create a minimum-area, stall-free memory system. 
+To maximize kernel throughput, your design's datapath should have stall-free access to all of its memory systems. A memory read or write is said to be *stall-free* if the compiler can prove that it has contention-free access to a memory port. A memory system is stall-free if all of its accesses have this property. Wherever possible, the compiler will try to create a minimum-area, stall-free memory system. 
 
-If a different area performance trade-off is desired, or if the compiler fails to find the best configuration, you can use memory attributes to override the compiler’s decisions and specify the memory configuration you need.
+Suppose a different area performance trade-off is desired, or the compiler fails to find the best configuration. In that case, you can use memory attributes to override the compiler’s decisions and specify the memory configuration you need.
 
 Memory attributes can be applied to any variable or array defined within the kernel and to struct data members in struct declarations. The compiler supports the following memory attributes:
 
@@ -81,9 +81,9 @@ q.submit([&](handler &h) {
     State S1;
     
     // In this case, we have attributes on struct declaration as
-    // well as struct instantiation. When this happpens, the outer
-    // level attribute takes precendence. Here, the compiler will
-    // generate a single memory system for S2 which will have 4
+    // well as struct instantiation. When this happens, the outer
+    // level attribute takes precedence. Here, the compiler will
+    // generate a single memory system for S2, which will have 4
     // banks.  
     [[intelfpga::numbanks(4)]] State S2;
 
@@ -115,13 +115,13 @@ After all loops are unrolled, the innermost dimension of every access is known a
 
 ### Banks and replicates of `dict_offset`
 
-If we partition the memory system such that array elements `dict_offset[:][0]` (where `:` denotes all indices in range) are contained in Bank 0, `dict_offset[:][1]` are contained in Bank 1, and so on, each access is confined to a single bank. This partitioning is achieved by requesting the compiler to generate `kVec` banks.
+Suppose we partition the memory system such that array elements `dict_offset[:][0]` (where `:` denotes all indices in range) are contained in Bank 0, `dict_offset[:][1]` are contained in Bank 1, and so on, each access is confined to a single bank. This partitioning is achieved by requesting the compiler to generate `kVec` banks.
 
 In total, there are `kVec` reads from each bank. To make these reads stall-free, we request `kVec` replicates per bank so that (if needed) each read can occur simultaneously from a separate replicate. Since all replicates in a bank must contain identical data, a write to a bank must go to all replicates. 
 
-For single-pumped memories, each replicate has 2 physical ports. In the tutorial code, one of these ports is used for writing and one for reading. The compiler must generate `kVec` replicates per bank to create stall-free accesses for `kVec` reads. 
+For single-pumped memories, each replicate has two physical ports. In the tutorial code, one of these ports is used for writing and one for reading. The compiler must generate `kVec` replicates per bank to create stall-free accesses for `kVec` reads. 
 
-For double-pumped memories, each replicate effectively has 4 ports, three of which are available for reads. Hence, the compiler needs fewer replicates per bank to create stall-free reads. However, this can incur a system f<sub>MAX</sub> penalty.
+For double-pumped memories, each replicate effectively has four ports, three of which are available for reads. Hence, the compiler needs fewer replicates per bank to create stall-free reads. However, this can incur a system f<sub>MAX</sub> penalty.
 
 The choice of attributes will be further discussed in the [Examining the Reports](#examining-the-reports) section.
 
@@ -129,7 +129,7 @@ The choice of attributes will be further discussed in the [Examining the Reports
 ## Key Concepts
 * The basic concepts of on-chip memory attributes 
 * How to apply memory attributes in your program 
-* How to confirm that the memory attributes were respected by the compiler 
+* How to confirm that the compiler respected the memory attributes 
 * A case study of the type of performance/area trade-offs enabled by memory attributes 
 
 ## License  
@@ -141,7 +141,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -227,11 +227,11 @@ This view provides information about the memory configuration. The user-specifie
 
 For both single-pumped and double-pumped versions of the kernel, the compiler generates `kVec` banks and implements the memory in MLABs, as was requested through memory attributes. The main difference between these two memory systems is the number of replicates within each bank. To see the number of replicates per bank, click any bank label (say Bank 0) under `dict_offset`. 
 
-For the single-pumped memory system, the compiler created 4 replicates per bank, whereas for the double-pumped memory system, the compiler created 2 replicates per bank. A single-pumped replicate has 2 physical ports and a double-pumped replicates has 4 (effective) physical ports. For this reason, the compiler required twice as many replicates to create a stall-free system in the single-pumped version as compared to the double-pumped version. 
+For the single-pumped memory system, the compiler created four replicates per bank, whereas, for the double-pumped memory system, the compiler created two replicates per bank. A single-pumped replicate has two physical ports, and double-pumped replicates have four (effective) physical ports. For this reason, the compiler required twice as many replicates to create a stall-free system in the single-pumped version as compared to the double-pumped version. 
 
 ### Area implications
 
-This also means that the FPGA resources needed to generate the stall-free memory systems differ between the two versions. In the report, navigate to the Area Analysis of System view (Area Analysis > Area Analysis of System) and click "Expand All". For the single-pumped version, you can see that the compiler used 32 MLABs to implement the memory system for `dict_offset`, whereas for the double-pumped version, the compiler used only 16 MLABs. However, the double-pumped version of the memory required additional ALUTs and FFs to implement the double-pumping logic. 
+This also means that the FPGA resources needed to generate the stall-free memory systems differ between the two versions. In the report, navigate to the Area Analysis of System view (Area Analysis > Area Analysis of System) and click "Expand All". For the single-pumped version, you can see that the compiler used 32 MLABs to implement the memory system for `dict_offset`, whereas, for the double-pumped version, the compiler used only 16 MLABs. However, the double-pumped version of the memory required additional ALUTs and FFs to implement the double-pumping logic. 
 
 In general, double-pumped memories are more area-efficient than single-pumped memories.
 
@@ -239,11 +239,11 @@ In general, double-pumped memories are more area-efficient than single-pumped me
 
 The use of double-pumped memories can impact the f<sub>MAX</sub> of your system. Double-pumped memories have to be clocked at twice the frequency of the rest of the datapath, and the resulting cross-clock domain transfer can reduce f<sub>MAX</sub>. The effect is particularly pronounced when double-pumping MLABs.
 
-In this tutorial, both the single-pumped and double-pumped version of the kernel share a single clock domain, so the difference in f<sub>MAX</sub> cannot be directly observed in the report. 
+In this tutorial, both the single-pumped and double-pumped versions of the kernel share a single clock domain, so the difference in f<sub>MAX</sub> cannot be directly observed in the report. 
 
 If you want to observe the f<sub>MAX</sub> effect, modify the code to enqueue only the single-pumped (or only the double-pumped) version of the kernel. Only the report generated from a full FPGA compile (`make fpga`) will provide f<sub>MAX</sub> information.
 
-The table that follows summarizes the f<sub>MAX</sub> achieved when compiling single-kernel variants of the tutorial design to an on Intel® PAC with Intel® Arria® 10 GX FPGA.
+The table below summarizes the f<sub>MAX</sub> achieved when compiling single-kernel variants of the tutorial design to an on Intel® PAC with Intel® Arria® 10 GX FPGA.
 
 Variant  | Fmax (MHz) | \# MLABs in `dict_offset`
 ------------- | ------------- | --------
@@ -279,4 +279,5 @@ PASSED: all kernel results are correct.
 
 Feel free to experiment further with the tutorial code. You can:
  - Change the memory implementation type to block RAMs (using `[[intelfpga::memory("BLOCK_RAM")]]`) or registers (using `[[intelfpga::register]]`) to see how it affects the area and f<sub>MAX</sub> of the tutorial design.
- - Vary `kRows` and/or `kVec` (both in powers of 2) to see how it effects the trade-off between single-pumped and double-pumped memories.
+ Vary `kRows` and/or `kVec` (both in powers of 2) see how it affects the trade-off between single-pumped and double-pumped memories.
+

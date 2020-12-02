@@ -1,5 +1,5 @@
 # TBB-Task-Sycl Sample
-This sample illustrates how 2 TBB tasks can execute similar computational kernels with one task executing SYCL code and another one the TBB code. This tbb-task-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.
+This sample illustrates how two TBB tasks can execute similar computational kernels, with one task executing the SYCL code and the other task executing the TBB code. This tbb-task-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
@@ -9,13 +9,13 @@ This sample illustrates how 2 TBB tasks can execute similar computational kernel
 | Time to complete                  | 15 minutes
 
 ## Purpose
-The Purpose of this sample is to show how similar computational kernels can be executed by two TBB tasks with one excuting on SYCL code and another on TBB code. 
+The purpose of this sample is to show how similar computational kernels can be executed by two TBB tasks, with one executing on SYCL code and another on TBB code. 
   
 ## Key Implementation Details 
 The implementation based on TBB tasks and SYCL explained. 
 
 ## License  
-This code sample is licensed under MIT license   
+This code sample is licensed under the MIT license   
 
 ## Building the TBB-Task-Sycl Program 
 
@@ -60,4 +60,4 @@ None
     output array c_array on GPU: 0 1.5 3 4.5 6 7.5 9 10.5 12 13.5 15 16.5 18 19.5 21 22.5
     output array c_array_tbb on CPU: 0 1.5 3 4.5 6 7.5 9 10.5 12 13.5 15 16.5 18 19.5 21 22.5
     Built target run
- 
+

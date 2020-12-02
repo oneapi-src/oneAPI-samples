@@ -1,5 +1,5 @@
 # Matrix Multiply Sample
-A sample containing multiple implementations of matrix multiplication. This sample code is implemented using DPC++ language for CPU and GPU. 
+A code sample containing multiple implementations of matrix multiplication. This sample code is implemented using DPC++ language for CPU and GPU. 
   
 | Optimized for                       | Description
 |:---                               |:---
@@ -11,14 +11,14 @@ A sample containing multiple implementations of matrix multiplication. This samp
 
 ## Purpose
 
-The Matrix Multiplication sample performs basic matrix multiplication. Three version are provided that use different features of DPC++.
+The Matrix Multiplication sample performs basic matrix multiplication. Three versions are provided that use different features of DPC++.
 
 ## Key Implementation details
 
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups. 
 
 ## License  
-This code sample is licensed under MIT license
+This code sample is licensed under the MIT license
 
 ## How to Build  
 
