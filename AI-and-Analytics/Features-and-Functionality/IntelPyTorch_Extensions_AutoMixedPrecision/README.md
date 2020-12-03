@@ -1,6 +1,6 @@
 # `Intel Extension for PyTorch Getting Started` Sample
 
-Intel Extension for PyTorch is a Python package to extend official PyTorch. It is designed to make the Out-of-Box user experience of PyTorch CPU better while achieving good performance. The extension also will be the PR(Pull-Request) buffer for the Intel PyTorch framework dev team. The PR buffer will not only contain functions, but also optimization (for example, take advantage of Intel's new hardware features).
+Intel Extension for PyTorch is a Python package to extend the official PyTorch. It is designed to make the Out-of-Box user experience of PyTorch CPU better while achieving good performance. The extension also will be the PR(Pull-Request) buffer for the Intel PyTorch framework dev team. The PR buffer will contain functions and optimization (for example, take advantage of Intel's new hardware features).
 
 For comprehensive instructions regarding Intel Extension for PyTorch, go to https://github.com/intel/intel-extension-for-pytorch.
 
@@ -15,9 +15,9 @@ For comprehensive instructions regarding Intel Extension for PyTorch, go to http
 
 ## Purpose
 
-From this sample code, you will learn how to download, compile and get started with Intel Extension for PyTorch.
+You will learn how to download, compile, and get started with Intel Extension for PyTorch from this sample code.
 
-The code will be running on CPU.
+The code will be running on the CPU.
 
 ## Key Implementation Details 
 
