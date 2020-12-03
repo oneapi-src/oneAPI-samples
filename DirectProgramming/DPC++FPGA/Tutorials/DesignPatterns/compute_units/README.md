@@ -15,7 +15,7 @@ This FPGA tutorial showcases a design pattern that allows you to make multiple c
 
 
 ## Purpose
-The performance of a design can sometimes by increased by making multiple copies of kernels, to make full use of the FPGA resources. Each kernel copy is called a compute unit.  
+A design's performance can sometimes be increased by making multiple copies of kernels to make full use of the FPGA resources. Each kernel copy is called a compute unit.  
 
 This tutorial provides a header file that defines an abstraction for making multiple copies of a single-task kernel. This header can be used in any DPC++ design and can be extended as necessary.
 
@@ -23,7 +23,7 @@ This tutorial provides a header file that defines an abstraction for making mult
 
 This code sample builds on the pipe_array tutorial. It includes the header files `pipe_array.hpp`, `pipe_array_internal.hpp`, and `unroller.hpp` from the pipe_array tutorial, and provides the `compute_units.hpp` header as well.
 
-This code sample defines a `Source` kernel, and a `Sink` kernel. Data is read from host memory by the `Source` kernel, and sent to the `Sink` kernel via a chain of compute units. The number of compute units in the chain between `Source` and `Sink` is determined by the following parameter:
+This code sample defines a `Source` kernel, and a `Sink` kernel. Data is read from host memory by the `Source` kernel and sent to the `Sink` kernel via a chain of compute units. The number of compute units in the chain between `Source` and `Sink` is determined by the following parameter:
 
 ``` c++
 constexpr size_t kEngines = 5;
@@ -65,7 +65,7 @@ void SinkKernel(queue &q, float &out_data) {
 }
 ```
 
- The following line defines the functionality of each compute unit, and submits each compute unit to the given queue `q`. The number of copies to submit is provided by the first template parameter of `SubmitComputeUnits`, while the second template parameter allows you to give the compute units a shared base name, e.g., `ChainComputeUnit`. The functionality of each compute unit must be specified by a generic lambda expression, that takes a single argument (with type `auto`) that provides an ID for each compute unit:
+ The following line defines each compute unit's functionality and submits each compute unit to the given queue `q`. The number of copies to submit is provided by the first template parameter of `SubmitComputeUnits`, while the second template parameter allows you to give the compute units a shared base name, e.g., `ChainComputeUnit`. The functionality of each compute unit must be specified by a generic lambda expression that takes a single argument (with type `auto`) that provides an ID for each compute unit:
 
 ``` c++
 SubmitComputeUnits<kEngines, ChainComputeUnit>(q, [=](auto ID) {
@@ -74,7 +74,7 @@ SubmitComputeUnits<kEngines, ChainComputeUnit>(q, [=](auto ID) {
   });
 ```
 
-Each compute unit in the chain from `Source` to `Sink` must read from a unique pipe, and write to the next pipe. As seen above, each compute unit knows its own ID and therefore its behavior can depend on this ID. Each compute unit in the chain will read from pipe `ID` and write to pipe `ID + 1`.
+Each compute unit in the chain from `Source` to `Sink` must read from a unique pipe and write to the next pipe. As seen above, each compute unit knows its ID and therefore, its behavior can depend on this ID. Each compute unit in the chain will read from pipe `ID` and write to pipe `ID + 1`.
 
 ## Key Concepts
 * A design pattern to generate multiple compute units in DPC++ using template metaprogramming
@@ -89,7 +89,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 

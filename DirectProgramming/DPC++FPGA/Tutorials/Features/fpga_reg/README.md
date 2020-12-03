@@ -55,7 +55,7 @@ The basic function performed by the tutorial kernel is a vector dot product with
 
 The optimization applied in this tutorial impacts the system f<sub>MAX</sub> or the maximum frequency that the design can run at. Since the compiler implements all kernels in a common clock domain, f<sub>MAX</sub> is a global system parameter. To see the impact of the `INTEL::fpga_reg` optimization in this tutorial, you will need to compile the design twice.
 
-Part 1 compiles the kernel code without setting the `USE_FPGA_REG` macro, whereas Part 2 compiles the kernel while setting this macro. This chooses between two code segments that are functionally equivalent, but the latter version makes use of `INTEL::fpga_reg`. In the `USE_FPGA_REG` version of the code, the compiler is guaranteed to insert at least one register stage between the input and output of each of the calls to `INTEL::fpga_reg` function.
+Part 1 compiles the kernel code without setting the `USE_FPGA_REG` macro, whereas Part 2 compiles the kernel while setting this macro. This chooses between two functionally equivalent code segments, but the latter version uses `INTEL::fpga_reg`. In the `USE_FPGA_REG` version of the code, the compiler is guaranteed to insert at least one register stage between the input and output of each of the calls to `INTEL::fpga_reg` function.
 
 #### Part 1: Without `USE_FPGA_REG`
 
@@ -72,12 +72,12 @@ The fanout grows linearly with the unroll factor in this tutorial. In FPGA desig
 
 #### Part 2: with `USE_FPGA_REG`
 
-In this part, we added two sets of `INTEL::fpga_reg` within the unrolled loop. The first is added to pipeline `val` once per iteration. This reduce the fanout of `val` from 4 in the example in Part 1 to just 2. The second `INTEL::fpga_reg` is inserted between accumulation into the `acc` value. This generates the following structure in hardware.
+In this part, we added two sets of `INTEL::fpga_reg` within the unrolled loop. The first is added to pipeline `val` once per iteration. This reduces the fanout of `val` from 4 in the example in Part 1 to just 2. The second `INTEL::fpga_reg` is inserted between accumulation into the `acc` value. This generates the following structure in hardware.
 
 <img src="fpga_reg.png" alt="Part 2" title="Part 2" width="400" />
 
 In this version, the adder tree has been transformed into a vine-like structure. This increases latency, but it helps us achieve our goal of reducing the fanout and improving f<sub>MAX</sub>.
-Since the outer loop in this tutorial is pipelined and has a high trip count, the increased latency of the inner loop has negligible impact on throughput. The tradeoff pays off, as the f<sub>MAX</sub> improvement yields a higher performing design.
+Since this tutorial's outer loop is pipelined and has a high trip count, the inner loop's increased latency has a negligible impact on throughput. The tradeoff pays off, as the f<sub>MAX</sub> improvement yields a higher performing design.
 
 ## Key Concepts
 
@@ -97,7 +97,7 @@ The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\
 
 ### Running Samples in DevCloud
 
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -187,7 +187,7 @@ Locate the pair of `report.html` files in either:
 * **Report-only compile**:  `fpga_reg_report.prj` and `fpga_reg_registered_report.prj`
 * **FPGA hardware compile**: `fpga_reg.prj` and `fpga_reg_registered.prj`
 
-Open the reports in any of Chrome*, Firefox*, Edge*, or Internet Explorer*. Observe the structure of the design in the optimization report's System Viewer and notice the changes within `Cluster 2` of the `SimpleMath.B1` block. You can notice that in the report for Part 1, the viewer shows a much more shallow graph as compared to the one in Part 2. This is because the operations are performed much closer to one another in Part 1 as compared to Part 2. By transforming the code in Part 2, with more register stages, the compiler was able to achieve an higher f<sub>MAX</sub>.
+Open the reports in Chrome*, Firefox*, Edge*, or Internet Explorer*. Observe the structure of the design in the optimization report's System Viewer and notice the changes within `Cluster 2` of the `SimpleMath.B1` block. In the report for Part 1, the viewer shows a much more shallow graph compared to the one in Part 2. This is because the operations are performed much closer to one another in Part 1 compared to Part 2. By transforming the code in Part 2, with more register stages, the compiler achieved a higher f<sub>MAX</sub>.
 
 >**NOTE**: Only the report generated after the FPGA hardware compile will reflect the performance benefit of using the `fpga_reg` extension. The difference is *not* apparent in the reports generated by `make report` because a design's f<sub>MAX</sub> cannot be predicted. The final achieved f<sub>MAX</sub> can be found in `fpga_reg.prj/reports/report.html` and `fpga_reg_registered.prj/reports/report.html` (after `make fpga` completes).
 

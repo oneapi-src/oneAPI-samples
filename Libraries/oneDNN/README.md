@@ -25,8 +25,8 @@ The code samples are licensed under MIT license.
 
 You can use oneDNN samples in
 [Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/)
-environment in the following ways:
+the environment in the following ways:
 * Login to a DevCloud system via SSH and
   * use `git clone` to get a full copy of samples repository, or
-  * use `oneapi-cli` tool to download specific sample.
+  * use the `oneapi-cli` tool to download specific sample.
 * Launch a JupyterLab server and run Jupyter Notebooks from your web browser.

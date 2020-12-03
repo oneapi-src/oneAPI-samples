@@ -2,10 +2,10 @@
 
 Deep Neural Networks Library for Deep Neural Networks (oneDNN) is an open-source performance library for deep learning applications. The library includes basic building blocks for neural networks optimized for Intel Architecture Processors and Intel Processor Graphics. oneDNN is intended for deep learning applications and framework developers interested in improving application performance on Intel CPUs and GPUs
 
-Github : https://github.com/oneapi-src/oneDNN
+Github: https://github.com/oneapi-src/oneDNN
 
 ## License  
-The code samples are licensed under MIT license
+The code samples are licensed under the MIT license
 
 # oneDNN Tutorials
 
@@ -18,4 +18,4 @@ The code samples are licensed under MIT license
 >  Notice : Please use Intel oneAPI DevCloud as the environment for jupyter notebook samples. \
 Users can refer to [DevCloud Getting Started](https://devcloud.intel.com/oneapi/get-started/) for using DevCloud \
 Users can use JupyterLab from DevCloud via "One-click Login in", and download samples via "git clone" or the "oneapi-cli" tool \
-Once users are in the JupyterLab with downloaded jupyter notebook samples, they can start following the steps without further installion needed.
+Once users are in the JupyterLab with downloaded jupyter notebook samples, they can start following the steps without further installation needed.

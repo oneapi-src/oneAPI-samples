@@ -1,5 +1,5 @@
 # Removing Loop Carried Dependencies
-This tutorial demonstrates how to remove a loop-carried dependency to improve the performance of FPGA device code.
+This tutorial demonstrates how to remove a loop-carried dependency to improve the performance of the FPGA device code.
  
 ***Documentation***: The [FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)  provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a resource for general target-independent DPC++ programming. 
  
@@ -61,7 +61,7 @@ Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in t
 ```
 
 ## Key Concepts
-* Loop carried-dependencies, and their impact on FPGA DPC++ kernel performance
+* Loop carried-dependencies and their impact on FPGA DPC++ kernel performance
 * An optimization technique to break loop-carried data dependencies in critical loops
 
 ## License  
@@ -73,7 +73,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
  
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 

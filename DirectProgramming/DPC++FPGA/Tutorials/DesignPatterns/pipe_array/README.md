@@ -15,7 +15,7 @@ This FPGA tutorial showcases a design pattern that makes it possible to create a
 
 
 ## Purpose
-In certain situations, it is useful to be able to create collection of pipes that can be indexed like an array in a DPC++ FPGA design. If you are not yet familiar with DPC++ pipes, refer to the prerequisite tutorial "Data Transfers Using Pipes".
+In certain situations, it is useful to create a collection of pipes that can be indexed like an array in a DPC++ FPGA design. If you are not yet familiar with DPC++ pipes, refer to the prerequisite tutorial "Data Transfers Using Pipes".
 
 In SYCL*, each pipe defines a unique type with static methods for reading data (`read`) and writing data (`write`). Since pipes are not objects but *types*, defining a collection of pipes requires C++ template meta-programming. This is somewhat non-intuitive but yields highly efficient code.
 
@@ -29,7 +29,7 @@ To create an array of pipes, include the top-level header (from this code sample
 #include "pipe_array.hpp"
 ```
 
-As with regular pipes, an array of pipes needs template parameters for an ID, for the `min_capacity` of each pipe, and for the data type of each pipe. An array of pipes additionally requires one or more template parameters to specify the array size. The following code declares a one dimensional array of 10 pipes, each with `capacity=32`, that operate on `int` values.
+As with regular pipes, an array of pipes needs template parameters for an ID, for the `min_capacity` of each pipe, and each pipe's data type. An array of pipes additionally requires one or more template parameters to specify the array size. The following code declares a one dimensional array of 10 pipes, each with `capacity=32`, that operate on `int` values.
 
 ```c++
 using MyPipeArray = PipeArray<     // Defined in "pipe_array.h".
@@ -50,7 +50,7 @@ auto x = MyPipeArray::PipeAt<3>::read();
 ```
 The template parameter `<3>` identifies a specific pipe within the array of pipes.  The index of the pipe being accessed *must* be determinable at compile time. 
 
-In most cases, we want to use an array of pipes so that we can iterate over them in a loop. In order to respect the requirement that all pipe indices are uniquely determinable at compile time, we must use a static form of loop unrolling based on C++ templates. A simple example is shown in the code snippet:
+In most cases, we want to use an array of pipes so that we can iterate over them in a loop. To respect the requirement that all pipe indices are uniquely determinable at compile time, we must use a static form of loop unrolling based on C++ templates. A simple example is shown in the code snippet:
 
 ```c++
 // Write 17 to every pipe in the array
@@ -78,7 +78,7 @@ using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_array.h".
     kNumCols                                     // array dimension.
     >;
 ```
-The producer kernel writes `num_passes` units of data into each of the `kNumRows * kNumCols` pipes. Note that the unrollers' lambdas must capture certain variables from their outer scope.
+The producer kernel writes `num_passes` units of data into each `kNumRows * kNumCols` pipes. Note that the unrollers' lambdas must capture certain variables from their outer scope.
 
 ```c++
 h.single_task<ProducerTutorial>([=]() {
@@ -131,7 +131,7 @@ The host must thus enqueue the producer kernel and `kNumRows * kNumCols` separat
 ```
 
 ## Key Concepts
-* A design pattern to generate a array of pipes in DPC++
+* A design pattern to generate an array of pipes in DPC++
 * Static loop unrolling through template metaprogramming
 
 ## License  
@@ -144,7 +144,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 

@@ -1,6 +1,6 @@
 # oneAPI training Jupyter notebooks 
 
-The purpose of this repo is to be the central aggregation, curation, and distribution point for Juypter notebooks that are developed in support of oneAPI training programs (e.g. oneAPI Essentials Series). 
+The purpose of this repo is to be the central aggregation, curation, and distribution point for Juypter notebooks that are developed in support of oneAPI training programs (e.g., oneAPI Essentials Series). 
 
 The Jupyter notebooks are tested and can be run on Intel Devcloud.
 Below are the steps to access these Jupyter notebooks on Intel Devcloud
