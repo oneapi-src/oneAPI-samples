@@ -2,7 +2,7 @@
 
 This code sample demonstrates the implementation of parallel prefix sum using Intel Data Parallel C++ to
 offload the computation to a GPU. In this implementation, a random sequence of 2**n elements is given
-(n is a positive number) as input, the algorithm compute the prefix sum in parallel. The result sequence is
+(n is a positive number) as input. The algorithm computes the prefix sum in parallel. The result sequence is
 in ascending order.
 
 For comprehensive instructions regarding DPC++ Programming, go to
@@ -53,7 +53,7 @@ The basic DPC++ implementation explained in the code includes device selector, b
 groups.
 
 ## License  
-This code sample is licensed under MIT license  
+This code sample is licensed under the MIT license  
 
 ## Building the `PrefixSum` Program for CPU and GPU
 
@@ -62,7 +62,7 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU,
-FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI
+FPGA) as well as whether to run in batch or interactive mode. For more information, see the Intel® oneAPI
 Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
@@ -87,9 +87,9 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 
 ### On a Windows* System
     * Build the program using VS2017 or VS2019
-      Right click on the solution file and open using either VS2017 or VS2019 IDE.
-      Right click on the project in Solution explorer and select Rebuild.
-      From top menu select Debug -> Start without Debugging.
+      Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+      Right-click on the project in Solution Explorer and select Rebuild.
+      From the top menu, select Debug -> Start without Debugging.
 
     * Build the program using MSBuild
       Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for
@@ -103,12 +103,12 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 
 where
 
-exponent is a positive number. The according length of the sequence is 2**exponent.
+an exponent is a positive number. The according length of the sequence is 2**exponent.
 
 seed is the seed used by the random generator to generate the randomness.
 
-The sample offloads the computation to GPU and then performs the verification the results in the CPU.
-The results are verified if yk = yk-1 + xk the original compared. If the results are matched and
+The sample offloads the computation to GPU and then performs the verification of the results in the CPU.
+The results are verified if yk = yk-1 + xk the original compared. If the results are matched, and
 the ascending order is verified, the application will display a “Success!” message.
 
 ### Example of Output

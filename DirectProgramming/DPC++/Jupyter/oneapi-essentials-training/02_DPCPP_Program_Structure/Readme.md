@@ -1,5 +1,5 @@
-complex_mult is a  program that multiplies  two large vectors of Complex numbers and verifies the results. This program is implemented using C++ and DPC++ language for Intel CPU and accelerators.
-The Complex class is a custom class and this program shows how we can use custom types of classes in a DPC++ program
+complex_mult is a  program that multiplies two large vectors of Complex numbers and verifies the results. This program is implemented using C++ and DPC++ language for Intel CPU and accelerators.
+The Complex class is a custom class, and this program shows how we can use custom types of classes in a DPC++ program
   
 | Optimized for                       | Description
 |:---                               |:---
@@ -10,7 +10,7 @@ The Complex class is a custom class and this program shows how we can use custom
 | Time to complete                  | 15 minutes  
   
 ## Key implementation details 
-This program shows how we can use custom types of classes in a DPC++ program and explains the basic DPC++ implementation including device selector, buffer, accessor, kernel and command group.
+This program shows how we can use custom types of classes in a DPC++ program and explains the basic DPC++ implementation, including device selector, buffer, accessor, kernel and command group.
 
 ## License  
 This code sample is licensed under MIT license. 
@@ -25,4 +25,4 @@ This code sample is licensed under MIT license.
     make run  
 
    * Clean the program  
-    make clean 
+    make clean

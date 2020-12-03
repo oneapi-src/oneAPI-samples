@@ -41,16 +41,16 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 
 ## Building the `loop-unroll` Program for CPU and GPU
 
 ### Running Samples In DevCloud
 
-If running a sample in the Intel DevCloud remember that you must
-specify the compute node (CPU, GPU, FPGA) as well whether to run in
-batch or interactive mode. For more information see the Intel® oneAPI
+If running a sample in the Intel DevCloud, remember that you must
+specify the compute node (CPU, GPU, FPGA) and whether to run in
+batch or interactive mode. For more information, see the Intel® oneAPI
 Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
@@ -79,9 +79,9 @@ Base Toolkit Get Started Guide
   
 ### On a Windows* System
 
-* Build the program using VS2017 or VS2019 Right click on the solution
-  file and open using either VS2017 or VS2019 IDE.  Right click on the
-  project in Solution explorer and select Rebuild.  From top menu
+* Build the program using VS2017 or VS2019 Right-click on the solution
+  file and open using either VS2017 or VS2019 IDE.  Right-click on the
+  project in Solution Explorer and select Rebuild.  From the top menu,
   select Debug -> Start without Debugging.
 
 * Build the program using MSBuild Open "x64 Native Tools Command
