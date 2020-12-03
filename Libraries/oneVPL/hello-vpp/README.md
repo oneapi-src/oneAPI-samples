@@ -100,13 +100,11 @@ Perform the following steps:
    ```
 
 
-#### Building the program using VS2017 or VS2019 IDE
-
-1. Install the Intel® oneAPI Base Toolkit for Windows*
-2. Right-click on the solution file and open using either VS2017 or VS2019 IDE.
-3. Right-click on the project in Solution Explorer and select Rebuild.
-4. From the top menu, select Debug -> Start without Debugging.
-
+### On a Windows* System Using Visual Studio* Version 2017 or Newer
+- Build the program using VS2017 or VS2019
+    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+    - Right-click on the project in Solution Explorer and select Rebuild.
+    - From the top menu, select Debug -> Start without Debugging.
 
 ## Running the Sample
 
