@@ -15,14 +15,14 @@ By using all reduce collective operation samples, users can understand how to co
 | ------ | ------ |
 | sycl_allreduce_test.cpp |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
 | cpu_allreduce_test.cpp/cpu_allreduce_bf16_test.c |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
->  Notice : Please use Intel oneAPI DevCloud as the environment for jupyter notebook samples. \
+>  Notice: Please use Intel oneAPI DevCloud as the environment for jupyter notebook samples. \
 Users can refer to [DevCloud Getting Started](https://devcloud.intel.com/oneapi/get-started/) for using DevCloud \
 Users can use JupyterLab from DevCloud via "One-click Login in", and download samples via "git clone" or the "oneapi-cli" tool \
-Once users are in the JupyterLab with download jupytered notebook samples, they can start following the steps without further installion needed.
+Once users are in the JupyterLab with download jupyter notebook samples, they can start following the steps without further installation needed.
 
 ## Purpose
 The samples implement the allreduce collective operation with oneCCL APIs. 
-With the samples users will learn how to compile the code with various oneCCL configurations in Intel oneAPI environment.
+The sample users will learn how to compile the code with various oneCCL configurations in the Intel oneAPI environment.
 
 ## License  
 Those code samples are licensed under MIT license
@@ -49,7 +49,7 @@ The samples below require the following components, which are part of the [Intel
 *  Intel oneAPI DPC++/C++ Compiler
 *  Intel oneAPI DPC++ Library (oneDPL)
 
-The samples also require OpenCL driver. Please refer [System Requirements](https://software.intel.com/en-us/articles/intel-oneapi-base-toolkit-system-requirements) for OpenCL driver installation.
+The samples also require an OpenCL driver. Please refer [System Requirements](https://software.intel.com/en-us/articles/intel-oneapi-base-toolkit-system-requirements) for OpenCL driver installation.
 
 
 You can refer to this page [oneAPI](https://software.intel.com/en-us/oneapi) for toolkit installation.
@@ -147,7 +147,7 @@ The include folder is located at ${CCL_ROOT}}\include on your development system
   Running on Intel(R) Core(TM) i7-7567U CPU @ 3.50GHz
   Example passes
   ```
-  please note that name of running device may vary according to your environment
+  please note that name of the running device may vary according to your environment
   
 
 - GPU Results
@@ -156,11 +156,11 @@ The include folder is located at ${CCL_ROOT}}\include on your development system
   Running on Intel(R) Gen9 HD Graphics NEO
   Example passes
   ```
-  please note that name of running device may vary according to your environment
+  please note that name of the running device may vary according to your environment
   
 - Enable oneCCL Verbose log 
 
-  There are different log levels in oneCCL. Users can refer to below table for different log levels. 
+  There are different log levels in oneCCL. Users can refer to the below table for different log levels. 
   
   | CCL_LOG_LEVEL | value 
   | :------ | :------ 
@@ -170,7 +170,7 @@ The include folder is located at ${CCL_ROOT}}\include on your development system
   | TRACE | 3    
   
   
-  Users can enable oneCCL verbose log by following below command to see more 
+  Users can enable oneCCL verbose log by following the command shown below to see more 
   runtime information from oneCCL.
   ```
   export CCL_LOG_LEVEL=1
