@@ -46,6 +46,25 @@ def run_workload(outfile='mkldnn_log.csv'):
             if 'dnnl' in l and 'exec' in l:
                 f.write(l + '\n')
 
+class FileUtils:
+
+    def __init_(self):
+        return
+    def replace_string_in_file(self, filename, oldstring, newstring):
+        fin = open(filename, "rt")
+        #output file to write the result to
+        fout = open('tmp.txt', "wt")
+        #for each line in the input file
+        for line in fin:
+            #read replace the string and write to output file
+            fout.write(line.replace(oldstring, newstring))
+        #close input and output files
+        fin.close()
+        fout.close()
+        os.remove(filename)
+        os.rename('tmp.txt',filename)
+
+
 class oneDNNLog:
 
     def __init_(self):
