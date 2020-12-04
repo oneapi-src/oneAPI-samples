@@ -41,15 +41,18 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 
 ### On a Linux* System
 Perform the following steps:
-1. mkdir build 
-2. cd build 
-3. cmake .. 
-4. Build the program using the following make commands 
-    - make
+```
+mkdir build 
+cd build 
+cmake ..
+```
+Build the program using the following make commands 
+```make
+```
 5. Run the program using:
-    - make run or src/openmp_reduction 
+```make run``` or ```src/openmp_reduction``` 
 6.  Clean the program using:
-    - make clean
+```make clean```
 
 ## Running the Sample
 
