@@ -34,7 +34,7 @@ The OpenMP* version of the merge sort implementation uses the #pragma omp task i
  
 ## License  
 
-This code sample is licensed under MIT license. 
+This code sample is licensed under the MIT license. 
 
 
 ## Building the `Merge Sort` Program
@@ -63,9 +63,8 @@ $ make
 
 There are two configurable options defined near the top of the code, both of which affect the program's performance:
 
-constexpr int task_threshold - This determines the minimum size of the list passed to the OpenMP merge sort function required to call itself and not the scalar version recursively. Its purpose is to reduce the threading overhead as it gets less efficient on smaller list sizes. Setting this value too small can reduce the OpenMP implementation's performance as it has more threading overhead for smaller workloads.
-
-constexpr int n - This determines the size of the list used to test the merge sort functions. Setting it larger will result in longer runtime and is useful for analyzing the algorithm's runtime growth rate.
+- constexpr int task_threshold - This determines the minimum size of the list passed to the OpenMP merge sort function required to call itself and not the scalar version recursively. Its purpose is to reduce the threading overhead as it gets less efficient on smaller list sizes. Setting this value too small can reduce the OpenMP implementation's performance as it has more threading overhead for smaller workloads.
+- constexpr int n - This determines the size of the list used to test the merge sort functions. Setting it larger will result in longer runtime and is useful for analyzing the algorithm's runtime growth rate.
 
 
 ### Example of Output
