@@ -93,7 +93,7 @@ make -j
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run - MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"
+     - Run - MSBuild iso3dfd_dpcpp.sln /t:Rebuild /p:Configuration="Release"
 
 ## Running the Sample
 ```
