@@ -83,7 +83,7 @@ You can modify the Mandelbrot parameters from within mandel.hpp. The configurabl
     max_iterations =
     repetitions =
 The default row and column size are 512.  Max interatins and repetitions are both 100.  By adjusting the parameters, you can observe how the performance varies using the different offload techniques.  
-Note: If the values drop below 128 for row and column, the output is limited to just text in the output window.
+> Note: If the values drop below 128 for row and column, the output is limited to just text in the output window.
 
 ### Example of Output
 ```
