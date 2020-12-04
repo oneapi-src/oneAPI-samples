@@ -66,7 +66,7 @@ You can modify the Mandelbrot parameters from within the main() definition near 
     int width = 2048;
     int max_depth = 100;
 
-In mandelbrot.cpp, the schedule(<static/dynamic>, <chunk_size>) pragmas in the OpenMP parallel for sections can be modified to change the parallelization parameters. changing between static and dynamic affects how work items are distributed between threads, and the chunk_size affects each work item's size. On line 69, there is a preprocessor definition NUM_THREADS: Changing this value affects the number of threads dedicated to each parallel section. The ideal number of threads will vary based on device hardware.
+In mandelbrot.cpp, the schedule(<static/dynamic>, <chunk_size>) pragmas in the OpenMP parallel for sections can be modified to change the parallelization parameters. changing between static and dynamic affects how work items are distributed between threads, and the chunk_size affects each work item's size. in mandelbrot.cpp, there is a preprocessor definition NUM_THREADS: Changing this value affects the number of threads dedicated to each parallel section. The ideal number of threads will vary based on device hardware.
 
 ### Example of Output
 ```
