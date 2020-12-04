@@ -41,20 +41,21 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 
 ### On a Linux* System
 Perform the following steps:
-
-mkdir build 
-cd build 
-cmake .. 
-
-1.  Build the program using the following make commands 
+1. mkdir build 
+2. cd build 
+3. cmake .. 
+4. Build the program using the following make commands 
+...
 make 
-
-2. Run the program using:
+...
+5. Run the program using:
+...
 make run or src/openmp_reduction 
-
-3.  Clean the program using:
+...
+6.  Clean the program using:
+...
 make clean
-
+...
 
 ## Running the Sample
 
@@ -62,6 +63,7 @@ make clean
 There are no editable parameters for this sample.
 
 ### Example of Output (result vary depending on hardware)
+
 Number of steps is 1000000
 
 Cpu Seq calc:           PI =3.14 in 0.00105 seconds
