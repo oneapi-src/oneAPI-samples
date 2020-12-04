@@ -45,17 +45,11 @@ Perform the following steps:
 2. cd build 
 3. cmake .. 
 4. Build the program using the following make commands 
-...
-make 
-...
+    - make
 5. Run the program using:
-...
-make run or src/openmp_reduction 
-...
+    - make run or src/openmp_reduction 
 6.  Clean the program using:
-...
-make clean
-...
+    - make clean
 
 ## Running the Sample
 
