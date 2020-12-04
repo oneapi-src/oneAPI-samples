@@ -47,12 +47,21 @@ cd build
 cmake ..
 ```
 Build the program using the following make commands 
-```make
 ```
-5. Run the program using:
-```make run``` or ```src/openmp_reduction``` 
-6.  Clean the program using:
-```make clean```
+make
+```
+Run the program using:
+```
+make run
+``` 
+    or 
+```
+src/openmp_reduction
+``` 
+Clean the program using:
+```
+make clean
+```
 
 ## Running the Sample
 
