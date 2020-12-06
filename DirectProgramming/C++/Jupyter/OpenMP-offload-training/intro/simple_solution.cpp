@@ -6,7 +6,7 @@
 #include <omp.h>
 #include <iostream>
 
-static const int N = 16;
+constexpr int N = 16;
 int main(){
     int is_cpu = true;
     int *data = static_cast<int*>(malloc(N * sizeof(int)));
