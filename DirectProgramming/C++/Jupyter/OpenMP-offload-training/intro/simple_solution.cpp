@@ -25,7 +25,7 @@ int main(){
     }
 
     //# Print Output
-    printf ("Running on %s\n", (is_cpu?"CPU":"GPU"));
+    std::cout << "Running on " << (is_cpu ? "CPU" : "GPU") << std::endl;    
     for(int i=0; i<N; i++) std::cout << data[i] << std::endl;
 
     free(data);
