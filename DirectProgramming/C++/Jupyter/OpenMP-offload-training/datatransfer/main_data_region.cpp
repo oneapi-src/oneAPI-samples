@@ -7,7 +7,7 @@
 #include <omp.h>
 #include <stdio.h>
 
-#define ARRAY_SIZE 256
+constexpr int ARRAY_SIZE = 256;
 
 void init1(float *x, int N) {
   for (int i = 0; i < N; i++) x[i] = 1.0;

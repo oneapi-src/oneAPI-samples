@@ -7,8 +7,8 @@
 #include <omp.h>
 #include <stdio.h>
 
-#define ARRAY_SIZE 256
-#define NUM_BLOCKS 9
+constexpr int ARRAY_SIZE = 256;
+constexpr int NUM_BLOCKS = 9;
 
 int main(int argc, char *argv[]) {
   int i, ib, is_cpu = 1, num_teams = 0;

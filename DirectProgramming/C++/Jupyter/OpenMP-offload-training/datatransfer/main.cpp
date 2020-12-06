@@ -7,7 +7,7 @@
 #include <omp.h>
 #include <stdio.h>
 
-#define ARRAY_SIZE 256
+constexpr int ARRAY_SIZE=256;
 
 int main(int argc, char *argv[]) {
   int i, j, is_cpu = true;
