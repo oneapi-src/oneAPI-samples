@@ -10,8 +10,6 @@ Below are the steps to access these Jupyter notebooks on Intel Devcloud
 3. Type in the below command to download the oneAPI-essentials series and OpenMP offload notebooks into your devcloud account
     /data/oneapi_workshop/get_jupyter_notebooks.sh
 
-Contact for this repo: Karl Qi karl.qi@intel.com @karlqi2000
-
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux*
