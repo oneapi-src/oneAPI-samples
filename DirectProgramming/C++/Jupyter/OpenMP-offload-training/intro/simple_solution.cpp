@@ -26,8 +26,8 @@ int main() {
   }
 
   // Print Output
-  std::cout << "Running on " << (is_cpu ? "CPU" : "GPU") << std::endl;
-  for (int i = 0; i < N; i++) std::cout << data[i] << std::endl;
+  std::cout << "Running on " << (is_cpu ? "CPU" : "GPU") << "\n";
+  for (int i = 0; i < N; i++) std::cout << data[i] << "\n";
 
   free(data);
   return 0;
