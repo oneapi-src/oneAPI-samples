@@ -29,7 +29,7 @@ The basic DPC++ implementation explained in the code includes device selector, b
  
 ## License  
 
-This code sample is licensed under MIT license. 
+This code sample is licensed under the MIT license. 
 
 
 ## Building the `Monte Carlo Pi` Program for CPU and GPU
