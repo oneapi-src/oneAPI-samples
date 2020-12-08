@@ -63,15 +63,14 @@ The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on y
     ```
 
 ### On a Windows* System Using a Command Line Interface
-    * Build the program using VS2017 or VS2019
-      Right-click on the solution file and open using either VS2017 or VS2019 IDE.
-      Right-click on the project in Solution Explorer and select Rebuild.
-      From the top menu, select Debug -> Start without Debugging.
+* Build the program using VS2017 or VS2019
+    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+    - Right-click on the project in Solution Explorer and select Rebuild.
+    - From the top menu, select Debug -> Start without Debugging.
 
-    * Build the program using MSBuild
-      Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for
- VS2019"
-      Run - MSBuild hidden-markov-models.sln /t:Rebuild /p:Configuration="Release"
+* Build the program using MSBuild
+    - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
+    - Run - MSBuild hidden-markov-models.sln /t:Rebuild /p:Configuration="Release"
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 Perform the following steps:
