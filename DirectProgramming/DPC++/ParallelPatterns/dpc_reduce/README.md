@@ -48,7 +48,7 @@ The basic DPC++ implementation explained in the code includes accessor,
 kernels, queues, buffers, as well as some oneDPL library calls. 
 
 ## License
-This code sample is licensed under MIT license.
+This code sample is licensed under the MIT license.
 
 ## Building the dpc_reduce program for CPU and GPU
 
