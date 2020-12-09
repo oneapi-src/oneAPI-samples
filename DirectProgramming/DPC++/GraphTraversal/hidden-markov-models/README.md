@@ -1,4 +1,4 @@
- #`DPC++ Hidden Markov Model` Sample
+﻿ #`DPC++ Hidden Markov Model` Sample
 The HMM (Hidden Markov Model) sample presents a statistical model using a Markov process to present graphable nodes that are otherwise in an unobservable state or “hidden”.  This technique helps with pattern recognition such as speech, handwriting, gesture recognition, part-of-speech tagging, partial discharges and bioinformatics. The sample offloads the complexity of the Markov process to the GPU.
 
 The directed edges of this graph are possible transitions between nodes or states defined with the following parameters: 
@@ -70,7 +70,7 @@ The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on y
 
 * Build the program using MSBuild
     - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-    - Run - MSBuild hidden-markov-models.sln /t:Rebuild /p:Configuration="Release"
+    - Run the following command: `MSBuild hidden-markov-models.sln /t:Rebuild /p:Configuration="Release"`
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 Perform the following steps:

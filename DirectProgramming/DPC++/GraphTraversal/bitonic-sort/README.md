@@ -1,4 +1,4 @@
-# `Bitonic Sort` sample
+﻿# `Bitonic Sort` sample
 
 This code sample demonstrates the implementation of bitonic sort using Intel Data Parallel C++ to
 offload the computation to a GPU. In this implementation, a random sequence of 2**n elements is given
@@ -102,7 +102,7 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run - MSBuild bitonic-sort.sln /t:Rebuild /p:Configuration="Release
+     - Run the following command: `MSBuild bitonic-sort.sln /t:Rebuild /p:Configuration="Release"'
 
 ## Running the sample
 ### Application Parameters

@@ -1,4 +1,4 @@
-# `Visual Studio based GPU Project` Sample
+﻿# `Visual Studio based GPU Project` Sample
 A minimal project template for GPU using Visual Studio.
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
@@ -38,4 +38,4 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run - MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"
+     - Run the following command: `MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"`

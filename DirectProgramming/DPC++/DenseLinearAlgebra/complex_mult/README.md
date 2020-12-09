@@ -1,4 +1,4 @@
-# Complex Multiplication sample
+﻿# Complex Multiplication sample
 
 complex multiplication is a program that multiplies two large vectors of 
 Complex numbers in parallel and verifies the results. It also implements 
@@ -77,7 +77,7 @@ Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run - MSBuild complex_mult.sln /t:Rebuild /p:Configuration="debug"
+     - Run the following command: `MSBuild complex_mult.sln /t:Rebuild /p:Configuration="debug"`
      
 ## Running the Sample
 

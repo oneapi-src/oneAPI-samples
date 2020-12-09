@@ -50,7 +50,7 @@ $ make
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run - MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"
+     - Run the following command: `MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"`
      
 ### Application Parameters 
 You can modify the NBody simulation parameters from within GSimulation.cpp. The configurable parameters include:

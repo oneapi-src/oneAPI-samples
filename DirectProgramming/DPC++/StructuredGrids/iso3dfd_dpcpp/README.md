@@ -1,4 +1,4 @@
-# `ISO3DFD DPC++` Sample
+﻿# `ISO3DFD DPC++` Sample
 
 The ISO3DFD sample refers to Three-Dimensional Finite-Difference Wave Propagation in Isotropic Media.  It is a three-dimensional stencil to simulate a wave propagating in a 3D isotropic medium. It shows some of the more common challenges when targeting SYCL devices (GPU/CPU) in more complex applications.
 
@@ -93,7 +93,7 @@ make -j
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run - MSBuild iso3dfd_dpcpp.sln /t:Rebuild /p:Configuration="Release"
+     - Run the following command: `MSBuild iso3dfd_dpcpp.sln /t:Rebuild /p:Configuration="Release"`
 
 ## Running the Sample
 ```

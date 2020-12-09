@@ -1,4 +1,4 @@
-# `DPC++ Discrete Cosine Transform` Sample
+﻿# `DPC++ Discrete Cosine Transform` Sample
 
 Discrete Cosine Transform (DCT) and Quantization are the first two steps in the JPEG compression standard. This sample demonstrates how DCT and Quantizing stages can be implemented to run faster using Data Parallel C++ (DPC++) by offloading image processing work to a GPU or other device.
 
@@ -83,12 +83,12 @@ Perform the following steps:
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 * Build the program using VS2017 or VS2019
-      Right-click on the solution file and open using either VS2017 or VS2019 IDE.
-      Set the configuration to 'Intel Release' for normal execution or 'Intel Performance Test' to take performance metrics.
-      Right-click on the project in Solution Explorer and select Rebuild.
-
-      To run:
-      From the top menu, select Debug -> Start without Debugging.
+    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+    - Set the configuration to 'Intel Release' for normal execution or 'Intel Performance Test' to take performance metrics.
+    - Right-click on the project in Solution Explorer and select Rebuild.
+ 
+* To run:
+    - From the top menu, select Debug -> Start without Debugging.
 
 * Build the program using MSBuild
       Open "Intel oneAPI command prompt for Microsoft Visual Studio 2019" and use your shell of choice to navigate to the DCT sample directory

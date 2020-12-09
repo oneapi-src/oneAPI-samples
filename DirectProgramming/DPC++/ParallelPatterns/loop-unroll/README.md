@@ -1,4 +1,4 @@
-
+﻿
 # Unrolling Loops
 The Loop Unroll demonstrates a simple example of unrolling loops to improve the throughput of a DPC++ program for GPU offload. 
 
@@ -85,7 +85,7 @@ Base Toolkit Get Started Guide
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run - MSBuild loop-unroll.sln.sln /t:Rebuild /p:Configuration="Release"
+     - Run the following command: `MSBuild loop-unroll.sln.sln /t:Rebuild /p:Configuration="Release"`
 ## Running the Sample
  
 ### Example of Output

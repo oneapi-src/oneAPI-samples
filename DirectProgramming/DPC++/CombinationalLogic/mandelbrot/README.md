@@ -1,4 +1,4 @@
-# `Mandelbrot` Sample
+﻿# `Mandelbrot` Sample
 
 Mandelbrot is an infinitely complex fractal patterning that is derived from a simple formula.  It demonstrates using DPC++ for offloading computations to a GPU (or other devices) and shows how processing time can be optimized and improved with parallelism.
 
@@ -72,7 +72,7 @@ $ make
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run - MSBuild mandelbrot.sln /t:Rebuild /p:Configuration="Release
+     - Run the following command: `MSBuild mandelbrot.sln /t:Rebuild /p:Configuration="Release"`
 
 
 ## Running the Sample

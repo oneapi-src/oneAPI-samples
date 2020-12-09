@@ -1,4 +1,4 @@
-# Monte Carlo Pi Sample
+﻿# Monte Carlo Pi Sample
 
 Monte Carlo Simulation is a broad category of computation that utilizes statistical analysis to reach a result. This sample uses the Monte Carlo Procedure to estimate the value of pi. By inscribing a circle of radius 1 inside a 2x2 square and then sampling a large number of random coordinates falling uniformly within the square, the value of pi can be estimated using the ratio of samples that fall inside the circle divided by the total number of samples.
 
@@ -74,7 +74,7 @@ $ make
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run - MSBuild MonteCarloPi.sln /t:Rebuild /p:Configuration="Release
+     - Run the following command: `MSBuild MonteCarloPi.sln /t:Rebuild /p:Configuration="Release"`
 
 
 ## Running the Sample

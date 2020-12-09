@@ -102,7 +102,7 @@ Base Toolkit Get Started Guide
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - " Run - MSBuild 1d_HeatTransfer.sln /t:Rebuild /p:Configuration="Release"
+     - Run the following command: `MSBuild 1d_HeatTransfer.sln /t:Rebuild /p:Configuration="Release"`
 
 
 ## Running the sample
