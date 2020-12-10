@@ -51,7 +51,9 @@ $ make
     ```
 
 ## Running the Sample
+```
 ./stream_sycl.exe
+```
 
 ### Example of Output
 ```
