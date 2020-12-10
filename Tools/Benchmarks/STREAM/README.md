@@ -19,7 +19,7 @@ The STREAM sample performs the memory bandwidth benchmark.
 This sample is a variance of the [STREAM](http://www.cs.virginia.edu/stream/) benchmark.
  
 ## License  
-This code sample is licensed under MIT license. 
+This code sample is licensed under the MIT license. 
 
 
 ## Building the `STREAM` Program for CPU and GPU
