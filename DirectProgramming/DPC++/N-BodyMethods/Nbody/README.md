@@ -16,7 +16,10 @@ Nbody sample code simulates 16000 particles and for ten integration steps. Each 
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
 
 ## License  
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Program for CPU and GPU
 

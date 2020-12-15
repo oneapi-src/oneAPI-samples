@@ -37,8 +37,10 @@ configured correctly on your system. This sample shows the basic invocation and 
 
 ## License
 
-This code sample is licensed under the MIT license, which is located in the
-[LICENSE.txt file](LICENSE.txt) in this sample project's folder.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Migrating the CUDA Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool

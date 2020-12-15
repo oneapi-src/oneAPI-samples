@@ -15,7 +15,10 @@ This sample tests Azure Cloud IoT Hub. There are five protocols to choose from; 
 The sample requires an Azure account and created Azure IoT Hub.
 
 ##License
-The code sample uses the MIT License.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ##Building the `Azure Telemetry` Sample
 

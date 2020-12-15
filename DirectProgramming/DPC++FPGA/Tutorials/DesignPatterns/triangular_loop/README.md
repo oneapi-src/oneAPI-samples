@@ -164,8 +164,10 @@ Summing the number of real and dummy iterations give the total iterations of the
 * Using `ivdep safelen` to convey the broken loop-carried dependency to the compiler
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `triangular_loop` Tutorial
 

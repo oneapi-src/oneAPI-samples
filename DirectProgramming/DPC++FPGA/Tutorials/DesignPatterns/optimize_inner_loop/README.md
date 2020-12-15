@@ -93,7 +93,10 @@ while (Pipe::read()) {
 * Optimizing the throughput of inner loops with low trip counts by using the `speculated_iterations` attribute and explicit loop bounding
 
 ## License
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `optimize_inner_loop` Tutorial
 ### Include Files

@@ -133,7 +133,10 @@ The choice of attributes will be further discussed in the [Examining the Reports
 * A case study of the type of performance/area trade-offs enabled by memory attributes 
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `memory_attributes` Tutorial
 

@@ -25,6 +25,13 @@ This sample requires additional system configuration when using Ubuntu OS with t
 
 To enable the ADC on Intel® Atom based UP boards, refer to the following [download](https://downloads.up-community.org/download/how-to-access-adc-for-up-squared-atom/).
 
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
 ## Setup
 Create a new project using this sample in Eclipse* IDE and install the Intel® oneAPI IoT Toolkit.
 Connect the input device to an analog input pin on your IoT board.

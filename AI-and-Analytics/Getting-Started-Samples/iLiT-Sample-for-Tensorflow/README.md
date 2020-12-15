@@ -13,7 +13,10 @@ Please refer to the official website for detailed info and news: [https://github
 
 ## License
 
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Purpose
 This sample will show a whole process to build up a CNN model to recognize handwriting number and speed up it by iLiT.

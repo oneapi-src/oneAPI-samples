@@ -12,7 +12,10 @@ The simple-vector-incr and simple-vector-add programs are simpler implementation
 Implementing the simple-vector-incr program is such that a developer following Steps 1 - 5 embedded in the code will learn about the buffers, accessors, and command group handler.
 
 ## License  
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## How to Build for CPU and GPU 
 

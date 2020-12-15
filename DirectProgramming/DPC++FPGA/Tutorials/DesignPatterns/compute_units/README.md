@@ -80,7 +80,10 @@ Each compute unit in the chain from `Source` to `Sink` must read from a unique p
 * A design pattern to generate multiple compute units in DPC++ using template metaprogramming
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `compute_units` Tutorial

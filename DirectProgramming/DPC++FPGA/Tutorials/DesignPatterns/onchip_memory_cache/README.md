@@ -56,8 +56,10 @@ Two versions of the histogram kernel are implemented in the tutorial: one with a
 * How to tune the cache depth
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `onchip_memory_cache` Tutorial
 

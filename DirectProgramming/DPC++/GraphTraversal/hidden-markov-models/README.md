@@ -35,7 +35,10 @@ Note: The implementation uses logarithms of the probabilities to process small n
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
 
 ## License
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `DPC++ Hidden Markov Model` Program for CPU and GPU
 

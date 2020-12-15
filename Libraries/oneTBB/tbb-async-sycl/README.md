@@ -15,7 +15,10 @@ The purpose of this sample is to show how during execution, a computational kern
 TBB Flow Graph and DPC++ implementation explained. 
 
 ## License  
-This code sample is licensed under the MIT license
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the TBB-Async-Sycl Program
 

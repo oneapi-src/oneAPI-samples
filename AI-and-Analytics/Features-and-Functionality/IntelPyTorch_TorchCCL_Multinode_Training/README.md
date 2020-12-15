@@ -27,14 +27,12 @@ The code includes how to perform distributed training with oneCCL in PyTorch.
  
 ## License  
 
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `torch-ccl Getting Started` Sample
-
-### Running Samples In DevCloud
-
-N/A
 
 ### On a Linux* System 
 

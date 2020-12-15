@@ -13,7 +13,10 @@ The Complex class is a custom class, and this program shows how we can use custo
 This program shows how we can use custom types of classes in a DPC++ program and explains the basic DPC++ implementation, including device selector, buffer, accessor, kernel and command group.
 
 ## License  
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## How to Build for CPU and GPU 
 

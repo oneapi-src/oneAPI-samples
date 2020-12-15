@@ -149,7 +149,10 @@ void Consumer(queue &q, buffer<int, 1> &output_buffer) {
 * How to declare and use pipes in a DPC++ program
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `pipes` Tutorial
 

@@ -23,7 +23,10 @@ The code will attempt to execute on an available GPU and fallback to the system'
 The basic DPC++ implementation explained in the code includes device selector, USM, buffer, accessor, kernel, and command groups.
 
 ## License  
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `simple add DPC++` Program for CPU and GPU 
 

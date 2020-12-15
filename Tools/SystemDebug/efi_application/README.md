@@ -11,9 +11,10 @@
 | Software                          | Intel&reg; oneAPI C++ Compiler, Visual Studio, GCC-9, GCC-10, Clang-10
 
 ## License
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ### Toolchains
 

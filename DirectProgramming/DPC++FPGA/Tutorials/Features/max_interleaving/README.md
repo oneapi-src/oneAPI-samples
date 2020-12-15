@@ -40,7 +40,10 @@ In this loop nest, pipelined iterations of L1 are serialized across L2 to preser
 * How to apply the `max_interleaving` attribute to loops in your program
 
 ## License
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `max_interleaving` Tutorial
 

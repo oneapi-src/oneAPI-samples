@@ -65,7 +65,10 @@ Look at the _Compiler Report > Throughput Analysis > Loop Analysis_ section in t
 * An optimization technique to break loop-carried data dependencies in critical loops
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
  
 ## Building the `loop_carried_dependency` Tutorial
 

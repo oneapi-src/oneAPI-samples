@@ -44,8 +44,10 @@ The DCT representation is calculated through the multiplication of a DCT matrix 
  
 ## License  
 
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `DPC++ Discrete Cosine Transform` Program for CPU and GPU
 

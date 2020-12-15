@@ -24,6 +24,13 @@ This version of the sample has been tested on Ubuntu Linux. It requires the [Ecl
 
 This sample requires additional system configuration when using Ubuntu OS with the UP series boards. Instructions on installing the custom provided Linux kernel with the required drivers can be [found here](https://wiki.up-community.org/Ubuntu#Ubuntu_18.04_installation_and_configuration).
 
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
 ## Setup
 Create a new project using the Eclipse* IDE and install the Intel® oneAPI IoT Toolkit.
 Connect the input device to a digital input pin on your IoT board.

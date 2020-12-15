@@ -10,7 +10,6 @@ Below are the steps to access these Jupyter notebooks on Intel Devcloud
 3. Type in the below command to download the oneAPI-essentials series notebooks into your devcloud account
     /data/oneapi_workshop/get_jupyter_notebooks.sh
 
-
 # The organization of the Jupyter notebook directories is a follows:
 
 | Notebook Name | Owner | Description |

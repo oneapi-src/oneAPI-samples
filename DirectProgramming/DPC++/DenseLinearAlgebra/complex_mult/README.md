@@ -44,9 +44,12 @@ program and explains the basic DPC++ implementation, including device
 selector, buffer, accessor, kernel and command group.  
 
 
-## License  
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-This code sample is licensed under MIT license. 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
 
 ## Building the complex_mult Program for CPU and GPU 
 

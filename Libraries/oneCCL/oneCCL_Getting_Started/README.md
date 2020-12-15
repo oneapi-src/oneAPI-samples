@@ -25,7 +25,10 @@ The samples implement the allreduce collective operation with oneCCL APIs.
 The sample users will learn how to compile the code with various oneCCL configurations in the Intel oneAPI environment.
 
 ## License  
-Those code samples are licensed under MIT license
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Prerequisites
 

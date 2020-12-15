@@ -25,7 +25,10 @@ This Hello World sample code is implemented for CPU using the Python language.
  - For the inference portion, `to_mkldnn()` function in `torch.utils.mkldnn` can accelerate performance by eliminating data reorders between operations, which are supported by Intel(R) DNNL.
 
 ## License  
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## How to Build and Run 
 ### Running Samples In DevCloud (Optional)

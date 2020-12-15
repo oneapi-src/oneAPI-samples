@@ -42,7 +42,10 @@ To optimize the different database queries, the design leverages concepts discus
    3. Showcase the usage of advanced FPGA optimizations listed above to improve the performance of a large design
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `db` Reference Design
 

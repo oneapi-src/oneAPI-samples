@@ -21,7 +21,10 @@ This is a simple sample you could use for a test of the IBM device connection. T
  - Receive and process commands from WIoTP service
 
 ##License
-The code sample uses the MIT License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ##Building the `IBM Device` Sample
 

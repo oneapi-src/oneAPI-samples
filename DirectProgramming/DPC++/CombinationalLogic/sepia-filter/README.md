@@ -19,7 +19,10 @@ The device selected for offloading the kernel is displayed in the output and the
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.  This sample also demonstrates a custom device selector's implementation by overwriting the SYCL device selector class, offloading computation using both lambda and functor kernels, and using event objects to time command group execution, enabling profiling.
  
 ## License  
-This code sample is licensed under the MIT license 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Program for CPU and GPU
 

@@ -31,10 +31,12 @@ This code sample demonstrates how to convert a scalar implementation of merge so
 
 The OpenMP* version of the merge sort implementation uses the #pragma omp task in its recursive calls, which allows the recursive calls to be handled by different threads. The #pragma omp taskawait preceding the function call to merge() ensures the two recursive calls are completed before the merge() is executed. Through this use of OpenMP* pragmas, the recursive sorting algorithm can effectively run in parallel, where each recursion is a unique task able to be performed by any available thread.
 
- 
 ## License  
 
-This code sample is licensed under the MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `Merge Sort` Program

@@ -109,7 +109,10 @@ After each kernel is launched, the host-side operations (that occur *after* the 
 * How to measure the impact of N-way buffering
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `n_way_buffering` Tutorial

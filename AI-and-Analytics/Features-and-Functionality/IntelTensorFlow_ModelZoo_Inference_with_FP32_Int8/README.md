@@ -12,7 +12,10 @@ For any performance and/or benchmarking information on specific Intel platforms,
 The example uses Intel's pretrained model published as part of [Intel Model Zoo](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow and MKL run time settings to maximize CPU performance on ResNet50 workload
 
 ## License  
-This code sample is licensed under the MIT license
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Pre-requirement
 

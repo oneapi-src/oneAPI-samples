@@ -49,11 +49,12 @@ The basic DPC++ implementation explained in the code includes a device
 selector, buffer, accessor, USM allocation, kernel, and command
 groups.
 
-
 ## License  
 
-This code sample is licensed under the MIT license  
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `1d_HeatTransfer` Program for CPU and GPU
 

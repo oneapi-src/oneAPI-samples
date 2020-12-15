@@ -38,10 +38,16 @@ SYCL implementation explained.
 * Optimization using API-based programming and Atomic Functions.
 
 SYCL implementation is explained in further detail in the source code.
+
 ## How Other Tools (Intel Libraries or Intel Tools) are used
 Intel® Math Kernel Library (MKL) is used for random number generation on the CPU and device. Precise generators are used within this library to ensure that the numbers generated on the CPU and device are relatively equivalent (relative accuracy 10E-07).  
+
 ## License
-This code sample is licensed under MIT license. Please see the `License.txt` file for more information.  
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
 ## Building the `particle-diffusion` Program for CPU and GPU
 
 ### Include Files  

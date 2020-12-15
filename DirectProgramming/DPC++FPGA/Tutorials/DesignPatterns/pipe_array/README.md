@@ -135,8 +135,10 @@ The host must thus enqueue the producer kernel and `kNumRows * kNumCols` separat
 * Static loop unrolling through template metaprogramming
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `pipe_array` Tutorial
 

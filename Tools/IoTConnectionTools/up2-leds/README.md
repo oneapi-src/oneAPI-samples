@@ -24,6 +24,13 @@ It requires the [Eclipse* MRAA library](https://github.com/intel-iot-devkit/mraa
 
 This sample requires additional system configuration when using Ubuntu OS with the UP series boards. Instructions on installing the custom provided Linux kernel with the required drivers can be [found here](https://wiki.up-community.org/Ubuntu#Ubuntu_18.04_installation_and_configuration).
 
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
 ## Setup
 Create a new project using this sample in Eclipse* IDE and install the Intel® oneAPI IoT Toolkit. Run it on the UP Squared board using a TCF connection.
 

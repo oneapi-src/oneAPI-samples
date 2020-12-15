@@ -49,7 +49,10 @@ This approach is not considered host streaming since the CPU and FPGA cannot (re
 * The performance benefits of using restricted USM over traditional SYCL buffers or explicit USM
  
 ## License
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
  
 ## Building the `zero_copy_data_transfer` Tutorial
 ### Include Files

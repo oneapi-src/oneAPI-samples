@@ -57,7 +57,10 @@ If the innermost coalesced loop has a very small trip count, `loop_coalesce` mig
 * Determining which loops make good candidates for coalescing
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `loop_coalesce` Tutorial

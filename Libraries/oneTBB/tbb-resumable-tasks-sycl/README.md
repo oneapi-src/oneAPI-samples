@@ -12,6 +12,14 @@ This sample illustrates how the computational kernel can be split for execution 
 ## Purpose
 The purpose of this sample is to show how during execution, a computational kernel can be split between CPU and GPU using TBB resumable tasks and TBB parallel_for.
 
+
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
 ## Key implementation details
 TBB resumable tasks and DPC++ implementation explained.
 

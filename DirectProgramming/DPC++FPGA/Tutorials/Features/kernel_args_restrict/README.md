@@ -53,7 +53,10 @@ In this tutorial, we will show how to use the `kernel_args_restrict` attribute f
 * The effect this attribute can have on your kernel's performance on FPGA
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `kernel_args_restrict` Tutorial
 
