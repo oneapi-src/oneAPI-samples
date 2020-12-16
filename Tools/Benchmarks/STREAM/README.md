@@ -6,7 +6,7 @@ This sample contains a [STREAM](http://www.cs.virginia.edu/stream/) implementati
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 20.04
-| Hardware                          | GEN9, DG1
+| Hardware                          | GEN9, Iris-Xe Max 
 | Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | How to benchmark the memory bandwidth using STREAM.
 | Time to complete                  | 5 minutes
