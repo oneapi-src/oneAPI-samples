@@ -5,6 +5,6 @@ set(CMAKE_CXX_COMPILER dpcpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fsycl -DTUNED -DSTREAM_ARRAY_SIZE=134217728 -DNTIMES=20") 
 
-add_executable(stream src/stream.cc)
+add_executable(stream src/stream.c)
 
 add_custom_target(run ./stream)
