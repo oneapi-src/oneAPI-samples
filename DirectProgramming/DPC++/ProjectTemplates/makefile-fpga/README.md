@@ -1,5 +1,5 @@
-# `Make based FPGA Project` Template
-A minimal project template for FPGA using make build system.
+# `Make` based FPGA Project Template
+This code sample is a minimal project template for FPGA using the make build system.
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
@@ -12,9 +12,9 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 | Time to complete                  | n/a
 
 ## Purpose
-This project is a template designed to help you quickly create your own Data Parallel C++ application for FPGA targets. The template assumes the use of make to build your application. See the supplied `Makefile` file for hints regarding the compiler options and libraries needed to compile a Data Parallel C++ application for FPGA targets. Review the `main.cpp` source file for help with the header files you should include and how to implement the "device selector" code for targeting your application's runtime device.
+This project is a template designed to help you quickly create your own Data Parallel C++ application for FPGA targets. The template assumes the use of make to build your application. The supplied `Makefile` file contains the compiler options and libraries needed to compile a Data Parallel C++ application for FPGA targets. The `main.cpp` source file shows the header files you should include and the recommended "device selector" code for targeting your application's runtime device.
 
-To see a simple FPGA kernel and explain the recommended workflow with FPGA targets, consult the "compile flow" FPGA Tutorial.
+This is a project template only. It is recommended that you review the FPGA "Getting Started" code sample  [compile_flow](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials/GettingStarted/fpga_compile), which explains the basic DPC++ FPGA workflow, compile targets, and compiler options.
 
 ## Key Implementation Details
 The basic DPC++ project template for FPGA targets.
@@ -35,7 +35,6 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 
 ### On a Linux* System
 The following instructions assume you are in the project's root folder.
-Since the template does not define a kernel, all code in "main" is executed on the host regardless of the make target.
 
 To build the template for FPGA Emulator (fast compile time, targets a CPU-emulated FPGA device):
   ```
