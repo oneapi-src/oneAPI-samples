@@ -15,7 +15,7 @@ This FPGA tutorial demonstrates how to build DPC++ device libraries from various
 _Notice: The FPGA library feature is not yet supported in Windows*_
 
 ## Purpose
-This FPGA tutorial demonstrates how to build DPC++ device libraries from multiple sources and use them in your DPC++ design. A library is useful for reusing and sharing code or for separating code for testing purposes. Power users can also use libraries to leverage other programming languages' features in their DPC++ FPGA designs.
+This FPGA tutorial demonstrates how to build DPC++ device libraries from multiple sources and use them in your DPC++ design. A library is useful for reusing and sharing code, or for separating code for testing purposes. Power users can also use libraries to leverage the features of other programming languages in their DPC++ FPGA designs.
 
 It is currently possible to generate FPGA library objects from the following source types:
 * Verilog or VHDL (modules or entities, respectively)

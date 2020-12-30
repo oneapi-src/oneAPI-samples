@@ -1,6 +1,6 @@
 
 # Separating Host and Device Code Compilation
-This FPGA tutorial demonstrates how to separate the compilation of a program's host code and device code to save development time.
+This FPGA tutorial demonstrates how to separate the compilation of a program's host code and device code to save development time.  It's recommended to read the 'fpga_compile' code sample before this one.
 
 ***Documentation***: The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)  provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. 
 
@@ -42,11 +42,11 @@ If `out.fpga` does not exist, `-reuse-exe` is ignored and the FPGA device image 
 
 If `out.fpga` is found, the compiler checks whether any changes affecting the FPGA device code have been made since the last compilation. If no such changes are detected, the compiler reuses the existing FPGA binary, and only the host code is recompiled. The recompilation process takes a few minutes. Note that the device code is partially re-compiled (similar to a report flow compile) to check that the FPGA binary can safely be reused.
 
-If `out.fpga` is found but the compiler cannot prove that the FPGA device code will yield a result identical to the last compilation, a warning is printed, and the FPGA device code is fully recompiled. Since the compiler checks must be conservative, spurious recompilations can sometimes occur when using `-reuse-exe`.
+If `out.fpga` is found but the compiler cannot prove that the FPGA device code will yield a result identical to the last compilation, a warning is printed and the FPGA device code is fully recompiled. Since the compiler checks must be conservative, spurious recompilations can sometimes occur when using `-reuse-exe`.
 
 ### Using the device link method
 
-The program accompanying this tutorial is separated into two files, `host. cpp` and `kernel. cpp`. Only the `kernel. cpp` file contains device code. 
+The program accompanying this tutorial is separated into two files, `host.cpp` and `kernel.cpp`. Only the `kernel. cpp` file contains device code. 
 
 In the normal compilation process, FPGA device image generation happens at link time. As a result, any change to either `host.cpp` or `kernel.cpp` will trigger an FPGA device image's regeneration. 
 
@@ -99,11 +99,11 @@ The following graph depicts the device link compilation process:
 ![](device_link.png)
 
 ### Which method to use?
-Of the two methods described, `-reuse-exe` is easier to use. It also allows you to keep your host and device code as a single source, which is preferred for small programs. 
+Of the two methods described, `-reuse-exe` is easier to use. It also allows you to keep your host and device code as single source, which is preferred for small programs. 
 
 For larger and more complex projects, the device link method has the advantage of giving you complete control over the compiler's behavior.
-* When using `-reuse-exe`, the compiler must partially recompile and then analyze the device code to ensure that it is unchanged. This takes several minutes for larger designs. Compiling separate files does not incur this time.
-* When using `-reuse-exe`, you may occasionally encounter a "false positive" where the compiler wrongly believes that it must recompile your device code. In a single source file, the device and host code are coupled, so specific changes to the host code can change the compiler's view of the device code. The compiler will always behave conservatively and trigger a full recompilation if it cannot prove that reusing the previous FPGA binary is safe. Compiling separate files eliminates this possibility.
+* When using `-reuse-exe`, the compiler must partially recompile and then analyze the device code to ensure that it is unchanged. This takes several minutes for larger designs. Compiling separate files does not incur this extra time.
+* When using `-reuse-exe`, you may occasionally encounter a "false positive" where the compiler wrongly believes that it must recompile your device code. In a single source file, the device and host code are coupled, so some changes to the host code _can_ change the compiler's view of the device code. The compiler will always behave conservatively and trigger a full recompilation if it cannot prove that reusing the previous FPGA binary is safe. Compiling separate files eliminates this possibility.
 
 
 ## Key Concepts

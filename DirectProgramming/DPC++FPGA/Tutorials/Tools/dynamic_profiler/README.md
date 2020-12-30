@@ -66,8 +66,7 @@ There are two ways of obtaining data from a DPC++ program containing performance
 
 1. Run the design in the Intel® VTune™ Profiler via the CPU/FPGA Interaction viewpoint.
   
-    Instructions on installing, configure and opening the Intel® VTune™ Profiler can be found in the [Intel® Vtune™ Profiler User Guide](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/installation.html).
- Further instructions on setting up the Dynamic Profiler via the CPU/FPGA Interaction View can be found in the [CPU/FPGA Interaction Analysis](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html) section of the Intel® VTune™ Profiler User Guide. To extract device performance counter data, please ensure the source for the FPGA profiling data is set to "AOCL Profiler".
+    Instructions on installing, configure and opening the Intel® VTune™ Profiler can be found in the [Intel® Vtune™ Profiler User Guide](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/installation.html). Further instructions on setting up the Dynamic Profiler via the CPU/FPGA Interaction View can be found in the [CPU/FPGA Interaction Analysis](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html) section of the Intel® VTune™ Profiler User Guide. To extract device performance counter data, please ensure the source for the FPGA profiling data is set to "AOCL Profiler".
 
 2. Run the design from the command line using the Profiler Runtime Wrapper.
   The Profiler Runtime Wrapper comes as part of the DPC++ Compiler and can be run as follows:
@@ -88,7 +87,7 @@ The CPU/FPGA Interaction viewpoint is comprised of four windows:
 - The **Summary window** displays statistics on the overall application execution. It can be used to identify CPU time and processor utilization, and the execution time for DPC++ kernels. 
 - The **Bottom-up window** displays details about the kernels in a bottom-up tree. This tree contains computing task information such as total time and instance count and device metrics such as overall stall, occupancy, and bandwidth. This data is also displayed in a timeline. 
 - The **Platform window** displays over-time performance data for the kernels, memory transfers, CPU context switches, FPU utilization, and CPU threads with FPGA kernels.
-- The **Source window** displays device-side data at the corresponding source line. Unlike the other three windows, which are accessible via a tab, the Source window is opened on a per-kernel basis by double-clicking the kernel name in the Bottom-up view.
+- The **Source window** displays device-side data at the corresponding source line. Unlike the other three windows, which are accessible via tabs, the Source window is opened on a per-kernel basis by double-clicking the kernel name in the Bottom-up view.
 
 ### Understanding the Performance Metrics 
 
@@ -105,7 +104,7 @@ The following device metrics are important in this tutorial:
 | Pipe Stall %                      | The percentage of time the pipe is causing the pipeline to stall. It measures the ability of the pipe to fulfill an access request.
 | Pipe Occupancy %                  | The percentage of time when a valid work-item executes a pipe access.
 
-When analyzing performance data to optimize a design, the goal is to get as close to an ideal kernel pipeline as possible. An ideal pipeline should have no stalls for pipes, occupancy of 100%, and an average pipe depth close to the maximum possible depth. If memory or pipe access is far from the ideal, it may be a candidate for an investigation into what went wrong. For example, if the stall percentage of a pipe write is high, it may indicate that the kernel controlling the pipe's read side is slower than the write side kernel, causing the pipe to fill up, leading to a performance bottleneck.
+When analyzing performance data to optimize a design, the goal is to get as close to an ideal kernel pipeline as possible. Pipes in an ideal pipeline should have no stalls, occupancy of 100%, and an average pipe depth close to the maximum possible depth. If memory or pipe access is far from the ideal, it may be a candidate for an investigation into what went wrong. For example, if the stall percentage of a pipe write is high, it may indicate that the kernel controlling the pipe's read side is slower than the write side kernel, causing the pipe to fill up, leading to a performance bottleneck.
 
 #### Analyzing Stall and Occupancy Metrics
 
@@ -125,7 +124,7 @@ The second scenario is an example of what the design might look like after being
 - a producer DPC++ kernel (ProducerAfter) that reads data from a buffer, performs the first computation on the data and writes this value to a pipe (ProducerToConsumerAfterPipe), and
 - a consumer DPC++ kernel (ConsumerAfter) that reads from the pipe (ProducerToConsumerAfterPipe), does the second set of computations and fills up the output buffer. 
 
-When looking at the performance data for the two "after optimization" kernels in the Bottom-Up view, you should see that ProducerAfter's pipe write (on line 105) and the ConsumerAfter's pipe read (line 120) both have stall percentages near 0%. This indicates the pipe being used more effectively - now the read and write side of the pipe are being used at similar rates, so the pipe operations are not creating stalls in the pipeline. This also speeds up the overall design execution - the two "after" kernels take less time to execute than the two before kernels.
+When looking at the performance data for the two "after optimization" kernels in the Bottom-Up view, you should see that ProducerAfter's pipe write (on line 105) and the ConsumerAfter's pipe read (line 120) both have stall percentages near 0%. This indicates the pipe is being used more effectively - now the read and write side of the pipe are being used at similar rates, so the pipe operations are not creating stalls in the pipeline. This also speeds up the overall design execution - the two "after" kernels take less time to execute than the two before kernels.
 
 ![](profiler_pipe_tutorial_bottom_up.png)
 
@@ -232,10 +231,10 @@ Post-processing complete.
 An example output, `dynamic_profiler_tutorial.json`, can be downloaded from [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler_tutorial.json). Without needing to run the design, you can import this data file in the VTune Profiler, as described in the [Import FPGA Data collected with Profiler Runtime Wrapper](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html#cpu-fpga-interaction-analysis-preview_GUID-31737EA6-79AB-41BB-8361-0DA583109015) documentation, to observe the kind of data the Dynamic Profiler can collect.
 
 ## Examining the Reports
-The tab containing the data from your run ensures the view is set to "CPU/FPGA Interaction". There should be three windows for viewing:
+In the tab containing the data from your run, ensure the view is set to "CPU/FPGA Interaction". There should be three windows for viewing:
 
 1. Summary
 2. Bottom-up
 3. Platform
 
-This tutorial focuses on the Bottom-Up window. To navigate there, click on the Bottom-Up window and set the grouping to "Computing Task / Channel / Compute Unit". Initially, all profiling data in the Bottom-Up and Source windows will be summed over all DPC++ kernel runs. To view data from a particular point in a kernel's run, click and drag to select a portion of data in the execution timeline in the lower half of the Bottom-Up window and choose "Filter In by Selection". Then all data in the table or Source window will only be from the currently selected timeslice.
+This tutorial focuses on the Bottom-Up window. To navigate there, click on the Bottom-Up window and set the grouping to "Computing Task / Channel / Compute Unit". Initially, all profiling data in the Bottom-Up and Source windows will be summed over all DPC++ kernel runs. To view data from a particular point in a kernel's run, click and drag to select a portion of data in the execution timeline in the lower half of the Bottom-Up window and choose "Filter In by Selection". Then all data in the table or Source window will only be from the current selected timeslice.
