@@ -6,7 +6,7 @@ This DPC++ reference design demonstrates high performance QR decomposition of co
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm.
 | Time to complete                  | 1 hr (not including compile time)
@@ -20,7 +20,7 @@ Please refer to the performance disclaimer at the end of this README.
 | Device                                         | Throughput
 |:---                                            |:---
 | Intel® PAC with Intel Arria® 10 GX FPGA        | 25k matrices/s for matrices of size 128 * 128
-| Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA)      | 7k matrices/s for matrices of size 256 * 256
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for matrices of size 256 * 256
 
 
 ## Purpose
@@ -40,7 +40,7 @@ We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder fl
 
 With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product. Thus, the matrix size is constrained by the total FPGA DSP resources available. Note that this upper bound is a consequence of this particular implementation.
 
-By default, the design is parameterized to process 128 × 128 matrices when compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), a larger device.
+By default, the design is parameterized to process 128 × 128 matrices when compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), a larger device.
  
 
 ## Key Implementation Details
@@ -92,7 +92,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    cmake ..
    ```
 
-   If instead you are compiling for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   If instead you are compiling for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -130,7 +130,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
@@ -146,7 +146,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ``` 
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -194,7 +194,7 @@ Verifying results on matrix 0 16384 32767
 PASSED
 ```
 
-Example output when running on Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) for 40960 matrices (each consisting of 256*256 complex numbers):
+Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for 40960 matrices (each consisting of 256*256 complex numbers):
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)

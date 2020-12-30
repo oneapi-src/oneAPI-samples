@@ -6,7 +6,7 @@ Reference design demonstrating high-performance GZIP compression on FPGA.
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | How to implement a high-performance multi-engine compression algorithm on FPGA
 | Time to complete                  | 1 hr (not including compile time)
@@ -18,7 +18,7 @@ Please refer to the performance disclaimer at the end of this README.
 | Device                                                | Throughput
 |:---                                                   |:---
 | Intel® PAC with Intel Arria® 10 GX FPGA               | 1 engine @ 3.4 GB/s
-| Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA)             | 2 engines @ 5.5 GB/s each = 11.0 GB/s total (High Bandwidth variant) using 120MB+ input, 2 engines @ 3.5 GB/s = 7.0 GB/s (Low Latency variant) using 80kB input
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)             | 2 engines @ 5.5 GB/s each = 11.0 GB/s total (High Bandwidth variant) using 120MB+ input, 2 engines @ 3.5 GB/s = 7.0 GB/s (Low Latency variant) using 80kB input
 
  
 ## Purpose
@@ -27,7 +27,7 @@ This DPC++ reference design implements a compression algorithm. The implementati
 
 The algorithm uses a GZIP-compatible Limpel-Ziv 77 (LZ77) algorithm for data de-duplication and a GZIP-compatible Static Huffman algorithm for bit reduction. The implementation includes three FPGA accelerated tasks (LZ77, Static Huffman and CRC). 
 
-The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target Intel® PAC with Intel Arria® 10 GX FPGA. Two engines are created when compiling for Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), a larger device.
+The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target Intel® PAC with Intel Arria® 10 GX FPGA. Two engines are created when compiling for Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), a larger device.
 
 This reference design contains two variants: "High Bandwidth" and "Low-Latency."
 The High Bandwidth variant maximizes system throughput without regard for latency. It transfers input/output SYCL Buffers to FPGA-attached DDR. The kernel then operates on these buffers.
@@ -75,7 +75,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
  
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
@@ -112,7 +112,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
@@ -132,7 +132,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     > Note: for the Low Latency variant, use `nmake report_ll`. Only supported on Stratix® 10 SX.   
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
  
@@ -158,7 +158,7 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 | Argument | Description
 ---        |---
 | `<input_file>` | Mandatory argument that specifies the file to be compressed. Use a 120+ MB file to achieve peak performance (80kB for Low Latency variant).
-| `-o=<output_file>` | Optional argument that specifies the name of the output file. The default name of the output file is `<input_file>.gz`. When targeting Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), the single `<input_file>` is fed to both engines, yielding two identical output files, using `<output_file>` as the basis for the filenames.
+| `-o=<output_file>` | Optional argument that specifies the name of the output file. The default name of the output file is `<input_file>.gz`. When targeting Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), the single `<input_file>` is fed to both engines, yielding two identical output files, using `<output_file>` as the basis for the filenames.
  
 ### Example of Output
  
