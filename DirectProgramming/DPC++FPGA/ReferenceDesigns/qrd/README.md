@@ -1,5 +1,5 @@
 # QR Decomposition of Matrices
-This DPC++ reference design demonstrates the high-performance QR decomposition of complex matrices on FPGA.
+This DPC++ reference design demonstrates high performance QR decomposition of complex matrices on FPGA.
 
 ***Documentation***: The [FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)  provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a resource for general target-independent DPC++ programming. 
 
@@ -25,7 +25,7 @@ Please refer to the performance disclaimer at the end of this README.
 
 ## Purpose
 
-This FPGA reference design demonstrates the QR decomposition of matrices of complex numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
+This FPGA reference design demonstrates QR decomposition of matrices of complex numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
 
 The algorithms employed by the reference design are the Gram-Schmidt QR decomposition algorithm and the thin QR factorization method. Background information on these algorithms can be found in Wikipedia's [QR decomposition](https://en.wikipedia.org/wiki/QR_decomposition) article. The original algorithm has been modified and optimized for performance on FPGAs in this implementation.
 

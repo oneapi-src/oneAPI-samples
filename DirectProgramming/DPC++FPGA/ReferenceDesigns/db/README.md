@@ -246,7 +246,7 @@ You should see the following output in the console:
 |`db_utils/Unroller.hpp`                | A templated-based loop unroller that unrolls loops in the front end 
 
 ### Database files
-In the `data/` directory, you will find database files for a scale factor of 0.01. These files were generated manually and can be used to verify the queries in emulation. However, **these files are too small to showcase the performance of the FPGA hardware** adequately.
+In the `data/` directory, you will find database files for a scale factor of 0.01. These files were generated manually and can be used to verify the queries in emulation. However, **these files are too small to showcase the true performance of the FPGA hardware**.
 
 To generate larger database files to run on the hardware, you can use TPC's `dbgen` tool. Instructions for downloading, building and running the `dbgen` tool can be found in the [TPC-H documents](http://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.18.0.pdf) on the [TPC-H website](http://www.tpc.org/tpch/). Note that this reference design currently only supports TPC-H databases with scale factors of 0.01 or 1.
 

@@ -27,7 +27,7 @@ This DPC++ reference design implements a compression algorithm. The implementati
 
 The algorithm uses a GZIP-compatible Limpel-Ziv 77 (LZ77) algorithm for data de-duplication and a GZIP-compatible Static Huffman algorithm for bit reduction. The implementation includes three FPGA accelerated tasks (LZ77, Static Huffman and CRC). 
 
-The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single-engine when the design is compiled, targeting Intel® PAC with Intel Arria® 10 GX FPGA. Two engines are created when targeting Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), a larger device.
+The FPGA implementation of the algorithm enables either one or two independent GZIP compute engines to operate in parallel on the FPGA. The available FPGA resources constrain the number of engines. By default, the design is parameterized to create a single engine when the design is compiled to target Intel® PAC with Intel Arria® 10 GX FPGA. Two engines are created when compiling for Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), a larger device.
 
 This reference design contains two variants: "High Bandwidth" and "Low-Latency."
 The High Bandwidth variant maximizes system throughput without regard for latency. It transfers input/output SYCL Buffers to FPGA-attached DDR. The kernel then operates on these buffers.
@@ -179,7 +179,7 @@ PASSED
 | `gzipkernel_ll.cpp`          | Low-latency variant of kernels.
 | `CompareGzip.cpp`            | Contains code to compare a GZIP-compatible file with the original input.
 | `WriteGzip.cpp`              | Contains code to write a GZIP compatible file. 
-| `crc32.cpp`                  | Contains code to calculate a 32-bit CRC compatible with the GZIP file format and combine multiple 32-bit CRC values. It is used to account for the CRC of the last few bytes in the file, which are not processed by the accelerated CRC kernel. 
+| `crc32.cpp`                  | Contains code to calculate a 32-bit CRC compatible with the GZIP file format and to combine multiple 32-bit CRC values. It is only used to account for the CRC of the last few bytes in the file, which are not processed by the accelerated CRC kernel. 
 | `kernels.hpp`                  | Contains miscellaneous defines and structure definitions required by the LZReduction and Static Huffman kernels.
 | `crc32.hpp`                    | Header file for `crc32.cpp`.
 | `gzipkernel.hpp`              | Header file for `gzipkernels.cpp`.
@@ -196,7 +196,7 @@ PASSED
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsparallel=2` | Uses two cores when compiling the bitstream through Quartus
 `-Xsseed=22` | Uses seed 22 (seed 22 for Low latency Variant) during Quartus, yields slightly higher fmax
-`-Xsnum-reorder=6` | On Intel Stratix® 10 SX only, specify a wider data path for reading data from global memory 
+`-Xsnum-reorder=6` | On Intel Stratix® 10 SX only, specify a wider data path for read data from global memory 
 `-Xsopt-arg="-nocaching"` | Specifies that cached LSUs should not be used.
 `-DNUM_ENGINES=<1|2>` | Specifies that 1 GZIP engine should be compiled when targeting Intel Arria® 10 GX and two engines when targeting Intel Stratix® 10 SX
 
@@ -216,7 +216,7 @@ Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries
 (C) Intel Corporation.
 
 ### References
-[Khronous SYCL Resources](https://www.khronos.org/sycl/resources)
+[Khronos SYCL Resources](https://www.khronos.org/sycl/resources)
 
 [Intel GZIP OpenCL Design Example](https://www.intel.com/content/www/us/en/programmable/support/support-resources/design-examples/design-software/opencl/gzip-compression.html)
 
