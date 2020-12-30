@@ -1,5 +1,5 @@
 # Zero-copy Data Transfer
-This tutorial demonstrates how to use zero-copy host memory via the SYCL restricted Unified Shared Memory (USM) to improve your FPGA design performance.
+This tutorial demonstrates how to use zero-copy host memory via the SYCL restricted Unified Shared Memory (USM) to improve your FPGA design's performance.
 
 ***Documentation***: The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)  provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
 
@@ -15,7 +15,7 @@ This tutorial demonstrates how to use zero-copy host memory via the SYCL restric
 _Notice: Restricted USM (and therefore this tutorial) is only supported for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA)_
 
 ## Purpose
-The purpose of this tutorial is to show you how to take advantage of zero-copy host memory for the FPGA to improve the performance of your design. All host and shared allocations are implemented as *zero-copy* data in host memory on an FPGA. This means that the FPGA will access the data directly over PCIe, which can improve performance in cases where there is little or no temporal reuse of data in the FPGA kernel. This tutorial includes two different kernels: one using traditional SYCL buffers (`src/buffer_kernel.hpp`) and one using restricted USM (`src/restricted_usm_kernel.hpp`) that takes advantage of zero-copy host memory. Before completing this tutorial, it is suggested you review the **Explicit USM** (explicit_usm) tutorial.
+The purpose of this tutorial is to show you how to take advantage of zero-copy host memory for the FPGA to improve the performance of your design. On FPGA, DPC++ implements all host and shared allocations as *zero-copy* data in host memory. This means that the FPGA will access the data directly over PCIe, which can improve performance in cases where there is little or no temporal reuse of data in the FPGA kernel. This tutorial includes two different kernels: one using traditional SYCL buffers (`src/buffer_kernel.hpp`) and one using restricted USM (`src/restricted_usm_kernel.hpp`) that takes advantage of zero-copy host memory. Before completing this tutorial, it is suggested you review the **Explicit USM** (explicit_usm) tutorial.
 
 ### Restricted USM
 Restricted USM allows the host and device to share their respective memories. A typical SYCL design, which transfers data using either SYCL buffers/accessors or explicit USM, copies its input data from the Host Memory to the FPGA's Device Memory. To do this, the data is sent to the FPGA board over PCIe. Once all the data is copied to the FPGA's Device Memory, the FPGA kernel is run and produces output that is also stored in Device Memory. Finally, the output data is transferred from the FPGA's Device Memory back to the CPU's Host Memory over PCIe. This model is shown in the figure below.
@@ -42,7 +42,7 @@ However, a better approach would simply stream the data from the host memory to 
 |---------------|
 ```
 
-This approach is not considered host streaming since the CPU and FPGA cannot (reliably) access the input/output data simultaneously. In other words, the host must wait until all the FPGA kernels have finished before (reliably) accessing the output data. However, we did avoid copying the data to and from the FPGA's Device Memory and therefore, we get overall savings in total latency. This savings can be seen by running the sample on FPGA hardware or the example output later in the [Example of Output](#example-of-output) section. In the future, we plan to create a tutorial that describes how to achieve true host streaming using restricted USM.
+This approach is not considered host streaming since the CPU and FPGA cannot (reliably) access the input/output data simultaneously. In other words, the host must wait until all the FPGA kernels have finished before accessing the output data. However, we did avoid copying the data to and from the FPGA's Device Memory and therefore, we get overall savings in total latency. This savings can be seen by running the sample on FPGA hardware or the example output later in the [Example of Output](#example-of-output) section. In the future, we plan to create a tutorial that describes how to achieve true host streaming using restricted USM.
 
 ## Key Concepts
 * How to use restricted USM for the FPGA

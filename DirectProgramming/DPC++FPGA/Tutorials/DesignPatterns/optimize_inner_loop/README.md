@@ -34,7 +34,7 @@ In this tutorial, we will focus on optimizing inner loops with low trip counts, 
 
 ![](timing_base.png)
 
-In general, the compiler optimizes loops for throughput, assuming that the loop has a high trip count. These optimizations include, but are not limited to, speculating iterations and inserting pipeline registers in the circuit that starts loops. The next two subsections will describe how these optimizations can substantially *decrease* throughput and how you can disable them to improve your design when applied to inner loops with low trip counts.
+In general, the compiler optimizes loops for throughput with the assumption that the loop has a high trip count. These optimizations include (but are not limited to) speculating iterations and inserting pipeline registers in the circuit that starts loops. The next two subsections will describe how these optimizations can substantially *decrease* throughput and how you can disable them to improve your design when applied to inner loops with low trip counts.
 
 #### Speculated Iterations
 Loop speculation enables loop iterations to be initiated before determining whether they should have been initiated. *Speculated iterations* are the iterations of a loop that launch before the exit condition computation has been completed. This is beneficial when the computation of the exit condition is preventing effective loop pipelining. However, when an inner loop has a low trip count, speculating iterations results in a relatively high proportion of invalid loop iterations.
@@ -64,7 +64,7 @@ for (int i; i < kOuterLoopBound; i++) {
 ```
 
 ### Code Sample Details
-In this tutorial, the code finds the sum of an array, albeit in a roundabout way, to better illustrate the optimizations. The `Producer` kernel performs the logic in the pseudocode below. We fill the `input_array` array with random values in the range `[0,3]`. As a result, the number of inner loop iterations will be in the range `[0,3]` for all outer loop iterations.
+The sample code finds the sum of an array, albeit in a roundabout way, to better illustrate the optimizations. The `Producer` kernel performs the logic in the pseudocode below. We fill the `input_array` array with random values in the range `[0,3]`. As a result, the number of inner loop iterations will be in the range `[0,3]` for all outer loop iterations.
 
 ```c++
 for (int i = 0; i < input_array.size(); i++) {
@@ -178,7 +178,7 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ## Examining the Reports
 Locate `report.html` in the `optimize_inner_loop.prj/reports/` or `optimize_inner_loop_s10_pac_report.prj/reports/report.html` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Open the reports and look at the *Loop Analysis* pane. Examine the loop attributes for the three different versions of the `Producer` kernel (`Producer<0>`, `Producer<1>` and `Producer<2>`). Note that each has an outer loop with an II of 1 and an inner loop with an II of 1. As discussed earlier in this tutorial, the II of the outer loop will be *dynamic* and depend on the inner loop's execution for each outer loop iteration. Also, note the *Speculated Iterations* column, which should show 2 speculated loop iterations on the inner loop for `Producer<0>` and 0 for `Producer<1>` and `Producer<2>`. Unfortunately, at this time, there is no information in the reports indicating whether there will be a 1 cycle delay in starting the loop. We are working on improving our reports to help you better debug throughput bottlenecks! 
+Open the reports and look at the *Loop Analysis* pane. Examine the loop attributes for the three different versions of the `Producer` kernel (`Producer<0>`, `Producer<1>` and `Producer<2>`). Note that each has an outer loop with an II of 1 and an inner loop with an II of 1. As discussed earlier in this tutorial, the II of the outer loop will be *dynamic* and depend on the inner loop's execution for each outer loop iteration. Also, note the *Speculated Iterations* column, which should show 2 speculated loop iterations on the inner loop for `Producer<0>` and 0 for `Producer<1>` and `Producer<2>`. At this time, there is no information in the reports indicating whether there will be a 1 cycle delay in starting the loop. We are working on improving our reports to help you better debug throughput bottlenecks! 
 
 ### Version 0
 Version 0 of the kernel (`Producer<0>`) does **not** bound the inner loop trip count and speculates 2 iterations. Since we expect 1 inner loop iteration for every outer loop iteration. This results in 3 invalid iterations for every 1 valid inner loop iteration; 2 (invalid) speculated iterations are launched, and there is a 1 cycle delay starting the inner loop. Therefore, this version only achieves ~1/4 the maximum throughput.

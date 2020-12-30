@@ -46,12 +46,14 @@ for (int i = 0; i < SIZE; i++) {
 }
 ```
 
-A possible circuit diagram for this optimized algorithm is shown in the image below, where the dotted red line represents a possible critical path in the circuit. Notice that we have removed the `+` operation from the critical path. This assumes that the critical path delay through the multiplexer is higher than through the adder. This may not be the case, and the critical path could be from the `c` register to the `c_next` register through the adder, in which case we would have removed the multiplexer from the critical path. Regardless of which operation has the longer critical path delay (the adder or the multiplexer), we have removed an operation from the critical path by precomputing and storing the _next_ value of `c`. This allows us to reduce the critical path delay at the expense of the area (in this case, a single 32-bit register).
+A possible circuit diagram for this optimized algorithm is shown in the image below, where the dotted red line represents a possible critical path in the circuit. Notice that we have removed the `+` operation from the critical path. This assumes that the critical path delay through the multiplexer is higher than through the adder. This may not be the case, and the critical path could be from the `c` register to the `c_next` register through the adder, in which case we would have removed the multiplexer from the critical path. Regardless of which operation has the longer critical path delay (the adder or the multiplexer), we have removed an operation from the critical path by precomputing and storing the _next_ value of `c`. This allows us to reduce the critical path delay at the expense of area (in this case, a single 32-bit register).
 
 ![](optimized.png)
 
 ### Code Sample Details
-The purpose of this tutorial is to show methods for improving the f<sub>MAX</sub>/II of a design by removing computation from the critical path. This optimization is widely applicable, but for the demonstration, we will optimize a design that finds the size of the intersection (denoted by the `∩` symbol) between two sorted arrays. We will look at a special case where one array (`A`) **cannot** have duplicates. In contrast, the second array (`B`) **can** have duplicates, and the output intersection contains the entire intersection (including the duplicates). An example is shown below:
+The purpose of this tutorial is to show methods for improving the f<sub>MAX</sub>/II of a design by removing computation from the critical path. This optimization is widely applicable. 
+
+To demonstrate, we will optimize a simple function (useful in database processing) that finds the size of the intersection (denoted by the `∩` symbol) between two sorted arrays. We look at a special case where one array (`A`) **cannot** have duplicates, the second array (`B`) **can** have duplicates, and the output intersection contains the entire intersection (including the duplicates). An example is shown below:
 
 ```
 A = {2,5,6,7,9}
@@ -321,4 +323,4 @@ You should see the following output in the console:
     Kernel 2 average throughput: 742.257 MB/s
     PASSED
     ```
-    NOTE: These throughput numbers were collected using the Intel® PAC D5005 (Intel Stratix® 10 SX FPGA).
+    NOTE: These throughput numbers were collected using the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA).

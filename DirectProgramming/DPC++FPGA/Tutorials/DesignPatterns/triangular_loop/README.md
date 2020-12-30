@@ -62,7 +62,7 @@ iterations are executed *between* any two iterations that are dependent on one a
 However, the challenge in the triangular loop pattern is that the trip-count of the inner-loop
 progressively shrinks as `x` increments. In the worst case of `x=7`, the program writes to `local_buf[y=8]` in the first `y` iteration but has only one intervening `y` iteration at `y=9` before the value must be reread at `x=8,y=8`. This may not allow enough time for the write operation to complete. The compiler compensates for this by increasing the initiation interval (II) of the inner-loop to allow more time to elapse between iterations. Unfortunately, this reduces the throughput of the inner-loop by a factor of II.
 
-A key observation is that this increased II is only functionally necessary when the inner-loop trip-count becomes small. Furthermore, the II of a loop is static -- it applies to all invocations of that loop. Therefore, if the *outer-loop* trip-count (_n_) is large, most of the inner-loop invocations unnecessarily suffer the aforementioned throughput degradation. The optimization technique demonstrated in this tutorial addresses this issue.
+A key observation is that this increased II is only functionally necessary when the inner-loop trip-count becomes small. Furthermore, the II of a loop is static: it applies to all invocations of that loop. Therefore, if the *outer-loop* trip-count (_n_) is large, most of the inner-loop invocations unnecessarily suffer the aforementioned throughput degradation. The optimization technique demonstrated in this tutorial addresses this issue.
 
 ### Optimization concept
 
@@ -153,9 +153,9 @@ descending series from `n` is `n*(n+1)/2`. Since there is no iteration at `x=9,y
 
 The number of dummy iterations on the right is 4+3+2+1 = 10. The largest number in this series is _M_-2. Using the same formula for a descending series , you get `(M-2)*(M-1)/2`. For _M_=6, this expression yields 4*5/2 = 10, as expected.
 
-Summing the number of real and dummy iterations give the total iterations of the merged loop.
+Summing the number of real and dummy iterations gives the total iterations of the merged loop.
 
-***Use of ivdep***: Since the loop is restructured to ensure that a minimum of M iterations is executed, the  `[[intelfpga::ivdep(M)]]` is used to hint to the compiler that at least M iterations always separate iterations with dependencies.
+***Use of ivdep***: Since the loop is restructured to ensure that a minimum of M iterations is executed, the `[[intelfpga::ivdep(M)]]` is used to hint to the compiler that at least _M_ iterations always separate any pair of dependent iterations.
 
 
 

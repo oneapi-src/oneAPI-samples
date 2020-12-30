@@ -78,7 +78,7 @@ using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_array.h".
     kNumCols                                     // array dimension.
     >;
 ```
-The producer kernel writes `num_passes` units of data into each `kNumRows * kNumCols` pipes. Note that the unrollers' lambdas must capture certain variables from their outer scope.
+The producer kernel writes `num_passes` units of data into each of the `kNumRows * kNumCols` pipes. Note that the unrollers' lambdas must capture certain variables from their outer scope.
 
 ```c++
 h.single_task<ProducerTutorial>([=]() {

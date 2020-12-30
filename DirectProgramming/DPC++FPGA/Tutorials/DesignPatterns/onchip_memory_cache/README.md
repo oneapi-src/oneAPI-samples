@@ -29,11 +29,11 @@ The on-chip memory cache technique is applicable if the compiler could not pipel
 To check this for a given design, view the "Loops Analysis" section of its optimization report. The report lists the II of all loops and explains why a lower II is not achievable. Check whether the reason given resembles "the compiler failed to schedule this loop with smaller II due to memory dependency". The report will describe the "most critical loop feedback path during scheduling". Check whether this includes on-chip memory load/store operations on the critical path.
 
 ***An II=1 loop with a load operation of latency 1***:
-The compiler is capable of reducing the latency of on-chip memory accesses to achieve II=1. However, in doing so, the compiler makes a trade-off, sacrificing f<sub>MAX</sub> to optimize the loop better. 
+The compiler is capable of reducing the latency of on-chip memory accesses to achieve II=1. In doing so, the compiler makes a trade-off by sacrificing f<sub>MAX</sub> to improve the II. 
 
 In a design with II=1 critical loops but lower than desired f<sub>MAX</sub>, the on-chip memory cache technique may still be applicable. It can help recover f<sub>MAX</sub> by enabling the compiler to achieve II=1 with a higher latency memory access.
 
-To check whether this is the case for a given design, view the "Kernel Memory Viewer" section of the optimization report. Select the on-chip memory of interest from the Kernel Memory List, and mouse over the load operation "LD" to check its latency. If the latency of the load operation is 1, this is a clear sign that the compiler has attempted to sacrifice f<sub>MAX</sub> to optimize a loop better.
+To check whether this is the case for a given design, view the "Kernel Memory Viewer" section of the optimization report. Select the on-chip memory of interest from the Kernel Memory List, and mouse over the load operation "LD" to check its latency. If the latency of the load operation is 1, this is a clear sign that the compiler has attempted to sacrifice f<sub>MAX</sub> to improve loop II.
 
 
 ### Implementing the on-chip memory cache technique

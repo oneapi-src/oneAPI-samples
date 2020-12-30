@@ -92,7 +92,7 @@ The above formula can be used to calculate the **N** required to minimize downti
 
 You must get a sense of the kernel downtime to identify the degree to which this technique can help improve performance.
 
-This can be done by querying the total kernel execution time from the runtime and comparing it to the overall application execution time. In an application where kernels execute with minimal downtime, these two numbers are close. However, if kernels have a lot of downtime, overall execution time notably exceeds the kernel execution time. The tutorial code exemplifies how to do this.
+This can be done by querying the total kernel execution time from the runtime and comparing it to the overall application execution time. In an application where kernels execute with minimal downtime, these two numbers are close. However, if kernels have a lot of downtime, overall execution time notably exceeds the kernel execution time. The tutorial code demonstrates how to do this.
 
 ### Tutorial Implementation Notes
 

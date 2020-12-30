@@ -37,7 +37,7 @@ Let's define the required variables:
 
 ![](downtime.png)
 
-In general, **R**, **Op**, **Ip**, and **W** operations must all complete before the next kernel is launched. To maximize performance, while one kernel is executing on the device, these operations should execute simultaneously on the host and operate on the second set of buffer locations. They should complete before the current kernel completes, allowing the next kernel to be launched immediately with no downtime. In general, to maximize performance, the host must launch a new kernel every **K**.
+In general, **R**, **Op**, **Ip**, and **W** operations must all complete before the next kernel is launched. To maximize performance, while one kernel is executing on the device, these operations should execute simultaneously on the host and operate on a second set of buffer locations. They should complete before the current kernel completes, allowing the next kernel to be launched immediately with no downtime. In general, to maximize performance, the host must launch a new kernel every **K**.
 
 This leads to the following constraint:
 
@@ -50,7 +50,7 @@ If the above constraint is not satisfied, a performance improvement may still be
 
 You must get a sense of the kernel downtime to identify the degree to which this technique can help improve performance.
 
-This can be done by querying the total kernel execution time from the runtime and comparing it to the overall application execution time. In an application where kernels execute with minimal downtime, these two numbers will be close. However, if kernels have a lot of downtimes, the overall execution time will notably exceed kernel execution time. The tutorial code exemplifies how to do this.
+This can be done by querying the total kernel execution time from the runtime and comparing it to the overall application execution time. In an application where kernels execute with minimal downtime, these two numbers will be close. However, if kernels have a lot of downtime, the overall execution time will notably exceed kernel execution time. The tutorial code exemplifies how to do this.
 
 ### Tutorial Implementation Notes
 
