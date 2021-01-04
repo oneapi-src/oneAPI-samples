@@ -57,15 +57,17 @@ $ make
      
 ### Application Parameters 
 You can modify the NBody simulation parameters from within GSimulation.cpp. The configurable parameters include:
-  set_npart(__);
-  set_nsteps(__);
-  set_tstep(__);
-  set_sfreq(__);
+- set_npart(__);
+- set_nsteps(__);
+- set_tstep(__);
+- set_sfreq(__);
+
 Below are the default parameters:
-Number of particles (npart) is 16000
-Number of integration steps (nsteps) is 10
-Time delta (tstep) is 0.1s
-Sample frequency (sfreq) is 1
+
+* Number of particles (npart) is 16000
+* Number of integration steps (nsteps) is 10
+* Time delta (tstep) is 0.1s
+* Sample frequency (sfreq) is 1
 
 ## Example of Output
     ===============================
