@@ -1,5 +1,5 @@
 # Sparse Matrix Vector sample
-`Sparse Matrix Vector sample` provides a parallel implementation of a merge based sparse matrix and vector multiplication algorithm using DPC++. 
+Sparse Matrix Vector sample provides a parallel implementation of a merge based sparse matrix and vector multiplication algorithm using DPC++. 
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
