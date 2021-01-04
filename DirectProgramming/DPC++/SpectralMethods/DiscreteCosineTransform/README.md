@@ -1,4 +1,4 @@
-﻿# `DPC++ Discrete Cosine Transform` Sample
+﻿# DPC++ Discrete Cosine Transform Sample
 
 Discrete Cosine Transform (DCT) and Quantization are the first two steps in the JPEG compression standard. This sample demonstrates how DCT and Quantizing stages can be implemented to run faster using Data Parallel C++ (DPC++) by offloading image processing work to a GPU or other device.
 
@@ -49,15 +49,12 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `DPC++ Discrete Cosine Transform` Program for CPU and GPU
+## Building the DPC++ Discrete Cosine Transform Program for CPU and GPU
 
-> Note: if you have not already done so, set up your CLI 
-> environment by sourcing  the setvars script located in 
-> the root of your oneAPI installation. 
->
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
-> Linux User: . ~/intel/oneapi/setvars.sh  
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+Note: if you have not already done so, set up your CLI environment by sourcing  the setvars script located in the root of your oneAPI installation. 
+* Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+* Linux User: . ~/intel/oneapi/setvars.sh  
+* Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
