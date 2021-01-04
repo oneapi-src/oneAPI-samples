@@ -19,7 +19,7 @@ This FPGA tutorial demonstrates how to apply the `ivdep` attribute to a loop to 
 In order to understand and apply `ivdep` to loops in your design, it is necessary to understand the concepts of loop-carried memory dependencies. Unlike many other attributes that can improve a design's performance, `ivdep` has functional implications. Using it incorrectly will result in undefined behavior for your design!
 
 ### Loop-Carried Memory Dependencies
-A *loop-carried memory dependency* refers to a situation where memory access in a given loop iteration cannot proceed until memory access from a previous loop iteration is completed. Loop-carried dependencies can be categorized into the following cases:
+A *loop-carried memory dependency* refers to a situation where memory access in a given loop iteration cannot proceed until a memory access from a previous loop iteration is completed. Loop-carried dependencies can be categorized into the following cases:
 * **True-dependence (Read-After-Write)** - A memory location read in an iteration that must occur after a previous iteration writes to the same memory location.
 * **Anti-dependence (Write-After-Read)** - A memory location read must occur before a future iteration writes to the same memory location.
 * **Output-dependence (Write-After-Write)** - A memory location write must occur before a future iteration writes to the same memory location.
@@ -54,7 +54,7 @@ for(i = 0; i < n; i++){
   S2: b[i] = a[i];
 }
 for(j = 0; j < m; j++){
-  S3: A[i] = bar();
+  S3: a[i] = bar();
 }
 ```
 
@@ -62,7 +62,7 @@ for(j = 0; j < m; j++){
 Imagine loop-carried dependencies in terms of the distance between the dependence source and sink statements, measured in the number of iterations of the loop containing the statements. In example 1, the dependence source (store into array `a`) and dependence sink (load from the same index in array `a`) are one iteration apart. That is, for the specified memory location, the data is read one iteration after it was written. Therefore, this true dependence has a distance of 1. In many cases, the compiler loop dependence analysis may be able to statically determine the dependence distance. 
 
 #### Example 4: Simple dependence distance
-The compiler's static analysis facilities can infer that the distance of the true dependence in the following example code is ten iterations. This impacts the scheduling of how iterations of the loop are issued into the generated pipelined datapath. For example, iteration `k` may not begin executing the load from an array `a` before iteration `(k-10)` has completed storing the data into the same memory location. However, iterations `[k-9,k)` do not incur the scheduling constraint on the store in iteration `(k-10)` and begin execution earlier.
+The compiler's static analysis facilities can infer that the distance of the true dependence in the following example code is ten iterations. This impacts the scheduling of how iterations of the loop are issued into the generated pipelined datapath. For example, iteration `k` may not begin executing the load from array `a` before iteration `(k-10)` has completed storing the data into the same memory location. However, iterations `[k-9,k)` do not incur the scheduling constraint on the store in iteration `(k-10)` and begin execution earlier.
 ```c++
 for(i = 1; i < n; i++){
   S: a[i] = a[i-10];
@@ -70,7 +70,7 @@ for(i = 1; i < n; i++){
 ```
 
 #### Example 5: Dependence distance across multiple loops in a nest
-In the code snippet that follows, Statement'S'S' forms two distinct true dependencies, one carried by loop `L1` and one by loop `L2`. Across iterations of loop `L1`, data is stored into a location in array `a`. Then is read in the next iteration. Similarly, across iterations of loop `L2`, data is stored into a location in array `a`. Then is read in a later iteration. In the latter case, the dependence across loop `L2` has a dependence distance of 2. In the former, the dependence distance across loop `L1` has a dependence distance of 1. Special care must be taken when reasoning about loop-carried memory dependencies spanning multiple loops.
+In the code snippet that follows, Statement `S` forms two distinct true dependencies, one carried by loop `L1` and one by loop `L2`. Across iterations of loop `L1`, data is stored into a location in array `a` that is read in the next iteration. Similarly, across iterations of loop `L2`, data is stored into a location in array `a` that is read in a later iteration. In the latter case, the dependence across loop `L2` has dependence distance of 2. In the former, the dependence distance across loop `L1` has dependence distance of 1. Special care must be taken when reasoning about loop-carried memory dependencies spanning multiple loops.
 ```c++
 L1: for(i = 1; i < n; i++){
   L2: for(j = 1; j < m; j++){
@@ -82,9 +82,9 @@ L1: for(i = 1; i < n; i++){
 ### Specifying that memory accesses do *not* cause loop-carried dependencies
 Apply the `ivdep` attribute to a loop to inform the compiler that ***none*** of the memory accesses within a loop incur loop-carried dependencies.
 ```c++
-[[intelfpga::ivdep]]
-for (int i = 0; i < N; i++) {
-    A[i] = A[i - X[i]];
+[[intel::ivdep]]
+for (int i = 0; i < n; i++) {
+    a[i] = a[i - X[i]];
 }
 ```
 The `ivdep` attribute indicates to the compiler that it can disregard assumed loop-carried memory dependencies and generate a pipelined datapath for this loop capable of issuing new iterations as soon as possible (every cycle), maximizing possible throughput.
@@ -93,24 +93,24 @@ The `ivdep` attribute indicates to the compiler that it can disregard assumed lo
 Apply the `ivdep` attribute with a `safelen` parameter to set a specific lower bound on the dependence distance that can possibly be attributed to loop-carried dependencies in the associated loop.
 ```c++
 // n is a constant expression of integer type
-[[intelfpga::ivdep(n)]]
-for (int i = 0; i < N; i++) {
-    A[i] = A[i - X[i]];
+[[intel::ivdep(n)]]
+for (int i = 0; i < n; i++) {
+    a[i] = a[i - X[i]];
 }
 ```
-The `ivdep` attribute informs the compiler to generate a pipelined loop datapath that can issue a new iteration as soon as the iteration `n` iterations ago have been completed. The attribute parameter (`safelen`) is a refinement of the compiler static loop-carried dependence analysis that infers the code's dependence but is otherwise unable to determine its distance accurately.
+The `ivdep` attribute informs the compiler to generate a pipelined loop datapath that can issue a new iteration as soon as the iteration `n` iterations ago has completed. The attribute parameter (`safelen`) is a refinement of the compiler static loop-carried dependence analysis that infers the dependence present in the code but is otherwise unable to determine its distance accurately.
 
 ***IMPORTANT***: Applying the `ivdep` attribute or the `ivdep` attribute with a `safelen` parameter may lead to incorrect results if the annotated loop exhibits loop-carried memory dependencies. The attribute directs the compiler to generate hardware assuming no loop-carried dependencies. Specifying this assumption incorrectly is an invalid use of the attribute and results in undefined (and likely incorrect) behavior.
 
 ### Testing the Tutorial
 In `loop_ivdep.cpp`, the `ivdep` attribute is applied to the kernel work loop with a `safelen` parameter of 1 and 128.
 ```c++
-  TransposeAndFold<kMinSafelen>(selector,  A,  B); // kMinSafelen = 1
-  TransposeAndFold<kMaxSafelen>(selector,  A,  C); // kMaxSafelen = 128
+  TransposeAndFold<kMinSafelen>(selector,  a,  b); // kMinSafelen = 1
+  TransposeAndFold<kMaxSafelen>(selector,  a,  b); // kMaxSafelen = 128
 ```
 The `ivdep` attribute with the `safelen` parameter equal to 1 informs the compiler that iterations of the associated loop do not form a loop-carried memory dependence with a distance of at least 1. That is, the attribute is redundant and is equivalent to the code without the attribute in place.
 
-**_Try this!_**: Compile the tutorial program in `loop_ivdep.cpp` with and without the `[[intelfpga::ivdep]]` attribute altogether and compare the resulting reports.
+**_Try this!_**: Compile the tutorial program in `loop_ivdep.cpp` with and without the `[[intel::ivdep]]` attribute altogether and compare the resulting reports.
 
 The `ivdep` attribute with `safelen` parameter equal to 128 is reflective of the maximum number of iterations of the associated loop among which no loop-carried memory dependence occurs. The annotated loop nest contains a dependence on values of array `temp_buffer`:
 
@@ -121,7 +121,7 @@ for (size_t j = 0; j < kMatrixSize * kRowLength; j++) {
   }
 }
 ```
-Observe that the indexing expression on `temp_buffer` evaluates the same index every `kRowLength` iterations of the `j` loop. Specifying the `ivdep` attribute on the `j` loop without a `safelen` parameter or with a `safelen` parameter >= `kRowLength` leads to undefined behavior because the generated hardware does not adhere to the ordering constraint imposed by the dependence. Specifying the `ivdep` attribute with a `safelen` attribute <= `kRowLength` is valid and will result in a better performing end result.
+Observe that the indexing expression on `temp_buffer` evaluates to the same index every `kRowLength` iterations of the `j` loop. Specifying the `ivdep` attribute on the `j` loop without a `safelen` parameter, or with a `safelen` parameter >= `kRowLength` leads to undefined behavior because the generated hardware does not adhere to the ordering constraint imposed by the dependence. Specifying the `ivdep` attribute with a `safelen` attribute <= `kRowLength` is valid and will result in a better performing end result.
 
 ## Key Concepts
 * Basics of loop-carried dependencies

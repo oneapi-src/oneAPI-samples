@@ -47,7 +47,7 @@ Generally, coalescing loops can help reduce area usage by reducing the overhead 
    1. The loops being coalesced have the same initiation interval (II).
    2. The exit condition computation for the resulting coalesced look is not complicated.
 
-If the innermost coalesced loop has a very small trip count, `loop_coalesce` might improve throughput.
+If the innermost coalesced loop has a very small trip count, `loop_coalesce` might actually improve throughput.
 
 
 ## Key Concepts
@@ -144,7 +144,7 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ## Examining the Reports
 Locate `report.html` in the `loop_coalesce_report.prj/reports/` or `loop_coalesce_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Each kernel name ends in the loop_coalesce attribute argument used for that kernel, e.g., KernelCompute<2> uses a loop_coalesce argument of 2. You can verify that the number of registers, MLABs and DSPs used for each kernel decreases after nested loops have coalesced.
+On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Each kernel name ends in the loop_coalesce attribute argument used for that kernel, e.g., KernelCompute<2> uses a loop_coalesce argument of 2. You can verify that the number of registers, MLABs and DSPs used for each kernel decreases after nested loops are coalesced.
 
 
 ## Running the Sample

@@ -15,13 +15,13 @@ This FPGA tutorial demonstrates how to use on-chip memory attributes to control 
 
 
 ## Purpose
-For each private or local array in your DPC++ FPGA device code, the Intel® oneAPI DPC++ Compiler creates a custom memory system in your program's datapath to contain the contents of that array. The compiler has many options to choose from when architecting this on-chip memory structure. Memory attributes are a set of DPC++ extensions for FPGA that enable you to override the compiler's internal heuristics and control kernel memory architecture.
+For each private or local array in your DPC++ FPGA device code, the Intel® oneAPI DPC++ Compiler creates a custom memory system in your program's datapath to contain the contents of that array. The compiler has many options to choose from when architecting this on-chip memory structure. Memory attributes are a set of DPC++ extensions for FPGA that enable you to override the compiler's internal heuristics and control the kernel's memory architecture.
 
 ### Introduction to Memory Attributes
 
 To maximize kernel throughput, your design's datapath should have stall-free access to all of its memory systems. A memory read or write is said to be *stall-free* if the compiler can prove that it has contention-free access to a memory port. A memory system is stall-free if all of its accesses have this property. Wherever possible, the compiler will try to create a minimum-area, stall-free memory system. 
 
-Suppose a different area performance trade-off is desired, or the compiler fails to find the best configuration. In that case, you can use memory attributes to override the compiler’s decisions and specify the memory configuration you need.
+You may prefer a different area performance trade-off for your design, or in some cases the compiler may fails to find the best configuration. In such situations, you can use memory attributes to override the compiler’s decisions and specify the memory configuration you need.
 
 Memory attributes can be applied to any variable or array defined within the kernel and to struct data members in struct declarations. The compiler supports the following memory attributes:
 
@@ -115,7 +115,7 @@ After all loops are unrolled, the innermost dimension of every access is known a
 
 ### Banks and replicates of `dict_offset`
 
-Suppose we partition the memory system such that array elements `dict_offset[:][0]` (where `:` denotes all indices in range) are contained in Bank 0, `dict_offset[:][1]` are contained in Bank 1, and so on, each access is confined to a single bank. This partitioning is achieved by requesting the compiler to generate `kVec` banks.
+If we partition the memory system such that array elements `dict_offset[:][0]` (where `:` denotes all indices in range) are contained in Bank 0, `dict_offset[:][1]` are contained in Bank 1, and so on, each access is confined to a single bank. This partitioning is achieved by requesting the compiler to generate `kVec` banks.
 
 In total, there are `kVec` reads from each bank. To make these reads stall-free, we request `kVec` replicates per bank so that (if needed) each read can occur simultaneously from a separate replicate. Since all replicates in a bank must contain identical data, a write to a bank must go to all replicates. 
 
@@ -282,5 +282,5 @@ PASSED: all kernel results are correct.
 
 Feel free to experiment further with the tutorial code. You can:
  - Change the memory implementation type to block RAMs (using `[[intelfpga::memory("BLOCK_RAM")]]`) or registers (using `[[intelfpga::register]]`) to see how it affects the area and f<sub>MAX</sub> of the tutorial design.
- Vary `kRows` and/or `kVec` (both in powers of 2) see how it affects the trade-off between single-pumped and double-pumped memories.
+ - Vary `kRows` and/or `kVec` (both in powers of 2) see how it affects the trade-off between single-pumped and double-pumped memories.
 

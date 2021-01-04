@@ -54,13 +54,13 @@ for(i = 0 ; i < 5; i++){
   a[i * 4 + 3] += 1;
 }
 ```
-Each loop iteration in the "equivalent code" contains four unrolled invocations of the first. The Intel® oneAPI DPC++ Compiler for FPGA instantiates four adders instead of one adder. Because there is no data dependency between iterations in the loop, in this case, the compiler schedules all four adds in parallel.
+Each loop iteration in the "equivalent code" contains four unrolled invocations of the first. The Intel® oneAPI DPC++ Compiler for FPGA instantiates four adders instead of one adder. Because there is no data dependency between iterations in the loop, the compiler schedules all four adds in parallel.
 
 ### Determining the optimal unroll factor
-In an FPGA design, unrolling loops is a common strategy to trade off on-chip resources for increased throughput directly. When selecting the unroll factor for a specific loop, the intent is to improve throughput while minimizing resource utilization. It is also important to be mindful of other throughput constraints in your system, such as memory bandwidth.
+In an FPGA design, unrolling loops is a common strategy to directly trade off on-chip resources for increased throughput. When selecting the unroll factor for a specific loop, the intent is to improve throughput while minimizing resource utilization. It is also important to be mindful of other throughput constraints in your system, such as memory bandwidth.
 
 ### Tutorial design
-This tutorial demonstrates this trade-off with a simple vector add a kernel. The tutorial shows how increasing the unroll factor on a loop increases throughput... until another bottleneck is encountered. This example is constructed to run up against global memory bandwidth constraints.
+This tutorial demonstrates this trade-off with a simple vector add kernel. The tutorial shows how increasing the unroll factor on a loop increases throughput... until another bottleneck is encountered. This example is constructed to run up against global memory bandwidth constraints.
 
 The memory bandwidth on an Intel® Programmable Acceleration Card with Intel Arria®, 10 GX FPGA system, is about 6 GB/s. The tutorial design will likely run at around 300 MHz. In this design, the FPGA design processes a new iterations every cycle in a pipeline-parallel fashion. The theoretical computation limit for one adder is:
 

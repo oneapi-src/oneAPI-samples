@@ -77,7 +77,7 @@ In this part, we added two sets of `INTEL::fpga_reg` within the unrolled loop. T
 <img src="fpga_reg.png" alt="Part 2" title="Part 2" width="400" />
 
 In this version, the adder tree has been transformed into a vine-like structure. This increases latency, but it helps us achieve our goal of reducing the fanout and improving f<sub>MAX</sub>.
-Since this tutorial's outer loop is pipelined and has a high trip count, the inner loop's increased latency has a negligible impact on throughput. The tradeoff pays off, as the f<sub>MAX</sub> improvement yields a higher performing design.
+Since the outer loop is pipelined and has a high trip count, the inner loop's increased latency has a negligible impact on throughput. The tradeoff pays off, as the f<sub>MAX</sub> improvement yields a higher performing design.
 
 ## Key Concepts
 

@@ -17,7 +17,7 @@ This FPGA tutorial explains how to use the max_concurrency attribute for loops.
 This tutorial demonstrates a simple example of applying the `max_concurrency` attribute to a loop in a task kernel to trade off the on-chip memory use and throughput of the loop.
 
 ### Description of the `max_concurrency` Attribute
-The `max_concurrency` attribute is a loop attribute that enables you to control the number of simultaneously executed loop iterations. To enable simultaneous execution, the compiler creates copies of any private memory to a single iteration. These copies are called private copies. The greater the permitted concurrency, the more private copies the compiler must create. 
+The `max_concurrency` attribute is a loop attribute that enables you to control the number of simultaneously executed loop iterations. To enable simultaneous execution, the compiler creates copies of any memory with single iteration scope. These copies are called private copies. The greater the permitted concurrency, the more private copies the compiler must create. 
 
 #### Example: 
 
@@ -39,7 +39,7 @@ In this example, the maximum concurrency allowed for the outer loop is 1. Only o
 ### Identifying the Correct `max_concurrency` Factor
 Generally, increasing the maximum concurrency allowed for a loop through the use of the `max_concurrency` attribute increases the throughput of that loop at the cost of increased memory resource use. Additionally, in nearly all cases, there is a point at which increasing the maximum concurrency does not have any further effect on the throughput of the loop, as the maximum exploitable concurrency of that loop has been achieved. 
 
-The correct `max_concurrency` factor for a loop depends on your design's goals, the criticality of the loop in question, and its impact on your design's overall throughput. A typical design flow may be to: 
+The correct `max_concurrency` factor for a loop depends on your goals for the design, the criticality of the loop in question, and its impact on your design's overall throughput. A typical design flow may be to: 
 1. Experiment with different values of `max_concurrency`. 
 2. Observe what impact the values have on the overall throughput and memory use of your design.
 3. Choose the appropriate value that allows you to achieve your desired throughput and area goals.
@@ -173,7 +173,7 @@ PASSED: The results are correct
 
 The stdout output shows the giga-floating point operations per second (GFlops) for each kernel. 
 
-When run on the Intel® PAC with Intel Arria10® 10 GX FPGA hardware board, we see that the throughput doubles from using max_concurrency 1 to max_concurrency 2. After which increasing the value of max_concurrency does not increase the GFlops achieved, i.e., increasing the max_concurrency above two will spend additional RAM resources for no additional throughput gain. As such, for this tutorial design, maximal throughput is best achieved by using max_concurrency 2. 
+When run on the Intel® PAC with Intel Arria10® 10 GX FPGA hardware board, we see that the throughput doubles from using max_concurrency 1 to max_concurrency 2. Further increasing the value of max_concurrency does not increase the GFlops achieved, i.e., increasing the max_concurrency above 2 will spend additional RAM resources for no additional throughput gain. As such, for this tutorial design, maximal throughput is best achieved by using max_concurrency 2. 
 
 Using max_concurrency 0 (or equivalently omitting the attribute entirely) also produced good throughput, indicating that the compiler's default heuristic chose a concurrency of 2 or higher in this case.
 

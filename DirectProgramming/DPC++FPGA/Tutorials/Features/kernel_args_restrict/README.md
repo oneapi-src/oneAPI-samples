@@ -19,7 +19,7 @@ Due to pointer aliasing, the compiler must be conservative about optimizations t
 
 
 ### What Is Pointer Aliasing?
-Pointer aliasing occurs when the same memory location can be accessed using different *names* (i.e., variables). For example, consider the code below. Here, the variable `pi` can be changed in three ways: `pi=3.14159`, `*a=3.14159` or `*b=3.14159`. In general, the compiler has to be conservative about which accesses may alias to each other and avoid making optimizations that reorder and/or parallelize operations.
+Pointer aliasing occurs when the same memory location can be accessed using different *names* (i.e., variables). For example, consider the code below. Here, the value of the variable `pi` can be changed in three ways: `pi=3.14159`, `*a=3.14159` or `*b=3.14159`. In general, the compiler has to be conservative about which accesses may alias to each other and avoid making optimizations that reorder and/or parallelize operations.
 
 ```c++
 float pi = 3.14;
@@ -37,7 +37,7 @@ void myCopy(int *in, int *out, size_t int size) {
 ```
 This possibility of aliasing forces the compiler to be conservative. Without more information from the developer, it cannot make any optimizations that overlap, vectorize or reorder the assignment operations. Doing so would result in functionally incorrect behavior if the compiled function is called with aliasing pointers.
 
-If this code is compiled to FPGA, the performance penalty of this conservatism is severe. The loop in `myCopy` cannot be pipelined, because the next iteration of the loop cannot begin until the current iteration has been completed. 
+If this code is compiled to FPGA, the performance penalty of this conservatism is severe. The loop in `myCopy` cannot be pipelined, because the next iteration of the loop cannot begin until the current iteration has completed. 
 
 ### A Promise to the Compiler
 The developer often knows that pointer arguments will never alias in practice, as with the `myCopy` function. In your DPC++ program, you can use the `[[intel::kernel_args_restrict]]` attribute to inform the compiler that none of a kernel's arguments will alias to any another, thereby enabling more aggressive optimizations. If the non-aliasing assumption is violated at runtime, the result will be undefined behavior.
@@ -154,7 +154,7 @@ We can confirm this by looking at the details of the loop. Click on the *KernelA
   - *144.00 clock cycles Load Operation (kernel_args_restrict.cpp: 74 > accessor.hpp: 945)*
   - *42.00 clock cycles Store Operation (kernel_args_restrict.cpp: 74)*
 
-The first bullet (and its sub-bullets) tells you that memory dependency exists between the load and store operations in the loop. This is the conservative pointer aliasing memory dependency described earlier. The second bullet shows you the estimated latencies for the load and store operations (note that these are board-dependent). The sum of these two latencies (plus 1) is the II of the loop.
+The first bullet (and its sub-bullets) tells you that a memory dependency exists between the load and store operations in the loop. This is the conservative pointer aliasing memory dependency described earlier. The second bullet shows you the estimated latencies for the load and store operations (note that these are board-dependent). The sum of these two latencies (plus 1) is the II of the loop.
 
 Next, look at the loop details of the *KernelArgsRestrict* kernel. You will notice that the *Details* pane doesn't show a memory dependency. The usage of the `[[intel::kernel_args_restrict]]` attribute allowed the compiler to schedule a new iteration of the for-loop every cycle since it knows that accesses to `in` and `out` will never alias.
 

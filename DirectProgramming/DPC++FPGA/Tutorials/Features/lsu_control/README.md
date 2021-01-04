@@ -24,7 +24,7 @@ The two LSU styles used in this tutorial are listed below:
 | Burst-Coalesced LSU                                                         |  Prefetching LSU
 |---                                                                          |---
 | - Dynamically buffers requests until the largest possible burst can be made | - Buffers the next contiguous address of data for future loads
-| - Makes efficient accesses to global memory but takes more FPGA resources  | - If the access is not contiguous, the buffer must be flushed
+| - Makes efficient accesses to global memory but takes more FPGA resources   | - If the access is not contiguous, the buffer must be flushed
 | - Works for both loads and stores                                           | - Works only for loads
 
 The best LSU style depends on the memory access pattern in your design. There are trade-offs for each LSU, so picking a configuration solely based on the area may compromise throughput. In this tutorial, the access pattern is ideal for the prefetching LSU, and it will achieve the same throughput as the burst coalesced LSU, but this is not always the case. 
@@ -65,7 +65,8 @@ q.submit([&](handler &h) {
 });
 ```
 
-Currently, not every combination of parameters is valid in the compiler. Please refer to the LSU Controls section in the [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide). 
+Currently, not every combination of parameters is valid in the compiler. 
+For more details on the descriptions of LSU controls, styles, and modifiers please refer the to the LSU Controls section in the [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide). 
 
 ### Tutorial Code Overview
 The compiler selects an LSU configuration based on the design's memory access pattern and dependencies. In some cases, it can be beneficial to explicitly set the configuration using the LSU control extension. If the LSU configurations are invalid, the compiler will emit a warning and choose a valid LSU. This tutorial will highlight a situation where using the extension to specify an LSU is beneficial. 
@@ -78,7 +79,7 @@ In the tutorial, there are three kernels with the same body:
 | KernelDefault                  | directly loads data from read accessor, instead of using the ```INTEL::lsu``` class
 
 
-The kernel design requests data from global memory in a contiguous manner. Therefore, both the prefetching LSU and the burst-coalesced LSU would allow the design to have high throughput. However, the prefetching LSU is highly optimized for such access patterns, especially in situations where we know, at compile time, that such access pattern exists. This will generally lead to significant area savings. As a result, between the two kernels, ```KernelPrefetch``` and ```KernelBurst```, an improvement in the area should be observed with ```KernelPrefetch```. The kernel ```KernelDefault``` shows the same design without using the LSU controls extension. This kernel acts as both a baseline and illustrates the difference in syntax between using the LSU controls and not using them.
+The kernel design requests data from global memory in a contiguous manner. Therefore, both the prefetching LSU and the burst-coalesced LSU would allow the design to have high throughput. However, the prefetching LSU is highly optimized for such access patterns, especially in situations where we know, at compile time, that such access pattern exists. This will generally lead to significant area savings. As a result, between the two kernels, ```KernelPrefetch``` and ```KernelBurst```, an improvement in area should be observed with ```KernelPrefetch```. The kernel ```KernelDefault``` shows the same design without using the LSU controls extension. This kernel acts as both a baseline and illustrates the difference in syntax between using the LSU controls and not using them.
 
 ## Key Concepts
 * The basic concepts of LSU styles and LSU configurability
@@ -204,12 +205,12 @@ The ```KernelPrefetch``` should use fewer FPGA resources, as the design is a mem
 
 There are many different ways to configure an LSU. As a programmer, the implementation you should choose depends on your design constraints.
 
-If the available FPGA resources limit your design, you can try the following:
+If your design is limited by the available FPGA resources, you can try the following:
   - Request a prefetching LSU instead of a burst-coalesced LSU for loads.
   - Disable the prefetching LSU, the burst-coalesced LSU, and caching, to infer a pipelined LSU. 
   - Disable the LSU cache modifier to prevent the compiler from inferring any caching, especially if a cache will not be helpful for your design
 
-However, configuring an LSU solely based on the area may compromise throughput. In this tutorial, the access pattern is ideal for the prefetch LSU, and it will achieve the same throughput as the burst coalesced, but this is not always the case. 
+However, configuring an LSU solely based on area may compromise throughput. In this tutorial, the access pattern is ideal for the prefetch LSU and it will achieve the same throughput as the burst coalesced, but this is not always the case. 
   
 For more details on the descriptions of LSU controls, styles, and modifiers, refer to the LSU Controls section in the [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide). 
 
