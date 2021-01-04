@@ -56,7 +56,7 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `1d_HeatTransfer` Program for CPU and GPU
+## Building the 1d_HeatTransfer Program for CPU and GPU
 
 ### Include Files  
 
