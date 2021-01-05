@@ -7,7 +7,7 @@ This FPGA tutorial demonstrates how to use the Intel® FPGA Dynamic Profiler for
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | About the Intel® FPGA Dynamic Profiler for DPC++ <br> How to set up and use this tool <br> A case study of using this tool to identify performance bottlenecks in pipes.
 | Time to complete                  | 15 minutes
@@ -165,7 +165,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```

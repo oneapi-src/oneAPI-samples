@@ -6,7 +6,7 @@ This FPGA tutorial introduces how to compile DPC++ for FPGA through a simple vec
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and why compiling DPC++ to FPGA differs from CPU or GPU <br> FPGA device image types and when to use them <br> The compile flags used to target FPGA
 | Time to complete                  | 15 minutes
@@ -58,7 +58,7 @@ Optimization reports are generated after both stages. The optimization report ge
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design.html) contains a chapter on how to analyze the reports generated after the FPGA early image and FPGA image.
 
 #### FPGA Hardware
-This is a full compile through to the FPGA hardware image. You can target the Intel® PAC with Intel Arria® 10 GX FPGA, the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), or a custom board.
+This is a full compile through to the FPGA hardware image. You can target the Intel® PAC with Intel Arria® 10 GX FPGA, the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), or a custom board.
 
 ### Device Selectors
 The following code snippet demonstrates how you can specify the target device in your source code. The selector is used to specify the target device at runtime.
@@ -145,7 +145,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -178,7 +178,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -196,7 +196,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ``` 
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
 ### In Third-Party Integrated Development Environments (IDEs)
 

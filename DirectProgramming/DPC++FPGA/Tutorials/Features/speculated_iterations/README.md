@@ -7,7 +7,7 @@ This FPGA tutorial demonstrates applying the `speculated_iterations` attribute t
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               |  What the `speculated_iterations` attribute does <br> How to apply the `speculated_iterations` attribute to loops in your program <br> How to determine the optimal number of speculated iterations
 | Time to complete                  | 15 minutes
@@ -50,7 +50,7 @@ In both increasing and decreasing cases, some experimentation is usually necessa
 ### Tutorial example
 In the tutorial design's kernel, the loop's exit condition involves a logarithm and a compare operation. This complex exit condition prevents the loop from achieving ```II=1```. 
 
-The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on the Intel® PAC with Intel Arria® 10 GX FPGA. Different numbers are chosen for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) accordingly.
+The design enqueues variants of the kernel with 0, 10, and 27 speculated iterations, respectively, to demonstrate the effect of the `speculated_iterations` attribute on the Intel® PAC with Intel Arria® 10 GX FPGA. Different numbers are chosen for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) accordingly.
 
 ## Key Concepts
 * Description of the `speculated_iterations` attribute. 
@@ -84,7 +84,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -117,7 +117,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -135,7 +135,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ``` 
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
 
