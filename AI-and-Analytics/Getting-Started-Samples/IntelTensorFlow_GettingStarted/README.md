@@ -91,16 +91,20 @@ With successful execution, it will print out the following results:
     [CODE_SAMPLE_COMPLETED_SUCCESSFULLY] 
 ```
 
-The mkldnn run-time verbose trace should look similar to what is shown below:
+If you export the DNNL_VERBOSE as 1 in the command line, the mkldnn run-time verbose trace should look similar to what is shown below:
+```
+export DNNL_VERBOSE=1
+```
 
 ```
-2019-07-23 13:54:42.599871: I tensorflow/core/common_runtime/process_util.cc:71] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
-mkldnn_verbose,exec,reorder,jit:uni,undef,in:f32_nhwc out:f32_nchw,num:1,64x4x128x128,22.9941
-mkldnn_verbose,exec,reorder,simple:any,undef,in:f32_hwio out:f32_Ohwi16o,num:1,10x4x3x3,0.0249023
-mkldnn_verbose,exec,convolution,jit:avx512_common,forward_training,fsrc:nchw fwei:Ohwi16o fbia:undef fdst:nChw16c,alg:convolution_direct,mb64_g1ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,1.302
-mkldnn_verbose,exec,reorder,simple:any,undef,in:f32_nChw16c out:f32_nhwc,num:1,64x10x128x128,5.146
-mkldnn_verbose,exec,eltwise,jit:avx512_common,forward_training,fdata:blocked fdiff:undef,alg:eltwise_relu,mb64ic128ih128iw10,0.744141
-mkldnn_verbose,exec,eltwise,jit:avx512_common,backward_data,fdata:blocked fdiff:blocked,alg:eltwise_relu,mb64ic128ih128iw10,3.96899
+2021-01-06 10:44:28.875296: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+dnnl_verbose,info,DNNL v1.2.0 (commit N/A)
+dnnl_verbose,info,cpu,runtime:OpenMP
+dnnl_verbose,info,cpu,isa:Intel AVX-512 with Intel DL Boost
+dnnl_verbose,info,gpu,runtime:none
+dnnl_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:acdb:f0 dst_f32::blocked:abcd:f0,,,4x4x128x128,12.0649
+dnnl_verbose,exec,cpu,reorder,simple:any,undef,src_f32::blocked:cdba:f0 dst_f32:p:blocked:Acdb16a:f0,,,10x4x3x3,0.187012
+dnnl_verbose,exec,cpu,convolution,jit:avx512_common,forward_training,src_f32::blocked:abcd:f0 wei_f32:p:blocked:Acdb16a:f0 bia_undef::undef::f0 dst_f32:p:blocked:aBcd16b:f0,,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.266113
 ```
 Please see the [DNNL Developer's Guide](https://intel.github.io/mkl-dnn/dev_guide_verbose.html) for more details on the verbose log. 
 
