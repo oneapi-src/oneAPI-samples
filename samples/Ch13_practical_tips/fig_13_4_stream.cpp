@@ -14,6 +14,12 @@ int main() {
       out << "Testing my sycl stream (this is work-item ID:" << idx << ")\n";
     });
   });
+
+  // Wait on the queue so that the host program doesn't complete before the device
+  // code stream out is executed.  This ensures that the example actually displays
+  // the output text.
+  Q.wait();
+
   return 0;
 }
 
