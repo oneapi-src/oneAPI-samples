@@ -1,4 +1,4 @@
-# TensorFlow HelloWorld Sample
+# `TensorFlow HelloWorld` Sample
 TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel® architecture and to extract maximum performance, the TensorFlow framework has been optimized using Intel® Deep Neural Networks (Intel® DNNL) primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow enables Intel® DNNL calls by default. 
 
 | Optimized for                       | Description

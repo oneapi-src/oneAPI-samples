@@ -1,4 +1,4 @@
-# ISO2DFD sample
+# `ISO2DFD` Sample
 
 ISO2DFD: Intel® oneAPI DPC++ Language Basics Using 
 2D-Finite-Difference-Wave Propagation

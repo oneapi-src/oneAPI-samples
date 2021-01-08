@@ -1,4 +1,4 @@
-# UP Squared* Built-in LEDs
+# `UP Squared* Built-in LEDs` Sample
 
 ## Introduction
 This simple sample can be used to blink the built-in LEDs on the UP Squared board.

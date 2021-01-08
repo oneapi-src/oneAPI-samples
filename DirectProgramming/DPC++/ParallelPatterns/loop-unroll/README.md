@@ -1,5 +1,4 @@
-﻿
-# Unrolling Loops
+﻿# `Unrolling Loops` Sample
 The Loop Unroll demonstrates a simple example of unrolling loops to improve the throughput of a DPC++ program for GPU offload. 
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.

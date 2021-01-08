@@ -1,4 +1,4 @@
-# matrix_mul sample
+# `matrix_mul` Sample
 matrix_mul is a simple program that multiplies together two large matrices and
 verifies the results.  This program is implemented using two ways: 
     1. Data Parallel C++ (DPC++)

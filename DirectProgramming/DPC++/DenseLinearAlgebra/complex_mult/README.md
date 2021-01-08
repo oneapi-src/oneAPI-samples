@@ -1,4 +1,4 @@
-﻿# Complex Multiplication sample
+﻿# `Complex Multiplication` Sample
 
 complex multiplication is a program that multiplies two large vectors of 
 Complex numbers in parallel and verifies the results. It also implements 

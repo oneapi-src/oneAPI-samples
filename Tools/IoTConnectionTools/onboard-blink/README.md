@@ -1,4 +1,4 @@
-# Onboard Blink
+# `Onboard Blink` Sample
 
 ## Introduction
 This is a simple sample you could use for a quick IoT board test.

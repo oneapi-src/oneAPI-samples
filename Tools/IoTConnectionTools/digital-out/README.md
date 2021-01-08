@@ -1,4 +1,4 @@
-# Digital Out
+# `Digital Out` Sample
 
 ## Introduction
 This is a simple sample you could use for a quick test of digital output.

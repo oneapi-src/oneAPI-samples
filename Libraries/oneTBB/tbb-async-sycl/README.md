@@ -1,4 +1,4 @@
-# TBB-Async-Sycl Sample
+# `TBB-Async-Sycl` Sample
 This sample illustrates how the computational kernel can be split for execution between CPU and GPU using TBB Flow Graph asynchronous node and functional node. The Flow Graph asynchronous node uses SYCL to implement GPU calculations while the functional node does the CPU part of calculations. This tbb-async-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.  
 | Optimized for                     | Description
 |:---                               |:---

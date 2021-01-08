@@ -1,4 +1,4 @@
-# Intel Python XGBoost Getting Started
+# `Intel Python XGBoost Getting Started` Sample
 XGBoost* is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost* includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath.
 
 | Optimized for                     | Description

@@ -1,4 +1,4 @@
-# oneDNN Getting Started Sample
+# `oneDNN Getting Started` Sample
 
 oneAPI Deep Neural Network Library (oneDNN) is an open-source performance
 library for deep learning applications. The library includes basic building

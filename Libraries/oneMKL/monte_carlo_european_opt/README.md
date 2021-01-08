@@ -1,4 +1,4 @@
-# Monte Carlo European Options Sample
+# `Monte Carlo European Options` Sample
 
 Monte Carlo European Options shows how to use the oneMKL library's random number generation (RNG) functionality to compute European option prices.
 

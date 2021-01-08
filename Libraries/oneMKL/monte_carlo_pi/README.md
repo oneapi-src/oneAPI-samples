@@ -1,4 +1,4 @@
-# Monte Carlo Pi Estimation Sample
+# `Monte Carlo Pi Estimation` Sample
 
 Monte Carlo Pi Estimation shows how to use the oneMKL library's random number generation (RNG) functionality to estimate the value of &pi;.
 

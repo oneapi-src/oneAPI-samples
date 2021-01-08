@@ -1,4 +1,4 @@
-# ISR
+# `ISR` Sample
 
 ## Introduction
 You could use this simple sample for a quick test of an Interrupt Service Routine (ISR).

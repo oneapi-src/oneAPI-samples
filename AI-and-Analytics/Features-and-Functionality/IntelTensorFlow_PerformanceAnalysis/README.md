@@ -1,4 +1,4 @@
-# TensorFlow Performance Analysis by using Intel Model Zoo
+# `TensorFlow Performance Analysis by using Intel Model Zoo` Sample
 This sample contains two Jupyter notebooks from Intel Model Zoo to help users analyze the performance difference between Stock Tensorflow and Intel Tensorflow.  
 
 | Optimized for                     | Description

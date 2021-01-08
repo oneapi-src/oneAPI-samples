@@ -1,4 +1,4 @@
-﻿# 1D-Heat-Transfer Sample
+﻿# `1D-Heat-Transfer` Sample
 
 This code sample demonstrates the simulation of a one-dimensional heat
 transfer process using Intel Data Parallel C++. Kernels in this

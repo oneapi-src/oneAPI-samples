@@ -1,4 +1,4 @@
-# Distributed TensorFlow with Horovod Sample
+# `Distributed TensorFlow with Horovod` Sample
 Today's modern computer systems are becoming heavily distributed. It is important to capitalize on scaling techniques to maximize the efficiency and performance of neural networks training, a resource-intensive process.
 
 | Optimized for                       | Description

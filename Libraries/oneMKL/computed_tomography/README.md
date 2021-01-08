@@ -1,4 +1,4 @@
-# Computed Tomography Reconstruction Sample
+# `Computed Tomography Reconstruction` Sample
 
 Computed Tomography shows how to use the oneMKL library's DFT functionality to simulate computed tomography (CT) imaging.
 

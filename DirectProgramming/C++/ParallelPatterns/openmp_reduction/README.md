@@ -1,4 +1,4 @@
-# openmp_reduction Sample
+# `openmp_reduction` Sample
 
 The openmp_reduction sample is a simple program that calculates pi.  This program is implemented using C++ and openMP for Intel(R) CPU and accelerators.
 

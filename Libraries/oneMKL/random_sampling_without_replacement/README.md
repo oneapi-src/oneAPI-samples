@@ -1,4 +1,4 @@
-# Multiple Simple Random Sampling without replacement
+# `Multiple Simple Random Sampling without replacement` Sample
 
 Multiple Simple Random Sampling without replacement shows how to use the oneMKL library's random number generation (RNG) functionality to generate K>>1 simple random length-M samples without replacement from a population of size N (1 ≤ M ≤ N).
 

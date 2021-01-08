@@ -1,4 +1,4 @@
-﻿# `Bitonic Sort` sample
+﻿# `Bitonic Sort` Sample
 
 This code sample demonstrates the implementation of bitonic sort using Intel Data Parallel C++ to
 offload the computation to a GPU. In this implementation, a random sequence of 2**n elements is given

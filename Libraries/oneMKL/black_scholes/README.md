@@ -1,4 +1,4 @@
-# Black-Scholes Sample
+# `Black-Scholes` Sample
 
 Black-Scholes shows how to use oneMKL's Vector Math (VM) and Random Number Generator (RNG) functionality to calculate the prices of options using the Black-Scholes formula for suitable randomly-generated portfolios.
 

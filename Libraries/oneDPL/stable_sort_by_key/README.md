@@ -1,4 +1,4 @@
-# Stable sort by key sample
+# `Stable sort by key` Sample
 
 Stable sort by key is a sorting operation when sorting two sequences (keys and values). Only keys are compared, but both keys and values are swapped. This sample demonstrates `counting_iterator` and `zip_iterator` from Intel&reg; oneAPI DPC++ Library (oneDPL).
 

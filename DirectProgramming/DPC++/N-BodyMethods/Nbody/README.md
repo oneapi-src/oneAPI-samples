@@ -1,4 +1,4 @@
-# Nbody sample
+# `Nbody` sample
 An N-body simulation is a simulation of a dynamical system of particles, usually under the influence of physical forces, such as gravity. This nbody sample code is implemented using C++ and DPC++ language for Intel CPU and GPU. 
   
 | Optimized for                       | Description

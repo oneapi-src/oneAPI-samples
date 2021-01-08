@@ -1,4 +1,4 @@
-# PWM
+# `PWM` Sample
 
 ## Introduction
 This is a simple sample you could use for a quick test of PWM output.

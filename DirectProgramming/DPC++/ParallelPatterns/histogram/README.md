@@ -1,4 +1,4 @@
-# Histogram Sample
+# `Histogram` Sample
 
 This sample demonstrates a histogram that groups numbers together and provides the count of a particular number in the input. In this sample we are using dpstd APIs to offload the computation to the selected device.
 

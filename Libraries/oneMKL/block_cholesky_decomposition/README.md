@@ -1,4 +1,4 @@
-# Block Cholesky Decomposition Sample
+# `Block Cholesky Decomposition` Sample
 
 Block Cholesky Decomposition shows how to use the oneMKL library's BLAS and LAPACK functionality to solve a symmetric, positive-definite block tridiagonal linear equation.
 

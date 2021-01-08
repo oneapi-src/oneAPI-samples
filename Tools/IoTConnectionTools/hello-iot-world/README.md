@@ -1,4 +1,4 @@
-﻿# Hello IoT World
+﻿# `Hello IoT World` Sample
 
 ## Introduction
 

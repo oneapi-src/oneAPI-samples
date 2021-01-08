@@ -1,4 +1,4 @@
-# Matrix Multiplication with oneMKL Sample
+# `Matrix Multiplication with oneMKL` Sample
 
 Matrix Multiplication with oneMKL shows how to use the oneMKL's optimized matrix multiplication routines. 
 

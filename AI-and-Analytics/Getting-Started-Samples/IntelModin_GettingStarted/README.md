@@ -1,4 +1,4 @@
-# Intel Modin Getting Started
+# `Intel Modin Getting Started` Sample
 This Getting Started sample code show how to use distributed Pandas using the Modin package. It demonstrates how to use software products that can be found in the [Intel AI Analytics Toolkit powered by oneAPI](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description

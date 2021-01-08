@@ -1,4 +1,4 @@
-# oneDNN Simple Model Sample
+# `oneDNN Simple Model` Sample
 
 This sample is implemented in C++ and DPC++ and runs on CPU or GPU. The sample
 also includes [Jupyer notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_simple_model.ipynb) that

@@ -1,4 +1,4 @@
- # All Pairs Shortest Paths sample
+ # `All Pairs Shortest Paths` Sample
 `All Pairs Shortest Paths` uses the Floyd-Warshall algorithm to find the shortest paths between pairs of vertices in a graph. It uses a parallel blocked algorithm that enables the application to offload compute intensive work to the GPU efficiently.
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.

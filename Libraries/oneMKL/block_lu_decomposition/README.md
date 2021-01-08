@@ -1,4 +1,4 @@
-# Block LU Decomposition Sample
+# `Block LU Decomposition` Sample
 
 Block LU Decomposition shows how to use the oneMKL library's BLAS and LAPACK functionality to solve a block tridiagonal linear equation.
 

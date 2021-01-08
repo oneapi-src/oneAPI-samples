@@ -1,4 +1,4 @@
-# oneDNN DPC++ Interoperability Sample
+# `oneDNN DPC++ Interoperability`Sample
 
 This C++ API example demonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN. 
 Users will know how to access SYCL buffer and queue via oneDNN SYCL interoperability interfaces,  

@@ -1,4 +1,4 @@
-# `Optimization Integral`
+# `Optimization Integral` Sample
  
 This sample is designed to illustrate compiler optimization features and programming concepts.
 

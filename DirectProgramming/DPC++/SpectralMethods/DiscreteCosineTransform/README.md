@@ -1,4 +1,4 @@
-﻿# DPC++ Discrete Cosine Transform Sample
+﻿# `DPC++ Discrete Cosine Transform` Sample
 
 Discrete Cosine Transform (DCT) and Quantization are the first two steps in the JPEG compression standard. This sample demonstrates how DCT and Quantizing stages can be implemented to run faster using Data Parallel C++ (DPC++) by offloading image processing work to a GPU or other device.
 

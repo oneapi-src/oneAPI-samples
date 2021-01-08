@@ -1,4 +1,4 @@
-# End-to-end machine learning workload: Census
+# End-to-end machine learning workload: `Census` Sample
 
 This sample code illustrates how to use Intel® Distribution of Modin for ETL operations and ridge regression algorithm from the Intel® oneAPI Data Analytics Library (oneDAL) accelerated scikit-learn library to build and run an end to end machine learning workload. Both Intel Distribution of Modin and oneDAL accelerated scikit-learn libraries are available together in [Intel AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). This sample code demonstrates how to seamlessly run the end-to-end census workload using the toolkit, without any external dependencies.
 

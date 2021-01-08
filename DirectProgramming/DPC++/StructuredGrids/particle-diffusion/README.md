@@ -1,4 +1,4 @@
-# Water Molecule Diffusion Sample
+# `Water Molecule Diffusion` Sample
 motionsim: Intel® oneAPI DPC++ Language Basics Using a Monte Carlo Simulation
 
 This code sample implements a simple example of a Monte Carlo simulation of water molecules' diffusion in tissue. This kind of computational experiment can be used to simulate the acquisition of a diffusion signal for dMRI.

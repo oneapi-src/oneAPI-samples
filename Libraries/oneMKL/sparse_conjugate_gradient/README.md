@@ -1,4 +1,4 @@
-# Sparse Conjugate Gradient Sample
+# `Sparse Conjugate Gradient` Sample
 
 Sparse Conjugate Gradient shows how to use the oneMKL library's sparse linear algebra functionality to solve a sparse, symmetric linear system using the (preconditioned) conjugate gradient method.
 

@@ -1,4 +1,4 @@
-# Intel(R) Low Precision Optimization Tool (iLiT) Sample for Tensorflow
+# `Intel(R) Low Precision Optimization Tool (iLiT)` Sample for Tensorflow
 
 ## Background
 Low-precision inference can speed up inference obviously, by converting the fp32 model to int8 or bf16 model. Intel provides Intel(R) Deep Learning Boost technology in the Second Generation Intel(R) Xeon(R) Scalable Processors and newer Xeon(R), which supports to speed up int8 and bf16 model by hardware.

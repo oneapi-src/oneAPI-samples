@@ -1,4 +1,4 @@
-﻿# `Prefix Sum` sample
+﻿# `Prefix Sum` Sample
 
 This code sample demonstrates the implementation of parallel prefix sum using Intel Data Parallel C++ to
 offload the computation to a GPU. In this implementation, a random sequence of 2**n elements is given

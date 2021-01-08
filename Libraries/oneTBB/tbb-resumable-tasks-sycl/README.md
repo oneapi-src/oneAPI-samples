@@ -1,4 +1,4 @@
-# `tbb-resumable-tasks-sycl` sample
+# `tbb-resumable-tasks-sycl` Sample
 
 This sample illustrates how the computational kernel can be split for execution between CPU and GPU using TBB resumable task and parallel_for. The TBB resumable task uses SYCL to implement GPU calculations, while the parallel_for algorithm does the CPU part of calculations. This tbb-resumable-tasks-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.
 | Optimized for                     | Description

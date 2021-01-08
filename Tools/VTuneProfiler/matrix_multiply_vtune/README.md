@@ -1,4 +1,4 @@
-# Matrix Multiply Sample
+# `Matrix Multiply` Sample
 A sample containing multiple implementations of matrix multiplication. This sample code is implemented using DPC++ language for CPU and GPU. 
   
 | Optimized for                       | Description

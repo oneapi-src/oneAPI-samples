@@ -1,4 +1,4 @@
-# ISO3DFD sample
+# `ISO3DFD` Sample
 ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic isotropic wave equation, which can be used as a proxy for propagating a seismic wave. In this sample, kernels are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions. This sample code is implemented using Data Parallel C++ for CPU and GPU and using OpenMP on CPU for comparison and validation.
   
 | Optimized for                       | Description

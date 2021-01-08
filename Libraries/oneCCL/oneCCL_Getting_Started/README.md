@@ -1,4 +1,4 @@
-# oneCCL Getting Started samples
+# `oneCCL Getting Started` Samples
 The CCL sample codes are implemented using C++, C and DPC++ language for CPU and GPU. 
 By using all reduce collective operation samples, users can understand how to compile oneCCL codes with various oneCCL configurations in Intel oneAPI environment.  
 
