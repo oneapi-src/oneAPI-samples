@@ -28,8 +28,7 @@ Using Data Parallel C++, the sample will explicitly run on the GPU as well as CP
 result. The output will include GPU device name. The results from the two devices are compared and, if 
 the sample ran correctly, report a success message. The output of the wavefield can be plotted using 
 the SU Seismic processing library, which  has utilities to display seismic wavefields and can be 
-downloaded from John Stockwell’s SeisUnix GitHub* (https://github.com/JohnWStockwellJr/SeisUnix/wiki/
-Seismic-Unix-install-on-Ubuntu)
+downloaded from [John Stockwell’s SeisUnix GitHub](https://https://github.com/JohnWStockwellJr/SeisUnix/wiki/Seismic-Unix-install-on-Ubuntu)
 
 ## Key implementation details
 
@@ -63,8 +62,8 @@ The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on y
 ### Running Samples In DevCloud
 
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, 
-FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI 
-Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+FPGA) as well whether to run in batch or interactive mode. For more information see the [Intel® oneAPI 
+Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
 Perform the following steps:
