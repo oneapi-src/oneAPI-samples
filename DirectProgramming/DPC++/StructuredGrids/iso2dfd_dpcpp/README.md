@@ -1,18 +1,13 @@
-# `ISO2DFD` Sample
+﻿# `ISO2DFD` Sample
 
-ISO2DFD: Intel® oneAPI DPC++ Language Basics Using 
-2D-Finite-Difference-Wave Propagation
+ISO2DFD: Intel® oneAPI DPC++ Language Basics Using 2D-Finite-Difference-Wave Propagation
 
 The ISO2DFD sample refers to Two-Dimensional Finite-Difference Wave Propagation in Isotropic Media.  It is a two-dimensional stencil to simulate a wave propagating in a 2D isotropic medium and illustrates the basics of the DPC++ programming language using direct programming.
 
-A complete code walk-through for this sample can be found at:
-https://software.intel.com/en-us/articles/code-sample-two-dimensional-finite-difference-wave-propagation-in-isotropic-media-iso2dfd
+A complete code walk-through for this sample can be found [here](https://software.intel.com/en-us/articles/code-sample-two-dimensional-finite-difference-wave-propagation-in-isotropic-media-iso2dfd)
 
-For comprehensive instructions regarding DPC++ Programming, go to
-https://software.intel.com/en-us/oneapi-programming-guide
-and search based on relevant terms noted in the comments.
+For comprehensive instructions regarding DPC++ Programming, see the [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
-  
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
@@ -20,7 +15,6 @@ and search based on relevant terms noted in the comments.
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | How to offload the computation to GPU using Intel® oneAPI DPC++/C++ Compiler
 | Time to complete                  | 10 minutes
-
 
 ## Purpose
 
@@ -37,8 +31,6 @@ the SU Seismic processing library, which  has utilities to display seismic wavef
 downloaded from John Stockwell’s SeisUnix GitHub* (https://github.com/JohnWStockwellJr/SeisUnix/wiki/
 Seismic-Unix-install-on-Ubuntu)
 
-A detailed code walk through can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP3_ISO2DFD. 
-
 ## Key implementation details
 
 SYCL implementation explained.  
@@ -49,7 +41,6 @@ SYCL implementation explained.
 function called inside the kernel performs a computation (it updates a grid point specified by the 
 global ID variable) for a single time step.  
 
-
 ## License
 
 Code samples are licensed under the MIT license. See
@@ -59,9 +50,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ##  Building the `iso2dfd` Program for CPU and GPU
 
-> Note: if you have not already done so, set up your CLI 
-> environment by sourcing  the setvars script located in 
-> the root of your oneAPI installation. 
+> Note: if you have not already done so, set up your CLI environment by sourcing  the setvars script located in the root of your oneAPI installation. 
 >
 > Linux Sudo: . /opt/intel/oneapi/setvars.sh  
 > Linux User: . ~/intel/oneapi/setvars.sh  
@@ -121,8 +110,7 @@ You can  execute the code with different parameters. For example the following c
 	 n1 n2      : Grid sizes for the stencil
 	 Iterations : Number of timesteps.
 
-   * Find graphical output for sample execution in the online tutorial at:
-     https://software.intel.com/en-us/articles/code-sample-two-dimensional-finite-difference-wave-propagation-in-isotropic-media-iso2dfd
+   * Find graphical output for sample execution in the [online tutorial](https://software.intel.com/en-us/articles/code-sample-two-dimensional-finite-difference-wave-propagation-in-isotropic-media-iso2dfd)
 
 ### Example of Output 
 
