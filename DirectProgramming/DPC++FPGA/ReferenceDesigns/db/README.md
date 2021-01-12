@@ -6,17 +6,17 @@ This reference design demonstrates how to accelerate [TPC-H](http://www.tpc.org/
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Hardware                          | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel&reg; oneAPI DPC++ Compiler 
 | What you will learn               | How to accelerate database queries using an Intel FPGA
 | Time to complete                  | 1 hour
 
-_Notice: This example design is only officially supported for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA)_
+_Notice: This example design is only officially supported for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)_
 
 **Performance**
-In this design, we accelerate four TPC-H style queries as *offload accelerators*. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the latency (i.e. the wall clock time) from the time the query is requested to the time the output data is accessible by the host; this includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). As shown in the table below, most of the total query time is spent transferring the data between the CPU and FPGA and the query kernels themselves are a small portion of the total latency. 
+In this design, we accelerate four TPC-H style queries as *offload accelerators*. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the latency (i.e., the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). As shown in the table below, most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency. 
 
-The performance data below was gathered using the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) with a database scale factor (SF) of 1. Please see the [Database files](#database-files) section for more information on how to generate data for a scale factor of 1.
+The performance data below was gathered using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) with a database scale factor (SF) of 1. Please see the [Database files](#database-files) section for more information on generating data for a scale factor of 1.
 
 | Query | Approximate Data Transfer Time (ms) | Measured Total Query Latency (ms)
 |:---   |:---                                 |:--- 
@@ -26,7 +26,7 @@ The performance data below was gathered using the Intel® PAC D5005 (with Intel 
 | 12    | 16                                  | 19
 
 ## Purpose
-The [TPC-H database benchmark](http://www.tpc.org/tpch/) is an 8-table database and set of 21 business oriented queries with broad industry-wide relevance. In this reference design, we show how four of these queries, *similar* to TPC-H queries 1, 9, 11, and 12, can be accelerated using the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) and oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are are combined in different ways to build the four queries. For more information on the TPC-H benchmark, you can visit the [TPC-H website](http://www.tpc.org/tpch/).
+The [TPC-H database benchmark](http://www.tpc.org/tpch/) is an 8-table database and set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four of these queries, *similar* to TPC-H queries 1, 9, 11, and 12, can be accelerated using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) and oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are are combined in different ways to build the four queries. For more information on the TPC-H benchmark, you can visit the [TPC-H website](http://www.tpc.org/tpch/).
 
 ## Key Implementation Details
 To optimize the different database queries, the design leverages concepts discussed in the following FPGA tutorials: 
@@ -42,7 +42,10 @@ To optimize the different database queries, the design leverages concepts discus
    3. Showcase the usage of advanced FPGA optimizations listed above to improve the performance of a large design
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `db` Reference Design
 
@@ -50,7 +53,7 @@ This code sample is licensed under MIT license.
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Code Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
 
@@ -93,7 +96,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
        ```
       When building for hardware, the default scale factor is 1. To use the smaller scale factor of 0.01, add the flag `-DSF_SMALL=1` to the original `cmake` command. For example: `cmake .. -DQUERY=9 -DSF_SMALL=1`. See the [Database files](#database-files) for more information.
 
-3. (Optional) As the hardware compile may take several hours to complete, an Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) precompiled binary (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz" download>here</a>.
+3. (Optional) As the hardware compile may take several hours to complete, an Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) precompiled binary (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/db.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
@@ -129,7 +132,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
     * An FPGA hardware target is not provided on Windows*.
   
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -243,18 +246,18 @@ You should see the following output in the console:
 |`db_utils/Unroller.hpp`                | A templated-based loop unroller that unrolls loops in the front end 
 
 ### Database files
-In the `data/` directory you will find database files for a scale factor of 0.01. These files were generated manually and can be used to verify the queries in emulation. However, **these files are too small to adequately showcase the performance of the FPGA hardware**.
+In the `data/` directory, you will find database files for a scale factor of 0.01. These files were generated manually and can be used to verify the queries in emulation. However, **these files are too small to showcase the true performance of the FPGA hardware**.
 
 To generate larger database files to run on the hardware, you can use TPC's `dbgen` tool. Instructions for downloading, building and running the `dbgen` tool can be found in the [TPC-H documents](http://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.18.0.pdf) on the [TPC-H website](http://www.tpc.org/tpch/). Note that this reference design currently only supports TPC-H databases with scale factors of 0.01 or 1.
 
 ### Query Implementation
-The description and SQL code for each TPC-H query can be found in the [TPC-H documents](http://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.18.0.pdf). The following sections will describe, at a high level, how queries 1, 9, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels and the arrows represent `pipes` that shows the flow of data from one kernel to another.
+The description and SQL code for each TPC-H query can be found in the [TPC-H documents](http://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.18.0.pdf). The following sections will describe, at a high level, how queries 1, 9, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
 
 #### Query 1
-Query 1 is the simplest of the four queries and only uses the `Accumulator` database operator. The query simply streams in each row of the LINEITEM table and performs computation on each row.
+Query 1 is the simplest of the four queries and only uses the `Accumulator` database operator. The query streams in each row of the LINEITEM table and performs computation on each row.
 
 #### Query 9
-Query 9 is the most complicated of the four queries and utilizes all of the database operators (`LikeRegex`, `Accumulator`, `MapJoin`, `MergeJoin`, `DuplicateMergeJoin` and `FifoSort`). The block diagram of the design is shown below.
+Query 9 is the most complicated of the four queries and utilizes all database operators (`LikeRegex`, `Accumulator`, `MapJoin`, `MergeJoin`, `DuplicateMergeJoin` and `FifoSort`). The block diagram of the design is shown below.
 
 ![](q9.png)
 

@@ -1,6 +1,6 @@
 # `Azure Telemetry` Sample
 
-`Azure Telemetry` sample demonstrates how to send messages from a single device to Microsoft Azure IoT Hub via selected protocol.
+`Azure Telemetry` sample demonstrates how to send messages from a single device to Microsoft Azure IoT Hub via a selected protocol.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -8,14 +8,17 @@
 | What you will learn               | Use one of the protocols to send events from a device
 
 ## Purpose
-This is a simple code sample that helps user to test the advantages of the Azure cloud services.
+This simple code sample helps the user to test the advantages of the Azure cloud services.
 
 ## Key Implementation Details
-This sample tests Azure Cloud IoT Hub. There are five protocols to choose from: MQTT, AMQP, HTTP, MQTT over Websockets and AMQP over Websockets.
-The sample requires Azure account and created Azure IoT Hub.
+This sample tests Azure Cloud IoT Hub. There are five protocols to choose from; MQTT, AMQP, HTTP, MQTT over Websockets and AMQP over Websockets.
+The sample requires an Azure account and created Azure IoT Hub.
 
 ##License
-Code sample uses MIT License.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ##Building the `Azure Telemetry` Sample
 

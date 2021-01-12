@@ -1,5 +1,5 @@
-# TensorFlow Performance Analysis by using Intel Model Zoo
-This sample contains two Jupyter notebooks from Intel Model Zoo to help users analyze the performance difference among Stock Tensorflow and Intel Tensorflow.  
+# `TensorFlow Performance Analysis by using Intel Model Zoo` Sample
+This sample contains two Jupyter notebooks from Intel Model Zoo to help users analyze the performance difference between Stock Tensorflow and Intel Tensorflow.  
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -12,13 +12,13 @@ This sample contains two Jupyter notebooks from Intel Model Zoo to help users an
 ## Purpose
 [Intel Model Zoo](https://github.com/IntelAI/models) contains links to pre-trained models, sample scripts, best practices, and step-by-step tutorials for many popular open-source machine learning models optimized by Intel to run on Intel® Xeon® Scalable processors.
 
-This sample helps to demonstrate AI workloads and deep learning models that have been optimized by Intel and validated to run on Intel hardware. Using the Tensorflow Timeline, you can analyze the performance benefits from Intel Optimizations for Tensorflow* and oneDNN among different layers to efficiently execute, train, and deploy Intel-optimized models
+This sample helps demonstrate AI workloads and deep learning models optimized by Intel and validated to run on Intel hardware. Using the Tensorflow Timeline, you can analyze the performance benefits from Intel Optimizations for Tensorflow* and oneDNN among different layers to efficiently execute, train, and deploy Intel-optimized models
 
 
 ## Key implementation details
 ### Jupyter Notebooks 
  
-These Jupyter notebooks help users to analyze the performance benefit from using Intel Optimizations for Tensorflow with the oneDNN library.
+These Jupyter notebooks help users analyze the performance benefit from using Intel Optimizations for Tensorflow with the oneDNN library.
 
 | Notebook | Notes|
 | ------ | ------ |
@@ -27,13 +27,16 @@ These Jupyter notebooks help users to analyze the performance benefit from using
 
     
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Build and Run the Sample
 
 ### Pre-requirement
 
-> NOTE: No action required if users use Intel DevCloud as their environment. 
+> NOTE: No action is required if users use Intel DevCloud as their environment. 
   Please refer to [Intel oneAPI DevCloud](https://intelsoftwaresites.secure.force.com/devcloud/oneapi) for Intel DevCloud.
 
  1. **Intel AI Analytics Toolkit**  
@@ -51,14 +54,14 @@ This code sample is licensed under MIT license.
 ###### **Stock TensorFlow**
 
 1. Create conda env: `$conda create -n stock-tensorflow python matplotlib ipykernel psutil pandas gitpython`
-2. Activate the created conda env: `$source activate stock-tensorflow`
+2. Activate the created conda env: `$source activate stock-tensorflow.`
 3. Install stock Tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.2.0`
 4. Install extra needed package: `(stock-tensorflow) $pip install cxxfilt`
 5. Deactivate conda env: `(stock-tensorflow)$conda deactivate`
 6. Register the kernel to Jupyter NB: `$~/.conda/envs/stock-tensorflow/bin/python -m ipykernel install --user --name=stock-tensorflow`
 
 >  NOTE: Please change the python path if you have a different folder path for anaconda3.
-   After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall stock-tensorflow`.
+   After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall stock-tensorflow.`
 
 ###### **Intel TensorFlow**
 
@@ -68,12 +71,12 @@ This code sample is licensed under MIT license.
 1. Source oneAPI environment variables: `$source /opt/intel/inteloneapi/setvars.sh`
 2. Create conda env: `$conda create --name intel-tensorflow --clone tensorflow`
 3. Activate the created conda env: `$source activate intel-tensorflow`
-4  Install extra needed package: `(intel-tensorflow) $pip install cxxfilt matplotlib ipykernel psutil pandas gitpython`
+4  Install the extra needed package: `(intel-tensorflow) $pip install cxxfilt matplotlib ipykernel psutil pandas gitpython`
 5. Deactivate conda env: `(intel-tensorflow)$conda deactivate`
 6. Register the kernel to Jupyter NB: `$~/.conda/envs/intel-tensorflow/bin/python  -m ipykernel install --user --name=intel-tensorflow`
 
 > NOTE: Please change the python path if you have a different folder path for anaconda3. 
-  After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall intel-tensorflow`.
+  After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall intel-tensorflow.`
 
 ##### **2. Linux with Intel oneAPI AI Analytics Toolkit**  
 ---
@@ -88,19 +91,19 @@ This code sample is licensed under MIT license.
 6. Register the kernel to Jupyter NB: `$~/anaconda3/envs/stock-tensorflow/bin/python  -m ipykernel install --user --name=stock-tensorflow`
 
 > NOTE: Please change the python path if you have a different folder path for anaconda3. 
-  After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall stock-tensorflow`.
+  After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall stock-tensorflow.`
 
 ###### **Intel TensorFlow**
 
 1. Source oneAPI environment variables: `$source /opt/intel/oneapi/setvars.sh`
 2. Create conda env: `$conda create --name intel-tensorflow --clone tensorflow`
 3. Activate the created conda env: `$source activate intel-tensorflow`
-4  Install extra needed package: `(intel-tensorflow) $pip install cxxfilt matplotlib ipykernel psutil pandas gitpython`
+4  Install the extra needed package: `(intel-tensorflow) $pip install cxxfilt matplotlib ipykernel psutil pandas gitpython`
 5. Deactivate conda env: `(intel-tensorflow)$conda deactivate`
 6. Register the kernel to Jupyter NB: `$~/anaconda3/envs/intel-tensorflow/bin/python  -m ipykernel install --user --name=intel-tensorflow`
 
 > NOTE: Please change the python path if you have a different folder path for anaconda3. 
-  After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall intel-tensorflow`.
+  After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall intel-tensorflow.`
 
 
 ### Running the Sample
@@ -117,7 +120,7 @@ This code sample is licensed under MIT license.
     <br><img src="images/jupyter_kernels.png" width="300" height="300"><br>
 7. Run through every cell of the notebook one by one
 
-> NOTE: In order to compare between stock and Intel-optimized TF results in section "Analyze TF Timeline results among Stock and Intel Tensorflow", users need to run all cells before the comparison section with both stock-tensorflow and intel-tensorflow kernels.
+> NOTE: To compare stock and Intel-optimized TF results in the section "Analyze TF Timeline results among Stock and Intel Tensorflow," users need to run all cells before the comparison section with both stock-tensorflow and intel-tensorflow kernels.
 
 ### Example of Output
 Users should be able to see some diagrams for performance comparison and analysis.  
