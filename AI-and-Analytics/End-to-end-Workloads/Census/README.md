@@ -1,4 +1,4 @@
-# End-to-end machine learning workload: `Census` Sample
+﻿# End-to-end machine learning workload: `Census` Sample
 
 This sample code illustrates how to use Intel® Distribution of Modin for ETL operations and ridge regression algorithm from the Intel® oneAPI Data Analytics Library (oneDAL) accelerated scikit-learn library to build and run an end to end machine learning workload. Both Intel Distribution of Modin and oneDAL accelerated scikit-learn libraries are available together in [Intel AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). This sample code demonstrates how to seamlessly run the end-to-end census workload using the toolkit, without any external dependencies.
 
@@ -37,7 +37,7 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 
 ### Activate conda environment With Root Access
 
-Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the `setvars.sh` script and Intel® Distribution of Modin environment installation (https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html). Then navigate in Linux shell to your oneapi installation path, typically `/opt/intel/oneapi/` when installed as root or sudo, and `~/intel/oneapi/` when not installed as a super user. If you customized the installation folder, the `setvars.sh` file is in your custom folder.
+Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the `setvars.sh` script and [Intel® Distribution of Modin environment installation] (https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html). Then navigate in Linux shell to your oneapi installation path, typically `/opt/intel/oneapi/` when installed as root or sudo, and `~/intel/oneapi/` when not installed as a super user. If you customized the installation folder, the `setvars.sh` file is in your custom folder.
 
 Activate the conda environment with the following command:
 

@@ -1,7 +1,7 @@
 # `Sepia-filter` Sample
 The sepia filter is a program that converts a color image to a Sepia tone image, which is a monochromatic image with a distinctive Brown Gray color. The program works by offloading the compute intensive conversion of each pixel to Sepia tone and is implemented using DPC++ for CPU and GPU.
 
-For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
 | Optimized for                     | Description
 |:---                               |:---

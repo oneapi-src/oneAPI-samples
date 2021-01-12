@@ -1,4 +1,4 @@
- # `Vectorize VecMatMult` Sample
+﻿ # `Vectorize VecMatMult` Sample
 
 In this sample, you will use the auto-vectorizer to improve the performance 
 of the sample application. You will compare the performance of the 
@@ -21,8 +21,7 @@ Single Instruction Multiple Data (SIMD) instruction set.
 
 For the Intel® compiler, vectorization is the unrolling of a loop combined with the generation of packed SIMD instructions. Because the packed instructions operate on more than one data element simultaneously, the loop can execute more efficiently. It is sometimes referred to as auto-vectorization to emphasize that the compiler automatically identifies and optimizes suitable loops on its own.
 
-Intel® Advisor can assist with vectorization and show optimization report messages with your source code. See [Intel Advisor][1] for details.
-[1]: https://software.intel.com/content/www/us/en/develop/tools/advisor.html "Intel Advisor"
+Intel® Advisor can assist with vectorization and show optimization report messages with your source code. See [Intel Advisor](https://software.intel.com/content/www/us/en/develop/tools/advisor.html)
 
 Vectorization may call library routines that can result in additional performance gain on Intel microprocessors than non-Intel microprocessors. The vectorization can also be affected by specific options, such as m or x.
 
@@ -61,7 +60,7 @@ This sample contains 2 Fortran source files in the subdirectory 'src/' under the
 
 ## Running the `Fortran Vectorization` sample
 
-### Step1 Establishing a Performance Baseline
+### Step 1 Establishing a Performance Baseline
 
 To set a performance baseline for the improvements that follow in this sample, compile your sources from the src directory with these compiler options:
 
@@ -158,8 +157,7 @@ The vectorization report matvec.optrpt indicates that the loop at line 33 in mat
 Note: Your line and column numbers may be different.
 
 For more information on the **qopt-report** and **qopt-report-phase** compiler options, see the 
-[Compiler Options section][3] in the Intel® Fortran Compiler Developer Guide and Reference.
-[3]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/compiler-reference/compiler-options/alphabetical-list-of-compiler-options.html "Options"
+[Compiler Options section](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top/compiler-reference/compiler-options.html) in the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top.html)
 
 
 ### Step 3 Improving Performance by Aligning Data

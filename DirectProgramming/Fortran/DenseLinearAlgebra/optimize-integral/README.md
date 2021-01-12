@@ -1,4 +1,4 @@
-# `Optimization Integral` Sample
+﻿# `Optimization Integral` Sample
  
 This sample is designed to illustrate compiler optimization features and programming concepts.
 
@@ -29,9 +29,7 @@ The Intel® Fortran Compiler can optimize applications for performance.  The pri
    * O2 - Enables optimizations for speed. This is the generally recommended optimization level. Vectorization is enabled at O2 and higher levels.
    * O3 - Performs O2 optimizations and enables more aggressive loop transformations such as Fusion, Block-Unroll-and-Jam, and collapsing IF statements.
 
-Read the [Intel® Fortran Compiler Developer Guide and Reference][1]
-[1]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html "Intel® Fortran Compiler Developer Guide and Reference" 
-for more information about these options.
+Read the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html) for more information about these options.
 
 Some of these compiler optimizations use features and options that can 
 restrict program execution to specific architectures.  
@@ -183,13 +181,11 @@ If you have a genuine Intel® Architecture processor, try these additional optio
     make clean
     
 There are two additional compiler options here that are worth mentioning: Read the online 
-[Developer Guide and Reference][3] for more information about
-these options
-[3]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html "Developer Guide and Reference" 
- 1. -xhost (sub option of -x option):  [-x][4]
- [4]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/compiler-reference/compiler-options/compiler-option-details/code-generation-options/x-qx.html "-x option"
- 2. -align array64byte: [-align][5]
- [5]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/compiler-reference/compiler-options/compiler-option-details/data-options/align.html "-align option"
+[Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html)for more information about
+these options.
+ 
+ 1. -xhost (sub option of -X option):  [X](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top/compiler-reference/compiler-options/compiler-option-details/code-generation-options/x-qx.html "-x option)
+ 2. -align array64byte: [-align](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top/compiler-reference/compiler-options/compiler-option-details/data-options/align.html)
 
 ### Clean up 
    * Clean the program  

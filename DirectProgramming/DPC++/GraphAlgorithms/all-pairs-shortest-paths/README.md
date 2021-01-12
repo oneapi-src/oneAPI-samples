@@ -1,7 +1,8 @@
  # `All Pairs Shortest Paths` Sample
 `All Pairs Shortest Paths` uses the Floyd-Warshall algorithm to find the shortest paths between pairs of vertices in a graph. It uses a parallel blocked algorithm that enables the application to offload compute intensive work to the GPU efficiently.
 
-For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -42,7 +43,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and run in batch or interactive mode. For more information, see the [Intel&reg; oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
 

@@ -1,4 +1,4 @@
-# `PyTorch HelloWorld` Sample
+﻿# `PyTorch HelloWorld` Sample
 PyTorch* is a very popular framework for deep learning. Intel and Facebook* collaborate to boost PyTorch* CPU Performance for years. The official PyTorch has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives by default. This sample demonstrates how to train a PyTorch model and shows how Intel-optimized PyTorch* enables Intel® DNNL calls by default. 
 
 | Optimized for                       | Description
@@ -32,7 +32,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## How to Build and Run 
 ### Running Samples In DevCloud (Optional)
-If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
+If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
 
 1. Pre-requirement
 

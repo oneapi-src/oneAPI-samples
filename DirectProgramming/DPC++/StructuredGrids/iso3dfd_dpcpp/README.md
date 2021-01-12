@@ -2,7 +2,7 @@
 
 The ISO3DFD sample refers to Three-Dimensional Finite-Difference Wave Propagation in Isotropic Media.  It is a three-dimensional stencil to simulate a wave propagating in a 3D isotropic medium. It shows some of the more common challenges when targeting SYCL devices (GPU/CPU) in more complex applications.
 
-For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
 | Optimized for                       | Description
 |:---                               |:---
@@ -26,7 +26,7 @@ ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic isotro
 
 The code will first attempt to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected. By default, the output will print the device name where the DPC++ code ran along with the grid computation metrics - flops and effective throughput. For validating results, a serial version of the application will be run on CPU, and results will be compared to the DPC++ version.
 
-A detailed code walkthrough can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP4_ISO3DFD. 
+For a detailed [code walkthrough](https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP4_ISO3DFD). 
 
 ## Key Implementation Details 
 
@@ -58,7 +58,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system".  
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide] (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
 Perform the following steps:

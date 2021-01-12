@@ -5,10 +5,11 @@ Complex numbers in parallel and verifies the results. It also implements
 a custom device selector to target a specific vendor device. This program is 
 implemented using C++ and DPC++ language for Intel CPU and accelerators. 
 The Complex class is a custom class, and this program shows how we can use 
-custom types of classes in a DPC++ program
-  
-| Optimized for                       | Description
-ii|:---                               |:---
+custom types of classes in a DPC++ program.
+
+ 
+| Optimized for                     | Description
+|:---                               |:---
 | OS                                | Linux Ubuntu 18.04, Windows 10 
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler

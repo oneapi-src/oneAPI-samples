@@ -1,10 +1,8 @@
-# `dpc_reduce` Sample
+﻿# `dpc_reduce` Sample
 
-The `dpc_reduce` is a simple program that calculates pi.  This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators. This code sample also demonstrates how to incorporate Data Parallel PC++ into
-an MPI program.
+The `dpc_reduce` is a simple program that calculates pi.  This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators. This code sample also demonstrates how to incorporate Data Parallel PC++ into an MPI program.
 
-
-For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
 | Optimized for                     | Description
 |:---                               |:---

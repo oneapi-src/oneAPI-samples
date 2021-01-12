@@ -1,4 +1,4 @@
-# `Distributed TensorFlow with Horovod` Sample
+﻿# `Distributed TensorFlow with Horovod` Sample
 Today's modern computer systems are becoming heavily distributed. It is important to capitalize on scaling techniques to maximize the efficiency and performance of neural networks training, a resource-intensive process.
 
 | Optimized for                       | Description
@@ -33,7 +33,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 ## Build and Run the Sample
 
 ### Running Samples In DevCloud (Optional)
-If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
+If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide] (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
 
 ### Pre-requirement
 

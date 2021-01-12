@@ -1,4 +1,4 @@
-# `TensorFlow HelloWorld` Sample
+﻿# `TensorFlow HelloWorld` Sample
 TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel® architecture and to extract maximum performance, the TensorFlow framework has been optimized using Intel® Deep Neural Networks (Intel® DNNL) primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow enables Intel® DNNL calls by default. 
 
 | Optimized for                       | Description
@@ -42,7 +42,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 ## Build and Run the Sample
 
 ### Running Samples In DevCloud (Optional)
-If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
+If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
 
 ### Pre-requirement
 

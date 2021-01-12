@@ -4,7 +4,7 @@ Monte Carlo Simulation is a broad category of computation that utilizes statisti
 
 This method of estimation works for calculating pi because the expected value of the sample ratio is equal to the ratio of a circle's area divided by the square's: a circle of radius 1 has an area of pi units squared, while a 2x2 square has an area of 4 units squared, yielding a ratio of pi/4. Therefore, to estimate the value of pi, our solution will be four times the sample ratio.
 
-For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -87,8 +87,7 @@ constexpr int size_wg =
 constexpr int img_dimensions =
 constexpr double circle_outline =
 
-size_n defines the sample size for the Monte Carlo procedure. size_wg defines the size of workgroups inside the kernel code. The number of workgroups is calculated by dividing size_n by size_wg, so size_n must be greater than or equal to size_wg. Increasing size_n will increase computation time as well as the accuracy of the pi estimation. Changing size_wg will have different performance effects depending on the device used for offloading.
-
+- size_n defines the sample size for the Monte Carlo procedure. size_wg defines the size of workgroups inside the kernel code. The number of workgroups is calculated by dividing size_n by size_wg, so size_n must be greater than or equal to size_wg. Increasing size_n will increase computation time as well as the accuracy of the pi estimation. Changing size_wg will have different performance effects depending on the device used for offloading.
 - img_dimensions define the size of the output image for data visualization.
 - circle_outline defines the thickness of the circular border in the output image for data visualization. Setting it to zero will remove it entirely.
 

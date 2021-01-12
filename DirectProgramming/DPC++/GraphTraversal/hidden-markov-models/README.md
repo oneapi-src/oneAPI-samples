@@ -1,4 +1,4 @@
-﻿ #`DPC++ Hidden Markov Model` Sample
+﻿# DPC++ Hidden Markov Model` Sample
 The HMM (Hidden Markov Model) sample presents a statistical model using a Markov process to present graphable nodes that are otherwise in an unobservable state or “hidden”.  This technique helps with pattern recognition such as speech, handwriting, gesture recognition, part-of-speech tagging, partial discharges and bioinformatics. The sample offloads the complexity of the Markov process to the GPU.
 
 The directed edges of this graph are possible transitions between nodes or states defined with the following parameters: 
@@ -7,7 +7,7 @@ The directed edges of this graph are possible transitions between nodes or state
 
 HMM's main assumption is that there are visible observations that depend on the current Markov process. That dependency can be described as a conditional probability distribution (represented by emission matrix). The problem is to find out the most likely chain of the hidden Markov states using the given observations set.
 
-##Requirements and sample info
+## Requirements and sample info
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -17,7 +17,7 @@ HMM's main assumption is that there are visible observations that depend on the 
 | What you will learn               | Implement Viterbi algorithm to get the most likely path that consists of the hidden states
 | Time to complete                  | 1 minute
 
-##Purpose
+## Purpose
 
 The sample can use GPU offload to compute sequential steps of multiple graph traversals simultaneously.
 
@@ -30,7 +30,7 @@ This code sample implements the Viterbi algorithm, a dynamic programming algorit
 
 Note: The implementation uses logarithms of the probabilities to process small numbers correctly and replace multiplication operations with addition operations.
 
-##Key Implementation details
+## Key Implementation details
 
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
 
@@ -83,11 +83,15 @@ Perform the following steps:
 4. Select **Debug** > **Start Without Debugging** menu option to run the program.
 
 ## Running the Sample
+
 ### Application Parameters
 There are no editable parameters for this sample.
 
 ### Example of Output
+
+```
 Device: Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz Intel(R) OpenCL
 The Viterbi path is:
 19 18 17 16 15 14 13 12 11 10
 The sample completed successfully!
+```

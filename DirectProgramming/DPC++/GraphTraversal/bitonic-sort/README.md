@@ -5,9 +5,7 @@ offload the computation to a GPU. In this implementation, a random sequence of 2
 (n is a positive number) as input, and the algorithm sorts the sequence in parallel. The result sequence is
 in ascending order.
 
-For comprehensive instructions regarding DPC++ Programming, go to
-https://software.intel.com/en-us/oneapi-programming-guide
-and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
   
 | Optimized for                     | Description
 |:---                               |:---

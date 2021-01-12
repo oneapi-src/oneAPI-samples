@@ -1,5 +1,5 @@
-# `Water Molecule Diffusion` Sample
-motionsim: Intel® oneAPI DPC++ Language Basics Using a Monte Carlo Simulation
+﻿# `Water Molecule Diffusion` Sample
+Motionsim: Intel® oneAPI DPC++ Language Basics Using a Monte Carlo Simulation
 
 This code sample implements a simple example of a Monte Carlo simulation of water molecules' diffusion in tissue. This kind of computational experiment can be used to simulate the acquisition of a diffusion signal for dMRI.
 
@@ -11,7 +11,7 @@ For comprehensive instructions regarding DPC++ Programming, go to
 https://software.intel.com/en-us/oneapi-programming-guide
 and search based on relevant terms noted in the comments.
 
- For more information and details: https://software.intel.com/en-us/articles/vectorization-of-monte-carlo-simulation-for-diffusion-weighted-imaging-on-intel-xeon
+For more information and details: https://software.intel.com/en-us/articles/vectorization-of-monte-carlo-simulation-for-diffusion-weighted-imaging-on-intel-xeon
   
 | Optimized for                     | Description
 |:---                               |:---

@@ -54,7 +54,7 @@ We will learn how to train a CNN model based on Keras with Tensorflow, use iLiT 
 
 ### Running in Devcloud
 
-If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also, remember that you must specify the compute node (CPU) as well as whether to run in batch or interactive mode. For more information, see the [Intel(R) oneAPI AI Analytics Toolkit Get Started Guide] https://devcloud.intel.com/oneapi/get-started/analytics-toolkit/)
+If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also, remember that you must specify the compute node (CPU) as well as whether to run in batch or interactive mode. For more information, see the [Intel(R) oneAPI AI Analytics Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/analytics-toolkit/)
 
 ### Running in Local Server
 

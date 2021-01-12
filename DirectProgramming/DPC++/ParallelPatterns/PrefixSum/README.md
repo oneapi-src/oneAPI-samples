@@ -5,9 +5,7 @@ offload the computation to a GPU. In this implementation, a random sequence of 2
 (n is a positive number) as input. The algorithm computes the prefix sum in parallel. The result sequence is
 in ascending order.
 
-For comprehensive instructions regarding DPC++ Programming, go to
-https://software.intel.com/en-us/oneapi-programming-guide
-and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
   
 | Optimized for                     | Description
 |:---                               |:---
@@ -103,11 +101,9 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 	
         Usage: PrefixSum <exponent> <seed>
 
-where
+Where an exponent is a positive number. The according length of the sequence is 2**exponent.
 
-an exponent is a positive number. The according length of the sequence is 2**exponent.
-
-seed is the seed used by the random generator to generate the randomness.
+Seed is the seed used by the random generator to generate the randomness.
 
 The sample offloads the computation to GPU and then performs the verification of the results in the CPU.
 The results are verified if yk = yk-1 + xk the original compared. If the results are matched, and

@@ -15,7 +15,7 @@ The intrinsic samples are designed to show how to utilize the intrinsics support
 
 Intrinsics are assembly-coded functions that allow you to use C++ function calls and variables in place of assembly instructions. Intrinsics are expanded inline, eliminating function call overhead. While providing the same benefits as using inline assembly, intrinsics improve code readability, assist instruction scheduling, and help when debugging. They provide access to instructions that cannot be generated using the C and C++ languages' standard constructs and allow code to leverage performance-enhancing features unique to specific processors.
 
-Further information on intrinsics can be found here: https://software.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/compiler-reference/intrinsics.html#intrinsics_GUID-D70F9A9A-BAE1-4242-963E-C3A12DE296A1
+Further information on intrinsics can be found [here](https://software.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/compiler-reference/intrinsics.html#intrinsics_GUID-D70F9A9A-BAE1-4242-963E-C3A12DE296A1):
 
 ## Key Implementation Details 
 

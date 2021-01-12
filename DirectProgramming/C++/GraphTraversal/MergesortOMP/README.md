@@ -2,7 +2,7 @@
 
 The merge sort algorithm is a comparison-based sorting algorithm. In this sample, we use a top-down implementation, which recursively splits the list into two halves (called sublists) until each sublist is size 1. We then merge sublists two at a time to produce a sorted list. This sample could run in serial or parallel with OpenMP* Tasking #pragma omp task and #pragma omp taskwait.
 
-For more details about merge sort algorithm and top-down implementation, please refer to http://en.wikipedia.org/wiki/Merge_sort.
+For more details, see the wiki on [merge sort](http://en.wikipedia.org/wiki/Merge_sort) algorithm and top-down implementation.
 
 | Optimized for                     | Description
 |:---                               |:---

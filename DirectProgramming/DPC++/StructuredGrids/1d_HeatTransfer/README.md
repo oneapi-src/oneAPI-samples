@@ -1,13 +1,8 @@
 ﻿# `1D-Heat-Transfer` Sample
 
-This code sample demonstrates the simulation of a one-dimensional heat
-transfer process using Intel Data Parallel C++. Kernels in this
-example are implemented as a discretized differential equation with
-the second derivative in space and the first derivative in time.
+This code sample demonstrates the simulation of a one-dimensional heat transfer process using Intel Data Parallel C++. Kernels in this example are implemented as a discretized differential equation with the second derivative in space and the first derivative in time.
 
-For comprehensive instructions regarding DPC++ Programming, go to
-https://software.intel.com/en-us/oneapi-programming-guide and search
-based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
   
 | Optimized for                     | Description
 |:---                               |:---
@@ -66,11 +61,7 @@ system".
 
 ### Running Samples In DevCloud
 
-If running a sample in the Intel DevCloud, remember that you must
-specify the compute node (CPU, GPU, FPGA) and whether to run in
-batch or interactive mode. For more information, see the Intel® oneAPI
-Base Toolkit Get Started Guide
-(https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System  
   1. Build the program using the following `cmake` commands. 

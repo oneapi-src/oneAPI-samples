@@ -1,8 +1,9 @@
-# `simple-add-dpc++` Sample
+﻿# `simple-add-dpc++` Sample
 
 `simple-add-dpc++` provides the simplest example of DPC++ while providing an example of using both buffers and Unified Shared Memory.   
 
-For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+
 
 | Optimized for                     | Description
 |:---                               |:---

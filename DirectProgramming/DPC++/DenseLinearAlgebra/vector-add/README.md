@@ -1,8 +1,9 @@
-# `vector-add` Sample
+﻿# `vector-add` Sample
 
 Vector Add is the equivalent of a ‘Hello, World!’ sample for data parallel programs. Building and running the code sample verifies that your development environment is set up correctly and demonstrates the use of the core features of DPC++.
 
-For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+
 
 | Optimized for                     | Description
 |:---                               |:---
