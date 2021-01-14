@@ -14,8 +14,8 @@
  */
 void Iso3dfdVerifyIteration(float *ptr_next_base, float *ptr_prev_base,
                             float *ptr_vel_base, float *coeff, int n1, int n2,
-                            int n3, unsigned int n1_block,
-                            unsigned int n2_block, unsigned int n3_block) {
+                            int n3, size_t n1_block,
+                            size_t n2_block, size_t n3_block) {
   auto dimn1n2 = n1 * n2;
 
   auto n3_end = n3 - kHalfLength;
@@ -64,9 +64,9 @@ void Iso3dfdVerifyIteration(float *ptr_next_base, float *ptr_prev_base,
  * accelerated wave propogation
  */
 void Iso3dfdVerify(float *ptr_next, float *ptr_prev, float *ptr_vel,
-                   float *coeff, unsigned int n1, unsigned int n2,
-                   unsigned int n3, unsigned int nreps, unsigned int n1_block,
-                   unsigned int n2_block, unsigned int n3_block) {
+                   float *coeff, size_t n1, size_t n2,
+                   size_t n3, size_t nreps, size_t n1_block,
+                   size_t n2_block, size_t n3_block) {
   for (auto it = 0; it < nreps; it += 1) {
     Iso3dfdVerifyIteration(ptr_next, ptr_prev, ptr_vel, coeff, n1, n2, n3,
                            n1_block, n2_block, n3_block);
@@ -82,10 +82,10 @@ void Iso3dfdVerify(float *ptr_next, float *ptr_prev, float *ptr_vel,
 }
 
 bool VerifyResults(float *next_base, float *prev_base, float *vel_base,
-                   float *coeff, unsigned int n1, unsigned int n2,
-                   unsigned int n3, unsigned int num_iterations,
-                   unsigned int n1_block, unsigned int n2_block,
-                   unsigned int n3_block) {
+                   float *coeff, size_t n1, size_t n2,
+                   size_t n3, size_t num_iterations,
+                   size_t n1_block, size_t n2_block,
+                   size_t n3_block) {
   std::cout << "Checking Results ...\n";
   size_t nsize = n1 * n2 * n3;
   bool error = false;
