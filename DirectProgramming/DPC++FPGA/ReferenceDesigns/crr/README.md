@@ -6,7 +6,7 @@ The [FPGA Optimization Guide](https://software.intel.com/content/www/us/en/devel
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | Review a high performance DPC++ design optimized for FPGA
 | Time to complete                  | 1 hr (not including compile time)
@@ -15,16 +15,16 @@ The [FPGA Optimization Guide](https://software.intel.com/content/www/us/en/devel
 
 
 **Performance**
-Please refer to performance disclaimer at the end of this README.
+Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
 | Intel® PAC with Intel Arria® 10 GX FPGA        | 118 assets/s
-| Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA)      | 243 assets/s
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 243 assets/s
 
 
 ## Purpose
-This sample implements the Cox-Ross-Rubinstein (CRR) binomial tree model that is used in the finance field for American exercise options with five Greeks (delta, gamma, theta, vega and rho). The simple idea is to model all possible assets price paths using a binomial tree.
+This sample implements the Cox-Ross-Rubinstein (CRR) binomial tree model that is used in the finance field for American exercise options with five Greeks (delta, gamma, theta, vega and rho). The simple idea is to model all possible asset price paths using a binomial tree.
 
 ## Key Implementation Details
 
@@ -51,17 +51,20 @@ This design writes outputs to the `ordered_outputs.csv` file. The outputs are:
 | `delta`                           | Measures the rate of change of the theoretical option value with respect to changes in the underlying asset's price.
 | `gamma`                           | Measures the rate of change in the `delta` with respect to changes in the underlying price.
 | `vega`                            | Measures sensitivity to volatility.
-| `theta`                           | Measures the sensitivity of the value of the derivative to the passage of time.
+| `theta`                           | Measures the sensitivity of the derivative's value to the passage of time.
 | `rho`                             | Measures sensitivity to the interest of rate.
 
 ### Design Correctness
-This design tests the correctness of the optimized FPGA code by comparing its output to a golden result computed on the CPU.
+This design tests the optimized FPGA code's correctness by comparing its output to a golden result computed on the CPU.
 
 ### Design Performance
 This design measures the FPGA performance to determine how many assets can be processed per second.
 
 ## License
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the CRR Program 
 
@@ -69,7 +72,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (FPGA) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 48h.
 
@@ -84,7 +87,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
  
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -117,7 +120,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -135,7 +138,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ``` 
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
  ### In Third-Party Integrated Development Environments (IDEs)
  

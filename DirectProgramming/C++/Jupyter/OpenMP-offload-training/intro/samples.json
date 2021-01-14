@@ -1,0 +1,19 @@
+{
+  "guid": "535CDFC7-F7CE-4E22-B941-23749AEE2F99",	
+  "name": "OpenMP Offload Basics C++ Intro",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++/OpenMP Offload"],
+  "description": "OpenMP Offload Basics Intro",
+  "toolchain": [ "icpx" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"icpx -fiopenmp -fopenmp-targets=spir64 simple_solution.cpp",
+			"./a.out"
+		 ]
+	}]
+  }
+}
