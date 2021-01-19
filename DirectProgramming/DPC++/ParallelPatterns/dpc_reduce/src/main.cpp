@@ -7,6 +7,7 @@
 // The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include
 // on your development system.
 #include <oneapi/dpl/algorithm>
+#include <oneapi/dpl/numeric>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
 
