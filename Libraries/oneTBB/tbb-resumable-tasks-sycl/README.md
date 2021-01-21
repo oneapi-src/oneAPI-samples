@@ -1,21 +1,29 @@
-# `tbb-resumable-tasks-sycl` sample
+# `tbb-resumable-tasks-sycl` Sample
 
-This sample illustrates how computational kernel can be split for execution between CPU and GPU using TBB resumable task and parallel_for. The TBB resumable task uses SYCL to implement calculations on GPU while the parallel_for algorithm does CPU part of calculations. This tbb-resumable-tasks-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.
+This sample illustrates how the computational kernel can be split for execution between CPU and GPU using TBB resumable task and parallel_for. The TBB resumable task uses SYCL to implement GPU calculations, while the parallel_for algorithm does the CPU part of calculations. This tbb-resumable-tasks-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
 | Time to complete                  | 15 minutes
 
 ## Purpose
 The purpose of this sample is to show how during execution, a computational kernel can be split between CPU and GPU using TBB resumable tasks and TBB parallel_for.
 
+
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
 ## Key implementation details
 TBB resumable tasks and DPC++ implementation explained.
 
-## Building the tbb-resumable-tasks-sycl Program
+## Building the tbb-resumable-tasks-sycl program
 
 ### On a Linux System
     * Build tbb-resumable-tasks-sycl program

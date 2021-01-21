@@ -8,8 +8,8 @@ This FPGA tutorial demonstrates an advanced technique to improve the performance
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | How and when to apply the triangular loop optimization technique
 | Time to complete                  | 30 minutes
  
@@ -54,21 +54,21 @@ The picture is triangular in shape, hence the name "triangular loop".
 
 ### Performance challenge
 
-In the above example, the table shows that in outer-loop iteration `x=0`, the program reads `local_buf[x=0]` and reads, modifies, and writes the values from `local_buf[y=1]` through `local_buf[y=9]`. This pattern of memory accesses results in a loop-carried dependency across the outer loop iterations. For example, the read at `x=2` depends on the value that was written at `x=1,y=2`. 
+In the above example, the table shows that in outer-loop iteration `x=0`, the program reads `local_buf[x=0]` and reads, modifies, and writes the values from `local_buf[y=1]` through `local_buf[y=9]`. This pattern of memory accesses results in a loop-carried dependency across the outer loop iterations. For example, the read at `x=2` depends on the value written at `x=1,y=2`. 
 
 Generally, a new iteration is launched on every cycle as long as a sufficient number of inner-loop 
 iterations are executed *between* any two iterations that are dependent on one another.
 
 However, the challenge in the triangular loop pattern is that the trip-count of the inner-loop
-progressively shrinks as `x` increments. In the worst case of `x=7`, the program writes to `local_buf[y=8]` in the first `y` iteration, but has only one intervening `y` iteration at `y=9` before the value must be read again at `x=8,y=8`. This may not allow enough time for the write operation to complete. The compiler compensates for this by increasing the initiation interval (II) of the inner-loop to allow more time to elapse between iterations. Unfortunately, this reduces the throughput of the inner-loop by a factor of II.
+progressively shrinks as `x` increments. In the worst case of `x=7`, the program writes to `local_buf[y=8]` in the first `y` iteration but has only one intervening `y` iteration at `y=9` before the value must be reread at `x=8,y=8`. This may not allow enough time for the write operation to complete. The compiler compensates for this by increasing the initiation interval (II) of the inner-loop to allow more time to elapse between iterations. Unfortunately, this reduces the throughput of the inner-loop by a factor of II.
 
-A key observation is that this increased II is only functionally necessary when the inner-loop trip-count becomes small. Furthermore, the II of a loop is static -- it applies for all invocations of that loop. Therefore, if the *outer-loop* trip-count (_n_) is large, then most of the invocations of the inner-loop unnecessarily suffer the aforementioned throughput degradation. The optimization technique demonstrated in this tutorial addresses this issue.
+A key observation is that this increased II is only functionally necessary when the inner-loop trip-count becomes small. Furthermore, the II of a loop is static: it applies to all invocations of that loop. Therefore, if the *outer-loop* trip-count (_n_) is large, most of the inner-loop invocations unnecessarily suffer the aforementioned throughput degradation. The optimization technique demonstrated in this tutorial addresses this issue.
 
 ### Optimization concept
 
 The triangular loop optimization alters the code to guarantee that the trip count never falls below some minimum (_M_). This is accomplished by executing extra 'dummy' iterations of the inner loop when the *true* trip count falls below _M_. 
 
-The purpose of the dummy iterations is to allow extra time for the loop-carried dependency to resolve. No actual computation (or side effects) take place during these added iterations. Note that the extra iterations are only executed on inner loop invocations that require them. When the inner-loop trip count is large, extra iterations are not needed. 
+The purpose of the dummy iterations is to allow extra time for the loop-carried dependency to resolve. No actual computation (or side effects) takes place during these added iterations. Note that the extra iterations are only executed on inner loop invocations that require them. When the inner-loop trip count is large, extra iterations are not needed. 
 
 This technique allows the compiler to achieve II=1. 
 
@@ -151,21 +151,23 @@ x=9
 The number of "real" iterations on the left is 10+9+8+7+6+5+4+3+2 = 54. The formula for a
 descending series from `n` is `n*(n+1)/2`. Since there is no iteration at `x=9,y=9`, subtract 1  (i.e., `n*(n+1)/2 - 1`). When _n_=10, this expression yields 54, as expected.
 
-The number of dummy iterations on the right is 4+3+2+1 = 10. The largest number in this series is _M_-2. Using the same formula for a descending series , you get `(M-2)*(M-1)/2`. For _M_=6, this this expression yields 4*5/2 = 10, as expected.
+The number of dummy iterations on the right is 4+3+2+1 = 10. The largest number in this series is _M_-2. Using the same formula for a descending series , you get `(M-2)*(M-1)/2`. For _M_=6, this expression yields 4*5/2 = 10, as expected.
 
 Summing the number of real and dummy iterations gives the total iterations of the merged loop.
 
-***Use of ivdep***: Since the loop is restructured to ensure that a minimum of M iterations are executed, the  `[[intelfpga::ivdep(M)]]` is used to hint to the compiler that iterations with dependencies are always separated by at least M iterations.
+***Use of ivdep***: Since the loop is restructured to ensure that a minimum of M iterations is executed, the `[[intelfpga::ivdep(M)]]` is used to hint to the compiler that at least _M_ iterations always separate any pair of dependent iterations.
 
 
 
 ## Key Concepts
-* The triangular loop advanced optimization technique, and situations in which it is applicable
+* The triangular loop advanced optimization technique and situations in which it is applicable
 * Using `ivdep safelen` to convey the broken loop-carried dependency to the compiler
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `triangular_loop` Tutorial
 
@@ -173,7 +175,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -188,7 +190,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -221,7 +223,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -239,7 +241,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ``` 
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
  
@@ -296,5 +298,5 @@ Configuration | Overall Execution Time (ms) | Throughput (MB/s)
 Without optimization | 4972 | 25.7
 With optimization | 161 | 796.6
 
-Without optimization, the compiler achieved an II of 30 on the inner-loop. With the optimization, the compiler achieves an II of 1 and the throughput increased by approximately 30x.
+Without optimization, the compiler achieved an II of 30 on the inner-loop. With the optimization, the compiler achieves an II of 1, and the throughput increased by approximately 30x.
 

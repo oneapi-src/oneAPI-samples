@@ -1,4 +1,4 @@
-# Intel Model Zoo Sample
+# ~Intel Model Zoo` Sample
 This code example provides a sample code to run ResNet50 inference on Intel's pretrained FP32 and Int8 model
 
 ## Purpose
@@ -12,17 +12,20 @@ For any performance and/or benchmarking information on specific Intel platforms,
 The example uses Intel's pretrained model published as part of [Intel Model Zoo](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow and MKL run time settings to maximize CPU performance on ResNet50 workload
 
 ## License  
-This code sample is licensed under MIT license
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Pre-requirement
 
-TensorFlow is ready for use once you finish the Intel AI Analytics Toolkit installation, and have run post installation script.
+TensorFlow is ready for use once you finish the Intel AI Analytics Toolkit installation and have run the post installation script.
 
-You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation, and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
+You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
 ## Activate conda environment With Root Access
 
-Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the setvars.sh script. Then navigate in linux shell to your oneapi installation path, typically `/opt/intel/oneapi`. Activate the conda environment with the following command:
+Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the setvars.sh script. Then, navigate the Linux shell to your oneapi installation path, typically `/opt/intel/oneapi`. Activate the conda environment with the following command:
 
 #### Linux
 ```
@@ -71,6 +74,6 @@ or<br>
 2b. Open the command prompt where you have GUI support, and forward the port from host to client<br>
 2c. Enter `ssh -N -f -L localhost:8888:localhost:8888 <userid@hostname>`<br>
 2d. Copy-paste the URL address from the host into your local browser to open the jupyter console<br>
-3. Go to `ResNet50_Inference.ipynb` and run each cell to create sythetic data and run int8 inference
+3. Go to `ResNet50_Inference.ipynb` and run each cell to create synthetic data and run int8 inference
 
 Note, In jupyter page, please choose the right 'kernel'. In this case, please choose it in menu 'Kernel' -> 'Change kernel' -> Python [conda env:tensorflow]

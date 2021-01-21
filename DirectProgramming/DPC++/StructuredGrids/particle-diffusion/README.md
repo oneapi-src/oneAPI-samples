@@ -1,24 +1,23 @@
-# Water Molecule Diffusion Sample
-motionsim: Intel® oneAPI DPC++ Language Basics Using a Monte Carlo Simulation
+﻿# `Water Molecule Diffusion` Sample
+Motionsim: Intel® oneAPI DPC++ Language Basics Using a Monte Carlo Simulation
 
-This code sample implements a simple example of a Monte Carlo simulation of the diffusion of water molecules in tissue. This kind of computational experiment can be used to simulate acquisition of a diffusion signal for dMRI.
+This code sample implements a simple example of a Monte Carlo simulation of water molecules' diffusion in tissue. This kind of computational experiment can be used to simulate the acquisition of a diffusion signal for dMRI.
 
-The model for the simulation consists of water molecules moving through a 2D array of cells in a tissue sample (water molecule diffusion). In this code sample, we use a uniform rectilinear 2D array of digital cells, where cells are spaced regularly along each direction and are represented by circles.
+The simulation model consists of water molecules moving through a 2D array of cells in a tissue sample (water molecule diffusion). In this code sample, we use a uniform rectilinear 2D array of digital cells, where cells are spaced regularly along each direction and are represented by circles.
 
-Water molecule diffusion is simulated by defining a number of particles P (simulated water molecules) at random positions in the grid, followed by random walks of these particles in the ensemble of cells in the grid. During the random walks, particles can move randomly inside or outside simulated cells. The positions of these particles at every time step in the simulation, the number of times they go through a cell membrane (in/out), as well as the time every particle spends inside and outside cells can be recorded. These measurements are a simple example of useful information that can be used to simulate an MR signal. 
+Water molecule diffusion is simulated by defining a number of particles P (simulated water molecules) at random positions in the grid, followed by random walks of these particles in the ensemble of cells in the grid. During the random walks, particles can move randomly inside or outside simulated cells. The positions of these particles at every time step in the simulation, the number of times they go through a cell membrane (in/out), and the time every particle spends inside and outside cells can be recorded. These measurements are a simple example of useful information that can be used to simulate an MR signal. 
 
 For comprehensive instructions regarding DPC++ Programming, go to
 https://software.intel.com/en-us/oneapi-programming-guide
 and search based on relevant terms noted in the comments.
 
- For more information and details: https://software.intel.com/en-us/articles/vectorization-of-monte-carlo-simulation-for-diffusion-weighted-imaging-on-intel-xeon
+For more information and details: https://software.intel.com/en-us/articles/vectorization-of-monte-carlo-simulation-for-diffusion-weighted-imaging-on-intel-xeon
   
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; Windows 10 or Windows Server 2017
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel Data Parallel C++ Compiler (beta)
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
+| Software                          | Intel Data Parallel C++ Compiler (beta)| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
 | Time to complete                  | 20 minutes
 
 Performance number tabulation [if applicable]
@@ -28,32 +27,6 @@ Performance number tabulation [if applicable]
 | Scalar baseline -O2               | 1.0
 | SYCL                              | 
 | OpenMP offload                    | 
-
-
-## Purpose
-Using the Monte Carlo simulation, the Particle Diffusion sample provides simulation of the 
-diffusion of water molecules in tissue  This kind of computational experiment can be used to 
-simulate acquisition of a diffusion signal for dMRI.
-
-The model for the simulation consists of water molecules moving through a 2D array of cells in a 
-tissue sample (water molecule diffusion). In this code sample, we use a uniform rectilinear 2D 
-array of digital cells, where cells are spaced regularly along each direction and are represented 
-by circles.
-
-Water molecule diffusion is simulated by defining a number of particles P (simulated water 
-molecules) at random positions in the grid, followed by random walks of these particles in the 
-ensemble of cells in the grid. During the random walks, particles can move randomly inside or 
-outside simulated cells. The positions of these particles at every time step in the simulation, 
-the number of times they go through a cell membrane (in/out), as well as the time every particle 
-spends inside and outside cells can be recorded. These measurements are a simple example of 
-useful information that can be used to simulate an MR signal. 
-
-The Particle Diffusion sample is intended to show the basic elements of the DPC++ programming 
-language as well as some basic optimizations as generating random numbers in the device (using 
-functionality from the oneAPI oneMKL library), as well as atomic functions to prevent memory 
-access inconsistencies. 
-
-A detailed code walk through can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP5_PART_DIFF. 
  
 ## Key Implementation Details
 
@@ -64,27 +37,25 @@ SYCL implementation explained.
 * The ability to call a function inside a kernel definition and pass accessor arguments as pointers.
 * Optimization using API-based programming and Atomic Functions.
 
-SYCL implementation explained in further detail in source code.
-## How Other Tools (Intel Libraries or Intel Tools) are used
-Intel® Math Kernel Library (MKL) is used for random number generation on the cpu and device. Precise generators are used within this library to ensure that the numbers generated on the cpu and device are relatively equivalent (relative accurracy 10E-07).  
-## License
-This code sample is licensed under MIT license. Please see the `License.txt` file for more information.  
-## Building the `particle-diffusion` Program for CPU and GPU
+SYCL implementation is explained in further detail in the source code.
 
- Note: if you have not already done so, set up your CLI 
-> environment by sourcing  the setvars script located in 
-> the root of your oneAPI installation. 
->
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
-> Linux User: . ~/intel/oneapi/setvars.sh  
+## How Other Tools (Intel Libraries or Intel Tools) are used
+Intel® Math Kernel Library (MKL) is used for random number generation on the CPU and device. Precise generators are used within this library to ensure that the numbers generated on the CPU and device are relatively equivalent (relative accuracy 10E-07).  
+
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
+## Building the `particle-diffusion` Program for CPU and GPU
 
 ### Include Files  
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your 
 development system".  
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, 
-FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI 
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI 
 Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ## Build and run
@@ -240,3 +211,4 @@ Note:
     Success.
     Built target run
     $
+

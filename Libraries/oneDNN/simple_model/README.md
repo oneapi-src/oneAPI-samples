@@ -1,8 +1,8 @@
-# oneDNN Simple Model Sample
+# `oneDNN Simple Model` Sample
 
 This sample is implemented in C++ and DPC++ and runs on CPU or GPU. The sample
-also includes [a Jupyter Notebook](simple_model.ipynb) that
-demonstrates how to port a oneDNN sample from CPU-only version to CPU & GPU
+also includes [Jupyer notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_simple_model.ipynb) that
+demonstrates how to port an oneDNN code sample from CPU-only version to CPU & GPU
 in Intel oneAPI DevCloud environment.
 
 | Optimized for                      | Description
@@ -15,12 +15,12 @@ in Intel oneAPI DevCloud environment.
 
 ## Purpose
 
-This sample implements computational part of a convolutional neural network
-based on [ImageNet Classification with Deep Convolutional Neural Networks by Alex Krizhevsky at al](https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf).
-The network consists of 15 layers including convolution, rectified linear
+This sample implements the computational part of a convolutional neural network
+based on [ImageNet Classification with Deep Convolutional Neural Networks by Alex Krizhevsky et al.](https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf).
+The network consists of 15 layers, including convolution, rectified linear
 unit (ReLU), linear response normalization (LRN), and inner product.
 
-With this sample you will learn:
+With this sample, you will learn:
 * How to run a simple convolutional network on Intel CPU or Intel GPU
 * How to compile examples with Intel oneAPI DPC++/C++ Compiler, Intel C++ Compiler,
 and GNU C++ Compiler
@@ -28,7 +28,7 @@ and GNU C++ Compiler
 * How to describe tensors with oneDNN memory objects
 * How to describe neural network layers with oneDNN primitives
 
-The sample executes on system's CPU by default and can be executed on Intel GPU
+The sample executes on the system's CPU by default and can be executed on Intel GPU
 using a command line parameter `gpu`.
 
 ## Key Implementation Details
@@ -41,7 +41,10 @@ Detailed code walkthrough is available in [oneDNN developer guide](https://oneap
 
 ## License
 
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the sample for CPU and GPU
 
@@ -64,7 +67,7 @@ make
 ./bin/cnn-inference-f32-cpp
 ```
 
-By default the sample uses oneAPI DPC++/C++ Compiler and can execute on CPUs or
+By default, the sample uses oneAPI DPC++/C++ Compiler and can execute on CPUs or
 Intel GPUs. You can build the sample with CPU support with other compilers
 and threading runtimes:
 * GNU C++ Compiler and GNU OpenMP runtime
@@ -83,31 +86,28 @@ source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_tbb
 CC=icc CXX=icpc cmake ..
 ```
 
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
+### On a Windows* System
 
-Open "x64 Native Tools Command Prompt for VS2017" or 
-"x64 Native Tools Command Prompt for VS2019" and perform the following steps:
+Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or 
+"Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
 1. Setup oneAPI development environment
 ```
-C:\Program Files (x86)\intel\oneapi\setvars.bat --dnnl-configuration=cpu_vcomp
+C:\Program Files (x86)\intel\oneapi\setvars.bat
 ```
 2. Build the program using `cmake`
 ```
 mkdir build
 cd build
-cmake -G "Visual Studio 16 2019" ..
+cmake -G Ninja ..
 cmake --build .
 ```
-
-> Note: You can open the `simple_model.sln` in build folder to edit source
-> code with Microsoft Visual Studio integrated development environment.
 
 ### Include Files
 The include folder is located at ${DNNLROOT}\include on your development system".
 
 3. Run the program
 ```
-bin\Debug\cnn-inference-f32-cpp.exe
+bin\cnn-inference-f32-cpp.exe
 ```
 
 ### Include Files
@@ -117,19 +117,28 @@ The include folder is located at ${DNNLROOT}\include on your development system"
 ## Running the Sample
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### Application Parameters
 
-You can specify target device for this sample using command line arguments:
-* `cpu` (default) directs the application to run on system's CPU
+You can specify the target device for this sample using command-line arguments:
+* `cpu` (default) directs the application to run on the system's CPU
 * `gpu` directs the sample to run on Intel GPU
 
 > Note: When executed with `gpu` parameter the 
 > sample will return an error if there are no Intel GPUs are found in the system.
 
-You can get additional information during execution of this sample by setting
+You can get additional information during the execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
+
+#### On a Linux System
+```
+export DNNL_VERBOSE=1
+```
+#### On a Windows* System
+```
+set DNNL_VERBOSE=1
+```
 
 ### Example of Output
 

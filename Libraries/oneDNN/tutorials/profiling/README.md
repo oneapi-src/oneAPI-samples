@@ -3,7 +3,6 @@
 
 ## prerequisites 
 
-
 *  users need to get a oneDNN verbose log from their workloads first.  
 
 ## how to parse logs

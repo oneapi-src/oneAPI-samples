@@ -7,8 +7,8 @@ This FPGA tutorial demonstrates how to build DPC++ device libraries from various
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | How to create and use libraries in DPC++ FPGA projects <br> How power users can incorporate RTL source code in DPC++ for FPGA
 | Time to complete                  | 15 minutes
 
@@ -18,7 +18,7 @@ _Notice: The FPGA library feature is not yet supported in Windows*_
 This FPGA tutorial demonstrates how to build DPC++ device libraries from multiple sources and use them in your DPC++ design. A library is useful for reusing and sharing code, or for separating code for testing purposes. Power users can also use libraries to leverage the features of other programming languages in their DPC++ FPGA designs.
 
 It is currently possible to generate FPGA library objects from the following source types:
-* Verilog or VHDL (modules or entities respectively)
+* Verilog or VHDL (modules or entities, respectively)
 * Intel® High Level Synthesis Compiler (HLS) functions
 * OpenCL* 1.2 functions
 * SYCL* or DPC++ functions
@@ -58,7 +58,10 @@ dpcpp -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware
 * How power users can incorporate RTL source code in DPC++ for FPGA
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `use_library` Tutorial
@@ -67,7 +70,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -82,7 +85,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10

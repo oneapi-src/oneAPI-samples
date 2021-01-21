@@ -1,4 +1,4 @@
-# Sparse Conjugate Gradient Sample
+# `Sparse Conjugate Gradient` Sample
 
 Sparse Conjugate Gradient shows how to use the oneMKL library's sparse linear algebra functionality to solve a sparse, symmetric linear system using the (preconditioned) conjugate gradient method.
 
@@ -8,7 +8,7 @@ For more information on oneMKL, and complete documentation of all oneMKL routine
 |:---                 |:---
 | OS                  | Linux* Ubuntu* 18.04; Windows 10
 | Hardware            | Skylake with Gen9 or newer
-| Software            | Intel&reg; oneMKL beta
+| Software            | Intel&reg; oneMKL
 | What you will learn | How to use oneMKL's sparse linear algebra functionality
 | Time to complete    | 15 minutes
 
@@ -22,31 +22,36 @@ This sample performs its computations on the default DPC++ device. You can set t
 
 ## Key Implementation Details
 
-oneMKL sparse routines use a two-stage method where the sparse matrix is analyzed in preparation for subsequent calculations (the _optimize_ step). Sparse matrix-vector multiplication and triangular solves (`gemv` and `trsv`) are used to implement the main loop, along with vector routines from BLAS.
+oneMKL sparse routines use a two-stage method where the sparse matrix is analyzed to prepare subsequent calculations (the _optimize_ step). Sparse matrix-vector multiplication and triangular solves (`gemv` and `trsv`) are used to implement the main loop, along with vector routines from BLAS.
 
 
 ## License
 
-This code sample is licensed under the MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the Sparse Conjugate Gradient Sample
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
 Run `make` to build and run the sample.
 
-You can remove all generated files with `make clean`.
+You can remove all generated files with `make clean.`
 
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time due to a known compiler issue. This will be addressed in an upcoming release.
+
 ## Running the Sparse Conjugate Gradient Sample
 
 ### Example of Output
-If everything is working correctly, the example program will rapidly converge to a solution, and display the first few entries of the solution vector. The test will run in both single and double precision (if available on the selected device).
+If everything is working correctly, the example program will rapidly converge to a solution and display the solution vector's first few entries. The test will run in both single and double precision (if available on the selected device).
 ```
 ./sparse_cg
 ########################################################################
@@ -68,7 +73,7 @@ Running tests on Intel(R) Gen9 HD Graphics NEO.
         Running with single precision real data type:
                 relative norm of residual on 1 iteration: 0.0856119
                 relative norm of residual on 2 iteration: 0.00204826
-                relative norm of residual on 3 iteration: 6.68015e-05
+                relative norm of residual on 3 iterations: 6.68015e-05
 
                 Preconditioned CG process has successfully converged, and
                 the following solution has been obtained:

@@ -1,13 +1,13 @@
 # QR Decomposition of Matrices
-This DPC++ reference design demonstrates high-performance QR decomposition of complex matrices on FPGA.
+This DPC++ reference design demonstrates high performance QR decomposition of complex matrices on FPGA.
 
 ***Documentation***: The [FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)  provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a resource for general target-independent DPC++ programming. 
 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm.
 | Time to complete                  | 1 hr (not including compile time)
 
@@ -15,12 +15,12 @@ This DPC++ reference design demonstrates high-performance QR decomposition of co
 
 
 **Performance**
-Please refer to performance disclaimer at the end of this README.
+Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
 | Intel® PAC with Intel Arria® 10 GX FPGA        | 25k matrices/s for matrices of size 128 * 128
-| Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA)      | 7k matrices/s for matrices of size 256 * 256
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for matrices of size 256 * 256
 
 
 ## Purpose
@@ -34,13 +34,13 @@ QR decomposition is used extensively in signal processing applications such as b
 
 ### Matrix dimensions and FPGA resources
 
-The QR decomposition algorithm factors a complex _m_×_n_ matrix, where _m_ ≥ _n_. The algorithm computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the _m_ elements of the column. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. 
+The QR decomposition algorithm factors a complex _m_×_n_ matrix, where _m_ ≥ _n_. The algorithm computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _m_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. 
 
-We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
+We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e., assuming that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
 
 With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product. Thus, the matrix size is constrained by the total FPGA DSP resources available. Note that this upper bound is a consequence of this particular implementation.
 
-By default, the design is parameterized to process 128 × 128 matrices when compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), a larger device.
+By default, the design is parameterized to process 128 × 128 matrices when compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), a larger device.
  
 
 ## Key Implementation Details
@@ -55,15 +55,18 @@ To optimize the performance-critical loop in its algorithm, the design leverages
 * **Unrolling Loops** (loop_unroll)
 
  The key optimization techniques used are as follows:
-   1. Refactoring the algorithm to merge two dot products into one, reducing the total number of dot products needed to three from two. This helps us reduce the DSPs needed for the implementation.
+   1. Refactoring the algorithm to merge two dot products into one, reducing the total number of dot products needed to three from two. This helps us reduce the DSPs required for the implementation.
    2. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
    3. Fully vectorizing the dot products using loop unrolling.
-   4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialised dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
+   4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialized dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
    5. Using an efficient memory banking scheme to generate high performance hardware.
    6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Reference Design
 
@@ -71,7 +74,7 @@ This code sample is licensed under MIT license.
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Code Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
  
@@ -89,13 +92,13 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    cmake ..
    ```
 
-   If instead you are compiling for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   If instead you are compiling for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 
-2. Compile the design through the generated `Makefile`. The following targets are provided and they match the recommended development flow:
+2. Compile the design through the generated `Makefile`. The following targets are provided, and they match the recommended development flow:
 
     * Compile for emulation (fast compile time, targets emulated FPGA device).
 
@@ -127,7 +130,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
@@ -143,14 +146,14 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ``` 
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
 You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Running the Reference Design
-You can apply QR decomposition to a number of matrices as shown below. This step performs the following:
+You can apply QR decomposition to a number of matrices, as shown below. This step performs the following:
 * Generates the number of random matrices specified as the command line argument (defaults to 1).
 * Computes QR decomposition on all matrices.
 * Evaluates performance.
@@ -179,7 +182,7 @@ NOTE: The design is optimized to perform best when run on a large number of matr
 
 ### Example of Output
 
-Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 32768 matrices (each of consisting of 128*128 complex numbers):
+Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 32768 matrices (each consisting of 128*128 complex numbers):
 
 ```
 Device name: pac_a10 : Intel PAC Platform (pac_f000000)
@@ -191,7 +194,7 @@ Verifying results on matrix 0 16384 32767
 PASSED
 ```
 
-Example output when running on Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) for 40960 matrices (each of consisting of 256*256 complex numbers):
+Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for 40960 matrices (each consisting of 256*256 complex numbers):
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)

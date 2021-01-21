@@ -1,4 +1,4 @@
-# Intel DPC++ Compatibility Tool: Needleman-Wunsch
+# Intel DPC++ Compatibility Tool: `Needleman-Wunsch` Sample
 
 This project demonstrates how to migrate a Make/CMake project from CUDA to
 Data Parallel C++ using the Intel DPC++ Compatibility Tool.
@@ -6,11 +6,11 @@ Data Parallel C++ using the Intel DPC++ Compatibility Tool.
 | Optimized for         | Description
 |:---                   |:---
 | OS                    | Linux* Ubuntu* 18.04; Windows 10
-| Software              | Intel&reg; DPC++ Compatibility Tool beta;
+| Software              | Intel&reg; DPC++ Compatibility Tool;
 | What you will learn   | Simple invocation of dpct to migrate CUDA code
 | Time to complete      | 10 minutes
 
-The program, `needleman-wunsch`, naively implements the [Needleman-Wunsch
+The program, `needleman-Wunsch`, naively implements the [Needleman-Wunsch
 algorithm][nw-algorithm], which is used in bioinformatics to align protein and
 nucleotide sequences. The code is based on [Rodinia][rodinia], a set of
 benchmarks for heterogeneous computing. As compared to the `Intel DPC++
@@ -37,8 +37,10 @@ build and run using the Intel&reg; oneAPI DPC++ Compiler
 
 ## License
 
-This code sample is licensed under the MIT license, which is located in the
-[LICENSE.txt file](LICENSE.txt) in this sample project's folder.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Migrating the CUDA Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
@@ -111,7 +113,7 @@ TARGET = needleman_wunsch_dpcpp
 SRCS = src/needle.dp.cpp
 DEPS = src/needle_kernel.dp.cpp src/needle.h
 
-# The remainder of the Makefile should work without changes.
+# The remainder of the makefile should work without changes.
 ```
 
 6. Switch to the migration directory: `cd migration`.
@@ -141,7 +143,7 @@ error: assigning to 'int' from incompatible type 'typename info::param_traits<in
 2. Configure and run the migration. Use the default settings to create a new
    project, which will be added to the open solution.
 
-Note the generated command line invocation. You can run this from the command
+Note the generated command-line invocation. You can run this from the command
 line as long as you first initialize your environment with:
 
 ```sh
@@ -166,7 +168,7 @@ See the section titled **Addressing Warnings in Migrated Code** below to
 understand how to resolve the warnings.
 
 4. Address any compilation issues and then build and run the migrated project
-   by right clicking the project in the solution explorer, selecting it as the
+   by right-clicking the project in the solution explorer, selecting it as the
    startup project, and running it with the green play button in the top bar.
 
 
@@ -192,13 +194,13 @@ In this case, the original CUDA call `cudaDriverGetVersion` was migrated to an
 equivalent DPC++ construct. However, because CUDA uses error codes while DPC++
 uses exceptions to handle errors, `dpct` added the DPCT1003 message in the
 comments to indicate that additional manual edits are likely required. The
-same call also resulted in message DPCT1043 which warns that the device
-version has different meaning versus the CUDA driver version. Lastly, the `if`
+same call also resulted in message DPCT1043, which warns that the device
+version has a different meaning versus the CUDA driver version. Lastly, the `if`
 statement that checks the error code results in DPCT1009.
 
 To manually resolve these issues:
 -	since the error codes are not needed, you can remove code related to them.
--	since SYCL device version api is different, you need to update this code.
+-	since the SYCL device version api is different, you need to update this code.
 
 Replace the following lines from `needle.dp.cpp`.
 
@@ -233,8 +235,8 @@ After the code is fixed, save the file in the text editor.
 ## Resolve DPCT1049
 
 This DPCT message appears twice in `needle.dp.cpp`, and it simply warns that
-the maximum work group size for your GPU may be different from the CUDA limit.
-If you examine the code, we are running work group sizes of `BLOCK_SIZE=16`
+the maximum workgroup size for your GPU may be different from the CUDA limit.
+If you examine the code, we are running workgroup sizes of `BLOCK_SIZE=16`
 which is well under the limit of all GPUs. This message can be safely ignored.
 
 
@@ -265,10 +267,10 @@ sycl::range<2> ref_range_ct1(BLOCK_SIZE, BLOCK_SIZE);
 
 Open `needle.h`, also located in the migrated source directory.
 
-The equivalent of a CUDA block is a SYCL work-group in DPC++. The maximum size
+The equivalent of a CUDA block is an SYCL workgroup in DPC++. The maximum size
 of a block for a CUDA-enabled device may be different than the maximum size of
-a work-group for a SYCL-enable device. You can use `clinfo` to get information
-about the max workgroup size available on your system. Often times the block
+a work-group for a SYCL-enabled device. You can use `clinfo` to get information
+about the max workgroup size available on your system. Often the block
 size needs to be adjusted for functionality and performance.
 
 In this application, you can try changing the BLOCK_SIZE in needle.h.
@@ -277,7 +279,7 @@ In this application, you can try changing the BLOCK_SIZE in needle.h.
 # Example Output
 
 Once you have correctly completed the migration and provided the new makefile
-to the migrated project, you will be able to successfully build and run the
+to the migrated project, you will be able to build and run the
 project to get the following output.
 
 ```

@@ -6,8 +6,8 @@ This FPGA tutorial shows how to use pipes to transfer data between kernels.
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
-| Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | The basics of the of DPC++ pipes extension for FPGA<br> How to declare and use pipes in a DPC++ program
 | Time to complete                  | 15 minutes
 
@@ -32,7 +32,7 @@ This tutorial focuses on kernel-kernel pipes, but
 the concepts discussed here apply to other kinds of pipes as well.
 
 The `read` and `write` operations have two variants: 
-* Blocking variant: Blocking operations may not return immediately, but are always successful.
+* Blocking variant: Blocking operations may not return immediately but are always successful.
 * Non-blocking variant: Non-blocking operations take an extra boolean parameter
 that is set to `true` if the operation happened successfully. 
 
@@ -48,13 +48,13 @@ consider a pipe `P` with capacity 3, and two kernels `K1` and `K2` using
 
  `write(1)`, `write(2)`, `write(3)`
 
-In this situation, the pipe is full, because three (the `capacity` of
+In this situation, the pipe is full because three (the `capacity` of
 `P`) `write` operations were performed without any `read` operation. In this
 situation, a `read` must occur before any other `write` is allowed.
 
 If a `write` is attempted to a full pipe, one of two behaviors occur:
 
-  * If the operation is non-blocking, it returns immediately and its
+  * If the operation is non-blocking, it returns immediately, and its
   boolean parameter is set to `false`. The `write` does not have any effect.
   * If the operation is blocking, it does not return until a `read` is
   performed by the other endpoint. Once the `read` is performed, the `write`
@@ -76,7 +76,7 @@ using ProducerToConsumerPipe = pipe<  // Defined in the DPC++ headers.
 ```
 
 The `class ProducerToConsumerPipe` template parameter is important to the
-uniqueness of the pipe. This class need not be defined, but must be distinct
+uniqueness of the pipe. This class need not be defined but must be distinct
 for each pipe. Consider another type alias with the exact same parameters:
 
 ```c++
@@ -149,7 +149,10 @@ void Consumer(queue &q, buffer<int, 1> &output_buffer) {
 * How to declare and use pipes in a DPC++ program
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `pipes` Tutorial
 
@@ -157,7 +160,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (FPGA) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -172,7 +175,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -205,7 +208,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -223,7 +226,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ``` 
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -247,9 +250,47 @@ Navigate to the "System Viewer" to visualize the structure of the kernel system.
      ```
 
 ### Example of Output
-```
-Input Array Size:  1024
-Enqueuing producer...
-Enqueuing consumer...
-PASSED: The results are correct
-```
+You should see the following output in the console:
+
+1. When running on the FPGA emulator
+    ```
+    Input Array Size: 8192
+    Enqueuing producer...
+    Enqueuing consumer...
+
+    Profiling Info
+      Producer:
+        Start time: 0 ms
+        End time: +8.18174 ms
+        Kernel Duration: 8.18174 ms
+      Consumer:
+        Start time: +7.05307 ms
+        End time: +8.18231 ms
+        Kernel Duration: 1.12924 ms
+      Design Duration: 8.18231 ms
+      Design Throughput: 4.00474 MB/s
+
+    PASSED: The results are correct
+    ```
+    NOTE: The FPGA emulator does not accurately represent the performance nor the kernels' relative timing (i.e., the start and end times).
+
+2. When running on the FPGA device
+    ```
+    Input Array Size: 1048576
+    Enqueuing producer...
+    Enqueuing consumer...
+
+    Profiling Info
+      Producer:
+        Start time: 0 ms
+        End time: +4.481 ms
+        Kernel Duration: 4.481 ms
+      Consumer:
+        Start time: +0.917 ms
+        End time: +4.484 ms
+        Kernel Duration: 3.568 ms
+      Design Duration: 4.484 ms
+      Design Throughput: 935.348 MB/s
+
+    PASSED: The results are correct
+    ```

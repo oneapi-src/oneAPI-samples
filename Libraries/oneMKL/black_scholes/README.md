@@ -1,4 +1,4 @@
-# Black-Scholes Sample
+# `Black-Scholes` Sample
 
 Black-Scholes shows how to use oneMKL's Vector Math (VM) and Random Number Generator (RNG) functionality to calculate the prices of options using the Black-Scholes formula for suitable randomly-generated portfolios.
 
@@ -8,16 +8,16 @@ For more information on oneMKL, and complete documentation of all oneMKL routine
 |:---                 |:---
 | OS                  | Linux* Ubuntu* 18.04; Windows 10
 | Hardware            | Skylake with Gen9 or newer
-| Software            | Intel&reg; oneMKL beta
+| Software            | Intel&reg; oneMKL
 | What you will learn | How to use oneMKL's vector math and random number generation functionality
 | Time to complete    | 15 minutes
 
 
 ## Purpose
 
-The Black-Scholes formula is widely used in financial markets as a basic prognostic tool. The ability to calculate it quickly for a large number of options has become a neccesity and represents a classic problem in parallel computation.
+The Black-Scholes formula is widely used in financial markets as a basic prognostic tool. The ability to calculate it quickly for a large number of options has become a necessity and represents a classic problem in parallel computation.
 
-The sample generates first a portfolio within given constraints using a uniform distribution and a Philox-type generator provided by oneMKL's RNG API.
+The sample first generates a portfolio within given constraints using a uniform distribution and a Philox-type generator provided by oneMKL's RNG API.
 Examples of both host-based APIs and device-based APIs for random number generation are provided.
 
 Then, the Black-Scholes formula is used in two distinct implementations:
@@ -38,24 +38,28 @@ In this sample, a Philox 4x32x10 generator is used. It is a lightweight counter-
 
 ## License
 
-This code sample is licensed under the MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Black-Scholes Sample
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
-Run `make` to build and run the sample. One program is generated which will use four different interfaces in turn.
+Run `make` to build and run the sample. One program is generated, which will use four different interfaces in turn.
 
 You can remove all generated files with `make clean`.
 
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time due to a known compiler issue. This will be addressed in an upcoming release.
 
 ## Running the Black-Scholes Sample
-If everything is working correctly, the program will exercise different combinations of APIs for both single and double precision (if available), and print a summary of its computations.
+If everything is working correctly, the program will exercise different combinations of APIs for both single and double precision (if available) and print a summary of its computations.
 
 ```
 running on:

@@ -1,11 +1,11 @@
-# ISO3DFD sample
-ISO3DFD is a finite difference stencil kernel for solving 3D acoustic isotropic wave equation which can be used as a proxy for propogating a seismic wave. Kernels in this sample are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions. This sample code is implemented using Data Parallel C++ for CPU and GPU and using OpenMP on CPU for comparison and validation.
+# `ISO3DFD` Sample
+ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic isotropic wave equation, which can be used as a proxy for propagating a seismic wave. In this sample, kernels are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions. This sample code is implemented using Data Parallel C++ for CPU and GPU and using OpenMP on CPU for comparison and validation.
   
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; Windows 10 or Windows Server 2017
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel Data Parallel C++ Compiler beta; Intel C++ Compiler xxx beta
+| Software                          | Intel Data Parallel C++ Compiler; Intel C++ Compiler
 | What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler and OpenMP offload pragmas
 | Time to complete                  | 15 minutes
 
@@ -19,13 +19,16 @@ Performance number tabulation [Dummy data for now]
 ## Key implementation details [optional]
 SYCL implementation explained. 
 
-You're encourage to use any infographics to increase readibility and clarity which is strongly recommended by UX team based on customer feedbacks. 
+You're encouraged to use any infographics to increase readibility and clarity, strongly recommended by UX team based on customer feedback. 
 
 ## How other tools (Intel libraries or Intel tools) are used [optional]
    
 
 ## License  
-This code sample is licensed under MIT license under xxx  
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## How to Build  
 
