@@ -11,16 +11,10 @@
 *      Cholesky factored symmetric positive definite block tridiagonal
 *      coefficient matrix.
 ************************************************************************/
-#include <CL/sycl.hpp>
 #include <cstdint>
-#include "mkl.h"
 
-#if __has_include("oneapi/mkl.hpp")
+#include <CL/sycl.hpp>
 #include "oneapi/mkl.hpp"
-#else
-// Beta09 compatibility -- not needed for new code.
-#include "mkl_sycl.hpp"
-#endif
 
 using namespace oneapi;
 
