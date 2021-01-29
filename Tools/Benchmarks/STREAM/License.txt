@@ -1,7 +1,35 @@
-Copyright Intel Corporation
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*=======================================================================
+*-----------------------------------------------------------------------
+* Copyright 1991-2003: John D. McCalpin
+* Copyright 2020-2021: Intel Corporation (oneAPI modifications)
+*-----------------------------------------------------------------------
+* License:
+*  1. You are free to use this program and/or to redistribute
+*     this program.
+*  2. You are free to modify this program for your own use,
+*     including commercial use, subject to the publication
+*     restrictions in item 3.
+*  3. You are free to publish results obtained from running this
+*     program, or from works that you derive from this program,
+*     with the following limitations:
+*     3a. In order to be referred to as "STREAM benchmark results",
+*         published results must be in conformance to the STREAM
+*         Run Rules, (briefly reviewed below) published at
+*         http://www.cs.virginia.edu/stream/ref.html
+*         and incorporated herein by reference.
+*         As the copyright holder, John McCalpin retains the
+*         right to determine conformity with the Run Rules.
+*     3b. Results based on modified source code or on runs not in
+*         accordance with the STREAM Run Rules must be clearly
+*         labelled whenever they are published.  Examples of
+*         proper labelling include:
+*         "tuned STREAM benchmark results" 
+*         "based on a variant of the STREAM benchmark code"
+*         Other comparable, clear and reasonable labelling is
+*         acceptable.
+*     3c. Submission of results to the STREAM benchmark web site
+*         is encouraged, but not required.
+*  4. Use of this program or creation of derived works based on this
+*     program constitutes acceptance of these licensing restrictions.
+*  5. Absolutely no warranty is expressed or implied.
+*-----------------------------------------------------------------------
