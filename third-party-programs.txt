@@ -227,5 +227,168 @@ Each version is given a distinguishing version number. If the Library as you rec
 If the Library as you received it specifies that a proxy can decide whether future versions of the GNU Lesser General Public License shall apply, that proxy's public statement of acceptance of any version is permanent authorization for you to choose that version for the Library.
 
 --------------------------------------------------------------------------------
+8. Rodinia
 
+LICENSE TERMS
+
+Copyright (c)2008-2011 University of Virginia
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted without royalty fees or other restrictions, provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+    * Neither the name of the University of Virginia, the Dept. of Computer Science, nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission. 
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE UNIVERSITY OF VIRGINIA OR THE SOFTWARE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+If you use this software or a modified version of it, please cite the most relevant among the following papers:
+
+ - M. A. Goodrum, M. J. Trotter, A. Aksel, S. T. Acton, and K. Skadron. Parallelization of Particle Filter Algorithms. In Proceedings of the 3rd Workshop on Emerging Applications and Many-core Architecture (EAMA), in conjunction with the IEEE/ACM International 
+Symposium on Computer Architecture (ISCA), June 2010.
+
+ - S. Che, M. Boyer, J. Meng, D. Tarjan, J. W. Sheaffer, Sang-Ha Lee and K. Skadron.
+Rodinia: A Benchmark Suite for Heterogeneous Computing. IEEE International Symposium
+on Workload Characterization, Oct 2009.
+
+- J. Meng and K. Skadron. "Performance Modeling and Automatic Ghost Zone Optimization
+for Iterative Stencil Loops on GPUs." In Proceedings of the 23rd Annual ACM International
+Conference on Supercomputing (ICS), June 2009.
+
+- L.G. Szafaryn, K. Skadron and J. Saucerman. "Experiences Accelerating MATLAB Systems
+Biology Applications." in Workshop on Biomedicine in Computing (BiC) at the International
+Symposium on Computer Architecture (ISCA), June 2009.
+
+- M. Boyer, D. Tarjan, S. T. Acton, and K. Skadron. "Accelerating Leukocyte Tracking using CUDA:
+A Case Study in Leveraging Manycore Coprocessors." In Proceedings of the International Parallel
+and Distributed Processing Symposium (IPDPS), May 2009.
+
+- S. Che, M. Boyer, J. Meng, D. Tarjan, J. W. Sheaffer, and K. Skadron. "A Performance
+Study of General Purpose Applications on Graphics Processors using CUDA" Journal of
+Parallel and Distributed Computing, Elsevier, June 2008.
+
+
+---------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+9. psutil
+
+BSD 3-Clause License
+
+Copyright (c) 2009, Jay Loden, Dave Daeschler, Giampaolo Rodola'
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+ * Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+ * Neither the name of the psutil authors nor the names of its contributors
+   may be used to endorse or promote products derived from this software without
+   specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+--------------------------------------------------------------------------------
+
+19. SDL2
+
+SDL 2.0 and newer are available under the zlib license :
+
+This software is provided 'as-is', without any express or implied
+warranty.  In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+   in a product, an acknowledgment in the product documentation would be
+   appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+   misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
+
+ 
+--------------------------------------------------------------------------------
+
+10. Plotly.js
+
+The MIT License (MIT)
+
+Copyright (c) 2020 Plotly, Inc
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+--------------------------------------------------------------------------------
+
+11.  Stream
+=======================================================================
+-----------------------------------------------------------------------
+ Copyright 1991-2003: John D. McCalpin
+-----------------------------------------------------------------------
+ License:
+  1. You are free to use this program and/or to redistribute
+     this program.
+  2. You are free to modify this program for your own use,
+     including commercial use, subject to the publication
+     restrictions in item 3.
+  3. You are free to publish results obtained from running this
+     program, or from works that you derive from this program,
+     with the following limitations:
+     3a. In order to be referred to as "STREAM benchmark results",
+         published results must be in conformance to the STREAM
+         Run Rules, (briefly reviewed below) published at
+         http://www.cs.virginia.edu/stream/ref.html
+         and incorporated herein by reference.
+         As the copyright holder, John McCalpin retains the
+         right to determine conformity with the Run Rules.
+     3b. Results based on modified source code or on runs not in
+         accordance with the STREAM Run Rules must be clearly
+         labelled whenever they are published.  Examples of
+         proper labelling include:
+         "tuned STREAM benchmark results" 
+         "based on a variant of the STREAM benchmark code"
+         Other comparable, clear and reasonable labelling is
+         acceptable.
+     3c. Submission of results to the STREAM benchmark web site
+         is encouraged, but not required.
+  4. Use of this program or creation of derived works based on this
+     program constitutes acceptance of these licensing restrictions.
+  5. Absolutely no warranty is expressed or implied.
+
+--------------------------------------------------------------------------------
 Other names and brands may be claimed as the property of others. 
+

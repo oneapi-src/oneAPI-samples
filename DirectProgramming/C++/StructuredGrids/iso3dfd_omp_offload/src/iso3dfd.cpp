@@ -11,7 +11,7 @@
  * Inline device function to find minimum
  */
 #pragma omp declare target
-inline unsigned int GetMin(unsigned int first, unsigned int second) {
+inline size_t GetMin(size_t first, size_t second) {
   return ((first < second) ? first : second);
 }
 #pragma omp end declare target
@@ -27,12 +27,11 @@ inline unsigned int GetMin(unsigned int first, unsigned int second) {
  */
 void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
                              float *ptr_vel_base, float *coeff,
-                             const unsigned int n1, const unsigned int n2,
-                             const unsigned int n3, const unsigned int n1_block,
-                             const unsigned int n2_block,
-                             const unsigned int n3_block) {
+                             const size_t n1, const size_t n2,
+                             const size_t n3, const size_t n1_block,
+                             const size_t n2_block,
+                             const size_t n3_block) {
   auto dimn1n2 = n1 * n2;
-  auto size = n3 * dimn1n2;
 
   auto n3_end = n3 - kHalfLength;
   auto n2_end = n2 - kHalfLength;
@@ -89,12 +88,11 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
  */
 void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
                              float *ptr_vel_base, float *coeff,
-                             const unsigned int n1, const unsigned int n2,
-                             const unsigned int n3, const unsigned int n1_block,
-                             const unsigned int n2_block,
-                             const unsigned int n3_block) {
+                             const size_t n1, const size_t n2,
+                             const size_t n3, const size_t n1_block,
+                             const size_t n2_block,
+                             const size_t n3_block) {
   auto dimn1n2 = n1 * n2;
-  auto size = n3 * dimn1n2;
 
   auto n3_end = n3 - kHalfLength;
   auto n2_end = n2 - kHalfLength;
@@ -155,12 +153,11 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
  */
 void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
                              float *ptr_vel_base, float *coeff,
-                             const unsigned int n1, const unsigned int n2,
-                             const unsigned int n3, const unsigned int n1_block,
-                             const unsigned int n2_block,
-                             const unsigned int n3_block) {
+                             const size_t n1, const size_t n2,
+                             const size_t n3, const size_t n1_block,
+                             const size_t n2_block,
+                             const size_t n3_block) {
   auto dimn1n2 = n1 * n2;
-  auto size = n3 * dimn1n2;
 
   auto n3_end = n3 - kHalfLength;
   auto n2_end = n2 - kHalfLength;
@@ -244,12 +241,11 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
  */
 void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
                              float *ptr_vel_base, float *coeff,
-                             const unsigned int n1, const unsigned int n2,
-                             const unsigned int n3, const unsigned int n1_block,
-                             const unsigned int n2_block,
-                             const unsigned int n3_block) {
+                             const size_t n1, const size_t n2,
+                             const size_t n3, const size_t n1_block,
+                             const size_t n2_block,
+                             const size_t n3_block) {
   auto dimn1n2 = n1 * n2;
-  auto size = n3 * dimn1n2;
 
   auto n3_end = n3 - kHalfLength;
   auto n2_end = n2 - kHalfLength;
@@ -324,10 +320,10 @@ void inline Iso3dfdIteration(float *ptr_next_base, float *ptr_prev_base,
  * time steps
  */
 void Iso3dfd(float *ptr_next, float *ptr_prev, float *ptr_vel, float *coeff,
-             const unsigned int n1, const unsigned int n2,
-             const unsigned int n3, const unsigned int nreps,
-             const unsigned int n1_block, const unsigned int n2_block,
-             const unsigned int n3_block) {
+             const size_t n1, const size_t n2,
+             const size_t n3, const size_t nreps,
+             const size_t n1_block, const size_t n2_block,
+             const size_t n3_block) {
   auto dimn1n2 = n1 * n2;
   auto size = n3 * dimn1n2;
 
@@ -359,9 +355,9 @@ int main(int argc, char *argv[]) {
 
   bool error = false;
 
-  unsigned int n1, n2, n3;
-  unsigned int n1_block, n2_block, n3_block;
-  unsigned int num_iterations;
+  size_t n1, n2, n3;
+  size_t n1_block, n2_block, n3_block;
+  size_t num_iterations;
 
   try {
     n1 = std::stoi(argv[1]) + (2 * kHalfLength);
@@ -385,7 +381,7 @@ int main(int argc, char *argv[]) {
   }
 
   // Check for available omp offload capable device
-  unsigned int num_devices = omp_get_num_devices();
+  int num_devices = omp_get_num_devices();
   if (num_devices <= 0) {
     std::cout << "--------------------------------------\n";
     std::cout << " No OpenMP Offload device found\n";

@@ -4,20 +4,11 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <algorithm>
-#include <vector>
 #include <type_traits>
+#include <vector>
 
 #include <CL/sycl.hpp>
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 
 #include "IntersectionKernel.hpp"
 
@@ -91,7 +82,7 @@ event SubmitKernels(queue& q, std::vector<unsigned int>& a,
 
   // submit the kernel that produces table A
   q.submit([&](handler& h) {
-    accessor a_accessor { a_buf, h, read_only };
+    accessor a_accessor(a_buf, h, read_only);
     h.single_task<ProducerA<Version>>([=]() [[intel::kernel_args_restrict]] {
       for (int i = 0; i < a_size; i++) {
         ProduceAPipe::write(a_accessor[i]);
@@ -101,7 +92,7 @@ event SubmitKernels(queue& q, std::vector<unsigned int>& a,
 
   // submit the kernel that produces table B
   q.submit([&](handler& h) {
-    accessor b_accessor { b_buf, h, read_only };
+    accessor b_accessor(b_buf, h, read_only);
     h.single_task<ProducerB<Version>>([=]() [[intel::kernel_args_restrict]] {
       for (int i = 0; i < b_size; i++) {
         ProduceBPipe::write(b_accessor[i]);
@@ -112,7 +103,7 @@ event SubmitKernels(queue& q, std::vector<unsigned int>& a,
   // submit the kernel that performs the intersection
   event e = q.submit([&](handler& h) {
     // output accessor
-    accessor n_accessor { n_buf, h, write_only, noinit };
+    accessor n_accessor(n_buf, h, write_only, noinit);
 
     h.single_task<Worker<Version>>([=]() [[intel::kernel_args_restrict]] {
       // The 'Version' template parameter will choose between the different 
@@ -323,15 +314,13 @@ int main(int argc, char** argv) {
 
   } catch (exception const& e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << std::endl;
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
-                   "system has a correctly configured FPGA board."
-                << std::endl;
-      std::cout << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR."
-                << std::endl;
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
+                   "system has a correctly configured FPGA board.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
+                   "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
   }

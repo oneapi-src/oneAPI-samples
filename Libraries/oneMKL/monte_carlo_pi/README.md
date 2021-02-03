@@ -1,4 +1,4 @@
-# Monte Carlo Pi Estimation Sample
+# `Monte Carlo Pi Estimation` Sample
 
 Monte Carlo Pi Estimation shows how to use the oneMKL library's random number generation (RNG) functionality to estimate the value of &pi;.
 
@@ -8,7 +8,7 @@ For more information on oneMKL, and complete documentation of all oneMKL routine
 |:---                 |:---
 | OS                  | Linux* Ubuntu* 18.04; Windows 10
 | Hardware            | Skylake with Gen9 or newer
-| Software            | Intel&reg; oneMKL beta
+| Software            | Intel&reg; oneMKL
 | What you will learn | How to use oneMKL's random number generation functionality
 | Time to complete    | 15 minutes
 
@@ -31,7 +31,10 @@ In this sample, a Philox 4x32x10 generator is used, and a uniform distribution i
 
 ## License
 
-This code sample is licensed under the MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the Monte Carlo Pi Estimation Sample
@@ -47,6 +50,7 @@ You can remove all generated files with `make clean`.
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
 ## Running the Monte Carlo Pi Estimation Sample
 
 ### Example of Output

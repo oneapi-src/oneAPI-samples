@@ -1,8 +1,8 @@
 {
   "guid": "4B3FDDD8-64CF-4CF3-9387-26E34F021E24",
-  "name": "Array Transform",
-  "categories": ["Toolkit/Get Started", "Toolkit/Intel® oneAPI Base Toolkit/Debugger"],
-  "description": "A small DPC++ example that is used in the \"Get Started Guide\" of the application debugger to exercise major debugger functionality.",
+  "name": "Debugger: Array Transform",
+  "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Tools/Application Debugger"],
+  "description": "A small Intel® oneAPI Data Parallel C++ (DPC++) example that is used in the \"Get Started Guide\" of the Application Debugger to exercise major debugger functionality",
   "toolchain": ["dpcpp"],
   "dependencies": ["debugger"],
   "languages": [{"cpp":{}}],
@@ -21,6 +21,15 @@
         ]
       },
       {
+        "id": "cpu-aot",
+        "steps": [
+          "mkdir -p build_cpu_aot; cd build_cpu_aot; cmake .. -DDPCPP_COMPILE_TARGET=cpu",
+          "make",
+          "./array-transform cpu",
+          "make clean"
+        ]
+      },
+      {
         "id": "gpu",
         "steps": [
           "mkdir -p build_gpu; cd build_gpu; cmake ..",
@@ -30,9 +39,27 @@
         ]
       },
       {
+        "id": "gpu-aot",
+        "steps": [
+          "mkdir -p build_gpu_aot; cd build_gpu_aot; cmake .. -DDPCPP_COMPILE_TARGET=gen9,gen12LP",
+          "make",
+          "./array-transform gpu",
+          "make clean"
+        ]
+      },
+      {
         "id": "fpga-emu",
         "steps": [
           "mkdir -p build_acc; cd build_acc; cmake ..",
+          "make",
+          "./array-transform accelerator",
+          "make clean"
+        ]
+      },
+      {
+        "id": "fpga-emu-aot",
+        "steps": [
+          "mkdir -p build_acc_aot; cd build_acc_aot; cmake .. -DDPCPP_COMPILE_TARGET=fpga-emu",
           "make",
           "./array-transform accelerator",
           "make clean"

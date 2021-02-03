@@ -4,10 +4,13 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <array>
 #include <iomanip>
 #include <iostream>
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 using namespace sycl;
@@ -20,7 +23,7 @@ constexpr size_t kMaxValue = 128;
 using FloatArray = std::array<float, kSize>;
 using FloatScalar = std::array<float, 1>;
 
-template <int concurrency> class Compute;
+template <int concurrency> class Kernel;
 
 // Launch a kernel on the device specified by selector.
 // The kernel's functionality is designed to show the
@@ -40,10 +43,10 @@ void PartialSumWithShift(const device_selector &selector,
     buffer<float, 1> buffer_result(result.data(), 1);
 
     event e = q.submit([&](handler &h) {
-      auto accessor_array = buffer_array.get_access<access::mode::read>(h);
-      auto accessor_result = buffer_result.get_access<access::mode::discard_write>(h);
+      accessor accessor_array(buffer_array, h, read_only);
+      accessor accessor_result(buffer_result, h, write_only, noinit);
 
-      h.single_task<Compute<concurrency>>([=]()
+      h.single_task<Kernel<concurrency>>([=]()
                                           [[intel::kernel_args_restrict]] {
         float r = 0;
 
@@ -51,7 +54,7 @@ void PartialSumWithShift(const device_selector &selector,
         // active at one time.
         // This limits memory usage, since each iteration of the outer
         // loop requires its own copy of a1.
-        [[intelfpga::max_concurrency(concurrency)]]
+        [[intel::max_concurrency(concurrency)]]
         for (size_t i = 0; i < kMaxIter; i++) {
           float a1[kSize];
           for (size_t j = 0; j < kSize; j++)
@@ -70,13 +73,14 @@ void PartialSumWithShift(const device_selector &selector,
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
@@ -95,7 +99,7 @@ void PartialSumWithShift(const device_selector &selector,
 }
 
 // Calculates the expected results. Used to verify that the kernel
-// is functionally correct. 
+// is functionally correct.
 float GoldenResult(const FloatArray &A, float shift) {
   float gr = 0;
   for (size_t i = 0; i < kMaxIter; i++) {
@@ -121,14 +125,14 @@ int main() {
     A[i] = rand() % kMaxValue;
 
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector selector;
+  INTEL::fpga_emulator_selector selector;
 #else
-  intel::fpga_selector selector;
+  INTEL::fpga_selector selector;
 #endif
 
   // Run the kernel with different values of the max_concurrency
-  // attribute, to determine the optimal concurrency. 
-  // In this case, the optimal max_concurrency is 2 since this 
+  // attribute, to determine the optimal concurrency.
+  // In this case, the optimal max_concurrency is 2 since this
   // achieves the highest GFlops. Higher values of max_concurrency
   // consume additional RAM without increasing GFlops.
   PartialSumWithShift<0>(selector, A, shift, R0);

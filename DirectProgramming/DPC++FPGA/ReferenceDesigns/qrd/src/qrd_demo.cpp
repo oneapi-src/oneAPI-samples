@@ -29,11 +29,14 @@
 #include <math.h>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <chrono>
 #include <list>
 
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
+
 #include "qrd.hpp"
 
 using namespace std;
@@ -46,13 +49,17 @@ using namespace sycl;
 //   2. Run the algorithm.
 //   3. Copy the output data back to host device.
 // The above process is carried out 'reps' number of times.
-void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue &q,
-                size_t matrices, size_t reps);
+void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
+                     queue &q, size_t matrices, size_t reps);
 
 int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
   constexpr size_t kRandomMin = 1;
   constexpr size_t kRandomMax = 10;
+  constexpr size_t kAMatrixSizeFactor = ROWS_COMPONENT * COLS_COMPONENT * 2;
+  constexpr size_t kQRMatrixSizeFactor =
+      (ROWS_COMPONENT + 1) * COLS_COMPONENT * 3;
+  constexpr size_t kIndexAccessFactor = 2;
 
   size_t matrices = argc > 1 ? atoi(argv[1]) : 1;
   if (matrices < 1) {
@@ -62,9 +69,9 @@ int main(int argc, char *argv[]) {
 
   try {
 #if defined(FPGA_EMULATOR)
-    intel::fpga_emulator_selector device_selector;
+    INTEL::fpga_emulator_selector device_selector;
 #else
-    intel::fpga_selector device_selector;
+    INTEL::fpga_selector device_selector;
 #endif
 
     queue q = queue(device_selector, dpc_common::exception_handler);
@@ -74,11 +81,6 @@ int main(int argc, char *argv[]) {
 
     vector<float> a_matrix;
     vector<float> qr_matrix;
-
-    constexpr size_t kAMatrixSizeFactor = ROWS_COMPONENT * COLS_COMPONENT * 2;
-    constexpr size_t kQRMatrixSizeFactor =
-        (ROWS_COMPONENT + 1) * COLS_COMPONENT * 3;
-    constexpr size_t kIndexAccessFactor = 2;
 
     a_matrix.resize(matrices * kAMatrixSizeFactor);
     qr_matrix.resize(matrices * kQRMatrixSizeFactor);
@@ -111,7 +113,7 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    QRDecomposition(a_matrix, qr_matrix, q, 1, 1);  // Accelerator warmup
+    QRDecomposition(a_matrix, qr_matrix, q, 1, 1); // Accelerator warmup
 
 #if defined(FPGA_EMULATOR)
     size_t reps = 2;
@@ -219,14 +221,30 @@ int main(int argc, char *argv[]) {
     return 0;
 
   } catch (sycl::exception const &e) {
-    cout << "Caught a synchronous SYCL exception: " << e.what() << "\n";
-    cout << "   If you are targeting an FPGA hardware, "
+    cerr << "Caught a synchronous SYCL exception: " << e.what() << "\n";
+    cerr << "   If you are targeting an FPGA hardware, "
             "ensure that your system is plugged to an FPGA board that is "
             "set up correctly"
          << "\n";
-    cout << "   If you are targeting the FPGA emulator, compile with "
+    cerr << "   If you are targeting the FPGA emulator, compile with "
             "-DFPGA_EMULATOR"
          << "\n";
+
+    terminate();
+  } catch (std::bad_alloc const &e) {
+    cerr << "Caught a memory allocation exception on the host: " << e.what()
+         << "\n";
+    cerr << "   You can reduce the memory requirement by reducing the number "
+            "of matrices generated. Specify a smaller number when running the "
+            "executable."
+         << "\n";
+    cerr << "   In this run, more than "
+         << (((long long)matrices * (kAMatrixSizeFactor + kQRMatrixSizeFactor) *
+              sizeof(float)) /
+             pow(2, 30))
+         << " GBs of memory was requested for " << matrices
+         << " matrices, each of size " << ROWS_COMPONENT << " x "
+         << COLS_COMPONENT << "\n";
 
     terminate();
   }

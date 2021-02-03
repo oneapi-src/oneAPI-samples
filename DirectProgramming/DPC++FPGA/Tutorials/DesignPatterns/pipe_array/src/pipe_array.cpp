@@ -4,13 +4,16 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>
-#include "dpc_common.hpp"
 #include "pipe_array.hpp"
 #include "unroller.hpp"
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
+#include "dpc_common.hpp"
 
 using namespace sycl;
 
@@ -36,7 +39,7 @@ void Producer(queue &q, buffer<uint64_t, 1> &input_buffer) {
   std::cout << "Enqueuing producer...\n";
 
   auto e = q.submit([&](handler &h) {
-    auto input_accessor = input_buffer.get_access<access::mode::read>(h);
+    accessor input_accessor(input_buffer, h, read_only);
     auto num_elements = input_buffer.get_count();
     auto num_passes = num_elements / kNumberOfConsumers;
 
@@ -66,7 +69,7 @@ void Consumer(queue &q, buffer<uint64_t, 1> &out_buf) {
   std::cout << "Enqueuing consumer " << consumer_id << "...\n";
 
   auto e = q.submit([&](handler &h) {
-    auto output_accessor = out_buf.get_access<access::mode::discard_write>(h);
+    accessor output_accessor(out_buf, h, write_only, noinit);
     auto num_elements = out_buf.get_count();
 
     // The consumer kernel reads from a single pipe, determined by consumer_id
@@ -115,14 +118,14 @@ int main(int argc, char *argv[]) {
   for (auto &output : consumer_output)
     output.resize(items_per_consumer, -1);
 
-  // Initialize producer input 
+  // Initialize producer input
   for (size_t i = 0; i < array_size; i++)
     producer_input[i] = i;
 
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector device_selector;
+  INTEL::fpga_emulator_selector device_selector;
 #else
-  intel::fpga_selector device_selector;
+  INTEL::fpga_selector device_selector;
 #endif
 
   try {
@@ -132,8 +135,6 @@ int main(int argc, char *argv[]) {
     buffer<uint64_t,1> producer_buffer(producer_input);
     Producer(q, producer_buffer);
 
-    // Use verbose SYCL 1.2 syntax for the output buffer.
-    // (This will become unnecessary in a future compiler version.)
     std::vector<buffer<uint64_t,1>> consumer_buffers;
 
     // Use template-based unroll to enqueue multiple consumers
@@ -145,13 +146,14 @@ int main(int argc, char *argv[]) {
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
-    std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();

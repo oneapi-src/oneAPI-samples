@@ -1,11 +1,11 @@
-# Matrix Multiply Sample
+# `Matrix Multiply` Sample
 A sample containing multiple implementations of matrix multiplication. This sample code is implemented using DPC++ language for CPU and GPU. 
   
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; Windows 10
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel(R) oneAPI DPC++ Compiler (beta); VTune(TM) Profiler
+| Software                          | Intel(R) oneAPI DPC++ Compiler; VTune(TM) Profiler
 | What you will learn               | How to profile an application using Intel(R) VTune(TM) Profiler
 | Time to complete                  | 15 minutes
 
@@ -20,7 +20,10 @@ Include Files
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ## License  
-This code sample is licensed under MIT license
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## How to Build  
 

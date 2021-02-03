@@ -1,8 +1,9 @@
-# `simple-add-dpc++` Sample
+﻿# `simple-add-dpc++` Sample
 
 `simple-add-dpc++` provides the simplest example of DPC++ while providing an example of using both buffers and Unified Shared Memory.   
 
-For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -15,20 +16,26 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 ## Purpose
 The `simple-add-dpc++` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators.
 
-In this sample, you can learn how to use the most basic code in C++ language that offloads computations to a GPU using the DPC++ language. This includes using Unified Shared Memory (USM) and buffers. USM requires explicit wait for the asynchronous kernel's computation to complete.  Buffers, at the time they go out of scope, bring main memory in sync with device memory implicitly; the explicit wait on the event is not required as a result. This sample provides examples of both implementations for simple side by side review.
+In this sample, you can learn how to use the most basic code in C++ language that offloads computations to a GPU using the DPC++ language. This includes using Unified Shared Memory (USM) and buffers. USM requires an explicit wait for the asynchronous kernel's computation to complete.  Buffers, at the time they go out of scope, bring main memory in sync with device memory implicitly; the explicit wait on the event is not required as a result. This sample provides examples of both implementations for simple side by side review.
 
-The code will attempt first to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected. If successful, the name of the offload device and a success message are displayed. And, your development environment is setup correctly!
+The code will attempt to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected. If successful, the name of the offload device and a success message is displayed. Confirming your development environment is set up correctly!
 
 ## Key Implementation Details 
 The basic DPC++ implementation explained in the code includes device selector, USM, buffer, accessor, kernel, and command groups.
 
 ## License  
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `simple add DPC++` Program for CPU and GPU 
 
-## Include Files
+### Include Files
 The include folder is located at "%ONEAPI_ROOT%\dev-utilities\latest\include" on your development system.
+
+### Running Samples in DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 ### On a Linux* System
 Perform the following steps:
@@ -110,7 +117,7 @@ Perform the following steps:
 ### On a Windows* System Using a Command Line Interface
 Perform the following steps:
 
-**NOTE:** On a Windows* system, you can only compile and run on the FPGA emulator. Generating an HTML optimization report and compiling and running on the FPGA hardware are not currently supported.
+**NOTE:** On a Windows* system, you can only compile and run on the FPGA emulator. Generating an HTML optimization report and compiling and running on the FPGA hardware is not currently supported.
 
 1. Select **Programs** > **Intel oneAPI 2021** > **Intel oneAPI Command Prompt** to launch a command window.
 2. Build the program using the following `nmake` commands:

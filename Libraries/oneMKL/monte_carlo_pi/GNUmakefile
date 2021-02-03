@@ -2,6 +2,8 @@
 
 default: run_all
 
+all: run_all
+
 run_all: mc_pi mc_pi_usm mc_pi_device_api
 	./mc_pi
 	./mc_pi_usm
@@ -21,4 +23,4 @@ mc_pi_device_api: mc_pi_device_api.cpp
 clean:
 	-rm -f mc_pi mc_pi_usm mc_pi_device_api
 
-.PHONY: run_all clean
+.PHONY: run_all clean all

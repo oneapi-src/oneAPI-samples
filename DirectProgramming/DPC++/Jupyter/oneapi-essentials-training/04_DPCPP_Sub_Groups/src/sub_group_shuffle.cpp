@@ -20,7 +20,7 @@ int main() {
   std::cout << std::endl << std::endl;
 
   q.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item) {
-    intel::sub_group sg = item.get_sub_group();
+    ONEAPI::sub_group sg = item.get_sub_group();
     size_t i = item.get_global_id(0);
 
     //# swap adjasent items in array using sub_group shuffle_xor

@@ -1,13 +1,11 @@
-# `Bitonic Sort` sample
+﻿# `Bitonic Sort` Sample
 
 This code sample demonstrates the implementation of bitonic sort using Intel Data Parallel C++ to
 offload the computation to a GPU. In this implementation, a random sequence of 2**n elements is given
-(n is a positive number) as input, the algorithm sorts the sequence in parallel. The result sequence is
+(n is a positive number) as input, and the algorithm sorts the sequence in parallel. The result sequence is
 in ascending order.
 
-For comprehensive instructions regarding DPC++ Programming, go to
-https://software.intel.com/en-us/oneapi-programming-guide
-and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
   
 | Optimized for                     | Description
 |:---                               |:---
@@ -21,8 +19,8 @@ and search based on relevant terms noted in the comments.
 ## Purpose
 
 The algorithm converts a randomized sequence of numbers into
-a bitonic sequence (two ordered sequences), and then merge these two ordered
-sequences into a ordered sequence. Bitonic sort algorithm is briefly
+a bitonic sequence (two ordered sequences) and then merges these two ordered
+sequences into an ordered sequence. Bitonic sort algorithm is briefly
 described as followed:
 
 - First, it decomposes the randomized sequence of size 2\*\*n into 2\*\*(n-1)
@@ -30,10 +28,10 @@ pairs where each pair consists of 2 consecutive elements. Note that each pair
 is a bitonic sequence.
 - Step 0: for each pair (sequence of size 2), the two elements are swapped so
 that the two consecutive pairs form  a bitonic sequence in increasing order,
-the next two pairs form the second bitonic sequence in decreasing order, the
-next two pairs form the third bitonic sequence in  increasing order, etc, ....
+the next two pairs form the second bitonic sequence in decreasing order.
+The next two pairs form the third bitonic sequence in increasing order, etc., ....
 At the end of this step, we have 2\*\*(n-1) bitonic sequences of size 2, and
-they follow an order increasing, decreasing, increasing, .., decreasing.
+they follow an order of increasing, decreasing, increasing, .., decreasing.
 Thus, they form 2\*\*(n-2) bitonic sequences of size 4.
 - Step 1: for each new 2\*\*(n-2) bitonic sequences of size 4, (each new
 sequence consists of 2 consecutive previous sequences), it swaps the elements
@@ -43,7 +41,7 @@ decreasing. Thus, they form 2\*\*(n-3) bitonic sequences of size 8.
 - Same logic applies until we reach the last step.
 - Step n: at this last step, we have one bitonic sequence of size 2\*\*n. The
 elements in the sequence are swapped until we have a sequence in increasing
-oder.
+order.
 
 The code will attempt first to execute on an available GPU and fallback to the system's CPU
 if a compatible GPU is not detected.
@@ -54,16 +52,27 @@ The basic DPC++ implementation explained in the code includes device selector, b
 roups. Unified Shared Memory (USM) and Buffer Object are used for data management.
 
 ## License  
-This code sample is licensed under MIT license  
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `bitonic-sort` Program for CPU and GPU
+
+> Note: if you have not already done so, set up your CLI 
+> environment by sourcing  the setvars script located in 
+> the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU,
-FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI
+FPGA) as well as whether to run in batch or interactive mode. For more information, see the Intel® oneAPI
 Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
@@ -86,16 +95,15 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
     make clean
     ```
 
-### On a Windows* System
-    * Build the program using VS2017 or VS2019
-      Right click on the solution file and open using either VS2017 or VS2019 IDE.
-      Right click on the project in Solution explorer and select Rebuild.
-      From top menu select Debug -> Start without Debugging.
+### On a Windows* System Using Visual Studio* Version 2017 or Newer
+- Build the program using VS2017 or VS2019
+    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+    - Right-click on the project in Solution Explorer and select Rebuild.
+    - From the top menu, select Debug -> Start without Debugging.
 
-    * Build the program using MSBuild
-      Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for
- VS2019"
-      Run - MSBuild bitonic-sort.sln /t:Rebuild /p:Configuration="Release"
+- Build the program using MSBuild
+     - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
+     - Run the following command: `MSBuild bitonic-sort.sln /t:Rebuild /p:Configuration="Release"'
 
 ## Running the sample
 ### Application Parameters

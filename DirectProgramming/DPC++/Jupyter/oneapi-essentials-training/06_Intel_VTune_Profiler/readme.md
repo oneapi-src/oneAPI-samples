@@ -1,82 +1,27 @@
-# ISO3DFD sample
-ISO3DFD is a finite difference stencil kernel for solving 3D acoustic isotropic wave equation which can be used as a proxy for propogating a seismic wave. Kernels in this sample are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions. This sample code is implemented using Data Parallel C++ for CPU and GPU and using OpenMP on CPU for comparison and validation.
+## Title
+Intel® Vtune™ Profiler on DevCloud: This is part 6 of the oneAPI essentials training series
   
+## Requirements
 | Optimized for                       | Description
 |:---                               |:---
-| OS                                | Linux Ubuntu 18.04; Windows 10 or Windows Server 2017
-| Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel Data Parallel C++ Compiler beta; Intel C++ Compiler xxx beta
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler and OpenMP offload pragmas
-| Time to complete                  | 15 minutes
-
-Performance number tabulation [Dummy data for now]
-
-| iso3dfd                           | Performance data
-|:---                               |:---
-| Scalar baseline -O2               | 1.0
-
+| OS                                | Linux* Ubuntu 18.04, 20 Windows* 10
+| Hardware                          | Skylake with GEN9 or newer
+| Software                          | Intel&reg; oneAPI DPC++ Compiler, Jupyter Notebooks, Intel Devcloud
   
-## Key implementation details [optional]
-SYCL implementation explained. 
-
-You're encourage to use any infographics to increase readibility and clarity which is strongly recommended by UX team based on customer feedbacks. 
-
-## How other tools (Intel libraries or Intel tools) are used [optional]
-   
+## Purpose
+The hands-on exercise in this notebook demonstrates using Intel® Vtune™ Profiler on the command-line to collect and analyze gpu_hotspots. You will learn how to collect performance metrics and explore the results with the HTML output rendered inside of the notebook. This module meant for exploration and familiarization, and does not require any code modification.
 
 ## License  
-This code sample is licensed under MIT license under xxx  
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-## How to Build  
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-### on Linux  
-   * Build iso3dfd  
-    
-    cd iso3dfd &&  
-    mkdir build &&  
-    cd build &&  
-    cmake .. &&  
-    make 
+## Install Directions
 
-   * Run the program on Gen9 
-    
-    make run  
-   
-   * Run the program on CPU 
-    
-    make run_cpu  
-
-   * Clean the program  
-    make clean  
-
-### on Windows
-
-INSTRUCTIONS HERE. EXAMPLE:
-
-## How to Run  
-   * Application Parameters   
-	Usage: ./iso3dfd n1 n2 n3 b1 b2 b3 Iterations [omp|sycl] [gpu|cpu]
-	
-	n1 n2 n3      : Grid sizes for the stencil
-	b1 b2 b3      : cache block sizes for cpu openmp version.
-	Iterations    : No. of timesteps.
-	[omp|sycl]    : Optional: Run the OpenMP or the SYCL variant. Default is to use both for validation
-	[gpu|cpu]     : Optional: Device to run the SYCL version Default is to use the GPU if available, if not fallback to CPU
-
-
-## Performance Tests
-   * DPC++ on CPU
-	
-    numactl -c 0 -m 0 ./iso3dfd 256 256 256 256 8 8 100 sycl cpu   
-   * DPC++ on Gen9   
-	
-    ./iso3dfd 256 256 256 256 8 8 100 sycl gpu   
-	  
-
-## Validation Tests
-   * DPC++ on CPU
-	
-    numactl -c 0 -m 0 ./iso3dfd 256 256 256 256 8 8 10 cpu   
-   * DPC++ on Gen9   
-    
-    ./iso3dfd 256 256 256 256 8 8 10 gpu   
+The Jupyter notebooks are tested and can be run on Intel Devcloud.
+Below are the steps to access these Jupyter notebooks on Intel Devcloud
+1. Register on [Intel Devcloud](https://intelsoftwaresites.secure.force.com/devcloud/oneapi)
+2. Go to the "Terminal" in the Intel Devcloud
+3. Type in the below command to download the oneAPI-essentials series notebooks into your Devcloud account
+    /data/oneapi_workshop/get_jupyter_notebooks.sh
+4. Navigate to oneAPI_Essentials folder and open the Welcome.ipynb, click on "Intel® Vtune™ Profiler on DevCloud" notebook and follow the instructions

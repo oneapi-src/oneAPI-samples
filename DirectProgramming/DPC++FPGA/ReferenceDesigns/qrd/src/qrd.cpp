@@ -27,7 +27,7 @@
 // California and by the laws of the United States of America.
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <chrono>
 #include <cstring>
 #include <vector>
@@ -37,19 +37,15 @@
 using std::vector;
 using namespace sycl;
 
-template <int begin, int end>
-struct Unroller {
-  template <typename Action>
-  static void Step(const Action &action) {
+template <int begin, int end> struct Unroller {
+  template <typename Action> static void Step(const Action &action) {
     action(begin);
     Unroller<begin + 1, end>::Step(action);
   }
 };
 
-template <int end>
-struct Unroller<end, end> {
-  template <typename Action>
-  static void Step(const Action &action) {}
+template <int end> struct Unroller<end, end> {
+  template <typename Action> static void Step(const Action &action) {}
 };
 
 struct MyComplex {
@@ -73,18 +69,17 @@ MyComplex MulMycomplex(MyComplex a, MyComplex b) {
 }
 
 // Forward declare the kernel name
-// (This will become unnecessary in a future compiler version.)
+// (This prevents unwanted name mangling in the optimization report.)
 class QRD;
 
-void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue &q,
-                size_t matrices, size_t reps) {
+void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
+                     queue &q, size_t matrices, size_t reps) {
   // Number of complex elements in the matrix
   constexpr int kNumComplexElements = COLS_COMPONENT * ROWS_COMPONENT;
 
   // Sizes of allocated memories for input and output matrix
   constexpr int kInputMatrixSize = kNumComplexElements * 2;
-  constexpr int kOutputMatrixSize =
-      (ROWS_COMPONENT + 1) * COLS_COMPONENT * 3;
+  constexpr int kOutputMatrixSize = (ROWS_COMPONENT + 1) * COLS_COMPONENT * 3;
 
   // Constants related to the memory configuration of the kernel's local
   // memories
@@ -125,14 +120,13 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
       });
 
       q.submit([&](handler &h) {
-        auto in_matrix = input_matrix[b]->get_access<access::mode::read>(h);
-        auto out_matrix =
-            output_matrix[b]->get_access<access::mode::discard_write>(h);
+        accessor in_matrix(*input_matrix[b], h, read_only);
+        accessor out_matrix(*output_matrix[b], h, write_only, noinit);
         auto out_matrix2 = out_matrix;
         h.single_task<class QRD>([=]() [[intel::kernel_args_restrict]] {
           for (int l = 0; l < matrices; l++) {
-            [[intelfpga::bankwidth(kBankwidth),
-              intelfpga::numbanks(kNumBanks)]] struct {
+            [[intel::bankwidth(kBankwidth),
+              intel::numbanks(kNumBanks)]] struct {
               MyComplex d[ROWS_COMPONENT];
             } a_matrix[COLS_COMPONENT], ap_matrix[COLS_COMPONENT],
                 aload_matrix[COLS_COMPONENT];
@@ -157,18 +151,20 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
                 Unroller<0, kNumElementsPerBank>::Step([&](int t) {
                   if (jtmp == k) {
                     aload_matrix[li / (kNumBanks)]
-                        .d[k * kNumElementsPerBank + t].xx = tmp[t].xx;
+                        .d[k * kNumElementsPerBank + t]
+                        .xx = tmp[t].xx;
                     aload_matrix[li / (kNumBanks)]
-                        .d[k * kNumElementsPerBank + t].yy = tmp[t].yy;
+                        .d[k * kNumElementsPerBank + t]
+                        .yy = tmp[t].yy;
                   }
 
                   // Delay data signals to create a vine-based data distribution
                   // to lower signal fanout.
-                  tmp[t].xx = intel::fpga_reg(tmp[t].xx);
-                  tmp[t].yy = intel::fpga_reg(tmp[t].yy);
+                  tmp[t].xx = INTEL::fpga_reg(tmp[t].xx);
+                  tmp[t].yy = INTEL::fpga_reg(tmp[t].yy);
                 });
 
-                jtmp = intel::fpga_reg(jtmp);
+                jtmp = INTEL::fpga_reg(jtmp);
               });
             }
 
@@ -179,8 +175,8 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
                           : 0;
             int qr_idx = l * kOutputMatrixSize / 2;
 
-            [[intelfpga::ii(1)]] [[intelfpga::ivdep(FIXED_ITERATIONS)]]
-            for (int s = 0; s < ITERATIONS; s++) {
+            [[intel::ii(1)]] [[intel::ivdep(
+                FIXED_ITERATIONS)]] for (int s = 0; s < ITERATIONS; s++) {
               MyComplex vector_t[ROWS_COMPONENT];
               MyComplex sori[kNumBanks];
 
@@ -189,13 +185,13 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
                   i_lt_0[kNumBanks];
 
               Unroller<0, kNumBanks>::Step([&](int k) {
-                i_gt_0[k] = intel::fpga_reg(i > 0);
-                i_lt_0[k] = intel::fpga_reg(i < 0);
-                j_eq_i[k] = intel::fpga_reg(j == i);
-                i_ge_0_j_eq_i[k] = intel::fpga_reg(i >= 0 && j >= i);
-                j_eq_i_plus_1[k] = intel::fpga_reg(j == i + 1);
-                sori[k].xx = intel::fpga_reg(s_or_i[j].xx);
-                sori[k].yy = intel::fpga_reg(s_or_i[j].yy);
+                i_gt_0[k] = INTEL::fpga_reg(i > 0);
+                i_lt_0[k] = INTEL::fpga_reg(i < 0);
+                j_eq_i[k] = INTEL::fpga_reg(j == i);
+                i_ge_0_j_eq_i[k] = INTEL::fpga_reg(i >= 0 && j >= i);
+                j_eq_i_plus_1[k] = INTEL::fpga_reg(j == i + 1);
+                sori[k].xx = INTEL::fpga_reg(s_or_i[j].xx);
+                sori[k].yy = INTEL::fpga_reg(s_or_i[j].yy);
               });
 
               Unroller<0, ROWS_COMPONENT>::Step([&](int k) {
@@ -220,10 +216,8 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
                     (j_eq_i[k / kNumElementsPerBank] ? MyComplex(0.0, 0.0)
                                                      : vector_t[k]);
                 if (i_ge_0_j_eq_i[k / kNumElementsPerBank]) {
-                  ap_matrix[j].d[k].xx = a_matrix[j].d[k].xx =
-                    vector_t[k].xx;
-                  ap_matrix[j].d[k].yy = a_matrix[j].d[k].yy =
-                    vector_t[k].yy;
+                  ap_matrix[j].d[k].xx = a_matrix[j].d[k].xx = vector_t[k].xx;
+                  ap_matrix[j].d[k].yy = a_matrix[j].d[k].yy = vector_t[k].yy;
                 }
                 if (j_eq_i_plus_1[k / kNumElementsPerBank]) {
                   vector_ti[k] = vector_t[k];
@@ -274,20 +268,20 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
               bool get[kNumBanks];
               Unroller<0, kNumBanks>::Step([&](int k) {
                 get[k] = desired == k;
-                desired = intel::fpga_reg(desired);
+                desired = INTEL::fpga_reg(desired);
               });
 
               MyComplex tmp[kNumElementsPerBank];
               Unroller<0, kNumBanks>::Step([&](int t) {
                 Unroller<0, kNumElementsPerBank>::Step([&](int k) {
                   tmp[k].xx = get[t] ? ap_matrix[si / (kNumBanks)]
-                                            .d[t * kNumElementsPerBank + k]
-                                            .xx
-                                      : intel::fpga_reg(tmp[k].xx);
+                                           .d[t * kNumElementsPerBank + k]
+                                           .xx
+                                     : INTEL::fpga_reg(tmp[k].xx);
                   tmp[k].yy = get[t] ? ap_matrix[si / (kNumBanks)]
-                                            .d[t * kNumElementsPerBank + k]
-                                            .yy
-                                      : intel::fpga_reg(tmp[k].yy);
+                                           .d[t * kNumElementsPerBank + k]
+                                           .yy
+                                     : INTEL::fpga_reg(tmp[k].yy);
                 });
               });
 
@@ -305,7 +299,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix, queue 
       });
 
       q.submit([&](handler &h) {
-        auto final_matrix = output_matrix[b]->get_access<access::mode::read>(h);
+        accessor final_matrix(*output_matrix[b], h, read_only);
         h.copy(final_matrix, kPtr2);
       });
     }

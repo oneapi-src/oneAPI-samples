@@ -5,17 +5,19 @@
 // =============================================================
 
 #include <omp.h>
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstring>
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 constexpr float dt = 0.002f;
 constexpr float dxyz = 50.0f;
-constexpr unsigned int kHalfLength = 8;
-constexpr unsigned int kMaxTeamSizeLimit = 256;
+constexpr size_t kHalfLength = 8;
+constexpr size_t kMaxTeamSizeLimit = 256;
 
 #define STENCIL_LOOKUP(ir)                                          \
   (coeff[ir] * ((ptr_prev[ix + ir] + ptr_prev[ix - ir]) +           \
@@ -29,22 +31,22 @@ constexpr unsigned int kMaxTeamSizeLimit = 256;
 
 void Usage(const std::string& programName);
 
-void PrintStats(double time, unsigned int n1, unsigned int n2, unsigned int n3,
-                unsigned int num_iterations);
+void PrintStats(double time, size_t n1, size_t n2, size_t n3,
+                size_t num_iterations);
 
-bool WithinEpsilon(float* output, float* reference, unsigned int dim_x,
-                   unsigned int dim_y, unsigned int dim_z, unsigned int radius,
+bool WithinEpsilon(float* output, float* reference, size_t dim_x,
+                   size_t dim_y, size_t dim_z, size_t radius,
                    const int zadjust, const float delta);
 
 void Initialize(float* ptr_prev, float* ptr_next, float* ptr_vel,
-                unsigned int n1, unsigned int n2, unsigned int n3);
+                size_t n1, size_t n2, size_t n3);
 
 bool VerifyResults(float* next_base, float* prev_base, float* vel_base,
-                   float* coeff, unsigned int n1, unsigned int n2,
-                   unsigned int n3, unsigned int num_iterations,
-                   unsigned int n1_block, unsigned int n2_block,
-                   unsigned int n3_block);
+                   float* coeff, size_t n1, size_t n2,
+                   size_t n3, size_t num_iterations,
+                   size_t n1_block, size_t n2_block,
+                   size_t n3_block);
 
-bool ValidateInput(unsigned int n1, unsigned int n2, unsigned int n3,
-                   unsigned int n1_block, unsigned int n2_block,
-                   unsigned int n3_block, unsigned int num_iterations);
+bool ValidateInput(size_t n1, size_t n2, size_t n3,
+                   size_t n1_block, size_t n2_block,
+                   size_t n3_block, size_t num_iterations);

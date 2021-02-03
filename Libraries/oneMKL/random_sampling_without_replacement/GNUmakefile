@@ -2,6 +2,8 @@
 
 default: run_all
 
+all: run_all
+
 run_all: lottery lottery_usm lottery_device_api
 		./lottery
 		./lottery_usm
@@ -21,4 +23,4 @@ lottery_device_api: lottery_device_api.cpp
 clean:
 		-rm -f lottery lottery_usm lottery_device_api
 
-.PHONY: run_all clean
+.PHONY: run_all clean all

@@ -1,13 +1,13 @@
 {
  "guid": "389BBED3-456D-4092-B6D8-DDF782865D66",
- "name": "oneDNN CNN FP32 Inference",
- "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneDNN"],
- "description": "Run a simple CNN on both Intel CPU and GPU with sample C++ codes.",
+ "name": "Simple Model",
+ "categories": ["Toolkit/oneAPI Libraries/oneDNN"],
+ "description": "Run a simple CNN on both Intel® CPU and GPU with sample C++ codes",
  "toolchain": ["dpcpp","gcc","icc"],
  "languages": [{"cpp":{}}],
- "dependencies": ["oneDNN", "tbb","compiler|icc"],
+ "dependencies": ["dnnl", "tbb","compiler|icc"],
  "os": ["linux", "windows"],
- "builder": ["ide","cmake"],
+ "builder": ["cli","cmake"],
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
 	"linux": [{
@@ -26,6 +26,8 @@
 	    {
 		"id": "infer cpu",
 		"steps": [
+			"set CC=clang",
+			"set CXX=clang++",
 			"mkdir build_cpu",
                         "cd build_cpu",
                         "cmake -G Ninja ..",
@@ -36,6 +38,8 @@
 	    {
 		"id": "infer gpu",
 		"steps": [
+			"set CC=clang",
+			"set CXX=clang++",
                         "mkdir build_gpu",
                         "cd build_gpu",
                         "cmake -G Ninja ..",

@@ -4,10 +4,12 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <iomanip>
 #include <random>
 
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 using namespace sycl;
@@ -53,8 +55,8 @@ void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
   // Submit to the queue and execute the kernel
   e = q->submit([&](handler &h) {
     // Get kernel access to the buffers
-    auto accessor_a = buffer_a.get_access<access::mode::read>(h);
-    auto accessor_b = buffer_b.get_access<access::mode::discard_read_write>(h);
+    accessor accessor_a(buffer_a, h, read_only);
+    accessor accessor_b(buffer_b, h, read_write, noinit);
 
     const int num = kSize;
     assert(kPow >= 2);
@@ -77,7 +79,7 @@ void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
 
   event update_host_event;
   update_host_event = q->submit([&](handler &h) {
-    auto accessor_b = buffer_b.get_access<access::mode::read>(h);
+    accessor accessor_b(buffer_b, h, read_only);
 
     /*
       Explicitly instruct the SYCL runtime to copy the kernel's output buffer
@@ -121,8 +123,8 @@ float MyPow(float input, int pow) {
 void ProcessOutput(buffer<float, 1> &input_buf,
                    buffer<float, 1> &output_buf, int exec_number, event e,
                    ulong &total_kernel_time_per_slot) {
-  auto input_buf_acc = input_buf.get_access<access::mode::read>();
-  auto output_buf_acc = output_buf.get_access<access::mode::read>();
+  host_accessor input_buf_acc(input_buf, read_only);
+  host_accessor output_buf_acc(output_buf, read_only);
   int num_errors = 0;
   int num_errors_to_print = 10;
   /*  The use of update_host() in the kernel function allows for additional
@@ -162,9 +164,9 @@ void ProcessOutput(buffer<float, 1> &input_buf,
    completes.
 */
 void ProcessInput(buffer<float, 1> &buf) {
-  // We are generating completely new input data, so can use discard_write()
+  // We are generating completely new input data, so can the noinit property
   // here to indicate we don't care about the SYCL buffer's current contents.
-  auto buf_acc = buf.get_access<access::mode::discard_write>();
+  host_accessor buf_acc(buf, write_only, noinit);
 
   // RNG seed
   auto seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -189,19 +191,19 @@ void ProcessInput(buffer<float, 1> &buf) {
 int main() {
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
-    intel::fpga_emulator_selector device_selector;
+    INTEL::fpga_emulator_selector device_selector;
     std::cout << "\nEmulator output does not demonstrate true hardware "
                  "performance. The design may need to run on actual hardware "
                  "to observe the performance benefit of the optimization "
                  "exemplified in this tutorial.\n\n";
 #else
-    intel::fpga_selector device_selector;
+    INTEL::fpga_selector device_selector;
 #endif
 
     try {
       auto prop_list =
           property_list{property::queue::enable_profiling()};
-      
+
       std::unique_ptr<queue> q;
       q.reset(new queue(device_selector, dpc_common::exception_handler, prop_list));
 
@@ -334,14 +336,15 @@ int main() {
       }
     } catch (sycl::exception const& e) {
       // Catches exceptions in the host code
-      std::cout << "Caught a SYCL host exception:\n" << e.what() << "\n";
-      
+      std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
+
       // Most likely the runtime couldn't find FPGA hardware!
       if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-        std::cout << "If you are targeting an FPGA, please ensure that your "
+        std::cerr << "If you are targeting an FPGA, please ensure that your "
                      "system has a correctly configured FPGA board.\n";
-        std::cout << "If you are targeting the FPGA emulator, compile with "
-                     "-DFPGA_EMULATOR.\n"; 
+        std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+        std::cerr << "If you are targeting the FPGA emulator, compile with "
+                     "-DFPGA_EMULATOR.\n";
       }
       std::terminate();
     }

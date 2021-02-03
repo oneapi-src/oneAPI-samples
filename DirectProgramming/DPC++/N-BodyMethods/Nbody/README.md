@@ -1,22 +1,25 @@
-# Nbody sample
+# `Nbody` sample
 An N-body simulation is a simulation of a dynamical system of particles, usually under the influence of physical forces, such as gravity. This nbody sample code is implemented using C++ and DPC++ language for Intel CPU and GPU. 
   
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler beta;
+| Software                          | Intel&reg; oneAPI DPC++ Compiler;
 | What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
 | Time to complete                  | 15 minutes
 
 ## Purpose
-Nbody sample code simulates 16000 particles and for 10 integration steps. Each particles position, velocity and acceleration parameters are dependent on other (N-1) particles. This algorithm is highly data parallel and a perfect candidate to offload to GPU. The code demonstartes how to deal with multiple device kernels which can be enqueued into a DPC++ queue for execution. 
+Nbody sample code simulates 16000 particles and for ten integration steps. Each particle's position, velocity and acceleration parameters are dependent on other (N-1) particles. This algorithm is highly data parallel and a perfect candidate to offload to GPU. The code demonstrates how to deal with multiple device kernels, which can be enqueued into a DPC++ queue for execution and how to handle parallel reductions.
 
 ## Key Implementation Details 
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
 
 ## License  
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Program for CPU and GPU
 
@@ -41,27 +44,30 @@ $ make
     ```
     make clean
     ```
+
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
-* Build the program using VS2017 or VS2019
-      Right click on the solution file and open using either VS2017 or VS2019 IDE.
-      Right click on the project in Solution explorer and select Rebuild.
-      From top menu select Debug -> Start without Debugging.
+- Build the program using VS2017 or VS2019
+    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+    - Right-click on the project in Solution Explorer and select Rebuild.
+    - From the top menu, select Debug -> Start without Debugging.
 
-* Build the program using MSBuild
-      Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-      Run - MSBuild Nbody.sln /t:Rebuild /p:Configuration="Release"
-
+- Build the program using MSBuild
+     - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
+     - Run the following command: `MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"`
+     
 ### Application Parameters 
 You can modify the NBody simulation parameters from within GSimulation.cpp. The configurable parameters include:
-  set_npart(__);
-  set_nsteps(__);
-  set_tstep(__);
-  set_sfreq(__);
+- set_npart(__);
+- set_nsteps(__);
+- set_tstep(__);
+- set_sfreq(__);
+
 Below are the default parameters:
-Number of particles (npart) is 16000
-Number of integration steps (nsteps) is 10
-Time delta (tstep) is 0.1s
-Sample frequency (sfreq) is 1
+
+* Number of particles (npart) is 16000
+* Number of integration steps (nsteps) is 10
+* Time delta (tstep) is 0.1s
+* Sample frequency (sfreq) is 1
 
 ## Example of Output
     ===============================

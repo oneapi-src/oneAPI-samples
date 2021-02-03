@@ -139,12 +139,13 @@
       <PreprocessorDefinitions>WIN32;DPCPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
       <AdditionalOptions>/std:c++17 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SYCLShowVerboseInformation>false</SYCLShowVerboseInformation>
+      <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -198,6 +199,7 @@
       <SYCLWarningLevel>DisableAllWarnings</SYCLWarningLevel>
       <LanguageStandard>Default</LanguageStandard>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)\dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

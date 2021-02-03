@@ -4,9 +4,12 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
+
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 using namespace sycl;
@@ -21,11 +24,11 @@ constexpr size_t kTotalOps = (4 + (3*kNumCols)) * kNumElements;
 
 
 // Forward declare the kernel name
-// (This will become unnecessary in a future compiler version.)
+// (This prevents unwanted name mangling in the optimization report.)
 template <int N> class KernelCompute;
 
 // The kernel implements a matrix multiplication.
-// This is not meant to be a high performance implementation on FPGA! 
+// This is not meant to be a high performance implementation on FPGA!
 // It's just a simple kernel with nested loops to illustrate loop coalescing.
 template <int coalesce_factor>
 void MatrixMultiply(const device_selector &selector,
@@ -40,16 +43,14 @@ void MatrixMultiply(const device_selector &selector,
 
     buffer buffer_in_a(matrix_a);
     buffer buffer_in_b(matrix_b);
-    // Use verbose SYCL 1.2 syntax for the output buffer.
-    // (This will become unnecessary in a future compiler version.)
-    buffer<float, 1> buffer_out(res.data(), kNumElements);
+    buffer buffer_out(res);
 
     event e = q.submit([&](handler &h) {
-      auto accessor_matrix_a = buffer_in_a.get_access<access::mode::read>(h);
-      auto accessor_matrix_b = buffer_in_b.get_access<access::mode::read>(h);
-      auto accessor_res = buffer_out.get_access<access::mode::discard_write>(h);
+      accessor accessor_matrix_a(buffer_in_a, h, read_only);
+      accessor accessor_matrix_b(buffer_in_b, h, read_only);
+      accessor accessor_res(buffer_out, h, write_only, noinit);
 
-      // The kernel_args_restrict promises the compiler that this kernel's 
+      // The kernel_args_restrict promises the compiler that this kernel's
       // accessor arguments won't alias (i.e. non-overlapping memory regions).
       h.single_task<class KernelCompute<coalesce_factor>>(
                                        [=]() [[intel::kernel_args_restrict]] {
@@ -58,10 +59,10 @@ void MatrixMultiply(const device_selector &selector,
         float b[kNumRows][kNumCols];
         float tmp[kNumRows][kNumCols];
 
-        // The loop_coalesce instructs the compiler to attempt to "merge" 
+        // The loop_coalesce instructs the compiler to attempt to "merge"
         // coalesce_factor loop levels of this nested loop together.
         // For example, a coalesce_factor of 2 turns this into a single loop.
-        [[intelfpga::loop_coalesce(coalesce_factor)]]
+        [[intel::loop_coalesce(coalesce_factor)]]
         for (size_t i = 0; i < kNumRows; ++i) {
           for (size_t j = 0; j < kNumCols; ++j) {
             a[i][j] = accessor_matrix_a[idx];
@@ -70,12 +71,12 @@ void MatrixMultiply(const device_selector &selector,
             idx++;
           }
         }
-        
+
         // Applying loop_coalesce to the outermost loop of a deeply nested
         // loop results coalescing from the outside in.
         // For example, a coalesce_factor of 2 coalesces the "i" and "j" loops,
-        // making a doubly nested loop.   
-        [[intelfpga::loop_coalesce(coalesce_factor)]]
+        // making a doubly nested loop.
+        [[intel::loop_coalesce(coalesce_factor)]]
         for (size_t i = 0; i < kNumRows; ++i) {
           for (size_t j = 0; j < kNumCols; ++j) {
             float sum = 0.0f;
@@ -87,7 +88,7 @@ void MatrixMultiply(const device_selector &selector,
         }
 
         idx = 0;
-        [[intelfpga::loop_coalesce(coalesce_factor)]]
+        [[intel::loop_coalesce(coalesce_factor)]]
         for (size_t i = 0; i < kNumRows; ++i) {
           for (size_t j = 0; j < kNumCols; ++j) {
             accessor_res[idx] = tmp[i][j];
@@ -105,11 +106,12 @@ void MatrixMultiply(const device_selector &selector,
     kernel_time = (double)(end - start) * 1e-3;
 
   } catch (exception const &exc) {
-    std::cout << "Caught synchronous SYCL exception:\n" << exc.what() << '\n';
+    std::cerr << "Caught synchronous SYCL exception:\n" << exc.what() << '\n';
     if (exc.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-      std::cout << "If you are targeting an FPGA, please ensure that your "
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
-      std::cout << "If you are targeting the FPGA emulator, compile with "
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
                    "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
@@ -141,9 +143,9 @@ int main() {
   }
 
 #if defined(FPGA_EMULATOR)
-  intel::fpga_emulator_selector selector;
+  INTEL::fpga_emulator_selector selector;
 #else
-  intel::fpga_selector selector;
+  INTEL::fpga_selector selector;
 #endif
 
   // Two versions of the simple matrix multiply kernel will be enqueued:

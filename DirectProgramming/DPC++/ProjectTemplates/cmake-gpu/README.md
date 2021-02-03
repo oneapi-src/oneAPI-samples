@@ -1,5 +1,5 @@
 # `CMake based GPU Project` Template
-A minimal project template for GPU using CMake build system.
+A minimal project template for GPU using the CMake build system.
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
@@ -7,7 +7,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux Ubuntu LTS 18.04, 19.10; RHEL 8.x
 | Hardware                          | Integrated Graphics from Intel (GPU) GEN9 or higher
-| Software                          | Intel(R) oneAPI DPC++ Compiler (beta)
+| Software                          | Intel(R) oneAPI DPC++ Compiler
 | What you will learn               | Get started with compile flow for GPU projects
 | Time to complete                  | n/a
 
@@ -15,10 +15,13 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 This project is a template designed to help you create your own Data Parallel C++ application for GPU targets. The template assumes the use of CMake to build your application. See the supplied `CMakeLists.txt` file for hints regarding the compiler options and libraries needed to compile a Data Parallel C++ application for GPU targets. And review the `main.cpp` source file for help with the header files you should include and how to implement "device selector" code for targeting your application's runtime device.
 
 ## Key Implementation Details
-The basic DPC++ project template for FPGA targets.
+The basic DPC++ project template for GPU targets.
 
 ## License
-This code sample is licensed under the MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `CMake based GPU` Program
 

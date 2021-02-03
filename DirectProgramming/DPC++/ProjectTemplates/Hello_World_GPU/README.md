@@ -1,5 +1,5 @@
-# `Visual Studio based GPU Project` Sample
-A minimal project template for GPU using for Visual Studio.
+﻿# `Visual Studio based GPU Project` Sample
+A minimal project template for GPU using Visual Studio.
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
@@ -7,7 +7,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Windows 10
 | Hardware                          | Integrated Graphics from Intel (GPU) GEN9 or higher
-| Software                          | Intel(R) oneAPI DPC++ Compiler (beta)
+| Software                          | Intel(R) oneAPI DPC++ Compiler
 | What you will learn               | Get started with DPC++ for GPU projects
 | Time to complete                  | n/a
 
@@ -20,7 +20,10 @@ If GPU is not available on your system, you can fallback to cpu or default devic
 The basic DPC++ project template for FPGA targets.
 
 ## License
-This code sample is licensed under the MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `Visual Studio based GPU` Program
 
@@ -28,15 +31,14 @@ This code sample is licensed under the MIT license.
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
-* Build the program using VS2017 or VS2019
-  Right click on the solution file and open using either VS2017 or VS2019 IDE.
-  Right click on the project in Solution explorer and select Rebuild.
-  From top menu select Debug -> Start without Debugging.
+- Build the program using VS2017 or VS2019
+    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+    - Right-click on the project in Solution Explorer and select Rebuild.
+    - From the top menu, select Debug -> Start without Debugging.
 
-* Build the program using MSBuild
-  Open "x64 Native Tools Command Prompt for VS2017" or
-  "x64 Native Tools Command Prompt for VS2019"
-  Run - MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"
+- Build the program using MSBuild
+     - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
+     - Run the following command: `MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"`

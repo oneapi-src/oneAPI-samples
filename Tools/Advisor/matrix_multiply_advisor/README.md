@@ -1,17 +1,17 @@
-# Matrix Multiply Sample
-A sample containing multiple implementations of matrix multiplication. This sample code is implemented using DPC++ language for CPU and GPU. 
+# `Matrix Multiply` Sample
+A sample containing multiple implementations of matrix multiplication code sample and  is implemented using the DPC++ language for CPU and GPU. 
   
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; Windows 10
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel(R) oneAPI DPC++ Compiler (beta); Intel(R) Advisor
+| Software                          | Intel(R) oneAPI DPC++ Compiler; Intel(R) Advisor
 | What you will learn               | How to profile an application using Intel(R) Advisor
 | Time to complete                  | 15 minutes
 
 ## Purpose
 
-The Matrix Multiplication sample performs basic matrix multiplication. Three version are provided that use different features of DPC++.
+The Matrix Multiplication sample performs basic matrix multiplication. Three versions are provided that use different features of DPC++.
 
 ## Key Implementation details
 
@@ -19,7 +19,10 @@ The basic DPC++ implementation explained in the code includes device selector, b
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ## License  
-This code sample is licensed under MIT license
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## How to Build  
 
@@ -27,7 +30,7 @@ This sample contains 3 version of matrix multiplication using DPC++:
 
     multiply1 – basic implementation of matrix multiply using DPC++
     multiply1_1 – basic implementation that replaces the buffer store with a local accessor “acc” to reduce memory traffic
-    multiply1_2 – basic implementation plus the local accessor and matrix tiling
+    multiply1_2 – the basic implementation, plus adding the local accessor and matrix tiling
 
 Edit the line in multiply.h to select the version of the multiply function:
 #define MULTIPLY multiply1

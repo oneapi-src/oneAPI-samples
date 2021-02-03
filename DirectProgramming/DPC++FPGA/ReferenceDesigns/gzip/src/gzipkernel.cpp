@@ -36,6 +36,7 @@
 #include "gzipkernel.hpp"
 #include "kernels.hpp"
 
+
 using namespace sycl;
 
 // This reference design uses a template-based unroller. It's also possible
@@ -745,8 +746,8 @@ void SubmitGzipTasksSingleEngine(
     buffer<struct GzipOutInfo, 1> *gzip_out_buf,
     buffer<unsigned, 1> *result_crc, bool last_block, event &e_crc, event &e_lz,
     event &e_huff) {
-  using acc_dist_channel = intel::pipe<class some_pipe, struct DistLen>;
-  using acc_dist_channel_last = intel::pipe<class some_pipe2, struct DistLen>;
+  using acc_dist_channel = INTEL::pipe<class some_pipe, struct DistLen>;
+  using acc_dist_channel_last = INTEL::pipe<class some_pipe2, struct DistLen>;
 
   e_crc = q.submit([&](handler &h) {
     auto accessor_isz = block_size;
@@ -2013,13 +2014,13 @@ void SubmitGzipTasksSingleEngine(
       //   Hash Table(s)
       //-------------------------------------
 
-      [[intelfpga::singlepump]] [[intelfpga::numbanks(kVec)]] [
-          [intelfpga::max_replicates(kVec)]] struct {
+      [[intel::singlepump]] [[intel::numbanks(kVec)]] [
+          [intel::max_replicates(kVec)]] struct {
         unsigned char s[kLen];
       } dictionary[kDepth][kVec];
 
-      [[intelfpga::singlepump]] [[intelfpga::numbanks(kVec)]] [
-          [intelfpga::max_replicates(
+      [[intel::singlepump]] [[intel::numbanks(kVec)]] [
+          [intel::max_replicates(
               kVec)]] unsigned int dict_offset[kDepth][kVec];
 
       // Initialize history to empty.

@@ -1,8 +1,8 @@
-# oneDNN DPC++ Interoperability Sample
+# `oneDNN DPC++ Interoperability`Sample
 
 This C++ API example demonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN. 
 Users will know how to access SYCL buffer and queue via oneDNN SYCL interoperability interfaces,  
-and this interface also helps users to execute a custom SYCL kernel with oneDNN library.
+and this interface also helps users to execute a custom SYCL kernel with an oneDNN library.
 
 | Optimized for                      | Description
 | :---                               | :---
@@ -16,7 +16,7 @@ and this interface also helps users to execute a custom SYCL kernel with oneDNN 
 
 This sample demonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN.
 
-With this sample you will learn:
+With this code sample, you will learn:
 * How to create a GPU or CPU engine.
 * How to create a memory descriptor/object.
 * How to create a SYCL kernel for data initialization.
@@ -27,21 +27,23 @@ With this sample you will learn:
 * How to execute the primitive with the initialized memory.
 * How to validate the result through a host accessor.
 
-The sample executes on system's CPU by default and can be executed on Intel GPU
+The sample executes on the system's CPU by default and can be executed on Intel GPU
 using a command line parameter `gpu`.
 
 ## Key Implementation Details
 
-This sample uses example file `${DNNLROOT}/examples/sycl_interop.cpp`
+This sample uses example file `${DNNLROOT}/examples/sycl_interop_buffer.cpp`
 from oneDNN distribution. You can find this code in
-[oneDNN Github repository](https://github.com/oneapi-src/oneDNN/blob/dev-v2/examples/sycl_interop.cpp).
+[oneDNN Github repository](https://github.com/oneapi-src/oneDNN/blob/dev-v2/examples/sycl_interop_buffer.cpp).
 
 Detailed code walkthrough is available in [oneDNN developer guide](https://oneapi-src.github.io/oneDNN/v2/sycl_interop_cpp.html)
 
 ## License
 
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 ## Building the sample for CPU and GPU
 
 ### On a Linux System
@@ -60,7 +62,28 @@ make
 ```
 3. Run the program
 ```
-./bin/sycl-interop-cpp
+./bin/sycl-interop-buffer-cpp
+```
+
+### On a Windows* System 
+
+Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or 
+"Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
+1. Setup oneAPI development environment
+```
+C:\Program Files (x86)\intel\oneapi\setvars.bat
+```
+2. Build the program using `cmake`
+```
+mkdir build
+cd build
+cmake -G Ninja ..
+cmake --build .
+```
+
+3. Run the program
+```
+bin\sycl-interop-buffer-cpp.exe
 ```
 
 ### Include Files
@@ -70,19 +93,28 @@ The include folder is located at ${DNNLROOT}\include on your development system"
 ## Running the Sample
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### Application Parameters
 
-You can specify target device for this sample using command line arguments:
-* `cpu` (default) directs the application to run on system's CPU
+You can specify the target device for this sample using command-line arguments:
+* `cpu` (default) directs the application to run on the system's CPU
 * `gpu` directs the sample to run on Intel GPU
 
 > Note: When executed with `gpu` parameter the 
 > sample will return an error if there are no Intel GPUs are found in the system.
 
-You can get additional information during execution of this sample by setting
+You can get additional information during the execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
+
+#### On a Linux System
+```
+export DNNL_VERBOSE=1
+```
+#### On a Windows* System
+```
+set DNNL_VERBOSE=1
+```
 
 ### Example of Output
 

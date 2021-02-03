@@ -1,13 +1,13 @@
 {
  "guid": "028AE3ED-2896-4C56-9066-42AA5D5FA973",
- "name": "oneDNN Getting Started",
- "categories": ["Toolkit/Intel® oneAPI Base Toolkit/oneDNN"],
- "description": "Basic oneDNN programming model for both Intel CPU and GPU.",
+ "name": "Getting Started",
+ "categories": ["Toolkit/oneAPI Libraries/oneDNN"],
+ "description": "Basic Intel® oneDNN programming model for both Intel® CPU and GPU",
  "toolchain": ["dpcpp"],
  "languages": [{"cpp":{}}],
- "dependencies": ["oneDNN", "tbb"],
+ "dependencies": ["dnnl", "tbb"],
  "os": ["linux","windows"],
- "builder": ["ide","cmake"],
+ "builder": ["cli","cmake"],
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
 	"linux": [{
@@ -25,6 +25,8 @@
 	    {
 		"id": "gsg cpu",
 		"steps": [
+			"set CC=clang",
+			"set CXX=clang++",
 			"mkdir build_cpu",
                         "cd build_cpu",
                         "cmake -G Ninja ..",
@@ -35,6 +37,8 @@
 	    {
 		"id": "gsg gpu",
 		"steps": [
+			"set CC=clang",
+			"set CXX=clang++",
 			"mkdir build_gpu",
                         "cd build_gpu",
                         "cmake -G Ninja ..",

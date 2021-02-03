@@ -152,10 +152,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\kernel.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\host.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\kernel.h" />
+    <ClInclude Include="src\kernel.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

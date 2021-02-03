@@ -1,18 +1,13 @@
-# ISO2DFD sample
+﻿# `ISO2DFD` Sample
 
-ISO2DFD: Intel® oneAPI DPC++ Language Basics Using 
-2D-Finite-Difference-Wave Propagation
+ISO2DFD: Intel® oneAPI DPC++ Language Basics Using 2D-Finite-Difference-Wave Propagation
 
 The ISO2DFD sample refers to Two-Dimensional Finite-Difference Wave Propagation in Isotropic Media.  It is a two-dimensional stencil to simulate a wave propagating in a 2D isotropic medium and illustrates the basics of the DPC++ programming language using direct programming.
 
-A complete code walk-through for this sample can be found at:
-https://software.intel.com/en-us/articles/code-sample-two-dimensional-finite-difference-wave-propagation-in-isotropic-media-iso2dfd
+A complete code walk-through for this sample can be found [here](https://software.intel.com/en-us/articles/code-sample-two-dimensional-finite-difference-wave-propagation-in-isotropic-media-iso2dfd)
 
-For comprehensive instructions regarding DPC++ Programming, go to
-https://software.intel.com/en-us/oneapi-programming-guide
-and search based on relevant terms noted in the comments.
+For comprehensive instructions regarding DPC++ Programming, see the [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
-  
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
@@ -20,7 +15,6 @@ and search based on relevant terms noted in the comments.
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | How to offload the computation to GPU using Intel® oneAPI DPC++/C++ Compiler
 | Time to complete                  | 10 minutes
-
 
 ## Purpose
 
@@ -34,9 +28,7 @@ Using Data Parallel C++, the sample will explicitly run on the GPU as well as CP
 result. The output will include GPU device name. The results from the two devices are compared and, if 
 the sample ran correctly, report a success message. The output of the wavefield can be plotted using 
 the SU Seismic processing library, which  has utilities to display seismic wavefields and can be 
-downloaded from John Stockwell’s SeisUnix GitHub* (https://github.com/JohnWStockwellJr/SeisUnix/wiki/
-Seismic-Unix-install-on-Ubuntu)
-
+downloaded from [John Stockwell’s SeisUnix GitHub](https://https://github.com/JohnWStockwellJr/SeisUnix/wiki/Seismic-Unix-install-on-Ubuntu)
 
 ## Key implementation details
 
@@ -48,12 +40,20 @@ SYCL implementation explained.
 function called inside the kernel performs a computation (it updates a grid point specified by the 
 global ID variable) for a single time step.  
 
-
 ## License
 
-This code sample is licensed under MIT license.  
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ##  Building the `iso2dfd` Program for CPU and GPU
+
+> Note: if you have not already done so, set up your CLI environment by sourcing  the setvars script located in the root of your oneAPI installation. 
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
+> Linux User: . ~/intel/oneapi/setvars.sh  
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Include Files 
 
@@ -62,8 +62,8 @@ The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on y
 ### Running Samples In DevCloud
 
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, 
-FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI 
-Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+FPGA) as well whether to run in batch or interactive mode. For more information see the [Intel® oneAPI 
+Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
 Perform the following steps:
@@ -90,10 +90,10 @@ Perform the following steps:
     ```
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
-* Build the program using VS2017 or VS2019
-      Right click on the solution file and open using either VS2017 or VS2019 IDE.
-      Right click on the project in Solution explorer and select Rebuild.
-      From top menu select Debug -> Start without Debugging.
+- Build the program using VS2017 or VS2019
+    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+    - Right-click on the project in Solution Explorer and select Rebuild.
+    - From the top menu, select Debug -> Start without Debugging.
 
 ## Running the Sample
 ### Application Parameters 
@@ -109,8 +109,7 @@ You can  execute the code with different parameters. For example the following c
 	 n1 n2      : Grid sizes for the stencil
 	 Iterations : Number of timesteps.
 
-   * Find graphical output for sample execution in the online tutorial at:
-     https://software.intel.com/en-us/articles/code-sample-two-dimensional-finite-difference-wave-propagation-in-isotropic-media-iso2dfd
+   * Find graphical output for sample execution in the [online tutorial](https://software.intel.com/en-us/articles/code-sample-two-dimensional-finite-difference-wave-propagation-in-isotropic-media-iso2dfd)
 
 ### Example of Output 
 

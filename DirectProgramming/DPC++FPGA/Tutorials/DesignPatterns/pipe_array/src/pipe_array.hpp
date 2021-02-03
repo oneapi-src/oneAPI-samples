@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/intel/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <utility>
 
 #include "pipe_array_internal.hpp"
@@ -25,7 +25,7 @@ struct PipeArray {
                       idxs...>::IsValid(),
                   "Index out of bounds");
     using VerifiedPipe =
-        cl::sycl::intel::pipe<StructId<idxs...>, BaseTy, depth>;
+        cl::sycl::INTEL::pipe<StructId<idxs...>, BaseTy, depth>;
   };
 
   template <size_t... idxs>

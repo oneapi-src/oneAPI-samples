@@ -1,4 +1,4 @@
-# `Vectorize VecMatMult`
+﻿ # `Vectorize VecMatMult` Sample
 
 In this sample, you will use the auto-vectorizer to improve the performance 
 of the sample application. You will compare the performance of the 
@@ -8,7 +8,7 @@ serial version and the version that was compiled with the auto-vectorizer.
 |:---                               |:---
 | OS                                | macOS* with Xcode* installed 
 | Hardware							   | Intel-based Mac*
-| Software                          | Intel&reg; oneAPI Intel Fortran Compiler (beta)
+| Software                          | Intel&reg; oneAPI Intel Fortran Compiler
 | What you will learn               | Vectorization using Intel Fortran compiler
 | Time to complete                  | 15 minutes
 
@@ -19,12 +19,11 @@ that can be done in parallel and converts sequential operations
 to parallel operations by using the 
 Single Instruction Multiple Data (SIMD) instruction set.
 
-For the Intel® compiler, vectorization is the unrolling of a loop combined with the generation of packed SIMD instructions. Because the packed instructions operate on more than one data element at a time, the loop can execute more efficiently. It is sometimes referred to as auto-vectorization to emphasize that the compiler automatically identifies and optimizes suitable loops on its own.
+For the Intel® compiler, vectorization is the unrolling of a loop combined with the generation of packed SIMD instructions. Because the packed instructions operate on more than one data element simultaneously, the loop can execute more efficiently. It is sometimes referred to as auto-vectorization to emphasize that the compiler automatically identifies and optimizes suitable loops on its own.
 
-Intel® Advisor can assist with vectorization and show optimization report messages with your source code. See [Intel Advisor][1] for details.
-[1]: https://software.intel.com/content/www/us/en/develop/tools/advisor.html "Intel Avisor"
+Intel® Advisor can assist with vectorization and show optimization report messages with your source code. See [Intel Advisor](https://software.intel.com/content/www/us/en/develop/tools/advisor.html)
 
-Vectorization may call library routines that can result in additional performance gain on Intel microprocessors than on non-Intel microprocessors. The vectorization can also be affected by certain options, such as m or x.
+Vectorization may call library routines that can result in additional performance gain on Intel microprocessors than non-Intel microprocessors. The vectorization can also be affected by specific options, such as m or x.
 
 Vectorization is enabled with the compiler at optimization levels of O2 (default level) and higher for both Intel® microprocessors and non-Intel® microprocessors. Many loops are vectorized automatically, but in cases where this doesn't happen, you may be able to vectorize loops by making simple code modifications. In this sample, you will:
 
@@ -46,19 +45,22 @@ In this sample, you will use the following files:
 
 
 ## License  
-This code sample is licensed under MIT license  
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `Fortran Vectorization` sample
 
-This sample contains 2 Fortran source files, in subdirectory 'src/' under the main sample root directory oneAPI-samples/DirectProgramming/Fortran/vectorize-vecmatmult
+This sample contains 2 Fortran source files in the subdirectory 'src/' under the main sample root directory oneAPI-samples/DirectProgramming/Fortran/vectorize-vecmatmult
 
 1. matvec.f90 is a Fortran source file with a matrix-times-vector algorithm
 2. driver.f90 is a Fortran source file with the main program calling matvec
 
 ## Running the `Fortran Vectorization` sample
 
-### Step1 Establishing a Performance Baseline
+### Step 1 Establishing a Performance Baseline
 
 To set a performance baseline for the improvements that follow in this sample, compile your sources from the src directory with these compiler options:
 
@@ -82,7 +84,7 @@ Because vectorization is turned off with the **O1** option, the compiler does no
 
 Recompile the program and then execute MatVector. Record the new execution time. The reduction in time is mostly due to auto-vectorization of the inner loop at line 32 noted in the vectorization report **matvec.optrpt** :
 
-    Begin optimization report for: matvec_
+    Begin optimization report for matvec_
 
       Report from: Vector optimizations [vec]
 
@@ -123,13 +125,13 @@ Note
 
 Your line and column numbers may be different.
 
-**qopt-report=2** with **qopt-report-phase=vec,loop** returns a list that also includes loops that were not vectorized or multi-versioned, along with the reason that the compiler did not vectorize them or multi-version the loop.
+**qopt-report=2** with **qopt-report-phase=vec, loop** returns a list that also includes loops that were not vectorized or multi-versioned, along with the reason that the compiler did not vectorize them or multi-version the loop.
 
 Recompile your project with the **qopt-report=2** and **qopt-report-phase=vec,loop** options.
 
     ifort -real-size 64 -O2 -qopt-report-phase=vec -qopt-report=2 matvec.f90 driver.f90 -o MatVector
 
-The vectorization report matvec.optrpt indicates that the loop at line 33 in matvec.f90 did not vectorize because it is not the innermost loop of the loop nest.
+The vectorization report matvec.optrpt indicates that the loop at line 33 in matvec.f90 did not vectorize because it is not the loop nest's innermost loop.
 
     LOOP BEGIN at matvec.f90(27,3)
       remark #15542: loop was not vectorized: inner loop was already vectorized
@@ -148,26 +150,25 @@ The vectorization report matvec.optrpt indicates that the loop at line 33 in mat
 
       LOOP BEGIN at matvec.f90(32,6)
        <Remainder loop for vectorization>
-         remark #15335: remainder loop was not vectorized: vectorization possible but seems inefficient. Use vector always directive or -vec-threshold0 to override 
+         remark #15335: remainder loop was not vectorized: vectorization possible but seemed inefficient. Use vector always directive or -vec-threshold0 to override 
       LOOP END
     LOOP END
 
 Note: Your line and column numbers may be different.
 
 For more information on the **qopt-report** and **qopt-report-phase** compiler options, see the 
-[Compiler Options section][3] in the Intel® Fortran Compiler Developer Guide and Reference.
-[3]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/compiler-reference/compiler-options/alphabetical-list-of-compiler-options.html "Options"
+[Compiler Options section](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top/compiler-reference/compiler-options.html) in the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top.html)
 
 
 ### Step 3 Improving Performance by Aligning Data
 
-The vectorizer can generate faster code when operating on aligned data. In this activity you will improve the vectorizer performance by aligning the arrays a, b, and c in **driver.f90** on a 16-byte boundary so the vectorizer can use aligned load instructions for all arrays rather than the slower unaligned load instructions and can avoid runtime tests of alignment. Using the ALIGNED macro will insert an alignment directive for a, b, and c in driver.f90 with the following syntax:
+The vectorizer can generate faster code when operating on aligned data. In this activity, you will improve the vectorizer performance by aligning the arrays a, b, and c in **driver.f90** on a 16-byte boundary so the vectorizer can use aligned load instructions for all arrays rather than the slower unaligned load instructions and can avoid runtime tests of alignment. Using the ALIGNED macro will insert an alignment directive for a, b, and c in the driver.f90 with the following syntax:
 
     !dir$ attributes align : 16 :: a,b,c
 
-This instructs the compiler to create arrays that it are aligned on a 16-byte boundary, which should facilitate the use of SSE aligned load instructions.
+This code sample instructs the compiler to create arrays aligned on a 16-byte boundary, facilitating the use of SSE aligned load instructions.
 
-In addition, the column height of the matrix a needs to be padded out to be a multiple of 16 bytes, so that each individual column of a maintains the same 16-byte alignment. In practice, maintaining a constant alignment between columns is much more important than aligning the start of the arrays.
+The column height of the matrix needs to be padded out to be a multiple of 16 bytes, so that each column maintains the same 16-byte alignment. In practice, maintaining a constant alignment between columns is much more important than aligning the arrays' start.
 
 To derive the maximum benefit from this alignment, we also need to tell the vectorizer it can safely assume that the arrays in matvec.f90 are aligned by using the directive
 
@@ -184,7 +185,7 @@ Recompile the program after adding the ALIGNED macro to ensure consistently alig
 
 ### Step 4 Improving Performance with Interprocedural Optimization
 
-The compiler may be able to perform additional optimizations if it is able to optimize across source line boundaries. These may include, but are not limited to, function inlining. This is enabled with the **-ipo** option.
+The compiler may be able to perform additional optimizations if it can optimize across source line boundaries. These may include but are not limited to function inlining. This optimization is enabled with the **-ipo** option.
 
 Recompile the program using the **-ipo** option to enable interprocedural optimization.
 
@@ -192,10 +193,10 @@ Recompile the program using the **-ipo** option to enable interprocedural optimi
 
 Note that the vectorization messages now appear at the point of inlining in **driver.f90** (line 70) and this is found in the file **ipo_out.optrpt**.
 
-    LOOP BEGIN at driver.f90(73,16)
+    LOOP BEGIN at the driver.f90(73,16)
        remark #15541: loop was not vectorized: inner loop was already vectorized
 
-       LOOP BEGIN at matvec.f90(32,3) inlined into driver.f90(70,14)
+       LOOP BEGIN at matvec.f90(32,3) inlined into the driver.f90(70,14)
           remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
        LOOP END
 
@@ -216,7 +217,7 @@ Now, run the executable and record the execution time.
 
 ### Additional Exercises
 
-The previous examples made use of double precision arrays. They may be built instead with single precision arrays by changing the command-line option **-real-size 64** to **-real-size 32**. The non-vectorized versions of the loop execute only slightly faster the double precision version; however, the vectorized versions are substantially faster. This is because a packed SIMD instruction operating on a 32-byte vector register operates on eight single precision data elements at once instead of four double precision data elements.
+The previous examples made use of double-precision arrays. They may be built instead with single precision arrays by changing the command-line option **-real-size 64** to **-real-size 32**. The non-vectorized versions of the loop execute only slightly faster than the double-precision version; however, the vectorized versions are substantially faster. This is because a packed SIMD instruction operating on a 32-byte vector register operates on eight single-precision data elements at once instead of four double-precision data elements.
 
 Note: In the example with data alignment, you will need to set ROWBUF=3 to ensure 16-byte alignment for each row of the matrix a. Otherwise, the directive **!dir$ vector aligned** will cause the program to fail.
 

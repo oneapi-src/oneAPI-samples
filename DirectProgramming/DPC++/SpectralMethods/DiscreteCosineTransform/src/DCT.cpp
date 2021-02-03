@@ -27,7 +27,9 @@
 using namespace dpc_common;
 using namespace sycl;
 
+#ifdef PERF_NUM
 constexpr int num_tests = 5;
+#endif
 
 constexpr int block_dims = 8;
 constexpr int block_size = 64;
@@ -230,20 +232,20 @@ void ProcessImage(rgb* indataset, rgb* outdataset, int width, int height) {
     // Creating a transpose of DCT matrix
     MatrixTranspose(dct, dctinv);
 
-    buffer<rgb, 1> indata_buf((rgb*)indataset, range<1>(image_size));
-    buffer<rgb, 1> outdata_buf((rgb*)outdataset, range<1>(image_size));
-    buffer<float, 1> dct_buf((float*)dct, range<1>(block_size));
-    buffer<float, 1> dctinv_buf((float*)dctinv, range<1>(block_size));
+    buffer indata_buf(indataset, range<1>(image_size));
+    buffer outdata_buf(outdataset, range<1>(image_size));
+    buffer dct_buf(dct, range<1>(block_size));
+    buffer dctinv_buf(dctinv, range<1>(block_size));
 
     q.submit([&](handler& h) {
-      auto i_acc = indata_buf.get_access<access::mode::read>(h);
-      auto o_acc = outdata_buf.get_access<access::mode::read_write>(h);
-      auto d_acc = dct_buf.get_access<access::mode::read>(h);
-      auto di_acc = dctinv_buf.get_access<access::mode::read>(h);
+      auto i_acc = indata_buf.get_access(h,read_only);
+      auto o_acc = outdata_buf.get_access(h);
+      auto d_acc = dct_buf.get_access(h,read_only);
+      auto di_acc = dctinv_buf.get_access(h,read_only);
 
       // Processes individual 8x8 chunks in parallel
       h.parallel_for(
-          range<2>(width / block_dims, height / block_dims), [=](id<2> idx) {
+          range<2>(width / block_dims, height / block_dims), [=](auto idx) {
             int start_index = idx[0] * block_dims + idx[1] * block_dims * width;
             ProcessBlock(i_acc.get_pointer(), o_acc.get_pointer(),
                          d_acc.get_pointer(), di_acc.get_pointer(), start_index,

@@ -1,10 +1,10 @@
-# TBB-Async-Sycl Sample
-This sample illustrates how computational kernel can be split for execution between CPU and GPU using TBB Flow Graph asynchronous node and functional node. The Flow Graph asynchronous node uses SYCL to implement calculations on GPU while the functional node does CPU part of calculations. This tbb-async-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.  
+# `TBB-Async-Sycl` Sample
+This sample illustrates how the computational kernel can be split for execution between CPU and GPU using TBB Flow Graph asynchronous node and functional node. The Flow Graph asynchronous node uses SYCL to implement GPU calculations while the functional node does the CPU part of calculations. This tbb-async-sycl sample code is implemented using C++ and SYCL language for CPU and GPU.  
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler (beta) 
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
 | Time to complete                  | 15 minutes
 
@@ -15,7 +15,10 @@ The purpose of this sample is to show how during execution, a computational kern
 TBB Flow Graph and DPC++ implementation explained. 
 
 ## License  
-This code sample is licensed under MIT license
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the TBB-Async-Sycl Program
 
