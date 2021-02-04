@@ -1,12 +1,14 @@
 ---
 name: Request to add a oneAPI Sample
 about: Use this template to request to add a new Code Sample
-title: ''
+title: 'Request to Add a oneAPI Sample <YourSampleName>'
 labels: 'enhancement'
 assignees: '@JoeOster'
 ---
 
-# Summary
+## Summary
+This is a request for a new code Sample called `YourSampleName`
+
 ## Description
 Include a short Description of what the sample while Demonstrate and why it is important to the ecosystem.
 
