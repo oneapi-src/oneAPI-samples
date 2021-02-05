@@ -154,7 +154,7 @@ int64_t dgeblttrs(sycl::queue queue, int64_t n, int64_t nb, int64_t nrhs, double
         auto event1 = mkl::blas::trsm(queue, mkl::side::left, mkl::uplo::lower, mkl::transpose::nontrans, mkl::diag::unit, nb, nrhs, 1.0, &D(0, (n-2)*nb), nb, &F((n-2)*nb, 0), ldf);
         auto event2 = mkl::blas::gemm(queue, mkl::transpose::nontrans, mkl::transpose::nontrans, nb, nrhs, nb, -1.0, &DL(0, (n-2)*nb), nb, &F((n-2)*nb, 0), ldf, 1.0, &F((n-1)*nb, 0), ldf, {event1});
         auto event3 = mkl::blas::trsm(queue, mkl::side::left, mkl::uplo::lower, mkl::transpose::nontrans, mkl::diag::unit, nb, nrhs, 1.0, &D(0, (n-1)*nb), nb, &F((n-1)*nb, 0), ldf, {event2});
-        event1.wait_and_throw();
+        event3.wait_and_throw();
     }
 
     // Backward substitution      
@@ -179,5 +179,5 @@ int64_t dgeblttrs(sycl::queue queue, int64_t n, int64_t nb, int64_t nrhs, double
         event3.wait_and_throw();
     }
 
-    return 0; 
+    return info;
 }
