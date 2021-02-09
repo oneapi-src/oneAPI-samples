@@ -95,5 +95,5 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Contribute
 
-See [CONTRIBUTING](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md)
-for more information.
+See [GitHub Steps for Contribution](https://github.com/oneapi-src/oneAPI-samples/wiki/Github-Steps-for-Contribution)
+and [Contributing a New Sample](https://github.com/oneapi-src/oneAPI-samples/wiki/Contributing-a-New-Sample).
