@@ -36,7 +36,8 @@ constexpr int kM = 50;
 // do not use with unary operators, e.g., kMin(x++, y++)
 constexpr int Min(int X, int Y) { return (((X) < (Y)) ? (X) : (Y)); };
 
-// Forward declaration of kernel
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class Task;
 
 // This method represents the operation you perform on the loop-carried variable

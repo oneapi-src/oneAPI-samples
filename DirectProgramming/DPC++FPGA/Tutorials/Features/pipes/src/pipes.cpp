@@ -21,7 +21,8 @@ using ProducerToConsumerPipe = INTEL::pipe<  // Defined in the SYCL headers.
     int,                                     // The type of data in the pipe.
     4>;                                      // The capacity of the pipe.
 
-// Forward declare the kernel names to reduce name mangling
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class ProducerTutorial;
 class ConsumerTutorial;
 

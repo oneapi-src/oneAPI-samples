@@ -19,8 +19,9 @@ constexpr size_t kMaxVal = 512;
 constexpr size_t kNumTests = 64;
 constexpr size_t kMaxIter = 8;
 
-// the kernel class name
-// templating allows us to easily instantiate different versions of the kernel
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
+// Templating allows us to easily instantiate different versions of the kernel.
 template<int AttrType>
 class Kernel;
 

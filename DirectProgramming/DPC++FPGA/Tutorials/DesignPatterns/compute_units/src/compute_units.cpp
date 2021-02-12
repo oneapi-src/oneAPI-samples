@@ -21,8 +21,8 @@ constexpr size_t kEngines = 5;
 
 using Pipes = PipeArray<class MyPipe, float, 1, kEngines + 1>;
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class Source;
 class Sink;
 template <std::size_t ID> class ChainComputeUnit;
