@@ -22,29 +22,43 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
                     std::array<DBDecimal, 2>& high_line_count,
                     std::array<DBDecimal, 2>& low_line_count,
                     double& kernel_latency, double& total_latency) {
-  // setup the input buffers
+  // create space for the input buffers
   // LINEITEM table
-  buffer l_orderkey_buf(dbinfo.l.orderkey);
-  buffer l_shipmode_buf(dbinfo.l.shipmode);
-  buffer l_commitdate_buf(dbinfo.l.commitdate);
-  buffer l_shipdate_buf(dbinfo.l.shipdate);
-  buffer l_receiptdate_buf(dbinfo.l.receiptdate);
+  buffer<DBIdentifier,1> l_orderkey_buf(dbinfo.l.orderkey.size());
+  buffer<int,1> l_shipmode_buf(dbinfo.l.shipmode.size());
+  buffer<DBDate,1> l_commitdate_buf(dbinfo.l.commitdate.size());
+  buffer<DBDate,1> l_shipdate_buf(dbinfo.l.shipdate.size());
+  buffer<DBDate,1> l_receiptdate_buf(dbinfo.l.receiptdate.size());
 
   // ORDERS table
-  buffer o_orderkey_buf(dbinfo.o.orderkey);
-  buffer o_orderpriority_buf(dbinfo.o.orderpriority);
+  buffer<DBIdentifier,1> o_orderkey_buf(dbinfo.o.orderkey.size());
+  buffer<int,1> o_orderpriority_buf(dbinfo.o.orderpriority.size());
+
+  // a convenient lamda to make the explicit copy code less verbose
+  auto submit_copy = [&](auto& buf, const auto& host_data) {
+    return q.submit([&](handler &h) {
+      accessor accessor(buf, h, write_only, noinit);
+      h.copy(host_data, accessor);
+    });
+  };
+
+  // start the transers of the input buffers
+  event copy_l_orderkey = submit_copy(l_orderkey_buf, dbinfo.l.orderkey.data());
+  event copy_l_shipmode = submit_copy(l_shipmode_buf, dbinfo.l.shipmode.data());
+  event copy_l_commitdate = 
+    submit_copy(l_commitdate_buf, dbinfo.l.commitdate.data());
+  event copy_l_shipdate = submit_copy(l_shipdate_buf, dbinfo.l.shipdate.data());
+  event copy_l_receiptdate = 
+    submit_copy(l_receiptdate_buf, dbinfo.l.receiptdate.data());
+
+  event copy_o_orderkey =
+    submit_copy(o_orderkey_buf, dbinfo.o.orderkey.data());
+  event copy_o_orderpriority = 
+    submit_copy(o_orderpriority_buf, dbinfo.o.orderpriority.data());
 
   // setup the output buffers
-  // constructing the output buffers WITHOUT a backed host pointer allows
-  // us to avoid copying the output data from the host to the device before
-  // launching the kernels. Using the set_final_data() function tells the
-  // runtime to copy the contents of the buffer from the device to the given
-  // host pointer (the argument to set_final_data) upon buffer destruction.
-  buffer<DBDecimal, 1> high_line_count_buf(high_line_count.size());
-  high_line_count_buf.set_final_data(high_line_count.data());
-
-  buffer<DBDecimal, 1> low_line_count_buf(low_line_count.size());
-  low_line_count_buf.set_final_data(low_line_count.data());
+  buffer high_line_count_buf(high_line_count);
+  buffer low_line_count_buf(low_line_count);
 
   // start timer
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
@@ -52,6 +66,10 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// LineItemProducer Kernel: produce the LINEITEM table
   auto produce_lineitem_event = q.submit([&](handler& h) {
+    // this kernel depends on the memory transfer for the LINEITEM table
+    h.depends_on({copy_l_orderkey, copy_l_shipmode, copy_l_commitdate,
+                  copy_l_shipdate, copy_l_receiptdate});
+
     size_t l_rows = dbinfo.l.rows;
     accessor l_orderkey_accessor(l_orderkey_buf, h, read_only);
     accessor l_shipmode_accessor(l_shipmode_buf, h, read_only);
@@ -87,6 +105,9 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// OrdersProducer Kernel: produce the ORDERS table
   auto produce_orders_event = q.submit([&](handler& h) {
+    // this kernel depends on the memory transfer for the ORDERS table
+    h.depends_on({copy_o_orderkey, copy_o_orderpriority});
+
     size_t o_rows = dbinfo.o.rows;
     accessor o_orderkey_accessor(o_orderkey_buf, h, read_only);
     accessor o_orderpriority_accessor(o_orderpriority_buf, h, read_only);
@@ -115,7 +136,9 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// Join kernel
   auto join_event = q.submit([&](handler& h) {
-    // read accessors
+    // this kernel doesn't depend on any memory copies; all data is fed
+    // to/from it via SYCL pipes (see the README)
+
     int o_rows = dbinfo.o.rows;
     int l_rows = dbinfo.l.rows;
 

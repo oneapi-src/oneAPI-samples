@@ -189,7 +189,7 @@ Device name: pac_a10 : Intel PAC Platform (pac_f000000)
 Generating 32768 random matrices
 Running QR decomposition of 32768 matrices repeatedly
    Total duration:   41.3763 s
-Throughput: 25.3425k matrices/s
+Throughput: 23.9941k matrices/s
 Verifying results on matrix 0 16384 32767
 PASSED
 ```
@@ -201,7 +201,7 @@ Device name: pac_s10 : Intel PAC Platform (pac_f100000)
 Generating 4096 random matrices
 Running QR decomposition of 4096 matrices repeatedly
    Total duration:   17.3197 s
-Throughput: 7.5678k matrices/s
+Throughput: 7.74676k matrices/s
 Verifying results on matrix 0 2048 4095
 PASSED
 ```
