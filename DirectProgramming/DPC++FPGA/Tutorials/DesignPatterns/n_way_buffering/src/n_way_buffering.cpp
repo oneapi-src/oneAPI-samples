@@ -42,6 +42,8 @@ constexpr int kNumRuns = 4;
 
 bool pass = true;
 
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class SimpleVpow;
 
 /*  Kernel function.

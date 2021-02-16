@@ -24,8 +24,8 @@ using ProducerToConsumerBeforePipe =
 using ProducerToConsumerAfterPipe =
     INTEL::pipe<class ProducerConsumerAfterPipe, float, 20>;
 
-// Forward declare the kernel names
-// (This reduces unwanted name mangling in the optimization report.)
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization report.
 class ProducerBeforeKernel;
 class ConsumerBeforeKernel;
 class ProducerAfterKernel;

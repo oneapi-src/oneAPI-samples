@@ -2,19 +2,12 @@
 #define __INTERSECTIONKERNEL_HPP__
 
 #include <CL/sycl.hpp>
-
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 
 // the kernel class names
 // templated on the version of the kernel
+// Best practice: forward declare the kernel names in the global scope
+// to reduce compiler name mangling in the optimization reports.
 template<int Version> class ProducerA;
 template<int Version> class ProducerB;
 template<int Version> class Worker;

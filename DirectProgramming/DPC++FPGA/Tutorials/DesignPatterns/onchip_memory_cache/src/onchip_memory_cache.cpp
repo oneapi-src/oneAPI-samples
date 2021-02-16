@@ -20,6 +20,8 @@ constexpr int kCacheDepth = 5;        // Depth of the cache.
 constexpr int kNumRuns = 2;           // runs twice to show the impact of cache
 constexpr double kNs = 1000000000.0;  // number of nanoseconds in a second
 
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template<bool use_cache>
 class Task;
 

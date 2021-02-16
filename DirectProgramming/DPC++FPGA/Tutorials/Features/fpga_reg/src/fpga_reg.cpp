@@ -18,12 +18,12 @@ using namespace std;
 
 // Artificial coefficient and offset data for our math function
 constexpr size_t kSize = 64;
-constexpr int kCoeff[kSize] = {
+constexpr std::array<int, kSize> kCoeff = {
             1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16,
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
             33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
             49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64};
-constexpr int kOffset[kSize] = {
+constexpr std::array<int, kSize> kOffset = {
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
             49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64,
             33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
@@ -34,10 +34,7 @@ constexpr int kOffset[kSize] = {
 vector<int> GoldenResult(vector<int> vec) {
 
   // The coefficients will be modified with each iteration of the outer loop.
-  int coeff[kSize];
-  for (size_t i = 0; i < kSize; i++) {
-    coeff[i] = kCoeff[i];
-  }
+  std::array coeff = kCoeff;
 
   for (int &val : vec) {
     // Do some arithmetic
@@ -60,8 +57,8 @@ vector<int> GoldenResult(vector<int> vec) {
   return vec;
 }
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class SimpleMath;
 
 void RunKernel(const device_selector &selector,
@@ -88,10 +85,7 @@ void RunKernel(const device_selector &selector,
 
         // Force the compiler to implement the coefficient array in FPGA
         // pipeline registers rather than in on-chip memory.
-        [[intel::fpga_register]] int coeff[kSize];
-        for (size_t i = 0; i < kSize; i++) {
-          coeff[i] = kCoeff[i];
-        }
+        [[intel::fpga_register]] std::array coeff = kCoeff;
 
         // The compiler will pipeline the outer loop.
         for (size_t i = 0; i < input_size; ++i) {
