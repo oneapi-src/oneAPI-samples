@@ -18,12 +18,12 @@ In this design, we accelerate four TPC-H style queries as *offload accelerators*
 
 The performance data below was gathered using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) with a database scale factor (SF) of 1. Please see the [Database files](#database-files) section for more information on generating data for a scale factor of 1.
 
-| Query | Approximate Data Transfer Time (ms) | Measured Total Query Latency (ms)
+| Query | Approximate Data Transfer Time (ms) | Measured Total Query Processing Time (ms)
 |:---   |:---                                 |:--- 
-| 1     | 28                                  | 31
-| 9     | 37                                  | 39
-| 11    | 5                                   | 16
-| 12    | 16                                  | 19
+| 1     | 35                                  | 39
+| 9     | 37                                  | 43
+| 11    | 5                                   | 11
+| 12    | 16                                  | 26
 
 ## Purpose
 The [TPC-H database benchmark](http://www.tpc.org/tpch/) is an 8-table database and set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four of these queries, *similar* to TPC-H queries 1, 9, 11, and 12, can be accelerated using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) and oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are are combined in different ways to build the four queries. For more information on the TPC-H benchmark, you can visit the [TPC-H website](http://www.tpc.org/tpch/).
@@ -212,8 +212,7 @@ You should see the following output in the console:
     Validating query 1 test results
     Running Q1 within 90 days of 1998-12-1
     Validating query 1 test results
-    Average Kernel latency: 3.76935 ms
-    Average Host latency: 32.2986 ms
+    Processing time: 40.2986 ms
     PASSED
     ```
     NOTE: the scale factor 1 (SF=1) database files (`../data/sf1`) are **not** shipped with this reference design. Please refer to the [Database files](#database-files) section for information on how to generate these files yourself.

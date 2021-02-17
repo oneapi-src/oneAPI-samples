@@ -19,8 +19,8 @@ set(FPGA_TARGET_LL ${TARGET_NAME}_ll.fpga)
 set(REPORTS_TARGET ${TARGET_NAME}_report)
 set(REPORTS_TARGET_LL ${TARGET_NAME}_ll_report)
 
-set(HIGH_BW_SEED "-Xsseed=22")
-set(LL_SEED "-Xsseed=22")
+set(HIGH_BW_SEED "-Xsseed=8")
+set(LL_SEED "-Xsseed=33")
 
 set (IS_A10 1)
 
