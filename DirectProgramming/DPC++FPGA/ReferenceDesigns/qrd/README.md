@@ -225,6 +225,9 @@ PASSED
 
 NOTE: The values for `seed`, `FIXED_ITERATIONS`, `ROWS_COMPONENT`, `COLS_COMPONENT` are set according to the board being targeted.
 
+### Host Limitations
+The QRD demo host is not optimized for a very large number of matrices. Running the QRD executable with number of matrices that occupy more memory than what is physically available on the host machine will result in system performance degradation due to virtual memory thrashing by the operating system.
+
 ### Performance disclaimers
 
 Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
