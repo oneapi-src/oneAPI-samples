@@ -116,7 +116,7 @@ void DoOneIterationAPI(queue& q, size_t buffers, size_t buffer_count,
   // cases, this may not be possible and an infinite loop may be required (i.e.
   // read from the Producer pipe and produce to the Consumer pipe, forever).
   auto kernel_event = q.submit([&](handler& h) {
-    h.single_task<APIKernel>([=]() {
+    h.single_task<APIKernel>([=] {
       // process ALL of the possible data
       for (size_t i = 0; i < total_count; i++) {
         // read from the producer pipe

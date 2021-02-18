@@ -94,24 +94,24 @@ int main(int argc, char* argv[]) {
   // check the reps
   if (reps <= 0) {
     std::cerr << "ERROR: 'reps' must be greater than 0\n";
-    return 1;
+    std::terminate();
   }
 
   // check the buffer_count
   if (buffer_count <= 0) {
     std::cerr << "ERROR: 'buffer_count' must be greater than 0\n";
-    return 1;
+    std::terminate();
   }
 
   // check the number of iterations
   if (iterations <= 0) {
     std::cerr << "ERROR: 'iterations' must be positive\n";
-    return 1;
+    std::terminate();
   }
 
   if (threads <= 0) {
     std::cerr << "ERROR: 'threads' must be positive\n";
-    return 1;
+    std::terminate();
   }
 
   // print info
@@ -133,7 +133,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     // queue properties to enable profiling
-    auto prop_list = property_list{ property::queue::enable_profiling() };
+    property_list prop_list { property::queue::enable_profiling() };
 
     // create the device queue
     queue q(selector, dpc_common::exception_handler, prop_list);
@@ -143,7 +143,7 @@ int main(int argc, char* argv[]) {
     if (!d.get_info<info::device::usm_host_allocations>()) {
       std::cerr << "ERROR: The selected device does not support USM host"
                 << " allocations\n";
-      return 1;
+      std::terminate();
     }
 
     ///////////////////////////////////////////////////////////////////////////
