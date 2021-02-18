@@ -34,7 +34,7 @@ event SubmitProducer(queue &q, T* in_ptr, size_t size) {
     h.single_task<P>([=]() [[intel::kernel_args_restrict]] {
       host_ptr<T> in(in_ptr);
       for (size_t i = 0; i < size; i++) {
-        T data = *(in + i);
+        auto data = in[i];
         InPipe::write(data);
       }
     });
@@ -60,7 +60,7 @@ event SubmitConsumer(queue &q, T* out_ptr, size_t size) {
     h.single_task<C>([=]() [[intel::kernel_args_restrict]] {
       host_ptr<T> out(out_ptr);
       for (size_t i = 0; i < size; i++) {
-        T data = OutPipe::read();
+        auto data = OutPipe::read();
         *(out + i) = data;
       }
     });
@@ -81,7 +81,7 @@ event SubmitSinglePipeWorker(queue &q, size_t size) {
   auto e = q.submit([&](handler& h) {
     h.single_task<KernelClass>([=]() [[intel::kernel_args_restrict]] {
       for (size_t i = 0; i < size; i++) {
-        T data = InPipe::read();
+        auto data = InPipe::read();
         // computation could be placed here
         OutPipe::write(data);
       }

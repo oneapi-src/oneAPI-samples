@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     // queue properties to enable profiling
-    auto prop_list = property_list{ property::queue::enable_profiling() };
+    property_list prop_list { property::queue::enable_profiling() };
 
     // create the device queue
     queue q(selector, dpc_common::exception_handler, prop_list);
@@ -155,16 +155,16 @@ int main(int argc, char* argv[]) {
     if (!d.get_info<info::device::usm_host_allocations>()) {
       std::cerr << "ERROR: The selected device does not support USM host"
                 << " allocations\n";
-      return 1;
+      std::terminate();
     }
 
     // the USM input and output data
     Type *in, *out;
-    if ((in = malloc_host<Type>(total_count, q)) == NULL) {
+    if ((in = malloc_host<Type>(total_count, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'in'\n";
       std::terminate();
     }
-    if ((out = malloc_host<Type>(total_count, q)) == NULL) {
+    if ((out = malloc_host<Type>(total_count, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'out'\n";
       std::terminate();
     }
@@ -178,7 +178,7 @@ int main(int argc, char* argv[]) {
     std::generate_n(in, total_count, [] { return Type(rand() % 100); });
 
     // a lambda function to validate the results
-    auto validate_results = [&]() {
+    auto validate_results = [&] {
       for (size_t i = 0; i < total_count; i++) {
         auto comp = (in[i] == out[i]);
         for (auto j = 0; j < comp.get_count(); j++) {
