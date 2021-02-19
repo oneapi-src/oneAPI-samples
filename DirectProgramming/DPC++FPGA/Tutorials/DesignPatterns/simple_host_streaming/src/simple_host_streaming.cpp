@@ -104,25 +104,25 @@ int main(int argc, char* argv[]) {
   // check the chunks
   if (chunks <= 0) {
     std::cerr << "ERROR: 'chunks' must be greater than 0\n";
-    return 1;
+    std::terminate();
   }
 
   // check the chunk size
   if (chunk_count <= 0) {
     std::cerr << "ERROR: 'chunk_count' must be greater than 0\n";
-    return 1;
+    std::terminate();
   }
 
   // check inflight_kernels
   if (inflight_kernels <= 0) {
     std::cerr << "ERROR: 'inflight_kernels' must be positive\n";
-    return 1;
+    std::terminate();
   }
 
   // check the number of iterations
   if (iterations <= 0) {
     std::cerr << "ERROR: 'iterations' must be positive\n";
-    return 1;
+    std::terminate();
   }
 
   // compute the total number of elements
