@@ -21,7 +21,6 @@ This tutorial demonstrates how to optimize a full system design that streams dat
 
 Before starting this tutorial, we recommend first reviewing the **Simple Host Streaming** (simple_host_streaming), **Double Buffering** (double_buffering), and **N-Way Buffering** (n_way_buffering) FPGA tutorials. The concepts explained in these tutorials will be used in this tutorial to create a highly optimized heterogeneous design. This tutorial also assumes that the reader has a basic understanding of multi-threaded C++ programming. More information on C++ multi-threading programming can be found [here](http://www.cplusplus.com/reference/multithreading/).
 
-## Tutorial Design
 ### Overview
 In this tutorial, we will create a design where a *Producer* (running on the CPU) produces data into USM host allocations, a *Kernel* (running on the FPGA) processes this data and produces output into host allocations, and a *Consumer* (running on the CPU) consumes the data. Data is shared between the host and FPGA device via host pointers (pointers to USM host allocations).
 
@@ -94,7 +93,9 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
- 
+
+## Building the `buffered_host_streaming` Tutorial
+
 ### Running Samples in DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) as well as whether to run in batch or interactive mode. For more information see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
  
