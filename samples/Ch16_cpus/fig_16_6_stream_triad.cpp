@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
   }
   std::cout << "Results are correct!\n\n";
 
-  int triad_bytes = 3 * sizeof(double) * array_size;
+  size_t triad_bytes = 3 * sizeof(double) * array_size;
   std::cout << "Triad Bytes: " << triad_bytes << "\n";
   std::cout << "Time in sec (fastest run): " << min_time * 1.0E-9 << "\n";
 
