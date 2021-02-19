@@ -167,4 +167,3 @@ class Date {
 };
 
 #endif /* __DATE_HPP__ */
-

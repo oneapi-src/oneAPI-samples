@@ -5,6 +5,9 @@
   demonstates the sort of code changes the profiler data can guide.
   The main content of this sample is in the README file.
 */
+
+#include <numeric>
+
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 

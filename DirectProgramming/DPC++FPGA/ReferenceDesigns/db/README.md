@@ -1,7 +1,9 @@
 ﻿# Database Query Acceleration
 This reference design demonstrates how to accelerate [TPC-H](http://www.tpc.org/tpch/)-like database queries on an FPGA.
 
-***Documentation***: The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)  provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. 
+***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
+The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
+The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
  
 | Optimized for                     | Description
 ---                                 |---
@@ -18,12 +20,12 @@ In this design, we accelerate four TPC-H style queries as *offload accelerators*
 
 The performance data below was gathered using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) with a database scale factor (SF) of 1. Please see the [Database files](#database-files) section for more information on generating data for a scale factor of 1.
 
-| Query | Approximate Data Transfer Time (ms) | Measured Total Query Latency (ms)
+| Query | Approximate Data Transfer Time (ms) | Measured Total Query Processing Time (ms)
 |:---   |:---                                 |:--- 
-| 1     | 28                                  | 31
-| 9     | 37                                  | 39
-| 11    | 5                                   | 16
-| 12    | 16                                  | 19
+| 1     | 35                                  | 39
+| 9     | 37                                  | 43
+| 11    | 5                                   | 11
+| 12    | 16                                  | 26
 
 ## Purpose
 The [TPC-H database benchmark](http://www.tpc.org/tpch/) is an 8-table database and set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four of these queries, *similar* to TPC-H queries 1, 9, 11, and 12, can be accelerated using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) and oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are are combined in different ways to build the four queries. For more information on the TPC-H benchmark, you can visit the [TPC-H website](http://www.tpc.org/tpch/).
@@ -53,7 +55,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Code Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
 
@@ -212,8 +214,7 @@ You should see the following output in the console:
     Validating query 1 test results
     Running Q1 within 90 days of 1998-12-1
     Validating query 1 test results
-    Average Kernel latency: 3.76935 ms
-    Average Host latency: 32.2986 ms
+    Processing time: 40.2986 ms
     PASSED
     ```
     NOTE: the scale factor 1 (SF=1) database files (`../data/sf1`) are **not** shipped with this reference design. Please refer to the [Database files](#database-files) section for information on how to generate these files yourself.

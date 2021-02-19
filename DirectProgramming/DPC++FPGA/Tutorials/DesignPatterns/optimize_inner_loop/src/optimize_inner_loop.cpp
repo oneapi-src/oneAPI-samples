@@ -3,9 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+#include <algorithm>
 #include <array>
 #include <iomanip>
 #include <iostream>
+#include <numeric>
 #include <random>
 #include <type_traits>
 

@@ -1,7 +1,11 @@
 # GZIP Compression
 Reference design demonstrating high-performance GZIP compression on FPGA.
  
-***Documentation***: The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. Additional reference material specific to this GZIP implementation is provided in the References section of this README.
+***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
+The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
+The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. <br>
+Additional reference material specific to this GZIP implementation is provided in the References section of this README.
+
  
 | Optimized for                     | Description
 ---                                 |---
@@ -12,8 +16,7 @@ Reference design demonstrating high-performance GZIP compression on FPGA.
 | Time to complete                  | 1 hr (not including compile time)
  
  
-**Performance**
-Please refer to the performance disclaimer at the end of this README.
+***Performance***: Please refer to the performance disclaimer at the end of this README.
 
 | Device                                                | Throughput
 |:---                                                   |:---
@@ -60,7 +63,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
  
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
  
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
  
@@ -195,7 +198,7 @@ PASSED
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsparallel=2` | Uses two cores when compiling the bitstream through Quartus
-`-Xsseed=22` | Uses seed 22 (seed 22 for Low latency Variant) during Quartus, yields slightly higher fmax
+`-Xsseed=8` | Uses seed 8 (seed 33 for Low latency Variant) during Quartus, yields slightly higher fmax
 `-Xsnum-reorder=6` | On Intel Stratix® 10 SX only, specify a wider data path for read data from global memory 
 `-Xsopt-arg="-nocaching"` | Specifies that cached LSUs should not be used.
 `-DNUM_ENGINES=<1|2>` | Specifies that 1 GZIP engine should be compiled when targeting Intel Arria® 10 GX and two engines when targeting Intel Stratix® 10 SX
@@ -205,11 +208,11 @@ PASSED
 
 Tests document the performance of components on a particular test on a specific system. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
 
-Performance results are based on testing as of July 29, 2020, and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
+Performance results are based on testing as of October 27, 2020 (using tool version 2021.1), and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
 
 Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](www.intel.com).
 
-Intel measured the performance on July 29, 2020
+Intel measured the performance on October 27, 2020 (using tool version 2021.1).
 
 Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
 
