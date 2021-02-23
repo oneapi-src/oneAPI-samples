@@ -451,7 +451,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       do {
         bool valid;
         FinalPipeData pipe_data = FinalPipe::read(valid);
-        done = pipe_data.done;
+        done = pipe_data.done && valid;
 
         const bool pipeDataValid = !pipe_data.done && valid && pipe_data.valid;
 
