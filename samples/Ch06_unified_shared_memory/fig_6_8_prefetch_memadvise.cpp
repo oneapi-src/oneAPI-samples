@@ -28,7 +28,7 @@ int main() {
 
   for (int b = 0; b < NUM_BLOCKS; b++) {
     Q.parallel_for(range{BLOCK_SIZE}, e,
-                   [=](id<1> i) { data[b * BLOCK_SIZE + i] += data[i]; });
+                   [=](id<1> i) { data[b * BLOCK_SIZE + i] += read_only_data[i]; });
     if ((b + 1) < NUM_BLOCKS) {
       // Prefetch next block
       e = Q.prefetch(data + (b + 1) * BLOCK_SIZE, BLOCK_SIZE);
