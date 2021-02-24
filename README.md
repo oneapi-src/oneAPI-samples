@@ -47,8 +47,8 @@ be stable.
 |...../DesignPatterns/shannonization                |FPGA |Tutorial explaining an optimization for removing computation from the critical path |
 |...../DesignPatterns/pipe_array                    |FPGA |Tutorial showing how to create an array of pipes  |
 |...../DesignPatterns/compute_units                 |FPGA |Tutorial showing how to efficiently make multiple copies of a kernel, called compute units |
-|...../DesignPatterns/explicit_data_movement        |FPGA |Tutorial showing how to use SYCL Universal Shared Memory (USM) to stream data between the host and FPGA device and achieve low latency while maintaining throughput. |
-|...../DesignPatterns/simple_host_streaming         |FPGA |Tutorial showing an alternative coding (explicit USM) in which data movement between host and device is controlled explicitly in code |
+|...../DesignPatterns/simple_host_streaming         |FPGA |Tutorial showing how to use SYCL Universal Shared Memory (USM) to stream data between the host and FPGA device and achieve low latency while maintaining throughput. |
+|...../DesignPatterns/explicit_data_movement        |FPGA |Tutorial showing an alternative coding (explicit USM) in which data movement between host and device is controlled explicitly in code |
 |...../Features/fpga_reg                            |FPGA |Tutorial demonstrating the use of the DPC++ FPGA power user extension intel::fpga_reg |
 |...../Features/kernel_args_restrict                |FPGA |Tutorial demonstrating how to avoid performance penalties due to kernel argument aliasing |
 |...../Features/loop_coalesce                       |FPGA |Tutorial demonstrating the DPC++ FPGA loop_coalesce attribute |
