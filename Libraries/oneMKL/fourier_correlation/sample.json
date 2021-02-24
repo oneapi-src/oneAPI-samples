@@ -1,8 +1,8 @@
 {
   "guid": "69F6B0A1-3046-467F-B4A7-E61F636BC5BF",
-  "name": "Fourier correlation",
+  "name": "Fourier Correlation",
   "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
-  "description": "Compute 1D Fourier correlation with Intel® oneMK",
+  "description": "Compute 1D Fourier correlation with Intel® oneMKL",
   "toolchain": [ "dpcpp" ],
   "dependencies": [ "mkl" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
