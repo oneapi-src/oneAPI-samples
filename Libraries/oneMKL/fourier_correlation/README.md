@@ -16,7 +16,9 @@ This sample shows how to implement the Fourier correlation algorithm:
 
     corr = IDFT(DFT(signal1) * CONJG(DFT(signal1)))
 
-where ``DFT`` is the discrete Fourier transform, ``IDFT`` is the inverse DFT, and ``CONJG`` is the complex conjugate. The algorithm can be composed using oneMKL, which contains optimized forward and backward transforms and complex conjugate multiplication functions. Therefore, the entire computation can be performed on the accelerator device.
+Where ``DFT`` is the discrete Fourier transform, ``IDFT`` is the inverse DFT, and ``CONJG`` is the complex conjugate. 
+
+The algorithm can be composed using oneMKL, which contains optimized forward and backward transforms and complex conjugate multiplication functions. Therefore, the entire computation can be performed on the accelerator device.
 
 ## Key Implementation Details
 In many applications, only the final correlation result matters, so this is all that has to be transferred from the device back to the host. In this example, two artificial signals will be created on the device, transformed in-place, then correlated. The host will retrieve the final result and report the optimal translation and correlation score.
@@ -39,12 +41,14 @@ Run `make` to build and run the sample. Two programs are generated: one that use
 You can remove all generated files with `make clean`.
 
 ### On a Windows System
-Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
+Run `nmake` to build and run the sample. 
 
-*Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
+Note: To removes temporary files, run `nmake clean`.
+
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming oneMKL compiler release.
 
 ### Example of Output
-If everything is working correctly, the program will generate two artificial 1D signals, cross-correlate them, and report the relative shift that gives the maximum correlation score:
+If everything is working correctly, the program will generate two artificial 1D signals, cross-correlate them, and report the relative shift that gives the maximum correlation score the output should be similar to this:
 ```
 ./fcorr_1d_buff 4096
 Running on: Intel(R) Graphics Gen9 [0x3e96]
