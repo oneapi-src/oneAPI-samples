@@ -66,7 +66,7 @@ set(EMULATOR_COMPILE_FLAGS "-g0 -fintelfpga  -DFPGA_EMULATOR -DNUM_ENGINES=${NUM
 set(EMULATOR_LINK_FLAGS -fintelfpga)
 
 # specify -MMD -fsycl-link-targets=... instead of -fintelfpga to workaround known issue; lower report quality 
-set(HARDWARE_COMPILE_FLAGS -MMD -fsycl-link-targets=spir64_fpga-unknown-unknown-sycldevice -c -DNUM_ENGINES=${NUM_ENGINES})
+set(HARDWARE_COMPILE_FLAGS -MMD -fintelfpga -c -DNUM_ENGINES=${NUM_ENGINES})
 
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 separate_arguments(USER_HARDWARE_FLAGS)
