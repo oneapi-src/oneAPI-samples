@@ -10,23 +10,23 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
-#include "PointPillars/PointPillarsConfig.hpp"
-#include "PointPillars/PointPillarsUtil.hpp"
-#include "PointPillars/inference/pointpillars.hpp"
-#include "PointPillars/operations/common.hpp"
+#include "pointpillars/pointpillars_config.hpp"
+#include "pointpillars/pointpillars_util.hpp"
+#include "pointpillars/pointpillars.hpp"
+#include "devicemanager/devicemanager.hpp"
 
-std::size_t readPointCloud(std::string const &fileName, std::vector<float> &points) {
-  if (!boost::filesystem::exists(fileName) || fileName.empty()) {
+std::size_t ReadPointCloud(std::string const &file_name, std::vector<float> &points) {
+  if (!boost::filesystem::exists(file_name) || file_name.empty()) {
     return 0;
   }
 
-  std::size_t numberOfPoints = 0;
+  std::size_t number_of_points = 0;
 
-  std::ifstream in(fileName);
+  std::ifstream in(file_name);
   std::string line;
-  bool parseData = false;
-  while (std::getline(in, line) && points.size() <= 4 * numberOfPoints) {
-    if (parseData) {
+  bool parse_data = false;
+  while (std::getline(in, line) && points.size() <= 4 * number_of_points) {
+    if (parse_data) {
       std::istringstream iss(line);
       float x, y, z, intensity;
       double timestamp;
@@ -38,13 +38,13 @@ std::size_t readPointCloud(std::string const &fileName, std::vector<float> &poin
       points.push_back(z);
       points.push_back(intensity);
     } else if (line.find("POINTS") != std::string::npos) {
-      numberOfPoints = atoll(line.substr(7).c_str());
+      number_of_points = atoll(line.substr(7).c_str());
     } else if (line.find("DATA") != std::string::npos) {
-      parseData = true;
+      parse_data = true;
     }
   }
 
-  return numberOfPoints;
+  return number_of_points;
 }
 
 int main(int argc, char *argv[]) {
@@ -68,60 +68,61 @@ int main(int argc, char *argv[]) {
   }
 
   if (vm.count("list")) {
-    getSyclDevices();
+    devicemanager::GetDevices();
     return 1;
   }
 
-  std::vector<cl::sycl::info::device_type> executionDevices;
+  std::vector<sycl::info::device_type> execution_devices;
 
   if (vm.count("cpu")) {
-    executionDevices.push_back(cl::sycl::info::device_type::cpu);
+    execution_devices.push_back(sycl::info::device_type::cpu);
   }
 
   if (vm.count("gpu")) {
-    executionDevices.push_back(cl::sycl::info::device_type::gpu);
+    execution_devices.push_back(sycl::info::device_type::gpu);
   }
 
-  if ((vm.count("host")) || executionDevices.empty()) {
-    executionDevices.push_back(cl::sycl::info::device_type::host);
+  if ((vm.count("host")) || execution_devices.empty()) {
+    execution_devices.push_back(sycl::info::device_type::host);
   }
 
   // Point Pillars initialization
-  dnn::PointPillarsConfig config;
-  std::vector<dnn::ObjectDetection> objectDetections;
+  pointpillars::PointPillarsConfig config;
+  std::vector<pointpillars::ObjectDetection> object_detections;
 
   // read point cloud
-  std::size_t numberOfPoints;
+  std::size_t number_of_points;
   std::vector<float> points;
-  numberOfPoints = readPointCloud("example.pcd", points);
+  number_of_points = ReadPointCloud("example.pcd", points);
 
-  if ((numberOfPoints == 0) || points.empty()) {
+  if ((number_of_points == 0) || points.empty()) {
     std::cout << "Unable to read point cloud file. Please put the point cloud file into the data/ folder." << std::endl;
-    return 1;
+    return -1;
   }
 
-  for (const auto &device : executionDevices) {
-    if (!changeDefaultSyclDevice(device)) {
+  for (const auto &device_type : execution_devices) {
+    if (!devicemanager::SelectDevice(device_type)) {
       std::cout << "\n\n";
       continue;
     }
 
-    dnn::PointPillars pointPillars(0.5f, 0.5f, config);
+    pointpillars::PointPillars point_pillars(0.5f, 0.5f, config);
 
-    std::chrono::high_resolution_clock::time_point tStartOneAPI = std::chrono::high_resolution_clock::now();
+    const auto start_time = std::chrono::high_resolution_clock::now();
     try {
-      pointPillars.detect(points.data(), numberOfPoints, objectDetections);
+      point_pillars.Detect(points.data(), number_of_points, object_detections);
     } catch (...) {
       std::cout << "Exception during PointPillars execution\n";
+      return -1;
     }
-    std::chrono::high_resolution_clock::time_point tEndOneAPI = std::chrono::high_resolution_clock::now();
+    const auto end_time = std::chrono::high_resolution_clock::now();
     std::cout << "Execution time: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(tEndOneAPI - tStartOneAPI).count() << "ms\n\n";
+              << std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count() << "ms\n\n";
 
-    std::cout << objectDetections.size() << " cars detected\n";
+    std::cout << object_detections.size() << " cars detected\n";
 
-    for (auto const &detection : objectDetections) {
-      std::cout << config.classes[detection.classId] << ": Probability = " << detection.classProbabilities[0]
+    for (auto const &detection : object_detections) {
+      std::cout << config.classes[detection.class_id] << ": Probability = " << detection.class_probabilities[0]
                 << " Position = (" << detection.x << ", " << detection.y << ", " << detection.z
                 << ") Length = " << detection.length << " Width = " << detection.width << "\n";
     }

@@ -17,24 +17,31 @@
 
 #pragma once
 
-namespace dnn {
+#include <CL/sycl.hpp>
+
+namespace pointpillars {
+
+/**
+ * PointPillar's Scatter.
+ * Converts learned features (output from PFE network = 1st CNN) from dense tensors
+ * to sparse pseudo image.
+ */
 class Scatter {
  private:
-  const int NUM_THREADS_;
-  const int MAX_NUM_PILLARS_;
-  const int GRID_X_SIZE_;
-  const int GRID_Y_SIZE_;
+  const int num_threads_;
+  const int max_num_pillars_;
+  const int grid_x_size_;
+  const int grid_y_size_;
 
  public:
   /**
   * @brief Constructor
-  * @param[in] NUM_THREADS The number of threads to launch kernel
-  * @param[in] MAX_NUM_PILLARS Maximum number of pillars
-  * @param[in] GRID_X_SIZE Number of pillars in x-coordinate
-  * @param[in] GRID_Y_SIZE Number of pillars in y-coordinate
-  * @details Captital variables never change after the compile
+  * @param[in] num_threads The number of threads to launch kernel
+  * @param[in] max_num_pillars Maximum number of pillars
+  * @param[in] grid_x_size Number of pillars in x-coordinate
+  * @param[in] grid_y_size Number of pillars in y-coordinate
   */
-  Scatter(const int NUM_THREADS, const int MAX_NUM_PILLARS, const int GRID_X_SIZE, const int GRID_Y_SIZE);
+  Scatter(const int num_threads, const int max_num_pillars, const int grid_x_size, const int grid_y_size);
 
   /**
   * @brief Call scatter kernel
@@ -45,6 +52,6 @@ class Scatter {
   * @param[out] scattered_feature Gridmap representation for pillars' feature
   * @details Allocate pillars in gridmap based on index(coordinates) information
   */
-  void doScatter(const int pillar_count, int *x_coors, int *y_coors, float *pfe_output, float *scattered_feature);
+  void DoScatter(const int pillar_count, int *x_coors, int *y_coors, float *pfe_output, float *scattered_feature);
 };
-}
+}  // namespace pointpillars

@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-#include "PointPillars/operations/scan.hpp"
+#include "pointpillars/scan.hpp"
 #include <CL/sycl.hpp>
-#include <dpct/dpct.hpp>
+#include "devicemanager/devicemanager.hpp"
 
-namespace dnn {
+namespace pointpillars {
 
-void scan_x(int *output, const int *input, int n, sycl::nd_item<3> item_ct1, uint8_t *dpct_local) {
-  auto temp = (int *)dpct_local;  // allocated on invocation
+void ScanXKernel(int *output, const int *input, int n, sycl::nd_item<3> item_ct1, uint8_t *local) {
+  auto temp = (int *)local;  // allocated on invocation
   int thid = item_ct1.get_local_id(2);
   int bid = item_ct1.get_group(2);
   int bdim = item_ct1.get_local_range().get(2);
@@ -31,8 +31,7 @@ void scan_x(int *output, const int *input, int n, sycl::nd_item<3> item_ct1, uin
   temp[2 * thid] = input[bid * bdim * 2 + 2 * thid];  // load input into shared memory
   temp[2 * thid + 1] = input[bid * bdim * 2 + 2 * thid + 1];
 
-  for (int d = n >> 1; d > 0; d >>= 1)  // build sum in place up the tree
-  {
+  for (int d = n >> 1; d > 0; d >>= 1) {  // build sum in place up the tree
     item_ct1.barrier();
     if (thid < d) {
       int ai = offset * (2 * thid + 1) - 1;
@@ -43,9 +42,8 @@ void scan_x(int *output, const int *input, int n, sycl::nd_item<3> item_ct1, uin
   }
   if (thid == 0) {
     temp[n - 1] = 0;
-  }                               // clear the last element
-  for (int d = 1; d < n; d *= 2)  // traverse down tree & build scan
-  {
+  }                                 // clear the last element
+  for (int d = 1; d < n; d *= 2) {  // traverse down tree & build scan
     offset >>= 1;
     item_ct1.barrier();
     if (thid < d) {
@@ -66,8 +64,8 @@ void scan_x(int *output, const int *input, int n, sycl::nd_item<3> item_ct1, uin
   }
 }
 
-void scan_y(int *output, const int *input, int n, sycl::nd_item<3> item_ct1, uint8_t *dpct_local) {
-  auto temp = (int *)dpct_local;  // allocated on invocation
+void ScanYKernel(int *output, const int *input, int n, sycl::nd_item<3> item_ct1, uint8_t *local) {
+  auto temp = (int *)local;  // allocated on invocation
   int thid = item_ct1.get_local_id(2);
   int bid = item_ct1.get_group(2);
   int bdim = item_ct1.get_local_range().get(2);
@@ -75,8 +73,7 @@ void scan_y(int *output, const int *input, int n, sycl::nd_item<3> item_ct1, uin
   int offset = 1;
   temp[2 * thid] = input[bid + 2 * thid * gdim];  // load input into shared memory
   temp[2 * thid + 1] = input[bid + 2 * thid * gdim + gdim];
-  for (int d = n >> 1; d > 0; d >>= 1)  // build sum in place up the tree
-  {
+  for (int d = n >> 1; d > 0; d >>= 1) {  // build sum in place up the tree
     item_ct1.barrier();
     if (thid < d) {
       int ai = offset * (2 * thid + 1) - 1;
@@ -87,9 +84,8 @@ void scan_y(int *output, const int *input, int n, sycl::nd_item<3> item_ct1, uin
   }
   if (thid == 0) {
     temp[n - 1] = 0;
-  }                               // clear the last element
-  for (int d = 1; d < n; d *= 2)  // traverse down tree & build scan
-  {
+  }                                 // clear the last element
+  for (int d = 1; d < n; d *= 2) {  // traverse down tree & build scan
     offset >>= 1;
     item_ct1.barrier();
     if (thid < d) {
@@ -110,70 +106,72 @@ void scan_y(int *output, const int *input, int n, sycl::nd_item<3> item_ct1, uin
   }
 }
 
-void scanX(int *devOutput, const int *devInput, int w, int h, int n) {
-  if (!dpct::get_current_device().is_cpu()) {
+void ScanX(int *dev_output, const int *dev_input, int w, int h, int n) {
+  sycl::queue queue = devicemanager::GetCurrentQueue();
+  if (!devicemanager::GetCurrentDevice().is_cpu()) {
     // For host and GPU (due to worker limitations) we use a sequential
     // implementation
-    int *hostInput = new int[w * h];
-    int *hostOutput = new int[w * h];
-    dpct::get_default_queue().memcpy(hostInput, devInput, w * h * sizeof(int)).wait();
+    int *host_input = new int[w * h];
+    int *host_output = new int[w * h];
+    queue.memcpy(host_input, dev_input, w * h * sizeof(int)).wait();
 
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
         if (j == 0) {
-          hostOutput[i * w + j] = hostInput[i * w + j];
+          host_output[i * w + j] = host_input[i * w + j];
         } else {
-          hostOutput[i * w + j] = hostInput[i * w + j] + hostOutput[i * w + j - 1];
+          host_output[i * w + j] = host_input[i * w + j] + host_output[i * w + j - 1];
         }
       }
     }
 
-    dpct::get_default_queue().memcpy(devOutput, hostOutput, w * h * sizeof(int)).wait();
+    queue.memcpy(dev_output, host_output, w * h * sizeof(int)).wait();
   } else {
-    dpct::get_default_queue().submit([&](sycl::handler &cgh) {
-      sycl::accessor<uint8_t, 1, sycl::access::mode::read_write, sycl::access::target::local> dpct_local_acc_ct1(
+    queue.submit([&](sycl::handler &cgh) {
+      sycl::accessor<uint8_t, 1, sycl::access::mode::read_write, sycl::access::target::local> local_acc_ct1(
           sycl::range<1>(n * sizeof(int)), cgh);
 
       cgh.parallel_for(
           sycl::nd_range<3>(sycl::range<3>(1, 1, h) * sycl::range<3>(1, 1, w / 2), sycl::range<3>(1, 1, w / 2)),
           [=](sycl::nd_item<3> item_ct1) {
-            scan_x(devOutput, devInput, n, item_ct1, dpct_local_acc_ct1.get_pointer());
+            ScanXKernel(dev_output, dev_input, n, item_ct1, local_acc_ct1.get_pointer());
           });
     });
   }
 }
 
-void scanY(int *devOutput, const int *devInput, int w, int h, int n) {
-  if (!dpct::get_current_device().is_cpu()) {
+void ScanY(int *dev_output, const int *dev_input, int w, int h, int n) {
+  sycl::queue queue = devicemanager::GetCurrentQueue();
+  if (!devicemanager::GetCurrentDevice().is_cpu()) {
     // For host and GPU (due to worker limitations) we use a sequential
     // implementation
-    int *hostInput = new int[w * h];
-    int *hostOutput = new int[w * h];
-    dpct::get_default_queue().memcpy(hostInput, devInput, w * h * sizeof(int)).wait();
+    int *host_input = new int[w * h];
+    int *host_output = new int[w * h];
+    queue.memcpy(host_input, dev_input, w * h * sizeof(int)).wait();
 
     for (int i = 0; i < w; i++) {
       for (int j = 0; j < h; j++) {
         if (j == 0) {
-          hostOutput[i + j * w] = hostInput[i + j * w];
+          host_output[i + j * w] = host_input[i + j * w];
         } else {
-          hostOutput[i + j * w] = hostInput[i + j * w] + hostOutput[i + (j - 1) * w];
+          host_output[i + j * w] = host_input[i + j * w] + host_output[i + (j - 1) * w];
         }
       }
     }
 
-    dpct::get_default_queue().memcpy(devOutput, hostOutput, w * h * sizeof(int)).wait();
+    queue.memcpy(dev_output, host_output, w * h * sizeof(int)).wait();
   } else {
-    dpct::get_default_queue().submit([&](sycl::handler &cgh) {
-      sycl::accessor<uint8_t, 1, sycl::access::mode::read_write, sycl::access::target::local> dpct_local_acc_ct1(
+    queue.submit([&](sycl::handler &cgh) {
+      sycl::accessor<uint8_t, 1, sycl::access::mode::read_write, sycl::access::target::local> local_acc_ct1(
           sycl::range<1>(n * sizeof(int)), cgh);
 
       cgh.parallel_for(
           sycl::nd_range<3>(sycl::range<3>(1, 1, w) * sycl::range<3>(1, 1, h / 2), sycl::range<3>(1, 1, h / 2)),
           [=](sycl::nd_item<3> item_ct1) {
-            scan_y(devOutput, devInput, n, item_ct1, dpct_local_acc_ct1.get_pointer());
+            ScanYKernel(dev_output, dev_input, n, item_ct1, local_acc_ct1.get_pointer());
           });
     });
   }
 }
 
-}  // namespace dnn
+}  // namespace pointpillars

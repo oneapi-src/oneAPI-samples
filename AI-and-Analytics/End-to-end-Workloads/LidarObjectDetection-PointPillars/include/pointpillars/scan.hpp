@@ -16,11 +16,26 @@
  */
 
 #pragma once
-#include "PointPillars/operations/common.hpp"
+#include <CL/sycl.hpp>
+#include <cstdint>
 
-namespace dnn {
-void maskAnchors(const float *devAnchorsPx, const float *devAnchorsPy, const int *devPillarMap, int *devAnchorMask,
-                 const float *devAnchorsRad, const float minXRange, const float minYRange, const float pillarXSize,
-                 const float pillarYSize, const int gridXSize, const int gridYSize, const int C, const int R,
-                 const int H, const int W);
-}  // namespace dnn
+namespace pointpillars {
+
+// Prefix sum in 2D coordinates
+//
+//          X--->
+//            W
+//  Y    o-------------
+//  |    |
+//  |  H |
+//  v    |
+//       |
+//
+
+// Prefix in x-direction
+void ScanX(int *dev_output, const int *dev_input, int w, int h, int n);
+
+// Prefix in y-direction
+void ScanY(int *dev_output, const int *dev_input, int w, int h, int n);
+
+}  // namespace pointpillars

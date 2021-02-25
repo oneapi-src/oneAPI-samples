@@ -10,7 +10,8 @@ This sample performs 3D object detection and classification using data (point cl
 | Time to complete                  | 15 minutes
 
 ## Purpose
-PointPillars is an AI algorithm, that uses LIDAR point clouds to detect and classify 3D objects in the sensor environment. For this purpose, the algorithm consists of 5 main steps. First a pre-processing of the point cloud is performed. This is realized with the help of kernels implemented in oneAPI. Afterward, the preprocessed data is used by a so-called Pillar Feature Extraction (PFE) CNN to create a 2D image-like representation of the sensor environment. For the inference, this sample uses the Intel® Distribution of OpenVINO™ toolkit. It follows another oneAPI processing step before a second CNN inference for the so-called Region Proposal Network (RPN) is executed using the OpenVINO™ toolkit. Finally, the output data (object list) is post-processed and filtered, which is again performed in oneAPI kernels.
+PointPillars is an AI algorithm, that uses LIDAR point clouds to detect and classify 3D objects in the sensor environment. For this purpose, the algorithm consists of 5 main steps. First a pre-processing of the point cloud is performed. This is realized with the help of kernels implemented in oneAPI. Afterward, the preprocessed data is used by a so-called Pillar Feature Extraction (PFE) CNN to create a 2D image-like representation of the sensor environment. For the inference, this sample uses the Intel® Distribution of OpenVINO™ toolkit. It follows another oneAPI processing step before a second CNN inference for the so-called Region Proposal Network (RPN) is executed using the OpenVINO™ toolkit. Finally, the output data (object list) is post-processed and filtered, which is again performed in oneAPI kernels. An overview of the data flow is given in image below:
+![Overview](data/point_pillars_overview.png)
 
 
 By default the application will use 'host' as the Intel® oneAPI execution device and CPU for Intel® Distribution of OpenVINO™ toolkit inferencing part. The Intel® oneAPI execution device and inferencing device are displayed in the output along with elapsed time of each of the five steps described above. For more details refer to section: [Execution Options for the Sample Program](#execution-options-for-the-sample-program).
@@ -32,7 +33,7 @@ Currently, only Linux platforms are supported. It is recommended to use Ubuntu 1
 ### Requirements
 To build and run the PointPillars sample, the following libraries have to be installed:
 1. Intel® Distribution of OpenVINO™ toolkit (at least 2021.1)
-2. Intel® oneAPI Base Toolkit (at least 2021.1)
+2. Intel® oneAPI Base Toolkit (at least 2021.2)
 3. Boost (including `boost::program_options` library)
 4. Optional: If the sample should be run on an Intel GPU, it might be necessary to upgrade the corresponding drivers. Therefore, please consult the following page: https://github.com/intel/compute-runtime/releases/   
 
@@ -43,7 +44,6 @@ Perform the following steps:
 ``` 
 $ source /opt/intel/openvino_2021/bin/setupvars.sh
 $ source /opt/intel/oneapi/setvars.sh
-$ export TBB_DIR=/opt/intel/openvino_2021/inference_engine/external/tbb
 ```
 
 2. Download the PFE and RPN models in ONNX format

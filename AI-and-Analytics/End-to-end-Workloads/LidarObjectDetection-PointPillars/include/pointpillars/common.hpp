@@ -16,11 +16,24 @@
  */
 
 #pragma once
-#include <cstdint>
 
-namespace dnn {
+#include <CL/sycl.hpp>
 
-uint32_t inline nextPower(uint32_t v) {
+// using MACRO to allocate memory inside kernel
+#define NUM_3D_BOX_CORNERS_MACRO 8
+#define NUM_2D_BOX_CORNERS_MACRO 4
+
+#define DIVUP(m, n) ((m) / (n) + ((m) % (n) > 0))
+
+// Performs atomic fetch and add operation using SYCL
+inline int AtomicFetchAdd(int *addr, int operand) {
+  sycl::atomic<int, sycl::access::address_space::global_space> obj(
+      (sycl::multi_ptr<int, sycl::access::address_space::global_space>(addr)));
+  return sycl::atomic_fetch_add(obj, operand, sycl::memory_order::relaxed);
+}
+
+// Returns the next power of 2 for a given number
+uint32_t inline NextPower(uint32_t v) {
   v--;
   v |= v >> 1;
   v |= v >> 2;
@@ -30,20 +43,3 @@ uint32_t inline nextPower(uint32_t v) {
   v++;
   return v;
 }
-
-// Prefix sum in 2D coordinates
-//
-//          X--->
-//            W
-//  Y    o-------------
-//  |    |
-//  |  H |
-//  v    |
-//       |
-//
-
-void scanX(int *devOutput, const int *devInput, int w, int h, int n);
-
-void scanY(int *devOutput, const int *devInput, int w, int h, int n);
-
-}  // namespace dnn

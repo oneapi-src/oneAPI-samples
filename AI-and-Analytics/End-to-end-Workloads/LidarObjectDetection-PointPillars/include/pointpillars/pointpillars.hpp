@@ -19,53 +19,63 @@
 
 #include <inference_engine.hpp>
 #include <iostream>
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
-#include "PointPillars/PointPillarsConfig.hpp"
-#include "PointPillars/PointPillarsUtil.hpp"
-#include "PointPillars/operations/anchorgrid.hpp"
-#include "PointPillars/operations/postprocess.hpp"
-#include "PointPillars/operations/preprocess.hpp"
-#include "PointPillars/operations/scatter.hpp"
+#include "pointpillars/pointpillars_config.hpp"
+#include "pointpillars/pointpillars_util.hpp"
+#include "pointpillars/anchorgrid.hpp"
+#include "pointpillars/postprocess.hpp"
+#include "pointpillars/preprocess.hpp"
+#include "pointpillars/scatter.hpp"
 
-namespace dnn {
+namespace pointpillars {
 
+/**
+ * PointPillar's Main Class
+ * 
+ * This class encapsulates the complete end-to-end
+ * implementation of PointPillars.
+ * 
+ * Users only need to create an object and call 'Detect'.
+ */
 class PointPillars {
  protected:
-  PointPillarsConfig mConfig;
+  PointPillarsConfig config_;
   const float score_threshold_;
   const float nms_overlap_threshold_;
   const std::string pfe_model_file_;
   const std::string rpn_model_file_;
-  const int MAX_NUM_PILLARS_;
-  const int MAX_NUM_POINTS_PER_PILLAR_;
-  const int PFE_OUTPUT_SIZE_;
-  const int GRID_X_SIZE_;
-  const int GRID_Y_SIZE_;
-  const int GRID_Z_SIZE_;
-  const int RPN_INPUT_SIZE_;
-  const int NUM_CLS_;
-  const int NUM_ANCHOR_X_INDS_;
-  const int NUM_ANCHOR_Y_INDS_;
-  const int NUM_ANCHOR_R_INDS_;
-  const int NUM_ANCHOR_;
-  const int RPN_BOX_OUTPUT_SIZE_;
-  const int RPN_CLS_OUTPUT_SIZE_;
-  const int RPN_DIR_OUTPUT_SIZE_;
-  const float PILLAR_X_SIZE_;
-  const float PILLAR_Y_SIZE_;
-  const float PILLAR_Z_SIZE_;
-  const float MIN_X_RANGE_;
-  const float MIN_Y_RANGE_;
-  const float MIN_Z_RANGE_;
-  const float MAX_X_RANGE_;
-  const float MAX_Y_RANGE_;
-  const float MAX_Z_RANGE_;
-  const int BATCH_SIZE_;
-  const int NUM_FEATURES_;
-  const int NUM_THREADS_;
-  const int NUM_BOX_CORNERS_;
-  const int NUM_OUTPUT_BOX_FEATURE_;
+  const int max_num_pillars_;
+  const int max_num_points_per_pillar_;
+  const int pfe_output_size_;
+  const int grid_x_size_;
+  const int grid_y_size_;
+  const int grid_z_size_;
+  const int rpn_input_size_;
+  const int num_cls_;
+  const int num_anchor_x_inds_;
+  const int num_anchor_y_inds_;
+  const int num_anchor_r_inds_;
+  const int num_anchor_;
+  const int rpn_box_output_size_;
+  const int rpn_cls_output_size_;
+  const int rpn_dir_output_size_;
+  const float pillar_x_size_;
+  const float pillar_y_size_;
+  const float pillar_z_size_;
+  const float min_x_range_;
+  const float min_y_range_;
+  const float min_z_range_;
+  const float max_x_range_;
+  const float max_y_range_;
+  const float max_z_range_;
+  const int batch_size_;
+  const int num_features_;
+  const int num_threads_;
+  const int num_box_corners_;
+  const int num_output_box_feature_;
 
   int host_pillar_count_[1];
 
@@ -99,7 +109,7 @@ class PointPillars {
   std::unique_ptr<PreProcess> preprocess_points_ptr_;
   std::unique_ptr<Scatter> scatter_ptr_;
   std::unique_ptr<PostProcess> postprocess_ptr_;
-  std::unique_ptr<AnchorGrid> mAnchorGridPtr;
+  std::unique_ptr<AnchorGrid> anchor_grid_ptr_;
 
  public:
   PointPillars() = delete;
@@ -108,8 +118,7 @@ class PointPillars {
   * @brief Constructor
   * @param[in] score_threshold Score threshold for filtering output
   * @param[in] nms_overlap_threshold IOU threshold for NMS
-  * @param[in] config Point Pillars net configuration file
-  * @details Variables could be chaned through rosparam
+  * @param[in] config PointPillars net configuration file
   */
   PointPillars(const float score_threshold, const float nms_threshold, const PointPillarsConfig &config);
 
@@ -120,27 +129,27 @@ class PointPillars {
   * @param[in] in_points_array Pointcloud array
   * @param[in] in_num_points Number of points
   * @param[in] detections Network output bounding box list
-  * @details This is an interface for the algorithm
+  * @details This is the main public interface to run the algorithm
   */
-  void detect(const float *in_points_array, const int in_num_points, std::vector<ObjectDetection> &detections);
+  void Detect(const float *in_points_array, const int in_num_points, std::vector<ObjectDetection> &detections);
 
  private:
-  InferenceEngine::ExecutableNetwork mPfeExeNetwork;
-  std::map<std::string, float *> mPfeInputMap;
-  InferenceEngine::ExecutableNetwork mRpnExeNetwork;
+  InferenceEngine::ExecutableNetwork pfe_exe_network_;
+  std::map<std::string, float *> pfe_input_map_;
+  InferenceEngine::ExecutableNetwork rpn_exe_network_;
 
   float *pfe_output_;
   float *rpn_1_output_;
   float *rpn_2_output_;
   float *rpn_3_output_;
 
-  void initComponents();
+  void InitComponents();
 
   /**
   * @brief Memory allocation for device memory
   * @details Called in the constructor
   */
-  void deviceMemoryMalloc();
+  void DeviceMemoryMalloc();
 
   /**
   * @brief Preprocess points
@@ -148,19 +157,19 @@ class PointPillars {
   * @param[in] in_num_points Number of points
   * @details Call oneAPI preprocess
   */
-  void preprocess(const float *in_points_array, const int in_num_points);
+  void PreProcessing(const float *in_points_array, const int in_num_points);
 
   /**
   * @brief Setup the PFE executable network
   * @details Setup the PFE network
   */
-  void setupPfeNetwork();
+  void SetupPfeNetwork();
 
   /**
   * @brief Setup the RPN executable network
   * @param[in] resizeInput If false, the network is not adapted to input size changes
   * @details Setup the RPN network
   */
-  void setupRpnNetwork(bool resizeInput);
+  void SetupRpnNetwork(bool resize_input);
 };
-}
+} // namespace pointpillars

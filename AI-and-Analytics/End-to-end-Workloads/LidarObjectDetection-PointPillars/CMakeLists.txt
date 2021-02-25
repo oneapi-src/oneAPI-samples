@@ -13,27 +13,19 @@ set(CMAKE_CXX_COMPILER dpcpp)
 # gather all dependencies
 ############################################################
 find_package(InferenceEngine REQUIRED)
+FILE(STRINGS "${InferenceEngine_INCLUDE_DIRS}/../version.txt" IE_VERSION)
+
+if (${IE_VERSION} STRLESS "2021.2")
+  message(FATAL_ERROR "OpenVINO with version 2021.2 or newer required. Found only ${IE_VERSION}")
+endif()
 find_path(SYCL_HEADERS CL/sycl.hpp PATHS $ENV{ONEAPI_ROOT}/compiler/latest/linux/include/sycl PATH_SUFFIXES / NO_CMAKE_FIND_ROOT_PATH NO_CMAKE_SYSTEM_PATH NO_DEFAULT_PATH)
 find_path(DPCPP_HEADERS oneapi/dpl/iterator PATHS $ENV{ONEAPI_ROOT}/dpl/latest/linux/include PATH_SUFFIXES / NO_CMAKE_FIND_ROOT_PATH NO_CMAKE_SYSTEM_PATH NO_DEFAULT_PATH)
-find_path(DPCT_HEADERS dpct/dpct.hpp PATHS $ENV{ONEAPI_ROOT}/dpcpp-ct/latest/include PATH_SUFFIXES / NO_CMAKE_FIND_ROOT_PATH NO_CMAKE_SYSTEM_PATH NO_DEFAULT_PATH)
 find_library(SYCL_LIB sycl PATHS $ENV{ONEAPI_ROOT}/compiler/latest/linux PATH_SUFFIXES lib NO_CMAKE_FIND_ROOT_PATH NO_CMAKE_SYSTEM_PATH NO_DEFAULT_PATH)
-
-find_package(TBB REQUIRED)
-
-if(TBB_FOUND)
-  message(STATUS "TBB Version - ${TBB_VERSION}")
-endif()
 
 if(NOT DPCPP_HEADERS)
   message(FATAL_ERROR "No DPCPP Headers for oneAPI found. Please check the environment variable ONEAPI_ROOT")
 else()
   message(STATUS "DPCPP Headers - ${DPCPP_HEADERS}")
-endif()
-
-if(NOT DPCT_HEADERS)
-  message(FATAL_ERROR "No DPCT Headers for oneAPI found. Please check the environment variable ONEAPI_ROOT")
-else()
-  message(STATUS "DPCT Headers - ${DPCT_HEADERS}")
 endif()
 
 if(NOT SYCL_HEADERS)
@@ -54,14 +46,13 @@ endif()
 ############################################
 
 set(PROJECT_SOURCE_LIST
-  ${CMAKE_SOURCE_DIR}/src/PointPillars/operations/anchorgrid.cpp
-  ${CMAKE_SOURCE_DIR}/src/PointPillars/operations/scan.cpp
-  ${CMAKE_SOURCE_DIR}/src/PointPillars/operations/scatter.cpp
-  ${CMAKE_SOURCE_DIR}/src/PointPillars/operations/nms.cpp
-  ${CMAKE_SOURCE_DIR}/src/PointPillars/operations/postprocess.cpp
-  ${CMAKE_SOURCE_DIR}/src/PointPillars/operations/maskanchors.cpp
-  ${CMAKE_SOURCE_DIR}/src/PointPillars/operations/preprocess.cpp
-  ${CMAKE_SOURCE_DIR}/src/PointPillars/inference/pointpillars.cpp
+  ${CMAKE_SOURCE_DIR}/src/pointpillars/anchorgrid.cpp
+  ${CMAKE_SOURCE_DIR}/src/pointpillars/scan.cpp
+  ${CMAKE_SOURCE_DIR}/src/pointpillars/scatter.cpp
+  ${CMAKE_SOURCE_DIR}/src/pointpillars/nms.cpp
+  ${CMAKE_SOURCE_DIR}/src/pointpillars/postprocess.cpp
+  ${CMAKE_SOURCE_DIR}/src/pointpillars/preprocess.cpp
+  ${CMAKE_SOURCE_DIR}/src/pointpillars/pointpillars.cpp
 )
 
 add_library(${PROJECT_NAME} SHARED
@@ -71,15 +62,12 @@ add_library(${PROJECT_NAME} SHARED
 target_link_libraries(${PROJECT_NAME} PUBLIC
                       ${InferenceEngine_LIBRARIES}
                       dl
-                      ${TBB_LIBRARIES}
                       ${SYCL_LIB}
                     )
 
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
   ${SYCL_HEADERS}
   ${DPCPP_HEADERS}
-  ${DPCT_HEADERS}
-  ${TBB_INCLUDE_DIRS}
   ${InferenceEngine_INCLUDE_DIRS}
 )
 
