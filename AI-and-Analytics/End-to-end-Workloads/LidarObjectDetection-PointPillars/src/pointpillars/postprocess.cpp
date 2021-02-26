@@ -201,6 +201,7 @@ void PostProcess::DoPostProcess(const float *rpn_box_output, const float *rpn_cl
                    num_output_box_feature_ct22, num_cls_ct23, index);
     });
   });
+  queue.wait();
 
   int host_filter_count[1];
   queue.memcpy(host_filter_count, dev_filter_count, sizeof(int)).wait();
@@ -249,6 +250,7 @@ void PostProcess::DoPostProcess(const float *rpn_box_output, const float *rpn_cl
                                             num_cls_ct14, item_ct1);
                    });
   });
+  queue.wait();
 
   int keep_inds[host_filter_count[0]];
   size_t out_num_objects = 0;
@@ -261,15 +263,13 @@ void PostProcess::DoPostProcess(const float *rpn_box_output, const float *rpn_cl
   int host_filtered_dir[host_filter_count[0]];
   int host_filtered_class_id[host_filter_count[0]];
 
-  queue
-      .memcpy(host_filtered_box, dev_sorted_filtered_box,
-              num_output_box_feature_ * host_filter_count[0] * sizeof(float))
-      .wait();
-  queue.memcpy(host_multiclass_score, dev_sorted_multiclass_score, num_cls_ * host_filter_count[0] * sizeof(float))
-      .wait();
-  queue.memcpy(host_filtered_class_id, dev_sorted_filtered_class_id, host_filter_count[0] * sizeof(int)).wait();
-  queue.memcpy(host_filtered_dir, dev_sorted_filtered_dir, host_filter_count[0] * sizeof(int)).wait();
-  queue.memcpy(host_filtered_score, dev_filtered_score, host_filter_count[0] * sizeof(float)).wait();
+  queue.memcpy(host_filtered_box, dev_sorted_filtered_box,
+               num_output_box_feature_ * host_filter_count[0] * sizeof(float));
+  queue.memcpy(host_multiclass_score, dev_sorted_multiclass_score, num_cls_ * host_filter_count[0] * sizeof(float));
+  queue.memcpy(host_filtered_class_id, dev_sorted_filtered_class_id, host_filter_count[0] * sizeof(int));
+  queue.memcpy(host_filtered_dir, dev_sorted_filtered_dir, host_filter_count[0] * sizeof(int));
+  queue.memcpy(host_filtered_score, dev_filtered_score, host_filter_count[0] * sizeof(float));
+  queue.wait();
 
   for (size_t i = 0; i < out_num_objects; i++) {
     ObjectDetection detection;

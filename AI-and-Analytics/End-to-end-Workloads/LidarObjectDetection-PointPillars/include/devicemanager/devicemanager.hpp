@@ -67,7 +67,7 @@ class DeviceManager {
         std::cout << "Using " << current_device_.get_info<sycl::info::device::name>() << "\n";
       }
 
-      current_queue_ = sycl::queue(current_device_, sycl::property::queue::in_order());
+      current_queue_ = sycl::queue(current_device_);
 
       return true;
     }

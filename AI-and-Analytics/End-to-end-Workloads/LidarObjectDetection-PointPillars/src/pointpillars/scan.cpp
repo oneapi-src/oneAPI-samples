@@ -138,6 +138,7 @@ void ScanX(int *dev_output, const int *dev_input, int w, int h, int n) {
           });
     });
   }
+  queue.wait();
 }
 
 void ScanY(int *dev_output, const int *dev_input, int w, int h, int n) {
@@ -172,6 +173,7 @@ void ScanY(int *dev_output, const int *dev_input, int w, int h, int n) {
           });
     });
   }
+  queue.wait();
 }
 
 }  // namespace pointpillars

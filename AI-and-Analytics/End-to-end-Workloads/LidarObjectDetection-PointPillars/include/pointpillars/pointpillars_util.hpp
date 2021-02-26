@@ -10,7 +10,7 @@
 namespace pointpillars {
 
 /**
- * 3D-Object representation 
+ * 3D-Object representation
  */
 struct ObjectDetection {
   ObjectDetection()

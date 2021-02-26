@@ -135,6 +135,7 @@ void NMS::ParallelNMS(const size_t host_filter_count, float *dev_sorted_box_for_
                             num_box_corners_ct4, item_ct1, block_boxes_acc_ct1.get_pointer());
                    });
   });
+  queue.wait();
 
   // postprocess for nms output
   std::vector<unsigned long long> host_mask(host_filter_count * col_blocks);

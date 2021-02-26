@@ -54,5 +54,7 @@ void Scatter::DoScatter(const int pillar_count, int *x_coors, int *y_coors, floa
                                    grid_x_size_ct5, grid_y_size_ct6, item_ct1);
                    });
   });
+
+  queue.wait();
 }
 }  // namespace pointpillars

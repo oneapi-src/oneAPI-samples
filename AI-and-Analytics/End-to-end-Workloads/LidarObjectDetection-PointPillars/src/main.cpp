@@ -10,10 +10,10 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
+#include "devicemanager/devicemanager.hpp"
+#include "pointpillars/pointpillars.hpp"
 #include "pointpillars/pointpillars_config.hpp"
 #include "pointpillars/pointpillars_util.hpp"
-#include "pointpillars/pointpillars.hpp"
-#include "devicemanager/devicemanager.hpp"
 
 std::size_t ReadPointCloud(std::string const &file_name, std::vector<float> &points) {
   if (!boost::filesystem::exists(file_name) || file_name.empty()) {

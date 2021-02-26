@@ -23,7 +23,7 @@ namespace pointpillars {
 
 /**
  * PointPillar's PreProcessing
- * 
+ *
  * Convert 3D point cloud data into 2D-grid/pillar form
  * to be able to feed it into the PillarFeatureNetwork
  */

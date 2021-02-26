@@ -23,9 +23,9 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "pointpillars/anchorgrid.hpp"
 #include "pointpillars/pointpillars_config.hpp"
 #include "pointpillars/pointpillars_util.hpp"
-#include "pointpillars/anchorgrid.hpp"
 #include "pointpillars/postprocess.hpp"
 #include "pointpillars/preprocess.hpp"
 #include "pointpillars/scatter.hpp"
@@ -34,10 +34,10 @@ namespace pointpillars {
 
 /**
  * PointPillar's Main Class
- * 
+ *
  * This class encapsulates the complete end-to-end
  * implementation of PointPillars.
- * 
+ *
  * Users only need to create an object and call 'Detect'.
  */
 class PointPillars {
@@ -172,4 +172,4 @@ class PointPillars {
   */
   void SetupRpnNetwork(bool resize_input);
 };
-} // namespace pointpillars
+}  // namespace pointpillars

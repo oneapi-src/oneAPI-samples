@@ -18,8 +18,8 @@
 #include "pointpillars/anchorgrid.hpp"
 #include <CL/sycl.hpp>
 #include <algorithm>
-#include "pointpillars/common.hpp"
 #include "devicemanager/devicemanager.hpp"
+#include "pointpillars/common.hpp"
 #include "pointpillars/scan.hpp"
 
 namespace pointpillars {
@@ -172,16 +172,15 @@ void AnchorGrid::MoveAnchorsToDevice() {
   AllocateDeviceMemory();
 
   sycl::queue queue = devicemanager::GetCurrentQueue();
+  queue.memcpy(dev_anchors_px_, host_anchors_px_, num_anchors_ * sizeof(float));
+  queue.memcpy(dev_anchors_py_, host_anchors_py_, num_anchors_ * sizeof(float));
+  queue.memcpy(dev_anchors_pz_, host_anchors_pz_, num_anchors_ * sizeof(float));
+  queue.memcpy(dev_anchors_dx_, host_anchors_dx_, num_anchors_ * sizeof(float));
+  queue.memcpy(dev_anchors_dy_, host_anchors_dy_, num_anchors_ * sizeof(float));
+  queue.memcpy(dev_anchors_dz_, host_anchors_dz_, num_anchors_ * sizeof(float));
+  queue.memcpy(dev_anchors_ro_, host_anchors_ro_, num_anchors_ * sizeof(float));
+  queue.memcpy(dev_anchors_rad_, host_anchors_rad_, mc_ * sizeof(float));
   queue.wait();
-  queue.memcpy(dev_anchors_px_, host_anchors_px_, num_anchors_ * sizeof(float)).wait();
-  queue.memcpy(dev_anchors_py_, host_anchors_py_, num_anchors_ * sizeof(float)).wait();
-  queue.memcpy(dev_anchors_pz_, host_anchors_pz_, num_anchors_ * sizeof(float)).wait();
-  queue.memcpy(dev_anchors_dx_, host_anchors_dx_, num_anchors_ * sizeof(float)).wait();
-  queue.memcpy(dev_anchors_dy_, host_anchors_dy_, num_anchors_ * sizeof(float)).wait();
-  queue.memcpy(dev_anchors_dz_, host_anchors_dz_, num_anchors_ * sizeof(float)).wait();
-  queue.memcpy(dev_anchors_ro_, host_anchors_ro_, num_anchors_ * sizeof(float)).wait();
-
-  queue.memcpy(dev_anchors_rad_, host_anchors_rad_, mc_ * sizeof(float)).wait();
 
   ClearHostMemory();
 }
@@ -319,6 +318,8 @@ void AnchorGrid::MaskAnchors(const float *dev_anchors_px, const float *dev_ancho
       });
     });
   }
+
+  queue.wait();
 }
 
 }  // namespace pointpillars

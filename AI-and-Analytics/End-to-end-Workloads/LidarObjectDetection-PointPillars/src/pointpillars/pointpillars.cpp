@@ -265,21 +265,24 @@ void PointPillars::PreProcessing(const float *in_points_array, const int in_num_
 
   dev_points = sycl::malloc_device<float>(in_num_points * num_box_corners_, queue);
 
-  queue.memcpy(dev_points, in_points_array, in_num_points * num_box_corners_ * sizeof(float)).wait();
-  queue.memset(dev_sparse_pillar_map_, 0, grid_y_size_ * grid_x_size_ * sizeof(int)).wait();
-  queue.memset(dev_pillar_x_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float)).wait();
-  queue.memset(dev_pillar_y_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float)).wait();
-  queue.memset(dev_pillar_z_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float)).wait();
-  queue.memset(dev_pillar_i_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float)).wait();
-  queue.memset(dev_x_coors_, 0, max_num_pillars_ * sizeof(int)).wait();
-  queue.memset(dev_y_coors_, 0, max_num_pillars_ * sizeof(int)).wait();
-  queue.memset(dev_num_points_per_pillar_, 0, max_num_pillars_ * sizeof(float)).wait();
-  queue.memset(dev_anchor_mask_, 0, num_anchor_ * sizeof(int)).wait();
-  queue.memset(dev_cumsum_workspace_, 0, grid_y_size_ * grid_x_size_ * sizeof(int)).wait();
+  queue.memcpy(dev_points, in_points_array, in_num_points * num_box_corners_ * sizeof(float));
+  queue.memset(dev_sparse_pillar_map_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
+  queue.memset(dev_pillar_x_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
+  queue.memset(dev_pillar_y_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
+  queue.memset(dev_pillar_z_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
+  queue.memset(dev_pillar_i_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
+  queue.memset(dev_x_coors_, 0, max_num_pillars_ * sizeof(int));
+  queue.memset(dev_y_coors_, 0, max_num_pillars_ * sizeof(int));
+  queue.memset(dev_num_points_per_pillar_, 0, max_num_pillars_ * sizeof(float));
+  queue.memset(dev_anchor_mask_, 0, num_anchor_ * sizeof(int));
+  queue.memset(dev_cumsum_workspace_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
 
-  queue.memset(dev_x_coors_for_sub_shaped_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float)).wait();
-  queue.memset(dev_y_coors_for_sub_shaped_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float)).wait();
-  queue.memset(dev_pillar_feature_mask_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float)).wait();
+  queue.memset(dev_x_coors_for_sub_shaped_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
+  queue.memset(dev_y_coors_for_sub_shaped_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
+  queue.memset(dev_pillar_feature_mask_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
+
+  // wait until all memory operations were completed
+  queue.wait();
 
   preprocess_points_ptr_->DoPreProcess(dev_points, in_num_points, dev_x_coors_, dev_y_coors_,
                                        dev_num_points_per_pillar_, dev_pillar_x_, dev_pillar_y_, dev_pillar_z_,
@@ -342,12 +345,11 @@ void PointPillars::Detect(const float *in_points_array, const int in_num_points,
   auto output_name = pfe_exe_network_.GetOutputsInfo().begin()->first;
   auto output_blob = infer_request_ptr->GetBlob(output_name)->buffer().as<float *>();
 
-  std::cout << "   Scattering";
-  // copy inference data to SYCL device
-  queue.memcpy(pfe_output_, output_blob, pfe_output_size_ * sizeof(float)).wait();
-
   // perform scatter
-  queue.memset(dev_scattered_feature_, 0, rpn_input_size_ * sizeof(float)).wait();
+  std::cout << "   Scattering";
+  queue.memcpy(pfe_output_, output_blob, pfe_output_size_ * sizeof(float));
+  queue.memset(dev_scattered_feature_, 0, rpn_input_size_ * sizeof(float));
+  queue.wait();
   scatter_ptr_->DoScatter(host_pillar_count_[0], dev_x_coors_, dev_y_coors_, pfe_output_, dev_scattered_feature_);
 
   const auto t4 = std::chrono::high_resolution_clock::now();
@@ -388,26 +390,21 @@ void PointPillars::Detect(const float *in_points_array, const int in_num_points,
   std::cout << "   Postprocessing";
   // postprocessing
   // copy inference data to SYCL device
-  queue
-      .memcpy(rpn_1_output_, output_blobs[0]
-                                 ->buffer()
-                                 .as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>(),
-              rpn_box_output_size_ * sizeof(float))
-      .wait();
-  queue
-      .memcpy(rpn_2_output_, output_blobs[1]
-                                 ->buffer()
-                                 .as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>(),
-              rpn_cls_output_size_ * sizeof(float))
-      .wait();
-  queue
-      .memcpy(rpn_3_output_, output_blobs[2]
-                                 ->buffer()
-                                 .as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>(),
-              rpn_dir_output_size_ * sizeof(float))
-      .wait();
+  queue.memcpy(
+      rpn_1_output_,
+      output_blobs[0]->buffer().as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>(),
+      rpn_box_output_size_ * sizeof(float));
+  queue.memcpy(
+      rpn_2_output_,
+      output_blobs[1]->buffer().as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>(),
+      rpn_cls_output_size_ * sizeof(float));
+  queue.memcpy(
+      rpn_3_output_,
+      output_blobs[2]->buffer().as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>(),
+      rpn_dir_output_size_ * sizeof(float));
 
-  queue.memset(dev_filter_count_, 0, sizeof(int)).wait();
+  queue.memset(dev_filter_count_, 0, sizeof(int));
+  queue.wait();
   postprocess_ptr_->DoPostProcess(
       rpn_1_output_, rpn_2_output_, rpn_3_output_, dev_anchor_mask_, anchor_grid_ptr_->dev_anchors_px_,
       anchor_grid_ptr_->dev_anchors_py_, anchor_grid_ptr_->dev_anchors_pz_, anchor_grid_ptr_->dev_anchors_dx_,

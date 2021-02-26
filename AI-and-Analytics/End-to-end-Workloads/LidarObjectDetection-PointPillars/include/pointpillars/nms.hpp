@@ -24,7 +24,7 @@ namespace pointpillars {
 
 /**
  * Non-Maximum-Surpression
- * 
+ *
  * Used to filter out redundant object detections
  */
 class NMS {

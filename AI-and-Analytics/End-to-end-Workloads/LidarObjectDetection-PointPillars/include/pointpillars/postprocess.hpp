@@ -20,14 +20,14 @@
 #include <CL/sycl.hpp>
 #include <memory>
 #include <vector>
-#include "pointpillars/pointpillars_util.hpp"
 #include "pointpillars/nms.hpp"
+#include "pointpillars/pointpillars_util.hpp"
 
 namespace pointpillars {
 
 /**
  * PointPillar's PostProcessing
- * 
+ *
  * Use the output of the RegionProposalNetwork for
  * object position, dimension and class to filter out
  * redundant/clutter objects using NMS and sort them

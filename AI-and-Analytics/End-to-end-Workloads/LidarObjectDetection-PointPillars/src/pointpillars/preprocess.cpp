@@ -19,8 +19,8 @@
 #include <CL/sycl.hpp>
 #include <algorithm>
 #include <iostream>
-#include "pointpillars/common.hpp"
 #include "devicemanager/devicemanager.hpp"
+#include "pointpillars/common.hpp"
 
 namespace pointpillars {
 
@@ -184,19 +184,16 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
                               float *dev_y_coors_for_sub_shaped, float *dev_pillar_feature_mask,
                               int *dev_sparse_pillar_map, int *host_pillar_count) {
   sycl::queue queue = devicemanager::GetCurrentQueue();
-  queue.memset(dev_pillar_x_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float))
-      .wait();
-  queue.memset(dev_pillar_y_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float))
-      .wait();
-  queue.memset(dev_pillar_z_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float))
-      .wait();
-  queue.memset(dev_pillar_i_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float))
-      .wait();
-  queue.memset(dev_pillar_count_histo_, 0, grid_y_size_ * grid_x_size_ * sizeof(int)).wait();
-  queue.memset(dev_counter_, 0, sizeof(int)).wait();
-  queue.memset(dev_pillar_count_, 0, sizeof(int)).wait();
-  queue.memset(dev_x_coors_for_sub_, 0, max_num_pillars_ * sizeof(float)).wait();
-  queue.memset(dev_y_coors_for_sub_, 0, max_num_pillars_ * sizeof(float)).wait();
+  queue.memset(dev_pillar_x_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float));
+  queue.memset(dev_pillar_y_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float));
+  queue.memset(dev_pillar_z_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float));
+  queue.memset(dev_pillar_i_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float));
+  queue.memset(dev_pillar_count_histo_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
+  queue.memset(dev_counter_, 0, sizeof(int));
+  queue.memset(dev_pillar_count_, 0, sizeof(int));
+  queue.memset(dev_x_coors_for_sub_, 0, max_num_pillars_ * sizeof(float));
+  queue.memset(dev_y_coors_for_sub_, 0, max_num_pillars_ * sizeof(float));
+  queue.wait();
 
   int num_block = DIVUP(in_num_points, 256);
   queue.submit([&](auto &h) {
@@ -226,6 +223,7 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
                                 pillar_x_size_ct14, pillar_y_size_ct15, pillar_z_size_ct16, item_ct1);
         });
   });
+  queue.wait();
 
   queue.submit([&](auto &h) {
     auto dev_pillar_count_histo_ct0 = dev_pillar_count_histo_;
@@ -252,6 +250,7 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
                                            min_y_range_ct13, pillar_x_size_ct14, pillar_y_size_ct15, x, y);
                    });
   });
+  queue.wait();
 
   queue.memcpy(host_pillar_count, dev_pillar_count_, sizeof(int)).wait();
 
@@ -273,6 +272,7 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
                                   grid_x_size_ct12, item_ct1);
         });
   });
+  queue.wait();
 
   queue.submit([&](auto &h) {
     auto dev_x_coors_for_sub_ct0 = dev_x_coors_for_sub_;
@@ -288,5 +288,6 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
                                       max_num_points_per_pillar_ct6, item_ct1);
         });
   });
+  queue.wait();
 }
 }  // namespace pointpillars
