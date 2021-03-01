@@ -28,10 +28,10 @@ class Task;
 // This kernel function implements two data paths: with and without caching.
 // use_cache specifies which path to take.
 template<bool use_cache>
-void Histogram(std::unique_ptr<queue>& q, buffer<uint32_t>& input_buf,
+void Histogram(sycl::queue &q, buffer<uint32_t>& input_buf,
                buffer<uint32_t>& output_buf, event& e) {
   // Enqueue  kernel
-  e = q->submit([&](handler& h) {
+  e = q.submit([&](handler& h) {
     // Get accessors to the SYCL buffers
     accessor input(input_buf, h, read_only);
     accessor output(output_buf, h, write_only, noinit);
@@ -124,11 +124,10 @@ int main() {
     auto prop_list =
         property_list{property::queue::enable_profiling()};
 
-    std::unique_ptr<queue> q;
-    q.reset(new queue(device_selector, dpc_common::exception_handler, prop_list));
+    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
 
-    platform platform = q->get_context().get_platform();
-    device device = q->get_device();
+    platform platform = q.get_context().get_platform();
+    device device = q.get_device();
     std::cout << "Platform name: "
               << platform.get_info<info::platform::name>().c_str() << "\n";
     std::cout << "Device name: "
@@ -184,7 +183,7 @@ int main() {
       }
 
       // Wait for kernels to finish
-      q->wait();
+      q.wait();
 
       // Compute kernel execution time
       t1_kernel = e.get_profiling_info<info::event_profiling::command_start>();
