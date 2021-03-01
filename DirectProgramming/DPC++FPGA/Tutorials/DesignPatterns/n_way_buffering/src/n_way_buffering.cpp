@@ -60,10 +60,10 @@ class SimpleVpow;
    to occur at the end of overall execution, not at the end of each individual
    kernel execution.
 */
-void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
+void SimplePow(sycl::queue &q, buffer<float, 1> &buffer_a,
                buffer<float, 1> &buffer_b, event &e) {
   // Submit to the queue and execute the kernel
-  e = q->submit([&](handler &h) {
+  e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
     accessor accessor_a(buffer_a, h, read_only);
     accessor accessor_b(buffer_b, h, read_write, noinit);
@@ -88,7 +88,7 @@ void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
   });
 
   event update_host_event;
-  update_host_event = q->submit([&](handler &h) {
+  update_host_event = q.submit([&](handler &h) {
     accessor accessor_b(buffer_b, h, read_only);
 
     /*
@@ -217,12 +217,10 @@ int main() {
   try {
     auto prop_list = property_list{property::queue::enable_profiling()};
 
-    std::unique_ptr<queue> q;
-    q.reset(
-        new queue(device_selector, dpc_common::exception_handler, prop_list));
+    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
 
-    platform platform = q->get_context().get_platform();
-    device device = q->get_device();
+    platform platform = q.get_context().get_platform();
+    device device = q.get_device();
     std::cout << "Platform name: "
               << platform.get_info<info::platform::name>().c_str() << "\n";
     std::cout << "Device name: "
