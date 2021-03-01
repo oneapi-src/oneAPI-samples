@@ -120,17 +120,21 @@ int64_t dpbltrs(cl::sycl::queue queue, int64_t n, int64_t nrhs, int64_t nb, doub
         return info;
 
     // Solving the system of linear equations L*Y=F
-    mkl::blas::trsm(queue, mkl::side::left, mkl::uplo::lower, mkl::transpose::nontrans, mkl::diag::nonunit, nb, nrhs, 1.0, d, ldd, f, ldf);
+    auto event1 = mkl::blas::trsm(queue, mkl::side::left, mkl::uplo::lower, mkl::transpose::nontrans, mkl::diag::nonunit, nb, nrhs, 1.0, d, ldd, f, ldf);
+    event1.wait_and_throw();
     for ( int64_t k = 0; k < n-1; k++) {
-        mkl::blas::gemm(queue, mkl::transpose::nontrans, mkl::transpose::nontrans, nb, nrhs, nb, -1.0, &B(0, k*nb), ldb, &F(k*nb, 0), ldf, 1.0, &F((k+1)*nb, 0), ldf);
-        mkl::blas::trsm(queue, mkl::side::left, mkl::uplo::lower, mkl::transpose::nontrans, mkl::diag::nonunit, nb, nrhs, 1.0, &D(0, (k+1)*nb), ldd, &F((k+1)*nb, 0), ldf);
+        auto event2 = mkl::blas::gemm(queue, mkl::transpose::nontrans, mkl::transpose::nontrans, nb, nrhs, nb, -1.0, &B(0, k*nb), ldb, &F(k*nb, 0), ldf, 1.0, &F((k+1)*nb, 0), ldf);
+        auto event3 = mkl::blas::trsm(queue, mkl::side::left, mkl::uplo::lower, mkl::transpose::nontrans, mkl::diag::nonunit, nb, nrhs, 1.0, &D(0, (k+1)*nb), ldd, &F((k+1)*nb, 0), ldf, {event2});
+        event3.wait_and_throw();
     }
     // ..
     // Solving the system of linear equations L^T*X=Y
-    mkl::blas::trsm(queue, mkl::side::left, mkl::uplo::lower, mkl::transpose::trans, mkl::diag::nonunit, nb, nrhs, 1.0, &D(0, (n-1)*nb), ldd, &F((n-1)*nb, 0), ldf);
+    event1 = mkl::blas::trsm(queue, mkl::side::left, mkl::uplo::lower, mkl::transpose::trans, mkl::diag::nonunit, nb, nrhs, 1.0, &D(0, (n-1)*nb), ldd, &F((n-1)*nb, 0), ldf);
+    event1.wait_and_throw();
     for ( int64_t k = n-2; k >= 0; k-- ) {
-        mkl::blas::gemm(queue, mkl::transpose::trans, mkl::transpose::nontrans, nb, nrhs, nb, -1.0, &B(0, k*nb), ldb, &F((k+1)*nb, 0), ldf, 1.0, &F(k*nb, 0), ldf);
-        mkl::blas::trsm(queue, mkl::side::left, mkl::uplo::lower, mkl::transpose::trans, mkl::diag::nonunit, nb, nrhs, 1.0, &D(0, k*nb), ldd, &F(k*nb, 0), ldf);
+        auto event2 = mkl::blas::gemm(queue, mkl::transpose::trans, mkl::transpose::nontrans, nb, nrhs, nb, -1.0, &B(0, k*nb), ldb, &F((k+1)*nb, 0), ldf, 1.0, &F(k*nb, 0), ldf);
+        auto event3 = mkl::blas::trsm(queue, mkl::side::left, mkl::uplo::lower, mkl::transpose::trans, mkl::diag::nonunit, nb, nrhs, 1.0, &D(0, k*nb), ldd, &F(k*nb, 0), ldf, {event2});
+        event3.wait_and_throw();
     }
 
     return info;
