@@ -13,13 +13,13 @@ be stable.
 |Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	|
 |-----------------------|-------------------------------------------|---------------|
 |DirectPrograming/ |
-|../DPC++/CombinationalLogic/Mandelbrot 	|GPU, CPU  	|Example of a fractal in   mathematics 	|
-|../DPC++/CombinationalLogic/Sepia-filter    	|GPU, CPU  	|Color image conversion using 1D   range    	|
-|../DPC++/DenseLinearAlgebra/Complex_mult    	|GPU, CPU  	|Complex number Multiplication    	|
-|../DPC++/DenseLinearAlgebra/Matrix_mul 	|GPU, CPU  	|Simple program that multiplies   two large matrices in parallel using DPC++, OpenMP and MKL  	|
-|../DPC++/DenseLinearAlgebra/Simple-add 	|FPGA, GPU, CPU 	|Simple Add program	|
-|../DPC++/DenseLinearAlgebra/Vector-add 	|FPGA, GPU, CPU 	|Simple Vector add program   	|
-|../DPC++/GraphTraversal/Bitonic-sort   	|GPU, CPU  	|Implementation of bitonic sort   using DPC++.   	|
+|../DPC++/CombinationalLogic/mandelbrot 	|GPU, CPU  	|Example of a fractal in   mathematics 	|
+|../DPC++/CombinationalLogic/sepia-filter    	|GPU, CPU  	|Color image conversion using 1D   range    	|
+|../DPC++/DenseLinearAlgebra/complex_mult    	|GPU, CPU  	|Complex number Multiplication    	|
+|../DPC++/DenseLinearAlgebra/matrix_mul 	|GPU, CPU  	|Simple program that multiplies   two large matrices in parallel using DPC++, OpenMP and MKL  	|
+|../DPC++/DenseLinearAlgebra/simple-add 	|FPGA, GPU, CPU 	|Simple Add program	|
+|../DPC++/DenseLinearAlgebra/vector-add 	|FPGA, GPU, CPU 	|Simple Vector add program   	|
+|../DPC++/GraphTraversal/bitonic-sort   	|GPU, CPU  	|Implementation of bitonic sort   using DPC++.   	|
 |../DPC++/ParallelPatterns/Dpc_reduce   	|GPU, CPU  	|A simple program that calculates   pi,  implemented using C++ and DPC++. 	|
 |../DPC++/SpectralMethods/Discrete-cosine-transform    	|GPU, CPU  	|Image processing algorithm used   in JPEG compression	|
 |../DPC++/StructuredGrids/1d_HeatTransfer    	|GPU, CPU  	|A simulation of one dimensional   heat transfer process using DPC++.	|
