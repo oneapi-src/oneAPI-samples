@@ -1,10 +1,10 @@
 # Makefile for GNU Make
 
-default: run_all
+default: run
 
-all: run_all
+all: run
 
-run_all: mc_pi mc_pi_usm mc_pi_device_api
+run: mc_pi mc_pi_usm mc_pi_device_api
 	./mc_pi
 	./mc_pi_usm
 	./mc_pi_device_api
@@ -23,4 +23,4 @@ mc_pi_device_api: mc_pi_device_api.cpp
 clean:
 	-rm -f mc_pi mc_pi_usm mc_pi_device_api
 
-.PHONY: run_all clean all
+.PHONY: clean run all
