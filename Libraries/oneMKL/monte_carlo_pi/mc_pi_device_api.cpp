@@ -16,13 +16,7 @@
 #include <vector>
 
 #include <CL/sycl.hpp>
-
-#if __has_include("oneapi/mkl/rng/device.hpp")
 #include "oneapi/mkl/rng/device.hpp"
-#else
-// Beta09 compatibility -- not needed for new code.
-#include "mkl_rng_sycl_device.hpp"
-#endif
 
 using namespace oneapi;
 
