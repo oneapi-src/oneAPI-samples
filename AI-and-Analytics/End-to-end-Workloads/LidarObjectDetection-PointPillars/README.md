@@ -6,29 +6,27 @@ This sample performs 3D object detection and classification using data (point cl
 | OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Skylake with GEN9 or newer / Intel Xe Graphics
 | Software                          | Intel® oneAPI DPC++/C++ Compiler, Intel® Distribution of OpenVINO™ toolkit
-| What you will learn               | How to combine Intel® Distribution of OpenVINO™ toolkit and Intel® oneAPI to offload the computation of a complex workload to one of Intel's supported accelerators (e.g. GPU or CPU)
+| What you will learn               | How to combine Intel® Distribution of OpenVINO™ toolkit and Intel® oneAPI to offload the computation of a complex workload to one of Intel's supported accelerators (e.g., GPU or CPU)
 | Time to complete                  | 30 minutes
 
 ## Purpose
-PointPillars is an AI algorithm, that uses LIDAR point clouds to detect and classify 3D objects in the sensor environment. For this purpose, the algorithm consists of 5 main steps. First a pre-processing of the point cloud is performed. This is realized with the help of kernels implemented in oneAPI. Afterward, the preprocessed data is used by a so-called Pillar Feature Extraction (PFE) CNN to create a 2D image-like representation of the sensor environment. For the inference, this sample uses the Intel® Distribution of OpenVINO™ toolkit. It follows another oneAPI processing step before a second CNN inference for the so-called Region Proposal Network (RPN) is executed using the OpenVINO™ toolkit. Finally, the output data (object list) is post-processed and filtered, which is again performed in oneAPI kernels. An overview of the data flow is given in image below:
+PointPillars is an AI algorithm that uses LIDAR point clouds to detect and classify 3D objects in the sensor environment. For this purpose, the algorithm consists of 5 main steps. First, a pre-processing of the point cloud is performed. This is realized with the help of kernels implemented in oneAPI. Afterward, the pre-processed data is used by a so-called Pillar Feature Extraction (PFE) CNN to create a 2D image-like representation of the sensor environment. For the inference, this sample uses the Intel® Distribution of OpenVINO™ toolkit. It follows another oneAPI processing step before a second CNN inference for the so-called Region Proposal Network (RPN) is executed using the OpenVINO™ toolkit. Finally, the output data (object list) is post-processed and filtered, which is again performed in oneAPI kernels. An overview of the data flow is given in the image below:
 ![Overview](data/point_pillars_overview.png)
 
-
-By default the application will use 'host' as the Intel® oneAPI execution device and CPU for Intel® Distribution of OpenVINO™ toolkit inferencing part. The Intel® oneAPI execution device and inferencing device are displayed in the output along with elapsed time of each of the five steps described above. For more details refer to section: [Execution Options for the Sample Program](#execution-options-for-the-sample-program).
+By default, the application will use 'host' as the Intel® oneAPI execution device and CPU for Intel® Distribution of OpenVINO™ toolkit inferencing part. The Intel® oneAPI execution device and the inferencing device are displayed in the output, along with the elapsed time of each of the five steps described above. For more details refer to section: [Execution Options for the Sample Program](#execution-options-for-the-sample-program).
 
 ## Key Implementation Details
-This sample demonstrates a real-world end-to-end example that uses a combination Intel® oneAPI and the Intel® Distribution of OpenVINO™ to solve the complex task of object detection in a given environment. Hence, this sample will give you insights into the following aspects:
- - You will learn how to transfer data from a oneAPI device/kernel to an OpenVINO-based inference task, and back.
- - You will learn how to implement a device manager that allows to choose the target hardware for execution, i.e. CPU, GPU or an accelerator, at runtime in a user transperent manner. As a result, the target hardware can be chosen via a command line argument, without requiring a time consuming re-compilation (further details on the execution are provided below)
+This sample demonstrates a real-world, end-to-end example that uses a combination of Intel® oneAPI and the Intel® Distribution of OpenVINO™ to solve object detection's complex task in a given environment. Hence, this sample will give you insights into the following aspects:
+ - You will learn how to transfer data from a oneAPI device/kernel to an OpenVINO-based inference task and back.
+ - You will learn how to implement a device manager that allows choosing the target hardware for execution, i.e., CPU, GPU or an accelerator, at runtime in a user transparent manner. As a result, the target hardware can be chosen via a command-line argument without requiring a time-consuming re-compilation (further details on the execution are provided below)
  - You will learn how to implement oneAPI-based function kernels that can be executed on the host system, on a multi-threaded CPU or a GPU.
- - You will learn how ti implement standard algorithms for AI-based object detection, for example _Non-Maximum-Suppression_, using oneAPI.
+ - You will learn how to implement standard algorithms for AI-based object detection, for example, _Non-Maximum-Suppression_, using oneAPI.
 
 ## License  
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `PointPillars` Sample Program for CPU and GPU
 Currently, only Linux platforms are supported. It is recommended to use Ubuntu 18.04.
@@ -39,7 +37,6 @@ To build and run the PointPillars sample, the following libraries have to be ins
 2. Intel® oneAPI Base Toolkit (at least 2021.2)
 3. Boost (including `boost::program_options` library)
 4. Optional: If the sample should be run on an Intel GPU, it might be necessary to upgrade the corresponding drivers. Therefore, please consult the following page: https://github.com/intel/compute-runtime/releases/   
-
 
 ### Build process
 Perform the following steps:
