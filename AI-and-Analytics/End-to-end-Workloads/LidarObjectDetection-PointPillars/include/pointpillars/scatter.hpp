@@ -28,20 +28,20 @@ namespace pointpillars {
  */
 class Scatter {
  private:
-  const int num_threads_;
-  const int max_num_pillars_;
-  const int grid_x_size_;
-  const int grid_y_size_;
+  const int num_features_;     // The number of features per pillar
+  const int max_num_pillars_;  // Maximum number of pillars
+  const int grid_x_size_;      // Number of pillars in x-coordinate
+  const int grid_y_size_;      // Number of pillars in x-coordinate
 
  public:
   /**
   * @brief Constructor
-  * @param[in] num_threads The number of threads to launch kernel
+  * @param[in] num_features The number of features per pillar
   * @param[in] max_num_pillars Maximum number of pillars
   * @param[in] grid_x_size Number of pillars in x-coordinate
   * @param[in] grid_y_size Number of pillars in y-coordinate
   */
-  Scatter(const int num_threads, const int max_num_pillars, const int grid_x_size, const int grid_y_size);
+  Scatter(const int num_features, const int max_num_pillars, const int grid_x_size, const int grid_y_size);
 
   /**
   * @brief Call scatter kernel

@@ -24,6 +24,8 @@
 
 namespace pointpillars {
 
+// This kernel is called on each point of the Point Cloud.  It calculates the coordinates of the point in the 2D pillar
+// map and adds it to the corresponding pillar.
 void MakePillarHistoKernel(const float *dev_points, float *dev_pillar_x_in_coors, float *dev_pillar_y_in_coors,
                            float *dev_pillar_z_in_coors, float *dev_pillar_i_in_coors,
                            int *pillar_count_histo,  // holds the point count on the cell
@@ -41,7 +43,7 @@ void MakePillarHistoKernel(const float *dev_points, float *dev_pillar_x_in_coors
   int yIndex = sycl::floor((float)((dev_points[point_index * 4 + 1] - min_y_range) / pillar_y_size));
   int zIndex = sycl::floor((float)((dev_points[point_index * 4 + 2] - min_z_range) / pillar_z_size));
 
-  // Check for withing grid ranges
+  // Check if it is within grid range
   if (xIndex >= 0 && xIndex < grid_x_size && yIndex >= 0 && yIndex < grid_y_size && zIndex >= 0 &&
       zIndex < grid_z_size) {
     // increase the point count
@@ -62,6 +64,10 @@ void MakePillarHistoKernel(const float *dev_points, float *dev_pillar_x_in_coors
   }
 }
 
+// This kernel is executed on a specific location in the pillar map.
+// It will test if the corresponding pillar has points.
+// In such case it will mark the pillar for use as input to the PillarFeatureExtraction
+// A pillar mask is also generated and can be used to optimize the decoding.
 void MakePillarIndexKernel(int *dev_pillar_count_histo, int *dev_counter, int *dev_pillar_count, int *dev_x_coors,
                            int *dev_y_coors, float *dev_x_coors_for_sub, float *dev_y_coors_for_sub,
                            float *dev_num_points_per_pillar, int *dev_sparse_pillar_map, const int max_pillars,
@@ -95,6 +101,8 @@ void MakePillarIndexKernel(int *dev_pillar_count_histo, int *dev_counter, int *d
   }
 }
 
+// This kernel generates the input feature map to the PillarFeatureExtraction network.
+// It takes the pillars that were marked for use and stores the first 4 features (x,y,z,i) in the input feature map.
 void MakePillarFeatureKernel(float *dev_pillar_x_in_coors, float *dev_pillar_y_in_coors, float *dev_pillar_z_in_coors,
                              float *dev_pillar_i_in_coors, float *dev_pillar_x, float *dev_pillar_y,
                              float *dev_pillar_z, float *dev_pillar_i, int *dev_x_coors, int *dev_y_coors,
@@ -116,6 +124,8 @@ void MakePillarFeatureKernel(float *dev_pillar_x_in_coors, float *dev_pillar_y_i
   dev_pillar_i[pillar_ind] = dev_pillar_i_in_coors[coors_ind];
 }
 
+// This kernel takes the pillars that were marked for use and stores the features: (pillar_center_x, pillar_center_y,
+// pillar_mask) in the input feature map.
 void MakeExtraNetworkInputKernel(float *dev_x_coors_for_sub, float *dev_y_coors_for_sub,
                                  float *dev_num_points_per_pillar, float *dev_x_coors_for_sub_shaped,
                                  float *dev_y_coors_for_sub_shaped, float *dev_pillar_feature_mask,
@@ -183,6 +193,7 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
                               float *dev_pillar_z, float *dev_pillar_i, float *dev_x_coors_for_sub_shaped,
                               float *dev_y_coors_for_sub_shaped, float *dev_pillar_feature_mask,
                               int *dev_sparse_pillar_map, int *host_pillar_count) {
+  // Set Pillar input features to 0
   sycl::queue queue = devicemanager::GetCurrentQueue();
   queue.memset(dev_pillar_x_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float));
   queue.memset(dev_pillar_y_in_coors_, 0, grid_y_size_ * grid_x_size_ * max_num_points_per_pillar_ * sizeof(float));
@@ -191,10 +202,11 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
   queue.memset(dev_pillar_count_histo_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
   queue.memset(dev_counter_, 0, sizeof(int));
   queue.memset(dev_pillar_count_, 0, sizeof(int));
-  queue.memset(dev_x_coors_for_sub_, 0, max_num_pillars_ * sizeof(float));
-  queue.memset(dev_y_coors_for_sub_, 0, max_num_pillars_ * sizeof(float));
   queue.wait();
 
+  // Use the point cloud data to generate the pillars
+  // This will create create assign the point to the corresponding pillar in the grid. A maximum number of points can be
+  // assigned to a single pillar.
   int num_block = DIVUP(in_num_points, 256);
   queue.submit([&](auto &h) {
     auto dev_pillar_x_in_coors_ct1 = dev_pillar_x_in_coors_;
@@ -225,6 +237,7 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
   });
   queue.wait();
 
+  // Check which pillars contain points and mark them for use during feature extraction.
   queue.submit([&](auto &h) {
     auto dev_pillar_count_histo_ct0 = dev_pillar_count_histo_;
     auto dev_counter_ct1 = dev_counter_;
@@ -254,6 +267,8 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
 
   queue.memcpy(host_pillar_count, dev_pillar_count_, sizeof(int)).wait();
 
+  // Generate the first 4 pillar features in the input feature map.
+  // This is a list of points up to max_num_points_per_pillar
   queue.submit([&](auto &h) {
     auto dev_pillar_x_in_coors_ct0 = dev_pillar_x_in_coors_;
     auto dev_pillar_y_in_coors_ct1 = dev_pillar_y_in_coors_;
@@ -274,6 +289,7 @@ void PreProcess::DoPreProcess(const float *dev_points, const int in_num_points, 
   });
   queue.wait();
 
+  // Generate the next features in the pillar input feature map: (pillar_center_x, pillar_center_y, pillar_mask)
   queue.submit([&](auto &h) {
     auto dev_x_coors_for_sub_ct0 = dev_x_coors_for_sub_;
     auto dev_y_coors_for_sub_ct1 = dev_y_coors_for_sub_;

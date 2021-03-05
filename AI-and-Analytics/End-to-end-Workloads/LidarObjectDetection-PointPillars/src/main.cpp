@@ -15,6 +15,14 @@
 #include "pointpillars/pointpillars_config.hpp"
 #include "pointpillars/pointpillars_util.hpp"
 
+/**
+ * Read in a LiDAR point cloud from a file in Point Cloud Data format (as ascii)
+ * https://pointclouds.org/documentation/tutorials/pcd_file_format.html
+ *
+ * @param[in] file_name is the name of the PCD file
+ * @param[in] points are the parsed points from the PCD as x,y,z,intensity values
+ * @return number of of points in the point cloud
+ */
 std::size_t ReadPointCloud(std::string const &file_name, std::vector<float> &points) {
   if (!boost::filesystem::exists(file_name) || file_name.empty()) {
     return 0;
@@ -25,6 +33,8 @@ std::size_t ReadPointCloud(std::string const &file_name, std::vector<float> &poi
   std::ifstream in(file_name);
   std::string line;
   bool parse_data = false;
+
+  // read PCD file in a line-by-line manner
   while (std::getline(in, line) && points.size() <= 4 * number_of_points) {
     if (parse_data) {
       std::istringstream iss(line);
@@ -62,6 +72,7 @@ int main(int argc, char *argv[]) {
   boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
   boost::program_options::notify(vm);
 
+  // parse program options
   if (vm.count("help")) {
     std::cout << desc << std::endl;
     return 1;
@@ -95,20 +106,24 @@ int main(int argc, char *argv[]) {
   std::vector<float> points;
   number_of_points = ReadPointCloud("example.pcd", points);
 
+  // if the point cloud was empty, something went wrong
   if ((number_of_points == 0) || points.empty()) {
     std::cout << "Unable to read point cloud file. Please put the point cloud file into the data/ folder." << std::endl;
     return -1;
   }
 
+  // Run PointPillars for each execution device
   for (const auto &device_type : execution_devices) {
     if (!devicemanager::SelectDevice(device_type)) {
       std::cout << "\n\n";
       continue;
     }
 
+    // setup PointPillars
     pointpillars::PointPillars point_pillars(0.5f, 0.5f, config);
-
     const auto start_time = std::chrono::high_resolution_clock::now();
+
+    // run PointPillars
     try {
       point_pillars.Detect(points.data(), number_of_points, object_detections);
     } catch (...) {
@@ -119,6 +134,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Execution time: "
               << std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count() << "ms\n\n";
 
+    // print results
     std::cout << object_detections.size() << " cars detected\n";
 
     for (auto const &detection : object_detections) {

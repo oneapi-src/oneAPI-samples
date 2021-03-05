@@ -19,14 +19,68 @@
 #include "devicemanager/devicemanager.hpp"
 
 namespace pointpillars {
+
+// Intersection over Union (IoU) calculation
+// a and b are pointers to the input objects
+// @return IoU value = Area of overlap / Area of union
+// @details: https://en.wikipedia.org/wiki/Jaccard_index
 inline float DevIoU(float const *const a, float const *const b) {
-  float left = sycl::max(a[0], b[0]), right = sycl::min(a[2], b[2]);
-  float top = sycl::max(a[1], b[1]), bottom = sycl::min(a[3], b[3]);
-  float width = sycl::max((float)(right - left + 1), 0.f), height = sycl::max((float)(bottom - top + 1), 0.f);
+  float left = sycl::max(a[0], b[0]);
+  float right = sycl::min(a[2], b[2]);
+  float top = sycl::max(a[1], b[1]);
+  float bottom = sycl::min(a[3], b[3]);
+  float width = sycl::max((float)(right - left + 1), 0.f);
+  float height = sycl::max((float)(bottom - top + 1), 0.f);
   float interS = width * height;
   float Sa = (a[2] - a[0] + 1) * (a[3] - a[1] + 1);
   float Sb = (b[2] - b[0] + 1) * (b[3] - b[1] + 1);
   return interS / (Sa + Sb - interS);
+}
+
+NMS::NMS(const int num_threads, const int num_box_corners, const float nms_overlap_threshold)
+    : num_threads_(num_threads), num_box_corners_(num_box_corners), nms_overlap_threshold_(nms_overlap_threshold) {}
+
+void NMS::DoNMS(const size_t host_filter_count, float *dev_sorted_box_for_nms, int *out_keep_inds,
+                size_t &out_num_to_keep) {
+  // Currently the parallel implementation of NMS only works on the GPU
+  // Therefore, in case of a CPU or Host device, we use the sequential implementation
+  if (!devicemanager::GetCurrentDevice().is_gpu()) {
+    SequentialNMS(host_filter_count, dev_sorted_box_for_nms, out_keep_inds, out_num_to_keep);
+  } else {
+    ParallelNMS(host_filter_count, dev_sorted_box_for_nms, out_keep_inds, out_num_to_keep);
+  }
+}
+
+void NMS::SequentialNMS(const size_t host_filter_count, float *dev_sorted_box_for_nms, int *out_keep_inds,
+                        size_t &out_num_to_keep) {
+  std::vector<int> keep_inds_vec;           // vector holding the object indexes that should be kept
+  keep_inds_vec.resize(host_filter_count);  // resize vector to maximum possible length
+
+  // fill vector with default indexes 0, 1, 2, ...
+  std::iota(keep_inds_vec.begin(), keep_inds_vec.end(), 0);
+
+  // Convert vector to a C++ set
+  std::set<int> keep_inds(keep_inds_vec.begin(), keep_inds_vec.end());
+
+  // Filtering overlapping boxes
+  for (size_t i = 0; i < host_filter_count; ++i) {
+    for (size_t j = i + 1; j < host_filter_count; ++j) {
+      auto iou_value =
+          DevIoU(dev_sorted_box_for_nms + i * num_box_corners_, dev_sorted_box_for_nms + j * num_box_corners_);
+      if (iou_value > nms_overlap_threshold_) {
+        // if IoU value to too high, remove the index from the set
+        keep_inds.erase(j);
+      }
+    }
+  }
+
+  // fill output data, with the kept indexes
+  out_num_to_keep = keep_inds.size();
+  int keep_counter = 0;
+  for (auto ind : keep_inds) {
+    out_keep_inds[keep_counter] = ind;
+    keep_counter++;
+  }
 }
 
 void Kernel(const int n_boxes, const float nms_overlap_thresh, const float *dev_boxes, unsigned long long *dev_mask,
@@ -49,7 +103,6 @@ void Kernel(const int n_boxes, const float nms_overlap_thresh, const float *dev_
     block_boxes[item_ct1.get_local_id(2) * num_box_corners + 3] =
         dev_boxes[(block_threads * col_start + item_ct1.get_local_id(2)) * num_box_corners + 3];
   }
-  // item_ct1.barrier(); // @todo: re-enable if not using host device
 
   if (item_ct1.get_local_id(2) < row_size) {
     const int cur_box_idx = block_threads * row_start + item_ct1.get_local_id(2);
@@ -68,44 +121,6 @@ void Kernel(const int n_boxes, const float nms_overlap_thresh, const float *dev_
     }
     const int col_blocks = DIVUP(n_boxes, block_threads);
     dev_mask[cur_box_idx * col_blocks + col_start] = t;
-  }
-}
-
-NMS::NMS(const int num_threads, const int num_box_corners, const float nms_overlap_threshold)
-    : num_threads_(num_threads), num_box_corners_(num_box_corners), nms_overlap_threshold_(nms_overlap_threshold) {}
-
-void NMS::DoNMS(const size_t host_filter_count, float *dev_sorted_box_for_nms, int *out_keep_inds,
-                size_t &out_num_to_keep) {
-  if (!devicemanager::GetCurrentDevice().is_gpu()) {
-    SequentialNMS(host_filter_count, dev_sorted_box_for_nms, out_keep_inds, out_num_to_keep);
-  } else {
-    ParallelNMS(host_filter_count, dev_sorted_box_for_nms, out_keep_inds, out_num_to_keep);
-  }
-}
-
-void NMS::SequentialNMS(const size_t host_filter_count, float *dev_sorted_box_for_nms, int *out_keep_inds,
-                        size_t &out_num_to_keep) {
-  std::vector<int> keep_inds_vec;
-  keep_inds_vec.resize(host_filter_count);
-  std::iota(keep_inds_vec.begin(), keep_inds_vec.end(), 0);
-  std::set<int> keep_inds(keep_inds_vec.begin(), keep_inds_vec.end());
-
-  // Filtering overlapping boxes
-  for (size_t i = 0; i < host_filter_count; ++i) {
-    for (size_t j = i + 1; j < host_filter_count; ++j) {
-      auto iou_value =
-          DevIoU(dev_sorted_box_for_nms + i * num_box_corners_, dev_sorted_box_for_nms + j * num_box_corners_);
-      if (iou_value > nms_overlap_threshold_) {
-        keep_inds.erase(j);
-      }
-    }
-  }
-
-  out_num_to_keep = keep_inds.size();
-  int keep_counter = 0;
-  for (auto ind : keep_inds) {
-    out_keep_inds[keep_counter] = ind;
-    keep_counter++;
   }
 }
 
@@ -155,6 +170,8 @@ void NMS::ParallelNMS(const size_t host_filter_count, float *dev_sorted_box_for_
       }
     }
   }
+
+  // release the dev_mask, as it was only of temporary use
   sycl::free(dev_mask, devicemanager::GetCurrentQueue());
 }
 }  // namespace pointpillars

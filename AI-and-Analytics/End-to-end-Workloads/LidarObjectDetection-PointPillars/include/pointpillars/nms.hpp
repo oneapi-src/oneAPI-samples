@@ -23,15 +23,18 @@
 namespace pointpillars {
 
 /**
- * Non-Maximum-Surpression
+ * Non-Maximum-Suppression
  *
- * Used to filter out redundant object detections
+ * Non-maximum suppression (NMS) is a way to eliminate points that do not lie in the important edges
+ * of detected data. Here NMS is used to filter out overlapping object detections. Therefore, an
+ * intersection-over-union (IOU) approach is used to caculate the overlap of two objects. At the end,
+ * only the most relevant objects are kept.
  */
 class NMS {
  private:
-  const int num_threads_;
-  const int num_box_corners_;
-  const float nms_overlap_threshold_;
+  const int num_threads_;              // Number of threads used to execute the NMS kernel
+  const int num_box_corners_;          // Number of corners of a 2D box
+  const float nms_overlap_threshold_;  // Threshold below which objects are discarded
 
  public:
   /**
@@ -39,13 +42,11 @@ class NMS {
   * @param[in] num_threads Number of threads when launching kernel
   * @param[in] num_box_corners Number of corners for 2D box
   * @param[in] nms_overlap_threshold IOU threshold for NMS
-  * @details Captital variables never change after the compile, Non-captital
-  * variables could be chaned through rosparam
   */
   NMS(const int num_threads, const int num_box_corners, const float nms_overlap_threshold);
 
   /**
-  * @brief Non-Maximum Suppresion for network output
+  * @brief Execute Non-Maximum Suppresion for network output
   * @param[in] host_filter_count Number of filtered output
   * @param[in] dev_sorted_box_for_nms Bounding box output sorted by score
   * @param[out] out_keep_inds Indexes of selected bounding box
@@ -56,14 +57,14 @@ class NMS {
 
  private:
   /**
-   * @brief Parallel Non-Maximum Suppresion for network output using SYCL or GPU
+   * @brief Parallel Non-Maximum Suppresion for network output using SYCL GPU
    * @details Parallel NMS and postprocessing for selecting box
    */
   void ParallelNMS(const size_t host_filter_count, float *dev_sorted_box_for_nms, int *out_keep_inds,
                    size_t &out_num_to_keep);
 
   /**
-   * @brief Sequential Non-Maximum Suppresion for network output in CPU
+   * @brief Sequential Non-Maximum Suppresion for network output in SYCL CPU or Host device
    */
   void SequentialNMS(const size_t host_filter_count, float *dev_sorted_box_for_nms, int *out_keep_inds,
                      size_t &out_num_to_keep);

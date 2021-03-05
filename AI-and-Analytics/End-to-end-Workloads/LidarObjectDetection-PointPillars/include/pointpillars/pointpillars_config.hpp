@@ -16,7 +16,21 @@ namespace pointpillars {
  * Anchor representation
  */
 struct Anchor {
+  /**
+  * @brief Constructor
+  * @param[in] _x Size along x
+  * @param[in] _y Size along y
+  * @param[in] _z Size along z
+  */
   Anchor(float _x, float _y, float _z) : x(_x), y(_y), z(_z), dz(0.){};
+
+  /**
+  * @brief Constructor
+  * @param[in] _x Size along x
+  * @param[in] _y Size along y
+  * @param[in] _z Size along z
+  * @param[in] _dz Position in z
+  */
   Anchor(float _x, float _y, float _z, float _dz) : x(_x), y(_y), z(_z), dz(_dz){};
 
   float x{1.f};
@@ -33,11 +47,11 @@ struct AnchorGridConfig {
   float min_z_range{0.0f};  // defines the area covered
   float max_z_range{1.0f};  // defines the area covered
 
-  float x_stride{0.01f};
-  float y_stride{0.01f};
+  float x_stride{0.01f};  // spacing between anchors along x
+  float y_stride{0.01f};  // spacing between anchors along y
 
   std::vector<Anchor> anchors = {Anchor(1.0f, 2.0f, 1.5f)};
-  std::vector<float> rotations = {0.f, M_PI_2};
+  std::vector<float> rotations = {0.f, M_PI_2};  // The set of rotations to in which the anchors should be generated
 };
 
 struct PointPillarsConfig {
@@ -49,12 +63,12 @@ struct PointPillarsConfig {
   float max_y_range{39.68f};   // defines the area covered by the algorithm
   float min_z_range{-3.0f};    // defines the area covered by the algorithm
   float max_z_range{1.0f};     // defines the area covered by the algorithm
-  float rpn_scale{0.5f};       // upsample_scale / downsample scale
+  float rpn_scale{0.5f};       // The scaling factor that the RPN is applying = 1 / (final convolution stride)
   float pillar_x_size{0.16f};  // pillar voxelization size along X
   float pillar_y_size{0.16f};  // pillar voxelization size along Y
   float pillar_z_size{4.0f};   // pillar voxelization size along Z
-  float x_stride{0.32f};
-  float y_stride{0.32f};
+  float x_stride{0.32f};       // spacing between pillars along x
+  float y_stride{0.32f};       // spacing between pillars along y
   std::size_t max_num_pillars{12000};
   std::size_t num_classes{1};
   std::vector<Anchor> anchors = {Anchor(1.6f, 3.9f, 1.56f)};

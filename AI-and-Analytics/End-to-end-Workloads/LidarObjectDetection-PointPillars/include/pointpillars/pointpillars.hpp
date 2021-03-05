@@ -79,25 +79,33 @@ class PointPillars {
 
   int host_pillar_count_[1];
 
-  int *dev_x_coors_;
-  int *dev_y_coors_;
-  float *dev_num_points_per_pillar_;
-  int *dev_sparse_pillar_map_;
-  int *dev_cumsum_workspace_;
+  int *dev_x_coors_;                  // Array that holds the coordinates of corresponding pillar in x
+  int *dev_y_coors_;                  // Array that holds the coordinates of corresponding pillar in y
+  float *dev_num_points_per_pillar_;  // Array that stores the number of points in the corresponding pillar
+  int *dev_sparse_pillar_map_;  // Mask with values 0 or 1 that specifies if the corresponding pillar has points or not
+  int *dev_cumsum_workspace_;  // Device variable used as temporary storage of the cumulative sum during the anchor mask
+                               // creation
 
+  // variables to store the pillar's points
   float *dev_pillar_x_;
   float *dev_pillar_y_;
   float *dev_pillar_z_;
   float *dev_pillar_i_;
 
+  // variables to store the pillar coordinates in the pillar grid
   float *dev_x_coors_for_sub_shaped_;
   float *dev_y_coors_for_sub_shaped_;
+
+  // Pillar mask used to ignore the features generated with empty pillars
   float *dev_pillar_feature_mask_;
 
+  // Mask used to filter the anchors in regions with input points
   int *dev_anchor_mask_;
 
+  // Device memory used to store the RPN input feature map after Scatter
   float *dev_scattered_feature_;
 
+  // Device memory locations to store the object detections
   float *dev_filtered_box_;
   float *dev_filtered_score_;
   float *dev_multiclass_score_;

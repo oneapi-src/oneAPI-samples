@@ -26,6 +26,7 @@
 #define DIVUP(m, n) ((m) / (n) + ((m) % (n) > 0))
 
 // Performs atomic fetch and add operation using SYCL
+// Calls add on SYCL atomic object
 inline int AtomicFetchAdd(int *addr, int operand) {
   sycl::atomic<int, sycl::access::address_space::global_space> obj(
       (sycl::multi_ptr<int, sycl::access::address_space::global_space>(addr)));
