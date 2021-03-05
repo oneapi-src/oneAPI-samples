@@ -12,12 +12,26 @@ set(CMAKE_CXX_COMPILER dpcpp)
 ############################################################
 # gather all dependencies
 ############################################################
-find_package(InferenceEngine REQUIRED)
-FILE(STRINGS "${InferenceEngine_INCLUDE_DIRS}/../version.txt" IE_VERSION)
+find_package(InferenceEngine)
 
-if (${IE_VERSION} STRLESS "2021.2")
-  message(FATAL_ERROR "OpenVINO with version 2021.2 or newer required. Found only ${IE_VERSION}")
+if (InferenceEngine_FOUND)
+  FILE(STRINGS "${InferenceEngine_INCLUDE_DIRS}/../version.txt" IE_VERSION)
+  if (${IE_VERSION} STRLESS "2021.2")
+    unset(InferenceEngine_FOUND)
+  endif()
 endif()
+
+if (NOT InferenceEngine_FOUND)
+  message(STATUS "ERROR: OpenVINO with version 2021.2 or newer required.")
+  if (IE_VERSION)
+    message(STATUS "   Found only ${IE_VERSION}")
+  endif()
+  message(STATUS "  Please ensure that OpenVINO is correctly installed and that the OpenVINO environment is setup,")
+  message(STATUS "  i.e. run 'source <path/to/openvino>/bin/setupvars.sh' before calling cmake")
+  return()
+endif()
+
+
 find_path(SYCL_HEADERS CL/sycl.hpp PATHS $ENV{ONEAPI_ROOT}/compiler/latest/linux/include/sycl PATH_SUFFIXES / NO_CMAKE_FIND_ROOT_PATH NO_CMAKE_SYSTEM_PATH NO_DEFAULT_PATH)
 find_path(DPCPP_HEADERS oneapi/dpl/iterator PATHS $ENV{ONEAPI_ROOT}/dpl/latest/linux/include PATH_SUFFIXES / NO_CMAKE_FIND_ROOT_PATH NO_CMAKE_SYSTEM_PATH NO_DEFAULT_PATH)
 find_library(SYCL_LIB sycl PATHS $ENV{ONEAPI_ROOT}/compiler/latest/linux PATH_SUFFIXES lib NO_CMAKE_FIND_ROOT_PATH NO_CMAKE_SYSTEM_PATH NO_DEFAULT_PATH)
