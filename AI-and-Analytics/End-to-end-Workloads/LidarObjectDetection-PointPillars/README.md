@@ -10,10 +10,18 @@ This sample performs 3D object detection and classification using data (point cl
 | Time to complete                  | 30 minutes
 
 ## Purpose
-PointPillars is an AI algorithm that uses LIDAR point clouds to detect and classify 3D objects in the sensor environment. For this purpose, the algorithm consists of 5 main steps. First, a pre-processing of the point cloud is performed. This is realized with the help of kernels implemented in oneAPI. Afterward, the pre-processed data is used by a so-called Pillar Feature Extraction (PFE) CNN to create a 2D image-like representation of the sensor environment. For the inference, this sample uses the Intel® Distribution of OpenVINO™ toolkit. It follows another oneAPI processing step before a second CNN inference for the so-called Region Proposal Network (RPN) is executed using the OpenVINO™ toolkit. Finally, the output data (object list) is post-processed and filtered, which is again performed in oneAPI kernels. An overview of the data flow is given in the image below:
+PointPillars is an AI algorithm that uses LIDAR point clouds to detect and classify 3D objects in the sensor environment. For this purpose, the algorithm consists of the following steps, that are also visualized in the figure below:
+
 ![Overview](data/point_pillars_overview.png)
 
-By default, the application will use 'host' as the Intel® oneAPI execution device and CPU for Intel® Distribution of OpenVINO™ toolkit inferencing part. The Intel® oneAPI execution device and the inferencing device are displayed in the output, along with the elapsed time of each of the five steps described above. For more details refer to section: [Execution Options for the Sample Program](#execution-options-for-the-sample-program).
+1. Pre-processing of the LiDAR input point cloud is performed. This is realized with the help of kernels implemented using Intel® oneAPI.
+2. An anchor grid is generated. The anchors in the grid are later used in object detection to refine detected boxes by the RegionProposalNetwork (RPN). The anchor grid generation is also implemented using Intel® oneAPI.
+3. Afterward, the pre-processed data is used by a so-called Pillar Feature Extraction (PFE) CNN to create a 2D image-like representation of the sensor environment. For the inference, this sample uses the Intel® Distribution of OpenVINO™ toolkit. The output of this CNN is a list of dense tensors (learned pillar features).
+4. To convert these dense tensors into an pseudo-image, a scatter operation is performed. This operation is again realized with Intel® oneAPI.
+5. This pseudo-image is consumed by the second CNN, the so-called Region Proposal Network (RPN). The inference is performed with the help of the Intel® Distribution of OpenVINO™ toolkit. The output is an unfiltered list of possible object detections, their position, dimensions and classifications.
+6. Finally, this output data (object list) is post-processed with the help of the anchors created in the 2nd step. The anchors are used to decode the object position, dimension and class. Afterwards, a Non-Maximum-Suppression (NMS) is used to filter out redundant/clutter objects. Finally, the objects are sorted according to their likelihood, and then provided as output. All of these steps are implemented as Intel® oneAPI kernels. 
+
+By default, the application will use 'host' as the Intel® oneAPI execution device and CPU (single-threaded) for Intel® Distribution of OpenVINO™ toolkit inferencing part. The Intel® oneAPI execution device and the inferencing device are displayed in the output, along with the elapsed time of each of the five steps described above. For more details refer to section: [Execution Options for the Sample Program](#execution-options-for-the-sample-program).
 
 ## Key Implementation Details
 This sample demonstrates a real-world, end-to-end example that uses a combination of Intel® oneAPI and the Intel® Distribution of OpenVINO™ to solve object detection's complex task in a given environment. Hence, this sample will give you insights into the following aspects:
