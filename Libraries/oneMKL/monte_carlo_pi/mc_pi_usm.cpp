@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include <iostream>
+#include <numeric>
 #include <vector>
 
 #include <CL/sycl.hpp>
