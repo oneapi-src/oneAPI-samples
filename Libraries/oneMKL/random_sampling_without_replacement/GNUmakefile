@@ -9,7 +9,7 @@ run_all: lottery lottery_usm lottery_device_api
 		./lottery_usm
 		./lottery_device_api
 
-DPCPP_OPTS = -I${MKLROOT}/include -mkl -DMKL_ILP64 -fsycl-device-code-split=per_kernel -fno-sycl-early-optimizations
+DPCPP_OPTS = -qmkl -DMKL_ILP64 -fsycl-device-code-split=per_kernel -fno-sycl-early-optimizations
 
 lottery: lottery.cpp
 		dpcpp $< -o $@ $(DPCPP_OPTS)

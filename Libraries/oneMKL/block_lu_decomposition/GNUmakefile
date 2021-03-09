@@ -5,10 +5,10 @@ all: factor solve
 	./solve
 
 factor: factor.cpp dgeblttrf.cpp auxi.cpp
-	dpcpp $^ -o $@ -fsycl-device-code-split=per_kernel -DMKL_ILP64 -I${MKLROOT}/include -mkl
+	dpcpp $^ -o $@ -fsycl-device-code-split=per_kernel -DMKL_ILP64 -qmkl
 
 solve: solve.cpp dgeblttrf.cpp dgeblttrs.cpp auxi.cpp
-	dpcpp $^ -o $@ -fsycl-device-code-split=per_kernel -DMKL_ILP64 -I${MKLROOT}/include -mkl
+	dpcpp $^ -o $@ -fsycl-device-code-split=per_kernel -DMKL_ILP64 -qmkl
 
 clean:
 	-rm -f factor solve

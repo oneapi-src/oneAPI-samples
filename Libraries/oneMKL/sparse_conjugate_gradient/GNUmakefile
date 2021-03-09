@@ -7,7 +7,7 @@ all: run
 run: sparse_cg
 	./sparse_cg
 
-DPCPP_OPTS = -I${MKLROOT}/include -mkl -fsycl-device-code-split=per_kernel
+DPCPP_OPTS = -qmkl -fsycl-device-code-split=per_kernel
 
 sparse_cg: sparse_cg.cpp
 	dpcpp $< -o $@ $(DPCPP_OPTS)

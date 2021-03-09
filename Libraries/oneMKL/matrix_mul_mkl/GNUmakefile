@@ -7,7 +7,7 @@ all: run
 run: matrix_mul_mkl
 	./matrix_mul_mkl
 
-DPCPP_OPTS = -I${MKLROOT}/include -mkl -fsycl-device-code-split=per_kernel
+DPCPP_OPTS = -qmkl -fsycl-device-code-split=per_kernel
 
 matrix_mul_mkl: matrix_mul_mkl.cpp
 	dpcpp $< -o $@ $(DPCPP_OPTS)

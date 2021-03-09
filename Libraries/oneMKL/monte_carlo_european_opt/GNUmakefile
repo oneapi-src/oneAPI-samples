@@ -7,7 +7,7 @@ run_all: mc_european mc_european_usm
 	@echo
 	./mc_european_usm
 
-DPCPP_OPTS = -I${MKLROOT}/include -mkl -DMKL_ILP64 -fsycl-device-code-split=per_kernel
+DPCPP_OPTS = -qmkl -DMKL_ILP64 -fsycl-device-code-split=per_kernel
 
 mc_european: mc_european.cpp
 	dpcpp $< -o $@ $(DPCPP_OPTS)
