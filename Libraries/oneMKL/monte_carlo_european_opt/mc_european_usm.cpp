@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <vector>
+#include <numeric>
 
 #include <CL/sycl.hpp>
 #include "oneapi/mkl.hpp"
