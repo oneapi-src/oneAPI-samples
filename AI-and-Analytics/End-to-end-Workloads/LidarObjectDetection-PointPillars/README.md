@@ -54,20 +54,13 @@ $ source /opt/intel/openvino_2021/bin/setupvars.sh
 $ source /opt/intel/oneapi/setvars.sh
 ```
 
-2. Download the PFE and RPN models in ONNX format
-``` 
-$ cd data/model
-$ wget https://github.com/k0suke-murakami/kitti_pretrained_point_pillars/raw/master/pfe.onnx
-$ wget https://github.com/k0suke-murakami/kitti_pretrained_point_pillars/raw/master/rpn.onnx
-$ cd ../..
-```
-
 2. Build the program using the following `cmake` commands. 
 ``` 
 $ mkdir build && cd build
 $ cmake ..
 $ make
 ```
+Please note that cmake will also download the ONNX models required for the two inference steps executed with the Intel® Distribution of OpenVINO™ toolkit.
 
 ## Running the `PointPillars` Sample Program
 After a successful build, the sample program can be run as follows:
