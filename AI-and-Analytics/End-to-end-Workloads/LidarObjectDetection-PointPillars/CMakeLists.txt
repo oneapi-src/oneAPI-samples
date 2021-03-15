@@ -89,7 +89,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   ${CMAKE_SOURCE_DIR}/include
 )
 
-target_compile_options(${PROJECT_NAME} PRIVATE -fsycl -Wall -Wextra -Wformat-security)
+target_compile_options(${PROJECT_NAME} PRIVATE -fsycl)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC -DCL_TARGET_OPENCL_VERSION=220)
 
@@ -109,7 +109,9 @@ target_link_libraries(example.exe PRIVATE
   Boost::program_options
 )
 
-configure_file(${CMAKE_SOURCE_DIR}/data/model/pfe.onnx ${CMAKE_CURRENT_BINARY_DIR}/pfe.onnx COPYONLY)
-configure_file(${CMAKE_SOURCE_DIR}/data/model/rpn.onnx ${CMAKE_CURRENT_BINARY_DIR}/rpn.onnx COPYONLY)
+# Get the required model files and copy the input point cloud
+message(STATUS "Getting model files")
+execute_process(COMMAND wget https://github.com/k0suke-murakami/kitti_pretrained_point_pillars/raw/master/pfe.onnx -q -O ${CMAKE_CURRENT_BINARY_DIR}/pfe.onnx)
+execute_process(COMMAND wget https://github.com/k0suke-murakami/kitti_pretrained_point_pillars/raw/master/rpn.onnx -q -O ${CMAKE_CURRENT_BINARY_DIR}/rpn.onnx)
 configure_file(${CMAKE_SOURCE_DIR}/data/example.pcd ${CMAKE_CURRENT_BINARY_DIR}/example.pcd COPYONLY)
 
