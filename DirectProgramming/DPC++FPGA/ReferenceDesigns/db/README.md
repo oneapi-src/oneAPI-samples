@@ -1,5 +1,5 @@
 ﻿# Database Query Acceleration
-This reference design demonstrates how to accelerate [TPC-H](http://www.tpc.org/tpch/)-like database queries on an FPGA.
+This reference design demonstrates how to use an FPGA to accelerate database queries for a data-warehouse schema derived from TPC-H.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -16,7 +16,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 _Notice: This example design is only officially supported for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)_
 
 **Performance**
-In this design, we accelerate four TPC-H style queries as *offload accelerators*. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the latency (i.e., the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). As shown in the table below, most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency. 
+In this design, we accelerate four database queries as *offload accelerators*. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the latency (i.e., the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). As shown in the table below, most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency. 
 
 The performance data below was gathered using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) with a database scale factor (SF) of 1. Please see the [Database files](#database-files) section for more information on generating data for a scale factor of 1.
 
@@ -28,7 +28,7 @@ The performance data below was gathered using the Intel® FPGA PAC D5005 (with I
 | 12    | 16                                  | 26
 
 ## Purpose
-The [TPC-H database benchmark](http://www.tpc.org/tpch/) is an 8-table database and set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four of these queries, *similar* to TPC-H queries 1, 9, 11, and 12, can be accelerated using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) and oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are are combined in different ways to build the four queries. For more information on the TPC-H benchmark, you can visit the [TPC-H website](http://www.tpc.org/tpch/).
+The database in this tutorial has 8-tables and set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four queries can be accelerated using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) and oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are are combined in different ways to build the four queries.
 
 ## Key Implementation Details
 To optimize the different database queries, the design leverages concepts discussed in the following FPGA tutorials: 
@@ -225,14 +225,14 @@ You should see the following output in the console:
 | File                                  | Description 
 |:---                                   |:---
 |`db.cpp`                               | Contains the `main()` function and the top-level interfaces to the database functions.
-|`dbdata.cpp`                           | Contains code to parse the TPC-H-like input files and validate the query output
-|`dbdata.hpp`                           | Definitions of TPC-H related datastructures and parsing functions
-|`query1/query1_kernel.cpp`             | Contains the kernel for TPC-H-like Query 1 
-|`query9/query9_kernel.cpp`             | Contains the kernel for TPC-H-like Query 9
+|`dbdata.cpp`                           | Contains code to parse the database input files and validate the query output
+|`dbdata.hpp`                           | Definitions of database related datastructures and parsing functions
+|`query1/query1_kernel.cpp`             | Contains the kernel for Query 1 
+|`query9/query9_kernel.cpp`             | Contains the kernel for Query 9
 |`query9/pipe_types.cpp`                | All data types and instantiations for pipes used in query 9
-|`query11/query11_kernel.cpp`           | Contains the kernel for TPC-H-like Query 11
+|`query11/query11_kernel.cpp`           | Contains the kernel for Query 11
 |`query11/pipe_types.cpp`               | All data types and instantiations for pipes used in query 11
-|`query12/query12_kernel.cpp`           | Contains the kernel for TPC-H-like Query 12
+|`query12/query12_kernel.cpp`           | Contains the kernel for Query 12
 |`query12/pipe_types.cpp`               | All data types and instantiations for pipes used in query 12
 |`db_utils/Accumulator.hpp`             | Generalized templated accumulators using registers or BRAMs
 |`db_utils/Date.hpp`                    | A class to represent dates within the database
@@ -252,7 +252,7 @@ In the `data/` directory, you will find database files for a scale factor of 0.0
 To generate larger database files to run on the hardware, you can use TPC's `dbgen` tool. Instructions for downloading, building and running the `dbgen` tool can be found in the [TPC-H documents](http://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.18.0.pdf) on the [TPC-H website](http://www.tpc.org/tpch/). Note that this reference design currently only supports TPC-H databases with scale factors of 0.01 or 1.
 
 ### Query Implementation
-The description and SQL code for each TPC-H query can be found in the [TPC-H documents](http://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.18.0.pdf). The following sections will describe, at a high level, how queries 1, 9, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
+The following sections will describe, at a high level, how queries 1, 9, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
 
 #### Query 1
 Query 1 is the simplest of the four queries and only uses the `Accumulator` database operator. The query streams in each row of the LINEITEM table and performs computation on each row.
