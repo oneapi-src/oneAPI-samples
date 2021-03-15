@@ -114,6 +114,10 @@ Perform the following steps:
 3. Right-click on the project in Solution Explorer and select Rebuild.
 4. From the top menu, select Debug -> Start without Debugging.
 
+***
+Note: You need Base Toolkit 2021.2 or later to build this sample with the IDE.
+***
+
 
 ## Running the Sample
 
