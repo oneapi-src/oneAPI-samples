@@ -213,8 +213,8 @@ if __name__ == '__main__':
     elif len(sys.argv) > 1 and '.csv' in sys.argv[1]:
         log = oneDNNLog()
         log.load_log(sys.argv[1])
-        print('Total MKLDNN time:', log.data['time'].sum())
-        print('Total MKLDNN ops:', log.data['time'].count())
+        print('Total MKLDNN time:', log.exec_data['time'].sum())
+        print('Total MKLDNN ops:', log.exec_data['time'].count())
         onednn.breakdown(log.exec_data,"type","time")
         onednn.breakdown(log.exec_data,"jit","time")
     elif len(sys.argv) > 1:
@@ -223,7 +223,7 @@ if __name__ == '__main__':
         print(csvpath)
         log = oneDNNLog()
         log.load_log(csvpath)
-        print('Total MKLDNN time:', log.data['time'].sum())
-        print('Total MKLDNN ops:', log.data['time'].count())
+        print('Total MKLDNN time:', log.exec_data['time'].sum())
+        print('Total MKLDNN ops:', log.exec_data['time'].count())
         onednn.breakdown(log.exec_data,"type","time")
         onednn.breakdown(log.exec_data,"jit","time")
