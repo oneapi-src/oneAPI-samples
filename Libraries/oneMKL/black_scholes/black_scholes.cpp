@@ -20,15 +20,8 @@
 #include <vector>
 
 #include <CL/sycl.hpp>
-
-#if __has_include("oneapi/mkl.hpp")
 #include "oneapi/mkl.hpp"
 #include "oneapi/mkl/rng/device.hpp"
-#else
-// Beta09 compatibility -- not needed for new code.
-#include "mkl_sycl.hpp"
-#include "mkl_rng_sycl_device.hpp"
-#endif
 
 using namespace oneapi;
 

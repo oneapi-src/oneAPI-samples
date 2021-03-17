@@ -13,8 +13,8 @@
 using namespace sycl;
 using namespace std;
 
-// Forward declare the kernel names
-// (This prevents unwanted name mangling in the optimization report.)
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class UnOptKernel;
 class OptKernel;
 

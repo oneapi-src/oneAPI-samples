@@ -10,7 +10,8 @@
 using namespace sycl;
 using namespace std::chrono;
 
-// Declare the kernel class name globally to avoid name mangling.
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class BufferWorker;
 
 // kernel using buffers to transfer data

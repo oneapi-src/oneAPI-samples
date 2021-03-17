@@ -23,6 +23,8 @@ constexpr size_t kMaxValue = 128;
 using FloatArray = std::array<float, kSize>;
 using FloatScalar = std::array<float, 1>;
 
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template <int concurrency> class Kernel;
 
 // Launch a kernel on the device specified by selector.

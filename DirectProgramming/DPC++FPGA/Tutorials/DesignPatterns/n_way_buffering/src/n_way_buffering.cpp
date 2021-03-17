@@ -5,6 +5,7 @@
 // =============================================================
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <cmath>
 #include <iomanip>
 #include <random>
 #include <thread>
@@ -42,6 +43,8 @@ constexpr int kNumRuns = 4;
 
 bool pass = true;
 
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class SimpleVpow;
 
 /*  Kernel function.
@@ -57,10 +60,10 @@ class SimpleVpow;
    to occur at the end of overall execution, not at the end of each individual
    kernel execution.
 */
-void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
+void SimplePow(sycl::queue &q, buffer<float, 1> &buffer_a,
                buffer<float, 1> &buffer_b, event &e) {
   // Submit to the queue and execute the kernel
-  e = q->submit([&](handler &h) {
+  e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
     accessor accessor_a(buffer_a, h, read_only);
     accessor accessor_b(buffer_b, h, read_write, noinit);
@@ -85,7 +88,7 @@ void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
   });
 
   event update_host_event;
-  update_host_event = q->submit([&](handler &h) {
+  update_host_event = q.submit([&](handler &h) {
     accessor accessor_b(buffer_b, h, read_only);
 
     /*
@@ -102,15 +105,13 @@ void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
     */
     h.update_host(accessor_b);
   });
-
 }
 
 // Returns kernel execution time for a given SYCL event from a queue.
 ulong SyclGetExecTimeNs(event e) {
   ulong start_time =
       e.get_profiling_info<info::event_profiling::command_start>();
-  ulong end_time =
-      e.get_profiling_info<info::event_profiling::command_end>();
+  ulong end_time = e.get_profiling_info<info::event_profiling::command_end>();
   return (end_time - start_time);
 }
 
@@ -127,12 +128,16 @@ float MyPow(float input, int pow) {
    records execution time of the kernel that just completed. This is a natural
    place to do this because ProcessOutput() is blocked on kernel completion.
 */
-void ProcessOutput(buffer<float, 1> &output_buf,
-                   std::vector<float> &input_copy, int exec_number, event e,
+void ProcessOutput(buffer<float, 1> &output_buf, std::vector<float> &input_copy,
+                   int exec_number, event e,
                    ulong &total_kernel_time_per_slot) {
   host_accessor output_buf_acc(output_buf, read_only);
   int num_errors = 0;
   int num_errors_to_print = 10;
+
+  // Max fractional difference between FPGA pow result and CPU pow result
+  // Anything greater than this will be considered an error
+  constexpr double epsilon = 0.01;
 
   /*  The use of update_host() in the kernel function allows for additional
      host-side operations to be performed here, in parallel with the buffer copy
@@ -141,8 +146,10 @@ void ProcessOutput(buffer<float, 1> &output_buf,
      done here and this is just a note that this is the place
       where you *could* do it. */
   for (int i = 0; i < kSize; i++) {
-    bool out_valid = (MyPow(input_copy.data()[i], kPow) != output_buf_acc[i]);
-    if ((num_errors < num_errors_to_print) && out_valid) {
+    const double expected_value = MyPow(input_copy.data()[i], kPow);
+    const bool out_invalid = std::abs((output_buf_acc[i] - expected_value) /
+                                      expected_value) > epsilon;
+    if ((num_errors < num_errors_to_print) && out_invalid) {
       if (num_errors == 0) {
         pass = false;
         std::cout << "Verification failed on kernel execution # " << exec_number
@@ -151,8 +158,8 @@ void ProcessOutput(buffer<float, 1> &output_buf,
       }
       std::cout << "Verification failed on kernel execution # " << exec_number
                 << ", at element " << i << ". Expected " << std::fixed
-                << std::setprecision(16) << MyPow(input_copy.data()[i], kPow)
-                << " but got " << output_buf_acc[i] << "\n";
+                << std::setprecision(16) << expected_value << " but got "
+                << output_buf_acc[i] << "\n";
       num_errors++;
     }
   }
@@ -208,14 +215,12 @@ int main() {
 #endif
 
   try {
-    auto prop_list =
-        property_list{property::queue::enable_profiling()};
+    auto prop_list = property_list{property::queue::enable_profiling()};
 
-    std::unique_ptr<queue> q;
-    q.reset(new queue(device_selector, dpc_common::exception_handler, prop_list));
+    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
 
-    platform platform = q->get_context().get_platform();
-    device device = q->get_device();
+    platform platform = q.get_context().get_platform();
+    device device = q.get_device();
     std::cout << "Platform name: "
               << platform.get_info<info::platform::name>().c_str() << "\n";
     std::cout << "Device name: "
@@ -423,7 +428,7 @@ int main() {
       std::cout << "Verification FAILED\n";
       return 1;
     }
-  } catch (sycl::exception const& e) {
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 

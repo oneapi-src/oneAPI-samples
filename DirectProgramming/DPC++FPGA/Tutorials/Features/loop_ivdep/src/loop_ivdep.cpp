@@ -19,6 +19,8 @@ constexpr size_t kMatrixSize = kRowLength * kRowLength;
 
 using namespace sycl;
 
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template <size_t safe_len> class KernelCompute;
 
 template <size_t safe_len>

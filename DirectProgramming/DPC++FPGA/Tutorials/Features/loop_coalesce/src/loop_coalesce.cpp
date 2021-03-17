@@ -23,8 +23,8 @@ constexpr size_t kNumElements = kNumRows * kNumCols;
 constexpr size_t kTotalOps = (4 + (3*kNumCols)) * kNumElements;
 
 
-// Forward declare the kernel name
-// (This prevents unwanted name mangling in the optimization report.)
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template <int N> class KernelCompute;
 
 // The kernel implements a matrix multiplication.

@@ -15,6 +15,8 @@
 
 using namespace sycl;
 
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template <int unroll_factor> class VAdd;
 
 // This function instantiates the vector add kernel, which contains
