@@ -29,7 +29,7 @@
 using namespace sycl;
 
 // Array size for this example.
-constexpr size_t array_size = 10000;
+constexpr size_t array_size = 500000000;
 
 // Create an exception handler for asynchronous SYCL exceptions
 static auto exception_handler = [](sycl::exception_list e_list) {
