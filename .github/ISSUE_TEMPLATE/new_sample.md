@@ -9,11 +9,16 @@ assignees: '@JoeOster, @srdontha'
 ## Summary
 This is a request for a new code Sample called `YourSampleName`
 
-## Description
-Include a short Description of what the sample while Demonstrate and why it is important to the ecosystem.
+## Purpose
+Answer the following questions
+* What specifically is this code sample trying to show?
+* Why is this important to the oneAPI ecosystem?
 
 ## Domain
-Please supply what [Domain](https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts) that you feel represnts your Code Sample. (Best Effort)
+Please supply what [Domain](https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts) that you feel represents your Code Sample. (Best Effort)
+
+## Description
+Include a short Description of what the sample while Demonstrate and why it is important to the ecosystem.
 
 ## Dependencies
 Please list any dependencies, libraries and images, etc and urls to the download locations
