@@ -5,16 +5,16 @@ XGBoost* is a widely used gradient boosting library in the classical ML area. De
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
-| Software                          | XGBoost, Intel® AI Analytics Toolkit
+| Software                          | XGBoost, Intel® oneAPI AI Analytics Toolkit
 | What you will learn               | basic XGBoost programming model for Intel CPU
 | Time to complete                  | 5 minutes
 
 ## Purpose
-In this code sample, you will learn how to use Intel optimized XGBoost published as part of IntelAI Analytics Toolkit powered by oneAPI. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction. 
-It also demonstrates how to use software products that can be found in the [Intel AI Analytics Toolkit powered by oneAPI](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+In this code sample, you will learn how to use Intel optimized XGBoost published as part of Intel® oneAPI AI Analytics Toolkit. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction. 
+It also demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
   
 ## Key Implementation Details 
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel(R) Distribution for Python as part of the [oneAPI AI Analytics Toolkit powered by oneAPI](https://software.intel.com/en-us/oneapi/ai-kit). 
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). 
 
 ## License  
 Code samples are licensed under the MIT license. See
@@ -24,7 +24,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building XGBoost for CPU
 
-XGBoost* is ready for use once you finish the Intel AI Analytics Toolkit installation and have run the post installation script.
+XGBoost* is ready for use once you finish the Intel® oneAPI AI Analytics Toolkit installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -41,7 +41,7 @@ source activate base
 
 ### Activate conda environment Without Root Access (Optional)
 
-By default, the Intel AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel® oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### On a Linux* System
 ```

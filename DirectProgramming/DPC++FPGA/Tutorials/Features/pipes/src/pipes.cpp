@@ -3,11 +3,13 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
+#include <numeric>
 #include <vector>
+
+#include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -21,7 +23,8 @@ using ProducerToConsumerPipe = INTEL::pipe<  // Defined in the SYCL headers.
     int,                                     // The type of data in the pipe.
     4>;                                      // The capacity of the pipe.
 
-// Forward declare the kernel names to reduce name mangling
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class ProducerTutorial;
 class ConsumerTutorial;
 

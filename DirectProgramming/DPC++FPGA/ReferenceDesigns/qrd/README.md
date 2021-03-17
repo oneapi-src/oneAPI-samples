@@ -1,7 +1,9 @@
 # QR Decomposition of Matrices
 This DPC++ reference design demonstrates high performance QR decomposition of complex matrices on FPGA.
 
-***Documentation***: The [FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)  provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a resource for general target-independent DPC++ programming. 
+***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
+The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
+The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
 
 | Optimized for                     | Description
 ---                                 |---
@@ -19,7 +21,7 @@ Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 25k matrices/s for matrices of size 128 * 128
+| Intel® PAC with Intel Arria® 10 GX FPGA        | 24k matrices/s for matrices of size 128 * 128
 | Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for matrices of size 256 * 256
 
 
@@ -74,7 +76,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Code Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
  
@@ -185,11 +187,11 @@ NOTE: The design is optimized to perform best when run on a large number of matr
 Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 32768 matrices (each consisting of 128*128 complex numbers):
 
 ```
-Device name: pac_a10 : Intel PAC Platform (pac_f000000)
-Generating 32768 random matrices
+Device name: pac_a10 : Intel PAC Platform (pac_f100000)
+Generating 32768 random matrices 
 Running QR decomposition of 32768 matrices repeatedly
-   Total duration:   41.3763 s
-Throughput: 25.3425k matrices/s
+   Total duration:   42.8404 s
+Throughput: 24.4763k matrices/s
 Verifying results on matrix 0 16384 32767
 PASSED
 ```
@@ -198,11 +200,11 @@ Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 S
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 4096 random matrices
-Running QR decomposition of 4096 matrices repeatedly
-   Total duration:   17.3197 s
-Throughput: 7.5678k matrices/s
-Verifying results on matrix 0 2048 4095
+Generating 40960 random matrices 
+Running QR decomposition of 40960 matrices repeatedly
+   Total duration:   176.523 s
+Throughput: 7.42523k matrices/s
+Verifying results on matrix 0 20480 40959
 PASSED
 ```
 
@@ -222,6 +224,9 @@ PASSED
 `-DFIXED_ITERATIONS` | Used to set the ivdep safelen attribute for the performance critical triangular loop
 
 NOTE: The values for `seed`, `FIXED_ITERATIONS`, `ROWS_COMPONENT`, `COLS_COMPONENT` are set according to the board being targeted.
+
+### Host Limitations
+The QRD demo host is not optimized for a very large number of matrices. Running the QRD executable with number of matrices that occupy more memory than what is physically available on the host machine will result in system performance degradation due to virtual memory thrashing by the operating system.
 
 ### Performance disclaimers
 

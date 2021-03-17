@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <chrono>
 #include <iomanip>
+#include <numeric>
 #include <random>
 #include <type_traits>
 

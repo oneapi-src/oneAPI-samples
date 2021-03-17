@@ -18,8 +18,8 @@ constexpr size_t kInSize = 1000000;
 constexpr double kInputMB = (kInSize * sizeof(int)) / (1024 * 1024);
 constexpr int kRandMax = 7777;
 
-// Forward declare the kernel names
-// (This prevents unwanted name mangling in the optimization report.)
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class KernelArgsRestrict;
 class KernelArgsNoRestrict;
 
