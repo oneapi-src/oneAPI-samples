@@ -123,6 +123,7 @@ class oneDNNUtils:
             if Type == "time":
                 print()
                 print(' breakdown:',Group)
+                data['time'] = data['time'].astype(float)
                 time = data.groupby(Group)['time'].sum().sort_values().head(topk)
                 print(time)
                 title=Group + "Time Breakdown"
@@ -158,13 +159,15 @@ class oneDNNUtils:
         if Type == "count":
             jitstat = pd.concat((d1[name].value_counts(), d2[name].value_counts()), axis=1, sort=True)
             jitstat.columns = ('1-' + log1, '2-' + log2)
-            jitstat['run2/run1'] = jitstat.iloc[:, 1] / jitstat.iloc[:, 0]
+            jitstat['run2/run1'] = jitstat.iloc[:, 1].astype(float) / jitstat.iloc[:, 0].astype(float)
             jitstat_count = jitstat.sort_values('1-' + log1, ascending=False).head(n)
             print(jitstat_count)
         elif Type == "time":
+            d1['time'] = d1['time'].astype(float)
+            d2['time'] = d2['time'].astype(float)
             jitstat = pd.concat((d1.groupby(name)['time'].sum(), d2.groupby(name)['time'].sum()), axis=1, sort=True)
             jitstat.columns = ('1-' + log1, '2-' + log2)
-            jitstat['run2/run1'] = jitstat.iloc[:, 1] / jitstat.iloc[:, 0]
+            jitstat['run2/run1'] = jitstat.iloc[:, 1].astype(float) / jitstat.iloc[:, 0].astype(float)
             jitstat_time = jitstat.sort_values('1-' + log1, ascending=False).head(n)
             print(jitstat_time)
             title=name + " run2/run1 Time Comparison"
@@ -200,6 +203,7 @@ if __name__ == '__main__':
         log1.load_log(sys.argv[1])
         log2 = oneDNNLog()
         log2.load_log(sys.argv[2])
+        log1.data['time'] = log1.data['time'].astype(float)
         print('Total time %s: %0.2f\t---  %s: %0.2f' % (log1.filename, log1.data['time'].sum(), log2.filename, log2.data['time'].sum()))
         print('Total  ops  %s: %d\t\t---  %s: %d'    % (log1.filename, log1.data['time'].count(), log2.filename, log2.data['time'].count()))
         #onednn.stats_comp('jit', 'time',log1, log2)
@@ -213,6 +217,7 @@ if __name__ == '__main__':
     elif len(sys.argv) > 1 and '.csv' in sys.argv[1]:
         log = oneDNNLog()
         log.load_log(sys.argv[1])
+        log.exec_data['time'] = log.exec_data['time'].astype(float)
         print('Total MKLDNN time:', log.exec_data['time'].sum())
         print('Total MKLDNN ops:', log.exec_data['time'].count())
         onednn.breakdown(log.exec_data,"type","time")
@@ -223,6 +228,7 @@ if __name__ == '__main__':
         print(csvpath)
         log = oneDNNLog()
         log.load_log(csvpath)
+        log.exec_data['time'] = log.exec_data['time'].astype(float)
         print('Total MKLDNN time:', log.exec_data['time'].sum())
         print('Total MKLDNN ops:', log.exec_data['time'].count())
         onednn.breakdown(log.exec_data,"type","time")
