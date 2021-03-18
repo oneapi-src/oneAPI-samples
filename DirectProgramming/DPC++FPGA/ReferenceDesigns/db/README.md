@@ -249,7 +249,7 @@ You should see the following output in the console:
 ### Database files
 In the `data/` directory, you will find database files for a scale factor of 0.01. These files were generated manually and can be used to verify the queries in emulation. However, **these files are too small to showcase the true performance of the FPGA hardware**.
 
-To generate larger database files to run on the hardware, you can use TPC's `dbgen` tool. Instructions for downloading, building and running the `dbgen` tool can be found in the [TPC-H documents](http://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.18.0.pdf) on the [TPC-H website](http://www.tpc.org/tpch/). Note that this reference design currently only supports TPC-H databases with scale factors of 0.01 or 1.
+To generate larger database files to run on the hardware, you can use TPC's `dbgen` tool. Instructions for downloading, building and running the `dbgen` tool can be found on the [TPC-H website](http://www.tpc.org/tpch/). Note that this reference design currently only supports databases with scale factors of 0.01 or 1.
 
 ### Query Implementation
 The following sections will describe, at a high level, how queries 1, 9, 11 and 12 are implemented on the FPGA using a set of generalized database operators (found in `db_utils/`). In the block diagrams below, the blocks are oneAPI kernels, and the arrows represent `pipes` that shows the flow of data from one kernel to another.
@@ -271,10 +271,5 @@ Query 11 showcases the `MapJoin` and `FifoSort` database operators. The block di
 Query 12 showcases the `MergeJoin` database operator. The block diagram of the design is shown below.
 
 ![](q12.png)
-      
-## References
-[Khronous SYCL Resources](https://www.khronos.org/sycl/resources) </br>
-[TPC Website](http://www.tpc.org/tpch/) </br>
-[TPC-H Document](http://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.18.0.pdf) </br>
 
 
