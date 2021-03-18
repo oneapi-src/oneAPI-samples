@@ -109,7 +109,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 ### Running the Sample
 
 1. Copy the Intel Model Zoo from your AI Analytics Toolkit installation path: `$cp -rf /opt/intel/oneapi/modelzoo/latest/models ~/`
-2. git init; git add . ; git commit -m 'initial commit'
+2. cd ~/models; git init; git add . ; git commit -m 'initial commit'
 3. Launch Jupyter notebook: `$jupyter notebook --ip=0.0.0.0`
 
 > NOTE: Users don't need to apply step 2 on DevCloud Environment.
