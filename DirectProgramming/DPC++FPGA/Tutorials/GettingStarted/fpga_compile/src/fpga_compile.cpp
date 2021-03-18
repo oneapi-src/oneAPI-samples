@@ -17,8 +17,9 @@ using namespace sycl;
 // Vector size for this example
 constexpr size_t kSize = 1024;
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declare the kernel name in the global scope to reduce name mangling. 
+// This is an FPGA best practice that makes it easier to identify the kernel in 
+// the optimization reports.
 class VectorAdd;
 
 
@@ -72,7 +73,11 @@ int main() {
         // The kernel uses single_task rather than parallel_for.
         // The task's for loop is executed in pipeline parallel on the FPGA,
         // exploiting the same parallelism as an equivalent parallel_for.
-        h.single_task<VectorAdd>([=]() {
+        //
+        // The "kernel_args_restrict" tells the compiler that a, b, and r
+        // do not alias. For a full explanation, see:
+        //    DPC++FPGA/Tutorials/Features/kernel_args_restrict
+        h.single_task<VectorAdd>([=]() [[intel::kernel_args_restrict]] {
           for (int i = 0; i < kSize; ++i) {
             r[i] = a[i] + b[i];
           }

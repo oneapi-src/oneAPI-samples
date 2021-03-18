@@ -769,6 +769,7 @@ void sort(Compare compare) {
   constexpr int kTotalIter = kOutputStartLastStage + sort_size;
 
   // Sort
+  //[[intel::ii(1)]]
   for (int i = 0; i < kTotalIter; i++) {
 #ifdef DEBUG
     std::cout << "I: " << i << std::endl;

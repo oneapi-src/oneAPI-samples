@@ -30,8 +30,8 @@ using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_array.h".
     kNumCols   // array dimension.
     >;
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class ProducerTutorial;
 template <size_t consumer_id> class ConsumerTutorial;
 

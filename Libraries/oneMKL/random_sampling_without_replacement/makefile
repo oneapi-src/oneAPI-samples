@@ -1,13 +1,13 @@
 # Makefile for NMAKE
 
-default: run_all
+default: run
 
-all: run_all
+all: run
 
-run_all: lottery.exe lottery_usm.exe lottery_device_api.exe
-	.\lottery
-	.\lottery_usm
-	.\lottery_device_api
+run: lottery.exe lottery_usm.exe lottery_device_api.exe
+	.\lottery.exe
+	.\lottery_usm.exe
+	.\lottery_device_api.exe
 
 DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /DMKL_ILP64 /EHsc -fsycl-device-code-split=per_kernel -fno-sycl-early-optimizations OpenCL.lib
 
@@ -22,7 +22,5 @@ lottery_device_api.exe: lottery_device_api.cpp
 
 clean:
 	del /q lottery.exe lottery_usm.exe lottery_device_api.exe
-	del /q lottery.exp lottery_usm.exp lottery_device_api.exp
-	del /q lottery.lib lottery_usm.lib lottery_device_api.lib
 
-pseudo: run_all clean all
+pseudo: clean run all

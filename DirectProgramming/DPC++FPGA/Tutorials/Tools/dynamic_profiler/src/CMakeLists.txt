@@ -19,9 +19,9 @@ else()
 endif()
 
 # Flags
-set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-fintelfpga")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR -fp-model=precise -ffp-contract=off")
+set(EMULATOR_LINK_FLAGS "-fintelfpga -fp-model=precise -ffp-contract=off")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga -fp-model=precise -ffp-contract=off")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${SELECTED_BOARD} -Xsprofile ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 

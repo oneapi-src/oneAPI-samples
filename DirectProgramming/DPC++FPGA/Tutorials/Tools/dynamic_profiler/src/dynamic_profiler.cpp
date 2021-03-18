@@ -5,6 +5,9 @@
   demonstates the sort of code changes the profiler data can guide.
   The main content of this sample is in the README file.
 */
+
+#include <numeric>
+
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
@@ -24,8 +27,8 @@ using ProducerToConsumerBeforePipe =
 using ProducerToConsumerAfterPipe =
     INTEL::pipe<class ProducerConsumerAfterPipe, float, 20>;
 
-// Forward declare the kernel names
-// (This reduces unwanted name mangling in the optimization report.)
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization report.
 class ProducerBeforeKernel;
 class ConsumerBeforeKernel;
 class ProducerAfterKernel;

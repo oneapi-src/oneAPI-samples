@@ -4,12 +4,28 @@
 #
 # Version: 0.5
 #========================================
-#property='gpu'
-#property='clx'
-#property='skx'
-if [ -z "$property" ]; then
-    property='gpu'
-fi
+properties=("xe_hp" "dg1" "skx" "clx" "gpu") 
+avail_1=$(pbsnodes | grep properties | sort |  cut -d',' -f6 |  uniq)
+avail_2=$(pbsnodes | grep properties | sort |  cut -d',' -f2 |  uniq)
+for value in "${properties[@]}"
+do
+     for avail in $avail_1
+     do
+	 if [ "$avail" == "$value" ]; then
+             property="$value"
+	     break 2
+         fi
+     done
+     for avail in $avail_2
+     do
+	 if [ "$avail" == "$value" ]; then
+             property="$value"
+	     break 2
+         fi
+     done
+done
+
+echo $property
 
 if [ -z "$1" ]; then
 	echo "Missing script argument, Usage: ./q run.sh"
