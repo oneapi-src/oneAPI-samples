@@ -156,7 +156,7 @@ Perform the following steps:
 
 ## Running the Sample
 ### Application Parameters
-There are no editable parameters for this sample.
+There is an optional parameter which determines the size of vector. Default value is 10000.
 
 ### Example of Output
 <pre>

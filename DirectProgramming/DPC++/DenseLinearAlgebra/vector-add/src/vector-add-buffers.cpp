@@ -29,7 +29,7 @@
 using namespace sycl;
 
 // Vector type and data size for this example.
-constexpr size_t vector_size = 500000000;
+size_t vector_size = 10000;
 typedef std::vector<int> IntVector; 
 
 // Create an exception handler for asynchronous SYCL exceptions
@@ -93,7 +93,9 @@ void InitializeVector(IntVector &a) {
 //************************************
 // Demonstrate vector add both in sequential on CPU and in parallel on device.
 //************************************
-int main() {
+int main(int argc, char* argv[]) {
+  // Change vector_size if it was passed as argument
+  if (argc > 1) vector_size = std::stoi(argv[1]);
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // DPC++ extension: FPGA emulator selector on systems without FPGA card.
