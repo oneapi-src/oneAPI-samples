@@ -1,9 +1,10 @@
 # MVDR Beamforming
 This reference design demonstrates FPGA IO streaming in oneAPI. 
 
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. 
+***Documentation***:  
+* [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
+* [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
+* [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. 
  
 | Optimized for                     | Description
 ---                                 |---
@@ -14,7 +15,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Time to complete                  | 1 hour
 
 ## Purpose
-The purpose of this tutorial is implement a high-performance streaming IO design using oneAPI. In this reference design, we implement an MVDR-beamforming algorithm using oneAPI. More details on the algorithm can be found in the [Additional Design Information](#additional-design-information) Section.
+The purpose of this tutorial is to implement a high-performance streaming IO design using oneAPI. In this reference design, we implement an MVDR-beamforming algorithm using oneAPI. More details on the algorithm can be found in the [Additional Design Information](#additional-design-information) Section.
 
 ## Key Implementation Details
 This reference design code sample leverages concepts that are discussed in the following FPGA tutorials: 
@@ -71,7 +72,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
        make fpga_emu
        ```
 
-    * Generate HTML performance report. Find the report in `mvdr_beamforming_report.prj/reports/report.html`directory.
+    * Generate HTML performance report. Find the report in `mvdr_beamforming_report.prj/reports/report.html` directory.
 
        ```
        make report
@@ -206,9 +207,9 @@ PASSED
 |`UnrolledLoop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end 
 
 ### MVDR Beamforming
-This reference design is built upon the **IO Streaming** code sample. <br/>
+This reference design is built upon the **IO Streaming** code sample.
 
-The images below show the dataflow in the MVDR beamforming design. The first image shows the "real" dataflow when IO pipes are used at the inputs and outputs. The second image shows the data flow in this reference design where we don't have access to a BSP with IO pipes. The `XrxTrainingProducer` and `XrxDataProducer` are the kernels that replace the input IO pipe in the first image. Note that the splitting of data (shown as a black dot with two outward arrows in the first image) is done by the host using `XrxTrainingProducer` and `XrxDataProducer`. The `DataOutConsumer` kernel replaces the output IO pipe in the first image. The data for the `SteeringVectorGenerator` kernel still comes from the host through the `SinThetaProducer` kernel. This kernel does not replace an IO pipe, but rather simplifies and modularizes the streaming of data from host to device.
+The images below show the dataflow in the MVDR beamforming design. The first image shows the "real" dataflow when IO pipes are used at the inputs and outputs. The second image shows the data flow in this reference design where we don't have access to a BSP with IO pipes. The `XrxTrainingProducer` and `XrxDataProducer` are the kernels that replace the input IO pipe in the first image. Note that the splitting of data (shown as a black dot with two outward arrows in the first image) is done by the host using `XrxTrainingProducer` and `XrxDataProducer`. The `DataOutConsumer` kernel replaces the output IO pipe in the first image. The data for the `SteeringVectorGenerator` kernel still comes from the host through the `SinThetaProducer` kernel. This kernel does not replace an IO pipe but simplifies and modularizes the host's data streaming to the device.
 
 <img src="processing_kernels_ideal.png" alt="processing_kernels_ideal" width="800"/>
 <img src="processing_kernels_fake.png" alt="processing_kernels_fake" width="800"/>
