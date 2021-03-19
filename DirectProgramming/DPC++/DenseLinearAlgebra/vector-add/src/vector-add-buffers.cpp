@@ -144,7 +144,7 @@ int main() {
     }
   }
 
-  int indices[]{0, 1, 2, (a.size() - 1)};
+  int indices[]{0, 1, 2, (static_cast<int>(a.size()) - 1)};
   constexpr size_t indices_size = sizeof(indices) / sizeof(int);
 
   // Print out the result of vector add.
