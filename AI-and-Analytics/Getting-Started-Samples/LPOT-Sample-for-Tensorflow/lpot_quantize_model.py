@@ -1,4 +1,8 @@
-import ilit
+try:
+    import lpot
+except:
+    import ilit as lpot
+
 import alexnet
 import math
 import mnist_dataset
