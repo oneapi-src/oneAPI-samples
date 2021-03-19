@@ -145,7 +145,7 @@ public:
   ProducerImpl &operator=(ProducerImpl const &)=delete;
 
   // the pipe to connect to in device code
-  using Pipe = sycl::pipe<PipeID, T, min_capacity>;
+  using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
 
   // the implementation of the static
   static event Start(queue &q, size_t count = BaseImpl::count_) {
@@ -212,7 +212,7 @@ public:
   ConsumerImpl &operator=(ConsumerImpl const &)=delete;
 
   // the pipe to connect to in device code
-  using Pipe = sycl::pipe<PipeID, T, min_capacity>;
+  using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
 
   static event Start(queue &q, size_t count = BaseImpl::count_) {
     // make sure initialized has been called

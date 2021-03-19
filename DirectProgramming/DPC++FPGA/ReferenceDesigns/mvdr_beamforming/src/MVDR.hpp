@@ -134,15 +134,15 @@ MVDREventArray SubmitMVDRKernels(
   // Connect SteeringVectorGenerator to ForwardSubstitution
   constexpr short kSteeringVectorsPipeMinDepth = 
     k_num_steering_vectors * k_num_sensor_inputs * 2;
-  using SteeringVectorsPipe = sycl::pipe< SteeringVectorsPipeID<k_instance_num>, 
-                                          ComplexType, 
-                                          kSteeringVectorsPipeMinDepth >;
-  using UpdateSteeringVectorsPipe = sycl::pipe< 
+  using SteeringVectorsPipe = sycl::INTEL::pipe< 
+    SteeringVectorsPipeID<k_instance_num>,
+    ComplexType, kSteeringVectorsPipeMinDepth >;
+  using UpdateSteeringVectorsPipe = sycl::INTEL::pipe< 
     UpdateSteeringVectorsPipeID<k_instance_num>, bool, 1 >;
 
   // Pipe for forwarding steering vectors used by ForwardSubstitution to
   // CalcWeights
-  using ForwardSteeringVectorsPipe = sycl::pipe<
+  using ForwardSteeringVectorsPipe = sycl::INTEL::pipe<
     ForwardSteeringVectorsPipeID<k_instance_num>, 
     ComplexType, kSteeringVectorsPipeMinDepth >;
 
@@ -169,7 +169,7 @@ MVDREventArray SubmitMVDRKernels(
 
   // Forward substitution result pipe
   // Connect ForwardSubstitution to BackwardSubstitution
-  using ForwardSubstitutionResultPipe = sycl::pipe< 
+  using ForwardSubstitutionResultPipe = sycl::INTEL::pipe< 
     ForwardSubstitutionResultPipeID<k_instance_num>,
     ComplexType, k_num_sensor_inputs >;
 
@@ -177,14 +177,15 @@ MVDREventArray SubmitMVDRKernels(
   // Y = (inverse(R x Rtranspose) ) * (complex_conjugate(C)) , where 
   // R is the R matrix from QRD, and C is the steering vector
   // Connect BackwardSubstitution to CalcWeights
-  using YVectorsPipe = sycl::pipe< 
+  using YVectorsPipe = sycl::INTEL::pipe< 
     YVectorsPipeID<k_instance_num>, ComplexType, k_num_sensor_inputs >;
 
   // Weight vectors pipe
   // Connect CalcWeights to Beamformer
   constexpr short kWeightVectorsPipeMinDepth = 
     k_num_steering_vectors * k_num_sensor_inputs * 2;
-  using WeightVectorsPipe = sycl::pipe< WeightVectorsPipeID<k_instance_num>,
+  using WeightVectorsPipe = sycl::INTEL::pipe< 
+    WeightVectorsPipeID<k_instance_num>,
     ComplexType, kWeightVectorsPipeMinDepth >;
 
   // Q matrix pipe
@@ -196,9 +197,9 @@ MVDREventArray SubmitMVDRKernels(
   constexpr short kTrainingArrayPipeMinDepth = k_num_sensor_inputs * 
     k_num_sensor_inputs * k_rmb_factor / k_num_complex_per_xrx_read;
   using XrxPipeType = NTuple< ComplexType, k_num_complex_per_xrx_read >;
-  using TrainingArrayPipe = sycl::pipe< TrainingArrayPipeID<k_instance_num>, 
-                                        XrxPipeType, 
-                                        kTrainingArrayPipeMinDepth >;
+  using TrainingArrayPipe = sycl::INTEL::pipe< 
+    TrainingArrayPipeID<k_instance_num>, 
+    XrxPipeType, kTrainingArrayPipeMinDepth >;
 
   // array of events to return
   // use MVDRKernelNames enum as indicies into the array
