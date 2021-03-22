@@ -4,7 +4,7 @@ The implementation of simple C++ code to test Jupyter Notebook functionality.
 |:---                               |:---
 | OS                                | Linux* Ubuntu 18.04, Windows* 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler
+| Software                          | Intel&reg; oneAPI DPC++ Compiler (beta)
 | What you will learn               | The developer will learn about buffers, accessors, and command group handlers.
 | Time to complete                  | 15 minutes  
   

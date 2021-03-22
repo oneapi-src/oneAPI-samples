@@ -1,4 +1,4 @@
-# `ISO3DFD OpenMP Offload` Sample
+﻿# `ISO3DFD OpenMP Offload` Sample
 
 The ISO3DFD sample refers to Three-Dimensional Finite-Difference Wave Propagation in Isotropic Media.  It is a three-dimensional stencil to simulate a wave propagating in a 3D isotropic medium and shows some of the more common challenges and techniques when targeting OMP Offload devices (GPU) in more complex applications to achieve good performance. 
 
@@ -22,31 +22,34 @@ Performance number tabulation
 
 ## Purpose
 
-ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic isotropic wave equation which can be used as a proxy for propogating a seismic wave. Kernels in this sample are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions.. Using OpenMP Offload, the sample can explicitly run on the GPU to propagate a seismic wave which is a compute intensive task.
+ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic isotropic wave equation, which can be used as a proxy for propagating a seismic wave. In this sample, kernels are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions. Using OpenMP Offload, the sample can explicitly run on the GPU to propagate a seismic wave, which is a compute-intensive task.
 
-The code will attempt to find an available GPU or OpenMP Offload capable device and exit if a compatible device is not detected. By default, the output will print the device name where the OpenMP Offload code ran along with the grid computation metrics - flops and effective throughput. For validating results, a OpenMP/CPU-only version of the application will be run on host/CPU and results will be compared to the OpenMP Offload version.
+The code will attempt to find an available GPU or OpenMP Offload capable device and exit if a compatible device is not detected. By default, the output will print the device name where the OpenMP Offload code ran along with the grid computation metrics - flops and effective throughput. For validating results, an OpenMP/CPU-only version of the application will be run on host/CPU, and results will be compared to the OpenMP Offload version.
 
-The code also demonstrates some of the common optimization techniques which can be used to improve performance of 3D-stencil code running on a GPU device.
+The code also demonstrates some of the common optimization techniques that can be used to improve 3D-stencil code running on a GPU device.
  
 ## Key Implementation Details 
 
 The basic OpenMP Offload implementation explained in the code includes the use of the following : 
 * OpenMP offload target data map construct
-* Default Baseline version demonstrates use of OpenMP offload target parallel for construct with collapse 
-* Optimized version 1 demonstrates use of OpenMP offload teams distribute construct and use of num_teams and thread_limit clause
-* Incremental Optimized version 2 demonstrates use of OpenMP offload teams distribute construct with improved data-access pattern
+* Default Baseline version demonstrates the use of OpenMP offload target parallel for construct with the collapse 
+* Optimized version 1 demonstrates the use of OpenMP offload teams distribute construct and use of num_teams and thread_limit clause
+* Incremental Optimized version 2 demonstrates the use of OpenMP offload teams distribute construct with improved data-access pattern
 * Incremental Optimized version 3 demonstrates use of OpenMP CPU threads along with OpenMP offload target construct
 
  
 ## License  
 
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `ISO3DFD` Program for GPU
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) and Intel® oneAPI HPC Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide] (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) and [Intel® oneAPI HPC Toolkit Get Started Guide] (https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
 
 ### On a Linux* System
 Perform the following steps:
@@ -58,7 +61,7 @@ $ cmake ..
 $ make -j
 ```
 
-> Note: by default, executable is build with default baseline version. You can build the kernel with optimized versions with the following:
+> Note: by default, the executable is built with the default baseline version. You can build the kernel with optimized versions with the following:
 ```
 cmake -DUSE_OPT1=1 ..
 make -j
@@ -98,7 +101,7 @@ You can modify the ISO3DFD parameters from the command line.
                                 	: OR TILE sizes for OMP Offload
  	Iterations                     	: No. of timesteps.
 
-### Example of Output with default baseline version
+### Example of Output with the default baseline version
 ```
 Grid Sizes: 256 256 256
 Tile sizes ignored for OMP Offload

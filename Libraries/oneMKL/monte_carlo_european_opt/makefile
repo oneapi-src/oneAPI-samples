@@ -1,10 +1,10 @@
-default: run_all
+default: run
 
-all: run_all
+all: run
 
-run_all: mc_european.exe mc_european_usm.exe
-	.\mc_european
-	.\mc_european_usm
+run: mc_european.exe mc_european_usm.exe
+	.\mc_european.exe
+	.\mc_european_usm.exe
 
 DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /DMKL_ILP64 /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
 
@@ -16,7 +16,5 @@ mc_european_usm.exe: mc_european_usm.cpp
 
 clean:
 	del /q mc_european.exe mc_european_usm.exe
-	del /q mc_european.exp mc_european_usm.exp
-	del /q mc_european.lib mc_european_usm.lib
 
-pseudo: run_all clean all
+pseudo: clean run all

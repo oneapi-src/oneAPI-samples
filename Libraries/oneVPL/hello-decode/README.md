@@ -15,8 +15,8 @@ perform a simple video decode.
 ## Purpose
 
 This sample is a command line application that takes a file containing an H.265
-video elementary stream as an argument, decodes it with oneVPL and writes the
-decoded output to a the file `out.i420` in raw I420 format.
+video elementary stream as an argument then decodes it with oneVPL and writes the
+decoded output to the file `out.i420` in raw I420 format.
 
 
 ## Key Implementation details
@@ -26,12 +26,15 @@ decoded output to a the file `out.i420` in raw I420 format.
 | Target device     | CPU
 | Input format      | H.265 video elementary stream
 | Output format     | I420
-| Output resolution | same as input
+| Output resolution | same as the input
 
 
 ## License
 
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `hello-decode` Program
@@ -40,7 +43,7 @@ This code sample is licensed under MIT license.
 
 Perform the following steps:
 
-1. Install the prerequisite software. To build and run the sample you need to
+1. Install the prerequisite software. To build and run the sample, you need to
    install prerequisite software and set up your environment:
 
    - Intel® oneAPI Base Toolkit for Linux*
@@ -73,7 +76,7 @@ Perform the following steps:
 
 #### Building the program using CMake
 
-1. Install the prerequisite software. To build and run the sample you need to
+1. Install the prerequisite software. To build and run the sample, you need to
    install prerequisite software and set up your environment:
 
    - Intel® oneAPI Base Toolkit for Windows*
@@ -84,10 +87,10 @@ Perform the following steps:
    <oneapi_install_dir>\setvars.bat
    ```
    Here `<oneapi_install_dir>` represents the root folder of your oneAPI
-   installation, which is which is `C:\Program Files (x86)\Intel\oneAPI\`
+   installation, which is `C:\Program Files (x86)\Intel\oneAPI\`
    when installed using default options. If you customized the installation
    folder, the `setvars.bat` is in your custom location.  Note that if a
-   compiler is not part of your oneAPI installation you should run in a Visual
+   compiler is not part of your oneAPI installation, you should run in a Visual
    Studio 64-bit command prompt.
 
 3. Build the program using the following commands:
@@ -107,9 +110,13 @@ Perform the following steps:
 #### Building the program using VS2017 or VS2019 IDE
 
 1. Install the Intel® oneAPI Base Toolkit for Windows*
-2. Right click on the solution file and open using either VS2017 or VS2019 IDE.
-3. Right click on the project in Solution explorer and select Rebuild.
-4. From top menu select Debug -> Start without Debugging.
+2. Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+3. Right-click on the project in Solution Explorer and select Rebuild.
+4. From the top menu, select Debug -> Start without Debugging.
+
+***
+Note: You need Base Toolkit 2021.2 or later to build this sample with the IDE.
+***
 
 
 ## Running the Sample

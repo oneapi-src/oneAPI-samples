@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+#include <numeric>
+
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
@@ -12,7 +14,8 @@
 
 using namespace sycl;
 
-// Declare Kernel class names globally to reduce name mangling in reports
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class KernelPrefetch;
 class KernelBurst;
 class KernelDefault;

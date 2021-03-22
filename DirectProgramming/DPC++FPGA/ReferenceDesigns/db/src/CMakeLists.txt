@@ -7,14 +7,33 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(REPORTS_TARGET ${TARGET_NAME}_report)
 
-# set SEED variable
+# which query are we doing?
+if(NOT DEFINED QUERY)
+    message(STATUS "\t!!QUERY variable is NOT set, defaulting to QUERY=1!!")
+    set(QUERY 1)
+else()
+    message(STATUS "\tQUERY=${QUERY}")
+endif()
+
+# Pick the default seed if the user did not specify one to CMake.
+# We do a seed sweep to find a good seed by default
 if(NOT DEFINED SEED)
-    set(SEED 1)
+    if(${QUERY} EQUAL 1)
+        set(SEED 2)
+    elseif(${QUERY} EQUAL 9)
+        set(SEED 2)
+    elseif(${QUERY} EQUAL 11)
+        set(SEED 4)
+    elseif(${QUERY} EQUAL 12)
+        set(SEED 3)
+    else()
+        message(FATAL_ERROR "\tQUERY ${QUERY} not supported (supported queries are 1, 9, 11 and 12)")
+    endif()
 endif()
 
 # set number of CPU cores to use for quartus compile
 if(NOT DEFINED QUARTUS_CORES)
-    set(QUARTUS_CORES 4)
+    set(QUARTUS_CORES 2)
 endif()
 
 # check if they want to use the small database
@@ -23,14 +42,6 @@ if(DEFINED SF_SMALL)
     set(SF_SMALL_ARG -DSF_SMALL)
 else()
     set(SF_SMALL_ARG )
-endif()
-
-# which query are we doing?
-if(NOT DEFINED QUERY)
-    message(STATUS "\t!!QUERY variable is NOT set, defaulting to QUERY=1!!")
-    set(QUERY 1)
-else()
-    message(STATUS "\tQUERY=${QUERY}")
 endif()
 
 # setting source file based on query version

@@ -1,14 +1,16 @@
 
 
 # Loop `ivdep` Attribute
-This FPGA tutorial demonstrates how to applying the `ivdep` attribute to a loop to aid the compiler's loop dependence analysis.
+This FPGA tutorial demonstrates how to apply the `ivdep` attribute to a loop to aid the compiler's loop dependence analysis.
 
-***Documentation***: The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)  provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. 
+***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
+The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
+The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               |  Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a *safe* dependence distance <br> How to aid the compiler's dependence analysis to maximize performance
 | Time to complete                  | 30 minutes
@@ -16,20 +18,20 @@ This FPGA tutorial demonstrates how to applying the `ivdep` attribute to a loop 
 
 
 ## Purpose
-In order to understand and apply `ivdep` to loops in your design, it is necessary to understand the concepts of loop-carried memory dependencies. Unlike many other attributes that can be used to improve a design's performance, `ivdep` has functional implications. Using it incorrectly will result in undefined behavior for your design!
+In order to understand and apply `ivdep` to loops in your design, it is necessary to understand the concepts of loop-carried memory dependencies. Unlike many other attributes that can improve a design's performance, `ivdep` has functional implications. Using it incorrectly will result in undefined behavior for your design!
 
 ### Loop-Carried Memory Dependencies
-A *loop-carried memory dependency* refers to a situation where memory access in a given loop  iteration cannot proceed until a memory access from a previous loop iteration is completed. Loop-carried dependencies can be categorized into the following cases:
+A *loop-carried memory dependency* refers to a situation where memory access in a given loop iteration cannot proceed until a memory access from a previous loop iteration is completed. Loop-carried dependencies can be categorized into the following cases:
 * **True-dependence (Read-After-Write)** - A memory location read in an iteration that must occur after a previous iteration writes to the same memory location.
 * **Anti-dependence (Write-After-Read)** - A memory location read must occur before a future iteration writes to the same memory location.
 * **Output-dependence (Write-After-Write)** - A memory location write must occur before a future iteration writes to the same memory location.
 
 The Intel® oneAPI DPC++ Compiler employs static analysis to scan the program's code to establish the dependence relationships between all memory accesses in a loop. However, depending on the complexity of the addressing expressions and the loop's stride or upper bound, the compiler may not be able to statically determine precise dependence information. 
 
-In such scenarios, the compiler must conservatively assume some statements to be dependent in order to guarantee functional correctness of the generated hardware. Precise dependence information is crucially important to generate an efficient pipelined datapath. Such information reduces the number of assumed dependencies, allowing the hardware schedule to extract as much pipeline parallelism from loops as possible.
+In such scenarios, the compiler must conservatively assume some statements to be dependent in order to guarantee the functional correctness of the generated hardware. Precise dependence information is crucially important to generate an efficient pipelined datapath. Such information reduces the number of assumed dependencies, allowing the hardware schedule to extract as much pipeline parallelism from loops as possible.
 
 #### Example 1: Basic true-dependence
-Each iteration of the loop reads a value from memory location that is written to in the previous iteration. The pipelined datapath generated by the compiler cannot issue a new iteration until the previous iteration is complete.
+Each iteration of the loop reads a value from the memory location written to in the previous iteration. The pipelined datapath generated by the compiler cannot issue a new iteration until the previous iteration is complete.
 
 ```c++
 for(i = 1; i < n; i++){
@@ -54,7 +56,7 @@ for(i = 0; i < n; i++){
   S2: b[i] = a[i];
 }
 for(j = 0; j < m; j++){
-  S3: A[i] = bar();
+  S3: a[i] = bar();
 }
 ```
 
@@ -62,7 +64,7 @@ for(j = 0; j < m; j++){
 Imagine loop-carried dependencies in terms of the distance between the dependence source and sink statements, measured in the number of iterations of the loop containing the statements. In example 1, the dependence source (store into array `a`) and dependence sink (load from the same index in array `a`) are one iteration apart. That is, for the specified memory location, the data is read one iteration after it was written. Therefore, this true dependence has a distance of 1. In many cases, the compiler loop dependence analysis may be able to statically determine the dependence distance. 
 
 #### Example 4: Simple dependence distance
-The compiler's static analysis facilities can infer that the distance of the true dependence in the following example code is 10 iterations. This has an impact on the scheduling of how iterations of the loop are issued into the generated pipelined datapath. For example, iteration `k` may not begin executing the load from array `a` before iteration `(k-10)` has completed storing the data into the same memory location. However, iterations `[k-9,k)` do not incur the scheduling constraint on the store in iteration `(k-10)` and begin execution earlier.
+The compiler's static analysis facilities can infer that the distance of the true dependence in the following example code is ten iterations. This impacts the scheduling of how iterations of the loop are issued into the generated pipelined datapath. For example, iteration `k` may not begin executing the load from array `a` before iteration `(k-10)` has completed storing the data into the same memory location. However, iterations `[k-9,k)` do not incur the scheduling constraint on the store in iteration `(k-10)` and begin execution earlier.
 ```c++
 for(i = 1; i < n; i++){
   S: a[i] = a[i-10];
@@ -70,7 +72,7 @@ for(i = 1; i < n; i++){
 ```
 
 #### Example 5: Dependence distance across multiple loops in a nest
-Statement `S`, in the code snippet that follows, forms two distinct true dependencies, one carried by loop `L1` and one by loop `L2`. Across iterations of loop `L1`, data is stored into a location in array `a` that is read in the next iteration. Similarly, across iterations of loop `L2`, data is stored into a location in array `a` that is read in a later iteration. In the latter case, the dependence across loop `L2` has dependence distance of 2. In the former, the dependence distance across loop `L1` has dependence distance of 1. Special care must be taken when reasoning about loop-carried memory dependencies spanning multiple loops.
+In the code snippet that follows, Statement `S` forms two distinct true dependencies, one carried by loop `L1` and one by loop `L2`. Across iterations of loop `L1`, data is stored into a location in array `a` that is read in the next iteration. Similarly, across iterations of loop `L2`, data is stored into a location in array `a` that is read in a later iteration. In the latter case, the dependence across loop `L2` has dependence distance of 2. In the former, the dependence distance across loop `L1` has dependence distance of 1. Special care must be taken when reasoning about loop-carried memory dependencies spanning multiple loops.
 ```c++
 L1: for(i = 1; i < n; i++){
   L2: for(j = 1; j < m; j++){
@@ -82,35 +84,35 @@ L1: for(i = 1; i < n; i++){
 ### Specifying that memory accesses do *not* cause loop-carried dependencies
 Apply the `ivdep` attribute to a loop to inform the compiler that ***none*** of the memory accesses within a loop incur loop-carried dependencies.
 ```c++
-[[intelfpga::ivdep]]
-for (int i = 0; i < N; i++) {
-    A[i] = A[i - X[i]];
+[[intel::ivdep]]
+for (int i = 0; i < n; i++) {
+    a[i] = a[i - X[i]];
 }
 ```
-The `ivdep` attribute indicates to the compiler that it can disregard assumed loop-carried  memory dependencies and generate a pipelined datapath for this loop capable of issuing new iterations as soon as possible (every cycle), maximizing possible throughput.
+The `ivdep` attribute indicates to the compiler that it can disregard assumed loop-carried memory dependencies and generate a pipelined datapath for this loop capable of issuing new iterations as soon as possible (every cycle), maximizing possible throughput.
 
 ### Specifying that memory accesses do *not* cause loop-carried dependencies across a fixed distance
 Apply the `ivdep` attribute with a `safelen` parameter to set a specific lower bound on the dependence distance that can possibly be attributed to loop-carried dependencies in the associated loop.
 ```c++
 // n is a constant expression of integer type
-[[intelfpga::ivdep(n)]]
-for (int i = 0; i < N; i++) {
-    A[i] = A[i - X[i]];
+[[intel::ivdep(n)]]
+for (int i = 0; i < n; i++) {
+    a[i] = a[i - X[i]];
 }
 ```
-The `ivdep` attribute informs the compiler to generate a pipelined loop datapath that can issue a new iteration as soon as the iteration `n` iterations ago has completed. The attribute parameter (`safelen`) is a refinement of the compiler static loop-carried dependence analysis that infers the dependence present in the code but is otherwise unable to accurately determine its distance.
+The `ivdep` attribute informs the compiler to generate a pipelined loop datapath that can issue a new iteration as soon as the iteration `n` iterations ago has completed. The attribute parameter (`safelen`) is a refinement of the compiler static loop-carried dependence analysis that infers the dependence present in the code but is otherwise unable to determine its distance accurately.
 
-***IMPORTANT***: Applying the `ivdep` attribute or the `ivdep` attribute with a `safelen` parameter may lead to incorrect results if the annotated loop exhibits loop-carried memory dependencies. The attribute directs the compiler to generate hardware assuming no loop-carried dependencies. Specifying this assumption incorrectly is an invalid use of the attribute, and results in undefined (and likely incorrect) behavior.
+***IMPORTANT***: Applying the `ivdep` attribute or the `ivdep` attribute with a `safelen` parameter may lead to incorrect results if the annotated loop exhibits loop-carried memory dependencies. The attribute directs the compiler to generate hardware assuming no loop-carried dependencies. Specifying this assumption incorrectly is an invalid use of the attribute and results in undefined (and likely incorrect) behavior.
 
 ### Testing the Tutorial
 In `loop_ivdep.cpp`, the `ivdep` attribute is applied to the kernel work loop with a `safelen` parameter of 1 and 128.
 ```c++
-  TransposeAndFold<kMinSafelen>(selector,  A,  B); // kMinSafelen = 1
-  TransposeAndFold<kMaxSafelen>(selector,  A,  C); // kMaxSafelen = 128
+  TransposeAndFold<kMinSafelen>(selector,  a,  b); // kMinSafelen = 1
+  TransposeAndFold<kMaxSafelen>(selector,  a,  b); // kMaxSafelen = 128
 ```
-The `ivdep` attribute with `safelen` parameter equal to 1 informs the compiler that iterations of the associated loop do not form a loop-carried memory dependence with a distance of at least 1. That is, the attribute is redundant and is equivalent to the code without the attribute in place.
+The `ivdep` attribute with the `safelen` parameter equal to 1 informs the compiler that iterations of the associated loop do not form a loop-carried memory dependence with a distance of at least 1. That is, the attribute is redundant and is equivalent to the code without the attribute in place.
 
-**_Try this!_**: Compile the tutorial program in `loop_ivdep.cpp` with and without the `[[intelfpga::ivdep]]` attribute altogether and compare the resulting reports.
+**_Try this!_**: Compile the tutorial program in `loop_ivdep.cpp` with and without the `[[intel::ivdep]]` attribute altogether and compare the resulting reports.
 
 The `ivdep` attribute with `safelen` parameter equal to 128 is reflective of the maximum number of iterations of the associated loop among which no loop-carried memory dependence occurs. The annotated loop nest contains a dependence on values of array `temp_buffer`:
 
@@ -130,8 +132,10 @@ Observe that the indexing expression on `temp_buffer` evaluates to the same inde
 * How to aid the compiler's dependence analysis to maximize performance
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `loop_ivdep` Tutorial
 
@@ -139,7 +143,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) and whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -154,7 +158,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -187,7 +191,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -205,7 +209,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ``` 
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -214,10 +218,10 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ## Examining the Reports
 Locate `report.html` in the `loop_ivdep_report.prj/reports/` or `loop_ivdep_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Navigate to the Loops Analysis section of the optimization report and look at the initiation interval (II) achieved by the two version of the kernel.
-* **`safelen(1)`** The II reported for this version of the kernel is 5 cycles. 
+Navigate to the Loops Analysis section of the optimization report and look at the initiation interval (II) achieved by the two kernel versions.
+* **`safelen(1)`** The II reported for this version of the kernel is five cycles. 
 You should see a message similar to "Compiler failed to schedule this loop with smaller II due to memory dependency."
-* **`safelen(128)`** The II reported for this version of the kernel is 1 cycle, the optimal result. You should  see a message similar to  "a new iteration is issued into the pipelined loop datapath on every cycle".
+* **`safelen(128)`** The II reported for this version of the kernel is one cycle, the optimal result. You should see a message similar to  "a new iteration is issued into the pipelined loop datapath on every cycle".
 
 
 ## Running the Sample

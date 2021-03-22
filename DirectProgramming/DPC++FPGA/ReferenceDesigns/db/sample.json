@@ -82,54 +82,68 @@
       {
         "id": "fpga_emu_q1",
         "steps": [
-          "cd src",
-          "ninja fpga_emu_q1",
-          "db.q1.fpga_emu.exe --dbroot=../data/sf0.01 --test"
+          "mkdir build-q1",
+          "cd build-q1",
+          "cmake -G \"NMake Makefiles\" .. -DQUERY=1",
+          "nmake fpga_emu",
+          "db.fpga_emu.exe --dbroot=../data/sf0.01 --test"
         ]
       },
       {
         "id": "fpga_emu_q9",
         "steps": [
-          "cd src",
-          "ninja fpga_emu_q9",
-          "db.q9.fpga_emu.exe --dbroot=../data/sf0.01 --test"
+          "mkdir build-q9",
+          "cd build-q9",
+          "cmake -G \"NMake Makefiles\" .. -DQUERY=9",
+          "nmake fpga_emu",
+          "db.fpga_emu.exe --dbroot=../data/sf0.01 --test"
         ]
       },
       {
         "id": "fpga_emu_q11",
         "steps": [
-          "cd src",
-          "ninja fpga_emu_q11",
-          "db.q11.fpga_emu.exe --dbroot=../data/sf0.01 --test"
+          "mkdir build-q11",
+          "cd build-q11",
+          "cmake -G \"NMake Makefiles\" .. -DQUERY=11",
+          "nmake fpga_emu",
+          "db.fpga_emu.exe --dbroot=../data/sf0.01 --test"
         ]
       },
       {
         "id": "fpga_emu_q12",
         "steps": [
-          "cd src",
-          "ninja fpga_emu_q12",
-          "db.q12.fpga_emu.exe --dbroot=../data/sf0.01 --test"
+          "mkdir build-q12",
+          "cd build-q12",
+          "cmake -G \"NMake Makefiles\" .. -DQUERY=12",
+          "nmake fpga_emu",
+          "db.fpga_emu.exe --dbroot=../data/sf0.01 --test"
         ]
       },
       {
         "id": "report_q1",
         "steps": [
-          "cd src",
-          "ninja report_q1"
+          "mkdir build-q1",
+          "cd build-q1",
+          "cmake -G \"NMake Makefiles\" .. -DQUERY=1",
+          "nmake report"
         ]
       },
       {
         "id": "report_q11",
         "steps": [
-          "cd src",
-          "ninja report_q11"
+          "mkdir build-q11",
+          "cd build-q11",
+          "cmake -G \"NMake Makefiles\" .. -DQUERY=11",
+          "nmake report"
         ]
       },
       {
         "id": "report_q12",
         "steps": [
-          "cd src",
-          "ninja report_q12"
+          "mkdir build-q12",
+          "cd build-q12",
+          "cmake -G \"NMake Makefiles\" .. -DQUERY=12",
+          "nmake report"
         ]
       }
     ]

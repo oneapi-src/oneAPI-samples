@@ -3,7 +3,7 @@ project(hello-decode)
 
 set(TARGET hello-decode)
 set(SOURCES src/hello-decode.cpp)
-set(VPL_NAME mfx)
+
 set(RUNARGS ${CMAKE_CURRENT_SOURCE_DIR}/content/cars_128x96.h265)
 
 # Set default build type to RelWithDebInfo if not specified
