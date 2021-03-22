@@ -1,0 +1,22 @@
+{
+    "guid": "39AA03BC-09ED-4DDF-A115-FD31F6F46450",
+    "name": "STREAM",
+    "categories": ["Toolkit/oneAPI Tools/Benchmarks"],
+    "description": "The STREAM is a program that measures memory transfer rates in MB/s for simple computational kernels coded in C",
+    "toolchain": [ "dpcpp" ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "languages": [ { "cpp": {} } ],
+    "os": [ "linux" ],
+    "builder": [ "ide", "cmake" ],
+    "ciTests": {
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make",
+                          "make run"
+                   ]
+          }]
+    }
+  }

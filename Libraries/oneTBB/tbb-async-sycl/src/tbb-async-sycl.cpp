@@ -9,6 +9,7 @@
 #include <atomic>
 #include <iostream>
 #include <thread>
+#include <numeric>
 
 #include <CL/sycl.hpp>
 

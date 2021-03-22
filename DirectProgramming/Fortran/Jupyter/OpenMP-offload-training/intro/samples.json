@@ -1,0 +1,19 @@
+{
+  "guid": "CEA8B9EF-0143-499B-956D-12EC17BFAFA8",	
+  "name": "OpenMP Offload Basics Fortran Intro",
+  "categories": ["Toolkit/oneAPI Direct Programming/Fortran/OpenMP Offload"],
+  "description": "OpenMP Offload Basics Intro",
+  "toolchain": [ "icpx" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"ifx -fiopenmp -fopenmp-targets=spir64 simple_solution.f90",
+			"./a.out"
+		 ]
+	}]
+  }
+}

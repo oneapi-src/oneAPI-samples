@@ -2,12 +2,14 @@
 This FPGA tutorial demonstrates how to build a simple cache (implemented in FPGA registers) to store recently-accessed memory locations so that the compiler can achieve II=1 on critical loops in task kernels.
 
 
-***Documentation***: The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)  provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. 
+***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
+The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
+The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | How and when to implement the on-chip memory cache optimization
 | Time to complete                  | 30 minutes
@@ -15,30 +17,30 @@ This FPGA tutorial demonstrates how to build a simple cache (implemented in FPGA
 
 
 ## Purpose
-In DPC++ task kernels for FPGA, it is always our objective to achieve an initiation interval (II) of 1 on performance-critical loops. This means that a new loop iteration is launched on every clock cycle, maximizing the throughput of the loop. 
+In DPC++ task kernels for FPGA, our objective is to achieve an initiation interval (II) of 1 on performance-critical loops. This means that a new loop iteration is launched on every clock cycle, maximizing the loop's throughput. 
 
-When the loop contains a loop-carried variable that is implemented in on-chip memory, the compiler often *cannot* achieve II=1 because the memory access takes more than one clock cycle. If the updated memory location may be needed on the next loop iteration, the next iteration must be delayed to allow time for the update, hence II > 1.
+When the loop contains a loop-carried variable implemented in on-chip memory, the compiler often *cannot* achieve II=1 because the memory access takes more than one clock cycle. If the updated memory location may be needed on the next loop iteration, the next iteration must be delayed to allow time for the update, hence II > 1.
 
 The on-chip memory cache technique breaks this dependency by storing recently-accessed values in a cache capable of a 1-cycle read-modify-write operation. The cache is implemented in FPGA registers rather than on-chip memory. By pulling memory accesses preferentially from the register cache, the loop-carried dependency is broken.
 
 ### When is the on-chip memory cache technique applicable?
 
 ***Failure to achieve II=1 because of a loop-carried memory dependency in on-chip memory***:
-The on-chip memory cache technique is applicable if compiler could not pipeline a loop with II=1 because of an on-chip memory dependency. (If the compiler could not achieve II=1 because of a *global* memory dependency, this technique does not apply as the access latencies are too great.)
+The on-chip memory cache technique is applicable if the compiler could not pipeline a loop with II=1 because of an on-chip memory dependency. (If the compiler could not achieve II=1 because of a *global* memory dependency, this technique does not apply as the access latencies are too great.)
 
 To check this for a given design, view the "Loops Analysis" section of its optimization report. The report lists the II of all loops and explains why a lower II is not achievable. Check whether the reason given resembles "the compiler failed to schedule this loop with smaller II due to memory dependency". The report will describe the "most critical loop feedback path during scheduling". Check whether this includes on-chip memory load/store operations on the critical path.
 
 ***An II=1 loop with a load operation of latency 1***:
-The compiler is capable of reducing the latency of on-chip memory accesses in order to achieve II=1. However, in doing so the compiler makes a trade-off, sacrificing f<sub>MAX</sub> to better optimize the loop. 
+The compiler is capable of reducing the latency of on-chip memory accesses to achieve II=1. In doing so, the compiler makes a trade-off by sacrificing f<sub>MAX</sub> to improve the II. 
 
 In a design with II=1 critical loops but lower than desired f<sub>MAX</sub>, the on-chip memory cache technique may still be applicable. It can help recover f<sub>MAX</sub> by enabling the compiler to achieve II=1 with a higher latency memory access.
 
-To check whether this is the case for a given design, view the "Kernel Memory Viewer" section of the optimization report. Select the on-chip memory of interest from the Kernel Memory List, and mouse over the load operation "LD" to check its latency. If the latency of the load operation is 1, this is a clear sign that the compiler has attempted to sacrifice f<sub>MAX</sub> to better optimize a loop.
+To check whether this is the case for a given design, view the "Kernel Memory Viewer" section of the optimization report. Select the on-chip memory of interest from the Kernel Memory List, and mouse over the load operation "LD" to check its latency. If the latency of the load operation is 1, this is a clear sign that the compiler has attempted to sacrifice f<sub>MAX</sub> to improve loop II.
 
 
 ### Implementing the on-chip memory cache technique
 
-The tutorial demonstrates the technique using a program that computes a histogram. The histogram operation accepts an input vector of values, separates the values into buckets, and counts the number of values per bucket. For each input value, an output bucket location is determined, and the count for the bucket is incremented. This count is stored in the on-chip memory and the increment operation requires reading from the memory, performing the increment, and storing the result. This read-modify-write operation is the critical path that can result in II > 1.
+The tutorial demonstrates the technique using a program that computes a histogram. The histogram operation accepts an input vector of values, separates the values into buckets, and counts the number of values per bucket. For each input value, an output bucket location is determined, and the count for the bucket is incremented. This count is stored in the on-chip memory, and the increment operation requires reading from memory, performing the increment, and storing the result. This read-modify-write operation is the critical path that can result in II > 1.
 
 To reduce II, the idea is to store recently-accessed values in an FPGA register-implemented cache that is capable of a 1-cycle read-modify-write operation. If the memory location required on a given iteration exists in the cache, it is pulled from there. The updated count is written back to *both* the cache and the on-chip memory. The `ivdep` pragma is added to inform the compiler that if a loop-carried variable (namely, the variable storing the histogram output) is needed within `CACHE_DEPTH` iterations, it is guaranteed to be available right away.
 
@@ -46,9 +48,9 @@ To reduce II, the idea is to store recently-accessed values in an FPGA register-
 
 While any value of `CACHE_DEPTH` results in functional hardware, the ideal value of `CACHE_DEPTH` requires some experimentation. The depth of the cache needs to roughly cover the latency of the on-chip memory access. To determine the correct value, it is suggested to start with a value of 2 and then increase it until both II = 1 and load latency > 1. In this tutorial, a `CACHE_DEPTH` of 5 is needed. 
 
-Each iteration takes only a few moments by running `make report` (refer to the section below on how to build the design). It is important to find the *minimal* value of `CACHE_DEPTH` that results in a maximal performance increase. Unnecessarily large values of `CACHE_DEPTH` consume unnecessary FPGA resources and can reduce f<sub>MAX</sub>. Therefore, at a `CACHE_DEPTH` that results in II=1 and load latency = 1, if further increases to `CACHE_DEPTH` show no improvement, then `CACHE_DEPTH` should not be increased any further.
+Each iteration takes only a few moments by running `make report` (refer to the section below on how to build the design). It is important to find the *minimal* value of `CACHE_DEPTH` that results in a maximal performance increase. Unnecessarily large values of `CACHE_DEPTH` consume unnecessary FPGA resources and can reduce f<sub>MAX</sub>. Therefore, at a `CACHE_DEPTH` that results in II=1 and load latency = 1, if further increases to `CACHE_DEPTH` show no improvement, `CACHE_DEPTH` should not be increased any further.
 
-In the tutorial, two versions of the histogram kernel are implemented: one with and one without caching. The report shows II > 1 for the loop in the kernel without caching and II = 1 for the one with caching.
+Two versions of the histogram kernel are implemented in the tutorial: one with and one without caching. The report shows II > 1 for the loop in the kernel without caching and II = 1 for the one with caching.
 
 ## Key Concepts
 * How to implement the on-chip memory cache optimization technique
@@ -56,8 +58,10 @@ In the tutorial, two versions of the histogram kernel are implemented: one with 
 * How to tune the cache depth
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `onchip_memory_cache` Tutorial
 
@@ -65,7 +69,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -80,7 +84,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -113,7 +117,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -131,7 +135,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ``` 
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -141,7 +145,7 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ## Examining the Reports
 Locate `report.html` in the `onchip_memory_cache_report.prj/reports/` or `onchip_memory_cache_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Compare the Loop Analysis reports with and without the onchip memory cache optimization, as described in the "When is the on-chip memory cache technique applicable?" section.
+Compare the Loop Analysis reports with and without the on-chip memory cache optimization, as described in the "When is the on-chip memory cache technique applicable?" section.
 
 
 ## Running the Sample

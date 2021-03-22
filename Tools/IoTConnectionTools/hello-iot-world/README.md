@@ -1,8 +1,8 @@
-# Hello IoT World
+﻿# `Hello IoT World` Sample
 
 ## Introduction
 
-This is a simple sample you could use for a quick compiler test.
+This source code is a simple sample you could use for a quick compiler test.
 
 ## What it is
 
@@ -17,12 +17,19 @@ Any Intel® CPU
 
 Intel® C++ Compiler Classic
 
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
 ## Build and Run
 
 ### Linux CLI
 
 Source the `setvars.sh` environment setup script distributed with oneAPI to
-configure the oneAPI development environment. By default this script can be
+configure the oneAPI development environment. By default, this script can be
 found in the `/opt/intel/oneapi` directory.
 
 After sourcing `setvars.sh`, type `oneapi-cli` at the command line to download
@@ -43,7 +50,7 @@ make run
 Use the Intel Samples Plugin in Eclipse to create and run the sample.
 
 You may need to source the `setvars.sh` script distributed with oneAPI before
-launching Eclipse, so that Eclipse can locate and use the Intel® C++ Compiler
+launching Eclipse so that Eclipse can locate and use the Intel® C++ Compiler
 Classic.
 
 ## Additional Links

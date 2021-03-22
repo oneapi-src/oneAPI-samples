@@ -10,7 +10,7 @@ We welcome community contributions to the oneAPI-samples project. You can:
 We accept contributions as pull requests on GitHub. To contribute your changes
 directly to the repository, please do the following:
 
-* Follow the [Git Steps for contribution](https://github.com/oneapi-src/oneAPI-samples/wiki/Git-Steps-for-Contribution).
+* Follow the [Git Steps for contribution](https://github.com/oneapi-src/oneAPI-samples/wiki/Github-Steps-for-Contribution).
 * Make sure your PR has a clear purpose, and does one thing only, and nothing more. This will enable us review your PR more quickly.
 * Make sure each commit in your PR is a small, atomic change representing one step in development.
 * Squash intermediate steps within PR for bug fixes, style cleanups, reversions, etc., so they do not appear in merged PR history.

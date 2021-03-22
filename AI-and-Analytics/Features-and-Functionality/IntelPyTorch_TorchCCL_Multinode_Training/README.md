@@ -1,10 +1,12 @@
-# `Intel Extension for PyTorch Getting Started` Sample
+﻿# `Intel Extension for PyTorch Getting Started` Sample
 
 torch-ccl holds PyTorch bindings maintained by Intel for the Intel® oneAPI Collective Communications Library (oneCCL).
 
-Intel® oneCCL (collective commnications library) is a library for efficient distributed deep learning training implementing such collectives like allreduce, allgather, alltoall. For more information on oneCCL, please refer to the oneCCL documentation.
+Intel® oneCCL (collective communications library) is a library for efficient distributed deep learning training that implements such collectives like allreduce, allgather, and alltoall. For more information on oneCCL, please refer to the oneCCL documentation.
 
-For comprehensive instructions regarding distributed training with oneCCL in PyTorch, go to https://github.com/intel/torch-ccl and https://github.com/intel/optimized-models/tree/master/pytorch/distributed.
+For comprehensive instructions regarding distributed training with oneCCL in PyTorch, go to the following github repos:
+* [PyTorch and oneCCL](https://github.com/intel/torch-ccl) 
+* [PyTorch](https://github.com/intel/optimized-models/tree/master/pytorch/distributed)
 
 | Optimized for                       | Description
 |:---                               |:---
@@ -19,7 +21,7 @@ For comprehensive instructions regarding distributed training with oneCCL in PyT
 
 From this sample code, you will learn how to perform distributed training with oneCCL in PyTorch.
 
-The code will be running on CPU.
+The code will be running on the CPU.
 
 ## Key Implementation Details 
 
@@ -27,14 +29,12 @@ The code includes how to perform distributed training with oneCCL in PyTorch.
  
 ## License  
 
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `torch-ccl Getting Started` Sample
-
-### Running Samples In DevCloud
-
-N/A
 
 ### On a Linux* System 
 

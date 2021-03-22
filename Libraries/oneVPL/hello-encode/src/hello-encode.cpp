@@ -62,17 +62,20 @@ int main(int argc, char *argv[]) {
     mfxStatus sts                    = MFX_ERR_NONE;
     mfxLoader loader                 = NULL;
     mfxConfig cfg                    = NULL;
-    mfxVariant impl_value            = { 0 };
+    mfxVariant impl_value            = {};
+    mfxVariant codec_value           = {};
     mfxSession session               = NULL;
     mfxU16 input_width               = 0;
     mfxU16 input_height              = 0;
-    mfxBitstream bitstream           = { 0 };
-    mfxVideoParam encode_params      = { 0 };
+    mfxBitstream bitstream           = {};
+    mfxVideoParam encode_params      = {};
     mfxFrameSurface1 *enc_surface_in = NULL;
-    mfxSyncPoint syncp               = { 0 };
+    mfxSyncPoint syncp               = {};
     mfxU32 framenum                  = 0;
     bool is_draining                 = false;
     bool is_stillgoing               = true;
+    int implIdx                      = 0;
+    mfxImplDescription *idesc        = NULL;
 
     // Setup input and output files
     in_filename = ValidateFileName(argv[1]);
@@ -97,16 +100,42 @@ int main(int argc, char *argv[]) {
     cfg = MFXCreateConfig(loader);
     VERIFY(NULL != cfg, "MFXCreateConfig failed")
 
-    impl_value.Type     = MFX_VARIANT_TYPE_U32;
-    impl_value.Data.U32 = MFX_CODEC_HEVC;
-    sts                 = MFXSetConfigFilterProperty(
+    codec_value.Type     = MFX_VARIANT_TYPE_U32;
+    codec_value.Data.U32 = MFX_CODEC_HEVC;
+    sts                  = MFXSetConfigFilterProperty(
         cfg,
         (mfxU8 *)"mfxImplDescription.mfxEncoderDescription.encoder.CodecID",
-        impl_value);
-    VERIFY(MFX_ERR_NONE == sts, "MFXSetConfigFilterProperty failed");
+        codec_value);
+    VERIFY(MFX_ERR_NONE == sts, "MFXSetConfigFilterProperty failed for codec");
 
-    sts = MFXCreateSession(loader, 0, &session);
-    VERIFY(MFX_ERR_NONE == sts, "Not able to create VPL session supporting HEVC/H265 encode");
+    // Find first implementation which supports 2.0 API
+    while (true) {
+        sts = MFXEnumImplementations(loader,
+                                     implIdx,
+                                     MFX_IMPLCAPS_IMPLDESCSTRUCTURE,
+                                     (mfxHDL *)&idesc);
+
+        if (sts != MFX_ERR_NONE)
+            break;
+
+        if (idesc) {
+            printf("Found ApiVersion: %hu.%hu  ", idesc->ApiVersion.Major, idesc->ApiVersion.Minor);
+            printf("   \t%s ", (idesc->Impl == MFX_IMPL_TYPE_SOFTWARE) ? "SW" : "HW");
+
+            if (idesc->ApiVersion.Major >= 2) {
+                sts = MFXCreateSession(loader, implIdx, &session);
+                printf("  session created\n");
+                MFXDispReleaseImplDescription(loader, idesc);
+                break;
+            }
+            else {
+                printf("  skip\n");
+                MFXDispReleaseImplDescription(loader, idesc);
+            }
+        }
+        implIdx++;
+    }
+    VERIFY(MFX_ERR_NONE == sts, "Not able to create 2.x VPL session supporting HEVC/H265 encode");
 
     // Initialize encode parameters
     encode_params.mfx.CodecId                 = MFX_CODEC_HEVC;
@@ -209,6 +238,7 @@ end:
     // Clean up resources - It is recommended to close components first, before
     // releasing allocated surfaces, since some surfaces may still be locked by
     // internal resources.
+
     if (loader)
         MFXUnload(loader);
 
