@@ -42,41 +42,37 @@ TensorFlow is ready for use once you finish the Intel AI Analytics Toolkit insta
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
 
-### On a Linux* System
-#### Activate conda environment With Root Access
+### Sourcing the oneAPI AI Analytics Toolkit environment variables
 
-Navigate in Linux shell to your oneapi installation path, typically `/opt/intel/oneapi`. Activate the conda environment with the following command:
-
-```
-source /opt/intel/oneapi/setvars.sh
-source activate tensorflow
-```
-
-#### Activate conda environment Without Root Access (Optional)
-
-By default, the Intel AI Analytics toolkit is installed in the `/opt/intel/oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel AI Analytics toolkit is installed in the `/opt/intel/oneapi` folder. The toolkit may be loaded by sourcing the `setvars.sh` script on a Linux shell. Notice the flag `--ccl-configuration=cpu_icc`. By default, the `ccl-configuration` is set to `cpu_gpu_dpcpp`. However, since we are distributing our TensorFlow workload on multiple CPU nodes, we are configuring the Horovod installation to use CPUs. 
 
 ```
-conda create --name user_tensorflow --clone tensorflow
+source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_icc
 ```
 
-Then activate your conda environment with the following command:
+### Creating a TensorFlow environment with Horovod
+
+Let's proceed with creating a conda environment with the Intel-optimized TensorFlow and horovod installed. Execute the following commands:
 
 ```
-source activate user_tensorflow
+conda create --name tensorflow_horovod 
+conda activate tensorflow_horovod 
+```
+
+Find the path where the `tensorflow_horovod` conda environment has been created. 
+
+```
+conda install -c "/opt/intel/oneapi/conda_channel" -p <path_of_tensorflow_horovod_env>/tensorflow_horovod -y -q conda python=3.7 numpy intel-openmp tensorflow --offline
+```
+
+Before running the sample, you will need to install the 3rd-party [Horovod](https://github.com/horovod/horovod) framework. Proceed with installing Horovod with the follwing command:
+```
+env HOROVOD_WITHOUT_MPI=1 HOROVOD_CPU_OPERATIONS=CCL HOROVOD_WITHOUT_MXNET=1 HOROVOD_WITHOUT_PYTORCH=1 HOROVOD_WITH_TENSORFLOW=1 python -m pip install --upgrade --force-reinstall --no-cache-dir horovod
 ```
 
 ## Running the Sample
 
-Before running the sample, you will need to install the 3rd-party [Horovod](https://github.com/horovod/horovod) framework. 
-
-After you have activated your conda environment, you may wish to execute the following commands to install `horovod`:
-```
-export HOROVOD_WITHOUT_MPI=1 #Optional, in case you encounter MPI-related install issues
-pip install horovod
-```
-
-To the script on one machine without invoking Horovod, type the following command in the terminal with Python installed:
+To execute the script on one machine without invoking Horovod, type the following command in the terminal with Python installed:
 ```
     python TensorFlow_Multinode_Training_with_Horovod.py
 ```
