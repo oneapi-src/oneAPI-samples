@@ -40,7 +40,7 @@ int main() {
         int j = idx[0];
         int i = idx[1];
         for (int k = 0; k < N; ++k) {
-          c[j][i] += a[j][k] * b[k][i]; // or c[idx] += a[id(j,k) * b[id(k,i)];
+          c[j][i] += a[j][k] * b[k][i]; // or c[idx] += a[id(j,k)] * b[id(k,i)];
         }
       });
 // END CODE SNIP
