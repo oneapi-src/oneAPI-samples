@@ -1,4 +1,13 @@
-import ilit
+import sys
+try:
+    import lpot
+except:
+    import ilit as lpot
+
+if lpot.__version__ > '1.1':
+    print("This script doesn't support LPOT 1.2 or newer, please install LPOT 1.1")
+    sys.exit(1)
+
 import alexnet
 import math
 import mnist_dataset
@@ -30,7 +39,7 @@ class Dataloader(object):
 
 def auto_tune(input_graph_path, yaml_config, batch_size):
     fp32_graph = alexnet.load_pb(input_graph_path)
-    quan = ilit.Quantization(yaml_config)
+    quan = lpot.Quantization(yaml_config)
     dataloader = Dataloader(batch_size)
 
     q_model = quan(

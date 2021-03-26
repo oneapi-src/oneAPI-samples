@@ -1,13 +1,13 @@
-# `Intel(R) Low Precision Optimization Tool (iLiT)` Sample for Tensorflow
+# `Intel(R) Low Precision Optimization Tool (LPOT)` Sample for Tensorflow
 
 ## Background
 Low-precision inference can speed up inference obviously, by converting the fp32 model to int8 or bf16 model. Intel provides Intel(R) Deep Learning Boost technology in the Second Generation Intel(R) Xeon(R) Scalable Processors and newer Xeon(R), which supports to speed up int8 and bf16 model by hardware.
 
-Intel(R) Low Precision Optimization Tool (iLiT) helps the user to simplify the processing to convert the fp32 model to int8/bf16.
+Intel(R) Low Precision Optimization Tool (LPOT) helps the user to simplify the processing to convert the fp32 model to int8/bf16.
 
-At the same time, iLiT will tune the quanization method to reduce the accuracy loss, which is a big blocker for low-precision inference.
+At the same time, LPOT will tune the quanization method to reduce the accuracy loss, which is a big blocker for low-precision inference.
 
-iLiT is released in Intel(R) AI Analytics Toolkit and works with Intel(R) Optimization of Tensorflow*.
+LPOT is released in Intel(R) AI Analytics Toolkit and works with Intel(R) Optimization of Tensorflow*.
 
 Please refer to the official website for detailed info and news: [https://github.com/intel/lp-opt-tool](https://github.com/intel/lp-opt-tool)
 
@@ -19,18 +19,18 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Purpose
-This sample will show a whole process to build up a CNN model to recognize handwriting number and speed up it by iLiT.
+This sample will show a whole process to build up a CNN model to recognize handwriting number and speed up it by LPOT.
 
-We will learn how to train a CNN model based on Keras with Tensorflow, use iLiT to quantize the model and compare the performance to understand the benefit of iLiT.
+We will learn how to train a CNN model based on Keras with Tensorflow, use LPOT to quantize the model and compare the performance to understand the benefit of LPOT.
 
 ## Key Implementation Details
 
 - Use Keras on Tensorflow to build and train the CNN model.
 
 
-- Define function and class for iLiT to quantize the CNN model.
+- Define function and class for LPOT to quantize the CNN model.
 
-  The iLiT can run on any Intel(R) CPU to quantize the AI model.
+  The LPOT can run on any Intel(R) CPU to quantize the AI model.
   
   The quantized AI model has better inference performance than the FP32 model on Intel CPU.
   
@@ -42,12 +42,12 @@ We will learn how to train a CNN model based on Keras with Tensorflow, use iLiT 
 
 ## Pre-requirement
 
-| Optimized for                       | Description
+| Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 
 | Hardware                          | The Second Generation Intel(R) Xeon(R) Scalable processor family or newer
 | Software                          | Intel(R) oneAPI AI Analytics Toolkit
-| What you will learn               | How to use iLiT tool to quantize the AI model based on Tensorflow and speed up the inference on Intel(R) Xeon(R) CPU
+| What you will learn               | How to use LPOT tool to quantize the AI model based on Tensorflow and speed up the inference on Intel(R) Xeon(R) CPU
 | Time to complete                  | 10 minutes
 
 ## Running Environment
@@ -75,7 +75,7 @@ https://software.intel.com/content/www/us/en/develop/articles/installation-guide
 
 Intel(R) Optimization of Tensorflow* are included in Intel(R) AI Analytics Toolkit. So, no need to install them separately.
 
-This sample depends on **Tensorflow* 2.2**.
+This sample depends on **Tensorflow* 2.2** or newer.
 
 ### Activate Intel(R) AI Analytics Toolkit
 
@@ -99,11 +99,11 @@ conda info -e
 #                        
 base                  *  /opt/intel/oneapi/intelpython/latest
 pytorch                  /opt/intel/oneapi/intelpython/latest/envs/pytorch
-pytorch-1.5.0            /opt/intel/oneapi/intelpython/latest/envs/pytorch-1.5.0
+pytorch-1.7.0            /opt/intel/oneapi/intelpython/latest/envs/pytorch-1.7.0
 tensorflow               /opt/intel/oneapi/intelpython/latest/envs/tensorflow
-tensorflow-2.2.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.2.0
-                         /opt/intel/oneapi/pytorch/1.5.0
-                         /opt/intel/oneapi/tensorflow/2.2.0
+tensorflow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.3.0
+                         /opt/intel/oneapi/pytorch/1.7.0
+                         /opt/intel/oneapi/tensorflow/2.3.0
 ```
 
   2. Activate Tensorflow Env.
@@ -114,11 +114,10 @@ conda activate tensorflow
             
 ```
 
-### Install iLiT by Local Channel
+### Install LPOT by Local Channel
 
 ```
-cd /opt/intel/oneapi/iLiT/latest
-sudo ./install_iLiT.sh
+conda install -c ${ONEAPI_ROOT}/conda_channel numpy pyyaml scikit-learn schema lpot -y
 ```
 
 ### Install Jupyter Notebook
@@ -166,7 +165,7 @@ conda activate /opt/intel/oneapi/intelpython/latest/envs/tensorflow
 
 ### Open Sample Code File
 
-In a web browser, open link: **http://yyy:8888/?token=146761d9317552c43e0d6b8b6b9e1108053d465f6ca32fca**. Click 'ilit_sample_tensorflow.ipynb' to start up the sample.
+In a web browser, open link: **http://yyy:8888/?token=146761d9317552c43e0d6b8b6b9e1108053d465f6ca32fca**. Click 'lpot_sample_tensorflow.ipynb' to start up the sample.
 
 ### Run
 
