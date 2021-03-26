@@ -8,7 +8,6 @@
 // utility classes
 #include "pipe_array.hpp"
 #include "NullPipe.hpp"
-#include "PipeAggregator.hpp"
 
 #include "mvdr_complex.hpp"
 
