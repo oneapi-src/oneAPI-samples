@@ -117,14 +117,7 @@ conda activate tensorflow
 ### Install LPOT by Local Channel
 
 ```
-cd /opt/intel/oneapi/LPOT/latest
-sudo ./install_LPOT.sh
-```
-or 
-```
-cd /opt/intel/oneapi/iLiT/latest
-sudo ./install_iLiT.sh
-
+conda install -c ${ONEAPI_ROOT}/conda_channel numpy pyyaml scikit-learn schema lpot -y
 ```
 
 ### Install Jupyter Notebook
