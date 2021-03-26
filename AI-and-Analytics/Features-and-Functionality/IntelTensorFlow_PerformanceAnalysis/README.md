@@ -55,7 +55,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 1. Create conda env: `$conda create -n stock-tensorflow python matplotlib ipykernel psutil pandas gitpython`
 2. Activate the created conda env: `$source activate stock-tensorflow.`
-3. Install stock Tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.2.0`
+3. Install stock Tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.3.0`
 4. Install extra needed package: `(stock-tensorflow) $pip install cxxfilt`
 5. Deactivate conda env: `(stock-tensorflow)$conda deactivate`
 6. Register the kernel to Jupyter NB: `$~/.conda/envs/stock-tensorflow/bin/python -m ipykernel install --user --name=stock-tensorflow`
@@ -68,7 +68,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 > NOTE: Intel-optimized Tensorflow is on DevCloud. However, users don't have access to install extra packages. 
   Therefore, we need to clone Intel Tensorflow into the user's home directory for installing extra packages.
 
-1. Source oneAPI environment variables: `$source /opt/intel/inteloneapi/setvars.sh`
+1. Source oneAPI environment variables: `$source /opt/intel/oneapi/setvars.sh`
 2. Create conda env: `$conda create --name intel-tensorflow --clone tensorflow`
 3. Activate the created conda env: `$source activate intel-tensorflow`
 4  Install the extra needed package: `(intel-tensorflow) $pip install cxxfilt matplotlib ipykernel psutil pandas gitpython`
@@ -85,7 +85,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 1. Create conda env: `$conda create -n stock-tensorflow python matplotlib ipykernel psutil pandas gitpython`
 
 2. Activate the created conda env: `$conda activate stock-tensorflow`
-3. Install stock tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.2.0`
+3. Install stock tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.3.0`
 4. Install extra needed package: `(stock-tensorflow) $pip install cxxfilt`
 5. Deactivate conda env: `(stock-tensorflow)$conda deactivate`
 6. Register the kernel to Jupyter NB: `$~/anaconda3/envs/stock-tensorflow/bin/python  -m ipykernel install --user --name=stock-tensorflow`
@@ -108,17 +108,18 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ### Running the Sample
 
-1. Copy the Intel Model Zoo from your AI Analytics Toolkit installation path: `$cp -rf /opt/intel/inteloneapi/modelzoo/latest/models ~/`
-2. Launch Jupyter notebook: `$jupyter notebook --ip=0.0.0.0`
+1. Copy the Intel Model Zoo from your AI Analytics Toolkit installation path: `$cp -rf /opt/intel/oneapi/modelzoo/latest/models ~/`
+2. cd ~/models; git init; git add . ; git commit -m 'initial commit'
+3. Launch Jupyter notebook: `$jupyter notebook --ip=0.0.0.0`
 
 > NOTE: Users don't need to apply step 2 on DevCloud Environment.
 
-3. Follow the instructions to open the URL with the token in your browser
-4. Browse to the `models/docs/notebooks/perf_analysis` folder
-5. Click the `benchmark_perf_comparison.ipynb` or `benchmark_perf_timeline_analysis.ipynb` file
-6. Change your Jupyter notebook kernel to either "stock-tensorflow" or "intel-tensorflow" (highlighted in the diagram below)
+4. Follow the instructions to open the URL with the token in your browser
+5. Browse to the `models/docs/notebooks/perf_analysis` folder
+6. Click the `benchmark_perf_comparison.ipynb` or `benchmark_perf_timeline_analysis.ipynb` file
+7. Change your Jupyter notebook kernel to either "stock-tensorflow" or "intel-tensorflow" (highlighted in the diagram below)
     <br><img src="images/jupyter_kernels.png" width="300" height="300"><br>
-7. Run through every cell of the notebook one by one
+8. Run through every cell of the notebook one by one
 
 > NOTE: To compare stock and Intel-optimized TF results in the section "Analyze TF Timeline results among Stock and Intel Tensorflow," users need to run all cells before the comparison section with both stock-tensorflow and intel-tensorflow kernels.
 
