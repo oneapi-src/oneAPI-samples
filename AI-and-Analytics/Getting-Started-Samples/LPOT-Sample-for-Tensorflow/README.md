@@ -46,7 +46,7 @@ We will learn how to train a CNN model based on Keras with Tensorflow, use LPOT 
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 
 | Hardware                          | The Second Generation Intel(R) Xeon(R) Scalable processor family or newer
-| Software                          | Intel(R) oneAPI AI Analytics Toolkit 1.2 or newer
+| Software                          | Intel(R) oneAPI AI Analytics Toolkit 2021.1 or newer
 | What you will learn               | How to use LPOT tool to quantize the AI model based on Tensorflow and speed up the inference on Intel(R) Xeon(R) CPU
 | Time to complete                  | 10 minutes
 
