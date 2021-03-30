@@ -180,6 +180,9 @@ event SubmitStreamingQRDKernel( queue& q ) {
         short j =       // iterates up to k_a_num_cols multiple times
           ( ((short)k_a_num_cols - (short)k_min_inner_loop_iterations) < 0) ?
           ((short)k_a_num_cols - (short)k_min_inner_loop_iterations) : 0;
+        // version of j that is forced to never be negative, so it can safely
+        // be used as an array index
+        short j_nonneg = 0;
 
         // Calculate Q and R by iterating over A
         [[intel::ii(1)]]
@@ -203,7 +206,7 @@ event SubmitStreamingQRDKernel( queue& q ) {
             i_ge_0_j_ge_i[k] = INTEL::fpga_reg(i >= 0 && j >= i);
             j_eq_i_plus_1[k] = INTEL::fpga_reg(j == i + 1);
             i_lt_0[k] = INTEL::fpga_reg(i < 0);
-            sori[k] = INTEL::fpga_reg(s_or_i[j]);
+            sori[k] = INTEL::fpga_reg(s_or_i[j_nonneg]);
           });
 
           // fetch data from a_matrix_in or a_matrix, based on value of i
@@ -213,12 +216,12 @@ event SubmitStreamingQRDKernel( queue& q ) {
 
             // load vector_t from a_matrix_in
             vector_t.template get<row>() = 
-              INTEL::fpga_reg( a_matrix_in[j].template get<row>() );
+              INTEL::fpga_reg( a_matrix_in[j_nonneg].template get<row>() );
 
             // overwrite vector_t from a_matrix if i > 0
             if( i_gt_0[row / kNumElementsPerBank] ) {
               vector_t.template get<row>() = 
-                INTEL::fpga_reg( a_matrix[j].template get<row>() );
+                INTEL::fpga_reg( a_matrix[j_nonneg].template get<row>() );
             }
 
             // store the 'unaltered' column in vector_ai if j == i
@@ -245,8 +248,10 @@ event SubmitStreamingQRDKernel( queue& q ) {
 
             // update the values in the A matrix (and its copy q_matrix)
             if( i_ge_0_j_ge_i[row / kNumElementsPerBank] ) {
-              a_matrix[j].template get<row>() = vector_t.template get<row>();
-              q_matrix[j].template get<row>() = vector_t.template get<row>();
+              a_matrix[j_nonneg].template get<row>() = 
+                vector_t.template get<row>();
+              q_matrix[j_nonneg].template get<row>() =
+                vector_t.template get<row>();
             }
 
             if ( j_eq_i_plus_1[row / kNumElementsPerBank] ) {
@@ -272,9 +277,9 @@ event SubmitStreamingQRDKernel( queue& q ) {
 
           if( j >= 0 ) {
             if ( j == i+1 ) {
-              s_or_i[j] = i_r_ii_real;
+              s_or_i[j_nonneg] = i_r_ii_real;
             } else {
-              s_or_i[j] = s_ij;
+              s_or_i[j_nonneg] = s_ij;
             }
           }
 
@@ -299,7 +304,7 @@ event SubmitStreamingQRDKernel( queue& q ) {
             r_index++;
           }
           if (j == i+1 && i+1 < k_a_num_cols) {
-            r_diag_recip_vector[j] = r_ii_diag_recip;
+            r_diag_recip_vector[j_nonneg] = r_ii_diag_recip;
           }
 
           if (j == (short)k_a_num_cols - 1) {
@@ -310,6 +315,7 @@ event SubmitStreamingQRDKernel( queue& q ) {
           } else {
             j++;
           }
+          j_nonneg = j < 0 ? 0 : j;
         
         }   // for( s < kNumIterations )
 

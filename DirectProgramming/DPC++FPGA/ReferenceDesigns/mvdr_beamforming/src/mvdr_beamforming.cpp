@@ -274,7 +274,15 @@ int main(int argc, char *argv[]) {
     sin_theta_producer_event = SinThetaProducer::Start(q, kNumSteer);
     sin_theta_producer_event.wait();
 
-    std::cout << "Re-sending Xrx and training data two times" << std::endl;
+    std::cout << "Re-sending Xrx and training data three times" << std::endl;
+    data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
+    xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
+    xrx_training_producer_event =
+        XrxTrainingProducer::Start(q, kTrainingDataSize);
+    xrx_training_producer_event.wait();
+    xrx_data_producer_event.wait();
+    data_out_consumer_event.wait();
+
     data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
     xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
     xrx_training_producer_event =
@@ -307,7 +315,15 @@ int main(int argc, char *argv[]) {
     sin_theta_producer_event = SinThetaProducer::Start(q, kNumSteer);
     sin_theta_producer_event.wait();
 
-    std::cout << "Re-sending Xrx and training data two times" << std::endl;
+    std::cout << "Re-sending Xrx and training data three times" << std::endl;
+    data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
+    xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
+    xrx_training_producer_event =
+        XrxTrainingProducer::Start(q, kTrainingDataSize);
+    xrx_training_producer_event.wait();
+    xrx_data_producer_event.wait();
+    data_out_consumer_event.wait();
+
     data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
     xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
     xrx_training_producer_event =
