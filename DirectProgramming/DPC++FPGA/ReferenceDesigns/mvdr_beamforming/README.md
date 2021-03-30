@@ -1,5 +1,5 @@
 # MVDR Beamforming
-This reference design demonstrates FPGA IO streaming in oneAPI. 
+This reference design demonstrates IO streaming in DPC++ on an FPGA for a large sytem.  The IO streaming is 'faked' using data from the host. 
 
 ***Documentation***:  
 * [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
@@ -11,22 +11,22 @@ This reference design demonstrates FPGA IO streaming in oneAPI.
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | How to perform IO streaming in oneAPI using the IO pipes SYCL extension.
+| What you will learn               | How to create a full, complex system that performs IO streaming in DPC++ using the IO pipes DPC++ extension.
 | Time to complete                  | 1 hour
 
 ## Purpose
-The purpose of this tutorial is to implement a high-performance streaming IO design using oneAPI. In this reference design, we implement an MVDR-beamforming algorithm using oneAPI. More details on the algorithm can be found in the [Additional Design Information](#additional-design-information) Section.
+The purpose of this reference design is to implement a high-performance streaming IO design using DPC++. In this reference design, we implement an MVDR-beamforming algorithm using oneAPI. More details on the algorithm can be found in the [Additional Design Information](#additional-design-information) Section.
 
 ## Key Implementation Details
 This reference design code sample leverages concepts that are discussed in the following FPGA tutorials: 
 * **IO Streaming** (io_streaming)
-* **Explicit Pipelining with `fpga_reg`** (fpga_register)
+* **Explicit Pipelining with `fpga_reg`** (fpga_reg)
 * **Loop `ivdep` Attribute** (loop_ivdep)
 * **Triangular Loop Optimization** (triangular_loop)
 * **Unrolling Loops** (loop_unroll)
 * **Pipe Arrays** (pipe_array)
 
-Notably, we strongly suggest reviewing the **IO Streaming** code sample as this reference design is a direct extension of the concepts it describes.
+Notably, we strongly suggest reviewing the **IO Streaming** code sample as this reference design is a direct extension of the concepts it describes.  That code sample clearly illustrates the concept of 'fake' IO Pipes, which is used heavily in this reference design.
 
 ## License  
 Code samples are licensed under the MIT license. See
@@ -72,7 +72,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
        make fpga_emu
        ```
 
-    * Generate HTML performance report. Find the report in `mvdr_beamforming_report.prj/reports/report.html` directory.
+    * Generate optimization report. Find the report in `mvdr_beamforming_report.prj/reports/report.html` directory.
 
        ```
        make report
