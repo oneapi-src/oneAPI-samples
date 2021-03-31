@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
                             num_matrix_copies);
 
     // calcluate the sin(theta) values for each steering vector
-    float degree_unit = 120.0f / (kNumSteer - 1);
+    constexpr float degree_unit = 120.0f / (kNumSteer - 1);
     for (int i = 0; i < kNumSteer; i++) {
       float degree = -60.0f + i * degree_unit;
       SinThetaProducer::Data()[i] = sin(degree / 180.0f * M_PI);
