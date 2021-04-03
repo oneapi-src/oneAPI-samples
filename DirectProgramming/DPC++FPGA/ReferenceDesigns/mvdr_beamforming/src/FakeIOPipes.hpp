@@ -176,7 +176,10 @@ public:
       h.depends_on(dma_event);
 
       // the producing kernel
-      h.single_task<KernelID>([=]() [[intel::kernel_args_restrict]] {
+      // NO-FORMAT comments are for clang-format
+      h.single_task<KernelID>([=]() 
+      [[intel::kernel_args_restrict]]   // NO-FORMAT: Attribute
+      {
         kernel_ptr_type ptr(kernel_ptr);
         for (size_t i = 0; i < count; i++) {
           auto d = *(ptr + i);
@@ -229,8 +232,11 @@ public:
     auto kernel_ptr = BaseImpl::get_kernel_ptr();
 
     // launch the kernel to read the output into device side global memory
+    // NO-FORMAT comments are for clang-format
     auto kernel_event = q.submit([&](handler &h) {
-      h.single_task<KernelID>([=]() [[intel::kernel_args_restrict]] {
+      h.single_task<KernelID>([=]() 
+      [[intel::kernel_args_restrict]]   // NO-FORMAT: Attribute
+      {
         kernel_ptr_type ptr(kernel_ptr);
         for (size_t i = 0; i < count; i++) {
           auto d = Pipe::read();

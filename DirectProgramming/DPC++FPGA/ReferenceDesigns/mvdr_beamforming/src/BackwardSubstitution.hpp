@@ -137,7 +137,8 @@ event SubmitBackwardSubstitutionKernel( queue& q ) {
             // iterate over all rows of U in the current column
             // unroll by a factor of k_unroll_factor (so perform k_unroll_factor
             // operations in parallel)
-            [[intel::speculated_iterations(0)]]
+            // NO-FORMAT comments are for clang-format
+            [[intel::speculated_iterations(0)]]   // NO-FORMAT: Attribute
             for( short i = 0; i < kNumCalcTypePerVector; i++ ) {
 
               // These variables are used to help the compiler infer the
