@@ -1,7 +1,7 @@
 #ifndef __CONSTANTS_HPP__
 #define __CONSTANTS_HPP__
 
-// Allow design parameters to be defined on the command line 
+// Allow design parameters to be defined on the command line
 
 // check is USM host allocations are enabled
 #ifdef USM_HOST_ALLOCATIONS
@@ -56,19 +56,18 @@ constexpr bool kUseUSMHostAllocation = false;
 
 // Degree of folding for substitution kernels
 #ifndef SUBSTITUTION_FOLDING_FACTOR
-#define SUBSTITUTION_FOLDING_FACTOR 1   // default to full unroll
+#define SUBSTITUTION_FOLDING_FACTOR 1  // default to full unroll
 #endif
 
 // Degree of folding for beamformer kernel
 #ifndef BEAMFORMING_FOLDING_FACTOR
-#define BEAMFORMING_FOLDING_FACTOR 1    // default to full unroll
+#define BEAMFORMING_FOLDING_FACTOR 1  // default to full unroll
 #endif
 
 // minimum iterations for QRD
 #ifndef QRD_MIN_ITERATIONS
 #define QRD_MIN_ITERATIONS 80
 #endif
-
 
 // constants
 constexpr int kNumSensorInputs = NUM_SENSORS;
@@ -77,11 +76,10 @@ constexpr int kTrainingMatrixNumRows = NUM_SENSORS * RMB_FACTOR;
 constexpr int kNumInputVectors = NUM_INPUT_VECTORS;
 constexpr int kNumSteer = NUM_STEER;
 constexpr int kNumComplexPerXrxPipe = STREAMING_PIPE_WIDTH;
-constexpr int kSubstitutionUnrollFactor = NUM_SENSORS / 
-                                          SUBSTITUTION_FOLDING_FACTOR;
-constexpr int kBeamformingUnrollFactor = NUM_SENSORS / 
-                                         BEAMFORMING_FOLDING_FACTOR;
-constexpr int kQRDMinIterations = QRD_MIN_ITERATIONS;                                         
+constexpr int kSubstitutionUnrollFactor =
+    NUM_SENSORS / SUBSTITUTION_FOLDING_FACTOR;
+constexpr int kBeamformingUnrollFactor =
+    NUM_SENSORS / BEAMFORMING_FOLDING_FACTOR;
+constexpr int kQRDMinIterations = QRD_MIN_ITERATIONS;
 
-
-#endif // __CONSTANTS_HPP__
+#endif  // __CONSTANTS_HPP__

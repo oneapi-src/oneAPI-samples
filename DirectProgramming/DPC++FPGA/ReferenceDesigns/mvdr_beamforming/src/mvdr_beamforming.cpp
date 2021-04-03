@@ -16,8 +16,8 @@
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
-#include "mvdr_complex.hpp"
 #include "Tuple.hpp"
+#include "mvdr_complex.hpp"
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
@@ -68,7 +68,7 @@ constexpr size_t kInputDataSize =
     kNumSensorInputs * kNumInputVectors / kNumComplexPerXrxPipe;
 constexpr size_t kDataOutSize = kNumInputVectors * kNumSteer;
 
-using XrxPipeType = NTuple< ComplexType, kNumComplexPerXrxPipe >;
+using XrxPipeType = NTuple<ComplexType, kNumComplexPerXrxPipe>;
 
 // File I/O
 bool ReadInputData(std::string in_dir, ComplexType *training_data,
@@ -81,7 +81,7 @@ bool CheckOutputData(std::string in_dir, ComplexType *data_out,
 int main(int argc, char *argv[]) {
   std::string in_dir = "../data";
   std::string out_dir = ".";
-  int num_matrix_copies = 1024;   // number of matrices for throughput test
+  int num_matrix_copies = 1024;  // number of matrices for throughput test
 
   // parse the command line arguments
   for (int i = 1; i < argc; i++) {
@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
 
     // read the input data
     passed &= ReadInputData(in_dir, (ComplexType *)XrxTrainingProducer::Data(),
-                            (ComplexType *)XrxDataProducer::Data(), 
+                            (ComplexType *)XrxDataProducer::Data(),
                             num_matrix_copies);
 
     // calcluate the sin(theta) values for each steering vector
@@ -188,7 +188,7 @@ int main(int argc, char *argv[]) {
         XrxDataPipe,                // Sensor data sent to beamforming kernel
         SinThetaPipe,               // sin(theta) input for steering vectors
         DataOutPipe                 // output from MVDR
-        >( q, kNumInputVectors );
+        >(q, kNumInputVectors);
 
     std::cout << "Launched MVDR kernels" << std::endl;
 
@@ -348,22 +348,20 @@ int main(int argc, char *argv[]) {
     }
     passed &= one_passed;
 
-
     ////////////////////////////////////////////////////////////////////////////
     // Throughput test
     ////////////////////////////////////////////////////////////////////////////
     std::cout << std::endl
               << "*** Launching throughput test of " << num_matrix_copies
               << " matrices ***" << std::endl;
-  
+
     std::cout << "Sensor inputs                 : " << kNumSensorInputs
               << std::endl;
     std::cout << "Training matrix rows          : " << kTrainingMatrixNumRows
               << std::endl;
     std::cout << "Data rows per training matrix : " << kNumInputVectors
               << std::endl;
-    std::cout << "Steering vectors              : " << kNumSteer
-              << std::endl;
+    std::cout << "Steering vectors              : " << kNumSteer << std::endl;
 
     // start the consumer
     data_out_consumer_event =
@@ -389,7 +387,8 @@ int main(int argc, char *argv[]) {
     double latency_s = process_time.count() / 1000.0;
     double throughput = (double)num_matrix_copies / latency_s;
 
-    std::cout << "Throughput: " << throughput << " matrices/second" << std::endl;
+    std::cout << "Throughput: " << throughput << " matrices/second"
+              << std::endl;
 
     // check one instance of output data
     one_passed = CheckOutputData(in_dir, DataOutConsumer::Data(), true);
@@ -434,8 +433,7 @@ int main(int argc, char *argv[]) {
 }
 
 bool ReadInputData(std::string in_dir, ComplexType *training_data,
-                   ComplexType *data_in, int num_matrix_copies ) {
-
+                   ComplexType *data_in, int num_matrix_copies) {
   // file paths relative the the base directory
   std::string training_real_path = in_dir + "/" + "A_real.txt";
   std::string training_imag_path = in_dir + "/" + "A_imag.txt";
@@ -464,15 +462,15 @@ bool ReadInputData(std::string in_dir, ComplexType *training_data,
   // TODO temporarily, we do the transpose of this matrix in host code, until
   // the transpose kernel is fully implemented data comes in row order, we need
   // it in column order
-  // Note this is not a 'full' transpose, we just transpose 
+  // Note this is not a 'full' transpose, we just transpose
   // kNumComplexPerXrxPipe rows at a time
   for (size_t row = 0; row < kTrainingMatrixNumRows; row++) {
     for (size_t col = 0; col < kNumSensorInputs; col++) {
       a_real_is >> real;
       a_imag_is >> imag;
-      size_t data_index = (row/kNumComplexPerXrxPipe) * kNumSensorInputs * 
-                          kNumComplexPerXrxPipe + 
-                          col * kNumComplexPerXrxPipe + 
+      size_t data_index = (row / kNumComplexPerXrxPipe) * kNumSensorInputs *
+                              kNumComplexPerXrxPipe +
+                          col * kNumComplexPerXrxPipe +
                           row % kNumComplexPerXrxPipe;
       training_data[data_index].set_r(real);
       training_data[data_index].set_i(imag);
@@ -485,8 +483,8 @@ bool ReadInputData(std::string in_dir, ComplexType *training_data,
   // copy the first training matrix num_matrix_copies times
   for (size_t matrix_num = 1; matrix_num < num_matrix_copies; matrix_num++) {
     for (size_t i = 0; i < kNumSensorInputs * kTrainingMatrixNumRows; i++) {
-      size_t data_copy_index = i + (matrix_num * kNumSensorInputs * 
-                                    kTrainingMatrixNumRows);
+      size_t data_copy_index =
+          i + (matrix_num * kNumSensorInputs * kTrainingMatrixNumRows);
       training_data[data_copy_index] = training_data[i];
     }
   }
@@ -521,8 +519,8 @@ bool ReadInputData(std::string in_dir, ComplexType *training_data,
   // copy the first data matrix num_matrix_copies times
   for (size_t matrix_num = 1; matrix_num < num_matrix_copies; matrix_num++) {
     for (size_t i = 0; i < kInputDataSize * kNumComplexPerXrxPipe; i++) {
-      size_t data_copy_index = i + (matrix_num * kInputDataSize * 
-                                    kNumComplexPerXrxPipe);
+      size_t data_copy_index =
+          i + (matrix_num * kInputDataSize * kNumComplexPerXrxPipe);
       data_in[data_copy_index] = data_in[i];
     }
   }
@@ -535,8 +533,10 @@ bool CheckOutputData(std::string in_dir, ComplexType *data_out,
   bool match = true;
 
   // file paths relative the the base directory
-  std::string expected_out_real_path = in_dir + "/" + "small_expected_out_real.txt";
-  std::string expected_out_imag_path = in_dir + "/" + "small_expected_out_imag.txt";
+  std::string expected_out_real_path =
+      in_dir + "/" + "small_expected_out_real.txt";
+  std::string expected_out_imag_path =
+      in_dir + "/" + "small_expected_out_imag.txt";
 #ifdef LARGE_SENSOR_ARRAY
   expected_out_real_path = in_dir + "/" + "large_expected_out_real.txt";
   expected_out_imag_path = in_dir + "/" + "large_expected_out_imag.txt";
@@ -587,7 +587,6 @@ bool CheckOutputData(std::string in_dir, ComplexType *data_out,
 }
 
 bool WriteOutputData(std::string out_dir, ComplexType *data_out) {
-
   // file paths relative the the base directory
   std::string out_real_path = out_dir + "/" + "out_real.txt";
   std::string out_imag_path = out_dir + "/" + "out_imag.txt";
