@@ -12,7 +12,7 @@
 		"linux": [{
 			"id": "model_zoo_sample_test",
 			"steps": [
-				"./run_hello.sh",
+				"run_hello.sh",
         "pip install runipy",
 				"Introduction_to_Jupyter.ipynb"
       	]
