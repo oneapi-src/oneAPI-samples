@@ -1,7 +1,7 @@
 {
 	"guid": "*448610ce-5ee8-4802-920e-7b421fcd5339*",
 	"name": "*Introduction to Jupyer Notebooks*",
-	"categories": ["DirectProgramming/DPC++/Jupyter/oneapi-essentials-training"],
+	"categories": ["Toolkit/DirectProgramming/DPC++/Jupyter/oneapi-essentials-training"],
 	"description": "The implementation of simple C++ code to test Jupyter Notebook functionality.",
 	"builder": ["cli"],
 	"languages": [{
@@ -10,7 +10,6 @@
 	"os": ["linux"],
 	"ciTests": {
 		"linux": [{
-			"id": "model_zoo_sample_test",
 			"steps": [
 				"run_hello.sh",
         "pip install runipy",
