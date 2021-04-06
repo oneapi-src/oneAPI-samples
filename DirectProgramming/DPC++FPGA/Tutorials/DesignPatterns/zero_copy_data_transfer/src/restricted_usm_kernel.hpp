@@ -42,7 +42,8 @@ using namespace std::chrono;
 // stalls while reading/writing from/to the Host Memory over PCIe. 
 //
 
-// Declare the kernel class names globally to avoid name mangling.
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class RestrictedUSM;
 class Producer;
 class Consumer;

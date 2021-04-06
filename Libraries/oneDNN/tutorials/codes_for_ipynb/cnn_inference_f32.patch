@@ -1,6 +1,14 @@
---- cnn_inference_f32.cpp	2020-02-12 10:12:10.467690007 -0800
-+++ cnn_inference_f32_gpu.cpp	2020-02-12 10:12:28.395690295 -0800
-@@ -19,12 +19,62 @@
+--- cnn_inference_f32.cpp	2020-12-02 16:40:15.494038678 -0800
++++ cnn_inference_f32_gpu.cpp	2020-12-02 18:06:15.773550045 -0800
+@@ -9,6 +9,7 @@
+ #include <vector>
+ 
+ #include "dnnl.hpp"
++#include "dnnl_sycl.hpp"
+ 
+ using namespace dnnl;
+ 
+@@ -19,12 +20,63 @@
              std::multiplies<memory::dim>());
  }
  
@@ -18,7 +26,8 @@
 +            && eng.get_kind() == dnnl::engine::kind::gpu);
 +    if (is_cpu_sycl || is_gpu_sycl) {
 +
-+        auto buffer = mem.get_sycl_buffer<uint8_t>();
++        //auto buffer = mem.get_sycl_buffer<uint8_t>();
++        auto buffer = dnnl::sycl_interop::get_buffer<uint8_t>(mem);
 +        auto dst = buffer.get_access<cl::sycl::access::mode::write>();
 +        uint8_t *dst_ptr = dst.get_pointer();
 +
@@ -64,7 +73,7 @@
      stream s(eng);
  
      std::vector<primitive> net;
-@@ -53,13 +103,17 @@
+@@ -53,13 +105,17 @@
  //[Allocate buffers]
  
  
@@ -86,7 +95,7 @@
  
  
  
-@@ -175,13 +229,18 @@
+@@ -175,13 +231,18 @@
      std::vector<float> conv2_weights(product(conv2_weights_tz));
      std::vector<float> conv2_bias(product(conv2_bias_tz));
  
@@ -108,7 +117,7 @@
      // create memory descriptors for convolution data w/ no specified format
      auto conv2_src_md = memory::desc({ conv2_src_tz }, dt::f32, tag::any);
      auto conv2_bias_md = memory::desc({ conv2_bias_tz }, dt::f32, tag::any);
-@@ -291,13 +350,18 @@
+@@ -291,13 +352,18 @@
      std::vector<float> conv3_weights(product(conv3_weights_tz));
      std::vector<float> conv3_bias(product(conv3_bias_tz));
  
@@ -130,7 +139,7 @@
      // create memory descriptors for convolution data w/ no specified format
      auto conv3_src_md = memory::desc({ conv3_src_tz }, dt::f32, tag::any);
      auto conv3_bias_md = memory::desc({ conv3_bias_tz }, dt::f32, tag::any);
-@@ -364,13 +428,17 @@
+@@ -364,13 +430,17 @@
      std::vector<float> conv4_weights(product(conv4_weights_tz));
      std::vector<float> conv4_bias(product(conv4_bias_tz));
  
@@ -151,7 +160,7 @@
      // create memory descriptors for convolution data w/ no specified format
      auto conv4_src_md = memory::desc({ conv4_src_tz }, dt::f32, tag::any);
      auto conv4_bias_md = memory::desc({ conv4_bias_tz }, dt::f32, tag::any);
-@@ -436,13 +504,18 @@
+@@ -436,13 +506,18 @@
      std::vector<float> conv5_weights(product(conv5_weights_tz));
      std::vector<float> conv5_bias(product(conv5_bias_tz));
  
@@ -173,7 +182,7 @@
      // create memory descriptors for convolution data w/ no specified format
      auto conv5_src_md = memory::desc({ conv5_src_tz }, dt::f32, tag::any);
      auto conv5_weights_md
-@@ -532,13 +605,18 @@
+@@ -532,13 +607,18 @@
      std::vector<float> fc6_weights(product(fc6_weights_tz));
      std::vector<float> fc6_bias(product(fc6_bias_tz));
  
@@ -195,7 +204,7 @@
      // create memory descriptors for convolution data w/ no specified format
      auto fc6_src_md = memory::desc({ fc6_src_tz }, dt::f32, tag::any);
      auto fc6_bias_md = memory::desc({ fc6_bias_tz }, dt::f32, tag::any);
-@@ -583,13 +661,18 @@
+@@ -583,13 +663,18 @@
      std::vector<float> fc7_weights(product(fc7_weights_tz));
      std::vector<float> fc7_bias(product(fc7_bias_tz));
  
@@ -218,7 +227,7 @@
      // create memory descriptors for convolution data w/ no specified format
      auto fc7_bias_md = memory::desc({ fc7_bias_tz }, dt::f32, tag::any);
      auto fc7_weights_md = memory::desc({ fc7_weights_tz }, dt::f32, tag::any);
-@@ -624,14 +707,20 @@
+@@ -624,14 +709,20 @@
      std::vector<float> fc8_weights(product(fc8_weights_tz));
      std::vector<float> fc8_bias(product(fc8_bias_tz));
  
@@ -243,3 +252,10 @@
      // create memory descriptors for convolution data w/ no specified format
      auto fc8_bias_md = memory::desc({ fc8_bias_tz }, dt::f32, tag::any);
      auto fc8_weights_md = memory::desc({ fc8_weights_tz }, dt::f32, tag::any);
+@@ -697,4 +788,4 @@
+         std::cerr << "message: " << e.message << std::endl;
+     }
+     return 0;
+-}
+\ No newline at end of file
++}

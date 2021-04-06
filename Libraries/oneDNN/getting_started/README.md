@@ -1,4 +1,4 @@
-# oneDNN Getting Started Sample
+# `oneDNN Getting Started` Sample
 
 oneAPI Deep Neural Network Library (oneDNN) is an open-source performance
 library for deep learning applications. The library includes basic building
@@ -6,7 +6,7 @@ blocks for neural networks optimized for Intel Architecture Processors
 and Intel Processor Graphics. oneDNN is intended for deep learning
 applications and framework developers interested in improving application
 performance on Intel CPUs and GPUs.
-You can find library source code and code used by these samples at oneDNN Github repository.
+You can find library source code and code used by these samples at the oneDNN Github repository.
 
 This sample is implemented in C++ and executes on CPU or GPU. The sample also
 also includes [a Jupyer Notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_getting_started.ipynb) that
@@ -23,15 +23,15 @@ in Intel oneAPI DevCloud environment.
 
 ## Purpose
 
-This sample demonstrates the basics of oneDNN programming model. With this
-sample you will learn:
+This sample demonstrates the basics of the oneDNN programming model. With this code 
+sample, you will learn:
 * How to create oneDNN memory objects.
-* How to get data from application buffer into a oneDNN memory object.
+* How to get data from application buffer into an oneDNN memory object.
 * How tensor's logical dimensions and memory object formats relate.
 * How to create oneDNN primitives.
 * How to execute the primitives.
 
-The sample executes on system's CPU by default and can be executed on Intel GPU
+The sample executes on the system's CPU by default and can be executed on Intel GPU
 using a command line parameter `gpu`.
 
 ## Key Implementation Details
@@ -44,7 +44,10 @@ Detailed code walkthrough is available in [oneDNN developer guide](https://oneap
 
 ## License
 
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the sample for CPU and GPU
 
@@ -67,7 +70,7 @@ make
 ./bin/getting-started-cpp
 ```
 
-By default the sample uses oneAPI DPC++/C++ Compiler and can execute on CPUs or
+By default, the sample uses oneAPI DPC++/C++ Compiler and can execute on CPUs or
 Intel GPUs. You can build the sample with CPU support with other compilers
 and threading runtimes:
 * GNU C++ Compiler and GNU OpenMP runtime
@@ -114,19 +117,19 @@ The include folder is located at ${DNNLROOT}\include on your development system"
 ## Running the Sample
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### Application Parameters
 
-You can specify target device for this sample using command line arguments:
-* `cpu` (default) directs the application to run on system's CPU
+You can specify the target device for this sample using command-line arguments:
+* `cpu` (default) directs the application to run on the system's CPU
 * `gpu` directs the sample to run on Intel GPU
 
 > Note: When executed with `gpu` parameter the 
 > sample will return an error if the sample is compiled with oneDNN configuration
-> that does not support GPU or no Intel GPUs are found in the system.
+> that does not support GPU, or no Intel GPUs are found in the system.
 
-You can get additional information during execution of this sample by setting
+You can get additional information during the execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
 
 #### On a Linux System

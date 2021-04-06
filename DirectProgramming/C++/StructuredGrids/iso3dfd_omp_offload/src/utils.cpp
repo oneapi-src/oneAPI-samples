@@ -29,7 +29,7 @@ void Usage(const std::string& programName) {
  * Function used for initialization
  */
 void Initialize(float* ptr_prev, float* ptr_next, float* ptr_vel,
-                unsigned int n1, unsigned int n2, unsigned int n3) {
+                size_t n1, size_t n2, size_t n3) {
   auto dim2 = n2 * n1;
 
   for (auto i = 0; i < n3; i++) {
@@ -63,8 +63,8 @@ void Initialize(float* ptr_prev, float* ptr_next, float* ptr_vel,
  * Host-Code
  * Utility function to print stats
  */
-void PrintStats(double time, unsigned int n1, unsigned int n2, unsigned int n3,
-                unsigned int num_iterations) {
+void PrintStats(double time, size_t n1, size_t n2, size_t n3,
+                size_t num_iterations) {
   float throughput_mpoints = 0.0f, mflops = 0.0f, normalized_time = 0.0f;
   double mbytes = 0.0f;
 
@@ -89,8 +89,8 @@ void PrintStats(double time, unsigned int n1, unsigned int n2, unsigned int n3,
  * Utility function to calculate L2-norm between resulting buffer and reference
  * buffer
  */
-bool WithinEpsilon(float* output, float* reference, unsigned int dim_x,
-                   unsigned int dim_y, unsigned int dim_z, unsigned int radius,
+bool WithinEpsilon(float* output, float* reference, size_t dim_x,
+                   size_t dim_y, size_t dim_z, size_t radius,
                    const int zadjust = 0, const float delta = 0.01f) {
   std::ofstream error_file;
   error_file.open("error_diff.txt");
@@ -128,9 +128,9 @@ bool WithinEpsilon(float* output, float* reference, unsigned int dim_x,
  * Host-code
  * Validate input arguments
  */
-bool ValidateInput(unsigned int n1, unsigned int n2, unsigned int n3,
-                   unsigned int n1_block, unsigned int n2_block,
-                   unsigned int n3_block, unsigned int num_iterations) {
+bool ValidateInput(size_t n1, size_t n2, size_t n3,
+                   size_t n1_block, size_t n2_block,
+                   size_t n3_block, size_t num_iterations) {
   bool error = false;
 
   if ((n1 < kHalfLength) || (n2 < kHalfLength) || (n3 < kHalfLength)) {

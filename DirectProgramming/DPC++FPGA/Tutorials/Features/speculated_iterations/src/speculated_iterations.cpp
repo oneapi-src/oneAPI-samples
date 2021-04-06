@@ -27,8 +27,8 @@ constexpr size_t kExpectedIterations = 1e8;
 
 using namespace sycl;
 
-// This is the class used to name the kernel for the runtime.
-// This must be done when the kernel is expressed as a lambda.
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template <int N> class KernelCompute;
 
 template <int spec_iter>

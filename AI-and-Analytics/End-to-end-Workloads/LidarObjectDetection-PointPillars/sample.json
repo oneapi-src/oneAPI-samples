@@ -1,0 +1,21 @@
+{
+    "guid" : "314B4C1D-07A0-4527-A9FA-9F87ED9622D7",
+    "name": "Lidar Object Detection using PointPillars",
+    "categories": ["Toolkit/AI-and-Analytics/End-to-end-Workloads/LidarObjectDetection-PointPillars"],
+    "description": "This sample does object detection on LIDAR's point cloud provided as input. It is Intel® oneAPI implementation based on pape' PointPillars: Fast Encoders for Object Detection from Point Clouds'",
+    "toolchain": ["dpcpp"],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": ["CPU", "GPU"],
+    "os": ["linux"],
+    "builder": ["cmake"],
+    "ciTests": {
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make"
+                   ]
+          }]
+    }
+  }

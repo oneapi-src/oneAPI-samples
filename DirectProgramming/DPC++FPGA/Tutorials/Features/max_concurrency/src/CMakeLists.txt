@@ -19,10 +19,10 @@ else()
 endif()
 
 # Flags
-set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR -fp-model=precise -no-fma")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(AOC_SEED_FLAG "-Xsseed=4 -Xsparallel=2")
-set(HARDWARE_COMPILE_FLAGS "-fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga -fno-fast-math")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${SELECTED_BOARD} ${AOC_SEED_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -33,7 +33,7 @@ if(WIN32)
     add_custom_target(fpga_emu DEPENDS ${WIN_EMULATOR_TARGET})
     separate_arguments(WIN_EMULATOR_COMPILE_FLAGS WINDOWS_COMMAND "${EMULATOR_COMPILE_FLAGS}")
     add_custom_command(OUTPUT ${WIN_EMULATOR_TARGET} 
-                       COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_EMULATOR_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${WIN_EMULATOR_TARGET}
+                       COMMAND ${CMAKE_CXX_COMPILER} /EHsc /fp:precise /Qfma- ${WIN_EMULATOR_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${WIN_EMULATOR_TARGET}
                        DEPENDS ${SOURCE_FILE})
 else()
     add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
