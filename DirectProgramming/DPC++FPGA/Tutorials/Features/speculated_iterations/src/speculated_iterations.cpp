@@ -112,8 +112,8 @@ int main(int argc, char *argv[]) {
   int r0, r1, r2;
 
 // Choose the number of speculated iterations based on the FPGA board selected.
-// This reflects compute latency differences on different hardware architectures,
-// and is a low-level optimization.
+// This reflects compute latency differences on different hardware
+// architectures, and is a low-level optimization.
 #if defined(A10)
   ComplexExit<0>(selector, bound, r0);
   ComplexExit<10>(selector, bound, r1);
@@ -122,6 +122,10 @@ int main(int argc, char *argv[]) {
   ComplexExit<0>(selector, bound, r0);
   ComplexExit<10>(selector, bound, r1);
   ComplexExit<54>(selector, bound, r2);
+#elif defined(Agilex)
+  ComplexExit<0>(selector, bound, r0);
+  ComplexExit<10>(selector, bound, r1);
+  ComplexExit<50>(selector, bound, r2);
 #else
   std::static_assert(false, "Invalid FPGA board macro");
 #endif
@@ -146,9 +150,7 @@ int main(int argc, char *argv[]) {
     passed = false;
   }
 
-
   std::cout << (passed ? "PASSED: The results are correct" : "FAILED") << "\n";
 
   return passed ? 0 : -1;
 }
-
