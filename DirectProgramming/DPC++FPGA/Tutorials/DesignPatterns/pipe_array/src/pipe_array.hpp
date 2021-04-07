@@ -3,6 +3,9 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+#ifndef __PIPE_ARRAY_HPP__
+#define __PIPE_ARRAY_HPP__
+
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <utility>
@@ -31,3 +34,5 @@ struct PipeArray {
   template <size_t... idxs>
   using PipeAt = typename VerifyIndices<idxs...>::VerifiedPipe;
 };
+
+#endif /* __PIPE_ARRAY_HPP__ */

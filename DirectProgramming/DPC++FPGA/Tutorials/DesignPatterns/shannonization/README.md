@@ -43,7 +43,7 @@ for (int i = 0; i < SIZE; i++) {
   if (A[i] < v) {
     // these operations can happen in parallel!
     c = c_next;
-    c++;
+    c_next++;
   }
 }
 ```
