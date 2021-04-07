@@ -93,9 +93,9 @@ Here is a cheat sheet of the DPC++ compiler commands to compile for the FPGA emu
 dpcpp -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu
 
 # Optimization report (default board)
-dpcpp -fintelfpga -Xshardware -fsycl-link fpga_compile.cpp -o fpga_compile_report.a
+dpcpp -fintelfpga -Xshardware -fsycl-link=early fpga_compile.cpp -o fpga_compile_report.a
 # Optimization report (explicit board)
-dpcpp -fintelfpga -Xshardware -fsycl-link -Xsboard=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile_report.a
+dpcpp -fintelfpga -Xshardware -fsycl-link=early -Xsboard=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile_report.a
 
 # FPGA hardware (default board)
 dpcpp -fintelfpga -Xshardware fpga_compile.cpp -o fpga_compile.fpga
@@ -104,13 +104,13 @@ dpcpp -fintelfpga -Xshardware -Xsboard=intel_s10sx_pac:pac_s10 fpga_compile.cpp 
 ```
 
 The compiler flags used to achieve this are explained below.
-| Flag              | Explanation
----                 |---
-| `-fintelfpga`     | Perform ahead-of-time compilation for FPGA.
-| `-DFPGA_EMULATOR` | Adds a preprocessor define (see code snippet above).
-| `-Xshardware`     | `-Xs` is used to pass arguments to the FPGA backend. <br> Since the emulator is the default FPGA target, you must pass `Xshardware` to instruct the compiler to target FPGA hardware.
-| `-Xsboard`        | Optional argument to specify the FPGA board target. <br> If omitted, a default FPGA board is chosen.
-| `-fsycl-link`     | This is synonymous with `-fsycl-link=early`. <br> It instructs the compile to stop after creating the FPGA early image (and associated optimization report).
+| Flag               | Explanation
+---                  |---
+| `-fintelfpga`      | Perform ahead-of-time compilation for FPGA.
+| `-DFPGA_EMULATOR`  | Adds a preprocessor define (see code snippet above).
+| `-Xshardware`      | `-Xs` is used to pass arguments to the FPGA backend. <br> Since the emulator is the default FPGA target, you must pass `Xshardware` to instruct the compiler to target FPGA hardware.
+| `-Xsboard`         | Optional argument to specify the FPGA board target. <br> If omitted, a default FPGA board is chosen.
+| `-fsycl-link=early`| Instructs the compiler to stop after creating the FPGA early image (and associated optimization report).
 
 Notice that whether you target the FPGA emulator or FPGA hardware must be specified twice: through compiler flags for the ahead-of-time compilation and through the runtime device selector.
 
