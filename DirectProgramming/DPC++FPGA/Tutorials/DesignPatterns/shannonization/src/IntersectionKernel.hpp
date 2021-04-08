@@ -238,36 +238,48 @@ struct IntersectionKernel<3, II, APipe, BPipe> {
 
     bool a_count_inrange = a_count < a_size;
     bool b_count_inrange = b_count < b_size;
-    bool a_count_next_inrange = a_count_next < a_size;;
-    bool b_count_next_inrange = b_count_next < b_size;;
+    bool a_count_next_inrange = a_count_next < a_size;
+    bool b_count_next_inrange = b_count_next < b_size;
     bool keep_going = true;
 
-    bool a_valid;
-    bool b_valid;
+    bool a_valid = false;
+    bool b_valid = false;
 
-    // initialize the first values from the pipes
-    do {
-      a = APipe::read(a_valid);
-    } while (!a_valid);
-    do {
-      b = BPipe::read(b_valid);
-    } while (!b_valid);
+    const int total_compares = (a_size < b_size) ? b_size : a_size;
+    int num_compares = 0;
+    int num_compares_next = 1;
+    int num_compares_next_next = 2;
+    bool num_compares_in_range = num_compares < total_compares;
+    bool num_compares_next_in_range = num_compares_next < total_compares;
 
     [[intel::ii(II)]]
     while (keep_going) {
-      if (a == b && a_valid && b_valid) {
-        n++;
-      }
+      if (!a_valid || !b_valid) {
+        if (!a_valid) {
+          a = APipe::read(a_valid);
+        } else {
+          b = BPipe::read(b_valid);
+        }
+      } else {
+        if (a == b) {
+          n++;
+          num_compares_in_range = num_compares_next < total_compares;
+          num_compares_next_in_range = num_compares_next_next < total_compares;
+          num_compares = num_compares_next;
+          num_compares_next = num_compares_next_next;
+          num_compares_next_next++;
+        }
 
-      ///////////////////////////////////////////////////////////////////////
-      // In this version of the kernel, we do the same optimization as
-      // Version 1 for a_count by adding the variable a_count_next_next.
-      // This precomputes the a_count values for the next TWO iterations
-      // of the loop that read from APipe. We also precompute the check
-      // for whether a_count and a_count_next are still in range using
-      // the a_count_inrange and a_count_next_inrange variables.
-      if (!a_valid || (a < b && a_count_inrange && b_valid)) {
-        if(a_valid) {
+        ////////////////////////////////////////////////////////////////////////
+        // In this version of the kernel, we do the same optimization as
+        // Version 1 for a_count by adding the variable a_count_next_next.
+        // This precomputes the a_count values for the next TWO iterations
+        // of the loop that read from APipe. We also precompute the check
+        // for whether a_count and a_count_next are still in range using
+        // the a_count_inrange and a_count_next_inrange variables.
+        if (a < b && a_count_inrange) {
+          a = APipe::read(a_valid);
+
           // first update the variables that determine whether
           // the current counters are in range of the table
           a_count_inrange = a_count_next_inrange;
@@ -278,11 +290,9 @@ struct IntersectionKernel<3, II, APipe, BPipe> {
           a_count = a_count_next;
           a_count_next = a_count_next_next;
           a_count_next_next++;
-        }
+        } else if (b_count_inrange) {
+          b = BPipe::read(b_valid);
 
-        a = APipe::read(a_valid);
-      } else if (!b_valid || b_count_inrange) {
-        if(b_valid) {
           // first update the variables that determine whether
           // the current counters are in range of the table
           b_count_inrange = b_count_next_inrange;
@@ -294,17 +304,10 @@ struct IntersectionKernel<3, II, APipe, BPipe> {
           b_count_next = b_count_next_next;
           b_count_next_next++;
         }
-
-        b = BPipe::read(b_valid);
+        ////////////////////////////////////////////////////////////////////////
       }
-      ///////////////////////////////////////////////////////////////////////
 
-      keep_going = (a_count_inrange || b_count_inrange);
-    }
-
-    // check the last pair of elements
-    if(a == b) {
-      n++;
+      keep_going = num_compares_in_range;
     }
 
     return n;
