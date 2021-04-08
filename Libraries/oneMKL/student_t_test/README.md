@@ -48,7 +48,7 @@ You can remove all generated files with `make clean`.
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
 *Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
-## Running the Monte Carlo Pi Estimation Sample
+## Running the Student's T-test Sample
 
 ### Example of Output
 If everything is working correctly, after building you will see step-by-step output from each of the three example programs, providing the generated estimate of &pi;.
