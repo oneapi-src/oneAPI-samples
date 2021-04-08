@@ -107,10 +107,9 @@ std::int32_t t_test(sycl::queue& queue, sycl::buffer<RealType, 1>& r1, std::int6
 
 int main(int argc, char ** argv) {
 
-    std::cout << std::endl;
-    std::cout << "Student's T-test Simulation" << std::endl;
-    std::cout << "Buffer Api" << std::endl;
-    std::cout << "-------------------------------------" << std::endl;
+    std::cout << "\nStudent's T-test Simulation\n";
+    std::cout << "Buffer Api\n";
+    std::cout << "-------------------------------------\n";
 
     size_t n_points = n_samples;
     fp_type mean = expected_mean;
@@ -135,7 +134,7 @@ int main(int argc, char ** argv) {
     }
 
     std::cout << "Number of random samples = " << n_points << " with mean = " <<
-        mean << ", std_dev = " << std_dev << std::endl;
+        mean << ", std_dev = " << std_dev << "\n";
 
     // This exception handler with catch async exceptions
     auto exception_handler = [] (sycl::exception_list exceptions) {
@@ -171,14 +170,13 @@ int main(int argc, char ** argv) {
         res1 = t_test(q, rng_buf0, n_points, rng_buf1, n_points);
     } catch(...) {
         // Some other exception detected
-        std::cout << "Failure" << std::endl;
+        std::cout << "Failure\n";
         std::terminate();
     }
 
     // Printing results
-    std::cout << "T-test result with expected mean: " << res0 << std::endl;
-    std::cout << "T-test result with two input arrays: " << res1 << std::endl;
-    std::cout << std::endl;
+    std::cout << "T-test result with expected mean: " << res0 << "\n";
+    std::cout << "T-test result with two input arrays: " << res1 << "\n\n";
 
     return 0;
 }

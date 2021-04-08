@@ -1,5 +1,5 @@
 {
-  "guid": "93cdfcb7-a17c-401e-beb3-91290add228a",
+  "guid": "ADD7BA78-BBFD-4390-A814-886CCC7971C1",
   "name": "Student's T-test",
   "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
   "description": "Performing Student's T-test with Intel® oneMKL Vector Statistics functionality",
