@@ -32,6 +32,8 @@ Links and Details can be found in the samples WG Teams Files.
 - [ ] Adhere to readme template 
 - [ ] Ensure/create CI test configurations for sample (ciTests field) https://github.com/oneapi-src/oneAPI-samples/wiki/sample-json-ci-test-object
 - [ ] Enforce format via clang-format config file
+- [ ] Compile code using compiler flags and fix anything detected "enable /Wall -Wformat-security -Werror=format-security"
+- [ ] Review Sample with Domain Expert: <insert NameHere>
 - [ ] Review DPC++ code with Paul Peterseon. (GitHub User: pmpeter1)
 - [ ] Review readme with Tom Lenth or Joe Oster. (GitHub User: JoeOster)
 - [ ] Tested using Dev Cloud when applicable
