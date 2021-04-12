@@ -156,7 +156,7 @@ event SubmitInputDemuxKernel(
         // must be discarded
         if (read_valid && !cur_almost_full) {
           // store training data
-          if (rx_state == RxState::receiving_training_data) {
+          if (cur_rx_state == RxState::receiving_training_data) {
             training_matrix[cur_rx_buffer][cur_rx_training_count] = data_in;
             rx_training_count++;
           } else {
@@ -164,7 +164,7 @@ event SubmitInputDemuxKernel(
           }
 
           // store xrx data
-          if (rx_state == RxState::receiving_xrx_data) {
+          if (cur_rx_state == RxState::receiving_xrx_data) {
             xrx_data_matrix[cur_rx_buffer][cur_rx_xrx_count] = data_in;
             rx_xrx_count++;
           } else {
@@ -172,25 +172,25 @@ event SubmitInputDemuxKernel(
           }
 
           // update the rx_buffer when all data has been received
-          if (rx_state == RxState::receiving_xrx_data &&
+          if (cur_rx_state == RxState::receiving_xrx_data &&
               cur_rx_xrx_count == reads_per_xrx_matrix - 1) {
             ready_to_send[cur_rx_buffer] = true;
             rx_buffer = (rx_buffer + 1) & kNumMatrixCopiesBitMask;
           }
 
           // Rx state machine
-          if (rx_state == RxState::wait_training_header) {
+          if (cur_rx_state == RxState::wait_training_header) {
             if (is_header && header_is_training) {
               rx_state = RxState::receiving_training_data;
             }
-          } else if (rx_state == RxState::receiving_training_data) {
+          } else if (cur_rx_state == RxState::receiving_training_data) {
             if (is_header) {
               // unexpected header, discard the current data and start over
               rx_state = RxState::wait_training_header;
             } else if (cur_rx_training_count == kReadsPerTrainingMatrix - 1) {
               rx_state = RxState::expect_xrx_data_header;
             }
-          } else if (rx_state == RxState::expect_xrx_data_header) {
+          } else if (cur_rx_state == RxState::expect_xrx_data_header) {
             if (is_header && !header_is_training) {
               rx_state = RxState::receiving_xrx_data;
             } else {
