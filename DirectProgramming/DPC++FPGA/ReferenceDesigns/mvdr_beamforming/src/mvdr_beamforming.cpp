@@ -179,18 +179,18 @@ int main(int argc, char *argv[]) {
   printf("Output Directory: '%s'\n", out_dir.c_str());
   printf("\n");
 
-
   bool passed = true;
 
   const size_t in_count = kInputDataSize * num_matrix_copies;
   const size_t out_count = kDataOutSize * num_matrix_copies;
-  const size_t in_size = in_count * sizeof(ComplexType);
   
   // find number of full matrices.
   // For the real IO pipes, we cannot send and receive a partial
   // packet so we need to find the number of FULL matrices that
   // we will send and receive
 #if defined(REAL_IO_PIPES)
+  const size_t in_size = in_count * sizeof(ComplexType);
+  
   size_t full_in_packet_count = in_size / kUDPDataSize;
   size_t full_in_size = full_in_packet_count * kUDPDataSize; 
   size_t full_in_count = full_in_size / sizeof(ComplexType);
@@ -457,8 +457,6 @@ bool ReadInputData(std::string in_dir,
   std::string x_real_path = in_dir + "/" + "X_real.txt";
   std::string x_imag_path = in_dir + "/" + "X_imag.txt";
 
-  ComplexBaseType real, imag;
-
   std::cout << "Reading training data from '" << training_real_path << " and "
             << training_imag_path << std::endl;
 
@@ -479,29 +477,16 @@ bool ReadInputData(std::string in_dir,
   constexpr float kIsNotTrainingData = 1.0f;  // any non-zero number is fine
   
   // insert the header to mark the first training matrix
-  data_in[0].set_r( std::nanf("") );    // marks this word as a header
-  data_in[0].set_i( kIsTrainingData );  // marks this as training data
+  data_in[0].real() = std::nanf("");    // marks this word as a header
+  data_in[0].imag() = kIsTrainingData;  // marks this as training data
 
   // load the first matrix from the input file
-  // TODO temporarily, we do the transpose of this matrix in host code, until
-  // the transpose kernel is fully implemented data comes in row order, we need
-  // it in column order
-  // Note this is not a 'full' transpose, we just transpose 
-  // kNumComplexPerXrxPipe rows at a time
-  for (size_t row = 0; row < kTrainingMatrixNumRows; row++) {
-    for (size_t col = 0; col < kNumSensorInputs; col++) {
-      a_real_is >> real;
-      a_imag_is >> imag;
-      size_t data_index = (row/kNumComplexPerXrxPipe) * kNumSensorInputs * 
-                          kNumComplexPerXrxPipe + 
-                          col * kNumComplexPerXrxPipe + 
-                          row % kNumComplexPerXrxPipe +
-                          kNumComplexPerXrxPipe;  // skip header
-      data_in[data_index].set_r(real);
-      data_in[data_index].set_i(imag);
-    }
+  int data_offset = kNumComplexPerXrxPipe; // skip the header
+  for (size_t i = 0; i < kTrainingMatrixNumRows * kNumSensorInputs; i++) {
+    a_real_is >> data_in[data_offset + i].real();
+    a_imag_is >> data_in[data_offset + i].imag();
   }
-
+  
   a_real_is.close();
   a_imag_is.close();
 
@@ -522,17 +507,15 @@ bool ReadInputData(std::string in_dir,
   }
 
   // insert header to mark processing data
-  int data_offset = (kTrainingDataSize + 1) * kNumComplexPerXrxPipe;
-  data_in[data_offset].set_r( std::nanf("") );
-  data_in[data_offset].set_i( kIsNotTrainingData );
+  data_offset = (kTrainingDataSize + 1) * kNumComplexPerXrxPipe;
+  data_in[data_offset].real() = std::nanf("");
+  data_in[data_offset].imag() = kIsNotTrainingData;
   data_offset += kNumComplexPerXrxPipe;
 
   // load the first matrix
   for (size_t i = 0; i < kInputDataSize * kNumComplexPerXrxPipe; i++) {
-    x_real_is >> real;
-    x_imag_is >> imag;
-    data_in[data_offset + i].set_r(real);
-    data_in[data_offset + i].set_i(imag);
+    x_real_is >> data_in[data_offset + i].real();
+    x_imag_is >> data_in[data_offset + i].imag();
   }
 
   x_real_is.close();
@@ -618,8 +601,6 @@ bool WriteOutputData(std::string out_dir, ComplexType *data_out) {
   // file paths relative the the base directory
   std::string out_real_path = out_dir + "/" + "out_real.txt";
   std::string out_imag_path = out_dir + "/" + "out_imag.txt";
-
-  ComplexBaseType real, imag;
 
   std::cout << "Writing output to " << out_real_path << " and " << out_imag_path
             << std::endl;

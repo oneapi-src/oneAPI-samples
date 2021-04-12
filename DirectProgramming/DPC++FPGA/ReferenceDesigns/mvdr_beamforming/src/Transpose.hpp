@@ -5,8 +5,14 @@
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
 #include "Tuple.hpp"
+#include "UnrolledLoop.hpp"
 
 using namespace sycl;
+
+// the generic transpose class. Defined below after SubmitTransposeKernel.
+template<typename T, size_t k_num_cols_in, size_t k_pipe_width,
+         typename MatrixInPipe, typename MatrixOutPipe>
+struct Transposer;
 
 // SubmitTransposeKernel
 // Accept k_pipe_width elements of type T wrapped in NTuple
@@ -32,38 +38,78 @@ template <
                                       // Send k_pipe_width elements of type T
                                       // wrapped in NTuple on each write.
 >
-event SubmitTransposeKernel( queue& q ) {
-
+event SubmitTransposeKernel(queue& q) {
   // Template parameter checking
   static_assert(std::numeric_limits<short>::max() > k_num_cols_in,
     "k_num_cols_in must fit in a short" );
   static_assert( k_num_cols_in % k_pipe_width == 0,
     "k_num_cols_in must be evenly divisible by k_pipe_width" );
+  
+  return q.submit([&](handler& h) {
+    h.single_task<TransposeKernelName>([=]() {
+      // start the transposer
+      Transposer<T, k_num_cols_in, k_pipe_width,
+                 MatrixInPipe, MatrixOutPipe> TheTransposer;
+      TheTransposer();
+    });
+  });
+}
 
-  using PipeType = NTuple< T, k_pipe_width >;
 
-  auto e = q.submit([&](handler& h) {
+// The generic transpose. We use classes here because we want to do partial
+// template specialization on the 'k_pipe_width' to optimize the case where
+// 'k_pipe_width' == 1 and this cannot be done with a function.
+template<typename T, size_t k_num_cols_in, size_t k_pipe_width,
+         typename MatrixInPipe, typename MatrixOutPipe>
+struct Transposer {
+  void operator()() const {
+    using PipeType = NTuple<T, k_pipe_width>;
 
-    h.single_task< TransposeKernelName > ( [=] {
-
-      while( 1 ) {
-
-        // TODO
-        // for now, DO NOT do the transpose, just accept the data already in
-        // column order and pass it through
-        for ( short col = 0; col < k_num_cols_in; col++ ) {
-          PipeType data_in = MatrixInPipe::read();
-          MatrixOutPipe::write( data_in );
+    while (1) {
+      // This is a scratch pad memory that we will use to do the transpose.
+      // We read the data in from a pipe (k_pipe_width elements at at time),
+      // store it in this memory in row-major format and read it out in
+      // column-major format (again, k_pipe_width elements at a time).
+      T scratch[k_pipe_width][k_num_cols_in];
+      
+      // fill the matrix internally
+      [[intel::ii(1), intel::loop_coalesce(2), intel::speculated_iterations(0)]]
+      for (int y = 0; y < k_pipe_width; y++) {
+        for (int x = 0; x < k_num_cols_in/k_pipe_width; x++) {
+          PipeType in_data = MatrixInPipe::read();
+          UnrolledLoop<k_pipe_width>([&](auto i) {
+            scratch[y][x*k_pipe_width + i] = in_data.template get<i>();
+          });
         }
+      }
 
-      }   // end of while( 1 ) 
+      // write output
+      [[intel::ii(1), intel::speculated_iterations(0)]]
+      for (int x = 0; x < k_num_cols_in; x++) {
+        PipeType out_data;
+        UnrolledLoop<k_pipe_width>([&](auto i) {
+          out_data.template get<i>() = scratch[i][x];
+        });
 
-    });   // end of h.single_task
+        MatrixOutPipe::write(out_data);
+      }
+    }
+  }
+};
 
-  });   // end of q.submit
-
-  return e;
-
-}   // end of SubmitTransposeKernel()
+// Special case for a k_pipe_width=1
+// In this case, the is just a pass through kernel since the matrix is
+// 1xk_num_cols. Overriding this version allows us to save area.
+template<typename T, size_t k_num_cols_in,
+         typename MatrixInPipe, typename MatrixOutPipe>
+struct Transposer<T, k_num_cols_in, 1, MatrixInPipe, MatrixOutPipe> {
+  void operator()() const {
+    while (1) {
+      auto d = MatrixInPipe::read();
+      MatrixOutPipe::write(d);
+    }
+  }
+};
 
 #endif  // ifndef __TRANSPOSE_HPP__
+

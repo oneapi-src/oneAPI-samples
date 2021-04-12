@@ -179,8 +179,6 @@ MVDREventArray SubmitMVDRKernels(
   using XrxDataPipe = sycl::INTEL::pipe< 
     XrxDataPipeID<k_instance_num>,
     XrxPipeType, kXrxDataPipeMinDepth >;
-  using XrxDataDupPipe = PipeDuplicator<XrxDataDupPipeID<k_instance_num>,
-    XrxPipeType, XrxDataPipe, XrxDataPipeOut>;
 
   // Steering vector generator pipe and duplicator, and related update pipe
   // Connect SteeringVectorGenerator to ForwardSubstitution

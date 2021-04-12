@@ -105,7 +105,7 @@ event SubmitForwardSubstitutionKernel( queue& q ) {
         // receive new y_vectors if they are available
         // This odd loop is a fusion of two loops with different trip counts.
         short col = 0, row = 0, i = 0, j = 0;
-        char vector_num = 0;
+        unsigned char vector_num = 0;
         for( int iteration = 0; iteration < kLoadLoopIterations;
              iteration++ ) {
           // Load the L and LDiagRecip values
@@ -145,7 +145,7 @@ event SubmitForwardSubstitutionKernel( queue& q ) {
         }   // end of for(i...)
 
         // Loop through all the y vectors
-        for( char vector_num = 0; vector_num < (char)k_num_y_vectors; 
+        for( unsigned char vector_num = 0; vector_num < (char)k_num_y_vectors; 
              vector_num++ ) {
 
           // y_vector_intial contains the unmodified current y vector.  y_vector
@@ -264,3 +264,4 @@ event SubmitForwardSubstitutionKernel( queue& q ) {
 }   // end of SubmitForwardSubstitutionrKernel()
 
 #endif  // ifndef __FORWARD_SUBSTITUTION_HPP__
+

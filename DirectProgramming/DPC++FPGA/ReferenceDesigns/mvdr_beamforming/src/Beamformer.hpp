@@ -80,14 +80,14 @@ event SubmitBeamformerKernel(
 
       // count the number of xrx vectors that have been processed with the
       // current weight vectors
-      int xrx_vectors_processed = 0; 
+      //int xrx_vectors_processed = 0; 
 
       while( 1 ) {
 
         CalcType weight_vectors[k_num_weight_vectors][kNumCalcTypePerVector];
 
         // load the weight vectors to be used with the next set of Xrx vectors
-        for( char vector_num = 0; vector_num < (char)k_num_weight_vectors;
+        for( unsigned char vector_num = 0; vector_num < (char)k_num_weight_vectors;
              vector_num++ ) {
           // weights are loaded in reverse order
           for ( short i = kNumCalcTypePerVector-1; i >= 0; i-- ) {
@@ -130,8 +130,9 @@ event SubmitBeamformerKernel(
           ComplexType result[k_num_weight_vectors];
 
           // calculate an output vector for each weight vector
-          for(  char vector_num = 0; vector_num < (char)k_num_weight_vectors; 
-                vector_num++ ) {
+          for (unsigned char vector_num = 0;
+               vector_num < (unsigned char)k_num_weight_vectors;
+               vector_num++ ) {
             // zero the accumulators
             UnrolledLoop<k_unroll_factor>([&](auto i) {
               accum_vector[i] = 0;
@@ -155,8 +156,9 @@ event SubmitBeamformerKernel(
 
           } // end of for( vector_num... )
 
-          for(  char vector_num = 0; vector_num < (char)k_num_weight_vectors; 
-                vector_num++ ) {
+          for (unsigned char vector_num = 0;
+               vector_num < (unsigned char)k_num_weight_vectors; 
+               vector_num++ ) {
             // send the result out
             DataOutPipe::write( result[vector_num] );
           }
