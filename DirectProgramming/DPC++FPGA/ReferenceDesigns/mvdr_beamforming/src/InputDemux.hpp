@@ -74,7 +74,8 @@ event SubmitInputDemuxKernel(
       PipeType xrx_data_matrix[kNumMatrixCopies][kMaxReadsPerXrxDataMatrix];
 
       // track the status of each of the two buffers
-      [[intel::fpga_register]]
+      // NO-FORMAT comments are for clang-format
+      [[intel::fpga_register]]    // NO-FORMAT: Attribute
       bool ready_to_send[kNumMatrixCopies] = {false, false, false, false};
 
       // create a 'pipeline' for the almost full signal
@@ -103,7 +104,8 @@ event SubmitInputDemuxKernel(
       bool all_training_sent = false;
       bool all_xrx_sent = false;
 
-      [[intel::ii(1)]]
+      // NO-FORMAT comments are for clang-format
+      [[intel::ii(1)]]    // NO-FORMAT: Attribute
       while( 1 ) {
 
         // capture the current state of variables before they are modified

@@ -124,11 +124,16 @@ event SubmitStreamingQRDKernel( queue& q ) {
         // q_matrix is a copy of a_matrix and is used to send the final output
         // The compiler has difficulty automatically figuring out an optimal
         // configuration for these memories, so force all relevant parameters.
-        [[intel::numbanks(kNumBanksNextPow2)]] [[intel::bankwidth(kBankwidth)]]
-        [[intel::private_copies(4)]] [[intel::max_replicates(1)]]
+        // NO-FORMAT comments are for clang-format
+        [[intel::numbanks(kNumBanksNextPow2)]]    // NO-FORMAT: Attribute
+        [[intel::bankwidth(kBankwidth)]]          // NO-FORMAT: Attribute
+        [[intel::private_copies(4)]]              // NO-FORMAT: Attribute
+        [[intel::max_replicates(1)]]              // NO-FORMAT: Attribute
         AColumn a_matrix_in[k_a_num_cols];
-        [[intel::numbanks(kNumBanksNextPow2)]] [[intel::bankwidth(kBankwidth)]]
-        [[intel::private_copies(4)]] [[intel::max_replicates(1)]]
+        [[intel::numbanks(kNumBanksNextPow2)]]    // NO-FORMAT: Attribute
+        [[intel::bankwidth(kBankwidth)]]          // NO-FORMAT: Attribute
+        [[intel::private_copies(4)]]              // NO-FORMAT: Attribute
+        [[intel::max_replicates(1)]]              // NO-FORMAT: Attribute
         AColumn a_matrix[k_a_num_cols];
         AColumn q_matrix[k_a_num_cols];
 
@@ -185,8 +190,9 @@ event SubmitStreamingQRDKernel( queue& q ) {
         short j_nonneg = 0;
 
         // Calculate Q and R by iterating over A
-        [[intel::ii(1)]]
-        [[intel::ivdep(k_min_inner_loop_iterations)]]
+        // NO-FORMAT comments are for clang-format
+        [[intel::ii(1)]]                                // NO-FORMAT: Attribute
+        [[intel::ivdep(k_min_inner_loop_iterations)]]   // NO-FORMAT: Attribute
         for (int s = 0; s < kNumIterations; s++) {
 
           AColumn vector_t;

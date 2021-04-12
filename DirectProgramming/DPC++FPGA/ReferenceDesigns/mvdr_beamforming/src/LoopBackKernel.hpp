@@ -24,7 +24,9 @@ class Kernel3;
 template<typename KernelClass, typename T, typename InputPipe, typename OutputPipe>
 event SubmitLoopbackKernel(queue& q, size_t max_size) {
   auto e = q.submit([&](handler& h) {
-    h.single_task<KernelClass>([=]() [[intel::kernel_args_restrict]] {
+    // NO-FORMAT comments are for clang-format
+    h.single_task<KernelClass>([=]()
+    [[intel::kernel_args_restrict]] {   // NO-FORMAT: Attribute
       for (size_t i = 0; i < max_size; i++) {
         T data = InputPipe::read();
         OutputPipe::write(data);

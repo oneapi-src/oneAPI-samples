@@ -103,7 +103,8 @@ event SubmitBeamformerKernel(
           
           // force adequate private copies of this variable to not limit
           // throughput, extra private copies are cheap here
-          [[intel::private_copies(8)]]
+          // NO-FORMAT comments are for clang-format
+          [[intel::private_copies(8)]]    // NO-FORMAT: Attribute
           CalcType xrx_vector[kNumCalcTypePerVector];
           XrxPipeType segment;
 
@@ -121,12 +122,12 @@ event SubmitBeamformerKernel(
             });
           }
 
-          [[intel::fpga_register]]
+          [[intel::fpga_register]]  // NO-FORMAT: Attribute
           CalcType accum_vector;
           
           // don't let throughput be limited by result, adding extra private
           // copies is cheap as long as we stay below the depth of an M20K
-          [[intel::private_copies(8)]]
+          [[intel::private_copies(8)]]  // NO-FORMAT: Attribute
           ComplexType result[k_num_weight_vectors];
 
           // calculate an output vector for each weight vector

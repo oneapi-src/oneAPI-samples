@@ -73,7 +73,10 @@ struct Transposer {
       T scratch[k_pipe_width][k_num_cols_in];
       
       // fill the matrix internally
-      [[intel::ii(1), intel::loop_coalesce(2), intel::speculated_iterations(0)]]
+      // NO-FORMAT comments are for clang-format
+      [[intel::ii(1)]]                      // NO-FORMAT: Attribute
+      [[intel::loop_coalesce(2)]]           // NO-FORMAT: Attribute
+      [[intel::speculated_iterations(0)]]   // NO-FORMAT: Attribute
       for (int y = 0; y < k_pipe_width; y++) {
         for (int x = 0; x < k_num_cols_in/k_pipe_width; x++) {
           PipeType in_data = MatrixInPipe::read();
@@ -84,7 +87,9 @@ struct Transposer {
       }
 
       // write output
-      [[intel::ii(1), intel::speculated_iterations(0)]]
+      // NO-FORMAT comments are for clang-format
+      [[intel::ii(1)]]                      // NO-FORMAT: Attribute
+      [[intel::speculated_iterations(0)]]   // NO-FORMAT: Attribute
       for (int x = 0; x < k_num_cols_in; x++) {
         PipeType out_data;
         UnrolledLoop<k_pipe_width>([&](auto i) {
