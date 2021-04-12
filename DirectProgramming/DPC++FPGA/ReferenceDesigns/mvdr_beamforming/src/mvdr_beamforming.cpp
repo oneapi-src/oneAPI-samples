@@ -1,9 +1,3 @@
-// ==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-
 #define _USE_MATH_DEFINES
 #include <cmath>
 
@@ -16,16 +10,35 @@
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
-#include "Tuple.hpp"
 #include "mvdr_complex.hpp"
+#include "Tuple.hpp"
 
+#if not defined(REAL_IO_PIPES)
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
+#endif
 
 #include "Constants.hpp"
 #include "FakeIOPipes.hpp"
 #include "MVDR.hpp"
+
+#if defined(REAL_IO_PIPES) && defined(FPGA_EMULATOR)
+static_assert(false, "Real IO pipes cannot be emulated for this design");
+#endif
+
+#if defined(REAL_IO_PIPES) && (defined(_WIN32) || defined(_WIN64))
+static_assert(false, "Real IO pipes cannot be used in windows");
+#endif
+
+#if defined(REAL_IO_PIPES)
+#include <sys/mman.h>
+#include "UDP.hpp"
+#endif
+
+using namespace sycl;
+using namespace std::chrono_literals;
+using namespace std::chrono;
 
 // We will have the producer and consumer use USM host allocations
 // if they are enabled, otherwise they use device allocations
@@ -34,14 +47,11 @@ using MyProducer = Producer<Id, T, kUseUSMHostAllocation, min_capacity>;
 template <typename Id, typename T, size_t min_capacity = 0>
 using MyConsumer = Consumer<Id, T, kUseUSMHostAllocation, min_capacity>;
 
-using namespace sycl;
-using namespace std::chrono_literals;
-using namespace std::chrono;
-
 ////////////////////////////////////////////////////////////////////////////////
 // utility functions
-void PrintComplex(const ComplexType &c) {
-  std::cout << "(" << c.real() << ", " << c.imag() << ")";
+std::ostream& operator<<(std::ostream& os, const ComplexType& val) {
+  os << val.real() << " + " << val.imag() << "i";
+  return os;
 }
 
 bool AlmostEqual(float x, float y, float epsilon = 0.0002f) {
@@ -56,61 +66,158 @@ bool AlmostEqual(ComplexType x, ComplexType y, float epsilon = 0.0002f) {
 ////////////////////////////////////////////////////////////////////////////////
 
 // Forward declare the kernel names to reduce name mangling
-class XrxTrainingProducerID;
-class XrxDataProducerID;
-class SinThetaProducerID;
-class UpdateSinThetaProducerID;
+#if not defined(REAL_IO_PIPES)
+class DataProducerID;
 class DataOutConsumerID;
+#endif
+class SinThetaProducerID;
 
-constexpr size_t kTrainingDataSize =
-    kNumSensorInputs * kTrainingMatrixNumRows / kNumComplexPerXrxPipe;
-constexpr size_t kInputDataSize =
-    kNumSensorInputs * kNumInputVectors / kNumComplexPerXrxPipe;
-constexpr size_t kDataOutSize = kNumInputVectors * kNumSteer;
-
+// the data type that goes through the IO pipes; both fake and real
 using XrxPipeType = NTuple<ComplexType, kNumComplexPerXrxPipe>;
 
+// size of Training Data matrix, in units of XrxPipeTypes
+constexpr size_t kTrainingDataSize =
+    kNumSensorInputs * kTrainingMatrixNumRows / kNumComplexPerXrxPipe;
+
+// size of data to be processed, in units of XrxPipeTypes
+constexpr size_t kXrxDataSize =
+    kNumSensorInputs * kNumInputVectors / kNumComplexPerXrxPipe;
+
+// size of header data per set of training and processing data matrices, in
+// units of XrxPipeTypes (one header word per matrix)
+constexpr size_t kHeadersSize = 2;
+
+// total size of one 'quanta' of input data, in units of XrxPipeTypes
+constexpr size_t kInputDataSize = 
+  kTrainingDataSize + kXrxDataSize + kHeadersSize;
+
+// total size of one 'quanta' of output data, in units of ComplexTypes
+constexpr size_t kDataOutSize = kNumInputVectors * kNumSteer;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+// host producer and consumers
+#if defined(REAL_IO_PIPES)
+// REAL IO PIPES
+struct ReadIOPipeID { static constexpr unsigned id = 1; };
+struct WriteIOPipeID { static constexpr unsigned id = 0; };
+
+using DataInPipe = 
+  INTEL::kernel_readable_io_pipe<ReadIOPipeID, XrxPipeType, 512>;
+
+using DataOutPipe = 
+  INTEL::kernel_writeable_io_pipe<WriteIOPipeID, XrxPipeType, 512>;
+#else
+// FAKE IO PIPES
+using DataProducer =
+    MyProducer<DataProducerID, XrxPipeType, kInputDataSize * 2>;
+using DataInPipe = DataProducer::Pipe;
+
+using DataOutConsumer =
+    MyConsumer<DataOutConsumerID, ComplexType, kDataOutSize * 2>;
+using DataOutPipe = DataOutConsumer::Pipe;
+#endif
+
+using SinThetaProducer =
+    MyProducer<SinThetaProducerID, float, kNumSteer * 2>;
+using SinThetaPipe = SinThetaProducer::Pipe;
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 // File I/O
-bool ReadInputData(std::string in_dir, ComplexType *training_data,
-                   ComplexType *data_in, int num_matrix_copies);
+bool ReadInputData(std::string in_dir, ComplexType *data_in, 
+                   int num_matrix_copies);
 bool WriteOutputData(std::string out_dir, ComplexType *data_out);
 bool CheckOutputData(std::string in_dir, ComplexType *data_out,
-                     bool print_diffs);
+                     int num_matrix_copies, bool print_diffs);
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+struct UDPArgs {
+  unsigned long fpga_mac_addr = 0;
+  unsigned long host_mac_addr = 0;
+  unsigned int fpga_udp_port = 0;
+  unsigned int host_udp_port = 0;
+  char *fpga_ip_addr = nullptr;
+  char *fpga_netmask = nullptr;
+  char *host_ip_addr = nullptr;
+};
+
+// arguments
+bool ParseArgs(int argc, char *argv[], int& num_matrix_copies,
+               std::string& in_dir, std::string& out_dir,
+               UDPArgs* udp_args);
+void PrintUsage();
+////////////////////////////////////////////////////////////////////////////////
 
 // the main function
 int main(int argc, char *argv[]) {
+  UDPArgs udp_args;
+  int num_matrix_copies = 1024;
   std::string in_dir = "../data";
   std::string out_dir = ".";
-  int num_matrix_copies = 1024;  // number of matrices for throughput test
 
   // parse the command line arguments
-  for (int i = 1; i < argc; i++) {
-    std::string arg(argv[i]);
-
-    if (arg == "--help" || arg == "-h") {
-      std::cout << "USAGE: ./mvdr_beamforming "
-                << "[--in=<string>] "
-                << "[--out=<string>]\n";
-      return 0;
-    } else {
-      std::string str_after_equals = arg.substr(arg.find("=") + 1);
-
-      if (arg.find("--in=") == 0) {
-        in_dir = std::string(str_after_equals.c_str());
-      } else if (arg.find("--out=") == 0) {
-        out_dir = std::string(str_after_equals.c_str());
-      } else if (arg.find("--n=") == 0) {
-        num_matrix_copies = std::stoi(str_after_equals);
-      } else {
-        std::cout << "WARNING: ignoring unknown argument '" << arg << "'\n";
-      }
-    }
+  if (!ParseArgs(argc, argv, num_matrix_copies, in_dir, out_dir, &udp_args)) {
+    PrintUsage();
+    std::terminate();
   }
 
-  bool passed = true;
-  bool one_passed;
+  printf("\n");
+#if defined(REAL_IO_PIPES)
+  printf("FPGA MAC Address: %012lx\n", udp_args.fpga_mac_addr);
+  printf("FPGA IP Address:  %s\n", udp_args.fpga_ip_addr);
+  printf("FPGA UDP Port:    %d\n", udp_args.fpga_udp_port);
+  printf("FPGA Netmask:     %s\n", udp_args.fpga_netmask);
+  printf("Host MAC Address: %012lx\n", udp_args.host_mac_addr);
+  printf("Host IP Address:  %s\n", udp_args.host_ip_addr);
+  printf("Host UDP Port:    %d\n", udp_args.host_udp_port);
+#endif
+  printf("Matrices:         %d\n", num_matrix_copies);
+  printf("Input Directory:  '%s'\n", in_dir.c_str());
+  printf("Output Directory: '%s'\n", out_dir.c_str());
+  printf("\n");
 
-  // start the more 'SYCL' portion of the design
+
+  bool passed = true;
+
+  const size_t in_count = kInputDataSize * num_matrix_copies;
+  const size_t out_count = kDataOutSize * num_matrix_copies;
+  const size_t in_size = in_count * sizeof(ComplexType);
+  
+  // find number of full matrices.
+  // For the real IO pipes, we cannot send and receive a partial
+  // packet so we need to find the number of FULL matrices that
+  // we will send and receive
+#if defined(REAL_IO_PIPES)
+  size_t full_in_packet_count = in_size / kUDPDataSize;
+  size_t full_in_size = full_in_packet_count * kUDPDataSize; 
+  size_t full_in_count = full_in_size / sizeof(ComplexType);
+
+  const size_t num_full_matrix_copies = full_in_count / kInputDataSize;
+
+  const size_t full_out_count = kDataOutSize * num_full_matrix_copies;
+  const size_t full_out_size = full_out_count * sizeof(ComplexType);
+  const size_t full_out_packet_count = full_out_size / kUDPDataSize;
+
+  std::cout << "full_matrix_copies    = " << num_full_matrix_copies << "\n";
+  std::cout << "full_in_packet_count  = " << full_in_packet_count << "\n";
+  std::cout << "full_out_packet_count = " << full_out_packet_count << "\n";
+
+  // allocate aligned memory for raw input and output data
+  unsigned char *in_packets = AllocatePackets(full_in_packet_count);
+  unsigned char *out_packets = AllocatePackets(full_out_packet_count);
+#else
+  // for the fake IO pipes we don't need to worry about data fitting into
+  // UDP packets, so the number of full matrices is the amount requested
+  const size_t num_full_matrix_copies = num_matrix_copies;
+#endif
+  
+  // the input and output data
+  std::vector<XrxPipeType> in_data(in_count);
+  std::vector<XrxPipeType> out_data(out_count);
+
   try {
     // device selector
 #if defined(FPGA_EMULATOR)
@@ -119,54 +226,39 @@ int main(int argc, char *argv[]) {
     INTEL::fpga_selector selector;
 #endif
 
-    // queue properties to enable SYCL profiling of kernels
-    auto prop_list = property_list{property::queue::enable_profiling()};
-
     // create the device queue
-    queue q(selector, dpc_common::exception_handler, prop_list);
-
-    // TODO training and data need to be sent through the same pipe, and split
-    // by a kernel
-
-    // host producer and consumers
-    using XrxTrainingProducer =
-        MyProducer<XrxTrainingProducerID, XrxPipeType, kTrainingDataSize * 2>;
-    using XrxTrainingPipe = XrxTrainingProducer::Pipe;
-
-    using XrxDataProducer =
-        MyProducer<XrxDataProducerID, XrxPipeType, kInputDataSize * 2>;
-    using XrxDataPipe = XrxDataProducer::Pipe;
-
-    using SinThetaProducer =
-        MyProducer<SinThetaProducerID, float, kNumSteer * 2>;
-    using SinThetaPipe = SinThetaProducer::Pipe;
-
-    using DataOutConsumer =
-        MyConsumer<DataOutConsumerID, ComplexType, kDataOutSize * 2>;
-    using DataOutPipe = DataOutConsumer::Pipe;
+#if defined(REAL_IO_PIPES)
+    queue q(selector);
+#else
+    queue q(selector, dpc_common::exception_handler);
+#endif
 
     // initialize the producers and consumers
-    XrxTrainingProducer::Init(q, kTrainingDataSize * num_matrix_copies);
-    XrxDataProducer::Init(q, kInputDataSize * num_matrix_copies);
-    SinThetaProducer::Init(q, kNumSteer);
+#if not defined(REAL_IO_PIPES)
+    DataProducer::Init(q, kInputDataSize * num_matrix_copies);
     DataOutConsumer::Init(q, kDataOutSize * num_matrix_copies);
-
-    // clear the output data
-    std::fill_n(DataOutConsumer::Data(), kDataOutSize * num_matrix_copies, 0.0);
+#endif
+    SinThetaProducer::Init(q, kNumSteer);
 
     // read the input data
-    passed &= ReadInputData(in_dir, (ComplexType *)XrxTrainingProducer::Data(),
-                            (ComplexType *)XrxDataProducer::Data(),
+    passed &= ReadInputData(in_dir,
+                            (ComplexType *)in_data.data(),
                             num_matrix_copies);
 
-    // calcluate the sin(theta) values for each steering vector
+#if defined(REAL_IO_PIPES)
+    // convert the input data into UDP packets for the real IO pipes
+    ToPackets(in_packets, in_data.data(), full_in_count);
+#else
+    // copy the input data to the producer fake IO pipe buffer
+    std::copy_n(in_data.data(), in_count, DataProducer::Data());
+#endif
+
+    // calculate the sin(theta) values for each steering vector
     constexpr float degree_unit = 120.0f / (kNumSteer - 1);
     for (int i = 0; i < kNumSteer; i++) {
       float degree = -60.0f + i * degree_unit;
       SinThetaProducer::Data()[i] = sin(degree / 180.0f * M_PI);
     }
-
-    std::cout << "Calculated sin(theta) values" << std::endl;
 
     // launch the mvdr kernels
     MVDREventArray mvdr_events;
@@ -184,8 +276,7 @@ int main(int argc, char *argv[]) {
         kNumComplexPerXrxPipe,      // Number of complex numbers (contained
                                     // in NTuple) per read from the
                                     // Xrx input pipes
-        XrxTrainingPipe,            // Sensor data sent to the training kernels
-        XrxDataPipe,                // Sensor data sent to beamforming kernel
+        DataInPipe,                 // Input data for MVDR
         SinThetaPipe,               // sin(theta) input for steering vectors
         DataOutPipe                 // output from MVDR
         >(q, kNumInputVectors);
@@ -193,221 +284,146 @@ int main(int argc, char *argv[]) {
     std::cout << "Launched MVDR kernels" << std::endl;
 
     ////////////////////////////////////////////////////////////////////////////
-    // Basic test
-    // Send all data sources, check output
-    // Also write output to a file
-    ////////////////////////////////////////////////////////////////////////////
-    std::cout << std::endl
-              << "*** Basic single matrix and steering vectors test ***"
-              << std::endl;
-
-    // start the consumer
-    std::cout << "Launching consumer kernel" << std::endl;
-    event data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
-
-    // start the producers
-    std::cout << "Launching producer kernels" << std::endl;
-    event sin_theta_producer_event = SinThetaProducer::Start(q, kNumSteer);
-    event xrx_training_producer_event =
-        XrxTrainingProducer::Start(q, kTrainingDataSize);
-    event xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
-
-    // wait for producer kernels to finish
-    sin_theta_producer_event.wait();
-    xrx_training_producer_event.wait();
-    xrx_data_producer_event.wait();
-    std::cout << "Producer kernels finished" << std::endl;
-
-    // wait for consumer kernels to finish
-    data_out_consumer_event.wait();
-    std::cout << "Consumer kernels finished" << std::endl;
-
-    // write the output to a file
-    passed &= WriteOutputData(out_dir, DataOutConsumer::Data());
-
-    // check the output against expected result
-    one_passed = CheckOutputData(in_dir, DataOutConsumer::Data(), true);
-    if (one_passed) {
-      std::cout << "Output data check succeeded" << std::endl;
-    } else {
-      std::cout << "Output data check failed" << std::endl;
-    }
-    passed &= one_passed;
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Re-send Xrx and training data test
-    // Don't update training data or sin(theta), so should get same result
-    ////////////////////////////////////////////////////////////////////////////
-    std::cout << std::endl << "*** Re-send single matrix test ***" << std::endl;
-
-    // start the producers
-    std::cout << "Re-sending Xrx and training data" << std::endl;
-    data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
-    xrx_training_producer_event =
-        XrxTrainingProducer::Start(q, kTrainingDataSize);
-    xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
-    xrx_training_producer_event.wait();
-    xrx_data_producer_event.wait();
-    std::cout << "Producer kernels finished" << std::endl;
-    data_out_consumer_event.wait();
-    std::cout << "Consumer kernels finished" << std::endl;
-
-    one_passed = CheckOutputData(in_dir, DataOutConsumer::Data(), true);
-    if (one_passed) {
-      std::cout << "Output data check succeeded" << std::endl;
-    } else {
-      std::cout << "Output data check failed" << std::endl;
-    }
-    passed &= one_passed;
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Modify weight vectors, re-send Xrx and training data, expect a mismatch
-    ////////////////////////////////////////////////////////////////////////////
-    std::cout << std::endl
-              << "*** Modify weight vectors test (expect data mismatch) ***"
-              << std::endl;
-    std::cout << "Modifying and sending sin(theta) values" << std::endl;
-    float *sin_theta_ptr = SinThetaProducer::Data();
-
-    float sin_theta_zero_save = sin_theta_ptr[0];
-    sin_theta_ptr[0] = sin_theta_ptr[1];
-    sin_theta_producer_event = SinThetaProducer::Start(q, kNumSteer);
-    sin_theta_producer_event.wait();
-
-    std::cout << "Re-sending Xrx and training data three times" << std::endl;
-    data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
-    xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
-    xrx_training_producer_event =
-        XrxTrainingProducer::Start(q, kTrainingDataSize);
-    xrx_training_producer_event.wait();
-    xrx_data_producer_event.wait();
-    data_out_consumer_event.wait();
-
-    data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
-    xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
-    xrx_training_producer_event =
-        XrxTrainingProducer::Start(q, kTrainingDataSize);
-    xrx_training_producer_event.wait();
-    xrx_data_producer_event.wait();
-    data_out_consumer_event.wait();
-
-    data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
-    xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
-    xrx_training_producer_event =
-        XrxTrainingProducer::Start(q, kTrainingDataSize);
-    xrx_training_producer_event.wait();
-    xrx_data_producer_event.wait();
-    data_out_consumer_event.wait();
-
-    one_passed = !CheckOutputData(in_dir, DataOutConsumer::Data(), false);
-    if (one_passed) {
-      std::cout << "Output data mismatched as expected" << std::endl;
-    } else {
-      std::cout << "Output data check failed" << std::endl;
-    }
-    passed &= one_passed;
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Restore weight vectors, re-send Xrx and training data, expect a match
-    ////////////////////////////////////////////////////////////////////////////
-    std::cout << "Restoring original sin(theta)[0] value" << std::endl;
-    sin_theta_ptr[0] = sin_theta_zero_save;
-    sin_theta_producer_event = SinThetaProducer::Start(q, kNumSteer);
-    sin_theta_producer_event.wait();
-
-    std::cout << "Re-sending Xrx and training data three times" << std::endl;
-    data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
-    xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
-    xrx_training_producer_event =
-        XrxTrainingProducer::Start(q, kTrainingDataSize);
-    xrx_training_producer_event.wait();
-    xrx_data_producer_event.wait();
-    data_out_consumer_event.wait();
-
-    data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
-    xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
-    xrx_training_producer_event =
-        XrxTrainingProducer::Start(q, kTrainingDataSize);
-    xrx_training_producer_event.wait();
-    xrx_data_producer_event.wait();
-    data_out_consumer_event.wait();
-
-    data_out_consumer_event = DataOutConsumer::Start(q, kDataOutSize);
-    xrx_data_producer_event = XrxDataProducer::Start(q, kInputDataSize);
-    xrx_training_producer_event =
-        XrxTrainingProducer::Start(q, kTrainingDataSize);
-    xrx_training_producer_event.wait();
-    xrx_data_producer_event.wait();
-    data_out_consumer_event.wait();
-
-    one_passed = CheckOutputData(in_dir, DataOutConsumer::Data(), true);
-    if (one_passed) {
-      std::cout << "Output data check succeeded" << std::endl;
-    } else {
-      std::cout << "Output data check failed" << std::endl;
-    }
-    passed &= one_passed;
-
-    ////////////////////////////////////////////////////////////////////////////
     // Throughput test
     ////////////////////////////////////////////////////////////////////////////
     std::cout << std::endl
               << "*** Launching throughput test of " << num_matrix_copies
               << " matrices ***" << std::endl;
-
+  
     std::cout << "Sensor inputs                 : " << kNumSensorInputs
               << std::endl;
     std::cout << "Training matrix rows          : " << kTrainingMatrixNumRows
               << std::endl;
     std::cout << "Data rows per training matrix : " << kNumInputVectors
               << std::endl;
-    std::cout << "Steering vectors              : " << kNumSteer << std::endl;
+    std::cout << "Steering vectors              : " << kNumSteer
+              << std::endl;
+    std::cout << "Streaming pipe width          : " << kNumComplexPerXrxPipe
+              << std::endl;
 
-    // start the consumer
-    data_out_consumer_event =
+    // Start the host producer for the sin theta data
+    // By waiting on this kernel to finish, we are assuring that the runtime
+    // has already programmed the FPGA with the image for this kernel. This makes
+    // calling SetupPAC below safe (for the real IO pipes).
+    SinThetaProducer::Start(q, kNumSteer).wait();
+
+    // Setup CSRs on FPGA (this function is in UDP.hpp)
+    // NOTE: this must be done AFTER programming the FPGA, which happens
+    // when the kernel is launched (if it is not already programmed)
+#if defined(REAL_IO_PIPES)
+    SetupPAC(udp_args.fpga_mac_addr, udp_args.fpga_ip_addr,
+             udp_args.fpga_udp_port, udp_args.fpga_netmask,
+             udp_args.host_mac_addr, udp_args.host_ip_addr,
+             udp_args.host_udp_port);
+    
+    // give some time for the FPGA to set things up
+    std::this_thread::sleep_for(100ms);
+#endif
+
+    ////////////////////////////////////////////////////////////////////////////
+    // start the producer and consumer of data
+#if defined(REAL_IO_PIPES)
+    // REAL IO PIPES: start CPU threads to produce/consume data to/from the
+    // IO pipes of the FPGA using UDP
+
+    // start the receiver
+    std::cout << "Starting receiver thread" << std::endl;
+    std::thread receiver_thread([&] {
+      std::this_thread::sleep_for(10ms);
+      std::cout << "Receiver running on CPU " << sched_getcpu() << "\n";
+      UDPReceiver(udp_args.host_ip_addr, udp_args.fpga_udp_port, out_packets,
+                  full_out_packet_count, nullptr);
+    });
+
+    // pin the receiver to CPU 1
+    if (PinThreadToCPU(receiver_thread, 1) != 0) {
+      std::cerr << "ERROR: could not pin receiver thread to core 1\n";
+    }
+
+    // give a little time for the receiver to start
+    std::this_thread::sleep_for(20ms);
+
+    // Start the sender
+    std::cout << "Starting sender thread" << std::endl;
+    std::thread sender_thread([&] {
+      std::this_thread::sleep_for(10ms);
+      std::cout << "Sender running on CPU " << sched_getcpu() << "\n";
+      UDPSender(udp_args.fpga_ip_addr, udp_args.host_udp_port, in_packets,
+                full_in_packet_count, nullptr);
+    });
+    
+    // pin the sender to CPU 3
+    if (PinThreadToCPU(sender_thread, 3) != 0) {
+      std::cerr << "ERROR: could not pin sender thread to core 3\n";
+    }
+#else
+    // start the fake IO pipe kernels
+    auto data_out_consumer_event =
         DataOutConsumer::Start(q, kDataOutSize * num_matrix_copies);
+    auto data_producer_event =
+        DataProducer::Start(q, kInputDataSize * num_matrix_copies);
+#endif
+    ////////////////////////////////////////////////////////////////////////////
 
     auto start_time = high_resolution_clock::now();
 
-    // start the producers
-    xrx_training_producer_event =
-        XrxTrainingProducer::Start(q, kTrainingDataSize * num_matrix_copies);
-    xrx_data_producer_event =
-        XrxDataProducer::Start(q, kInputDataSize * num_matrix_copies);
-
-    // wait for producer and consumer kernels to finish
-    xrx_training_producer_event.wait();
-    xrx_data_producer_event.wait();
+    // wait for producer and consumer to finish
+#if defined(REAL_IO_PIPES)
+    sender_thread.join();
+    receiver_thread.join();
+#else
+    data_producer_event.wait();
     data_out_consumer_event.wait();
+#endif
 
     auto end_time = high_resolution_clock::now();
 
     // compute latency and throughput
-    duration<double, std::milli> process_time = end_time - start_time;
-    double latency_s = process_time.count() / 1000.0;
-    double throughput = (double)num_matrix_copies / latency_s;
+    duration<double, std::milli> process_time(end_time - start_time);
+    double latency_s = process_time.count() * 1e-3;
+    double throughput = num_full_matrix_copies / latency_s;
 
-    std::cout << "Throughput: " << throughput << " matrices/second"
-              << std::endl;
+    std::cout << "Throughput: " << throughput << " matrices/second\n";
+
+    // copy the output back from the consumer
+#if defined(REAL_IO_PIPES)
+    const size_t count_to_extract = 
+      full_out_packet_count * kUDPDataSize / sizeof(ComplexType);
+    
+    FromPackets(out_packets, out_data.data(), count_to_extract);
+    
+    const size_t num_out_matrix_copies_to_check = 
+      count_to_extract / kDataOutSize;
+#else
+    std::copy_n(DataOutConsumer::Data(),
+                out_count,
+                (ComplexType*)out_data.data());
+    
+    const size_t num_out_matrix_copies_to_check = num_full_matrix_copies;
+#endif
 
     // check one instance of output data
-    one_passed = CheckOutputData(in_dir, DataOutConsumer::Data(), true);
-    if (one_passed) {
+    passed &= CheckOutputData(in_dir,
+                              (ComplexType*)out_data.data(),
+                              num_out_matrix_copies_to_check,
+                              true);
+    if (passed) {
       std::cout << "Output data check succeeded" << std::endl;
     } else {
       std::cout << "Output data check failed" << std::endl;
     }
-    passed &= one_passed;
 
     ////////////////////////////////////////////////////////////////////////////
     // Post-test cleanup
     ////////////////////////////////////////////////////////////////////////////
-
-    // free the host USM memory
-    XrxTrainingProducer::Destroy(q);
-    XrxDataProducer::Destroy(q);
-    SinThetaProducer::Destroy(q);
+#if defined(REAL_IO_PIPES)
+    FreePackets(in_packets, full_in_packet_count);
+    FreePackets(out_packets, full_out_packet_count);
+#else
+    DataProducer::Destroy(q);
     DataOutConsumer::Destroy(q);
+#endif
+    SinThetaProducer::Destroy(q);
 
   } catch (exception const &e) {
     // Catches exceptions in the host code
@@ -432,8 +448,9 @@ int main(int argc, char *argv[]) {
   }
 }
 
-bool ReadInputData(std::string in_dir, ComplexType *training_data,
-                   ComplexType *data_in, int num_matrix_copies) {
+bool ReadInputData(std::string in_dir, 
+                    ComplexType *data_in, 
+                    int num_matrix_copies) {
   // file paths relative the the base directory
   std::string training_real_path = in_dir + "/" + "A_real.txt";
   std::string training_imag_path = in_dir + "/" + "A_imag.txt";
@@ -458,36 +475,35 @@ bool ReadInputData(std::string in_dir, ComplexType *training_data,
     return false;
   }
 
+  constexpr float kIsTrainingData = 0.0f;
+  constexpr float kIsNotTrainingData = 1.0f;  // any non-zero number is fine
+  
+  // insert the header to mark the first training matrix
+  data_in[0].set_r( std::nanf("") );    // marks this word as a header
+  data_in[0].set_i( kIsTrainingData );  // marks this as training data
+
   // load the first matrix from the input file
   // TODO temporarily, we do the transpose of this matrix in host code, until
   // the transpose kernel is fully implemented data comes in row order, we need
   // it in column order
-  // Note this is not a 'full' transpose, we just transpose
+  // Note this is not a 'full' transpose, we just transpose 
   // kNumComplexPerXrxPipe rows at a time
   for (size_t row = 0; row < kTrainingMatrixNumRows; row++) {
     for (size_t col = 0; col < kNumSensorInputs; col++) {
       a_real_is >> real;
       a_imag_is >> imag;
-      size_t data_index = (row / kNumComplexPerXrxPipe) * kNumSensorInputs *
-                              kNumComplexPerXrxPipe +
-                          col * kNumComplexPerXrxPipe +
-                          row % kNumComplexPerXrxPipe;
-      training_data[data_index].set_r(real);
-      training_data[data_index].set_i(imag);
+      size_t data_index = (row/kNumComplexPerXrxPipe) * kNumSensorInputs * 
+                          kNumComplexPerXrxPipe + 
+                          col * kNumComplexPerXrxPipe + 
+                          row % kNumComplexPerXrxPipe +
+                          kNumComplexPerXrxPipe;  // skip header
+      data_in[data_index].set_r(real);
+      data_in[data_index].set_i(imag);
     }
   }
 
   a_real_is.close();
   a_imag_is.close();
-
-  // copy the first training matrix num_matrix_copies times
-  for (size_t matrix_num = 1; matrix_num < num_matrix_copies; matrix_num++) {
-    for (size_t i = 0; i < kNumSensorInputs * kTrainingMatrixNumRows; i++) {
-      size_t data_copy_index =
-          i + (matrix_num * kNumSensorInputs * kTrainingMatrixNumRows);
-      training_data[data_copy_index] = training_data[i];
-    }
-  }
 
   std::cout << "Reading input data from " << x_real_path << " and "
             << x_imag_path << std::endl;
@@ -505,22 +521,28 @@ bool ReadInputData(std::string in_dir, ComplexType *training_data,
     return false;
   }
 
+  // insert header to mark processing data
+  int data_offset = (kTrainingDataSize + 1) * kNumComplexPerXrxPipe;
+  data_in[data_offset].set_r( std::nanf("") );
+  data_in[data_offset].set_i( kIsNotTrainingData );
+  data_offset += kNumComplexPerXrxPipe;
+
   // load the first matrix
   for (size_t i = 0; i < kInputDataSize * kNumComplexPerXrxPipe; i++) {
     x_real_is >> real;
     x_imag_is >> imag;
-    data_in[i].set_r(real);
-    data_in[i].set_i(imag);
+    data_in[data_offset + i].set_r(real);
+    data_in[data_offset + i].set_i(imag);
   }
 
   x_real_is.close();
   x_imag_is.close();
 
-  // copy the first data matrix num_matrix_copies times
+  // copy the first data and training matrices num_matrix_copies times
   for (size_t matrix_num = 1; matrix_num < num_matrix_copies; matrix_num++) {
     for (size_t i = 0; i < kInputDataSize * kNumComplexPerXrxPipe; i++) {
-      size_t data_copy_index =
-          i + (matrix_num * kInputDataSize * kNumComplexPerXrxPipe);
+      size_t data_copy_index = i + (matrix_num * kInputDataSize * 
+                                    kNumComplexPerXrxPipe);
       data_in[data_copy_index] = data_in[i];
     }
   }
@@ -529,14 +551,12 @@ bool ReadInputData(std::string in_dir, ComplexType *training_data,
 }
 
 bool CheckOutputData(std::string in_dir, ComplexType *data_out,
-                     bool print_diffs) {
+                     int num_matrix_copies, bool print_diffs) {
   bool match = true;
 
   // file paths relative the the base directory
-  std::string expected_out_real_path =
-      in_dir + "/" + "small_expected_out_real.txt";
-  std::string expected_out_imag_path =
-      in_dir + "/" + "small_expected_out_imag.txt";
+  std::string expected_out_real_path = in_dir + "/" + "small_expected_out_real.txt";
+  std::string expected_out_imag_path = in_dir + "/" + "small_expected_out_imag.txt";
 #ifdef LARGE_SENSOR_ARRAY
   expected_out_real_path = in_dir + "/" + "large_expected_out_real.txt";
   expected_out_imag_path = in_dir + "/" + "large_expected_out_imag.txt";
@@ -558,30 +578,38 @@ bool CheckOutputData(std::string in_dir, ComplexType *data_out,
     return false;
   }
 
+  // parse the expected output data
+  std::vector<ComplexType> ref_data(kNumInputVectors * kNumSteer);
   for (size_t i = 0; i < kNumInputVectors; i++) {
     for (size_t j = 0; j < kNumSteer; j++) {
-      ComplexType expected;
-      ComplexBaseType data_in;
-      exp_real_is >> data_in;
-      expected.set_r(data_in);
-      exp_imag_is >> data_in;
-      expected.set_i(data_in);
-      if (!AlmostEqual(expected, data_out[i * kNumSteer + j])) {
-        if (print_diffs) {
-          std::cout << "Error at input vector " << i << " steering vector " << j
-                    << ". Expected: " << expected.real() << " + "
-                    << expected.imag() << "i, "
-                    << " Actual: " << data_out[i * kNumSteer + j].real()
-                    << " + " << data_out[i * kNumSteer + j].imag() << "i"
-                    << std::endl;
-        }
-        match = false;
-      }
+      exp_real_is >> ref_data[i * kNumSteer + j].real();
+      exp_imag_is >> ref_data[i * kNumSteer + j].imag();
     }
   }
 
   exp_real_is.close();
   exp_imag_is.close();
+
+  // validate the result for all output matrices
+  for (size_t m = 0; m < num_matrix_copies; m++) {
+    for (size_t i = 0; i < kNumInputVectors; i++) {
+      for (size_t j = 0; j < kNumSteer; j++) {
+        auto result = 
+            data_out[m * kNumSteer * kNumInputVectors + i * kNumSteer + j];
+        auto expected = ref_data[i * kNumSteer + j];
+
+        if (!AlmostEqual(expected, result)) {
+          if (print_diffs) {
+            std::cout << "Error in output matrix " << m << " for input vector "
+                      << i << ", steering vector " << j << ".\n"
+                      << "Expected: " << expected << ", "
+                      << "Actual: " << result << "\n";
+          }
+          match = false;
+        }
+      }
+    }
+  }
 
   return match;
 }
@@ -623,4 +651,65 @@ bool WriteOutputData(std::string out_dir, ComplexType *data_out) {
   out_imag_os.close();
 
   return true;
+}
+
+bool ParseArgs(int argc, char *argv[], int& num_matrix_copies,
+               std::string& in_dir, std::string& out_dir,
+               UDPArgs* udp_args) {
+#if defined(REAL_IO_PIPES)
+  if (argc < 8) {
+    return false;
+  } else {
+    // parse FPGA and HOST MAC addresses
+    udp_args->fpga_mac_addr = ParseMACAddress(argv[1]);
+    udp_args->host_mac_addr = ParseMACAddress(argv[5]);
+  
+    // parse ports
+    udp_args->fpga_udp_port = (unsigned int) atoi(argv[3]);
+    udp_args->host_udp_port = (unsigned int) atoi(argv[7]);
+
+    // get IP addresses and netmask
+    udp_args->fpga_ip_addr = argv[2];
+    udp_args->fpga_netmask = argv[4];
+    udp_args->host_ip_addr = argv[6];
+
+    if (argc > 8) {
+      num_matrix_copies = atoi(argv[8]);
+    }
+    if (argc > 9) {
+      in_dir = argv[9];
+    }
+    if (argc > 10) {
+      out_dir = argv[10];
+    }
+
+    return true;
+  }
+#else
+  if (argc > 1) {
+    num_matrix_copies = atoi(argv[1]);
+  }
+  if (argc > 2) {
+    in_dir = argv[2];
+  }
+  if (argc > 3) {
+    out_dir = argv[3];
+  }
+  return true;
+#endif
+}
+
+void PrintUsage() {
+#if defined(REAL_IO_PIPES)
+  std::cout << "USAGE: ./mvdr_beamforming.fpga fpga_mac_adr fpga_ip_addr "
+            << "fpga_udp_port fpga_netmask host_mac_adr host_ip_addr "
+            << "host_udp_port [num_matrices] [in directory] [out directory]\n";
+  std::cout << "EXAMPLE: ./mvdr_beamforming.fpga 64:4C:36:00:2F:20 "
+            << "192.168.0.11 34543 255.255.255.0 94:40:C9:71:8D:10 "
+            << " 192.168.0.10 34543 1024 ../data .\n";
+#else
+  std::cout << "USAGE: ./mvdr_beamforming.fpga "
+            << "[num_matrices] [in directory] [out directory]\n";
+  std::cout << "EXAMPLE: ./mvdr_beamforming.fpga 1024 ../data .\n";
+#endif
 }

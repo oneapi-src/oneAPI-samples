@@ -8,36 +8,39 @@
 // success = true.
 // Blocking reads never return.
 // Non-blocking reads return immediately with success = false.
-template <class Id,   // name of the pipe
-          typename T  // data type accepted by the pipe
-          >
-struct NullPipe {
+template <
+  class     Id,   // name of the pipe
+  typename  T     // data type accepted by the pipe
+> struct NullPipe {
+
   NullPipe() = delete;  // ensure we cannot create an instance
 
   // Non-blocking write
-  static void write(const T & /*data*/, bool &success) { success = true; }
+  static void write( const T & /*data*/, bool &success ) {
+    success = true;
+  }
 
   // Blocking write
-  static void write(const T & /*data*/) {
+  static void write( const T & /*data*/ ) {
     // do nothing
   }
 
   // Non-blocking read
-  static T read(bool &success) {
-    T return_value = T();  // call the default constructor to avoid warnings
-                           // about uninitialized variables
+  static T read( bool &success ) {
+    T return_value = T();   // call the default constructor to avoid warnings
+                            // about uninitialized variables
     success = false;
-    return (return_value);
+    return( return_value );
   }
 
   // Blocking read
   static T read() {
-    T return_value = T();  // call the default constructor to avoid warnings
-                           // about uninitialized variables
-    while (1) {
+    T return_value = T();   // call the default constructor to avoid warnings
+                            // about uninitialized variables
+    while(1) {
       // do nothing, never return
     }
-    return (return_value);
+    return( return_value );
   }
 
 };  // end of struct NullPipe

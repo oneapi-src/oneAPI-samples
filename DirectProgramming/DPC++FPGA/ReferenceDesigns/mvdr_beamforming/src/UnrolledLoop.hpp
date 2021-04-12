@@ -29,9 +29,10 @@ struct integer_range_impl<T, std::integer_sequence<T, N...>, begin, false> {
 
 // integer_range
 template <typename T, T begin, T end>
-using integer_range = typename integer_range_impl<
-    T, std::make_integer_sequence<T, (begin < end) ? end - begin : begin - end>,
-    begin, (begin < end)>::type;
+using integer_range = typename integer_range_impl<T,
+    std::make_integer_sequence<T, (begin < end) ? end - begin : begin - end>,
+    begin,
+    (begin < end)>::type;
 
 //
 // make_integer_range
@@ -95,12 +96,12 @@ using make_index_pow2_sequence = integer_pow2_sequence<std::size_t, N>;
 // Example usage for UnrolledLoop constexpr:
 //
 // Base
-//    UnrolledLoop(std::integer_sequence<int,5,2,7,8>{},[&](auto i) {
+//    UnrolledLoop(std::integer_sequence<int,5,2,7,8>{},[&](auto i) { 
 //      /* i = 5,2,7,8 */
 //    });
 //
 // Case A
-//    UnrolledLoop<10>([&](auto i) {
+//    UnrolledLoop<10>([&](auto i) { 
 //      /* i = 0,1,...,9 */
 //    });
 //
@@ -110,7 +111,7 @@ using make_index_pow2_sequence = integer_pow2_sequence<std::size_t, N>;
 //    });
 //
 // Case C
-//    UnrolledLoop<char, 1, 10>([&](auto i) {
+//    UnrolledLoop<char, 1, 10>([&](auto i) { 
 //      /* i = 1,2,...,9 */
 //    });
 //    UnrolledLoop<char, 10, 1>([&](auto i) {

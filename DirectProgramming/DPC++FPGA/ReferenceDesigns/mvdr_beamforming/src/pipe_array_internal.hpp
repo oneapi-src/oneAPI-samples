@@ -32,28 +32,35 @@ struct VerifierDimLayer<dim> {
 
 // Templated classes to perform 'currying' write to all pipes in the array
 // Primary template, dummy
-template <template <std::size_t...> class WriteFunc, typename BaseTy,
-          typename PartialSequence, typename... RemainingSequences>
+template <template <std::size_t...> class WriteFunc, 
+          typename BaseTy,
+          typename PartialSequence,
+          typename... RemainingSequences>
 struct write_currying {};
 // Induction case
-template <template <std::size_t...> class WriteFunc, typename BaseTy,
-          std::size_t... I, std::size_t... J, typename... RemainingSequences>
-struct write_currying<WriteFunc, BaseTy, std::index_sequence<I...>,
-                      std::index_sequence<J...>, RemainingSequences...> {
-  void operator()(const BaseTy &data, bool &success) const {
-    (write_currying<WriteFunc, BaseTy, std::index_sequence<I..., J>,
-                    RemainingSequences...>()(data, success),
-     ...);
-  }
+template <template <std::size_t...> class WriteFunc, 
+          typename BaseTy,
+          std::size_t... I, 
+          std::size_t... J, 
+          typename... RemainingSequences>
+struct write_currying<
+  WriteFunc, BaseTy, std::index_sequence<I...>, std::index_sequence<J...>, 
+  RemainingSequences...
+> {
+    void operator()(const BaseTy &data, bool &success) const {
+        (write_currying<WriteFunc, BaseTy, std::index_sequence<I..., J>, 
+          RemainingSequences...>()(data, success) , ...);
+    }
 };
 // Base case
-template <template <std::size_t...> class WriteFunc, typename BaseTy,
+template <template <std::size_t...> class WriteFunc, 
+          typename BaseTy,
           std::size_t... I>
 struct write_currying<WriteFunc, BaseTy, std::index_sequence<I...>> {
-  void operator()(const BaseTy &data, bool &success) const {
-    WriteFunc<I...>()(data, success);
-  }
-};
+    void operator()(const BaseTy &data, bool &success) const {
+        WriteFunc<I...>()(data, success);
+    }
+};  
 
 }  // namespace
 
