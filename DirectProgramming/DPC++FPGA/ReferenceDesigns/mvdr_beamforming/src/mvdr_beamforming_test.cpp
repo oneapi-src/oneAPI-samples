@@ -27,8 +27,8 @@
 // California and by the laws of the United States of America.
 
 #include <chrono>
-#include <complex>
 #include <cmath>
+#include <complex>
 #include <cstring>
 #include <vector>
 
@@ -69,14 +69,14 @@ bool AlmostEqual(ComplexType x, ComplexType y, float epsilon = 0.0001f) {
 class LoopBackKernel;
 
 // this function tests the UDP conversion kernels
-template<typename T>
+template <typename T>
 void UDPDataConverterTest(queue& q, T* in_data, size_t count);
 
 // File I/O
-bool ReadInputData(std::string in_dir, ComplexType *a, ComplexType *x);
+bool ReadInputData(std::string in_dir, ComplexType* a, ComplexType* x);
 
 // the main function
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   bool need_help = false;
   std::string in_dir = "../data";
   std::string out_dir = "../data";
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     // queue properties to enable SYCL profiling of kernels
-    auto prop_list = property_list{ property::queue::enable_profiling() };
+    auto prop_list = property_list{property::queue::enable_profiling()};
 
     // create the device queue
     queue q(selector, dpc_common::exception_handler, prop_list);
@@ -140,19 +140,19 @@ int main(int argc, char *argv[]) {
 
     // allocate host memory
     ComplexType *a_in, *a_out, *x_in, *x_out;
-    if((a_in = malloc_host<ComplexType>(kASize, q)) == nullptr) {
+    if ((a_in = malloc_host<ComplexType>(kASize, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'a_in'\n";
       std::terminate();
     }
-    if((a_out = malloc_host<ComplexType>(kASize, q)) == nullptr) {
+    if ((a_out = malloc_host<ComplexType>(kASize, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'a_out'\n";
       std::terminate();
     }
-    if((x_in = malloc_host<ComplexType>(kXSize, q)) == nullptr) {
+    if ((x_in = malloc_host<ComplexType>(kXSize, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'x_in'\n";
       std::terminate();
     }
-    if((x_out = malloc_host<ComplexType>(kXSize, q)) == nullptr) {
+    if ((x_out = malloc_host<ComplexType>(kXSize, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'x_out'\n";
       std::terminate();
     }
@@ -165,29 +165,26 @@ int main(int argc, char *argv[]) {
     passed &= ReadInputData(in_dir, a_in, x_in);
 
     // NOTE: uncomment this to run the simple UDP conversion test
-    //UDPDataConverterTest(q, a_in, kASize);
+    // UDPDataConverterTest(q, a_in, kASize);
 
     // Declare the host producer and consumer
     using MyProducer = HostProducer<class HostProducerClass,
-                                    class HostProducerPipeClass,
-                                    ComplexType>;
+                                    class HostProducerPipeClass, ComplexType>;
     using MyConsumer = HostConsumer<class HostConsumerClass,
-                                    class HostConsumerPipeClass,
-                                    ComplexType>;
+                                    class HostConsumerPipeClass, ComplexType>;
     MyProducer producer(q, a_in);
     MyConsumer consumer(q, a_out);
 
     // start the loop back kernel
     // InputPipe and OutPipe are 'invisible' to the actual kernel the host can
     // choose (at compile time) which pipes to connect to the kernel
-    //event kernel_event =
+    // event kernel_event =
     //    SubmitLoopbackKernel<LoopBackKernel,
     //                         int,
     //                         HostProducer<int>::Pipe,
     //                         HostConsumer<int>::Pipe>(q, size);
     std::vector<event> kernel_events =
-        SubmitLongLoopbackKernel<ComplexType,
-                                 MyProducer::Pipe,
+        SubmitLongLoopbackKernel<ComplexType, MyProducer::Pipe,
                                  MyConsumer::Pipe>(q, kASize);
 
     // start the Producer and Consumer kernels
@@ -195,7 +192,7 @@ int main(int argc, char *argv[]) {
     event consumer_event = consumer.Start(kASize);
 
     // wait for the kernels to finish
-    //kernel_event.wait();
+    // kernel_event.wait();
     for (auto& e : kernel_events) {
       e.wait();
     }
@@ -245,7 +242,7 @@ int main(int argc, char *argv[]) {
   }
 }
 
-bool ReadInputData(std::string in_dir, ComplexType *a, ComplexType *x) {
+bool ReadInputData(std::string in_dir, ComplexType* a, ComplexType* x) {
   std::cout << "Reading input from '" << in_dir << "'\n";
 
   // file paths relative the the base directory
@@ -260,7 +257,7 @@ bool ReadInputData(std::string in_dir, ComplexType *a, ComplexType *x) {
   // TODO: allow multiple input matrices back-to-back
   std::ifstream a_real_is, a_image_is;
   a_real_is.open(a_real_path);
-  a_image_is.open(a_imag_path); 
+  a_image_is.open(a_imag_path);
   if (a_real_is.fail()) {
     std::cerr << "Failed to open " << a_real_path << "\n";
     return false;
@@ -282,7 +279,7 @@ bool ReadInputData(std::string in_dir, ComplexType *a, ComplexType *x) {
   // parse X
   std::ifstream x_real_is, x_image_is;
   x_real_is.open(x_real_path);
-  x_image_is.open(x_imag_path); 
+  x_image_is.open(x_imag_path);
   if (x_real_is.fail()) {
     std::cerr << "Failed to open " << x_real_path << "\n";
     return false;
@@ -307,11 +304,13 @@ bool ReadInputData(std::string in_dir, ComplexType *a, ComplexType *x) {
 // test the conversion to and from UDP data
 // This is the layout of the test pipeline:
 //
-// |------------|  |---------| InputPipe  |----| OutputPipe  |---------|  |------------|
+// |------------|  |---------| InputPipe  |----| OutputPipe  |---------|
+// |------------|
 // |HostProducer|=>|UDPReader|===========>|Wire|============>|UDPWriter|=>|HostConsumer|
-// |------------|  |---------|            |----|             |---------|  |------------|
+// |------------|  |---------|            |----|             |---------|
+// |------------|
 //
-template<typename T>
+template <typename T>
 void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
   // number of data bytes from UDP
   constexpr size_t udp_bytes = 8;
@@ -322,8 +321,9 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
   // number of application elements per UDP packet
   constexpr size_t elements_per_udp_packet = udp_bytes / sizeof(T);
   static_assert(elements_per_udp_packet == 1,
-      "We want 1 complex number per UDP packet");
-  size_t num_packets = (count + elements_per_udp_packet - 1)  / elements_per_udp_packet;
+                "We want 1 complex number per UDP packet");
+  size_t num_packets =
+      (count + elements_per_udp_packet - 1) / elements_per_udp_packet;
 
   // input and output pipes for application (before/after UDP conversion)
   using InputPipe = sycl::pipe<class PipeIn, T>;
@@ -331,11 +331,11 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
 
   // allocate fake UDP data
   UDP_t *in, *out;
-  if((in = malloc_host<UDP_t>(num_packets, q)) == nullptr) {
+  if ((in = malloc_host<UDP_t>(num_packets, q)) == nullptr) {
     std::cerr << "ERROR: could not allocate space for 'in'\n";
     std::terminate();
   }
-  if((out = malloc_host<UDP_t>(num_packets, q)) == nullptr) {
+  if ((out = malloc_host<UDP_t>(num_packets, q)) == nullptr) {
     std::cerr << "ERROR: could not allocate space for 'out'\n";
     std::terminate();
   }
@@ -343,18 +343,16 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
   // create random input data
   for (size_t i = 0; i < num_packets; i++) {
     for (size_t j = 0; j < elements_per_udp_packet; j++) {
-      ((T*)in[i].data)[j] = in_data[i*elements_per_udp_packet + j];
+      ((T*)in[i].data)[j] = in_data[i * elements_per_udp_packet + j];
     }
   }
 
   // Declare the host producer and consumer which will produce and consume
   // 'fake' UDP data
-  using MyProducer = HostProducer<class UDPProducerClass,
-                                  class UDPProducerPipeClass,
-                                  UDP_t>;
-  using MyConsumer = HostConsumer<class UDPConsumerClass,
-                                  class UDPConsumerPipeClass,
-                                  UDP_t>;
+  using MyProducer =
+      HostProducer<class UDPProducerClass, class UDPProducerPipeClass, UDP_t>;
+  using MyConsumer =
+      HostConsumer<class UDPConsumerClass, class UDPConsumerPipeClass, UDP_t>;
   MyProducer producer(q, in);
   MyConsumer consumer(q, out);
 
@@ -363,25 +361,20 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
   event consumer_event = consumer.Start(num_packets);
 
   // start the UDP reader/writer
-  event udp_reader_event = SubmitUDPReaderKernel<class UDPReader,
-                                                T,
-                                                elements_per_udp_packet,
-                                                udp_bytes,
-                                                typename MyProducer::Pipe,
-                                                InputPipe>(q, num_packets);
+  event udp_reader_event =
+      SubmitUDPReaderKernel<class UDPReader, T, elements_per_udp_packet,
+                            udp_bytes, typename MyProducer::Pipe, InputPipe>(
+          q, num_packets);
 
-  event udp_writer_event = SubmitUDPWriterKernel<class UDPWriter,
-                                                T,
-                                                elements_per_udp_packet,
-                                                udp_bytes,
-                                                OutputPipe,
-                                                typename MyConsumer::Pipe>(q, num_packets);
-
+  event udp_writer_event =
+      SubmitUDPWriterKernel<class UDPWriter, T, elements_per_udp_packet,
+                            udp_bytes, OutputPipe, typename MyConsumer::Pipe>(
+          q, num_packets);
 
   // start the main processing kernel (pass through)
   event kernel_event = q.submit([&](handler& h) {
     h.single_task<class Wire>([=]() {
-      for (size_t i = 0; i < num_packets*elements_per_udp_packet; i++) {
+      for (size_t i = 0; i < num_packets * elements_per_udp_packet; i++) {
         T data = InputPipe::read();
         OutputPipe::write(data);
       }
@@ -420,7 +413,7 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
     std::cerr << "First packet did not have SOF bit set!\n";
     passed = false;
   }
-  if (!out[num_packets-1].isEOF()) {
+  if (!out[num_packets - 1].isEOF()) {
     std::cerr << "Last packet did not have EOF bit set!\n";
     passed = false;
   }
@@ -436,4 +429,3 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
   sycl::free(in, q);
   sycl::free(out, q);
 }
-

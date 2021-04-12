@@ -10,8 +10,8 @@
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
-#include "mvdr_complex.hpp"
 #include "Tuple.hpp"
+#include "mvdr_complex.hpp"
 
 #if not defined(REAL_IO_PIPES)
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -49,7 +49,7 @@ using MyConsumer = Consumer<Id, T, kUseUSMHostAllocation, min_capacity>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // utility functions
-std::ostream& operator<<(std::ostream& os, const ComplexType& val) {
+std::ostream &operator<<(std::ostream &os, const ComplexType &val) {
   os << val.real() << " + " << val.imag() << "i";
   return os;
 }
@@ -88,8 +88,8 @@ constexpr size_t kXrxDataSize =
 constexpr size_t kHeadersSize = 2;
 
 // total size of one 'quanta' of input data, in units of XrxPipeTypes
-constexpr size_t kInputDataSize = 
-  kTrainingDataSize + kXrxDataSize + kHeadersSize;
+constexpr size_t kInputDataSize =
+    kTrainingDataSize + kXrxDataSize + kHeadersSize;
 
 // total size of one 'quanta' of output data, in units of ComplexTypes
 constexpr size_t kDataOutSize = kNumInputVectors * kNumSteer;
@@ -99,14 +99,18 @@ constexpr size_t kDataOutSize = kNumInputVectors * kNumSteer;
 // host producer and consumers
 #if defined(REAL_IO_PIPES)
 // REAL IO PIPES
-struct ReadIOPipeID { static constexpr unsigned id = 1; };
-struct WriteIOPipeID { static constexpr unsigned id = 0; };
+struct ReadIOPipeID {
+  static constexpr unsigned id = 1;
+};
+struct WriteIOPipeID {
+  static constexpr unsigned id = 0;
+};
 
-using DataInPipe = 
-  INTEL::kernel_readable_io_pipe<ReadIOPipeID, XrxPipeType, 512>;
+using DataInPipe =
+    INTEL::kernel_readable_io_pipe<ReadIOPipeID, XrxPipeType, 512>;
 
-using DataOutPipe = 
-  INTEL::kernel_writeable_io_pipe<WriteIOPipeID, XrxPipeType, 512>;
+using DataOutPipe =
+    INTEL::kernel_writeable_io_pipe<WriteIOPipeID, XrxPipeType, 512>;
 #else
 // FAKE IO PIPES
 using DataProducer =
@@ -118,15 +122,14 @@ using DataOutConsumer =
 using DataOutPipe = DataOutConsumer::Pipe;
 #endif
 
-using SinThetaProducer =
-    MyProducer<SinThetaProducerID, float, kNumSteer * 2>;
+using SinThetaProducer = MyProducer<SinThetaProducerID, float, kNumSteer * 2>;
 using SinThetaPipe = SinThetaProducer::Pipe;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
 // File I/O
-bool ReadInputData(std::string in_dir, ComplexType *data_in, 
+bool ReadInputData(std::string in_dir, ComplexType *data_in,
                    int num_matrix_copies);
 bool WriteOutputData(std::string out_dir, ComplexType *data_out);
 bool CheckOutputData(std::string in_dir, ComplexType *data_out,
@@ -145,9 +148,8 @@ struct UDPArgs {
 };
 
 // arguments
-bool ParseArgs(int argc, char *argv[], int& num_matrix_copies,
-               std::string& in_dir, std::string& out_dir,
-               UDPArgs* udp_args);
+bool ParseArgs(int argc, char *argv[], int &num_matrix_copies,
+               std::string &in_dir, std::string &out_dir, UDPArgs *udp_args);
 void PrintUsage();
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -183,16 +185,16 @@ int main(int argc, char *argv[]) {
 
   const size_t in_count = kInputDataSize * num_matrix_copies;
   const size_t out_count = kDataOutSize * num_matrix_copies;
-  
+
   // find number of full matrices.
   // For the real IO pipes, we cannot send and receive a partial
   // packet so we need to find the number of FULL matrices that
   // we will send and receive
 #if defined(REAL_IO_PIPES)
   const size_t in_size = in_count * sizeof(ComplexType);
-  
+
   size_t full_in_packet_count = in_size / kUDPDataSize;
-  size_t full_in_size = full_in_packet_count * kUDPDataSize; 
+  size_t full_in_size = full_in_packet_count * kUDPDataSize;
   size_t full_in_count = full_in_size / sizeof(ComplexType);
 
   const size_t num_full_matrix_copies = full_in_count / kInputDataSize;
@@ -213,7 +215,7 @@ int main(int argc, char *argv[]) {
   // UDP packets, so the number of full matrices is the amount requested
   const size_t num_full_matrix_copies = num_matrix_copies;
 #endif
-  
+
   // the input and output data
   std::vector<XrxPipeType> in_data(in_count);
   std::vector<XrxPipeType> out_data(out_count);
@@ -241,9 +243,8 @@ int main(int argc, char *argv[]) {
     SinThetaProducer::Init(q, kNumSteer);
 
     // read the input data
-    passed &= ReadInputData(in_dir,
-                            (ComplexType *)in_data.data(),
-                            num_matrix_copies);
+    passed &=
+        ReadInputData(in_dir, (ComplexType *)in_data.data(), num_matrix_copies);
 
 #if defined(REAL_IO_PIPES)
     // convert the input data into UDP packets for the real IO pipes
@@ -289,22 +290,21 @@ int main(int argc, char *argv[]) {
     std::cout << std::endl
               << "*** Launching throughput test of " << num_matrix_copies
               << " matrices ***" << std::endl;
-  
+
     std::cout << "Sensor inputs                 : " << kNumSensorInputs
               << std::endl;
     std::cout << "Training matrix rows          : " << kTrainingMatrixNumRows
               << std::endl;
     std::cout << "Data rows per training matrix : " << kNumInputVectors
               << std::endl;
-    std::cout << "Steering vectors              : " << kNumSteer
-              << std::endl;
+    std::cout << "Steering vectors              : " << kNumSteer << std::endl;
     std::cout << "Streaming pipe width          : " << kNumComplexPerXrxPipe
               << std::endl;
 
     // Start the host producer for the sin theta data
     // By waiting on this kernel to finish, we are assuring that the runtime
-    // has already programmed the FPGA with the image for this kernel. This makes
-    // calling SetupPAC below safe (for the real IO pipes).
+    // has already programmed the FPGA with the image for this kernel. This
+    // makes calling SetupPAC below safe (for the real IO pipes).
     SinThetaProducer::Start(q, kNumSteer).wait();
 
     // Setup CSRs on FPGA (this function is in UDP.hpp)
@@ -315,7 +315,7 @@ int main(int argc, char *argv[]) {
              udp_args.fpga_udp_port, udp_args.fpga_netmask,
              udp_args.host_mac_addr, udp_args.host_ip_addr,
              udp_args.host_udp_port);
-    
+
     // give some time for the FPGA to set things up
     std::this_thread::sleep_for(100ms);
 #endif
@@ -351,7 +351,7 @@ int main(int argc, char *argv[]) {
       UDPSender(udp_args.fpga_ip_addr, udp_args.host_udp_port, in_packets,
                 full_in_packet_count, nullptr);
     });
-    
+
     // pin the sender to CPU 3
     if (PinThreadToCPU(sender_thread, 3) != 0) {
       std::cerr << "ERROR: could not pin sender thread to core 3\n";
@@ -387,26 +387,23 @@ int main(int argc, char *argv[]) {
 
     // copy the output back from the consumer
 #if defined(REAL_IO_PIPES)
-    const size_t count_to_extract = 
-      full_out_packet_count * kUDPDataSize / sizeof(ComplexType);
-    
+    const size_t count_to_extract =
+        full_out_packet_count * kUDPDataSize / sizeof(ComplexType);
+
     FromPackets(out_packets, out_data.data(), count_to_extract);
-    
-    const size_t num_out_matrix_copies_to_check = 
-      count_to_extract / kDataOutSize;
+
+    const size_t num_out_matrix_copies_to_check =
+        count_to_extract / kDataOutSize;
 #else
-    std::copy_n(DataOutConsumer::Data(),
-                out_count,
-                (ComplexType*)out_data.data());
-    
+    std::copy_n(DataOutConsumer::Data(), out_count,
+                (ComplexType *)out_data.data());
+
     const size_t num_out_matrix_copies_to_check = num_full_matrix_copies;
 #endif
 
     // check one instance of output data
-    passed &= CheckOutputData(in_dir,
-                              (ComplexType*)out_data.data(),
-                              num_out_matrix_copies_to_check,
-                              true);
+    passed &= CheckOutputData(in_dir, (ComplexType *)out_data.data(),
+                              num_out_matrix_copies_to_check, true);
     if (passed) {
       std::cout << "Output data check succeeded" << std::endl;
     } else {
@@ -448,9 +445,8 @@ int main(int argc, char *argv[]) {
   }
 }
 
-bool ReadInputData(std::string in_dir, 
-                    ComplexType *data_in, 
-                    int num_matrix_copies) {
+bool ReadInputData(std::string in_dir, ComplexType *data_in,
+                   int num_matrix_copies) {
   // file paths relative the the base directory
   std::string training_real_path = in_dir + "/" + "A_real.txt";
   std::string training_imag_path = in_dir + "/" + "A_imag.txt";
@@ -475,18 +471,18 @@ bool ReadInputData(std::string in_dir,
 
   constexpr float kIsTrainingData = 0.0f;
   constexpr float kIsNotTrainingData = 1.0f;  // any non-zero number is fine
-  
+
   // insert the header to mark the first training matrix
   data_in[0].real() = std::nanf("");    // marks this word as a header
   data_in[0].imag() = kIsTrainingData;  // marks this as training data
 
   // load the first matrix from the input file
-  int data_offset = kNumComplexPerXrxPipe; // skip the header
+  int data_offset = kNumComplexPerXrxPipe;  // skip the header
   for (size_t i = 0; i < kTrainingMatrixNumRows * kNumSensorInputs; i++) {
     a_real_is >> data_in[data_offset + i].real();
     a_imag_is >> data_in[data_offset + i].imag();
   }
-  
+
   a_real_is.close();
   a_imag_is.close();
 
@@ -524,8 +520,8 @@ bool ReadInputData(std::string in_dir,
   // copy the first data and training matrices num_matrix_copies times
   for (size_t matrix_num = 1; matrix_num < num_matrix_copies; matrix_num++) {
     for (size_t i = 0; i < kInputDataSize * kNumComplexPerXrxPipe; i++) {
-      size_t data_copy_index = i + (matrix_num * kInputDataSize * 
-                                    kNumComplexPerXrxPipe);
+      size_t data_copy_index =
+          i + (matrix_num * kInputDataSize * kNumComplexPerXrxPipe);
       data_in[data_copy_index] = data_in[i];
     }
   }
@@ -538,8 +534,10 @@ bool CheckOutputData(std::string in_dir, ComplexType *data_out,
   bool match = true;
 
   // file paths relative the the base directory
-  std::string expected_out_real_path = in_dir + "/" + "small_expected_out_real.txt";
-  std::string expected_out_imag_path = in_dir + "/" + "small_expected_out_imag.txt";
+  std::string expected_out_real_path =
+      in_dir + "/" + "small_expected_out_real.txt";
+  std::string expected_out_imag_path =
+      in_dir + "/" + "small_expected_out_imag.txt";
 #ifdef LARGE_SENSOR_ARRAY
   expected_out_real_path = in_dir + "/" + "large_expected_out_real.txt";
   expected_out_imag_path = in_dir + "/" + "large_expected_out_imag.txt";
@@ -577,7 +575,7 @@ bool CheckOutputData(std::string in_dir, ComplexType *data_out,
   for (size_t m = 0; m < num_matrix_copies; m++) {
     for (size_t i = 0; i < kNumInputVectors; i++) {
       for (size_t j = 0; j < kNumSteer; j++) {
-        auto result = 
+        auto result =
             data_out[m * kNumSteer * kNumInputVectors + i * kNumSteer + j];
         auto expected = ref_data[i * kNumSteer + j];
 
@@ -634,9 +632,8 @@ bool WriteOutputData(std::string out_dir, ComplexType *data_out) {
   return true;
 }
 
-bool ParseArgs(int argc, char *argv[], int& num_matrix_copies,
-               std::string& in_dir, std::string& out_dir,
-               UDPArgs* udp_args) {
+bool ParseArgs(int argc, char *argv[], int &num_matrix_copies,
+               std::string &in_dir, std::string &out_dir, UDPArgs *udp_args) {
 #if defined(REAL_IO_PIPES)
   if (argc < 8) {
     return false;
@@ -644,10 +641,10 @@ bool ParseArgs(int argc, char *argv[], int& num_matrix_copies,
     // parse FPGA and HOST MAC addresses
     udp_args->fpga_mac_addr = ParseMACAddress(argv[1]);
     udp_args->host_mac_addr = ParseMACAddress(argv[5]);
-  
+
     // parse ports
-    udp_args->fpga_udp_port = (unsigned int) atoi(argv[3]);
-    udp_args->host_udp_port = (unsigned int) atoi(argv[7]);
+    udp_args->fpga_udp_port = (unsigned int)atoi(argv[3]);
+    udp_args->host_udp_port = (unsigned int)atoi(argv[7]);
 
     // get IP addresses and netmask
     udp_args->fpga_ip_addr = argv[2];

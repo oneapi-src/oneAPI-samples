@@ -25,7 +25,7 @@
 using namespace sycl;
 
 // utility functions
-void PrintComplex(const ComplexType& c) {
+void PrintComplex(const ComplexType &c) {
   std::cout << "(" << c.real() << ", " << c.imag() << ")";
 }
 
@@ -39,7 +39,6 @@ bool AlmostEqual(ComplexType x, ComplexType y, float epsilon = 0.0001f) {
   return real_close && imag_close;
 }
 
-
 // File I/O
 bool ReadComplexData(std::string file_basename, ComplexType *data);
 
@@ -52,8 +51,6 @@ class SteeringVectorGenerator;
 class UpdateSinThetaPipeID;
 class UpdateSteeringVectorsPipeID;
 class UpdateSinThetaKernelName;
-
-
 
 // the main function
 int main(int argc, char *argv[]) {
@@ -100,7 +97,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     // queue properties to enable SYCL profiling of kernels
-    auto prop_list = property_list{ property::queue::enable_profiling() };
+    auto prop_list = property_list{property::queue::enable_profiling()};
 
     // create the device queue
     queue q(selector, dpc_common::exception_handler, prop_list);
@@ -120,17 +117,16 @@ int main(int argc, char *argv[]) {
 
     // allocate host memory
     float *sintheta_in;
-    if( (sintheta_in = malloc_host<float>( kNumSteer, q) ) == nullptr) {
+    if ((sintheta_in = malloc_host<float>(kNumSteer, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'sintheta_in'\n";
       std::terminate();
     }
     ComplexType *steering_vectors_out;
     constexpr short kSteeringVectorsSize = kNumSteer * kNumSensorInputs;
-    if( (steering_vectors_out = 
-      malloc_host<ComplexType>( kSteeringVectorsSize, q) ) == nullptr )
-    {
-      std::cerr << "ERROR: could not allocate space for "
-      std::cerr << "'steering_vectors_out'\n";
+    if ((steering_vectors_out =
+             malloc_host<ComplexType>(kSteeringVectorsSize, q)) == nullptr) {
+      std::cerr << "ERROR: could not allocate space for " std::cerr
+                << "'steering_vectors_out'\n";
       std::terminate();
     }
 
@@ -138,54 +134,51 @@ int main(int argc, char *argv[]) {
     std::fill_n(steering_vectors_out, kSteeringVectorsSize, -1);
 
     // read the input data
-    std::string sintheta_in_base_filename = indir + "/sintheta_in"
-    passed &= ReadFloatData( sintheta_in_base_filename, sintheta_in );
+    std::string sintheta_in_base_filename = indir + "/sintheta_in" passed &=
+        ReadFloatData(sintheta_in_base_filename, sintheta_in);
 
     // Declare pipes, producers, and consumers
-    using SinThetaProducer = HostProducer<  SinThetaProducerID,
-                                            SinThetaProducerPipeID,
-                                            float >;
+    using SinThetaProducer =
+        HostProducer<SinThetaProducerID, SinThetaProducerPipeID, float>;
     using SinThetaPipe = SinThetaProducer::Pipe;
 
-    using UpdateSinThetaPipe = sycl::pipe< UpdateSinThetaPipeID, bool, 1 >;
+    using UpdateSinThetaPipe = sycl::pipe<UpdateSinThetaPipeID, bool, 1>;
 
-    using SteeringVectorsConsumer = HostConsumer< SteeringVectorConsumerID,
-                                                  SteeringVectorConsumerPipeID,
-                                                  ComplexType >;
+    using SteeringVectorsConsumer =
+        HostConsumer<SteeringVectorConsumerID, SteeringVectorConsumerPipeID,
+                     ComplexType>;
     using SteeringVectorsPipe = SteeringVectorsConsumer::Pipe;
 
-    using UpdateSteeringVectorsPipe = 
-      sycl::pipe< UpdateSteeringVectorsPipeID, bool, 1 >;
+    using UpdateSteeringVectorsPipe =
+        sycl::pipe<UpdateSteeringVectorsPipeID, bool, 1>;
 
     SinThetaProducer sintheta_producer(q, sintheta_in);
     SteeringVectorsConsumer steering_vectors_consumer(q, steering_vectors_out);
 
     // start the steering vector generator kernel
-    event steering_vector_generator_event =
-      SubmitSteeringVectorGeneratorKernel<
-        SteeringVectorGenerator,        // Name to use for the Kernel
-        kNumSteer,                      // number of steering vectors
-        kNumSensorInputs,               // number of elements in each vector
-        SinThetaPipe,                   // sin(theta) input
-        UpdateSinThetaPipe,             // load new sin(theta)
-        SteeringVectorsPipes,           // generated steering vectors
-        UpdateSteeringVectorsPipes      // load new steering vectors
-      >( q );
+    event steering_vector_generator_event = SubmitSteeringVectorGeneratorKernel<
+        SteeringVectorGenerator,    // Name to use for the Kernel
+        kNumSteer,                  // number of steering vectors
+        kNumSensorInputs,           // number of elements in each vector
+        SinThetaPipe,               // sin(theta) input
+        UpdateSinThetaPipe,         // load new sin(theta)
+        SteeringVectorsPipes,       // generated steering vectors
+        UpdateSteeringVectorsPipes  // load new steering vectors
+        >(q);
 
     // start the Producer and Consumer kernels
-    event steering_vector_consumer_event = 
-      steering_vectors_consumer.Start(kSteeringVectorsSize);
+    event steering_vector_consumer_event =
+        steering_vectors_consumer.Start(kSteeringVectorsSize);
     event sintheta_producer_event = sintheta_producer.Start(kNumSteer);
 
-    // wait for the producer kernel to finish before writing to the 
+    // wait for the producer kernel to finish before writing to the
     // UpdateSinTheta pipe
     sintheta_producer_event.wait();
 
     // launch kernel that writes a single bool to the UpdateSinTheta pipe
-    event update_sin_theta_event = q.submit([&](handler& h) {
-      h.single_task< UpdateSinThetaKernelName > ( [=]() {
-        UpdateSinThetaPipe::write( true );
-      });
+    event update_sin_theta_event = q.submit([&](handler &h) {
+      h.single_task<UpdateSinThetaKernelName>(
+          [=]() { UpdateSinThetaPipe::write(true); });
     });
     update_sin_theta_event.wait();
 
@@ -194,10 +187,10 @@ int main(int argc, char *argv[]) {
     steering_vector_consumer_event.wait();
 
     // print the output
-    for ( int i = 0; i < kNumSteer; i++ ) {
+    for (int i = 0; i < kNumSteer; i++) {
       std::cout << std::endl << "Vector " << i << std::endl;
-      for ( int j = 0; j < kNumSensorInputs; j++ ) {
-        PrintComplex( steering_vectors_out[i * kNumSensorInputs + j]);
+      for (int j = 0; j < kNumSensorInputs; j++) {
+        PrintComplex(steering_vectors_out[i * kNumSensorInputs + j]);
         std::cout << std::endl;
       }
     }
@@ -206,7 +199,7 @@ int main(int argc, char *argv[]) {
     sycl::free(sintheta_in, q);
     sycl::free(steering_vectors_out, q);
 
-  } catch (exception const& e) {
+  } catch (exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
     // Most likely the runtime couldn't find FPGA hardware!
@@ -244,7 +237,7 @@ bool ReadInputData(std::string in_dir, ComplexType *a, ComplexType *x) {
   // TODO: allow multiple input matrices back-to-back
   std::ifstream a_real_is, a_image_is;
   a_real_is.open(a_real_path);
-  a_image_is.open(a_imag_path); 
+  a_image_is.open(a_imag_path);
   if (a_real_is.fail()) {
     std::cerr << "Failed to open " << a_real_path << "\n";
     return false;
@@ -266,7 +259,7 @@ bool ReadInputData(std::string in_dir, ComplexType *a, ComplexType *x) {
   // parse X
   std::ifstream x_real_is, x_image_is;
   x_real_is.open(x_real_path);
-  x_image_is.open(x_imag_path); 
+  x_image_is.open(x_imag_path);
   if (x_real_is.fail()) {
     std::cerr << "Failed to open " << x_real_path << "\n";
     return false;
@@ -291,12 +284,14 @@ bool ReadInputData(std::string in_dir, ComplexType *a, ComplexType *x) {
 // test the conversion to and from UDP data
 // This is the layout of the test pipeline:
 //
-// |------------|  |---------| InputPipe  |----| OutputPipe  |---------|  |------------|
+// |------------|  |---------| InputPipe  |----| OutputPipe  |---------|
+// |------------|
 // |HostProducer|=>|UDPReader|===========>|Wire|============>|UDPWriter|=>|HostConsumer|
-// |------------|  |---------|            |----|             |---------|  |------------|
+// |------------|  |---------|            |----|             |---------|
+// |------------|
 //
-template<typename T>
-void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
+template <typename T>
+void UDPDataConverterTest(queue &q, T *in_data, size_t count) {
   // number of data bytes from UDP
   constexpr size_t udp_bytes = 8;
 
@@ -306,8 +301,9 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
   // number of application elements per UDP packet
   constexpr size_t elements_per_udp_packet = udp_bytes / sizeof(T);
   static_assert(elements_per_udp_packet == 1,
-      "We want 1 complex number per UDP packet");
-  size_t num_packets = (count + elements_per_udp_packet - 1)  / elements_per_udp_packet;
+                "We want 1 complex number per UDP packet");
+  size_t num_packets =
+      (count + elements_per_udp_packet - 1) / elements_per_udp_packet;
 
   // input and output pipes for application (before/after UDP conversion)
   using InputPipe = sycl::pipe<class PipeIn, T>;
@@ -315,11 +311,11 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
 
   // allocate fake UDP data
   UDP_t *in, *out;
-  if((in = malloc_host<UDP_t>(num_packets, q)) == nullptr) {
+  if ((in = malloc_host<UDP_t>(num_packets, q)) == nullptr) {
     std::cerr << "ERROR: could not allocate space for 'in'\n";
     std::terminate();
   }
-  if((out = malloc_host<UDP_t>(num_packets, q)) == nullptr) {
+  if ((out = malloc_host<UDP_t>(num_packets, q)) == nullptr) {
     std::cerr << "ERROR: could not allocate space for 'out'\n";
     std::terminate();
   }
@@ -327,18 +323,16 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
   // create random input data
   for (size_t i = 0; i < num_packets; i++) {
     for (size_t j = 0; j < elements_per_udp_packet; j++) {
-      ((T*)in[i].data)[j] = in_data[i*elements_per_udp_packet + j];
+      ((T *)in[i].data)[j] = in_data[i * elements_per_udp_packet + j];
     }
   }
 
   // Declare the host producer and consumer which will produce and consume
   // 'fake' UDP data
-  using MyProducer = HostProducer<class UDPProducerClass,
-                                  class UDPProducerPipeClass,
-                                  UDP_t>;
-  using MyConsumer = HostConsumer<class UDPConsumerClass,
-                                  class UDPConsumerPipeClass,
-                                  UDP_t>;
+  using MyProducer =
+      HostProducer<class UDPProducerClass, class UDPProducerPipeClass, UDP_t>;
+  using MyConsumer =
+      HostConsumer<class UDPConsumerClass, class UDPConsumerPipeClass, UDP_t>;
   MyProducer producer(q, in);
   MyConsumer consumer(q, out);
 
@@ -347,25 +341,20 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
   event consumer_event = consumer.Start(num_packets);
 
   // start the UDP reader/writer
-  event udp_reader_event = SubmitUDPReaderKernel<class UDPReader,
-                                                T,
-                                                elements_per_udp_packet,
-                                                udp_bytes,
-                                                typename MyProducer::Pipe,
-                                                InputPipe>(q, num_packets);
+  event udp_reader_event =
+      SubmitUDPReaderKernel<class UDPReader, T, elements_per_udp_packet,
+                            udp_bytes, typename MyProducer::Pipe, InputPipe>(
+          q, num_packets);
 
-  event udp_writer_event = SubmitUDPWriterKernel<class UDPWriter,
-                                                T,
-                                                elements_per_udp_packet,
-                                                udp_bytes,
-                                                OutputPipe,
-                                                typename MyConsumer::Pipe>(q, num_packets);
-
+  event udp_writer_event =
+      SubmitUDPWriterKernel<class UDPWriter, T, elements_per_udp_packet,
+                            udp_bytes, OutputPipe, typename MyConsumer::Pipe>(
+          q, num_packets);
 
   // start the main processing kernel (pass through)
-  event kernel_event = q.submit([&](handler& h) {
+  event kernel_event = q.submit([&](handler &h) {
     h.single_task<class Wire>([=]() {
-      for (size_t i = 0; i < num_packets*elements_per_udp_packet; i++) {
+      for (size_t i = 0; i < num_packets * elements_per_udp_packet; i++) {
         T data = InputPipe::read();
         OutputPipe::write(data);
       }
@@ -384,8 +373,8 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
   for (size_t i = 0; i < num_packets; i++) {
     for (size_t j = 0; j < elements_per_udp_packet; j++) {
       // the input and output data
-      T input_data = ((T*)in[i].data)[j];
-      T output_data = ((T*)out[i].data)[j];
+      T input_data = ((T *)in[i].data)[j];
+      T output_data = ((T *)out[i].data)[j];
 
       if (!AlmostEqual(output_data, input_data)) {
         std::cerr << "ERROR: output is invalid at index " << i << ": ";
@@ -404,7 +393,7 @@ void UDPDataConverterTest(queue& q, T* in_data, size_t count) {
     std::cerr << "First packet did not have SOF bit set!\n";
     passed = false;
   }
-  if (!out[num_packets-1].isEOF()) {
+  if (!out[num_packets - 1].isEOF()) {
     std::cerr << "Last packet did not have EOF bit set!\n";
     passed = false;
   }
