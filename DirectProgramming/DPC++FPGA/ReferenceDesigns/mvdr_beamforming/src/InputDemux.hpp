@@ -69,7 +69,7 @@ event SubmitInputDemuxKernel(
       PipeType training_matrix[kNumMatrixCopies][kReadsPerTrainingMatrix];
       PipeType xrx_data_matrix[kNumMatrixCopies][kMaxReadsPerXrxDataMatrix];
 
-      // track the status of each of the two buffers
+      // track the status of each of the buffers
       // NO-FORMAT comments are for clang-format
       [[intel::fpga_register]]  // NO-FORMAT: Attribute
       bool ready_to_send[kNumMatrixCopies] = {false, false, false, false};
