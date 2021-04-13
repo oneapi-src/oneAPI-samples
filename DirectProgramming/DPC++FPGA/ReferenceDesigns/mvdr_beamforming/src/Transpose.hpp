@@ -71,10 +71,10 @@ struct Transposer {
     constexpr unsigned char kNumScratchMemCopiesBitMask = 0x03;
     constexpr int kBankwidth = k_pipe_width * sizeof(T);
     // NO-FORMAT comments are for clang-format
-    [[intel::numbanks(1)]]                  // NO-FORMAT: Attribute
-    [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
-    [[intel::private_copies(1)]]            // NO-FORMAT: Attribute
-    [[intel::max_replicates(k_pipe_width)]] // NO-FORMAT: Attribute
+    [[intel::numbanks(1)]]                   // NO-FORMAT: Attribute
+    [[intel::bankwidth(kBankwidth)]]         // NO-FORMAT: Attribute
+    [[intel::private_copies(1)]]             // NO-FORMAT: Attribute
+    [[intel::max_replicates(k_pipe_width)]]  // NO-FORMAT: Attribute
     T scratch[kNumScratchMemCopies][k_pipe_width][k_num_cols_in];
 
     // track the status of each of the buffers
@@ -98,7 +98,6 @@ struct Transposer {
     // NO-FORMAT comments are for clang-format
     [[intel::ii(1)]]  // NO-FORMAT: Attribute
     while (1) {
-
       // capture current value of all status variables as we begin each loop
       // iteration
       unsigned char cur_rx_buffer = rx_buffer;
@@ -127,7 +126,7 @@ struct Transposer {
 
       // read the next data to send
       PipeType data_out;
-      UnrolledLoop<k_pipe_width>([&](auto i) { 
+      UnrolledLoop<k_pipe_width>([&](auto i) {
         data_out.template get<i>() = scratch[cur_tx_buffer][i][cur_tx_col];
       });
 
@@ -161,12 +160,12 @@ struct Transposer {
 
       // if we have new data, store it in the buffer and update the status
       if (read_valid) {
-        unsigned short row = (cur_rx_count * (unsigned short)k_pipe_width) / 
+        unsigned short row = (cur_rx_count * (unsigned short)k_pipe_width) /
                              (unsigned short)k_num_cols_in;
-        unsigned short col = (cur_rx_count * (unsigned short)k_pipe_width) % 
+        unsigned short col = (cur_rx_count * (unsigned short)k_pipe_width) %
                              (unsigned short)k_num_cols_in;
         UnrolledLoop<k_pipe_width>([&](auto i) {
-          scratch[cur_rx_buffer][row][col+i] = data_in.template get<i>();
+          scratch[cur_rx_buffer][row][col + i] = data_in.template get<i>();
         });
 
         // update the receive buffer status
@@ -179,8 +178,8 @@ struct Transposer {
         }
       }
 
-    } // end of while(1)
-  } // end of operator()()
+    }  // end of while(1)
+  }    // end of operator()()
 };
 
 // Special case for a k_pipe_width=1
