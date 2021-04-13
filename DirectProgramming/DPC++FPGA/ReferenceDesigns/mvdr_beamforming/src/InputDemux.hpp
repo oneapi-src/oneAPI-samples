@@ -131,7 +131,7 @@ event SubmitInputDemuxKernel(
         // if the NEXT buffer we would write to is not ready for use, then
         // assert almost full
         almost_full_pipe.template get<kAlmostFullPipeDepth - 1>() =
-            ready_to_send[(rx_buffer + 1) & kNumMatrixCopiesBitMask];
+            ready_to_send[(cur_rx_buffer + 1) & kNumMatrixCopiesBitMask];
 
         // Only do the pipe read if we have space available, OR if we are
         // configured to read on every cycle.  Reading on every cycle means
