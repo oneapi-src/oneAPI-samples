@@ -20,12 +20,13 @@
     <ClInclude Include="src\Constants.hpp" />
     <ClInclude Include="src\FakeIOPipes.hpp" />
     <ClInclude Include="src\ForwardSubstitution.hpp" />
+    <ClInclude Include="src\InputDemux.hpp" />
     <ClInclude Include="src\mvdr_complex.hpp" />
     <ClInclude Include="src\MVDR.hpp" />
-    <ClInclude Include="src\NullPipe.hpp" />
     <ClInclude Include="src\ParallelCopyArray.hpp" />
-    <ClInclude Include="src\pipe_array_internal.hpp" />
     <ClInclude Include="src\pipe_array.hpp" />
+    <ClInclude Include="src\pipe_array_internal.hpp" />
+    <ClInclude Include="src\PipeDuplicator.hpp" />
     <ClInclude Include="src\SteeringVectorGenerator.hpp" />
     <ClInclude Include="src\StreamingQRD.hpp" />
     <ClInclude Include="src\Transpose.hpp" />

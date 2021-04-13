@@ -652,7 +652,9 @@ bool ParseArgs(int argc, char *argv[], int &num_matrix_copies,
     udp_args->host_ip_addr = argv[6];
 
     if (argc > 8) {
-      num_matrix_copies = atoi(argv[8]);
+      if (atoi(argv[8]) > 0) {
+        num_matrix_copies = atoi(argv[8]);
+      }
     }
     if (argc > 9) {
       in_dir = argv[9];
@@ -665,7 +667,9 @@ bool ParseArgs(int argc, char *argv[], int &num_matrix_copies,
   }
 #else
   if (argc > 1) {
-    num_matrix_copies = atoi(argv[1]);
+    if (atoi(argv[1]) > 0) {
+      num_matrix_copies = atoi(argv[1]);
+    }
   }
   if (argc > 2) {
     in_dir = argv[2];
