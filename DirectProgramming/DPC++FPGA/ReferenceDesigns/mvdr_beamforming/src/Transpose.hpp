@@ -70,10 +70,11 @@ struct Transposer {
     constexpr int kNumScratchMemCopies = 4;
     constexpr unsigned char kNumScratchMemCopiesBitMask = 0x03;
     constexpr int kBankwidth = k_pipe_width * sizeof(T);
-    [[intel::numbanks(1)]]  // NO-FORMAT: Attribute
+    // NO-FORMAT comments are for clang-format
+    [[intel::numbanks(1)]]                  // NO-FORMAT: Attribute
     [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
     [[intel::private_copies(1)]]            // NO-FORMAT: Attribute
-    [[intel::max_replicates(k_pipe_width)]]            // NO-FORMAT: Attribute
+    [[intel::max_replicates(k_pipe_width)]] // NO-FORMAT: Attribute
     T scratch[kNumScratchMemCopies][k_pipe_width][k_num_cols_in];
 
     // track the status of each of the buffers
@@ -94,9 +95,8 @@ struct Transposer {
       almost_full_pipe.template get<pipe_stage>() = false;
     });
 
-
-//    [[intel::ivdep(scratch, k_num_cols_in)]]
-    [[intel::ii(1)]]
+    // NO-FORMAT comments are for clang-format
+    [[intel::ii(1)]]  // NO-FORMAT: Attribute
     while (1) {
 
       // capture current value of all status variables as we begin each loop
@@ -136,8 +136,8 @@ struct Transposer {
         bool write_success;
         MatrixOutPipe::write(data_out, write_success);
 
+        // update the transmit buffer status only if the pipe write succeeded
         if (write_success) {
-          // update the transmit buffer status
           if (cur_last_tx_col) {
             ready_to_send[cur_tx_buffer] = false;
             tx_col = 0;
@@ -150,8 +150,6 @@ struct Transposer {
         }
       }
 
-
-
       // as long as the internal buffers are not almost full, read new data
       bool read_valid;
       PipeType data_in;
@@ -163,15 +161,16 @@ struct Transposer {
 
       // if we have new data, store it in the buffer and update the status
       if (read_valid) {
-        unsigned short row = (cur_rx_count * (unsigned short)k_pipe_width) / (unsigned short)k_num_cols_in;
-        unsigned short col = (cur_rx_count * (unsigned short)k_pipe_width) % (unsigned short)k_num_cols_in;
+        unsigned short row = (cur_rx_count * (unsigned short)k_pipe_width) / 
+                             (unsigned short)k_num_cols_in;
+        unsigned short col = (cur_rx_count * (unsigned short)k_pipe_width) % 
+                             (unsigned short)k_num_cols_in;
         UnrolledLoop<k_pipe_width>([&](auto i) {
           scratch[cur_rx_buffer][row][col+i] = data_in.template get<i>();
         });
 
         // update the receive buffer status
-        if (cur_rx_count == 
-          (unsigned short)((k_num_cols_in - 1))) {
+        if (cur_rx_count == (unsigned short)((k_num_cols_in - 1))) {
           ready_to_send[cur_rx_buffer] = true;
           rx_count = 0;
           rx_buffer = (cur_rx_buffer + 1) & kNumScratchMemCopiesBitMask;
@@ -180,45 +179,13 @@ struct Transposer {
         }
       }
 
-
-
-
-
-/*
-      // fill the matrix internally
-      // NO-FORMAT comments are for clang-format
-      [[intel::ii(1)]]                     // NO-FORMAT: Attribute
-      [[intel::loop_coalesce(2)]]          // NO-FORMAT: Attribute
-      [[intel::speculated_iterations(0)]]  // NO-FORMAT: Attribute
-      for (int y = 0; y < k_pipe_width; y++) {
-        for (int x = 0; x < k_num_cols_in / k_pipe_width; x++) {
-          PipeType in_data = MatrixInPipe::read();
-          UnrolledLoop<k_pipe_width>([&](auto i) {
-            scratch[y][x * k_pipe_width + i] = in_data.template get<i>();
-          });
-        }
-      }
-
-      // write output
-      // NO-FORMAT comments are for clang-format
-      [[intel::ii(1)]]                     // NO-FORMAT: Attribute
-      [[intel::speculated_iterations(0)]]  // NO-FORMAT: Attribute
-      for (int x = 0; x < k_num_cols_in; x++) {
-        PipeType out_data;
-        UnrolledLoop<k_pipe_width>(
-            [&](auto i) { out_data.template get<i>() = scratch[i][x]; });
-
-        MatrixOutPipe::write(out_data);
-      }
-*/
-
-    }
-  }
+    } // end of while(1)
+  } // end of operator()()
 };
 
 // Special case for a k_pipe_width=1
 // In this case, the is just a pass through kernel since the matrix is
-// 1xk_num_cols. Overriding this version allows us to save area.
+// 1 x k_num_cols. Overriding this version allows us to save area.
 template <typename T, size_t k_num_cols_in, typename MatrixInPipe,
           typename MatrixOutPipe>
 struct Transposer<T, k_num_cols_in, 1, MatrixInPipe, MatrixOutPipe> {
