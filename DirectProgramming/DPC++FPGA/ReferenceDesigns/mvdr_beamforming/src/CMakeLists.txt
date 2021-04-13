@@ -84,11 +84,11 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${ENABLE_USM}")
-set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
+set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
 set(SIMULATOR_LINK_FLAGS "-fintelfpga -fbracket-depth=512 -Xssimulation -Xsghdl")
-set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fbracket-depth=512 -fintelfpga ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fbracket-depth=512 -fintelfpga ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -fbracket-depth=512 ${PROFILE_FLAG} -Xsparallel=2 -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -154,7 +154,7 @@ set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAG
 # UDP Loopback test
 ###############################################################################
 set(UDP_LOOPBACK_TARGET udp_loopback_test.fpga)
-set(UDP_LOOPBACK_COMPILE_FLAGS "-fintelfpga -Wall")
+set(UDP_LOOPBACK_COMPILE_FLAGS "-Wall -fintelfpga")
 set(UDP_LOOPBACK_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${FLAT_COMPILE_FLAG} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
 add_executable(${UDP_LOOPBACK_TARGET} EXCLUDE_FROM_ALL udp_loopback_test.cpp)
 add_custom_target(udp_loopback_test DEPENDS ${UDP_LOOPBACK_TARGET})

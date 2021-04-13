@@ -7,4 +7,3 @@ using ComplexBaseType = float;
 using ComplexType = ac_complex<ComplexBaseType>;
 
 #endif  // ifndef __MVDR_COMPLEX_HPP__
-

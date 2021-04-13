@@ -13,7 +13,7 @@ using namespace sycl;
 
 template <typename Id, typename T, bool use_host_alloc>
 class ProducerConsumerBaseImpl {
-protected:
+ protected:
   // private members
   static inline T *host_data_{nullptr};
   static inline T *device_data_{nullptr};
@@ -22,14 +22,14 @@ protected:
 
   // use some fancy C++ metaprogramming to get the correct pointer type
   // based on the template variable
-  typedef typename std::conditional_t<use_host_alloc,
-                                      host_ptr<T>,
-                                      device_ptr<T>> kernel_ptr_type;
+  typedef
+      typename std::conditional_t<use_host_alloc, host_ptr<T>, device_ptr<T>>
+          kernel_ptr_type;
 
   // private constructor so users cannot make an object
-  ProducerConsumerBaseImpl() {};
+  ProducerConsumerBaseImpl(){};
 
-  static T* get_kernel_ptr() {
+  static T *get_kernel_ptr() {
     return use_host_alloc ? host_data_ : device_data_;
   }
 
@@ -40,10 +40,11 @@ protected:
     }
   }
 
-public:
+ public:
   // disable copy constructor and operator=
-  ProducerConsumerBaseImpl(const ProducerConsumerBaseImpl &)=delete;
-  ProducerConsumerBaseImpl& operator=(ProducerConsumerBaseImpl const &)=delete;
+  ProducerConsumerBaseImpl(const ProducerConsumerBaseImpl &) = delete;
+  ProducerConsumerBaseImpl &operator=(ProducerConsumerBaseImpl const &) =
+      delete;
 
   static void Init(queue &q, size_t count) {
     // make sure init hasn't already been called
@@ -127,7 +128,7 @@ public:
 // Producer implementation
 template <typename Id, typename T, bool use_host_alloc, size_t min_capacity>
 class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
-private:
+ private:
   // base implementation alias
   using BaseImpl = ProducerConsumerBaseImpl<Id, T, use_host_alloc>;
   using kernel_ptr_type = typename BaseImpl::kernel_ptr_type;
@@ -137,12 +138,12 @@ private:
   class KernelID;
 
   // private constructor so users cannot make an object
-  ProducerImpl() {};
+  ProducerImpl(){};
 
-public:
+ public:
   // disable copy constructor and operator=
-  ProducerImpl(const ProducerImpl &)=delete;
-  ProducerImpl &operator=(ProducerImpl const &)=delete;
+  ProducerImpl(const ProducerImpl &) = delete;
+  ProducerImpl &operator=(ProducerImpl const &) = delete;
 
   // the pipe to connect to in device code
   using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
@@ -176,7 +177,9 @@ public:
       h.depends_on(dma_event);
 
       // the producing kernel
-      h.single_task<KernelID>([=]() [[intel::kernel_args_restrict]] {
+      // NO-FORMAT comments are for clang-format
+      h.single_task<KernelID>([=
+      ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         kernel_ptr_type ptr(kernel_ptr);
         for (size_t i = 0; i < count; i++) {
           auto d = *(ptr + i);
@@ -194,7 +197,7 @@ public:
 // Consumer implementation
 template <typename Id, typename T, bool use_host_alloc, size_t min_capacity>
 class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
-private:
+ private:
   // base implementation alias
   using BaseImpl = ProducerConsumerBaseImpl<Id, T, use_host_alloc>;
   using kernel_ptr_type = typename BaseImpl::kernel_ptr_type;
@@ -204,12 +207,12 @@ private:
   class KernelID;
 
   // private constructor so users cannot make an object
-  ConsumerImpl() {};
+  ConsumerImpl(){};
 
-public:
+ public:
   // disable copy constructor and operator=
-  ConsumerImpl(const ConsumerImpl &)=delete;
-  ConsumerImpl &operator=(ConsumerImpl const &)=delete;
+  ConsumerImpl(const ConsumerImpl &) = delete;
+  ConsumerImpl &operator=(ConsumerImpl const &) = delete;
 
   // the pipe to connect to in device code
   using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
@@ -230,7 +233,9 @@ public:
 
     // launch the kernel to read the output into device side global memory
     auto kernel_event = q.submit([&](handler &h) {
-      h.single_task<KernelID>([=]() [[intel::kernel_args_restrict]] {
+      // NO-FORMAT comments are for clang-format
+      h.single_task<KernelID>([=
+      ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         kernel_ptr_type ptr(kernel_ptr);
         for (size_t i = 0; i < count; i++) {
           auto d = Pipe::read();
@@ -261,12 +266,11 @@ public:
 
 }  // namespace detail
 
-
 // alias the implementations to face the user
-template <typename Id, typename T, bool use_host_alloc, size_t min_capacity=0>
+template <typename Id, typename T, bool use_host_alloc, size_t min_capacity = 0>
 using Producer = detail::ProducerImpl<Id, T, use_host_alloc, min_capacity>;
 
-template <typename Id, typename T, bool use_host_alloc, size_t min_capacity=0>
+template <typename Id, typename T, bool use_host_alloc, size_t min_capacity = 0>
 using Consumer = detail::ConsumerImpl<Id, T, use_host_alloc, min_capacity>;
 
 // convenient aliases to get a host or device allocation producer/consumer
