@@ -67,8 +67,11 @@ struct Transposer {
     // We read the data in from a pipe (k_pipe_width elements at at time),
     // store it in this memory in row-major format and read it out in
     // column-major format (again, k_pipe_width elements at a time).
-    constexpr int kNumScratchMemCopies = 4;
-    constexpr unsigned char kNumScratchMemCopiesBitMask = 0x03;
+    constexpr int kNumScratchMemCopies = 4;   // must be a power of 2
+    static_assert(kNumScratchMemCopies > 0);
+    static_assert((kNumScratchMemCopies & (kNumScratchMemCopies - 1)) == 0);
+    constexpr unsigned char kNumScratchMemCopiesBitMask = 
+      kNumScratchMemCopies - 1;
     constexpr int kBankwidth = k_pipe_width * sizeof(T);
     // NO-FORMAT comments are for clang-format
     [[intel::numbanks(1)]]                   // NO-FORMAT: Attribute
@@ -90,9 +93,9 @@ struct Transposer {
 
     // create a 'pipeline' for the almost full signal
     constexpr int kAlmostFullPipeDepth = 2;
-    NTuple<bool, kAlmostFullPipeDepth> almost_full_pipe;
+    NTuple<bool, kAlmostFullPipeDepth> almost_full_pipeline;
     UnrolledLoop<kAlmostFullPipeDepth>([&](auto pipe_stage) {
-      almost_full_pipe.template get<pipe_stage>() = false;
+      almost_full_pipeline.template get<pipe_stage>() = false;
     });
 
     // NO-FORMAT comments are for clang-format
@@ -113,15 +116,15 @@ struct Transposer {
       // can wait several loop iterations.  This allows us to break
       // dependencies between loop iterations and improve FMAX.
       UnrolledLoop<kAlmostFullPipeDepth - 1>([&](auto pipe_stage) {
-        almost_full_pipe.template get<pipe_stage>() =
-            almost_full_pipe.template get<pipe_stage + 1>();
+        almost_full_pipeline.template get<pipe_stage>() =
+            almost_full_pipeline.template get<pipe_stage + 1>();
       });
-      bool cur_almost_full = almost_full_pipe.template get<0>();
+      bool cur_almost_full = almost_full_pipeline.first();
 
       // Calculate almost full at the start of the pipeline
       // if the NEXT buffer we would write to is not ready for use, then
       // assert almost full
-      almost_full_pipe.template get<kAlmostFullPipeDepth - 1>() =
+      almost_full_pipeline.last() =
           ready_to_send[(cur_rx_buffer + 1) & kNumScratchMemCopiesBitMask];
 
       // read the next data to send
@@ -144,18 +147,19 @@ struct Transposer {
             last_tx_col = false;
           } else {
             tx_col++;
+            // if the current value of tx_col is 2 less than the total, then
+            // the next value we read out (when cur_tx_col == k_num_cols_in -1)
+            // is the last value for this copy
             last_tx_col = (cur_tx_col == (unsigned short)k_num_cols_in - 2);
           }
         }
       }
 
       // as long as the internal buffers are not almost full, read new data
-      bool read_valid;
       PipeType data_in;
+      bool read_valid = false;
       if (!cur_almost_full) {
         data_in = MatrixInPipe::read(read_valid);
-      } else {
-        read_valid = false;
       }
 
       // if we have new data, store it in the buffer and update the status

@@ -65,20 +65,22 @@ event SubmitInputDemuxKernel(
       // multiple copies of each matrix to create a simple FIFO that has enough
       // slack to allow us to use 'almost full' in the logic below
       constexpr unsigned char kNumMatrixCopies = 4;  // must be power of 2
-      constexpr unsigned char kNumMatrixCopiesBitMask = 0x03;
+      static_assert(kNumMatrixCopies > 0);
+      static_assert((kNumMatrixCopies & (kNumMatrixCopies - 1)) == 0);
+      constexpr unsigned char kNumMatrixCopiesBitMask = kNumMatrixCopies - 1;
       PipeType training_matrix[kNumMatrixCopies][kReadsPerTrainingMatrix];
       PipeType xrx_data_matrix[kNumMatrixCopies][kMaxReadsPerXrxDataMatrix];
 
       // track the status of each of the buffers
       // NO-FORMAT comments are for clang-format
       [[intel::fpga_register]]  // NO-FORMAT: Attribute
-      bool ready_to_send[kNumMatrixCopies] = {false, false, false, false};
+      bool ready_to_send[kNumMatrixCopies] = {false};
 
       // create a 'pipeline' for the almost full signal
       constexpr int kAlmostFullPipeDepth = 2;
-      NTuple<bool, kAlmostFullPipeDepth> almost_full_pipe;
+      NTuple<bool, kAlmostFullPipeDepth> almost_full_pipeline;
       UnrolledLoop<kAlmostFullPipeDepth>([&](auto pipe_stage) {
-        almost_full_pipe.template get<pipe_stage>() = false;
+        almost_full_pipeline.template get<pipe_stage>() = false;
       });
 
       // state variables for receiving data
@@ -122,27 +124,25 @@ event SubmitInputDemuxKernel(
         // can wait several loop iterations.  This allows us to break
         // dependencies between loop iterations and improve FMAX.
         UnrolledLoop<kAlmostFullPipeDepth - 1>([&](auto pipe_stage) {
-          almost_full_pipe.template get<pipe_stage>() =
-              almost_full_pipe.template get<pipe_stage + 1>();
+          almost_full_pipeline.template get<pipe_stage>() =
+              almost_full_pipeline.template get<pipe_stage + 1>();
         });
-        bool cur_almost_full = almost_full_pipe.template get<0>();
+        bool cur_almost_full = almost_full_pipeline.first();
 
         // Calculate almost full at the start of the pipeline
         // if the NEXT buffer we would write to is not ready for use, then
         // assert almost full
-        almost_full_pipe.template get<kAlmostFullPipeDepth - 1>() =
+        almost_full_pipeline.last() =
             ready_to_send[(cur_rx_buffer + 1) & kNumMatrixCopiesBitMask];
 
         // Only do the pipe read if we have space available, OR if we are
         // configured to read on every cycle.  Reading on every cycle means
         // this block will discard data if downstream can't keep up (and
         // therefore be able to track how much data is discarded).
-        bool read_valid;
         PipeType data_in;
+        bool read_valid = false;
         if (k_read_every_cycle || !cur_almost_full) {
           data_in = DataInPipe::read(read_valid);
-        } else {
-          read_valid = false;
         }
 
         // examine received data for header markers (ignored if !read_valid)
@@ -215,16 +215,15 @@ event SubmitInputDemuxKernel(
 
         // try to send data unless we have sent all data from the current buffer
         if (!cur_all_training_sent || !cur_all_xrx_sent) {
-          bool write_success;
+          bool write_success = false;
 
           // send training data, if available
           if (ready_to_send[cur_tx_buffer] && !cur_all_training_sent) {
             TrainingDataOutPipe::write(
                 training_matrix[cur_tx_buffer][cur_tx_training_count],
                 write_success);
-          } else {
-            write_success = false;
           }
+          
           if (write_success) {
             all_training_sent =
                 (cur_tx_training_count == kReadsPerTrainingMatrix - 1);
