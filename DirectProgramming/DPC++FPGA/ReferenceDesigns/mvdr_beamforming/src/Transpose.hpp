@@ -63,13 +63,128 @@ struct Transposer {
   void operator()() const {
     using PipeType = NTuple<T, k_pipe_width>;
 
-    while (1) {
-      // This is a scratch pad memory that we will use to do the transpose.
-      // We read the data in from a pipe (k_pipe_width elements at at time),
-      // store it in this memory in row-major format and read it out in
-      // column-major format (again, k_pipe_width elements at a time).
-      T scratch[k_pipe_width][k_num_cols_in];
+    // This is a scratch pad memory that we will use to do the transpose.
+    // We read the data in from a pipe (k_pipe_width elements at at time),
+    // store it in this memory in row-major format and read it out in
+    // column-major format (again, k_pipe_width elements at a time).
+    constexpr int kNumScratchMemCopies = 4;
+    constexpr unsigned char kNumScratchMemCopiesBitMask = 0x03;
+    constexpr int kBankwidth = k_pipe_width * sizeof(T);
+    [[intel::numbanks(1)]]  // NO-FORMAT: Attribute
+    [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+    [[intel::private_copies(1)]]            // NO-FORMAT: Attribute
+    [[intel::max_replicates(k_pipe_width)]]            // NO-FORMAT: Attribute
+    T scratch[kNumScratchMemCopies][k_pipe_width][k_num_cols_in];
 
+    // track the status of each of the buffers
+    // NO-FORMAT comments are for clang-format
+    [[intel::fpga_register]]  // NO-FORMAT: Attribute
+    bool ready_to_send[kNumScratchMemCopies] = {false, false, false, false};
+
+    unsigned char rx_buffer = 0;
+    unsigned short rx_count = 0;
+    unsigned char tx_buffer = 0;
+    unsigned char tx_col = 0;
+    bool last_tx_col = false;
+
+    // create a 'pipeline' for the almost full signal
+    constexpr int kAlmostFullPipeDepth = 2;
+    NTuple<bool, kAlmostFullPipeDepth> almost_full_pipe;
+    UnrolledLoop<kAlmostFullPipeDepth>([&](auto pipe_stage) {
+      almost_full_pipe.template get<pipe_stage>() = false;
+    });
+
+
+//    [[intel::ivdep(scratch, k_num_cols_in)]]
+    [[intel::ii(1)]]
+    while (1) {
+
+      // capture current value of all status variables as we begin each loop
+      // iteration
+      unsigned char cur_rx_buffer = rx_buffer;
+      unsigned short cur_rx_count = rx_count;
+      unsigned char cur_tx_buffer = tx_buffer;
+      unsigned char cur_tx_col = tx_col;
+      bool cur_last_tx_col = last_tx_col;
+
+      // Create a 'pipeline' for the almost full signal.
+      // Calculate almost full at the end of the pipeline, and on each loop
+      // iteration we shift the data down the pipeline.  Since we are using
+      // an 'almost' full signal, we don't need the result right away, we
+      // can wait several loop iterations.  This allows us to break
+      // dependencies between loop iterations and improve FMAX.
+      UnrolledLoop<kAlmostFullPipeDepth - 1>([&](auto pipe_stage) {
+        almost_full_pipe.template get<pipe_stage>() =
+            almost_full_pipe.template get<pipe_stage + 1>();
+      });
+      bool cur_almost_full = almost_full_pipe.template get<0>();
+
+      // Calculate almost full at the start of the pipeline
+      // if the NEXT buffer we would write to is not ready for use, then
+      // assert almost full
+      almost_full_pipe.template get<kAlmostFullPipeDepth - 1>() =
+          ready_to_send[(cur_rx_buffer + 1) & kNumScratchMemCopiesBitMask];
+
+      // read the next data to send
+      PipeType data_out;
+      UnrolledLoop<k_pipe_width>([&](auto i) { 
+        data_out.template get<i>() = scratch[cur_tx_buffer][i][cur_tx_col];
+      });
+
+      // only attempt to send the data if it is valid
+      if (ready_to_send[cur_tx_buffer]) {
+        bool write_success;
+        MatrixOutPipe::write(data_out, write_success);
+
+        if (write_success) {
+          // update the transmit buffer status
+          if (cur_last_tx_col) {
+            ready_to_send[cur_tx_buffer] = false;
+            tx_col = 0;
+            tx_buffer = (cur_tx_buffer + 1) & kNumScratchMemCopiesBitMask;
+            last_tx_col = false;
+          } else {
+            tx_col++;
+            last_tx_col = (cur_tx_col == (unsigned short)k_num_cols_in - 2);
+          }
+        }
+      }
+
+
+
+      // as long as the internal buffers are not almost full, read new data
+      bool read_valid;
+      PipeType data_in;
+      if (!cur_almost_full) {
+        data_in = MatrixInPipe::read(read_valid);
+      } else {
+        read_valid = false;
+      }
+
+      // if we have new data, store it in the buffer and update the status
+      if (read_valid) {
+        unsigned short row = (cur_rx_count * (unsigned short)k_pipe_width) / (unsigned short)k_num_cols_in;
+        unsigned short col = (cur_rx_count * (unsigned short)k_pipe_width) % (unsigned short)k_num_cols_in;
+        UnrolledLoop<k_pipe_width>([&](auto i) {
+          scratch[cur_rx_buffer][row][col+i] = data_in.template get<i>();
+        });
+
+        // update the receive buffer status
+        if (cur_rx_count == 
+          (unsigned short)((k_num_cols_in - 1))) {
+          ready_to_send[cur_rx_buffer] = true;
+          rx_count = 0;
+          rx_buffer = (cur_rx_buffer + 1) & kNumScratchMemCopiesBitMask;
+        } else {
+          rx_count++;
+        }
+      }
+
+
+
+
+
+/*
       // fill the matrix internally
       // NO-FORMAT comments are for clang-format
       [[intel::ii(1)]]                     // NO-FORMAT: Attribute
@@ -95,6 +210,8 @@ struct Transposer {
 
         MatrixOutPipe::write(out_data);
       }
+*/
+
     }
   }
 };
