@@ -75,10 +75,6 @@ event SubmitBeamformerKernel(
 
   auto e = q.submit([&](handler& h) {
     h.single_task<BeamformerKernelName>([=] {
-      // count the number of xrx vectors that have been processed with the
-      // current weight vectors
-      // int xrx_vectors_processed = 0;
-
       while (1) {
         CalcType weight_vectors[k_num_weight_vectors][kNumCalcTypePerVector];
 

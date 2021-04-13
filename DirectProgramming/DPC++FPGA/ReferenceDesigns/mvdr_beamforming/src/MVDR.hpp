@@ -307,10 +307,9 @@ MVDREventArray SubmitMVDRKernels(
           InputDemux<k_instance_num>,  // Name to use for the Kernel
           k_num_complex_per_xrx_read,  // Number of elements per pipe read/write
           kTrainingMatrixSize,         // Complex numbers per training matrix
-          kTrainingMatrixSize,         // maximum number of complex numbers in a
+          kTrainingMatrixSize,  // maximum number of complex numbers in a
                                 // set of xrx data to be matched with each
                                 // training matrix to support
-          // TODO pass this in from the top level
           false,                // read every cycle (true) or only when
                                 // space is available (false)
           DataInPipe,           // Incoming data, including headers
