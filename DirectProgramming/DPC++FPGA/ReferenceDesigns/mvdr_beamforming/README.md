@@ -122,21 +122,22 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
      ```
-     ./mvdr_beamforming.fpga_emu --in=../data         (Linux)
-     ./mvdr_beamforming.fpga_emu.exe --in=../data     (Windows)
+     ./mvdr_beamforming.fpga_emu 1024 ../data .          (Linux)
+     ./mvdr_beamforming.fpga_emu.exe 1024 ../data .      (Windows)
      ```
 
 2. Run the sample on the FPGA device.
      ```
-     ./mvdr_beamforming.fpga --in=../data             (Linux)
+     ./mvdr_beamforming.fpga 1024 ../data .              (Linux)
      ```
 
 ### Application Parameters
 
-| Argument                  | Description
-|---                        |---
-| `--in=<path to input>`    | Specifies the directory that contains the input files (default=`../data`)
-| `--out=<path to output>`  | Specifies the directory to produce output data to (default=`.`)
+| Argument Index        | Description
+|---                    |---
+| 0                     | The number of matrices (default=`1024`)
+| 1                     | The input directory (default=`../data`)
+| 2                     | The output directory (default=`.`)
 
 ### Example of Output
 You should see the following output in the console:
@@ -204,6 +205,7 @@ PASSED
 |`StreamingQRD.hpp`              | StreamingQRD kernel, performs Q-R Decompostion on a matrix
 |`Transpose.hpp`                 | Transpose kernel, reorders data for the StreamingQRD kernel
 |`Tuple.hpp`                     | A templated tuple that defines the NTuple class which is used for pipe interfaces
+|`UDP.hpp`                       | This code is **only** relevant for using the real IO pipes (i.e. not in the devcloud). This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes).
 |`UnrolledLoop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end 
 
 ### MVDR Beamforming
@@ -214,3 +216,62 @@ The images below show the dataflow in the MVDR beamforming design. The first ima
 <img src="processing_kernels_ideal.png" alt="processing_kernels_ideal" width="800"/>
 <img src="processing_kernels_fake.png" alt="processing_kernels_fake" width="800"/>
 
+### Using Real IO-pipes
+This section describes how to build and run this reference design on a BSP with real IO pipes. The real IO pipes version does **not** work on Windows and requires a specific system setup and BSP.
+
+#### Getting access to the BSP
+TODO
+
+#### Building the loopback test and Reference Design with real IO pipes
+Use the following commands to generate a Makefile for building both the loopback test and reference design:
+```
+mkdir build
+cd build
+
+cmake .. -DREAL_IO_PIPES=1 -DFPGA_BOARD=pac_s10_usm_udp
+```
+
+To build the loopback test, use the following command:
+```
+make udp_loopback_test
+```
+
+To build the MVDR reference design, use the following command:
+```
+make fpga
+```
+
+#### Running the loopback test and Reference Design with real IO pipes
+The loopback test can be run using the following command:
+```
+./udp_loopback_test.fpga 64:4C:36:00:2F:20 192.168.0.11 34543 255.255.255.0 94:40:C9:71:8D:10 192.168.0.10 34543 10000000
+```
+
+| Argument Index        | Description
+|---                    |---
+| 0                     | FPGA MAC Address
+| 1                     | FPGA IP Address
+| 2                     | FPGA UDP Port
+| 3                     | FPGA Netmask
+| 4                     | Host MAC Address
+| 5                     | Host IP Address
+| 6                     | Host UDP Port
+| 7                     | Number of packets (optional, default=`100000000`)
+
+The MVDR reference design can be run using the following command
+```
+./mvdr_beamforming.fpga 64:4C:36:00:2F:20 192.168.0.11 34543 255.255.255.0 94:40:C9:71:8D:10 192.168.0.10 34543 1024 ../data .
+```
+
+| Argument Index        | Description
+|---                    |---
+| 0                     | FPGA MAC Address
+| 1                     | FPGA IP Address
+| 2                     | FPGA UDP Port
+| 3                     | FPGA Netmask
+| 4                     | Host MAC Address
+| 5                     | Host IP Address
+| 6                     | Host UDP Port
+| 7                     | The number of matrices (optional, default=`1024`)
+| 8                     | The input directory (optional, default=`../data`)
+| 9                     | The output directory (optional, default=`.`)
