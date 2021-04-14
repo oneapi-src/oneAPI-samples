@@ -8,6 +8,13 @@
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "include/pipe_array.hpp",
+      "include/pipe_array_internal.hpp"
+    ]
+  },
   "ciTests": {
     "linux": [
       {
