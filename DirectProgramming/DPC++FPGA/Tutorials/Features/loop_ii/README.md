@@ -30,9 +30,9 @@ The reader is assumed to be familiar with the concepts of [loop-carried dependen
 
 ### The f<sub>MAX</sub>-II tradeoff
 
-Why would we ever want a loop with II > 1? Since II > 1 decreases the occupancy of the loop body, isn't loop II = 1 always the optimal performance point to strive for? The answer is no; in the presence of loop-carried dependencies this is not necessarily true.
+Generally, striving for the lowest possible II of 1 is preferred. However, in some cases, it may be suboptimal for the scheduler to do so.
 
-The compiler must ensure that loop-carried dependencies are satisfied. To achieve an II of 1, the compiler must schedule all of the operations necessary to compute loop-carried dependencies within a single clock cycle. As the number of operations in a clock cycle increases, the circuit's clock frequency (f<sub>MAX</sub>) must decrease. The lower clock frequency slows down the entire circuit, not just the single loop. This is the f<sub>MAX</sub>-II tradeoff. Sometimes, the benefits of achieving an II of 1 for a particular loop may not outweigh the negative impact of reducing f<sub>MAX</sub> for the entire system.
+For example, consider a loop with loop-carried dependencies. The compiler must ensure that these dependencies are satisfied. To achieve an II of 1, the compiler must schedule all of the operations necessary to compute loop-carried dependencies within a single clock cycle. As the number of operations in a clock cycle increases, the circuit's clock frequency (f<sub>MAX</sub>) must decrease. The lower clock frequency slows down the entire circuit, not just the single loop. This is the f<sub>MAX</sub>-II tradeoff. Sometimes, the benefits of achieving an II of 1 for a particular loop may not outweigh the negative impact of reducing f<sub>MAX</sub> for the entire system.
 
 In the presence of loop-carried dependencies, it may be impossible for the compiler to schedule a given loop with II = 1 while respecting a target f<sub>MAX</sub>.
 
