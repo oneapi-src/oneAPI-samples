@@ -1,6 +1,6 @@
 # Loop `ii` attribute
 
-This FPGA tutorial demonstrates how a user can use the `intel::ii` attribute to change the initiation interval (II) of a loop, and in what scenarios this feature is helpful to improve performance.
+This FPGA tutorial demonstrates how a user can use the `intel::initiation_interval` attribute to change the initiation interval (II) of a loop, and in what scenarios this feature is helpful to improve performance.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -11,17 +11,17 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
 | Software                          | Intel® oneAPI DPC++ Compiler (Beta) <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | The f<sub>MAX</sub>-II tradeoff <br>Default behaviour of the compiler when scheduling loops <br> How to use `intel::ii` to attempt to set the II for a loop <br> Scenarios in which `intel::ii` can be helpful in optimizing kernel performance
+| What you will learn               | The f<sub>MAX</sub>-II tradeoff <br>Default behaviour of the compiler when scheduling loops <br> How to use `intel::initiation_interval` to attempt to set the II for a loop <br> Scenarios in which `intel::initiation_interval` can be helpful in optimizing kernel performance
 | Time to complete                  | 20 minutes
 
 ## Purpose
 
-This FPGA tutorial demonstrates how to use the `intel::ii` attribute to set the II for a loop. The attribute serves two purposes:
+This FPGA tutorial demonstrates how to use the `intel::initiation_interval` attribute to set the II for a loop. The attribute serves two purposes:
 
 * Relax the II of a loop with a loop-carried dependency in order to achieve a higher kernel f<sub>MAX</sub>
 * Enforce the II of a loop such that the compiler will error out if it cannot achieve the specified II
 
-The `intel::ii` attribute is useful when optimizing kernels with loop-carried dependencies in loops with a short trip count, to prevent the compiler from scheduling the loop with a f<sub>MAX</sub>-II combination that results in low system-wide f<sub>MAX</sub>, decreasing throughput.
+The `intel::initiation_interval` attribute is useful when optimizing kernels with loop-carried dependencies in loops with a short trip count, to prevent the compiler from scheduling the loop with a f<sub>MAX</sub>-II combination that results in low system-wide f<sub>MAX</sub>, decreasing throughput.
 
 The reader is assumed to be familiar with the concepts of [loop-carried dependencies](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/optimize-your-design/throughput-1/single-work-item-kernels/loops/single-work-item-kernel-design-guidelines.html#single-work-item-kernel-design-guidelines_SECTION_3A389B8F1FE3452C84F44F07FA2C813E) and [initiation interval (II)](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/fpga-optimization-flags-attributes-pragmas-and-extensions/loop-directives/ii-attribute.html). 
 
@@ -46,31 +46,31 @@ In this case, the compiler can either:
 
    <img src="high_fmax_high_ii.png" alt="High fMAX with II 3" title="High fMAX with II 3" width="700" />
 
-The `intel::ii` attribute gives the user explicit control over the f<sub>MAX</sub>-II tradeoff.
+The `intel::initiation_interval` attribute gives the user explicit control over the f<sub>MAX</sub>-II tradeoff.
 
 ### Compiler Default Heuristics and Overrides
 
 By default, the compiler attempts to schedule each loop with the optimal minimum product of the II and cycle time (1/f<sub>MAX</sub>), while ensuring that all loop carried dependencies are fulfilled. The resulting loop block might not necessarily achieve the targeted f<sub>MAX</sub> as the f<sub>MAX</sub>-II heuristic depends on low II or high f<sub>MAX</sub>. A combination of f<sub>MAX</sub> and II may have the best heuristic but might not necessarily achieve the target f<sub>MAX</sub>. This might cause performance bottlenecks as f<sub>MAX</sub> is a global constraint and II is a local constraint.
 
-The `intel::ii` attribute can be used to specify an II for a particular loop. It informs the compiler to ignore the default heuristic and to try and schedule the loop that the attribute is applied to with the specific II the user provides. 
+The `intel::initiation_interval` attribute can be used to specify an II for a particular loop. It informs the compiler to ignore the default heuristic and to try and schedule the loop that the attribute is applied to with the specific II the user provides. 
 
 The targeted f<sub>MAX</sub> can be specified using the [-Xsclock](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/fpga-optimization-flags-attributes-pragmas-and-extensions/optimization-flags/specify-schedule-fmax-target-for-kernels-xsclock-clock-target.html) compiler argument. The argument determines the pipelining effort of the compiler, which uses an internal model of the FPGA fabric to estimate f<sub>MAX</sub>. The true f<sub>MAX</sub> is known only after compiling to hardware. Without the argument, the default target f<sub>MAX</sub> is 240MHz for the Intel® PAC with Intel Arria® 10 GX FPGA and 480MHz for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), but the compiler will not strictly enforce reaching that default target when scheduling loops.
 
->**Note:** The scheduler prioritizes II over f<sub>MAX</sub> if **both** *-Xsclock* and `intel::ii` are used. Your kernel may be able to achieve a lower II for the loop with the `intel::ii` attribute while targeting a specific f<sub>MAX</sub>, but the loop will not be scheduled with the lower II.
+>**Note:** The scheduler prioritizes II over f<sub>MAX</sub> if **both** *-Xsclock* and `intel::initiation_interval` are used. Your kernel may be able to achieve a lower II for the loop with the `intel::initiation_interval` attribute while targeting a specific f<sub>MAX</sub>, but the loop will not be scheduled with the lower II.
 
 ### Syntax
 
 To let the compiler attempt to set the II for a loop to a positive constant expression of integer type *n*, declare the attribute above the loop. For example:
 
 ```cpp
-[[intel::ii(n)]] // n is required
+[[intel::initiation_interval(n)]] // n is required
 for (int i = 0; i < N; i++) {
   s *= a;
   s += b;
 }
 ```
 
-### Use cases of `intel::ii`
+### Use cases of `intel::initiation_interval`
 
 1. Allow users to assert an II for a loop. 
  
@@ -82,7 +82,7 @@ for (int i = 0; i < N; i++) {
 
 ### Code Sample: Overriding the compiler's f<sub>MAX</sub>-II heuristic
 
-The code sample gives a trivial kernel in which the compiler's decision is suboptimal and the `intel::ii` attribute can be used to improve performance.
+The code sample gives a trivial kernel in which the compiler's decision is suboptimal and the `intel::initiation_interval` attribute can be used to improve performance.
 
 This tutorial contains two distinct pipelineable loops:
 
@@ -91,9 +91,9 @@ This tutorial contains two distinct pipelineable loops:
 
 >**Note:** The operations performed in the short and long-running loops are for illustrative purposes only. 
 
-Since the tutorial shows performance impacts in terms of f<sub>MAX</sub>, and all kernels are implemented by the compiler in a common clock domain, the results cannot be shown in two kernels that are compiled once. To see the impact of the `intel::ii` optimization in this tutorial, the design needs to be compiled twice.
+Since the tutorial shows performance impacts in terms of f<sub>MAX</sub>, and all kernels are implemented by the compiler in a common clock domain, the results cannot be shown in two kernels that are compiled once. To see the impact of the `intel::initiation_interval` optimization in this tutorial, the design needs to be compiled twice.
 
-Part 1 compiles the kernel code without setting the `ENABLE_II` macro, whereas Part 2 compiles the kernel while setting this macro. The macro chooses between two code segments that are functionally equivalent, but the `ENABLE_II` version of the code demonstrates the two use cases of `intel::ii`. 
+Part 1 compiles the kernel code without setting the `ENABLE_II` macro, whereas Part 2 compiles the kernel while setting this macro. The macro chooses between two code segments that are functionally equivalent, but the `ENABLE_II` version of the code demonstrates the two use cases of `intel::initiation_interval`. 
 
 #### Part 1: Without `ENABLE_II`
 
@@ -103,20 +103,20 @@ Depending on the feedback path in the long-running loop, the rest of the kernel 
 
 #### Part 2: With `ENABLE_II`
 
-In this part, `intel::ii` is used for both the short and long running loops to show the two scenarios where using the attribute is appropriate.
+In this part, `intel::initiation_interval` is used for both the short and long running loops to show the two scenarios where using the attribute is appropriate.
 
-The first `intel::ii` declaration sets an II value of 3 for the Intel® PAC with Intel Arria® 10 GX FPGA, and an II value of 5 for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA). Since the initialization loop has a low trip count compared to the long-running loop, a higher II for the initialization loop is a reasonable tradeoff to allow for a higher overall f<sub>MAX</sub> for the entire kernel. 
+The first `intel::initiation_interval` declaration sets an II value of 3 for the Intel® PAC with Intel Arria® 10 GX FPGA, and an II value of 5 for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA). Since the initialization loop has a low trip count compared to the long-running loop, a higher II for the initialization loop is a reasonable tradeoff to allow for a higher overall f<sub>MAX</sub> for the entire kernel. 
 
 >**Note:** For Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), the estimated f<sub>MAX</sub> of the long-running loop is not able to reach the default targeted f<sub>MAX</sub> of 480MHz while maintaining an II of 1. This is due to the nature of the feedback path that exists in the long running loop. Setting the II of the initialization loop to 5 ensures that the initialization loop is not the bottleneck when finding the maximum operating frequency.
 
-The second `intel::ii` declaration sets an II of 1 for the long-running loop. Since we might not want to compromise the II of 1 achieved for this loop while performing optimizations on other parts of the kernel; by declaring that the loop should have an II of 1, the compiler will produce an error if it cannot schedule this loop with that II, implying that the other optimization will have a negative performance impact on this loop. This makes it easier to find the cause of any throughput drops in larger designs.
+The second `intel::initiation_interval` declaration sets an II of 1 for the long-running loop. Since we might not want to compromise the II of 1 achieved for this loop while performing optimizations on other parts of the kernel; by declaring that the loop should have an II of 1, the compiler will produce an error if it cannot schedule this loop with that II, implying that the other optimization will have a negative performance impact on this loop. This makes it easier to find the cause of any throughput drops in larger designs.
 
 ## Key Concepts
 
 * The f<sub>MAX</sub>-II tradeoff
 * Default behaviour of the compiler when scheduling loops
-* How to use `intel::ii`  to set the II for a loop
-* Scenarios in which `intel::ii` can be helpful in optimizing kernel performance
+* How to use `intel::initiation_interval`  to set the II for a loop
+* Scenarios in which `intel::initiation_interval` can be helpful in optimizing kernel performance
 
 ## License
 
@@ -219,15 +219,15 @@ Locate the pair of `report.html` files in either:
 * **Report-only compile**:  `loop_ii_report.prj` and `loop_ii_enable_ii_report.prj`
 * **FPGA hardware compile**: `loop_ii.prj` and `loop_ii_enable_ii.prj`
 
-Open the reports in any of Chrome*, Firefox*, Edge*, or Internet Explorer*. Looking at the reports for the design without the `intel::ii` attribute, navigate to the *Loop Analysis* report (*Throughput Analysis* > *Loop Analysis*). Click on the *SimpleMath* kernel in the *Loop List* panel and using the *Bottlenecks* viewer panel in the bottom left, you will see that a throughput bottleneck exists in the *SimpleMath* kernel. 
+Open the reports in any of Chrome*, Firefox*, Edge*, or Internet Explorer*. Looking at the reports for the design without the `intel::initiation_interval` attribute, navigate to the *Loop Analysis* report (*Throughput Analysis* > *Loop Analysis*). Click on the *SimpleMath* kernel in the *Loop List* panel and using the *Bottlenecks* viewer panel in the bottom left, you will see that a throughput bottleneck exists in the *SimpleMath* kernel. 
 
 Select the bottleneck. The report shows that the estimated f<sub>MAX</sub> is significantly lower than the target f<sub>MAX</sub> and shows the feedback path responsible, which is the feedback path in the initialization loop.
 
 The *Loop Analysis* report shows that the long-running loop achieves the target f<sub>MAX</sub> with an II of 1.
 
-Compare the results to the report for the version of the design using the `intel::ii` attribute. Here both loops achieve the target f<sub>MAX</sub>.
+Compare the results to the report for the version of the design using the `intel::initiation_interval` attribute. Here both loops achieve the target f<sub>MAX</sub>.
 
->**Note:** Only the report generated after the FPGA hardware compile will reflect the true performance benefit of using the `ii` extension. The difference is **not** apparent in the reports generated by `make report` because a design's f<sub>MAX</sub> cannot be predicted. The final achieved f<sub>MAX</sub> can be found in `loop_ii.prj/reports/report.html` and `loop_ii_enable_ii.prj/reports/report.html` (after `make fpga` completes), in *Clock Frequency Summary* on the main page of the report.
+>**Note:** Only the report generated after the FPGA hardware compile will reflect the true performance benefit of using the `initiation_interval` extension. The difference is **not** apparent in the reports generated by `make report` because a design's f<sub>MAX</sub> cannot be predicted. The final achieved f<sub>MAX</sub> can be found in `loop_ii.prj/reports/report.html` and `loop_ii_enable_ii.prj/reports/report.html` (after `make fpga` completes), in *Clock Frequency Summary* on the main page of the report.
 
 ## Running the Sample
 
@@ -241,24 +241,24 @@ Compare the results to the report for the version of the design using the `intel
 2. Run the sample on the FPGA device (Linux only)
 
    ```bash
-   ./loop_ii.fpga            # Sample without intel::ii attribute
-   ./loop_ii_enable_ii.fpga  # Sample with intel::ii attribute
+   ./loop_ii.fpga            # Sample without intel::initiation_interval attribute
+   ./loop_ii_enable_ii.fpga  # Sample with intel::initiation_interval attribute
    ```
 
 ### Example of Output
-Output of sample without the `intel::ii` attribute:
+Output of sample without the `intel::initiation_interval` attribute:
 ```txt
 Kernel Throughput: 0.0635456MB/s
 Exec Time: 60.0309s , InputMB: 3.8147MB
 PASSED
 ```
-Output of sample with the `intel::ii` attribute:
+Output of sample with the `intel::initiation_interval` attribute:
 ```txt
 Kernel_ENABLE_II Throughput: 0.117578MB/s
 Exec Time: 32.4439s , InputMB: 3.8147MB
 ```
 ### Discussion of Results
 
-Total throughput improved with the use of the `intel::ii` attribute because the increase in kernel f<sub>MAX</sub> is more significant than the II relaxation of the low trip-count loop.
+Total throughput improved with the use of the `intel::initiation_interval` attribute because the increase in kernel f<sub>MAX</sub> is more significant than the II relaxation of the low trip-count loop.
 
 This performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
