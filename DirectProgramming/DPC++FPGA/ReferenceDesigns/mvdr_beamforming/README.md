@@ -143,35 +143,12 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 You should see the following output in the console:
 
 ```
+Matrices:         1024
+Input Directory:  '../data'
+Output Directory: '.'
+
 Reading training data from '../data/A_real.txt and ../data/A_imag.txt
 Reading input data from ../data/X_real.txt and ../data/X_imag.txt
-Calculated sin(theta) values
-Launched MVDR kernels
-
-*** Basic single matrix and steering vectors test ***
-Launching consumer kernel
-Launching producer kernels
-Producer kernels finished
-Consumer kernels finished
-Writing output to ./out_real.txt and ./out_imag.txt
-Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
-Output data check succeeded
-
-*** Re-send single matrix test ***
-Re-sending Xrx and training data
-Producer kernels finished
-Consumer kernels finished
-Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
-Output data check succeeded
-
-*** Modify weight vectors test (expect data mismatch) ***
-Modifying and sending sin(theta) values
-Re-sending Xrx and training data two times
-Output data mismatched as expected
-Restoring original sin(theta)[0] value
-Re-sending Xrx and training data two times
-Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
-Output data check succeeded
 
 *** Launching throughput test of 1024 matrices ***
 Sensor inputs                 : 16
@@ -179,6 +156,7 @@ Training matrix rows          : 48
 Data rows per training matrix : 48
 Steering vectors              : 25
 Throughput: 34.6133 matrices/second
+Throughput: 82.5219 matrices/second
 Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
 Output data check succeeded
 PASSED
@@ -205,6 +183,7 @@ PASSED
 |`StreamingQRD.hpp`              | StreamingQRD kernel, performs Q-R Decompostion on a matrix
 |`Transpose.hpp`                 | Transpose kernel, reorders data for the StreamingQRD kernel
 |`Tuple.hpp`                     | A templated tuple that defines the NTuple class which is used for pipe interfaces
+|`mvdr_beamforming.cpp`          | Contains the `main()` function for the loopback test. This code is only relevant for use with real IO pipes.
 |`UDP.hpp`                       | This code is **only** relevant for using the real IO pipes (i.e. not in the devcloud). This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes).
 |`UnrolledLoop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end 
 
@@ -251,14 +230,14 @@ To run the loopback test, use the following command:
 
 | Argument Index        | Description
 |---                    |---
-| 0                     | FPGA MAC Address
-| 1                     | FPGA IP Address
-| 2                     | FPGA UDP Port
-| 3                     | FPGA Netmask
-| 4                     | Host MAC Address
-| 5                     | Host IP Address
-| 6                     | Host UDP Port
-| 7                     | Number of packets (optional, default=`100000000`)
+| 1                     | FPGA MAC Address
+| 2                     | FPGA IP Address
+| 3                     | FPGA UDP Port
+| 4                     | FPGA Netmask
+| 5                     | Host MAC Address
+| 6                     | Host IP Address
+| 7                     | Host UDP Port
+| 8                     | Number of packets (optional, default=`100000000`)
 
 To run the MVDR reference design with real IO pipes, use the following command:
 ```
@@ -267,13 +246,13 @@ To run the MVDR reference design with real IO pipes, use the following command:
 
 | Argument Index        | Description
 |---                    |---
-| 0                     | FPGA MAC Address
-| 1                     | FPGA IP Address
-| 2                     | FPGA UDP Port
-| 3                     | FPGA Netmask
-| 4                     | Host MAC Address
-| 5                     | Host IP Address
-| 6                     | Host UDP Port
-| 7                     | The number of matrices (optional, default=`1024`)
-| 8                     | The input directory (optional, default=`../data`)
-| 9                     | The output directory (optional, default=`.`)
+| 1                     | FPGA MAC Address
+| 2                     | FPGA IP Address
+| 3                     | FPGA UDP Port
+| 4                     | FPGA Netmask
+| 5                     | Host MAC Address
+| 6                     | Host IP Address
+| 7                     | Host UDP Port
+| 8                     | The number of matrices (optional, default=`1024`)
+| 9                     | The input directory (optional, default=`../data`)
+| 10                    | The output directory (optional, default=`.`)
