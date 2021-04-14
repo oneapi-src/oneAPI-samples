@@ -4,8 +4,8 @@ try:
 except:
     import ilit as lpot
 
-if lpot.__version__ > '1.1':
-    print("This script doesn't support LPOT 1.2 or newer, please install LPOT 1.1")
+if lpot.__version__ == '1.2':
+    print("This script doesn't support LPOT 1.2, please install LPOT 1.1, 1.2.1 or newer")
     sys.exit(1)
 
 import alexnet
