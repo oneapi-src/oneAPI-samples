@@ -231,6 +231,8 @@ cd build
 cmake .. -DREAL_IO_PIPES=1 -DFPGA_BOARD=pac_s10_usm_udp
 ```
 
+The `REAL_IO_PIPES` cmake flag defines a variable that is used *exclusively* in `mvdr_beamforming.cpp` to create a kernel system using real IO pipes, as opposed to the fake IO pipes described earlier in this document.
+
 To build the loopback test, use the following command:
 ```
 make udp_loopback_test
@@ -241,8 +243,8 @@ To build the MVDR reference design, use the following command:
 make fpga
 ```
 
-#### Running the loopback test and Reference Design with real IO pipes
-The loopback test can be run using the following command:
+#### Running the loopback test and reference design with real IO pipes
+To run the loopback test, use the following command:
 ```
 ./udp_loopback_test.fpga 64:4C:36:00:2F:20 192.168.0.11 34543 255.255.255.0 94:40:C9:71:8D:10 192.168.0.10 34543 10000000
 ```
@@ -258,7 +260,7 @@ The loopback test can be run using the following command:
 | 6                     | Host UDP Port
 | 7                     | Number of packets (optional, default=`100000000`)
 
-The MVDR reference design can be run using the following command
+To run the MVDR reference design with real IO pipes, use the following command:
 ```
 ./mvdr_beamforming.fpga 64:4C:36:00:2F:20 192.168.0.11 34543 255.255.255.0 94:40:C9:71:8D:10 192.168.0.10 34543 1024 ../data .
 ```
