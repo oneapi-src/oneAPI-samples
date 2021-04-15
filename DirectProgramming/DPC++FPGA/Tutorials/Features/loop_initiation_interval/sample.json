@@ -1,8 +1,8 @@
 {
   "guid": "CA62DCB6-3815-413B-9B3D-2F31912B45E1",
-  "name": "Loop II",
+  "name": "Loop Initiation Interval",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
-  "description": "An Intel® FPGA tutorial demonstrating the usage of the ii attribute",
+  "description": "An Intel® FPGA tutorial demonstrating the usage of the initiation_interval attribute",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],

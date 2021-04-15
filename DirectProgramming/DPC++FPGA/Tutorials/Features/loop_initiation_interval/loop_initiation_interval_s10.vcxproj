@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\loop_ii.cpp" />
+    <ClCompile Include="src\loop_initiation_interval.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -20,7 +20,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{A9AB3D6C-7F09-4E92-9A44-850371678D85}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>loop_ii</RootNamespace>
+    <RootNamespace>loop_initiation_interval</RootNamespace>
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -105,7 +105,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
       <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)loop_ii.obj</ObjectFileName>
+      <ObjectFileName>$(IntDir)loop_initiation_interval.obj</ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>S10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -145,7 +145,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
       <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)loop_ii.obj</ObjectFileName>
+      <ObjectFileName>$(IntDir)loop_initiation_interval.obj</ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>S10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>

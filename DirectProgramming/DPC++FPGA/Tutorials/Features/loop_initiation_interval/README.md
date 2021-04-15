@@ -1,4 +1,4 @@
-# Loop `ii` attribute
+# Loop `initiation_interval` attribute
 
 This FPGA tutorial demonstrates how a user can use the `intel::initiation_interval` attribute to change the initiation interval (II) of a loop, and in what scenarios this feature is helpful to improve performance.
 

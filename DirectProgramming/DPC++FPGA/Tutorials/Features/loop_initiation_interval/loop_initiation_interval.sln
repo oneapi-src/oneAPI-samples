@@ -2,11 +2,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loop_ii_a10", "loop_ii_a10.vcxproj", "{46F6F585-7F2C-409D-B96A-6D64F7430A38}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loop_initiation_interval_a10", "loop_initiation_interval_a10.vcxproj", "{46F6F585-7F2C-409D-B96A-6D64F7430A38}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loop_ii_agilex", "loop_ii_agilex.vcxproj", "{9A1AE1BB-ED32-426C-83C8-94C6D35EF91B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loop_initiation_interval_agilex", "loop_initiation_interval_agilex.vcxproj", "{9A1AE1BB-ED32-426C-83C8-94C6D35EF91B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loop_ii_s10", "loop_ii_s10.vcxproj", "{A9AB3D6C-7F09-4E92-9A44-850371678D85}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loop_initiation_interval_s10", "loop_initiation_interval_s10.vcxproj", "{A9AB3D6C-7F09-4E92-9A44-850371678D85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
