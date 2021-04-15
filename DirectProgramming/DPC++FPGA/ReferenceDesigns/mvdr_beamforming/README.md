@@ -201,7 +201,7 @@ The images below show the dataflow in the MVDR beamforming design. The first ima
 This section describes how to build and run this reference design on a BSP with real IO pipes. The real IO pipes version does **not** work on Windows and requires a specific system setup and BSP.
 
 #### Getting access to the BSP
-TODO
+This design requires a specific board support package (BSP) with a distinct hardware configuration.  For access to this BSP or general customer support, submit a case through Intel&reg; Premier Support (IPS) or contact your Intel or Distribution Sales Representative.
 
 #### Building the loopback test and Reference Design with real IO pipes
 Use the following commands to generate a Makefile for building both the loopback test and reference design:
