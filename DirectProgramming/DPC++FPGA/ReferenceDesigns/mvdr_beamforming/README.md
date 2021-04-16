@@ -167,27 +167,27 @@ PASSED
 ### Source Code Breakdown
 | File                           | Description 
 |:---                            |:---
-|`mvdr_beamforming.cpp`          | Contains the `main()` function and the top-level interfaces to the MVDR functions.
+|`mvdr_beamforming.cpp`          | Contains the `main()` function and the top-level interfaces to the MVDR functions
 |`BackwardSubstitution.hpp`      | Backward Substitution kernel
 |`Beamformer.hpp`                | Beamformer kernel, multiplies input vectors by each weight vector to generate final output
 |`CalcWeights.hpp`               | CalcWeights kernel, multiplies BackwardSubstitution output by steering vectors
 |`Constants.hpp`                 | Defines constants used throught the design, some can be overridden from the command line during compiliation
 |`FakeIOPipes.hpp`               | Implements 'fake' IO pipes, which interface to the host
 |`ForwardSubstitution.hpp`       | Forward Substitution kernel
-|`InputDemux.hpp`                | InputDemux kernel, separates training and processing data.
+|`InputDemux.hpp`                | InputDemux kernel, separates training and processing data
 |`mvdr_complex.hpp`              | Definition of ComplexType, used throughout this design
 |`MVDR.hpp`                      | Function to launch all MVDR kernels and define the pipes that connect them together
 |`ParallelCopyArray.hpp`         | Defines the ParallelCopyArray class, an array that supports unrolled copy / assign operations
-|`pipe_array.hpp`                | Header file containing the definition of an array of pipes. 
-|`pipe_array_internal.hpp`       | Helper for pipe_array.hpp.
-|`PipeDuplicator.hpp`            | Defines the PipeDuplicator class, creates multiple copies of a pipe for fan-out.
+|`pipe_array.hpp`                | Header file containing the definition of an array of pipes
+|`pipe_array_internal.hpp`       | Helper for pipe_array.hpp
+|`PipeDuplicator.hpp`            | Defines the PipeDuplicator class, creates multiple copies of a pipe for fan-out
 |`SteeringVectorGenerator.hpp`   | SteeringVectorGenerator kernel, generates steering vectors based on data from the host
 |`StreamingQRD.hpp`              | StreamingQRD kernel, performs Q-R Decompostion on a matrix
 |`Transpose.hpp`                 | Transpose kernel, reorders data for the StreamingQRD kernel
 |`Tuple.hpp`                     | A templated tuple that defines the NTuple class which is used for pipe interfaces
-|`udp_loopback_test.cpp`         | Contains the `main()` function for the loopback test. This code is only relevant for use with real IO pipes.
-|`UDP.hpp`                       | This code is **only** relevant for using the real IO pipes (i.e. not in the devcloud). This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes).
-|`UnrolledLoop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end 
+|`udp_loopback_test.cpp`         | Contains the `main()` function for the loopback test. This code is only relevant for use with real IO pipes
+|`UDP.hpp`                       | This code is **only** relevant for using the real IO pipes (i.e. not in the devcloud). This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes)
+|`UnrolledLoop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end
 
 ### MVDR Beamforming
 This reference design is built upon the **IO Streaming** code sample.
