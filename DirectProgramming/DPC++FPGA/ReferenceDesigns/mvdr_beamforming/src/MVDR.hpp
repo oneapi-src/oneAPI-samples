@@ -194,8 +194,10 @@ MVDREventArray SubmitMVDRKernels(
                      TrainingDataPipe, TrainingDataPipeOut>;
 
   // Xrx processing data pipe and duplicator (after demux from input data)
+  // Must provide sufficient depth to not produce backpressure while training
+  // data is processed (4 full matrices is adequate)                     
   constexpr int kXrxDataPipeMinDepth =
-      kTrainingMatrixSize / k_num_complex_per_xrx_read;
+      (kTrainingMatrixSize / k_num_complex_per_xrx_read) * 4;
   using XrxDataPipe = sycl::INTEL::pipe<XrxDataPipeID<k_instance_num>,
                                         XrxPipeType, kXrxDataPipeMinDepth>;
 
