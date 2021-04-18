@@ -1,21 +1,21 @@
-# Description
+## Description
 
 Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change.
 
 Fixes # (issue) 
 
-# External Dependencies
+## External Dependencies
 
 List any external dependencies created as a result of this change.
 
-# Type of change
+## Type of change
 
 Please delete options that are not relevant. Add a 'X' to the one that is applicable. 
 
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 
-# How Has This Been Tested?
+## How Has This Been Tested?
 
 Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration
 
@@ -25,8 +25,7 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 - [ ] Eclipse IDE
 - [ ] VSCode
 
-# Checklist for New samples:
-Links and Details can be found in the samples WG Teams Files. 
+## Checklist for New samples:
 
 - [ ] Review sample design with domain reviewers https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts 
 - [ ] Implement coding guidelines and ensure code quality.
