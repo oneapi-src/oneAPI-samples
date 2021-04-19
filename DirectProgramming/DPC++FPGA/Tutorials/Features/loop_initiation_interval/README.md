@@ -122,7 +122,7 @@ The second `intel::initiation_interval` declaration sets an II of 1 for the long
 
 This code sample is licensed under MIT license.
 
-## Building the `loop_ii` Tutorial
+## Building the `loop_initiation_interval` Tutorial
 
 ### Include Files
 
