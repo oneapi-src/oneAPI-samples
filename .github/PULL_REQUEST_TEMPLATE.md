@@ -35,7 +35,7 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 - [ ] Ensure/create CI test configurations for sample (ciTests field) https://github.com/oneapi-src/oneAPI-samples/wiki/sample-json-ci-test-object
 - [ ] Enforce format via clang-format config file
 - [ ] Review DPC++ code with Paul Peterseon. (GitHub User: pmpeter1)
-- [ ] Review readme with Tom Lenth or Joe Oster. (GitHub User: JoeOster)
+- [ ] Review readme with Tom Lenth or Joe Oster. (GitHub User: tomlenth or JoeOster)
 - [ ] Tested using Dev Cloud when applicable
 - [ ] Implement fixes for ONSAM Jiras
 - [ ] If you have new dependencies/binaries, inform Samples Project Manager Swapna R Dontharaju (@srdontha) or @JoeOster
