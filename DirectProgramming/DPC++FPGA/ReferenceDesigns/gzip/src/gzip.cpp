@@ -308,7 +308,7 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
         }
         if (kinfo[eng][i].poutput_buffer == NULL) {
           std::cout << "Cannot allocate output buffer.\n";
-          free(kinfo);
+          free(kinfo[eng]);
           return 1;
         }
         // zero pages to fully allocate them
