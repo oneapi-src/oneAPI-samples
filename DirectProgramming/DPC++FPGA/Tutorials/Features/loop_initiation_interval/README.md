@@ -1,6 +1,6 @@
 # Loop `initiation_interval` attribute
 
-This FPGA tutorial demonstrates how a user can use the `intel::initiation_interval` attribute to change the initiation interval (II) of a loop, and in what scenarios this feature is helpful to improve performance.
+This FPGA tutorial demonstrates how a user can use the `intel::initiation_interval` attribute to change the initiation interval (II) of a loop in scenarios that this feature improves performance.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
