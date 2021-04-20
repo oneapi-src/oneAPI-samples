@@ -1,5 +1,5 @@
 # Contraction and Reassociation on Floating Point Numbers
-This FPGA tutorial explains how to use the fp reassociate and fp contract pragmas for floating point numbers.
+This FPGA tutorial explains how to use the fp reassociate and fp contract pragmas for floating point numbers. These pragmas allow the compiler to skip the rounding steps or change the order of certain floating point operations so that they map more efficiently to hardware. The impact is that the results may be altered slightly due to rounding that can occur after each floating point operation.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -10,7 +10,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | The basic usage of the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas <br> How the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas affect resource use <br> How to apply the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas in your program
+| What you will learn               | The basic usage of the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas <br> How the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas affect resource use and latency <br> How to apply the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas in your program
 | Time to complete                  | 20 minutes
 
 
@@ -19,14 +19,16 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 This tutorial demonstrates a simple example of using the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas.
 
 ### Description of the pragmas
-The `fp contract(fast|off)` pragma controls whether the compiler can skip intermediate rounding and conversions between double precision arithmetic operations. If multiple occurrences of this pragma affect the same scope of your code, the pragma with the narrowest scope takes precedence.
+The `fp contract(fast|off)` pragma controls whether the compiler can skip intermediate rounding and conversions between double precision arithmetic operations. `fp contract(fast)` has the same effect as the alternative command flag option `-ffp-contract=fast`; however, the effect of the flag will be disabled for code blocks fenced by `#pragma clang fp contract(off)`.
 
-The `fp reassociate(on|off)` pragma controls the relaxing of the order of floating point arithmetic operations within the code block that this pragma is applied to. If multiple occurrences of this pragma affect the same scope of your code, the pragma with the narrowest scope takes precedence.
+The `fp reassociate(on|off)` pragma controls the relaxing of the order of floating point arithmetic operations within the code block that this pragma is applied to. 
+
+The default setting of `fp contract` pragma is `fast` and the default setting of `fp reassociate` is `on`. Guarding the code block with `#pragma clang fp contract(off)` and `#pragma clang fp reassociate(off)` will overwrite the default setting. If multiple occurrences of the pragma affect the same scope of your code, the pragma with the narrowest scope takes precedence.
 
 #### Example
 This tutorial design applies `fp contract(off)` and `fp reassociate(off)` at a global scope.
 
-A kernel in this tutorial applies `fp contract(fast)` to addition followed by multiplication. The following is an example:
+ContractFastKernel in this tutorial applies `fp contract(fast)` to addition followed by multiplication. The following is an example:
 
 ```
 #pragma clang fp contract(fast)
@@ -36,9 +38,9 @@ A kernel in this tutorial applies `fp contract(fast)` to addition followed by mu
   accessorRes[0] = temp1 * temp2;
 ```
 
-The `fp contract(fast)` pragma will fuse the multiply and add operations into an FMA, and therefore reduce the area.
+The `fp contract(fast)` pragma allows the compiler to skip rounding steps on these double precision operations, which in turn allows more efficient use of FPGA floating point math resources and thus a reduction in area and latency.
 
-A kernel in this tutorial applies `fp reassociate(on)` to a sequence of addition. The following is an example:
+ReassociateOnKernel in this tutorial applies `fp reassociate(on)` to a sequence of additions. The following is an example:
 
 ```
 #pragma clang fp reassociate(on)
@@ -46,11 +48,11 @@ A kernel in this tutorial applies `fp reassociate(on)` to a sequence of addition
     accessorA[0] + accessorB[0] + accessorC[0] + accessorD[0];
 ```
 
-The `fp reassociate(on)` will relax the order of the series of add operations and remove the dependency of each add, and therefore reduce the area.
+By relaxing the order of the additions, the compiler is able to group these four additions that maps to the FPGA hardware in a more efficient way, and thus saves area and reduces latency.
 
 ## Key Concepts
 * The basic usage of the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas
-* How the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas affect resource use
+* How the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas affect resource use and latency
 * How to apply the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas in your program
 
 ## License
@@ -157,6 +159,8 @@ Open the reports in Google Chrome*, Mozilla Firefox*, Microsoft Edge*, or Micros
 
 On the main report page, scroll down to the section titled "Estimated Resource Usage". Each kernel name represents the pragma usage. e.g., `ContractFastKernel` sets the `fp contract(fast|off)` pragma to `fast` mode. You can verify that the number of ALMs used for kernels with `fp contract(fast)` or `fp reassociate(on)` is fewer than the kernels with `fp contract(off)` or `fp reassociate(off)` respectively.
 
+In the "Loop Analysis" section under the tab titled "Throughput Analysis", there is a panel on the left containing all the kernels. the loop information of each kernel can be seen by expanding them. You can verify that the latencies for kernels with `fp contract(fast)` or `fp reassociate(on)` are smaller than those of the kernels with `fp contract(off)` or `fp reassociate(off)` respectively.
+
 ## Running the Sample
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
@@ -169,7 +173,7 @@ On the main report page, scroll down to the section titled "Estimated Resource U
 2. Run the sample on the FPGA device
 
    ```bash
-   ./fp_pragmas.fpga             # Linux
+   ./fp_pragmas.fpga        # Linux
 
 ### Example of Output
 

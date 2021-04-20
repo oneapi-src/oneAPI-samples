@@ -153,7 +153,8 @@ void enable_contract(const device_selector &selector, const double a,
       //    DPC++FPGA/Tutorials/Features/kernel_args_restrict
       h.single_task<ContractFastKernel>([=]() [[intel::kernel_args_restrict]] {
 
-      // Allows the fusing of mult and add instructions into an FMA.
+      // This pragma allows re-ordering of the multiply and add instructions to
+      // an order that maps more efficiently to FPGA hardware.
 #pragma clang fp contract(fast)
         double temp1 = 0.0, temp2 = 0.0;
         temp1 = accessorA[0] + accessorB[0];
@@ -205,8 +206,8 @@ void enable_reassociate(const device_selector &selector, const double a,
       //    DPC++FPGA/Tutorials/Features/kernel_args_restrict
       h.single_task<ReassociateOnKernel>([=]() [[intel::kernel_args_restrict]] {
 
-      // Enables the compiler to reorder floating-point operations to improve
-      // performance and on-chip area.
+      // This pragma enables the compiler to reorder floating-point operations
+      // to improve performance and on-chip area.
 #pragma clang fp reassociate(on)
         accessorRes[0] =
             accessorA[0] + accessorB[0] + accessorC[0] + accessorD[0];
@@ -250,9 +251,11 @@ int main() {
   disable_reassociate(selector, a, b, c, d, res_reassociate_off);
   enable_reassociate(selector, a, b, c, d, res_reassociate_on);
 
-  // Using fp contract and fp reassociate pragmas will cause some nuances in
-  // precision due to rounding or reordering of math operations, but the results
-  // should be close to the strict results.
+  // The fp contract and reassociate pragmas can save area and improve
+  // performance, but because the operations can be reordered we may get
+  // slightly different results from those computed by the CPU. The EPISILON
+  // constant allows us to define what we consider to be 'close enough' to an
+  // exact match.
   if (fabs(res_contract_off - golden_res_contract) <= EPSILON &&
       fabs(res_reassociate_off - golden_res_reassociate) <= EPSILON &&
       fabs(res_contract_fast - golden_res_contract) <= EPSILON &&
