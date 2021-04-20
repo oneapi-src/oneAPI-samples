@@ -11,7 +11,7 @@
   "commonFolder": {
     "base": "../../..",
     "include": [
-      "Tutorials/DesignPatterns/compute_units"
+      "Tutorials/DesignPatterns/compute_units",
       "include/pipe_array.hpp",
       "include/pipe_array_internal.hpp"
     ]
