@@ -16,6 +16,8 @@
 using namespace sycl;
 using namespace std;
 
+// Unify the baseline of the kernels by setting fp pragmas to off in global
+// scope.
 #pragma clang fp contract(off)
 #pragma clang fp reassociate(off)
 constexpr double EPSILON = 1e-6;
@@ -49,9 +51,9 @@ void disable_contract(const device_selector &selector, const double a,
       accessor accessorD(bufferD, h, read_only);
       accessor accessorRes(bufferE, h, write_only, noinit);
 
-      // FPGA-optimized kernel
-      // Using kernel_args_restrict tells the compiler that the input
-      // and output buffers won't alias.
+      // The "kernel_args_restrict" tells the compiler that a, b, and r
+      // do not alias. For a full explanation, see:
+      //    DPC++FPGA/Tutorials/Features/kernel_args_restrict
       h.single_task<ContractOffKernel>([=]() [[intel::kernel_args_restrict]] {
         double temp1 = 0.0, temp2 = 0.0;
         temp1 = accessorA[0] + accessorB[0];
@@ -98,9 +100,9 @@ void disable_reassociate(const device_selector &selector, const double a,
       accessor accessorD(bufferD, h, read_only);
       accessor accessorRes(bufferE, h, write_only, noinit);
 
-      // FPGA-optimized kernel
-      // Using kernel_args_restrict tells the compiler that the input
-      // and output buffers won't alias.
+      // The "kernel_args_restrict" tells the compiler that a, b, and r
+      // do not alias. For a full explanation, see:
+      //    DPC++FPGA/Tutorials/Features/kernel_args_restrict
       h.single_task<ReassociateOffKernel>([=
       ]() [[intel::kernel_args_restrict]] {
         accessorRes[0] =
@@ -146,10 +148,12 @@ void enable_contract(const device_selector &selector, const double a,
       accessor accessorD(bufferD, h, read_only);
       accessor accessorRes(bufferE, h, write_only, noinit);
 
-      // FPGA-optimized kernel
-      // Using kernel_args_restrict tells the compiler that the input
-      // and output buffers won't alias.
+      // The "kernel_args_restrict" tells the compiler that a, b, and r
+      // do not alias. For a full explanation, see:
+      //    DPC++FPGA/Tutorials/Features/kernel_args_restrict
       h.single_task<ContractFastKernel>([=]() [[intel::kernel_args_restrict]] {
+
+      // Allows the fusing of mult and add instructions into an FMA.
 #pragma clang fp contract(fast)
         double temp1 = 0.0, temp2 = 0.0;
         temp1 = accessorA[0] + accessorB[0];
@@ -196,10 +200,13 @@ void enable_reassociate(const device_selector &selector, const double a,
       accessor accessorD(bufferD, h, read_only);
       accessor accessorRes(bufferE, h, write_only, noinit);
 
-      // FPGA-optimized kernel
-      // Using kernel_args_restrict tells the compiler that the input
-      // and output buffers won't alias.
+      // The "kernel_args_restrict" tells the compiler that a, b, and r
+      // do not alias. For a full explanation, see:
+      //    DPC++FPGA/Tutorials/Features/kernel_args_restrict
       h.single_task<ReassociateOnKernel>([=]() [[intel::kernel_args_restrict]] {
+
+      // Enables the compiler to reorder floating-point operations to improve
+      // performance and on-chip area.
 #pragma clang fp reassociate(on)
         accessorRes[0] =
             accessorA[0] + accessorB[0] + accessorC[0] + accessorD[0];
@@ -243,6 +250,9 @@ int main() {
   disable_reassociate(selector, a, b, c, d, res_reassociate_off);
   enable_reassociate(selector, a, b, c, d, res_reassociate_on);
 
+  // Using fp contract and fp reassociate pragmas will cause some nuances in
+  // precision due to rounding or reordering of math operations, but the results
+  // should be close to the strict results.
   if (fabs(res_contract_off - golden_res_contract) <= EPSILON &&
       fabs(res_reassociate_off - golden_res_reassociate) <= EPSILON &&
       fabs(res_contract_fast - golden_res_contract) <= EPSILON &&
