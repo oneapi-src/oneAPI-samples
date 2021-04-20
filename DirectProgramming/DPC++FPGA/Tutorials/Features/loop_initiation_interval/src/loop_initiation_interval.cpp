@@ -204,10 +204,10 @@ int main() {
   std::vector<int> out(kInputSize);
 
   // Conservative max to avoid addition overflow
-  constexpr int randMax = 1 << 10;
+  constexpr int kRandMax = 1 << 10;
   // generate random input data
   for (size_t i = 0; i < kInputSize; i++) {
-    in[i] = rand() % randMax;
+    in[i] = rand() % kRandMax;
   }
 
   // Run kernel once. Since fMAX is a global constraint, we cannot run two
