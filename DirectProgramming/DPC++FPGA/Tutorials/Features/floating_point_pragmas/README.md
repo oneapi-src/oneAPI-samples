@@ -1,5 +1,5 @@
-#Contraction and Reassociation on Floating Points
-This FPGA tutorial explains how to use the fp reassociate and fp contract pragmas for floating points.
+# Contraction and Reassociation on Floating Point Numbers
+This FPGA tutorial explains how to use the fp reassociate and fp contract pragmas for floating point numbers.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -8,9 +8,9 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | The basic usage of the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas <br> How the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas affect resource use <br> How to apply the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas in your program
+| What you will learn               | The basic usage of the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas <br> How the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas affect resource use <br> How to apply the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas in your program
 | Time to complete                  | 20 minutes
 
 
@@ -19,7 +19,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 This tutorial demonstrates a simple example of using the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas.
 
 ### Description of the pragmas
-The `fp contract(fast|off)` pragma controls whether the compiler can skip intermediate rounding and conversions mainly between double precision arithmetic operations. If multiple occurrences of this pragma affect the same scope of your code, the pragma with the narrowest scope takes precedence.
+The `fp contract(fast|off)` pragma controls whether the compiler can skip intermediate rounding and conversions between double precision arithmetic operations. If multiple occurrences of this pragma affect the same scope of your code, the pragma with the narrowest scope takes precedence.
 
 The `fp reassociate(on|off)` pragma controls the relaxing of the order of floating point arithmetic operations within the code block that this pragma is applied to. If multiple occurrences of this pragma affect the same scope of your code, the pragma with the narrowest scope takes precedence.
 
@@ -33,16 +33,20 @@ A kernel in this tutorial applies `fp contract(fast)` to addition followed by mu
   double temp1 = 0.0, temp2 = 0.0;
   temp1 = accessorA[0] + accessorB[0];
   temp2 = accessorC[0] + accessorD[0];
-  accessorRes[0] += temp1 * temp2;
+  accessorRes[0] = temp1 * temp2;
 ```
+
+The `fp contract(fast)` pragma will fuse the multiply and add operations into an FMA, and therefore reduce the area.
 
 A kernel in this tutorial applies `fp reassociate(on)` to a sequence of addition. The following is an example:
 
 ```
 #pragma clang fp reassociate(on)
-  accessorRes[0] += 
+  accessorRes[0] = 
     accessorA[0] + accessorB[0] + accessorC[0] + accessorD[0];
 ```
+
+The `fp reassociate(on)` will relax the order of the series of add operations and remove the dependency of each add, and therefore reduce the area.
 
 ## Key Concepts
 * The basic usage of the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas
