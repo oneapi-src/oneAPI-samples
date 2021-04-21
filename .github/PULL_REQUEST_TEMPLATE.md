@@ -1,6 +1,8 @@
-# this template serves 2 purposes and will need to be edited accordingly prior to submitting the PR
+# Introduction
+This template serves 2 purposes and will need to be edited accordingly prior to submitting the PR
 - changes to existing samples
 - Submission of new Samples
+
 # Existing Sample Changes
 ## Description
 
@@ -38,7 +40,7 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 Administrative
 - [ ] Review sample design with domain reviewers https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts 
 - [ ] Review Sample with Domain Expert: <insert NameHere>
-- [ ] If you have new dependencies/binaries, inform Samples Project Manager Swapna R Dontharaju (@srdontha) or @JoeOster
+- [ ] If you dependencies/binaries, inform Samples Project Manager Swapna R Dontharaju (@srdontha) or @JoeOster
 
 Code Development
 - [ ] Implement coding guidelines and ensure code quality.
@@ -49,6 +51,7 @@ Code Development
 - [ ] Run jsonlint on sample.json to verify json syntax. www.jsonlint.com
 
 Security and Legal
+- [ ] OSPDT Approval (see @JoeOster for assistance)
 - [ ] Compile code using compiler flags and fix anything detected "enable /Wall -Wformat-security -Werror=format-security"
 - [ ] Protex (see @JoeOster for assistance)
 - [ ] Bandit Scans (Python only)
