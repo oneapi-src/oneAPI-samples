@@ -1,6 +1,6 @@
 # Introduction
 This template serves 2 purposes and will need to be edited accordingly prior to submitting the PR
-- changes to existing samples
+- Changes to existing samples
 - Submission of new Samples
 
 # Existing Sample Changes
