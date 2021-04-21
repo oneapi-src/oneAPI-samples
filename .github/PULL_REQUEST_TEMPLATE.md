@@ -36,8 +36,10 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 **_Delete this line and everything below if this is not a PR for a new sample_**
 
 **_Delete this line and all above it if this PR is for a new Sample_**
-## Checklist for New samples:
-
+# Adding a New samples
+##Introduction
+The 
+## Checklist
 Administrative
 - [ ] Review sample design with domain reviewers https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts 
 - [ ] Review Sample with Domain Expert: <insert NameHere>
