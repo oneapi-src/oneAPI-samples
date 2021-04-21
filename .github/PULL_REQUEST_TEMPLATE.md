@@ -38,7 +38,9 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 **_Delete this line and all above it if this PR is for a new Sample_**
 # Adding a New samples
 ##Introduction
-The 
+
+The full instructions on submitting a new sample is located in the [wiki](https://github.com/oneapi-src/oneAPI-samples/wiki/Contributing-a-New-Sample) if you have any questions about the steps for submitting a new code sample
+
 ## Checklist
 Administrative
 - [ ] Review sample design with domain reviewers https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts 
