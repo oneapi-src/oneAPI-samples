@@ -39,7 +39,7 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 # Adding a New samples
 ##Introduction
 
-The full instructions on submitting a new sample is located in the [wiki](https://github.com/oneapi-src/oneAPI-samples/wiki/Contributing-a-New-Sample) if you have any questions about the steps for submitting a new code sample
+The full instructions on submitting a new sample is located in the [wiki](https://github.com/oneapi-src/oneAPI-samples/wiki/Contributing-a-New-Sample) if you have any addional questions contact @JoeOster
 
 ## Checklist
 Administrative
