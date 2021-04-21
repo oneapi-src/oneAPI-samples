@@ -10,7 +10,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | The basic usage of the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas <br> How the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas affect resource use, latency, fmax and throughput <br> How to apply the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas in your program
+| What you will learn               | The basic usage of the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas <br> How the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas affect resource use and latency <br> How to apply the `fp contract(fast\|off)` and `fp reassociate(on\|off)` pragmas in your program
 | Time to complete                  | 20 minutes
 
 
@@ -52,7 +52,7 @@ By relaxing the order of the additions, the compiler is able to group these four
 
 ## Key Concepts
 * The basic usage of the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas
-* How the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas affect resource use, latency, fmax and throughput
+* How the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas affect resource use and latency
 * How to apply the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas in your program
 
 ## License
@@ -61,7 +61,7 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `floating_point_pragmas` Tutorial
+## Building the `fp_pragmas` Tutorial
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -160,8 +160,6 @@ Open the reports in Google Chrome*, Mozilla Firefox*, Microsoft Edge*, or Micros
 On the main report page, scroll down to the section titled "Estimated Resource Usage". Each kernel name represents the pragma usage. e.g., `ContractFastKernel` sets the `fp contract(fast|off)` pragma to `fast` mode. You can verify that the number of ALMs used for kernels with `fp contract(fast)` or `fp reassociate(on)` is fewer than the kernels with `fp contract(off)` or `fp reassociate(off)` respectively.
 
 In the "Loop Analysis" section under the tab titled "Throughput Analysis", there is a panel on the left containing all the kernels. the loop information of each kernel can be seen by expanding them. You can verify that the latencies for kernels with `fp contract(fast)` or `fp reassociate(on)` are smaller than those of the kernels with `fp contract(off)` or `fp reassociate(off)` respectively.
-
-The potential improvement in fmax and throughput are not illustrated by this particular code.
 
 ## Running the Sample
 
