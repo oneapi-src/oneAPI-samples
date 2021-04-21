@@ -80,7 +80,7 @@ event SubmitBeamformerKernel(
 
         // load the weight vectors to be used with the next set of Xrx vectors
         for (unsigned char vector_num = 0;
-             vector_num < (char)k_num_weight_vectors; vector_num++) {
+             vector_num < (unsigned char)k_num_weight_vectors; vector_num++) {
           // weights are loaded in reverse order
           for (short i = kNumCalcTypePerVector - 1; i >= 0; i--) {
             for (short j = (short)k_unroll_factor - 1; j >= 0; j--) {
