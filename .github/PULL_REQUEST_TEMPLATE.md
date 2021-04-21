@@ -31,7 +31,7 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 - [ ] Visual Studio
 - [ ] Eclipse IDE
 - [ ] VSCode
-- [ ] When compiling the compliler flag was used ""enable /Wall -Wformat-security -Werror=format-security"
+- [ ] When compiling the compliler flag "/Wall -Wformat-security -Werror=format-security" was used
 
 **_Delete this line and everything below if this is not a PR for a new code sample_**
 
