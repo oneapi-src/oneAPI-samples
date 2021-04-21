@@ -33,8 +33,9 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 - [ ] VSCode
 - [ ] When compiling the compliler flag was used ""enable /Wall -Wformat-security -Werror=format-security"
 
-# Delete this line and everything below if this is not a PR for a new sample
-# Delete this line and all above it if this PR is for a new Sample
+**_Delete this line and everything below if this is not a PR for a new sample_**
+
+**_Delete this line and all above it if this PR is for a new Sample_**
 ## Checklist for New samples:
 
 Administrative
