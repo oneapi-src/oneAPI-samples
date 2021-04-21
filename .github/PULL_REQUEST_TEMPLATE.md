@@ -43,12 +43,11 @@ The full instructions on submitting a new sample is located in the [wiki](https:
 
 ## Checklist
 Administrative
-- [ ] Review sample design with domain reviewers https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts 
-- [ ] Review Sample with Domain Expert: <insert NameHere>
-- [ ] If you dependencies/binaries, inform Samples Project Manager Swapna R Dontharaju (@srdontha) or @JoeOster
+- [ ] Review sample design with the appropriate [Domain Expert](https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts): <insert Name Here>
+- [ ] If you dependencies/binaries, inform the oneAPI Code Samples Project Manager: @JoeOster
 
 Code Development
-- [ ] Implement coding guidelines and ensure code quality.
+- [ ] Implement coding guidelines and ensure code quality. [see wiki for details](https://github.com/oneapi-src/oneAPI-samples/wiki/General-Code-Guidelines)
 - [ ] Adhere to readme template 
 - [ ] Enforce format via clang-format config file
 - [ ] Adhere to sample.json specification. https://github.com/oneapi-src/oneAPI-samples/wiki/sample-json-specification
@@ -57,7 +56,7 @@ Code Development
 
 Security and Legal
 - [ ] OSPDT Approval (see @JoeOster for assistance)
-- [ ] Compile code using compiler flags and fix anything detected "enable /Wall -Wformat-security -Werror=format-security"
+- [ ] Compile using the following compiler flags and fix any warnings, the falgs are: "/Wall -Wformat-security -Werror=format-security"
 - [ ] Protex (see @JoeOster for assistance)
 - [ ] Bandit Scans (Python only)
 - [ ] IPLDT Scan (see @JoeOster for assistance)
