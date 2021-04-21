@@ -135,8 +135,8 @@ event SubmitForwardSubstitutionKernel(queue& q) {
         }  // end of for(i...)
 
         // Loop through all the y vectors
-        for (unsigned char vector_num = 0; vector_num < (char)k_num_y_vectors;
-             vector_num++) {
+        for (unsigned char vector_num = 0;
+             vector_num < (unsigned char)k_num_y_vectors; vector_num++) {
           // y_vector_intial contains the unmodified current y vector.  y_vector
           // is used during processing.  Splitting these two vectors allows
           // each to be implemented in a local memory with only one read and
