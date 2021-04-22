@@ -188,7 +188,7 @@ event SubmitStreamingQRDKernel(queue& q) {
 
         // Calculate Q and R by iterating over A
         // NO-FORMAT comments are for clang-format
-        [[intel::ii(1)]]                               // NO-FORMAT: Attribute
+        [[intel::initiation_interval(1)]]              // NO-FORMAT: Attribute
         [[intel::ivdep(k_min_inner_loop_iterations)]]  // NO-FORMAT: Attribute
         for (int s = 0; s < kNumIterations; s++) {
           AColumn vector_t;

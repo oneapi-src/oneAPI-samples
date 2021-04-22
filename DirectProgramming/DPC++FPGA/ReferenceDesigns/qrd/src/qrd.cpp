@@ -175,7 +175,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                           : 0;
             int qr_idx = l * kOutputMatrixSize / 2;
 
-            [[intel::ii(1)]] [[intel::ivdep(
+            [[intel::initiation_interval(1)]] [[intel::ivdep(
                 FIXED_ITERATIONS)]] for (int s = 0; s < ITERATIONS; s++) {
               MyComplex vector_t[ROWS_COMPONENT];
               MyComplex sori[kNumBanks];
