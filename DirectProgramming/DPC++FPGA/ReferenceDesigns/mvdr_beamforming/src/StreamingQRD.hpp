@@ -327,9 +327,9 @@ event SubmitStreamingQRDKernel(queue& q) {
           }
         }
 
-        // TODO this is where the A matrix would be written out to a pipe
+        // this is where the A matrix would be written out to a pipe
         // using q_matrix, but we don't need this functionality in MVDR so
-        // skipping this for now
+        // skipping this
 
       }  // end of while(1) - main processing loop for QRD kernel
     });  // end of h.single_task

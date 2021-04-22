@@ -232,8 +232,8 @@ class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
     auto kernel_ptr = BaseImpl::get_kernel_ptr();
 
     // launch the kernel to read the output into device side global memory
-    // NO-FORMAT comments are for clang-format
     auto kernel_event = q.submit([&](handler &h) {
+      // NO-FORMAT comments are for clang-format
       h.single_task<KernelID>([=
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         kernel_ptr_type ptr(kernel_ptr);

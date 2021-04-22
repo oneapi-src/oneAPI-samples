@@ -122,55 +122,33 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
      ```
-     ./mvdr_beamforming.fpga_emu --in=../data         (Linux)
-     ./mvdr_beamforming.fpga_emu.exe --in=../data     (Windows)
+     ./mvdr_beamforming.fpga_emu 1024 ../data .          (Linux)
+     ./mvdr_beamforming.fpga_emu.exe 1024 ../data .      (Windows)
      ```
 
 2. Run the sample on the FPGA device.
      ```
-     ./mvdr_beamforming.fpga --in=../data             (Linux)
+     ./mvdr_beamforming.fpga 1024 ../data .              (Linux)
      ```
 
 ### Application Parameters
 
-| Argument                  | Description
-|---                        |---
-| `--in=<path to input>`    | Specifies the directory that contains the input files (default=`../data`)
-| `--out=<path to output>`  | Specifies the directory to produce output data to (default=`.`)
+| Argument Index        | Description
+|---                    |---
+| 0                     | The number of matrices (default=`1024`)
+| 1                     | The input directory (default=`../data`)
+| 2                     | The output directory (default=`.`)
 
 ### Example of Output
 You should see the following output in the console:
 
 ```
+Matrices:         1024
+Input Directory:  '../data'
+Output Directory: '.'
+
 Reading training data from '../data/A_real.txt and ../data/A_imag.txt
 Reading input data from ../data/X_real.txt and ../data/X_imag.txt
-Calculated sin(theta) values
-Launched MVDR kernels
-
-*** Basic single matrix and steering vectors test ***
-Launching consumer kernel
-Launching producer kernels
-Producer kernels finished
-Consumer kernels finished
-Writing output to ./out_real.txt and ./out_imag.txt
-Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
-Output data check succeeded
-
-*** Re-send single matrix test ***
-Re-sending Xrx and training data
-Producer kernels finished
-Consumer kernels finished
-Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
-Output data check succeeded
-
-*** Modify weight vectors test (expect data mismatch) ***
-Modifying and sending sin(theta) values
-Re-sending Xrx and training data two times
-Output data mismatched as expected
-Restoring original sin(theta)[0] value
-Re-sending Xrx and training data two times
-Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
-Output data check succeeded
 
 *** Launching throughput test of 1024 matrices ***
 Sensor inputs                 : 16
@@ -178,6 +156,7 @@ Training matrix rows          : 48
 Data rows per training matrix : 48
 Steering vectors              : 25
 Throughput: 34.6133 matrices/second
+Throughput: 82.5219 matrices/second
 Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
 Output data check succeeded
 PASSED
@@ -188,23 +167,27 @@ PASSED
 ### Source Code Breakdown
 | File                           | Description 
 |:---                            |:---
-|`mvdr_beamforming.cpp`          | Contains the `main()` function and the top-level interfaces to the MVDR functions.
+|`mvdr_beamforming.cpp`          | Contains the `main()` function and the top-level interfaces to the MVDR functions
 |`BackwardSubstitution.hpp`      | Backward Substitution kernel
 |`Beamformer.hpp`                | Beamformer kernel, multiplies input vectors by each weight vector to generate final output
 |`CalcWeights.hpp`               | CalcWeights kernel, multiplies BackwardSubstitution output by steering vectors
 |`Constants.hpp`                 | Defines constants used throught the design, some can be overridden from the command line during compiliation
 |`FakeIOPipes.hpp`               | Implements 'fake' IO pipes, which interface to the host
 |`ForwardSubstitution.hpp`       | Forward Substitution kernel
+|`InputDemux.hpp`                | InputDemux kernel, separates training and processing data
 |`mvdr_complex.hpp`              | Definition of ComplexType, used throughout this design
 |`MVDR.hpp`                      | Function to launch all MVDR kernels and define the pipes that connect them together
-|`NullPipe.hpp`                  | Defines the NullPipe class which allows pipe interfaces on kernels to be unused
-|`pipe_array.hpp`                | Header file containing the definition of an array of pipes. 
-|`pipe_array_internal.hpp`       | Helper for pipe_array.hpp. 
+|`ParallelCopyArray.hpp`         | Defines the ParallelCopyArray class, an array that supports unrolled copy / assign operations
+|`pipe_array.hpp`                | Header file containing the definition of an array of pipes
+|`pipe_array_internal.hpp`       | Helper for pipe_array.hpp
+|`PipeDuplicator.hpp`            | Defines the PipeDuplicator class, creates multiple copies of a pipe for fan-out
 |`SteeringVectorGenerator.hpp`   | SteeringVectorGenerator kernel, generates steering vectors based on data from the host
 |`StreamingQRD.hpp`              | StreamingQRD kernel, performs Q-R Decompostion on a matrix
 |`Transpose.hpp`                 | Transpose kernel, reorders data for the StreamingQRD kernel
 |`Tuple.hpp`                     | A templated tuple that defines the NTuple class which is used for pipe interfaces
-|`UnrolledLoop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end 
+|`udp_loopback_test.cpp`         | Contains the `main()` function for the loopback test. This code is only relevant for use with real IO pipes
+|`UDP.hpp`                       | This code is **only** relevant for using the real IO pipes (i.e. not in the devcloud). This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes)
+|`UnrolledLoop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end
 
 ### MVDR Beamforming
 This reference design is built upon the **IO Streaming** code sample.
@@ -214,3 +197,64 @@ The images below show the dataflow in the MVDR beamforming design. The first ima
 <img src="processing_kernels_ideal.png" alt="processing_kernels_ideal" width="800"/>
 <img src="processing_kernels_fake.png" alt="processing_kernels_fake" width="800"/>
 
+### Using Real IO-pipes
+This section describes how to build and run this reference design on a BSP with real IO pipes. The real IO pipes version does **not** work on Windows and requires a specific system setup and BSP.
+
+#### Getting access to the BSP
+This design requires a specific board support package (BSP) with a distinct hardware configuration.  For access to this BSP or general customer support, submit a case through Intel&reg; Premier Support (IPS) or contact your Intel or Distribution Sales Representative.
+
+#### Building the loopback test and Reference Design with real IO pipes
+Use the following commands to generate a Makefile for building both the loopback test and reference design:
+```
+mkdir build
+cd build
+
+cmake .. -DREAL_IO_PIPES=1 -DFPGA_BOARD=pac_s10_usm_udp
+```
+
+The `REAL_IO_PIPES` cmake flag defines a variable that is used *exclusively* in `mvdr_beamforming.cpp` to create a kernel system using real IO pipes, as opposed to the fake IO pipes described earlier in this document.
+
+To build the loopback test, use the following command:
+```
+make udp_loopback_test
+```
+
+To build the MVDR reference design, use the following command:
+```
+make fpga
+```
+
+#### Running the loopback test and reference design with real IO pipes
+To run the loopback test, use the following command:
+```
+./udp_loopback_test.fpga 64:4C:36:00:2F:20 192.168.0.11 34543 255.255.255.0 94:40:C9:71:8D:10 192.168.0.10 34543 10000000
+```
+
+| Argument Index        | Description
+|---                    |---
+| 1                     | FPGA MAC Address
+| 2                     | FPGA IP Address
+| 3                     | FPGA UDP Port
+| 4                     | FPGA Netmask
+| 5                     | Host MAC Address
+| 6                     | Host IP Address
+| 7                     | Host UDP Port
+| 8                     | Number of packets (optional, default=`100000000`)
+
+To run the MVDR reference design with real IO pipes, use the following command:
+```
+./mvdr_beamforming.fpga 64:4C:36:00:2F:20 192.168.0.11 34543 255.255.255.0 94:40:C9:71:8D:10 192.168.0.10 34543 1024 ../data .
+```
+
+| Argument Index        | Description
+|---                    |---
+| 1                     | FPGA MAC Address
+| 2                     | FPGA IP Address
+| 3                     | FPGA UDP Port
+| 4                     | FPGA Netmask
+| 5                     | Host MAC Address
+| 6                     | Host IP Address
+| 7                     | Host UDP Port
+| 8                     | The number of matrices (optional, default=`1024`)
+| 9                     | The input directory (optional, default=`../data`)
+| 10                    | The output directory (optional, default=`.`)
