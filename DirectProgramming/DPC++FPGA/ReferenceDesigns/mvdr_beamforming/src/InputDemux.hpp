@@ -103,7 +103,7 @@ event SubmitInputDemuxKernel(
       bool all_xrx_sent = false;
 
       // NO-FORMAT comments are for clang-format
-      [[intel::ii(1)]]  // NO-FORMAT: Attribute
+      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       while (1) {
         // capture the current state of variables before they are modified
         // by this iteration of the loop
