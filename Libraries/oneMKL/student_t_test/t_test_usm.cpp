@@ -36,22 +36,22 @@ static const auto threshold = 1.95996f;
 // Returns: -1 if something went wrong, 1 - in case of NULL hypothesis should be
 // accepted, 0 - in case of NULL hypothesis should be rejected
 template <typename RealType>
-std::int32_t t_test(sycl::queue& queue, RealType* r, std::int64_t n,
+std::int32_t t_test(sycl::queue& q, RealType* r, std::int64_t n,
                     RealType expected_mean) {
   std::int32_t res = -1;
   RealType sqrt_n_observations = sycl::sqrt(static_cast<RealType>(n));
 
   // Allocate memory to be passed inside oneMKL stats functions
-  RealType* mean = sycl::malloc_shared<RealType>(1, queue);
-  RealType* variance = sycl::malloc_shared<RealType>(1, queue);
+  RealType* mean = sycl::malloc_shared<RealType>(1, q);
+  RealType* variance = sycl::malloc_shared<RealType>(1, q);
   // Perform computations of mean and variance
   auto dataset =
       oneapi::mkl::stats::make_dataset<oneapi::mkl::stats::layout::row_major>(
           1, n, r);
-  oneapi::mkl::stats::mean(queue, dataset, mean);
-  queue.wait_and_throw();
-  oneapi::mkl::stats::central_moment(queue, mean, dataset, variance);
-  queue.wait_and_throw();
+  oneapi::mkl::stats::mean(q, dataset, mean);
+  q.wait_and_throw();
+  oneapi::mkl::stats::central_moment(q, mean, dataset, variance);
+  q.wait_and_throw();
   // Check the condition
   if ((sycl::abs(mean[0] - expected_mean) * sqrt_n_observations /
        sycl::sqrt(variance[0])) < static_cast<RealType>(threshold)) {
@@ -60,8 +60,8 @@ std::int32_t t_test(sycl::queue& queue, RealType* r, std::int64_t n,
     res = 0;
   }
   // Free allocated memory
-  sycl::free(mean, queue);
-  sycl::free(variance, queue);
+  sycl::free(mean, q);
+  sycl::free(variance, q);
   return res;
 }
 
@@ -69,14 +69,14 @@ std::int32_t t_test(sycl::queue& queue, RealType* r, std::int64_t n,
 // Returns: -1 if something went wrong, 1 - in case of NULL hypothesis should be
 // accepted, 0 - in case of NULL hypothesis should be rejected
 template <typename RealType>
-std::int32_t t_test(sycl::queue& queue, RealType* r1, std::int64_t n1,
+std::int32_t t_test(sycl::queue& q, RealType* r1, std::int64_t n1,
                     RealType* r2, std::int64_t n2) {
   std::int32_t res = -1;
   // Allocate memory to be passed inside oneMKL stats functions
-  RealType* mean1 = sycl::malloc_shared<RealType>(1, queue);
-  RealType* variance1 = sycl::malloc_shared<RealType>(1, queue);
-  RealType* mean2 = sycl::malloc_shared<RealType>(1, queue);
-  RealType* variance2 = sycl::malloc_shared<RealType>(1, queue);
+  RealType* mean1 = sycl::malloc_shared<RealType>(1, q);
+  RealType* variance1 = sycl::malloc_shared<RealType>(1, q);
+  RealType* mean2 = sycl::malloc_shared<RealType>(1, q);
+  RealType* variance2 = sycl::malloc_shared<RealType>(1, q);
   // Perform computations of mean and variance
   auto dataset1 =
       oneapi::mkl::stats::make_dataset<oneapi::mkl::stats::layout::row_major>(
@@ -84,13 +84,13 @@ std::int32_t t_test(sycl::queue& queue, RealType* r1, std::int64_t n1,
   auto dataset2 =
       oneapi::mkl::stats::make_dataset<oneapi::mkl::stats::layout::row_major>(
           1, n2, r2);
-  oneapi::mkl::stats::mean(queue, dataset1, mean1);
-  queue.wait_and_throw();
-  oneapi::mkl::stats::central_moment(queue, mean1, dataset1, variance1);
-  oneapi::mkl::stats::mean(queue, dataset2, mean2);
-  queue.wait_and_throw();
-  oneapi::mkl::stats::central_moment(queue, mean2, dataset2, variance2);
-  queue.wait_and_throw();
+  oneapi::mkl::stats::mean(q, dataset1, mean1);
+  q.wait_and_throw();
+  oneapi::mkl::stats::central_moment(q, mean1, dataset1, variance1);
+  oneapi::mkl::stats::mean(q, dataset2, mean2);
+  q.wait_and_throw();
+  oneapi::mkl::stats::central_moment(q, mean2, dataset2, variance2);
+  q.wait_and_throw();
   // Check the condition
   bool almost_equal =
       (variance1[0] < 2 * variance2[0]) || (variance2[0] < 2 * variance1[0]);
@@ -115,10 +115,10 @@ std::int32_t t_test(sycl::queue& queue, RealType* r1, std::int64_t n1,
     }
   }
   // Free allocated memory
-  sycl::free(mean1, queue);
-  sycl::free(variance1, queue);
-  sycl::free(mean2, queue);
-  sycl::free(variance2, queue);
+  sycl::free(mean1, q);
+  sycl::free(variance1, q);
+  sycl::free(mean2, q);
+  sycl::free(variance2, q);
   return res;
 }
 
