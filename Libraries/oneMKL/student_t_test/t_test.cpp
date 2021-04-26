@@ -36,7 +36,7 @@ static const auto threshold = 1.95996f;
 // Returns: -1 if something went wrong, 1 - in case of NULL hypothesis should be
 // accepted, 0 - in case of NULL hypothesis should be rejected
 template <typename RealType>
-std::int32_t t_test(sycl::queue& queue, sycl::buffer<RealType, 1>& r,
+std::int32_t t_test(sycl::queue &q, sycl::buffer<RealType, 1> &r,
                     std::int64_t n, RealType expected_mean) {
   std::int32_t res = -1;
   RealType sqrt_n_observations = sycl::sqrt(static_cast<RealType>(n));
@@ -48,14 +48,13 @@ std::int32_t t_test(sycl::queue& queue, sycl::buffer<RealType, 1>& r,
   auto dataset =
       oneapi::mkl::stats::make_dataset<oneapi::mkl::stats::layout::row_major>(
           1, n, r);
-  oneapi::mkl::stats::mean(queue, dataset, mean_buf);
-  queue.wait_and_throw();
-  oneapi::mkl::stats::central_moment(queue, mean_buf, dataset, variance_buf);
-  queue.wait_and_throw();
+  oneapi::mkl::stats::mean(q, dataset, mean_buf);
+  q.wait_and_throw();
+  oneapi::mkl::stats::central_moment(q, mean_buf, dataset, variance_buf);
+  q.wait_and_throw();
   // Create Host accessors and check the condition
-  auto mean_acc = mean_buf.template get_access<sycl::access::mode::read>();
-  auto variance_acc =
-      variance_buf.template get_access<sycl::access::mode::read>();
+  sycl::host_accessor mean_acc(mean_buf);
+  sycl::host_accessor variance_acc(variance_buf);
   if ((sycl::abs(mean_acc[0] - expected_mean) * sqrt_n_observations /
        sycl::sqrt(variance_acc[0])) < static_cast<RealType>(threshold)) {
     res = 1;
@@ -69,8 +68,8 @@ std::int32_t t_test(sycl::queue& queue, sycl::buffer<RealType, 1>& r,
 // Returns: -1 if something went wrong, 1 - in case of NULL hypothesis should be
 // accepted, 0 - in case of NULL hypothesis should be rejected
 template <typename RealType>
-std::int32_t t_test(sycl::queue& queue, sycl::buffer<RealType, 1>& r1,
-                    std::int64_t n1, sycl::buffer<RealType, 1>& r2,
+std::int32_t t_test(sycl::queue &q, sycl::buffer<RealType, 1> &r1,
+                    std::int64_t n1, sycl::buffer<RealType, 1> &r2,
                     std::int64_t n2) {
   std::int32_t res = -1;
 
@@ -86,20 +85,18 @@ std::int32_t t_test(sycl::queue& queue, sycl::buffer<RealType, 1>& r1,
   auto dataset2 =
       oneapi::mkl::stats::make_dataset<oneapi::mkl::stats::layout::row_major>(
           1, n2, r2);
-  oneapi::mkl::stats::mean(queue, dataset1, mean1_buf);
-  queue.wait_and_throw();
-  oneapi::mkl::stats::central_moment(queue, mean1_buf, dataset1, variance1_buf);
-  oneapi::mkl::stats::mean(queue, dataset2, mean2_buf);
-  queue.wait_and_throw();
-  oneapi::mkl::stats::central_moment(queue, mean2_buf, dataset2, variance2_buf);
-  queue.wait_and_throw();
+  oneapi::mkl::stats::mean(q, dataset1, mean1_buf);
+  q.wait_and_throw();
+  oneapi::mkl::stats::central_moment(q, mean1_buf, dataset1, variance1_buf);
+  oneapi::mkl::stats::mean(q, dataset2, mean2_buf);
+  q.wait_and_throw();
+  oneapi::mkl::stats::central_moment(q, mean2_buf, dataset2, variance2_buf);
+  q.wait_and_throw();
   // Create Host accessors and check the condition
-  auto mean1_acc = mean1_buf.template get_access<sycl::access::mode::read>();
-  auto variance1_acc =
-      variance1_buf.template get_access<sycl::access::mode::read>();
-  auto mean2_acc = mean2_buf.template get_access<sycl::access::mode::read>();
-  auto variance2_acc =
-      variance2_buf.template get_access<sycl::access::mode::read>();
+  sycl::host_accessor mean1_acc{mean1_buf};
+  sycl::host_accessor variance1_acc{variance1_buf};
+  sycl::host_accessor mean2_acc{mean2_buf};
+  sycl::host_accessor variance2_acc{variance2_buf};
   bool almost_equal = (variance1_acc[0] < 2 * variance2_acc[0]) ||
                       (variance2_acc[0] < 2 * variance1_acc[0]);
   if (almost_equal) {
@@ -125,7 +122,7 @@ std::int32_t t_test(sycl::queue& queue, sycl::buffer<RealType, 1>& r1,
   return res;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   std::cout << "\nStudent's T-test Simulation\n";
   std::cout << "Buffer Api\n";
   std::cout << "-------------------------------------\n";
@@ -143,6 +140,9 @@ int main(int argc, char** argv) {
 
   if (argc >= 3) {
     mean = std::atof(argv[2]);
+    if (std::isnan(mean) || std::isinf(mean)) {
+      mean = expected_mean;
+    }
   }
 
   if (argc >= 4) {
@@ -157,10 +157,10 @@ int main(int argc, char** argv) {
 
   // This exception handler with catch async exceptions
   auto exception_handler = [](sycl::exception_list exceptions) {
-    for (std::exception_ptr const& e : exceptions) {
+    for (std::exception_ptr const &e : exceptions) {
       try {
         std::rethrow_exception(e);
-      } catch (sycl::exception const& e) {
+      } catch (sycl::exception const &e) {
         std::cout << "Caught asynchronous SYCL exception during generation:\n"
                   << e.what() << std::endl;
       }

@@ -140,6 +140,9 @@ int main(int argc, char** argv) {
 
   if (argc >= 3) {
     mean = std::atof(argv[2]);
+    if (std::isnan(mean) || std::isinf(mean)) {
+      mean = expected_mean;
+    }
   }
 
   if (argc >= 4) {
