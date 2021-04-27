@@ -201,8 +201,12 @@ bool RunSideChannelsSystem(queue& q, size_t count) {
     std::this_thread::sleep_for(10ms);
 
     // launch the producer and consumer to send the data through the kernel
-    auto producer_event = FakeIOPipeInProducer::Start(q);
-    auto consumer_event = FakeIOPipeOutConsumer::Start(q);
+    event producer_dma_event, producer_kernel_event;
+    event consumer_dma_event, consumer_kernel_event;
+    std::tie(producer_dma_event, producer_kernel_event) =
+      FakeIOPipeInProducer::Start(q);
+    std::tie(consumer_dma_event, consumer_kernel_event) =
+      FakeIOPipeOutConsumer::Start(q);
 
     // get updates from the device
     for (size_t i = 0; i < expected_updated_count; i++) {
@@ -210,9 +214,12 @@ bool RunSideChannelsSystem(queue& q, size_t count) {
       device_updates.push_back(device_update);
     }
 
-    // wait for producer and consumer to finish
-    producer_event.wait();
-    consumer_event.wait();
+    // wait for producer and consumer to finish, including the DMA events
+    // NOTE: if USM host allocations are used, the dma events are noops.
+    producer_dma_event.wait();
+    producer_kernel_event.wait();
+    consumer_dma_event.wait();
+    consumer_kernel_event.wait();
 
     bool test_passed = true;
 

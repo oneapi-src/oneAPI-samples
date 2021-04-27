@@ -305,7 +305,11 @@ int main(int argc, char *argv[]) {
     // By waiting on this kernel to finish, we are assuring that the runtime
     // has already programmed the FPGA with the image for this kernel. This
     // makes calling SetupPAC below safe (for the real IO pipes).
-    SinThetaProducer::Start(q, kNumSteer).wait();
+    event steer_dma_event, steer_kernel_event;
+    std::tie(steer_dma_event, steer_kernel_event) =
+      SinThetaProducer::Start(q, kNumSteer);
+    steer_dma_event.wait();
+    steer_kernel_event.wait();
 
     // Setup CSRs on FPGA (this function is in UDP.hpp)
     // NOTE: this must be done AFTER programming the FPGA, which happens
@@ -358,12 +362,18 @@ int main(int argc, char *argv[]) {
     }
 #else
     // start the fake IO pipe kernels
-    auto data_out_consumer_event =
+    event consume_dma_event, consume_kernel_event;
+    event produce_dma_event, produce_kernel_event;
+    std::tie(consume_dma_event, consume_kernel_event) =
         DataOutConsumer::Start(q, kDataOutSize * num_matrix_copies);
-    auto data_producer_event =
+    std::tie(produce_dma_event, produce_kernel_event) =
         DataProducer::Start(q, kInputDataSize * num_matrix_copies);
 #endif
     ////////////////////////////////////////////////////////////////////////////
+
+    // Wait for the DMA event to finish for the producer before starting the
+    // timer. If USM host allocations are used, this is a noop.
+    produce_dma_event.wait();
 
     auto start_time = high_resolution_clock::now();
 
@@ -372,11 +382,15 @@ int main(int argc, char *argv[]) {
     sender_thread.join();
     receiver_thread.join();
 #else
-    data_producer_event.wait();
-    data_out_consumer_event.wait();
+    produce_kernel_event.wait();
+    consume_kernel_event.wait();
 #endif
 
     auto end_time = high_resolution_clock::now();
+
+    // Stop the timer before performing the DMA from the consumer. Again,
+    // if USM host allocations are used then this is a noop.
+    consume_dma_event.wait();
 
     // compute latency and throughput
     duration<double, std::milli> process_time(end_time - start_time);
