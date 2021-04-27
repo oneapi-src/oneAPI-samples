@@ -8,6 +8,12 @@
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
+// the "detail" namespace is commonly used in C++ as an internal namespace
+// (to a file) that is not meant to be visible to the public and should be
+// ignored by external users. That is to say, you should never have the line:
+// "using namespace detail;" in your code!
+//
+// "internal" is another common name for a namespace like this.
 namespace detail {
 
 using namespace sycl;
