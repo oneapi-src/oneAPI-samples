@@ -84,7 +84,7 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall -Werror ${WIN_FLAG} -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${ENABLE_USM}")
 set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
 set(SIMULATOR_LINK_FLAGS "-fintelfpga -fbracket-depth=512 -Xssimulation -Xsghdl")

@@ -99,7 +99,7 @@ struct Transposer {
     });
 
     // NO-FORMAT comments are for clang-format
-    [[intel::ii(1)]]  // NO-FORMAT: Attribute
+    [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
     while (1) {
       // capture current value of all status variables as we begin each loop
       // iteration
