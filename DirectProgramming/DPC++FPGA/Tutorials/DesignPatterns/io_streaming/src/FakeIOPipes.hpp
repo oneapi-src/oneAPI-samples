@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <type_traits>
+#include <utility>
 
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
@@ -19,7 +20,7 @@ using namespace sycl;
 
 template <typename Id, typename T, bool use_host_alloc>
 class ProducerConsumerBaseImpl {
-protected:
+ protected:
   // private members
   static inline T *host_data_{nullptr};
   static inline T *device_data_{nullptr};
@@ -28,11 +29,14 @@ protected:
 
   // use some fancy C++ metaprogramming to get the correct pointer type
   // based on the template variable
-  typedef typename std::conditional_t<use_host_alloc,
-                                      host_ptr<T>,
-                                      device_ptr<T>> kernel_ptr_type;
+  typedef
+      typename std::conditional_t<use_host_alloc, host_ptr<T>, device_ptr<T>>
+          kernel_ptr_type;
 
-  static T* get_kernel_ptr() {
+  // private constructor so users cannot make an object
+  ProducerConsumerBaseImpl(){};
+
+  static T *get_kernel_ptr() {
     return use_host_alloc ? host_data_ : device_data_;
   }
 
@@ -43,11 +47,11 @@ protected:
     }
   }
 
-public:
-  // delete constructors and operator=
-  ProducerConsumerBaseImpl()=delete;
-  ProducerConsumerBaseImpl(const ProducerConsumerBaseImpl &)=delete;
-  ProducerConsumerBaseImpl& operator=(ProducerConsumerBaseImpl const &)=delete;
+ public:
+  // disable copy constructor and operator=
+  ProducerConsumerBaseImpl(const ProducerConsumerBaseImpl &) = delete;
+  ProducerConsumerBaseImpl &operator=(ProducerConsumerBaseImpl const &) =
+      delete;
 
   static void Init(queue &q, size_t count) {
     // make sure init hasn't already been called
@@ -75,25 +79,24 @@ public:
     // Allocate the space the user requested. Calling a different malloc
     // based on whether the user wants to use USM host allocations or not.
     if (use_host_alloc) {
-      // using USM host allocations
       host_data_ = malloc_host<T>(count_, q);
     } else {
-      // not using USM host allocations
-      // allocate space for some host side memory
       host_data_ = new T[count_];
-
-      // allocate space in device memory
-      device_data_ = malloc_device<T>(count_, q);
     }
 
-    // validate the allocated memory
     if (host_data_ == nullptr) {
       std::cerr << "ERROR: failed to allocate space for host_data_\n";
       std::terminate();
     }
-    if (!use_host_alloc && (device_data_ == nullptr)) {
-      std::cerr << "ERROR: failed to allocate space for device_data_\n";
-      std::terminate(); 
+
+    // if not using host allocations, allocate device memory
+    if (!use_host_alloc) {
+      device_data_ = malloc_device<T>(count_, q);
+      if (device_data_ == nullptr) {
+        std::cerr << "ERROR: failed to allocate space for"
+                  << "device_data_\n";
+        std::terminate();
+      }
     }
 
     initialized_ = true;
@@ -122,7 +125,7 @@ public:
     return count_;
   }
 
-  static T* Data() {
+  static T *Data() {
     initialized_check();
     return host_data_;
   }
@@ -132,7 +135,7 @@ public:
 // Producer implementation
 template <typename Id, typename T, bool use_host_alloc, size_t min_capacity>
 class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
-protected:
+ private:
   // base implementation alias
   using BaseImpl = ProducerConsumerBaseImpl<Id, T, use_host_alloc>;
   using kernel_ptr_type = typename BaseImpl::kernel_ptr_type;
@@ -141,17 +144,20 @@ protected:
   class PipeID;
   class KernelID;
 
-public:
-  // delete constructors and operator=
-  ProducerImpl()=delete;
-  ProducerImpl(const ProducerImpl &)=delete;
-  ProducerImpl &operator=(ProducerImpl const &)=delete;
+  // private constructor so users cannot make an object
+  ProducerImpl(){};
+
+ public:
+  // disable copy constructor and operator=
+  ProducerImpl(const ProducerImpl &) = delete;
+  ProducerImpl &operator=(ProducerImpl const &) = delete;
 
   // the pipe to connect to in device code
-  using Pipe = sycl::pipe<PipeID, T, min_capacity>;
+  using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
 
   // the implementation of the static
-  static event Start(queue &q, size_t count = BaseImpl::count_) {
+  static std::pair<event, event> Start(queue &q,
+                                       size_t count = BaseImpl::count_) {
     // make sure initialized has been called
     BaseImpl::initialized_check();
 
@@ -179,7 +185,9 @@ public:
       h.depends_on(dma_event);
 
       // the producing kernel
-      h.single_task<KernelID>([=]() [[intel::kernel_args_restrict]] {
+      // NO-FORMAT comments are for clang-format
+      h.single_task<KernelID>([=
+      ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         kernel_ptr_type ptr(kernel_ptr);
         for (size_t i = 0; i < count; i++) {
           auto d = *(ptr + i);
@@ -188,7 +196,7 @@ public:
       });
     });
 
-    return kernel_event;
+    return std::make_pair(dma_event, kernel_event);
   }
 };
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,7 +205,7 @@ public:
 // Consumer implementation
 template <typename Id, typename T, bool use_host_alloc, size_t min_capacity>
 class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
-protected:
+ private:
   // base implementation alias
   using BaseImpl = ProducerConsumerBaseImpl<Id, T, use_host_alloc>;
   using kernel_ptr_type = typename BaseImpl::kernel_ptr_type;
@@ -206,16 +214,19 @@ protected:
   class PipeID;
   class KernelID;
 
-public:
-  // delete constructors and operator=
-  ConsumerImpl()=delete;
-  ConsumerImpl(const ConsumerImpl &)=delete;
-  ConsumerImpl &operator=(ConsumerImpl const &)=delete;
+  // private constructor so users cannot make an object
+  ConsumerImpl(){};
+
+ public:
+  // disable copy constructor and operator=
+  ConsumerImpl(const ConsumerImpl &) = delete;
+  ConsumerImpl &operator=(ConsumerImpl const &) = delete;
 
   // the pipe to connect to in device code
-  using Pipe = sycl::pipe<PipeID, T, min_capacity>;
+  using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
 
-  static event Start(queue &q, size_t count = BaseImpl::count_) {
+  static std::pair<event, event> Start(queue &q,
+                                       size_t count = BaseImpl::count_) {
     // make sure initialized has been called
     BaseImpl::initialized_check();
 
@@ -231,7 +242,9 @@ public:
 
     // launch the kernel to read the output into device side global memory
     auto kernel_event = q.submit([&](handler &h) {
-      h.single_task<KernelID>([=]() [[intel::kernel_args_restrict]] {
+      // NO-FORMAT comments are for clang-format
+      h.single_task<KernelID>([=
+      ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         kernel_ptr_type ptr(kernel_ptr);
         for (size_t i = 0; i < count; i++) {
           auto d = Pipe::read();
@@ -240,34 +253,30 @@ public:
       });
     });
 
-    // if the user wanted to use device memory, copy the data back to the host
+    // if the user wanted to use board memory, copy the data back to the host
+    event dma_event;
     if (!use_host_alloc) {
       // launch a task to copy the data back from the device. Use the
       // event.depends_on signal to wait for the kernel to finish first.
-      auto dma_event = q.submit([&](handler &h) {
+      dma_event = q.submit([&](handler &h) {
         h.depends_on(kernel_event);
         h.memcpy(BaseImpl::host_data_, BaseImpl::device_data_,
                  BaseImpl::count_ * sizeof(T));
       });
-
-      return dma_event;
-    } else {
-      // user used host memory so they just have to wait for the kernel
-      // to finish and the data will be present in the host memory for them
-      return kernel_event;
     }
+
+    return std::make_pair(dma_event, kernel_event);
   }
 };
 ////////////////////////////////////////////////////////////////////////////////
 
 }  // namespace detail
 
-
 // alias the implementations to face the user
-template <typename Id, typename T, bool use_host_alloc, size_t min_capacity=0>
+template <typename Id, typename T, bool use_host_alloc, size_t min_capacity = 0>
 using Producer = detail::ProducerImpl<Id, T, use_host_alloc, min_capacity>;
 
-template <typename Id, typename T, bool use_host_alloc, size_t min_capacity=0>
+template <typename Id, typename T, bool use_host_alloc, size_t min_capacity = 0>
 using Consumer = detail::ConsumerImpl<Id, T, use_host_alloc, min_capacity>;
 
 // convenient aliases to get a host or device allocation producer/consumer

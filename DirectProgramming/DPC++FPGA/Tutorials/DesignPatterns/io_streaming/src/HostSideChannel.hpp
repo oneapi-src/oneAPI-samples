@@ -57,7 +57,10 @@ public:
     MyProducer::Data()[0] = data;
 
     // start the kernel and wait on it to finish (blocking)
-    MyProducer::Start(*q_).wait();
+    event dma, kernel;
+    std::tie(dma, kernel) = MyProducer::Start(*q_);
+    dma.wait();
+    kernel.wait();
   }
 
   // non-blocking
@@ -70,8 +73,8 @@ public:
     // populate the data
     MyProducer::Data()[0] = data;
 
-    // start the kernel and return the event
-    return MyProducer::Start(*q_);
+    // start the kernel and return the kernel event
+    return MyProducer::Start(*q_).second;
   }
 };
 
@@ -109,7 +112,10 @@ public:
     // HOST CODE
     // launch the kernel to read the data from the pipe into memory
     // and wait for it to finish (blocking)
-    MyConsumer::Start(*q_).wait();
+    event dma, kernel;
+    std::tie(dma, kernel) = MyConsumer::Start(*q_);
+    dma.wait();
+    kernel.wait();
 
     // the kernel has finished, so return the data
     return MyConsumer::Data()[0];
@@ -121,8 +127,9 @@ public:
   static event read(bool &success_code) {
     // start the kernel and return the event
     // the user can use ::Data() later to get the data
+    // return the DMA event, since it happen second
     success_code = true;
-    return MyConsumer::Start(*q_);
+    return MyConsumer::Start(*q_).first;
   }
 
   static void write(const T &data) {

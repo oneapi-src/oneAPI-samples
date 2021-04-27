@@ -3,10 +3,17 @@
 
 #include <iostream>
 #include <type_traits>
+#include <utility>
 
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
+// the "detail" namespace is commonly used in C++ as an internal namespace
+// (to a file) that is not meant to be visible to the public and should be
+// ignored by external users. That is to say, you should never have the line:
+// "using namespace detail;" in your code!
+//
+// "internal" is another common name for a namespace like this.
 namespace detail {
 
 using namespace sycl;
@@ -149,7 +156,8 @@ class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
   using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
 
   // the implementation of the static
-  static event Start(queue &q, size_t count = BaseImpl::count_) {
+  static std::pair<event, event> Start(queue &q,
+                                       size_t count = BaseImpl::count_) {
     // make sure initialized has been called
     BaseImpl::initialized_check();
 
@@ -188,7 +196,7 @@ class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
       });
     });
 
-    return kernel_event;
+    return std::make_pair(dma_event, kernel_event);
   }
 };
 ////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +225,8 @@ class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
   // the pipe to connect to in device code
   using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
 
-  static event Start(queue &q, size_t count = BaseImpl::count_) {
+  static std::pair<event, event> Start(queue &q,
+                                       size_t count = BaseImpl::count_) {
     // make sure initialized has been called
     BaseImpl::initialized_check();
 
@@ -245,21 +254,18 @@ class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
     });
 
     // if the user wanted to use board memory, copy the data back to the host
+    event dma_event;
     if (!use_host_alloc) {
       // launch a task to copy the data back from the device. Use the
       // event.depends_on signal to wait for the kernel to finish first.
-      auto dma_event = q.submit([&](handler &h) {
+      dma_event = q.submit([&](handler &h) {
         h.depends_on(kernel_event);
         h.memcpy(BaseImpl::host_data_, BaseImpl::device_data_,
                  BaseImpl::count_ * sizeof(T));
       });
-
-      return dma_event;
-    } else {
-      // user used host memory so they just have to wait for the kernel
-      // to finish and the data will be present in the host memory for them
-      return kernel_event;
     }
+
+    return std::make_pair(dma_event, kernel_event);
   }
 };
 ////////////////////////////////////////////////////////////////////////////////
