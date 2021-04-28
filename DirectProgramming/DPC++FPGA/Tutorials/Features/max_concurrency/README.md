@@ -156,27 +156,27 @@ On the main report page, scroll down to the section titled "Estimated Resource U
 
 ### Example of Output
 ```
-Max concurrency 0 kernel time : 1459.89 ms
-Throughput for kernel with max_concurrency 0: 0.561 GFlops
-Max concurrency 1 kernel time : 2890.810 ms
-Throughput for kernel with max_concurrency 1: 0.283 GFlops
-Max concurrency 2 kernel time : 1460.227 ms
-Throughput for kernel with max_concurrency 2: 0.561 GFlops
-Max concurrency 4 kernel time : 1459.970 ms
-Throughput for kernel with max_concurrency 4: 0.561 GFlops
-Max concurrency 8 kernel time : 1460.034 ms
-Throughput for kernel with max_concurrency 8: 0.561 GFlops
-Max concurrency 16 kernel time : 1459.901 ms
-Throughput for kernel with max_concurrency 16: 0.561 GFlops
+Max concurrency 0 kernel time : 1457.47 ms
+Throughput for kernel with max_concurrency 0: 562 MIPS
+Max concurrency 1 kernel time : 2947.784 ms
+Throughput for kernel with max_concurrency 1: 278 MIPS
+Max concurrency 2 kernel time : 1471.743 ms
+Throughput for kernel with max_concurrency 2: 557 MIPS
+Max concurrency 4 kernel time : 1457.460 ms
+Throughput for kernel with max_concurrency 4: 562 MIPS
+Max concurrency 8 kernel time : 1457.461 ms
+Throughput for kernel with max_concurrency 8: 562 MIPS
+Max concurrency 16 kernel time : 1457.463 ms
+Throughput for kernel with max_concurrency 16: 562 MIPS
 PASSED: The results are correct
 ```
 
 ### Discussion of Results
 
-The stdout output shows the giga-floating point operations per second (GFlops) for each kernel. 
+The stdout output shows the million instructions per second (MIPS) for each kernel. 
 
-When run on the Intel® PAC with Intel Arria10® 10 GX FPGA hardware board, we see that the throughput doubles from using max_concurrency 1 to max_concurrency 2. Further increasing the value of max_concurrency does not increase the GFlops achieved, i.e., increasing the max_concurrency above 2 will spend additional RAM resources for no additional throughput gain. As such, for this tutorial design, maximal throughput is best achieved by using max_concurrency 2. 
+When run on the Intel® PAC with Intel Arria10® 10 GX FPGA hardware board, we see that the throughput doubles from using max_concurrency 1 to max_concurrency 2. Further increasing the value of max_concurrency does not increase the MIPS achieved, i.e., increasing the max_concurrency above 2 will spend additional RAM resources for no additional throughput gain. As such, for this tutorial design, maximal throughput is best achieved by using max_concurrency 2. 
 
 Using max_concurrency 0 (or equivalently omitting the attribute entirely) also produced good throughput, indicating that the compiler's default heuristic chose a concurrency of 2 or higher in this case.
 
-When run on the FPGA emulator, the max_concurrency attribute has no effect on runtime. You may notice that the emulator achieved higher throughput than the FPGA in this example. This is because this trivial example uses only a tiny fraction of the spacial compute resources available on the FPGA.
+When run on the FPGA emulator, the max_concurrency attribute has no effect on runtime. You may notice that the emulator achieved higher throughput than the FPGA in this example. This is because this trivial example uses only a tiny fraction of the spatial compute resources available on the FPGA.

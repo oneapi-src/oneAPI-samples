@@ -97,8 +97,8 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 ## Building the `buffered_host_streaming` Tutorial
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) as well as whether to run in batch or interactive mode. For more information see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
- 
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
  
 ### On a Linux* System
@@ -176,7 +176,7 @@ Locate `report.html` in the `buffered_host_streaming_report.prj/reports/` direct
  
 ### Example of Output
 The following results were obtained on a system with the following specifications:</br>
-*CPU*: Intel(R) Xeon(R) CPU E5-1650 v3 @ 3.50GHz (6 cores, 12 threads) </br>
+*CPU*: Intel&reg; Xeon&reg; CPU E5-1650 v3 @ 3.50GHz (6 cores, 12 threads) </br>
 *CPU Memory*: 65GB </br>
 *Accelerator*: Intel&reg; PAC D5005 (with Intel Stratix&reg; 10 SX FPGA) </br>
 *PCIe*: Gen3 x16 </br>
