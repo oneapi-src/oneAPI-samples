@@ -87,9 +87,9 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall -Werror ${WIN_FLAG} -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${ENABLE_USM}")
 set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -fbracket-depth=512 -Xssimulation -Xsghdl")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -Xssimulation -Xsghdl")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fbracket-depth=512 -fintelfpga ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -fbracket-depth=512 ${PROFILE_FLAG} -Xsparallel=2 -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} ${PROFILE_FLAG} -Xsparallel=2 -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
