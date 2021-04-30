@@ -15,7 +15,8 @@
       "ReferenceDesigns/mvdr_beamforming",
       "include/pipe_array.hpp",
       "include/pipe_array_internal.hpp"
-    ]
+    ],
+    "exclude": []
   },
   "ciTests": {
     "linux": [

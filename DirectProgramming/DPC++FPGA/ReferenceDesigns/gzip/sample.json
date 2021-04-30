@@ -14,7 +14,8 @@
       "ReferenceDesigns/gzip",
       "include/pipe_array.hpp",
       "include/pipe_array_internal.hpp"
-    ]
+    ],
+    "exclude": []
   },
   "ciTests": {
     "linux": [

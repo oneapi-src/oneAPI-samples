@@ -14,7 +14,8 @@
       "Tutorials/DesignPatterns/pipe_array",
       "include/pipe_array.hpp",
       "include/pipe_array_internal.hpp"
-    ]
+    ],
+    "exclude": []
   },
   "ciTests": {
     "linux": [
