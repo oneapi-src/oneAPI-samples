@@ -18,7 +18,7 @@ endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
-    set(WIN_FLAG "/EHsc")
+    set(WIN_FLAG "-EHsc")
 endif()
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
