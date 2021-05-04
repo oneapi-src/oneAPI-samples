@@ -32,7 +32,7 @@ elseif(FPGA_BOARD STREQUAL "intel_s10sx_pac:pac_s10")
     set(FIXED_ITERATIONS 105)
     set(CLOCK_TARGET 480MHz)
 else()
-    message(STATUS "\tAn invalid board name was passed in using the FPGA_BOARD flag. Configuring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Arria(R) 10 GX FPGA. Please refer to the README for the list of valid board names.")
+    message(FATAL_ERROR "Unknown or unsupported board!")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
