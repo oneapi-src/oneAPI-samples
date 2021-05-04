@@ -1,13 +1,8 @@
-//==============================================================
-// Copyright © 2020 Intel Corporation
-//
+// Copyright (C) 2020 Intel Corporation
 // SPDX-License-Identifier: MIT
-// =============================================================
 
 #ifndef _DP_HPP
 #define _DP_HPP
-
-#pragma once
 
 #include <stdlib.h>
 #include <exception>
@@ -15,7 +10,7 @@
 #include <CL/sycl.hpp>
 
 namespace dpc_common {
-// this exception handler with catch async exceptions
+// This exception handler will catch async exceptions
 static auto exception_handler = [](cl::sycl::exception_list eList) {
   for (std::exception_ptr const &e : eList) {
     try {
