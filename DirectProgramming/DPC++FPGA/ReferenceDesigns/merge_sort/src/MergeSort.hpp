@@ -15,7 +15,6 @@
 #include "Misc.hpp"
 #include "Produce.hpp"
 #include "Shuffle.hpp"
-#include "Tuple.hpp"
 #include "UnrolledLoop.hpp"
 
 using namespace sycl;
@@ -136,20 +135,20 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
   };
 
   // the number of elements each merge unit will sort
-  IndexT count_per_unit = count / units;
+  const IndexT count_per_unit = count / units;
 
   // the number of sorting iterations each merge unit will perform
-  size_t iterations = Log2(count_per_unit);
+  const size_t iterations = Log2(count_per_unit);
 
   // memory to store the various merge unit and merge tree kernel events
   std::array<std::vector<event>, units> produce_a_events, produce_b_events,
                                         merge_events, consume_events;
   std::array<std::vector<event>, kReductionLevels> mt_merge_events;
   for (size_t i = 0; i < units; i++) {
-    produce_a_events[i].reserve(iterations);
-    produce_b_events[i].reserve(iterations);
-    merge_events[i].reserve(iterations);
-    consume_events[i].reserve(iterations);
+    produce_a_events[i].resize(iterations);
+    produce_b_events[i].resize(iterations);
+    merge_events[i].resize(iterations);
+    consume_events[i].resize(iterations);
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -161,7 +160,6 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
 
   ////////////////////////////////////////////////////////////////////////////
   // Launching all of the merge unit kernels
-
   // start with inputs of size 1
   IndexT in_count = 1;
 
@@ -173,19 +171,6 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
 
     // launch the merge unit kernels for this iteration of the sort
     UnrolledLoop<units>([&](auto u) {
-      // Except for the first iteration, producers for the current iteration
-      // must wait for the consumer to be done writing to global memory from the
-      // previous iteration. This is coarse grain synchronization between the
-      // producer and consumer of each merge unit.
-      std::vector<event> wait_events;
-      if (i != 0) {
-        wait_events.push_back(consume_events[u].back());
-      }
-
-      // the temporary device buffers reside in a single device allocation,
-      // so compute the offset into the buffer for each merge unit.
-      size_t unit_buf_offset = count_per_unit * u;
-
       // the intra merge unit pipes
       using APipe = typename APipes::template pipe<u>;
       using BPipe = typename BPipes::template pipe<u>;
@@ -193,12 +178,35 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
       using AShufflePipe = typename AShufflePipes::template pipe<u>;
       using BShufflePipe = typename BShufflePipes::template pipe<u>;
 
-      // if there is only 1 merge unit, there will be no merge tree,
-      // so the single unit's output pipe will be the entire sort output pipe
+      // if there is only 1 merge unit, there will be no merge tree, so the
+      // single merge unit's output pipe will be the entire sort's output pipe
       using InternalOutPipe =
         std::conditional_t<(units == 1),
                             OutPipe,
                             typename InternalOutPipes::template pipe<u>>;
+
+      // alias the templated function names to make them shorter
+      #define SubmitProduceA \
+        Produce<ProduceAKernelID<u>, ValueT, IndexT, AShufflePipe, APipe>
+      #define SubmitProduceB \
+        Produce<ProduceBKernelID<u>, ValueT, IndexT, BShufflePipe, BPipe>
+      #define SubmitMerge \
+        Merge<MergeKernelID<u>, ValueT, IndexT, APipe, BPipe, MergePipe>
+      #define SubmitConsume \
+        Consume<ConsumeKernelID<u>, ValueT, IndexT, MergePipe, InternalOutPipe>
+
+      // Except for the first iteration, producers for the current iteration
+      // must wait for the consumer to be done writing to global memory from the
+      // previous iteration. This is coarse grain synchronization between the
+      // producer and consumer of each merge unit.
+      std::vector<event> wait_events;
+      if (i != 0) {
+        wait_events.push_back(consume_events[u][i-1]);
+      }
+
+      // the temporary device buffers reside in a single device allocation,
+      // so compute the offset into the buffer for each merge unit.
+      size_t unit_buf_offset = count_per_unit * u;
 
       // get device pointers for this merge unit's producers and consumer
       ValueT* in_buf_a = buf[buf_idx] + unit_buf_offset;
@@ -208,31 +216,21 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
       ////////////////////////////////////////////////////////////////////////
       // Enqueue the merge unit kernels
       // Produce A
-      produce_a_events[u].push_back(
-        Produce<ProduceAKernelID<u>, ValueT, IndexT,
-                AShufflePipe, APipe>(q, in_buf_a, count_per_unit, in_count,
-                                     producer_from_pipe, wait_events)
-      );
+      produce_a_events[u][i] = SubmitProduceA(q, in_buf_a, count_per_unit,
+                                              in_count, producer_from_pipe,
+                                              wait_events);
 
       // Produce B
-      produce_b_events[u].push_back(
-        Produce<ProduceBKernelID<u>, ValueT, IndexT,
-                BShufflePipe, BPipe>(q, in_buf_b, count_per_unit, in_count,
-                                     producer_from_pipe, wait_events)
-      ); 
+      produce_b_events[u][i] = SubmitProduceB(q, in_buf_b, count_per_unit,
+                                              in_count, producer_from_pipe,
+                                              wait_events); 
       
       // Merge
-      merge_events[u].push_back( 
-        Merge<MergeKernelID<u>, ValueT, IndexT,
-              APipe, BPipe, MergePipe>(q, count_per_unit, in_count, comp)
-      );
+      merge_events[u][i] = SubmitMerge(q, count_per_unit, in_count, comp);
 
       // Consume
-      consume_events[u].push_back( 
-        Consume<ConsumeKernelID<u>, ValueT, IndexT,
-                MergePipe, InternalOutPipe>(q, out_buf, count_per_unit,
-                                            consumer_to_pipe)
-      );
+      consume_events[u][i] = SubmitConsume(q, out_buf, count_per_unit,
+                                           consumer_to_pipe);
     });
     ////////////////////////////////////////////////////////////////////////
 
@@ -259,46 +257,44 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
       // InPipeA for this merge kernel in the merge tree.
       // If the merge tree level is 0, the pipe is from a merge unit
       // otherwise it is from the previous level of the merge tree.
-      using APipeFromMergeUnit = 
+      using MTAPipeFromMergeUnit = 
         typename InternalOutPipes::template pipe<merge_unit*2>;
-      using APipeFromMergeTree =
+      using MTAPipeFromMergeTree =
         typename InternalMTPipes::template pipe<level-1, merge_unit*2>;
       using MTAPipe =
         typename std::conditional_t<(level == 0),
-                                    APipeFromMergeUnit,
-                                    APipeFromMergeTree>;
+                                    MTAPipeFromMergeUnit,
+                                    MTAPipeFromMergeTree>;
 
       // InPipeB for this merge kernel in the merge tree.
       // If the merge tree level is 0, the pipe is from a merge unit
       // otherwise it is from the previous level of the merge tree.
-      using BPipeFromMergeUnit =
+      using MTBPipeFromMergeUnit =
         typename InternalOutPipes::template pipe<merge_unit*2+1>;
-      using BPipeFromMergeTree =
+      using MTBPipeFromMergeTree =
         typename InternalMTPipes::template pipe<level-1, merge_unit*2+1>;
       using MTBPipe =
         typename std::conditional_t<(level == 0),
-                                      BPipeFromMergeUnit,
-                                      BPipeFromMergeTree>;
+                                      MTBPipeFromMergeUnit,
+                                      MTBPipeFromMergeTree>;
 
       // OutPipe for this merge kernel in the merge tree.
       // If this is the last level, then the output pipe is the output pipe
       // of the entire sorter, otherwise it is going to another level of the
       // merge tree.
-      using OutPipeToMT = 
+      using MTOutPipeToMT = 
         typename InternalMTPipes::template pipe<level, merge_unit>;
       using MTOutPipe =
         typename std::conditional_t<(level == (kReductionLevels-1)),
                                       OutPipe,
-                                      OutPipeToMT>;
+                                      MTOutPipeToMT>;
       
       // Launch the merge kernel
-      mt_merge_events[level].push_back( 
-        Merge<MergeTreeMergeKernelID<level, merge_unit>, ValueT, IndexT,
-                                     MTAPipe, MTBPipe, MTOutPipe>(q,
-                                                                  in_count*2,
-                                                                  in_count,
-                                                                  comp)
-      );
+      #define SubmitMTMerge \
+        Merge<MergeTreeMergeKernelID<level, merge_unit>, ValueT, IndexT, \
+              MTAPipe, MTBPipe, MTOutPipe>
+      mt_merge_events[level].push_back(SubmitMTMerge(q, in_count*2, in_count,
+                                                     comp));
     });
     
     // increase the input size
