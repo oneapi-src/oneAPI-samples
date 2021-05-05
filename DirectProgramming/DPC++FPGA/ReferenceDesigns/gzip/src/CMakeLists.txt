@@ -82,8 +82,8 @@ if(${SUPPORTS_LL_VARIANT})
     # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
     add_executable(${EMULATOR_TARGET_LL} ${DEVICE_SOURCE_FILE_LL} ${HOST_SOURCE_FILE_LL})
     add_custom_target(fpga_emu_ll DEPENDS ${EMULATOR_TARGET_LL})
-    set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
-    set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
+    set_target_properties(${EMULATOR_TARGET_LL} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
+    set_target_properties(${EMULATOR_TARGET_LL} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
     # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 endif()
 
