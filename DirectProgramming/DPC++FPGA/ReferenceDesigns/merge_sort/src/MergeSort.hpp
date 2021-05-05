@@ -206,7 +206,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
 
       // the temporary device buffers reside in a single device allocation,
       // so compute the offset into the buffer for each merge unit.
-      size_t unit_buf_offset = count_per_unit * u;
+      const size_t unit_buf_offset = count_per_unit * u;
 
       // get device pointers for this merge unit's producers and consumer
       ValueT* in_buf_a = buf[buf_idx] + unit_buf_offset;
@@ -289,10 +289,12 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
                                       OutPipe,
                                       MTOutPipeToMT>;
       
-      // Launch the merge kernel
+      // create an alias for the long templated function call
       #define SubmitMTMerge \
         Merge<MergeTreeMergeKernelID<level, merge_unit>, ValueT, IndexT, \
               MTAPipe, MTBPipe, MTOutPipe>
+      
+      // Launch the merge kernel
       mt_merge_events[level].push_back(SubmitMTMerge(q, in_count*2, in_count,
                                                      comp));
     });
@@ -330,7 +332,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
 }
 
 //
-// A convenience method which defaults the sorters comparator to 'LessThan'
+// A convenience method that defaults the sorters comparator to 'LessThan'
 // (i.e., operator<)
 //
 template<typename ValueT, typename IndexT, typename InPipe, typename OutPipe, size_t units>
