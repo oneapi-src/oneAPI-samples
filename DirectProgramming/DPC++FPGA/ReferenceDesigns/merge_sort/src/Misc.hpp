@@ -36,29 +36,4 @@ constexpr T RoundUpPow2(T n) {
   }
 }
 
-///////////////////////////////////////////////////////////
-// Simple 1D and 2D pipe arrays
-template <class Id, typename T, size_t depth=0>
-struct PipeArray {
-  PipeArray() = delete;
-
-  template <size_t idx>
-  struct PipeId;
-
-  template <size_t idx>
-  using pipe = sycl::INTEL::pipe<PipeId<idx>, T, depth>;
-};
-
-template <class Id, typename T, size_t depth=0>
-struct PipeArray2D {
-  PipeArray2D() = delete;
-
-  template <size_t x, size_t y>
-  struct PipeId;
-
-  template <size_t x, size_t y>
-  using pipe = sycl::INTEL::pipe<PipeId<x,y>, T, depth>;
-};
-///////////////////////////////////////////////////////////
-
 #endif /* __MISC_HPP__ */

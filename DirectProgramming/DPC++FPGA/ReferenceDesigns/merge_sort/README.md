@@ -158,12 +158,14 @@ The following source files can be found in the `src/` sub-directory.
 | File                           | Description 
 |:---                            |:---
 |`merge_sort.cpp`                | Contains the `main()` function and the top-level interfaces.
-|`MergeSort.hpp`                 | The function to submit all of the merge sort kernels (`Shuffle`, `Produce`, `Merge`, and `Consume`)
+|`MergeSort.hpp`                 | The function to submit all of the merge sort kernels (`Partition`, `Produce`, `Merge`, and `Consume`)
 |`Consume.hpp`                   | The `Consume` kernel for the merge unit
 |`Merge.hpp`                     | The `Merge` kernel for the merge unit and the merge tree
 |`Misc.hpp`                      | Miscellaneous helper functions
+|`Partition.hpp`                 | The `Partition` kernel
+|`pipe_array.hpp`                | Header file containing the definition of an array of pipes
+|`pipe_array_internal.hpp`       | Helper for pipe_array.hpp
 |`Produce.hpp`                   | The `Produce` kernel for the merge unit
-|`Shuffle.hpp`                   | The `Shuffle` kernel
 |`UnrolledLoop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end
 
 ### Merge Sort Details
@@ -181,9 +183,9 @@ A single merge unit requires `lg(N)` iterations to sort `N` elements. This requi
 
 <img src="basic_runtime_graph.png" alt="basic_runtime_graph" width="800"/>
 
-To improve performance, the merge sort design accepts a template parameter `units` which allows one to instantiate multiple instances of the merge unit, as shown in the figure below. Choosing the number of units is an area-performance tradeoff (note: the number of instantiated merge units must be a power of 2). In this design, each merge unit sorts a partition of the input data of size `N/units`. However, since the data is coming in one element at a time from a SYCL pipe, the data must be partitioned in the first iteration of the sort. This is done using the `Shuffle` kernel, which shuffles the data between the merge units and the producers (`ProduceA` and `ProduceB`) of each merge unit to perform the first iteration of the sort from the input pipe.
+To improve performance, the merge sort design accepts a template parameter `units` which allows one to instantiate multiple instances of the merge unit, as shown in the figure below. Choosing the number of units is an area-performance tradeoff (note: the number of instantiated merge units must be a power of 2). In this design, each merge unit sorts a partition of the input data of size `N/units`. However, since the data is coming in one element at a time from a SYCL pipe, the data must be partitioned in the first iteration of the sort. This is done using the `Partition` kernel, which feeds the data to producers of merge unit 0 (alternating between the) to perform the first iteration of the sort from the input pipe. Notice that only `ProduceA` and `ProduceB` of merge unit 0 have input pipes to perform this initial partition, the other merge units do not. This is reflected in the two different versions of the `Produce` kernel in *Produce.hpp*.
 
-<img src="parallel_tree.png" alt="parallel_tree" width="800"/>
+<img src="parallel_tree.png" alt="parallel_tree" width="900"/>
 
 After the merge units sort their `N/units`-sized partition, the partitions must be reduced into a single sorted list. There are two options to do this: (1) reuse the merge units to perform `lg(units)` more iterations to sort the partitions, or (2) create a merge tree to reduce the partitions into a single sorted list. Option (1) saves area at the expense of performance, since it has to perform additional sorting iterations. Option (2), which we choose for this design, improves performance by creating a merge tree to reduce the final partitions into a single sorted list. The `Merge` kernels in the merge tree (shown in the figure above) use the same kernel code that is used in the `Merge` kernel of the merge unit.
 
