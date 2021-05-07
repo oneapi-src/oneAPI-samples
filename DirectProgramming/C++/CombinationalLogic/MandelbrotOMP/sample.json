@@ -13,12 +13,13 @@
             { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
         ],
         "linux": [{
-		    "steps": [
-			    "mkdir build",
-                "cd build",
-                "cmake ..",
-                "make",
-                "make run"
+		"id": "mandelbrot_omp",
+		"steps": [
+		    	"mkdir build",
+			"cd build",
+                	"cmake ..",
+                	"make",
+                	"make run"
 		 ]
     }
 }
