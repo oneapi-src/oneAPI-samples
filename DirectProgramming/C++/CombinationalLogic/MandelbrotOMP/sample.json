@@ -2,8 +2,8 @@
     "name": "Mandelbrot OMP",
     "categories": ["Toolkit/oneAPI Direct Programming/C++/Combinational Logic", "Toolkit/oneAPI Tools/Advisor"],
     "description": "Calculates the Mandelbrot Set and outputs a BMP image representation using OpenMP* (OMP)",
-    "os": ["darwin"],
-    "builder": ["make"],
+    "os": ["darwin", "linux"],
+    "builder": ["make", "cmake"],
     "languages": [{"cpp":{}}],
     "toolchain": ["icc"],
     "guid": "DD113F58-4D91-41BB-B46E-6CF2C0D9F6F9",
@@ -11,6 +11,14 @@
         "darwin": [ 
             { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
             { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
-        ]
+        ],
+        "linux": [{
+		    "steps": [
+			    "mkdir build",
+                "cd build",
+                "cmake ..",
+                "make",
+                "make run"
+		 ]
     }
 }
