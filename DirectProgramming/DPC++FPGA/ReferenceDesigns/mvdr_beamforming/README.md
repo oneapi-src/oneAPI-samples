@@ -192,10 +192,10 @@ PASSED
 ### MVDR Beamforming
 This reference design is built upon the **IO Streaming** code sample.
 
-The images below show the dataflow in the MVDR beamforming design. The first image shows the "real" dataflow when IO pipes are used at the inputs and outputs. The second image shows the data flow in this reference design where we don't have access to a BSP with IO pipes. The `XrxTrainingProducer` and `XrxDataProducer` are the kernels that replace the input IO pipe in the first image. Note that the splitting of data (shown as a black dot with two outward arrows in the first image) is done by the host using `XrxTrainingProducer` and `XrxDataProducer`. The `DataOutConsumer` kernel replaces the output IO pipe in the first image. The data for the `SteeringVectorGenerator` kernel still comes from the host through the `SinThetaProducer` kernel. This kernel does not replace an IO pipe but simplifies and modularizes the host's data streaming to the device.
+The images below show the dataflow in the MVDR beamforming design. The first image shows the "real" dataflow when IO pipes are used at the inputs and outputs. The second image shows the data flow in this reference design where we don't have access to a BSP with IO pipes. The `DataProducer` kernel replaces the input IO pipe in the first image. The splitting of data between the training and beamforming pipelines is done by the `InputDemux` kernel. The `DataOutConsumer` kernel replaces the output IO pipe in the first image. The data for the `SteeringVectorGenerator` kernel still comes from the host through the `SinThetaProducer` kernel. This kernel does not replace an IO pipe but simplifies and modularizes the host's data streaming to the device.
 
-<img src="processing_kernels_ideal.png" alt="processing_kernels_ideal" width="800"/>
-<img src="processing_kernels_fake.png" alt="processing_kernels_fake" width="800"/>
+<img src="processing_kernels_ideal.png" alt="processing_kernels_ideal" width="900"/>
+<img src="processing_kernels_fake.png" alt="processing_kernels_fake" width="900"/>
 
 ### Using Real IO-pipes
 This section describes how to build and run this reference design on a BSP with real IO pipes. The real IO pipes version does **not** work on Windows and requires a specific system setup and BSP.
