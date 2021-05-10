@@ -26,32 +26,35 @@ be stable.
 |../DPC++/StructuredGrids/ISO2DFD_DPCPP 	|GPU, CPU  	|A simple finite difference   stencil kernel for solving 2D acoustic isotropic wave equation using DPC++	|
 |../DPC++/StructuredGrids/ISO3DFD_DPCPP 	|GPU, CPU  	|A finite difference stencil   kernel for solving 3D acoustic isotropic wave equation using DPC++  	|
 |../DPC++/StructuredGrids/Particle-diffusion 	|GPU, CPU  	|A simple implementation of a   Monte Carlo simulation of the diffusion of water molecules in tissue    	|
-|../DPC++FPGA/ReferenceDesigns/gzip                 |FPGA |High-performance GZIP compression using DPC++ on FPGA |
-|../DPC++FPGA/ReferenceDesigns/db                   |FPGA |High-performance database query acceleration for FPGA-attached memory using DPC++ |
-|../DPC++FPGA/ReferenceDesigns/qrd                  |FPGA |High-performance QR decomposition of matrices using DPC++ on FPGA |
 |../DPC++FPGA/ReferenceDesigns/crr                  |FPGA |High-performance CRR binomial tree option pricing model using DPC++ on FPGA |
+|../DPC++FPGA/ReferenceDesigns/db                   |FPGA |High-performance database query acceleration for FPGA-attached memory using DPC++ |
+|../DPC++FPGA/ReferenceDesigns/gzip                 |FPGA |High-performance GZIP compression using DPC++ on FPGA |
+|../DPC++FPGA/ReferenceDesigns/mvdr_beamforming     |FPGA |High-performance radar beamforming for streaming data using DPC++ on FPGA |
+|../DPC++FPGA/ReferenceDesigns/qrd                  |FPGA |High-performance QR decomposition of matrices using DPC++ on FPGA |
 |../DPC++FPGA/Tutorials/                            |
-|...../GettingStarted/fpga_compile                  |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
 |...../GettingStarted/fast_recompile                |FPGA |Tutorial introducing host-only recompile to save DPC++ development time on FPGA |
-|...../Tools/use_library                            |FPGA |Tutorial showing how to use cross-language libraries in DPC++ on FPGA |
-|...../Tools/system_profiling                       |FPGA |Tutorial showing how to use the OpenCL Intercept Layer to profile DPC++ designs running on FPGA at the system level |
+|...../GettingStarted/fpga_compile                  |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
 |...../Tools/dynamic_profiler                       |FPGA |Tutorial showing how to use the Intel® FPGA Dynamic Profiler for DPC++ for detailed FPGA kernel profiling|
+|...../Tools/system_profiling                       |FPGA |Tutorial showing how to use the OpenCL Intercept Layer to profile DPC++ designs running on FPGA at the system level |
+|...../Tools/use_library                            |FPGA |Tutorial showing how to use cross-language libraries in DPC++ on FPGA |
 |...../DesignPatterns/buffered_host_streaming       |FPGA |Tutorial demonstrating how to create a high-performance full system CPU-FPGA design using SYCL USM. |
+|...../DesignPatterns/compute_units                 |FPGA |Tutorial showing how to efficiently make multiple copies of a kernel, called compute units |
 |...../DesignPatterns/double_buffering              |FPGA |Tutorial demonstrating how to overlap kernel execution with buffer transfers and host processing |
+|...../DesignPatterns/explicit_data_movement        |FPGA |Tutorial showing an alternative coding (explicit USM) in which data movement between host and device is controlled explicitly in code |
+|...../DesignPatterns/io_streaming                  |FPGA |Tutorial describing how to use DPC++ IO pipes to stream data through the FPGA's IO |
+|...../DesignPatterns/loop_carried_dependency       |FPGA |Tutorial demonstrating how to remove a loop-carried dependency to improve the performance of the FPGA device code |
 |...../DesignPatterns/n_way_buffering               |FPGA |Tutorial demonstrating how to extend double buffering to n-way buffering |
-|...../DesignPatterns/zero_copy_data_transfer       |FPGA |Tutorial demonstrating how to use zero-copy host-device memory transfer for FPGA kernels with no temporal data reuse  |
 |...../DesignPatterns/onchip_memory_cache           |FPGA |Tutorial explaining the caching of on-chip memory to reduce loop initiation interval on FPGA |
 |...../DesignPatterns/optimize_inner_loop           |FPGA |Tutorial explaining how to optimize the throughput of an inner loop with a low trip count |
-|...../DesignPatterns/carried_dependency            |FPGA |Tutorial explaining a technique to optimize performance by removing loop carried dependencies |
-|...../DesignPatterns/triangular_loop               |FPGA |Tutorial explaining an advanced FPGA optimization technique for triangular loops |
-|...../DesignPatterns/shannonization                |FPGA |Tutorial explaining an optimization for removing computation from the critical path |
 |...../DesignPatterns/pipe_array                    |FPGA |Tutorial showing how to create an array of pipes  |
-|...../DesignPatterns/compute_units                 |FPGA |Tutorial showing how to efficiently make multiple copies of a kernel, called compute units |
+|...../DesignPatterns/shannonization                |FPGA |Tutorial explaining an optimization for removing computation from the critical path |
 |...../DesignPatterns/simple_host_streaming         |FPGA |Tutorial showing how to use SYCL Universal Shared Memory (USM) to stream data between the host and FPGA device and achieve low latency while maintaining throughput. |
-|...../DesignPatterns/explicit_data_movement        |FPGA |Tutorial showing an alternative coding (explicit USM) in which data movement between host and device is controlled explicitly in code |
+|...../DesignPatterns/triangular_loop               |FPGA |Tutorial explaining an advanced FPGA optimization technique for triangular loops |
+|...../DesignPatterns/zero_copy_data_transfer       |FPGA |Tutorial demonstrating how to use zero-copy host-device memory transfer for FPGA kernels with no temporal data reuse  |
 |...../Features/fpga_reg                            |FPGA |Tutorial demonstrating the use of the DPC++ FPGA power user extension intel::fpga_reg |
 |...../Features/kernel_args_restrict                |FPGA |Tutorial demonstrating how to avoid performance penalties due to kernel argument aliasing |
 |...../Features/loop_coalesce                       |FPGA |Tutorial demonstrating the DPC++ FPGA loop_coalesce attribute |
+|...../Features/loop_initiation_interval            |FPGA |Tutorial demonstrating the use of the intel::initiation_interval attribute to improve performance |
 |...../Features/loop_ivdep                          |FPGA |Tutorial demonstrating the use of the loop ivdep attribute |
 |...../Features/loop_unroll                         |FPGA |Tutorial demonstrating the DPC++ unroll pragma and its performance trade-offs on FPGA |
 |...../Features/lsu_control                         |FPGA |Tutorial demonstrating how to configure the load-store units (LSUs) in your DPC++ program for FPGA |
