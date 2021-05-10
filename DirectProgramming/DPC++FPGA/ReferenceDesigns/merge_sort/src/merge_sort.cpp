@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
       std::terminate(); 
     }
 
-    // copy input to the device memory adn wait for the copy to finish
+    // copy input to the device memory and wait for the copy to finish
     q.memcpy(in, in_vec.data(), count*sizeof(ValueT)).wait();
   }
 
@@ -237,7 +237,7 @@ class SortOutPipeID;
 // perform the actual sort on the FPGA.
 //
 template<typename ValueT, typename IndexT, typename KernelPtrType>
-double fpga_sort(queue& q, ValueT *in_ptr, ValueT* out_ptr, IndexT count) {
+double fpga_sort(queue& q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   // the input and output pipe for the sorter
   using SortInPipe = sycl::INTEL::pipe<SortInPipeID, ValueT>;
   using SortOutPipe = sycl::INTEL::pipe<SortOutPipeID, ValueT>;
@@ -257,7 +257,7 @@ double fpga_sort(queue& q, ValueT *in_ptr, ValueT* out_ptr, IndexT count) {
  
   // launch the producer
   auto producer_event = q.submit([&](handler& h) {
-    h.single_task<ProducerKernelID>([=] {
+    h.single_task<ProducerKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the input pointer and write it to the sorter's input pipe
       KernelPtrType in(in_ptr);
       for (unsigned int i = 0; i < sorter_count; i++) {
@@ -267,10 +267,9 @@ double fpga_sort(queue& q, ValueT *in_ptr, ValueT* out_ptr, IndexT count) {
     });
   });
 
-
   // launch the consumer
   auto consumer_event = q.submit([&](handler& h) {
-    h.single_task<ConsumerKernelID>([=] {
+    h.single_task<ConsumerKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the sorters output pipe and write to the output pointer
       KernelPtrType out(out_ptr);
       for (unsigned int i = 0; i < sorter_count; i++) {
@@ -281,7 +280,7 @@ double fpga_sort(queue& q, ValueT *in_ptr, ValueT* out_ptr, IndexT count) {
   });
 
   // allocate some memory for the merge sort to use as temporary storage
-  ValueT* buf_0, *buf_1;
+  ValueT *buf_0, *buf_1;
   if ((buf_0 = malloc_device<ValueT>(sorter_count, q)) == nullptr) {
     std::cerr << "ERROR: could not allocate memory for 'buf_0'\n";
     std::terminate();
@@ -293,9 +292,9 @@ double fpga_sort(queue& q, ValueT *in_ptr, ValueT* out_ptr, IndexT count) {
 
   // launch the merge sort kernels
   auto merge_sort_events =
-    SubmitMergeSort<ValueT, IndexT, SortInPipe, SortOutPipe, kMergeUnits>(q,
-                                                                   sorter_count,
-                                                                   buf_0, buf_1);
+    SubmitMergeSort<ValueT, IndexT,
+                    SortInPipe, SortOutPipe, kMergeUnits>(q, sorter_count,
+                                                          buf_0, buf_1);
 
   // wait for the producer and consumer to finish
   auto start = high_resolution_clock::now();

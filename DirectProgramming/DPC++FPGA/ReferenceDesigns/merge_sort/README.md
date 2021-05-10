@@ -145,7 +145,7 @@ You should see the following output in the console:
 2. When running on the FPGA device
     ```
     Running sort 17 times for an input size of 16777216 using 16 merge units
-    Streaming data from host memory
+    Streaming data from device memory
     Execution time: 69.9848 ms
     Throughput: 228.621 Melements/s
     PASSED

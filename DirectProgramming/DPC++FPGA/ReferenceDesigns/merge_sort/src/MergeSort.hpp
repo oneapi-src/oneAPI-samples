@@ -104,36 +104,6 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
   // depth of the merge tree to reduce the partial results of each merge unit
   constexpr size_t kReductionLevels = Log2(units);
 
-  //////////////////////////////////////////////////////////////////////////////
-  // These defines make the code much cleaner but one must be careful
-  // to make sure that changing variable/template names in the code later
-  // is propagated here
-  #define SubmitPartition \
-    Partition<PartitionKernelID, ValueT, IndexT, InPipe, APartitionPipe, \
-              BPartitionPipe>
-  #define SubmitPartitionProduceA \
-    Produce<ProduceAKernelID<0>, ValueT, IndexT, APartitionPipe, APipe>
-  #define SubmitPartitionProduceB \
-    Produce<ProduceBKernelID<0>, ValueT, IndexT, BPartitionPipe, BPipe>
-  #define SubmitPartitionMerge \
-    Merge<MergeKernelID<0>, ValueT, IndexT, APipe, BPipe, MergePipe>
-  #define SubmitPartitionConsume \
-    Consume<ConsumeKernelID<0>, ValueT, IndexT, MergePipe, InternalOutPipe>
-
-  #define SubmitProduceA \
-    Produce<ProduceAKernelID<u>, ValueT, IndexT, APipe>
-  #define SubmitProduceB \
-    Produce<ProduceBKernelID<u>, ValueT, IndexT, BPipe>
-  #define SubmitMerge \
-    Merge<MergeKernelID<u>, ValueT, IndexT, APipe, BPipe, MergePipe>
-  #define SubmitConsume \
-    Consume<ConsumeKernelID<u>, ValueT, IndexT, MergePipe, InternalOutPipe>
-
-  #define SubmitMTMerge \
-    Merge<MergeTreeMergeKernelID<level, merge_unit>, ValueT, IndexT, \
-          MTAPipe, MTBPipe, MTOutPipe>
-  //////////////////////////////////////////////////////////////////////////////
-
   // validate 'count'
   if (count == 0) {
     std::cerr << "ERROR: 'count' must be greater than 0\n";
@@ -202,28 +172,34 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
     std::conditional_t<(units == 1), OutPipe,
                         typename InternalOutPipes::template PipeAt<0>>;
   
-  std::vector<event> empty_event_vec;
+  // empty vector of events to signal no dependencies for the producer kernels
+  std::vector<event> no_deps;
 
-  // NOTE: check the macros defined earlier in this function for an explanation
-  // of what SubmitPartition* do
   // Partition Kernel
-  auto partition_event = SubmitPartition(q, count);
+  auto partition_event =
+    Partition<PartitionKernelID, ValueT, IndexT, InPipe,
+              APartitionPipe, BPartitionPipe>(q, count);
 
   // NOTE: 'buf[buf_idx]' are unused by the producers below
   // Produce A (merge unit 0)
   auto partition_produce_a_event =
-    SubmitPartitionProduceA(q, buf[buf_idx], count, 1, true, empty_event_vec);
+    Produce<ProduceAKernelID<0>, ValueT, IndexT,
+            APartitionPipe, APipe>(q, buf[buf_idx], count, 1, 0, true, no_deps);
 
   // Produce B (merge unit 0)
   auto partition_produce_b_event =
-    SubmitPartitionProduceB(q, buf[buf_idx], count, 1, true, empty_event_vec);
+    Produce<ProduceBKernelID<0>, ValueT, IndexT,
+            BPartitionPipe, BPipe>(q, buf[buf_idx], count, 1, 1, true, no_deps);
 
   // Merge
-  auto partition_merge_event = SubmitPartitionMerge(q, count, 1, comp);
+  auto partition_merge_event =
+    Merge<MergeKernelID<0>, ValueT, IndexT,
+          APipe, BPipe, MergePipe>(q, count, 1, comp);
 
   // Consume
   auto partition_consume_event =
-    SubmitPartitionConsume(q, buf[buf_idx], count, false);
+    Consume<ConsumeKernelID<0>, ValueT, IndexT,
+            MergePipe, InternalOutPipe>(q, buf[buf_idx], count, false);
   ////////////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////////////
@@ -271,9 +247,8 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
       const size_t unit_buf_offset = count_per_unit * u;
 
       // get device pointers for this merge unit's producers and consumer
-      ValueT* in_buf_a = buf[buf_idx] + unit_buf_offset;
-      ValueT* in_buf_b = buf[buf_idx] + unit_buf_offset + in_count;
-      ValueT* out_buf = buf[next_buf_idx(buf_idx)] + unit_buf_offset;
+      ValueT *in_buf = buf[buf_idx] + unit_buf_offset;
+      ValueT *out_buf = buf[next_buf_idx(buf_idx)] + unit_buf_offset;
 
       ////////////////////////////////////////////////////////////////////////
       // Enqueue the merge unit kernels
@@ -287,25 +262,35 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
         // the first merge unit is special, since it is connected to the 
         // partition kernel.
         produce_a_events[u][i] =
-          SubmitPartitionProduceA(q, in_buf_a, count_per_unit, in_count, false,
-                                  wait_events);
+          Produce<ProduceAKernelID<u>, ValueT, IndexT,
+                  APartitionPipe, APipe>(q, in_buf, count_per_unit, in_count,
+                                         0, false, wait_events);
         produce_b_events[u][i] =
-          SubmitPartitionProduceB(q, in_buf_b, count_per_unit, in_count, false,
-                                  wait_events);
+          Produce<ProduceBKernelID<u>, ValueT, IndexT,
+                  BPartitionPipe, BPipe>(q, in_buf, count_per_unit, in_count,
+                                         in_count, false, wait_events);
       } else {
         // all other merge units (not the first) are not connected to pipes
         produce_a_events[u][i] =
-          SubmitProduceA(q, in_buf_a, count_per_unit, in_count, wait_events);
+          Produce<ProduceAKernelID<u>, ValueT,
+                  IndexT, APipe>(q, in_buf, count_per_unit,
+                                 in_count, 0, wait_events);
         produce_b_events[u][i] =
-          SubmitProduceB(q, in_buf_b, count_per_unit, in_count, wait_events);
+          Produce<ProduceBKernelID<u>, ValueT,
+                  IndexT, BPipe>(q, in_buf, count_per_unit,
+                                 in_count, in_count, wait_events);
       }
-      
+
       // Merge
-      merge_events[u][i] = SubmitMerge(q, count_per_unit, in_count, comp);
+      merge_events[u][i] =
+        Merge<MergeKernelID<u>, ValueT, IndexT,
+              APipe, BPipe, MergePipe>(q, count_per_unit, in_count, comp);
 
       // Consume
-      consume_events[u][i] = SubmitConsume(q, out_buf, count_per_unit,
-                                           consumer_to_pipe);
+      consume_events[u][i] =
+        Consume<ConsumeKernelID<u>, ValueT, IndexT,
+                MergePipe, InternalOutPipe>(q, out_buf, count_per_unit,
+                                            consumer_to_pipe);
     });
     ////////////////////////////////////////////////////////////////////////
 
@@ -340,7 +325,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
 
     UnrolledLoop<kLevelMergeUnits>([&](auto merge_unit) {
       // When level == 0, we know we will use MTAPipeFromMergeUnit and
-      // MTBPipeFromMergeUnit below. Howevever, we cannot access
+      // MTBPipeFromMergeUnit below. However, we cannot access
       // PipeAt<-1, ...> without a compiler error. So, we will set the previous
       // level to 0, knowing that we will not use MTAPipeFromMergeTree nor
       // MTBPipeFromMergeTree
@@ -382,9 +367,11 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
                                      MTOutPipeToMT>;
       
       // Launch the merge kernel
-      const auto e = SubmitMTMerge(q, in_count*2, in_count, comp);
+      const auto e =
+        Merge<MergeTreeMergeKernelID<level, merge_unit>, ValueT, IndexT,
+              MTAPipe, MTBPipe, MTOutPipe>(q, in_count*2, in_count, comp);
       mt_merge_events[level].push_back(e);
-    });
+    }); 
     
     // increase the input size
     in_count *= 2;

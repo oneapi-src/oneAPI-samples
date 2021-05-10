@@ -13,7 +13,7 @@ using namespace sycl;
 template<typename Id, typename ValueT, typename IndexT, typename InPipe,
          typename OutPipe>
 event Produce(queue& q, ValueT *in_ptr, IndexT total_count,
-              IndexT in_block_count, bool from_pipe,
+              IndexT in_block_count, IndexT start_offset, bool from_pipe,
               std::vector<event>& depend_events) {
   // producer always produces half of the total count
   const IndexT half_total_count = total_count / 2;
@@ -41,7 +41,7 @@ event Produce(queue& q, ValueT *in_ptr, IndexT total_count,
         if (from_pipe) {
           data = InPipe::read();
         } else {
-          data = *(in + block_offset + inter_block_offset);
+          data = in[start_offset + block_offset + inter_block_offset];
         }
 
         // write to the output pipe
@@ -63,11 +63,12 @@ event Produce(queue& q, ValueT *in_ptr, IndexT total_count,
 }
 
 //
-// Same as the produce about, but with no input pipe
+// Same as the produce above, but with no input pipe
 //
 template<typename Id, typename ValueT, typename IndexT, typename OutPipe>
 event Produce(queue& q, ValueT *in_ptr, IndexT total_count,
-              IndexT in_block_count, std::vector<event>& depend_events) {
+              IndexT in_block_count, IndexT start_offset,
+              std::vector<event>& depend_events) {
   // producer always produces half of the total count
   const IndexT half_total_count = total_count / 2;
 
@@ -88,7 +89,7 @@ event Produce(queue& q, ValueT *in_ptr, IndexT total_count,
 
       while (block_idx != num_blocks) {
         // get the input data from either the input pipe, or device memory
-        ValueT data = *(in + block_offset + inter_block_offset);
+        ValueT data = in[start_offset + block_offset + inter_block_offset];
 
         // write to the output pipe
         OutPipe::write(data);

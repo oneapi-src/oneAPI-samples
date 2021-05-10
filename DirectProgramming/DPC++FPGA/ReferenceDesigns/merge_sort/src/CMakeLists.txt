@@ -17,8 +17,9 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
 endif()
 
-# check if the BSP has USM host allocations
-if(FPGA_BOARD MATCHES ".usm.*")
+# check if the BSP has USM host allocations or manually enable using host allocations
+# e.g. cmake .. -DUSE_USM_HOST_ALLOCATIONS=1
+if(FPGA_BOARD MATCHES ".usm.*" OR DEFINED USE_USM_HOST_ALLOCATIONS)
     set(ENABLE_USM "-DUSM_HOST_ALLOCATIONS")
     message(STATUS "USM host allocations are enabled")
 endif()
