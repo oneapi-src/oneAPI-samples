@@ -15,6 +15,6 @@
 	    "linux": [ 
             { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
             { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "make run", "make clean" ] }
-        ],
+        ]
     }
 }
