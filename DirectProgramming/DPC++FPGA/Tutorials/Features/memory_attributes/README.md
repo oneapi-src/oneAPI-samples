@@ -39,7 +39,7 @@ Memory attributes can be applied to any variable or array defined within the ker
 | `intel::private_copies(N)`       | Specifies that a maximum of N private copies should be created to enable concurrent execution of N pipelined threads.
 | `intel::simple_dual_port`        | Specifies that the memory implementing the variable or array should have no port that services both reads and writes.
 | `intel::merge("key", "type")`    | Merge two or more variables or arrays in the same scope width-wise or depth-wise. All variables with the same `key` string are merged into the same memory system. The string `type` can be either `width` or `depth`. 
-| `intel::bank_bits(b0, b1,..., bn)`  | Specifies that the local memory addresses should use bits (b0, b1,..., bn) for bank-selection, where (b0, b1,..., bn) are indicated in terms of word-addressing. The bits of the local memory address not included in (b0, b1,..., bn) will be used for word-selection in each bank. 
+| `intel::bank_bits(b0, b1,..., bn)`  | Specifies that the local memory addresses should use bits `(b0, b1,..., bn)` for bank-selection, where `(b0, b1,..., bn)` are indicated in terms of word-addressing. The bits of the local memory address not included in `(b0, b1,..., bn)` will be used for word-selection in each bank. 
 
 
 #### Example 1: Applying memory attributes to private arrays
