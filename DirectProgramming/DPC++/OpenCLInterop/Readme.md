@@ -9,9 +9,9 @@
   
 ## Purpose
 The samples here show how to incrementally migrate OpenCL to DPC++.
-1. Shows a DPC++ program that copmiles and runs an OpenCL kernel. (For this, OpenCL must be set as the backend and not Level 0)
-	Use the environment varialbe SYCL_DEVICE_FILTER=OPENCL
-2. Show how to conver OpenCL objects (Memory Objects, Platform, Context, Program, Kernel) to DPC++ and execute the program. 
+1. Shows a DPC++ program that compiles and runs an OpenCL kernel. (For this, OpenCL must be set as the backend and not Level 0)
+    - Use the environment variable SYCL_DEVICE_FILTER=OPENCL
+3. Show how to convert OpenCL objects (Memory Objects, Platform, Context, Program, Kernel) to DPC++ and execute the program. 
 
 ## License  
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
