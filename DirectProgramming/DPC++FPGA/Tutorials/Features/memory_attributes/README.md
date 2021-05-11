@@ -30,7 +30,7 @@ Memory attributes can be applied to any variable or array defined within the ker
 | Memory Attribute                 | Description
 ---                                |---
 | `intel::fpga_register`           | Forces a variable or array to be carried through the pipeline in registers.
-| `intel::memory("impl_type")`     | Forces a variable or array to be implemented as embedded memory. The optional string parameter `impl_type` can be `BLOCK_RAM` or `MLAB`.
+| `intel::fpga_memory("impl_type")`| Forces a variable or array to be implemented as embedded memory. The optional string parameter `impl_type` can be `BLOCK_RAM` or `MLAB`.
 | `intel::numbanks(N)`             | Specifies that the memory implementing the variable or array must have N memory banks. 
 | `intel::bankwidth(W)`            | Specifies that the memory implementing the variable or array must be W bytes wide.
 | `intel::singlepump`              | Specifies that the memory implementing the variable or array should be clocked at the same rate as the accesses to it.
@@ -39,7 +39,7 @@ Memory attributes can be applied to any variable or array defined within the ker
 | `intel::private_copies(N)`       | Specifies that a maximum of N private copies should be created to enable concurrent execution of N pipelined threads.
 | `intel::simple_dual_port`        | Specifies that the memory implementing the variable or array should have no port that services both reads and writes.
 | `intel::merge("key", "type")`    | Merge two or more variables or arrays in the same scope width-wise or depth-wise. All variables with the same `key` string are merged into the same memory system. The string `type` can be either `width` or `depth`. 
-| `intel::bank_bits`(b<sub>0</sub>,b<sub>1</sub>,...,b<sub>n</sub>)  | Specifies that the local memory addresses should use bits (b<sub>0</sub>,b<sub>1</sub>,...,b<sub>n</sub>) for bank-selection, where (b<sub>0</sub>,b<sub>1</sub>,...,b<sub>n</sub>) are indicated in terms of word-addressing. The bits of the local memory address not included in (b<sub>0</sub>,b<sub>1</sub>,...,b<sub>n</sub>) will be used for word-selection in each bank. 
+| `intel::bank_bits(b0, b1,..., bn)`  | Specifies that the local memory addresses should use bits (b0, b1,..., bn) for bank-selection, where (b0, b1,..., bn) are indicated in terms of word-addressing. The bits of the local memory address not included in (b0, b1,..., bn) will be used for word-selection in each bank. 
 
 
 #### Example 1: Applying memory attributes to private arrays
@@ -71,7 +71,7 @@ q.submit([&](handler &h) {
 // Memory attributes can be specified for struct data members
 // within the struct declaration.
 struct State {
-  [[intel::numbanks(2)]] int mem[64];
+  [[intel::numbanks(2)]]      int mem[64];
   [[intel::fpga_register]]    int reg[8];
 };
 
@@ -283,6 +283,6 @@ PASSED: all kernel results are correct.
 ### Discussion
 
 Feel free to experiment further with the tutorial code. You can:
- - Change the memory implementation type to block RAMs (using `[[intel::memory("BLOCK_RAM")]]`) or registers (using `[[intel::fpga_register]]`) to see how it affects the area and f<sub>MAX</sub> of the tutorial design.
+ - Change the memory implementation type to block RAMs (using `[[intel::fpga_memory("BLOCK_RAM")]]`) or registers (using `[[intel::fpga_register]]`) to see how it affects the area and f<sub>MAX</sub> of the tutorial design.
  - Vary `kRows` and/or `kVec` (both in powers of 2) see how it affects the trade-off between single-pumped and double-pumped memories.
 
