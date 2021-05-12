@@ -133,10 +133,7 @@ int main() {
 #endif
 
   // Run the kernel with different values of the private_copies
-  // attribute, to determine the optimal concurrency.
-  // In this case, the optimal private_copies is <TODO: Need to put a number
-  // here> since this achieves the highest GFlops. Higher values of
-  // private_copies consume additional RAM without increasing GFlops.
+  // attribute, to determine the optimal private_copies number.
   SimpleMathWithShift<0>(selector, a, shift, R0);
   SimpleMathWithShift<1>(selector, a, shift, R1);
   SimpleMathWithShift<2>(selector, a, shift, R2);

@@ -1,5 +1,5 @@
-# Maximum Concurrency of a Loop
-This FPGA tutorial explains how to use the `private_copies` attribute to improve loop concurrency.
+# Private Copies
+This FPGA tutorial explains how to use the `private_copies` attribute to improve concurrent outer loop iterations.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -18,7 +18,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 ## Purpose
 This tutorial demonstrates a simple example of applying the `private_copies` attribute to an array within a loop in a task kernel to trade off the on-chip memory use and throughput of the loop.
 
-### Description of the `max_concurrency` Attribute
+### Description of the `private_copies` Attribute
 The `private_copies` attribute is a loop attribute that enables you to control the number of copies of any memory that this is applied to. This works best when applying to any memory that has single iteration scope, thus enabling simultaneously executed loop iterations.
 
 #### Example: 
