@@ -12,7 +12,7 @@ OpenCL to DPC++. Two usage scenarios are shown.
 | OS                                | Linux* Ubuntu* 18.04, 20; Windows 10
 | Hardware                          | Skylake or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler, Intel Devcloud
-| What you will learn               | How to offload the computation to GPU using the Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | How OpenCL code can interact with DPC++ with the Intel&reg; oneAPI DPC++/C++ Compiler
 | Time to complete                  | 10 minutes
 
 ## Purpose
