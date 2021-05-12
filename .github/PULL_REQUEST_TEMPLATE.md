@@ -1,8 +1,14 @@
+# Introduction
+This template serves 2 purposes and will need to be edited accordingly prior to submitting the PR
+- Changes to existing samples
+- Submission of new Samples
+
+# Existing Sample Changes
 ## Description
 
 Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change.
 
-Fixes # (issue) 
+Fixes Issue# 
 
 ## External Dependencies
 
@@ -14,6 +20,7 @@ Please delete options that are not relevant. Add a 'X' to the one that is applic
 
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
+- [ ] Implement fixes for ONSAM Jiras
 
 ## How Has This Been Tested?
 
@@ -24,21 +31,39 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 - [ ] Visual Studio
 - [ ] Eclipse IDE
 - [ ] VSCode
+- [ ] When compiling the compliler flag "-Wall -Wformat-security -Werror=format-security" was used
 
-## Checklist for New samples:
+**_Delete this line and everything below if this is not a PR for a new code sample_**
 
-- [ ] Review sample design with domain reviewers https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts 
-- [ ] Implement coding guidelines and ensure code quality.
-- [ ] Adhere to sample.json specification. https://github.com/oneapi-src/oneAPI-samples/wiki/sample-json-specification
-- [ ] Run jsonlint on sample.json to verify json syntax. www.jsonlint.com
+**_Delete this line and all above it if this PR is for a new code sample_**
+# Adding a New samples
+##Introduction
+
+The full instructions on submitting a new sample is located in the [wiki](https://github.com/oneapi-src/oneAPI-samples/wiki/Contributing-a-New-Sample) if you have any addional questions contact @JoeOster
+
+## Checklist
+Administrative
+- [ ] Review sample design with the appropriate [Domain Expert](https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts): <insert Name Here>
+- [ ] If you dependencies/binaries, inform the oneAPI Code Samples Project Manager: @JoeOster
+
+Code Development
+- [ ] Implement coding guidelines and ensure code quality. [see wiki for details](https://github.com/oneapi-src/oneAPI-samples/wiki/General-Code-Guidelines)
 - [ ] Adhere to readme template 
-- [ ] Ensure/create CI test configurations for sample (ciTests field) https://github.com/oneapi-src/oneAPI-samples/wiki/sample-json-ci-test-object
 - [ ] Enforce format via clang-format config file
-- [ ] Compile code using compiler flags and fix anything detected "enable /Wall -Wformat-security -Werror=format-security"
-- [ ] Review Sample with Domain Expert: <insert NameHere>
+- [ ] Adhere to sample.json specification. https://github.com/oneapi-src/oneAPI-samples/wiki/sample-json-specification
+- [ ] Ensure/create CI test configurations for sample (ciTests field) https://github.com/oneapi-src/oneAPI-samples/wiki/sample-json-ci-test-object
+- [ ] Run jsonlint on sample.json to verify json syntax. www.jsonlint.com
+
+Security and Legal
+- [ ] OSPDT Approval (see @JoeOster for assistance)
+- [ ] Compile using the following compiler flags and fix any warnings, the falgs are: "/Wall -Wformat-security -Werror=format-security"
+- [ ] Protex (see @JoeOster for assistance)
+- [ ] Bandit Scans (Python only)
+- [ ] IPLDT Scan (see @JoeOster for assistance)
+- [ ] Virus scan
+
+Review
 - [ ] Review DPC++ code with Paul Peterseon. (GitHub User: pmpeter1)
-- [ ] Review readme with Tom Lenth or Joe Oster. (GitHub User: tomlenth or JoeOster)
+- [ ] Review readme with Tom Lenth(@tomlenth) and/or Joe Oster(@JoeOster)
 - [ ] Tested using Dev Cloud when applicable
-- [ ] Implement fixes for ONSAM Jiras
-- [ ] If you have new dependencies/binaries, inform Samples Project Manager Swapna R Dontharaju (@srdontha) or @JoeOster
 
