@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+#include <math.h>
+
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <array>
@@ -25,14 +27,14 @@ using IntScalar = std::array<int, 1>;
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-template <int concurrency>
+template <int NumCopies>
 class Kernel;
 
 // Launch a kernel on the device specified by selector.
 // The kernel's functionality is designed to show the
-// performance impact of the max_concurrency attribute.
-template <int concurrency>
-void PartialSumWithShift(const device_selector &selector, const IntArray &array,
+// performance impact of the private_copies attribute.
+template <int NumCopies>
+void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
                          int shift, IntScalar &result) {
   double kernel_time = 0.0;
 
@@ -47,20 +49,18 @@ void PartialSumWithShift(const device_selector &selector, const IntArray &array,
       accessor accessor_array(buffer_array, h, read_only);
       accessor accessor_result(buffer_result, h, write_only, noinit);
 
-      h.single_task<Kernel<concurrency>>([=]() [[intel::kernel_args_restrict]] {
+      h.single_task<Kernel<NumCopies>>([=]() [[intel::kernel_args_restrict]] {
         int r = 0;
 
-        // At most concurrency iterations of the outer loop will be
-        // active at one time.
-        // This limits memory usage, since each iteration of the outer
-        // loop requires its own copy of a1.
-        [[intel::max_concurrency(concurrency)]] for (size_t i = 0; i < kMaxIter;
-                                                     i++) {
-          int a1[kSize];
-          for (size_t j = 0; j < kSize; j++)
-            a1[j] = accessor_array[(i * 4 + j) % kSize] * shift;
-          for (size_t j = 0; j < kSize; j++) r += a1[j];
+        for (size_t i = 0; i < kMaxIter; i++) {
+          [[intel::private_copies(NumCopies)]] int a[kSize];
+          for (size_t j = 0; j < kSize; j++) {
+            a[j] = accessor_array[(i * 4 + j) % kSize] * shift;
+          }
+          for (size_t j = 0; j < kSize; j++) 
+            r += a[j];
         }
+
         accessor_result[0] = r;
       });
     });
@@ -85,40 +85,46 @@ void PartialSumWithShift(const device_selector &selector, const IntArray &array,
     std::terminate();
   }
 
-  // The performance of the kernel is measured in MIPS, based on:
-  // 1) the number of arithmetic operations performed by the kernel.
+  // The performance of the kernel is measured in GFlops, based on:
+  // 1) the number of inting-point operations performed by the kernel.
   //    This can be calculated easily for the simple example kernel.
   // 2) the kernel execution time reported by SYCL event profiling.
-  std::cout << "Max concurrency " << concurrency << " "
+  std::cout << "Num private_copies " << NumCopies << " "
             << "kernel time : " << kernel_time << " ms\n";
-  std::cout << "Throughput for kernel with max_concurrency " << concurrency
+  std::cout << "Throughput for kernel with private_copies " << NumCopies
             << ": ";
   std::cout << std::fixed << std::setprecision(3)
-            << ((double)(kTotalOps) / kernel_time) / 1e3f << " MIPS\n";
+            << ((double)(kTotalOps) / kernel_time) / 1e6f << " GFlops\n";
 }
 
 // Calculates the expected results. Used to verify that the kernel
 // is functionally correct.
-int GoldenResult(const IntArray &A, int shift) {
+int GoldenResult(const IntArray &input_arr, int shift) {
   int gr = 0;
+
   for (size_t i = 0; i < kMaxIter; i++) {
-    int a1[kSize];
-    for (size_t j = 0; j < kSize; j++) a1[j] = A[(i * 4 + j) % kSize] * shift;
-    for (size_t j = 0; j < kSize; j++) gr += a1[j];
+    int a[kSize];
+    for (size_t j = 0; j < kSize; j++) {
+      a[j] = input_arr[(i * 4 + j) % kSize] * shift;
+    }
+    for (size_t j = 0; j < kSize; j++) 
+      gr += a[j];
   }
+
   return gr;
 }
 
 int main() {
   bool success = true;
 
-  IntArray A;
-  IntScalar R0, R1, R2, R3, R4, R5;
+  IntArray a;
+  IntScalar R0, R1, R2, R3, R4;
 
   int shift = rand() % kMaxValue;
 
   // initialize the input data
-  for (size_t i = 0; i < kSize; i++) A[i] = rand() % kMaxValue;
+  for (size_t i = 0; i < kSize; i++)
+    a[i] = rand() % kMaxValue;
 
 #if defined(FPGA_EMULATOR)
   INTEL::fpga_emulator_selector selector;
@@ -126,54 +132,47 @@ int main() {
   INTEL::fpga_selector selector;
 #endif
 
-  // Run the kernel with different values of the max_concurrency
+  // Run the kernel with different values of the private_copies
   // attribute, to determine the optimal concurrency.
-  // In this case, the optimal max_concurrency is 2 since this
-  // achieves the highest throughput. Higher values of max_concurrency
-  // consume additional RAM without increasing throughput.
-  PartialSumWithShift<0>(selector, A, shift, R0);
-  PartialSumWithShift<1>(selector, A, shift, R1);
-  PartialSumWithShift<2>(selector, A, shift, R2);
-  PartialSumWithShift<4>(selector, A, shift, R3);
-  PartialSumWithShift<8>(selector, A, shift, R4);
-  PartialSumWithShift<16>(selector, A, shift, R5);
+  // In this case, the optimal private_copies is <TODO: Need to put a number
+  // here> since this achieves the highest GFlops. Higher values of
+  // private_copies consume additional RAM without increasing GFlops.
+  SimpleMathWithShift<0>(selector, a, shift, R0);
+  SimpleMathWithShift<1>(selector, a, shift, R1);
+  SimpleMathWithShift<2>(selector, a, shift, R2);
+  SimpleMathWithShift<3>(selector, a, shift, R3);
+  SimpleMathWithShift<4>(selector, a, shift, R4);
 
   // compute the actual result here
-  int gr = GoldenResult(A, shift);
+  int gr = GoldenResult(a, shift);
 
   // verify the results are correct
   if (gr != R0[0]) {
-    std::cout << "Max Concurrency 0: mismatch: " << R0[0] << " != " << gr
+    std::cout << "private_copies 0: mismatch: " << R0[0] << " != " << gr
               << " (kernel != expected)" << '\n';
     success = false;
   }
 
   if (gr != R1[0]) {
-    std::cout << "Max Concurrency 1: mismatch: " << R1[0] << " != " << gr
+    std::cout << "private_copies 1: mismatch: " << R1[0] << " != " << gr
               << " (kernel != expected)" << '\n';
     success = false;
   }
 
   if (gr != R2[0]) {
-    std::cout << "Max Concurrency 2: mismatch: " << R2[0] << " != " << gr
+    std::cout << "private_copies 2: mismatch: " << R2[0] << " != " << gr
               << " (kernel != expected)" << '\n';
     success = false;
   }
 
   if (gr != R3[0]) {
-    std::cout << "Max Concurrency 4: mismatch: " << R3[0] << " != " << gr
+    std::cout << "private_copies 3: mismatch: " << R3[0] << " != " << gr
               << " (kernel != expected)" << '\n';
     success = false;
   }
 
   if (gr != R4[0]) {
-    std::cout << "Max Concurrency 8: mismatch: " << R4[0] << " != " << gr
-              << " (kernel != expected)" << '\n';
-    success = false;
-  }
-
-  if (gr != R5[0]) {
-    std::cout << "Max Concurrency 16: mismatch: " << R5[0] << " != " << gr
+    std::cout << "private_copies 4: mismatch: " << R4[0] << " != " << gr
               << " (kernel != expected)" << '\n';
     success = false;
   }
