@@ -9,11 +9,10 @@
   "ciTests": {
 	"linux": [
 	{
-		"id": "tensorflow horovod",
+		"env": ["source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_icc --force", "conda create -n horovod_test -c intel -c conda python=3.7 numpy intel-openmp tensorflow=2.3.0", "source activate horovod_test"],
+        "id": "tensorflow horovod",
 		"steps": [
-			"source activate tensorflow",
-            "export HOROVOD_WITHOUT_MPI=1",
-            "pip install horovod",
+            "env HOROVOD_WITHOUT_MPI=1 HOROVOD_CPU_OPERATIONS=CCL HOROVOD_WITHOUT_MXNET=1 HOROVOD_WITHOUT_PYTORCH=1 HOROVOD_WITH_TENSORFLOW=1 python -m pip install --upgrade --force-reinstall --no-cache-dir horovod",
 			"horovodrun -np 2 python TensorFlow_Multinode_Training_with_Horovod.py"
 		 ]
 	}

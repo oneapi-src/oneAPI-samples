@@ -20,47 +20,46 @@ constexpr size_t kMaxIter = 50000;
 constexpr size_t kTotalOps = 2 * kMaxIter * kSize;
 constexpr size_t kMaxValue = 128;
 
-using FloatArray = std::array<float, kSize>;
-using FloatScalar = std::array<float, 1>;
+using IntArray = std::array<int, kSize>;
+using IntScalar = std::array<int, 1>;
 
-template <int concurrency> class Kernel;
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
+template <int concurrency>
+class Kernel;
 
 // Launch a kernel on the device specified by selector.
 // The kernel's functionality is designed to show the
 // performance impact of the max_concurrency attribute.
 template <int concurrency>
-void PartialSumWithShift(const device_selector &selector,
-                         const FloatArray &array, float shift,
-                         FloatScalar &result) {
+void PartialSumWithShift(const device_selector &selector, const IntArray &array,
+                         int shift, IntScalar &result) {
   double kernel_time = 0.0;
 
   try {
-
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
 
     buffer buffer_array(array);
-    buffer<float, 1> buffer_result(result.data(), 1);
+    buffer<int, 1> buffer_result(result.data(), 1);
 
     event e = q.submit([&](handler &h) {
       accessor accessor_array(buffer_array, h, read_only);
       accessor accessor_result(buffer_result, h, write_only, noinit);
 
-      h.single_task<Kernel<concurrency>>([=]()
-                                          [[intel::kernel_args_restrict]] {
-        float r = 0;
+      h.single_task<Kernel<concurrency>>([=]() [[intel::kernel_args_restrict]] {
+        int r = 0;
 
         // At most concurrency iterations of the outer loop will be
         // active at one time.
         // This limits memory usage, since each iteration of the outer
         // loop requires its own copy of a1.
-        [[intel::max_concurrency(concurrency)]]
-        for (size_t i = 0; i < kMaxIter; i++) {
-          float a1[kSize];
+        [[intel::max_concurrency(concurrency)]] for (size_t i = 0; i < kMaxIter;
+                                                     i++) {
+          int a1[kSize];
           for (size_t j = 0; j < kSize; j++)
             a1[j] = accessor_array[(i * 4 + j) % kSize] * shift;
-          for (size_t j = 0; j < kSize; j++)
-            r += a1[j];
+          for (size_t j = 0; j < kSize; j++) r += a1[j];
         }
         accessor_result[0] = r;
       });
@@ -86,8 +85,8 @@ void PartialSumWithShift(const device_selector &selector,
     std::terminate();
   }
 
-  // The performance of the kernel is measured in GFlops, based on:
-  // 1) the number of floating-point operations performed by the kernel.
+  // The performance of the kernel is measured in MIPS, based on:
+  // 1) the number of arithmetic operations performed by the kernel.
   //    This can be calculated easily for the simple example kernel.
   // 2) the kernel execution time reported by SYCL event profiling.
   std::cout << "Max concurrency " << concurrency << " "
@@ -95,19 +94,17 @@ void PartialSumWithShift(const device_selector &selector,
   std::cout << "Throughput for kernel with max_concurrency " << concurrency
             << ": ";
   std::cout << std::fixed << std::setprecision(3)
-            << ((double)(kTotalOps) / kernel_time) / 1e6f << " GFlops\n";
+            << ((double)(kTotalOps) / kernel_time) / 1e3f << " MIPS\n";
 }
 
 // Calculates the expected results. Used to verify that the kernel
 // is functionally correct.
-float GoldenResult(const FloatArray &A, float shift) {
-  float gr = 0;
+int GoldenResult(const IntArray &A, int shift) {
+  int gr = 0;
   for (size_t i = 0; i < kMaxIter; i++) {
-    float a1[kSize];
-    for (size_t j = 0; j < kSize; j++)
-      a1[j] = A[(i * 4 + j) % kSize] * shift;
-    for (size_t j = 0; j < kSize; j++)
-      gr += a1[j];
+    int a1[kSize];
+    for (size_t j = 0; j < kSize; j++) a1[j] = A[(i * 4 + j) % kSize] * shift;
+    for (size_t j = 0; j < kSize; j++) gr += a1[j];
   }
   return gr;
 }
@@ -115,14 +112,13 @@ float GoldenResult(const FloatArray &A, float shift) {
 int main() {
   bool success = true;
 
-  FloatArray A;
-  FloatScalar R0, R1, R2, R3, R4, R5;
+  IntArray A;
+  IntScalar R0, R1, R2, R3, R4, R5;
 
-  float shift = (float)(rand() % kMaxValue);
+  int shift = rand() % kMaxValue;
 
   // initialize the input data
-  for (size_t i = 0; i < kSize; i++)
-    A[i] = rand() % kMaxValue;
+  for (size_t i = 0; i < kSize; i++) A[i] = rand() % kMaxValue;
 
 #if defined(FPGA_EMULATOR)
   INTEL::fpga_emulator_selector selector;
@@ -133,8 +129,8 @@ int main() {
   // Run the kernel with different values of the max_concurrency
   // attribute, to determine the optimal concurrency.
   // In this case, the optimal max_concurrency is 2 since this
-  // achieves the highest GFlops. Higher values of max_concurrency
-  // consume additional RAM without increasing GFlops.
+  // achieves the highest throughput. Higher values of max_concurrency
+  // consume additional RAM without increasing throughput.
   PartialSumWithShift<0>(selector, A, shift, R0);
   PartialSumWithShift<1>(selector, A, shift, R1);
   PartialSumWithShift<2>(selector, A, shift, R2);
@@ -143,7 +139,7 @@ int main() {
   PartialSumWithShift<16>(selector, A, shift, R5);
 
   // compute the actual result here
-  float gr = GoldenResult(A, shift);
+  int gr = GoldenResult(A, shift);
 
   // verify the results are correct
   if (gr != R0[0]) {

@@ -21,7 +21,7 @@ ifdef perf_num
 	EXTRA_CFLAGS += -D PERF_NUM
 endif
 
-TARGET := $(BUILDDIR)/MergeSort
+TARGET := $(BUILDDIR)/Mandelbrot
 
 icpc: $(TARGET)
 

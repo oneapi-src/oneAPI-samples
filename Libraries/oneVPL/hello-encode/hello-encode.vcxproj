@@ -90,7 +90,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(VPLLIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vpl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </Link>
   </ItemDefinitionGroup>
@@ -110,7 +110,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(VPLLIB);$(ONEAPI_ROOT)\vpl\latest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vpl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </Link>
   </ItemDefinitionGroup>
@@ -134,7 +134,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(VPLLIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vpl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </Link>
   </ItemDefinitionGroup>
@@ -158,7 +158,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(VPLLIB);$(ONEAPI_ROOT)\vpl\latest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vpl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </Link>
   </ItemDefinitionGroup>

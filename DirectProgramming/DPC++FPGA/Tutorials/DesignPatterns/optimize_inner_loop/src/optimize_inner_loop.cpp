@@ -3,9 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+#include <algorithm>
 #include <array>
 #include <iomanip>
 #include <iostream>
+#include <numeric>
 #include <random>
 #include <type_traits>
 
@@ -28,13 +30,14 @@ constexpr int kNumKernels = 3;
 constexpr int kRandRangeMax = RAND_RANGE_MAX;
 constexpr double kProbSuccess = 1.0 / kRandRangeMax;
 
-// Declare the kernel class names globally to reduce name mangling.
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 // Templating allows us to instantiate multiple versions of the kernel.
 template <int version> class Producer;
 template <int version> class Consumer;
 
 // Declare the pipe class name globally to reduce name mangling.
-// Templating allows us to instantiate multiple versions of pipes for each
+// Templating allows us to instantiate multiple versions of pipes for each 
 // version of the kernel.
 template <int version> class PipeClass;
 

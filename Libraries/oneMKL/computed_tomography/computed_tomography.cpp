@@ -34,7 +34,6 @@
 *         image using oneMKL DFT DPCPP asynchronous USM API.
 */
 
-#include <CL/sycl.hpp>
 #include <cmath>
 #include <complex>
 #include <cstdarg>
@@ -44,12 +43,8 @@
 #include <string>
 #include <vector>
 
-#if __has_include("oneapi/mkl.hpp")
+#include <CL/sycl.hpp>
 #include "oneapi/mkl.hpp"
-#else
-// For compatibility with beta09 -- not needed for new code.
-#include "mkl_sycl.hpp"
-#endif
 
 #if !defined(M_PI)
 #define M_PI 3.14159265358979323846

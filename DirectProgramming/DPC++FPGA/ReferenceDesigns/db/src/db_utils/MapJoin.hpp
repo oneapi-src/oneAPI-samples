@@ -98,7 +98,7 @@ class MapJoiner {
       StreamingData<T2Data, t2_win_size> in_data = t2_reader();
 
       // check if upstream is telling us we are done
-      done = in_data.done;
+      done = in_data.done && in_data.valid;
 
       if (in_data.valid && !done) {
         // join the input data windows into output data

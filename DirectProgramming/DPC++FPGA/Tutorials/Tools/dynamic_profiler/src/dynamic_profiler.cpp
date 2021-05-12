@@ -1,12 +1,15 @@
 /*
   Please refer to the README file for information on how and why the
-  Intel(r) Dynamic Profiler for DPC++ should be used. This code sample 
+  Intel(r) Dynamic Profiler for DPC++ should be used. This code sample
   does not explain the tool, rather it is an artificial example that
   demonstates the sort of code changes the profiler data can guide.
   The main content of this sample is in the README file.
 */
+
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <cmath>
+#include <numeric>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -24,8 +27,8 @@ using ProducerToConsumerBeforePipe =
 using ProducerToConsumerAfterPipe =
     INTEL::pipe<class ProducerConsumerAfterPipe, float, 20>;
 
-// Forward declare the kernel names
-// (This reduces unwanted name mangling in the optimization report.)
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization report.
 class ProducerBeforeKernel;
 class ConsumerBeforeKernel;
 class ProducerAfterKernel;
@@ -45,7 +48,7 @@ constexpr int kComplexity = 2000;
 // Perform two stages of processing on the input data.
 // The output of ConsumerWork1 needs to go to the input
 // of ConsumerWork2, so they cannot be done concurrently.
-// These functions are currently doing pointless work, but 
+// These functions are currently doing pointless work, but
 // can be replaced with more useful operations.
 float ConsumerWork1(float f) {
   float output = f;
@@ -72,7 +75,7 @@ float ConsumerWork2(float f) {
 // The Consumer kernel reads data from the pipe, performs the two ConsumerWork
 // operations on the data, and writes the results to the output buffer.
 
-void ProducerBefore(queue &q, buffer<float, 1>& buffer_a) {
+void ProducerBefore(queue &q, buffer<float, 1> &buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
     accessor a(buffer_a, h, read_only);
@@ -85,7 +88,7 @@ void ProducerBefore(queue &q, buffer<float, 1>& buffer_a) {
   });
 }
 
-void ConsumerBefore(queue &q, buffer<float, 1>& buffer_a) {
+void ConsumerBefore(queue &q, buffer<float, 1> &buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
     accessor a(buffer_a, h, write_only, noinit);
@@ -108,10 +111,10 @@ void ConsumerBefore(queue &q, buffer<float, 1>& buffer_a) {
 // ConsumerWork1 on it before giving it to the concurrently
 // running Consumer kernel.
 // The Consumer kernel reads data from the pipe, performs the rest
-// of the work (ConsumerWork2), and writes the results 
+// of the work (ConsumerWork2), and writes the results
 // to the output buffer.
 
-void ProducerAfter(queue &q, buffer<float, 1>& buffer_a) {
+void ProducerAfter(queue &q, buffer<float, 1> &buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
     accessor a(buffer_a, h, read_only);
@@ -126,7 +129,7 @@ void ProducerAfter(queue &q, buffer<float, 1>& buffer_a) {
   });
 }
 
-void ConsumerAfter(queue &q, buffer<float, 1>& buffer_a) {
+void ConsumerAfter(queue &q, buffer<float, 1> &buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
     accessor a(buffer_a, h, write_only, noinit);
@@ -147,18 +150,23 @@ void ConsumerAfter(queue &q, buffer<float, 1>& buffer_a) {
 // output so that this method completes quickly. This is done
 // intentionally/artificially to keep host-processing time shorter than kernel
 // execution time. Grabs kernel output data from its SYCL buffers.
-bool ProcessOutput(buffer<float, 1>& input_buf, buffer<float, 1>& output_buf) {
+bool ProcessOutput(buffer<float, 1> &input_buf, buffer<float, 1> &output_buf) {
   host_accessor input_buf_acc(input_buf, read_only);
   host_accessor output_buf_acc(output_buf, read_only);
   int num_errors = 0;
   int num_errors_to_print = 5;
   bool pass = true;
 
+  // Max fractional difference between FPGA result and CPU result
+  // Anything greater than this will be considered an error
+  constexpr double epsilon = 0.01;
+
   for (int i = 0; i < kSize / 8; i++) {
     auto step1 = ConsumerWork1(input_buf_acc[i]);
     auto valid_result = ConsumerWork2(step1);
 
-    const bool out_invalid = (valid_result != output_buf_acc[i]);
+    const bool out_invalid =
+        std::abs((output_buf_acc[i] - valid_result) / valid_result) > epsilon;
     if ((num_errors < num_errors_to_print) && out_invalid) {
       if (num_errors == 0) {
         pass = false;
@@ -179,8 +187,8 @@ int main() {
 #if defined(FPGA_EMULATOR)
   INTEL::fpga_emulator_selector device_selector;
   std::cout << "\nThe Dynamic Profiler cannot be used in the emulator "
-                "flow. Please compile to FPGA hardware to collect "
-                "dynamic profiling data. \n\n";
+               "flow. Please compile to FPGA hardware to collect "
+               "dynamic profiling data. \n\n";
 #else
   INTEL::fpga_selector device_selector;
 #endif
