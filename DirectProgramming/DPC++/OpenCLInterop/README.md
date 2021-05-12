@@ -51,4 +51,3 @@ Perform the following steps:
     ```
     make clean
     ```
-```
