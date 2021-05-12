@@ -3,7 +3,7 @@
 The examples here demonstrate how DPC++ can interact with OpenCL. This enables programmers to incrementally migrate from
 OpenCL to DPC++. Two usage scenarios are shown.
 1. Shows a DPC++ program that compiles and runs an OpenCL kernel. (For this, OpenCL must be set as the backend and not Level 0)
-	Use the environment varialbe SYCL_DEVICE_FILTER=OPENCL
+	Use the environment variable SYCL_DEVICE_FILTER=OPENCL
 2. Show how to convert OpenCL objects (Memory Objects, Platform, Context, Program, Kernel) to DPC++ and execute the program. 
 
 
