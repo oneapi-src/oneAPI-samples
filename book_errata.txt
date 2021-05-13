@@ -6,6 +6,13 @@ p.183 - Fig. 7-6 - In the first column, there should be no capitalization,
                    therefore "Write" should be "write"
                    and "read_Write" should be "read_write"
 
+p.284 - The line "if (dev.is_host()) score += 100;" will need
+        deleting when implementations drop support for a host_device (see
+        errata below regarding changes in the SYCL 2020 specification that we
+        did not anticipate in the book.)  The accompanying text needs to
+	consider the implications of such a change: without it, it is possible
+	that this device selector will fail to find a device.
+
 p.421 - Fig 17-1 - The text at the top should be “ISA-based” instead of “SA-based”
 
 
