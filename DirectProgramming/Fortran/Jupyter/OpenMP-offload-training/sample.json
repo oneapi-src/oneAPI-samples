@@ -3,7 +3,6 @@
   "name": "OpenMP Offload Fortran Tutorials",
   "categories": [ "Toolkit/DirectProgramming/Fortran/Jupyter/OpenMP-offload-training/" ],
   "description": "Fortran OpenMP Offload Basics using Jupyter Notebooks",
-  "dependencies":["compiler|ifx"],
   "languages": [ { "fortran": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
   "os": [ "linux" ],
   "builder": [ "make" ],
