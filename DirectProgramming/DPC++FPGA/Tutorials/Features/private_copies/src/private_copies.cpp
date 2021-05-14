@@ -53,6 +53,9 @@ void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
         int r = 0;
 
         for (size_t i = 0; i < kMaxIter; i++) {
+          // Request num_copies private copies for array a. This limits the
+          // concurrency of the outer loop to num_copies and also limits the
+          // memory use of a.
           [[intel::private_copies(num_copies)]] int a[kSize];
           for (size_t j = 0; j < kSize; j++) {
             a[j] = accessor_array[(i * 4 + j) % kSize] * shift;
@@ -89,9 +92,9 @@ void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
   // 1) the number of operations performed by the kernel.
   //    This can be calculated easily for the simple example kernel.
   // 2) the kernel execution time reported by SYCL event profiling.
-  std::cout << "Num private_copies " << num_copies << " "
-            << "kernel time : " << kernel_time << " ms\n";
-  std::cout << "Throughput for kernel with private_copies " << num_copies
+  std::cout << "Kernel time when private_copies is set to " << num_copies
+            << ": " << kernel_time << " ms\n";
+  std::cout << "Kernel throughput when private_copies is set to " << num_copies
             << ": ";
   std::cout << std::fixed << std::setprecision(3)
             << ((double)(kTotalOps) / kernel_time) / 1e6f << " GFlops\n";
@@ -133,7 +136,7 @@ int main() {
 #endif
 
   // Run the kernel with different values of the private_copies
-  // attribute, to determine the optimal private_copies number.
+  // attribute to determine the optimal private_copies number.
   SimpleMathWithShift<0>(selector, a, shift, R0);
   SimpleMathWithShift<1>(selector, a, shift, R1);
   SimpleMathWithShift<2>(selector, a, shift, R2);
@@ -145,31 +148,31 @@ int main() {
 
   // verify the results are correct
   if (gr != R0[0]) {
-    std::cout << "private_copies 0: mismatch: " << R0[0] << " != " << gr
+    std::cout << "Private copies 0: mismatch: " << R0[0] << " != " << gr
               << " (kernel != expected)" << '\n';
     success = false;
   }
 
   if (gr != R1[0]) {
-    std::cout << "private_copies 1: mismatch: " << R1[0] << " != " << gr
+    std::cout << "Private copies 1: mismatch: " << R1[0] << " != " << gr
               << " (kernel != expected)" << '\n';
     success = false;
   }
 
   if (gr != R2[0]) {
-    std::cout << "private_copies 2: mismatch: " << R2[0] << " != " << gr
+    std::cout << "Private copies 2: mismatch: " << R2[0] << " != " << gr
               << " (kernel != expected)" << '\n';
     success = false;
   }
 
   if (gr != R3[0]) {
-    std::cout << "private_copies 3: mismatch: " << R3[0] << " != " << gr
+    std::cout << "Private copies 3: mismatch: " << R3[0] << " != " << gr
               << " (kernel != expected)" << '\n';
     success = false;
   }
 
   if (gr != R4[0]) {
-    std::cout << "private_copies 4: mismatch: " << R4[0] << " != " << gr
+    std::cout << "Private copies 4: mismatch: " << R4[0] << " != " << gr
               << " (kernel != expected)" << '\n';
     success = false;
   }

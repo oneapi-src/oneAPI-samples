@@ -1,5 +1,5 @@
 # Private Copies
-This FPGA tutorial explains how to use the `private_copies` attribute to improve concurrent outer loop iterations.
+This FPGA tutorial explains how to use the `private_copies` attribute to trade off the on-chip memory use and the throughput of a DPC++ FPGA program.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -10,7 +10,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
-| What you will learn               | The basic usage of the `private_copies` attribute <br> How the `private_copies` attribute affects loop throughput and resource use <br> How to apply the `private_copies` attribute in your program <br> How to identify the correct `private_copies` factor for your program
+| What you will learn               | The basic usage of the `private_copies` attribute <br> How the `private_copies` attribute affects the throughput and resource use of your DPC++ FPGA program <br> How to apply the `private_copies` attribute to variables or arrays in your program <br> How to identify the correct `private_copies` factor for your program
 | Time to complete                  | 15 minutes
 
 
@@ -23,10 +23,9 @@ The `private_copies` attribute is a memory attribute that enables you to control
 
 #### Example: 
 
-Kernels in this tutorial design apply `[[intel::private_copies(N)]]` to an array declared within an outer loop that is used by subsequent inner loops. These inner loops perform a global memory access before storing the results. The following is an example of such a loop:
+Kernels in this tutorial design apply `[[intel::private_copies(N)]]` to an array declared within an outer loop and used by subsequent inner loops. These inner loops perform a global memory access before storing the results. The following is an example of such a loop:
 
 ```cpp
-[[intel::private_copies(2)]]
 for (size_t i = 0; i < kMaxIter; i++) {
   [[intel::private_copies(2)]] int a[kSize];
   for (size_t j = 0; j < kSize; j++) {
@@ -40,16 +39,16 @@ for (size_t i = 0; i < kMaxIter; i++) {
 In this example, you only need to have two private copies of array `a` in order to have 2 concurrent outer loop iterations. The `private_copies` attribute in this example forces the compiler to create two private copies of the array `a`. In general, passing the parameter `N` to the `private_copies` attribute limits the number of private copies created for array `a` to `N`, which in turn limits the concurrency of the outer loop to `N`.
 
 ### Identifying the Correct `private_copies` Factor
-Generally, increasing the number of private copies of an array within a loop situated in a task kernel will increase the throughput of that loop at the cost of increased memory usage. However, in most cases, there is a limit beyond which increasing the number of private copies does not have any further effect on the throughput of the loop. That limit is the maximum exploitable concurrency of the outer loop. 
+Generally, increasing the number of private copies of an array within a loop situated in a task kernel will increase the throughput of that loop at the cost of increased memory use. However, in most cases, there is a limit beyond which increasing the number of private copies does not have any further effect on the throughput of the loop. That limit is the maximum exploitable concurrency of the outer loop. 
 
 The correct `private_copies` factor for a given array depends on your goals for the design, the criticality of the loop in question, and its impact on your design's overall throughput. A typical design flow may be to: 
 1. Experiment with different values of `private_copies`. 
-2. Observe what impact the values have on the overall throughput and memory usage of your design.
+2. Observe what impact the values have on the overall throughput and memory use of your design.
 3. Choose the appropriate value that allows you to achieve your desired throughput and area goals.
 
 ## Key Concepts
 * The basic usage of the `private_copies` attribute 
-* How the `private_copies` attribute affects loop throughput and resource usage
+* How the `private_copies` attribute affects the throughput and resource use of your DPC++ FPGA program
 * How to apply the `private_copies` attribute to variables or arrays in your program
 * How to identify the correct `private_copies` factor for your program
 
@@ -158,16 +157,16 @@ On the main report page, scroll down to the section titled "Estimated Resource U
 ### Example of Output
 ```
 PASSED_fpga_compile
-Num private_copies 0 kernel time : 1441.45 ms
-Throughput for kernel with private_copies 0: 0.568 GFlops
-Num private_copies 1 kernel time : 2916.440 ms
-Throughput for kernel with private_copies 1: 0.281 GFlops
-Num private_copies 2 kernel time : 1458.260 ms
-Throughput for kernel with private_copies 2: 0.562 GFlops
-Num private_copies 3 kernel time : 1441.450 ms
-Throughput for kernel with private_copies 3: 0.568 GFlops
-Num private_copies 4 kernel time : 1441.448 ms
-Throughput for kernel with private_copies 4: 0.568 GFlops
+Kernel time when private_copies is set to 0: 1441.45 ms
+Kernel throughput when private_copies is set to 0: 0.568 GFlops
+Kernel time when private_copies is set to 1: 2916.440 ms
+Kernel throughput when private_copies is set to 1: 0.281 GFlops
+Kernel time when private_copies is set to 2: 1458.260 ms
+Kernel throughput when private_copies is set to 2: 0.562 GFlops
+Kernel time when private_copies is set to 3: 1441.450 ms
+Kernel throughput when private_copies is set to 3: 0.568 GFlops
+Kernel time when private_copies is set to 4: 1441.448 ms
+Kernel throughput when private_copies is set to 4: 0.568 GFlops
 PASSED: The results are correct
 ```
 
