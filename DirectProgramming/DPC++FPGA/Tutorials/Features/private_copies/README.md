@@ -10,7 +10,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
-| What you will learn               | The basic usage of the `private_copies` attribute <br> How the `private_copies` attribute affects loop throughput and resource use <br> How to apply the `private_copies` attribute to loops in your program <br> How to identify the correct `private_copies` factor for your program
+| What you will learn               | The basic usage of the `private_copies` attribute <br> How the `private_copies` attribute affects loop throughput and resource use <br> How to apply the `private_copies` attribute in your program <br> How to identify the correct `private_copies` factor for your program
 | Time to complete                  | 15 minutes
 
 
@@ -19,13 +19,13 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 This tutorial demonstrates a simple example of applying the `private_copies` attribute to an array within a loop in a task kernel to trade off the on-chip memory use and throughput of the loop.
 
 ### Description of the `private_copies` Attribute
-The `private_copies` attribute is a loop attribute that enables you to control the number of copies of any memory that this is applied to. This works best when applying to any memory that has single iteration scope, thus enabling simultaneously executed loop iterations.
+The `private_copies` attribute is a memory attribute that enables you to control the number of private copies of any variable or array declared inside a pipelined loop. These private copies allow multiple iterations of the loop to run concurrently by providing them their own private workspaces. The number of concurrent loop iterations is limited by the number of private copies specified by the `private_copies` attribute.
 
 #### Example: 
 
-Kernels in this tutorial design apply `[[intel::private_copies(N)]]` to an array within the outer loop that is used by subsequent inner loops. These inner loops perform a global memory access before storing the results. The following is an example of such a loop:
+Kernels in this tutorial design apply `[[intel::private_copies(N)]]` to an array declared within an outer loop that is used by subsequent inner loops. These inner loops perform a global memory access before storing the results. The following is an example of such a loop:
 
-```
+```cpp
 [[intel::private_copies(2)]]
 for (size_t i = 0; i < kMaxIter; i++) {
   [[intel::private_copies(2)]] int a[kSize];
@@ -37,20 +37,20 @@ for (size_t i = 0; i < kMaxIter; i++) {
 }    
 ```
 
-In this example, you only need to have two private copies of array `a` in order to have 2 concurrent outer loop iterations. The `private_copies` attribute in this example forces the compiler to create two private copies of the array `a`. Passing the parameter `N` to the `private_copies` attribute limits the number of privately-declared arrays that can be made in that loop.
+In this example, you only need to have two private copies of array `a` in order to have 2 concurrent outer loop iterations. The `private_copies` attribute in this example forces the compiler to create two private copies of the array `a`. In general, passing the parameter `N` to the `private_copies` attribute limits the number of private copies created for array `a` to `N`, which in turn limits the concurrency of the outer loop to `N`.
 
 ### Identifying the Correct `private_copies` Factor
-Generally, increasing the number of private copies of an array within a loop situated in a task kernel will increase the throughput of that loop at the cost of increased memory usage. Additionally, in most cases there is a point at which increasing the number of private copies does not have any further effect on the throughput of the loop, as the maximum exploitable concurrency of that loop has been achieved. 
+Generally, increasing the number of private copies of an array within a loop situated in a task kernel will increase the throughput of that loop at the cost of increased memory usage. However, in most cases, there is a limit beyond which increasing the number of private copies does not have any further effect on the throughput of the loop. That limit is the maximum exploitable concurrency of the outer loop. 
 
 The correct `private_copies` factor for a given array depends on your goals for the design, the criticality of the loop in question, and its impact on your design's overall throughput. A typical design flow may be to: 
 1. Experiment with different values of `private_copies`. 
-2. Observe what impact the values have on the overall throughput and memory use of your design.
+2. Observe what impact the values have on the overall throughput and memory usage of your design.
 3. Choose the appropriate value that allows you to achieve your desired throughput and area goals.
 
 ## Key Concepts
 * The basic usage of the `private_copies` attribute 
-* How the `private_copies` attribute affects loop throughput and resource use
-* How to apply the `private_copies` attribute to loops in your program
+* How the `private_copies` attribute affects loop throughput and resource usage
+* How to apply the `private_copies` attribute to variables or arrays in your program
 * How to identify the correct `private_copies` factor for your program
 
 ## License  

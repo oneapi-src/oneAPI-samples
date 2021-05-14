@@ -27,13 +27,13 @@ using IntScalar = std::array<int, 1>;
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-template <int NumCopies>
+template <int num_copies>
 class Kernel;
 
 // Launch a kernel on the device specified by selector.
 // The kernel's functionality is designed to show the
 // performance impact of the private_copies attribute.
-template <int NumCopies>
+template <int num_copies>
 void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
                          int shift, IntScalar &result) {
   double kernel_time = 0.0;
@@ -49,11 +49,11 @@ void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
       accessor accessor_array(buffer_array, h, read_only);
       accessor accessor_result(buffer_result, h, write_only, noinit);
 
-      h.single_task<Kernel<NumCopies>>([=]() [[intel::kernel_args_restrict]] {
+      h.single_task<Kernel<num_copies>>([=]() [[intel::kernel_args_restrict]] {
         int r = 0;
 
         for (size_t i = 0; i < kMaxIter; i++) {
-          [[intel::private_copies(NumCopies)]] int a[kSize];
+          [[intel::private_copies(num_copies)]] int a[kSize];
           for (size_t j = 0; j < kSize; j++) {
             a[j] = accessor_array[(i * 4 + j) % kSize] * shift;
           }
@@ -86,12 +86,12 @@ void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
   }
 
   // The performance of the kernel is measured in GFlops, based on:
-  // 1) the number of inting-point operations performed by the kernel.
+  // 1) the number of operations performed by the kernel.
   //    This can be calculated easily for the simple example kernel.
   // 2) the kernel execution time reported by SYCL event profiling.
-  std::cout << "Num private_copies " << NumCopies << " "
+  std::cout << "Num private_copies " << num_copies << " "
             << "kernel time : " << kernel_time << " ms\n";
-  std::cout << "Throughput for kernel with private_copies " << NumCopies
+  std::cout << "Throughput for kernel with private_copies " << num_copies
             << ": ";
   std::cout << std::fixed << std::setprecision(3)
             << ((double)(kTotalOps) / kernel_time) / 1e6f << " GFlops\n";
