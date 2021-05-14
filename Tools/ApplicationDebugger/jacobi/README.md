@@ -1,14 +1,14 @@
 # `jacobi` Sample
 
-This is a small DPC++ code sample for exercising application debugging using
+The 'jacobi' code sample is a small DPC++ code sample for exercising application debugging using
 Intel&reg; Distribution for GDB\*. It is highly recommended that you go
-through this sample *after* you familiarize yourself with the `array-transform`
+through this sample *after* you familiarize yourself with the [array-transform](https://github.com/oneapi-src/oneAPI-samples/tree/bed8a563ace4a31d00a4f1055f65d680fa4fe0a8/Tools/ApplicationDebugger/array-transform)
 sample and the 
 [Get Started Guide](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
 for the debugger.
 
 This sample contains two versions of the same program. One works correctly, 
-but in the other one several bugs were injected. You can try to find and fix them 
+but in the other version, several bugs were injected. You can try to find and fix them 
 using the debugger.
 
 | Optimized for       | Description
@@ -21,13 +21,13 @@ using the debugger.
 
 ## Purpose
 
-The `jacobi` sample is a DPC++ application which solves a hardcoded 
+The `jacobi` sample is a DPC++ application that solves a hardcoded 
 linear system of equations `Ax=b` using the Jacobi iteration. The matrix `A` 
 is `n x n` sparse matrix with diagonals [1 1 4 1 1], and vector `b` has
 a format `[6 7 8 ... 8 7 6]^T`. Thus, the solution vector `x` has a form of `[1 1 ... 1]^T`.
 
 The program `jacobi-fixed` computes vector `x` correctly, while `jacobi-bugged`
-returns an incorrect result. With the debugger you can put a breakpoint in and 
+returns an incorrect result. With the debugger, you can put a breakpoint in and 
 outside of the kernel, step through the code, and check the values of local variables. 
 Use these features to find places in `jacobi-bugged` where the program does not 
 behave as it was intended.
@@ -36,8 +36,8 @@ The sample is intended for exercising the debugger, not for performance benchmar
 
 The debugger supports debugging kernels that run on the CPU, GPU, or
 accelerator devices.  For convenience, the `jacobi`
-code sample provides the ability to select the target device by passing the
-program `cpu`, `gpu`, or `accelerator` as the command-line argument.
+code sample provides the ability to select the target device by using a command-line argument of `cpu`, `gpu`, or `accelerator`.
+
 The selected device is displayed in the output.
 For the overview of the debugger, please refer to 
 [Get Started Guide](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
@@ -54,10 +54,10 @@ Each iteration of the Jacobi method performs the following computation:
 x^{k+1} = D^{-1}(b - (A - D)x^k),
 ```
 
-where `n x n` matrix `D` is a diagonal component of the matrix `A`.
+Where `n x n` matrix `D` is a diagonal component of the matrix `A`.
 In the sample, this computation is offloaded to the device at each iteration.
 In the code, `x^{k+1}` corresponds to the variable `x_k1`, and
-`x^k` corresponds to `x_k`. At the end of each iteration we update `x_k` with
+`x^k` corresponds to `x_k`. At the end of each iteration, we update `x_k` with
 the value of `x_k1`.
 
 ## License
@@ -65,7 +65,7 @@ the value of `x_k1`.
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building and Running the `jacobi` Program
 
