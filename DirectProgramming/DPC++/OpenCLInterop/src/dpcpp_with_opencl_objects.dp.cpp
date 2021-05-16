@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
   FILE *fp;
   char *source_str;
   size_t source_size;
-  fp = fopen("src/vector_add_kernel.cl", "r");
+  fp = fopen("vector_add_kernel.cl", "r");
   if (!fp) {
     std::cerr << "Failed to load kernel file." << std::endl;
   }
