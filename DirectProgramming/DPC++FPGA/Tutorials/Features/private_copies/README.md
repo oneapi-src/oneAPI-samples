@@ -174,8 +174,8 @@ PASSED: The results are correct
 
 The stdout output shows the throughput (GFlops) for each kernel. 
 
-When run on the Intel® PAC with Intel Arria10® 10 GX FPGA hardware board, we see that the throughput doubles from using private_copies 1 to private_copies 2. Further increasing the value of private_copies does not increase the throughput achieved, i.e., increasing the private_copies above 2 will spend additional RAM resources for no additional throughput gain. As such, for this tutorial design, maximal throughput is best achieved by using private_copies 2. 
+When run on the Intel® PAC with Intel Arria10® 10 GX FPGA hardware board, we see that the throughput of the kernel doubles when going from 1 to 2 private copies for array `a`. Further increasing the number of private copies does not increase the throughput achieved, i.e., increasing the number of private copies above 2 will spend additional RAM resources for no additional throughput gain. As such, for this tutorial design, maximal throughput is best achieved when using 2 private copies.  
 
-Using private_copies 0 (or equivalently omitting the attribute entirely) also produced good throughput, indicating that the compiler's default heuristic chose a private_copies value of 2 or higher in this case.
+Setting the `private_copies` attribute to 0 (or equivalently omitting the attribute entirely) also produced good throughput, indicating that the compiler's default heuristic chose to create 2 or more private copies for array `a`.
 
-When run on the FPGA emulator, the private_copies attribute has no effect on runtime. You may notice that the emulator achieved higher throughput than the FPGA in this example. This is because this trivial example uses only a tiny fraction of the spatial compute resources available on the FPGA.
+When run on the FPGA emulator, the `private_copies` attribute has no effect on kernel time. You may actually notice that the emulator achieved higher throughput than the FPGA in this example. This is because this trivial example uses only a tiny fraction of the spatial compute resources available on the FPGA.
