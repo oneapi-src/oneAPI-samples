@@ -1,6 +1,5 @@
 # To see a Makefile equivalent of this build system:
 # https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE merge_sort.cpp)
 set(TARGET_NAME merge_sort)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
@@ -78,39 +77,23 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early merge_sort.cpp -o merge_sort_report.a
+#   dpcpp -fintelfpga -Xshardware -Xsdaz -Xsrounding=faithful -Xsparallel=2 -Xsseed=1 -Xsboard=<FPGA_BOARD> -fsycl-link=early merge_sort.cpp -o merge_sort_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
+# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
-set(CMAKE_CXX_FLAGS_LIST ${CMAKE_CXX_FLAGS})
-separate_arguments(CMAKE_CXX_FLAGS_LIST)
-set(HARDWARE_LINK_FLAGS_LIST ${HARDWARE_LINK_FLAGS})
-separate_arguments(HARDWARE_LINK_FLAGS_LIST)
-add_custom_command(OUTPUT ${FPGA_EARLY_IMAGE}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${WIN_FLAG} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link=early ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${FPGA_EARLY_IMAGE}
-                   DEPENDS ${SOURCE_FILE})
-                   # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
-
-###############################################################################
-### FPGA Simulator
-###############################################################################
-# To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> merge_sort.cpp -o merge_sort.fpga
-# CMake executes:
-#   [compile] dpcpp -fintelfpga -o merge_sort.cpp.o -c merge_sort.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> merge_sort.cpp.o -o merge_sort.fpga
-add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 
 ###############################################################################
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> merge_sort.cpp -o merge_sort.fpga
+#   dpcpp -fintelfpga -Xshardware -Xsseed=1 -Xsboard=<FPGA_BOARD> merge_sort.cpp -o merge_sort.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o merge_sort.cpp.o -c merge_sort.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> merge_sort.cpp.o -o merge_sort.fpga
+#   [compile] dpcpp -fintelfpga -c -o merge_sort.cpp.o -c merge_sort.cpp
+#   [link]    dpcpp -fintelfpga -Xshardware -Xsdaz -Xsrounding=faithful -Xsparallel=2 -Xsseed=1 -Xsboard=<FPGA_BOARD> merge_sort.cpp.o -o merge_sort.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
