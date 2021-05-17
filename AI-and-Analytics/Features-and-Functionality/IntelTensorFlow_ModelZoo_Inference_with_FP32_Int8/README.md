@@ -1,4 +1,4 @@
-# ~Intel Model Zoo` Sample
+# `Intel Model Zoo` Sample
 This code example provides a sample code to run ResNet50 inference on Intel's pretrained FP32 and Int8 model
 
 ## Purpose
