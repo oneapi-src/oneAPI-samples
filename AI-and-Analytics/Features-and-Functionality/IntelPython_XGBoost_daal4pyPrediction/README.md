@@ -11,11 +11,11 @@ This sample code illustrates how to analyze the performance benefit of minimal c
 
 ## Purpose
 
-XGBoost is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath. In addition, daal4py provides functionality to bring even more optimizations to gradient boosting prediction with XGBoost without needing to modify XGBoost models or learn an additional API.
+XGBoost is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath. In addition, daal4py provides functionality to bring even more optimizations to gradient boosting prediction with XGBoost without modifying XGBoost models or learning an additional API.
 
 This sample code illustrates how to analyze the performance benefit of minimal code changes to port pre-trained XGBoost models to daal4py prediction for much faster prediction than XGBoost prediction.
 
-In this sample, you will run a XGBoost model with daal4py prediction and XGBoost API prediction to see the performance benefit of daal4py gradient boosting prediction. You will also learn how to port a pre-trained XGBoost model to daal4py prediction.
+In this sample, you will run an XGBoost model with daal4py prediction and XGBoost API prediction to see the performance benefit of daal4py gradient boosting prediction. You will also learn how to port a pre-trained XGBoost model to daal4py prediction.
   
 ## Key Implementation Details 
 This sample code is implemented for CPU using the Python language. The example assumes you have XGboost and daal4py installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).  
@@ -24,7 +24,7 @@ This sample code is implemented for CPU using the Python language. The example a
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building XGBoost for CPU
 
