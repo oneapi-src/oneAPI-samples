@@ -3,7 +3,7 @@ This sample code illustrates how to analyze the performance benefit from using I
 
 | Optimized for                     | Description
 | :---                              | :---
-| OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
+| OS                                | 64-bit Linux: Ubuntu 18.04 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
 | Software                          | XGBoost, Intel® oneAPI AI Analytics Toolkit
 | What you will learn               | How to analyze the performance benefit from using Intel optimizations upstreamed by Intel to the latest XGBoost compared to un-optimized XGBoost 0.81
