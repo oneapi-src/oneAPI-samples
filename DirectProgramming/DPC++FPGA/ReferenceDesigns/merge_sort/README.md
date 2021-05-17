@@ -1,17 +1,18 @@
 # Merge Sort
 This DPC++ reference design demonstrates a highly paramaterizable merge sort algorithm on an FPGA.
 
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
-
+***Documentation***:  
+* [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
+* [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
+* [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. 
+ 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | Implementing a merge sort algorithm on an FPGA.
-| Time to complete                  | 1 hour (not including compile time)
+| Time to complete                  | 1 hour
 
 <br>
 
@@ -32,8 +33,6 @@ This FPGA reference design demonstrates a highly paramaterizable merge sort desi
 ## License  
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Reference Design
 
@@ -158,24 +157,24 @@ The following source files can be found in the `src/` sub-directory.
 | File                           | Description 
 |:---                            |:---
 |`merge_sort.cpp`                | Contains the `main()` function and the top-level interfaces.
-|`MergeSort.hpp`                 | The function to submit all of the merge sort kernels (`Partition`, `Produce`, `Merge`, and `Consume`)
-|`Consume.hpp`                   | The `Consume` kernel for the merge unit
-|`Merge.hpp`                     | The `Merge` kernel for the merge unit and the merge tree
-|`Misc.hpp`                      | Miscellaneous helper functions
-|`Partition.hpp`                 | The `Partition` kernel
-|`pipe_array.hpp`                | Header file containing the definition of an array of pipes
-|`pipe_array_internal.hpp`       | Helper for pipe_array.hpp
-|`Produce.hpp`                   | The `Produce` kernel for the merge unit
+|`MergeSort.hpp`                 | The function to submit all of the merge sort kernels (`Partition`, `Produce`, `Merge`, and `Consume`).
+|`Consume.hpp`                   | The `Consume` kernel for the merge unit. This kernel reads from an input pipe and writes out to either a different output pipe, or to device memory.
+|`Merge.hpp`                     | The `Merge` kernel for the merge unit and the merge tree. This kernel streams in two sorted lists, merges them into a single sorted list of double the size, and streams the data out a pipe.
+|`Misc.hpp`                      | Miscellaneous helper functions.
+|`Partition.hpp`                 | The `Partition` kernel. This kernel reads data from device memory and writes to the input pipes of the first merge unit.
+|`pipe_array.hpp`                | Header file containing the definition of an array of pipes.
+|`pipe_array_internal.hpp`       | Helper for pipe_array.hpp.
+|`Produce.hpp`                   | The `Produce` kernel for the merge unit. This kernel reads from input pipes or performs strided reads from device memory and writes the data to an output pipe.
 |`UnrolledLoop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end
 
 ### Merge Sort Details
 This section will describe how the merge sort design is layed out and how it takes advantage of the spatial computing of the FPGA. <br/>
 
-The figure below shows the conceptual view of the merge sort design to the user. The user streams data into a SYCL pipe and, after some delay, the element are streamed out of the sorter, in sorted order. The number of elements the merge sort design sorts can be a runtime parameter, but it must be a power of 2. However, this restriction can be worked around by padding the input stream with min/max elements, depending on the order of the sort. This technique is demonstrated in this design (see the `fpga_sort` function in *merge_sort.cpp*).
+The figure below shows the conceptual view of the merge sort design to the user. The user streams data into a SYCL pipe and, after some delay, the elements are streamed out of the sorter, in sorted order. The number of elements the merge sort design sorts can be a runtime parameter, but it must be a power of 2. However, this restriction can be worked around by padding the input stream with min/max elements, depending on the order of the sort. This technique is demonstrated in this design (see the `fpga_sort` function in *merge_sort.cpp*).
 
 <img src="sort_api.png" alt="sort_api" width="600"/>
 
-This basis of the merge sort design is what we call a *merge unit*, which is shown in the figure below. A single merge unit streams in sorted lists of size `count` in parallel and merges them into a sorted list of size `2*count`. The lists are streamed in by the `Produce` kernel, which can be configured to stream the data from a SYCL pipe or device memory (e.g., DDR or HBM). This configuration can be easily made at either compile time or at runtime with a dynamic parameter that changes over time. Similarly, the `Consumer` kernel can stream data out either a SYCL pipe or to device memory.
+The basis of the merge sort design is what we call a *merge unit*, which is shown in the figure below. A single merge unit streams in two sorted lists of size `count` in parallel and merges them into a single sorted list of size `2*count`. The lists are streamed in by the `Produce` kernel, which can be configured to stream the data from a SYCL pipe or device memory (e.g., DDR or HBM). This configuration can be easily made at either compile time or at runtime. Similarly, the `Consumer` kernel can stream data to either a SYCL pipe or to device memory.
 
 <img src="merge_unit.png" alt="merge_unit" width="500"/>
 
@@ -183,7 +182,7 @@ A single merge unit requires `lg(N)` iterations to sort `N` elements. This requi
 
 <img src="basic_runtime_graph.png" alt="basic_runtime_graph" width="800"/>
 
-To improve performance, the merge sort design accepts a template parameter `units` which allows one to instantiate multiple instances of the merge unit, as shown in the figure below. Choosing the number of units is an area-performance tradeoff (note: the number of instantiated merge units must be a power of 2). In this design, each merge unit sorts a partition of the input data of size `N/units`. However, since the data is coming in one element at a time from a SYCL pipe, the data must be partitioned in the first iteration of the sort. This is done using the `Partition` kernel, which feeds the data to producers of merge unit 0 (alternating between the) to perform the first iteration of the sort from the input pipe. Notice that only `ProduceA` and `ProduceB` of merge unit 0 have input pipes to perform this initial partition, the other merge units do not. This is reflected in the two different versions of the `Produce` kernel in *Produce.hpp*.
+To improve performance, the merge sort design accepts a template parameter `units` which allows one to instantiate multiple instances of the merge unit, as shown in the figure below. Choosing the number of units is an area-performance tradeoff (note: the number of instantiated merge units must be a power of 2). In this design, each merge unit sorts a partition of the input data of size `N/units`. However, since the data is coming in one element at a time from a SYCL pipe, the data must be partitioned in the first iteration of the sort. This is done using the `Partition` kernel, which feeds the data to producers of merge unit 0 (alternating between input pipe A and B) to perform the first iteration of the sort from the input pipe. Notice that only `ProduceA` and `ProduceB` of merge unit 0 have input pipes to perform this initial partition, the other merge units do not. This is reflected in the two different versions of the `Produce` kernel in *Produce.hpp*.
 
 <img src="parallel_tree.png" alt="parallel_tree" width="900"/>
 
@@ -192,14 +191,8 @@ After the merge units sort their `N/units`-sized partition, the partitions must 
 Once the merge units perform their last iteration, they output to a pipe (instead of writing to device memory) that feed the merge tree. We found that the using a merge tree increased the throughput by roughly 18% over the option of reusing the merge units. It is worth noting that if the number of merge units is set to `1` by the user, the merge tree is omitted entirely.
 
 ### Performance disclaimers
-Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
+Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase. For more complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
 
-Performance results are based on testing as of July 29, 2020 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
+Performance results are based on testing as of May 2021 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
 
 Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](www.intel.com).
-
-The performance was measured by Intel on July 29, 2020.
-
-Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
-
-(C) Intel Corporation.

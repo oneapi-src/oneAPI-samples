@@ -12,9 +12,6 @@
     "linux": [
       {
         "id": "fpga_emu",
-        "env": [
-          "export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
-        ],
         "steps": [
           "mkdir build",
           "cd build",
@@ -36,9 +33,6 @@
     "windows": [
       {
         "id": "fpga_emu",
-        "env": [
-          "set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
-        ],
         "steps": [
           "mkdir build",
           "cd build",

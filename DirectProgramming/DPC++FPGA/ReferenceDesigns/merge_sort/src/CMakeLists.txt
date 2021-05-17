@@ -4,7 +4,6 @@
 set(SOURCE_FILE merge_sort.cpp)
 set(TARGET_NAME merge_sort)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
-set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
@@ -92,6 +91,19 @@ add_custom_command(OUTPUT ${FPGA_EARLY_IMAGE}
                    # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 
 ###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#   dpcpp -fintelfpga -Xshardware -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> merge_sort.cpp -o merge_sort.fpga
+# CMake executes:
+#   [compile] dpcpp -fintelfpga -o merge_sort.cpp.o -c merge_sort.cpp
+#   [link]    dpcpp -fintelfpga -Xshardware -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> merge_sort.cpp.o -o merge_sort.fpga
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+
+###############################################################################
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
@@ -105,4 +117,3 @@ set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPIL
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
 # See DPC++FPGA/GettingStarted/fast_recompile for details.
-
