@@ -26,29 +26,33 @@ The `fp reassociate(on|off)` pragma controls the relaxing of the order of floati
 The default setting of `fp contract` pragma is `fast` and the default setting of `fp reassociate` is `on`. Guarding the code block with `#pragma clang fp contract(off)` and `#pragma clang fp reassociate(off)` will overwrite the default setting. If multiple occurrences of the pragma affect the same scope of your code, the pragma with the narrowest scope takes precedence.
 
 #### Example
-This tutorial design applies `fp contract(off)` and `fp reassociate(off)` at a global scope.
+This tutorial design applies `fp contract(fast)` and `fp reassociate(on)` at a global scope (the default behavior).
 
-ContractFastKernel in this tutorial applies `fp contract(fast)` to addition followed by multiplication. The following is an example:
-
-```
-#pragma clang fp contract(fast)
-  double temp1 = 0.0, temp2 = 0.0;
-  temp1 = accessorA[0] + accessorB[0];
-  temp2 = accessorC[0] + accessorD[0];
-  accessorRes[0] = temp1 * temp2;
-```
-
-The `fp contract(fast)` pragma allows the compiler to skip rounding steps on these double precision operations, which in turn allows more efficient use of FPGA floating point math resources and thus a reduction in area and latency.
-
-ReassociateOnKernel in this tutorial applies `fp reassociate(on)` to a sequence of additions. The following is an example:
+ContractOffKernel in this tutorial applies `fp contract(off)` to addition followed by multiplication in a loop. The following is an example:
 
 ```
-#pragma clang fp reassociate(on)
-  accessorRes[0] = 
-    accessorA[0] + accessorB[0] + accessorC[0] + accessorD[0];
+#pragma clang fp contract(off)
+  accessorRes[0] = 0.0;
+  for (size_t i = 0; i < size; i++) {
+    double temp1 = 0.0, temp2 = 0.0;
+    temp1 = accessorA[0] + accessorB[0];
+    temp2 = accessorC[0] + accessorArray[i];
+    accessorRes[0] += temp1 * temp2 + accessorD[0];
+  }
 ```
 
-By relaxing the order of the additions, the compiler is able to group these four additions that maps to the FPGA hardware in a more efficient way, and thus saves area and reduces latency.
+The `fp contract(fast)` pragma allows the compiler to skip rounding steps on these double precision operations, which in turn allows more efficient use of FPGA floating point math resources and thus a reduction in area and latency. By applying `fp contract(off)`, we lose this efficiency.
+
+ReassociateOffKernel in this tutorial applies `fp reassociate(off)` to a sequence of additions. The following is an example:
+
+```
+#pragma clang fp reassociate(off)
+  accessorRes[0] += accessorA[0] + accessorB[0]
+                    + accessorC[0] + accessorD[0]
+                    + accessorE[0] + accessorF[0];
+```
+
+By relaxing the order of the additions using `fp reassociate(on)`, the compiler is able to group these four additions that maps to the FPGA hardware in a more efficient way, and thus saves area and reduces latency. By applying `fp reassociate(off)`, we lose this efficiency.
 
 ## Key Concepts
 * The basic usage of the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas
