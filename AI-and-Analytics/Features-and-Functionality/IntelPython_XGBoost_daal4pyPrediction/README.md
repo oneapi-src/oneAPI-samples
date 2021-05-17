@@ -1,4 +1,4 @@
-# `Intel Python XGBoost daal4py Predictuion Sample`
+# `Intel Python XGBoost daal4py Prediction Sample`
 This sample code illustrates how to analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction than XGBoost prediction. It demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
