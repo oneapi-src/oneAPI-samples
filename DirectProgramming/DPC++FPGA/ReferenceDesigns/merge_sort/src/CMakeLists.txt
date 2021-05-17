@@ -25,7 +25,7 @@ endif()
 
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
-    set(WIN_FLAG "-EHsc")
+    set(WIN_FLAG "/EHsc")
 endif()
 
 # Allow the user to enable hardware profiling
