@@ -6,14 +6,14 @@ This sample code illustrates how to analyze the performance benefit from using I
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
 | Software                          | XGBoost, Intel® oneAPI AI Analytics Toolkit
-| What you will learn               | How to analyze the performance benefit from using Intel optimizations upstreamed by Intel to latest XGBoost compared to un-optimized XGBoost 0.81
+| What you will learn               | How to analyze the performance benefit from using Intel optimizations upstreamed by Intel to the latest XGBoost compared to un-optimized XGBoost 0.81
 | Time to complete                  | 10-15 minutes
 
 ## Purpose
 
 XGBoost is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath.
 
-In this sample, you will an XGBoost model and prediction using Intel optimizations upstreamed by Intel to the latest XGBoost package, and with un-optimized XGBoost 0.81 for comparison.
+In this sample, you will an XGBoost model and prediction using Intel optimizations upstreamed by Intel to the latest XGBoost package and the un-optimized XGBoost 0.81 for comparison.
   
 ## Key Implementation Details 
 This XGBoost sample code is implemented for the CPU using the Python language. The example assumes you XGBoost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). It also assumes you have set up an additional XGBoost 0.81 conda environment, with details on how to do so explained within the sample and this README.
@@ -22,7 +22,7 @@ This XGBoost sample code is implemented for the CPU using the Python language. T
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building XGBoost for CPU
 
@@ -65,7 +65,7 @@ conda install jupyter nb_conda_kernels
 
 ### Building XGBoost 0.81 Conda Environment
 
-To see the performance comparison to latest XGBoost with Intel optimizations and un-optimized XGBoost 0.81, you will be required to run this sample in a second conda environment with XGBoost 0.81 installed.
+To see the performance comparison to the latest XGBoost with Intel optimizations and un-optimized XGBoost 0.81, you will be required to run this sample in a second conda environment with XGBoost 0.81 installed.
 
 ### View in Jupyter Notebook
 
