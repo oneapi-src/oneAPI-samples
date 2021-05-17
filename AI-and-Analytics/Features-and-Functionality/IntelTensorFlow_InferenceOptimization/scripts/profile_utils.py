@@ -5,7 +5,7 @@ import json
 from tensorflow.python.client import timeline
 import os, fnmatch
 import psutil
-import subprocess
+import ast
 import tensorflow.estimator
 from tensorflow.python.training import training_util
 try:
@@ -17,6 +17,8 @@ except ImportError as e:
     has_git = False
     pass
 
+def do_command(command):
+    os.system(command)
 
 class TimeLiner:
 
@@ -181,7 +183,7 @@ class PlatformUtils:
 
 class CommonUtils:
 
-    def __init_(self):
+    def __init__(self):
         return
 
     def found_files_in_folder(self, pattern, path):
@@ -242,11 +244,11 @@ class ConfigFile:
             for each_key, each_val in config.items(each_section):
                 if each_key == 'mkl-only':
                     if each_val is not None:
-                        if eval(each_val) is True and on_mkl is False:
+                        if ast.literal_eval(each_val) is True and on_mkl is False:
                             is_supported = False
                 if each_key == 'support-accuracy':
                     if each_val is not None:
-                        if eval(each_val) is False and accuracy_only is True:
+                        if ast.literal_eval(each_val) is False and accuracy_only is True:
                             is_supported = False
             if is_supported is True:
                 supported_sections.append(each_section)
@@ -354,10 +356,10 @@ class ConfigFile:
                             self.patches_keyword = keyword
                     elif each_key == 'mkl-only':
                         if len(each_val) != 0 :
-                            self.mkl_only = eval(each_val)
+                            self.mkl_only = ast.literal_eval(each_val)
                     elif each_key == 'support-accuracy':
                         if len(each_val) != 0 :
-                            self.support_accuracy = eval(each_val)
+                            self.support_accuracy = ast.literal_eval(each_val)
                     else:
                         if len(each_val) != 0 :
                             if each_val[0] == '=':
@@ -418,7 +420,7 @@ class ConfigFile:
         elif file_ext == 'gz':
             cmd = "tar -xzvf  " + filepath
         if cmd != '':
-            os.system(cmd)
+            do_command(cmd)
             if os.path.exists(pretrainfd + os.sep + filename) is False:
                 shutil.move(filename, pretrainfd)
             uncompress_path = filepath.split('.')[0]
@@ -432,7 +434,7 @@ class ConfigFile:
         dataset_path = current_path + os.sep + datasetfd
         if os.path.exists(dataset_path) is True:
             return dataset_path
-        os.system(cmd)
+        do_command(cmd)
         print('Downloaded the model in:', dataset_path)
         return dataset_path
 
@@ -443,7 +445,7 @@ class ConfigFile:
         pretrain_model_path = current_path + os.sep + pretrainfd + os.sep + filename
         if os.path.exists(pretrain_model_path) is True:
             return pretrain_model_path
-        os.system(cmd)
+        do_command(cmd)
         if os.path.exists(pretrainfd) is False:
             os.mkdir(pretrainfd)
         if os.path.exists(pretrainfd + os.sep + filename) is False:
@@ -465,7 +467,7 @@ class ConfigFile:
         if os.path.exists(patch_path) is True:
             cmd = "git am " + patch_path
             print(cmd)
-            os.system(cmd)
+            do_command(cmd)
             self.patched = True
         return
 
@@ -479,10 +481,10 @@ class ConfigFile:
             print("do unpatch")
             cmd = "git reset HEAD^ "
             print(cmd)
-            os.system(cmd)
+            do_command(cmd)
             cmd = "git checkout " + model_path + "*"
             print(cmd)
-            os.system(cmd)
+            do_command(cmd)
         return
 
 
