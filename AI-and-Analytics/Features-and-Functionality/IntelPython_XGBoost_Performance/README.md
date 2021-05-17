@@ -1,5 +1,5 @@
-# `Intel Python daal4py Distributed Linear Regression Sample`
-This sample code illustrates how to analyze the performance benefit from using Intel optimizations upstreamed by Intel to latest XGBoost compared to un-optimized XGBoost 0.81. It assumes you have a working version of the MPI library installed, and it demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+# `Intel Python XGBoost Performance Sample`
+This sample code illustrates how to analyze the performance benefit from using Intel optimizations upstreamed by Intel to latest XGBoost compared to un-optimized XGBoost 0.81. It demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -11,12 +11,12 @@ This sample code illustrates how to analyze the performance benefit from using I
 
 ## Purpose
 
-XGBoost* is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost* includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath.
+XGBoost is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath.
 
-In this sample, you will an XGBoost model and prediction using Intel optimizations upstreamed by Intel to latest XGBoost, and with un-optimized XGBoost 0.81 for comparison.
+In this sample, you will an XGBoost model and prediction using Intel optimizations upstreamed by Intel to the latest XGBoost package, and with un-optimized XGBoost 0.81 for comparison.
   
 ## Key Implementation Details 
-This XGBoost sample code is implemented for the CPU using the Python language. The example assumes you XGBoost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). It also assumes you have set up an additional XGBoost 0.81 conda environment, with details on how to do this detailed in the sample and in this README.
+This XGBoost sample code is implemented for the CPU using the Python language. The example assumes you XGBoost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). It also assumes you have set up an additional XGBoost 0.81 conda environment, with details on how to do so explained within the sample and this README.
  
 ## License  
 Code samples are licensed under the MIT license. See
@@ -63,7 +63,11 @@ source activate usr_intelpython
 conda install jupyter nb_conda_kernels
 ```
 
-#### View in Jupyter Notebook
+### Building XGBoost 0.81 Conda Environment
+
+To see the performance comparison to latest XGBoost with Intel optimizations and un-optimized XGBoost 0.81, you will be required to run this sample in a second conda environment with XGBoost 0.81 installed.
+
+### View in Jupyter Notebook
 
 _Note: This distributed execution cannot be launched from the jupyter notebook version, but you can still view inside the notebook to follow the included write-up and description._
 
@@ -72,11 +76,6 @@ Launch Jupyter Notebook in the directory housing the code example
 ```
 jupyter notebook
 ```
-
-### Building XGBoost 0.81 Conda Environment
-
-To see the performance comparison to latest XGBoost with Intel optimizations and un-optimized XGBoost 0.81, you will be required to run this sample in a second conda environment with XGBoost 0.81 installed.
-
 
 ## Running the Sample
 
@@ -88,9 +87,8 @@ Open .pynb file and run cells in Jupyter Notebook using the "Run" button (see th
 
 ##### Expected Printed Output for Cells (with similar numbers):
 ```
-EDIT
+[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 ```
-
 
 ### Running the Sample as a Python File
 
@@ -100,11 +98,11 @@ Open notebook in Jupyter and download as python file (see the image using "daal4
 
 Run the Program
 
-`python IntelPython_XGBoost_GettingStarted.py`
+`python IntelPython_XGBoost_Performance.py`
 
 The output files of the script will be saved in the included models and result directories. 
 
 ##### Expected Printed Output (with similar numbers):
 ```
-EDIT
+[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 ```
