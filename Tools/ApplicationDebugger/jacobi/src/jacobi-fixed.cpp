@@ -60,13 +60,13 @@ int main(int argc, char *argv[]) {
         // kernel-start
         h.parallel_for(range{n}, [=](id<1> index) {
           int i = index[0];
-          /* Bug 1: b is an integer, so the division gives you 0.
-             Bug 2: out-of-bounds access. */
-          //  acc_x_k1[i] = acc_b[i] / 4
-          //    - (acc_x_k[i - 2] + acc_x_k[i - 1]
-          //       + acc_x_k[i + 1] + acc_x_k[i + 2]) / 4;
+          // Bug 1: out-of-bounds access.
+          // float sum = acc_x_k[i - 2] + acc_x_k[i - 1] + acc_x_k[i + 1] + acc_x_k[i + 2];
+          //
+          // Bug 2: b is an integer, so the division gives you 0.
+          // acc_x_k1[i] = acc_b[i] / 4 - sum / 4;
 
-          /* Fix bug 2. */
+          /* Fix bug 1. */
           float x_k1 = acc_b[i];
           if (i > 1)
             x_k1 -= acc_x_k[i - 2];
@@ -77,19 +77,19 @@ int main(int argc, char *argv[]) {
           if (i < n - 2)
             x_k1 -= acc_x_k[i + 2];
 
-          /* Fix bug 1. */
+          /* Fix bug 2. */
           x_k1 *= 0.25;
           acc_x_k1[index] = x_k1;
         });
         // kernel-end
       });
-      /* Bug 3: the host buffers are not yet updated at this moment.
-         Note, with this code, you get correct results on CPU.  */
+      // Bug 3: the host buffers are not yet updated at this moment.
+      // Note, with this code, you get correct results on CPU.
       // q.wait_and_throw();
       // for (int i = 0; i < n; i++)
       //   x_k[i] = x_k1[i];
 
-      /* Fix bug 3. */
+      // Fix bug 3.
       q.submit([&](auto &h) {
         auto acc_x_k = buffer_x_k.get_access<access::mode::write>(h);
         auto acc_x_k1 = buffer_x_k1.get_access<access::mode::read>(h);

@@ -60,9 +60,8 @@ int main(int argc, char *argv[]) {
         // kernel-start
         h.parallel_for(range{n}, [=](id<1> index) {
           int i = index[0];
-          acc_x_k1[i] = acc_b[i] / 4 - (acc_x_k[i - 2] + acc_x_k[i - 1] +
-                                        acc_x_k[i + 1] + acc_x_k[i + 2]) /
-                                           4;
+          float sum = acc_x_k[i - 2] + acc_x_k[i - 1] + acc_x_k[i + 1] + acc_x_k[i + 2];
+          acc_x_k1[i] = acc_b[i] / 4 - sum / 4;
         });
         // kernel-end
       });
