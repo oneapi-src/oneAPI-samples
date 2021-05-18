@@ -37,6 +37,8 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 > Linux User: . ~/intel/oneapi/setvars.sh  
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
+### Running Samples In DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
 Perform the following steps:
@@ -48,7 +50,7 @@ Perform the following steps:
 	$ make
 	```
 
-2. Run the program (default uses buffers):
+2. Run the program:
     ```
     make run_prog1
     make run_prog2
@@ -58,3 +60,18 @@ Perform the following steps:
     ```
     make clean
     ```
+
+### Example of Output
+```
+Device: Intel(R) HD Graphics 630 [0x5912]
+PASSED!
+Built target run_prog1
+
+Kernel Loading Done
+Platforms Found: 3
+Using Platform: Intel(R) FPGA Emulation Platform for OpenCL(TM)
+Devices Found: 1
+Device: Intel(R) FPGA Emulation Device
+Passed!
+Built target run_prog2
+```
