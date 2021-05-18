@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
     b[i] = 8;
     x_k[i] = 0;
   }
+
   b[0] = 6;
   b[1] = 7;
   b[n - 2] = 7;

@@ -26,19 +26,6 @@ if (NOT GDBSERVER)
   message (FATAL_ERROR "'gdbserver-gt' not found!")
 endif ()
 
-set(DPCPP_COMPILE_TARGET "jit" CACHE STRING "Kernel compilation mode: {jit, cpu, fpga-emu, kbl, gen9, gen12LP, ...}")
-if (DPCPP_COMPILE_TARGET MATCHES jit)
-  # Do nothing.  We are already set.
-elseif (DPCPP_COMPILE_TARGET MATCHES cpu)
-  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_x86_64-unknown-linux-sycldevice")
-elseif (DPCPP_COMPILE_TARGET MATCHES fpga-emu)
-  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_fpga-unknown-linux-sycldevice")
-else ()
-  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsycl-targets=spir64_gen-unknown-linux-sycldevice")
-  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xs \"-device ${DPCPP_COMPILE_TARGET} -internal_options -cl-kernel-debug-enable -options -cl-opt-disable\"")
-endif ()
-message (STATUS "DPCPP_COMPILE_TARGET is '${DPCPP_COMPILE_TARGET}'")
-
 set (PROJECT_NAME_BUGGED "${PROJECT_NAME}-bugged")
 set (PROJECT_NAME_FIXED "${PROJECT_NAME}-fixed")
 

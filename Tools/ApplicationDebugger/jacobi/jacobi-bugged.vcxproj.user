@@ -4,6 +4,6 @@
     <LocalDebuggerCommandArguments>cpu</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <RemoteDebuggerCommandArguments>gpu</RemoteDebuggerCommandArguments>
-    <RemoteDebuggerEnvironment>CL_CONFIG_USE_NATIVE_DEBUGGER=1</RemoteDebuggerEnvironment>
+    <LocalDebuggerEnvironment>CL_CONFIG_USE_NATIVE_DEBUGGER=1</LocalDebuggerEnvironment>
   </PropertyGroup>
 </Project>
