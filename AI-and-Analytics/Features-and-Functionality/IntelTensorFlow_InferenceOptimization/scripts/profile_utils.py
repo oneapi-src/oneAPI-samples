@@ -18,7 +18,7 @@ except ImportError as e:
     pass
 
 def do_command(command):
-    os.system(command)
+    print("WARNING!! No execution for : ", command)
 
 class TimeLiner:
 
