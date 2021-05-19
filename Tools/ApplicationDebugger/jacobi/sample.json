@@ -21,27 +21,9 @@
         ]
       },
       {
-        "id": "cpu-aot-bugged",
-        "steps": [
-          "mkdir -p build_cpu_aot_bugged; cd build_cpu_aot_bugged; cmake .. -DDPCPP_COMPILE_TARGET=cpu",
-          "make",
-          "./jacobi-bugged cpu",
-          "make clean"
-        ]
-      },
-      {
         "id": "gpu-bugged",
         "steps": [
           "mkdir -p build_gpu_bugged; cd build_gpu_bugged; cmake ..",
-          "make",
-          "./jacobi-bugged gpu",
-          "make clean"
-        ]
-      },
-      {
-        "id": "gpu-aot-bugged",
-        "steps": [
-          "mkdir -p build_gpu_aot_bugged; cd build_gpu_aot_bugged; cmake .. -DDPCPP_COMPILE_TARGET=gen9,gen12LP",
           "make",
           "./jacobi-bugged gpu",
           "make clean"
@@ -57,27 +39,9 @@
         ]
       },
       {
-        "id": "fpga-emu-aot-bugged",
-        "steps": [
-          "mkdir -p build_acc_aot_bugged; cd build_acc_aot_bugged; cmake .. -DDPCPP_COMPILE_TARGET=fpga-emu",
-          "make",
-          "./jacobi-bugged accelerator",
-          "make clean"
-        ]
-      },
-      {
         "id": "cpu-fixed",
         "steps": [
           "mkdir -p build_cpu_fixed; cd build_cpu_fixed; cmake ..",
-          "make",
-          "./jacobi-fixed cpu",
-          "make clean"
-        ]
-      },
-      {
-        "id": "cpu-aot-fixed",
-        "steps": [
-          "mkdir -p build_cpu_aot_fixed; cd build_cpu_aot_fixed; cmake .. -DDPCPP_COMPILE_TARGET=cpu",
           "make",
           "./jacobi-fixed cpu",
           "make clean"
@@ -93,27 +57,9 @@
         ]
       },
       {
-        "id": "gpu-aot-fixed",
-        "steps": [
-          "mkdir -p build_gpu_aot_fixed; cd build_gpu_aot_fixed; cmake .. -DDPCPP_COMPILE_TARGET=gen9,gen12LP",
-          "make",
-          "./jacobi-fixed gpu",
-          "make clean"
-        ]
-      },
-      {
         "id": "fpga-emu-fixed",
         "steps": [
           "mkdir -p build_acc_fixed; cd build_acc_fixed; cmake ..",
-          "make",
-          "./jacobi-fixed accelerator",
-          "make clean"
-        ]
-      },
-      {
-        "id": "fpga-emu-aot-fixed",
-        "steps": [
-          "mkdir -p build_acc_aot_fixed; cd build_acc_aot_fixed; cmake .. -DDPCPP_COMPILE_TARGET=fpga-emu",
           "make",
           "./jacobi-fixed accelerator",
           "make clean"
