@@ -11,16 +11,30 @@ analyze the model pb files before and after the inference optimizations.
 | Time to complete                  | 30 minutes
 
 ## Purpose
-Show users the importance of inference optimization on performance, and also analyze TF ops difference in pre-trained models before/after the optimizations.
+Show users the importance of inference optimization on performance, and also analyze TensorFlow ops difference in pre-trained models before/after the optimizations.  
+Those optimizations includes:  
+* Converting variables to constants.
+* Removing training-only operations like checkpoint saving.
+* Stripping out parts of the graph that are never reached.
+* Removing debug operations like CheckNumerics.
+* Folding batch normalization ops into the pre-calculated weights.
+* Fusing common operations into unified versions.
 
 ## Key implementation details
+This tutorial contains one Jupyter notebook and couple python scripts listed below.  
 ### Jupyter Notebooks 
  
-
 | Notebook | Notes|
 | ------ | ------ |
 |  tutorial_optimize_TensorFlow_pretrained_model.ipynb | Optimize a pre-trained model for a better inference performance, and also analyze the model pb files  |
 
+### Python Scripts
+| Scripts | Notes|
+| ------ | ------ |
+|  tf_pb_utils.py | This script parses a pre-trained TensorFlow model PB file.  |
+|  freeze_optimize_v2.py | This script optimizes a pre-trained TensorFlow model PB file.  |
+|  profile_utils.py | This script helps on output processing of the Jupyter Notebook.  |
+   
     
 ## License  
 Code samples are licensed under the MIT license. See
