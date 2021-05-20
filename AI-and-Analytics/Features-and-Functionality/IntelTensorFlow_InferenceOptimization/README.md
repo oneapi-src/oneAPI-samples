@@ -4,9 +4,9 @@ analyze the model pb files before and after the inference optimizations.
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 
+| OS                                | Ubuntu* 18.04 
 | Hardware                          | Intel® Xeon® Scalable processor family or newer
-| Software                          | Intel® oneAPI AI Analytics Toolkit
+| Software                          | [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html)
 | What you will learn               | Optimize a pre-trained model for a better inference performance
 | Time to complete                  | 30 minutes
 
@@ -35,7 +35,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 > NOTE: No action is required if users use Intel DevCloud as their environment. 
   Please refer to [Intel oneAPI DevCloud](https://intelsoftwaresites.secure.force.com/devcloud/oneapi) for Intel DevCloud.
 
- 1. **Intel AI Analytics Toolkit**  
+ 1. **Intel® AI Analytics Toolkit**  
        You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation,   
        and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
