@@ -7,7 +7,7 @@ For more information on migrating from OpenCL to DPC++, see [Migrating OpenCL De
 
 | Optimized for                       | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04, 20; Windows 10
+| OS                                | Linux* Ubuntu* 18.04, 20
 | Hardware                          | Skylake or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler, Intel Devcloud
 | What you will learn               | How OpenCL code can interact with DPC++ with the Intel&reg; oneAPI DPC++/C++ Compiler
