@@ -5,7 +5,7 @@ perform a simple video encode.
 
 | Optimized for    | Description
 |----------------- | ----------------------------------------
-| OS               | Ubuntu* 18.04; Windows* 10
+| OS               | Ubuntu* 20.04; Windows* 10
 | Hardware         | Intel® Processor Graphics GEN9 or newer
 | Software         | Intel® oneAPI Video Processing Library(oneVPL)
 | What You Will Learn | How to use oneVPL to encode a raw video file to H.265
@@ -15,9 +15,10 @@ perform a simple video encode.
 ## Purpose
 
 This sample is a command line application that takes a file containing a raw
-I420 format video elementary stream as an argument. Then encodes it with oneVPL and
-writes the encoded output to `out.h265` in H.265 format.
+format video elementary stream as an argument.  Using oneVPL, the application encodes and
+writes the encoded output to `a out.h265` in H.265 format.
 
+Native raw frame input format: CPU=I420, GPU=NV12.
 
 ## Key Implementation details
 
@@ -26,7 +27,7 @@ writes the encoded output to `out.h265` in H.265 format.
 | Target device     | CPU
 | Input format      | I420
 | Output format     | H.265 video elementary stream
-| Output resolution | same as input
+| Output resolution | same as the input
 
 
 ## License
@@ -34,10 +35,19 @@ writes the encoded output to `out.h265` in H.265 format.
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `hello-encode` Program
+
+### Include Files
+The oneVPL include folder is located at these locations on your development system:
+ - Windows: %ONEAPI_ROOT%\vpl\latest\include 
+ - Linux: $ONEAPI_ROOT/vpl/latest/include
+
+### Running Samples In DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+
 
 ### On a Linux* System
 
@@ -124,7 +134,7 @@ Note: You need Base Toolkit 2021.2 or later to build this sample with the IDE.
 ### Application Parameters
 
 The instructions given above run the sample executable with the arguments
-`<sample_dir>/content/cars_128x96.i420 128 96`.
+`-i <sample_dir>/content/cars_128x96.i420 -w 128 -h 96`.
 
 
 ### Example of Output
