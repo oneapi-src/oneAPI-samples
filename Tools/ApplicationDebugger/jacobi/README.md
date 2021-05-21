@@ -99,12 +99,14 @@ your development system.
 
 If running a sample in the Intel DevCloud, remember that you must specify the
 compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-For the jacobi sample, a node with GPU and an interactive shell is recommended.
+We recommend running the `jacobi` sample on a node with GPU. In order to have an
+interactive debugging session, we recommend using the interactive mode. To get
+the setting, after connecting to the login node, type the following command:
 
 ```
 $ qsub -I -l nodes=1:gpu:ppn=2
 ```
-
+Within the interactive session on the GPU node, build and run the sample.
 For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
