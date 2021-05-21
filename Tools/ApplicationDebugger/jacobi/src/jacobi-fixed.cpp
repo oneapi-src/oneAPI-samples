@@ -5,7 +5,7 @@
 // =============================================================
 
 // The program solves the linear equation Ax=b, where matrix A is a
-// n x n sparse matrix with diagonals [1 1 4 1 1],
+// n x n sparse matrix with diagonals [1 1 5 1 1],
 // vector b is set such that the solution is [1 1 ... 1]^T.
 // The linear system is solved via Jacobi iteration.
 
@@ -22,20 +22,23 @@ using namespace sycl;
 
 int main(int argc, char *argv[]) {
   constexpr size_t n = 64;
+  constexpr size_t number_of_iterations = 100;
+  constexpr float tolerance = 1e-6;
+
   int b[n];
   float x_k[n];
   float x_k1[n];
 
   // Initialize the input.
   for (int i = 0; i < n; i++) {
-    b[i] = 8;
+    b[i] = 9;
     x_k[i] = 0;
   }
 
-  b[0] = 6;
-  b[1] = 7;
-  b[n - 2] = 7;
-  b[n - 1] = 6;
+  b[0] = 7;
+  b[1] = 8;
+  b[n - 2] = 8;
+  b[n - 1] = 7;
 
   try {
     CustomSelector selector(GetDeviceType(argc, argv));
@@ -50,12 +53,12 @@ int main(int argc, char *argv[]) {
     buffer buffer_x_k(x_k, range{n});
     buffer buffer_x_k1(x_k1, range{n});
 
-    for (int k = 0; k < 15000; k++) {
+    for (int k = 0; k < number_of_iterations; k++) {
       // k-th iteration of Jacobi.
       q.submit([&](auto &h) {
-        auto acc_b = buffer_b.get_access<access::mode::read>(h);
-        auto acc_x_k = buffer_x_k.get_access<access::mode::read>(h);
-        auto acc_x_k1 = buffer_x_k1.get_access<access::mode::write>(h);
+        accessor acc_b (buffer_b, h, read_only);
+        accessor acc_x_k (buffer_x_k, h, read_only);
+        accessor acc_x_k1 (buffer_x_k1, h, write_only);
 
         // kernel-start
         h.parallel_for(range{n}, [=](id<1> index) {
@@ -78,7 +81,7 @@ int main(int argc, char *argv[]) {
             x_k1 -= acc_x_k[i + 2];
 
           /* Fix bug 2. */
-          x_k1 *= 0.25;
+          x_k1 *= 0.2;
           acc_x_k1[index] = x_k1;
         });
         // kernel-end
@@ -91,8 +94,8 @@ int main(int argc, char *argv[]) {
 
       // Fix bug 3.
       q.submit([&](auto &h) {
-        auto acc_x_k = buffer_x_k.get_access<access::mode::write>(h);
-        auto acc_x_k1 = buffer_x_k1.get_access<access::mode::read>(h);
+        accessor acc_x_k (buffer_x_k, h, write_only);
+        accessor acc_x_k1 (buffer_x_k1, h, read_only);
 
         h.parallel_for(range{n},
                        [=](id<1> index) { acc_x_k[index] = acc_x_k1[index]; });
@@ -106,7 +109,7 @@ int main(int argc, char *argv[]) {
   bool correct = true;
   // Verify the output, we expect a vector whose components are close to 1.0.
   for (int i = 0; i < n; i++) {
-    if ((x_k1[i] - 1.0f) * (x_k1[i] - 1.0f) > 1e-6)
+    if ((x_k[i] - 1.0f) * (x_k[i] - 1.0f) > tolerance)
       correct = false;
   }
 

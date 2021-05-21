@@ -24,7 +24,7 @@ injected. You can try to find and fix them using the debugger.
 
 The `jacobi` sample is a DPC++ application that solves a hardcoded linear system
 of equations `Ax=b` using the Jacobi iteration. The matrix `A` is an `n x n` sparse
-matrix with diagonals `[1 1 4 1 1]`. Vectors `b` and `x` are `n x 1` vectors.
+matrix with diagonals `[1 1 5 1 1]`. Vectors `b` and `x` are `n x 1` vectors.
 Vector `b` is set in the way that all components of the solution vector `x` are 1.
 
 The program `jacobi-fixed` computes vector `x` correctly. That is, all
