@@ -14,7 +14,7 @@
   		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],
   		"id": "idp_xgb_d4p_prediction",
   		"steps": [
-         "runipy IntelPython_XGBoost_Performance.ipynb"
+         "runipy IntelPython_XGBoost_daal4pyPrediction.ipynb"
   		 ]
   	}
     ]
