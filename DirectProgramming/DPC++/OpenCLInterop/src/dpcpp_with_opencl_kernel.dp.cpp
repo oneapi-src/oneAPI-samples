@@ -8,7 +8,7 @@
 #include <CL/sycl.hpp>
 using namespace sycl;
 
-static const int N = 1024;
+constexpr int N = 1024;
 
 void dpcpp_code(int *a, int *b, int *c) {
   queue q{default_selector()};  // Create Command Queue Targeting GPU

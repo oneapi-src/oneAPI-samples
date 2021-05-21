@@ -4,13 +4,13 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
+#include <CL/opencl.h>
 #include <stdio.h>
 #include <CL/sycl.hpp>
-#include "CL/opencl.h"
 using namespace sycl;
 
-#define MAX_SOURCE_SIZE (0x100000)
-static const int N = 1024;
+constexpr int MAX_SOURCE_SIZE = 0x100000;
+constexpr int N = 1024;
 
 int main(int argc, char **argv) {
   size_t bytes = sizeof(float) * N;
