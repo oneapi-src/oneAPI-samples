@@ -120,7 +120,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
-   You can also compile for a custom FPGA platform. Ensure then board support package is installed on your system. Then run `cmake` using the command:
+   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
    ```
