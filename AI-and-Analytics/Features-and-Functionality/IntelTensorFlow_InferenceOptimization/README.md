@@ -12,7 +12,7 @@ analyze the model pb files before and after the inference optimizations.
 
 ## Purpose
 Show users the importance of inference optimization on performance, and also analyze TensorFlow ops difference in pre-trained models before/after the optimizations.  
-Those optimizations includes:  
+Those optimizations include:  
 * Converting variables to constants.
 * Removing training-only operations like checkpoint saving.
 * Stripping out parts of the graph that are never reached.
@@ -21,7 +21,7 @@ Those optimizations includes:
 * Fusing common operations into unified versions.
 
 ## Key implementation details
-This tutorial contains one Jupyter notebook and couple python scripts listed below.  
+This tutorial contains one Jupyter notebook and three python scripts listed below.  
 ### Jupyter Notebooks 
  
 | Notebook | Notes|

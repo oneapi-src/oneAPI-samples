@@ -13,7 +13,8 @@
 			"id": "tensorflow_inference_optimization",
 			"steps": [
 				"source activate tensorflow",
-				"runipy tutorial_optimize_TensorFlow_pretrained_model.ipynb"
+				"/opt/intel/oneapi/intelpython/latest/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
+				"python scripts/ci_test.py"
 			]
 		}]
 	}
