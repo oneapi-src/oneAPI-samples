@@ -92,9 +92,9 @@ int main(int argc, char **argv) {
     buffer<int, 1> sycl_buf_c(ocl_buf_c, sycl_context);
     sycl_queue.submit([&](handler &h) {
       // Create accessors for each of the buffers
-      auto a_accessor = sycl_buf_a.get_access<access::mode::read>(h);
-      auto b_accessor = sycl_buf_b.get_access<access::mode::read>(h);
-      auto c_accessor = sycl_buf_c.get_access<access::mode::write>(h);
+      accessor a_accessor(sycl_buf_a, h, read_only);
+      accessor b_accessor(sycl_buf_b, h, read_only);
+      accessor c_accessor(sycl_buf_c, h, write_only);
       // Map kernel arguments to accessors
       h.set_args(a_accessor, b_accessor, c_accessor);
       // Launch Kernel
