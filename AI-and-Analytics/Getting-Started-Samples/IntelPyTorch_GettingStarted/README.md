@@ -39,16 +39,17 @@ This sample runs in batch mode, so you must have a script for batch processing. 
 
 <!---Include the next paragraph ONLY if the sample DOES NOT RUN in batch mode-->
 ### Run in Interactive Mode
-This sample runs in interactive mode. Follow the directions in the README.md for the sample you want to run. If the sample can be run in interactive mode, the sample will have directions on how to run the sample in a Jupyter Notebook. An example can be found in the [Intel Modin Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelModin_GettingStarted) sample.
+This sample runs in interactive mode. Follow the directions in the README.md for the sample you want to run. If the sample can be run in interactive mode, the sample will have directions on how to run the sample in a Jupyter Notebook. An example can be found in the [Intel&reg; Modin Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelModin_GettingStarted) sample.
 
-### Request Compute Node
-DevCloud uses a batch system and you need to request a compute node to use: GPU, CPU, FPGA Compile Time, or FPGA Runtime. This node must be used when using the qsub command to run your sample. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
+### Request a Compute Node
+In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.
+ This node information must be provided when submitting a job to run your sample in batch mode using the qsub command. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
 
 <!---Mark each compatible Node in BOLD-->
 | Node              | Command                                                 |
 | ----------------- | ------------------------------------------------------- |
-| **GPU**           | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
-| CPU               | qsub -l nodes=1:cpu:ppn=2 -d . hello-world.sh           |
+| GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
+| CPU               | qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh          |
 | FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
 | FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
 
@@ -56,7 +57,7 @@ DevCloud uses a batch system and you need to request a compute node to use: GPU,
 
 1. Pre-requirement
 
-    PyTorch is ready for use once you finish the Intel AI Analytics Toolkit installation and have run the post installation script. These steps apply to DevCloud as well.
+    PyTorch is ready for use once you finish the Intel&reg; AI Analytics Toolkit installation and have run the post installation script. These steps apply to DevCloud as well.
 
     You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
