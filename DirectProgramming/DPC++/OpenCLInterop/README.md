@@ -1,6 +1,6 @@
 # DPC++ OpenCL&trade; Interoperability Example
 
-The examples here demonstrate how DPC++ can interact with OpenCL&trade;. This enables programmers to incrementally migrate from
+This examples demonstrate how DPC++ can interact with OpenCL&trade;. This code shample will show  programmers to incrementally migrate from
 OpenCL to DPC++. Two usage scenarios are shown. First is a DPC++ program that compiles and runs an OpenCL kernel. The second program converts OpenCL objects to DPC++.
 
 For more information on migrating from OpenCL to DPC++, see [Migrating OpenCL Designs to DPC++](https://software.intel.com/content/www/us/en/develop/articles/migrating-opencl-designs-to-dpcpp.html).
@@ -14,7 +14,7 @@ For more information on migrating from OpenCL to DPC++, see [Migrating OpenCL De
 | Time to complete                  | 10 minutes
 
 ## Purpose
-For users who are migrating from OpenCL to DPC++, interoperability allows the migration to take place piecemeal so that the migration of all kernels does not have to take place at the same time.
+For users migrating from OpenCL to DPC++, interoperability allows the migration to take place piecemeal so that the migration of all kernels does not have to occur simultaneously.
  
 ## Key Implementation Details
 The common OpenCL to DPC++ conversion scenarios are covered.
