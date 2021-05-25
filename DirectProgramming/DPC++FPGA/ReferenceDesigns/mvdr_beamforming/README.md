@@ -8,7 +8,7 @@ This reference design demonstrates IO streaming in DPC++ on an FPGA for a large 
  
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux* Ubuntu* 18.04; Windows* 10
+| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to create a full, complex system that performs IO streaming in DPC++ using the IO pipes DPC++ extension.
@@ -40,7 +40,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Code Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
  
@@ -192,10 +192,10 @@ PASSED
 ### MVDR Beamforming
 This reference design is built upon the **IO Streaming** code sample.
 
-The images below show the dataflow in the MVDR beamforming design. The first image shows the "real" dataflow when IO pipes are used at the inputs and outputs. The second image shows the data flow in this reference design where we don't have access to a BSP with IO pipes. The `XrxTrainingProducer` and `XrxDataProducer` are the kernels that replace the input IO pipe in the first image. Note that the splitting of data (shown as a black dot with two outward arrows in the first image) is done by the host using `XrxTrainingProducer` and `XrxDataProducer`. The `DataOutConsumer` kernel replaces the output IO pipe in the first image. The data for the `SteeringVectorGenerator` kernel still comes from the host through the `SinThetaProducer` kernel. This kernel does not replace an IO pipe but simplifies and modularizes the host's data streaming to the device.
+The images below show the dataflow in the MVDR beamforming design. The first image shows the "real" dataflow when IO pipes are used at the inputs and outputs. The second image shows the data flow in this reference design where we don't have access to a BSP with IO pipes. The `DataProducer` kernel replaces the input IO pipe in the first image. The splitting of data between the training and beamforming pipelines is done by the `InputDemux` kernel. The `DataOutConsumer` kernel replaces the output IO pipe in the first image. The data for the `SteeringVectorGenerator` kernel still comes from the host through the `SinThetaProducer` kernel. This kernel does not replace an IO pipe but simplifies and modularizes the host's data streaming to the device.
 
-<img src="processing_kernels_ideal.png" alt="processing_kernels_ideal" width="800"/>
-<img src="processing_kernels_fake.png" alt="processing_kernels_fake" width="800"/>
+<img src="processing_kernels_ideal.png" alt="processing_kernels_ideal" width="900"/>
+<img src="processing_kernels_fake.png" alt="processing_kernels_fake" width="900"/>
 
 ### Using Real IO-pipes
 This section describes how to build and run this reference design on a BSP with real IO pipes. The real IO pipes version does **not** work on Windows and requires a specific system setup and BSP.
