@@ -12,7 +12,8 @@ using namespace sycl;
 //
 template<typename Id, typename ValueT, typename IndexT,
          typename InPipe, typename OutPipe>
-event Consume(queue& q, ValueT *out_ptr, IndexT total_count, bool to_pipe) {
+event Consume(queue& q, ValueT *out_ptr, IndexT total_count, IndexT offset,
+              bool to_pipe) {
   return q.submit([&](handler& h) {
     h.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
       device_ptr<ValueT> out(out_ptr);
@@ -26,7 +27,7 @@ event Consume(queue& q, ValueT *out_ptr, IndexT total_count, bool to_pipe) {
         if (to_pipe) {
           OutPipe::write(data);
         } else {
-          out[i] = data;
+          out[offset + i] = data;
         }
       }
     });

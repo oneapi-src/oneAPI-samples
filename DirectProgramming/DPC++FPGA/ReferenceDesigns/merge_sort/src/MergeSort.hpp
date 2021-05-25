@@ -199,7 +199,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
   // Consume
   auto partition_consume_event =
     Consume<ConsumeKernelID<0>, ValueT, IndexT,
-            MergePipe, InternalOutPipe>(q, buf[buf_idx], count, false);
+            MergePipe, InternalOutPipe>(q, buf[buf_idx], count, 0, false);
   ////////////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////////////
@@ -247,8 +247,8 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
       const size_t unit_buf_offset = count_per_unit * u;
 
       // get device pointers for this merge unit's producers and consumer
-      ValueT *in_buf = buf[buf_idx] + unit_buf_offset;
-      ValueT *out_buf = buf[next_buf_idx(buf_idx)] + unit_buf_offset;
+      ValueT *in_buf = buf[buf_idx];
+      ValueT *out_buf = buf[next_buf_idx(buf_idx)];
 
       ////////////////////////////////////////////////////////////////////////
       // Enqueue the merge unit kernels
@@ -264,21 +264,23 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
         produce_a_events[u][i] =
           Produce<ProduceAKernelID<u>, ValueT, IndexT,
                   APartitionPipe, APipe>(q, in_buf, count_per_unit, in_count,
-                                         0, false, wait_events);
+                                         unit_buf_offset, false, wait_events);
         produce_b_events[u][i] =
           Produce<ProduceBKernelID<u>, ValueT, IndexT,
                   BPartitionPipe, BPipe>(q, in_buf, count_per_unit, in_count,
-                                         in_count, false, wait_events);
+                                         unit_buf_offset + in_count, false,
+                                         wait_events);
       } else {
         // all other merge units (not the first) are not connected to pipes
         produce_a_events[u][i] =
           Produce<ProduceAKernelID<u>, ValueT,
                   IndexT, APipe>(q, in_buf, count_per_unit,
-                                 in_count, 0, wait_events);
+                                 in_count, unit_buf_offset, wait_events);
         produce_b_events[u][i] =
           Produce<ProduceBKernelID<u>, ValueT,
                   IndexT, BPipe>(q, in_buf, count_per_unit,
-                                 in_count, in_count, wait_events);
+                                 in_count, unit_buf_offset + in_count,
+                                wait_events);
       }
 
       // Merge
@@ -290,7 +292,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count,
       consume_events[u][i] =
         Consume<ConsumeKernelID<u>, ValueT, IndexT,
                 MergePipe, InternalOutPipe>(q, out_buf, count_per_unit,
-                                            consumer_to_pipe);
+                                            unit_buf_offset, consumer_to_pipe);
     });
     ////////////////////////////////////////////////////////////////////////
 
