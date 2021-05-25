@@ -13,7 +13,7 @@
 			"id": "tensorflow_inference_optimization",
 			"steps": [
 				"source activate tensorflow",
-				"/opt/intel/oneapi/intelpython/latest/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
+				"/opt/intel/oneapi/intelpython/latest/envs/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
 				"python scripts/ci_test.py"
 			]
 		}]
