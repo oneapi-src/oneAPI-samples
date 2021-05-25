@@ -15,7 +15,7 @@ Modin uses Ray or Dask to provide an effortless way to speed up your Pandas note
 In this sample, you will run Modin-accelerated Pandas functions and note the performance gain when compared to "stock" (aka standard) Pandas functions.
 
 ## Key Implementation Details
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Pandas and Modin installed inside a conda environment, similar to what is directed by the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html). 
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Pandas and Modin installed inside a conda environment, similar to what is directed by the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html).
 
 ## License
 
@@ -24,13 +24,16 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+## Running Samples on the Intel&reg; DevCloud
+If you are running this sample on the DevCloud, see [Running Samples on the Intel&reg; DevCloud](#run-samples-on-devcloud)
+
 ## Building Modin for CPU
 
 Modin is ready for use once you finish the Intel Distribution of Modin installation and have run the post installation script.
 
-For this sample, you will also have to install the matplotlib module. 
+For this sample, you will also have to install the matplotlib module.
 
-Please install matplotlib with the command: 
+Please install matplotlib with the command:
 
 ```
 conda install -c intel matplotlib
@@ -83,9 +86,9 @@ Launch Jupyter Notebook in the directory housing the code example
 jupyter notebook
 ```
 
-## Running the Sample
+## Running the Sample<a name="running-the-sample"></a>
 
-### Run as Jupyter Notebook
+### Run as Jupyter Notebook<a name="run-as-jupyter-notebook"></a>
 
 Open .ipynb file and run cells in Jupyter Notebook using the "Run" button (see the image using "daal4py Hello World" sample)
 
@@ -103,3 +106,25 @@ Run the Program
 
 ##### Expected Printed Output:
 Expected Cell Output is shown in IntelModin_GettingStarted.ipynb
+
+### Running Samples on the Intel&reg; DevCloud (Optional)<a name="run-samples-on-devcloud"></a>
+
+<!---Include the next paragraph ONLY if the sample runs in batch mode-->
+### Run in Batch Mode
+This sample runs in batch mode, so you must have a script for batch processing. Once you have a script set up, refer to [Running the Sample](#running-the-sample).
+
+<!---Include the next paragraph ONLY if the sample DOES NOT RUN in batch mode-->
+### Run in Interactive Mode
+This sample runs in interactive mode. For more information, see [Run as Juypter Notebook](#run-as-jupyter-notebook).
+
+### Request a Compute Node
+In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.
+ This node information must be provided when submitting a job to run your sample in batch mode using the qsub command. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
+
+<!---Mark each compatible Node in BOLD-->
+| Node              | Command                                                 |
+| ----------------- | ------------------------------------------------------- |
+| GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
+| CPU               | qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh          |
+| FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
+| FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
