@@ -54,11 +54,6 @@ We will learn how to train a CNN model based on Keras with TensorFlow, use LPOT 
 
 ### Running Samples In DevCloud (Optional)
 
-<!---Include the next paragraph ONLY if the sample runs in batch mode-->
-### Run in Batch Mode
-This sample runs in batch mode, so you must have a script for batch processing. Once you have a script set up, refer to [Running the Sample](#running-the-sample).
-
-<!---Include the next paragraph ONLY if the sample DOES NOT RUN in batch mode-->
 ### Run in Interactive Mode
 This sample runs in a Jupyter notebook. See [Running the Sample](#running-the-sample).
 
@@ -70,7 +65,7 @@ In order to run on the DevCloud, you need to request a compute node using node p
 | Node              | Command                                                 |
 | ----------------- | ------------------------------------------------------- |
 | GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
-| CPU               | qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh          |
+| __CPU__               | __qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh__          |
 | FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
 | FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
 
