@@ -15,7 +15,7 @@
   		"id": "idp_xgb_d4p_prediction",
   		"steps": [
         "source activate base",
-		    "/opt/intel/oneapi/intelpython/latest -m ipykernel install --user --name=xgboost",
+		    "python -m ipykernel install --user --name=xgboost",
 		    "python ci_test.py"
   		 ]
   	}
