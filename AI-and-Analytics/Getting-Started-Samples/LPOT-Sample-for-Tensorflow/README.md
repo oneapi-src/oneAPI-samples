@@ -113,17 +113,17 @@ conda info -e
 base                  *  /opt/intel/oneapi/intelpython/latest
 pytorch                  /opt/intel/oneapi/intelpython/latest/envs/pytorch
 pytorch-1.7.0            /opt/intel/oneapi/intelpython/latest/envs/pytorch-1.7.0
-tensorFlow               /opt/intel/oneapi/intelpython/latest/envs/tensorFlow
-tensorFlow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorFlow-2.3.0
+tensorflow               /opt/intel/oneapi/intelpython/latest/envs/tensorflow
+tensorflow-2.3.0         /opt/intel/oneapi/intelpython/latest/envs/tensorflow-2.3.0
                          /opt/intel/oneapi/pytorch/1.7.0
-                         /opt/intel/oneapi/tensorFlow/2.3.0
+                         /opt/intel/oneapi/tensorflow/2.3.0
 ```
 
   2. Activate TensorFlow Env.
   
 ```
-conda activate tensorFlow
-(tensorFlow) xxx@yyy:
+conda activate tensorflow
+(tensorflow) xxx@yyy:
             
 ```
 
@@ -155,10 +155,10 @@ Steps:
 
 ```
 source /opt/intel/oneapi/setvars.sh
-conda activate /opt/intel/oneapi/intelpython/latest/envs/tensorFlow
+conda activate /opt/intel/oneapi/intelpython/latest/envs/tensorflow
 ./run_jupyter.sh 
 
-(tensorFlow) xxx@yyy:$ [I 09:48:12.622 NotebookApp] Serving notebooks from local directory: 
+(tensorflow) xxx@yyy:$ [I 09:48:12.622 NotebookApp] Serving notebooks from local directory: 
 ...
 [I 09:48:12.622 NotebookApp] Jupyter Notebook 6.1.4 is running at:
 [I 09:48:12.622 NotebookApp] http://yyy:8888/?token=146761d9317552c43e0d6b8b6b9e1108053d465f6ca32fca
