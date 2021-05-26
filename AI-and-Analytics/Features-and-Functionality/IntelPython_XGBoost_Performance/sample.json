@@ -17,7 +17,7 @@
          	 "source activate base",
 		 "python -m ipykernel install --user --name=xgboost",
 		 "python ci_test.py",
-		 "conda clone --name xgb0.81 --clone base",
+		 "conda create --name xgb0.81 --clone base",
 		 "source activate xgb0.81",
 		 "conda remove xgboost",
 		 "pip install xgboost==0.81",
