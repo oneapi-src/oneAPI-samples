@@ -18,4 +18,4 @@ def runJupyterNotebook(input_notebook_filename, output_notebook_filename, conda_
         return -1
 
 
-runJupyterNotebook('IntelPython_XGBoost_daal4pyPrediction.ipynb', 'IntelPython_XGBoost_daal4pyPrediction_result.ipynb', 'xgboost')
+runJupyterNotebook('IntelPython_XGBoost_Performance.ipynb', 'IntelPython_XGBoost_Performance_result.ipynb', 'xgboost')
