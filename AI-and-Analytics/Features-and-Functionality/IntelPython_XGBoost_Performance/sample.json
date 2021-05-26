@@ -22,7 +22,7 @@
 		 "conda remove xgboost",
 		 "pip install xgboost==0.81",
 		 "python -m ipykernel install --user --name=xgboost",
-		 "runipy IntelPython_XGBoost_Performance.ipynb"
+		 "python ci_test.py"
 		 
   		 ]
   	}
