@@ -1,0 +1,24 @@
+{
+  "guid": "FB70D9EC-F355-4A50-8819-4AC6E507692C",
+  "name": "Intel® Python XGBoost Daal4py Prediction",
+  "categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
+  "description": "This sample code illustrates how to analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction than XGBoost prediction",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "dependencies": ["intelpython"], 
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force"],
+  		"id": "idp_xgb_d4p_prediction",
+  		"steps": [
+        "source activate base",
+		    "python -m ipykernel install --user --name=xgboost",
+		    "python ci_test.py"
+  		 ]
+  	}
+    ]
+}
+}
