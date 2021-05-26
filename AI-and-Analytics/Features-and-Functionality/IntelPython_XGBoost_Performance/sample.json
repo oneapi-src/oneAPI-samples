@@ -15,7 +15,7 @@
   		"id": "idp_xgb_performance",
   		"steps": [
          	 "source activate base",
-		 "/opt/intel/oneapi/intelpython/latest -m ipykernel install --user --name=xgboost",
+		 "python -m ipykernel install --user --name=xgboost",
 		 "python ci_test.py",
 		 "conda clone --name xgb0.81 --clone base",
 		 "source activate xgb0.81",
