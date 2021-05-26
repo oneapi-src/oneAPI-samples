@@ -11,14 +11,17 @@
   "ciTests": {
   	"linux": [
     {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force"],
   		"id": "idp_xgb_performance",
   		"steps": [
-         "runipy IntelPython_XGBoost_Performance.ipynb",
+         	 "source activate base",
+		 "/opt/intel/oneapi/intelpython/latest -m ipykernel install --user --name=xgboost",
+		 "python ci_test.py",
 		 "conda clone --name xgb0.81 --clone base",
-		 "conda activate xgb0.81",
+		 "source activate xgb0.81",
 		 "conda remove xgboost",
 		 "pip install xgboost==0.81",
+		 "python -m ipykernel install --user --name=xgboost",
 		 "runipy IntelPython_XGBoost_Performance.ipynb"
 		 
   		 ]
