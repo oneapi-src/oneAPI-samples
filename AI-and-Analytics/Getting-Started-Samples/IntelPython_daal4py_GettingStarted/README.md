@@ -80,7 +80,7 @@ jupyter notebook
 
 ### Running the Sample as a Jupyter Notebook<a name="run-as-jupyter-notebook"></a>
 
-Open .pynb file and run cells in Jupyter Notebook using the "Run" button (see image)
+Open .ipynb file and run cells in Jupyter Notebook using the "Run" button (see image)
 
 ![Click the Run Button in the Jupyter Notebook](Jupyter_Run.jpg "Run Button on Jupyter Notebook")
 
