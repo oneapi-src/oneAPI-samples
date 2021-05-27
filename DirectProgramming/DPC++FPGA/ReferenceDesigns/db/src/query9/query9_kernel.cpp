@@ -513,6 +513,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       bool done = false;
       size_t num_rows = 0;
 
+      [[intel::initiation_interval(1)]]
       do {
         // get data from upstream
         bool valid;
