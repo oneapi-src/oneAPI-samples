@@ -15,7 +15,6 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | Type      | Name                 | Description                                                  |
 | --------- | ----------------------- | ------------------------------------------------------------ |
 | Component | [getting_started](tutorial_getting_started.ipynb)  | The sample also includes a Jupyter notebook with step by step instructions on building code with different compilers and runtime configurations oneDNN support. |
-| Component | [simple_model](tutorial_simple_model.ipynb)| A Jupyter notebook with step by step instructions on running oneDNN-based application on a GPU. |
 | Component | [verbose_jitdump](tutorial_verbose_jitdump.ipynb) | This Jupyter Notebook demonstrates how to use Verbose Mode and JIT Dump to profile oneDNN samples. |
 | Component | [analyze_isa_with_dispatcher_control](tutorial_analyze_isa_with_dispatcher_control.ipynb) | This Jupyter Notebook demonstrates how to use CPU Dispatch Control to generate JIT codes among different ISA on CPU and also analyze JIT kernels among ISAs.|
 | Component | [Intel® vTune™ profiling](tutorial_vtune_profiling.ipynb) | This Jupyter Notebook demonstrates how to use VTune™ Profiler to profile oneDNN samples and find out performance bottlenecks. |
