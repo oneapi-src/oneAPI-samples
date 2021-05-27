@@ -1,13 +1,13 @@
-# `Intel(R) Low Precision Optimization Tool (LPOT)` Sample for TensorFlow*
+# `Intel&reg; Low Precision Optimization Tool (LPOT)` Sample for TensorFlow*
 
 ## Background
-Low-precision inference can speed up inference obviously, by converting the fp32 model to int8 or bf16 model. Intel provides Intel(R) Deep Learning Boost technology in the Second Generation Intel(R) Xeon(R) Scalable Processors and newer Xeon(R), which supports to speed up int8 and bf16 model by hardware.
+Low-precision inference can speed up inference obviously, by converting the fp32 model to int8 or bf16 model. Intel provides Intel&reg; Deep Learning Boost technology in the Second Generation Intel&reg; Xeon&reg; Scalable Processors and newer Xeon&reg;, which supports to speed up int8 and bf16 model by hardware.
 
-Intel(R) Low Precision Optimization Tool (LPOT) helps the user to simplify the processing to convert the fp32 model to int8/bf16.
+Intel&reg; Low Precision Optimization Tool (LPOT) helps the user to simplify the processing to convert the fp32 model to int8/bf16.
 
 At the same time, LPOT will tune the quanization method to reduce the accuracy loss, which is a big blocker for low-precision inference.
 
-LPOT is released in Intel(R) AI Analytics Toolkit and works with Intel(R) Optimization of TensorFlow*.
+LPOT is released in Intel&reg; AI Analytics Toolkit and works with Intel&reg; Optimization of TensorFlow*.
 
 Please refer to the official website for detailed info and news: [https://github.com/intel/lp-opt-tool](https://github.com/intel/lp-opt-tool)
 
@@ -30,11 +30,11 @@ We will learn how to train a CNN model based on Keras with TensorFlow, use LPOT 
 
 - Define function and class for LPOT to quantize the CNN model.
 
-  The LPOT can run on any Intel(R) CPU to quantize the AI model.
+  The LPOT can run on any Intel&reg; CPU to quantize the AI model.
   
   The quantized AI model has better inference performance than the FP32 model on Intel CPU.
   
-  Specifically, it could be speeded up by the Second Generation Intel(R) Xeon(R) Scalable Processors and newer Xeon(R).
+  Specifically, it could be speeded up by the Second Generation Intel&reg; Xeon&reg; Scalable Processors and newer Xeon&reg;.
   
   
 - Test the performance of the FP32 model and INT8 (quantization) model.
@@ -45,9 +45,9 @@ We will learn how to train a CNN model based on Keras with TensorFlow, use LPOT 
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 
-| Hardware                          | The Second Generation Intel(R) Xeon(R) Scalable processor family or newer
-| Software                          | Intel(R) oneAPI AI Analytics Toolkit 2021.1 or newer
-| What you will learn               | How to use LPOT tool to quantize the AI model based on TensorFlow and speed up the inference on Intel(R) Xeon(R) CPU
+| Hardware                          | The Second Generation Intel&reg; Xeon&reg; Scalable processor family or newer
+| Software                          | Intel&reg; oneAPI AI Analytics Toolkit 2021.1 or newer
+| What you will learn               | How to use LPOT tool to quantize the AI model based on TensorFlow and speed up the inference on Intel&reg; Xeon&reg; CPU
 | Time to complete                  | 10 minutes
 
 ## Running Environment
@@ -65,7 +65,7 @@ In order to run on the DevCloud, you need to request a compute node using node p
 | Node              | Command                                                 |
 | ----------------- | ------------------------------------------------------- |
 | GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
-| __CPU__               | __qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh__          |
+| __CPU__           | __qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh__      |
 | FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
 | FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
 
@@ -102,7 +102,7 @@ In this case, we use "/opt/intel/oneapi" as exapmle.
    source /opt/intel/oneapi/setvars.sh
 ```
 
-- Activate Conda Env. of Intel(R) Optimization of TensorFlow*
+- Activate Conda Env. of Intel&reg; Optimization of TensorFlow*
 
   1. Show Conda Env.
   
