@@ -21,7 +21,7 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-#
+##
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
