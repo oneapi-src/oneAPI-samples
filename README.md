@@ -12,6 +12,20 @@ be stable.
 
 |Code Sample    |Supported Intel®   Architecture(s)    	|Description 	|
 |-----------------------|-------------------------------------------|---------------|
+|__../AI-and-Analytics/End-to-end-Workloads/__|
+|../Census |GPU, CPU| This sample code demonstrates how to seamlessly run the end-to-end census workload using the AI Analytics toolkit without any external dependencies. |
+|../LidarObjectDetection-PointPillars |GPU, CPU | How to combine Intel® Distribution of OpenVINO™ toolkit and Intel® oneAPI to offload the computation of a complex workload to one of Intel's supported accelerators|
+|__../AI-and-Analytics/Features-and-Functionality/__|
+|../IntelPyTorch_Extensions_AutoMixedPrecision |CPU |You will learn how to download, compile, and get started with Intel Extension for PyTorch from this sample code.|
+|../IntelPyTorch_TorchCCL_Multinode_Training |CPU | How to perform distributed training with oneCCL in PyTorch |
+|../IntelPython_XGBoost_Performance |CPU | How to analyze the performance benefit from using Intel optimizations upstreamed by Intel to the latest XGBoost compared to un-optimized XGBoost 0.81|
+|../IntelPython_XGBoost_daal4pyPrediction | CPU | How to analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction than XGBoost prediction |
+|../IntelPython_daal4py_DistributedKMeans |CPU |Distributed oneDAL K-Means programming model for Intel CPU
+|../IntelPython_daal4py_DistributedLinearRegression |CPU |Distributed oneDAL Linear Regression programming model for Intel CPU |
+|../IntelTensorFlow_Horovod_Multinode_Training |CPU |Shows how to get started with scaling out a neural network's training in TensorFlow on multiple compute nodes in a cluster.|
+|../IntelTensorFlow_InferenceOptimization | CPU | Optimize a pre-trained model for a better inference performance
+|../IntelTensorFlow_ModelZoo_Inference_with_FP32_Int8 |CPU | Show how to efficiently execute, train, and deploy Intel-optimized models |
+|../IntelTensorFlow_PerformanceAnalysis | CPU |  Contains two Jupyter notebooks from Intel Model Zoo to help users analyze the performance difference between Stock Tensorflow and Intel Tensorflow.|
 |__DirectPrograming/C++/__ |
 |../CombinationalLogic/Mandelbrot   	|CPU  	|Demonstrates how to accelerate   Mandelbrot performance with SIMD and parallelization using OpenMP*.   	|
 |../CompilerInfrastructure/Intrinsics    	|CPU  	|Shows how to utilize the   intrinsics supported by C++ compiler in a variety of applications.	|
