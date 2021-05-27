@@ -21,7 +21,13 @@ static constexpr T Pow2(T n) {
 // base-2 logarithm
 template <typename T>
 static constexpr T Log2(T n) {
-  return ((n < 2) ? T(0) : T(1) + Log2(n / 2));
+  T ret = T(0);
+  T val = n;
+  while (val > T(1)) {
+    val >>= 1;
+    ret++;
+  }
+  return ret;
 }
 // round up Log2
 template <typename T>
@@ -188,7 +194,7 @@ event SubmitStreamingQRDKernel(queue& q) {
 
         // Calculate Q and R by iterating over A
         // NO-FORMAT comments are for clang-format
-        [[intel::ii(1)]]                               // NO-FORMAT: Attribute
+        [[intel::initiation_interval(1)]]              // NO-FORMAT: Attribute
         [[intel::ivdep(k_min_inner_loop_iterations)]]  // NO-FORMAT: Attribute
         for (int s = 0; s < kNumIterations; s++) {
           AColumn vector_t;
@@ -327,9 +333,9 @@ event SubmitStreamingQRDKernel(queue& q) {
           }
         }
 
-        // TODO this is where the A matrix would be written out to a pipe
+        // this is where the A matrix would be written out to a pipe
         // using q_matrix, but we don't need this functionality in MVDR so
-        // skipping this for now
+        // skipping this
 
       }  // end of while(1) - main processing loop for QRD kernel
     });  // end of h.single_task

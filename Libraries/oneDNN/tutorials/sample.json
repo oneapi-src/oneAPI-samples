@@ -38,6 +38,13 @@
 		"steps": [
 			"runipy tutorial_analyze_isa_with_dispatcher_control.ipynb"
 		 ]
+	},
+	{
+		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_gomp --force" ],
+		"id": "vtune_itt",
+		"steps": [
+			"runipy tutorial_vtune_profiling.ipynb"
+		 ]
 	}
      ]
  }

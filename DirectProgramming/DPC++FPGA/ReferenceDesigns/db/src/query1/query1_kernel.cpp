@@ -112,7 +112,7 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
       count_local.Init();
 
       // stream each row in the DB (kElementsPerCycle rows at a time)
-      [[intel::ii(1)]]
+      [[intel::initiation_interval(1)]]
       for (size_t r = 0; r < rows; r += kElementsPerCycle) {
         // locals
         DBDecimal qty[kElementsPerCycle];

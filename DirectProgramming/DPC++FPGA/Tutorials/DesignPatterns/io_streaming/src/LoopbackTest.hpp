@@ -90,12 +90,17 @@ bool RunLoopbackSystem(queue& q, size_t count) {
   // FAKE IO PIPES ONLY
 #ifndef USE_REAL_IO_PIPES
   // start the producer and consumer
-  auto producer_e = FakeIOPipeInProducer::Start(q);
-  auto consumer_e = FakeIOPipeOutConsumer::Start(q);
+  event produce_dma_e, produce_kernel_e;
+  event consume_dma_e, consume_kernel_e;
+  std::tie(produce_dma_e, produce_kernel_e) = FakeIOPipeInProducer::Start(q);
+  std::tie(consume_dma_e, consume_kernel_e) = FakeIOPipeOutConsumer::Start(q);
 
-  // wait for producer and consumer to finish
-  producer_e.wait();
-  consumer_e.wait();
+  // wait for producer and consumer to finish including the DMA events.
+  // NOTE: if USM host allocations are used, the dma events are noops.
+  produce_dma_e.wait();
+  produce_kernel_e.wait();
+  consume_dma_e.wait();
+  consume_kernel_e.wait();
 #endif
 
   // Wait for main kernel to finish.

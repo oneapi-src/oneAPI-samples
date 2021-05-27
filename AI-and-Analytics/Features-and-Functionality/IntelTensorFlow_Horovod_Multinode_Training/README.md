@@ -79,7 +79,7 @@ To execute the script on one machine without invoking Horovod, type the followin
 
 To run the script with Horovod, we invoke MPI:
 ```
-    horovodrun -np 2 TensorFlow_Multinode_Training_with_Horovod.py
+    horovodrun -np 2 `pwd`/TensorFlow_Multinode_Training_with_Horovod.py
 ```
 
 In the example above, we run the script on two MPI threads but on the same node. To use multiple nodes, we pass the `-hosts` flag, where host1 and host2 are the hostnames of two nodes on your cluster. 
@@ -87,7 +87,7 @@ In the example above, we run the script on two MPI threads but on the same node.
 Example:
 
 ```
-    horovodrun -n 2 -H host1,host2 TensorFlow_Multinode_Training_with_Horovod.py
+    horovodrun -n 2 -H host1,host2 `pwd`/TensorFlow_Multinode_Training_with_Horovod.py
 ```
 
 

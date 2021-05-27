@@ -49,7 +49,7 @@ struct IntersectionKernel<0, II, APipe, BPipe> {
     int b_count = 1;
     int n = 0;
 
-    [[intel::ii(II)]]
+    [[intel::initiation_interval(II)]]
     while (a_count < a_size || b_count < b_size) {
       // increment the intersection counter if the table elements match
       if (a == b) {
@@ -99,7 +99,7 @@ struct IntersectionKernel<1, II, APipe, BPipe> {
     int b_count_next = 2;
     int n = 0;
 
-    [[intel::ii(II)]]
+    [[intel::initiation_interval(II)]]
     while (a_count < a_size || b_count < b_size) {
       // increment the intersection counter if the table elements match
       if (a == b) {
@@ -161,7 +161,7 @@ struct IntersectionKernel<2, II, APipe, BPipe> {
     bool b_count_next_inrange = true;
     bool keep_going = true;
 
-    [[intel::ii(II)]]
+    [[intel::initiation_interval(II)]]
     while (keep_going) {
       // increment the intersection counter if the table elements match
       if (a == b) {
@@ -252,7 +252,7 @@ struct IntersectionKernel<3, II, APipe, BPipe> {
     bool num_compares_in_range = num_compares < total_compares;
     bool num_compares_next_in_range = num_compares_next < total_compares;
 
-    [[intel::ii(II)]]
+    [[intel::initiation_interval(II)]]
     while (keep_going) {
       if (!a_valid || !b_valid) {
         if (!a_valid) {
