@@ -216,7 +216,7 @@ Reading symbols from ./array-transform...
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) Core(TM) i9-7900X CPU @ 3.30GHz] from [Intel(R) OpenCL]
+[SYCL] Using device: [Intel(R) Core(TM) i9-7900X processor] from [Intel(R) OpenCL]
 [Switching to Thread 0x7fffe3bfe700 (LWP 925)]
 
 Thread 16 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
@@ -233,7 +233,7 @@ Reading symbols from ./array-transform...
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM)]
+[SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 [Switching to Thread 0x7fffe1ffb700 (LWP 2387)]
 
 Thread 9 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
