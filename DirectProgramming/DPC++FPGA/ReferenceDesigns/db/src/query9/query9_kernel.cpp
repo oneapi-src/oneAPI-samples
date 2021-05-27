@@ -199,7 +199,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       }
 
       // stream in rows of PARTS table and check partname against REGEX
-      [[intel::ivdep]]
+      [[intel::initiation_interval(1), intel::ivdep]]
       for (size_t i = 0; i < p_rows; i += kRegexFilterElementsPerCycle) {
         UnrolledLoop<0, kRegexFilterElementsPerCycle>([&](auto re) {
           const size_t idx = i + re;
@@ -227,6 +227,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       //// Stage 2
       // read in the LINEITEM table (kLineItemJoinWinSize rows at a time)
       // row is valid if its PARTKEY matched the REGEX
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < l_rows; i += kLineItemJoinWinSize) {
         // bulk read of data from global memory
         NTuple<kLineItemJoinWinSize, LineItemMinimalRow> data;
@@ -265,6 +266,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
     // produce ORDERS table (kOrdersJoinWinSize rows at a time)
     h.single_task<ProducerOrders>([=]() [[intel::kernel_args_restrict]] {
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < o_rows; i += kOrdersJoinWinSize) {
         // bulk read of data from global memory
         NTuple<kOrdersJoinWinSize, OrdersRow> data;
@@ -360,7 +362,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       //// Stage 1
       // populate MapJoiner map
       // why a map? keys may not be sequential
-      [[intel::ivdep]]
+      [[intel::initiation_interval(1), intel::ivdep]]
       for (size_t i = 0; i < s_rows; i++) {
         // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed
@@ -399,6 +401,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
     // kernel to produce the PARTSUPPLIER table
     h.single_task<ProducePartSupplier>([=]() [[intel::kernel_args_restrict]] {
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < ps_rows; i += kPartSupplierDuplicatePartkeys) {
         // bulk read of data from global memory
         NTuple<kPartSupplierDuplicatePartkeys, PartSupplierRow> data;
@@ -447,7 +450,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
       bool done = false;
 
-      [[intel::ivdep(ACCUM_CACHE_SIZE)]]
+      [[intel::initiation_interval(1), intel::ivdep(ACCUM_CACHE_SIZE)]]
       do {
         bool valid;
         FinalPipeData pipe_data = FinalPipe::read(valid);
@@ -602,6 +605,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       size_t num_rows = 0;
 
       // read out data from the sorter until 'done' signal from upstream
+      [[intel::initiation_interval(1)]]
       do {
         bool valid;
         SortData in_data = SortOutPipe::read(valid);
