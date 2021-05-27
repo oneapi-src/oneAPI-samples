@@ -172,6 +172,6 @@ In order to run on the DevCloud, you need to request a compute node using node p
 | Node              | Command                                                 |
 | ----------------- | ------------------------------------------------------- |
 | GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
-| CPU               | qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh          |
+| __CPU               | qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh__          |
 | FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
 | FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
