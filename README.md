@@ -13,9 +13,9 @@ be stable.
 |Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	|
 |-----------------------|-------------------------------------------|---------------|
 |__DirectPrograming/C++/__ |
-|../C++/CombinationalLogic/Mandelbrot   	|CPU  	|Demonstrates how to accelerate   Mandelbrot performance with SIMD and parallelization using OpenMP*.   	|
-|../C++/CompilerInfrastructure/Intrinsics    	|CPU  	|Shows how to utilize the   intrinsics supported by C++ compiler in a variety of applications.	|
-|../C++/GraphTraversal/Mergesort   	|CPU  	|Shows how to accelerate scalar   merge sort program using OpenMP tasks   	|
+|../CombinationalLogic/Mandelbrot   	|CPU  	|Demonstrates how to accelerate   Mandelbrot performance with SIMD and parallelization using OpenMP*.   	|
+|../CompilerInfrastructure/Intrinsics    	|CPU  	|Shows how to utilize the   intrinsics supported by C++ compiler in a variety of applications.	|
+|../GraphTraversal/Mergesort   	|CPU  	|Shows how to accelerate scalar   merge sort program using OpenMP tasks   	|
 |../Jupyter/OpenMP-offload-training | CPU |How to offload the computation to GPU using OpenMP with the Intel® C++ Compiler 
 |../ParallelPatterns/openmp_reduction | GPU, CPU |How to run openMP on cpu as well as GPU offload
 |../StructuredGrids/iso3dfd_omp_offload | CPU | How to offload the computation to GPU using Intel® oneAPI DPC++/C++ Compiler
@@ -93,17 +93,17 @@ be stable.
 |../DenseLinearAlgebra/optimize-integral/ | GPU, CPU | Optimization using the Intel® Fortran compiler |
 |../DenseLinearAlgebra/vectorize-vecmatmult/ | GPU, CPU | Vectorization using Intel Fortran compiler |
 |../Jupyter/OpenMP-offload-training/ | GPU, CPU | Collection of Jupyter notebooks that were developed to teach OpenMP Offload.|
-|__Libraries/__ |
-|../oneCCL/tutorials/oneCCL_Getting_Started |GPU, CPU |port an Intel® oneAPI Collective Communications Library (oneCCL) sample from CPU to GPU|
-|__Libraries/__ |
-|../oneDAL/IntelPython_daal4py_Distributed_Kmeans/|CPU| shows how to train and predict with a distributed k-means model using the python API package daal4py for oneAPI Data Analytics Library.|
-|../oneDAL/IntelPython_daal4py_Distributed_LinearRegression  | CPU |daal4py is a simplified API to Intel® DAAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users|
-|../oneDAL/IntelPython_daal4py_Getting_Started | CPU |how how to do batch linear regression using the python API package daal4py from oneDAL.|
-|__Libraries/__ |
-|../oneDNN/oneDNN/dpcpp_interoperability/ GPU, CPU| emonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN |
-|../oneDNN/getting_started | GPU, CPU | Running a simple convolutional model on Intel CPU or Intel GPU |
-|../oneDNN/simple_model | GPU, CPU | Running a simple convolutional model on Intel CPU or Intel GPU |
-|../oneDNN/Tutorials |GPU, CPU | Series of Jupyer notebook tutorials on oneDNN |
+|__Libraries/oneCCL/__ |
+|../tutorials/oneCCL_Getting_Started |GPU, CPU |port an Intel® oneAPI Collective Communications Library (oneCCL) sample from CPU to GPU|
+|__Libraries/oneDAL/__ |
+|../IntelPython_daal4py_Distributed_Kmeans/|CPU| shows how to train and predict with a distributed k-means model using the python API package daal4py for oneAPI Data Analytics Library.|
+|../IntelPython_daal4py_Distributed_LinearRegression  | CPU |daal4py is a simplified API to Intel® DAAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users|
+|../IntelPython_daal4py_Getting_Started | CPU |how how to do batch linear regression using the python API package daal4py from oneDAL.|
+|__Libraries/oneDNN/__ |
+|../dpcpp_interoperability | GPU, CPU| emonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN |
+|../getting_started | GPU, CPU | Running a simple convolutional model on Intel CPU or Intel GPU |
+|../simple_model | GPU, CPU | Running a simple convolutional model on Intel CPU or Intel GPU |
+|../Tutorials |GPU, CPU | Series of Jupyer notebook tutorials on oneDNN |
 |__Libraries/oneDPL/__ |
 |../Gamma-correction 	|GPU, CPU  	|gamma correction using Parallel   STL 	|
 |../Stable_sort_by_key    	|GPU, CPU  	|stable sort by key using   counting_iterator and zip_iterator  	|
