@@ -16,28 +16,46 @@ be stable.
 |../C++/CombinationalLogic/Mandelbrot   	|CPU  	|Demonstrates how to accelerate   Mandelbrot performance with SIMD and parallelization using OpenMP*.   	|
 |../C++/CompilerInfrastructure/Intrinsics    	|CPU  	|Shows how to utilize the   intrinsics supported by C++ compiler in a variety of applications.	|
 |../C++/GraphTraversal/Mergesort   	|CPU  	|Shows how to accelerate scalar   merge sort program using OpenMP tasks   	|
+|../Jupyter/OpenMP-offload-training | CPU |How to offload the computation to GPU using OpenMP with the Intel® C++ Compiler 
+|../ParallelPatterns/openmp_reduction | GPU, CPU |How to run openMP on cpu as well as GPU offload
+|../StructuredGrids/iso3dfd_omp_offload | CPU | How to offload the computation to GPU using Intel® oneAPI DPC++/C++ Compiler
 |__DirectPrograming/DPC++/__ |
-|../CombinationalLogic/mandelbrot 	|GPU, CPU  	|Example of a fractal in   mathematics 	|
-|../CombinationalLogic/sepia-filter    	|GPU, CPU  	|Color image conversion using 1D   range    	|
+|../CombinationalLogic/mandelbrot 	|GPU, CPU  	|Example of a fractal in mathematics 	|
+|../CombinationalLogic/sepia-filter    	|GPU, CPU  	|Color image conversion using 1D range    	|
 |../DenseLinearAlgebra/complex_mult    	|GPU, CPU  	|Complex number Multiplication    	|
-|../DenseLinearAlgebra/matrix_mul 	|GPU, CPU  	|Simple program that multiplies   two large matrices in parallel using DPC++, OpenMP and MKL  	|
+|../DenseLinearAlgebra/matrix_mul 	|GPU, CPU  	|Simple program that multiplies two large matrices in parallel using DPC++, OpenMP and MKL  	|
 |../DenseLinearAlgebra/simple-add 	|FPGA, GPU, CPU 	|Simple Add program	|
 |../DenseLinearAlgebra/vector-add 	|FPGA, GPU, CPU 	|Simple Vector add program   	|
+|../GraphAlgorithms/all-pairs-shortest-paths | GPU, CPU | The All Pairs Shortest Paths sample demonstrates the following using the Intel® oneAPI DPC++/C++ Compiler|
 |../GraphTraversal/bitonic-sort   	|GPU, CPU  	|Implementation of bitonic sort   using DPC++.   	|
-|../ParallelPatterns/Dpc_reduce   	|GPU, CPU  	|A simple program that calculates   pi,  implemented using C++ and DPC++. 	|
+|../Jupyter/oneapi-essentials-training   |GPU, CPU| Collection of Notebooks used ine the oneAPI Essentials training course|
+|../MapReduce/MonteCarloPi   |GPU, CPU|How to utilize the DPC++ reduction extension|
+|../N-BodyMethods/Nbody  |GPU, CPU| An N-body simulation is a simulation of a dynamical system of particles, usually under the influence of physical forces, such as gravity. This nbody sample code is implemented using C++ and DPC++ language for Intel CPU and GPU.|
+|../ParallelPatterns/PreFixSum   	|GPU, CPU  	|Implement bitonic sort using Intel DPC++ compiler 	|
+|../ParallelPatterns/dpc_reduce   	|GPU, CPU  	|A simple program that calculates   pi,  implemented using C++ and DPC++. 	|
+|../ParallelPatterns/histogram   	|GPU, CPU  	|This sample demonstrates a histogram that groups numbers together and provides the count of a particular number in the input|
+|../ParallelPatterns/loop-unroll   	|GPU, CPU  	|The Loop Unroll demonstrates a simple example of unrolling loops to improve the throughput of a DPC++ program for GPU offload.|
+|../ProjectTemplatesmakefile-gpu | GPU |	A "Hello, world" Linux Makefile project for GPU |
+|../ProjectTemplatesmakefile-fpga | FPGA |	A "Hello, world" Linux Makefile project for FPGA |
+|../ProjectTemplatescmake-gpu | GPU |	A "Hello, world" Linux CMake project for GPU |
+|../ProjectTemplatescmake-fpga | FPGA |	A "Hello, world" Linux CMake project for FPGA |
+|../ProjectTemplatesHello_World_GPU | GPU |	A "Hello, world" Windows Visual Studio project for GPU |
+|../SparseLinearAlgebra/merge-spmv { GPU, CPU | Sparse Matrix Vector sample provides a parallel implementation of a merge based sparse matrix and vector multiplication algorithm using DPC++. |
 |../SpectralMethods/Discrete-cosine-transform    	|GPU, CPU  	|Image processing algorithm used   in JPEG compression	|
 |../StructuredGrids/1d_HeatTransfer    	|GPU, CPU  	|A simulation of one dimensional   heat transfer process using DPC++.	|
 |../StructuredGrids/ISO2DFD_DPCPP 	|GPU, CPU  	|A simple finite difference   stencil kernel for solving 2D acoustic isotropic wave equation using DPC++	|
 |../StructuredGrids/ISO3DFD_DPCPP 	|GPU, CPU  	|A finite difference stencil   kernel for solving 3D acoustic isotropic wave equation using DPC++  	|
 |../StructuredGrids/Particle-diffusion 	|GPU, CPU  	|A simple implementation of a   Monte Carlo simulation of the diffusion of water molecules in tissue
-|__DirectPrograming/DPC++/DPC++FPGA/ReferenceDesigns/__ |
+|__DirectPrograming/DPC++FPGA/ReferenceDesigns/__ |
 |../crr                  |FPGA |High-performance CRR binomial tree option pricing model using DPC++ on FPGA |
 |../db                   |FPGA |High-performance database query acceleration for FPGA-attached memory using DPC++ |
 |../gzip                 |FPGA |High-performance GZIP compression using DPC++ on FPGA |
 |../mvdr_beamforming     |FPGA |High-performance radar beamforming for streaming data using DPC++ on FPGA |
 |../qrd                  |FPGA |High-performance QR decomposition of matrices using DPC++ on FPGA |
-|__DirectPrograming//DPC++FPGA/Tutorials/Design Patterns__ |
-|../buffered_host_streaming       |FPGA |Tutorial demonstrating how to create a high-performance full system CPU-FPGA design using SYCL USM. ||...../DesignPatterns/compute_units                 |FPGA |Tutorial showing how to efficiently make multiple copies of a kernel, called compute units |
+|__DirectPrograming/DPC++FPGA/Tutorials/Design Patterns__ |
+|../buffered_host_streaming       |FPGA |Tutorial demonstrating how to create a high-performance full system CPU-FPGA design using SYCL USM. |
+|../DesignPatterns/compute_units  |FPGA |Tutorial showing how to efficiently make multiple copies of a kernel, called compute units |
+|../compute_units                 |FPGA |Ttutorial showcases a design pattern that allows you to make multiple copies of a kernel, called compute units. }               
 |../double_buffering              |FPGA |Tutorial demonstrating how to overlap kernel execution with buffer transfers and host processing |
 |../explicit_data_movement        |FPGA |Tutorial showing an alternative coding (explicit USM) in which data movement between host and device is controlled explicitly in code |
 |../io_streaming                  |FPGA |Tutorial describing how to use DPC++ IO pipes to stream data through the FPGA's IO |
@@ -63,14 +81,23 @@ be stable.
 |../memory_attributes                   |FPGA |Tutorial demonstrating how to use DPC++ FPGA memory attributes |
 |../pipes                               |FPGA |Tutorial demonstrating the DPC++ FPGA pipes extension to transfer data between kernels |
 |../speculated_iterations               |FPGA |Tutorial demonstrating the DPC++ FPGA speculated_iterations attribute |
-|__DirectPrograming//DPC++FPGA/Tutorials//GettingStarted__ |
+|__DirectPrograming/DPC++FPGA/Tutorials/GettingStarted__ |
 |../fast_recompile                |FPGA |Tutorial introducing host-only recompile to save DPC++ development time on FPGA |
 |../fpga_compile                  |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
-|__DirectPrograming//DPC++FPGA/Tutorials//GettingStarted__ |
+|__DirectPrograming/DPC++FPGA/Tutorials/tools__ |
 |../dynamic_profiler                       |FPGA |Tutorial showing how to use the Intel® FPGA Dynamic Profiler for DPC++ for detailed FPGA kernel profiling|
 |../system_profiling                       |FPGA |Tutorial showing how to use the OpenCL Intercept Layer to profile DPC++ designs running on FPGA at the system level |
 |../use_library                            |FPGA |Tutorial showing how to use cross-language libraries in DPC++ on FPGA |
+|__DirectProgramming/Fortran/__ |
+|../CombinationalLogic/openmp-primes/ | GPU, CPU ||
+|../DenseLinearAlgebra/optimize-integral/ | GPU, CPU | Optimization using the Intel® Fortran compiler |
+|../DenseLinearAlgebra/vectorize-vecmatmult/ | GPU, CPU | Vectorization using Intel Fortran compiler |
+|../Jupyter/OpenMP-offload-training/ | GPU, CPU | Collection of Jupyter notebooks that were developed to teach OpenMP Offload.|
 |__Libraries__ |
+|../oneCCL/tutorials/oneCCL_Getting_Started |GPU, CPU |port an Intel® oneAPI Collective Communications Library (oneCCL) sample from CPU to GPU|
+|../oneDAL/IntelPython_daal4py_Distributed_Kmeans/|CPU| shows how to train and predict with a distributed k-means model using the python API package daal4py for oneAPI Data Analytics Library.|
+|../oneDAL/IntelPython_daal4py_Distributed_LinearRegression/daal4py is a simplified API to Intel® DAAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users|
+|../oneDAL/IntelPython_daal4py_Getting_Started | CPU |how how to do batch linear regression using the python API package daal4py from oneDAL.|
 |../oneDPL/Gamma-correction 	|GPU, CPU  	|gamma correction using Parallel   STL 	|
 |../oneDPL/Stable_sort_by_key    	|GPU, CPU  	|stable sort by key using   counting_iterator and zip_iterator  	|
 |../oneVPL/hello-decode	|CPU  	|shows how to use oneVPL to   perform a simple video decode	|
