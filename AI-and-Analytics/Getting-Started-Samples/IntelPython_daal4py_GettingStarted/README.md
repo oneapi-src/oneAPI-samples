@@ -124,7 +124,30 @@ Run the Program
 
 `python IntelPython_daal4py_GettingStarted.py`
 
-The output files of the script will be saved in the included models and result directories. 
+The output files of the script will be saved in the included models and result directories.
+
+### Running Samples on the Intel&reg; DevCloud (Optional)<a name="run-samples-on-devcloud"></a>
+
+<!---Include the next paragraph ONLY if the sample runs in batch mode-->
+### Run in Batch Mode
+This sample runs in batch mode, so you must have a script for batch processing. Once you have a script set up, refer to [Running the Sample](#running-the-sample).
+
+<!---Include the next paragraph ONLY if the sample DOES NOT RUN in batch mode-->
+### Run in Interactive Mode
+This sample runs in interactive mode. For more information, see [Run as Juypter Notebook](#run-as-jupyter-notebook).
+
+### Request a Compute Node
+In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.
+ This node information must be provided when submitting a job to run your sample in batch mode using the qsub command. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
+
+<!---Mark each compatible Node in BOLD-->
+| Node              | Command                                                 |
+| ----------------- | ------------------------------------------------------- |
+| GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
+| __CPU__           | __qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh__      |
+| FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
+| FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
+
 
 ##### Expected Printed Output (with similar numbers):
 ```
@@ -154,24 +177,3 @@ Here is one of our loaded model's features:
    1.58423529e-02 -4.57542900e-01]]
 [CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 ```
-### Running Samples on the Intel&reg; DevCloud (Optional)<a name="run-samples-on-devcloud"></a>
-
-<!---Include the next paragraph ONLY if the sample runs in batch mode-->
-### Run in Batch Mode
-This sample runs in batch mode, so you must have a script for batch processing. Once you have a script set up, refer to [Running the Sample](#running-the-sample).
-
-<!---Include the next paragraph ONLY if the sample DOES NOT RUN in batch mode-->
-### Run in Interactive Mode
-This sample runs in interactive mode. For more information, see [Run as Juypter Notebook](#run-as-jupyter-notebook).
-
-### Request a Compute Node
-In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.
- This node information must be provided when submitting a job to run your sample in batch mode using the qsub command. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
-
-<!---Mark each compatible Node in BOLD-->
-| Node              | Command                                                 |
-| ----------------- | ------------------------------------------------------- |
-| GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
-| __CPU__               | __qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh__          |
-| FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
-| FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
