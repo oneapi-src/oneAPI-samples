@@ -10,7 +10,7 @@ be stable.
 
 ## Code Samples
 
-|Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	|
+|Code Sample    |Supported Intel®   Architecture(s)    	|Description 	|
 |-----------------------|-------------------------------------------|---------------|
 |__DirectPrograming/C++/__ |
 |../CombinationalLogic/Mandelbrot   	|CPU  	|Demonstrates how to accelerate   Mandelbrot performance with SIMD and parallelization using OpenMP*.   	|
