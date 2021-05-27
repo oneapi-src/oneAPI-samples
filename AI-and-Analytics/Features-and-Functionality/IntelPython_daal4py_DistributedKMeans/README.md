@@ -75,7 +75,7 @@ Launch Jupyter Notebook in the directory housing the code example
 jupyter notebook
 ```
 
-### Running the Sample as a Python File
+### Running the Sample as a Python File<a name="running-the-sample"></a>
 
 When using daal4py for distributed memory systems, the command needed to execute the program should be executed in a bash shell. To execute this example, run the following command, where the number **4** is chosen as an example and means that it will run on **4 processes**:
 
