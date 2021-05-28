@@ -41,8 +41,10 @@ In this example, you only need to have two private copies of array `a` in order 
 ### Identifying the Correct `private_copies` Factor
 Generally, increasing the number of private copies of an array within a loop situated in a task kernel will increase the throughput of that loop at the cost of increased memory use. However, in most cases, there is a limit beyond which increasing the number of private copies does not have any further effect on the throughput of the loop. That limit is the maximum exploitable concurrency of the outer loop. 
 
-The correct `private_copies` factor for a given array depends on your goals for the design, the criticality of the loop in question, and its impact on your design's overall throughput. A typical design flow may be to: 
-1. Experiment with different values of `private_copies`. Alternatively, in many cases it is possible to analytically determine what this value should be by looking at the latency and loop capacity numbers that you can find in the reports.
+The correct `private_copies` factor for a given array depends on your goals for the design, the criticality of the loop in question, and its impact on your design's overall throughput. In the example above we can analytically determine what the value of `private_copies` should be by looking at the structure of the nested loops. The two nested inner loops both require memory accesses to `a`, meaning that before a second outer loop iteration can start we would have to wait for the second inner loop to finish running. Using a `private_copies` value of 2 allows for the second outer loop iteration to start as soon as the first inner loop finishes, allowing both inner loops to run in parallel. 
+
+A typical design flow may be to: 
+1. Analyze your code to come up with an estimate as to what number of `private_copies` should give you the desired throughput and area for your design. Alternatively, you can rely on the compilers default heuristic, setting `private_copies` to 0, to assist with this. If choosing this option please note that the compiler heuristic might sometimes be wrong, in which case you will have rely on your own estimation.
 2. Observe what impact the values have on the overall throughput and memory use of your design.
 3. Choose the appropriate value that allows you to achieve your desired throughput and area goals.
 
@@ -152,9 +154,6 @@ Locate `report.html` in the `private_copies_report.prj/reports/` or `private_cop
 
 On the main report page, scroll down to the section titled "Estimated Resource Usage". Each kernel name ends in the `private_copies` attribute argument used for that kernel, e.g., `kernelCompute1` uses a `private_copies` attribute value of 1. You can verify that the number of RAMs used for each kernel increases with the `private_copies` value used, with the exception of `private_copies` 0. Using `private_copies` 0 instructs the compiler to choose a default value, which is often close to the value that would give you maximum throughput.
 
-### Analytically determining the `private_copies` value
-Once you have the main report page open, click on the dropdown titled "Throughput Analysis" and choose the "Loop Analysis" option. Now you can choose to look at "Kernel: Kernel<0>" and this will provide information for the three loops of Kernel<0>. Specifically, you want to be looking at the concurrency value found by clicking on the array `a` in the "Bottlenecks" section of the report. In the details pane it will now highlight that the concurrency value for `a` is 3. Using this information we can make an analytical estimate that using `private_copies` of 3 or higher will deliver optimal throughput performance. 
-
 ## Running the Sample
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
@@ -188,7 +187,7 @@ PASSED: The results are correct
 
 The stdout output shows the throughput (GFlops) for each kernel. 
 
-When run on the Intel® PAC with Intel Arria10® 10 GX FPGA hardware board, we see that the throughput of the kernel doubles when going from 1 to 2 private copies for array `a`. Further increasing the number of private copies does not increase the throughput achieved, i.e., increasing the number of private copies above 2 will spend additional RAM resources for no additional throughput gain. As such, for this tutorial design, maximal throughput is best achieved when using 2 private copies.  
+When run on the Intel® PAC with Intel Arria10® 10 GX FPGA hardware board, we see that the throughput of the kernel doubles when going from 1 to 2 private copies for array `a`. Further increasing the number of private copies does not increase the throughput achieved, i.e., increasing the number of private copies above 2 will spend additional RAM resources for no additional throughput gain. As such, for this tutorial design, maximal throughput is best achieved when using 2 private copies. The small jump in throughput observed from using 3 private copies instead of 2 can be attributed to the third private copy allowing consequent outer loop iterations to launch slightly sooner then they would with 2 private copies.
 
 Setting the `private_copies` attribute to 0 (or equivalently omitting the attribute entirely) also produced good throughput, indicating that the compiler's default heuristic chose to create 2 or more private copies for array `a`.
 
