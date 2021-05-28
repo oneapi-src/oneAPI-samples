@@ -20,13 +20,6 @@
 	},
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
-		"id": "simple_model",
-		"steps": [
-			"runipy tutorial_simple_model.ipynb"
-		 ]
-	},
-	{
-		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_dpcpp_gpu_dpcpp --force" ],
 		"id": "verbose_jit",
 		"steps": [
 			"runipy tutorial_verbose_jitdump.ipynb"
