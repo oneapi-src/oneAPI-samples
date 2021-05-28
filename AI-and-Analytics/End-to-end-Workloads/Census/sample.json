@@ -11,7 +11,7 @@
   "ciTests": {
   	"linux": [
     {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -y -n aikit-modin-test -c intel -c conda-forge runipy intel-aikit-modin", "conda activate aikit-modin-test"],
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -y -n aikit-modin-test -c conda-forge runipy intel-aikit-modin", "conda activate aikit-modin-test"],
   		"steps": [
          "runipy census_modin.ipynb" 
   		 ]
