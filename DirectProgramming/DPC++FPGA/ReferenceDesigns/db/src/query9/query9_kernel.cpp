@@ -559,7 +559,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           //    A) Apply the [[intel::speculated_iterations(0)]] attribute
           //    B) Explicitly bound the loop iterations
           // For an explanation why, see the optimize_inner_loops tutorial.
-          [[intel::speculated_iterations(0)]]
+          [[intel::initiation_interval(1), intel::speculated_iterations(0)]]
           for (char i = 0; i < valid_count && 
                 i < kLineItemOrdersJoinWinSize; i++) {
             UnrolledLoop<0, kLineItemOrdersJoinWinSize>([&](auto j) {
