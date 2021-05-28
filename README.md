@@ -10,7 +10,7 @@ be stable.
 
 ## Code Samples
 
-|Code Sample    |Supported Intel®   Architecture(s)    	|Description 	|
+|Code Sample    |Supported Intel&reg;   Architecture(s)    	|Description 	|
 |-----------------------|-------------------------------------------|---------------|
 |__../AI-and-Analytics/End-to-end-Workloads/__|
 |../Census |GPU, CPU| This sample code demonstrates how to seamlessly run the end-to-end census workload using the AI Analytics toolkit without any external dependencies. |
