@@ -4,8 +4,8 @@
 #include <limits>
 #include <numeric>
 #include <type_traits>
+#include <utility>
 #include <vector>
-#include <utility> 
 
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
@@ -29,29 +29,31 @@ constexpr bool kUseUSMHostAllocation = false;
 
 // the number of merge units, must be a power of 2
 #ifndef MERGE_UNITS
-#ifdef FPGA_EMULATOR
-#define MERGE_UNITS 4
-#else
-#define MERGE_UNITS 16
-#endif
+#define MERGE_UNITS 8
 #endif
 constexpr size_t kMergeUnits = MERGE_UNITS;
-
-// sanity check on number of merge units
 static_assert(kMergeUnits > 0);
 static_assert(IsPow2(kMergeUnits));
 
+// the width of the sort
+#ifndef SORT_WIDTH
+#define SORT_WIDTH 4
+#endif
+constexpr size_t kSortWidth = SORT_WIDTH;
+static_assert(kSortWidth > 1);
+static_assert(IsPow2(kSortWidth));
+
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declare functions used in main
-template<typename ValueT, typename IndexT, typename KernelPtrType>
-double fpga_sort(queue& q, ValueT *in_vec, ValueT *out_vec, IndexT count);
+template <typename ValueT, typename IndexT, typename KernelPtrType>
+double fpga_sort(queue &q, ValueT *in_vec, ValueT *out_vec, IndexT count);
 
-template<typename T>
+template <typename T>
 bool validate(T *val, T *ref, unsigned int count);
 ////////////////////////////////////////////////////////////////////////////////
 
 // main
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
   // type to sort, needs a compare function!
   using ValueT = int;
 
@@ -59,17 +61,17 @@ int main(int argc, char* argv[]) {
   using IndexT = unsigned int;
 
   bool passed = true;
-
 #ifdef FPGA_EMULATOR
-  IndexT count = 32;
+  IndexT count = 64;
   int runs = 1;
 #else
   IndexT count = 1 << 24;
   int runs = 17;
 #endif
+  int seed = 777;
 
   // get the size of the input as the first command line argument
-  if(argc > 1) {
+  if (argc > 1) {
     count = atoi(argv[1]);
   }
 
@@ -78,9 +80,14 @@ int main(int argc, char* argv[]) {
     runs = atoi(argv[2]);
   }
 
+  // get the random number generator as the third command line argument
+  if (argc > 3) {
+    seed = atoi(argv[3]);
+  }
+
   // enforce at least two runs
   runs = std::max((int)2, runs);
-  
+
   // check args
   if (count <= kMergeUnits) {
     std::cerr << "ERROR: count must be greater than number of merge units\n";
@@ -88,6 +95,9 @@ int main(int argc, char* argv[]) {
   } else if (count > std::numeric_limits<IndexT>::max()) {
     std::cerr << "ERROR: the index type does not have bits to count to "
               << "'count'\n";
+    std::terminate();
+  } else if ((count % kSortWidth) != 0) {
+    std::cerr << "ERROR: count must be a multiple of the sorter width\n";
     std::terminate();
   }
 
@@ -121,7 +131,7 @@ int main(int argc, char* argv[]) {
   std::vector<ValueT> in_vec(count), out_vec(count), ref(count);
 
   // generate some random input data
-  srand(time(NULL));
+  srand(seed);
   std::generate(in_vec.begin(), in_vec.end(), [] { return rand() % 100; });
 
   // copy the input to the output reference and compute the expected result
@@ -130,7 +140,7 @@ int main(int argc, char* argv[]) {
 
   // allocate the input and output data either in USM host or device allocations
   ValueT *in, *out;
-  if constexpr(kUseUSMHostAllocation) {
+  if constexpr (kUseUSMHostAllocation) {
     // streaming data using USM host allocations
     if ((in = malloc_host<ValueT>(count, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'in'\n";
@@ -138,10 +148,10 @@ int main(int argc, char* argv[]) {
     }
     if ((out = malloc_host<ValueT>(count, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'out'\n";
-      std::terminate(); 
+      std::terminate();
     }
 
-    // Copy input to USM memory and reset the output
+    // Copy the input to USM memory and reset the output
     // this is NOT efficient since, in the case of USM host allocations,
     // we could have simply generated the input data into the host allocation
     // and avoided this copy. However, it makes the code cleaner to assume the
@@ -157,11 +167,11 @@ int main(int argc, char* argv[]) {
     }
     if ((out = malloc_device<ValueT>(count, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'out'\n";
-      std::terminate(); 
+      std::terminate();
     }
 
     // copy input to the device memory and wait for the copy to finish
-    q.memcpy(in, in_vec.data(), count*sizeof(ValueT)).wait();
+    q.memcpy(in, in_vec.data(), count * sizeof(ValueT)).wait();
   }
 
   // track timing information, in ms
@@ -169,17 +179,16 @@ int main(int argc, char* argv[]) {
 
   try {
     std::cout << "Running sort " << runs << " times for an "
-              << "input size of " << count << " using "
-              << kMergeUnits << " merge units\n";
+              << "input size of " << count << " using " << kMergeUnits
+              << " " << kSortWidth << "-way merge units\n";
     std::cout << "Streaming data from "
               << (kUseUSMHostAllocation ? "host" : "device") << " memory\n";
-    
+
     // the pointer type for the kernel depends on whether we are streaming
     // data via USM host allocations or device memory
-    using KernelPtrType = typename std::conditional_t<kUseUSMHostAllocation,
-                                                      host_ptr<ValueT>,
-                                                      device_ptr<ValueT>>;
-
+    using KernelPtrType =
+        typename std::conditional_t<kUseUSMHostAllocation, host_ptr<ValueT>,
+                                    device_ptr<ValueT>>;
 
     // run some sort iterations
     for (int i = 0; i < runs; i++) {
@@ -191,12 +200,12 @@ int main(int argc, char* argv[]) {
       // 'out'. However, it makes the following code cleaner since output
       // is always in 'out_vec' and this copy is not part of the performance
       // timing anyway.
-      q.memcpy(out_vec.data(), out, count*sizeof(ValueT)).wait();
+      q.memcpy(out_vec.data(), out, count * sizeof(ValueT)).wait();
 
       // validate the output
       passed &= validate(out_vec.data(), ref.data(), count);
     }
-  } catch (exception const& e) {
+  } catch (exception const &e) {
     std::cout << "Caught a synchronous SYCL exception: " << e.what() << "\n";
     std::terminate();
   }
@@ -215,8 +224,8 @@ int main(int argc, char* argv[]) {
     IndexT input_count_m = count * 1e-6;
 
     std::cout << "Execution time: " << avg_time << " ms\n";
-    std::cout << "Throughput: "
-              << (input_count_m / (avg_time * 1e-3)) << " Melements/s\n"; 
+    std::cout << "Throughput: " << (input_count_m / (avg_time * 1e-3))
+              << " Melements/s\n";
 #endif
 
     std::cout << "PASSED\n";
@@ -228,19 +237,21 @@ int main(int argc, char* argv[]) {
 }
 
 // forward declare the kernel and pipe IDs to reduce name mangling
-class ProducerKernelID;
-class ConsumerKernelID;
+class InputKernelID;
+class OuputKernelID;
 class SortInPipeID;
 class SortOutPipeID;
 
 //
 // perform the actual sort on the FPGA.
 //
-template<typename ValueT, typename IndexT, typename KernelPtrType>
-double fpga_sort(queue& q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
+template <typename ValueT, typename IndexT, typename KernelPtrType>
+double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   // the input and output pipe for the sorter
-  using SortInPipe = sycl::INTEL::pipe<SortInPipeID, ValueT>;
-  using SortOutPipe = sycl::INTEL::pipe<SortOutPipeID, ValueT>;
+  using SortInPipe =
+      sycl::INTEL::pipe<SortInPipeID, sycl::vec<ValueT, kSortWidth>>;
+  using SortOutPipe =
+      sycl::INTEL::pipe<SortOutPipeID, sycl::vec<ValueT, kSortWidth>>;
 
   // the sorter must sort a power of 2, so round up the requested count
   // to the nearest power of 2; we will pad the input to make sure the
@@ -254,27 +265,52 @@ double fpga_sort(queue& q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   // custom types which are not supported by std::numeric_limits, then you will
   // have to set this padding element differently.
   const auto padding_element = std::numeric_limits<ValueT>::max();
- 
+
+  // we sort kSortWidth elements per cycle, so we will have a certain number
+  // so calculate the number pipe reads/writes we will need to do
+  const IndexT total_pipe_accesses = sorter_count / kSortWidth;
+
   // launch the producer
-  auto producer_event = q.submit([&](handler& h) {
-    h.single_task<ProducerKernelID>([=]() [[intel::kernel_args_restrict]] {
+  auto producer_event = q.submit([&](handler &h) {
+    h.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the input pointer and write it to the sorter's input pipe
       KernelPtrType in(in_ptr);
-      for (unsigned int i = 0; i < sorter_count; i++) {
-        auto data = (i < count) ? in[i] : padding_element;
+      for (IndexT i = 0; i < total_pipe_accesses; i++) {
+        // read data from device memory
+        bool in_range = i < sorter_count;
+
+        sycl::vec<ValueT, kSortWidth> data;
+        #pragma unroll
+        for (unsigned char j = 0; j < kSortWidth; j++) {
+          data[j] = in_range ? in[i * kSortWidth + j] : padding_element;
+        }
+
+        // write it into the sorter
         SortInPipe::write(data);
       }
     });
   });
 
   // launch the consumer
-  auto consumer_event = q.submit([&](handler& h) {
-    h.single_task<ConsumerKernelID>([=]() [[intel::kernel_args_restrict]] {
+  auto consumer_event = q.submit([&](handler &h) {
+    h.single_task<OuputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the sorters output pipe and write to the output pointer
       KernelPtrType out(out_ptr);
-      for (unsigned int i = 0; i < sorter_count; i++) {
+      for (IndexT i = 0; i < total_pipe_accesses; i++) {
+        // read data from the sorter
         auto data = SortOutPipe::read();
-        if (i < count) out[i] = data;
+
+        // sorter_count is a multiple of kSortWidth
+        bool in_range = i < sorter_count;
+
+        // only write out to device memory if the index is in range
+        if (in_range) {
+          // write output to device memory
+          #pragma unroll
+          for (unsigned char j = 0; j < kSortWidth; j++) {
+            out[i * kSortWidth + j] = data[j];
+          }
+        }
       }
     });
   });
@@ -292,9 +328,8 @@ double fpga_sort(queue& q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
 
   // launch the merge sort kernels
   auto merge_sort_events =
-    SubmitMergeSort<ValueT, IndexT,
-                    SortInPipe, SortOutPipe, kMergeUnits>(q, sorter_count,
-                                                          buf_0, buf_1);
+      SubmitMergeSort<ValueT, IndexT, SortInPipe, SortOutPipe, kSortWidth,
+                      kMergeUnits>(q, sorter_count, buf_0, buf_1);
 
   // wait for the producer and consumer to finish
   auto start = high_resolution_clock::now();
@@ -303,7 +338,7 @@ double fpga_sort(queue& q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   auto end = high_resolution_clock::now();
 
   // wait for the merge sort events to all finish
-  for (auto& e : merge_sort_events) {
+  for (auto &e : merge_sort_events) {
     e.wait();
   }
 
@@ -319,13 +354,13 @@ double fpga_sort(queue& q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
 //
 // simple function to check if two regions of memory contain the same values
 //
-template<typename T>
+template <typename T>
 bool validate(T *val, T *ref, unsigned int count) {
   for (unsigned int i = 0; i < count; i++) {
     if (val[i] != ref[i]) {
       std::cout << "ERROR: mismatch at entry " << i << "\n";
       std::cout << "\t" << val[i] << " != " << ref[i]
-                << " (val[i] != ref[i])\n"; 
+                << " (val[i] != ref[i])\n";
       return false;
     }
   }

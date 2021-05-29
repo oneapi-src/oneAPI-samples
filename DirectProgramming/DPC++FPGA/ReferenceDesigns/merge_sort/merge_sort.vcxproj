@@ -18,10 +18,11 @@
     <ClInclude Include="src\Merge.hpp" />
     <ClInclude Include="src\MergeSort.hpp" />
     <ClInclude Include="src\Misc.hpp" />
-    <ClInclude Include="src\Partition.hpp" />
     <ClInclude Include="src\pipe_array_internal.hpp" />
     <ClInclude Include="src\pipe_array.hpp" />
     <ClInclude Include="src\Produce.hpp" />
+    <ClInclude Include="src\SortingNetworks.hpp" />
+    <ClInclude Include="src\static_math.hpp" />
     <ClInclude Include="src\UnrolledLoop.hpp" />
   </ItemGroup>
   <ItemGroup>

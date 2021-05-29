@@ -4,115 +4,141 @@
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
+#include "SortingNetworks.hpp"
+#include "static_math.hpp"
+
 using namespace sycl;
 
 //
-// Streams in a sorted list of size 'in_count` from both InPipeA and InPipeB
-// and merges them into a single sorted list of size 'in_count*2' to OutPipe.
-// Does this for total_count/(in_count*2) iterations.
+// Streams in a sorted list of size 'in_count`, 'k_width' elements at a time,
+// from both InPipeA and InPipeB and merges them into a single sorted list of
+// size 'in_count*2' to OutPipe. This merges two sorted sublists 'k_width'
+// elements per cycle.
 //
-template<typename Id, typename ValueT, typename IndexT, typename InPipeA,
-         typename InPipeB, typename OutPipe, class CompareFunc>
+template <typename Id, typename ValueT, typename IndexT, typename InPipeA,
+          typename InPipeB, typename OutPipe, unsigned char k_width,
+          class CompareFunc>
 event Merge(queue& q, IndexT total_count, IndexT in_count,
             CompareFunc compare) {
-  // the output size is 2x the input size, since we are merging 2 sorted lists
-  // of size 'count' into a single sorted list
-  // NOTE: this is NOT computed on the FPGA, it is an argument to the kernel
-  const IndexT out_size = in_count * 2;
+  // sanity check on k_wodth
+  static_assert(k_width > 1);
+  static_assert(IsPow2(k_width));
+
+  // merging two lists of size 'in_count' into a single output list of
+  // double the size
+  const IndexT out_count = in_count * 2;
 
   return q.submit([&](handler& h) {
     h.single_task<Id>([=] {
-      // the values read from pipe A and B, respectively
-      ValueT a, b;
+      // the two input and feedback buffers
+      [[intel::fpga_register]]
+      sycl::vec<ValueT, k_width> a, b, feedback;
 
-      // signals that it is time to drain input pipe A and B, respectively
       bool drain_a = false;
       bool drain_b = false;
-
-      // signals if the 'a' and 'b' inputs are valid, respectively
       bool a_valid = false;
       bool b_valid = false;
 
-      // track the number of elements read from each input pipe
+      // track the number of elements we have read from each input pipe
+      // for each sublist (counts up to 'in_count')
       IndexT read_from_a = 0;
       IndexT read_from_b = 0;
 
-      // track the number of elements written to the output pipe for one
-      // output sub-array
+      // track the number of elements we have written to the output pipe
+      // for each sublist (counts up to 'in_count')
       IndexT written_out_inner = 0;
 
-      // track the total number of elements written to the output pipe
+      // track the number of elements we have write to the output pipe
+      // in total (counts up to 'total_count')
       IndexT written_out = 0;
 
-      // signals that the current read is the last read from each input pipe
-      bool read_from_a_is_last = false;
-      bool read_from_b_is_last = false;
+      // this flag indicates that the chosen buffer (from Pipe A or B) is the
+      // first buffer from either sublist. This indicates that no output will
+      // be produced and instead we will just populate the feedback buffer
+      bool first_in_buffer = true;
 
-      // signals that the NEXT read will be the last read from each input pipe
-      bool next_read_from_a_is_last = (in_count == 1);
-      bool next_read_from_b_is_last = (in_count == 1);
-
-      // repeat until we have seen all of the elements to sort
+      [[intel::initiation_interval(1)]]
       while (written_out != total_count) {
-        // read from InPipeA if 'a' is not valid and we aren't in the process
-        // of draining InPipeB. Vice versa for InPipeB.
+        // read 'k_width' wide input from Pipe A
         if (!a_valid && !drain_b) {
-          // read from pipe A and mark the input as valid
           a = InPipeA::read();
           a_valid = true;
-
-          // 2-element shift register to track whether the element read from
-          // pipe A was the last element to read from the input pipe before
-          // draining pipe B. This shift register removes an addition and
-          // comparison from the critical path
-          read_from_a_is_last = next_read_from_a_is_last;
-          next_read_from_a_is_last = (read_from_a == in_count-2);
-          read_from_a++;
+          read_from_a += k_width;
         }
+
+        // read 'k_width' wide input from Pipe B
         if (!b_valid && !drain_a) {
-          // read from pipe B and mark the input as valid
           b = InPipeB::read();
           b_valid = true;
-
-          // same technique as the if-case
-          read_from_b_is_last = next_read_from_b_is_last;
-          next_read_from_b_is_last = (read_from_b == in_count-2);
-          read_from_b++;
+          read_from_b += k_width;
         }
 
-        // determine which element we want to output
-        bool choose_a = ((compare(a, b) || drain_a) && !drain_b);
-        ValueT out_data = choose_a ? a : b;
+        // determine which of the two inputs to feed into the merge sort network
+        bool choose_a = ((compare(a[0], b[0]) || drain_a) && !drain_b);
+        auto chosen_data_in = choose_a ? a : b;
 
-        // write the output
-        OutPipe::write(out_data);
-        written_out++;
+        // create input for merge sort network sorter network
+        sycl::vec<ValueT, k_width * 2> merge_sort_network_data;
+        #pragma unroll
+        for (unsigned char i = 0; i < k_width; i++) {
+          // populate the k_width*2 sized input for the merge sort network
+          // from the chosen input data and the feedback data
+          merge_sort_network_data[2 * i] = chosen_data_in[i];
+          merge_sort_network_data[2 * i + 1] = feedback[i];
+        }
 
-        // check if we are switching to a new set of 'in_count' inputs
-        if (written_out_inner == out_size-1) {
-          // switching, so reset all internal counters and flags
-          drain_a = false;
-          drain_b = false;
-          a_valid = false;
-          b_valid = false;
-          read_from_a = 0;
-          read_from_b = 0;
-          read_from_a_is_last = false;
-          read_from_b_is_last = false;
-          next_read_from_a_is_last = (in_count == 1);
-          next_read_from_b_is_last = (in_count == 1);
-          written_out_inner = 0;
-        } else {
-          // increment the internal counter
-          written_out_inner++;
+        // sort network
+        MergeSortNetwork<ValueT, k_width>(merge_sort_network_data, compare);
 
-          // determine whether we are draining input pipe A or B, respectively
-          drain_a = drain_a | (read_from_b_is_last && !choose_a);
-          drain_b = drain_b | (read_from_a_is_last && choose_a);
-
-          // if we chose 'a', it is no longer valid, otherwise 'b' is invalid
+        if (first_in_buffer) {
+          // the first buffer read for a sublist doesn't create any output,
+          // it just creates feedback
+          #pragma unroll
+          for (unsigned char i = 0; i < k_width; i++) {
+            feedback[i] = chosen_data_in[i];
+          }
+          drain_a = drain_a | ((read_from_b == in_count) && !choose_a);
+          drain_b = drain_b | ((read_from_a == in_count) && choose_a);
           a_valid = !choose_a;
           b_valid = choose_a;
+          first_in_buffer = false;
+        } else {
+          sycl::vec<ValueT, k_width> out_data;
+          if (written_out_inner == out_count - k_width) {
+            // on the last iteration for these sublists, the feedback
+            // is the only data left that is valid, so output it
+            out_data = feedback;
+          } else {
+            // grab the output data and the feedback
+            #pragma unroll
+            for (unsigned char i = 0; i < k_width; i++) {
+              out_data[i] = merge_sort_network_data[i];
+              feedback[i] = merge_sort_network_data[k_width + i];
+            }
+          }
+
+          // write to the output pipe
+          OutPipe::write(out_data);
+          written_out += k_width;
+
+          // check if we are switching to a new set of 'in_count' inputs
+          if (written_out_inner == out_count - k_width) {
+            // switching, so reset all internal counters
+            drain_a = false;
+            drain_b = false;
+            a_valid = false;
+            b_valid = false;
+            read_from_a = 0;
+            read_from_b = 0;
+            written_out_inner = 0;
+            first_in_buffer = true;
+          } else {
+            written_out_inner += k_width;
+            drain_a = drain_a | ((read_from_b == in_count) && !choose_a);
+            drain_b = drain_b | ((read_from_a == in_count) && choose_a);
+            a_valid = !choose_a;
+            b_valid = choose_a;
+          }
         }
       }
     });
