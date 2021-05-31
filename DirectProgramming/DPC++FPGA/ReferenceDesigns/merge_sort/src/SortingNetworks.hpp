@@ -9,9 +9,9 @@
 using namespace sycl;
 
 //
-// Helper function to create a merge sort network.
+// Creates a merge sort network.
 // Takes in two sorted lists ('a' and 'b') of size 'k_width' and merges them
-// into a single sorted output.
+// into a single sorted output in a single cycle, in the steady state.
 //
 //  a = {data[0], data[2], data[4], ...}
 //  b = {data[1], data[3], data[5], ...}
@@ -57,8 +57,8 @@ void MergeSortNetwork(sycl::vec<ValueT, k_width * 2>& data,
 }
 
 //
-// Helper function to create a bitonic sorting network.
-// It accepts and sorts 'k_width' elements per cycle, in steady state
+// Creates a bitonic sorting network.
+// It accepts and sorts 'k_width' elements per cycle, in the steady state.
 // For more info see: https://en.wikipedia.org/wiki/Bitonic_sorter
 //
 template <typename ValueT, unsigned char k_width, class CompareFunc>

@@ -45,10 +45,10 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
       IndexT read_from_b = 0;
 
       // track the number of elements we have written to the output pipe
-      // for each sublist (counts up to 'in_count')
+      // for each sublist (counts up to 'out_count')
       IndexT written_out_inner = 0;
 
-      // track the number of elements we have write to the output pipe
+      // track the number of elements we have written to the output pipe
       // in total (counts up to 'total_count')
       IndexT written_out = 0;
 
@@ -59,14 +59,14 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
 
       [[intel::initiation_interval(1)]]
       while (written_out != total_count) {
-        // read 'k_width' wide input from Pipe A
+        // read 'k_width' elements from Pipe A
         if (!a_valid && !drain_b) {
           a = InPipeA::read();
           a_valid = true;
           read_from_a += k_width;
         }
 
-        // read 'k_width' wide input from Pipe B
+        // read 'k_width' elements from Pipe B
         if (!b_valid && !drain_a) {
           b = InPipeB::read();
           b_valid = true;
@@ -87,7 +87,7 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
           merge_sort_network_data[2 * i + 1] = feedback[i];
         }
 
-        // sort network
+        // sort network, which sorts 'merge_sort_network_data' in-place
         MergeSortNetwork<ValueT, k_width>(merge_sort_network_data, compare);
 
         if (first_in_buffer) {
@@ -105,11 +105,11 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
         } else {
           sycl::vec<ValueT, k_width> out_data;
           if (written_out_inner == out_count - k_width) {
-            // on the last iteration for these sublists, the feedback
+            // on the last iteration for a set of sublists, the feedback
             // is the only data left that is valid, so output it
             out_data = feedback;
           } else {
-            // grab the output data and the feedback
+            // grab the output and feedback data from the merge sort network
             #pragma unroll
             for (unsigned char i = 0; i < k_width; i++) {
               out_data[i] = merge_sort_network_data[i];
@@ -117,11 +117,11 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
             }
           }
 
-          // write to the output pipe
+          // write the output data to the output pipe
           OutPipe::write(out_data);
           written_out += k_width;
 
-          // check if we are switching to a new set of 'in_count' inputs
+          // check if we are switching to a new set of 'in_count' sublists
           if (written_out_inner == out_count - k_width) {
             // switching, so reset all internal counters
             drain_a = false;

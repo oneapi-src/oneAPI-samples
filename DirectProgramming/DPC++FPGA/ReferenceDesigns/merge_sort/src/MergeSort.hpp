@@ -37,6 +37,7 @@ struct GreaterThan {
 ///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////
+// Forward declare kernel and pipe IDs to reduce name mangling
 // Kernel and pipe ID classes for the merge units
 template <int u>
 class ProduceAKernelID;
@@ -63,7 +64,7 @@ class InternalMergeTreePipeID;
 
 //
 // Submits all of the merge sort kernels necessary to sort 'count' elements.
-// Returns all of the events to wait on.
+// Returns all of the events for the caller to wait on.
 // NOTE: there is no need to worry about returing a std::vector by value here;
 // C++ return-value-optimization (RVO) will take care of it!
 //
@@ -71,7 +72,7 @@ template <typename ValueT, typename IndexT, typename InPipe, typename OutPipe,
           unsigned char k_width, size_t units, typename Compare>
 std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
                                    ValueT* buf_1, Compare comp) {
-  // sanity check the number of merge units
+  // sanity check the number of merge units and the width of the sorter
   static_assert(units >= 1);
   static_assert(IsPow2(units));
   static_assert(k_width > 1);
@@ -86,36 +87,36 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
       "The 'Compare' function type must be invocable (i.e. operator()) with two"
       "'ValueT' arguments and returning a boolean");
 
-  // a depth of 0 allows the compiler to pick a depth to try and
-  // balance the pipeline
+  // A depth of 0 allows the compiler to pick the depth for each pipe, which
+  // allows it to balance the depth of the pipeline.
   constexpr size_t kDefaultPipeDepth = 0;
 
   // the type that is passed around the pipes
   using PipeType = sycl::vec<ValueT, k_width>;
 
-  // the various pipes connecting the different kernels
+  // the various pipes connecting the different kernels of each merge unit
   using APipes = PipeArray<APipeID, PipeType, kDefaultPipeDepth, units>;
   using BPipes = PipeArray<BPipeID, PipeType, kDefaultPipeDepth, units>;
   using MergePipes = PipeArray<MergePipeID, PipeType, kDefaultPipeDepth, units>;
   using InternalOutPipes =
       PipeArray<InternalOutPipeID, PipeType, kDefaultPipeDepth, units>;
 
-//////////////////////////////////////////////////////////////////////////////
-// These defines make the code below cleaner
-#define SubmitSortNetworkKernel \
-  SortNetworkKernel<SortNetworkID, ValueT, IndexT, InPipe, k_width>
-#define SubmitProduceA \
-  Produce<ProduceAKernelID<u>, ValueT, IndexT, APipe, k_width>
-#define SubmitProduceB \
-  Produce<ProduceBKernelID<u>, ValueT, IndexT, BPipe, k_width>
-#define SubmitMerge \
-  Merge<MergeKernelID<u>, ValueT, IndexT, APipe, BPipe, MergePipe, k_width>
-#define SubmitConsume                                                     \
-  Consume<ConsumeKernelID<u>, ValueT, IndexT, MergePipe, InternalOutPipe, \
-          k_width>
-#define SubmitMTMerge                                                       \
-  Merge<MergeTreeMergeKernelID<level, merge_unit>, ValueT, IndexT, MTAPipe, \
-        MTBPipe, MTOutPipe, k_width>
+  //////////////////////////////////////////////////////////////////////////////
+  // These defines make the latter code cleaner
+  #define SubmitSortNetworkKernel \
+    SortNetworkKernel<SortNetworkID, ValueT, IndexT, InPipe, k_width>
+  #define SubmitProduceA \
+    Produce<ProduceAKernelID<u>, ValueT, IndexT, APipe, k_width>
+  #define SubmitProduceB \
+    Produce<ProduceBKernelID<u>, ValueT, IndexT, BPipe, k_width>
+  #define SubmitMerge \
+    Merge<MergeKernelID<u>, ValueT, IndexT, APipe, BPipe, MergePipe, k_width>
+  #define SubmitConsume                                                     \
+    Consume<ConsumeKernelID<u>, ValueT, IndexT, MergePipe, InternalOutPipe, \
+            k_width>
+  #define SubmitMTMerge                                                       \
+    Merge<MergeTreeMergeKernelID<level, merge_unit>, ValueT, IndexT, MTAPipe, \
+          MTBPipe, MTOutPipe, k_width>
   //////////////////////////////////////////////////////////////////////////////
 
   // depth of the merge tree to reduce the partial results of each merge unit
@@ -129,11 +130,11 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
     std::cerr << "ERROR: 'count' must be a power of 2\n";
     std::terminate();
   } else if (count < 4 * units) {
-    std::cerr << "ERROR: MergeSorter 'count' must be at least 4x greater than "
+    std::cerr << "ERROR: 'count' must be at least 4x greater than "
               << "the number of merge units (" << units << ")\n";
     std::terminate();
   } else if (count > std::numeric_limits<IndexT>::max()) {
-    std::cerr << "ERROR: the index type does not have bits to count to "
+    std::cerr << "ERROR: the index type does not have enough bits to count to "
               << "'count'\n";
     std::terminate();
   } else if ((count / units) <= k_width) {
@@ -153,7 +154,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   }
 
   // double buffering is more convenient with an array of pointers,
-  // so create one from the two buffers passed by the caller
+  // so create one from the two buffers passed in by the caller
   ValueT* buf[2] = {buf_0, buf_1};
 
   // using double buffering, so track the current buffer and have a simple
@@ -165,8 +166,9 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   const IndexT count_per_unit = count / units;
 
   // the number of sorting iterations each merge unit will perform
-  // NOTE: we subtract Log2(k_width) because the sorting network
-  // performs the first Log(k_width) iterations of the sort
+  // NOTE: we subtract log2(k_width) because the sorting network performs the
+  // first log2(k_width) iterations of the sort while streaming the input data
+  // from the input pipe.
   const IndexT iterations = Log2(count_per_unit) - Log2(k_width);
 
   // memory to store the various merge unit and merge tree kernel events
@@ -189,13 +191,13 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
 
   ////////////////////////////////////////////////////////////////////////////
   // Launching all of the merge unit kernels
-  // start with inputs of size 2 since the partition stage used merge unit 0
-  // to perform the first sort iteration that sorted inputs of size 1 into 2
+  // start with inputs of size 'k_width' since the data from the input pipe
+  // was sent through a sorting network that sorted sets of size 'k_width'.
   IndexT in_count = k_width;
 
-  // perform the sort iterations for each unit
+  // perform the sort iterations for each merge unit
   for (size_t i = 0; i < iterations; i++) {
-    // Consumers will write to a pipe on last iteration
+    // The Consume kernels will write to a pipe on last iteration
     bool consumer_to_pipe = (i == (iterations - 1));
 
     // launch the merge unit kernels for this iteration of the sort
@@ -214,15 +216,16 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
       // build the dependency event vector
       std::vector<event> wait_events;
       if (i == 0) {
-        // on the first iteration, wait for the consume kernel from the sorting
+        // on the first iteration, wait for the Consume kernel from the sorting
         // network stage to be done so that all of the data is in the temp
         // buffers in device memory
         wait_events.push_back(sort_network_event);
       } else {
-        // on all iterations (except the first), producers for the current
-        // iteration must wait for the consumer to be done writing to global
-        // memory from the previous iteration. This is coarse grain
-        // synchronization between the producer and consumer of each merge unit.
+        // on all iterations (except the first), Produce kernels for the
+        // current iteration must wait for the Consume kernels to be done
+        // writing to device memory from the previous iteration.
+        // This is coarse grain synchronization between the Produce and Consume
+        // kernels of each merge unit.
         wait_events.push_back(consume_events[u][i - 1]);
       }
 
@@ -230,7 +233,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
       // so compute the offset into the buffer for each merge unit.
       const size_t unit_buf_offset = count_per_unit * u;
 
-      // get device pointers for this merge unit's producers and consumer
+      // get device pointers for this merge unit's Produce and Consume kernels
       ValueT* in_buf = buf[buf_idx];
       ValueT* out_buf = buf[next_buf_idx(buf_idx)];
 
@@ -268,7 +271,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // the merge tree pipe array
   // NOTE: we actually only need 2^(kReductionLevels) - 2 total pipes,
   // but we have created a 2D pipe array with kReductionLevels*units*2
-  // pipes. The 2D pipe array makes the programming much easier and the
+  // pipes. The 2D pipe array makes the metaprogramming much easier and the
   // front-end compiler will not use the extra pipes and therefore they
   // will NOT be instantiated in hardware
   using InternalMTPipes = PipeArray<InternalMergeTreePipeID, PipeType,
@@ -361,7 +364,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
 }
 
 //
-// A convenience function that defaults the sorters comparator to 'LessThan'
+// A convenience function that defaults the sorter's comparator to 'LessThan'
 // (i.e., operator<)
 //
 template <typename ValueT, typename IndexT, typename InPipe, typename OutPipe,
