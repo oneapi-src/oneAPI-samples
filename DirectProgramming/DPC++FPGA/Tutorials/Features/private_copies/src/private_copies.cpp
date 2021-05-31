@@ -60,8 +60,7 @@ void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
           for (size_t j = 0; j < kSize; j++) {
             a[j] = accessor_array[(i * 4 + j) % kSize] * shift;
           }
-          for (size_t j = 0; j < kSize; j++) 
-            r += a[j];
+          for (size_t j = 0; j < kSize; j++) r += a[j];
         }
 
         accessor_result[0] = r;
@@ -110,8 +109,7 @@ int GoldenResult(const IntArray &input_arr, int shift) {
     for (size_t j = 0; j < kSize; j++) {
       a[j] = input_arr[(i * 4 + j) % kSize] * shift;
     }
-    for (size_t j = 0; j < kSize; j++) 
-      gr += a[j];
+    for (size_t j = 0; j < kSize; j++) gr += a[j];
   }
 
   return gr;
@@ -126,8 +124,7 @@ int main() {
   int shift = rand() % kMaxValue;
 
   // initialize the input data
-  for (size_t i = 0; i < kSize; i++)
-    a[i] = rand() % kMaxValue;
+  for (size_t i = 0; i < kSize; i++) a[i] = rand() % kMaxValue;
 
 #if defined(FPGA_EMULATOR)
   INTEL::fpga_emulator_selector selector;
