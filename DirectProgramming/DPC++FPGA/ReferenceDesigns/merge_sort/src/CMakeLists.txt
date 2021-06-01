@@ -15,16 +15,16 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
 endif()
 
+# This is a Windows-specific flag that enables error handling in host code
+if(WIN32)
+    set(WIN_FLAG "/EHsc")
+endif()
+
 # check if the BSP has USM host allocations or manually enable using host allocations
 # e.g. cmake .. -DUSE_USM_HOST_ALLOCATIONS=1
 if(FPGA_BOARD MATCHES ".usm.*" OR DEFINED USE_USM_HOST_ALLOCATIONS)
     set(ENABLE_USM "-DUSM_HOST_ALLOCATIONS")
     message(STATUS "USM host allocations are enabled")
-endif()
-
-# This is a Windows-specific flag that enables error handling in host code
-if(WIN32)
-    set(WIN_FLAG "/EHsc")
 endif()
 
 # Allow the user to enable hardware profiling
@@ -84,7 +84,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsdaz -Xsrounding=faithful -Xsparallel=2 -Xsseed=1 -Xsboard=<FPGA_BOARD> -fsycl-link=early merge_sort.cpp -o merge_sort_report.a
+#   dpcpp -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=<SEED> -Xsboard=<FPGA_BOARD> -fsycl-link=early merge_sort.cpp -o merge_sort_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -100,7 +100,7 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 #   dpcpp -fintelfpga -Xshardware -Xsseed=1 -Xsboard=<FPGA_BOARD> merge_sort.cpp -o merge_sort.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -c -o merge_sort.cpp.o -c merge_sort.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsdaz -Xsrounding=faithful -Xsparallel=2 -Xsseed=1 -Xsboard=<FPGA_BOARD> merge_sort.cpp.o -o merge_sort.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=<SEED> -Xsboard=<FPGA_BOARD> merge_sort.cpp.o -o merge_sort.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")

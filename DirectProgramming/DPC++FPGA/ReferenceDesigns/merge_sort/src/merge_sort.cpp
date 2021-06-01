@@ -27,7 +27,7 @@ constexpr bool kUseUSMHostAllocation = true;
 constexpr bool kUseUSMHostAllocation = false;
 #endif
 
-// the number of merge units, must be a power of 2
+// the number of merge units, which must be a power of 2
 #ifndef MERGE_UNITS
 #define MERGE_UNITS 8
 #endif
@@ -35,7 +35,7 @@ constexpr size_t kMergeUnits = MERGE_UNITS;
 static_assert(kMergeUnits > 0);
 static_assert(IsPow2(kMergeUnits));
 
-// the width of the sort, must be a power of 2
+// the width of the sort, which must be a power of 2
 #ifndef SORT_WIDTH
 #define SORT_WIDTH 4
 #endif
@@ -52,7 +52,7 @@ template <typename T>
 bool validate(T *val, T *ref, unsigned int count);
 ////////////////////////////////////////////////////////////////////////////////
 
-// main
+
 int main(int argc, char *argv[]) {
   // the type to sort, needs a compare function!
   using ValueT = int;
@@ -90,14 +90,14 @@ int main(int argc, char *argv[]) {
 
   // check args
   if (count <= kMergeUnits) {
-    std::cerr << "ERROR: count must be greater than number of merge units\n";
+    std::cerr << "ERROR: 'count' must be greater than number of merge units\n";
     std::terminate();
   } else if (count > std::numeric_limits<IndexT>::max()) {
     std::cerr << "ERROR: the index type (IndexT) does not have enough bits to "
               << "count to 'count'\n";
     std::terminate();
   } else if ((count % kSortWidth) != 0) {
-    std::cerr << "ERROR: count must be a multiple of the sorter width\n";
+    std::cerr << "ERROR: 'count' must be a multiple of the sorter width\n";
     std::terminate();
   }
 
@@ -188,13 +188,14 @@ int main(int argc, char *argv[]) {
     std::cout << "Streaming data from "
               << (kUseUSMHostAllocation ? "host" : "device") << " memory\n";
 
-    // the pointer type for the kernel depends on whether we are streaming
-    // data via USM host allocations or device memory
+    // the pointer type for the kernel depends on whether data is coming from
+    // USM host or device allocations
     using KernelPtrType =
         typename std::conditional_t<kUseUSMHostAllocation, host_ptr<ValueT>,
                                     device_ptr<ValueT>>;
 
-    // run some sort iterations
+    // run the sort multiple times to increase the accuracy of the timing 
+    // measurement
     for (int i = 0; i < runs; i++) {
       // run the sort
       time[i] = fpga_sort<ValueT, IndexT, KernelPtrType>(q, in, out, count);
@@ -260,12 +261,12 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   // the sorter must sort a power of 2, so round up the requested count
   // to the nearest power of 2; we will pad the input to make sure the
   // output is still correct
-  IndexT sorter_count = RoundUpPow2(count);
+  const IndexT sorter_count = RoundUpPow2(count);
 
   // This is the element we will pad the input with. In the case of this design,
   // we are sorting from smallest to largest and we want the last elements out
   // to be this element, so pad with MAX. If you are sorting from largest to
-  // smallest, make this the minimum element. If you are sorting custom types
+  // smallest, make this the MIN element. If you are sorting custom types
   // which are not supported by std::numeric_limits, then you will have to set
   // this padding element differently.
   const auto padding_element = std::numeric_limits<ValueT>::max();
@@ -275,10 +276,11 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   const IndexT total_pipe_accesses = sorter_count / kSortWidth;
 
   // launch the kernel that feeds data into the sorter
-  auto producer_event = q.submit([&](handler &h) {
+  auto input_kernel_event = q.submit([&](handler &h) {
     h.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the input pointer and write it to the sorter's input pipe
       KernelPtrType in(in_ptr);
+
       for (IndexT i = 0; i < total_pipe_accesses; i++) {
         // read data from device memory
         bool in_range = i < sorter_count;
@@ -297,10 +299,11 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   });
 
   // launch the kernel that pulls data out of the sorter
-  auto consumer_event = q.submit([&](handler &h) {
+  auto output_kernel_event = q.submit([&](handler &h) {
     h.single_task<OuputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the sorters output pipe and write to the output pointer
       KernelPtrType out(out_ptr);
+      
       for (IndexT i = 0; i < total_pipe_accesses; i++) {
         // read data from the sorter
         auto data = SortOutPipe::read();
@@ -336,10 +339,10 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
       SubmitMergeSort<ValueT, IndexT, SortInPipe, SortOutPipe, kSortWidth,
                       kMergeUnits>(q, sorter_count, buf_0, buf_1);
 
-  // wait for the producer and consumer to finish
+  // wait for the input and output kernels to finish
   auto start = high_resolution_clock::now();
-  producer_event.wait();
-  consumer_event.wait();
+  input_kernel_event.wait();
+  output_kernel_event.wait();
   auto end = high_resolution_clock::now();
 
   // wait for the merge sort events to all finish
