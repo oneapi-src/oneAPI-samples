@@ -1,4 +1,4 @@
-# Sparse Conjugate Gradient Sample
+# `Sparse Conjugate Gradient` Sample
 
 Sparse Conjugate Gradient shows how to use the oneMKL library's sparse linear algebra functionality to solve a sparse, symmetric linear system using the (preconditioned) conjugate gradient method.
 
@@ -27,7 +27,10 @@ oneMKL sparse routines use a two-stage method where the sparse matrix is analyze
 
 ## License
 
-This code sample is licensed under the MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the Sparse Conjugate Gradient Sample

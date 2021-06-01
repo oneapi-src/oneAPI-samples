@@ -26,7 +26,10 @@ Parallel STL offers efficient support for both parallel and vectorized execution
 
 ## License
 
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the 'Gamma Correction' Program for CPU and GPU
 
@@ -55,8 +58,14 @@ Perform the following steps:
 ```
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
-* Build the program using VS2017 or VS2019. Right click on the solution file and open using either VS2017 or VS2019 IDE. Right click on the project in Solution explorer and select Rebuild. From top menu select Debug -> Start without Debugging.
-* Build the program using MSBuild. Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019". Run - MSBuild gamma-correction.sln /t:Rebuild /p:Configuration="Release"
+- Build the program using VS2017 or VS2019
+    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+    - Right-click on the project in Solution Explorer and select Rebuild.
+    - From the top menu, select Debug -> Start without Debugging.
+
+- Build the program using MSBuild
+     - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
+     - Run the following command: `MSBuild gamma-correction.sln /t:Rebuild /p:Configuration="Release"`
 
 ## Running the Sample
 ### Example of Output

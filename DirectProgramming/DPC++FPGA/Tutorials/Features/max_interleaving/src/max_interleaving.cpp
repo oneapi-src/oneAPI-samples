@@ -27,6 +27,8 @@ using FloatScalar = std::array<float, 1>;
 // combinational logic from the use of the parameter values to the result
 float SomethingComplicated(float x, float y) { return sycl::sqrt(x) * sycl::sqrt(y); }
 
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template <int interleaving>
 class KernelCompute;
 

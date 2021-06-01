@@ -60,8 +60,8 @@ vector<int> GoldenResult(vector<int> vec) {
   return vec;
 }
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class SimpleMath;
 
 void RunKernel(const device_selector &selector,

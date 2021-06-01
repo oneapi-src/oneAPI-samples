@@ -7,17 +7,24 @@
 
 #include "kernel.hpp"
 
-// Forward declaration of the kernel name reduces name mangling
-class VectorAdd;
 
 // This file contains 'almost' exclusively device code. The single-source SYCL
 // code has been refactored between host.cpp and kernel.cpp to separate host and
 // device code to the extent that the language permits.
-// Note that ANY change in either this file or kernel.hpp will be detected
+//
+// Note that ANY change in either this file or in kernel.hpp will be detected
 // by the build system as a difference in the dependencies of device.o,
-// triggering the full recompilation of the device code. This is true even of
-// a trivial change, e.g. tweaking the function definition or the names of
-// variables like 'q' or 'h', EVEN THOUGH these are not truly "device code".
+// triggering a full recompilation of the device code. 
+//
+// This is true even of trivial changes, e.g. tweaking the function definition 
+// or the names of variables like 'q' or 'h', EVEN THOUGH these are not truly 
+// "device code".
+
+
+// Forward declare the kernel names in the global scope. This FPGA best practice
+// reduces compiler name mangling in the optimization reports.
+class VectorAdd;
+
 void RunKernel(queue& q, buffer<float,1>& buf_a, buffer<float,1>& buf_b,
                buffer<float,1>& buf_r, size_t size){
     // submit the kernel

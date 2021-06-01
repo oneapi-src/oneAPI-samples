@@ -1,13 +1,8 @@
-﻿# 1D-Heat-Transfer Sample
+﻿# `1D-Heat-Transfer` Sample
 
-This code sample demonstrates the simulation of one dimensional heat
-transfer process using Intel Data Parallel C++. Kernels in this
-example are implemented as a discretized differential equation with
-second derivative in space and first derivative in time.
+This code sample demonstrates the simulation of a one-dimensional heat transfer process using Intel Data Parallel C++. Kernels in this example are implemented as a discretized differential equation with the second derivative in space and the first derivative in time.
 
-For comprehensive instructions regarding DPC++ Programming, go to
-https://software.intel.com/en-us/oneapi-programming-guide and search
-based on relevant terms noted in the comments.
+For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
   
 | Optimized for                     | Description
 |:---                               |:---
@@ -28,7 +23,7 @@ dU/dt = k * d<sup>2</sup>U/dx<sup>2</sup>
 
 Where:
 dU/dt is the rate of change of temperature at a point.
-k is the thermal difusivity.
+k is the thermal diffusivity.
 d<sup>2</sup>U/dx<sup>2</sup> is the second spatial derivative.
 
 Or
@@ -37,25 +32,26 @@ U(i) = C * (U(i+1) - 2 * U(i) + U(i-1)) + U(i)
 
 where constant C = k * dt / (dx * dx)
 
-The code sample includes both parallel and serial calculation of heat
-propagation. The code sample will attempt first to execute on an
+The code sample includes both parallel and serial calculations of heat
+propagation. The code sample will attempt to execute on an
 available GPU and fallback to the system's CPU if a compatible GPU is
 not detected. The results are stored in a file.
 
 
 ## Key Implementation Details 
 
-The basic DPC++ implementation explained in the code includes device
+The basic DPC++ implementation explained in the code includes a device
 selector, buffer, accessor, USM allocation, kernel, and command
 groups.
 
-
 ## License  
 
-This code sample is licensed under MIT license  
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `1d_HeatTransfer` Program for CPU and GPU
+## Building the 1d_HeatTransfer Program for CPU and GPU
 
 ### Include Files  
 
@@ -65,11 +61,7 @@ system".
 
 ### Running Samples In DevCloud
 
-If running a sample in the Intel DevCloud remember that you must
-specify the compute node (CPU, GPU, FPGA) as well whether to run in
-batch or interactive mode. For more information see the Intel® oneAPI
-Base Toolkit Get Started Guide
-(https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System  
   1. Build the program using the following `cmake` commands. 
@@ -94,17 +86,15 @@ Base Toolkit Get Started Guide
   $ make clean
   ```
   
-### On a Windows* System
+### On a Windows* System Using Visual Studio* Version 2017 or Newer
+- Build the program using VS2017 or VS2019
+    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+    - Right-click on the project in Solution Explorer and select Rebuild.
+    - From the top menu, select Debug -> Start without Debugging.
 
-* Build the program using VS2017 or VS2019 Right click on the solution
-  file and open using either VS2017 or VS2019 IDE.  Right click on the
-  project in Solution explorer and select Rebuild.  From top menu
-  select Debug -> Start without Debugging.
-
-* Build the program using MSBuild Open "x64 Native Tools Command
-  Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-  Run - MSBuild 1d_HeatTransfer.sln /t:Rebuild
-  /p:Configuration="Release"
+- Build the program using MSBuild
+     - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
+     - Run the following command: `MSBuild 1d_HeatTransfer.sln /t:Rebuild /p:Configuration="Release"`
 
 
 ## Running the sample

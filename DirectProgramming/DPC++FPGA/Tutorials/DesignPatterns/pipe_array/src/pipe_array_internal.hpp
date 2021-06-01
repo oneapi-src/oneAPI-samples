@@ -4,6 +4,9 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
+#ifndef __PIPE_ARRAY_INTERNAL_HPP__
+#define __PIPE_ARRAY_INTERNAL_HPP__
+
 namespace {
 template <size_t dim1, size_t... dims>
 struct VerifierDimLayer {
@@ -24,3 +27,5 @@ struct VerifierDimLayer<dim> {
   };
 };
 }  // namespace
+
+#endif /* __PIPE_ARRAY_INTERNAL_HPP__ */

@@ -17,8 +17,8 @@ using namespace sycl;
 constexpr float kA = 2.0f;
 constexpr float kB = 3.0f;
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization report.
 class KernelCompute;
 
 int main() {
