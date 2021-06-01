@@ -184,8 +184,8 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
 
   // launch the sorting network kernel which performs the first log2(k_width)
   // iterations of the sort. For example, if k_width=4, the sorting network
-  // sorts 4 elements per cycle. This means we need log2(4)=2 less iterations
-  // of the merge sort.
+  // sorts 4 elements per cycle, in the steady state. This means we need
+  // log2(4)=2 less iterations of the merge sort.
   auto sort_network_event =
       SubmitSortNetworkKernel(q, buf[buf_idx], count, comp);
 
@@ -200,7 +200,8 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
     // The Consume kernels will write to a pipe on last iteration
     bool consumer_to_pipe = (i == (iterations - 1));
 
-    // launch the merge unit kernels for this iteration of the sort
+    // launch the merge unit kernels for this iteration of the sort using
+    // a front-end meta-programming unroller
     UnrolledLoop<units>([&](auto u) {
       // the intra merge unit pipes
       using APipe = typename APipes::template PipeAt<u>;
@@ -270,7 +271,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
 
   // the merge tree pipe array
   // NOTE: we actually only need 2^(kReductionLevels) - 2 total pipes,
-  // but we have created a 2D pipe array with kReductionLevels*units*2
+  // but we have created a 2D pipe array with kReductionLevels*units
   // pipes. The 2D pipe array makes the metaprogramming much easier and the
   // front-end compiler will not use the extra pipes and therefore they
   // will NOT be instantiated in hardware
@@ -281,20 +282,21 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // of each merge unit into a single sorted output through OutPipe
   // NOTE: if units==1, then there is no merge tree!
   UnrolledLoop<kReductionLevels>([&](auto level) {
-    // each level of the merge tree reduces the number merge kernels necessary.
-    // level 0 has 'units' merge kernels, level 1 has 'units/2', and so on.
+    // each level of the merge tree reduces the number of sorted partitions
+    // by a factor of 2.
+    // level 0 has 'units' merge kernels, level 1 has 'units/2', and so on...
     constexpr size_t kLevelMergeUnits = units / ((1 << level) * 2);
 
     UnrolledLoop<kLevelMergeUnits>([&](auto merge_unit) {
-      // When level == 0, we know we will use MTAPipeFromMergeUnit and
-      // MTBPipeFromMergeUnit below. However, we cannot access
+      // When level == 0, we know we will use 'MTAPipeFromMergeUnit' and
+      // 'MTBPipeFromMergeUnit' below. However, we cannot access
       // PipeAt<-1, ...> without a compiler error. So, we will set the previous
-      // level to 0, knowing that we will not use MTAPipeFromMergeTree nor
-      // MTBPipeFromMergeTree
+      // level to 0, knowing that we will NOT use 'MTAPipeFromMergeTree' nor
+      // 'MTBPipeFromMergeTree' in the case that level == 0.
       constexpr size_t prev_level = (level == 0) ? 0 : level - 1;
 
-      // InPipeA for this merge kernel in the merge tree.
-      // If the merge tree level is 0, the pipe is from a merge unit
+      // PipeA for this merge kernel in the merge tree.
+      // If the merge tree level is 0, the pipe is from a merge unit,
       // otherwise it is from the previous level of the merge tree.
       using MTAPipeFromMergeUnit =
           typename InternalOutPipes::template PipeAt<merge_unit * 2>;
@@ -304,8 +306,8 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
           typename std::conditional_t<(level == 0), MTAPipeFromMergeUnit,
                                       MTAPipeFromMergeTree>;
 
-      // InPipeB for this merge kernel in the merge tree.
-      // If the merge tree level is 0, the pipe is from a merge unit
+      // PipeB for this merge kernel in the merge tree.
+      // If the merge tree level is 0, the pipe is from a merge unit,
       // otherwise it is from the previous level of the merge tree.
       using MTBPipeFromMergeUnit =
           typename InternalOutPipes::template PipeAt<merge_unit * 2 + 1>;

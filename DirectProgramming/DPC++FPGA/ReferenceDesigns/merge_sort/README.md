@@ -19,6 +19,8 @@ This DPC++ reference design demonstrates a highly paramaterizable merge sort alg
 **Performance**
 The performance data below was gathered using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) sorting `2^24=16777216` elements using 1-16 merge units and the best throughput across 5 seeds.
 
+TODO: Update this.
+
 | Merge Units | Execution time (ms) | Throughput (Melements/s) |
 | :---------- | :-----------------: | :----------------------: |
 | 1           | 1476                | 11                       |

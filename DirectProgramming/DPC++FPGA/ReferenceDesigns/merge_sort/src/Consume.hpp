@@ -14,11 +14,17 @@ template <typename Id, typename ValueT, typename IndexT, typename InPipe,
           typename OutPipe, unsigned char k_width>
 event Consume(queue& q, ValueT* out_ptr, IndexT total_count, IndexT offset,
               bool to_pipe) {
+  // the number of loop iterations required to consume all of the data
   const IndexT iterations = total_count / k_width;
 
   return q.submit([&](handler& h) {
     h.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
+      // Pointer to the output data.
+      // Creating a device_ptr tells the compiler that this pointer is in
+      // device memory, not host memory, and avoids creating extra connections
+      // to host memory
       device_ptr<ValueT> out(out_ptr);
+
       for (IndexT i = 0; i < iterations; i++) {
         // get the data from the pipe
         auto data = InPipe::read();

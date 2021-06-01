@@ -28,13 +28,18 @@ event Produce(queue& q, ValueT* in_ptr, IndexT total_count,
     h.depends_on(depend_events);
 
     h.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
+      // Pointer to the input data.
+      // Creating a device_ptr tells the compiler that this pointer is in
+      // device memory, not host memory, and avoids creating extra connections
+      // to host memory
       device_ptr<ValueT> in(in_ptr);
+
       IndexT sublist_idx = 0; // index of the current sublist
       IndexT sublist_offset = 0; // offset to the start of the current sublist
       IndexT inter_sublist_offset = 0; // offset within the current sublist
 
       while (sublist_idx != num_sublists) {
-        // get the input data from either the input pipe, or device memory
+        // read the input data from device memory
         sycl::vec<ValueT, k_width> pipe_data;
         #pragma unroll
         for (unsigned char j = 0; j < k_width; j++) {
