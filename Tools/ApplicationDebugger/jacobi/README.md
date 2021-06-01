@@ -194,7 +194,7 @@ For detailed instructions about starting and using the debugger, please see the
 
 ```
 $ ./jacobi-fixed cpu
-[SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
+[SYCL] Using device: [Intel(R) Core(TM) i7-7567U Processor] from [Intel(R) OpenCL]
 success; result is correct.
 ```
 
@@ -213,7 +213,7 @@ success; result is correct.
 
 ```
 $ ./jacobi-bugged cpu
-[SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
+[SYCL] Using device: [Intel(R) Core(TM) i7-7567U Processor] from [Intel(R) OpenCL]
 fail; components of x_k are not close to 1.0
 ```
 

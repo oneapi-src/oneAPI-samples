@@ -216,7 +216,7 @@ Reading symbols from ./array-transform...
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) Core(TM) i9-7900X processor] from [Intel(R) OpenCL]
+[SYCL] Using device: [Intel(R) Core(TM) i9-7900 X-series Processor] from [Intel(R) OpenCL]
 [Switching to Thread 0x7fffe3bfe700 (LWP 925)]
 
 Thread 16 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
