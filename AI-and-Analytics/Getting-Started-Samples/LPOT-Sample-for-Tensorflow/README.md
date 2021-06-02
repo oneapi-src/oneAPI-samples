@@ -1,4 +1,4 @@
-# `Intel&reg; Low Precision Optimization Tool (LPOT)` Sample for TensorFlow*
+# `Intel® Low Precision Optimization Tool (LPOT)` Sample for TensorFlow*
 
 ## Background
 Low-precision inference can speed up inference obviously, by converting the fp32 model to int8 or bf16 model. Intel provides Intel&reg; Deep Learning Boost technology in the Second Generation Intel&reg; Xeon&reg; Scalable Processors and newer Xeon&reg;, which supports to speed up int8 and bf16 model by hardware.
@@ -178,7 +178,7 @@ conda activate /opt/intel/oneapi/intelpython/latest/envs/tensorflow
 
 ### Open Sample Code File
 
-In a web browser, open link: **http://yyy:8888/?token=146761d9317552c43e0d6b8b6b9e1108053d465f6ca32fca**. Click 'lpot_sample_TensorFlow.ipynb' to start up the sample.
+In a web browser, open link: **http://yyy:8888/?token=146761d9317552c43e0d6b8b6b9e1108053d465f6ca32fca**. Click 'lpot_sample_tensorflow.ipynb' to start up the sample.
 
 ### Run
 
