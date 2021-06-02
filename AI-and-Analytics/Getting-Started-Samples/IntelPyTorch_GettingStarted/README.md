@@ -22,7 +22,7 @@ This Hello World sample code is implemented for CPU using the Python language.
 ### Notes
  - The test dataset is inherited from `torch.utils.data.Dataset`.
  - The model is inherited from `torch.nn.Module`.
- - For the inference portion, `to_mkldnn()` function in `torch.utils.mkldnn` can accelerate performance by eliminating data reorders between operations, which are supported by Intel(R) DNNL.
+ - For the inference portion, `to_mkldnn()` function in `torch.utils.mkldnn` can accelerate performance by eliminating data reorders between operations, which are supported by Intel&reg; DNNL.
 
 ## License
 Code samples are licensed under the MIT license. See

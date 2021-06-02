@@ -7,7 +7,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Windows 10
 | Hardware                          | Integrated Graphics from Intel (GPU) GEN9 or higher
-| Software                          | Intel(R) oneAPI DPC++ Compiler
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | Get started with DPC++ for GPU projects
 | Time to complete                  | n/a
 

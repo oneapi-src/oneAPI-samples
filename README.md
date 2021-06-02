@@ -114,7 +114,7 @@ be stable.
 |../IntelPython_daal4py_Distributed_LinearRegression  | CPU |daal4py is a simplified API to Intel® DAAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users|
 |../IntelPython_daal4py_Getting_Started | CPU |how how to do batch linear regression using the python API package daal4py from oneDAL.|
 |__Libraries/oneDNN/__ |
-|../dpcpp_interoperability | GPU, CPU| emonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN |
+|../dpcpp_interoperability | GPU, CPU| emonstrates programming for Intel&reg; Processor Graphics with SYCL extensions API in oneDNN |
 |../getting_started | GPU, CPU | Running a simple convolutional model on Intel CPU or Intel GPU |
 |../simple_model | GPU, CPU | Running a simple convolutional model on Intel CPU or Intel GPU |
 |../Tutorials |GPU, CPU | Series of Jupyer notebook tutorials on oneDNN |

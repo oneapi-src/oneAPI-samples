@@ -15,9 +15,10 @@ For more information and details: https://software.intel.com/en-us/articles/vect
   
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux Ubuntu 18.04; Windows 10 or Windows Server 2017
+| OS                                | Linux Ubuntu 18.04; Windows* 10 or Windows* Server 2017
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel Data Parallel C++ Compiler (beta)| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
+| Software                          | Intel&reg; oneAPI Data Parallel C++ Compiler 
+| What you will learn               | How to offload the computation to GPU using the Intel Data Parallel C++ Compiler
 | Time to complete                  | 20 minutes
 
 Performance number tabulation [if applicable]
