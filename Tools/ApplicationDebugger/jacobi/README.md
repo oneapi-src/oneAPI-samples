@@ -107,7 +107,7 @@ the setting, after connecting to the login node, type the following command:
 $ qsub -I -l nodes=1:gpu:ppn=2
 ```
 Within the interactive session on the GPU node, build and run the sample.
-For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
+For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
 ### On a Linux* System

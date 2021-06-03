@@ -6,8 +6,8 @@ perform a simple video decode using 2.x enhanced programming model APIs.
 | Optimized for    | Description
 |----------------- | ----------------------------------------
 | OS               | Ubuntu* 20.04
-| Hardware         | Intel® Processor Graphics GEN9 or newer
-| Software         | Intel® oneAPI Video Processing Library(oneVPL)
+| Hardware         | Intel&reg; Processor Graphics GEN9 or newer
+| Software         | Intel&reg; oneAPI Video Processing Library(oneVPL)
 | What You Will Learn | How to use oneVPL to decode an H.265 encoded video file
 | Time to Complete | 5 minutes
 
@@ -46,7 +46,7 @@ The oneVPL include folder is located at these locations on your development syst
  - Linux: $ONEAPI_ROOT/vpl/latest/include
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 
 ### On a Linux* System
@@ -56,7 +56,7 @@ Perform the following steps:
 1. Install the prerequisite software. To build and run the sample, you need to
    install prerequisite software and set up your environment:
 
-   - Intel® oneAPI Base Toolkit for Linux*
+   - Intel&reg; oneAPI Base Toolkit for Linux*
    - [CMake](https://cmake.org)
 
 2. Set up your environment using the following command.

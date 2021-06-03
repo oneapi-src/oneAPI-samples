@@ -10,14 +10,14 @@ migrate more complex projects and use options.
 | Optimized for         | Description
 |:---                   |:---
 | OS                    | Linux* Ubuntu* 18.04; Windows 10
-| Software              | Intel® DPC++ Compatibility Tool;
+| Software              | Intel&reg; DPC++ Compatibility Tool;
 | What you will learn   | Simple invocation of dpct to migrate CUDA code
 | Time to complete      | 10 minutes
 
 
 ## Purpose
 
-The Intel® DPC++ Compatibility Tool (dpct) can be used to migrate projects
+The Intel&reg; DPC++ Compatibility Tool (dpct) can be used to migrate projects
 composed of multiple source and header files. This includes headers from the
 system libraries and other projects. The tool must know which headers need
 migration and which should be left alone.

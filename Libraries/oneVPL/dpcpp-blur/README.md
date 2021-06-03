@@ -6,8 +6,8 @@ oneAPI Video Processing Library to perform a simple video content blur.
 | Optimized for   | Description
 |---------------- | ----------------------------------------
 | OS              | Ubuntu* 18.04
-| Hardware        | Intel® Processor Graphics GEN9 or newer
-| Software        | Intel® oneAPI Video Processing Library (oneVPL)
+| Hardware        | Intel&reg; Processor Graphics GEN9 or newer
+| Software        | Intel&reg; oneAPI Video Processing Library (oneVPL)
 | What You Will Learn | How to use oneVPL and DPC++ to convert I420 raw video files into BGRA and blur each frame.
 | Time to Complete | 5 minutes
 
@@ -51,7 +51,7 @@ Perform the following steps:
 1. Install the prerequisite software. To build and run the sample, you need to
    install prerequisite software and set up your environment:
 
-   - Intel® oneAPI Base Toolkit for Linux*
+   - Intel&reg; oneAPI Base Toolkit for Linux*
    - [CMake](https://cmake.org)
 
 2. Set up your environment using the following command.

@@ -6,16 +6,16 @@ This source code is a simple sample you could use for a quick compiler test.
 
 ## What it is
 
-This project outputs a "Hello World" message and lets users know if the Intel®
+This project outputs a "Hello World" message and lets users know if the Intel&reg;
 C++ Compiler Classic was used to compile the code sample.
 
 ## Hardware requirements
 
-Any Intel® CPU
+Any Intel&reg; CPU
 
 ## Software requirements
 
-Intel® C++ Compiler Classic
+Intel&reg; C++ Compiler Classic
 
 ## License
 
@@ -50,7 +50,7 @@ make run
 Use the Intel Samples Plugin in Eclipse to create and run the sample.
 
 You may need to source the `setvars.sh` script distributed with oneAPI before
-launching Eclipse so that Eclipse can locate and use the Intel® C++ Compiler
+launching Eclipse so that Eclipse can locate and use the Intel&reg; C++ Compiler
 Classic.
 
 ## Additional Links

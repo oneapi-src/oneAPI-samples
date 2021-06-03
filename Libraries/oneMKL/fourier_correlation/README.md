@@ -33,7 +33,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 ## Building and Running the Fourier Correlation Sample
 
 ### Running Samples on the DevCloud
-When running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
+When running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel&reg; oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
 ### On a Linux System
 Run `make` to build and run the sample. Two programs are generated: one that uses explicit buffering and one that uses USM.

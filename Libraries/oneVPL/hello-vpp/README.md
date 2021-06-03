@@ -7,8 +7,8 @@ perform simple video processing using 2.x enhanced programming model APIs.
 |-------------------- | ----------------------------------------
 | OS                  | Ubuntu* 20.04
 | Hardware            | CPU: See [System Requirements](https://software.intel.com/content/www/us/en/develop/articles/oneapi-video-processing-library-system-requirements.html)
-|                     | GPU: Future Intel® Graphics platforms supporting oneVPL 2.x API features 
-| Software            | Intel® oneAPI Video Processing Library(oneVPL)
+|                     | GPU: Future Intel&reg; Graphics platforms supporting oneVPL 2.x API features 
+| Software            | Intel&reg; oneAPI Video Processing Library(oneVPL)
 | What You Will Learn | How to use oneVPL to resize and change color format of a raw video file
 | Time to Complete    | 5 minutes
 
@@ -43,7 +43,7 @@ The oneVPL include folder is located at these locations on your development syst
  - Linux: $ONEAPI_ROOT/vpl/latest/include
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 
 ### On a Linux* System
@@ -53,7 +53,7 @@ Perform the following steps:
 1. Install the prerequisite software. To build and run the sample, you need to
    install prerequisite software and set up your environment:
 
-   - Intel® oneAPI Base Toolkit for Linux*
+   - Intel&reg; oneAPI Base Toolkit for Linux*
    - [CMake](https://cmake.org)
 
 2. Set up your environment using the following command.

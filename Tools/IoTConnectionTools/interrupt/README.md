@@ -33,7 +33,7 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Setup
-Create a new project using this sample in Eclipse* IDE and install the Intel® oneAPI IoT Toolkit.
+Create a new project using this sample in Eclipse* IDE and install the Intel&reg; oneAPI IoT Toolkit.
 Connect the input device to a GPIO pin on your IoT board (pin 13 is used by default on most boards).
 
 ## Note

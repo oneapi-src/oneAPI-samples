@@ -32,7 +32,7 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Setup
-Create a new project using this sample in Eclipse* IDE and install the Intel® oneAPI IoT Toolkit. Run it on the UP Squared board using a TCF connection.
+Create a new project using this sample in Eclipse* IDE and install the Intel&reg; oneAPI IoT Toolkit. Run it on the UP Squared board using a TCF connection.
 
 ## Note
 Accessing device sensors, including LEDs, requires MRAA I/O operations. Mraa I/O operations require permissions to UNIX character devices and sysfs classes not commonly granted to normal users by default.

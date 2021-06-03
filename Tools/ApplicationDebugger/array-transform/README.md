@@ -87,7 +87,7 @@ with GPU and an interactive shell is recommended.
 $ qsub -I -l nodes=1:gpu:ppn=2
 ```
 
-For more information, see the Intel® oneAPI
+For more information, see the Intel&reg; oneAPI
 Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
