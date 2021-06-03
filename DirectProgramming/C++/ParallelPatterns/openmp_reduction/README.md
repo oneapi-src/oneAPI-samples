@@ -1,6 +1,6 @@
 ﻿# `openmp_reduction` Sample
 
-The `openmp_reduction` code sample is a simple program that calculates pi.  This program is implemented using C++ and openMP for Intel(R) CPU and accelerators.
+The `openmp_reduction` code sample is a simple program that calculates pi.  This program is implemented using C++ and openMP for Intel&reg; CPU and accelerators.
 
 For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
