@@ -1,17 +1,17 @@
 # `&reg; Python daal4py Getting Started` Sample
-This Getting Started sample code show how to do batch linear regression using the python API package daal4py from oneDAL. It demonstrates how to use software products that can be found in the [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+This Getting Started sample code show how to do batch linear regression using the python API package daal4py from oneDAL. It demonstrates how to use software products that can be found in the [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or the [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
-| Hardware                          | Intel Atom&reg; Processors; &reg; Core&trade; Processor Family; &reg; Xeon&reg; Processor Family; &reg; Xeon&reg; Scalable Performance Processor Family
+| Hardware                          | Intel Atom&reg; Processors; Intel&reg; Core&trade; Processor Family; &reg; Xeon&reg; Processor Family; &reg; Xeon&reg; Scalable Performance Processor Family
 | Software                          | oneDAL Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
 | What you will learn               | basic oneDAL programming model for Intel CPU
 | Time to complete                  | 5 minutes
 
 ## Purpose
 
-daal4py is a simplified API to &reg; oneDAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users. Built to help provide an abstraction to &reg; oneDAL for direct usage or integration into one's own framework.
+daal4py is a simplified API to Intel&reg; oneDAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users. Built to help provide an abstraction to Intel&reg; oneDAL for direct usage or integration into one's own framework.
 
 In this sample, you will run a batch Linear Regression model with oneDAL daal4py library memory objects. You will also learn how to train a model and save the information to a file.
   
@@ -46,7 +46,11 @@ source activate base
 
 ### Activate conda environment Without Root Access (Optional)
 
+<<<<<<< HEAD
 By default, the &reg; oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+=======
+By default, the Intel® oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+>>>>>>> master
 
 #### On a Linux* System
 ```

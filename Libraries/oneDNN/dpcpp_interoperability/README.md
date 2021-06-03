@@ -129,7 +129,7 @@ dnnl_verbose,info,oneDNN v1.95.0 (commit ae08a30fff7f76759fd4c5093c01707d0ee12c4
 dnnl_verbose,info,cpu,runtime:DPC++
 dnnl_verbose,info,cpu,isa:Intel AVX2
 dnnl_verbose,info,gpu,runtime:DPC++
-dnnl_verbose,info,cpu,engine,0,backend:OpenCL,name:Intel&reg; Core(TM) i9-9900K CPU @ 3.60GHz,driver_version:2020.10.7
+dnnl_verbose,info,cpu,engine,0,backend:OpenCL,name:Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz,driver_version:2020.10.7
 dnnl_verbose,info,gpu,engine,0,backend:Level Zero,name:Intel(R) Gen12LP,driver_version:0.8.0
 dnnl_verbose,exec,cpu,eltwise,jit:avx2,forward_training,data_f32::blocked:abcd:f0 diff_undef::undef::f0,,alg:eltwise_relu alpha:0 beta:0,2x3x4x5,0.36499
 Example passed on CPU.
