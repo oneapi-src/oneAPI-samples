@@ -44,15 +44,15 @@ Currently, only Linux platforms are supported. It is recommended to use Ubuntu 1
 
 ### Requirements (Local or Remote Host Installation)
 To build and run the PointPillars sample, the following libraries have to be installed:
-1. &reg; Distribution of OpenVINO&trade; toolkit (at least 2021.1)
-2. &reg; oneAPI Base Toolkit (at least 2021.2)
+1. Intel&reg; Distribution of OpenVINO&trade; toolkit (at least 2021.1)
+2. Intel&reg; oneAPI Base Toolkit (at least 2021.2)
 3. Boost (including `boost::program_options` library)
 4. Optional: If the sample should be run on an Intel GPU, it might be necessary to upgrade the corresponding drivers. Therefore, please consult the following page: https://github.com/intel/compute-runtime/releases/
 
 
 ### Build process (Local or Remote Host Installation)
 Perform the following steps:
-1. Prepare the environment to be able to use the &reg; Distribution of OpenVINO&trade; toolkit and oneAPI
+1. Prepare the environment to be able to use the Intel&reg; Distribution of OpenVINO&trade; toolkit and oneAPI
 ``` 
 $ source /opt/intel/openvino_2021/bin/setupvars.sh
 $ source /opt/intel/oneapi/setvars.sh
@@ -64,7 +64,7 @@ $ mkdir build && cd build
 $ cmake ..
 $ make
 ```
-Please note that cmake will also download the ONNX models required for the two inference steps executed with the &reg; Distribution of OpenVINO&trade; toolkit.
+Please note that cmake will also download the ONNX models required for the two inference steps executed with the Intel&reg; Distribution of OpenVINO&trade; toolkit.
 
 ## Running the `PointPillars` Sample Program
 After a successful build, the sample program can be run as follows:
@@ -107,7 +107,7 @@ For single-threaded execution on the host system, please use:
 ```
 ./example.exe --host
 ```
-And to use an &reg; DG1 or integrated graphics, please use:
+And to use an Intel&reg; DG1 or integrated graphics, please use:
 ```
 ./example.exe --gpu
 ```
@@ -182,7 +182,7 @@ For single-threaded execution on the host system, please use:
 ```
 ./example.exe --host
 ```
-And to use an &reg; DG1 or integrated graphics, please use:
+And to use an Intel&reg; DG1 or integrated graphics, please use:
 ```
 ./example.exe --gpu
 ```

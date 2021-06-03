@@ -4,7 +4,7 @@ This Getting Started sample code show how to do batch linear regression using th
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
-| Hardware                          | Intel Atom&reg; Processors; Intel&reg; Core&trade; Processor Family; Intel@reg; Xeon&reg; Processor Family; Intel@reg; Xeon&reg; Scalable Performance Processor Family
+| Hardware                          | Intel Atom&reg; Processors; Intel&reg; Core&trade; Processor Family; Intel&reg; Xeon&reg; Processor Family; Intel&reg; Xeon&reg; Scalable Performance Processor Family
 | Software                          | oneDAL Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
 | What you will learn               | basic oneDAL programming model for Intel CPU
 | Time to complete                  | 5 minutes
@@ -29,7 +29,7 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
 
 ## Building daal4py for CPU
 
-oneAPI Data Analytics Library is ready for use once you finish the Intel@reg; oneAPI AI Analytics Toolkit installation and have run the post installation script.
+oneAPI Data Analytics Library is ready for use once you finish the Intel&reg; oneAPI AI Analytics Toolkit installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -47,7 +47,7 @@ source activate base
 ### Activate conda environment Without Root Access (Optional)
 
 <<<<<<< HEAD
-By default, the Intel@reg; oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel&reg; oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 =======
 By default, the Intel® oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 >>>>>>> master

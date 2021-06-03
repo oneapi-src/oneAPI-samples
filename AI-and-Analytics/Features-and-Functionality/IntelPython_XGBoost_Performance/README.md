@@ -1,11 +1,11 @@
-# `&reg; Python XGBoost Performance Sample`
-This sample code illustrates how to analyze the performance benefit from using Intel optimizations upstreamed by Intel to latest XGBoost compared to un-optimized XGBoost 0.81. It demonstrates how to use software products that can be found in the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+# `Intel&reg; Python XGBoost Performance Sample`
+This sample code illustrates how to analyze the performance benefit from using Intel optimizations upstreamed by Intel to latest XGBoost compared to un-optimized XGBoost 0.81. It demonstrates how to use software products that can be found in the [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
-| Hardware                          | Intel Atom&reg; Processors; Intel@reg; Core&trade; Processor Family; Intel@reg; Xeon&reg; Processor Family; Intel@reg; Xeon&reg; Scalable Performance Processor Family
-| Software                          | XGBoost, Intel@reg; oneAPI AI Analytics Toolkit
+| Hardware                          | Intel Atom&reg; Processors; Intel&reg; Core&trade; Processor Family; Intel&reg; Xeon&reg; Processor Family; Intel&reg; Xeon&reg; Scalable Performance Processor Family
+| Software                          | XGBoost, Intel&reg; oneAPI AI Analytics Toolkit
 | What you will learn               | How to analyze the performance benefit from using Intel optimizations upstreamed by Intel to the latest XGBoost compared to un-optimized XGBoost 0.81
 | Time to complete                  | 10-15 minutes
 
@@ -16,7 +16,7 @@ XGBoost is a widely used gradient boosting library in the classical ML area. Des
 In this sample, you will an XGBoost model and prediction using Intel optimizations upstreamed by Intel to the latest XGBoost package and the un-optimized XGBoost 0.81 for comparison.
   
 ## Key Implementation Details 
-This XGBoost sample code is implemented for the CPU using the Python language. The example assumes you XGBoost installed inside a conda environment, similar to what is delivered with the installation of the Intel@reg; Distribution for Python as part of the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). It also assumes you have set up an additional XGBoost 0.81 conda environment, with details on how to do so explained within the sample and this README.
+This XGBoost sample code is implemented for the CPU using the Python language. The example assumes you XGBoost installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python as part of the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). It also assumes you have set up an additional XGBoost 0.81 conda environment, with details on how to do so explained within the sample and this README.
  
 ## License  
 Code samples are licensed under the MIT license. See
@@ -26,7 +26,7 @@ Third-party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building XGBoost for CPU
 
-XGBoost is ready for use once you finish the Intel@reg; oneAPI AI Analytics Toolkit installation and have run the post installation script.
+XGBoost is ready for use once you finish the Intel&reg; oneAPI AI Analytics Toolkit installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -45,7 +45,7 @@ source activate base
 
 ### Activate conda environment Without Root Access (Optional)
 
-By default, the Intel@reg; oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel&reg; oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### On a Linux* System
 ```

@@ -4,8 +4,8 @@ This Getting Started sample code show how to use distributed Pandas using the Mo
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
-| Hardware                          | Intel Atom&reg; Processors; Intel@reg; Core&trade; Processor Family; Intel@reg; Xeon&reg; Processor Family; Intel@reg; Xeon&reg; Scalable Performance Processor Family
-| Software                          | Modin, Intel@reg; oneAPI AI Analytics Toolkit
+| Hardware                          | Intel Atom&reg; Processors; Intel&reg; Core&trade; Processor Family; Intel&reg; Xeon&reg; Processor Family; Intel&reg; Xeon&reg; Scalable Performance Processor Family
+| Software                          | Modin, Intel&reg; oneAPI AI Analytics Toolkit
 | What you will learn               | basic Intel Distribution of Modin programming model for Intel CPU
 | Time to complete                  | 5-8 minutes
 
@@ -52,7 +52,7 @@ source activate intel-aikit-modin
 
 ### Activate conda environment Without Root Access (Optional)
 
-By default, the Intel@reg; oneAPI AI Analytics toolkit is installed in the `oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel&reg; oneAPI AI Analytics toolkit is installed in the `oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### Linux
 ```

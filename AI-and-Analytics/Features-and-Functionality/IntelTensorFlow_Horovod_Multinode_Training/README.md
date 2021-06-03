@@ -4,15 +4,15 @@ Today's modern computer systems are becoming heavily distributed. It is importan
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 
-| Hardware                          | Intel@reg; Xeon&reg; Scalable processor family or newer
-| Software                          | Intel@reg; oneAPI AI Analytics Toolkit
+| Hardware                          | Intel&reg; Xeon&reg; Scalable processor family or newer
+| Software                          | Intel&reg; oneAPI AI Analytics Toolkit
 | What you will learn               | How to get scale-out (distribute) the training of a model on multiple compute nodes
 | Time to complete                  | 10 minutes
 
 ## Purpose
 This sample code shows how to get started with scaling out a neural network's training in TensorFlow on multiple compute nodes in a cluster. The sample uses  [Horovod](https://github.com/horovod/horovod)*, a distributed deep learning training framework, to facilitate the task of distributing the workload. Horovod's core principles are based on MPI concepts such as size, rank, local rank, allreduce, allgather and, broadcast.
 
-Intel-optimized Tensorflow is available as part of Intel@reg; AI Analytics Toolkit. For more information on the optimizations and performance data, see this blog post [TensorFlow* Optimizations on Modern Intel@reg; Architecture](https://software.intel.com/content/www/us/en/develop/articles/tensorflow-optimizations-on-modern-intel-architecture.html).
+Intel-optimized Tensorflow is available as part of Intel&reg; AI Analytics Toolkit. For more information on the optimizations and performance data, see this blog post [TensorFlow* Optimizations on Modern Intel&reg; Architecture](https://software.intel.com/content/www/us/en/develop/articles/tensorflow-optimizations-on-modern-intel-architecture.html).
 
 ## Key implementation details
 
