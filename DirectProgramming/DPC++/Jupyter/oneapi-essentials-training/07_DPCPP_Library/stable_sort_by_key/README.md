@@ -11,7 +11,7 @@ The computations are performed using Intel® oneAPI DPC++ Library (oneDPL).
 |---------------------------------|------------------------------------------------------------------------------------|
 | OS                              | Linux Ubuntu 18.04                                                                 |
 | Hardware                        | Skylake with GEN9 or newer                                                         |
-| Software                        | Intel@reg; oneAPI Data Parallel C++ Compiler (beta)                                                |
+| Software                        | Intel® oneAPI DPC++/C++ Compiler                                              |
 | What you will learn             | How to use `counting_iterator` and `zip_iterator` that are a part of Intel&reg; oneAPI DPC++ Library |
 | Time to complete                | At most 5 minutes                                                                  |
 

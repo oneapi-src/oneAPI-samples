@@ -11,7 +11,7 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler (DPC++); Intel&reg; C++ Compiler
+| Software                          | Intel&reg; oneAPI DPC++ Compiler; Intel&reg; C++ Compiler
 | What you will learn               | Implement bitonic sort using Intel oneAPI DPC++ Compiler
 | Time to complete                  | 15 minutes
 

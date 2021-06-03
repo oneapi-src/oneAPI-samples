@@ -6,7 +6,7 @@ Intel&reg; VTune&trade; Profiler on DevCloud: This is part 6 of the oneAPI essen
 |:---                               |:---
 | OS                                | Linux* Ubuntu 18.04, 20 and Windows* 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI Data Parallel C++ Compiler, Jupyter Notebooks, Intel Devcloud
+| Software                          | Intel® oneAPI DPC++/C++ Compiler, Jupyter Notebooks, Intel Devcloud
   
 ## Purpose
 The hands-on exercise in this notebook demonstrates using Intel® VTune™ Profiler on the command-line to collect and analyze gpu_hotspots. You will learn how to collect performance metrics and explore the results with the HTML output rendered inside of the notebook. This module meant for exploration and familiarization, and does not require any code modification.
