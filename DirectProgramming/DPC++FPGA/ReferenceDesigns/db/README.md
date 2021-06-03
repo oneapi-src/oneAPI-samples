@@ -8,7 +8,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX)
+| Hardware                          | Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel&reg; Stratix&reg; 10 SX)
 | Software                          | Intel&reg; oneAPI DPC++ Compiler 
 | What you will learn               | How to accelerate database queries using an Intel FPGA
 | Time to complete                  | 1 hour

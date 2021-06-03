@@ -9,7 +9,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04* 
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel&reg; Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04* 
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | Why to separate host and device code compilation in your FPGA project <br> How to use the `-reuse-exe` and device link methods <br> Which method to choose for your project
 | Time to complete                  | 15 minutes
@@ -141,7 +141,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel&reg; Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -175,7 +175,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel&reg; Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -196,7 +196,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      nmake fpga
      ``` 
 
-*Note:* The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel&reg; Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
