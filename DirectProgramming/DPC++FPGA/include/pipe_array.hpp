@@ -9,7 +9,6 @@
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <utility>
-//#include <variant>
 
 #include "pipe_array_internal.hpp"
 
