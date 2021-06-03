@@ -1,36 +1,36 @@
-# Using the Intel® FPGA Dynamic Profiler for DPC++
+# Using the Intel&reg; FPGA Dynamic Profiler for DPC++
 
-This FPGA tutorial demonstrates how to use the Intel® FPGA Dynamic Profiler for DPC++ to dynamically collect performance data from an FPGA design and reveal areas for optimization and improvement.
+This FPGA tutorial demonstrates how to use the Intel&reg; FPGA Dynamic Profiler for DPC++ to dynamically collect performance data from an FPGA design and reveal areas for optimization and improvement.
 
 ***Documentation***: The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [Intel® oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) provides complete documentation for the use of this tool as well as comprehensive instructions for targeting FPGAs through DPC++. <br>
+The [Intel&reg; oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) provides complete documentation for the use of this tool as well as comprehensive instructions for targeting FPGAs through DPC++. <br>
 The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
-| What you will learn               | About the Intel® FPGA Dynamic Profiler for DPC++ <br> How to set up and use this tool <br> A case study of using this tool to identify performance bottlenecks in pipes.
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04* 
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit 
+| What you will learn               | About the Intel&reg; FPGA Dynamic Profiler for DPC++ <br> How to set up and use this tool <br> A case study of using this tool to identify performance bottlenecks in pipes.
 | Time to complete                  | 15 minutes
 
 _Notice: This code sample is not yet supported in Windows*_
 
 ## Purpose
 
-This FPGA tutorial demonstrates how to use the Intel® FPGA Dynamic Profiler for DPC++ to collect performance data from a design running on FPGA hardware and how to use the Intel® VTune™ Profiler to analyze the collected data. This tutorial focuses on optimizing the usage of loops and pipes within an FPGA design using stall and occupancy kernel performance data.
+This FPGA tutorial demonstrates how to use the Intel&reg; FPGA Dynamic Profiler for DPC++ to collect performance data from a design running on FPGA hardware and how to use the Intel&reg; VTune™ Profiler to analyze the collected data. This tutorial focuses on optimizing the usage of loops and pipes within an FPGA design using stall and occupancy kernel performance data.
 
 ###  Profiling Tools
 
-Intel® oneAPI provides two runtime profiling tools to help you analyze your DPC++ design for FPGA:
+Intel&reg; oneAPI provides two runtime profiling tools to help you analyze your DPC++ design for FPGA:
 
-1. The **Intel® FPGA Dynamic Profiler for DPC++** is a profiling tool used to collect fine-grained device side data during DPC++ kernel execution. When used within the Intel® VTune™ Profiler, some host side performance data is also collected. However, note that the VTune Profiler is not designed to collect detailed system level host-side data. 
+1. The **Intel&reg; FPGA Dynamic Profiler for DPC++** is a profiling tool used to collect fine-grained device side data during DPC++ kernel execution. When used within the Intel&reg; VTune™ Profiler, some host side performance data is also collected. However, note that the VTune Profiler is not designed to collect detailed system level host-side data. 
 
 2. The **Intercept Layer for OpenCL\*** is a profiling tool used to obtain detailed system-level information. 
 
-This tutorial introduces the Intel® FPGA Dynamic Profiler for DPC++. To learn more about the Intercept Layer, refer to the FPGA tutorial "[Using the OpenCL Intercept Layer to Profile Designs running on the FPGA](https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials/Tools/system_profiling)".
+This tutorial introduces the Intel&reg; FPGA Dynamic Profiler for DPC++. To learn more about the Intercept Layer, refer to the FPGA tutorial "[Using the OpenCL Intercept Layer to Profile Designs running on the FPGA](https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials/Tools/system_profiling)".
 
-#### The Intel® FPGA Dynamic Profiler for DPC++
+#### The Intel&reg; FPGA Dynamic Profiler for DPC++
 
 Work-item execution stalls can occur at various stages of a kernel pipeline. Applications that use many pipes or memory accesses might frequently stall to enable the completion of memory transfers. The Dynamic Profiler collects various performance metrics such as stall, occupancy, idle, and bandwidth data at these points in the pipeline to make it easier to identify the memory or pipe operations, creating stalls. 
 
@@ -50,13 +50,13 @@ During the above program's compilation, the Dynamic Profiler adds performance co
 - how often the memory access point is unused (idle)
 - how much data gets written/read from memory at this access (bandwidth).
 
-Once the run completes, the data is stored in a `profile.json` file and can be displayed using the Intel® VTune™ Profiler.
+Once the run completes, the data is stored in a `profile.json` file and can be displayed using the Intel&reg; VTune™ Profiler.
 
 ### Using the FPGA Dynamic Profiler
 
 #### Enabling Dynamic Profiling During Compilation
 
-The Intel® FPGA Dynamic Profiler for DPC++ comes as part of the Intel® oneAPI Base Toolkit.
+The Intel&reg; FPGA Dynamic Profiler for DPC++ comes as part of the Intel&reg; oneAPI Base Toolkit.
 
 To instrument the kernel pipeline with performance counters, add the `-Xsprofile` flag to your FPGA hardware compile command. 
 
@@ -66,9 +66,9 @@ For this tutorial, the `-Xsprofile` flag has already been added to the cmake com
 
 There are two ways of obtaining data from a DPC++ program containing performance counters:
 
-1. Run the design in the Intel® VTune™ Profiler via the CPU/FPGA Interaction viewpoint.
+1. Run the design in the Intel&reg; VTune™ Profiler via the CPU/FPGA Interaction viewpoint.
   
-    Instructions on installing, configure and opening the Intel® VTune™ Profiler can be found in the [Intel® Vtune™ Profiler User Guide](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/installation.html). Further instructions on setting up the Dynamic Profiler via the CPU/FPGA Interaction View can be found in the [CPU/FPGA Interaction Analysis](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html) section of the Intel® VTune™ Profiler User Guide. To extract device performance counter data, please ensure the source for the FPGA profiling data is set to "AOCL Profiler".
+    Instructions on installing, configure and opening the Intel&reg; VTune™ Profiler can be found in the [Intel&reg; Vtune™ Profiler User Guide](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/installation.html). Further instructions on setting up the Dynamic Profiler via the CPU/FPGA Interaction View can be found in the [CPU/FPGA Interaction Analysis](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html) section of the Intel&reg; VTune™ Profiler User Guide. To extract device performance counter data, please ensure the source for the FPGA profiling data is set to "AOCL Profiler".
 
 2. Run the design from the command line using the Profiler Runtime Wrapper.
   The Profiler Runtime Wrapper comes as part of the DPC++ Compiler and can be run as follows:
@@ -77,13 +77,13 @@ There are two ways of obtaining data from a DPC++ program containing performance
    ```
    More details and options can be found in the "[Invoke the Profiler Runtime Wrapper to Obtain Profiling Data](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design/analyze-the-fpga-image/intel-fpga-dynamic-profiler-for-dpc/obtain-profiling-data-during-runtime/invoke-the-profiler-runtime-wrapper-to-obtain-profiling-data.html)" section of the oneAPI FPGA Optimization Guide. 
    
-    Upon execution completion, a `profile.json` file will have been generated. This file contains all of the data collected by the Dynamic Profiler. It can either be viewed manually or imported into the Intel® VTune™ Profiler, as explained in the [Import FPGA Data collected with Profiler Runtime Wrapper](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html#cpu-fpga-interaction-analysis-preview_GUID-31737EA6-79AB-41BB-8361-0DA583109015) section of the [CPU FPGA Interaction Analysis](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html) document. 
+    Upon execution completion, a `profile.json` file will have been generated. This file contains all of the data collected by the Dynamic Profiler. It can either be viewed manually or imported into the Intel&reg; VTune™ Profiler, as explained in the [Import FPGA Data collected with Profiler Runtime Wrapper](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html#cpu-fpga-interaction-analysis-preview_GUID-31737EA6-79AB-41BB-8361-0DA583109015) section of the [CPU FPGA Interaction Analysis](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html) document. 
 
 To run this tutorial example, refer to the "[Running the Sample](#running-the-sample)" section. 
 
 #### Viewing the Performance Data
 
-After running the executable and opening the `profile.json` file in the Intel® VTune™ Profiler (done automatically when run in the VTune Profiler), the VTune Profiler will display the performance results collected from the DPC++ kernel pipelines.
+After running the executable and opening the `profile.json` file in the Intel&reg; VTune™ Profiler (done automatically when run in the VTune Profiler), the VTune Profiler will display the performance results collected from the DPC++ kernel pipelines.
 
 The CPU/FPGA Interaction viewpoint is comprised of four windows:
 - The **Summary window** displays statistics on the overall application execution. It can be used to identify CPU time and processor utilization, and the execution time for DPC++ kernels. 
@@ -93,9 +93,9 @@ The CPU/FPGA Interaction viewpoint is comprised of four windows:
 
 ### Understanding the Performance Metrics 
 
-For this tutorial, the focus will be on a few specific types of device metrics obtained by the Dynamic Profiler. For explanation and more information on other device metrics obtained by the Dynamic Profiler and the Intel® VTune™ Profiler please review the [Intel® oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) and the [Intel® VTune™ Profiler User Guide](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top.html). 
+For this tutorial, the focus will be on a few specific types of device metrics obtained by the Dynamic Profiler. For explanation and more information on other device metrics obtained by the Dynamic Profiler and the Intel&reg; VTune™ Profiler please review the [Intel&reg; oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) and the [Intel&reg; VTune™ Profiler User Guide](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top.html). 
 
-For additional design scenario examples demonstrating how to use other performance data for optimization, refer to the [Profiler Analyses of Example DPC++ Design Scenarios](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design/analyze-the-fpga-image/intel-fpga-dynamic-profiler-for-dpc/profiler-analyses-of-example-dpc-design-scenarios.html) section of the [Intel® oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide). 
+For additional design scenario examples demonstrating how to use other performance data for optimization, refer to the [Profiler Analyses of Example DPC++ Design Scenarios](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design/analyze-the-fpga-image/intel-fpga-dynamic-profiler-for-dpc/profiler-analyses-of-example-dpc-design-scenarios.html) section of the [Intel&reg; oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide). 
 
 #### FPGA Metrics for this Tutorial
 
@@ -110,7 +110,7 @@ When analyzing performance data to optimize a design, the goal is to get as clos
 
 #### Analyzing Stall and Occupancy Metrics
 
-In this tutorial, there are two design scenarios defined in dynamic_profiler.cpp. One showing a naive pre-optimized design, and a second showing the same design optimized based on data collected through the Intel® FPGA Dynamic Profiler for DPC++.
+In this tutorial, there are two design scenarios defined in dynamic_profiler.cpp. One showing a naive pre-optimized design, and a second showing the same design optimized based on data collected through the Intel&reg; FPGA Dynamic Profiler for DPC++.
 
 ##### Pre-optimization Version #####
 
@@ -118,7 +118,7 @@ The first scenario contains two kernels:
 - a producer DPC++ kernel (ProducerBefore) that reads data from a buffer and writes it to a pipe (ProducerToConsumerBeforePipe), and 
 - a consumer DPC++ kernel (ConsumerBefore) that reads data from the pipe (ProducerToConsumerBeforePipe), performs two computation operations on the pipe data and then outputs the result to a buffer.
 
-After compiling and running dynamic_profiler.cpp with the Dynamic Profiler (see [Running the Sample](#running-the-sample) for more information), open the Bottom-Up window of the CPU/FPGA Interaction viewpoint in the Intel® VTune™ Profiler to view the overall kernel performance data. You should see that ProducerBefore's pipe write (on line 68) has a stall percentage of nearly 100%. This shows that the ProducerBefore kernel is writing so much data to the pipe that it is filling up and stalling. From this, it can be concluded that the consumer kernel is reading data more slowly than the producer is writing it, causing the bottleneck. This is likely because the consumer kernel is performing several compute heavy operations on the data from the pipe, causing a large time delay before the next datapoint can be read. Recalling the ideal kernel described earlier, this would indicate that this design is not optimized and can possibly be improved.
+After compiling and running dynamic_profiler.cpp with the Dynamic Profiler (see [Running the Sample](#running-the-sample) for more information), open the Bottom-Up window of the CPU/FPGA Interaction viewpoint in the Intel&reg; VTune™ Profiler to view the overall kernel performance data. You should see that ProducerBefore's pipe write (on line 68) has a stall percentage of nearly 100%. This shows that the ProducerBefore kernel is writing so much data to the pipe that it is filling up and stalling. From this, it can be concluded that the consumer kernel is reading data more slowly than the producer is writing it, causing the bottleneck. This is likely because the consumer kernel is performing several compute heavy operations on the data from the pipe, causing a large time delay before the next datapoint can be read. Recalling the ideal kernel described earlier, this would indicate that this design is not optimized and can possibly be improved.
 
 ##### Post-optimization Version #####
 
@@ -135,8 +135,8 @@ When looking at the performance data for the two "after optimization" kernels in
 ## Key Concepts
 
 - A summary of profiling tools available for performance optimization
-- About the Intel® FPGA Dynamic Profiler for DPC++
-- How to set up and use this tool within the Intel® VTune™ Profiler
+- About the Intel&reg; FPGA Dynamic Profiler for DPC++
+- How to set up and use this tool within the Intel&reg; VTune™ Profiler
 - How to use performance data to identify performance bottlenecks in a design's kernel pipeline
 
 ## License
@@ -152,7 +152,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -163,11 +163,11 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:  
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
@@ -186,15 +186,15 @@ Alternatively, if you wish to view the dynamic profiler data in the VTune Profil
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile this tutorial in the Eclipse* IDE (in Linux*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile this tutorial in the Eclipse* IDE (in Linux*). For instructions, refer to the following link: [Intel&reg; oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Running the Sample
 
 To collect dynamic profiling data, choose one of the following methods:
 
-**Within the Intel® VTune™ Profiler (Recommended)**
+**Within the Intel&reg; VTune™ Profiler (Recommended)**
 
-1. Open the Intel® VTune™ Profiler on a machine with installed and configured FPGA hardware.
+1. Open the Intel&reg; VTune™ Profiler on a machine with installed and configured FPGA hardware.
 
 2. Create a new VTune Profiler project.
 
@@ -214,7 +214,7 @@ To collect dynamic profiling data, choose one of the following methods:
      ``` 
     This target runs the executable with the Profiler Runtime Wrapper, creating a `profile.json` data file in the current directory.
 
-2. Open the Intel® VTune™ Profiler.
+2. Open the Intel&reg; VTune™ Profiler.
 
 3. Follow the instructions in [Import FPGA Data collected with Profiler Runtime Wrapper](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html#cpu-fpga-interaction-analysis-preview_GUID-31737EA6-79AB-41BB-8361-0DA583109015) to import the `profile.json` file. The VTune Profiler will open up the profiling results once the import completes.
 
