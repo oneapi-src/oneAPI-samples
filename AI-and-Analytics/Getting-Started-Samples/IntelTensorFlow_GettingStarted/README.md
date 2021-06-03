@@ -1,18 +1,18 @@
 ﻿# `TensorFlow HelloWorld` Sample
-TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of &reg; architecture and to extract maximum performance, the TensorFlow framework has been optimized using &reg; Deep Neural Networks (&reg; DNNL) primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow enables &reg; DNNL calls by default. 
+TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel@reg; architecture and to extract maximum performance, the TensorFlow framework has been optimized using Intel@reg; Deep Neural Networks (&reg; DNNL) primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow enables Intel@reg; DNNL calls by default. 
 
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 
-| Hardware                          | &reg; Xeon&reg; Scalable processor family or newer
-| Software                          | &reg; oneAPI AI Analytics Toolkit
+| Hardware                          | Intel@reg; Xeon&reg; Scalable processor family or newer
+| Software                          | Intel@reg; oneAPI AI Analytics Toolkit
 | What you will learn               | How to get started to use Intel optimization for TensorFlow*
 | Time to complete                  | 10 minutes
 
 ## Purpose
-This sample code shows how to get started with Intel Optimization for TensorFlow*. It implements an example neural network with one convolution layer and one ReLU layer. Developers can quickly build and train a Tensorflow neural network using a simple python code. Also, by controlling the build-in environment variable, the sample attempts to explicitly show how &reg; DNNL Primitives are called and their performance during the neural network training. 
+This sample code shows how to get started with Intel Optimization for TensorFlow*. It implements an example neural network with one convolution layer and one ReLU layer. Developers can quickly build and train a Tensorflow neural network using a simple python code. Also, by controlling the build-in environment variable, the sample attempts to explicitly show how Intel@reg; DNNL Primitives are called and their performance during the neural network training. 
 
-Intel-optimized Tensorflow is available as part of the &reg; AI Analytics Toolkit. For more information on the optimizations and performance data, see this blog post [TensorFlow* Optimizations on Modern &reg; Architecture](https://software.intel.com/content/www/us/en/develop/articles/tensorflow-optimizations-on-modern-intel-architecture.html).
+Intel-optimized Tensorflow is available as part of the Intel@reg; AI Analytics Toolkit. For more information on the optimizations and performance data, see this blog post [TensorFlow* Optimizations on Modern Intel@reg; Architecture](https://software.intel.com/content/www/us/en/develop/articles/tensorflow-optimizations-on-modern-intel-architecture.html).
 
 ## Key implementation details
 *Please* **export the environment variable `MKLDNN_VERBOSE=1`** *to display the deep learning primitives trace during execution.*

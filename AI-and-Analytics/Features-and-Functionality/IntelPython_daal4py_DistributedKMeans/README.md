@@ -4,19 +4,19 @@ This sample code shows how to train and predict with a distributed k-means model
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
-| Hardware                          | Intel Atom&reg; Processors; &reg; Core&trade; Processor Family; &reg; Xeon&reg; Processor Family; &reg; Xeon&reg; Scalable Performance Processor Family
+| Hardware                          | Intel Atom&reg; Processors; Intel@reg; Core&trade; Processor Family; Intel@reg; Xeon&reg; Processor Family; Intel@reg; Xeon&reg; Scalable Performance Processor Family
 | Software                          | oneDAL Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
 | What you will learn               | distributed oneDAL K-Means programming model for Intel CPU
 | Time to complete                  | 5 minutes
 
 ## Purpose
 
-daal4py is a simplified API to &reg; oneDAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users. Built to help provide an abstraction to &reg; oneDAL for direct usage or integration into one's own framework.
+daal4py is a simplified API to Intel@reg; oneDAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users. Built to help provide an abstraction to Intel@reg; oneDAL for direct usage or integration into one's own framework.
 
 In this sample, you will run a distributed K-Means model with oneDAL daal4py library memory objects. You will also learn how to train a model and save the information to a file.
   
 ## Key Implementation Details 
-This distributed K-means sample code is implemented for CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the &reg; Distribution for Python as part of the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). 
+This distributed K-means sample code is implemented for CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel@reg; Distribution for Python as part of the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). 
  
 ## License  
 Code samples are licensed under the MIT license. See
@@ -29,7 +29,7 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
 
 ## Building daal4py for CPU
 
-oneAPI Data Analytics Library is ready for use once you finish the &reg; oneAPI AI Analytics Toolkit installation and have run the post installation script.
+oneAPI Data Analytics Library is ready for use once you finish the Intel@reg; oneAPI AI Analytics Toolkit installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -46,7 +46,7 @@ source activate base
 
 ### Activate conda environment Without Root Access (Optional)
 
-By default, the &reg; oneAPI AI Analytics toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel@reg; oneAPI AI Analytics toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### On a Linux* System
 ```
