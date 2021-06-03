@@ -12,7 +12,7 @@ custom types of classes in a DPC++ program.
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04, Windows* 10 
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel® oneAPI DPC++/C++ Compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | Using custom type classes and offloads complex number computations to GPU using DPC++
 | Time to complete                  | 15 minutes  
   
