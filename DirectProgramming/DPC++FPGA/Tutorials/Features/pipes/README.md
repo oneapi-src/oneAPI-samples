@@ -9,7 +9,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel&reg;reg; Programmable Acceleration Card (PAC) with Intel A&reg;ria&reg; 10 GX FPGA <b&reg;> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with I&reg;tel Stratix&reg; 1&reg; SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <&reg;r> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04* 
-| Software                          | Intel&reg;reg; oneAPI DPC++ Compiler <br> I&reg;tel&reg; FPGA Add-On for oneAPI Base Toolkit 
+| Software                          | Intel&reg;reg; oneAPI DPC++ Compiler <br> I&reg;tel&reg; FPGA Add-On for Intel@reg; oneAPI Base Toolkitase Toolkit 
 | What you will learn               | The basics of the of DPC++ pipes extension for FPGA<br> How to declare and use pipes in a DPC++ program
 | Time to complete                  | 15 minutes
 

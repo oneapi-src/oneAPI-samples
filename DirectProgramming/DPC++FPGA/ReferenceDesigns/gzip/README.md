@@ -11,7 +11,7 @@ Additional reference material specific to this GZIP implementation is provided i
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA; <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel&reg; Stratix&reg; 10 SX)
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit 
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for Intel@reg; oneAPI Base Toolkit 
 | What you will learn               | How to implement a high-performance multi-engine compression algorithm on FPGA
 | Time to complete                  | 1 hr (not including compile time)
  
