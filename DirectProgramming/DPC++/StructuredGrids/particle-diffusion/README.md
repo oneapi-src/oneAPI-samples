@@ -1,5 +1,5 @@
 ﻿# `Water Molecule Diffusion` Sample
-Motionsim: Intel® oneAPI DPC++ Library basics using a Monte Carlo Simulation
+Motionsim: Intel&reg; oneAPI DPC++ Library basics using a Monte Carlo Simulation
 
 This code sample implements a simple example of a Monte Carlo simulation of water molecules' diffusion in tissue. This kind of computational experiment can be used to simulate the acquisition of a diffusion signal for dMRI.
 
@@ -17,7 +17,7 @@ For more information and details: https://software.intel.com/en-us/articles/vect
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; Windows* 10 or Windows* Server 2017
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel® oneAPI DPC++/C++ Compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | How to offload the computation to GPU using the Intel Data Parallel C++ Compiler
 | Time to complete                  | 20 minutes
 
@@ -41,7 +41,7 @@ SYCL implementation explained.
 SYCL implementation is explained in further detail in the source code.
 
 ## How Other Tools (Intel Libraries or Intel Tools) are used
-Intel® Math Kernel Library (MKL) is used for random number generation on the CPU and device. Precise generators are used within this library to ensure that the numbers generated on the CPU and device are relatively equivalent (relative accuracy 10E-07).  
+Intel&reg; Math Kernel Library (MKL) is used for random number generation on the CPU and device. Precise generators are used within this library to ensure that the numbers generated on the CPU and device are relatively equivalent (relative accuracy 10E-07).  
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -56,7 +56,7 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 development system".  
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI 
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI 
 Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ## Build and run

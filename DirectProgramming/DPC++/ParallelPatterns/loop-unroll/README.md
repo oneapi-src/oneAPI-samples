@@ -7,7 +7,7 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 |:---                               |:---
 | OS	                | Linux* Ubuntu* 18.04, 
 | Hardware	            | Skylake with GEN9 or newer, 
-| Software	            | Intel® oneAPI DPC++ Compiler
+| Software	            | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn   | how to perform reduction with oneAPI on cpu and gpu
 | Time to complete      | 30 min 
 
@@ -42,7 +42,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 
 ## Building the `loop-unroll` Program for CPU and GPU
@@ -51,7 +51,7 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 
 If running a sample in the Intel DevCloud, remember that you must
 specify the compute node (CPU, GPU, FPGA) and whether to run in
-batch or interactive mode. For more information, see the Intel® oneAPI
+batch or interactive mode. For more information, see the Intel&reg; oneAPI
 Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 

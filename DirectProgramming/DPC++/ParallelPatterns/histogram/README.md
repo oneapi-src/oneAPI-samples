@@ -8,7 +8,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |---------------------------------|------------------------------------------------------------------------------------------------------|
 | OS                              | Linux Ubuntu 18.04                                                                                   |
 | Hardware                        | Skylake with GEN9 or newer, Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA|
-| Software                        | Intel® oneAPI DPC++ Compiler                                                                         |
+| Software                        | Intel&reg; oneAPI DPC++ Compiler                                                                         |
 
 
 ## Purpose
@@ -16,7 +16,7 @@ This sample creates both dense and sparse histograms using dpstd APIs, on an inp
 
 For the dense histogram all the bins(including the zero-size bins) are stored, whereas for the sparse algorithm only non-zero sized bins are stored.
 
-The computations are performed using Intel® oneAPI DPC++ Library (oneDPL).
+The computations are performed using Intel&reg; oneAPI DPC++ Library (oneDPL).
 
 ## Key Implementation Details
 The basic DPC++ implementation explained in the code includes accessor,

@@ -8,7 +8,7 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel® oneAPI DPC++/C++ Compiler;
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler;
 | What you will learn               | How to parallel process image data using DPC++ for producing a Discrete Cosine Transform
 | Time to complete                  | 15 minutes
 
@@ -57,7 +57,7 @@ Note: if you have not already done so, set up your CLI environment by sourcing  
 * Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel&reg; oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
 Perform the following steps:
