@@ -1,6 +1,6 @@
 ﻿# `Prefix Sum` Sample
 
-This code sample demonstrates the implementation of parallel prefix sum using Intel Data Parallel C++ to
+This code sample demonstrates the implementation of parallel prefix sum using Intel$reg; oneAPI Data Parallel C++ (DPC++) to
 offload the computation to a GPU. In this implementation, a random sequence of 2**n elements is given
 (n is a positive number) as input. The algorithm computes the prefix sum in parallel. The result sequence is
 in ascending order.
@@ -11,8 +11,8 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler; Intel C++ Compiler
-| What you will learn               | Implement bitonic sort using Intel DPC++ compiler
+| Software                          | Intel&reg; oneAPI DPC++ Compiler; Intel&reg; C++ Compiler
+| What you will learn               | Implement bitonic sort using Intel oneAPI DPC++ Compiler
 | Time to complete                  | 15 minutes
 
 

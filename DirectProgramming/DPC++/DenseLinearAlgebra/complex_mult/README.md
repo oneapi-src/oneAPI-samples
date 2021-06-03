@@ -10,10 +10,10 @@ custom types of classes in a DPC++ program.
  
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux Ubuntu 18.04, Windows 10 
+| OS                                | Linux Ubuntu 18.04, Windows* 10 
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
-| What you will learn               | Using custom type classes and offloads complex number computations to GPU using Intel DPC++
+| What you will learn               | Using custom type classes and offloads complex number computations to GPU using DPC++
 | Time to complete                  | 15 minutes  
   
 
@@ -28,8 +28,7 @@ success message is displayed.
 This sample uses buffers to manage memory. For more information regarding
 different memory management options, refer to the vector_add sample.
 
-complex multiplication includes C++ implementations of both Data Parallel 
-(DPC++). 
+Complex multiplication includes both C++ and DPC++ implementations.
 
 This program shows how to create a custom device selector and to target 
 GPU or CPU of a specific vendor. The program also shows how to pass in a 

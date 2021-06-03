@@ -8,13 +8,13 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10 
-| Hardware                          | Skylake with GEN9 or newer, Intel(R) Programmable Acceleration Card with Intel(R) Arria(R) 10 GX FPGA
+| Hardware                          | Skylake with GEN9 or newer, Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 
 
 
 ## Purpose
-The `simple-add-dpc++` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators.
+The `simple-add-dpc++` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel&reg; CPU and accelerators.
 
 In this sample, you can learn how to use the most basic code in C++ language that offloads computations to a GPU using the DPC++ language. This includes using Unified Shared Memory (USM) and buffers. USM requires an explicit wait for the asynchronous kernel's computation to complete.  Buffers, at the time they go out of scope, bring main memory in sync with device memory implicitly; the explicit wait on the event is not required as a result. This sample provides examples of both implementations for simple side by side review.
 
@@ -86,7 +86,7 @@ Perform the following steps:
 7. Select **Debug** > **Start Without Debugging** menu option to run the program.
 
 
-## Building the `simple-add` Program for Intel(R) FPGA
+## Building the `simple-add` Program for Intel&reg; FPGA
 
 ### On a Linux* System
 
