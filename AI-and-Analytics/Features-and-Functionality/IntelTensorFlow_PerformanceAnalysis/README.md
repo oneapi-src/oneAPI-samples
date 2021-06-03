@@ -4,13 +4,13 @@ This sample contains two Jupyter notebooks from Intel Model Zoo to help users an
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 
-| Hardware                          | Intel® Xeon® Scalable processor family or newer
-| Software                          | Intel® oneAPI AI Analytics Toolkit
+| Hardware                          | &reg; Xeon&reg; Scalable processor family or newer
+| Software                          | &reg; oneAPI AI Analytics Toolkit
 | What you will learn               | Analyze the performance benefit from using Intel Optimizations for Tensorflow*
 | Time to complete                  | 40 minutes
 
 ## Purpose
-[Intel Model Zoo](https://github.com/IntelAI/models) contains links to pre-trained models, sample scripts, best practices, and step-by-step tutorials for many popular open-source machine learning models optimized by Intel to run on Intel® Xeon® Scalable processors.
+[Intel Model Zoo](https://github.com/IntelAI/models) contains links to pre-trained models, sample scripts, best practices, and step-by-step tutorials for many popular open-source machine learning models optimized by Intel to run on &reg; Xeon&reg; Scalable processors.
 
 This sample helps demonstrate AI workloads and deep learning models optimized by Intel and validated to run on Intel hardware. Using the Tensorflow Timeline, you can analyze the performance benefits from Intel Optimizations for Tensorflow* and oneDNN among different layers to efficiently execute, train, and deploy Intel-optimized models
 

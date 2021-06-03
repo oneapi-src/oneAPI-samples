@@ -1,11 +1,11 @@
-# `Intel® Python XGBoost daal4py Prediction Sample`
-This sample code illustrates how to analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction than XGBoost prediction. It demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+# `&reg; Python XGBoost daal4py Prediction Sample`
+This sample code illustrates how to analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction than XGBoost prediction. It demonstrates how to use software products that can be found in the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
-| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
-| Software                          | XGBoost, Intel® oneAPI AI Analytics Toolkit
+| Hardware                          | Intel Atom&reg; Processors; &reg; Core&trade; Processor Family; &reg; Xeon&reg; Processor Family; &reg; Xeon&reg; Scalable Performance Processor Family
+| Software                          | XGBoost, &reg; oneAPI AI Analytics Toolkit
 | What you will learn               | How to analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction than XGBoost prediction
 | Time to complete                  | 5-8 minutes
 
@@ -18,7 +18,7 @@ This sample code illustrates how to analyze the performance benefit of minimal c
 In this sample, you will run an XGBoost model with daal4py prediction and XGBoost API prediction to see the performance benefit of daal4py gradient boosting prediction. You will also learn how to port a pre-trained XGBoost model to daal4py prediction.
   
 ## Key Implementation Details 
-This sample code is implemented for CPU using the Python language. The example assumes you have XGboost and daal4py installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).  
+This sample code is implemented for CPU using the Python language. The example assumes you have XGboost and daal4py installed inside a conda environment, similar to what is delivered with the installation of the &reg; Distribution for Python as part of the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).  
  
 ## License  
 Code samples are licensed under the MIT license. See
@@ -28,7 +28,7 @@ Third-party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building XGBoost for CPU
 
-XGBoost* is ready for use once you finish the Intel® oneAPI AI Analytics Toolkit installation and have run the post installation script.
+XGBoost* is ready for use once you finish the &reg; oneAPI AI Analytics Toolkit installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -46,7 +46,7 @@ source activate base
 
 ### Activate conda environment Without Root Access (Optional)
 
-By default, the Intel® oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the &reg; oneAPI AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### On a Linux* System
 ```
