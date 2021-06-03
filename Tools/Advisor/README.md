@@ -1,6 +1,6 @@
 # Code Samples of Intel&reg; Advisor
 
-| Code sample name                          | Supported Intel(r) Architecture(s) | Description
+| Code sample name                          | Supported Intel&reg; Architecture(s) | Description
 |:---                                       |:---                                |:---
 | matrix_multiply                           | GPU, CPU                     | Simple matrix multiplication program
 
