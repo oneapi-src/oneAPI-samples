@@ -14,7 +14,7 @@ be stable.
 |-----------------------|-------------------------------------------|---------------|
 |__../AI-and-Analytics/End-to-end-Workloads/__|
 |../Census |GPU, CPU| This sample code demonstrates how to seamlessly run the end-to-end census workload using the AI Analytics toolkit without any external dependencies. |
-|../LidarObjectDetection-PointPillars |GPU, CPU | How to combine Intel&reg; Distribution of OpenVINO™ toolkit and Intel&reg; oneAPI to offload the computation of a complex workload to one of Intel's supported accelerators|
+|../LidarObjectDetection-PointPillars |GPU, CPU | How to combine Intel&reg; Distribution of OpenVINO&trade; toolkit and Intel&reg; oneAPI to offload the computation of a complex workload to one of Intel's supported accelerators|
 |__../AI-and-Analytics/Features-and-Functionality/__|
 |../IntelPyTorch_Extensions_AutoMixedPrecision |CPU |You will learn how to download, compile, and get started with Intel Extension for PyTorch from this sample code.|
 |../IntelPyTorch_TorchCCL_Multinode_Training |CPU | How to perform distributed training with oneCCL in PyTorch |
