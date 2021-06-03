@@ -137,4 +137,3 @@ Here is our cluster assignments for first 5 datapoints:
 
 ```
 
-
