@@ -49,7 +49,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 ## Building the `ISO3DFD` Program for GPU
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and run in batch or interactive mode. For more information, see the [Intel&reg; oneAPI Base Toolkit Get Started Guide] (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) and [Intel&reg; oneAPI HPC Toolkit Get Started Guide] (https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide] (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) and [Intel® oneAPI HPC Toolkit Get Started Guide] (https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
 
 ### On a Linux* System
 Perform the following steps:

@@ -14,18 +14,18 @@ serial version and the version that was compiled with the auto-vectorizer.
 
 
 ## Purpose
-The Intel&reg; Compiler has an auto-vectorizer that detects operations in the application 
+The Intel® Compiler has an auto-vectorizer that detects operations in the application 
 that can be done in parallel and converts sequential operations 
 to parallel operations by using the 
 Single Instruction Multiple Data (SIMD) instruction set.
 
-For the Intel&reg; compiler, vectorization is the unrolling of a loop combined with the generation of packed SIMD instructions. Because the packed instructions operate on more than one data element simultaneously, the loop can execute more efficiently. It is sometimes referred to as auto-vectorization to emphasize that the compiler automatically identifies and optimizes suitable loops on its own.
+For the Intel® compiler, vectorization is the unrolling of a loop combined with the generation of packed SIMD instructions. Because the packed instructions operate on more than one data element simultaneously, the loop can execute more efficiently. It is sometimes referred to as auto-vectorization to emphasize that the compiler automatically identifies and optimizes suitable loops on its own.
 
-Intel&reg; Advisor can assist with vectorization and show optimization report messages with your source code. See [Intel Advisor](https://software.intel.com/content/www/us/en/develop/tools/advisor.html)
+Intel® Advisor can assist with vectorization and show optimization report messages with your source code. See [Intel Advisor](https://software.intel.com/content/www/us/en/develop/tools/advisor.html)
 
 Vectorization may call library routines that can result in additional performance gain on Intel microprocessors than non-Intel microprocessors. The vectorization can also be affected by specific options, such as m or x.
 
-Vectorization is enabled with the compiler at optimization levels of O2 (default level) and higher for both Intel&reg; microprocessors and non-Intel&reg; microprocessors. Many loops are vectorized automatically, but in cases where this doesn't happen, you may be able to vectorize loops by making simple code modifications. In this sample, you will:
+Vectorization is enabled with the compiler at optimization levels of O2 (default level) and higher for both Intel® microprocessors and non-Intel® microprocessors. Many loops are vectorized automatically, but in cases where this doesn't happen, you may be able to vectorize loops by making simple code modifications. In this sample, you will:
 
 1. establish a performance baseline
 
@@ -157,7 +157,7 @@ The vectorization report matvec.optrpt indicates that the loop at line 33 in mat
 Note: Your line and column numbers may be different.
 
 For more information on the **qopt-report** and **qopt-report-phase** compiler options, see the 
-[Compiler Options section](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top/compiler-reference/compiler-options.html) in the [Intel&reg; Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top.html)
+[Compiler Options section](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top/compiler-reference/compiler-options.html) in the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top.html)
 
 
 ### Step 3 Improving Performance by Aligning Data
@@ -176,7 +176,7 @@ To derive the maximum benefit from this alignment, we also need to tell the vect
     
 Note If you use **!dir$ vector aligned**, you must be sure that all the arrays or subarrays in the loop are 16-byte aligned. Otherwise, you may get a runtime error. Aligning data may still give a performance benefit even if **!dir$ vector aligned** is not used. See the code under the ALIGNED macro in **matvec.f90**
 
-If your compilation targets the Intel&reg; AVX-512 instruction set, you should try to align data on a 64-byte boundary. This may result in improved performance. In this case, **!dir$ vector aligned** advises the compiler that the data is 64-byte aligned.
+If your compilation targets the Intel® AVX-512 instruction set, you should try to align data on a 64-byte boundary. This may result in improved performance. In this case, **!dir$ vector aligned** advises the compiler that the data is 64-byte aligned.
 
 Recompile the program after adding the ALIGNED macro to ensure consistently aligned data:
 

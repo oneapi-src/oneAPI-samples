@@ -1,6 +1,6 @@
 # `OpenMP Primes` Samples
 This sample is designed to illustrate how to use 
-the OpenMP* API with the Intel&reg; Fortran Compiler.
+the OpenMP* API with the Intel® Fortran Compiler.
 
 This program finds all primes in the first 40,000,000 integers, 
 the number of 4n+1 primes, and the number of 4n-1 primes in the same range. 
@@ -39,7 +39,7 @@ The option -qopenmp enables compiler recognition of OpenMP* directives.
 This option can also be omitted, in which case the generated executable will be a serial program.
 
 The option -fpp enables the Fortran preprocessor.
-Read the Intel&reg; Fortran Compiler Documentation for more information about these options.
+Read the Intel® Fortran Compiler Documentation for more information about these options.
 
 ## Key Implementation Details
 The Intel&reg; oneAPI Intel Fortran Compiler includes all libraries and headers necessary to compile and run OpenMP* enabled Fortran applications. Users simply use the -qopenmp compiler option to compile and link their OpenMP enabled applications. 

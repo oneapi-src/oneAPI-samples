@@ -16,20 +16,20 @@ The source for this program also demonstrates recommended Fortran coding practic
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | macOS* with Xcode* installed 
-| Software                          | Intel&reg; oneAPI Intel&reg; Fortran Compiler
-| What you will learn               | Optimization using the Intel&reg; Fortran compiler
+| Software                          | Intel&reg; oneAPI Intel® Fortran Compiler
+| What you will learn               | Optimization using the Intel® Fortran compiler
 | Time to complete                  | 15 minutes
 
 ## Purpose
 
-The Intel&reg; Fortran Compiler can optimize applications for performance.  The primary compiler option is -O followed by a numeric optimization "level" from 0 requesting no optimization to 3, which requests all compiler optimizations for the application. The -O optimization levels are:
+The Intel® Fortran Compiler can optimize applications for performance.  The primary compiler option is -O followed by a numeric optimization "level" from 0 requesting no optimization to 3, which requests all compiler optimizations for the application. The -O optimization levels are:
 
    * O0 - No optimizations
    * O1 - Enables optimizations for speed and disables some optimizations that increase code size and affect speed.
    * O2 - Enables optimizations for speed. This is the generally recommended optimization level. Vectorization is enabled at O2 and higher levels.
    * O3 - Performs O2 optimizations and enables more aggressive loop transformations such as Fusion, Block-Unroll-and-Jam, and collapsing IF statements.
 
-Read the [Intel&reg; Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html) for more information about these options.
+Read the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html) for more information about these options.
 
 Some of these compiler optimizations use features and options that can 
 restrict program execution to specific architectures.  
@@ -151,13 +151,13 @@ To set optimization level uncomment FC = ifort -O3 like this
 ## What did we learn?
 There are big jumps going from O0 to O1, and from O1 to O2. 
 But we see minimal performance gain going from O2 to O3.
-This does vary by application but generally with Intel&reg; Compilers 
+This does vary by application but generally with Intel® Compilers 
 O2 has the most optimizations.  Sometimes O3 can help, of course,
 but generally, O2 is sufficient for most applications. 
 
 ### Further Exploration
-The Intel&reg; Fortran Compiler has many options for optimization. 
-If you have a genuine Intel&reg; Architecture processor, try these additional options
+The Intel® Fortran Compiler has many options for optimization. 
+If you have a genuine Intel® Architecture processor, try these additional options
 
    edit 'Makefile' using your favorite editor. To set additional optimizations uncomment FC = ifort -O3 and add additional options shown:
    

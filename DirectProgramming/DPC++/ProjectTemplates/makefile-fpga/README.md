@@ -31,7 +31,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
 The following instructions assume you are in the project's root folder.

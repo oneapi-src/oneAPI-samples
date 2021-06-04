@@ -19,7 +19,7 @@ directly to the repository, please do the following:
 ## Issues
 
 GitHub Issues tracks sample development issues, bugs, and feature requests.
-For usage, installation, or other requests for help, please use the [Intel&reg; oneAPI Forums](https://software.intel.com/en-us/forums/intel-oneapi-forums) instead.
+For usage, installation, or other requests for help, please use the [Intel® oneAPI Forums](https://software.intel.com/en-us/forums/intel-oneapi-forums) instead.
 
 When reporting a bug, please provide the following information, where applicable:
 
