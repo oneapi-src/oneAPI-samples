@@ -1,5 +1,5 @@
 ﻿# `Intel Modin Getting Started` Sample
-This Getting Started sample code show how to use distributed Pandas using the Modin package. It demonstrates how to use software products that can be found in the [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+This Getting Started sample code show how to use distributed Pandas using the Modin package. It demonstrates how to use software products that can be found in the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -15,7 +15,7 @@ Modin uses Ray or Dask to provide an effortless way to speed up your Pandas note
 In this sample, you will run Modin-accelerated Pandas functions and note the performance gain when compared to "stock" (aka standard) Pandas functions.
 
 ## Key Implementation Details
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Pandas and Modin installed inside a conda environment, similar to what is directed by the [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html). 
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Pandas and Modin installed inside a conda environment, similar to what is directed by the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html). 
 
 ## License
 
