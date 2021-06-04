@@ -271,7 +271,7 @@ int main(int argc, char** argv) {
     // Instantiate multiple versions of the kernel
     // The II achieved by the compiler can differ between FPGA architectures
     //
-    // On Arria 10, we are able to achieve an II of 1 for versions of the
+    // On Arria 10, we are able to achieve an II of 1 for all versions of the
     // kernel.
     // Version 2 of the kernel can achieve the highest Fmax with 
     // an II of 1 (and therefore has the highest throughput).
