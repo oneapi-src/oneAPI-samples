@@ -18,7 +18,7 @@ This sample code illustrates how to analyze the performance benefit of minimal c
 In this sample, you will run an XGBoost model with daal4py prediction and XGBoost API prediction to see the performance benefit of daal4py gradient boosting prediction. You will also learn how to port a pre-trained XGBoost model to daal4py prediction.
   
 ## Key Implementation Details 
-This sample code is implemented for CPU using the Python language. The example assumes you have XGboost and daal4py installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python as part of the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).  
+This sample code is implemented for CPU using the Python language. The example assumes you have XGboost and daal4py installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python as part of the [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).  
  
 ## License  
 Code samples are licensed under the MIT license. See
