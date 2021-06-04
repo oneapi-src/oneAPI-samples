@@ -30,9 +30,9 @@ be stable.
 |../CombinationalLogic/Mandelbrot   	|CPU  	|Demonstrates how to accelerate   Mandelbrot performance with SIMD and parallelization using OpenMP*.   	|
 |../CompilerInfrastructure/Intrinsics    	|CPU  	|Shows how to utilize the   intrinsics supported by C++ compiler in a variety of applications.	|
 |../GraphTraversal/Mergesort   	|CPU  	|Shows how to accelerate scalar   merge sort program using OpenMP tasks   	|
-|../Jupyter/OpenMP-offload-training | CPU |How to offload the computation to GPU using OpenMP with the Intel® C++ Compiler 
+|../Jupyter/OpenMP-offload-training | CPU |How to offload the computation to GPU using OpenMP with the Intel&reg; C++ Compiler 
 |../ParallelPatterns/openmp_reduction | GPU, CPU |How to run openMP on cpu as well as GPU offload
-|../StructuredGrids/iso3dfd_omp_offload | CPU | How to offload the computation to GPU using Intel® oneAPI DPC++/C++ Compiler
+|../StructuredGrids/iso3dfd_omp_offload | CPU | How to offload the computation to GPU using Intel&reg; oneAPI DPC++/C++ Compiler
 |__DirectPrograming/DPC++/__ |
 |../CombinationalLogic/mandelbrot 	|GPU, CPU  	|Example of a fractal in mathematics 	|
 |../CombinationalLogic/sepia-filter    	|GPU, CPU  	|Color image conversion using 1D range    	|
@@ -40,7 +40,7 @@ be stable.
 |../DenseLinearAlgebra/matrix_mul 	|GPU, CPU  	|Simple program that multiplies two large matrices in parallel using DPC++, OpenMP and MKL  	|
 |../DenseLinearAlgebra/simple-add 	|FPGA, GPU, CPU 	|Simple Add program	|
 |../DenseLinearAlgebra/vector-add 	|FPGA, GPU, CPU 	|Simple Vector add program   	|
-|../GraphAlgorithms/all-pairs-shortest-paths | GPU, CPU | The All Pairs Shortest Paths sample demonstrates the following using the Intel® oneAPI DPC++/C++ Compiler|
+|../GraphAlgorithms/all-pairs-shortest-paths | GPU, CPU | The All Pairs Shortest Paths sample demonstrates the following using the Intel&reg; oneAPI DPC++/C++ Compiler|
 |../GraphTraversal/bitonic-sort   	|GPU, CPU  	|Implementation of bitonic sort   using DPC++.   	|
 |../Jupyter/oneapi-essentials-training   |GPU, CPU| Collection of Notebooks used ine the oneAPI Essentials training course|
 |../MapReduce/MonteCarloPi   |GPU, CPU|How to utilize the DPC++ reduction extension|
@@ -99,19 +99,19 @@ be stable.
 |../fast_recompile                |FPGA |Tutorial introducing host-only recompile to save DPC++ development time on FPGA |
 |../fpga_compile                  |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
 |__DirectPrograming/DPC++FPGA/Tutorials/tools/__ |
-|../dynamic_profiler                       |FPGA |Tutorial showing how to use the Intel® FPGA Dynamic Profiler for DPC++ for detailed FPGA kernel profiling|
+|../dynamic_profiler                       |FPGA |Tutorial showing how to use the Intel&reg; FPGA Dynamic Profiler for DPC++ for detailed FPGA kernel profiling|
 |../system_profiling                       |FPGA |Tutorial showing how to use the OpenCL Intercept Layer to profile DPC++ designs running on FPGA at the system level |
 |../use_library                            |FPGA |Tutorial showing how to use cross-language libraries in DPC++ on FPGA |
 |__DirectProgramming/Fortran/__ |
 |../CombinationalLogic/openmp-primes/ | GPU, CPU ||
-|../DenseLinearAlgebra/optimize-integral/ | GPU, CPU | Optimization using the Intel® Fortran compiler |
+|../DenseLinearAlgebra/optimize-integral/ | GPU, CPU | Optimization using the Intel&reg; Fortran compiler |
 |../DenseLinearAlgebra/vectorize-vecmatmult/ | GPU, CPU | Vectorization using Intel Fortran compiler |
 |../Jupyter/OpenMP-offload-training/ | GPU, CPU | Collection of Jupyter notebooks that were developed to teach OpenMP Offload.|
 |__Libraries/oneCCL/__ |
-|../tutorials/oneCCL_Getting_Started |GPU, CPU |port an Intel® oneAPI Collective Communications Library (oneCCL) sample from CPU to GPU|
+|../tutorials/oneCCL_Getting_Started |GPU, CPU |port an Intel&reg; oneAPI Collective Communications Library (oneCCL) sample from CPU to GPU|
 |__Libraries/oneDAL/__ |
 |../IntelPython_daal4py_Distributed_Kmeans/|CPU| shows how to train and predict with a distributed k-means model using the python API package daal4py for oneAPI Data Analytics Library.|
-|../IntelPython_daal4py_Distributed_LinearRegression  | CPU |daal4py is a simplified API to Intel® DAAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users|
+|../IntelPython_daal4py_Distributed_LinearRegression  | CPU |daal4py is a simplified API to Intel&reg; DAAL that allows for fast usage of the framework suited for Data Scientists or Machine Learning users|
 |../IntelPython_daal4py_Getting_Started | CPU |how how to do batch linear regression using the python API package daal4py from oneDAL.|
 |__Libraries/oneDNN/__ |
 |../dpcpp_interoperability | GPU, CPU| emonstrates programming for Intel&reg; Processor Graphics with SYCL extensions API in oneDNN |

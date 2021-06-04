@@ -72,7 +72,7 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU,
-FPGA) as well as whether to run in batch or interactive mode. For more information, see the Intel® oneAPI
+FPGA) as well as whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI
 Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
