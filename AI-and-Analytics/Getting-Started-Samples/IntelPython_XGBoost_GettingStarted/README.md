@@ -11,10 +11,10 @@ XGBoost* is a widely used gradient boosting library in the classical ML area. De
 
 ## Purpose
 In this code sample, you will learn how to use Intel optimized XGBoost published as part of Intel&reg; oneAPI AI Analytics Toolkit. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction. 
-It also demonstrates how to use software products that can be found in the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+It also demonstrates how to use software products that can be found in the [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
   
 ## Key Implementation Details 
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python as part of the [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). 
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python as part of the [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). 
 
 ## License  
 Code samples are licensed under the MIT license. See

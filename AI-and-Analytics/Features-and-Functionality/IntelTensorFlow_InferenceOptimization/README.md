@@ -6,7 +6,7 @@ analyze the model pb files before and after the inference optimizations.
 |:---                               |:---
 | OS                                | Ubuntu* 18.04 
 | Hardware                          | Intel&reg; Xeon&reg; Scalable processor family or newer
-| Software                          | [&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html)
+| Software                          | [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html)
 | What you will learn               | Optimize a pre-trained model for a better inference performance
 | Time to complete                  | 30 minutes
 
