@@ -22,21 +22,42 @@ This Hello World sample code is implemented for CPU using the Python language.
 ### Notes
  - The test dataset is inherited from `torch.utils.data.Dataset`.
  - The model is inherited from `torch.nn.Module`.
- - For the inference portion, `to_mkldnn()` function in `torch.utils.mkldnn` can accelerate performance by eliminating data reorders between operations, which are supported by Intel(R) DNNL.
+ - For the inference portion, `to_mkldnn()` function in `torch.utils.mkldnn` can accelerate performance by eliminating data reorders between operations, which are supported by Intel&reg; DNNL.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## How to Build and Run 
+## How to Build and Run
 ### Running Samples In DevCloud (Optional)
-If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
+
+<!---Include the next paragraph ONLY if the sample runs in batch mode-->
+### Run in Batch Mode
+This sample runs in batch mode, so you must have a script for batch processing. Once you have a script set up, refer to the [Tensorflow Hello World](https://github.com/oneapi-src/oneAPI-samples/blob/master/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted/README.md) instructions or the [PyTorch Hello World](https://github.com/oneapi-src/oneAPI-samples/blob/master/AI-and-Analytics/Getting-Started-Samples/IntelPyTorch_GettingStarted/README.md) instructions to run the sample.
+
+<!---Include the next paragraph ONLY if the sample DOES NOT RUN in batch mode-->
+### Run in Interactive Mode
+This sample runs in interactive mode. Follow the directions in the README.md for the sample you want to run. If the sample can be run in interactive mode, the sample will have directions on how to run the sample in a Jupyter Notebook. An example can be found in the [Intel&reg; Modin Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelModin_GettingStarted) sample.
+
+### Request a Compute Node
+In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.
+ This node information must be provided when submitting a job to run your sample in batch mode using the qsub command. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
+
+<!---Mark each compatible Node in BOLD-->
+| Node              | Command                                                 |
+| ----------------- | ------------------------------------------------------- |
+| GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
+| CPU               | qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh          |
+| FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
+| FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
+
+
 
 1. Pre-requirement
 
-    PyTorch is ready for use once you finish the Intel AI Analytics Toolkit installation and have run the post installation script. These steps apply to DevCloud as well.
+    PyTorch is ready for use once you finish the Intel&reg; AI Analytics Toolkit installation and have run the post installation script. These steps apply to DevCloud as well.
 
     You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 

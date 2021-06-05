@@ -90,7 +90,7 @@ Perform the following steps:
     - From the top menu, select Debug -> Start without Debugging.
 
 * Build the program using MSBuild
-      Open "Intel oneAPI command prompt for Microsoft Visual Studio 2019" and use your shell of choice to navigate to the DCT sample directory
+      Open the "Intel oneAPI command prompt for Microsoft Visual Studio 2019" and use your shell of choice to navigate to the DCT sample directory
       Run command - MSBuild DCT.sln /t:Rebuild /p:Configuration="Intel Release"     (or Configuration="Intel Performance Test" for performance tabulation)
 
       To run:

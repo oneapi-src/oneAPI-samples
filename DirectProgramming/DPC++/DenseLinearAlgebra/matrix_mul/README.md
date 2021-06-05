@@ -11,8 +11,8 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10*
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler, Intel&reg; oneAPI C++ Compiler Classic
-| What you will learn               | Offloads computations on 2D arrays to GPU using Intel DPC++ and OpenMP
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler, Intel&reg; C++ Compiler, Intel&reg; oneAPI C++ Compiler Classic
+| What you will learn               | Offloads computations on 2D arrays to GPU using DPC++ and OpenMP
 | Time to complete                  | 15 minutes  
 
 ### Purpose

@@ -92,10 +92,11 @@ Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or
 "Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
 1. Setup oneAPI development environment
 ```
-C:\Program Files (x86)\intel\oneapi\setvars.bat
+C:\Program Files (x86)\Intel\oneAPI\setvars.bat
 ```
 2. Build the program using `cmake`
 ```
+cd C:\Program Files (x86)\Intel\oneAPI\dnnl\latest\cpu_dpcpp_gpu_dpcpp\examples\
 mkdir build
 cd build
 cmake -G Ninja ..
@@ -107,7 +108,7 @@ The include folder is located at ${DNNLROOT}\include on your development system"
 
 3. Run the program
 ```
-bin\cnn-inference-f32-cpp.exe
+cnn-inference-f32-cpp.exe
 ```
 
 ### Include Files
