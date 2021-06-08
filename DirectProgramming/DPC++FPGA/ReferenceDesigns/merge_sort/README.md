@@ -134,23 +134,16 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
      ```
 
 ### Example of Output
-You should see the following output in the console:
-
-1. When running on the FPGA emulator
-    ```
-    Running sort 2 times for an input size of 64 using 8 4-way merge units
-    Streaming data from device memory
-    PASSED
-    ```
-
-2. When running on the FPGA device
-    ```
-    Running sort 17 times for an input size of 16777216 using 8 4-way merge units
-    Streaming data from device memory
-    Execution time: 69.9848 ms
-    Throughput: 228.621 Melements/s
-    PASSED
-    ```
+You should see output similar to the following in the console:
+```
+Running sort 17 times for an input size of 16777216 using 8 4-way merge units
+Streaming data from device memory
+Execution time: 69.9848 ms
+Throughput: 228.621 Melements/s
+PASSED
+```
+NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's true performance.
+    
 
 ## Additional Design Information
 ### Source Code Breakdown

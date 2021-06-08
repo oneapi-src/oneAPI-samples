@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 
   bool passed = true;
 #ifdef FPGA_EMULATOR
-  IndexT count = 64;
+  IndexT count = 128;
   int runs = 1;
 #else
   IndexT count = 1 << 24;
@@ -221,8 +221,7 @@ int main(int argc, char *argv[]) {
 
   // print the performance results
   if (passed) {
-    // don't print performance when running in the emulator
-#ifndef FPGA_EMULATOR
+    // NOTE: in emulation, these results are not meaningful
     double avg_time = std::accumulate(time.begin() + 1, time.end(), 0.0);
     avg_time /= (double)(runs - 1);
 
@@ -231,7 +230,6 @@ int main(int argc, char *argv[]) {
     std::cout << "Execution time: " << avg_time << " ms\n";
     std::cout << "Throughput: " << (input_count_m / (avg_time * 1e-3))
               << " Melements/s\n";
-#endif
 
     std::cout << "PASSED\n";
     return 0;
