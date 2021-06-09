@@ -1,0 +1,12 @@
+--- tf_savemodel_benchmark.py	2021-05-07 18:11:56.281513000 -0700
++++ tf_savemodel_benchmark_new.py	2021-04-23 21:02:59.121176000 -0700
+@@ -139,6 +139,9 @@
+         if PRINT_LATENCY:
+             print("Latency: {:.0f} ms".format(latency))
+         else:
++            import logging
++            logger = logging.getLogger('LOGGER_NAME')
++            logger.info('Throughput: %f', throughput)
+             print("Throughput: {:.2f} fps".format(throughput))
+ if __name__ == "__main__":
+     parser = argparse.ArgumentParser()

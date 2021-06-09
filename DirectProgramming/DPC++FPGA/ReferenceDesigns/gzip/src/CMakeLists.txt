@@ -20,7 +20,7 @@ set(REPORTS_TARGET ${TARGET_NAME}_report)
 set(REPORTS_TARGET_LL ${TARGET_NAME}_ll_report)
 
 set(HIGH_BW_SEED "-Xsseed=8")
-set(LL_SEED "-Xsseed=33")
+set(LL_SEED "-Xsseed=1")
 
 set (IS_A10 1)
 
@@ -55,7 +55,10 @@ if(SELECTED_BOARD STREQUAL ${A10_PAC_BOARD_NAME})
 elseif(SELECTED_BOARD STREQUAL ${S10_PAC_USM_BOARD_NAME})
     # S10 parameters
     set(NUM_ENGINES 2)
+    # For the High Bandwidth variant, specify 6 reordering units to improve global memory read bandwidth across 4 channels of DDR.
+    # For Low Latency variant this is not necessary since only one channel of global memory is used (host memory).
     set(NUM_REORDER "-Xsnum-reorder=6")
+    set(NUM_REORDER_LL "")
 else()
     message(FATAL_ERROR "Unknown board!")
 endif()
@@ -70,7 +73,7 @@ set(HARDWARE_COMPILE_FLAGS -MMD -fintelfpga -c -DNUM_ENGINES=${NUM_ENGINES})
 
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 separate_arguments(USER_HARDWARE_FLAGS)
-set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg="-nocaching" ${NUM_REORDER} -Xsboard=${SELECTED_BOARD} ${USER_HARDWARE_FLAGS} -DNUM_ENGINES=${NUM_ENGINES})
+set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg="-nocaching" -Xsboard=${SELECTED_BOARD} ${USER_HARDWARE_FLAGS} -DNUM_ENGINES=${NUM_ENGINES})
 set(FINAL_LINK_FLAGS -fintelfpga -DNUM_ENGINES=${NUM_ENGINES})
 
 
@@ -135,7 +138,7 @@ else()
 
     # High BW GZIP Variant
     add_custom_command(OUTPUT ${DEVICE_IMAGE_FPGA_OBJ}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} ${HIGH_BW_SEED} -fsycl-link=image ${DEVICE_FPGA_OBJ} -o ${DEVICE_IMAGE_FPGA_OBJ}
+                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} ${NUM_REORDER} ${HIGH_BW_SEED} -fsycl-link=image ${DEVICE_FPGA_OBJ} -o ${DEVICE_IMAGE_FPGA_OBJ}
                        DEPENDS ${DEVICE_FPGA_OBJ} ${OBJ_FILES})
 
     add_custom_command(OUTPUT ${FPGA_TARGET}
@@ -163,7 +166,7 @@ else()
       endforeach()
 
       add_custom_command(OUTPUT ${DEVICE_IMAGE_FPGA_OBJ_LL}
-                         COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} ${LL_SEED} -fsycl-link=image ${DEVICE_FPGA_OBJ_LL} -o ${DEVICE_IMAGE_FPGA_OBJ_LL}
+                         COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} ${NUM_REORDER_LL} ${LL_SEED} -fsycl-link=image ${DEVICE_FPGA_OBJ_LL} -o ${DEVICE_IMAGE_FPGA_OBJ_LL}
                          DEPENDS ${DEVICE_FPGA_OBJ_LL} ${OBJ_FILES_LL})
 
       add_custom_command(OUTPUT ${FPGA_TARGET_LL}
@@ -177,7 +180,7 @@ if(WIN32)
     add_custom_target(report DEPENDS ${REPORTS_TARGET} )
     separate_arguments(WIN_FLAGS WINDOWS_COMMAND)
     add_custom_command(OUTPUT ${REPORTS_TARGET}
-                      COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link  ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
+                      COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} ${NUM_REORDER} -fsycl-link  ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
                       DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE})
 
     # Low-Latency Variant
@@ -185,7 +188,7 @@ if(WIN32)
       add_custom_target(report_ll DEPENDS ${REPORTS_TARGET_LL} )
       separate_arguments(WIN_FLAGS WINDOWS_COMMAND)
       add_custom_command(OUTPUT ${REPORTS_TARGET_LL}
-                        COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link  ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE_LL} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET_LL}
+                        COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} ${NUM_REORDER_LL} -fsycl-link  ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE_LL} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET_LL}
                         DEPENDS ${DEVICE_SOURCE_FILE_LL} ${DEVICE_HEADER_FILE_LL})
     endif()
 else()
@@ -208,7 +211,7 @@ else()
     separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
 
     add_custom_command(OUTPUT ${REPORTS_TARGET}
-                      COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} -fsycl-link ${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
+                      COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} ${NUM_REORDER} -fsycl-link ${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
                       DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} kernels.hpp)
 
     # Low-Latency Variant
@@ -219,7 +222,7 @@ else()
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gzipkernel_ll.hpp gzipkernel_ll.hpp COPYONLY)
 
       add_custom_command(OUTPUT ${REPORTS_TARGET_LL}
-                        COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} -fsycl-link ${DEVICE_SOURCE_FILE_LL} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET_LL}
+                        COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} ${NUM_REORDER_LL} -fsycl-link ${DEVICE_SOURCE_FILE_LL} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET_LL}
                         DEPENDS ${DEVICE_SOURCE_FILE_LL} ${DEVICE_HEADER_FILE_LL} kernels.hpp)
     endif()
 endif()

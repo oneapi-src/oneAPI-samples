@@ -1,24 +1,24 @@
 ﻿# `dpc_reduce` Sample
 
-The `dpc_reduce` is a simple program that calculates pi.  This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators. This code sample also demonstrates how to incorporate Data Parallel PC++ into an MPI program.
+The `dpc_reduce` is a simple program that calculates pi.  This program is implemented using C++ and Intel&reg; oneAPI Data Parallel C++ (DPC++) for Intel&reg; CPU and accelerators. This code sample also demonstrates how to incorporate DPC++ into an MPI program.
 
 For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS	                | Linux* Ubuntu* 18.04, 
-| Hardware	            | Skylake with GEN9 or newer, 
-| Software	            | Intel® oneAPI DPC++ Compiler
-| What you will learn   | how to perform reduction with oneAPI on CPU and GPU
-| Time to complete      | 30 min 
+| OS	                            | Linux* Ubuntu* 18.04, 
+| Hardware	                    | Skylake with GEN9 or newer, 
+| Software	                    | Intel® oneAPI DPC++/C++ Compiler
+| What you will learn               | how to perform reduction with oneAPI on CPU and GPU
+| Time to complete                  | 30 min 
 
 ## Purpose
 This example demonstrates how to do reduction by using one of several methods:
 - the CPU in serial mode
 - the CPU in parallel mode (using TBB)
 - the GPU using direct DPC++ coding
-- the GPU using multiple steps with DPC++ Library algorithms transform and reduce, 
-- Finally, using the DPC++ Library transform_reduce algorithm.  
+- the GPU using multiple steps with Intel&reg; oneAPI DPC++ Library algorithms transform and reduce, 
+- Finally, using the oneAPI DPC++ Library transform_reduce algorithm.  
 
 All these different modes use a simple calculation for Pi.   It is a well known 
 mathematical formula that if you integrate from 0 to 1 over the function, 
@@ -28,13 +28,12 @@ by summing up the area of a large number of rectangles over this same range.
 Each of the different function calculates pi by breaking the range into many 
 tiny rectangles and then summing up the results. 
 
-The parallel computations are performed using oneTBB and oneAPI DPC++ library 
-(oneDPL).
+The parallel computations are performed using oneTBB and oneAPI DPC++ Library (oneDPL).
 
-This example also demonstrates how to incorporate Data Parallel PC++ into an MPI program.
-Using Data Parallel C++, the code sample runs multiple MPI ranks to distribute the
+This example also demonstrates how to incorporate Intel Data Parallel C++ into an MPI program.
+Using DPC++, the code sample runs multiple MPI ranks to distribute the
 calculation of the number Pi. Each rank offloads the computation to an accelerator
-(GPU/CPU) using Intel DPC++ compiler to compute a partial computation of the number Pi.
+(GPU/CPU) using the oneAPI DPC++ Compiler to compute a partial computation of the number Pi.
 
 If you run the sample on a CPU as your default device,  you may need to increase 
 the memory allocation for OpenCL.  You can do this by setting an environment variable, 
@@ -43,7 +42,7 @@ the memory allocation for OpenCL.  You can do this by setting an environment var
 
 ## Key Implementation Details
 The basic DPC++ implementation explained in the code includes accessor,
-kernels, queues, buffers, as well as some oneDPL library calls. 
+kernels, queues, buffers, as well as some oneDPL calls. 
 
 ## License
 

@@ -14,13 +14,13 @@ This simple code sample helps the user to test the advantages of the Azure cloud
 This sample tests Azure Cloud IoT Hub. There are five protocols to choose from; MQTT, AMQP, HTTP, MQTT over Websockets and AMQP over Websockets.
 The sample requires an Azure account and created Azure IoT Hub.
 
-##License
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-##Building the `Azure Telemetry` Sample
+## Building the `Azure Telemetry` Sample
 
 ### On a Linux* System
 
@@ -32,7 +32,17 @@ Perform the following steps:
     ```
     static const char* connectionString = "[device connection string]"
     ```
-3. Run in the terminal:
+
+3. Add necessary PPAs and install all the prerequisite packages:
+    ```
+    sudo add-apt-repository -y ppa:mraa/mraa 
+    sudo add-apt-repository -y ppa:aziotsdklinux/ppa-azureiot 
+    sudo apt-get update 
+    sudo apt-get install -y libmraa2 libmraa-dev libmraa-java python-mraa python3-mraa node-mraa mraa-tools pkg-config 
+    sudo apt-get install -y azure-iot-sdk-c-dev
+    ```
+
+4. Run in the terminal:
     ```
     cd $ENV{HOME}
     git clone https://github.com/Azure/azure-iot-sdk-c.git
@@ -43,18 +53,18 @@ Perform the following steps:
     cmake ..
     ```
 
-4. Run the following lines from the sample folder 'azure-iot-telemetry':
+5. Run the following lines from the sample folder 'azure-iot-telemetry':
     ```
     mkdir build
     cd build
     cmake ..
     make all
     ```
-5. Run the program using:  
+6. Run the program using:  
     ```
     make run
     ```
-6. Clean the program using:
+7. Clean the program using:
     ```
     make clean
     ```

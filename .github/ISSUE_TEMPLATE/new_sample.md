@@ -3,7 +3,7 @@ name: Request to add a oneAPI Sample
 about: Use this template to request to add a new Code Sample
 title: 'Request to Add a oneAPI Sample <YourSampleName>'
 labels: 'enhancement'
-assignees: '@JoeOster, @srdontha'
+assignees: '@JoeOster'
 ---
 
 ## Summary
@@ -21,9 +21,11 @@ Please supply what [Domain](https://github.com/oneapi-src/oneAPI-samples/wiki/Re
 Include a short Description of what the sample while Demonstrate and why it is important to the ecosystem.
 
 ## Dependencies
-Please list any dependencies, libraries and images, etc and urls to the download locations
+Please list any dependencies, libraries and images, etc and urls of the download locations
 
 ## Proposed folder Location
 Please include the proposed folder location for your sample to reside
 
+## Checklist
+[ ] Samples Working Group Permission accepted on <Insert Date>
 

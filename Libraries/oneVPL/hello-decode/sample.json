@@ -4,23 +4,12 @@
   "categories": ["Toolkit/oneAPI Libraries/oneVPL"],
   "description": "Sample that shows how to use the Intel® oneAPI Video Processing Library (VPL) to perform a simple video decode",
   "dependencies": ["vpl"],
-  "os": ["linux", "windows"],
+  "os": ["linux"],
   "languages": [{"cpp":{}}],
   "builder": [ "ide", "cmake"],
   "targetDevice": ["CPU", "GPU"],
   "ciTests": {
     "linux": [
-      { "id": "builds and runs successfully with CMake",
-        "env": [ ],
-        "steps": [
-          "mkdir build",
-          "cd build",
-          "cmake ..",
-          "cmake --build .",
-          "cmake --build . --target run"
-        ] }
-    ],
-    "windows": [
       { "id": "builds and runs successfully with CMake",
         "env": [ ],
         "steps": [

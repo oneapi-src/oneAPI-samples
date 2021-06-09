@@ -1,0 +1,28 @@
+{
+ "guid": "82e7612f-2810-4d12-9c75-c17fcbb946fa",
+ "name": "Intel® Low Precision Optimization Tool Tensorflow Getting Started",
+ "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+ "description": "This sample illustrates how to run LPOT to quantize the FP32 model trained by Keras on Tensorflow to INT8 model to speed up the inference.",
+ "languages": [{"python":{}}],
+ "dependencies": ["tensorflow","lpot"],
+ "os": ["linux"],
+ "builder": ["cli"],
+ "targetDevice": ["CPU"],
+ "ciTests": {
+	"linux": [
+	{
+		"env": ["source ${ONEAPI_ROOT}/setvars.sh --force",
+			"conda env remove -n user_tensorflow",
+			"conda create --name user_tensorflow -y",
+			"conda activate user_tensorflow",
+			"conda install -c ${ONEAPI_ROOT}/conda_channel tensorflow numpy pyyaml scikit-learn schema lpot ilit matplotlib -y",
+		    "conda install runipy notebook -y"
+        ],
+		"id": "lpot tensorflow",
+		"steps": [
+			"runipy lpot_sample_tensorflow.ipynb"
+		 ]
+	}
+    ]
+ }
+}

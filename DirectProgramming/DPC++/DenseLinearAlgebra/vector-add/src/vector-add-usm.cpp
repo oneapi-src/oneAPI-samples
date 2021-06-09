@@ -29,7 +29,7 @@
 using namespace sycl;
 
 // Array size for this example.
-constexpr size_t array_size = 10000;
+size_t array_size = 10000;
 
 // Create an exception handler for asynchronous SYCL exceptions
 static auto exception_handler = [](sycl::exception_list e_list) {
@@ -76,7 +76,9 @@ void InitializeArray(int *a, size_t size) {
 //************************************
 // Demonstrate vector add both in sequential on CPU and in parallel on device.
 //************************************
-int main() {
+int main(int argc, char* argv[]) {
+  // Change array_size if it was passed as argument
+  if (argc > 1) array_size = std::stoi(argv[1]);
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // DPC++ extension: FPGA emulator selector on systems without FPGA card.
@@ -133,7 +135,7 @@ int main() {
       }
     }
 
-    int indices[]{0, 1, 2, (array_size - 1)};
+    int indices[]{0, 1, 2, (static_cast<int>(array_size) - 1)};
     constexpr size_t indices_size = sizeof(indices) / sizeof(int);
 
     // Print out the result of vector add.

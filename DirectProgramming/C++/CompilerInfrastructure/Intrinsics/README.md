@@ -1,6 +1,6 @@
 # `Intrinsics` Sample
 
-The intrinsic samples are designed to show how to utilize the intrinsics supported by the Intel&reg; C++ compiler in various applications. The src folder contains three .cpp source files, each demonstrating different intrinsics' functionality, including vector operations, complex numbers computations, and FTZ/DAZ flags.
+The intrinsic samples are designed to show how to utilize the intrinsics supported by the Intel&reg; C++ Compiler in various applications. The src folder contains three .cpp source files, each demonstrating different intrinsics' functionality, including vector operations, complex numbers computations, and FTZ/DAZ flags.
 
 | Optimized for                     | Description
 |:---                               |:---

@@ -36,17 +36,21 @@ Code samples are licensed under the MIT license. See
 
 Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+## Running Samples on the Intel&reg; DevCloud
+If you are running this sample on the DevCloud, see [Running Samples on the Intel&reg; DevCloud](#run-samples-on-devcloud)
+
 ## Building the `PointPillars` Sample Program for CPU and GPU
 Currently, only Linux platforms are supported. It is recommended to use Ubuntu 18.04.
 
-### Requirements
+### Requirements (Local or Remote Host Installation)
 To build and run the PointPillars sample, the following libraries have to be installed:
 1. Intel® Distribution of OpenVINO™ toolkit (at least 2021.1)
 2. Intel® oneAPI Base Toolkit (at least 2021.2)
 3. Boost (including `boost::program_options` library)
-4. Optional: If the sample should be run on an Intel GPU, it might be necessary to upgrade the corresponding drivers. Therefore, please consult the following page: https://github.com/intel/compute-runtime/releases/   
+4. Optional: If the sample should be run on an Intel GPU, it might be necessary to upgrade the corresponding drivers. Therefore, please consult the following page: https://github.com/intel/compute-runtime/releases/
 
-### Build process
+
+### Build process (Local or Remote Host Installation)
 Perform the following steps:
 1. Prepare the environment to be able to use the Intel® Distribution of OpenVINO™ toolkit and oneAPI
 ``` 
@@ -111,6 +115,80 @@ These options can also be used in combination, e.g.:
 ```
 ./example.exe --cpu --gpu --host
 ```
+
+## Running Samples on the Intel&reg; DevCloud<a name="run-samples-on-devcloud"></a>
+
+### Run in Batch Mode
+This sample runs in batch mode, so you must have a script for batch processing. Once you have a script set up, continue with the next section, Request a Compute Node.
+
+### Request a Compute Node
+In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.
+ This node information must be provided when submitting a job to run your sample in batch mode using the qsub command. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
+
+<!---Mark each compatible Node in BOLD-->
+| Node              | Command                                                 |
+| ----------------- | ------------------------------------------------------- |
+| __GPU__           | __qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh__       |
+| __CPU__           | __qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh__      |
+| FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
+| FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
+
+### Build process (DevCloud)
+1. Build the program using the following `cmake` commands. 
+``` 
+$ mkdir build && cd build
+$ cmake ..
+$ make
+```
+
+## Running the `PointPillars` Sample Program (DevCloud)
+After a successful build, the sample program can be run as follows:
+```
+./example.exe
+```
+The input data for the sample program is the example.pcd located in the /data folder. It contains an artificial point cloud from a simulated LIDAR sensor of the CARLA simulator [3]. The corresponding scene looks as follows:
+![SampleScene](data/image.png)
+The example.pcd file is a point cloud in ASCII using the PCL-format, which renders to (using the pcl_viewer tool):
+![SamplePointCloud](data/pointcloud.png)
+It is worth noting that there are three cars in this scene, one of which is very far away and thus not yet properly covered in the LIDAR scan. Then, there is a black car inside the intersection, which is also well visible in the LIDAR data, and a hidden car, right behind the black one. Hence, `PointPillars` should detect at least one car.
+
+Successful execution of the sample program results in at least one detected object and an output similar to:
+```
+Starting PointPillars
+   PreProcessing - 20ms
+   AnchorMask - 10ms
+   PFE Inference - 91ms
+   Scattering - 50ms
+   RPN Inference - 107ms
+   Postprocessing - 13ms
+Done
+Execution time: 296ms
+
+1 cars detected
+Car: Probability = 0.622569 Position = (24.8561, 12.5615, -0.00771689) Length = 2.42855 Width = 3.61396
+```
+
+## Execution Options for the Sample Program
+The sample program provides a few command-line options, which can be accessed using the 'help' option
+```
+./example.exe --help
+```
+
+Furthermore, it is possible to specify the execution device. For using multi-threaded CPU execution, please use:
+```
+./example.exe --cpu
+```
+For single-threaded execution on the host system, please use:
+```
+./example.exe --host
+```
+And to use an Intel® DG1 or integrated graphics, please use:
+```
+./example.exe --gpu
+```
+These options can also be used in combination, e.g.:
+```
+./example.exe --cpu --gpu --host
 
 ## Known Limitations
 - This sample code only works using models trained with the Sigmoid function, not with Softmax or Crossentropy
