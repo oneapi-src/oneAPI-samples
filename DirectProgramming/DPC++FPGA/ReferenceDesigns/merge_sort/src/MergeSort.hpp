@@ -165,6 +165,9 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // the number of elements each merge unit will sort
   const IndexT count_per_unit = count / units;
 
+  // each producer will produce half of the data for each unit
+  const IndexT half_count_per_unit = count_per_unit / 2;
+
   // the number of sorting iterations each merge unit will perform
   // NOTE: we subtract log2(k_width) because the sorting network performs the
   // first log2(k_width) iterations of the sort while streaming the input data
@@ -241,13 +244,14 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
       ////////////////////////////////////////////////////////////////////////
       // Enqueue the merge unit kernels
       // Produce A
-      produce_a_events[u][i] = SubmitProduceA(
-          q, in_buf, count_per_unit, in_count, unit_buf_offset, wait_events);
+      produce_a_events[u][i] =
+        SubmitProduceA(q, in_buf, half_count_per_unit, in_count,
+                       unit_buf_offset, wait_events);
 
       // Produce B
       produce_b_events[u][i] =
-          SubmitProduceB(q, in_buf, count_per_unit, in_count,
-                         unit_buf_offset + in_count, wait_events);
+          SubmitProduceB(q, in_buf, half_count_per_unit, in_count,
+                         unit_buf_offset + half_count_per_unit, wait_events);
 
       // Merge
       merge_events[u][i] = SubmitMerge(q, count_per_unit, in_count, comp);
