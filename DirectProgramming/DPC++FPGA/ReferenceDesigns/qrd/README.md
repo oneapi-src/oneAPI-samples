@@ -219,8 +219,8 @@ PASSED
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsclock=330MHz` | The FPGA backend attempts to achieve 330 MHz
 `-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) ) 
-`-Xsparallel=2` | Use 2 cores when compiling the bitstream through Quartus
-`-Xsseed` | Specifies the Quartus compile seed, to yield slightly higher fmax
+`-Xsparallel=2` | Use 2 cores when compiling the bitstream through Quartus®
+`-Xsseed` | Specifies the Quartus® compile seed, to yield slightly higher fmax
 `-DROWS_COMPONENT` | Specifies the number of rows of the matrix
 `-DCOLS_COMPONENT` | Specifies the number of columns of the matrix
 `-DFIXED_ITERATIONS` | Used to set the ivdep safelen attribute for the performance critical triangular loop

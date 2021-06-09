@@ -119,7 +119,7 @@ separate_arguments(HARDWARE_LINK_FLAGS_LIST)
 add_custom_command(OUTPUT ${FPGA_EARLY_IMAGE}
                    COMMAND ${CMAKE_CXX_COMPILER} ${WIN_FLAG} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link=early ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${FPGA_EARLY_IMAGE}
                    DEPENDS ${SOURCE_FILE})
-                   # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
+                   # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
 ### FPGA Simulator
