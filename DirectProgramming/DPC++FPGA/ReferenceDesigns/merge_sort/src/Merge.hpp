@@ -20,8 +20,8 @@ template <typename Id, typename ValueT, typename IndexT, typename InPipeA,
           class CompareFunc>
 event Merge(queue& q, IndexT total_count, IndexT in_count,
             CompareFunc compare) {
-  // sanity check on k_wodth
-  static_assert(k_width > 1);
+  // sanity check on k_width
+  static_assert(k_width >= 1);
   static_assert(IsPow2(k_width));
 
   // merging two lists of size 'in_count' into a single output list of
@@ -44,6 +44,13 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
       IndexT read_from_a = 0;
       IndexT read_from_b = 0;
 
+      // create a small 2 element shift register to track whether we have
+      // read the last inputs from the input pipes
+      bool read_from_a_is_last = false; // (0 == in_count)
+      bool read_from_b_is_last = false; // (0 == in_count)
+      bool next_read_from_a_is_last = (k_width == in_count);
+      bool next_read_from_b_is_last = (k_width == in_count);
+
       // track the number of elements we have written to the output pipe
       // for each sublist (counts up to 'out_count')
       IndexT written_out_inner = 0;
@@ -63,6 +70,8 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
         if (!a_valid && !drain_b) {
           a = InPipeA::read();
           a_valid = true;
+          read_from_a_is_last = next_read_from_a_is_last;
+          next_read_from_a_is_last = (read_from_a == in_count-2*k_width);
           read_from_a += k_width;
         }
 
@@ -70,6 +79,8 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
         if (!b_valid && !drain_a) {
           b = InPipeB::read();
           b_valid = true;
+          read_from_b_is_last = next_read_from_b_is_last;
+          next_read_from_b_is_last = (read_from_b == in_count-2*k_width);
           read_from_b += k_width;
         }
 
@@ -97,8 +108,8 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
           for (unsigned char i = 0; i < k_width; i++) {
             feedback[i] = chosen_data_in[i];
           }
-          drain_a = drain_a | ((read_from_b == in_count) && !choose_a);
-          drain_b = drain_b | ((read_from_a == in_count) && choose_a);
+          drain_a = drain_a | (read_from_b_is_last && !choose_a);
+          drain_b = drain_b | (read_from_a_is_last && choose_a);
           a_valid = !choose_a;
           b_valid = choose_a;
           first_in_buffer = false;
@@ -130,12 +141,16 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
             b_valid = false;
             read_from_a = 0;
             read_from_b = 0;
+            read_from_a_is_last = false; // (0 == in_count)
+            read_from_b_is_last = false; // (0 == in_count)
+            next_read_from_a_is_last = (k_width == in_count);
+            next_read_from_b_is_last = (k_width == in_count);
             written_out_inner = 0;
             first_in_buffer = true;
           } else {
             written_out_inner += k_width;
-            drain_a = drain_a | ((read_from_b == in_count) && !choose_a);
-            drain_b = drain_b | ((read_from_a == in_count) && choose_a);
+            drain_a = drain_a | (read_from_b_is_last && !choose_a);
+            drain_b = drain_b | (read_from_a_is_last && choose_a);
             a_valid = !choose_a;
             b_valid = choose_a;
           }

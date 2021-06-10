@@ -75,7 +75,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // sanity check the number of merge units and the width of the sorter
   static_assert(units >= 1);
   static_assert(IsPow2(units));
-  static_assert(k_width > 1);
+  static_assert(k_width >= 1);
   static_assert(IsPow2(k_width));
 
   // sanity check on IndexT

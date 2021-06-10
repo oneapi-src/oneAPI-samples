@@ -40,7 +40,7 @@ static_assert(IsPow2(kMergeUnits));
 #define SORT_WIDTH 4
 #endif
 constexpr size_t kSortWidth = SORT_WIDTH;
-static_assert(kSortWidth > 1);
+static_assert(kSortWidth >= 1);
 static_assert(IsPow2(kSortWidth));
 
 ////////////////////////////////////////////////////////////////////////////////
