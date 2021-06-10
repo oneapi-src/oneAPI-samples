@@ -1,8 +1,3 @@
-# Introduction
-This template serves 2 purposes and will need to be edited accordingly prior to submitting the PR
-- Changes to existing samples
-- Submission of new Samples
-
 # Existing Sample Changes
 ## Description
 
@@ -36,15 +31,16 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 **_Delete this line and everything below if this is not a PR for a new code sample_**
 
 **_Delete this line and all above it if this PR is for a new code sample_**
-# Adding a New samples
-##Introduction
+# Adding a New Sample(s)
 
-The full instructions on submitting a new sample is located in the [wiki](https://github.com/oneapi-src/oneAPI-samples/wiki/Contributing-a-New-Sample) if you have any addional questions contact @JoeOster
+## Description
+
+Please include a description of the sample
 
 ## Checklist
 Administrative
 - [ ] Review sample design with the appropriate [Domain Expert](https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts): <insert Name Here>
-- [ ] If you dependencies/binaries, inform the oneAPI Code Samples Project Manager: @JoeOster
+- [ ] If you have any new dependencies/binaries, inform the oneAPI Code Samples Project Manager: @JoeOster
 
 Code Development
 - [ ] Implement coding guidelines and ensure code quality. [see wiki for details](https://github.com/oneapi-src/oneAPI-samples/wiki/General-Code-Guidelines)
@@ -57,13 +53,10 @@ Code Development
 Security and Legal
 - [ ] OSPDT Approval (see @JoeOster for assistance)
 - [ ] Compile using the following compiler flags and fix any warnings, the falgs are: "/Wall -Wformat-security -Werror=format-security"
-- [ ] Protex (see @JoeOster for assistance)
 - [ ] Bandit Scans (Python only)
-- [ ] IPLDT Scan (see @JoeOster for assistance)
 - [ ] Virus scan
 
 Review
 - [ ] Review DPC++ code with Paul Peterseon. (GitHub User: pmpeter1)
 - [ ] Review readme with Tom Lenth(@tomlenth) and/or Joe Oster(@JoeOster)
 - [ ] Tested using Dev Cloud when applicable
-
