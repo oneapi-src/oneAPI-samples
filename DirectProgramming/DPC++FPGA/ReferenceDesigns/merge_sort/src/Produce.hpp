@@ -12,11 +12,10 @@ using namespace sycl;
 //
 template<typename Id, typename ValueT, typename IndexT, typename OutPipe,
          unsigned char k_width>
-event Produce(queue& q, ValueT *in_ptr, IndexT total_count,
-              IndexT in_block_count, IndexT start_offset,
-              std::vector<event>& depend_events) {
-  // the number of loop iterations required to consume all of the data
-  const IndexT iterations = total_count / k_width;
+event Produce(queue& q, ValueT *in_ptr, IndexT count, IndexT in_block_count,
+              IndexT start_offset, std::vector<event>& depend_events) {
+  // the number of loop iterations required to produce all of the data
+  const IndexT iterations = count / k_width;
 
   return q.submit([&](handler& h) {
     h.depends_on(depend_events);
@@ -29,7 +28,7 @@ event Produce(queue& q, ValueT *in_ptr, IndexT total_count,
       device_ptr<ValueT> in(in_ptr);
 
       for (IndexT i = 0; i < iterations; i++) {
-        // read data from memory
+        // read 'k_width' elements from device memory
         sycl::vec<ValueT, k_width> pipe_data;
         #pragma unroll
         for (unsigned char j = 0; j < k_width; j++) {

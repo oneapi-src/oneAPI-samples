@@ -165,7 +165,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // the number of elements each merge unit will sort
   const IndexT count_per_unit = count / units;
 
-  // each producer will produce half of the data for each unit
+  // each producer will produce half of the data for each merge unit
   const IndexT half_count_per_unit = count_per_unit / 2;
 
   // the number of sorting iterations each merge unit will perform

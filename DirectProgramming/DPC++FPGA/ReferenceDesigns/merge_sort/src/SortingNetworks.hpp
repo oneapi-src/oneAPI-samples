@@ -13,8 +13,9 @@ using namespace sycl;
 // Takes in two sorted lists ('a' and 'b') of size 'k_width' and merges them
 // into a single sorted output in a single cycle, in the steady state.
 //
-//  a = {data[0], data[2], data[4], ...}
-//  b = {data[1], data[3], data[5], ...}
+// Convention:
+//    a = {data[0], data[2], data[4], ...}
+//    b = {data[1], data[3], data[5], ...}
 //
 template <typename ValueT, unsigned char k_width, class CompareFunc>
 void MergeSortNetwork(sycl::vec<ValueT, k_width * 2>& data,
@@ -43,6 +44,8 @@ void MergeSortNetwork(sycl::vec<ValueT, k_width * 2>& data,
     }
   } else {
     // the general case
+    // this works well for k_width = 1 or 2, but is not optimal for
+    // k_width = 4 (see if-case above) or higher
     constexpr unsigned char merge_tree_depth = Log2(k_width * 2);
     #pragma unroll
     for (unsigned i = 0; i < merge_tree_depth; i++) {
@@ -105,7 +108,9 @@ event SortNetworkKernel(queue& q, ValueT* out_ptr, IndexT total_count,
         [[intel::fpga_register]]
         sycl::vec<ValueT, k_width> data = InPipe::read();
 
-        // bitonic sort network
+        // bitonic sort network sorts the k_width elements in 'data' in-place
+        // NOTE: there are no dependencies across loop iterations on 'data'
+        // here, so this sorting network can be fully pipelined
         BitonicSortNetwork<ValueT, k_width>(data, compare);
 
         // write the 'k_width' sorted elements to device memory

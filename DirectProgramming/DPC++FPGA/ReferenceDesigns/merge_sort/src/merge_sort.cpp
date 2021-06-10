@@ -19,15 +19,19 @@
 using namespace sycl;
 using namespace std::chrono;
 
-// determines whether we will use USM host or device allocations to move data
+// Determines whether we will use USM host or device allocations to move data
 // between host and the device.
+// This can be set on the command line by defining the preprocessor macro
+// 'USM_HOST_ALLOCATIONS' using the flag: '-DUSM_HOST_ALLOCATIONS'
 #if defined(USM_HOST_ALLOCATIONS)
 constexpr bool kUseUSMHostAllocation = true;
 #else
 constexpr bool kUseUSMHostAllocation = false;
 #endif
 
-// the number of merge units, which must be a power of 2
+// The number of merge units, which must be a power of 2.
+// This can be set by defining the preprocessor macro 'MERGE_UNIT'
+// otherwise the default value below is used.
 #ifndef MERGE_UNITS
 #define MERGE_UNITS 8
 #endif
@@ -35,7 +39,9 @@ constexpr size_t kMergeUnits = MERGE_UNITS;
 static_assert(kMergeUnits > 0);
 static_assert(IsPow2(kMergeUnits));
 
-// the width of the sort, which must be a power of 2
+// The width of the sort, which must be a power of 2
+// This can be set by defining the preprocessor macro 'SORT_WIDTH'
+// otherwise the default value below is used.
 #ifndef SORT_WIDTH
 #define SORT_WIDTH 4
 #endif
@@ -44,7 +50,7 @@ static_assert(kSortWidth >= 1);
 static_assert(IsPow2(kSortWidth));
 
 ////////////////////////////////////////////////////////////////////////////////
-// Forward declare functions used in main
+// Forward declare functions used in this file by main()
 template <typename ValueT, typename IndexT, typename KernelPtrType>
 double fpga_sort(queue &q, ValueT *in_vec, ValueT *out_vec, IndexT count);
 
@@ -60,6 +66,9 @@ int main(int argc, char *argv[]) {
   // the type used to index in the sorter
   using IndexT = unsigned int;
 
+  /////////////////////////////////////////////////////////////
+  // reading and validating the command line arguments
+  // defaults
   bool passed = true;
 #ifdef FPGA_EMULATOR
   IndexT count = 128;
@@ -100,6 +109,7 @@ int main(int argc, char *argv[]) {
     std::cerr << "ERROR: 'count' must be a multiple of the sorter width\n";
     std::terminate();
   }
+  /////////////////////////////////////////////////////////////
 
   // the device selector
 #ifdef FPGA_EMULATOR
@@ -127,7 +137,7 @@ int main(int argc, char *argv[]) {
     std::terminate();
   }
 
-  // the input, output, and output reference data
+  // the input, output, and reference data
   std::vector<ValueT> in_vec(count), out_vec(count), ref(count);
 
   // generate some random input data
@@ -141,7 +151,7 @@ int main(int argc, char *argv[]) {
   // allocate the input and output data either in USM host or device allocations
   ValueT *in, *out;
   if constexpr (kUseUSMHostAllocation) {
-    // streaming data using USM host allocations
+    // using USM host allocations
     if ((in = malloc_host<ValueT>(count, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'in' using "
                 << "malloc_host\n";
@@ -158,11 +168,11 @@ int main(int argc, char *argv[]) {
     // we could have simply generated the input data into the host allocation
     // and avoided this copy. However, it makes the code cleaner to assume the
     // input is always in 'in_vec' and this portion of the code is not part of
-    // the performance timing anyways.
+    // the performance timing.
     std::copy(in_vec.begin(), in_vec.end(), in);
     std::fill(out, out + count, ValueT(0));
   } else {
-    // streaming data using device allocations
+    // using device allocations
     if ((in = malloc_device<ValueT>(count, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'in' using "
                 << "malloc_device\n";
@@ -194,17 +204,16 @@ int main(int argc, char *argv[]) {
         typename std::conditional_t<kUseUSMHostAllocation, host_ptr<ValueT>,
                                     device_ptr<ValueT>>;
 
-    // run the sort multiple times to increase the accuracy of the timing 
-    // measurement
+    // run the sort multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       // run the sort
       time[i] = fpga_sort<ValueT, IndexT, KernelPtrType>(q, in, out, count);
 
-      // Copy output to out_vec. In the case where we are using USM host
+      // Copy the output to 'out_vec'. In the case where we are using USM host
       // allocations this is unnecessary since we could simply deference
       // 'out'. However, it makes the following code cleaner since the output
       // is always in 'out_vec' and this copy is not part of the performance
-      // timing anyway.
+      // timing.
       q.memcpy(out_vec.data(), out, count * sizeof(ValueT)).wait();
 
       // validate the output
@@ -221,14 +230,15 @@ int main(int argc, char *argv[]) {
 
   // print the performance results
   if (passed) {
-    // NOTE: in emulation, these results are not meaningful
-    double avg_time = std::accumulate(time.begin() + 1, time.end(), 0.0);
-    avg_time /= (double)(runs - 1);
+    // NOTE: when run in emulation, these results do not represent the
+    // performance of the kernels in actual FPGA hardware
+    double avg_time_ms =
+      std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
 
-    IndexT input_count_m = count * 1e-6;
+    IndexT input_count_mega = count * 1e-6;
 
-    std::cout << "Execution time: " << avg_time << " ms\n";
-    std::cout << "Throughput: " << (input_count_m / (avg_time * 1e-3))
+    std::cout << "Execution time: " << avg_time_ms << " ms\n";
+    std::cout << "Throughput: " << (input_count_mega / (avg_time_ms * 1e-3))
               << " Melements/s\n";
 
     std::cout << "PASSED\n";
@@ -261,6 +271,17 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   // output is still correct
   const IndexT sorter_count = RoundUpPow2(count);
 
+  // allocate some memory for the merge sort to use as temporary storage
+  ValueT *buf_0, *buf_1;
+  if ((buf_0 = malloc_device<ValueT>(sorter_count, q)) == nullptr) {
+    std::cerr << "ERROR: could not allocate memory for 'buf_0'\n";
+    std::terminate();
+  }
+  if ((buf_1 = malloc_device<ValueT>(sorter_count, q)) == nullptr) {
+    std::cerr << "ERROR: could not allocate memory for 'buf_1'\n";
+    std::terminate();
+  }
+
   // This is the element we will pad the input with. In the case of this design,
   // we are sorting from smallest to largest and we want the last elements out
   // to be this element, so pad with MAX. If you are sorting from largest to
@@ -273,7 +294,7 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   // sorter_count/kSortWidth pipe reads/writes from/to the sorter
   const IndexT total_pipe_accesses = sorter_count / kSortWidth;
 
-  // launch the kernel that feeds data into the sorter
+  // launch the kernel that provides data into the sorter
   auto input_kernel_event = q.submit([&](handler &h) {
     h.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the input pointer and write it to the sorter's input pipe
@@ -296,10 +317,10 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
     });
   });
 
-  // launch the kernel that pulls data out of the sorter
+  // launch the kernel that reads out data from the sorter
   auto output_kernel_event = q.submit([&](handler &h) {
     h.single_task<OuputKernelID>([=]() [[intel::kernel_args_restrict]] {
-      // read from the sorters output pipe and write to the output pointer
+      // read from the sorter's output pipe and write to the output pointer
       KernelPtrType out(out_ptr);
       
       for (IndexT i = 0; i < total_pipe_accesses; i++) {
@@ -321,17 +342,6 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
     });
   });
 
-  // allocate some memory for the merge sort to use as temporary storage
-  ValueT *buf_0, *buf_1;
-  if ((buf_0 = malloc_device<ValueT>(sorter_count, q)) == nullptr) {
-    std::cerr << "ERROR: could not allocate memory for 'buf_0'\n";
-    std::terminate();
-  }
-  if ((buf_1 = malloc_device<ValueT>(sorter_count, q)) == nullptr) {
-    std::cerr << "ERROR: could not allocate memory for 'buf_1'\n";
-    std::terminate();
-  }
-
   // launch the merge sort kernels
   auto merge_sort_events =
       SubmitMergeSort<ValueT, IndexT, SortInPipe, SortOutPipe, kSortWidth,
@@ -343,7 +353,7 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   output_kernel_event.wait();
   auto end = high_resolution_clock::now();
 
-  // wait for the merge sort events to all finish
+  // wait for the merge sort kernels to finish
   for (auto &e : merge_sort_events) {
     e.wait();
   }

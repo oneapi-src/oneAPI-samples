@@ -32,7 +32,7 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
     h.single_task<Id>([=] {
       // the two input and feedback buffers
       [[intel::fpga_register]]
-      sycl::vec<ValueT, k_width> a, b, feedback;
+      sycl::vec<ValueT, k_width> a, b, network_feedback;
 
       bool drain_a = false;
       bool drain_b = false;
@@ -95,7 +95,7 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
           // populate the k_width*2 sized input for the merge sort network
           // from the chosen input data and the feedback data
           merge_sort_network_data[2 * i] = chosen_data_in[i];
-          merge_sort_network_data[2 * i + 1] = feedback[i];
+          merge_sort_network_data[2 * i + 1] = network_feedback[i];
         }
 
         // sort network, which sorts 'merge_sort_network_data' in-place
@@ -106,7 +106,7 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
           // it just creates feedback
           #pragma unroll
           for (unsigned char i = 0; i < k_width; i++) {
-            feedback[i] = chosen_data_in[i];
+            network_feedback[i] = chosen_data_in[i];
           }
           drain_a = drain_a | (read_from_b_is_last && !choose_a);
           drain_b = drain_b | (read_from_a_is_last && choose_a);
@@ -118,13 +118,13 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
           if (written_out_inner == out_count - k_width) {
             // on the last iteration for a set of sublists, the feedback
             // is the only data left that is valid, so output it
-            out_data = feedback;
+            out_data = network_feedback;
           } else {
             // grab the output and feedback data from the merge sort network
             #pragma unroll
             for (unsigned char i = 0; i < k_width; i++) {
               out_data[i] = merge_sort_network_data[i];
-              feedback[i] = merge_sort_network_data[k_width + i];
+              network_feedback[i] = merge_sort_network_data[k_width + i];
             }
           }
 
@@ -132,9 +132,9 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
           OutPipe::write(out_data);
           written_out += k_width;
 
-          // check if we are switching to a new set of 'in_count' sublists
+          // check if switching to a new set of 'in_count' sorted sublists
           if (written_out_inner == out_count - k_width) {
-            // switching, so reset all internal counters
+            // switching, so reset all internal counters and flags
             drain_a = false;
             drain_b = false;
             a_valid = false;
@@ -148,6 +148,7 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
             written_out_inner = 0;
             first_in_buffer = true;
           } else {
+            // not switching, so update counters and flags
             written_out_inner += k_width;
             drain_a = drain_a | (read_from_b_is_last && !choose_a);
             drain_b = drain_b | (read_from_a_is_last && choose_a);
