@@ -19,6 +19,7 @@ The STREAM sample performs the memory bandwidth benchmark.
 This sample contains a STREAM implementation using DPC++ for CPU and GPU and is a variant of the [STREAM](http://www.cs.virginia.edu/stream/) benchmark code. Please review the license terms regarding publishing benchmarks.”
 
 ## License
+Please note: **_“This package contains a modified version of the Stream Benchmark.”_**
 
 For the original [Stream License]( http://www.cs.virginia.edu/stream/FTP/Code/LICENSE.txt.), which is copied below for reference
 
