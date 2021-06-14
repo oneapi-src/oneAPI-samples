@@ -95,6 +95,7 @@ be stable.
 |../memory_attributes                   |FPGA |Tutorial demonstrating how to use DPC++ FPGA memory attributes |
 |../pipes                               |FPGA |Tutorial demonstrating the DPC++ FPGA pipes extension to transfer data between kernels |
 |../speculated_iterations               |FPGA |Tutorial demonstrating the DPC++ FPGA speculated_iterations attribute |
+|../stall_enable                        |FPGA |Tutorial demonstrating the use of the intel::use_stall_enable_clusters attribute |
 |__DirectPrograming/DPC++FPGA/Tutorials/GettingStarted/__ |
 |../fast_recompile                |FPGA |Tutorial introducing host-only recompile to save DPC++ development time on FPGA |
 |../fpga_compile                  |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
