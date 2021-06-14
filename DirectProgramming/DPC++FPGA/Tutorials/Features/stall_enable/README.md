@@ -1,5 +1,4 @@
-
-# Coalescing Nested Loops
+# Reducing latency of computations
 This FPGA tutorial demonstrates how to use the `use_stall_enable_clusters` attribute to reduce the area and latency of your FPKA kernels.  This attribute may reduce the FPGA FMax for your kernels.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
@@ -125,7 +124,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Examining the Reports
-Locate `report.html` in the `stall_enable_coalesce_report.prj/reports/` and `stall_free__report.prj/reports/` directories. Open the reports in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the `stall_enable_report.prj/reports/` and `stall_free_report.prj/reports/` directories. Open the reports in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
 On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Note that the estimated number of **MLAB**s for KernelComputeStallEnable is smaller than that of KernelComputeStallFree
 
