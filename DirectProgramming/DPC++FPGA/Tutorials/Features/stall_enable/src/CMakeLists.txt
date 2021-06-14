@@ -2,11 +2,10 @@
 # https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
 
 set(SOURCE_FILE stall_enable.cpp)
-set(TARGET_NAME stall_enable)
-set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
-set(FPGA_TARGET ${TARGET_NAME}.fpga)
+set(STALL_ENABLE_TARGET_NAME stall_enable)
+set(EMULATOR_TARGET ${STALL_ENABLE_TARGET_NAME}.fpga_emu)
+set(FPGA_TARGET_STALL_ENABLE ${STALL_ENABLE_TARGET_NAME}.fpga)
 
-# We want to compile 2 times for FPGA_TARGET
 set(STALL_FREE_TARGET_NAME stall_free)
 set(STALL_FREE_DEFINE -DSTALL_FREE)
 set(FPGA_TARGET_STALL_FREE ${STALL_FREE_TARGET_NAME}.fpga)
@@ -54,7 +53,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ###############################################################################
 # To compile manually (Stall Enable):
 #   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early stall_enable.cpp -o stall_enable.a
-set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
+set(FPGA_EARLY_IMAGE ${STALL_ENABLE_TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
@@ -78,9 +77,9 @@ set_target_properties(${FPGA_STALL_FREE_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HA
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o stall_enable.cpp.o -c stall_enable.cpp
 #   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> stall_enable.cpp.o -o stall_enable.fpga
-add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
-set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+add_executable(${FPGA_TARGET_STALL_ENABLE} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+set_target_properties(${FPGA_TARGET_STALL_ENABLE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_TARGET_STALL_ENABLE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_STALL_ENABLE}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
 # See DPC++FPGA/GettingStarted/fast_recompile for details.
 
@@ -90,6 +89,6 @@ set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAG
 #   [compile] dpcpp -DSTALL_FREE -fintelfpga -o stall_free.cpp.o -c stall_free.cpp
 #   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> stall_free.cpp.o -o stall_free.fpga
 add_executable(${FPGA_TARGET_STALL_FREE} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-add_custom_target(fpga DEPENDS ${FPGA_TARGET} ${FPGA_TARGET_STALL_FREE})
+add_custom_target(fpga DEPENDS ${FPGA_TARGET_STALL_ENABLE} ${FPGA_TARGET_STALL_FREE})
 set_target_properties(${FPGA_TARGET_STALL_FREE} PROPERTIES COMPILE_FLAGS "${STALL_FREE_DEFINE} ${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET_STALL_FREE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_STALL_FREE}")

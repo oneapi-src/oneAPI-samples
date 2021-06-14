@@ -20,11 +20,11 @@ class KernelComputeStallFree;
 class KernelComputeStallEnable;
 
 constexpr int kSeed = 0;
-constexpr int kWork = 500;
+constexpr int kWork = 50;
 constexpr int kNumElements = 1000;
 constexpr int kTotalOps = kNumElements * kWork;
 
-typedef float WorkType;
+typedef long WorkType;
 typedef std::vector<WorkType> WorkVec;
 
 static WorkType RealWork(WorkType a, WorkType b) {
@@ -48,10 +48,11 @@ typedef accessor<WorkType, 1, access::mode::write,
 
 static void Work(const ReadAccessor &vec_a, const ReadAccessor &vec_b,
                  const WriteAccessor &vec_res) {
-  for (size_t idx = 0; idx < kNumElements; idx++) {
+  for (size_t idx = 0; idx < kNumElements; idx += 2) {
     auto a = vec_a[idx];
     auto b = vec_b[idx];
     vec_res[idx] = RealWork(a, b);
+    vec_res[idx+1] = RealWork(b, a);
   }
 }
 
