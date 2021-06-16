@@ -111,11 +111,44 @@ class QRD;
 
 /*
   Complex single precision floating-point QR Decomposition
+  Computes Q and R matrices such that A=QR where:
+  - A is the input matrix
+  - Q is a unitary matrix
+  - R is an upper triangular matrix
 
   This function implements a OneAPI optimized version of the "High performance
   QR Decomposition for FPGAs" FPGA'18 paper by Martin Langhammer and Bogdan
   Pasca.
 
+  Each matrix (input and output) are represented using floating-point vectors.
+  Each complex element is interpreted as two consecutive values.
+  e.g. in_matrix[2*i + 0] and in_matrix[2*i + 1] represent the real and
+  imaginary values of the i-th complex element of the matrix.
+
+  Function arguments:
+  - in_matrix:  The input matrix. Interpreted as a transposed matrix.
+  - out_matrix: The output matrix. The function will overwrite this matrix.
+                The first values of this output vector will contain the upper
+                triangular values of the R matrix, row by row.
+                e.g. for a 4x4 QRD, out_matrix[5*2+1] will contain the imaginary
+                part of R[1][1].
+                So there are exactly N*(N+1)/2 elements of R.
+                So rest of the values hold the transposed matrix Q.
+  - q:          The device queue.
+  - matrices:   The number of matrices to be processed.
+                The input matrices are read from the in_matrix vector.
+  - reps:       The number of repetitions of the computation to execute.
+                (for performance evaluation)
+
+  This function requires the definition of the following global defines:
+  - COLS_COMPONENT:   The number of columns in the matrix
+  - ROWS_COMPONENT:   The number of rows in the matrix     
+  - FIXED_ITERATIONS: The latency between the RAW dependency in the triangular
+                      loop that prevents the compiler to achieve an II of 1.
+                      This helps create a loop structure that can reach an II
+                      of 1 following the triangular loop optimization tutorial
+                      method.
+  
 */
 void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                      queue &q, size_t matrices, size_t reps) {
