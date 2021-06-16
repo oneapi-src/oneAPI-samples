@@ -111,15 +111,12 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile manually:
 #   dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -Xsboard=<FPGA_BOARD> -fsycl-link=early mvdr_beamforming.cpp -o mvdr_beamforming_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
+# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
-set(CMAKE_CXX_FLAGS_LIST ${CMAKE_CXX_FLAGS})
-separate_arguments(CMAKE_CXX_FLAGS_LIST)
-set(HARDWARE_LINK_FLAGS_LIST ${HARDWARE_LINK_FLAGS})
-separate_arguments(HARDWARE_LINK_FLAGS_LIST)
-add_custom_command(OUTPUT ${FPGA_EARLY_IMAGE}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${WIN_FLAG} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link=early ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${FPGA_EARLY_IMAGE}
-                   DEPENDS ${SOURCE_FILE})
-                   # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 
 ###############################################################################
 ### FPGA Simulator
