@@ -149,6 +149,12 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
   // for the triangular loop optimization
   constexpr int kVariableIterations = N_VALUE - FIXED_ITERATIONS;
 
+  constexpr int kjBitSize = (kVariableIterations < 0 ? 
+                            CeilLog2(COLS_COMPONENT + 1) + 
+                            CeilLog2(-kVariableIterations) : 
+                            CeilLog2(COLS_COMPONENT + 1) + 1) 
+                            + 1;
+
   // We will process 'chunk' number of matrices in each run of the kernel
   short chunk = 2048;
   if (matrices % chunk) {
@@ -176,6 +182,10 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
       });
 
       q.submit([&](handler &h) {
+    //// DEBUG
+    sycl::stream out(16384, 1024, h);
+    //// END DEBUG
+
 
         accessor in_matrix(*input_matrix[b], h, read_only);
         accessor out_matrix(*output_matrix[b], h, write_only, no_init);
@@ -229,7 +239,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
             int qr_idx = l * kOutputMatrixSize / 2;
 
             ac_int<kRowsComponentBitSize+2, true> i = -1;
-            ac_int<kColsComponentBitSize+2, true> j = kVariableIterations < 0
+            ac_int<kjBitSize, true> j = kVariableIterations < 0
                           ? kVariableIterations
                           : 0;
             [[intel::initiation_interval(1)]] [[intel::ivdep(FIXED_ITERATIONS)]]
@@ -313,8 +323,8 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
               if (j == N_VALUE - 1) {
                 j = (kVariableIterations > i)
-                        ? ac_int<kColsComponentBitSize+2, true>{i + 1}
-                        : ac_int<kColsComponentBitSize+2, true>{kVariableIterations};
+                        ? ac_int<kjBitSize, true>{i + 1}
+                        : ac_int<kjBitSize, true>{kVariableIterations};
                 i++;
               } else {
                 j++;
