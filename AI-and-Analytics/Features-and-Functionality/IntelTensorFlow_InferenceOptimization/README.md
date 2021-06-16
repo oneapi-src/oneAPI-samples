@@ -1,6 +1,7 @@
 # Tutorial : Optimize TensorFlow pre-trained model for inference
 This tutorial will guide you how to optimize a pre-trained model for a better inference performance, and also 
 analyze the model pb files before and after the inference optimizations.  
+Both The Intel® Low Precision Optimization Tool (Intel® LPOT) and TensorFlow optimization tools are used in this tutorial, and LPOT is the preferred tool for inference optimization on Intel Architectures.
 
 | Optimized for                     | Description
 |:---                               |:---
