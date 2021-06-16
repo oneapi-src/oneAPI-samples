@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
     cout << "Verifying results on matrix";
 
     for (size_t matrix : to_check) {
-      cout << " " << matrix;
+      cout << " " << matrix << std::endl;
       size_t idx = 0;
       for (size_t i = 0; i < COLS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
@@ -166,45 +166,103 @@ int main(int argc, char *argv[]) {
         }
       }
 
-      float acc_real = 0;
-      float acc_imag = 0;
-      float v_matrix[ROWS_COMPONENT][COLS_COMPONENT][2] = {{{0}}};
+      constexpr float kErrorThreshold = 1e-4;
+      size_t count = 0;
+      bool error = false;
+      float qr_ij[2] = {0};
+      float qtq_ij[2] = {0};
       for (size_t i = 0; i < ROWS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
-          acc_real = 0;
-          acc_imag = 0;
+          qr_ij[0] = 0;
+          qr_ij[1] = 0;
           for (size_t k = 0; k < COLS_COMPONENT; k++) {
-            acc_real += q_matrix[i][k][0] * r_matrix[k][j][0] -
+            qr_ij[0] += q_matrix[i][k][0] * r_matrix[k][j][0] -
                         q_matrix[i][k][1] * r_matrix[k][j][1];
-            acc_imag += q_matrix[i][k][0] * r_matrix[k][j][1] +
+            qr_ij[1] += q_matrix[i][k][0] * r_matrix[k][j][1] +
                         q_matrix[i][k][1] * r_matrix[k][j][0];
           }
-          v_matrix[i][j][0] = acc_real;
-          v_matrix[i][j][1] = acc_imag;
-        }
-      }
 
-      float error = 0;
-      size_t count = 0;
-      constexpr float kErrorThreshold = 1e-4;
-      for (size_t row = 0; row < ROWS_COMPONENT; row++) {
-        for (size_t col = 0; col < COLS_COMPONENT; col++) {
-          if (sycl::isnan(v_matrix[row][col][0]) ||
-              sycl::isnan(v_matrix[row][col][1])) {
-            count++;
+          qtq_ij[0] = 0;
+          qtq_ij[1] = 0;
+          for (size_t k = 0; k < COLS_COMPONENT; k++) {
+            qtq_ij[0] += q_matrix[i][k][0] * q_matrix[j][k][0] +
+                        q_matrix[i][k][1] * q_matrix[j][k][1];
+            qtq_ij[1] += q_matrix[i][k][0] * q_matrix[j][k][1] -
+                        q_matrix[i][k][1] * q_matrix[j][k][0];
           }
 
-          float real = v_matrix[row][col][0] -
-                       a_matrix[matrix * kAMatrixSizeFactor +
-                                col * ROWS_COMPONENT * kIndexAccessFactor +
-                                row * kIndexAccessFactor];
-          float imag = v_matrix[row][col][1] -
-                       a_matrix[matrix * kAMatrixSizeFactor +
-                                col * ROWS_COMPONENT * kIndexAccessFactor +
-                                row * kIndexAccessFactor + 1];
-          if (sqrt(real * real + imag * imag) >= kErrorThreshold) {
-            error += sqrt(real * real + imag * imag);
+
+          bool qr_eq_a = (abs(a_matrix[matrix * kAMatrixSizeFactor +
+                              j * ROWS_COMPONENT * kIndexAccessFactor +
+                              i * kIndexAccessFactor] - qr_ij[0]) 
+                          < kErrorThreshold)
+                      && (abs(a_matrix[matrix * kAMatrixSizeFactor +
+                              j * ROWS_COMPONENT * kIndexAccessFactor +
+                              i * kIndexAccessFactor + 1] - qr_ij[1]) 
+                          < kErrorThreshold);
+
+
+          bool qtq_ortho = (((i == j) && (abs(qtq_ij[0] - 1) < kErrorThreshold))
+                        || ((i != j) && (abs(qtq_ij[0]) < kErrorThreshold)))
+                        && (abs(qtq_ij[1]) < kErrorThreshold);
+
+          bool r_upper_triang = ((i > j) && 
+                                  ((abs(r_matrix[i][j][0]) < kErrorThreshold) &&
+                                  (abs(r_matrix[i][j][1]) < kErrorThreshold)))
+                                || ((i <= j));
+
+          if (!qr_eq_a || !qtq_ortho || !r_upper_triang
+              || !std::isfinite(qr_ij[0])
+              || !std::isfinite(qr_ij[1]) 
+              || !std::isfinite(qtq_ij[0])
+              || !std::isfinite(qtq_ij[1])
+              || !std::isfinite(r_matrix[i][j][0])
+              || !std::isfinite(r_matrix[i][j][1])
+            ) {
+
             count++;
+
+            if(error){
+              continue;
+            }
+
+            if(!qr_eq_a){
+              cout  << "Error: A[" << i << "][" << j << "] = (" << 
+                                  a_matrix[matrix * kAMatrixSizeFactor +
+                                  j * ROWS_COMPONENT * kIndexAccessFactor +
+                                  i * kIndexAccessFactor]
+                                  << ", " <<
+                                  a_matrix[matrix * kAMatrixSizeFactor +
+                                  j * ROWS_COMPONENT * kIndexAccessFactor +
+                                  i * kIndexAccessFactor +1] 
+                    << ") but QR[" << i << "][" << j << "] = (" << qr_ij[0] << ", "
+                    << qr_ij[1] << ")" << std::endl;
+            }
+            if(!qr_eq_a) {
+              cout  << "The difference is greater than tolerated (" 
+                    << kErrorThreshold << ")" << std::endl;
+            }
+            if(!qtq_ortho) {
+              cout  << "Q is not orthogonal" << std::endl;             
+            }
+            if(!r_upper_triang) {
+              cout  << "R is not upper triangular" << std::endl;             
+            }
+            if(!std::isfinite(qr_ij[0]) || !std::isfinite(qr_ij[1])) {
+              cout  << "QR[" << i << "][" << j << "] = (" << qr_ij[0] << ", " 
+                    << qr_ij[1] << ") is not finite" << std::endl;
+            }
+            if(!std::isfinite(qtq_ij[0]) || !std::isfinite(qtq_ij[1])) {
+              cout  << "QtQ[" << i << "][" << j << "] = (" << qtq_ij[0] << ", " 
+                    << qtq_ij[1] << ") is not finite" << std::endl;
+            }
+            if(!std::isfinite(r_matrix[i][j][0]) || 
+               !std::isfinite(r_matrix[i][j][1])) {
+              cout  << "R[" << i << "][" << j << "] = (" << r_matrix[i][j][0] 
+                    << ", " << r_matrix[i][j][1] << ") is not finite" \
+                    << std::endl;
+            }
+            error = true;
           }
         }
       }
@@ -212,8 +270,8 @@ int main(int argc, char *argv[]) {
       if (count > 0) {
         cout << "\nFAILED\n";
         cout << "\n"
-             << "!!!!!!!!!!!!!! Error = " << error << " in " << count << " / "
-             << ROWS_COMPONENT * COLS_COMPONENT << "\n";
+             << "!!!!!!!!!!!!!! " << count << " errors" 
+             << std::endl;
         return 1;
       }
     }

@@ -28,6 +28,7 @@
 
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <chrono>
 #include <cstring>
 #include <vector>
@@ -37,6 +38,9 @@
 using std::vector;
 using namespace sycl;
 
+/*
+  The Unroller functions are utility functions used to do static loop unrolling
+*/
 template <int begin, int end> struct Unroller {
   template <typename Action> static void Step(const Action &action) {
     action(begin);
@@ -48,34 +52,80 @@ template <int end> struct Unroller<end, end> {
   template <typename Action> static void Step(const Action &action) {}
 };
 
+/*
+  Static implementation of the base 2 logarithm function
+*/
+template <typename T>
+static constexpr T Log2(T n) {
+  T ret = T(0);
+  T val = n;
+  while (val > T(1)) {
+    val >>= 1;
+    ret++;
+  }
+  return ret;
+}
+
+/*
+  Static implementation of the CEIL base 2 logarithm function
+*/
+template <typename T>
+static constexpr T CeilLog2(T n) {
+  return ((n == 1) ? T(0) : Log2(n - 1) + T(1));
+}
+
+/*
+  A structure that represents a complex number.
+  - xx represents its real value
+  - yy represents its imaginary value
+  Two operators are overloaded (+, *) to help with manipulating this structure.
+*/
 struct MyComplex {
   float xx;
   float yy;
+
   MyComplex(float x, float y) {
     xx = x;
     yy = y;
   }
+
   MyComplex() {}
-  const MyComplex operator+(const MyComplex other) const {
-    return MyComplex(xx + other.xx, yy + other.yy);
+
+  // Complex addition
+  const MyComplex operator+(const MyComplex rhs) const {
+    return MyComplex(xx + rhs.xx, yy + rhs.yy);
+  }
+
+  // Complex multiplication
+  const MyComplex operator*(const MyComplex rhs) const {
+    MyComplex c;
+    c.xx = xx * rhs.xx + yy * rhs.yy;
+    c.yy = yy * rhs.xx - xx * rhs.yy;
+    return c;
   }
 };
-
-MyComplex MulMycomplex(MyComplex a, MyComplex b) {
-  MyComplex c;
-  c.xx = a.xx * b.xx + a.yy * b.yy;
-  c.yy = a.yy * b.xx - a.xx * b.yy;
-  return c;
-}
 
 // Forward declare the kernel name
 // (This prevents unwanted name mangling in the optimization report.)
 class QRD;
 
+/*
+  Complex single precision floating-point QR Decomposition
+
+  This function implements a OneAPI optimized version of the "High performance
+  QR Decomposition for FPGAs" FPGA'18 paper by Martin Langhammer and Bogdan
+  Pasca.
+
+*/
 void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                      queue &q, size_t matrices, size_t reps) {
+
   // Number of complex elements in the matrix
   constexpr int kNumComplexElements = COLS_COMPONENT * ROWS_COMPONENT;
+
+  // Bits to encode the COLS_COMPONENT and ROWS_COMPONENT
+  constexpr int kColsComponentBitSize = CeilLog2(COLS_COMPONENT);
+  constexpr int kRowsComponentBitSize = CeilLog2(ROWS_COMPONENT);
 
   // Sizes of allocated memories for input and output matrix
   constexpr int kInputMatrixSize = kNumComplexElements * 2;
@@ -90,8 +140,14 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
   constexpr int kNumBanks = ROWS_COMPONENT / kNumElementsPerBank;
 
   constexpr int kLoadIter = kNumComplexElements / kNumElementsPerBank;
+  constexpr int kLoadIterBitSize = CeilLog2(kLoadIter);
   constexpr int kStoreIter = kNumComplexElements / kNumElementsPerBank;
+  constexpr int kStoreIterBitSize = CeilLog2(kStoreIter);
   constexpr short kNumBuffers = 4;
+
+  // Number of iterations performed without any dummy work added
+  // for the triangular loop optimization
+  constexpr int kVariableIterations = N_VALUE - FIXED_ITERATIONS;
 
   // We will process 'chunk' number of matrices in each run of the kernel
   short chunk = 2048;
@@ -120,6 +176,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
       });
 
       q.submit([&](handler &h) {
+
         accessor in_matrix(*input_matrix[b], h, read_only);
         accessor out_matrix(*output_matrix[b], h, write_only, no_init);
         auto out_matrix2 = out_matrix;
@@ -136,7 +193,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
             // Copy data from DDR memory to on-chip memory.
             int idx = l * kNumComplexElements / kNumElementsPerBank;
-            for (short li = 0; li < kLoadIter; li++) {
+            for (ac_int<kLoadIterBitSize+1, false> li = 0; li < kLoadIter; li++) {
               MyComplex tmp[kNumElementsPerBank];
               Unroller<0, kNumElementsPerBank>::Step([&](int k) {
                 tmp[k].xx = in_matrix[idx * 2 * kNumElementsPerBank + k * 2];
@@ -169,14 +226,14 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
             }
 
             float p_ii_x, i_r_ii_x;
-            short i = -1;
-            short j = N_VALUE - FIXED_ITERATIONS < 0
-                          ? (N_VALUE - FIXED_ITERATIONS)
-                          : 0;
             int qr_idx = l * kOutputMatrixSize / 2;
 
-            [[intel::initiation_interval(1)]] [[intel::ivdep(
-                FIXED_ITERATIONS)]] for (int s = 0; s < ITERATIONS; s++) {
+            ac_int<kRowsComponentBitSize+2, true> i = -1;
+            ac_int<kColsComponentBitSize+2, true> j = kVariableIterations < 0
+                          ? kVariableIterations
+                          : 0;
+            [[intel::initiation_interval(1)]] [[intel::ivdep(FIXED_ITERATIONS)]]
+            for (int s = 0; s < ITERATIONS; s++) {
               MyComplex vector_t[ROWS_COMPONENT];
               MyComplex sori[kNumBanks];
 
@@ -208,13 +265,15 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               });
 
               Unroller<0, ROWS_COMPONENT>::Step([&](int k) {
-                vector_t[k] =
-                    MulMycomplex(vector_ai[k],
-                                 i_lt_0[k / kNumElementsPerBank]
-                                     ? MyComplex(0.0, 0.0)
-                                     : sori[k / kNumElementsPerBank]) +
-                    (j_eq_i[k / kNumElementsPerBank] ? MyComplex(0.0, 0.0)
-                                                     : vector_t[k]);
+                auto prod_lhs = vector_ai[k];
+                auto prod_rhs = i_lt_0[k / kNumElementsPerBank] ?
+                                  MyComplex(0.0, 0.0) :
+                                  sori[k / kNumElementsPerBank];
+                auto prod_added_term = j_eq_i[k / kNumElementsPerBank] ?
+                                        MyComplex(0.0, 0.0) :
+                                        vector_t[k];
+                vector_t[k] = prod_lhs * prod_rhs + prod_added_term;
+
                 if (i_ge_0_j_eq_i[k / kNumElementsPerBank]) {
                   ap_matrix[j].d[k].xx = a_matrix[j].d[k].xx = vector_t[k].xx;
                   ap_matrix[j].d[k].yy = a_matrix[j].d[k].yy = vector_t[k].yy;
@@ -226,7 +285,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
               MyComplex p_ij = MyComplex(0, 0);
               Unroller<0, ROWS_COMPONENT>::Step([&](int k) {
-                p_ij = p_ij + MulMycomplex(vector_t[k], vector_ti[k]);
+                p_ij = p_ij + vector_t[k] * vector_ti[k];
               });
 
               if (j == i + 1) {
@@ -253,17 +312,18 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               }
 
               if (j == N_VALUE - 1) {
-                j = ((N_VALUE - FIXED_ITERATIONS) > i)
-                        ? (i + 1)
-                        : (N_VALUE - FIXED_ITERATIONS);
+                j = (kVariableIterations > i)
+                        ? ac_int<kColsComponentBitSize+2, true>{i + 1}
+                        : ac_int<kColsComponentBitSize+2, true>{kVariableIterations};
                 i++;
               } else {
                 j++;
               }
             }
 
-            qr_idx /= 4;
-            for (short si = 0; si < kStoreIter; si++) {
+            qr_idx *= 2;
+
+            for (ac_int<kLoadIterBitSize+1, false> si = 0; si < kStoreIter; si++) {
               int desired = si % (kNumBanks);
               bool get[kNumBanks];
               Unroller<0, kNumBanks>::Step([&](int k) {
@@ -285,14 +345,12 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 });
               });
 
-              Unroller<0, 4>::Step([&](int k) {
-                out_matrix2[qr_idx * 2 * kNumElementsPerBank + k * 2] =
-                    tmp[k].xx;
-                out_matrix2[qr_idx * 2 * kNumElementsPerBank + k * 2 + 1] =
-                    tmp[k].yy;
+              Unroller<0, kNumElementsPerBank>::Step([&](int k) {
+                out_matrix2[qr_idx + k * 2]     = tmp[k].xx;
+                out_matrix2[qr_idx + k * 2 + 1] = tmp[k].yy;
               });
 
-              qr_idx++;
+              qr_idx += kNumElementsPerBank*2;
             }
           }
         });
