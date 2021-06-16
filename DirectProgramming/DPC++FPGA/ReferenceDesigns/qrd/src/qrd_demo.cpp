@@ -57,8 +57,11 @@ int main(int argc, char *argv[]) {
   constexpr size_t kRandomMin = 1;
   constexpr size_t kRandomMax = 10;
   constexpr size_t kAMatrixSizeFactor = ROWS_COMPONENT * COLS_COMPONENT * 2;
-  constexpr size_t kQRMatrixSizeFactor =
-      (ROWS_COMPONENT + 1) * COLS_COMPONENT * 3;
+  
+  constexpr size_t kQMatrixSize = ROWS_COMPONENT * COLS_COMPONENT * 2;
+  constexpr size_t kRMatrixSize = COLS_COMPONENT * (COLS_COMPONENT + 1) / 2 * 2;
+  constexpr size_t kQRMatrixSizeFactor = kQMatrixSize + kRMatrixSize;
+
   constexpr size_t kIndexAccessFactor = 2;
 
   size_t matrices = argc > 1 ? atoi(argv[1]) : 1;

@@ -156,13 +156,19 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
   // Number of complex elements in the matrix
   constexpr int kNumComplexElements = COLS_COMPONENT * ROWS_COMPONENT;
 
-  // Bits to encode the COLS_COMPONENT and ROWS_COMPONENT
-  constexpr int kColsComponentBitSize = CeilLog2(COLS_COMPONENT);
-  constexpr int kRowsComponentBitSize = CeilLog2(ROWS_COMPONENT);
-
   // Sizes of allocated memories for input and output matrix
+  // Both the input matrix and Q are full matrices of complex elements
+  // R only contains COLS_COMPONENT + 
+  //                 (COLS_COMPONENT - 1) + 
+  //                 (COLS_COMPONENT - 2) +
+  //                 (COLS_COMPONENT - 3) + 
+  //                 etc.
+  // So R contains COLS_COMPONENT * (COLS_COMPONENT + 1) / 2 complex elements.
+  // Each complex element takes two indexes.
   constexpr int kInputMatrixSize = kNumComplexElements * 2;
-  constexpr int kOutputMatrixSize = (ROWS_COMPONENT + 1) * COLS_COMPONENT * 3;
+  constexpr int kQMatrixSize = kNumComplexElements * 2;
+  constexpr int kRMatrixSize = COLS_COMPONENT * (COLS_COMPONENT + 1);
+  constexpr int kOutputMatrixSize = kQMatrixSize + kRMatrixSize;
 
   // Constants related to the memory configuration of the kernel's local
   // memories
@@ -172,17 +178,27 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
   constexpr int kBankwidth = kNumElementsPerBank * 8;
   constexpr int kNumBanks = ROWS_COMPONENT / kNumElementsPerBank;
 
+  // Number of load and store iterations for a single matrix given the size
+  // of the input matrices and the number of complex elements per banks
   constexpr int kLoadIter = kNumComplexElements / kNumElementsPerBank;
-  constexpr int kLoadIterBitSize = CeilLog2(kLoadIter);
   constexpr int kStoreIter = kNumComplexElements / kNumElementsPerBank;
-  constexpr int kStoreIterBitSize = CeilLog2(kStoreIter);
+  // Number of bits required by the loop counters for the loads/stores iters
+  constexpr int kLoadIterBitSize = CeilLog2(kLoadIter + 1);
+  constexpr int kStoreIterBitSize = CeilLog2(kStoreIter + 1);
+
   constexpr short kNumBuffers = 4;
 
   // Number of iterations performed without any dummy work added
   // for the triangular loop optimization
   constexpr int kVariableIterations = N_VALUE - FIXED_ITERATIONS;
 
-  constexpr int kjBitSize = (kVariableIterations < 0 ? 
+  // Sizes in bits for the triangular loop indexes
+  // i starts from -1 and goes up to ROWS_COMPONENT
+  // So we need:
+  // -> ROWS_COMPONENT+1 bits for the positive iterations and the exit condition
+  // -> one extra bit for the -1
+  constexpr int kIBitSize = CeilLog2(ROWS_COMPONENT + 1) + 1;
+  constexpr int kJBitSize = (kVariableIterations < 0 ? 
                             CeilLog2(COLS_COMPONENT + 1) + 
                             CeilLog2(-kVariableIterations) : 
                             CeilLog2(COLS_COMPONENT + 1) + 1) 
@@ -236,7 +252,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
             // Copy data from DDR memory to on-chip memory.
             int idx = l * kNumComplexElements / kNumElementsPerBank;
-            for (ac_int<kLoadIterBitSize+1, false> li = 0; li < kLoadIter; li++) {
+            for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; li++) {
               MyComplex tmp[kNumElementsPerBank];
               Unroller<0, kNumElementsPerBank>::Step([&](int k) {
                 tmp[k].xx = in_matrix[idx * 2 * kNumElementsPerBank + k * 2];
@@ -271,10 +287,9 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
             float p_ii_x, i_r_ii_x;
             int qr_idx = l * kOutputMatrixSize / 2;
 
-            ac_int<kRowsComponentBitSize+2, true> i = -1;
-            ac_int<kjBitSize, true> j = kVariableIterations < 0
-                          ? kVariableIterations
-                          : 0;
+            ac_int<kIBitSize, true> i = -1;
+            ac_int<kJBitSize, true> j = kVariableIterations < 0 ? 
+                                        kVariableIterations : 0;
             [[intel::initiation_interval(1)]] [[intel::ivdep(FIXED_ITERATIONS)]]
             for (int s = 0; s < ITERATIONS; s++) {
               MyComplex vector_t[ROWS_COMPONENT];
@@ -356,8 +371,8 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
               if (j == N_VALUE - 1) {
                 j = (kVariableIterations > i)
-                        ? ac_int<kjBitSize, true>{i + 1}
-                        : ac_int<kjBitSize, true>{kVariableIterations};
+                        ? ac_int<kJBitSize, true>{i + 1}
+                        : ac_int<kJBitSize, true>{kVariableIterations};
                 i++;
               } else {
                 j++;
@@ -366,7 +381,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
             qr_idx *= 2;
 
-            for (ac_int<kLoadIterBitSize+1, false> si = 0; si < kStoreIter; si++) {
+            for (ac_int<kStoreIterBitSize, false> si = 0; si < kStoreIter; si++) {
               int desired = si % (kNumBanks);
               bool get[kNumBanks];
               Unroller<0, kNumBanks>::Step([&](int k) {
