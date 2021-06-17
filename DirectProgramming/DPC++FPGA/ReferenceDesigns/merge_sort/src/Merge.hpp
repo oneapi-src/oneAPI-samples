@@ -10,10 +10,10 @@
 using namespace sycl;
 
 //
-// Streams in a sorted list of size 'in_count`, 'k_width' elements at a time,
+// Streams in two sorted list of size 'in_count`, 'k_width' elements at a time,
 // from both InPipeA and InPipeB and merges them into a single sorted list of
-// size 'in_count*2' to OutPipe. This merges two sorted sublists 'k_width'
-// elements per cycle.
+// size 'in_count*2' to OutPipe. This merges two sorted lists of size in_count
+// at a rate of 'k_width' elements per cycle.
 //
 template <typename Id, typename ValueT, typename IndexT, typename InPipeA,
           typename InPipeB, typename OutPipe, unsigned char k_width,
@@ -31,7 +31,6 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
   return q.submit([&](handler& h) {
     h.single_task<Id>([=] {
       // the two input and feedback buffers
-      [[intel::fpga_register]]
       sycl::vec<ValueT, k_width> a, b, network_feedback;
 
       bool drain_a = false;
@@ -64,6 +63,7 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
       // be produced and instead we will just populate the feedback buffer
       bool first_in_buffer = true;
 
+      // the main processing loop
       [[intel::initiation_interval(1)]]
       while (written_out != total_count) {
         // read 'k_width' elements from Pipe A
@@ -98,7 +98,7 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
           merge_sort_network_data[2 * i + 1] = network_feedback[i];
         }
 
-        // sort network, which sorts 'merge_sort_network_data' in-place
+        // merge sort network, which sorts 'merge_sort_network_data' in-place
         MergeSortNetwork<ValueT, k_width>(merge_sort_network_data, compare);
 
         if (first_in_buffer) {
@@ -117,7 +117,7 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
           sycl::vec<ValueT, k_width> out_data;
           if (written_out_inner == out_count - k_width) {
             // on the last iteration for a set of sublists, the feedback
-            // is the only data left that is valid, so output it
+            // is the only data left that is valid, so it goes to the output
             out_data = network_feedback;
           } else {
             // grab the output and feedback data from the merge sort network

@@ -119,7 +119,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
           MTBPipe, MTOutPipe, k_width>
   //////////////////////////////////////////////////////////////////////////////
 
-  // depth of the merge tree to reduce the partial results of each merge unit
+  // depth of the merge tree to reduce the sorted partitions of each merge unit
   constexpr size_t kReductionLevels = Log2(units);
 
   // validate 'count'
@@ -169,12 +169,12 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   const IndexT half_count_per_unit = count_per_unit / 2;
 
   // the number of sorting iterations each merge unit will perform
-  // NOTE: we subtract log2(k_width) because the sorting network performs the
-  // first log2(k_width) iterations of the sort while streaming the input data
-  // from the input pipe.
+  // NOTE: we subtract log2(k_width) because the bitonic sorting network
+  // performs the first log2(k_width) iterations of the sort while streaming
+  // the input data from the input pipe into device memory.
   const IndexT iterations = Log2(count_per_unit) - Log2(k_width);
 
-  // memory to store the various merge unit and merge tree kernel events
+  // store the various merge unit and merge tree kernel events
   std::array<std::vector<event>, units> produce_a_events, produce_b_events,
       merge_events, consume_events;
   std::array<std::vector<event>, kReductionLevels> mt_merge_events;
@@ -185,22 +185,23 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
     consume_events[i].resize(iterations);
   }
 
-  // launch the sorting network kernel which performs the first log2(k_width)
+  // launch the sorting network kernel that performs the first log2(k_width)
   // iterations of the sort. For example, if k_width=4, the sorting network
   // sorts 4 elements per cycle, in the steady state. This means we need
-  // log2(4)=2 less iterations of the merge sort.
+  // log2(4)=2 less iterations of the merge sort since we start with sorted
+  // sublists of size 4.
   auto sort_network_event =
       SubmitSortNetworkKernel(q, buf[buf_idx], count, comp);
 
   ////////////////////////////////////////////////////////////////////////////
   // Launching all of the merge unit kernels
   // start with inputs of size 'k_width' since the data from the input pipe
-  // was sent through a sorting network that sorted sets of size 'k_width'.
+  // was sent through a sorting network that sorted sublists of size 'k_width'.
   IndexT in_count = k_width;
 
   // perform the sort iterations for each merge unit
   for (size_t i = 0; i < iterations; i++) {
-    // The Consume kernels will write to a pipe on last iteration
+    // The Consume kernels will write to a pipe on the last iteration
     bool consumer_to_pipe = (i == (iterations - 1));
 
     // launch the merge unit kernels for this iteration of the sort using
@@ -220,9 +221,8 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
       // build the dependency event vector
       std::vector<event> wait_events;
       if (i == 0) {
-        // on the first iteration, wait for the Consume kernel from the sorting
-        // network stage to be done so that all of the data is in the temp
-        // buffers in device memory
+        // on the first iteration, wait for sorting network kernel to be done so
+        // that all of the data is in the temp buffers in device memory
         wait_events.push_back(sort_network_event);
       } else {
         // on all iterations (except the first), Produce kernels for the
@@ -274,7 +274,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // Launching all of the merge tree kernels
 
   // the merge tree pipe array
-  // NOTE: we actually only need 2^(kReductionLevels) - 2 total pipes,
+  // NOTE: we actually only need 2^(kReductionLevels)-2 total pipes,
   // but we have created a 2D pipe array with kReductionLevels*units
   // pipes. The 2D pipe array makes the metaprogramming much easier and the
   // front-end compiler will not use the extra pipes and therefore they

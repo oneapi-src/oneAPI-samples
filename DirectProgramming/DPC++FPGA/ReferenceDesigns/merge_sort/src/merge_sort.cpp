@@ -30,7 +30,7 @@ constexpr bool kUseUSMHostAllocation = false;
 #endif
 
 // The number of merge units, which must be a power of 2.
-// This can be set by defining the preprocessor macro 'MERGE_UNIT'
+// This can be set by defining the preprocessor macro 'MERGE_UNITS'
 // otherwise the default value below is used.
 #ifndef MERGE_UNITS
 #define MERGE_UNITS 8
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
   queue q(selector, dpc_common::exception_handler);
 
   // make sure the device supports USM device allocations
-  device d = q.get_device();
+  auto d = q.get_device();
   if (!d.get_info<info::device::usm_device_allocations>()) {
     std::cerr << "ERROR: The selected device does not support USM device"
               << " allocations\n";
@@ -230,8 +230,8 @@ int main(int argc, char *argv[]) {
 
   // print the performance results
   if (passed) {
-    // NOTE: when run in emulation, these results do not represent the
-    // performance of the kernels in actual FPGA hardware
+    // NOTE: when run in emulation, these results do not accurately represent
+    // the performance of the kernels in actual FPGA hardware
     double avg_time_ms =
       std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
 
@@ -304,7 +304,7 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
         // read data from device memory
         bool in_range = i < sorter_count;
 
-        // build the input pipe value
+        // build the input pipe data
         sycl::vec<ValueT, kSortWidth> data;
         #pragma unroll
         for (unsigned char j = 0; j < kSortWidth; j++) {

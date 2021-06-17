@@ -97,6 +97,7 @@ template <typename Id, typename ValueT, typename IndexT, typename InPipe,
           unsigned char k_width, class CompareFunc>
 event SortNetworkKernel(queue& q, ValueT* out_ptr, IndexT total_count,
                         CompareFunc compare) {
+  // the number of loop iterations required to process all of the data
   const IndexT iterations = total_count / k_width;
 
   return q.submit([&](handler& h) {
@@ -105,10 +106,9 @@ event SortNetworkKernel(queue& q, ValueT* out_ptr, IndexT total_count,
 
       for (IndexT i = 0; i < iterations; i++) {
         // read the input data from the pipe
-        [[intel::fpga_register]]
         sycl::vec<ValueT, k_width> data = InPipe::read();
 
-        // bitonic sort network sorts the k_width elements in 'data' in-place
+        // bitonic sort network sorts the k_width elements of 'data' in-place
         // NOTE: there are no dependencies across loop iterations on 'data'
         // here, so this sorting network can be fully pipelined
         BitonicSortNetwork<ValueT, k_width>(data, compare);
