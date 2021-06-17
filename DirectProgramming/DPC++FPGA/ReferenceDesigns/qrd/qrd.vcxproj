@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SpecifyDevCmplAdditionalOptions>-Xsclock=360MHz;-Xsfp-relaxed;-fno-fast-math;-Xsparallel=2</SpecifyDevCmplAdditionalOptions>
+      <SpecifyDevCmplAdditionalOptions>-Xsclock=360MHz;-Xsparallel=2</SpecifyDevCmplAdditionalOptions>
     </Link>
     <Manifest />
   </ItemDefinitionGroup>
@@ -160,7 +160,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SpecifyDevCmplAdditionalOptions>-Xsclock=330MHz;-Xsfp-relaxed;-Xsparallel=2</SpecifyDevCmplAdditionalOptions>
+      <SpecifyDevCmplAdditionalOptions>-Xsclock=330MHz;-Xsparallel=2</SpecifyDevCmplAdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
