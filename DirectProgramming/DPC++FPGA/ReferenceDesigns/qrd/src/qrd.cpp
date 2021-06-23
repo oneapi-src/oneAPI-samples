@@ -272,17 +272,17 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
             // Instantiate 3 versions of the input matrix
             // There are three loops that:
-            // - load the input matrix into aload_matrix
-            // - read aload_matrix and do the computation on a_matrix, then 
-            //   writes the results in astore_matrix
-            // - writes astore_matrix into the output matrix
+            // - load the input matrix into A_load
+            // - read A_load and do the computation on A_compute, then 
+            //   writes the results in A_store
+            // - writes A_store into the output matrix
             [[intel::bankwidth(kBankwidth)]] // NO-FORMAT: Attribute
             [[intel::numbanks(kNumBanks)]]   // NO-FORMAT: Attribute
             struct {
               Complex d[ROWS_COMPONENT];
-            } aload_matrix[COLS_COMPONENT],
-              a_matrix[COLS_COMPONENT], 
-              astore_matrix[COLS_COMPONENT];
+            } A_load[COLS_COMPONENT],
+              A_compute[COLS_COMPONENT], 
+              A_store[COLS_COMPONENT];
 
             /*
               ==================================================================
@@ -306,15 +306,15 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               // Increase the bank index
               loadBankIndex++;
 
-              // Write the current bank to the aload_matrix matrix.
+              // Write the current bank to the A_load matrix.
               int jtmp = li % (kNumBanks);
               int liNumBank = li / kNumBanks;
               Unroller<0, kNumBanks>::Step([&](int k) {
                 Unroller<0, kNumElementsPerBank>::Step([&](int t) {
                   if (jtmp == k) {
-                    aload_matrix[liNumBank].d[k * kNumElementsPerBank + t].xx 
+                    A_load[liNumBank].d[k * kNumElementsPerBank + t].xx 
                                                                     = tmp[t].xx;
-                    aload_matrix[liNumBank].d[k * kNumElementsPerBank + t].yy 
+                    A_load[liNumBank].d[k * kNumElementsPerBank + t].yy 
                                                                     = tmp[t].yy;
                   }
 
@@ -419,11 +419,11 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               });
 
               // Unroller<0, ROWS_COMPONENT>::Step([&](int k) {
-              //   col[k].xx = aload_matrix[j].d[k].xx;
-              //   col[k].yy = aload_matrix[j].d[k].yy;
+              //   col[k].xx = A_load[j].d[k].xx;
+              //   col[k].yy = A_load[j].d[k].yy;
               //   if (i_gt_0[k / kNumElementsPerBank]) {
-              //     col[k].xx = a_matrix[j].d[k].xx;
-              //     col[k].yy = a_matrix[j].d[k].yy;
+              //     col[k].xx = A_compute[j].d[k].xx;
+              //     col[k].yy = A_compute[j].d[k].yy;
               //   }
               //   if (j_eq_i[k / kNumElementsPerBank]) {
               //     a_i[k].xx = col[k].xx;
@@ -440,14 +440,14 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
                 // Load col with the current column of matrix a.
                 // At least one iteration of the outer loop i is required
-                // for the "working copy" a_matrix to contain data.
+                // for the "working copy" A_compute to contain data.
                 // If no i iteration elapsed, we must read the column of matrix
-                // a directly from the aload_matrix 
+                // a directly from the A_load 
                 // col then contains a_j
-                col[k].xx = i_gt_0[bank] ? a_matrix[j].d[k].xx : 
-                                                        aload_matrix[j].d[k].xx;
-                col[k].yy = i_gt_0[bank] ? a_matrix[j].d[k].yy : 
-                                                        aload_matrix[j].d[k].yy;
+                col[k].xx = i_gt_0[bank] ? A_compute[j].d[k].xx : 
+                                                        A_load[j].d[k].xx;
+                col[k].yy = i_gt_0[bank] ? A_compute[j].d[k].yy : 
+                                                        A_load[j].d[k].yy;
 
                 // Load a_i for reuse across j iterations
                 if (j_eq_i[bank]) {
@@ -473,20 +473,20 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 auto add = j_eq_i[bank] ? Complex(0.0, 0.0) : col[k];
                 col[k] = prod_lhs * prod_rhs + add;
 
-                // Store Q_i in astore_matrix and the modified a_j in a_matrix
-                // To reduce the amount of control, astore_matrix and a_matrix
+                // Store Q_i in A_store and the modified a_j in A_compute
+                // To reduce the amount of control, A_store and A_compute
                 // are both written to for each iteration of i>=0 && j>=i
                 // In fact:
-                // -> astore_matrix could only be written to at iterations i==j
-                // -> a_matrix could only be written to at iterations 
+                // -> A_store could only be written to at iterations i==j
+                // -> A_compute could only be written to at iterations 
                 //    j!=i && i>=0  
                 // The extra writes are harmless as the locations written to 
                 // are either going to be:
-                // -> overwritten for the matrix Q (astore_matrix)
-                // -> unused for the a_matrix
+                // -> overwritten for the matrix Q (A_store)
+                // -> unused for the A_compute
                 if (i_ge_0_j_ge_i[bank]) {
-                  astore_matrix[j].d[k].xx = a_matrix[j].d[k].xx = col[k].xx;
-                  astore_matrix[j].d[k].yy = a_matrix[j].d[k].yy = col[k].yy;
+                  A_store[j].d[k].xx = A_compute[j].d[k].xx = col[k].xx;
+                  A_store[j].d[k].yy = A_compute[j].d[k].yy = col[k].yy;
                 }
 
                 // Store a_{i+1} for subsequent iterations of j
@@ -546,7 +546,11 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               Loop 3: Copy the result from on-chip memory to DDR memory.
               ==================================================================
             */
-            for (ac_int<kStoreIterBitSize, false> si = 0; si < kStoreIter; si++) {
+            for (ac_int<kStoreIterBitSize, false> si = 0; si < kStoreIter; 
+                                                                        si++) {
+              // Only one bank is going to be stored per si iteration
+              // To reduce fanout on si, a "get" table will contain for each 
+              // bank a boolean to check if it should store this si iteration
               int desired = si % (kNumBanks);
               bool get[kNumBanks];
               Unroller<0, kNumBanks>::Step([&](int k) {
@@ -554,19 +558,24 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 desired = ext::intel::fpga_reg(desired);
               });
 
+              // Each bank will then check the get table to potentially 
+              // read kNumElementsPerBank from A_store and store the elements
+              // in tmp
               Complex tmp[kNumElementsPerBank];
               int siNumBank = si / kNumBanks;
               Unroller<0, kNumBanks>::Step([&](int t) {
                 Unroller<0, kNumElementsPerBank>::Step([&](int k) {
                   tmp[k].xx = get[t] ? 
-                        astore_matrix[siNumBank].d[t * kNumElementsPerBank + k].xx : 
-                        INTEL::fpga_reg(tmp[k].xx);
+                          A_store[siNumBank].d[t * kNumElementsPerBank + k].xx : 
+                          INTEL::fpga_reg(tmp[k].xx);
                   tmp[k].yy = get[t] ? 
-                        astore_matrix[siNumBank].d[t * kNumElementsPerBank + k].yy : 
-                        INTEL::fpga_reg(tmp[k].yy);
+                          A_store[siNumBank].d[t * kNumElementsPerBank + k].yy : 
+                          INTEL::fpga_reg(tmp[k].yy);
                 });
               });
 
+              // Finally, the kNumElementsPerBank elements from tmp are 
+              // written to the out_matrix2 (alias to out_matrix)
               Unroller<0, kNumElementsPerBank>::Step([&](int k) {
                 out_matrix2[qr_idx + k * 2]     = tmp[k].xx;
                 out_matrix2[qr_idx + k * 2 + 1] = tmp[k].yy;
