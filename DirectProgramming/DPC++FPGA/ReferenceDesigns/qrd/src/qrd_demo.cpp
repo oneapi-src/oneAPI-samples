@@ -43,12 +43,6 @@ using namespace std;
 using namespace std::chrono;
 using namespace sycl;
 
-// Run the modified Gram-Schmidt QR Decomposition algorithm on the given
-// matrices. The function will do the following:
-//   1. Transfer the input matrices to the FPGA.
-//   2. Run the algorithm.
-//   3. Copy the output data back to host device.
-// The above process is carried out 'reps' number of times.
 void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                      queue &q, size_t matrices, size_t reps);
 
@@ -238,8 +232,8 @@ int main(int argc, char *argv[]) {
                                   a_matrix[matrix * kAMatrixSizeFactor +
                                   j * ROWS_COMPONENT * kIndexAccessFactor +
                                   i * kIndexAccessFactor +1] 
-                    << ") but QR[" << i << "][" << j << "] = (" << qr_ij[0] << ", "
-                    << qr_ij[1] << ")" << std::endl;
+                    << ") but QR[" << i << "][" << j << "] = (" << qr_ij[0] 
+                    << ", " << qr_ij[1] << ")" << std::endl;
             }
             if(!qr_eq_a) {
               cout  << "The difference is greater than tolerated (" 

@@ -262,10 +262,6 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
         auto out_matrix2 = out_matrix;
 
-    //// DEBUG
-    sycl::stream out(16384, 1024, h);
-    //// END DEBUG
-
         h.single_task<class QRD>([=]() [[intel::kernel_args_restrict]] {
           // Go over the matrices
           for (int l = 0; l < matrices; l++) {
@@ -445,9 +441,9 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 // a directly from the A_load 
                 // col then contains a_j
                 col[k].xx = i_gt_0[bank] ? A_compute[j].d[k].xx : 
-                                                        A_load[j].d[k].xx;
+                                                              A_load[j].d[k].xx;
                 col[k].yy = i_gt_0[bank] ? A_compute[j].d[k].yy : 
-                                                        A_load[j].d[k].yy;
+                                                              A_load[j].d[k].yy;
 
                 // Load a_i for reuse across j iterations
                 if (j_eq_i[bank]) {
