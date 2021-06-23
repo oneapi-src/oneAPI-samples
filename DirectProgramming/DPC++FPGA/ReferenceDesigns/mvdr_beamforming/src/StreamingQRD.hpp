@@ -281,11 +281,7 @@ event SubmitStreamingQRDKernel(queue& q) {
           s_ij.set_i(p_ij.imag() / p_ii_real);
 
           if (j >= 0) {
-            if (j == i + 1) {
-              s_or_i[j_nonneg] = i_r_ii_real;
-            } else {
-              s_or_i[j_nonneg] = s_ij;
-            }
+            s_or_i[j_nonneg] = (j == i + 1) ? ComplexType{i_r_ii_real} : s_ij;
           }
 
           // calculate 1/R value
