@@ -404,7 +404,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               // kNumBanks times to reduce fanout
               bool  j_eq_i[kNumBanks], 
                     i_gt_0[kNumBanks],
-                    i_ge_0_j_eq_i[kNumBanks], 
+                    i_ge_0_j_ge_i[kNumBanks], 
                     j_eq_i_plus_1[kNumBanks],
                     i_lt_0[kNumBanks];
 
@@ -412,7 +412,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 i_gt_0[k] = ext::intel::fpga_reg(i > 0);
                 i_lt_0[k] = ext::intel::fpga_reg(i < 0);
                 j_eq_i[k] = ext::intel::fpga_reg(j == i);
-                i_ge_0_j_eq_i[k] = ext::intel::fpga_reg(i >= 0 && j >= i);
+                i_ge_0_j_ge_i[k] = ext::intel::fpga_reg(i >= 0 && j >= i);
                 j_eq_i_plus_1[k] = ext::intel::fpga_reg(j == i + 1);
                 sori[k].xx = ext::intel::fpga_reg(s_or_i[j].xx);
                 sori[k].yy = ext::intel::fpga_reg(s_or_i[j].yy);
@@ -473,8 +473,18 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 auto add = j_eq_i[bank] ? Complex(0.0, 0.0) : col[k];
                 col[k] = prod_lhs * prod_rhs + add;
 
-                // Store Q_i in astore_matrix
-                if (i_ge_0_j_eq_i[bank]) {
+                // Store Q_i in astore_matrix and the modified a_j in a_matrix
+                // To reduce the amount of control, astore_matrix and a_matrix
+                // are both written to for each iteration of i>=0 && j>=i
+                // In fact:
+                // -> astore_matrix could only be written to at iterations i==j
+                // -> a_matrix could only be written to at iterations 
+                //    j!=i && i>=0  
+                // The extra writes are harmless as the locations written to 
+                // are either going to be:
+                // -> overwritten for the matrix Q (astore_matrix)
+                // -> unused for the a_matrix
+                if (i_ge_0_j_ge_i[bank]) {
                   astore_matrix[j].d[k].xx = a_matrix[j].d[k].xx = col[k].xx;
                   astore_matrix[j].d[k].yy = a_matrix[j].d[k].yy = col[k].yy;
                 }
