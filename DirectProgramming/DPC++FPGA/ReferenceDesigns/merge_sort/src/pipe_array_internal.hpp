@@ -2,6 +2,7 @@
 #define __PIPE_ARRAY_INTERNAL_HPP__
 
 namespace impu {
+namespace pipe {
 namespace detail {
 
 // Templated classes for verifying dimensions when accessing elements in the
@@ -51,6 +52,7 @@ struct write_currying<WriteFunc, BaseTy, std::index_sequence<I...>> {
 };
 
 }  // namespace detail
+}  // namespace pipe
 }  // namespace impu
 
 #endif /* __PIPE_ARRAY_INTERNAL_HPP__ */

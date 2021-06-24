@@ -98,13 +98,13 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // the pipes connecting the different kernels of each merge unit
   // one set of pipes for each 'units' merge units
   using APipes =
-    impu::PipeArray<APipeID, PipeType, kDefaultPipeDepth, units>;
+    impu::pipe::PipeArray<APipeID, PipeType, kDefaultPipeDepth, units>;
   using BPipes =
-    impu::PipeArray<BPipeID, PipeType, kDefaultPipeDepth, units>;
+    impu::pipe::PipeArray<BPipeID, PipeType, kDefaultPipeDepth, units>;
   using MergePipes =
-    impu::PipeArray<MergePipeID, PipeType, kDefaultPipeDepth, units>;
+    impu::pipe::PipeArray<MergePipeID, PipeType, kDefaultPipeDepth, units>;
   using InternalOutPipes =
-      impu::PipeArray<InternalOutPipeID, PipeType, kDefaultPipeDepth, units>;
+      impu::pipe::PipeArray<InternalOutPipeID, PipeType, kDefaultPipeDepth, units>;
 
   //////////////////////////////////////////////////////////////////////////////
   // These defines make the latter code cleaner
@@ -286,8 +286,9 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // pipes. The 2D pipe array makes the metaprogramming much easier and the
   // front-end compiler will not use the extra pipes and therefore they
   // will NOT be instantiated in hardware
-  using InternalMTPipes = impu::PipeArray<InternalMergeTreePipeID, PipeType,
-                                kDefaultPipeDepth, kReductionLevels, units>;
+  using InternalMTPipes =
+    impu::pipe::PipeArray<InternalMergeTreePipeID, PipeType, kDefaultPipeDepth,
+                           kReductionLevels, units>;
 
   // create the merge tree connected by pipes to merge the sorted output
   // of each merge unit into a single sorted output. The output of the last

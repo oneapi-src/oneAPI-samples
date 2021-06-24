@@ -8,6 +8,7 @@
 #include "pipe_array_internal.hpp"
 
 namespace impu {
+namespace pipe {
 
 template <class Id,          // identifier for the pipe array
           typename BaseTy,   // type to write/read for each pipe
@@ -88,6 +89,7 @@ struct PipeArray {
 
 };  // end of struct PipeArray
 
+}  // namespace pipe
 }  // namespace impu
 
 #endif /* __PIPE_ARRAY_HPP__ */
