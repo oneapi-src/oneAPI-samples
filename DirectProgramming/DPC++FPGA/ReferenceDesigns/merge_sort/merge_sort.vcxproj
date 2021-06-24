@@ -16,13 +16,13 @@
   <ItemGroup>
     <ClInclude Include="src\consume.hpp" />
     <ClInclude Include="src\merge.hpp" />
-    <ClInclude Include="src\mergesort.hpp" />
+    <ClInclude Include="src\merge_sort.hpp" />
     <ClInclude Include="src\pipe_array_internal.hpp" />
     <ClInclude Include="src\pipe_array.hpp" />
     <ClInclude Include="src\produce.hpp" />
-    <ClInclude Include="src\sortingnetworks.hpp" />
+    <ClInclude Include="src\sorting_networks.hpp" />
     <ClInclude Include="src\impu_math.hpp" />
-    <ClInclude Include="src\unrolledloop.hpp" />
+    <ClInclude Include="src\unrolled_loop.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

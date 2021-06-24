@@ -4,7 +4,7 @@
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
-#include "sortingnetworks.hpp"
+#include "sorting_networks.hpp"
 #include "impu_math.hpp"
 
 using namespace sycl;

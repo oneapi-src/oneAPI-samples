@@ -15,7 +15,7 @@
 #include "dpc_common.hpp"
 
 // include the merge sort kernel header
-#include "mergesort.hpp"
+#include "merge_sort.hpp"
 
 using namespace sycl;
 using namespace std::chrono;

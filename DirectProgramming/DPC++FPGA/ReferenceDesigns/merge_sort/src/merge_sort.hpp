@@ -13,8 +13,8 @@
 #include "consume.hpp"
 #include "merge.hpp"
 #include "produce.hpp"
-#include "sortingnetworks.hpp"
-#include "unrolledloop.hpp"
+#include "sorting_networks.hpp"
+#include "unrolled_loop.hpp"
 #include "pipe_array.hpp"
 #include "impu_math.hpp"
 
