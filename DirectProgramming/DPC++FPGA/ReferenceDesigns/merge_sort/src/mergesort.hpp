@@ -95,7 +95,8 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // the type that is passed around the pipes
   using PipeType = sycl::vec<ValueT, k_width>;
 
-  // the various pipes connecting the different kernels of each merge unit
+  // the pipes connecting the different kernels of each merge unit
+  // one set of pipes for each 'units' merge units
   using APipes =
     impu::PipeArray<APipeID, PipeType, kDefaultPipeDepth, units>;
   using BPipes =
@@ -264,6 +265,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
       // Consume
       consume_events[u][i] = SubmitConsume(q, out_buf, count_per_unit,
                                            unit_buf_offset, consumer_to_pipe);
+      ////////////////////////////////////////////////////////////////////////
     });
     ////////////////////////////////////////////////////////////////////////
 
@@ -287,13 +289,15 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   using InternalMTPipes = impu::PipeArray<InternalMergeTreePipeID, PipeType,
                                 kDefaultPipeDepth, kReductionLevels, units>;
 
-  // create the static merge tree connected by pipes to merge the sorted output
-  // of each merge unit into a single sorted output through OutPipe
+  // create the merge tree connected by pipes to merge the sorted output
+  // of each merge unit into a single sorted output. The output of the last
+  // level of the merge tree will stream out of 'OutPipe'.
   // NOTE: if units==1, then there is no merge tree!
   impu::UnrolledLoop<kReductionLevels>([&](auto level) {
     // each level of the merge tree reduces the number of sorted partitions
     // by a factor of 2.
     // level 0 has 'units' merge kernels, level 1 has 'units/2', and so on...
+    // See README.md for a good illustration.
     constexpr size_t kLevelMergeUnits = units / ((1 << level) * 2);
 
     impu::UnrolledLoop<kLevelMergeUnits>([&](auto merge_unit) {
@@ -304,7 +308,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
       // 'MTBPipeFromMergeTree' in the case that level == 0.
       constexpr size_t prev_level = (level == 0) ? 0 : level - 1;
 
-      // PipeA for this merge kernel in the merge tree.
+      // 'PipeA' for this merge kernel in the merge tree.
       // If the merge tree level is 0, the pipe is from a merge unit,
       // otherwise it is from the previous level of the merge tree.
       using MTAPipeFromMergeUnit =
@@ -315,7 +319,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
           typename std::conditional_t<(level == 0), MTAPipeFromMergeUnit,
                                       MTAPipeFromMergeTree>;
 
-      // PipeB for this merge kernel in the merge tree.
+      // 'PipeB' for this merge kernel in the merge tree.
       // If the merge tree level is 0, the pipe is from a merge unit,
       // otherwise it is from the previous level of the merge tree.
       using MTBPipeFromMergeUnit =
@@ -327,7 +331,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
           typename std::conditional_t<(level == 0), MTBPipeFromMergeUnit,
                                       MTBPipeFromMergeTree>;
 
-      // OutPipe for this merge kernel in the merge tree.
+      // 'OutPipe' for this merge kernel in the merge tree.
       // If this is the last level, then the output pipe is the output pipe
       // of the entire sorter, otherwise it is going to another level of the
       // merge tree.
@@ -375,7 +379,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
 }
 
 //
-// A convenience function that defaults the sorter's comparator to 'LessThan'
+// A convenient function that defaults the sorter's comparator to 'LessThan'
 // (i.e., operator<)
 //
 template <typename ValueT, typename IndexT, typename InPipe, typename OutPipe,

@@ -142,7 +142,7 @@ Execution time: 69.9848 ms
 Throughput: 228.621 Melements/s
 PASSED
 ```
-NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's true performance.
+NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance.
     
 
 ## Additional Design Information
@@ -152,24 +152,24 @@ The following source files can be found in the `src/` sub-directory.
 | File                           | Description 
 |:---                            |:---
 |`main.cpp`                      | Contains the `main()` function and the top-level interfaces.
-|`mergesort.hpp`                 | The function to submit all of the merge sort kernels (`Partition`, `Produce`, `Merge`, and `Consume`).
+|`mergesort.hpp`                 | The function to submit all of the merge sort kernels (`SortingNetwork`, `Produce`, `Merge`, and `Consume`).
 |`consume.hpp`                   | The `Consume` kernel for the merge unit. This kernel reads from an input pipe and writes out to either a different output pipe, or to device memory.
+|`impu_math.hpp`                 | Metaprogramming math helper functions (*impu* = Intel Metaprogramming Utilities)
 |`merge.hpp`                     | The `Merge` kernel for the merge unit and the merge tree. This kernel streams in two sorted lists, merges them into a single sorted list of double the size, and streams the data out a pipe.
 |`pipe_array.hpp`                | Header file containing the definition of an array of pipes.
 |`pipe_array_internal.hpp`       | Helper for pipe_array.hpp.
 |`produce.hpp`                   | The `Produce` kernel for the merge unit. This kernel reads from input pipes or performs strided reads from device memory and writes the data to an output pipe.
 |`sortingnetworks.hpp`           | Contains all of the code relevant to sorting networks, including the `SortingNetwork` kernel, as well as the `BitonicSortingNetwork` and `MergeSortNetwork` helper functions.
-|`impu_math.hpp`                 | Metaprogramming math helper functions (*impu* = Intel Metaprogramming Utilities)
 |`unrolledloop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end.
 
 ### Merge Sort Details
 This section will describe how the merge sort design is structured and how it takes advantage of the spatial compute of the FPGA. <br/>
 
-The figure below shows the conceptual view of the merge sort design to the user. The user streams data into a SYCL pipe (`InPipe`) and, after some delay, the elements are streamed out of a SYCL pipe (`OutPipe`), in sorted order. The number of elements that the merge sort design is capable of sorting is a runtime parameter, but it must be a power of 2. However, this restriction can be worked around by padding the input stream with min/max elements, depending on the order of the sort. This technique is demonstrated in this design (see the `fpga_sort` function in *merge_sort.cpp*).
+The figure below shows the conceptual view of the merge sort design to the user. The user streams data into a SYCL pipe (`InPipe`) and, after some delay, the elements are streamed out of a SYCL pipe (`OutPipe`), in sorted order. The number of elements that the merge sort design is capable of sorting is a runtime parameter, but it must be a power of 2. However, this restriction can be worked around by padding the input stream with min/max elements, depending on the direction of the sort (smallest-to-largest vs largest-to-smallest). This technique is demonstrated in this design (see the `fpga_sort` function in *main.cpp*).
 
 <img src="sort_api.png" alt="sort_api" width="500"/>
 
-The basis of the merge sort design is what we call a *merge unit*, which is shown in the figure below. A single merge unit streams in two sorted lists of size `count` in parallel and merges them into a single sorted list of size `2*count`. The lists are streamed in from device memory (e.g., DDR or HBM) by two `Produce` kernels. The `Consumee` kernel can stream data to either a SYCL pipe or to device memory.
+The basis of the merge sort design is what we call a *merge unit*, which is shown in the figure below. A single merge unit streams in two sorted lists of size `count` in parallel and merges them into a single sorted list of size `2*count`. The lists are streamed in from device memory (e.g., DDR or HBM) by two `Produce` kernels. The `Consume` kernel can stream data out to either a SYCL pipe or to device memory.
 
 <img src="merge_unit.png" alt="merge_unit" width="600"/>
 
@@ -177,15 +177,15 @@ A single merge unit requires `lg(N)` iterations to sort `N` elements. This requi
 
 <img src="basic_runtime_graph.png" alt="basic_runtime_graph" width="800"/>
 
-To achieve SIMD-level (**s**ingle **i**nstruction **mu**ltiple **d**ata) parallelism, we enhance the merge unit to merge `k` elements per cycle. The figure below illustrates how this is done. In the following discussion, we will assume that we are sorting from smallest to largest, but the logic is very similar for sorting largest to smallest and is easily configurable at compile time in this design. <br/>
+To achieve SIMD-level (**S**ingle **I**nstruction **M**ultiple **D**ata) parallelism, we enhance the merge unit to merge `k` elements per cycle. The figure below illustrates how this is done. In the following discussion, we will assume that we are sorting from smallest-to-largest, but the logic is very similar for sorting largest-to-smallest and is easily configurable at compile time in this design. <br/>
 
-The merge unit looks at the two inputs of size `k` coming from the `ProduceA` and `ProduceB` kernels (in the figure below, `k=4`) and compares the first elements of each set; remember, these set of `k` elements are already sorted, so we are comparing the smallest elements of the set. Whichever set of elements has the *smaller of the smallest elements* is chosen and combined with the `k` other elements from the feedback path. These `2*k` elements go through a merge sort network that sorts them. After the `2*k` elements are sorted, the smallest `k` elements are output (to the `Consume` kernel) and the largest `k` elements are fed back into the sorting network, and the process repeats. This allows the merge unit to process `k` elements per cycle in the steady state. Note that `k` must be a power of 2. <br/>
+The merge unit looks at the two inputs of size `k` coming from the `ProduceA` and `ProduceB` kernels (in the figure below, `k=4`) and compares the first elements of each set; remember, these set of `k` elements are already sorted, so we are comparing the smallest elements of the set. Whichever set of elements has the *smaller of the smallest elements* is chosen and combined with `k` other elements from the `feedback` path. These `2*k` elements go through a merge sort network that sorts them in a single cycle. After the `2*k` elements are sorted, the smallest `k` elements are sent to the output (to the `Consume` kernel) and the largest `k` elements are fed back into the sorting network (the `feedback` path in the figure below), and the process repeats. This allows the merge unit to process `k` elements per cycle in the steady state. Note that `k` must be a power of 2. <br/>
 
 More information on this design can be found in this paper by [R. Kobayashi and K. Kise](https://www.researchgate.net/publication/316604001_A_High_Performance_FPGA-Based_Sorting_Accelerator_with_a_Data_Compression_Mechanism).
 
 <img src="k-way_merge_unit.png" alt="way_merge_unit" width="900"/>
 
-To achieve thread-level parallelism, the merge sort design accepts a template parameter, `units`, which allows one to instantiate multiple instances of the merge unit, as shown in the figure below. Before the merge units start, the incoming data coming from the input pipe is sent through a bitonic sorting network and written to the temporary buffer partitions in device memory. This sorting network sorts `k` elements per cycle in the steady state. Choosing the number of merge units is an area-performance tradeoff (note: the number of instantiated merge units must be a power of 2). Each merge unit sorts an `N/units`-sized partition of the input data in parallel.
+To achieve thread-level parallelism, the merge sort design accepts a template parameter, `units`, which allows one to instantiate multiple instances of the merge unit, as shown in the figure below. Before the merge units start processing data, the incoming data coming from the input pipe is sent through a bitonic sorting network and written to the temporary buffer partitions in device memory. This sorting network sorts `k` elements per cycle in the steady state. Choosing the number of merge units is an area-performance tradeoff (note: the number of instantiated merge units must be a power of 2). Each merge unit sorts an `N/units`-sized partition of the input data in parallel.
 
 <img src="parallel_tree_bitonic_k-way.png" alt="parallel_tree_bitonic_k-way" width="800"/>
 

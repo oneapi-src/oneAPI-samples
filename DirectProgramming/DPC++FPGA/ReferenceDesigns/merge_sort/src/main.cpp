@@ -14,6 +14,7 @@
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
+// include the merge sort kernel header
 #include "mergesort.hpp"
 
 using namespace sycl;
@@ -64,6 +65,8 @@ int main(int argc, char *argv[]) {
   using ValueT = int;
 
   // the type used to index in the sorter
+  // below we do a runtime check to make sure this type has enough bits to
+  // count all the elements to be sorted.
   using IndexT = unsigned int;
 
   /////////////////////////////////////////////////////////////
