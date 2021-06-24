@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <utility>
 
+namespace impu {
 //
 // The code below creates the constexprs 'make_integer_range'
 // and 'make_index_range' these are akin to 'std::make_integer_sequence'
@@ -181,5 +182,7 @@ template <std::size_t start, std::size_t end, class F>
 constexpr void UnrolledLoop(F&& f) {
   UnrolledLoop(make_index_range<start, end>{}, std::forward<F>(f));
 }
+
+}  // namespace impu
 
 #endif /* __UNROLLEDLOOP_HPP__ */

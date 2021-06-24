@@ -1,6 +1,6 @@
 # To see a Makefile equivalent of this build system:
 # https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-set(SOURCE_FILE merge_sort.cpp)
+set(SOURCE_FILE main.cpp)
 set(TARGET_NAME merge_sort)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)

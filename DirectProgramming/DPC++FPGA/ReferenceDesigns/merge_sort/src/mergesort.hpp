@@ -1,21 +1,22 @@
 #ifndef __MERGESORT_HPP__
 #define __MERGESORT_HPP__
 
-#include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <array>
 #include <iostream>
 #include <limits>
 #include <type_traits>
 #include <vector>
 
-#include "Consume.hpp"
-#include "Merge.hpp"
-#include "Produce.hpp"
-#include "SortingNetworks.hpp"
-#include "UnrolledLoop.hpp"
+#include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
+
+#include "consume.hpp"
+#include "merge.hpp"
+#include "produce.hpp"
+#include "sortingnetworks.hpp"
+#include "unrolledloop.hpp"
 #include "pipe_array.hpp"
-#include "static_math.hpp"
+#include "impu_math.hpp"
 
 using namespace sycl;
 
@@ -74,9 +75,9 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
                                    ValueT* buf_1, Compare comp) {
   // sanity check the number of merge units and the width of the sorter
   static_assert(units >= 1);
-  static_assert(IsPow2(units));
+  static_assert(impu::math::IsPow2(units));
   static_assert(k_width >= 1);
-  static_assert(IsPow2(k_width));
+  static_assert(impu::math::IsPow2(k_width));
 
   // sanity check on IndexT
   static_assert(std::is_integral_v<IndexT>);
@@ -95,11 +96,14 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   using PipeType = sycl::vec<ValueT, k_width>;
 
   // the various pipes connecting the different kernels of each merge unit
-  using APipes = PipeArray<APipeID, PipeType, kDefaultPipeDepth, units>;
-  using BPipes = PipeArray<BPipeID, PipeType, kDefaultPipeDepth, units>;
-  using MergePipes = PipeArray<MergePipeID, PipeType, kDefaultPipeDepth, units>;
+  using APipes =
+    impu::PipeArray<APipeID, PipeType, kDefaultPipeDepth, units>;
+  using BPipes =
+    impu::PipeArray<BPipeID, PipeType, kDefaultPipeDepth, units>;
+  using MergePipes =
+    impu::PipeArray<MergePipeID, PipeType, kDefaultPipeDepth, units>;
   using InternalOutPipes =
-      PipeArray<InternalOutPipeID, PipeType, kDefaultPipeDepth, units>;
+      impu::PipeArray<InternalOutPipeID, PipeType, kDefaultPipeDepth, units>;
 
   //////////////////////////////////////////////////////////////////////////////
   // These defines make the latter code cleaner
@@ -120,13 +124,13 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   //////////////////////////////////////////////////////////////////////////////
 
   // depth of the merge tree to reduce the sorted partitions of each merge unit
-  constexpr size_t kReductionLevels = Log2(units);
+  constexpr size_t kReductionLevels = impu::math::Log2(units);
 
   // validate 'count'
   if (count == 0) {
     std::cerr << "ERROR: 'count' must be greater than 0\n";
     std::terminate();
-  } else if (!IsPow2(count)) {
+  } else if (!impu::math::IsPow2(count)) {
     std::cerr << "ERROR: 'count' must be a power of 2\n";
     std::terminate();
   } else if (count < 4 * units) {
@@ -172,7 +176,8 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // NOTE: we subtract log2(k_width) because the bitonic sorting network
   // performs the first log2(k_width) iterations of the sort while streaming
   // the input data from the input pipe into device memory.
-  const IndexT iterations = Log2(count_per_unit) - Log2(k_width);
+  const IndexT iterations =
+    impu::math::Log2(count_per_unit) - impu::math::Log2(k_width);
 
   // store the various merge unit and merge tree kernel events
   std::array<std::vector<event>, units> produce_a_events, produce_b_events,
@@ -206,7 +211,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
 
     // launch the merge unit kernels for this iteration of the sort using
     // a front-end meta-programming unroller
-    UnrolledLoop<units>([&](auto u) {
+    impu::UnrolledLoop<units>([&](auto u) {
       // the intra merge unit pipes
       using APipe = typename APipes::template PipeAt<u>;
       using BPipe = typename BPipes::template PipeAt<u>;
@@ -279,19 +284,19 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // pipes. The 2D pipe array makes the metaprogramming much easier and the
   // front-end compiler will not use the extra pipes and therefore they
   // will NOT be instantiated in hardware
-  using InternalMTPipes = PipeArray<InternalMergeTreePipeID, PipeType,
-                                    kDefaultPipeDepth, kReductionLevels, units>;
+  using InternalMTPipes = impu::PipeArray<InternalMergeTreePipeID, PipeType,
+                                kDefaultPipeDepth, kReductionLevels, units>;
 
   // create the static merge tree connected by pipes to merge the sorted output
   // of each merge unit into a single sorted output through OutPipe
   // NOTE: if units==1, then there is no merge tree!
-  UnrolledLoop<kReductionLevels>([&](auto level) {
+  impu::UnrolledLoop<kReductionLevels>([&](auto level) {
     // each level of the merge tree reduces the number of sorted partitions
     // by a factor of 2.
     // level 0 has 'units' merge kernels, level 1 has 'units/2', and so on...
     constexpr size_t kLevelMergeUnits = units / ((1 << level) * 2);
 
-    UnrolledLoop<kLevelMergeUnits>([&](auto merge_unit) {
+    impu::UnrolledLoop<kLevelMergeUnits>([&](auto merge_unit) {
       // When level == 0, we know we will use 'MTAPipeFromMergeUnit' and
       // 'MTBPipeFromMergeUnit' below. However, we cannot access
       // PipeAt<-1, ...> without a compiler error. So, we will set the previous

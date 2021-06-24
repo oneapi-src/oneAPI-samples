@@ -4,8 +4,8 @@
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
-#include "SortingNetworks.hpp"
-#include "static_math.hpp"
+#include "sortingnetworks.hpp"
+#include "impu_math.hpp"
 
 using namespace sycl;
 
@@ -22,7 +22,7 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
             CompareFunc compare) {
   // sanity check on k_width
   static_assert(k_width >= 1);
-  static_assert(IsPow2(k_width));
+  static_assert(impu::math::IsPow2(k_width));
 
   // merging two lists of size 'in_count' into a single output list of
   // double the size

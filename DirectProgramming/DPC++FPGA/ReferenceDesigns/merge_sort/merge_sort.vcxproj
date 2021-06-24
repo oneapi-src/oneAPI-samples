@@ -11,19 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\merge_sort.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Consume.hpp" />
-    <ClInclude Include="src\Merge.hpp" />
-    <ClInclude Include="src\MergeSort.hpp" />
-    <ClInclude Include="src\Misc.hpp" />
+    <ClInclude Include="src\consume.hpp" />
+    <ClInclude Include="src\merge.hpp" />
+    <ClInclude Include="src\mergesort.hpp" />
     <ClInclude Include="src\pipe_array_internal.hpp" />
     <ClInclude Include="src\pipe_array.hpp" />
-    <ClInclude Include="src\Produce.hpp" />
-    <ClInclude Include="src\SortingNetworks.hpp" />
-    <ClInclude Include="src\static_math.hpp" />
-    <ClInclude Include="src\UnrolledLoop.hpp" />
+    <ClInclude Include="src\produce.hpp" />
+    <ClInclude Include="src\sortingnetworks.hpp" />
+    <ClInclude Include="src\impu_math.hpp" />
+    <ClInclude Include="src\unrolledloop.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

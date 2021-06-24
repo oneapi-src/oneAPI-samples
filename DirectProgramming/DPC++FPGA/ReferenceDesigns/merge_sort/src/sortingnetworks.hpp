@@ -4,7 +4,14 @@
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
-#include "static_math.hpp"
+#include "impu_math.hpp"
+
+#define SWAP(a, b)  \
+  do {              \
+    auto tmp = (a); \
+    (a) = (b);      \
+    (b) = tmp;      \
+  } while (0)
 
 using namespace sycl;
 
@@ -46,7 +53,7 @@ void MergeSortNetwork(sycl::vec<ValueT, k_width * 2>& data,
     // the general case
     // this works well for k_width = 1 or 2, but is not optimal for
     // k_width = 4 (see if-case above) or higher
-    constexpr unsigned char merge_tree_depth = Log2(k_width * 2);
+    constexpr unsigned char merge_tree_depth = impu::math::Log2(k_width * 2);
     #pragma unroll
     for (unsigned i = 0; i < merge_tree_depth; i++) {
       #pragma unroll

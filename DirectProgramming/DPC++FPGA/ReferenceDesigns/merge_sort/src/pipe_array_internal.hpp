@@ -1,13 +1,8 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-
 #ifndef __PIPE_ARRAY_INTERNAL_HPP__
 #define __PIPE_ARRAY_INTERNAL_HPP__
 
-namespace {
+namespace impu {
+namespace detail {
 
 // Templated classes for verifying dimensions when accessing elements in the
 // pipe array.
@@ -55,6 +50,7 @@ struct write_currying<WriteFunc, BaseTy, std::index_sequence<I...>> {
   }
 };
 
-}  // namespace
+}  // namespace detail
+}  // namespace impu
 
 #endif /* __PIPE_ARRAY_INTERNAL_HPP__ */

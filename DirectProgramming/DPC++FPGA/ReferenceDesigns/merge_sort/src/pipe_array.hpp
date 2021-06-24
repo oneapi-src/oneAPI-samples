@@ -1,17 +1,13 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
 #ifndef __PIPE_ARRAY_HPP__
 #define __PIPE_ARRAY_HPP__
 
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <utility>
-//#include <variant>
 
 #include "pipe_array_internal.hpp"
+
+namespace impu {
 
 template <class Id,          // identifier for the pipe array
           typename BaseTy,   // type to write/read for each pipe
@@ -31,7 +27,7 @@ struct PipeArray {
     static_assert(sizeof...(idxs) == sizeof...(dims),
                   "Indexing into a PipeArray requires as many indices as "
                   "dimensions of the PipeArray.");
-    static_assert(VerifierDimLayer<dims...>::template VerifierIdxLayer<
+    static_assert(detail::VerifierDimLayer<dims...>::template VerifierIdxLayer<
                       idxs...>::IsValid(),
                   "Index out of bounds");
     using VerifiedPipe =
@@ -52,7 +48,7 @@ struct PipeArray {
   template <size_t... idxs>
   using PipeAt = typename VerifyIndices<idxs...>::VerifiedPipe;
 
-  // functor to impllement blocking write to all pipes in the array
+  // functor to implement blocking write to all pipes in the array
   template <std::size_t... I>
   struct BlockingWriteFunc {
     void operator()(const BaseTy &data, bool &success) const {
@@ -71,7 +67,7 @@ struct PipeArray {
             typename... IndexSequences>
   static void write_currying_helper(const BaseTy &data, bool &success,
                                     IndexSequences...) {
-    write_currying<WriteFunc, BaseTy, std::index_sequence<>,
+    detail::write_currying<WriteFunc, BaseTy, std::index_sequence<>,
                    IndexSequences...>()(data, success);
   }
 
@@ -91,5 +87,7 @@ struct PipeArray {
   }
 
 };  // end of struct PipeArray
+
+}  // namespace impu
 
 #endif /* __PIPE_ARRAY_HPP__ */
