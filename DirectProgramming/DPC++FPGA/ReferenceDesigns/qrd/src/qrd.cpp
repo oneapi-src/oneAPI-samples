@@ -414,18 +414,6 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 sori[k].yy = ext::intel::fpga_reg(s_or_i[j].yy);
               });
 
-              // Unroller<0, ROWS_COMPONENT>::Step([&](int k) {
-              //   col[k].xx = A_load[j].d[k].xx;
-              //   col[k].yy = A_load[j].d[k].yy;
-              //   if (i_gt_0[k / kNumElementsPerBank]) {
-              //     col[k].xx = A_compute[j].d[k].xx;
-              //     col[k].yy = A_compute[j].d[k].yy;
-              //   }
-              //   if (j_eq_i[k / kNumElementsPerBank]) {
-              //     a_i[k].xx = col[k].xx;
-              //     a_i[k].yy = col[k].yy;
-              //   }
-              // });
               // Preload col and a_i with the correct data for the current 
               // iteration.
               // These are going to be use to compute the dot product of 
@@ -440,10 +428,30 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 // If no i iteration elapsed, we must read the column of matrix
                 // a directly from the A_load 
                 // col then contains a_j
-                col[k].xx = i_gt_0[bank] ? A_compute[j].d[k].xx : 
-                                                              A_load[j].d[k].xx;
-                col[k].yy = i_gt_0[bank] ? A_compute[j].d[k].yy : 
-                                                              A_load[j].d[k].yy;
+
+                /// ORIGINAL
+                // col[k].xx = A_load[j].d[k].xx;
+                // col[k].yy = A_load[j].d[k].yy;
+                // if (i_gt_0[bank]) {
+                //   col[k].xx = A_compute[j].d[k].xx;
+                //   col[k].yy = A_compute[j].d[k].yy;
+                // }
+
+                // NOT MAKING II 1
+                // col[k].xx = i_gt_0[bank] ? A_compute[j].d[k].xx : 
+                //                                               A_load[j].d[k].xx;
+                // col[k].yy = i_gt_0[bank] ? A_compute[j].d[k].yy : 
+                //                                               A_load[j].d[k].yy;
+
+                // WORKING
+                if(i_gt_0[bank]){
+                  col[k].xx = A_compute[j].d[k].xx;
+                  col[k].yy = A_compute[j].d[k].yy;
+                }
+                else{
+                  col[k].xx = A_load[j].d[k].xx;
+                  col[k].yy = A_load[j].d[k].yy;
+                }
 
                 // Load a_i for reuse across j iterations
                 if (j_eq_i[bank]) {
@@ -451,7 +459,6 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                   a_i[k].yy = col[k].yy;
                 }
               });
-
 
               Unroller<0, ROWS_COMPONENT>::Step([&](int k) {
                 // find which bank this unrolled iteration is going to use
