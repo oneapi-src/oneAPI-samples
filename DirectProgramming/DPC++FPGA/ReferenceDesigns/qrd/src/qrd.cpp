@@ -34,27 +34,12 @@
 #include <vector>
 
 #include "qrd.hpp"
+#include "UnrolledLoop.hpp"
+
 
 using std::vector;
 using namespace sycl;
 
-/*
-  The Unroller functions are utility functions used to do static loop unrolling
-*/
-template <int begin, int end> struct Unroller {
-  template <typename Action> static void Step(const Action &action) {
-    action(begin);
-    Unroller<begin + 1, end>::Step(action);
-  }
-};
-
-template <int end> struct Unroller<end, end> {
-  template <typename Action> static void Step(const Action &action) {}
-};
-
-/*
-  Static implementation of the base 2 logarithm function
-*/
 template <typename T>
 static constexpr T Log2(T n) {
   T ret = T(0);
@@ -292,7 +277,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
               // Load a single bank of the input matrix 
               Complex tmp[kNumElementsPerBank];
-              Unroller<0, kNumElementsPerBank>::Step([&](int k) {
+              UnrolledLoop<kNumElementsPerBank>([&](auto k) {
                 tmp[k].xx = in_matrix[loadBankIndex * 2 * kNumElementsPerBank + 
                                       k * 2];
                 tmp[k].yy = in_matrix[loadBankIndex * 2 * kNumElementsPerBank + 
@@ -305,8 +290,8 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               // Write the current bank to the A_load matrix.
               int jtmp = li % (kNumBanks);
               int liNumBank = li / kNumBanks;
-              Unroller<0, kNumBanks>::Step([&](int k) {
-                Unroller<0, kNumElementsPerBank>::Step([&](int t) {
+              UnrolledLoop<kNumBanks>([&](auto k) {
+                UnrolledLoop<kNumElementsPerBank>([&](auto t) {
                   if (jtmp == k) {
                     A_load[liNumBank].d[k * kNumElementsPerBank + t].xx 
                                                                     = tmp[t].xx;
@@ -404,23 +389,23 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                     j_eq_i_plus_1[kNumBanks],
                     i_lt_0[kNumBanks];
 
-              Unroller<0, kNumBanks>::Step([&](int k) {
-                i_gt_0[k] = ext::intel::fpga_reg(i > 0);
-                i_lt_0[k] = ext::intel::fpga_reg(i < 0);
-                j_eq_i[k] = ext::intel::fpga_reg(j == i);
-                i_ge_0_j_ge_i[k] = ext::intel::fpga_reg(i >= 0 && j >= i);
-                j_eq_i_plus_1[k] = ext::intel::fpga_reg(j == i + 1);
-                sori[k].xx = ext::intel::fpga_reg(s_or_i[j].xx);
-                sori[k].yy = ext::intel::fpga_reg(s_or_i[j].yy);
+              UnrolledLoop<kNumBanks>([&](auto k) {
+                i_gt_0[k] = INTEL::fpga_reg(i > 0);
+                i_lt_0[k] = INTEL::fpga_reg(i < 0);
+                j_eq_i[k] = INTEL::fpga_reg(j == i);
+                i_ge_0_j_ge_i[k] = INTEL::fpga_reg(i >= 0 && j >= i);
+                j_eq_i_plus_1[k] = INTEL::fpga_reg(j == i + 1);
+                sori[k].xx = INTEL::fpga_reg(s_or_i[j].xx);
+                sori[k].yy = INTEL::fpga_reg(s_or_i[j].yy);
               });
 
               // Preload col and a_i with the correct data for the current 
               // iteration.
               // These are going to be use to compute the dot product of 
               // two different column of the input matrix.
-              Unroller<0, ROWS_COMPONENT>::Step([&](int k) {
+              UnrolledLoop<ROWS_COMPONENT>([&](auto k) {
                 // find which bank this unrolled iteration is going to use
-                auto bank = k / kNumElementsPerBank;
+                constexpr auto bank = k / kNumElementsPerBank;
 
                 // Load col with the current column of matrix a.
                 // At least one iteration of the outer loop i is required
@@ -428,22 +413,6 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 // If no i iteration elapsed, we must read the column of matrix
                 // a directly from the A_load 
                 // col then contains a_j
-
-                /// ORIGINAL
-                // col[k].xx = A_load[j].d[k].xx;
-                // col[k].yy = A_load[j].d[k].yy;
-                // if (i_gt_0[bank]) {
-                //   col[k].xx = A_compute[j].d[k].xx;
-                //   col[k].yy = A_compute[j].d[k].yy;
-                // }
-
-                // NOT MAKING II 1
-                // col[k].xx = i_gt_0[bank] ? A_compute[j].d[k].xx : 
-                //                                               A_load[j].d[k].xx;
-                // col[k].yy = i_gt_0[bank] ? A_compute[j].d[k].yy : 
-                //                                               A_load[j].d[k].yy;
-
-                // WORKING
                 if(i_gt_0[bank]){
                   col[k].xx = A_compute[j].d[k].xx;
                   col[k].yy = A_compute[j].d[k].yy;
@@ -460,7 +429,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 }
               });
 
-              Unroller<0, ROWS_COMPONENT>::Step([&](int k) {
+              UnrolledLoop<ROWS_COMPONENT>([&](auto k) {
                 // find which bank this unrolled iteration is going to use
                 auto bank = k / kNumElementsPerBank;
 
@@ -500,7 +469,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
               // Perform the dot product <a_{i+1},a_{i+1}> or <a_{i+1}, a_j>
               Complex p_ij = Complex(0, 0);
-              Unroller<0, ROWS_COMPONENT>::Step([&](int k) {
+              UnrolledLoop<ROWS_COMPONENT>([&](auto k) {
                 p_ij = p_ij + col[k] * a_ip1[k];
               });
 
@@ -556,7 +525,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               // bank a boolean to check if it should store this si iteration
               int desired = si % (kNumBanks);
               bool get[kNumBanks];
-              Unroller<0, kNumBanks>::Step([&](int k) {
+              UnrolledLoop<kNumBanks>([&](auto k) {
                 get[k] = desired == k;
                 desired = ext::intel::fpga_reg(desired);
               });
@@ -566,8 +535,8 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               // in tmp
               Complex tmp[kNumElementsPerBank];
               int siNumBank = si / kNumBanks;
-              Unroller<0, kNumBanks>::Step([&](int t) {
-                Unroller<0, kNumElementsPerBank>::Step([&](int k) {
+              UnrolledLoop<kNumBanks>([&](auto t) {
+                UnrolledLoop<kNumElementsPerBank>([&](auto k) {
                   tmp[k].xx = get[t] ? 
                           A_store[siNumBank].d[t * kNumElementsPerBank + k].xx : 
                           INTEL::fpga_reg(tmp[k].xx);
@@ -579,7 +548,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
               // Finally, the kNumElementsPerBank elements from tmp are 
               // written to the out_matrix2 (alias to out_matrix)
-              Unroller<0, kNumElementsPerBank>::Step([&](int k) {
+              UnrolledLoop<kNumElementsPerBank>([&](auto k) {
                 out_matrix2[qr_idx + k * 2]     = tmp[k].xx;
                 out_matrix2[qr_idx + k * 2 + 1] = tmp[k].yy;
               });
