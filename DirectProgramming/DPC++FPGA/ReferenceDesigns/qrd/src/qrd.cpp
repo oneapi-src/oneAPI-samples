@@ -170,6 +170,10 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
   // Number of bits required by the loop counters for the loads/stores iterators
   constexpr int kLoadIterBitSize = CeilLog2(kLoadIter + 1);
   constexpr int kStoreIterBitSize = CeilLog2(kStoreIter + 1);
+  // The indexes kLoadIter and kStoreIter iterators are being divided 
+  // by kNumBanks. So we precompute the size of the output.
+  constexpr int kLiNumBankBitSize = kLoadIterBitSize - Log2(kNumBanks);
+  constexpr int kSiNumBankBitSize = kStoreIterBitSize - Log2(kNumBanks);
 
   // Number of buffers to allocate to be able to read/compute/store 
   // without overlap. 
@@ -233,7 +237,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
       // Copy a new input matrix from the host memory into the FPGA DDR 
       q.submit([&](handler &h) {
         auto in_matrix2 =
-            input_matrix[b]->get_access<access::mode::discard_write>(h);
+                    input_matrix[b]->get_access<access::mode::discard_write>(h);
         h.copy(kPtr, in_matrix2);
       });
 
@@ -279,9 +283,9 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               Complex tmp[kNumElementsPerBank];
               UnrolledLoop<kNumElementsPerBank>([&](auto k) {
                 tmp[k].xx = in_matrix[loadBankIndex * 2 * kNumElementsPerBank + 
-                                      k * 2];
+                                                                        k * 2];
                 tmp[k].yy = in_matrix[loadBankIndex * 2 * kNumElementsPerBank + 
-                                      k * 2 + 1];
+                                                                    k * 2 + 1];
               });
 
               // Increase the bank index
@@ -289,14 +293,13 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
               // Write the current bank to the A_load matrix.
               int jtmp = li % (kNumBanks);
-              int liNumBank = li / kNumBanks;
+              ac_int<kLiNumBankBitSize, false> liNumBank = li / kNumBanks;
               UnrolledLoop<kNumBanks>([&](auto k) {
                 UnrolledLoop<kNumElementsPerBank>([&](auto t) {
+                  constexpr auto rowIdx = k * kNumElementsPerBank + t;
                   if (jtmp == k) {
-                    A_load[liNumBank].d[k * kNumElementsPerBank + t].xx 
-                                                                    = tmp[t].xx;
-                    A_load[liNumBank].d[k * kNumElementsPerBank + t].yy 
-                                                                    = tmp[t].yy;
+                    A_load[liNumBank].d[rowIdx].xx = tmp[t].xx;
+                    A_load[liNumBank].d[rowIdx].yy = tmp[t].yy;
                   }
 
                   // Delay data signals to create a vine-based data distribution
@@ -308,7 +311,6 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 jtmp = ext::intel::fpga_reg(jtmp);
               });
             }
-
 
             /*
               ==================================================================
@@ -431,7 +433,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
               UnrolledLoop<ROWS_COMPONENT>([&](auto k) {
                 // find which bank this unrolled iteration is going to use
-                auto bank = k / kNumElementsPerBank;
+                constexpr auto bank = k / kNumElementsPerBank;
 
                 // Depending on the iteration this code will compute either:
                 // -> If i=j, a column of Q: Q_i = a_i*ir
@@ -534,15 +536,14 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               // read kNumElementsPerBank from A_store and store the elements
               // in tmp
               Complex tmp[kNumElementsPerBank];
-              int siNumBank = si / kNumBanks;
+              ac_int<kSiNumBankBitSize, false> siNumBank = si / kNumBanks;
               UnrolledLoop<kNumBanks>([&](auto t) {
                 UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                  tmp[k].xx = get[t] ? 
-                          A_store[siNumBank].d[t * kNumElementsPerBank + k].xx : 
-                          INTEL::fpga_reg(tmp[k].xx);
-                  tmp[k].yy = get[t] ? 
-                          A_store[siNumBank].d[t * kNumElementsPerBank + k].yy : 
-                          INTEL::fpga_reg(tmp[k].yy);
+                  constexpr auto rowIdx = t * kNumElementsPerBank + k;
+                  tmp[k].xx = get[t] ? A_store[siNumBank].d[rowIdx].xx : 
+                                                    INTEL::fpga_reg(tmp[k].xx);
+                  tmp[k].yy = get[t] ? A_store[siNumBank].d[rowIdx].yy : 
+                                                    INTEL::fpga_reg(tmp[k].yy);
                 });
               });
 
