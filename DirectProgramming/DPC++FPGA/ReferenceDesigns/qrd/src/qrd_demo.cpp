@@ -30,6 +30,7 @@
 
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <chrono>
 #include <list>
 
@@ -43,14 +44,14 @@ using namespace std;
 using namespace std::chrono;
 using namespace sycl;
 
-void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
+void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_matrix,
                      queue &q, size_t matrices, size_t reps);
 
 int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
   constexpr size_t kRandomMin = 1;
   constexpr size_t kRandomMax = 10;
-  constexpr size_t kAMatrixSizeFactor = ROWS_COMPONENT * COLS_COMPONENT * 2;
+  constexpr size_t kAMatrixSizeFactor = ROWS_COMPONENT * COLS_COMPONENT;
   
   constexpr size_t kQMatrixSize = ROWS_COMPONENT * COLS_COMPONENT * 2;
   constexpr size_t kRMatrixSize = COLS_COMPONENT * (COLS_COMPONENT + 1) / 2 * 2;
@@ -76,7 +77,7 @@ int main(int argc, char *argv[]) {
     cout << "Device name: " << device.get_info<info::device::name>().c_str()
          << "\n";
 
-    vector<float> a_matrix;
+    vector<ac_complex<float>> a_matrix;
     vector<float> qr_matrix;
 
     a_matrix.resize(matrices * kAMatrixSizeFactor);
@@ -95,17 +96,21 @@ int main(int argc, char *argv[]) {
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {
         for (size_t col = 0; col < COLS_COMPONENT; col++) {
           int random_val = rand();
-          float random_double =
+          float random_double_real =
               random_val % (kRandomMax - kRandomMin) + kRandomMin;
-          a_matrix[i * kAMatrixSizeFactor +
-                   col * ROWS_COMPONENT * kIndexAccessFactor +
-                   row * kIndexAccessFactor] = random_double;
           int random_val_imag = rand();
-          random_double =
+          float random_double_imag =
               random_val_imag % (kRandomMax - kRandomMin) + kRandomMin;
-          a_matrix[i * kAMatrixSizeFactor +
-                   col * ROWS_COMPONENT * kIndexAccessFactor +
-                   row * kIndexAccessFactor + 1] = random_double;
+          ac_complex<float> random_complex = {random_double_real, random_double_imag};
+
+          a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] = random_complex;
+
+          // a_matrix[i * kAMatrixSizeFactor +
+          //          col * ROWS_COMPONENT * kIndexAccessFactor +
+          //          row * kIndexAccessFactor] = random_double_real;
+          // a_matrix[i * kAMatrixSizeFactor +
+          //          col * ROWS_COMPONENT * kIndexAccessFactor +
+          //          row * kIndexAccessFactor + 1] = random_double_imag;
         }
       }
     }
@@ -190,12 +195,10 @@ int main(int argc, char *argv[]) {
 
 
           bool qr_eq_a = (abs(a_matrix[matrix * kAMatrixSizeFactor +
-                              j * ROWS_COMPONENT * kIndexAccessFactor +
-                              i * kIndexAccessFactor] - qr_ij[0]) 
+                              j * ROWS_COMPONENT + i].r() - qr_ij[0]) 
                           < kErrorThreshold)
                       && (abs(a_matrix[matrix * kAMatrixSizeFactor +
-                              j * ROWS_COMPONENT * kIndexAccessFactor +
-                              i * kIndexAccessFactor + 1] - qr_ij[1]) 
+                              j * ROWS_COMPONENT + i].i() - qr_ij[1]) 
                           < kErrorThreshold);
 
 
@@ -226,12 +229,10 @@ int main(int argc, char *argv[]) {
             if(!qr_eq_a){
               cout  << "Error: A[" << i << "][" << j << "] = (" << 
                                   a_matrix[matrix * kAMatrixSizeFactor +
-                                  j * ROWS_COMPONENT * kIndexAccessFactor +
-                                  i * kIndexAccessFactor]
+                                  j * ROWS_COMPONENT + i].r()
                                   << ", " <<
                                   a_matrix[matrix * kAMatrixSizeFactor +
-                                  j * ROWS_COMPONENT * kIndexAccessFactor +
-                                  i * kIndexAccessFactor +1] 
+                                  j * ROWS_COMPONENT + i].i()
                     << ") but QR[" << i << "][" << j << "] = (" << qr_ij[0] 
                     << ", " << qr_ij[1] << ")" << std::endl;
             }

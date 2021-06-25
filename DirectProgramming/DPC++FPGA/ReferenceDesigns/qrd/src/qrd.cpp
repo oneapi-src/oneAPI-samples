@@ -29,6 +29,8 @@
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_complex.hpp>
+
 #include <chrono>
 #include <cstring>
 #include <vector>
@@ -135,7 +137,7 @@ class QRD;
                       method.
   
 */
-void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
+void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_matrix,
                      queue &q, size_t matrices, size_t reps) {
 
   // Number of complex elements in the matrix
@@ -150,7 +152,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
   //                 etc.
   // So R contains COLS_COMPONENT * (COLS_COMPONENT + 1) / 2 complex elements.
   // Each complex element takes two indexes.
-  constexpr int kInputMatrixSize = kNumComplexElements * 2;
+  constexpr int kInputMatrixSize = kNumComplexElements;
   constexpr int kQMatrixSize = kNumComplexElements * 2;
   constexpr int kRMatrixSize = COLS_COMPONENT * (COLS_COMPONENT + 1);
   constexpr int kOutputMatrixSize = kQMatrixSize + kRMatrixSize;
@@ -215,9 +217,10 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
   }
 
   // Create buffers and allocate space for them.
-  buffer<float, 1> *input_matrix[kNumBuffers], *output_matrix[kNumBuffers];
+  buffer<ac_complex<float>, 1> *input_matrix[kNumBuffers];
+  buffer<float, 1> *output_matrix[kNumBuffers];
   for (short i = 0; i < kNumBuffers; i++) {
-    input_matrix[i] = new buffer<float, 1>(kInputMatrixSize * chunk);
+    input_matrix[i] = new buffer<ac_complex<float>, 1>(kInputMatrixSize * chunk);
     output_matrix[i] = new buffer<float, 1>(kOutputMatrixSize * chunk);
   }
 
@@ -229,7 +232,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                                       it += chunk, b = (b + 1) % kNumBuffers) {
 
       // Pointer to current input/output matrices in host memory 
-      const float *kPtr = in_matrix.data() + kInputMatrixSize * it;
+      const ac_complex<float> *kPtr = in_matrix.data() + kInputMatrixSize * it;
       float *kPtr2 = out_matrix.data() + kOutputMatrixSize * it;
 
       int matrices = chunk;
@@ -282,10 +285,8 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               // Load a single bank of the input matrix 
               Complex bank[kNumElementsPerBank];
               UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                bank[k].xx = in_matrix[loadBankIndex * 2 * kNumElementsPerBank + 
-                                                                        k * 2];
-                bank[k].yy = in_matrix[loadBankIndex * 2 * kNumElementsPerBank + 
-                                                                    k * 2 + 1];
+                bank[k].xx = in_matrix[loadBankIndex * kNumElementsPerBank + k].r();
+                bank[k].yy = in_matrix[loadBankIndex * kNumElementsPerBank + k].i();
               });
 
               // Increase the bank index
