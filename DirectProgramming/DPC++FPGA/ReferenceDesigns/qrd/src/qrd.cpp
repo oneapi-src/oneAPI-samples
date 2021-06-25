@@ -69,12 +69,12 @@ struct Complex {
   float xx;
   float yy;
 
+  Complex(){}
+
   Complex(float x, float y) {
     xx = x;
     yy = y;
   }
-
-  Complex() {}
 
   // Complex addition
   const Complex operator+(const Complex rhs) const {
@@ -280,11 +280,11 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
             for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; li++) {
 
               // Load a single bank of the input matrix 
-              Complex tmp[kNumElementsPerBank];
+              Complex bank[kNumElementsPerBank];
               UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                tmp[k].xx = in_matrix[loadBankIndex * 2 * kNumElementsPerBank + 
+                bank[k].xx = in_matrix[loadBankIndex * 2 * kNumElementsPerBank + 
                                                                         k * 2];
-                tmp[k].yy = in_matrix[loadBankIndex * 2 * kNumElementsPerBank + 
+                bank[k].yy = in_matrix[loadBankIndex * 2 * kNumElementsPerBank + 
                                                                     k * 2 + 1];
               });
 
@@ -292,20 +292,20 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               loadBankIndex++;
 
               // Write the current bank to the A_load matrix.
-              int jtmp = li % (kNumBanks);
+              ac_int<CeilLog2(kNumBanks), false> jtmp = li % (kNumBanks);
               ac_int<kLiNumBankBitSize, false> liNumBank = li / kNumBanks;
               UnrolledLoop<kNumBanks>([&](auto k) {
                 UnrolledLoop<kNumElementsPerBank>([&](auto t) {
                   constexpr auto rowIdx = k * kNumElementsPerBank + t;
                   if (jtmp == k) {
-                    A_load[liNumBank].d[rowIdx].xx = tmp[t].xx;
-                    A_load[liNumBank].d[rowIdx].yy = tmp[t].yy;
+                    A_load[liNumBank].d[rowIdx].xx = bank[t].xx;
+                    A_load[liNumBank].d[rowIdx].yy = bank[t].yy;
                   }
 
                   // Delay data signals to create a vine-based data distribution
                   // to lower signal fanout.
-                  tmp[t].xx = ext::intel::fpga_reg(tmp[t].xx);
-                  tmp[t].yy = ext::intel::fpga_reg(tmp[t].yy);
+                  bank[t].xx = INTEL::fpga_reg(bank[t].xx);
+                  bank[t].yy = INTEL::fpga_reg(bank[t].yy);
                 });
 
                 jtmp = ext::intel::fpga_reg(jtmp);
@@ -433,7 +433,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
               UnrolledLoop<ROWS_COMPONENT>([&](auto k) {
                 // find which bank this unrolled iteration is going to use
-                constexpr auto bank = k / kNumElementsPerBank;
+                constexpr auto bankIdx = k / kNumElementsPerBank;
 
                 // Depending on the iteration this code will compute either:
                 // -> If i=j, a column of Q: Q_i = a_i*ir
@@ -443,8 +443,9 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 //    the i iteration is still required to fill ir and s for
                 //    subsequent iterations
                 auto prod_lhs = a_i[k];
-                auto prod_rhs = i_lt_0[bank] ? Complex(0.0, 0.0) : sori[bank];
-                auto add = j_eq_i[bank] ? Complex(0.0, 0.0) : col[k];
+                auto prod_rhs = i_lt_0[bankIdx] ? Complex(0.0, 0.0) : 
+                                                                  sori[bankIdx];
+                auto add = j_eq_i[bankIdx] ? Complex(0.0, 0.0) : col[k];
                 col[k] = prod_lhs * prod_rhs + add;
 
                 // Store Q_i in A_store and the modified a_j in A_compute
@@ -458,19 +459,19 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
                 // are either going to be:
                 // -> overwritten for the matrix Q (A_store)
                 // -> unused for the A_compute
-                if (i_ge_0_j_ge_i[bank]) {
+                if (i_ge_0_j_ge_i[bankIdx]) {
                   A_store[j].d[k].xx = A_compute[j].d[k].xx = col[k].xx;
                   A_store[j].d[k].yy = A_compute[j].d[k].yy = col[k].yy;
                 }
 
                 // Store a_{i+1} for subsequent iterations of j
-                if (j_eq_i_plus_1[bank]) {
+                if (j_eq_i_plus_1[bankIdx]) {
                   a_ip1[k] = col[k];
                 }
               });
 
               // Perform the dot product <a_{i+1},a_{i+1}> or <a_{i+1}, a_j>
-              Complex p_ij = Complex(0, 0);
+              Complex p_ij = Complex(0.0, 0.0);
               UnrolledLoop<ROWS_COMPONENT>([&](auto k) {
                 p_ij = p_ij + col[k] * a_ip1[k];
               });
@@ -525,7 +526,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
               // Only one bank is going to be stored per si iteration
               // To reduce fanout on si, a "get" table will contain for each 
               // bank a boolean to check if it should store this si iteration
-              int desired = si % (kNumBanks);
+              ac_int<CeilLog2(kNumBanks), false> desired = si % (kNumBanks);
               bool get[kNumBanks];
               UnrolledLoop<kNumBanks>([&](auto k) {
                 get[k] = desired == k;
