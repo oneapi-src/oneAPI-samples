@@ -8,26 +8,11 @@ This DPC++ reference design demonstrates a highly paramaterizable merge sort alg
  
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
+| OS                                | Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to use the spatial compute of the FPGA to create a merge sort design that takes advantage of thread- and SIMD-level parallelism.
 | Time to complete                  | 1 hour
-
-<br>
-
-**Performance**
-The performance data below was gathered using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) sorting `2^24=16777216` elements using 1-16 merge units and the best throughput across 5 seeds.
-
-TODO: Update this.
-
-| Merge Units | Execution time (ms) | Throughput (Melements/s) |
-| :---------- | :-----------------: | :----------------------: |
-| 1           | 1476                | 11                       |
-| 2           | 569.8               | 28                       |
-| 4           | 195.2               | 82                       |
-| 8           | 99.9                | 160                      |
-| 16          | 69.9                | 228                      |
 
 ## Purpose
 This FPGA reference design demonstrates a highly paramaterizable merge sort design that utilizes the spatial computing of the FPGA. The basic merge sort algorithm is described [here](https://en.wikipedia.org/wiki/Merge_sort). See the [Additional Design Information Section](#additional-design-information) for more information on how the merge sort algorithm was implemented on the FPGA.
@@ -190,10 +175,3 @@ To achieve thread-level parallelism, the merge sort design accepts a template pa
 <img src="parallel_tree_bitonic_k-way.png" alt="parallel_tree_bitonic_k-way" width="800"/>
 
 After the merge units sort their `N/units`-sized partition, the partitions of each unit must be reduced into a single sorted list. There are two options to do this: (1) reuse the merge units to perform `lg(units)` more iterations to sort the partitions, or (2) create a merge tree to reduce the partitions into a single sorted list. Option (1) saves area at the expense of performance, since it has to perform additional sorting iterations. Option (2), which we choose for this design, improves performance by creating a merge tree to reduce the final partitions into a single sorted list. The `Merge` kernels in the merge tree (shown in the figure above) use the same kernel code that is used in the `Merge` kernel of the merge unit, which means they too can merge `k` elements per cycle. Once the merge units perform their last iteration, they output to a pipe (instead of writing to device memory) that feeds the merge tree.
-
-### Performance disclaimers
-Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase. For more complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
-
-Performance results are based on testing as of May 2021 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
-
-Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](www.intel.com).
