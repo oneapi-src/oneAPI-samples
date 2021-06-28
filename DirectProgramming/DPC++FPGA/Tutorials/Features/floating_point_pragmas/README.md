@@ -1,5 +1,5 @@
 # Contraction and Reassociation on Floating Point Numbers
-This FPGA tutorial explains how to use the fp reassociate and fp contract pragmas for floating point numbers. These pragmas allow the compiler to skip the rounding steps or change the order of certain floating point operations so that they map more efficiently to hardware. The impact is that the results may be altered slightly due to rounding that can occur after each floating point operation.
+This FPGA tutorial explains how to use the `fp reassociate` and `fp contract` pragmas for floating point numbers. These pragmas allow the compiler to skip the rounding steps or change the order of certain floating point operations so that they map more efficiently to hardware. The impact is that the results may be altered slightly due to rounding that can occur after each floating point operation.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -23,7 +23,7 @@ The `fp contract(fast|off)` pragma controls whether the compiler can skip interm
 
 The `fp reassociate(on|off)` pragma controls the relaxing of the order of floating point arithmetic operations within the code block that this pragma is applied to. 
 
-The default setting of `fp contract` pragma is `fast` and the default setting of `fp reassociate` is `on`. Guarding the code block with `#pragma clang fp contract(off)` and `#pragma clang fp reassociate(off)` will overwrite the default setting. If multiple occurrences of the pragma affect the same scope of your code, the pragma with the narrowest scope takes precedence.
+The default setting of `fp contract` pragma is `fast` and the default setting of `fp reassociate` is `on`. Guarding the code block with `#pragma clang fp contract(off)` and `#pragma clang fp reassociate(off)` will override the default setting. If multiple occurrences of the pragma affect the same scope of your code, the pragma with the narrowest scope takes precedence.
 
 #### Example
 This tutorial design applies `fp contract(fast)` and `fp reassociate(on)` at a global scope (the default behavior).
@@ -52,7 +52,7 @@ ReassociateOffKernel in this tutorial applies `fp reassociate(off)` to a sequenc
                     + accessorE[0] + accessorF[0];
 ```
 
-By relaxing the order of the additions using `fp reassociate(on)`, the compiler is able to group these four additions that maps to the FPGA hardware in a more efficient way, and thus saves area and reduces latency. By applying `fp reassociate(off)`, we lose this efficiency.
+By relaxing the order of the additions using `fp reassociate(on)`, the compiler is able to group these four additions in a way that maps to the FPGA hardware more efficiently, and thus saves area and reduces latency. By applying `fp reassociate(off)`, we lose this efficiency.
 
 ## Key Concepts
 * The basic usage of the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas
