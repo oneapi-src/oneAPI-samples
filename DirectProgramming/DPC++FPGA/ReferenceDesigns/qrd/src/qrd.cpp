@@ -56,9 +56,19 @@ static constexpr T Log2(T n) {
 /*
   Static implementation of the CEIL base 2 logarithm function
 */
-template <typename T>
-static constexpr T CeilLog2(T n) {
-  return ((n == 1) ? T(0) : Log2(n - 1) + T(1));
+template<unsigned int N, uint8_t remains=0>
+static constexpr inline unsigned int CeilLog2()
+{
+  return (N <= 1) ? remains : 1 + CeilLog2<(N>>1), remains | (N%2)>();
+}
+
+/*
+  Return the number of bits required to encode all the values between 0 and N
+*/
+template<unsigned int N>
+static constexpr inline unsigned int BitsForMaxValue()
+{
+  return CeilLog2<N+1>();
 }
 
 /*
@@ -109,11 +119,11 @@ class QRD;
 
   Each matrix (input and output) are represented using floating-point vectors.
   Each complex element is interpreted as two consecutive values.
-  e.g. in_matrix[2*i + 0] and in_matrix[2*i + 1] represent the real and
+  e.g. A_matrix[2*i + 0] and A_matrix[2*i + 1] represent the real and
   imaginary values of the i-th complex element of the matrix.
 
   Function arguments:
-  - in_matrix:  The input matrix. Interpreted as a transposed matrix.
+  - A_matrix:  The input matrix. Interpreted as a transposed matrix.
   - out_matrix: The output matrix. The function will overwrite this matrix.
                 The first values of this output vector will contain the upper
                 triangular values of the R matrix, row by row.
@@ -123,7 +133,7 @@ class QRD;
                 So rest of the values hold the transposed matrix Q.
   - q:          The device queue.
   - matrices:   The number of matrices to be processed.
-                The input matrices are read from the in_matrix vector.
+                The input matrices are read from the A_matrix vector.
   - reps:       The number of repetitions of the computation to execute.
                 (for performance evaluation)
 
@@ -137,8 +147,9 @@ class QRD;
                       method.
   
 */
-void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_matrix,
-                     queue &q, size_t matrices, size_t reps) {
+void QRDecomposition( vector<ac_complex<float>> &A_matrix, 
+                      vector<ac_complex<float>> &QR_matrix,
+                      queue &q, size_t matrices, size_t reps) {
 
   // Number of complex elements in the matrix
   constexpr int kNumComplexElements = COLS_COMPONENT * ROWS_COMPONENT;
@@ -152,10 +163,10 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
   //                 etc.
   // So R contains COLS_COMPONENT * (COLS_COMPONENT + 1) / 2 complex elements.
   // Each complex element takes two indexes.
-  constexpr int kInputMatrixSize = kNumComplexElements;
-  constexpr int kQMatrixSize = kNumComplexElements * 2;
-  constexpr int kRMatrixSize = COLS_COMPONENT * (COLS_COMPONENT + 1);
-  constexpr int kOutputMatrixSize = kQMatrixSize + kRMatrixSize;
+  constexpr int kAMatrixSize = kNumComplexElements;
+  constexpr int kQMatrixSize = kNumComplexElements;
+  constexpr int kRMatrixSize = COLS_COMPONENT * (COLS_COMPONENT + 1) / 2;
+  constexpr int kQRMatrixSize = kQMatrixSize + kRMatrixSize;
 
   // Constants related to the memory configuration of the kernel's local
   // memories
@@ -170,8 +181,8 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
   constexpr int kLoadIter = kNumComplexElements / kNumElementsPerBank;
   constexpr int kStoreIter = kNumComplexElements / kNumElementsPerBank;
   // Number of bits required by the loop counters for the loads/stores iterators
-  constexpr int kLoadIterBitSize = CeilLog2(kLoadIter + 1);
-  constexpr int kStoreIterBitSize = CeilLog2(kStoreIter + 1);
+  constexpr int kLoadIterBitSize = BitsForMaxValue<kLoadIter + 1>();
+  constexpr int kStoreIterBitSize = BitsForMaxValue<kStoreIter + 1>();
   // The indexes kLoadIter and kStoreIter iterators are being divided 
   // by kNumBanks. So we precompute the size of the output.
   constexpr int kLiNumBankBitSize = kLoadIterBitSize - Log2(kNumBanks);
@@ -193,7 +204,7 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
   // -> enough bits to encode ROWS_COMPONENT+1 for the positive iterations and 
   //    the exit condition
   // -> one extra bit for the -1
-  constexpr int kIBitSize = CeilLog2(ROWS_COMPONENT + 1) + 1;
+  constexpr int kIBitSize = BitsForMaxValue<ROWS_COMPONENT + 1>() + 1;
   // j starts from i, so from -1 and goes up to COLS_COMPONENT
   // So we need:
   // -> enough bits to encode COLS_COMPONENT+1 for the positive iterations and 
@@ -207,8 +218,8 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
   // -> enough bits to encode the maximum number of negative iterations
   constexpr int kJNegativeIterations = 
                             kVariableIterations < 0 ? -kVariableIterations : 1;
-  constexpr int kJBitSize = CeilLog2(COLS_COMPONENT + 1) 
-                            + CeilLog2(kJNegativeIterations);
+  constexpr int kJBitSize = BitsForMaxValue<COLS_COMPONENT + 1>() 
+                            + BitsForMaxValue<kJNegativeIterations>();
 
   // We will process 'chunk' number of matrices in each run of the kernel
   short chunk = 2048;
@@ -217,11 +228,11 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
   }
 
   // Create buffers and allocate space for them.
-  buffer<ac_complex<float>, 1> *input_matrix[kNumBuffers];
-  buffer<float, 1> *output_matrix[kNumBuffers];
+  buffer<ac_complex<float>, 1> *A_buffer[kNumBuffers];
+  buffer<ac_complex<float>, 1> *QR_buffer[kNumBuffers];
   for (short i = 0; i < kNumBuffers; i++) {
-    input_matrix[i] = new buffer<ac_complex<float>, 1>(kInputMatrixSize * chunk);
-    output_matrix[i] = new buffer<float, 1>(kOutputMatrixSize * chunk);
+    A_buffer[i] = new buffer<ac_complex<float>, 1>(kAMatrixSize * chunk);
+    QR_buffer[i] = new buffer<ac_complex<float>, 1>(kQRMatrixSize * chunk);
   }
 
   // Repeat the computation multiple times (for performance analysis)
@@ -232,27 +243,28 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
                                       it += chunk, b = (b + 1) % kNumBuffers) {
 
       // Pointer to current input/output matrices in host memory 
-      const ac_complex<float> *kPtr = in_matrix.data() + kInputMatrixSize * it;
-      float *kPtr2 = out_matrix.data() + kOutputMatrixSize * it;
+      const ac_complex<float> *kPtrA = A_matrix.data() + kAMatrixSize * it;
+      ac_complex<float> *kPtrQR = QR_matrix.data() + kQRMatrixSize * it;
 
       int matrices = chunk;
 
       // Copy a new input matrix from the host memory into the FPGA DDR 
       q.submit([&](handler &h) {
-        auto in_matrix2 =
-                    input_matrix[b]->get_access<access::mode::discard_write>(h);
-        h.copy(kPtr, in_matrix2);
+        auto A_matrix2 =
+                  A_buffer[b]->get_access<access::mode::discard_write>(h);
+        h.copy(kPtrA, A_matrix2);
       });
 
       // Compute job
       q.submit([&](handler &h) {
 
         // Create accessors to the FPGA DDR buffers
-        accessor in_matrix(*input_matrix[b], h, read_only);
 
-        accessor out_matrix(*output_matrix[b], h, write_only, no_init);
+        accessor A_matrix_accessor(*A_buffer[b], h, read_only);
+        accessor QR_matrix_accessor(*QR_buffer[b], h, write_only, noinit);
 
-        auto out_matrix2 = out_matrix;
+        // Create alias to the output matrix accessor
+        auto out_matrix2 = QR_matrix_accessor;
 
         h.single_task<class QRD>([=]() [[intel::kernel_args_restrict]] {
           // Go over the matrices
@@ -280,20 +292,21 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
             // Get the index of the first bank of the current matrix l
             int loadBankIndex = l * kNumComplexElements / kNumElementsPerBank;
 
+            [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
             for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; li++) {
 
               // Load a single bank of the input matrix 
               Complex bank[kNumElementsPerBank];
               UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                bank[k].xx = in_matrix[loadBankIndex * kNumElementsPerBank + k].r();
-                bank[k].yy = in_matrix[loadBankIndex * kNumElementsPerBank + k].i();
+                bank[k].xx = A_matrix_accessor[loadBankIndex * kNumElementsPerBank + k].r();
+                bank[k].yy = A_matrix_accessor[loadBankIndex * kNumElementsPerBank + k].i();
               });
 
               // Increase the bank index
               loadBankIndex++;
 
               // Write the current bank to the A_load matrix.
-              ac_int<CeilLog2(kNumBanks), false> jtmp = li % (kNumBanks);
+              ac_int<BitsForMaxValue<kNumBanks>(), false> jtmp = li % (kNumBanks);
               ac_int<kLiNumBankBitSize, false> liNumBank = li / kNumBanks;
               UnrolledLoop<kNumBanks>([&](auto k) {
                 UnrolledLoop<kNumElementsPerBank>([&](auto t) {
@@ -358,7 +371,7 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
 
             // Get index in the output at which to start writing the outputs for
             // input matrix l.
-            int qr_idx = l * kOutputMatrixSize;
+            int qr_idx = l * kQRMatrixSize;
 
             // Only the real part of the complex pip1 and ir are needed for the 
             // computation
@@ -498,9 +511,8 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
               // Write the computed R value when j is not a "dummy" iteration
               // introduced to optimized the triangular loop
               if (j >= i + 1 && i + 1 < N_VALUE) {
-                out_matrix[qr_idx] = r_ip1j.xx;
-                out_matrix[qr_idx + 1] = r_ip1j.yy;
-                qr_idx+=2;
+                QR_matrix_accessor[qr_idx] = {r_ip1j.xx, r_ip1j.yy};
+                qr_idx++;
               }
 
               // Update the loop indexes.
@@ -522,12 +534,15 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
               Loop 3: Copy the result from on-chip memory to DDR memory.
               ==================================================================
             */
+            // int q_idx = l * kQMatrixSize;
+
+            [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
             for (ac_int<kStoreIterBitSize, false> si = 0; si < kStoreIter; 
                                                                         si++) {
               // Only one bank is going to be stored per si iteration
               // To reduce fanout on si, a "get" table will contain for each 
               // bank a boolean to check if it should store this si iteration
-              ac_int<CeilLog2(kNumBanks), false> desired = si % (kNumBanks);
+              ac_int<BitsForMaxValue<kNumBanks>(), false> desired = si % (kNumBanks);
               bool get[kNumBanks];
               UnrolledLoop<kNumBanks>([&](auto k) {
                 get[k] = desired == k;
@@ -536,27 +551,26 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
 
               // Each bank will then check the get table to potentially 
               // read kNumElementsPerBank from A_store and store the elements
-              // in tmp
-              Complex tmp[kNumElementsPerBank];
+              // in bank
+              Complex bank[kNumElementsPerBank];
               ac_int<kSiNumBankBitSize, false> siNumBank = si / kNumBanks;
               UnrolledLoop<kNumBanks>([&](auto t) {
                 UnrolledLoop<kNumElementsPerBank>([&](auto k) {
                   constexpr auto rowIdx = t * kNumElementsPerBank + k;
-                  tmp[k].xx = get[t] ? A_store[siNumBank].d[rowIdx].xx : 
-                                                    INTEL::fpga_reg(tmp[k].xx);
-                  tmp[k].yy = get[t] ? A_store[siNumBank].d[rowIdx].yy : 
-                                                    INTEL::fpga_reg(tmp[k].yy);
+                  bank[k].xx = get[t] ? A_store[siNumBank].d[rowIdx].xx : 
+                                                    INTEL::fpga_reg(bank[k].xx);
+                  bank[k].yy = get[t] ? A_store[siNumBank].d[rowIdx].yy : 
+                                                    INTEL::fpga_reg(bank[k].yy);
                 });
               });
 
-              // Finally, the kNumElementsPerBank elements from tmp are 
+              // Finally, the kNumElementsPerBank elements from bank are 
               // written to the out_matrix2 (alias to out_matrix)
               UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                out_matrix2[qr_idx + k * 2]     = tmp[k].xx;
-                out_matrix2[qr_idx + k * 2 + 1] = tmp[k].yy;
+                out_matrix2[qr_idx + k] = {bank[k].xx, bank[k].yy};
               });
 
-              qr_idx += kNumElementsPerBank*2;
+              qr_idx += kNumElementsPerBank;
             } // end for si=0:kStoreIter-1
           } // end for l=0:matrices-1
         });
@@ -564,8 +578,8 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
 
       // Copy the output result from the FPGA DDR to the host memory
       q.submit([&](handler &h) {
-        accessor final_matrix(*output_matrix[b], h, read_only);
-        h.copy(final_matrix, kPtr2);
+        accessor final_QR_matrix(*QR_buffer[b], h, read_only);
+        h.copy(final_QR_matrix, kPtrQR);
       });
 
     } // end for it=0:matrices-1 
@@ -573,7 +587,7 @@ void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_ma
 
   // Clean allocated buffers
   for (short b = 0; b < kNumBuffers; b++) {
-    delete input_matrix[b];
-    delete output_matrix[b];
+    delete A_buffer[b];
+    delete QR_buffer[b];
   }
 }

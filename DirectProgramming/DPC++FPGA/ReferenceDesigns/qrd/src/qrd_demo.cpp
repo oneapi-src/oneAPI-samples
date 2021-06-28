@@ -44,8 +44,9 @@ using namespace std;
 using namespace std::chrono;
 using namespace sycl;
 
-void QRDecomposition(vector<ac_complex<float>> &in_matrix, vector<float> &out_matrix,
-                     queue &q, size_t matrices, size_t reps);
+void QRDecomposition(vector<ac_complex<float>> &in_matrix, 
+                      vector<ac_complex<float>> &QR_matrix,
+                      queue &q, size_t matrices, size_t reps);
 
 int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
@@ -53,9 +54,9 @@ int main(int argc, char *argv[]) {
   constexpr size_t kRandomMax = 10;
   constexpr size_t kAMatrixSizeFactor = ROWS_COMPONENT * COLS_COMPONENT;
   
-  constexpr size_t kQMatrixSize = ROWS_COMPONENT * COLS_COMPONENT * 2;
-  constexpr size_t kRMatrixSize = COLS_COMPONENT * (COLS_COMPONENT + 1) / 2 * 2;
-  constexpr size_t kQRMatrixSizeFactor = kQMatrixSize + kRMatrixSize;
+  constexpr size_t kQMatrixSize = ROWS_COMPONENT * COLS_COMPONENT;
+  constexpr size_t kRMatrixSize = COLS_COMPONENT * (COLS_COMPONENT + 1) / 2;
+  constexpr size_t kQRMatrixSize = kQMatrixSize + kRMatrixSize;
 
   constexpr size_t kIndexAccessFactor = 2;
 
@@ -78,14 +79,14 @@ int main(int argc, char *argv[]) {
          << "\n";
 
     vector<ac_complex<float>> a_matrix;
-    vector<float> qr_matrix;
+    vector<ac_complex<float>> qr_matrix;
 
     a_matrix.resize(matrices * kAMatrixSizeFactor);
-    qr_matrix.resize(matrices * kQRMatrixSizeFactor);
+    qr_matrix.resize(matrices * kQRMatrixSize);
 
     // For output-postprocessing
-    float q_matrix[ROWS_COMPONENT][COLS_COMPONENT][2];
-    float r_matrix[COLS_COMPONENT][COLS_COMPONENT][2];
+    float q_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT][2];
+    float r_matrix_pp[COLS_COMPONENT][COLS_COMPONENT][2];
 
     cout << "Generating " << matrices << " random matri"
          << ((matrices == 1) ? "x " : "ces ") << "\n";
@@ -95,27 +96,21 @@ int main(int argc, char *argv[]) {
     for (size_t i = 0; i < matrices; i++) {
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {
         for (size_t col = 0; col < COLS_COMPONENT; col++) {
-          int random_val = rand();
-          float random_double_real =
-              random_val % (kRandomMax - kRandomMin) + kRandomMin;
-          int random_val_imag = rand();
-          float random_double_imag =
-              random_val_imag % (kRandomMax - kRandomMin) + kRandomMin;
-          ac_complex<float> random_complex = {random_double_real, random_double_imag};
+          int val = rand();
+          float random_real = val % (kRandomMax - kRandomMin) + kRandomMin;
+          val = rand();
+          float random_imag = val % (kRandomMax - kRandomMin) + kRandomMin;
+          
+          ac_complex<float> random_complex = {random_real, random_imag};
 
-          a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] = random_complex;
-
-          // a_matrix[i * kAMatrixSizeFactor +
-          //          col * ROWS_COMPONENT * kIndexAccessFactor +
-          //          row * kIndexAccessFactor] = random_double_real;
-          // a_matrix[i * kAMatrixSizeFactor +
-          //          col * ROWS_COMPONENT * kIndexAccessFactor +
-          //          row * kIndexAccessFactor + 1] = random_double_imag;
+          a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] = 
+                                                                random_complex;
         }
       }
     }
 
-    QRDecomposition(a_matrix, qr_matrix, q, 1, 1); // Accelerator warmup
+    // Accelerator warmup
+    QRDecomposition(a_matrix, qr_matrix, q, 1, 1); 
 
 #if defined(FPGA_EMULATOR)
     size_t reps = 2;
@@ -153,19 +148,25 @@ int main(int argc, char *argv[]) {
       for (size_t i = 0; i < COLS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
           if (j < i)
-            r_matrix[i][j][0] = r_matrix[i][j][1] = 0;
+            r_matrix_pp[i][j][0] = r_matrix_pp[i][j][1] = 0;
           else {
-            r_matrix[i][j][0] = qr_matrix[matrix * kQRMatrixSizeFactor + idx++];
-            r_matrix[i][j][1] = qr_matrix[matrix * kQRMatrixSizeFactor + idx++];
+            r_matrix_pp[i][j][0] = qr_matrix[matrix * kQRMatrixSize + idx].r();
+            r_matrix_pp[i][j][1] = qr_matrix[matrix * kQRMatrixSize + idx].i();
+            idx++;
           }
         }
       }
 
+      // idx = 0;
       for (size_t j = 0; j < COLS_COMPONENT; j++) {
         for (size_t i = 0; i < ROWS_COMPONENT; i++) {
-          q_matrix[i][j][0] = qr_matrix[matrix * kQRMatrixSizeFactor + idx++];
-          q_matrix[i][j][1] = qr_matrix[matrix * kQRMatrixSizeFactor + idx++];
+          q_matrix_pp[i][j][0] = qr_matrix[matrix * kQRMatrixSize + idx].r();
+          q_matrix_pp[i][j][1] = qr_matrix[matrix * kQRMatrixSize + idx].i();
+          idx++;
+
+          // cout << q_matrix[matrix * kQMatrixSize + idx] << " ";
         }
+        // cout << std::endl;
       }
 
       constexpr float kErrorThreshold = 1e-4;
@@ -178,19 +179,19 @@ int main(int argc, char *argv[]) {
           qr_ij[0] = 0;
           qr_ij[1] = 0;
           for (size_t k = 0; k < COLS_COMPONENT; k++) {
-            qr_ij[0] += q_matrix[i][k][0] * r_matrix[k][j][0] -
-                        q_matrix[i][k][1] * r_matrix[k][j][1];
-            qr_ij[1] += q_matrix[i][k][0] * r_matrix[k][j][1] +
-                        q_matrix[i][k][1] * r_matrix[k][j][0];
+            qr_ij[0] += q_matrix_pp[i][k][0] * r_matrix_pp[k][j][0] -
+                        q_matrix_pp[i][k][1] * r_matrix_pp[k][j][1];
+            qr_ij[1] += q_matrix_pp[i][k][0] * r_matrix_pp[k][j][1] +
+                        q_matrix_pp[i][k][1] * r_matrix_pp[k][j][0];
           }
 
           qtq_ij[0] = 0;
           qtq_ij[1] = 0;
           for (size_t k = 0; k < COLS_COMPONENT; k++) {
-            qtq_ij[0] += q_matrix[i][k][0] * q_matrix[j][k][0] +
-                        q_matrix[i][k][1] * q_matrix[j][k][1];
-            qtq_ij[1] += q_matrix[i][k][0] * q_matrix[j][k][1] -
-                        q_matrix[i][k][1] * q_matrix[j][k][0];
+            qtq_ij[0] += q_matrix_pp[i][k][0] * q_matrix_pp[j][k][0] +
+                        q_matrix_pp[i][k][1] * q_matrix_pp[j][k][1];
+            qtq_ij[1] += q_matrix_pp[i][k][0] * q_matrix_pp[j][k][1] -
+                        q_matrix_pp[i][k][1] * q_matrix_pp[j][k][0];
           }
 
 
@@ -207,8 +208,8 @@ int main(int argc, char *argv[]) {
                         && (abs(qtq_ij[1]) < kErrorThreshold);
 
           bool r_upper_triang = ((i > j) && 
-                                  ((abs(r_matrix[i][j][0]) < kErrorThreshold) &&
-                                  (abs(r_matrix[i][j][1]) < kErrorThreshold)))
+                              ((abs(r_matrix_pp[i][j][0]) < kErrorThreshold) &&
+                                (abs(r_matrix_pp[i][j][1]) < kErrorThreshold)))
                                 || ((i <= j));
 
           if (!qr_eq_a || !qtq_ortho || !r_upper_triang
@@ -216,8 +217,8 @@ int main(int argc, char *argv[]) {
               || !std::isfinite(qr_ij[1]) 
               || !std::isfinite(qtq_ij[0])
               || !std::isfinite(qtq_ij[1])
-              || !std::isfinite(r_matrix[i][j][0])
-              || !std::isfinite(r_matrix[i][j][1])
+              || !std::isfinite(r_matrix_pp[i][j][0])
+              || !std::isfinite(r_matrix_pp[i][j][1])
             ) {
 
             count++;
@@ -254,10 +255,10 @@ int main(int argc, char *argv[]) {
               cout  << "QtQ[" << i << "][" << j << "] = (" << qtq_ij[0] << ", " 
                     << qtq_ij[1] << ") is not finite" << std::endl;
             }
-            if(!std::isfinite(r_matrix[i][j][0]) || 
-               !std::isfinite(r_matrix[i][j][1])) {
-              cout  << "R[" << i << "][" << j << "] = (" << r_matrix[i][j][0] 
-                    << ", " << r_matrix[i][j][1] << ") is not finite" \
+            if(!std::isfinite(r_matrix_pp[i][j][0]) || 
+               !std::isfinite(r_matrix_pp[i][j][1])) {
+              cout  << "R[" << i << "][" << j << "] = (" << r_matrix_pp[i][j][0] 
+                    << ", " << r_matrix_pp[i][j][1] << ") is not finite" \
                     << std::endl;
             }
             error = true;
@@ -296,7 +297,7 @@ int main(int argc, char *argv[]) {
             "executable."
          << "\n";
     cerr << "   In this run, more than "
-         << (((long long)matrices * (kAMatrixSizeFactor + kQRMatrixSizeFactor) *
+         << (((long long)matrices * (kAMatrixSizeFactor + kQRMatrixSize) *
               sizeof(float)) /
              pow(2, 30))
          << " GB of memory was requested for " << matrices
