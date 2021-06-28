@@ -38,13 +38,12 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-#include "qrd.hpp"
 
 using namespace std;
 using namespace std::chrono;
 using namespace sycl;
 
-void QRDecomposition(vector<ac_complex<float>> &in_matrix, 
+void ComplexFloatQRDecomposition( vector<ac_complex<float>> &A_matrix, 
                       vector<ac_complex<float>> &QR_matrix,
                       queue &q, size_t matrices, size_t reps);
 
@@ -110,7 +109,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Accelerator warmup
-    QRDecomposition(a_matrix, qr_matrix, q, 1, 1); 
+    ComplexFloatQRDecomposition(a_matrix, qr_matrix, q, 1, 1); 
 
 #if defined(FPGA_EMULATOR)
     size_t reps = 2;
@@ -122,7 +121,7 @@ int main(int argc, char *argv[]) {
          << ((reps > 1) ? "repeatedly" : "") << "\n";
 
     high_resolution_clock::time_point start_time = high_resolution_clock::now();
-    QRDecomposition(a_matrix, qr_matrix, q, matrices, reps);
+    ComplexFloatQRDecomposition(a_matrix, qr_matrix, q, matrices, reps);
     high_resolution_clock::time_point end_time = high_resolution_clock::now();
     duration<double> diff = end_time - start_time;
     q.throw_asynchronous();

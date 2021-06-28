@@ -7,6 +7,7 @@ set(UNROLLED_LOOP_HEADER UnrolledLoop.hpp)
 set(HOST_SOURCE_FILE qrd_demo.cpp)
 set(TARGET_NAME qrd)
 
+set(EMULATOR_TARGET ${TARGET_NAME}.prj)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
@@ -81,54 +82,6 @@ elseif(FPGA_BOARD MATCHES ".*agilex.*")
     set(SEED 5)
 else()
     message(FATAL_ERROR "Unknown board!")
-endif()
-
-if(WIN32)
-    add_custom_target(fpga COMMAND echo "An FPGA hardware target is not provided on Windows. See README for details.")
-else()
-    add_custom_target(fpga DEPENDS ${FPGA_TARGET})
-    set(DEVICE_FPGA_OBJ "qrd_fpga.o")
-    set(DEVICE_IMAGE_FPGA_OBJ "qrd_fpga.a")
-    set(HOST_FPGA_OBJ "qrd_host.o")
-
-    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
-
-    add_custom_command(OUTPUT ${DEVICE_FPGA_OBJ}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${DEVICE_FPGA_OBJ}
-                       DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} ${UNROLLED_LOOP_HEADER})
-
-    add_custom_command(OUTPUT ${HOST_FPGA_OBJ}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${HOST_SOURCE_FILE} -o ${HOST_FPGA_OBJ}
-                       DEPENDS ${HOST_SOURCE_FILE})
-
-    add_custom_command(OUTPUT ${DEVICE_IMAGE_FPGA_OBJ}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} -fsycl-link=image ${DEVICE_FPGA_OBJ} -o ${DEVICE_IMAGE_FPGA_OBJ}
-                       DEPENDS ${DEVICE_FPGA_OBJ})
-
-    add_custom_command(OUTPUT ${FPGA_TARGET}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${FINAL_LINK_FLAGS} ${HOST_FPGA_OBJ} ${DEVICE_IMAGE_FPGA_OBJ} -o  ${CMAKE_BINARY_DIR}/${FPGA_TARGET}
-                       DEPENDS ${DEVICE_IMAGE_FPGA_OBJ} ${HOST_FPGA_OBJ})
-endif()
-
-# FPGA hardware report
-if(WIN32)
-    add_custom_target(report DEPENDS ${REPORTS_TARGET} )
-    separate_arguments(WIN_FLAGS WINDOWS_COMMAND)
-    separate_arguments(CMAKE_CXX_FLAGS_LIST WINDOWS_COMMAND "${CMAKE_CXX_FLAGS}")
-    add_custom_command(OUTPUT ${REPORTS_TARGET}
-        COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${CMAKE_CXX_FLAGS_LIST} ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
-                      DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} ${UNROLLED_LOOP_HEADER})
-else()
-    add_custom_target(report DEPENDS ${REPORTS_TARGET} )
-
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} ${DEVICE_SOURCE_FILE} COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_HEADER_FILE} ${DEVICE_HEADER_FILE} COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${UNROLLED_LOOP_HEADER} ${UNROLLED_LOOP_HEADER} COPYONLY)
-
-    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
-    add_custom_command(OUTPUT ${REPORTS_TARGET}
-                      COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} -fsycl-link ${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
-                      DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} ${UNROLLED_LOOP_HEADER})
 endif()
 
 message(STATUS "ROWS_COMPONENT=${ROWS_COMPONENT}")
