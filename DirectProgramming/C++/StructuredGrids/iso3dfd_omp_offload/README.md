@@ -184,6 +184,7 @@ nano run.sh
 5.	 Add this text into the run.sh file:
 ```
 source /opt/intel/inteloneapi/setvars.sh > /dev/null 2>&1
+cd build
 make run
 ```
 6.	Save and close the run.sh file.
@@ -211,17 +212,35 @@ qsub -l nodes=1:gpu:ppn=2 -d . run.sh
 ```
 4.	When a job terminates, a couple of files are written to the disk:
 
-<script_name>.sh.eXXXX, which is the job stderr
+    <script_name>.sh.eXXXX, which is the job stderr
 
-<script_name>.sh.oXXXX, which is the job stdout
+    <script_name>.sh.oXXXX, which is the job stdout
 
-Here XXXX is the job ID, which gets printed to the screen after each qsub command.
+    Here XXXX is the job ID, which gets printed to the screen after each qsub command.
 
 5.	Inspect the output of the sample.
 ```
 cat run.sh.oXXXX
 ```
-Here XXXX is the job ID, which gets printed to the screen after each qsub command.
+You should see output similar to this:
+
+```
+Grid Sizes: 256 256 256
+Tile sizes ignored for OMP Offload
+--Using Baseline version with omp target with collapse
+Memory Usage (MBytes): 230
+--------------------------------------
+time         : 9.912 secs
+throughput   : 169.262 Mpts/s
+flops        : 10.325 GFlops
+bytes        : 2.03114 GBytes/s
+
+--------------------------------------
+
+--------------------------------------
+Checking Results ...
+Final wavefields from OMP Offload device and CPU are equivalent: Success
+```
 
 6.	Remove the stdout and stderr files and clean-up the project files.
 ```
