@@ -121,8 +121,8 @@ dnnl_verbose,exec,cpu,convolution,jit:avx512_common,forward_training,src_f32::bl
 ```
 Please see the [DNNL Developer's Guide](https://intel.github.io/mkl-dnn/dev_guide_verbose.html) for more details on the verbose log. 
 
-### Running Samples In DevCloud (Optional)
-#### Run TensorFlow_HelloWorld in Jupyter Lab
+## Running Samples In DevCloud (Optional)
+### Run TensorFlow_HelloWorld in Jupyter Lab
 1.	Open [Intel DevCloud](https://software.intel.com/content/www/us/en/develop/tools/devcloud.html).
 2.	In the upper right corner, click Sign In.
 3.	Log in with your Intel account username and password.
