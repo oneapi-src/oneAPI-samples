@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
   bool passed = true;
 #ifdef FPGA_EMULATOR
   IndexT count = 128;
-  int runs = 1;
+  int runs = 2;
 #else
   IndexT count = 1 << 24;
   int runs = 17;
@@ -98,7 +98,10 @@ int main(int argc, char *argv[]) {
   }
 
   // enforce at least two runs
-  runs = std::max((int)2, runs);
+  if (runs < 2) {
+    std::cerr << "ERROR: 'runs' must be 2 or more\n";
+    std::terminate();
+  }
 
   // check args
   if (count <= kMergeUnits) {
@@ -248,7 +251,7 @@ int main(int argc, char *argv[]) {
     return 0;
   } else {
     std::cout << "FAILED\n";
-    return 0;
+    return 1;
   }
 }
 
