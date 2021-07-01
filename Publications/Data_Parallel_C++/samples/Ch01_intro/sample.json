@@ -1,0 +1,30 @@
+{
+  "guid": "Insert_GUID_Here",	
+  "name": "InsertName",
+  "categories": [Insert Path Sample Browser should display ie Publications/Data_Parallel_C++/ChapterX],
+  "description": "Insert Description",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"mkdir build",
+      		        "cd build",
+           		"cmake ..",
+           		"make",
+			"make run"
+		 ]
+	}],
+	"windows": [{
+		"steps": [
+			"MSBuild mandelbrot.sln /t:Rebuild /p:Configuration=\"Release\"",
+			"cd x64/Release",
+            		"SampleName.exe"
+		]
+	}]
+
+  }
+}
