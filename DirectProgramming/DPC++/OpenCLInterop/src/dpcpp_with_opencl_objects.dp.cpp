@@ -4,13 +4,13 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
+#include <CL/opencl.h>
 #include <stdio.h>
 #include <CL/sycl.hpp>
-#include "CL/opencl.h"
 using namespace sycl;
 
-#define MAX_SOURCE_SIZE (0x100000)
-static const int N = 1024;
+constexpr int MAX_SOURCE_SIZE = 0x100000;
+constexpr int N = 1024;
 
 int main(int argc, char **argv) {
   size_t bytes = sizeof(float) * N;
@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
   FILE *fp;
   char *source_str;
   size_t source_size;
-  fp = fopen("src/vector_add_kernel.cl", "r");
+  fp = fopen("vector_add_kernel.cl", "r");
   if (!fp) {
     std::cerr << "Failed to load kernel file." << std::endl;
   }
@@ -92,9 +92,9 @@ int main(int argc, char **argv) {
     buffer<int, 1> sycl_buf_c(ocl_buf_c, sycl_context);
     sycl_queue.submit([&](handler &h) {
       // Create accessors for each of the buffers
-      auto a_accessor = sycl_buf_a.get_access<access::mode::read>(h);
-      auto b_accessor = sycl_buf_b.get_access<access::mode::read>(h);
-      auto c_accessor = sycl_buf_c.get_access<access::mode::write>(h);
+      accessor a_accessor(sycl_buf_a, h, read_only);
+      accessor b_accessor(sycl_buf_b, h, read_only);
+      accessor c_accessor(sycl_buf_c, h, write_only);
       // Map kernel arguments to accessors
       h.set_args(a_accessor, b_accessor, c_accessor);
       // Launch Kernel

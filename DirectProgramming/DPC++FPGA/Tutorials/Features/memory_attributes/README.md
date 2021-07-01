@@ -8,8 +8,8 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               |  The basic concepts of on-chip memory attributes <br> How to apply memory attributes in your program <br> How to confirm that the memory attributes were respected by the compiler <br> A case study of the type of performance/area trade-offs enabled by memory attributes 
 | Time to complete                  | 30 minutes
@@ -29,17 +29,17 @@ Memory attributes can be applied to any variable or array defined within the ker
 
 | Memory Attribute                 | Description
 ---                                |---
-| intelfpga::register              | Forces a variable or array to be carried through the pipeline in registers.
-| intelfpga::memory("`impl_type`") | Forces a variable or array to be implemented as embedded memory. The optional string parameter `impl_type` can be `BLOCK_RAM` or `MLAB`.
-| intelfpga::numbanks(N)           | Specifies that the memory implementing the variable or array must have N memory banks. 
-| intelfpga::bankwidth(W)          | Specifies that the memory implementing the variable or array must be W bytes wide.
-| intelfpga::singlepump            | Specifies that the memory implementing the variable or array should be clocked at the same rate as the accesses to it.
-| intelfpga::doublepump            | Specifies that the memory implementing the variable or array should be clocked at twice the rate as the accesses to it.
-| intelfpga::max_replicates(N)     | Specifies that a maximum of N replicates should be created to enable simultaneous reads from the datapath.
-| intelfpga::private_copies(N)     | Specifies that a maximum of N private copies should be created to enable concurrent execution of N pipelined threads.
-| intelfpga::simple_dual_port      | Specifies that the memory implementing the variable or array should have no port that services both reads and writes.
-| intelfpga::merge("`key`", "`type`")  | Merge two or more variables or arrays in the same scope width-wise or depth-wise. All variables with the same `key` string are merged into the same memory system. The string `type` can be either `width` or `depth`. 
-| intelfpga::bank_bits(b<sub>0</sub>,b<sub>1</sub>,...,b<sub>n</sub>)  | Specifies that the local memory addresses should use bits (b<sub>0</sub>,b<sub>1</sub>,...,b<sub>n</sub>) for bank-selection, where (b<sub>0</sub>,b<sub>1</sub>,...,b<sub>n</sub>) are indicated in terms of word-addressing. The bits of the local memory address not included in (b<sub>0</sub>,b<sub>1</sub>,...,b<sub>n</sub>) will be used for word-selection in each bank. 
+| `intel::fpga_register`           | Forces a variable or array to be carried through the pipeline in registers.
+| `intel::fpga_memory("impl_type")`| Forces a variable or array to be implemented as embedded memory. The optional string parameter `impl_type` can be `BLOCK_RAM` or `MLAB`.
+| `intel::numbanks(N)`             | Specifies that the memory implementing the variable or array must have N memory banks. 
+| `intel::bankwidth(W)`            | Specifies that the memory implementing the variable or array must be W bytes wide.
+| `intel::singlepump`              | Specifies that the memory implementing the variable or array should be clocked at the same rate as the accesses to it.
+| `intel::doublepump`              | Specifies that the memory implementing the variable or array should be clocked at twice the rate as the accesses to it.
+| `intel::max_replicates(N)`       | Specifies that a maximum of N replicates should be created to enable simultaneous reads from the datapath.
+| `intel::private_copies(N)`       | Specifies that a maximum of N private copies should be created to enable concurrent execution of N pipelined threads.
+| `intel::simple_dual_port`        | Specifies that the memory implementing the variable or array should have no port that services both reads and writes.
+| `intel::merge("key", "type")`    | Merge two or more variables or arrays in the same scope width-wise or depth-wise. All variables with the same `key` string are merged into the same memory system. The string `type` can be either `width` or `depth`. 
+| `intel::bank_bits(b0, b1,..., bn)`  | Specifies that the local memory addresses should use bits `(b0, b1,..., bn)` for bank-selection, where `(b0, b1,..., bn)` are indicated in terms of word-addressing. The bits of the local memory address not included in `(b0, b1,..., bn)` will be used for word-selection in each bank. 
 
 
 #### Example 1: Applying memory attributes to private arrays
@@ -49,16 +49,16 @@ q.submit([&](handler &h) {
     // Create a kernel memory 8 bytes wide (2 integers per memory word)
     // and split the contents into 2 banks (each bank will contain 32
     // integers in 16 memory words). 
-    [[intelfpga::bankwidth(8), intelfpga::numbanks(2)]] int a[64];
+    [[intel::bankwidth(8), intel::numbanks(2)]] int a[64];
     
     // Force array 'b' to be carried live in the data path using
     // registers. 
-    [[intelfpga::register]] int b[64];
+    [[intel::fpga_register]] int b[64];
 
     // Merge 'mem_A' and 'mem_B' width-wise so that they are mapped
     // to the same kernel memory system,
-    [[intelfpga::merge("mem", "width")]] unsigned short mem_A[64];
-    [[intelfpga::merge("mem", "width")]] unsigned short mem_B[64];
+    [[intel::merge("mem", "width")]] unsigned short mem_A[64];
+    [[intel::merge("mem", "width")]] unsigned short mem_B[64];
     
     // ...
   });
@@ -71,8 +71,8 @@ q.submit([&](handler &h) {
 // Memory attributes can be specified for struct data members
 // within the struct declaration.
 struct State {
-  [[intelfpga::numbanks(2)]] int mem[64];
-  [[intelfpga::register]]    int reg[8];
+  [[intel::numbanks(2)]]      int mem[64];
+  [[intel::fpga_register]]    int reg[8];
 };
 
 q.submit([&](handler &h) {
@@ -87,7 +87,7 @@ q.submit([&](handler &h) {
     // level attribute takes precedence. Here, the compiler will
     // generate a single memory system for S2, which will have 4
     // banks.  
-    [[intelfpga::numbanks(4)]] State S2;
+    [[intel::numbanks(4)]] State S2;
 
     // ...
   });
@@ -96,7 +96,7 @@ q.submit([&](handler &h) {
 ```
 
 ### Tutorial Code Overview
-This tutorial demonstrates the trade-offs between choosing a single-pumped and double-pumped memory system for your kernel. We will apply the attributes `[[intelfpga::singlepump]]` and `[[intelfpga::doublepump]]` to the two dimensional array `dict_offset`. 
+This tutorial demonstrates the trade-offs between choosing a single-pumped and double-pumped memory system for your kernel. We will apply the attributes `[[intel::singlepump]]` and `[[intel::doublepump]]` to the two dimensional array `dict_offset`. 
 
 The tutorial enqueues three versions of the same kernel:
 * `dict_offset` is single-pumped
@@ -146,7 +146,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -165,6 +165,10 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   ```
+   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+   ```
+   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -199,6 +203,10 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
+   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -210,10 +218,13 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      nmake report
      ``` 
-   * An FPGA hardware target is not provided on Windows*. 
+   * Compile for FPGA hardware (longer compile time, targets FPGA device):
+     ```
+     nmake fpga
+     ``` 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
- 
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+  
  ### In Third-Party Integrated Development Environments (IDEs)
 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
@@ -283,6 +294,6 @@ PASSED: all kernel results are correct.
 ### Discussion
 
 Feel free to experiment further with the tutorial code. You can:
- - Change the memory implementation type to block RAMs (using `[[intelfpga::memory("BLOCK_RAM")]]`) or registers (using `[[intelfpga::register]]`) to see how it affects the area and f<sub>MAX</sub> of the tutorial design.
+ - Change the memory implementation type to block RAMs (using `[[intel::fpga_memory("BLOCK_RAM")]]`) or registers (using `[[intel::fpga_register]]`) to see how it affects the area and f<sub>MAX</sub> of the tutorial design.
  - Vary `kRows` and/or `kVec` (both in powers of 2) see how it affects the trade-off between single-pumped and double-pumped memories.
 

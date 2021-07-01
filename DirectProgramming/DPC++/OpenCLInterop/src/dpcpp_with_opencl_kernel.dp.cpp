@@ -8,7 +8,7 @@
 #include <CL/sycl.hpp>
 using namespace sycl;
 
-static const int N = 1024;
+constexpr int N = 1024;
 
 void dpcpp_code(int *a, int *b, int *c) {
   queue q{default_selector()};  // Create Command Queue Targeting GPU
@@ -27,18 +27,18 @@ void dpcpp_code(int *a, int *b, int *c) {
                                 c[i] = a[i] + b[i]; 
                             } )");
 
-  buffer<int, 1> buf_a(a, range<1>(N));
-  buffer<int, 1> buf_b(b, range<1>(N));
-  buffer<int, 1> buf_c(c, range<1>(N));
+  buffer buf_a(a, range(N));
+  buffer buf_b(b, range(N));
+  buffer buf_c(c, range(N));
 
   q.submit([&](handler &h) {
-    auto A = buf_a.get_access<access::mode::read>(h);
-    auto B = buf_b.get_access<access::mode::read>(h);
-    auto C = buf_c.get_access<access::mode::write>(h);
+    accessor A(buf_a, h, read_only);
+    accessor B(buf_b, h, read_only);
+    accessor C(buf_c, h, write_only);
     // Set buffers as arguments to the kernel
     h.set_args(A, B, C);
     // Launch vecAdd kernel from the p program object across N elements.
-    h.parallel_for(range<1>(N), p.get_kernel("vecAdd"));
+    h.parallel_for(range(N), p.get_kernel("vecAdd"));
   });
 }
 

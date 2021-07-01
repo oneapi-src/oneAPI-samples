@@ -7,7 +7,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 |:---                               |:---
 | OS                                | Linux Ubuntu LTS 18.04, 19.10; RHEL 8.x
 | Hardware                          | Integrated Graphics from Intel (GPU) GEN9 or higher
-| Software                          | Intel(R) oneAPI DPC++ Compiler
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | Get started with compile flow for GPU projects
 | Time to complete                  | n/a
 

@@ -5,8 +5,8 @@ A sample containing multiple implementations of matrix multiplication code sampl
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; Windows 10
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel(R) oneAPI DPC++ Compiler; Intel(R) Advisor
-| What you will learn               | How to profile an application using Intel(R) Advisor
+| Software                          | Intel&reg; oneAPI DPC++ Compiler; Intel&reg; Advisor
+| What you will learn               | How to profile an application using Intel&reg; Advisor
 | Time to complete                  | 15 minutes
 
 ## Purpose

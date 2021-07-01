@@ -1,4 +1,4 @@
-# Code Samples of Intel(R) Advisor
+# Code Samples of Intel&reg; Advisor
 
 | Code sample name                          | Supported Intel(r) Architecture(s) | Description
 |:---                                       |:---                                |:---
