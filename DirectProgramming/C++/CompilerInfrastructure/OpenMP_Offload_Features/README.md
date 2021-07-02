@@ -2,11 +2,11 @@
 
 These examples demonstrate some of the new OpenMP Offload features supported by the Intel&reg; oneAPI DPC++/C++ Compiler.
 
-For more information on the compiler , see the [Intel oneAPI DPC++/C++ Compiler Landing Page](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/dpc-compiler.html).
+For more information on the compiler , see the [Intel&reg oneAPI DPC++/C++ Compiler Landing Page](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/dpc-compiler.html).
 
 | Optimized for                       | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04, 20
+| OS                                | Ubuntu* 18.04, 20
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler, Intel Devcloud
 | What you will learn               | Understand some of the new OpenMP Offload features supported by the Intel&reg; oneAPI DPC++/C++ Compiler
