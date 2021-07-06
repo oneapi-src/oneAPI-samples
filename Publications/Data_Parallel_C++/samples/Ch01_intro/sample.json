@@ -1,7 +1,7 @@
 {
   "guid": "Insert_GUID_Here",	
   "name": "InsertName",
-  "categories": [Insert Path Sample Browser should display ie Publications/Data_Parallel_C++/ChapterX],
+  "categories": ["Insert Path Sample Browser should display ie Publications/Data_Parallel_C++/ChapterX"],
   "description": "Insert Description",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
