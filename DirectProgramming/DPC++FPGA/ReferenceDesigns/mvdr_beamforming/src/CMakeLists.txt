@@ -84,12 +84,12 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall -Werror ${WIN_FLAG} -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${ENABLE_USM}")
 set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -Xssimulation -Xsghdl")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fbracket-depth=512 -fintelfpga ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} ${PROFILE_FLAG} -Xsparallel=2 -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-Wall -fintelfpga -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -Xssimulation -Xsghdl")
+set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fbracket-depth=512 -fintelfpga ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
+set(HARDWARE_LINK_FLAGS "-Wall -fintelfpga -Xshardware -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} ${PROFILE_FLAG} -Xsparallel=2 -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -111,15 +111,12 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile manually:
 #   dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -Xsboard=<FPGA_BOARD> -fsycl-link=early mvdr_beamforming.cpp -o mvdr_beamforming_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
+# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
-set(CMAKE_CXX_FLAGS_LIST ${CMAKE_CXX_FLAGS})
-separate_arguments(CMAKE_CXX_FLAGS_LIST)
-set(HARDWARE_LINK_FLAGS_LIST ${HARDWARE_LINK_FLAGS})
-separate_arguments(HARDWARE_LINK_FLAGS_LIST)
-add_custom_command(OUTPUT ${FPGA_EARLY_IMAGE}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${WIN_FLAG} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link=early ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${FPGA_EARLY_IMAGE}
-                   DEPENDS ${SOURCE_FILE})
-                   # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 
 ###############################################################################
 ### FPGA Simulator
