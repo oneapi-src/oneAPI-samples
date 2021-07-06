@@ -5,15 +5,15 @@
 // =============================================================
 
 extern "C" int printf(const char *, ...);
-struct C {
+struct MyArr {
   int num;
   int *arr;
 };
-#pragma omp declare mapper(id : C c) map(c.num, c.arr [0:c.num])
+#pragma omp declare mapper(id : MyArr c) map(c.num, c.arr [0:c.num])
 
 void foo(int num, int *arr, int *arr_one) {
   int i;
-  C c;
+  MyArr c;
   c.num = num;
   c.arr = arr;
   for (i = 0; i < num; ++i)
@@ -29,7 +29,7 @@ void foo(int num, int *arr, int *arr_one) {
     printf("%s%3d %s", (i == 0 ? "Out: " : ""), c.arr[i],
            (i == num - 1 ? "\n" : ""));
 
-  C c_one;
+  MyArr c_one;
   c_one.num = num;
   c_one.arr = arr_one;
   for (i = 0; i < num; ++i)
@@ -49,9 +49,9 @@ void foo(int num, int *arr, int *arr_one) {
 int main() {
   int arr4[] = {1, 2, 4, 8};
   int arr8[] = {1, 2, 4, 8, 16, 32, 64, 128};
-  int arr4one[] = {1, 2, 4, 8};
-  int arr8one[] = {1, 2, 4, 8, 16, 32, 64, 128};
-  foo(sizeof(arr4) / sizeof(arr4[0]), arr4, arr4one);
-  foo(sizeof(arr8) / sizeof(arr8[0]), arr8, arr8one);
+  int arr4_one[] = {1, 2, 4, 8};
+  int arr8_one[] = {1, 2, 4, 8, 16, 32, 64, 128};
+  foo(sizeof(arr4) / sizeof(arr4[0]), arr4, arr4_one);
+  foo(sizeof(arr8) / sizeof(arr8[0]), arr8, arr8_one);
   return 0;
 }

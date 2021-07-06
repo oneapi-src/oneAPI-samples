@@ -8,12 +8,12 @@
 using namespace std;
 
 // A Functor
-class inc {
+class Inc {
  private:
   int num;
 
  public:
-  inc(int n) : num(n) {}
+  Inc(int n) : num(n) {}
   int operator()(int arr_num) const { return num + arr_num; }
 };
 
@@ -21,7 +21,7 @@ int main() {
   int arr[] = {1, 2, 3, 4, 5};
   int n = sizeof(arr) / sizeof(arr[0]);
   int add5 = 5;
-  inc a_inc(add5);
+  Inc a_inc(add5);
 
 #pragma omp target teams distribute parallel for map(arr [0:n]) map(to : a_inc)
   for (int k = 0; k < n; k++) {
