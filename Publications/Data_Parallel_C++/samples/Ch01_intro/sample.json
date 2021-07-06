@@ -1,30 +1,37 @@
 {
-  "guid": "Insert_GUID_Here",	
-  "name": "InsertName",
-  "categories": [Insert Path Sample Browser should display ie Publications/Data_Parallel_C++/ChapterX],
-  "description": "Insert Description",
+  "guid": "7f013625-544b-4b54-8302-f88cec8bc8e4",
+  "name": "Chapter 1 - Introduction",
+  "categories": [ "Book: Data Parallel C++" ],
+  "description": "Chapter 1 source code samples: \n  Hello World \n race \n lambda \n functor",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
   "os": [ "linux", "windows" ],
   "builder": [ "ide", "cmake" ],
   "ciTests": {
-	"linux": [{
-		"steps": [
-			"mkdir build",
-      		        "cd build",
-           		"cmake ..",
-           		"make",
-			"make run"
-		 ]
-	}],
-	"windows": [{
-		"steps": [
-			"MSBuild mandelbrot.sln /t:Rebuild /p:Configuration=\"Release\"",
-			"cd x64/Release",
-            		"SampleName.exe"
-		]
-	}]
+    "linux": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+
+      }
+    ]
 
   }
 }
