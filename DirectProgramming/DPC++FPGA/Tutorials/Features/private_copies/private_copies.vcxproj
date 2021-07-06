@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\max_concurrency.cpp" />
+    <ClCompile Include="src\private_copies.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -20,7 +20,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{f0ce4972-62af-4b9f-996f-1d1db14d76b7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>max_concurrency</RootNamespace>
+    <RootNamespace>private_copies</RootNamespace>
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -105,7 +105,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
       <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)max_concurrency.obj</ObjectFileName>
+      <ObjectFileName>$(IntDir)private_copies.obj</ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -144,7 +144,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
       <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)max_concurrency.obj</ObjectFileName>
+      <ObjectFileName>$(IntDir)private_copies.obj</ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
