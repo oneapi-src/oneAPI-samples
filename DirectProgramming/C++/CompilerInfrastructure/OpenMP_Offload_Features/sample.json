@@ -20,7 +20,6 @@
           "make run_prog1",
           "make run_prog2",
           "make run_prog3",
-          "make run_prog4",
           "make clean"
         ]
       }
