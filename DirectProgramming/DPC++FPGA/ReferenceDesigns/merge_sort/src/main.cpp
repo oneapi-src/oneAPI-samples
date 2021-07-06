@@ -53,10 +53,10 @@ static_assert(impu::math::IsPow2(kSortWidth));
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declare functions used in this file by main()
 template <typename ValueT, typename IndexT, typename KernelPtrType>
-double fpga_sort(queue &q, ValueT *in_vec, ValueT *out_vec, IndexT count);
+double FPGASort(queue &q, ValueT *in_vec, ValueT *out_vec, IndexT count);
 
 template <typename T>
-bool validate(T *val, T *ref, unsigned int count);
+bool Validate(T *val, T *ref, unsigned int count);
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -213,7 +213,7 @@ int main(int argc, char *argv[]) {
     // run the sort multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       // run the sort
-      time[i] = fpga_sort<ValueT, IndexT, KernelPtrType>(q, in, out, count);
+      time[i] = FPGASort<ValueT, IndexT, KernelPtrType>(q, in, out, count);
 
       // Copy the output to 'out_vec'. In the case where we are using USM host
       // allocations this is unnecessary since we could simply deference
@@ -223,7 +223,7 @@ int main(int argc, char *argv[]) {
       q.memcpy(out_vec.data(), out, count * sizeof(ValueT)).wait();
 
       // validate the output
-      passed &= validate(out_vec.data(), ref.data(), count);
+      passed &= Validate(out_vec.data(), ref.data(), count);
     }
   } catch (exception const &e) {
     std::cout << "Caught a synchronous SYCL exception: " << e.what() << "\n";
@@ -265,7 +265,7 @@ class SortOutPipeID;
 // perform the actual sort on the FPGA.
 //
 template <typename ValueT, typename IndexT, typename KernelPtrType>
-double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
+double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   // the input and output pipe for the sorter
   using SortInPipe =
       sycl::INTEL::pipe<SortInPipeID, sycl::vec<ValueT, kSortWidth>>;
@@ -377,7 +377,7 @@ double fpga_sort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
 // simple function to check if two regions of memory contain the same values
 //
 template <typename T>
-bool validate(T *val, T *ref, unsigned int count) {
+bool Validate(T *val, T *ref, unsigned int count) {
   for (unsigned int i = 0; i < count; i++) {
     if (val[i] != ref[i]) {
       std::cout << "ERROR: mismatch at entry " << i << "\n";
