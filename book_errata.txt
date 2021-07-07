@@ -129,6 +129,6 @@ This is a very good thing, and makes vec better.
      
      
 Code samples from Figures -
-In an omission - code samples for 18-12 and 18-4 are not in the reposiory.
+In an omission - code samples for 18-12 and 18-14 are not in the reposiory.
 This does not affect the accuracy of the book, but it means we failed to supply the code,
 and we do not current include it to test compilation.
