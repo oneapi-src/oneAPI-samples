@@ -1,8 +1,7 @@
-<<<<<<< HEAD
 {
   "guid": "7f013625-544b-4b54-8302-f88cec8bc8e4",
   "name": "Chapter 1 - Introduction",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": "Chapter 1 source code samples: \n  Hello World \n race \n lambda \n functor",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
@@ -67,4 +66,4 @@
 
   }
 }
->>>>>>> 302990bb388338b07583bf0e96117a560e9748aa
+

@@ -1,7 +1,7 @@
 {
   "guid": "60a71766-b0d6-4d8e-9223-8d5628c1bec0",
   "name": "Chapter 5 - Error Handling",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": "Chapter 5 source code samples: ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

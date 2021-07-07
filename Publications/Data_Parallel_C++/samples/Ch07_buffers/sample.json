@@ -1,7 +1,7 @@
 {
   "guid": "25b534cd-4dc7-43dc-b3d0-05795b0b0f64",
   "name": "Chapter 7 - Buffers",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": "Chapter 7 source code samples: ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

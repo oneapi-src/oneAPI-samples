@@ -1,7 +1,7 @@
 {
   "guid": "42601abe-219f-425a-9170-073553c93979",
   "name": "Chapter 15",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": "Chapter 15 source code samples: ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

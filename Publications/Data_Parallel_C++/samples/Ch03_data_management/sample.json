@@ -1,7 +1,7 @@
 {
   "guid": "662c9ce1-c87c-4d70-9432-67b0df0931b0",
   "name": "Chapter 3 - Data Management",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": "Chapter 3 source code samples: ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

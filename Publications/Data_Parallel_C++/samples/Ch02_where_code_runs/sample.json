@@ -1,7 +1,7 @@
 {
   "guid": "b93d6b84-9812-47e6-ad2a-7a221d5b32fb",
   "name": "Chapter 2 - Where Code Executes",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": "Chapter 1 source code samples: simple_program, implicit_defaultselector, host_selector, cpu_selector, multiple selectors, gpu_plus_fpga, custom_selector, simple_device_code, simple_device_code_2, fallback",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

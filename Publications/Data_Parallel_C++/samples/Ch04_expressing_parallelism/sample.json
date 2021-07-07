@@ -1,7 +1,7 @@
 {
   "guid": "4c16d8f3-0662-4203-9d1f-b2ab2336eedb",
   "name": "Chapter 4 - Expresssing Parallelism",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": "Chapter 4 source code samples: ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

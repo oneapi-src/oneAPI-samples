@@ -1,7 +1,7 @@
 {
   "guid": "5945066a-c0a2-4ac1-8ca7-4aa7e87da1f0",
   "name": "Chapter 8 - Scheduling Kernals and Data Movement",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": "Chapter 8 source code samples: ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

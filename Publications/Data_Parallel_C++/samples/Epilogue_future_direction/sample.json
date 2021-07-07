@@ -1,7 +1,7 @@
 {
   "guid": "b50d9507-afad-46d2-8961-b69f58afc636",
   "name": "Epilogue",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": " Epilogue source code samples: ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

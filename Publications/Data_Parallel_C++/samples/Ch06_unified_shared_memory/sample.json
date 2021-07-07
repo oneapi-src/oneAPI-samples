@@ -1,7 +1,7 @@
 {
   "guid": "1e00e2dd-ffe3-408f-a9ec-77e81532d75a",
   "name": "Chapter 6 - Unified Shared Memory",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": "Chapter 6 source code samples: ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

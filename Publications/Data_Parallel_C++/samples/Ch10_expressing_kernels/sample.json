@@ -1,7 +1,7 @@
 {
   "guid": "b9a18214-3bbb-4487-89c5-34fa7db239bd",
   "name": "Chapter 10 - Defining Kernals",
-  "categories": [ "Book: Data Parallel C++" ],
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
   "description": "Chapter 10 source code samples: ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
