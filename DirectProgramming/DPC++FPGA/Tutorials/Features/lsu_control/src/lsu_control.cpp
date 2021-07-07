@@ -67,7 +67,7 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
     buffer input_buffer(input_data);
 
     auto e_p = q.submit([&](handler &h) {
-      accessor output_a(output_buffer, h, write_only, noinit);
+      accessor output_a(output_buffer, h, write_only, no_init);
       accessor input_a(input_buffer, h, read_only);
 
       // Kernel that uses the prefetch LSU
@@ -84,7 +84,7 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
     });
 
     auto e_b = q.submit([&](handler &h) {
-      accessor output_a(output_buffer, h, write_only, noinit);
+      accessor output_a(output_buffer, h, write_only, no_init);
       accessor input_a(input_buffer, h, read_only);
       
       // Kernel that uses the burst-coalesced LSU
@@ -101,7 +101,7 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
     });
 
     auto e_d = q.submit([&](handler &h) {
-      accessor output_a(output_buffer, h, write_only, noinit);
+      accessor output_a(output_buffer, h, write_only, no_init);
       accessor input_a(input_buffer, h, read_only);
       
       // Kernel that uses the default LSUs
