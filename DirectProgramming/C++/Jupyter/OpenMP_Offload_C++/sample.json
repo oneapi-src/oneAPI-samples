@@ -1,0 +1,23 @@
+{
+  "guid": "f903bafb-e694-4984-8706-a1024a2173a9",
+  "name": "OpenMP Offload C++ Tutorials",
+  "categories": [ "Toolkit/DirectProgramming/C++/Jupyter/OpenMP-offload-training/" ],
+  "description": "C++ OpenMP Offload Basics using Jupyter Notebooks",
+  "toolchain": [ "dpcpp"],
+  "languages": [{"cpp":{}}],
+  "os": [ "linux" ],
+  "builder": [ "make" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "env": [ "source /opt/intel/oneapi/setvars.sh" ],
+        "steps": [
+          "make all",
+          "make Run",
+          "make clean"
+        ]
+      }
+    ]
+  }
+}

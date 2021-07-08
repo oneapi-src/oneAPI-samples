@@ -1,0 +1,22 @@
+{
+  "guid": "466c6b01-16d8-4ecd-a294-ace4e02ac866",
+  "name": "OpenMP Offload Fortran Tutorials",
+  "categories": [ "Toolkit/DirectProgramming/Fortran/Jupyter/OpenMP-offload-training/" ],
+  "description": "Fortran OpenMP Offload Basics using Jupyter Notebooks",
+  "languages": [ { "fortran": {} } ],
+  "os": [ "linux" ],
+  "builder": [ "make" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "env": [ "source /opt/intel/oneapi/setvars.sh" ],
+        "steps": [
+          "make all",
+          "make Run",
+          "make clean"
+        ]
+      }
+    ]
+  }
+}
