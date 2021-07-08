@@ -3,6 +3,8 @@
 #include <chrono>
 #include <limits>
 #include <numeric>
+#include <sstream> 
+#include <string>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -27,14 +29,23 @@ constexpr bool kUseUSMHostAllocation = true;
 constexpr bool kUseUSMHostAllocation = false;
 #endif
 
-// the type to use for the pixel intensity values
+// the type to use for the pixel intensity values and a temporary type
+// which should have more bits than the pixel type to check overflow
 using PixelT = unsigned char; // 8 bits
+using TmpT = unsigned long long; // 64 bits
+static_assert(std::is_unsigned_v<PixelT>);
+static_assert(std::is_unsigned_v<TmpT>);
+static_assert(sizeof(TmpT) > sizeof(PixelT));
 
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declare functions used in this file by main()
 template <typename T>
 void ParseFiles(std::string data_dir, std::vector<T>& in_pixels,
                 std::vector<T>& ref_pixels, int& w, int& h);
+
+template <typename T>
+void WriteOutputFile(std::string data_dir, std::vector<T>& pixels,
+                     int w, int h);
 
 template <typename T>
 bool Validate(T *val, T *ref, unsigned int count);
@@ -191,6 +202,9 @@ int main(int argc, char *argv[]) {
   sycl::free(in, q);
   sycl::free(out, q);
 
+  // write the output files
+  WriteOutputFile(data_dir, out_pixels, w, h);
+
   // print the performance results
   if (passed) {
     // NOTE: when run in emulation, these results do not accurately represent
@@ -327,12 +341,111 @@ double fpga_sort(queue &q, PixelT *in_ptr, PixelT *out_ptr, IndexT count) {
 */
 
 //
+// Helper to parse data files
+//
+template <typename T>
+void ParseDataFile(std::string filename, std::vector<T>& pixels,
+                   int& w, int& h) {
+  // create the file stream to parse
+  std::ifstream is(filename);
+
+  // get header and data
+  std::string header_str, data_str;
+  if (!std::getline(is, header_str)) {
+    std::cerr << "ERROR: failed to get header line from " << filename << "\n";
+    std::terminate();
+  }
+  if (!std::getline(is, data_str)) {
+    std::cerr << "ERROR: failed to get data line from " << filename << "\n";
+    std::terminate();
+  }
+
+  // first two elements are the width and height
+  std::stringstream header_ss(header_str);
+  header_ss >> w >> h;
+
+  // expecting to parse w*h pixels
+  pixels.resize(w*h);
+
+  // parse all of the pixels
+  std::stringstream data_ss(data_str);
+  for (int i = 0; i < w*h; i++) {
+    // parse using 64 bit integer
+    TmpT x;
+
+    // parse the pixel value
+    if (!(data_ss >> x)) {
+      std::cerr << "ERROR: ran out of pixels when parsing " << filename << "\n";
+      std::terminate();
+    }
+
+    // check for parsing failure
+    if (data_ss.fail()) {
+      std::cerr << "ERROR: failed to parse pixel in " << filename << "\n";
+      std::terminate();
+    }
+
+    // check if the parsed value fits in given type 'T'
+    if (x > static_cast<TmpT>(std::numeric_limits<T>::max())) {
+      std::cerr << "ERROR: value (" << x
+                << ") is too big to store in pixel type 'T'\n";
+      std::terminate();
+    }
+    if (x < static_cast<TmpT>(std::numeric_limits<T>::min())) {
+      std::cerr << "ERROR: value (" << x
+                << ") is too small to store in pixel type 'T'\n";
+      std::terminate();
+    }
+
+    // set the value
+    pixels[i] = static_cast<T>(x);
+  }
+}
+
+//
 // Function that parses an input file and returns the result
 //
 template <typename T>
 void ParseFiles(std::string data_dir, std::vector<T>& in_pixels,
                 std::vector<T>& ref_pixels, int& w, int& h) {
-  // TODO
+  // parse the files
+  int noisy_w, noisy_h;
+  ParseDataFile(data_dir + "/input_noisy.data", in_pixels, noisy_w, noisy_h);
+  int ref_w, ref_h;
+  ParseDataFile(data_dir + "/output_ref.data", ref_pixels, ref_w, ref_h);
+
+  // ensure dimensions match
+  if (noisy_w != ref_w) {
+    std::cerr << "noisy input and reference widths do not match "
+              << noisy_w << " != " << ref_w << "\n";
+    std::terminate();
+  }
+  if (noisy_h != ref_h) {
+    std::cerr << "noisy input and reference heights do not match "
+              << noisy_h << " != " << ref_h << "\n";
+    std::terminate();
+  }
+
+  // set width and height
+  w = ref_w;
+  h = ref_h;
+}
+
+//
+// Function to write the output to a file
+//
+template <typename T>
+void WriteOutputFile(std::string data_dir, std::vector<T>& pixels,
+                     int w, int h) {
+  std::ofstream of(data_dir + "/output.data");
+
+  // write the size
+  of << w << " " << h << "\n";
+
+  // write the pixels 
+  for (auto& p : pixels) {
+    of << static_cast<TmpT>(p) << " ";
+  }
 }
 
 
@@ -344,8 +457,8 @@ bool Validate(T *val, T *ref, unsigned int count) {
   for (unsigned int i = 0; i < count; i++) {
     if (val[i] != ref[i]) {
       std::cout << "ERROR: mismatch at entry " << i << "\n";
-      std::cout << "\t" << val[i] << " != " << ref[i]
-                << " (val[i] != ref[i])\n";
+      std::cout << "\t" << static_cast<TmpT>(val[i]) << " != "
+                << static_cast<TmpT>(ref[i]) << " (val[i] != ref[i])\n";
       return false;
     }
   }

@@ -13,6 +13,10 @@ if len(sys.argv) > 1:
 if len(sys.argv) > 2:
   out_dir = sys.argv[2]
 
+# create output directory if it doesn't exist
+if not os.path.exists(out_dir):
+    os.makedirs(out_dir)
+
 # parse input image
 img_ref = np.array(Image.open(img_file))
 w, h, _ = img_ref.shape
@@ -20,11 +24,11 @@ w, h, _ = img_ref.shape
 # filenames use the input base filename
 filename_no_ext = os.path.splitext(os.path.basename(img_file))[0]
 img_in_filename = out_dir + "/" + filename_no_ext + "_input.png"
-img_in_noisy_filename = out_dir + "/" + filename_no_ext + "_input_noisy.png"
-img_in_noisy_data_filename = out_dir + "/" + filename_no_ext + "_input_noisy.data"
-param_config_data_filename = out_dir + "/" + filename_no_ext + "_param_config.data"
-img_out_ref_data_filename = out_dir + "/" + filename_no_ext + "_output_ref.data"
-img_out_ref_filename = out_dir + "/" + filename_no_ext + "_output_ref.png"
+img_in_noisy_filename = out_dir + "/input_noisy.png"
+img_in_noisy_data_filename = out_dir + "/input_noisy.data"
+param_config_data_filename = out_dir + "/param_config.data"
+img_out_ref_data_filename = out_dir + "/output_ref.data"
+img_out_ref_filename = out_dir + "/output_ref.png"
 
 ################################################################################
 print('Converting RGB->Bayer->RGB')
