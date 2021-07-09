@@ -16,43 +16,28 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 
 ## Purpose
-This tutorial demonstrates a simple example of using the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas.
+This FPGA tutorial demonstrates an example of using `fp contract(fast|off)` pragma to:
++ Skip intermediate rounding and conversion between double precision arithmetic operations with acceptable error
++ Reduce area and improve latency
 
-### Description of the pragmas
-The `fp contract(fast|off)` pragma controls whether the compiler can skip intermediate rounding and conversions between double precision arithmetic operations. `fp contract(fast)` has the same effect as the alternative command flag option `-ffp-contract=fast`; however, the effect of the flag will be disabled for code blocks fenced by `#pragma clang fp contract(off)`.
+and `fp reassociate(on|off)` pragma to:
++ Relaxing the order of floating point arithmetic operations
++ Reduce area and improve latency
 
-The `fp reassociate(on|off)` pragma controls the relaxing of the order of floating point arithmetic operations within the code block that this pragma is applied to. 
-
-The default setting of `fp contract` pragma is `fast` and the default setting of `fp reassociate` is `on`. Guarding the code block with `#pragma clang fp contract(off)` and `#pragma clang fp reassociate(off)` will override the default setting. If multiple occurrences of the pragma affect the same scope of your code, the pragma with the narrowest scope takes precedence.
-
-#### Example
-This tutorial design applies `fp contract(fast)` and `fp reassociate(on)` at a global scope (the default behavior).
-
-ContractOffKernel in this tutorial applies `fp contract(off)` to addition followed by multiplication in a loop. The following is an example:
-
-```
-#pragma clang fp contract(off)
-  accessorRes[0] = 0.0;
-  for (size_t i = 0; i < size; i++) {
-    double temp1 = 0.0, temp2 = 0.0;
-    temp1 = accessorA[0] + accessorB[0];
-    temp2 = accessorC[0] + accessorArray[i];
-    accessorRes[0] += temp1 * temp2 + accessorD[0];
-  }
+#### Example: Turn On Fp Contract
+```c++
+#pragma fp contract(fast)
+a = b * c + d;
 ```
 
-The `fp contract(fast)` pragma allows the compiler to skip rounding steps on these double precision operations, which in turn allows more efficient use of FPGA floating point math resources and thus a reduction in area and latency. By applying `fp contract(off)`, we lose this efficiency.
+The `fp contract(fast)` pragma allows the compiler to skip rounding steps on these double precision operations, which in turn allows more efficient use of FPGA floating point math resources and thus a reduction in area and latency.
 
-ReassociateOffKernel in this tutorial applies `fp reassociate(off)` to a sequence of additions. The following is an example:
-
-```
-#pragma clang fp reassociate(off)
-  accessorRes[0] += accessorA[0] + accessorB[0]
-                    + accessorC[0] + accessorD[0]
-                    + accessorE[0] + accessorF[0];
+```c++
+#pragma fp reassociate(on)
+a = b + c + d + e;
 ```
 
-By relaxing the order of the additions using `fp reassociate(on)`, the compiler is able to group these four additions in a way that maps to the FPGA hardware more efficiently, and thus saves area and reduces latency. By applying `fp reassociate(off)`, we lose this efficiency.
+By relaxing the order of the additions using `fp reassociate(on)`, the compiler is able to group these four additions in a way that maps to the FPGA hardware more efficiently, and thus saves area and reduces latency.
 
 ## Key Concepts
 * The basic usage of the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas
@@ -154,7 +139,7 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 
 ## Examining the Reports
 
-Locate the pair of `report.html` files in either:
+Locate `report.html` files in either:
 
 * **Report-only compile**:  `fp_pragmas_report.prj`
 * **FPGA hardware compile**: `fp_pragmas.prj`
@@ -182,7 +167,19 @@ In the "Loop Analysis" section under the tab titled "Throughput Analysis", there
 ### Example of Output
 
 ```txt
-PASSED: The results are correct
+Contract enabled: 
+    kernel result: -4.98704e+08, correct result: -4.98704e+08
+    delta: 2.38419e-07, expected delta: less than 0.000001
+Contract disabled: 
+    kernel result: -4.98704e+08, correct result: -4.98704e+08
+    delta: 0, expected delta: 0
+Reassociate enabled: 
+    kernel result: -4.98704e+08, correct result: -4.98704e+08
+    delta: 1.19209e-07, expected delta: less than 0.000001
+Reassociate disabled: 
+    kernel result: -4.98704e+08, correct result: -4.98704e+08
+    delta: 0, expected delta: 0
+Test Passed
 ```
 
 ### Discussion of Results

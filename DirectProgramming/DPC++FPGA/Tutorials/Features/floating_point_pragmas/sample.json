@@ -1,5 +1,5 @@
 {
-  "guid": "36C10F87-132F-461C-A80B-CC0A0A14A2B1",
+  "guid": "6D7BCDAD-1932-46D7-AE1D-70DB9E309B3E",
   "name": "Floating Point Pragmas",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating how to use the fp contract and fp reassociate pragmas in a design",
