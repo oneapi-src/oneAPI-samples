@@ -1,7 +1,7 @@
 {
   "guid": "2D2AAD9B-29BF-4380-B5E7-575CDECCF686",
   "name": "OpenMP Offload C++ Tutorials",
-  "categories": [ "Toolkit/DirectProgramming/C++/Jupyter/OpenMP-offload-training/" ],
+  "categories": [ "Toolkit/oneAPI Direct Programming/C++/Tutorials Jupyter Notebooks" ],
   "description": "C++ OpenMP Offload Basics using Jupyter Notebooks",
   "toolchain": [ "dpcpp"],
   "languages": [{"cpp":{}}],
