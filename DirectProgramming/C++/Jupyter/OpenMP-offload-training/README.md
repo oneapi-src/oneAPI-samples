@@ -1,4 +1,4 @@
-# oneAPI OpenMP Offload training Jupyter notebooks
+# oneAPI OpenMP Offload Training Jupyter Notebooks
 
 The the content of this repo is a collection of Jupyter notebooks that were
 developed to teach OpenMP Offload.
