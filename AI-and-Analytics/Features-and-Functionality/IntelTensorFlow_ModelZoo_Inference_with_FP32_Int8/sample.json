@@ -8,6 +8,8 @@
 		"python": {}
 	}],
 	"os": ["linux"],
+        "targetDevice": ["CPU"],
+
 	"ciTests": {
 		"linux": [{
 			"id": "model_zoo_sample_test",

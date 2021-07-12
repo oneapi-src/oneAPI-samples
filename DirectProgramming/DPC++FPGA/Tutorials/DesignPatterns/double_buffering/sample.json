@@ -5,7 +5,7 @@
   "description": "Intel® FPGA tutorial design to demonstrate overlapping kernel execution with buffer transfers and host-processing to improve system performance",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
-  "targetDevice": ["FPGA"],
+  "targetDevice": [ "FPGA" ],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
   "ciTests": {

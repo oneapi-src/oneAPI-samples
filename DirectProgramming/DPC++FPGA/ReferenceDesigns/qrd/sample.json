@@ -8,6 +8,7 @@
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
   "languages": [{"cpp":{}}],
+  "targetDevice": [ "FPGA" ],
   "ciTests": {
     "linux": [
       {

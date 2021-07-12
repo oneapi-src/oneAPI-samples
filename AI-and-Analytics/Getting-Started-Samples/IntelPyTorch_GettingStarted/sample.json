@@ -6,6 +6,7 @@
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "os":["linux"],
+  "targetDevice": ["CPU"],
   "ciTests": {
 	"linux": [
 	{
