@@ -84,23 +84,27 @@ L1: for(i = 1; i < n; i++){
 ### Specifying that memory accesses do *not* cause loop-carried dependencies
 Apply the `ivdep` attribute to a loop to inform the compiler that ***none*** of the memory accesses within a loop incur loop-carried dependencies.
 ```c++
-[[intel::ivdep]]
+[[intel::ivdep(a)]]
 for (int i = 0; i < n; i++) {
     a[i] = a[i - X[i]];
 }
 ```
-The `ivdep` attribute indicates to the compiler that it can disregard assumed loop-carried memory dependencies and generate a pipelined datapath for this loop capable of issuing new iterations as soon as possible (every cycle), maximizing possible throughput.
+The `ivdep(a)` attribute indicates to the compiler that it can disregard assumed loop-carried memory dependencies on accesses to array `a`. Disregarding dependencies on `a` allows the compiler to generate a pipelined datapath for this loop capable of issuing new iterations as soon as possible (every cycle), maximizing possible throughput.
+
+The `ivdep` attribute can also be applied to a loop without a specific array or pointer argument. When applied in this manner, the `ivdep` attribute indicates to the compiler that it can ignore all assumed loop-carried dependencies on accesses to all arrays and pointers with the loop.
+
+***IMPORTANT***: It is recommended best practice that users always apply `ivdep` with an array or pointer specified so that they explicitly understand which accesses are affected. Specifying `ivdep` incorrectly by telling the compiler to disregard loop-carried dependencies where some exist results in undefined (and likely incorrect) behaviour.
 
 ### Specifying that memory accesses do *not* cause loop-carried dependencies across a fixed distance
-Apply the `ivdep` attribute with a `safelen` parameter to set a specific lower bound on the dependence distance that can possibly be attributed to loop-carried dependencies in the associated loop.
+Apply the `ivdep` attribute with an additional `safelen` parameter to set a specific lower bound on the dependence distance that can possibly be attributed to loop-carried dependencies in the associated loop.
 ```c++
 // n is a constant expression of integer type
-[[intel::ivdep(n)]]
+[[intel::ivdep(a,n)]]
 for (int i = 0; i < n; i++) {
     a[i] = a[i - X[i]];
 }
 ```
-The `ivdep` attribute informs the compiler to generate a pipelined loop datapath that can issue a new iteration as soon as the iteration `n` iterations ago has completed. The attribute parameter (`safelen`) is a refinement of the compiler static loop-carried dependence analysis that infers the dependence present in the code but is otherwise unable to determine its distance accurately.
+The `ivdep(a,n)` attribute informs the compiler to generate a pipelined loop datapath that can issue a new iteration as soon as the iteration `n` iterations ago has completed. The attribute parameter (`safelen`) is a refinement of the compiler static loop-carried dependence analysis that infers the dependence present in the code but is otherwise unable to determine its distance accurately.
 
 ***IMPORTANT***: Applying the `ivdep` attribute or the `ivdep` attribute with a `safelen` parameter may lead to incorrect results if the annotated loop exhibits loop-carried memory dependencies. The attribute directs the compiler to generate hardware assuming no loop-carried dependencies. Specifying this assumption incorrectly is an invalid use of the attribute and results in undefined (and likely incorrect) behavior.
 

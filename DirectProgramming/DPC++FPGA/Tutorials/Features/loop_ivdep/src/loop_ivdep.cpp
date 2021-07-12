@@ -54,7 +54,7 @@ void TransposeAndFold(const device_selector &selector,
         // location that are less than kRowLength iterations apart.
         // The ivdep here instructs the compiler that it can safely assume no
         // loop-carried dependencies over safe_len consecutive iterations.
-        [[intel::ivdep(safe_len)]]
+        [[intel::ivdep(temp_buffer, safe_len)]]
         for (size_t j = 0; j < kMatrixSize * kRowLength; j++) {
           #pragma unroll
           for (size_t i = 0; i < kRowLength; i++) {

@@ -105,7 +105,6 @@ event SubmitBackwardSubstitutionKernel(queue& q) {
           // load a new y vector from the pipe
           for (short i = 0; i < (short)k_vector_size; i++) {
             ComplexType y_pipe_in = YVectorsInPipe::read();
-            ;
             y_vector_initial[i / k_unroll_factor][i % k_unroll_factor] =
                 y_pipe_in;
             if (i == (short)k_vector_size - 1) {
