@@ -16,28 +16,28 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 
 ## Purpose
-This FPGA tutorial demonstrates an example of using `fp contract(fast|off)` pragma to:
-+ Skip intermediate rounding and conversion between double precision arithmetic operations with acceptable error
-+ Reduce area and improve latency
+This FPGA tutorial demonstrates an example of using `fp contract(off)` pragma to:
++ Not skip intermediate rounding and conversion between double precision arithmetic operations with acceptable error
++ Have same precise result as the CPU
 
-and `fp reassociate(on|off)` pragma to:
-+ Relaxing the order of floating point arithmetic operations
-+ Reduce area and improve latency
+and `fp reassociate(off)` pragma to:
++ Cancel relaxing the order of floating point arithmetic operations
++ Have same precise result as the CPU
 
-#### Example: Turn On Fp Contract
+#### Example: Turn Off Fp Contract
 ```c++
-#pragma fp contract(fast)
+#pragma fp contract(off)
 a = b * c + d;
 ```
 
-The `fp contract(fast)` pragma allows the compiler to skip rounding steps on these double precision operations, which in turn allows more efficient use of FPGA floating point math resources and thus a reduction in area and latency.
+The `fp contract(off)` pragma tells the compiler not to skip rounding steps on these double precision operations, which in turn disallow more efficient use of FPGA floating point math resources and thus a incrementation in area and latency. However, the result of floating point computation would be more precise.
 
 ```c++
-#pragma fp reassociate(on)
+#pragma fp reassociate(off)
 a = b + c + d + e;
 ```
 
-By relaxing the order of the additions using `fp reassociate(on)`, the compiler is able to group these four additions in a way that maps to the FPGA hardware more efficiently, and thus saves area and reduces latency.
+By canceling relaxation of the order of the additions using `fp reassociate(off)`, the compiler will strictly follow the order of computation and map additions in a way that maps to the FPGA hardware less efficient, and thus increases area and latency. However, the result of floating point computation would be more precise.
 
 ## Key Concepts
 * The basic usage of the `fp contract(fast|off)` and `fp reassociate(on|off)` pragmas
@@ -184,4 +184,8 @@ Test Passed
 
 ### Discussion of Results
 
-You can see the reduction of resource use in kernel ContractFastKernel comparing with ContractOffKernel. You will also note the decrease in resource use in kernel ReassociateOnKernel comparing with ReassociateOffKernel.
+You can see the incrementation of resource use in kernel ContractOffKernel comparing with ContractFastKernel. You will also note the incrementation in resource use in kernel ReassociateOffKernel comparing with ReassociateOnKernel.
+
+However you can see a precise result as CPU code is generated from ContractOffKernel and ReassociateOffKernel, and an acceptable error of result compared to CPU code from ContractFastKernel and ReassocaiteOnKernel.
+
+Thus, by default, floating point computation would be faster and more efficient in terms of latency and area with slight error compared to CPU code, as two fp pragmas are turned on by default. If users want exact answer from CPU code and can accept loss in efficiency, fp pragmas can be turned off by using `#pragma clang fp contract(off)` and `#pragma clang fp reassociate(off)`.

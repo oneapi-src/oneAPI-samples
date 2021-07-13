@@ -22,9 +22,7 @@ using namespace std;
 // The constant double representing allowed error
 constexpr double kEpsilon = 1e-6;
 
-// Turn fp pragmas off as baseline
-#pragma clang fp contract(off)
-#pragma clang fp reassociate(off)
+// Fp pragmas are turned on by default
 
 // Forward declare the kernel name in the global scope.
 class ContractOffKernel;
@@ -159,6 +157,9 @@ void testReassociate(queue &q, const vector<double> &a,
 template <bool contractEnabled>
 bool verifyContract(const vector<double> &a, const vector<double> &b,
                     const vector<double> &c, double res) {
+// Turn off pragmas for CPU code
+#pragma clang fp contract(off)
+#pragma clang fp reassociate(off)
   assert(a.size() == b.size());
   assert(b.size() == c.size());
   size_t size = a.size();
@@ -193,6 +194,9 @@ bool verifyContract(const vector<double> &a, const vector<double> &b,
 template <bool reassociateEnabled>
 bool verifyReassociate(const vector<double> &a, const vector<double> &b,
                        const vector<double> &c, double res) {
+// Turn off pragmas for CPU code
+#pragma clang fp contract(off)
+#pragma clang fp reassociate(off)
   assert(a.size() == b.size());
   assert(b.size() == c.size());
   assert(a.size() % 4 == 0);
