@@ -6,14 +6,23 @@
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
+#include "anr_params.hpp"
+
 using namespace sycl;
 
 // declare kernel names globally to reduce name mangling
 class ANRKernelID;
 
-template<typename PixelT, typename InPipe, typename OutPipe,
+template<typename PixelT, typename InPipe, typename OutPipe, int filter_size,
          int max_width=4096, int max_height=4096, int pixels_per_cycle_k=1>
-std::vector<event> SubmitANRKernels(queue& q, int w, int h, int frames) {
+std::vector<event> SubmitANRKernels(queue& q, ANRParams params, int w, int h,
+                                    int frames) {
+  // static asserts for template parameters
+  static_assert(filter_size > 0);
+  static_assert(max_width > 0);
+  static_assert(max_height > 0);
+  static_assert(pixels_per_cycle_k > 0);
+
   // validate the image size
   if (w >= max_width) {
     std::cerr << "ERROR: width ('w') exceeds the maximum width (max_width)"

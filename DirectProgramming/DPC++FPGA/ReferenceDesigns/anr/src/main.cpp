@@ -17,6 +17,7 @@
 #include "dpc_common.hpp"
 
 #include "anr.hpp"
+#include "anr_params.hpp"
 
 using namespace sycl;
 using namespace std::chrono;
@@ -31,6 +32,14 @@ constexpr bool kUseUSMHostAllocation = true;
 constexpr bool kUseUSMHostAllocation = false;
 #endif
 
+// The size of the filter can be changed at the command line
+#ifndef FILTER_SIZE
+#define FILTER_SIZE 9
+#endif
+constexpr size_t kFilterSize = FILTER_SIZE;
+static_assert(kFilterSize > 0);
+// TODO: other asserts?
+
 // the type to use for the pixel intensity values and a temporary type
 // which should have more bits than the pixel type to check overflow
 using PixelT = unsigned char; // 8 bits
@@ -43,7 +52,8 @@ static_assert(sizeof(TmpT) > sizeof(PixelT));
 // Forward declare functions used in this file by main()
 template <typename PixelT>
 void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
-                std::vector<PixelT>& ref_pixels, int& w, int& h);
+                std::vector<PixelT>& ref_pixels, int& w, int& h,
+                ANRParams& params);
 
 template <typename PixelT>
 void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
@@ -51,7 +61,7 @@ void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
 
 template <typename PixelT, typename KernelPtrType>
 double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
-              int w, int h, int frames);
+              ANRParams params, int w, int h, int frames);
 
 template <typename T>
 bool Validate(T *val, T *ref, unsigned int count);
@@ -127,8 +137,9 @@ int main(int argc, char *argv[]) {
 
   // parse the input
   int w, h, pixel_count;
+  ANRParams params;
   std::vector<PixelT> in_pixels, ref_pixels;
-  ParseFiles(data_dir, in_pixels, ref_pixels, w, h);
+  ParseFiles(data_dir, in_pixels, ref_pixels, w, h, params);
   pixel_count = w*h;
 
   // create the output (initialize to all 0s)
@@ -177,6 +188,14 @@ int main(int argc, char *argv[]) {
   // track timing information, in ms
   std::vector<double> time(runs);
 
+  // print out some info
+  std::cout << "Data directory: " << data_dir << "\n";
+  std::cout << "Runs:           " << runs << "\n";
+  std::cout << "Image width:    " << w << "\n";
+  std::cout << "Image height:   " << h << "\n";
+  std::cout << "Frames per run: " << frames << "\n";
+  std::cout << "\n";
+
   try {
     // the pointer type for the kernel depends on whether data is coming from
     // USM host or device allocations
@@ -187,7 +206,7 @@ int main(int argc, char *argv[]) {
     // run the sort multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       // run ANR
-      time[i] = RunANR<PixelT, KernelPtrType>(q, in, out, w, h, frames);
+      time[i] = RunANR<PixelT, KernelPtrType>(q, in, out, params, w, h, frames);
 
       // Copy the output to 'out_vec'. In the case where we are using USM host
       // allocations this is unnecessary since we could simply deference
@@ -198,6 +217,7 @@ int main(int argc, char *argv[]) {
 
       // validate the output
       passed &= Validate(out_pixels.data(), ref_pixels.data(), pixel_count);
+      //passed &= Validate(out_pixels.data(), in_pixels.data(), pixel_count);
     }
   } catch (exception const &e) {
     std::cout << "Caught a synchronous SYCL exception: " << e.what() << "\n";
@@ -223,7 +243,6 @@ int main(int argc, char *argv[]) {
     std::cout << "Execution time: " << avg_time_ms << " ms\n";
     std::cout << "Throughput: " << (input_count_mega / (avg_time_ms * 1e-3))
               << " MB/s\n";
-
     std::cout << "PASSED\n";
     return 0;
   } else {
@@ -244,7 +263,7 @@ class ANRKernelID;
 //
 template <typename PixelT, typename KernelPtrType>
 double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
-              int w, int h, int frames) {
+              ANRParams params, int w, int h, int frames) {
   // the input and output pipe for the sorter
   using ANRInPipe = sycl::INTEL::pipe<ANRInPipeID, PixelT>;
   using ANROutPipe = sycl::INTEL::pipe<ANROutPipeID, PixelT>;
@@ -267,7 +286,7 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
       }
     });
   });
-  std::cout << "Input kernel launched" << std::endl;
+  //std::cout << "Input kernel launched" << std::endl;
 
   // launch the kernel that reads out data from the ANR kernel
   auto output_kernel_event = q.submit([&](handler &h) {
@@ -284,26 +303,27 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
       }
     });
   });
-  std::cout << "Output kernel launched" << std::endl;
+  //std::cout << "Output kernel launched" << std::endl;
 
   // launch ANR kernel
   auto anr_kernel_events =
-    SubmitANRKernels<PixelT, ANRInPipe, ANROutPipe>(q, w, h, frames);
-  std::cout << "ANR kernels launched" << std::endl;
+    SubmitANRKernels<PixelT, ANRInPipe, ANROutPipe, kFilterSize>(q, params,
+                                                                 w, h, frames);
+  //std::cout << "ANR kernels launched" << std::endl;
 
   // wait for the input and output kernels to finish
   auto start = high_resolution_clock::now();
   input_kernel_event.wait();
-  std::cout << "Input kernel done" << std::endl;
+  //std::cout << "Input kernel done" << std::endl;
   output_kernel_event.wait();
-  std::cout << "Output kernel done" << std::endl;
+  //std::cout << "Output kernel done" << std::endl;
   auto end = high_resolution_clock::now();
 
   // wait for the ANR kernels to finish
   for (auto &e : anr_kernel_events) {
     e.wait();
   }
-  std::cout << "ANR Kernels done" << std::endl;
+  //std::cout << "ANR Kernels done" << std::endl;
 
   // return the duration in milliseconds, excluding memory transfers
   duration<double, std::milli> diff = end - start;
@@ -377,7 +397,8 @@ void ParseDataFile(std::string filename, std::vector<T>& pixels,
 //
 template <typename PixelT>
 void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
-                std::vector<PixelT>& ref_pixels, int& w, int& h) {
+                std::vector<PixelT>& ref_pixels, int& w, int& h,
+                ANRParams& params) {
   // parse the files
   int noisy_w, noisy_h;
   ParseDataFile(data_dir + "/input_noisy.data", in_pixels, noisy_w, noisy_h);
@@ -399,6 +420,18 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
   // set width and height
   w = ref_w;
   h = ref_h;
+
+  // parse config parameters file
+  params = ANRParams::FromFile(data_dir + "/param_config.data");
+
+  // ensure the parsed filter size matches the compile time constant
+  if (params.filter_size != kFilterSize) {
+    std::cerr << "ERROR: the filter size parsed from " << data_dir
+              << "/param_config.data (" << params.filter_size
+              << ") does not match the compile time constant filter size "
+              << "(kFilterSize = " << kFilterSize << ")\n";
+    std::terminate();
+  }
 }
 
 //
