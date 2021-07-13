@@ -16,6 +16,8 @@
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
+#include "anr.hpp"
+
 using namespace sycl;
 using namespace std::chrono;
 
@@ -39,13 +41,17 @@ static_assert(sizeof(TmpT) > sizeof(PixelT));
 
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declare functions used in this file by main()
-template <typename T>
-void ParseFiles(std::string data_dir, std::vector<T>& in_pixels,
-                std::vector<T>& ref_pixels, int& w, int& h);
+template <typename PixelT>
+void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
+                std::vector<PixelT>& ref_pixels, int& w, int& h);
 
-template <typename T>
-void WriteOutputFile(std::string data_dir, std::vector<T>& pixels,
+template <typename PixelT>
+void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
                      int w, int h);
+
+template <typename PixelT, typename KernelPtrType>
+double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
+              int w, int h, int frames);
 
 template <typename T>
 bool Validate(T *val, T *ref, unsigned int count);
@@ -59,10 +65,10 @@ int main(int argc, char *argv[]) {
   bool passed = true;
 #ifdef FPGA_EMULATOR
   int runs = 2;
-  int batches = 256;
+  int frames = 2;
 #else
   int runs = 17;
-  int batches = 1024;
+  int frames = 1024;
 #endif
 
   // get the input directory
@@ -75,9 +81,9 @@ int main(int argc, char *argv[]) {
     runs = atoi(argv[2]);
   }
   
-  // get the number of batches as the third command line argument
+  // get the number of frames as the third command line argument
   if (argc > 3) {
-    batches = atoi(argv[3]);
+    frames = atoi(argv[3]);
   }
 
   // enforce at least two runs
@@ -87,8 +93,8 @@ int main(int argc, char *argv[]) {
   }
 
   // enforce at least one batch
-  if (batches < 1) {
-    std::cerr << "ERROR: 'batches' must be atleast 1\n";
+  if (frames < 1) {
+    std::cerr << "ERROR: 'frames' must be atleast 1\n";
     std::terminate();
   }
   /////////////////////////////////////////////////////////////
@@ -181,7 +187,7 @@ int main(int argc, char *argv[]) {
     // run the sort multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       // run ANR
-      //time[i] = fpga_sort<PixelT, IndexT, KernelPtrType>(q, in, out, count);
+      time[i] = RunANR<PixelT, KernelPtrType>(q, in, out, w, h, frames);
 
       // Copy the output to 'out_vec'. In the case where we are using USM host
       // allocations this is unnecessary since we could simply deference
@@ -226,119 +232,83 @@ int main(int argc, char *argv[]) {
   }
 }
 
-/*
+// declare kernel and pipe names globally to reduce name mangling
+class ANRInPipeID;
+class ANROutPipeID;
+class InputKernelID;
+class OutputKernelID;
+class ANRKernelID;
+
 //
-// perform the actual sort on the FPGA.
+// Run the ANR algorithm on the FPGA
 //
-template <typename PixelT, typename IndexT, typename KernelPtrType>
-double fpga_sort(queue &q, PixelT *in_ptr, PixelT *out_ptr, IndexT count) {
+template <typename PixelT, typename KernelPtrType>
+double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
+              int w, int h, int frames) {
   // the input and output pipe for the sorter
-  using SortInPipe =
-      sycl::INTEL::pipe<SortInPipeID, sycl::vec<PixelT, kSortWidth>>;
-  using SortOutPipe =
-      sycl::INTEL::pipe<SortOutPipeID, sycl::vec<PixelT, kSortWidth>>;
+  using ANRInPipe = sycl::INTEL::pipe<ANRInPipeID, PixelT>;
+  using ANROutPipe = sycl::INTEL::pipe<ANROutPipeID, PixelT>;
 
-  // the sorter must sort a power of 2, so round up the requested count
-  // to the nearest power of 2; we will pad the input to make sure the
-  // output is still correct
-  const IndexT sorter_count = impu::math::RoundUpPow2(count);
+  // the total number of pixels for a single frame
+  const auto frame_pixel_count = w * h;
 
-  // allocate some memory for the merge sort to use as temporary storage
-  PixelT *buf_0, *buf_1;
-  if ((buf_0 = malloc_device<PixelT>(sorter_count, q)) == nullptr) {
-    std::cerr << "ERROR: could not allocate memory for 'buf_0'\n";
-    std::terminate();
-  }
-  if ((buf_1 = malloc_device<PixelT>(sorter_count, q)) == nullptr) {
-    std::cerr << "ERROR: could not allocate memory for 'buf_1'\n";
-    std::terminate();
-  }
-
-  // This is the element we will pad the input with. In the case of this design,
-  // we are sorting from smallest to largest and we want the last elements out
-  // to be this element, so pad with MAX. If you are sorting from largest to
-  // smallest, make this the MIN element. If you are sorting custom types
-  // which are not supported by std::numeric_limits, then you will have to set
-  // this padding element differently.
-  const auto padding_element = std::numeric_limits<PixelT>::max();
-
-  // We are sorting kSortWidth elements per cycle, so we will have 
-  // sorter_count/kSortWidth pipe reads/writes from/to the sorter
-  const IndexT total_pipe_accesses = sorter_count / kSortWidth;
-
-  // launch the kernel that provides data into the sorter
+  // launch the kernel that provides data into the ANR kernel
   auto input_kernel_event = q.submit([&](handler &h) {
     h.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the input pointer and write it to the sorter's input pipe
       KernelPtrType in(in_ptr);
 
-      for (IndexT i = 0; i < total_pipe_accesses; i++) {
-        // read data from device memory
-        bool in_range = i < sorter_count;
-
-        // build the input pipe data
-        sycl::vec<PixelT, kSortWidth> data;
-        #pragma unroll
-        for (unsigned char j = 0; j < kSortWidth; j++) {
-          data[j] = in_range ? in[i * kSortWidth + j] : padding_element;
+      for (int f = 0; f < frames; f++) {
+        for (int i = 0; i < frame_pixel_count; i++) {
+          // read from memory and write into pipe
+          auto d = in[i];
+          ANRInPipe::write(d);
         }
-
-        // write it into the sorter
-        SortInPipe::write(data);
       }
     });
   });
+  std::cout << "Input kernel launched" << std::endl;
 
-  // launch the kernel that reads out data from the sorter
+  // launch the kernel that reads out data from the ANR kernel
   auto output_kernel_event = q.submit([&](handler &h) {
-    h.single_task<OuputKernelID>([=]() [[intel::kernel_args_restrict]] {
+    h.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the sorter's output pipe and write to the output pointer
       KernelPtrType out(out_ptr);
       
-      for (IndexT i = 0; i < total_pipe_accesses; i++) {
-        // read data from the sorter
-        auto data = SortOutPipe::read();
-
-        // sorter_count is a multiple of kSortWidth
-        bool in_range = i < sorter_count;
-
-        // only write out to device memory if the index is in range
-        if (in_range) {
-          // write output to device memory
-          #pragma unroll
-          for (unsigned char j = 0; j < kSortWidth; j++) {
-            out[i * kSortWidth + j] = data[j];
-          }
+      for (int f = 0; f < frames; f++) {
+        for (int i = 0; i < frame_pixel_count; i++) {
+          // read from output pipe and write to memory
+          auto d = ANROutPipe::read();
+          out[i] = d;
         }
       }
     });
   });
+  std::cout << "Output kernel launched" << std::endl;
 
-  // launch the merge sort kernels
-  auto merge_sort_events =
-      SubmitMergeSort<PixelT, IndexT, SortInPipe, SortOutPipe, kSortWidth,
-                      kMergeUnits>(q, sorter_count, buf_0, buf_1);
+  // launch ANR kernel
+  auto anr_kernel_events =
+    SubmitANRKernels<PixelT, ANRInPipe, ANROutPipe>(q, w, h, frames);
+  std::cout << "ANR kernels launched" << std::endl;
 
   // wait for the input and output kernels to finish
   auto start = high_resolution_clock::now();
   input_kernel_event.wait();
+  std::cout << "Input kernel done" << std::endl;
   output_kernel_event.wait();
+  std::cout << "Output kernel done" << std::endl;
   auto end = high_resolution_clock::now();
 
-  // wait for the merge sort kernels to finish
-  for (auto &e : merge_sort_events) {
+  // wait for the ANR kernels to finish
+  for (auto &e : anr_kernel_events) {
     e.wait();
   }
+  std::cout << "ANR Kernels done" << std::endl;
 
-  // free the memory allocated for the merge sort temporary buffers
-  sycl::free(buf_0, q);
-  sycl::free(buf_1, q);
-
-  // return the duration of the sort in milliseconds, excluding memory transfers
+  // return the duration in milliseconds, excluding memory transfers
   duration<double, std::milli> diff = end - start;
   return diff.count();
 }
-*/
 
 //
 // Helper to parse data files
@@ -405,9 +375,9 @@ void ParseDataFile(std::string filename, std::vector<T>& pixels,
 //
 // Function that parses an input file and returns the result
 //
-template <typename T>
-void ParseFiles(std::string data_dir, std::vector<T>& in_pixels,
-                std::vector<T>& ref_pixels, int& w, int& h) {
+template <typename PixelT>
+void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
+                std::vector<PixelT>& ref_pixels, int& w, int& h) {
   // parse the files
   int noisy_w, noisy_h;
   ParseDataFile(data_dir + "/input_noisy.data", in_pixels, noisy_w, noisy_h);
@@ -434,8 +404,8 @@ void ParseFiles(std::string data_dir, std::vector<T>& in_pixels,
 //
 // Function to write the output to a file
 //
-template <typename T>
-void WriteOutputFile(std::string data_dir, std::vector<T>& pixels,
+template <typename PixelT>
+void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
                      int w, int h) {
   std::ofstream of(data_dir + "/output.data");
 
