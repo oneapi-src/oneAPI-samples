@@ -11,16 +11,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\max_concurrency.cpp" />
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\consume.hpp" />
+    <ClInclude Include="src\merge.hpp" />
+    <ClInclude Include="src\merge_sort.hpp" />
+    <ClInclude Include="src\pipe_array_internal.hpp" />
+    <ClInclude Include="src\pipe_array.hpp" />
+    <ClInclude Include="src\produce.hpp" />
+    <ClInclude Include="src\sorting_networks.hpp" />
+    <ClInclude Include="src\impu_math.hpp" />
+    <ClInclude Include="src\unrolled_loop.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{f0ce4972-62af-4b9f-996f-1d1db14d76b7}</ProjectGuid>
+    <ProjectGuid>{acde6b7a-6f9a-428e-b040-cedc5b1e2c79}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>max_concurrency</RootNamespace>
+    <RootNamespace>qrd</RootNamespace>
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -104,14 +115,17 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
-      <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)max_concurrency.obj</ObjectFileName>
+      <AdditionalOptions>-DFPGA_EMULATOR -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>
+      </ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SpecifyDevCmplAdditionalOptions>-Xsclock=360MHz;-Xsfp-relaxed;-fno-fast-math;-Xsparallel=2</SpecifyDevCmplAdditionalOptions>
     </Link>
+    <Manifest />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -143,8 +157,9 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
-      <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
-      <ObjectFileName>$(IntDir)max_concurrency.obj</ObjectFileName>
+      <AdditionalOptions>-DFPGA_EMULATOR -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>
+      </ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -152,6 +167,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SpecifyDevCmplAdditionalOptions>-Xsclock=330MHz;-Xsfp-relaxed;-Xsparallel=2</SpecifyDevCmplAdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
