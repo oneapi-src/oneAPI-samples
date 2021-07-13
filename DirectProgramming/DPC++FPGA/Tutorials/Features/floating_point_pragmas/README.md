@@ -188,4 +188,4 @@ You can see the incrementation of resource use in kernel ContractOffKernel compa
 
 However you can see a precise result as CPU code is generated from ContractOffKernel and ReassociateOffKernel, and an acceptable error of result compared to CPU code from ContractFastKernel and ReassocaiteOnKernel.
 
-Thus, by default, floating point computation would be faster and more efficient in terms of latency and area with slight error compared to CPU code, as two fp pragmas are turned on by default. If users want exact answer from CPU code and can accept loss in efficiency, fp pragmas can be turned off by using `#pragma clang fp contract(off)` and `#pragma clang fp reassociate(off)`.
+Thus, by default, floating point computation would be faster and more efficient in terms of latency and area with slight error compared to CPU code, as two fp pragmas are turned on by default. If users want exact answer as CPU code and can accept loss in efficiency, fp pragmas can be turned off by using `#pragma clang fp contract(off)` and `#pragma clang fp reassociate(off)`.
