@@ -73,12 +73,13 @@ struct Transposer {
     constexpr unsigned char kNumScratchMemCopiesBitMask = 
       kNumScratchMemCopies - 1;
     constexpr int kBankwidth = k_pipe_width * sizeof(T);
+
     // NO-FORMAT comments are for clang-format
     [[intel::numbanks(1)]]                   // NO-FORMAT: Attribute
     [[intel::bankwidth(kBankwidth)]]         // NO-FORMAT: Attribute
     [[intel::private_copies(1)]]             // NO-FORMAT: Attribute
     [[intel::max_replicates(k_pipe_width)]]  // NO-FORMAT: Attribute
-    T scratch[kNumScratchMemCopies][k_pipe_width][k_num_cols_in];
+    T scratch[kNumScratchMemCopies][k_pipe_width*k_num_cols_in];
 
     // track the status of each of the buffers
     // NO-FORMAT comments are for clang-format
@@ -130,7 +131,7 @@ struct Transposer {
       // read the next data to send
       PipeType data_out;
       UnrolledLoop<k_pipe_width>([&](auto i) {
-        data_out.template get<i>() = scratch[cur_tx_buffer][i][cur_tx_col];
+        data_out.template get<i>() = scratch[cur_tx_buffer][i*k_num_cols_in+cur_tx_col];
       });
 
       // only attempt to send the data if it is valid
@@ -164,12 +165,8 @@ struct Transposer {
 
       // if we have new data, store it in the buffer and update the status
       if (read_valid) {
-        unsigned short row = (cur_rx_count * (unsigned short)k_pipe_width) /
-                             (unsigned short)k_num_cols_in;
-        unsigned short col = (cur_rx_count * (unsigned short)k_pipe_width) %
-                             (unsigned short)k_num_cols_in;
         UnrolledLoop<k_pipe_width>([&](auto i) {
-          scratch[cur_rx_buffer][row][col + i] = data_in.template get<i>();
+          scratch[cur_rx_buffer][cur_rx_count*(unsigned short)k_pipe_width + i] = data_in.template get<i>();
         });
 
         // update the receive buffer status

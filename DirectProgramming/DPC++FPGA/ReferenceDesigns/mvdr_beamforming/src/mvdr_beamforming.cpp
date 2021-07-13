@@ -245,6 +245,9 @@ int main(int argc, char *argv[]) {
     // read the input data
     passed &=
         ReadInputData(in_dir, (ComplexType *)in_data.data(), num_matrix_copies);
+    if (!passed) {
+      std::terminate();
+    }
 
 #if defined(REAL_IO_PIPES)
     // convert the input data into UDP packets for the real IO pipes
