@@ -13,7 +13,7 @@
     "include": [
       "Ch01_intro",
       "../dpcpp_toolchain.cmake",
-      "LICENSE.txt",
+      "../LICENSE.txt",
       "CMakeLists.txt"
     ],
     "exclude": [
