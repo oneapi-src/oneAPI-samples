@@ -5,7 +5,7 @@
   "description": "Intel® FPGA tutorial showcasing a design pattern to enable the creation of compute units",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
-  "targetDevice": [ "FPGA" ],
+  "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
   "ciTests": {
