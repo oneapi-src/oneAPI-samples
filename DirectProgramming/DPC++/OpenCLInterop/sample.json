@@ -1,8 +1,8 @@
 {
   "guid": "E3DE34BF-E5B6-44AF-8722-B2A5A6BE8D57",
   "name": "DPC++ OpenCL Interoperability Samples",
-  "categories": [ "Toolkit/DirectProgramming/DPC++/opencl_interop/" ],
-  "description": "Samples showing DPC++ OpenCL Interoperability",
+  "categories": [ "Toolkit/oneAPI Direct Programming/DPC++/OpenCL Interoperability" ],
+  "description": "Samples showing DPC++ and OpenCL Interoperability",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
   "os": [ "linux" ],

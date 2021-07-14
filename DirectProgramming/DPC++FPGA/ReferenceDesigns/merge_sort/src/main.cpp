@@ -257,7 +257,7 @@ int main(int argc, char *argv[]) {
 
 // forward declare the kernel and pipe IDs to reduce name mangling
 class InputKernelID;
-class OuputKernelID;
+class OutputKernelID;
 class SortInPipeID;
 class SortOutPipeID;
 
@@ -325,7 +325,7 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
 
   // launch the kernel that reads out data from the sorter
   auto output_kernel_event = q.submit([&](handler &h) {
-    h.single_task<OuputKernelID>([=]() [[intel::kernel_args_restrict]] {
+    h.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the sorter's output pipe and write to the output pointer
       KernelPtrType out(out_ptr);
       
