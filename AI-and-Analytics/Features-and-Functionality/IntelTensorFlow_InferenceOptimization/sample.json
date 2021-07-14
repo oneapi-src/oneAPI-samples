@@ -8,7 +8,7 @@
 		"python": {}
 	}],
 	"os": ["linux"],
-        "targetDevice": ["CPU"],
+	"targetDevice": ["CPU"],
 	"ciTests": {
 		"linux": [{
 			"id": "tensorflow_inference_optimization",
