@@ -6,5 +6,6 @@
   "languages": [ { "cpp": {} } ],
   "os": [ "linux", "windows" ],
   "builder": [ "ide", "make" ],
+  "targetDevice": [ "CPU" ],
   "ciTests": { "linux": [], "windows": [] }
 }
