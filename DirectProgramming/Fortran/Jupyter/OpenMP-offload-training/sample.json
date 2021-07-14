@@ -1,8 +1,9 @@
 {
-  "guid": "466c6b01-16d8-4ecd-a294-ace4e02ac866",
+  "guid": "D60DAB68-B9CC-4ECE-B10D-03F7B556171E",
   "name": "OpenMP Offload Fortran Tutorials",
-  "categories": [ "Toolkit/DirectProgramming/Fortran/Jupyter/OpenMP-offload-training/" ],
+  "categories": [ "Toolkit/oneAPI Direct Programming/Fortran/Tutorials Jupyter Notebooks" ],
   "description": "Fortran OpenMP Offload Basics using Jupyter Notebooks",
+  "toolchain": [ "ifx"],
   "languages": [ { "fortran": {} } ],
   "os": [ "linux" ],
   "builder": [ "make" ],
