@@ -6,8 +6,8 @@
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
-  "languages": [{"cpp":{}}],
   "targetDevice": [ "FPGA" ],
+  "languages": [{"cpp":{}}],
   "ciTests": {
     "linux": [
       {
