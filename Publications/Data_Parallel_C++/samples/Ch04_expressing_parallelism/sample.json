@@ -1,0 +1,36 @@
+{
+  "guid": "4c16d8f3-0662-4203-9d1f-b2ab2336eedb",
+  "name": "Chapter 4 - Expresssing Parallelism",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "Chapter 4 source code samples: ",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+      }
+    ]
+
+  }
+}

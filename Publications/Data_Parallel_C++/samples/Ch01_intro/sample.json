@@ -1,0 +1,49 @@
+{
+  "guid": "7f013625-544b-4b54-8302-f88cec8bc8e4",
+  "name": "Chapter 1 - Introduction",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "Chapter 1 source code samples: \n  Hello World \n race \n lambda \n functor",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch01_intro",
+      "../dpcpp_toolchain.cmake",
+      "LICENSE.txt",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+
+      }
+    ]
+
+  }
+}
