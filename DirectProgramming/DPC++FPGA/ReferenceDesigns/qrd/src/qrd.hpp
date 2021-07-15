@@ -65,6 +65,7 @@
 #include <chrono>
 #include <cstring>
 #include <vector>
+#include <type_traits>
 
 #include "UnrolledLoop.hpp"
 
@@ -93,6 +94,14 @@ template<unsigned int N, uint8_t remains=0>
 static constexpr inline unsigned int CeilLog2()
 {
   return (N <= 1) ? remains : 1 + CeilLog2<(N>>1), remains | (N%2)>();
+}
+
+/*
+  Static implementation of the base 2 power function
+*/
+template <typename T>
+static constexpr T Pow2(T n) {
+  return T(1) << n;
 }
 
 /*
@@ -182,9 +191,12 @@ class QRD;
   
 */
 template<unsigned columns, unsigned rows, unsigned raw_latency, typename T>
-void QRDecomposition( vector<ac_complex<T>> &A_matrix, 
-                      vector<ac_complex<T>> &QR_matrix,
-                      queue &q, size_t matrices, size_t reps) {
+void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix, 
+                            vector<ac_complex<T>> &QR_matrix,
+                            queue &q, 
+                            size_t matrices, 
+                            size_t reps,
+                            typename std::enable_if<std::is_same<T, float>::value>::type* = 0) {
 
   // Number of complex elements in the matrix
   constexpr int kNumComplexElements = columns * rows;
@@ -210,6 +222,7 @@ void QRDecomposition( vector<ac_complex<T>> &A_matrix,
   // Set the bankwidth in bytes
   constexpr int kBankwidth = kNumElementsPerBank * 8;
   constexpr int kNumBanks = rows / kNumElementsPerBank;
+  constexpr int kNumBanksNextPow2 = Pow2(CeilLog2<kNumBanks>());
 
   // Number of load and store iterations for a single matrix given the size
   // of the input matrices and the number of complex elements per banks
@@ -233,13 +246,15 @@ void QRDecomposition( vector<ac_complex<T>> &A_matrix,
   // triangular loop optimization
   constexpr int kNValue = columns;
   constexpr int kVariableIterations = kNValue - raw_latency;
+  // Total number of dummy iterations
+  constexpr int kDummyIterations = raw_latency > columns ?
+          (columns - 1) * columns / 2 + (raw_latency - columns) * columns :
+          raw_latency * (raw_latency - 1) / 2;
+
   // Total number of iterations (including dummy iterations)
-  constexpr int kMinusColumns = raw_latency > columns ? 
-                                                      raw_latency - columns : 0;
-  constexpr int kIterations = columns + kMinusColumns + 
-                              (columns + 1) * columns / 2 +  
-                              raw_latency * (raw_latency - 1) / 2 
-                              - kMinusColumns * (kMinusColumns - 1) / 2;
+  constexpr int kIterations = columns +
+                              columns * (columns+1) / 2 +  
+                              kDummyIterations;
 
   // Sizes in bits for the triangular loop indexes
   // i starts from -1 and goes up to rows
@@ -301,6 +316,10 @@ void QRDecomposition( vector<ac_complex<T>> &A_matrix,
       // Compute job
       q.submit([&](handler &h) {
 
+    //// DEBUG
+    sycl::stream out(32000, 1024, h);
+    //// END DEBUG
+
         // Create accessors to the FPGA DDR buffers
         accessor A_matrix_accessor(*A_buffer[b], h, read_only);
         accessor QR_matrix_accessor(*QR_buffer[b], h, write_only, noinit);
@@ -319,7 +338,7 @@ void QRDecomposition( vector<ac_complex<T>> &A_matrix,
             //   writes the results in A_store
             // - writes A_store into the output matrix
             [[intel::bankwidth(kBankwidth)]] // NO-FORMAT: Attribute
-            [[intel::numbanks(kNumBanks)]]   // NO-FORMAT: Attribute
+            [[intel::numbanks(kNumBanksNextPow2)]]   // NO-FORMAT: Attribute
             struct {
               Complex<T> d[rows];
             } A_load[columns],
@@ -424,9 +443,10 @@ void QRDecomposition( vector<ac_complex<T>> &A_matrix,
             // Therefore, the code iterates over the total number of iterations,
             // including "dummy" ones (that ensures II=1).
             ac_int<kIBitSize, true> i = -1;
-            ac_int<kJBitSize, true> j = kVariableIterations < 0 ? 
-                                        kVariableIterations : 0;
-
+            ac_int<kJBitSize, true> j = 0; 
+            // ac_int<kJBitSize, true> j = kVariableIterations < 0 ? 
+            //                             kVariableIterations : 0;
+            
             [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
             [[intel::ivdep(raw_latency)]]  // NO-FORMAT: Attribute
             for (int s = 0; s < kIterations; s++) {
@@ -631,4 +651,15 @@ void QRDecomposition( vector<ac_complex<T>> &A_matrix,
     delete A_buffer[b];
     delete QR_buffer[b];
   }
+}
+
+
+template<unsigned columns, unsigned rows, unsigned raw_latency, typename T>
+void QRDecomposition( vector<ac_complex<T>> &A_matrix, 
+                      vector<ac_complex<T>> &QR_matrix,
+                      queue &q, 
+                      size_t matrices, 
+                      size_t reps) {
+  QRDecomposition_impl<columns, rows, raw_latency, T>(A_matrix, QR_matrix, 
+                                                            q, matrices, reps);
 }

@@ -12,6 +12,30 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
+set(FIXED_ITERATIONS_A10 64)
+set(FIXED_ITERATIONS_S10 105)
+
+set(SEED_A10 9)
+set(SEED_S10 5)
+
+set(CLOCK_TARGET_A10 360MHz)
+set(CLOCK_TARGET_S10 480MHz)
+
+# Set parameter values assuming target is Intel(R) PAC with Intel Arria(R) 10 GX FPGA
+set(SELECTED_BOARD ${A10_PAC_BOARD_NAME})
+set(FIXED_ITERATIONS ${FIXED_ITERATIONS_A10})
+set(CLOCK_TARGET ${CLOCK_TARGET_A10})
+set(SEED ${SEED_A10})
+
+if(DEFINED ENV{ROWS_COMPONENT} AND DEFINED ENV{COLS_COMPONENT})
+    set(ROWS_COMPONENT $ENV{ROWS_COMPONENT})
+    set(COLS_COMPONENT $ENV{COLS_COMPONENT})    
+else()
+    set(ROWS_COMPONENT ${ROWS_COMPONENT_A10})
+    set(COLS_COMPONENT ${COLS_COMPONENT_A10})
+endif()
+
+# Check if target is the Intel(R) PAC D5005 (with Intel Stratix(R) 10 SX FPGA)
 if(NOT DEFINED FPGA_BOARD)
     set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
     message(STATUS "FPGA_BOARD was not specified.\
@@ -31,14 +55,14 @@ else()
     message(STATUS "\tAn invalid board name was passed in using the FPGA_BOARD flag. Configuring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Arria(R) 10 GX FPGA. Please refer to the README for the list of valid board names.")
 endif()
 
-set(HARDWARE_COMPILE_FLAGS -fintelfpga -c -fno-fast-math -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
+set(HARDWARE_COMPILE_FLAGS -fbracket-depth=512 -fintelfpga -c -fno-fast-math -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 separate_arguments(USER_HARDWARE_FLAGS)
 set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsfp-relaxed -fno-fast-math -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${SELECTED_BOARD} ${USER_HARDWARE_FLAGS} -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 set(FINAL_LINK_FLAGS -fintelfpga -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 
-set(EMULATOR_COMPILE_FLAGS "-fintelfpga -fno-finite-math-only -DFPGA_EMULATOR -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
+set(EMULATOR_COMPILE_FLAGS "-fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFPGA_EMULATOR -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
 set(EMULATOR_LINK_FLAGS -fintelfpga )
 
 # FPGA emulator
