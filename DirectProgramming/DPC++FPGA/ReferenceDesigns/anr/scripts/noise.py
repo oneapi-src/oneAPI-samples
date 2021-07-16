@@ -107,11 +107,25 @@ def calc_kernel(src, sigmaColor, sigmaSpace):
     center = src[r]
     intensity_kernel = gaussian(np.abs(center-src), sigmaColor)
 
+    #print('k = {}'.format(k))
+    #print('r = {}'.format(r))
+
     grid = np.mgrid[-r:r+1]
     spatial_kernel = gaussian(grid, sigmaSpace)
     if len(src.shape) == 2:
         spatial_kernel = spatial_kernel[:, None]
         spatial_kernel = np.tile(spatial_kernel, (1, 3))
+
+    if calc_kernel.flag == 1:
+      calc_kernel.flag = 0
+      print('src = {}'.format(src))
+      print('k = {}'.format(k))
+      print('sigmaColor = {}'.format(sigmaColor))
+      print('sigmaSpace = {}'.format(sigmaSpace))
+      print('spatial_kernel = {}'.format(spatial_kernel))
+      print('intensity_kernel = {}'.format(intensity_kernel))
+      print('output = {}'.format(intensity_kernel * spatial_kernel))
+
 
     return intensity_kernel * spatial_kernel
 

@@ -5,12 +5,13 @@
 #include <string> 
 
 struct ANRParams {
-  using ValT = float;
+  using FloatT = float;
 
   ANRParams() {}
-  ANRParams(ValT _sig_shot, ValT _k, ValT _sig_i_coeff, ValT _sig_s,
-            ValT _alpha) : sig_shot(_sig_shot), k(_k),
-            sig_i_coeff(_sig_i_coeff), sig_s(_sig_s), alpha(_alpha) {}
+  ANRParams(FloatT _sig_shot, FloatT _k, FloatT _sig_i_coeff, FloatT _sig_s,
+            FloatT _alpha) : sig_shot(_sig_shot), k(_k),
+            sig_i_coeff(_sig_i_coeff), sig_s(_sig_s), alpha(_alpha),
+            sig_shot_2(_sig_shot*_sig_shot), one_minus_alpha(1 - _alpha) {}
   
   
   static ANRParams FromFile(std::string filename) {
@@ -28,6 +29,7 @@ struct ANRParams {
 
       if (name == "sig_shot") {
         ret.sig_shot = val;
+        ret.sig_shot_2 = val*val;
       } else if (name == "k") {
         ret.k = val;
       } else if (name == "sig_i_coeff") {
@@ -36,6 +38,7 @@ struct ANRParams {
         ret.sig_s = val;
       } else if (name == "alpha") {
         ret.alpha = val;
+        ret.one_minus_alpha = FloatT(1) - val;
       } else if (name == "filter_size") {
         ret.filter_size = val;
       } else {
@@ -47,8 +50,16 @@ struct ANRParams {
     return ret;
   }
 
-  int filter_size;
-  ValT sig_shot, k, sig_i_coeff,sig_s, alpha;
+  int filter_size;  // filter size
+  FloatT sig_shot;  // shot noise
+  FloatT k;  // total gain
+  FloatT sig_i_coeff;  // intensity sigma coefficient
+  FloatT sig_s;  // spatial sigma
+  FloatT alpha;  // alpha value for alpha blending
+
+  // precomputed values
+  FloatT sig_shot_2;  // shot noise squared
+  FloatT one_minus_alpha;  // 1 - alpha
 };
 
 std::ostream& operator<<(std::ostream& os, const ANRParams& params) {
@@ -59,6 +70,5 @@ std::ostream& operator<<(std::ostream& os, const ANRParams& params) {
   os << "alpha: " << params.alpha << "\n";
   return os;
 }
-
 
 #endif /* __ANR_PARAMS_HPP__ */

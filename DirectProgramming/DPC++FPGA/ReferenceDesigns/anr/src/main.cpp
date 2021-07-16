@@ -18,6 +18,7 @@
 
 #include "anr.hpp"
 #include "anr_params.hpp"
+#include "data_bundle.hpp"
 
 using namespace sycl;
 using namespace std::chrono;
@@ -38,7 +39,14 @@ constexpr bool kUseUSMHostAllocation = false;
 #endif
 constexpr size_t kFilterSize = FILTER_SIZE;
 static_assert(kFilterSize > 0);
-// TODO: other asserts?
+// TODO: static asserts on filter size
+
+// The number of pixels per cycle
+#ifndef PIXELS_PER_CYCLE
+#define PIXELS_PER_CYCLE 1
+#endif
+constexpr size_t kPixelsPerCycle = PIXELS_PER_CYCLE;
+static_assert(kPixelsPerCycle > 0);
 
 // the type to use for the pixel intensity values and a temporary type
 // which should have more bits than the pixel type to check overflow
@@ -50,21 +58,19 @@ static_assert(sizeof(TmpT) > sizeof(PixelT));
 
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declare functions used in this file by main()
-template <typename PixelT>
 void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
-                std::vector<PixelT>& ref_pixels, int& w, int& h,
+                std::vector<PixelT>& ref_pixels, int& cols, int& rows,
                 ANRParams& params);
 
-template <typename PixelT>
 void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
-                     int w, int h);
+                     int cols, int rows);
 
-template <typename PixelT, typename KernelPtrType>
-double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
-              ANRParams params, int w, int h, int frames);
+template <typename T, typename KernelPtrType>
+double RunANR(queue &q, T *in_ptr, T *out_ptr,
+              ANRParams params, int cols, int rows, int frames);
 
-template <typename T>
-bool Validate(T *val, T *ref, unsigned int count);
+
+bool Validate(PixelT *val, PixelT *ref, unsigned int count, double thresh=0.2);
 ////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char *argv[]) {
@@ -75,7 +81,7 @@ int main(int argc, char *argv[]) {
   bool passed = true;
 #ifdef FPGA_EMULATOR
   int runs = 2;
-  int frames = 2;
+  int frames = 1;
 #else
   int runs = 17;
   int frames = 1024;
@@ -136,11 +142,18 @@ int main(int argc, char *argv[]) {
   }
 
   // parse the input
-  int w, h, pixel_count;
+  int cols, rows, pixel_count;
   ANRParams params;
   std::vector<PixelT> in_pixels, ref_pixels;
-  ParseFiles(data_dir, in_pixels, ref_pixels, w, h, params);
-  pixel_count = w*h;
+  ParseFiles(data_dir, in_pixels, ref_pixels, cols, rows, params);
+  pixel_count = cols*rows;
+
+  // check rows and cols
+  if ((cols % kPixelsPerCycle) != 0) {
+    std::cerr << "ERROR: The number of columns (cols) must be a multiple of "
+              << "kPixelsPerCycle\n";
+    std::terminate();
+  }
 
   // create the output (initialize to all 0s)
   std::vector<PixelT> out_pixels(in_pixels.size(), 0);
@@ -191,8 +204,8 @@ int main(int argc, char *argv[]) {
   // print out some info
   std::cout << "Data directory: " << data_dir << "\n";
   std::cout << "Runs:           " << runs << "\n";
-  std::cout << "Image width:    " << w << "\n";
-  std::cout << "Image height:   " << h << "\n";
+  std::cout << "Columns:        " << cols << "\n";
+  std::cout << "Rows:           " << rows << "\n";
   std::cout << "Frames per run: " << frames << "\n";
   std::cout << "\n";
 
@@ -206,7 +219,8 @@ int main(int argc, char *argv[]) {
     // run the sort multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       // run ANR
-      time[i] = RunANR<PixelT, KernelPtrType>(q, in, out, params, w, h, frames);
+      time[i] =
+        RunANR<PixelT, KernelPtrType>(q, in, out, params, cols, rows, frames);
 
       // Copy the output to 'out_vec'. In the case where we are using USM host
       // allocations this is unnecessary since we could simply deference
@@ -229,7 +243,7 @@ int main(int argc, char *argv[]) {
   sycl::free(out, q);
 
   // write the output files
-  WriteOutputFile(data_dir, out_pixels, w, h);
+  WriteOutputFile(data_dir, out_pixels, cols, rows);
 
   // print the performance results
   if (passed) {
@@ -263,25 +277,32 @@ class ANRKernelID;
 //
 template <typename PixelT, typename KernelPtrType>
 double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
-              ANRParams params, int w, int h, int frames) {
+              ANRParams params, int cols, int rows, int frames) {
   // the input and output pipe for the sorter
-  using ANRInPipe = sycl::INTEL::pipe<ANRInPipeID, PixelT>;
-  using ANROutPipe = sycl::INTEL::pipe<ANROutPipeID, PixelT>;
+  using PipeType = DataBundle<PixelT, kPixelsPerCycle>;
+  using ANRInPipe = sycl::INTEL::pipe<ANRInPipeID, PipeType>;
+  using ANROutPipe = sycl::INTEL::pipe<ANROutPipeID, PipeType>;
 
   // the total number of pixels for a single frame
-  const auto frame_pixel_count = w * h;
+  const auto frame_pixel_count = cols * rows;
+  const auto iterations = frame_pixel_count / kPixelsPerCycle;
 
   // launch the kernel that provides data into the ANR kernel
-  auto input_kernel_event = q.submit([&](handler &h) {
-    h.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
+  auto input_kernel_event = q.submit([&](handler &rows) {
+    rows.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the input pointer and write it to the sorter's input pipe
       KernelPtrType in(in_ptr);
 
       for (int f = 0; f < frames; f++) {
-        for (int i = 0; i < frame_pixel_count; i++) {
+        for (int i = 0; i < iterations; i++) {
           // read from memory and write into pipe
-          auto d = in[i];
-          ANRInPipe::write(d);
+          // NOTE: assumes number of pixels divisible by kPixelsPerCycle
+          PipeType pipe_data;
+          #pragma unroll
+          for (int k = 0; k < kPixelsPerCycle; k++) {
+            pipe_data[k] = in[i * kPixelsPerCycle + k];
+          }
+          ANRInPipe::write(pipe_data);
         }
       }
     });
@@ -289,16 +310,19 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
   //std::cout << "Input kernel launched" << std::endl;
 
   // launch the kernel that reads out data from the ANR kernel
-  auto output_kernel_event = q.submit([&](handler &h) {
-    h.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
+  auto output_kernel_event = q.submit([&](handler &rows) {
+    rows.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the sorter's output pipe and write to the output pointer
       KernelPtrType out(out_ptr);
       
       for (int f = 0; f < frames; f++) {
         for (int i = 0; i < frame_pixel_count; i++) {
           // read from output pipe and write to memory
-          auto d = ANROutPipe::read();
-          out[i] = d;
+          auto pipe_data = ANROutPipe::read();
+          #pragma unroll
+          for (int k = 0; k < kPixelsPerCycle; k++) {
+            out[i * kPixelsPerCycle + k] = pipe_data[k];
+          }
         }
       }
     });
@@ -308,7 +332,8 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
   // launch ANR kernel
   auto anr_kernel_events =
     SubmitANRKernels<PixelT, ANRInPipe, ANROutPipe, kFilterSize>(q, params,
-                                                                 w, h, frames);
+                                                                 cols, rows,
+                                                                 frames);
   //std::cout << "ANR kernels launched" << std::endl;
 
   // wait for the input and output kernels to finish
@@ -333,9 +358,8 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
 //
 // Helper to parse data files
 //
-template <typename T>
-void ParseDataFile(std::string filename, std::vector<T>& pixels,
-                   int& w, int& h) {
+void ParseDataFile(std::string filename, std::vector<PixelT>& pixels,
+                   int& cols, int& rows) {
   // create the file stream to parse
   std::ifstream is(filename);
 
@@ -352,14 +376,14 @@ void ParseDataFile(std::string filename, std::vector<T>& pixels,
 
   // first two elements are the width and height
   std::stringstream header_ss(header_str);
-  header_ss >> w >> h;
+  header_ss >> cols >> rows;
 
-  // expecting to parse w*h pixels
-  pixels.resize(w*h);
+  // expecting to parse cols*rows pixels
+  pixels.resize(cols*rows);
 
   // parse all of the pixels
   std::stringstream data_ss(data_str);
-  for (int i = 0; i < w*h; i++) {
+  for (int i = 0; i < cols*rows; i++) {
     // parse using 64 bit integer
     TmpT x;
 
@@ -375,29 +399,28 @@ void ParseDataFile(std::string filename, std::vector<T>& pixels,
       std::terminate();
     }
 
-    // check if the parsed value fits in given type 'T'
-    if (x > static_cast<TmpT>(std::numeric_limits<T>::max())) {
+    // check if the parsed value fits in given type 'PixelT'
+    if (x > static_cast<TmpT>(std::numeric_limits<PixelT>::max())) {
       std::cerr << "ERROR: value (" << x
                 << ") is too big to store in pixel type 'T'\n";
       std::terminate();
     }
-    if (x < static_cast<TmpT>(std::numeric_limits<T>::min())) {
+    if (x < static_cast<TmpT>(std::numeric_limits<PixelT>::min())) {
       std::cerr << "ERROR: value (" << x
                 << ") is too small to store in pixel type 'T'\n";
       std::terminate();
     }
 
     // set the value
-    pixels[i] = static_cast<T>(x);
+    pixels[i] = static_cast<PixelT>(x);
   }
 }
 
 //
 // Function that parses an input file and returns the result
 //
-template <typename PixelT>
 void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
-                std::vector<PixelT>& ref_pixels, int& w, int& h,
+                std::vector<PixelT>& ref_pixels, int& cols, int& rows,
                 ANRParams& params) {
   // parse the files
   int noisy_w, noisy_h;
@@ -418,8 +441,8 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
   }
 
   // set width and height
-  w = ref_w;
-  h = ref_h;
+  cols = ref_w;
+  rows = ref_h;
 
   // parse config parameters file
   params = ANRParams::FromFile(data_dir + "/param_config.data");
@@ -437,13 +460,12 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
 //
 // Function to write the output to a file
 //
-template <typename PixelT>
 void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
-                     int w, int h) {
+                     int cols, int rows) {
   std::ofstream of(data_dir + "/output.data");
 
   // write the size
-  of << w << " " << h << "\n";
+  of << cols << " " << rows << "\n";
 
   // write the pixels 
   for (auto& p : pixels) {
@@ -451,20 +473,30 @@ void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
   }
 }
 
-
 //
-// simple function to check if two regions of memory contain the same values
+// Validate the output pixels using normalized root-mean-squared-error (RMSE)
 //
-template <typename T>
-bool Validate(T *val, T *ref, unsigned int count) {
+bool Validate(PixelT *val, PixelT *ref, unsigned int count, double thresh) {
+  // compute the MSE
+  double nrmse = 0.0;
   for (unsigned int i = 0; i < count; i++) {
-    if (val[i] != ref[i]) {
-      std::cout << "ERROR: mismatch at entry " << i << "\n";
-      std::cout << "\t" << static_cast<TmpT>(val[i]) << " != "
-                << static_cast<TmpT>(ref[i]) << " (val[i] != ref[i])\n";
-      return false;
-    }
+    auto diff = (val[i] - ref[i]);
+    nrmse += diff * diff;
   }
 
-  return true;
+  // compute the RMSE
+  nrmse = std::sqrt(nrmse / count);
+
+  // normalize
+  nrmse /=
+    (std::numeric_limits<PixelT>::max() - std::numeric_limits<PixelT>::min());
+
+  // check MSE
+  if (nrmse >= thresh) {
+    std::cerr << "ERROR: Normalized root-mean-squared-error is too high: "
+              << nrmse << "\n";
+    return false;
+  } else {
+    return true;
+  }
 }
