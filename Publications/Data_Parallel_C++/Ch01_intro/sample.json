@@ -27,7 +27,7 @@
         "steps": [
           "mkdir build",
           "cd build",
-          "cmake -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..",
+          "cmake ..",
           "make",
           "make run"
         ]
@@ -38,7 +38,7 @@
         "steps": [
           "mkdir build",
           "cd build",
-          "cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..",
+          "cmake -G Ninja ..",
           "ninja"
         ]
 
