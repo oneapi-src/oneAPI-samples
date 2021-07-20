@@ -1,0 +1,36 @@
+{
+  "guid": "500e074f-96d8-4c3c-b482-564faad83696",
+  "name": "Chapter  12",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "Chapter 12 source code samples: ",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run"
+        ]
+      }
+    ]
+
+  }
+}

@@ -1,0 +1,7 @@
+# Resolving Git line ending issues between Windows and Linix/WSL
+# see: https://aka.ms/vscode-remote/wsl/troubleshooting/crlf
+# Forces all lines to end in LF, except Windows batch files that require CRLF.
+* text=auto eol=lf
+*.{cmd,[cC][mM][dD]}  text eol=crlf
+*.{bat,[bB][aA][tT]}  text eol=crlf
+
