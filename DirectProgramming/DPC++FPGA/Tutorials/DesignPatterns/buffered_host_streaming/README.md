@@ -13,7 +13,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | What you will learn               | How to optimally stream data between the host and device to maximize throughput
 | Time to complete                  | 45 minutes
 
-_Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix 10 SX)_
+_Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix® 10 SX)_
 _Notice: This tutorial demonstrates an implementation of host streaming that will be supplanted by better techniques in a future release. See the [Drawbacks and Future Work](#drawbacks-and-future-work)_
 
 ## Purpose

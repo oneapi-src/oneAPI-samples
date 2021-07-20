@@ -62,7 +62,7 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 
 set_target_properties(${FPGA_EARLY_IMAGE_REG} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DUSE_FPGA_REG")
 set_target_properties(${FPGA_EARLY_IMAGE_REG} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
-# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
 ### FPGA Hardware
