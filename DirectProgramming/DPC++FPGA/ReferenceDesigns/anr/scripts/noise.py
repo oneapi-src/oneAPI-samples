@@ -101,7 +101,7 @@ def gaussian(src, sigma):
     return dst
 
 # Calculate weight kernel of a bilateral filter
-def calc_kernel(src, sigmaColor, sigmaSpace):
+def calc_kernel(src, sigmaColor, sigmaSpace, debug=False):
     k = src.shape[0]
     r = k//2
     center = src[r]
@@ -116,15 +116,16 @@ def calc_kernel(src, sigmaColor, sigmaSpace):
         spatial_kernel = spatial_kernel[:, None]
         spatial_kernel = np.tile(spatial_kernel, (1, 3))
 
-    if calc_kernel.flag == 1:
-      calc_kernel.flag = 0
-      print('src = {}'.format(src))
-      print('k = {}'.format(k))
-      print('sigmaColor = {}'.format(sigmaColor))
-      print('sigmaSpace = {}'.format(sigmaSpace))
-      print('spatial_kernel = {}'.format(spatial_kernel))
-      print('intensity_kernel = {}'.format(intensity_kernel))
-      print('output = {}'.format(intensity_kernel * spatial_kernel))
+    if debug:
+        print('==========================================================')
+        print('src = {}'.format(src))
+        print('k = {}'.format(k))
+        print('sigmaColor = {}'.format(sigmaColor))
+        print('sigmaSpace = {}'.format(sigmaSpace))
+        print('spatial_kernel = {}'.format(spatial_kernel))
+        print('intensity_kernel = {}'.format(intensity_kernel))
+        print('output = {}'.format(intensity_kernel * spatial_kernel))
+        print('==========================================================')
 
 
     return intensity_kernel * spatial_kernel
@@ -134,6 +135,7 @@ def bilateral_filter(src, d, sigmaColor, sigmaSpace, borderType=None, is_seperab
     dst = np.zeros_like(src, dtype=np.float32)
     tmp = np.zeros_like(src, dtype=np.float32)
     r = d//2
+
 
     if is_seperable:
         for i in range(r, src.shape[0]-r):
@@ -156,7 +158,7 @@ def bilateral_filter(src, d, sigmaColor, sigmaSpace, borderType=None, is_seperab
     return dst
 
 # RAW bilateral filter
-def bilateral_filter_raw(src, d, sigmaColor, sigmaSpace, borderType=None, is_seperable=True):
+def bilateral_filter_raw(src, d, sigmaColor, sigmaSpace, borderType=None, is_seperable=True, debug=False):
     dst = np.zeros_like(src, dtype=np.float32)
     tmp = np.zeros_like(src, dtype=np.float32)
     r = d//2
@@ -165,13 +167,23 @@ def bilateral_filter_raw(src, d, sigmaColor, sigmaSpace, borderType=None, is_sep
         for i in range(r, src.shape[0]-r):
             for j in range(0, src.shape[1]):
                 src_local = src[i-r:i+r+1:2, j].astype(np.float32)
-                kernel = calc_kernel(src_local, sigmaColor[i,j], sigmaSpace)
+                kernel = calc_kernel(src_local, sigmaColor[i,j], sigmaSpace, debug and i == r and j == r)
                 tmp[i, j] = (src_local * kernel).sum(axis=0) / kernel.sum(axis=0)
+                if debug:
+                  if i == r and j == r:
+                    print('==========================================================')
+                    print('tmp[i,h] = {}'.format(tmp[i, j]))
+                    print('==========================================================')
         for i in range(r, src.shape[0]-r):
             for j in range(r, src.shape[1]-r):
                 src_local = tmp[i, j-r:j+r+1:2]
-                kernel = calc_kernel(src_local, sigmaColor[i,j], sigmaSpace)
+                kernel = calc_kernel(src_local, sigmaColor[i,j], sigmaSpace, debug and i == r and j == r)
                 dst[i,j] = (src_local * kernel).sum(axis=0) / kernel.sum(axis=0)
+                if debug:
+                  if i == r and j == r:
+                    print('==========================================================')
+                    print('dst[i,h] = {}'.format(dst[i, j]))
+                    print('==========================================================')
     else:
         for i in range(r, src.shape[0]-r):
             for j in range(r, src.shape[1]-r):

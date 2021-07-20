@@ -2,31 +2,56 @@
 #define __ANR_HPP__
 
 #include <vector>
+#include <utility>
 
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
 #include "anr_params.hpp"
 #include "stencil_kernel.hpp"
+#include "line_kernel.hpp"
 #include "data_bundle.hpp"
 #include "shift_reg.hpp"
 
 using namespace sycl;
+
+#ifdef __SYCL_DEVICE_ONLY__
+  #define CL_CONSTANT __attribute__((opencl_constant))
+#else
+  #define CL_CONSTANT
+#endif
+#define PRINTF(format, ...) { \
+            static const CL_CONSTANT char _format[] = format; \
+            sycl::ONEAPI::experimental::printf(_format, ## __VA_ARGS__); }
 
 // declare kernel names globally to reduce name mangling
 class IntraPipeID;
 class VerticalKernelID;
 class HorizontalKernelID;
 
+//
+// TODO
+//
 template<typename T, int size>
 using GenericWindowType = hldutils::ShiftReg2d<T, size, size>;
+
+//
+// TODO
+//
+template<typename T>
+struct PixelSigIPair {
+  PixelSigIPair() {}
+  PixelSigIPair(T _pixel) : pixel(_pixel), sig_i(0) {}
+  PixelSigIPair(T _pixel, float _sig_i) : pixel(_pixel), sig_i(_sig_i) {}
+  T pixel;
+  float sig_i;
+};
 
 //
 // Compute a 1D gaussian (ignores 1/2*pi constant)
 //
 template<typename T>
 constexpr inline T Gaussian1D(T x, T sigma) {
-  // TODO: use sycl::recip?
   return sycl::exp(-0.5 * sycl::pown((x / sigma), 2));
 }
 
@@ -34,100 +59,133 @@ constexpr inline T Gaussian1D(T x, T sigma) {
 // Build a 1D gaussian filter
 //
 template<typename T, int size>
-constexpr auto BuildGaussian1DFilter(T sigma) {
+constexpr auto BuildGaussianFilter1D(T sigma) {
   ShiftReg<T, size> filter;
   for (int x = -size/2; x <= size/2; x++) {
-    filter[x + size/2] =  Gaussian1D<T>(x, sigma);
+    filter[x + size/2] = Gaussian1D<T>(x, sigma);
   }
   return filter;
 }
 
 //
-// The functor for the stencil kernel. This performs the vertical filtering.
+// Compute the intensity sigma (sig_i) using a pixel value (x) and the ANR
+// parameters.
 //
-template<typename T, int filter_size, int filter_size_eff=(filter_size + 1)/2>
+float ComputeIntensitySigma(float x, ANRParams params) {
+  return sycl::sqrt(params.k * x + params.sig_shot_2) * params.sig_i_coeff;
+}
+
+//
+// compute intensity sigma give parameters and a pixel value
+//
+template<int filter_size, int filter_size_eff=(filter_size + 1)/2>
+inline auto BilateralFilter1D(ShiftReg<float, filter_size>& buffer,
+                              ShiftReg<float, filter_size_eff>& spatial_filter,
+                              ANRParams params, float middle_pixel, float sig_i,
+                              bool debug=false) {
+  // build the bilateral filter
+  ShiftReg<float, filter_size_eff> filter;
+  float filter_sum = 0.0;
+
+  UnrolledLoop<0, filter_size_eff>([&](auto i) {
+    // TODO: precompute stuff
+    // TODO: use a gaussian LUT to improve Gaussian1D DSP usage
+    //      Do so for sycl::exp() and sycl::pown()
+    // TODO: remove floating point subtraction for vertical version
+    const auto intensity_diff = std::abs((float)middle_pixel - buffer[i*2]);
+    const float intensity_gaussian = Gaussian1D<float>(intensity_diff, sig_i);
+
+    // compute the filter value based on the intensity and spatial filters
+    const float filter_val = spatial_filter[i] * intensity_gaussian;
+    filter[i] = filter_val;
+    filter_sum += filter_val;
+  });
+
+  // apply the bilateral filter
+  float filtered_pixel = 0.0;
+  UnrolledLoop<0, filter_size_eff>([&](auto i) {
+    filtered_pixel += (buffer[i*2] * filter[i]);
+  });
+  filtered_pixel /= filter_sum;
+
+  return filtered_pixel; 
+}
+
+template<typename InT, typename OutT, int filter_size,
+         int filter_size_eff=(filter_size + 1)/2>
 struct StencilFunctor {
-  T operator()(int row, int col,
-               GenericWindowType<T, filter_size> buffer,
-               ShiftReg<float, filter_size_eff> spatial_filter,
-               ANRParams params) const {
-    constexpr int mid_idx = filter_size / 2;
+  PixelSigIPair<OutT> operator()(int row, int col,
+                             GenericWindowType<InT, filter_size> buffer,
+                             ShiftReg<float, filter_size_eff> spatial_filter,
+                             ANRParams params) const {
+    // grab just the middle column
+    constexpr int kMidIdx = filter_size / 2;
+    ShiftReg<float, filter_size> buffer_mid_col;
+    UnrolledLoop<0, filter_size>([&](auto i) {
+      buffer_mid_col[i] = (float)buffer[i][kMidIdx];
+    });
 
-    // get the middle pixel and compute sigma_i for it.
-    // TODO: precompute some of this?
-    const T middle_pixel = buffer[mid_idx][mid_idx];
-    const float sig_i =
-        sycl::sqrt(params.k * middle_pixel + params.sig_shot_2) * params.sig_i_coeff;
+    // get the middle index and compute the intensity sigma from it
+    const auto middle_pixel = buffer_mid_col[kMidIdx];
+    const auto sig_i = ComputeIntensitySigma(middle_pixel, params);
 
-    // compute total filter using the intensity values
-    ShiftReg<float, filter_size_eff> filter;
-    float filter_sum = 0.0;
-    #pragma unroll
-    for (int y = 0; y < filter_size_eff; y++) {
-      // TODO: precompute stuff
-      // TODO: use a gaussian LUT
-      const auto intensity_diff = std::abs(middle_pixel - buffer[y*2][mid_idx]);
-      const float intensity_gaussian = Gaussian1D<float>(intensity_diff, sig_i);
+    // perform the vertical 1D bilateral filter
+    auto res =
+      BilateralFilter1D<filter_size>(buffer_mid_col, spatial_filter, params,
+                                     middle_pixel, sig_i);
 
-      // compute the filter value based on the intensity and spatial filters
-      const float filter_val = spatial_filter[y] * intensity_gaussian;
-      filter[y] = filter_val;
-      filter_sum += filter_val;
-    }
+    // return the result casted back to a pixel
+    return PixelSigIPair<OutT>(res, sig_i);
+  }
+};
 
-    // convolve the filter with the pixel window to get the output pixel
-    float filtered_pixel = 0.0;
-    #pragma unroll
-    for (int y = 0; y < filter_size_eff; y++) {
-      filtered_pixel += buffer[y*2][mid_idx] * filter[y];
-    }
-    filtered_pixel /= filter_sum;
+template<typename InT, typename OutT, int filter_size,
+         int filter_size_eff=(filter_size + 1)/2>
+struct LineFunctor {
+  OutT operator()(int row, int col,
+                  ShiftReg<PixelSigIPair<InT>, filter_size> buffer,
+                  ShiftReg<float, filter_size_eff> spatial_filter,
+                  ANRParams params) const {
+    constexpr int kMidIdx = filter_size / 2;
 
-    // TODO: round back to unsigned char?
-    return T(filtered_pixel);
+    // grab just the pixel data
+    ShiftReg<float, filter_size> buffer_pixels;
+    UnrolledLoop<0, filter_size>([&](auto i) {
+      buffer_pixels[i] = buffer[i].pixel;
+    });
+
+    // grab the middle pixel and the intensity sigma for it (forwarded from the
+    // vertical kernel)
+    const auto middle_pixel = buffer[kMidIdx].pixel;
+    const auto sig_i = buffer[kMidIdx].sig_i;
+
+    // perform the horizontal 1D bilateral filter
+    auto res =
+      BilateralFilter1D<filter_size>(buffer_pixels, spatial_filter, params,
+                                     middle_pixel, sig_i);
+
+    // return the result casted back to a pixel
+    // TODO: round rather than cast???
+    return OutT(res);
   }
 };
 
 //
-// Kernel to perform the horizontal filtering
-//
-template<typename KernelId, typename PixelT, typename InPipe, typename OutPipe,
-         int filter_size, int pixels_per_cycle=1,
-         int filter_size_eff=(filter_size + 1)/2>
-event SubmitHorizontalKernel(queue& q, int cols, int rows, int frames,
-                             ANRParams params,
-                             ShiftReg<float, filter_size_eff> spatial_filter) {
-  //constexpr kShiftRegSize = filter_size + pixels_per_cycle - 1;
-  const auto iterations = (rows * cols * frames) / pixels_per_cycle;
-
-  return q.submit([&](handler &rows) {
-    rows.single_task<KernelId>([=] {
-      // the shift register
-      //ShiftReg<PixelT, kShiftRegSize> shifty;
-
-      for (int i = 0; i < iterations; i++) {
-        // read new values from the pipe
-        auto d = InPipe::read();
-        OutPipe::write(d);
-      }
-    });
-  });
-}
-
-//
 // Submit all of the ANR kernels (vertical and horizontal)
 //
-template<typename PixelT, typename InPipe, typename OutPipe, int filter_size,
+template<typename PixelT, typename IndexT, typename InPipe, 
+         typename OutPipe, int filter_size,
          int max_cols=4096, int pixels_per_cycle=1>
 std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
                                     int cols, int rows, int frames) {
+  using IntraPipeType = DataBundle<PixelSigIPair<float>, pixels_per_cycle>;
+  using IntraPipe = sycl::INTEL::pipe<IntraPipeID, IntraPipeType>;
+
   // static asserts for template parameters
   static_assert(filter_size > 0);
   static_assert(max_cols > 0);
   static_assert(pixels_per_cycle > 0);
-
-  using PipeType = DataBundle<PixelT, pixels_per_cycle>;
-  using IntraPipe = sycl::INTEL::pipe<IntraPipeID, PipeType>;
+  // TODO: more
 
   // validate the image size
   if (cols > max_cols) {
@@ -139,25 +197,28 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
   // create the filter for the stencil operation
   constexpr int filter_size_eff = (filter_size + 1) / 2; // ceil(filter_size/2)
   auto spatial_filter =
-    BuildGaussian1DFilter<float, filter_size_eff>(params.sig_s);
+    BuildGaussianFilter1D<float, filter_size_eff>(params.sig_s);
 
+  // the functors for the stencil (vertical) and line (horizontal) kernels
   // either use a functor or a lamda, both work
-  auto stencil_func = StencilFunctor<PixelT, filter_size>();
+  auto stencil_func = StencilFunctor<PixelT, float, filter_size>();
+  auto line_func = LineFunctor<float, PixelT, filter_size>();
+  
 
   // submit the vertical kernel (stencil kernel)
   auto vertical_kernel =
-    SubmitStencilKernel<VerticalKernelID, PixelT, PixelT, InPipe, IntraPipe,
-                        filter_size, max_cols, pixels_per_cycle>(q, rows, cols, 0, stencil_func, spatial_filter, params);
+    SubmitStencilKernel<VerticalKernelID, PixelT, PixelSigIPair<float>, IndexT, InPipe, IntraPipe,
+                        filter_size, max_cols, pixels_per_cycle>(q, rows, cols, frames, 0, stencil_func, spatial_filter, params);
 
-  // submit the horizontal kernel
+  // submit the horizontal kernel (line kernel)
   auto horizontal_kernel =
-    SubmitHorizontalKernel<HorizontalKernelID, PixelT, IntraPipe, OutPipe,
-                           filter_size, pixels_per_cycle>(q, rows, cols, frames,
-                                                          params,
-                                                          spatial_filter);
-
-  // TODO: alpha blending?
-
+    SubmitLineKernel<HorizontalKernelID, PixelSigIPair<float>, PixelT, IndexT, IntraPipe, OutPipe,
+                     filter_size, pixels_per_cycle>(q, rows, cols, frames, PixelSigIPair<float>(0), line_func, spatial_filter, params);
+  /*
+  auto horizontal_kernel =
+    SubmitStencilKernel<HorizontalKernelID, float, PixelT, IndexT, IntraPipe, OutPipe,
+                        filter_size, max_cols, pixels_per_cycle>(q, rows, cols, float(0), line_func, spatial_filter, params);
+  */
   return {vertical_kernel, horizontal_kernel};
 }
 

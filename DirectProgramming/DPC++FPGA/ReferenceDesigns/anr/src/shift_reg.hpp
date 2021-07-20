@@ -78,6 +78,7 @@ class ShiftReg {
     }
 
     T &operator[](int i) { return registers[i]; }
+    const T &operator[](int i) const { return registers[i]; }
 };
 
 template <typename T, int REG_ROWS, int REG_DEPTH>
@@ -147,9 +148,8 @@ class ShiftReg2d {
         return registers[row][col];
     }
 
-    ShiftReg<T, REG_DEPTH> &operator[](int i) {
-        return registers[i];
-    }
+    ShiftReg<T, REG_DEPTH> &operator[](int i) { return registers[i]; }
+    const ShiftReg<T, REG_DEPTH> &operator[](int i) const { return registers[i]; }
 };
 
 } // namespace hldutils

@@ -37,7 +37,7 @@ constexpr bool kUseUSMHostAllocation = false;
 #ifndef FILTER_SIZE
 #define FILTER_SIZE 9
 #endif
-constexpr size_t kFilterSize = FILTER_SIZE;
+constexpr int kFilterSize = FILTER_SIZE;
 static_assert(kFilterSize > 0);
 // TODO: static asserts on filter size
 
@@ -45,7 +45,7 @@ static_assert(kFilterSize > 0);
 #ifndef PIXELS_PER_CYCLE
 #define PIXELS_PER_CYCLE 1
 #endif
-constexpr size_t kPixelsPerCycle = PIXELS_PER_CYCLE;
+constexpr int kPixelsPerCycle = PIXELS_PER_CYCLE;
 static_assert(kPixelsPerCycle > 0);
 
 // the type to use for the pixel intensity values and a temporary type
@@ -55,6 +55,11 @@ using TmpT = unsigned long long; // 64 bits
 static_assert(std::is_unsigned_v<PixelT>);
 static_assert(std::is_unsigned_v<TmpT>);
 static_assert(sizeof(TmpT) > sizeof(PixelT));
+
+// the type used for indexing the rows and columns of the image
+using IndexT = short;
+static_assert(std::is_integral_v<IndexT>);
+static_assert(!std::is_unsigned_v<IndexT>);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declare functions used in this file by main()
@@ -70,7 +75,7 @@ double RunANR(queue &q, T *in_ptr, T *out_ptr,
               ANRParams params, int cols, int rows, int frames);
 
 
-bool Validate(PixelT *val, PixelT *ref, unsigned int count, double thresh=0.2);
+bool Validate(PixelT *val, PixelT *ref, unsigned int count, double thresh=0.0001);
 ////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char *argv[]) {
@@ -81,10 +86,10 @@ int main(int argc, char *argv[]) {
   bool passed = true;
 #ifdef FPGA_EMULATOR
   int runs = 2;
-  int frames = 1;
+  int frames = 2;
 #else
-  int runs = 17;
-  int frames = 1024;
+  int runs = 9;
+  int frames = 8;
 #endif
 
   // get the input directory
@@ -146,7 +151,31 @@ int main(int argc, char *argv[]) {
   ANRParams params;
   std::vector<PixelT> in_pixels, ref_pixels;
   ParseFiles(data_dir, in_pixels, ref_pixels, cols, rows, params);
-  pixel_count = cols*rows;
+  pixel_count = cols * rows;
+
+  //////////////////////////////////////////////////////////////////////////////
+  // DEBUG
+  /*
+  for (int i = 0; i < 5; i++) {
+    for (int j = 0; j < 5; j++) {
+      printf("%d ", in_pixels[i * cols + j]);
+    }
+    printf("\n");
+  }
+  printf("\n");
+  */
+  /*
+  //std::array<PixelT, kFilterSize> test_in = {127, 0, 199, 0, 231, 0, 185, 0, 221};
+  //PixelT ref = 211, res = 0;
+  std::array<PixelT, kFilterSize> test_in = {0, 0, 0, 0, 211, 0, 164, 0, 255};
+  PixelT ref = 210, res = 0;
+  if (!TestBilateralFilter<PixelT, kFilterSize>(test_in, params, ref, res)) {
+    std::cerr << "ERROR: TestBilateralFilter failed ("
+              << (TmpT)res << " != " << (TmpT)ref << ")\n";
+    std::terminate();
+  }
+  */
+  //////////////////////////////////////////////////////////////////////////////
 
   // check rows and cols
   if ((cols % kPixelsPerCycle) != 0) {
@@ -206,7 +235,7 @@ int main(int argc, char *argv[]) {
   std::cout << "Runs:           " << runs << "\n";
   std::cout << "Columns:        " << cols << "\n";
   std::cout << "Rows:           " << rows << "\n";
-  std::cout << "Frames per run: " << frames << "\n";
+  std::cout << "Frames:         " << frames << "\n";
   std::cout << "\n";
 
   try {
@@ -252,7 +281,7 @@ int main(int argc, char *argv[]) {
     double avg_time_ms =
       std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
 
-    size_t input_count_mega = pixel_count * sizeof(PixelT) * 1e-6;
+    size_t input_count_mega = pixel_count * frames * sizeof(PixelT) * 1e-6;
 
     std::cout << "Execution time: " << avg_time_ms << " ms\n";
     std::cout << "Throughput: " << (input_count_mega / (avg_time_ms * 1e-3))
@@ -284,19 +313,21 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
   using ANROutPipe = sycl::INTEL::pipe<ANROutPipeID, PipeType>;
 
   // the total number of pixels for a single frame
-  const auto frame_pixel_count = cols * rows;
-  const auto iterations = frame_pixel_count / kPixelsPerCycle;
+  const int frame_pixel_count = cols * rows;
+  const int iterations = frame_pixel_count / kPixelsPerCycle;
 
   // launch the kernel that provides data into the ANR kernel
-  auto input_kernel_event = q.submit([&](handler &rows) {
-    rows.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
+  auto input_kernel_event = q.submit([&](handler &h) {
+    h.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the input pointer and write it to the sorter's input pipe
       KernelPtrType in(in_ptr);
 
+      [[intel::loop_coalesce(2)]]
       for (int f = 0; f < frames; f++) {
         for (int i = 0; i < iterations; i++) {
           // read from memory and write into pipe
           // NOTE: assumes number of pixels divisible by kPixelsPerCycle
+          // TODO: turn off caching here
           PipeType pipe_data;
           #pragma unroll
           for (int k = 0; k < kPixelsPerCycle; k++) {
@@ -307,17 +338,18 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
       }
     });
   });
-  //std::cout << "Input kernel launched" << std::endl;
 
   // launch the kernel that reads out data from the ANR kernel
-  auto output_kernel_event = q.submit([&](handler &rows) {
-    rows.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
+  auto output_kernel_event = q.submit([&](handler &h) {
+    h.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the sorter's output pipe and write to the output pointer
       KernelPtrType out(out_ptr);
       
+      [[intel::loop_coalesce(2)]]
       for (int f = 0; f < frames; f++) {
-        for (int i = 0; i < frame_pixel_count; i++) {
+        for (int i = 0; i < iterations; i++) {
           // read from output pipe and write to memory
+          // NOTE: assumes number of pixels divisible by kPixelsPerCycle
           auto pipe_data = ANROutPipe::read();
           #pragma unroll
           for (int k = 0; k < kPixelsPerCycle; k++) {
@@ -327,28 +359,23 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
       }
     });
   });
-  //std::cout << "Output kernel launched" << std::endl;
 
   // launch ANR kernel
   auto anr_kernel_events =
-    SubmitANRKernels<PixelT, ANRInPipe, ANROutPipe, kFilterSize>(q, params,
-                                                                 cols, rows,
-                                                                 frames);
-  //std::cout << "ANR kernels launched" << std::endl;
+    SubmitANRKernels<PixelT, IndexT, ANRInPipe, ANROutPipe, kFilterSize>(q, params,
+                                                                         cols, rows,
+                                                                         frames);
 
   // wait for the input and output kernels to finish
   auto start = high_resolution_clock::now();
   input_kernel_event.wait();
-  //std::cout << "Input kernel done" << std::endl;
   output_kernel_event.wait();
-  //std::cout << "Output kernel done" << std::endl;
   auto end = high_resolution_clock::now();
 
   // wait for the ANR kernels to finish
   for (auto &e : anr_kernel_events) {
     e.wait();
   }
-  //std::cout << "ANR Kernels done" << std::endl;
 
   // return the duration in milliseconds, excluding memory transfers
   duration<double, std::milli> diff = end - start;
@@ -481,7 +508,7 @@ bool Validate(PixelT *val, PixelT *ref, unsigned int count, double thresh) {
   double nrmse = 0.0;
   for (unsigned int i = 0; i < count; i++) {
     auto diff = (val[i] - ref[i]);
-    nrmse += diff * diff;
+    if(diff != 0) nrmse += diff * diff;
   }
 
   // compute the RMSE
@@ -497,6 +524,7 @@ bool Validate(PixelT *val, PixelT *ref, unsigned int count, double thresh) {
               << nrmse << "\n";
     return false;
   } else {
+    //std::cout << "NRMSE = " << nrmse << "\n";
     return true;
   }
 }
