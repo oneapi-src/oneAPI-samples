@@ -17,7 +17,10 @@
 # scan. To see those build targets, type "make help" at the command-line.
 ##############################################################################
 
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
+
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
 
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_CXX_STANDARD 17)
@@ -100,3 +103,4 @@ find_sample_dirs(${sample_dirs})
 # When done here, CMake will finish the task at hand by recursing through
 # all the folders that were added to the add_subdirectory() list and
 # parsing the CMakeLists.txt files found in those folders.
+

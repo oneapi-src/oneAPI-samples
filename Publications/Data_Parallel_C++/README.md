@@ -55,28 +55,28 @@ https://github.com/oneapi-src/oneDPL
     On Windows:
 
     ```sh
-    \path\to\Intel\oneAPI\setvars.bat
+    path\to\Intel\oneAPI\setvars.bat
     ```
 
     On Linux:
 
     ```sh
-    source /path/to/intel/oneapi/setvars.sh
+    source path/to/intel/oneapi/setvars.sh
     ```
 
 2. Create build files using CMake, specifying the DPC++ toolchain.
-   For example, to generate for `make` on Linux:
+   For example, to generate build files using `make` on Linux:
 
     ```sh
     mkdir build && cd build
-    cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..
+    cmake -G "Unix Makefiles" ..
     ```
 
     NOTE: If you do not have oneDPL installed, you can disable compilation of
     those tests with the option `NODPL`
 
     ```sh
-    cmake -G "Unix Makefiles" -DNODPL=1 -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..
+    cmake -G "Unix Makefiles" -DNODPL=1 ..
     ```
     Build with the generated build files:
     ```sh
@@ -84,18 +84,18 @@ https://github.com/oneapi-src/oneDPL
     ```
 
 3. Create build files using CMake, specifying the DPC++ toolchain.
-   For example, to generate for `ninja` on Windows:
+   For example, to generate build files using `ninja` on Windows:
 
     ```sh
     mkdir build && cd build
-    cmake -G "Ninja" -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..
+    cmake -G "Ninja" ..
     ```
 
     NOTE: If you do not have oneDPL installed, you can disable compilation of
     those tests with the option `NODPL`
 
     ```sh
-    cmake -G "Ninja" -DNODPL=1 -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..
+    cmake -G "Ninja" -DNODPL=1 ..
     ```
     Build with the generated build files:
     ```sh
