@@ -249,9 +249,9 @@ int main(int argc, char *argv[]) {
   std::cout << "Filter Size:      " << kFilterSize << "\n";
   std::cout << "Pixels Per Cycle: " << kPixelsPerCycle << "\n";
   std::cout << "Maximum Columns:  " << kMaxCols << "\n";
-  #ifdef DISABLE_GLOBAL_MEM
-    std::cout << "Global memory access is disabled; not validating results\n";
-  #endif
+#ifdef DISABLE_GLOBAL_MEM
+  std::cout << "Global memory access is disabled; not validating results\n";
+#endif
   std::cout << "\n";
 
   try {
@@ -291,10 +291,10 @@ int main(int argc, char *argv[]) {
   sycl::free(in, q);
   sycl::free(out, q);
 
-  #ifndef DISABLE_GLOBAL_MEM
-    // write the output files
-    WriteOutputFile(data_dir, out_pixels, cols, rows);
-  #endif
+#ifndef DISABLE_GLOBAL_MEM
+  // write the output files
+  WriteOutputFile(data_dir, out_pixels, cols, rows);
+#endif
 
   // print the performance results
   if (passed) {

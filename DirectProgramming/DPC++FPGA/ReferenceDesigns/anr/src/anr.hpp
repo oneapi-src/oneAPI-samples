@@ -24,13 +24,13 @@ using namespace sycl;
             static const CL_CONSTANT char _format[] = format; \
             sycl::ONEAPI::experimental::printf(_format, ## __VA_ARGS__); }
 
-// declare kernel names globally to reduce name mangling
+// declare the kernel and pipe names globally to reduce name mangling
 class IntraPipeID;
 class VerticalKernelID;
 class HorizontalKernelID;
 
 //
-// TODO
+// A struct to carry pixel and intensity sigma data
 //
 template<typename T>
 struct PixelSigIPair {
@@ -72,11 +72,15 @@ float ComputeIntensitySigma(float x, ANRParams params) {
 //
 // compute intensity sigma give parameters and a pixel value
 //
-template<int filter_size, int filter_size_eff=(filter_size + 1)/2>
-inline auto BilateralFilter1D(ShiftReg<float, filter_size>& buffer,
+template<typename InT, int filter_size, int filter_size_eff=(filter_size + 1)/2>
+inline float BilateralFilter1D(ShiftReg<InT, filter_size>& buffer,
                               ShiftReg<float, filter_size_eff>& spatial_filter,
-                              ANRParams params, float middle_pixel, float sig_i,
-                              bool debug=false) {
+                              ANRParams params, InT middle_pixel, float sig_i) {
+  // static asserts
+  static_assert(std::is_arithmetic_v<InT>);
+  static_assert(std::is_signed_v<InT>);
+  static_assert(filter_size > 1);
+
   // build the bilateral filter
   ShiftReg<float, filter_size_eff> filter;
   float filter_sum = 0.0;
@@ -86,7 +90,7 @@ inline auto BilateralFilter1D(ShiftReg<float, filter_size>& buffer,
     // TODO: use a gaussian LUT to improve Gaussian1D DSP usage
     //      Do so for sycl::exp() and sycl::pown()
     // TODO: remove floating point subtraction for vertical version
-    const auto intensity_diff = std::abs(middle_pixel - buffer[i*2]);
+    const InT intensity_diff = std::abs(middle_pixel - buffer[i*2]);
     const float intensity_gaussian = Gaussian1D<float>(intensity_diff, sig_i);
 
     // compute the filter value based on the intensity and spatial filters
@@ -94,12 +98,6 @@ inline auto BilateralFilter1D(ShiftReg<float, filter_size>& buffer,
     filter[i] = filter_val;
     filter_sum += filter_val;
   });
-  if (debug) {
-    UnrolledLoop<0, filter_size>([&](auto i) {
-      PRINTF("%f ", buffer[i]);
-    });
-    PRINTF("\n");
-  }
 
   // apply the bilateral filter
   float filtered_pixel = 0.0;
@@ -118,23 +116,35 @@ struct VerticalFunctor {
                                  ShiftReg<InT, filter_size> buffer,
                                  ShiftReg<float, filter_size_eff> spatial_filter,
                                  ANRParams params) const {
+    // use a short to store the pixels. We need to hold all 8 bits, but 
+    // need the type to be signed for the BilateralFilter1D
+    using SignedInT = short;
+
+    // static asserts
+    static_assert(std::is_arithmetic_v<InT>);
+    static_assert(std::is_arithmetic_v<OutT>);
+    static_assert(filter_size > 1);
+    static_assert(std::is_signed_v<SignedInT>);
+    static_assert(sizeof(SignedInT) > sizeof(InT));
+
+    ShiftReg<SignedInT, filter_size> buffer_signed;
+    UnrolledLoop<0, filter_size>([&](auto i) {
+      buffer_signed[i] = static_cast<SignedInT>(buffer[i]);
+    });
+
     // get the middle index and compute the intensity sigma from it
     constexpr int kMidIdx = filter_size / 2;
-    const float middle_pixel = (float)buffer[kMidIdx];
+    const SignedInT middle_pixel = buffer[kMidIdx];
     const auto sig_i = ComputeIntensitySigma(middle_pixel, params);
-
-    // convert to floats
-    ShiftReg<float, filter_size> buffer_float;
-    UnrolledLoop<0, filter_size>([&](auto i) {
-      buffer_float[i] = (float)buffer[i];
-    });
 
     // perform the vertical 1D bilateral filter
     auto res =
-      BilateralFilter1D<filter_size>(buffer_float, spatial_filter, params,
-                                     middle_pixel, sig_i, /*(row == 0) && (col == 0)*/false);
+      BilateralFilter1D<SignedInT, filter_size>(buffer_signed, spatial_filter,
+                                                params, middle_pixel, sig_i);
 
-    // return the result casted back to a pixel
+    // return the result, which is a temporary pixel (res) and the intensity
+    // sigma that was calculated for the pixel. This will be forwarded to the
+    // horizontal kernel.
     return PixelSigIPair<OutT>(res, sig_i);
   }
 };
@@ -146,11 +156,16 @@ struct HorizontalFunctor {
                   ShiftReg<PixelSigIPair<InT>, filter_size> buffer,
                   ShiftReg<float, filter_size_eff> spatial_filter,
                   ANRParams params) const {
+    // static asserts
+    static_assert(std::is_arithmetic_v<InT>);
+    static_assert(std::is_arithmetic_v<OutT>);
+    static_assert(filter_size > 1);
+
     // grab the middle pixel and the intensity sigma for it (forwarded from the
     // vertical kernel)
     constexpr int kMidIdx = filter_size / 2;
-    const auto middle_pixel = buffer[kMidIdx].pixel;
-    const auto sig_i = buffer[kMidIdx].sig_i;
+    const float middle_pixel = buffer[kMidIdx].pixel;
+    const float sig_i = buffer[kMidIdx].sig_i;
 
     // grab just the pixel data
     ShiftReg<float, filter_size> buffer_pixels;
@@ -160,8 +175,8 @@ struct HorizontalFunctor {
 
     // perform the horizontal 1D bilateral filter
     auto res =
-      BilateralFilter1D<filter_size>(buffer_pixels, spatial_filter, params,
-                                     middle_pixel, sig_i);
+      BilateralFilter1D<float, filter_size>(buffer_pixels, spatial_filter, params,
+                                            middle_pixel, sig_i);
 
     // return the result casted back to a pixel
     // TODO: round rather than cast???
@@ -177,19 +192,37 @@ template<typename PixelT, typename IndexT, typename InPipe,
          int pixels_per_cycle, int max_cols=4096>
 std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
                                     int cols, int rows, int frames) {
-  using IntraPipeType = DataBundle<PixelSigIPair<float>, pixels_per_cycle>;
-  using IntraPipe = sycl::INTEL::pipe<IntraPipeID, IntraPipeType>;
+  // types
+  using VerticalInT = PixelT;
+  using VerticalOutT = PixelSigIPair<float>;
+  using HorizontalInT = VerticalOutT;
+  using HorizontalOutT = PixelT;
+
+  // the internal pipe between the vertical and horizontal kernels
+  using IntraPipeT = DataBundle<VerticalOutT, pixels_per_cycle>;
+  using IntraPipe = sycl::INTEL::pipe<IntraPipeID, IntraPipeT>;
 
   // static asserts for template parameters
-  static_assert(filter_size > 0);
-  static_assert(max_cols > 0);
+  static_assert(filter_size > 1);
+  static_assert(max_cols > 1);
   static_assert(pixels_per_cycle > 0);
-  // TODO: more
+  static_assert(max_cols > pixels_per_cycle);
+  static_assert(std::is_arithmetic_v<PixelT>);
+  static_assert(std::is_integral_v<IndexT>);
 
-  // validate the image size
+  // validate the arguments
   if (cols > max_cols) {
     std::cerr << "ERROR: cols exceeds the maximum (max_cols)"
               << "(" << cols << " >= " << max_cols << ")\n";
+    std::terminate();
+  } else if (cols <= 0) {
+    std::cerr << "ERROR: cols must be strictly positive\n";
+    std::terminate();
+  } else if (rows <= 0) {
+    std::cerr << "ERROR: rows must be strictly positive\n";
+    std::terminate();
+  } else if (frames <= 0) {
+    std::cerr << "ERROR: frames must be strictly positive\n";
     std::terminate();
   }
   
@@ -202,17 +235,15 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
   // either use a functor or a lamda, both work
   auto stencil_func = VerticalFunctor<PixelT, float, filter_size>();
   auto line_func = HorizontalFunctor<float, PixelT, filter_size>();
-  
 
-  // submit the vertical kernel (stencil kernel)
+  // submit the vertical and horizontal kernels, respectively
   auto vertical_kernel =
-    SubmitVerticalKernel<VerticalKernelID, PixelT, PixelSigIPair<float>, IndexT, InPipe, IntraPipe,
-                         filter_size, max_cols, pixels_per_cycle>(q, rows, cols, frames, PixelT(0), stencil_func, spatial_filter, params);
+    SubmitVerticalKernel<VerticalKernelID, VerticalInT, VerticalOutT, IndexT, InPipe, IntraPipe,
+                         filter_size, max_cols, pixels_per_cycle>(q, rows, cols, frames, VerticalInT(0), stencil_func, spatial_filter, params);
 
-  // submit the horizontal kernel (line kernel)
   auto horizontal_kernel =
-    SubmitHorizontalKernel<HorizontalKernelID, PixelSigIPair<float>, PixelT, IndexT, IntraPipe, OutPipe,
-                           filter_size, pixels_per_cycle>(q, rows, cols, frames, PixelSigIPair<float>(0), line_func, spatial_filter, params);
+    SubmitHorizontalKernel<HorizontalKernelID, HorizontalInT, HorizontalOutT, IndexT, IntraPipe, OutPipe,
+                           filter_size, pixels_per_cycle>(q, rows, cols, frames, HorizontalInT(0), line_func, spatial_filter, params);
   
   return {vertical_kernel, horizontal_kernel};
 }
