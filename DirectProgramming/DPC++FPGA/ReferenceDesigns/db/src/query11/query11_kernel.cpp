@@ -110,6 +110,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
     // kernel to produce the PARTSUPPLIER table
     h.single_task<ProducePartSupplier>([=]() [[intel::kernel_args_restrict]] {
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < ps_rows; i += kJoinWinSize) {
         // bulk read of data from global memory
         NTuple<kJoinWinSize, PartSupplierRow> data;
@@ -166,7 +167,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
       // populate MapJoiner map
       // why a map? keys may not be sequential
-      [[intel::ivdep]]
+      [[intel::initiation_interval(1), intel::ivdep]]
       for (size_t i = 0; i < s_rows; i++) {
         // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed to be unique
@@ -203,7 +204,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
       // initialize accumulator
       partkey_values.Init();
 
-      [[intel::ivdep]]
+      [[intel::initiation_interval(1), intel::ivdep]]
       for (size_t i = 0; i < ps_rows; i += kJoinWinSize) {
         SupplierPartSupplierJoinedPipeData pipe_data = 
             PartSupplierPartsPipe::read();
@@ -224,6 +225,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
       // sort the {partkey, partvalue} pairs based on partvalue.
       // send in first kPartTableSize valid pairs
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < kPartTableSize; i++) {
         SortInPipe::write(OutputData(i + 1, partkey_values.Get(i)));
       }
@@ -258,6 +260,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
       ShannonIterator<int, 3> i(0, kSortSize);
 
       // grab all kSortSize elements from the sorter
+      [[intel::initiation_interval(1)]]
       while (i.InRange()) {
         bool valid;
         OutputData D = SortOutPipe::read(valid);
