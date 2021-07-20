@@ -12,7 +12,6 @@
     "base": "..",
     "include": [
       "Ch01_intro",
-      "dpcpp_toolchain.cmake",
       "LICENSE.txt",
       "README.md",
       "CMakeLists.txt"
