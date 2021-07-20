@@ -26,6 +26,15 @@ struct DataBundle {
         }
     }
 
+    DataBundle& operator=(const DataBundle &op) {
+        // unroll in case this copy constructor is implemented in an HLS component
+#pragma unroll
+        for (int idx = 0; idx < BUNDLE_SIZE; idx++) {
+            data_[idx] = op.data_[idx];
+        }
+        return *this;
+    }
+
     bool operator==(const DataBundle &rhs) {
         bool isEqual = true;
         // unroll in case this comparison is implemented in an HLS component

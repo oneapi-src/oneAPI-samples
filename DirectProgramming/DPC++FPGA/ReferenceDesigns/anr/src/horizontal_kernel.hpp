@@ -1,5 +1,5 @@
-#ifndef __LINE_KERNEL_HPP__
-#define __LINE_KERNEL_HPP__
+#ifndef __HORIZONTAL_KERNEL_HPP__
+#define __HORIZONTAL_KERNEL_HPP__
 
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
@@ -13,20 +13,20 @@ using namespace hldutils;
 //
 // Kernel to perform the horizontal filtering
 //
-template<typename KernelId, typename LineType, typename LineOutputType,
+template<typename KernelId, typename InType, typename OutType,
          typename IndexT, typename InPipe, typename OutPipe,
-         int line_size, int parallel_cols=1,
+         int filter_size, int parallel_cols,
          typename LineFunction,
          typename... FunctionArgs_T>
-event SubmitLineKernel(queue& q, IndexT rows, IndexT cols, IndexT frames,
-                       const LineType zero_val, LineFunction func,
-                       FunctionArgs_T... stencil_args) {
+event SubmitHorizontalKernel(queue& q, IndexT rows, IndexT cols, IndexT frames,
+                             const InType zero_val, LineFunction func,
+                             FunctionArgs_T... stencil_args) {
   // types coming into and out of the kernel from pipes, respectively
-  using InPipeT = DataBundle<LineType, parallel_cols>;
-  using OutPipeT = DataBundle<LineOutputType, parallel_cols>;
+  using InPipeT = DataBundle<InType, parallel_cols>;
+  using OutPipeT = DataBundle<OutType, parallel_cols>;
 
-  constexpr int kShiftRegSize = line_size + parallel_cols - 1;
-  constexpr int kPaddingPixels = line_size / 2;
+  constexpr int kShiftRegSize = filter_size + parallel_cols - 1;
+  constexpr int kPaddingPixels = filter_size / 2;
   constexpr IndexT kColThreshLow = kPaddingPixels;
 
   // TODO: static asserts
@@ -47,7 +47,7 @@ event SubmitLineKernel(queue& q, IndexT rows, IndexT cols, IndexT frames,
   return q.submit([&](handler &h) {
     h.single_task<KernelId>([=] {
       // the shift register
-      ShiftReg<LineType, kShiftRegSize> shifty_pixels;
+      ShiftReg<InType, kShiftRegSize> shifty_pixels;
 
       // initialize the contents of the shift register
       #pragma unroll
@@ -71,21 +71,21 @@ event SubmitLineKernel(queue& q, IndexT rows, IndexT cols, IndexT frames,
             shifty_pixels.shiftMultiVals(new_pixels);
 
             // Perform the convolution on the 1D window
-            OutPipeT out_data(LineOutputType(0));
+            OutPipeT out_data(OutType(0));
             UnrolledLoop<0, parallel_cols>([&](auto stencil_idx) {
               const int col_local = col + stencil_idx;
-              ShiftReg<LineType, line_size> shifty_pixels_copy;
+              ShiftReg<InType, filter_size> shifty_pixels_copy;
 
               // first, make an offsetted copy of the shift register
-              UnrolledLoop<0, line_size>([&](auto x) {
+              UnrolledLoop<0, filter_size>([&](auto x) {
                 shifty_pixels_copy[x] = shifty_pixels[x + stencil_idx];
               });
 
               // call the user's callback function for the operator
               out_data[stencil_idx] = func(row,
-                                          (col_local - kColThreshLow),
-                                          shifty_pixels_copy,
-                                          stencil_args...);
+                                           (col_local - kColThreshLow),
+                                           shifty_pixels_copy,
+                                           stencil_args...);
             });
 
             // write the output data if it is in range (i.e., it is a real pixel

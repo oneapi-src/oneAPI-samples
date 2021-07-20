@@ -43,10 +43,20 @@ static_assert(kFilterSize > 0);
 
 // The number of pixels per cycle
 #ifndef PIXELS_PER_CYCLE
-#define PIXELS_PER_CYCLE 1
+//#define PIXELS_PER_CYCLE 1
+#define PIXELS_PER_CYCLE 2
 #endif
 constexpr int kPixelsPerCycle = PIXELS_PER_CYCLE;
 static_assert(kPixelsPerCycle > 0);
+
+// The maximum number of columns in the image
+#ifndef MAX_COLS
+#define MAX_COLS 4096
+#endif
+constexpr int kMaxCols = MAX_COLS;
+static_assert(kMaxCols > 0);
+static_assert(kMaxCols > kPixelsPerCycle);
+static_assert((kMaxCols % kPixelsPerCycle) == 0);
 
 // the type to use for the pixel intensity values and a temporary type
 // which should have more bits than the pixel type to check overflow
@@ -231,11 +241,17 @@ int main(int argc, char *argv[]) {
   std::vector<double> time(runs);
 
   // print out some info
-  std::cout << "Data directory: " << data_dir << "\n";
-  std::cout << "Runs:           " << runs << "\n";
-  std::cout << "Columns:        " << cols << "\n";
-  std::cout << "Rows:           " << rows << "\n";
-  std::cout << "Frames:         " << frames << "\n";
+  std::cout << "Data directory:   " << data_dir << "\n";
+  std::cout << "Runs:             " << runs << "\n";
+  std::cout << "Columns:          " << cols << "\n";
+  std::cout << "Rows:             " << rows << "\n";
+  std::cout << "Frames:           " << frames << "\n";
+  std::cout << "Filter Size:      " << kFilterSize << "\n";
+  std::cout << "Pixels Per Cycle: " << kPixelsPerCycle << "\n";
+  std::cout << "Maximum Columns:  " << kMaxCols << "\n";
+  #ifdef DISABLE_GLOBAL_MEM
+    std::cout << "Global memory access is disabled; not validating results\n";
+  #endif
   std::cout << "\n";
 
   try {
@@ -259,8 +275,12 @@ int main(int argc, char *argv[]) {
       q.memcpy(out_pixels.data(), out, pixel_count * sizeof(PixelT)).wait();
 
       // validate the output
-      passed &= Validate(out_pixels.data(), ref_pixels.data(), pixel_count);
-      //passed &= Validate(out_pixels.data(), in_pixels.data(), pixel_count);
+      #ifndef DISABLE_GLOBAL_MEM
+        passed &= Validate(out_pixels.data(), ref_pixels.data(), pixel_count);
+        //passed &= Validate(out_pixels.data(), in_pixels.data(), pixel_count);
+      #else
+        passed = true;
+      #endif
     }
   } catch (exception const &e) {
     std::cout << "Caught a synchronous SYCL exception: " << e.what() << "\n";
@@ -271,8 +291,10 @@ int main(int argc, char *argv[]) {
   sycl::free(in, q);
   sycl::free(out, q);
 
-  // write the output files
-  WriteOutputFile(data_dir, out_pixels, cols, rows);
+  #ifndef DISABLE_GLOBAL_MEM
+    // write the output files
+    WriteOutputFile(data_dir, out_pixels, cols, rows);
+  #endif
 
   // print the performance results
   if (passed) {
@@ -317,6 +339,7 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
   const int iterations = frame_pixel_count / kPixelsPerCycle;
 
   // launch the kernel that provides data into the ANR kernel
+#ifndef DISABLE_GLOBAL_MEM
   auto input_kernel_event = q.submit([&](handler &h) {
     h.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the input pointer and write it to the sorter's input pipe
@@ -338,7 +361,25 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
       }
     });
   });
+#else
+  auto input_kernel_event = q.submit([&](handler &h) {
+    h.single_task<InputKernelID>([=] {
+      [[intel::loop_coalesce(2)]]
+      for (int f = 0; f < frames; f++) {
+        for (int i = 0; i < iterations; i++) {
+          PipeType pipe_data;
+          #pragma unroll
+          for (int k = 0; k < kPixelsPerCycle; k++) {
+            pipe_data[k] = (i * kPixelsPerCycle + k);
+          }
+          ANRInPipe::write(pipe_data);
+        }
+      }
+    });
+  });
+#endif
 
+#ifndef DISABLE_GLOBAL_MEM
   // launch the kernel that reads out data from the ANR kernel
   auto output_kernel_event = q.submit([&](handler &h) {
     h.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
@@ -359,12 +400,25 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
       }
     });
   });
+#else
+  // launch the kernel that reads out data from the ANR kernel
+  auto output_kernel_event = q.submit([&](handler &h) {
+    h.single_task<OutputKernelID>([=] {      
+      [[intel::loop_coalesce(2)]]
+      for (int f = 0; f < frames; f++) {
+        for (int i = 0; i < iterations; i++) {
+          (void)ANROutPipe::read();
+        }
+      }
+    });
+  });
+#endif
 
   // launch ANR kernel
   auto anr_kernel_events =
-    SubmitANRKernels<PixelT, IndexT, ANRInPipe, ANROutPipe, kFilterSize>(q, params,
-                                                                         cols, rows,
-                                                                         frames);
+    SubmitANRKernels<PixelT, IndexT, ANRInPipe, ANROutPipe, kFilterSize, kPixelsPerCycle>(q, params,
+                                                                                          cols, rows,
+                                                                                          frames);
 
   // wait for the input and output kernels to finish
   auto start = high_resolution_clock::now();

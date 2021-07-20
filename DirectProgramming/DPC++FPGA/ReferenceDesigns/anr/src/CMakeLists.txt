@@ -41,14 +41,56 @@ else()
     message(STATUS "Seed explicitly set to ${SEED}")
 endif()
 
+# Allow the user to change the filter size
+# e.g. cmake .. -DFILTER_SIZE=9
+if(FILTER_SIZE)
+    set(FILTER_SIZE_FLAG "-DFILTER_SIZE=${FILTER_SIZE}")
+    message(STATUS "FILTER_SIZE explicitly set to ${FILTER_SIZE}")
+endif()
+
+# Allow the user to change the pixels per cycle
+# e.g. cmake .. -DPIXELS_PER_CYCLE=9
+if(PIXELS_PER_CYCLE)
+    set(PIXELS_PER_CYCLE_FLAG "-DPIXELS_PER_CYCLE=${PIXELS_PER_CYCLE}")
+    message(STATUS "PIXELS_PER_CYCLE explicitly set to ${PIXELS_PER_CYCLE}")
+else()
+  # Default PIXELS_PER_CYCLE based on the board being used
+  if(FPGA_BOARD MATCHES ".*a10.*")
+    set(PIXELS_PER_CYCLE_FLAG "-DPIXELS_PER_CYCLE=2")
+  elseif(FPGA_BOARD MATCHES ".*s10.*")
+    set(PIXELS_PER_CYCLE_FLAG "-DPIXELS_PER_CYCLE=1")
+  elseif(FPGA_BOARD MATCHES ".*agilex.*")
+    set(PIXELS_PER_CYCLE_FLAG "-DPIXELS_PER_CYCLE=1")
+  else()
+    set(PIXELS_PER_CYCLE_FLAG "-DPIXELS_PER_CYCLE=1")
+    message(WARNING "Unknown board: setting PIXELS_PER_CYCLE to 1")
+  endif()
+endif()
+
+# Allow the user to change the maximum number of pixels per column
+# e.g. cmake .. -DMAX_COLS=9
+if(MAX_COLS)
+    set(MAX_COLS_FLAG "-DMAX_COLS=${MAX_COLS}")
+    message(STATUS "MAX_COLS explicitly set to ${MAX_COLS}")
+endif()
+
+# Allow the user to disable connections to global memory
+# This mode is used to test the Fmax and area of the standalone IP.
+# In this mode, the Validation will not be correct, but 
+# e.g. cmake .. -DDISABLE_GLOBAL_MEM
+if(DISABLE_GLOBAL_MEM)
+    set(DISABLE_GLOBAL_MEM_FLAG "-DDISABLE_GLOBAL_MEM")
+    message(STATUS "Global memory access has been manually disabled")
+endif()
+
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${ENABLE_USM} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga ${ENABLE_USM}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${ENABLE_USM}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} -Xsopt-arg=\"-nocaching\" -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${FPGA_BOARD} ${ENABLE_USM} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} -Xsopt-arg=\"-nocaching\" -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${FPGA_BOARD} ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
