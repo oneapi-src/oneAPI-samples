@@ -1,5 +1,5 @@
-#ifndef __IMPU_MATH__
-#define __IMPU_MATH__
+#ifndef __MP_MATH__
+#define __MP_MATH__
 
 namespace hldutils {
   
@@ -61,4 +61,4 @@ namespace hldutils {
   }
 }  // namespace hldutils
 
-#endif /* __IMPU_MATH__ */
+#endif /* __MP_MATH__ */

@@ -31,34 +31,36 @@ class VerticalKernelID;
 class HorizontalKernelID;
 
 //
-// A struct to carry pixel and intensity sigma data
+// A struct to carry the new pixel, the original pixel, and the intensity sigma
+// from the vertical kernel to horizontal kernel
 //
-template<typename T>
-struct PixelSigIPair {
-  PixelSigIPair() {}
-  PixelSigIPair(T _pixel) : pixel(_pixel), sig_i(0) {}
-  PixelSigIPair(T _pixel, float _sig_i) : pixel(_pixel), sig_i(_sig_i) {}
-  T pixel;
-  float sig_i;
+template<typename PixelT>
+struct DataForwardStruct {
+  DataForwardStruct() {}
+  DataForwardStruct(float pixel_n) : pixel_n(pixel_n) {}
+  DataForwardStruct(float pixel_n, PixelT pixel_o, float sig_i) :
+    pixel_n(pixel_n), pixel_o(pixel_o), sig_i(sig_i) {}
+  
+  float pixel_n; // the new pixel
+  PixelT pixel_o; // the original pixel
+  float sig_i; // the sigma 
 };
 
 //
 // Compute a 1D gaussian (ignores 1/2*pi constant)
-// TODO: Use a LUT in the future.
 //
-template<typename T>
-constexpr inline T Gaussian1D(T x, T sigma) {
+constexpr inline float Gaussian1D(float x, float sigma) {
   return sycl::exp(-0.5 * sycl::pown((x / sigma), 2));
 }
 
 //
 // Build a 1D gaussian filter
 //
-template<typename T, int size>
-constexpr auto BuildGaussianFilter1D(T sigma) {
-  ShiftReg<T, size> filter;
+template<int size>
+constexpr auto BuildGaussianFilter1D(float sigma) {
+  ShiftReg<float, size> filter;
   for (int x = -size/2; x <= size/2; x++) {
-    filter[x + size/2] = Gaussian1D<T>(x, sigma);
+    filter[x + size/2] = Gaussian1D(x, sigma);
   }
   return filter;
 }
@@ -66,7 +68,7 @@ constexpr auto BuildGaussianFilter1D(T sigma) {
 //
 // Compute the intensity sigma (sig_i) using a pixel value (x) and the ANR
 // parameters.
-// TODO: Use a LUT in the future.
+// TODO: use a LUT for this
 //
 float ComputeIntensitySigma(float x, ANRParams params) {
   return sycl::sqrt(params.k * x + params.sig_shot_2) * params.sig_i_coeff;
@@ -92,12 +94,10 @@ inline float BilateralFilter1D(ShiftReg<InT, filter_size>& buffer,
   float filter_sum = 0.0;
 
   UnrolledLoop<0, filter_size_eff>([&](auto i) {
-    // TODO: precompute stuff
     // TODO: use a gaussian LUT to improve Gaussian1D DSP usage
-    //      Do so for sycl::exp() and sycl::pown()
-    // TODO: remove floating point subtraction for vertical version
+    //      Do so for sycl::exp(), sycl::pown()
     const InT intensity_diff = std::abs(buffer[kMidIdx] - buffer[i*2]);
-    const float intensity_gaussian = Gaussian1D<float>(intensity_diff, sig_i);
+    const float intensity_gaussian = Gaussian1D(intensity_diff, sig_i);
 
     // compute the filter value based on the intensity and spatial filters
     const float filter_val = spatial_filter[i] * intensity_gaussian;
@@ -124,17 +124,16 @@ inline float BilateralFilter1D(ShiftReg<InT, filter_size>& buffer,
 template<typename InT, typename OutT, int filter_size,
          int filter_size_eff=(filter_size + 1)/2>
 struct VerticalFunctor {
-  PixelSigIPair<OutT> operator()(int row, int col,
-                                 ShiftReg<InT, filter_size> buffer,
-                                 ShiftReg<float, filter_size_eff> spatial_filter,
-                                 ANRParams params) const {
+  auto operator()(int row, int col,
+                  ShiftReg<InT, filter_size> buffer,
+                  ShiftReg<float, filter_size_eff> spatial_filter,
+                  ANRParams params) const {
     // use a short to store the pixels. We need to hold all 8 bits, but 
     // need the type to be signed for the BilateralFilter1D
     using SignedInT = short;
 
     // static asserts
     static_assert(std::is_arithmetic_v<InT>);
-    static_assert(std::is_arithmetic_v<OutT>);
     static_assert(filter_size > 1);
     static_assert(std::is_signed_v<SignedInT>);
     static_assert(sizeof(SignedInT) > sizeof(InT));
@@ -147,17 +146,19 @@ struct VerticalFunctor {
 
     // get the middle index and compute the intensity sigma from it
     constexpr int kMidIdx = filter_size / 2;
-    const auto sig_i = ComputeIntensitySigma(buffer[kMidIdx], params);
+    const InT middle_pixel = buffer[kMidIdx];
+    const auto sig_i = ComputeIntensitySigma(middle_pixel, params);
 
     // perform the vertical 1D bilateral filter
-    auto res =
+    auto output_pixel =
       BilateralFilter1D<SignedInT, filter_size>(buffer_signed, spatial_filter,
                                                 params, sig_i);
 
-    // return the result, which is a temporary pixel (res) and the intensity
-    // sigma that was calculated for the pixel. This will be forwarded to the
-    // horizontal kernel.
-    return PixelSigIPair<OutT>(res, sig_i);
+    // return the result, which is the output pixel, as well as the intensity
+    // sigma value (sig_i) and the original pixel which area forwarded to the
+    // horizontal kernel for the horizontal 1D bilateral calculation and alpha
+    // blending, respectively.
+    return OutT(output_pixel, middle_pixel, sig_i);
   }
 };
 
@@ -169,12 +170,11 @@ struct VerticalFunctor {
 template<typename InT, typename OutT, int filter_size,
          int filter_size_eff=(filter_size + 1)/2>
 struct HorizontalFunctor {
-  OutT operator()(int row, int col,
-                  ShiftReg<PixelSigIPair<InT>, filter_size> buffer,
+  auto operator()(int row, int col,
+                  ShiftReg<InT, filter_size> buffer,
                   ShiftReg<float, filter_size_eff> spatial_filter,
                   ANRParams params) const {
     // static asserts
-    static_assert(std::is_arithmetic_v<InT>);
     static_assert(std::is_arithmetic_v<OutT>);
     static_assert(filter_size > 1);
 
@@ -183,20 +183,26 @@ struct HorizontalFunctor {
     constexpr int kMidIdx = filter_size / 2;
     const float sig_i = buffer[kMidIdx].sig_i;
 
-    // grab just the pixel data
+    // grab just the pixel data, pixel_n is the 'new' pixel forwarded from the
+    // vertical kernel
     ShiftReg<float, filter_size> buffer_pixels;
     UnrolledLoop<0, filter_size>([&](auto i) {
-      buffer_pixels[i] = buffer[i].pixel;
+      buffer_pixels[i] = buffer[i].pixel_n;
     });
 
     // perform the horizontal 1D bilateral filter
-    auto res =
+    auto output_pixel =
       BilateralFilter1D<float, filter_size>(buffer_pixels, spatial_filter,
                                             params, sig_i);
 
+    // alpha blending
+    auto original_pixel = buffer[kMidIdx].pixel_o;
+    auto output_pixel_alpha = (params.alpha * output_pixel) +
+                              (params.one_minus_alpha * original_pixel);
+
     // return the result casted back to a pixel
     // TODO: round rather than cast???
-    return OutT(res);
+    return OutT(output_pixel_alpha);
   }
 };
 
@@ -210,8 +216,8 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
                                     int cols, int rows, int frames) {
   // datatypes
   using VerticalInT = PixelT;
-  using VerticalOutT = PixelSigIPair<float>;
-  using HorizontalInT = VerticalOutT;
+  using VerticalOutT = DataForwardStruct<PixelT>;
+  using HorizontalInT = VerticalOutT;  // vertical out is horizontal in
   using HorizontalOutT = PixelT;
 
   // the internal pipe between the vertical and horizontal kernels
@@ -271,20 +277,21 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
   }
 
   // cast the rows, columns, and frames to to index type and use these variables
-  // inside the kernel to avoid the device having to deal with conversions
+  // inside the kernel to avoid the device dealing with sign conversions
   const IndexT cols_k(cols);
   const IndexT rows_k(rows);
   const IndexT frames_k(frames);
   
   // create the spatial filter for the stencil operation
   constexpr int filter_size_eff = (filter_size + 1) / 2; // ceil(filter_size/2)
-  auto spatial_filter =
-    BuildGaussianFilter1D<float, filter_size_eff>(params.sig_s);
+  auto spatial_filter = BuildGaussianFilter1D<filter_size_eff>(params.sig_s);
 
   // the functors for the vertical and horizontal kernels.
   // You can either use a functor or a lamda, both work.
-  auto vertical_func = VerticalFunctor<PixelT, float, filter_size>();
-  auto horizontal_func = HorizontalFunctor<float, PixelT, filter_size>();
+  auto vertical_func =
+    VerticalFunctor<VerticalInT, VerticalOutT, filter_size>();
+  auto horizontal_func =
+    HorizontalFunctor<HorizontalInT, HorizontalOutT, filter_size>();
 
   // submit the vertical kernel using a column stencil
   auto vertical_kernel = q.submit([&](handler &h) {
