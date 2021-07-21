@@ -18,13 +18,6 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-# check if the BSP has USM host allocations or manually enable using host allocations
-# e.g. cmake .. -DUSE_USM_HOST_ALLOCATIONS=1
-if(FPGA_BOARD MATCHES ".usm.*" OR DEFINED USE_USM_HOST_ALLOCATIONS)
-    set(ENABLE_USM "-DUSM_HOST_ALLOCATIONS")
-    message(STATUS "USM host allocations are enabled")
-endif()
-
 # Allow the user to enable hardware profiling
 # Profiling can be enabled when running cmake by adding the flag -DPROFILE_HW=1
 # e.g. cmake .. -DPROFILE_HW=1
@@ -79,8 +72,8 @@ else()
   elseif(FPGA_BOARD MATCHES ".*agilex.*")
     set(CLOCK_TARGET 480MHz)
   else()
-  set(CLOCK_TARGET 240MHz)
-    message(WARNING "Unknown board: setting CLOCK_TARGET to 240MHz")
+  set(CLOCK_TARGET 300MHz)
+    message(WARNING "Unknown board: setting CLOCK_TARGET to 300MHz")
   endif()
 endif()
 

@@ -15,8 +15,8 @@ using namespace hldutils;
 // memory (disable_global_mem == true). The latter allows use to avoid
 // having a global memory interconnect in our kernel system for testing the IP.
 //
-template<typename KernelId, typename T, typename PtrT, typename Pipe,
-         int pixels_per_cycle, bool disable_global_mem>
+template<typename KernelId, typename T, typename Pipe, int pixels_per_cycle,
+         bool disable_global_mem>
 event SubmitInputDMA(queue& q, T *in_ptr, int rows, int cols, int frames) {
   using PipeType = DataBundle<T, pixels_per_cycle>;
 
@@ -32,7 +32,7 @@ event SubmitInputDMA(queue& q, T *in_ptr, int rows, int cols, int frames) {
   if constexpr (!disable_global_mem) {
     return q.submit([&](handler &h) {
       h.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
-        PtrT in(in_ptr);
+        device_ptr<T> in(in_ptr);
 
         [[intel::loop_coalesce(2)]]
         for (int f = 0; f < frames; f++) {
@@ -72,8 +72,8 @@ event SubmitInputDMA(queue& q, T *in_ptr, int rows, int cols, int frames) {
 // to device memory (disable_global_mem == true). The latter allows use to avoid
 // having a global memory interconnect in our kernel system for testing the IP.
 //
-template<typename KernelId, typename T, typename PtrT, typename Pipe,
-         int pixels_per_cycle, bool disable_global_mem>
+template<typename KernelId, typename T, typename Pipe, int pixels_per_cycle,
+         bool disable_global_mem>
 event SubmitOutputDMA(queue& q, T *out_ptr, int rows, int cols, int frames) {
   assert(((rows * cols) % pixels_per_cycle) == 0);
   const int iterations = cols * rows / pixels_per_cycle;
@@ -81,7 +81,7 @@ event SubmitOutputDMA(queue& q, T *out_ptr, int rows, int cols, int frames) {
   if constexpr(!disable_global_mem) {
     return q.submit([&](handler &h) {
       h.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
-        PtrT out(out_ptr);
+        device_ptr<T> out(out_ptr);
         [[intel::loop_coalesce(2)]]
         for (int f = 0; f < frames; f++) {
           for (int i = 0; i < iterations; i++) {

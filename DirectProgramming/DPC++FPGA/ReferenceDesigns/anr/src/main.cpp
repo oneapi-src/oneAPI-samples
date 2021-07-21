@@ -17,23 +17,13 @@
 #include "dpc_common.hpp"
 
 #include "anr.hpp"
-#include "dma_kernels.hpp"
 #include "anr_params.hpp"
 #include "data_bundle.hpp"
+#include "dma_kernels.hpp"
 #include "mp_math.hpp"
 
 using namespace sycl;
 using namespace std::chrono;
-
-// Determines whether we will use USM host or device allocations to move data
-// between host and the device.
-// This can be set on the command line by defining the preprocessor macro
-// 'USM_HOST_ALLOCATIONS' using the flag: '-DUSM_HOST_ALLOCATIONS'
-#if defined(USM_HOST_ALLOCATIONS)
-constexpr bool kUseUSMHostAllocation = true;
-#else
-constexpr bool kUseUSMHostAllocation = false;
-#endif
 
 // the user can disable global memory by defining the 'DISABLE_GLOBAL_MEM'
 // macro: -DDISABLE_GLOBAL_MEM
@@ -60,7 +50,7 @@ static_assert(IsPow2(kPixelsPerCycle) > 0);
 
 // The maximum number of columns in the image
 #ifndef MAX_COLS
-//#define MAX_COLS 1920 // HD quality
+//#define MAX_COLS 1920 // HD
 #define MAX_COLS 3840 // 4K
 #endif
 constexpr unsigned kMaxCols = MAX_COLS;
@@ -70,8 +60,8 @@ static_assert(kMaxCols > kPixelsPerCycle);
 // the type to use for the pixel intensity values and a temporary type
 // which should have more bits than the pixel type to check for overflow.
 // We will use subtraction on the temporary type, so it must be signed.
-using PixelT = unsigned char; // 8 bits
-using TmpT = long long; // 64 bits
+using PixelT = unsigned char; // 8 bits, unsigned
+using TmpT = long long; // 64 bits, signed
 static_assert(std::is_unsigned_v<PixelT>);
 static_assert(std::is_signed_v<TmpT>);
 static_assert(sizeof(TmpT) > sizeof(PixelT));
@@ -90,10 +80,8 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
 void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
                      int cols, int rows);
 
-template <typename T, typename KernelPtrType>
-double RunANR(queue &q, T *in_ptr, T *out_ptr,
+double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
               ANRParams params, int cols, int rows, int frames);
-
 
 bool Validate(PixelT *val, PixelT *ref, unsigned int count, double thresh=0.0001);
 ////////////////////////////////////////////////////////////////////////////////
@@ -158,14 +146,6 @@ int main(int argc, char *argv[]) {
     std::terminate();
   }
 
-  // make sure the device support USM host allocations if we chose to use them
-  if (!d.get_info<info::device::usm_host_allocations>() &&
-      kUseUSMHostAllocation) {
-    std::cerr << "ERROR: The selected device does not support USM host"
-              << " allocations\n";
-    std::terminate();
-  }
-
   // parse the input files
   int cols, rows, pixel_count;
   ANRParams params;
@@ -200,51 +180,26 @@ int main(int argc, char *argv[]) {
   // create the output (initialize to all 0s)
   std::vector<PixelT> out_pixels(in_pixels.size(), 0);
 
-  // allocate the input and output data either in USM host or device allocations
+  // allocate memory on the device for the input and output
   PixelT *in, *out;
-  if constexpr (kUseUSMHostAllocation) {
-    // using USM host allocations
-    if ((in = malloc_host<PixelT>(pixel_count, q)) == nullptr) {
-      std::cerr << "ERROR: could not allocate space for 'in' using "
-                << "malloc_host\n";
-      std::terminate();
-    }
-    if ((out = malloc_host<PixelT>(pixel_count, q)) == nullptr) {
-      std::cerr << "ERROR: could not allocate space for 'out' using "
-                << "malloc_host\n";
-      std::terminate();
-    }
-
-    // Copy the input to USM memory and reset the output.
-    // This is NOT efficient since, in the case of USM host allocations,
-    // we could have simply generated the input data into the host allocation
-    // and avoided this copy. However, it makes the code cleaner to assume the
-    // input is always in 'in_vec' and this portion of the code is not part of
-    // the performance timing.
-    std::copy(in_pixels.begin(), in_pixels.end(), in);
-    std::fill(out, out + pixel_count, PixelT(0));
-  } else {
-    // using device allocations
-    if ((in = malloc_device<PixelT>(pixel_count, q)) == nullptr) {
-      std::cerr << "ERROR: could not allocate space for 'in' using "
-                << "malloc_device\n";
-      std::terminate();
-    }
-    if ((out = malloc_device<PixelT>(pixel_count, q)) == nullptr) {
-      std::cerr << "ERROR: could not allocate space for 'out' using "
-                << "malloc_device\n";
-      std::terminate();
-    }
-
-    // copy the input to the device memory and wait for the copy to finish
-    q.memcpy(in, in_pixels.data(), pixel_count * sizeof(PixelT)).wait();
+  if ((in = malloc_device<PixelT>(pixel_count, q)) == nullptr) {
+    std::cerr << "ERROR: could not allocate space for 'in' using "
+              << "malloc_device\n";
+    std::terminate();
   }
+  if ((out = malloc_device<PixelT>(pixel_count, q)) == nullptr) {
+    std::cerr << "ERROR: could not allocate space for 'out' using "
+              << "malloc_device\n";
+    std::terminate();
+  }
+
+  // copy the input data to the device memory and wait for the copy to finish
+  q.memcpy(in, in_pixels.data(), pixel_count * sizeof(PixelT)).wait();
 
   // track timing information, in ms
   std::vector<double> time(runs);
 
   // print out some info
-  std::cout << "Data directory:   " << data_dir << "\n";
   std::cout << "Runs:             " << runs << "\n";
   std::cout << "Columns:          " << cols << "\n";
   std::cout << "Rows:             " << rows << "\n";
@@ -252,24 +207,13 @@ int main(int argc, char *argv[]) {
   std::cout << "Filter Size:      " << kFilterSize << "\n";
   std::cout << "Pixels Per Cycle: " << kPixelsPerCycle << "\n";
   std::cout << "Maximum Columns:  " << kMaxCols << "\n";
-  if constexpr (kDisableGlobalMem) {
-    std::cout << "Global memory access has been disabled; "
-              << "results will not be validated!\n";
-  }
   std::cout << "\n";
 
   try {
-    // the pointer type for the kernel depends on whether data is coming from
-    // USM host or device allocations
-    using KernelPtrType = typename std::conditional_t<kUseUSMHostAllocation,
-                                                      host_ptr<PixelT>,
-                                                      device_ptr<PixelT>>;
-
     // run the design multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       // run ANR
-      time[i] =
-        RunANR<PixelT, KernelPtrType>(q, in, out, params, cols, rows, frames);
+      time[i] = RunANR(q, in, out, params, cols, rows, frames);
 
       // Copy the output to 'out_vec'. In the case where we are using USM host
       // allocations this is unnecessary since we could simply deference
@@ -326,12 +270,10 @@ class ANRInPipeID;
 class ANROutPipeID;
 class InputKernelID;
 class OutputKernelID;
-class ANRKernelID;
 
 //
 // Run the ANR algorithm on the FPGA
 //
-template <typename PixelT, typename KernelPtrType>
 double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
               ANRParams params, int cols, int rows, int frames) {
   // the input and output pipe for the sorter
@@ -341,11 +283,11 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
 
   // launch the input and output kernels that read and write from device memory
   auto input_kernel_event =
-    SubmitInputDMA<InputKernelID, PixelT, KernelPtrType, ANRInPipe,
+    SubmitInputDMA<InputKernelID, PixelT, ANRInPipe,
                    kPixelsPerCycle, kDisableGlobalMem>(q, in_ptr, rows, cols, frames);
 
   auto output_kernel_event =
-    SubmitOutputDMA<OutputKernelID, PixelT, KernelPtrType, ANROutPipe,
+    SubmitOutputDMA<OutputKernelID, PixelT, ANROutPipe,
                    kPixelsPerCycle, kDisableGlobalMem>(q, out_ptr, rows, cols, frames);
 
   // launch ANR kernel
