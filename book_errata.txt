@@ -141,3 +141,21 @@ code and to invoke the final linkage. This is because only dpcpp knows that this
 Using another compiler to do the final linkage will not result in a functional SYCL program.
 There are probably several places in the book that we could have pointed this out - and we did not.
 
+	Mixing use of compilers with DPC++
+	Host code can be compiled with any compiler.
+	Any source files containing device code should be compiled with DPC++.
+	The linkage of the final program needs to be done with the DPC++ compiler.
+	The usage of DPC++ is necessary for these steps because DPC++ supports both host and device code while other compilers do not.
+	Mixing the use of another SYCL compiler with DPC++, is not currently documented or supported.
+
+	A simple example of mixing compilers could be:
+
+	dpcpp -c michigan.cpp	# can have host and device code
+	g++ -c erie.cpp		# host code only
+	ifx -c ontario.f90	# host code only
+	icx -c huron.cpp		# host code only
+	dpcpp -c superior.cpp	# can have host and device code
+	# final linkage must be using DPC++
+	dpcpp -o greatlakes.out michigan.o superior.o huron.o erie.o ontario.o
+
+
