@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string> 
 
+//
+// A struct to hold the ANR configuration paremeters
+//
 struct ANRParams {
   using FloatT = float;
 

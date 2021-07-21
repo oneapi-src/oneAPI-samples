@@ -67,6 +67,23 @@ else()
   endif()
 endif()
 
+# Allow the user to change the Fmax target
+if(CLOCK_TARGET)
+  message(STATUS "CLOCK_TARGET explicitly set to ${CLOCK_TARGET}")
+else()
+  # Default CLOCK_TARGET based on the board being used
+  if(FPGA_BOARD MATCHES ".*a10.*")
+    set(CLOCK_TARGET 300MHz)
+  elseif(FPGA_BOARD MATCHES ".*s10.*")
+    set(CLOCK_TARGET 480MHz)
+  elseif(FPGA_BOARD MATCHES ".*agilex.*")
+    set(CLOCK_TARGET 480MHz)
+  else()
+  set(CLOCK_TARGET 240MHz)
+    message(WARNING "Unknown board: setting CLOCK_TARGET to 240MHz")
+  endif()
+endif()
+
 # Allow the user to change the maximum number of pixels per column
 # e.g. cmake .. -DMAX_COLS=9
 if(MAX_COLS)
@@ -90,7 +107,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG}")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} -Xsopt-arg=\"-nocaching\" -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${FPGA_BOARD} ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} -Xsparallel=2 -Xsseed=${SEED} -Xsclock=${CLOCK_TARGET} -Xsboard=${FPGA_BOARD} ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
