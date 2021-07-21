@@ -2,7 +2,7 @@
   "guid": "9d73b58e-73d6-46e1-8c21-66274f6ee170",
   "name": "Chapter 18",
   "categories": [ "Toolkit/Publication: Data Parallel C++" ],
-  "description": "Chapter 18 source code samples: ",
+  "description": "Chapter 18 source code examples: Libraries | fig_18_1_builtin.cpp * Figure 18-1. Using std::log and sycl::log | fig_18_7_swap.cpp *	Figure 18-7. Using std::swap in device code | fig_18_11_std_fill.cpp * Figure 18-11. Using std::fill | fig_18_13_binary_search.cpp * Figure 18-13. Using binary_search |fig_18_15_pstl_usm.cpp * Figure 18-15. Using Parallel STL with a USM allocator | Errata - code samples for 18-10, 18-12, 18-14, and 19-17 are not in the repository ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],

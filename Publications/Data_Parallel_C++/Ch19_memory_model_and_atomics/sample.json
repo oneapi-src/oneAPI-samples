@@ -2,7 +2,7 @@
   "guid": "6464a02a-c783-457e-92af-915616ae98ea",
   "name": "Chapter 19",
   "categories": [ "Toolkit/Publication: Data Parallel C++" ],
-  "description": "Chapter 19 source code samples: ",
+  "description": "Chapter 19 source code examples: Memory Model and Atomics | fig_19_3_data_race.cpp * Figure 19-3. Kernel containing a data race | fig_19_6_avoid_data_race_with_barrier.cpp * Figure 19-6. Avoiding a data race using a barrier |  fig_19_7_avoid_data_race_with_atomics.cpp * Figure 19-7. Avoiding a data race using atomic operations | fig_19_15_buffer_and_atomic_ref.cpp * Figure 19-15. Accessing a buffer via an explicitly created atomic_ref | fig_19_16_atomic_accessor.cpp * Figure 19-16. Accessing a buffer via an atomic_ref implicitly created by an atomic accessor | fig_19_18_histogram.cpp * Figure 19-18. Computing a histogram using atomic references in different memory spaces |  fig_19_19-20_device_latch.cpp * Combining Figure 19-20. Using and nuilding a simple device-wide latch on top of atomic references | Errata - code samples for 18-10, 18-12, 18-14, and 19-17 are not in the repository",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],

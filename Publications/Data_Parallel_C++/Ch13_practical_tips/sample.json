@@ -2,7 +2,7 @@
   "guid": "df1ff4bd-e4b7-4b56-a23c-32c1abb06dfb",
   "name": "Chapter 13",
   "categories": [ "Toolkit/Publication: Data Parallel C++" ],
-  "description": "Chapter 13 source code samples: ",
+  "description": "Chapter 13 source code examples: Practical Tips | fig_13_4_stream.cpp * Figure 13-4. sycl::stream | fig_13_6_common_buffer_pattern.cpp * Figure 13-6. Common pattern—buffer creation from a host allocation | fig_13_7_common_pattern_bug.cpp * Figure 13-7. Common bug: Reading data directly from host allocation during buffer lifetime | fig_13_8_host_accessor.cpp * Figure 13-8. Recommendation: Use a host accessor to read kernel result | fig_13_9_host_accessor_for_init.cpp * Figure 13-9. Recommendation: Use host accessors for buffer initialization and reading of results | fig_13_10_host_accessor_deadlock.cpp * Figure 13-10. Bug (hang!) from improper use of host_accessors ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],

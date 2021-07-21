@@ -2,7 +2,7 @@
   "guid": "25b534cd-4dc7-43dc-b3d0-05795b0b0f64",
   "name": "Chapter 7 - Buffers",
   "categories": [ "Toolkit/Publication: Data Parallel C++" ],
-  "description": "Chapter 7 source code samples: ",
+  "description": "Chapter 07 source code examples: Buffers | fig_7_2_3_4_creating_buffers.cpp * Figure 7-2. Creating buffers, Part 1 * Figure 7-3. Creating buffers, Part 2  * Figure 7-4. Creating buffers, Part 3 | fig_7_5_buffer_properties.cpp * Figure 7-5. Buffer properties | fig_7_8_accessors_simple.cpp * 	Figure 7-8. Simple accessor creation | fig_7_10_accessors.cpp * Figure 7-10. Accessor creation with specified usage ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],

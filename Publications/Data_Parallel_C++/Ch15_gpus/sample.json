@@ -2,7 +2,7 @@
   "guid": "42601abe-219f-425a-9170-073553c93979",
   "name": "Chapter 15",
   "categories": [ "Toolkit/Publication: Data Parallel C++" ],
-  "description": "Chapter 15 source code samples: ",
+  "description": "Chapter 15 source code examples: Programming for GPUs | fig_15_3_single_task_matrix_multiplication.cpp * Figure 15-3. A single task matrix multiplication looks a lot like CPU host code | fig_15_5_somewhat_parallel_matrix_multiplication.cpp * 	Figure 15-5. Somewhat-parallel matrix multiplication | fig_15_7_more_parallel_matrix_multiplication.cpp * Figure 15-7. Even more parallel matrix multiplication | fig_15_10_divergent_control_flow.cpp * Figure 15-10. Kernel with divergent control flow | fig_15_12_small_work_group_matrix_multiplication.cpp * Figure 15-12. Inefficient single-item, somewhat-parallel matrix multiplication | fig_15_18_columns_matrix_multiplication.cpp * Figure 15-18. Computing columns of the result matrix in parallel, not rows",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
