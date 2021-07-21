@@ -64,9 +64,9 @@ https://github.com/oneapi-src/oneDPL
     source path/to/intel/oneapi/setvars.sh
     ```
 
-2. Create build files using CMake, specifying the DPC++ toolchain.
+2. Create build files using CMake.
    For example, to generate build files using `make` on Linux:
-
+   
     ```sh
     mkdir build && cd build
     cmake -G "Unix Makefiles" ..
