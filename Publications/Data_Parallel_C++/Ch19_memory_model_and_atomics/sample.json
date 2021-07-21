@@ -8,7 +8,19 @@
   "targetDevice": [ "CPU", "GPU" ],
   "os": [ "linux", "windows" ],
   "builder": [ "ide", "cmake" ],
-  "ciTests": {
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch19_memory_model_and_atomics",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
     "linux": [
       {
         "steps": [
@@ -25,12 +37,10 @@
         "steps": [
           "mkdir build",
           "cd build",
-          "cmake ..",
-          "make",
-          "make run"
+          "cmake -G Ninja ..",
+          "ninja"
         ]
       }
     ]
-
   }
 }
