@@ -78,7 +78,7 @@ void RowStencil(IndexT rows, IndexT cols, IndexT frames,
         }
 
         // shift in the input pixels
-        shifty_pixels.shiftMultiVals(new_pixels);
+        shifty_pixels.ShiftMultiVals(new_pixels);
 
         // Perform the convolution on the 1D window
         OutPipeT out_data(OutType(0));
@@ -93,9 +93,9 @@ void RowStencil(IndexT rows, IndexT cols, IndexT frames,
 
           // call the user's callback function for the operator
           out_data[stencil_idx] = func(row,
-                                        (col_local - kColThreshLow),
-                                        shifty_pixels_copy,
-                                        stencil_args...);
+                                       (col_local - kColThreshLow),
+                                       shifty_pixels_copy,
+                                       stencil_args...);
         });
 
         // write the output data if it is in range (i.e., it is a real pixel

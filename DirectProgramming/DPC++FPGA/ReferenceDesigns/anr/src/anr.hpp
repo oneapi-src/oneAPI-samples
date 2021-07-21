@@ -269,6 +269,12 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
               << std::numeric_limits<IndexT>::max() << ")\n";
     std::terminate();
   }
+
+  // cast the rows, columns, and frames to to index type and use these variables
+  // inside the kernel to avoid the device having to deal with conversions
+  const IndexT cols_k(cols);
+  const IndexT rows_k(rows);
+  const IndexT frames_k(frames);
   
   // create the spatial filter for the stencil operation
   constexpr int filter_size_eff = (filter_size + 1) / 2; // ceil(filter_size/2)
@@ -285,7 +291,7 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
     h.single_task<VerticalKernelID>([=] {
       ColumnStencil<VerticalInT, VerticalOutT, IndexT,
                     InPipe, IntraPipe,
-                    filter_size, max_cols, pixels_per_cycle>(rows, cols, frames,
+                    filter_size, max_cols, pixels_per_cycle>(rows_k, cols_k, frames_k,
                                                              VerticalInT(0),
                                                              vertical_func,
                                                              spatial_filter,
@@ -298,7 +304,7 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
     h.single_task<HorizontalKernelID>([=] {
       RowStencil<HorizontalInT, HorizontalOutT, IndexT,
                  IntraPipe, OutPipe,
-                 filter_size, pixels_per_cycle>(rows, cols, frames,
+                 filter_size, pixels_per_cycle>(rows_k, cols_k, frames_k,
                                                 HorizontalInT(0),
                                                 horizontal_func,
                                                 spatial_filter, params);

@@ -69,9 +69,10 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
     // NOTE: speculated iterations here will cause a bubble, but
     // small number relative padded_rows * col_loop_bound and the
     // increase in Fmax justifies it.
-    [[intel::loop_coalesce(2), intel::initiation_interval(1), intel::ivdep]]
+    [[intel::loop_coalesce(2), intel::initiation_interval(1),
+      intel::ivdep(line_buffer_FIFO)]]
     for (IndexT row = 0; row < padded_rows; row++) {
-      [[intel::initiation_interval(1), intel::ivdep]]
+      [[intel::initiation_interval(1), intel::ivdep(line_buffer_FIFO)]]
       for (IndexT col_loop = 0; col_loop < col_loop_bound; col_loop++) {
         // the base column index for this iteration
         IndexT col = col_loop * parallel_cols;
@@ -87,7 +88,7 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
         InPipeT input_val(last_new_pixels);
         constexpr auto kInputShiftVals =
           Min(kColThreshLow, (IndexT)parallel_cols);
-        input_val.template shiftMultiVals<kInputShiftVals, parallel_cols>(new_pixels);
+        input_val.template ShiftMultiVals<kInputShiftVals, parallel_cols>(new_pixels);
 
         [[intel::fpga_register]]
         InPipeT pixel_column[filter_size];
@@ -104,14 +105,13 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
         // └───┴───┴───┘
 
         UnrolledLoop<0, filter_size>([&](auto stencil_row) {
-          if (stencil_row == (filter_size - 1)) {
-            pixel_column[stencil_row] = input_val;
+          if constexpr (stencil_row != (filter_size - 1)) {
+            pixel_column[stencil_row] = line_buffer_FIFO[fifo_idx][stencil_row];
           } else {
-            pixel_column[stencil_row] =
-              line_buffer_FIFO[fifo_idx][stencil_row];
+            pixel_column[stencil_row] = input_val;
           }
         });
-        shifty_2d.template shiftCols<parallel_cols>(pixel_column);
+        shifty_2d.template ShiftCols<parallel_cols>(pixel_column);
 
         // Continue processing through FIFOs
         //      ┌─────────────┐
@@ -124,9 +124,8 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
         //                        └─Input
 
         UnrolledLoop<0, (filter_size - 1)>([&](auto fifo_row) {
-          if (fifo_row != (filter_size - 2)) {
-            line_buffer_FIFO[fifo_idx][fifo_row] =
-              pixel_column[fifo_row + 1];
+          if constexpr (fifo_row != (filter_size - 2)) {
+            line_buffer_FIFO[fifo_idx][fifo_row] = pixel_column[fifo_row + 1];
           } else {
             line_buffer_FIFO[fifo_idx][(filter_size - 2)] = input_val;
           }
@@ -135,7 +134,6 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
         // Perform the convolution on the 1D window
         OutPipeT out_data((OutType)0);
         UnrolledLoop<0, parallel_cols>([&](auto stencil_idx) {
-          //ShiftReg2d<InType, kShiftRegRows, 1> shifty_copy;
           ShiftReg<InType, kShiftRegRows> shifty_copy;
 
           int col_local = col + stencil_idx;
@@ -158,9 +156,10 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
         }
 
         // increment the fifo
-        fifo_idx++;
-        if (fifo_idx == (fifo_wrap)) {
+        if (fifo_idx == (fifo_wrap-1)) {
           fifo_idx = 0;
+        } else {
+          fifo_idx++;
         }
         last_new_pixels = new_pixels;
       }
