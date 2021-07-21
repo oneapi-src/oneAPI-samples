@@ -142,10 +142,11 @@ Using another compiler to do the final linkage will not result in a functional S
 There are probably several places in the book that we could have pointed this out - and we did not.
 
 	Mixing use of compilers with DPC++
-	Three simple rules exist for using multiple compilers with DPC++:
+	Four simple rules exist for using multiple compilers with DPC++:
 	1. Host code can be compiled with any compiler.
-	2. Any source files containing device code should be compiled with DPC++.
-	3. The linkage of the final program needs to be done with the DPC++ compiler.
+	2. main() needs to be compiled with a C++ compiler.
+	3. Any source files containing device code should be compiled with DPC++.
+	4. The linkage of the final program needs to be done with the DPC++ compiler.
 	Mixing the use of another SYCL compiler with DPC++, is not currently supported. As SYCL compilers evolve, this might change.
 
 	A simple example of mixing compilers could be:
