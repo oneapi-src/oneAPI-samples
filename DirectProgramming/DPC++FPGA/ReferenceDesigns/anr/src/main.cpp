@@ -215,11 +215,7 @@ int main(int argc, char *argv[]) {
       // run ANR
       time[i] = RunANR(q, in, out, params, cols, rows, frames);
 
-      // Copy the output to 'out_vec'. In the case where we are using USM host
-      // allocations this is unnecessary since we could simply deference
-      // 'out'. However, it makes the following code cleaner since the output
-      // is always in 'out_vec' and this copy is not part of the performance
-      // timing.
+      // Copy the output back from the device
       q.memcpy(out_pixels.data(), out, pixel_count * sizeof(PixelT)).wait();
 
       // validate the output
@@ -318,15 +314,21 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
 void ParseDataFile(std::string filename, std::vector<PixelT>& pixels,
                    int& cols, int& rows) {
   // create the file stream to parse
-  std::ifstream is(filename);
+  std::ifstream ifs(filename);
+
+  // make sure we opened the file fine
+  if (!ifs.is_open() || ifs.fail()) {
+    std::cerr << "ERROR: failed to open " << filename << " for reading\n";
+    std::terminate();
+  }
 
   // get header and data
   std::string header_str, data_str;
-  if (!std::getline(is, header_str)) {
+  if (!std::getline(ifs, header_str)) {
     std::cerr << "ERROR: failed to get header line from " << filename << "\n";
     std::terminate();
   }
-  if (!std::getline(is, data_str)) {
+  if (!std::getline(ifs, data_str)) {
     std::cerr << "ERROR: failed to get data line from " << filename << "\n";
     std::terminate();
   }
@@ -419,14 +421,21 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
 //
 void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
                      int cols, int rows) {
-  std::ofstream of(data_dir + "/output.data");
+  std::string filename = data_dir + "/output.data";
+  std::ofstream ofs(filename);
+
+  // make sure we opened the file fine
+  if (!ofs.is_open() || ofs.fail()) {
+    std::cerr << "ERROR: failed to open " << filename << " for writing\n";
+    std::terminate();
+  }
 
   // write the size
-  of << cols << " " << rows << "\n";
+  ofs << cols << " " << rows << "\n";
 
   // write the pixels 
   for (auto& p : pixels) {
-    of << static_cast<TmpT>(p) << " ";
+    ofs << static_cast<TmpT>(p) << " ";
   }
 }
 

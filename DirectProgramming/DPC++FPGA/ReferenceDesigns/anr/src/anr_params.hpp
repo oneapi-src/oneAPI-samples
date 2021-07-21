@@ -24,6 +24,12 @@ struct ANRParams {
     // create the file stream to parse
     std::ifstream is(filename);
 
+    // make sure we opened the file fine
+    if (!is.is_open() || is.fail()) {
+      std::cerr << "ERROR: failed to open " << filename << " for reading\n";
+      std::terminate();
+    }
+
     std::string line;
     while (std::getline(is, line)) {
       size_t colon_pos = line.find(':');
