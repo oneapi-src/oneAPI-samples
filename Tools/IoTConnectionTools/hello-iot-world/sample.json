@@ -7,6 +7,7 @@
   "builder": ["cmake"],
   "toolchain": ["icc", "gcc"],
   "languages": [{"cpp":{}}],
+  "targetDevice": [ "CPU" ],
   "ciTests": {
     "linux": [
         { "id": "hello-iot-world",
