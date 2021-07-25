@@ -37,6 +37,7 @@ alpha = 1.0
 def write_parameter_config_file(filename, dark_noise, total_eff_gain):
   with open(filename, "w") as f:
     print('filter_size: {:d}'.format(filter_size), file=f)
+    print('pixel_bits: {}'.format(bits), file=f)
     print('sig_shot: {}'.format(dark_noise), file=f)
     print('k: {}'.format(total_eff_gain), file=f)
     print('sig_i_coeff: {}'.format(sigma_intensity_coef), file=f)

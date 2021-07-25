@@ -11,11 +11,6 @@ struct ANRParams {
   using FloatT = float;
 
   ANRParams() {}
-  ANRParams(FloatT _sig_shot, FloatT _k, FloatT _sig_i_coeff, FloatT _sig_s,
-            FloatT _alpha) : sig_shot(_sig_shot), k(_k),
-            sig_i_coeff(_sig_i_coeff), sig_s(_sig_s), alpha(_alpha),
-            sig_shot_2(_sig_shot*_sig_shot), one_minus_alpha(1 - _alpha) {}
-  
   
   static ANRParams FromFile(std::string filename) {
     // the return object
@@ -50,6 +45,8 @@ struct ANRParams {
         ret.one_minus_alpha = FloatT(1) - val;
       } else if (name == "filter_size") {
         ret.filter_size = val;
+      } else if (name == "pixel_bits") {
+        ret.pixel_bits = val;
       } else {
         std::cerr << "WARNING: unknown name " << name
                   << " in ANRParams constructor\n";
@@ -65,6 +62,7 @@ struct ANRParams {
   FloatT sig_i_coeff;  // intensity sigma coefficient
   FloatT sig_s;  // spatial sigma
   FloatT alpha;  // alpha value for alpha blending
+  int pixel_bits;  // the number of bits for each pixel
 
   // precomputed values
   FloatT sig_shot_2;  // shot noise squared

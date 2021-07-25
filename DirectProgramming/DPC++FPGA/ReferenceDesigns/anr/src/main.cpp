@@ -83,7 +83,8 @@ void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
 double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
               ANRParams params, int cols, int rows, int frames);
 
-bool Validate(PixelT *val, PixelT *ref, unsigned int count, double thresh=0.0001);
+bool Validate(PixelT *val, PixelT *ref, unsigned int count,
+              double psnr_thresh=30.0, double pixel_diff_thresh=0.05);
 ////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char *argv[]) {
@@ -153,43 +154,17 @@ int main(int argc, char *argv[]) {
   ParseFiles(data_dir, in_pixels, ref_pixels, cols, rows, params);
   pixel_count = cols * rows;
 
-  //////////////////////////////////////////////////////////////////////////////
-  // DEBUG
-  /*
-  for (int i = 0; i < 5; i++) {
-    for (int j = 0; j < 5; j++) {
-      printf("%d ", in_pixels[i * cols + j]);
-    }
-    printf("\n");
-  }
-  printf("\n");
-  */
-  /*
-  //std::array<PixelT, kFilterSize> test_in = {127, 0, 199, 0, 231, 0, 185, 0, 221};
-  //PixelT ref = 211, res = 0;
-  std::array<PixelT, kFilterSize> test_in = {0, 0, 0, 0, 211, 0, 164, 0, 255};
-  PixelT ref = 210, res = 0;
-  if (!TestBilateralFilter<PixelT, kFilterSize>(test_in, params, ref, res)) {
-    std::cerr << "ERROR: TestBilateralFilter failed ("
-              << (TmpT)res << " != " << (TmpT)ref << ")\n";
-    std::terminate();
-  }
-  */
-  //////////////////////////////////////////////////////////////////////////////
-
   // create the output (initialize to all 0s)
   std::vector<PixelT> out_pixels(in_pixels.size(), 0);
 
   // allocate memory on the device for the input and output
   PixelT *in, *out;
   if ((in = malloc_device<PixelT>(pixel_count, q)) == nullptr) {
-    std::cerr << "ERROR: could not allocate space for 'in' using "
-              << "malloc_device\n";
+    std::cerr << "ERROR: could not allocate space for 'in'\n";
     std::terminate();
   }
   if ((out = malloc_device<PixelT>(pixel_count, q)) == nullptr) {
-    std::cerr << "ERROR: could not allocate space for 'out' using "
-              << "malloc_device\n";
+    std::cerr << "ERROR: could not allocate space for 'out'\n";
     std::terminate();
   }
 
@@ -413,6 +388,12 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
               << ") does not match the compile time constant filter size "
               << "(kFilterSize = " << kFilterSize << ")\n";
     std::terminate();
+  } else if (params.pixel_bits != (sizeof(PixelT) * 8)) {
+    std::cerr << "ERROR: the number of bits per pixel parsed from " << data_dir
+              << "/param_config.data (" << params.pixel_bits
+              << ") does not match the compile time constant pixel size "
+              << "(sizeof(PixelT) * 8 = " << (sizeof(PixelT) * 8) << ")\n";
+    std::terminate();
   }
 }
 
@@ -440,34 +421,42 @@ void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
 }
 
 //
-// Validate the output pixels using normalized-root-mean-squared-error (NRMSE)
-// https://en.wikipedia.org/wiki/Root-mean-square_deviation
+// Validate the output pixels using Peak signal-to-noise ratio (PSNR)
+// https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
 //
-// Acronyms
-//    MSE     = mean-square-error
-//    RMSE    = root-mean-square-error
-//    NRMSE   = normalized-root-mean-square-error
+// Also check the max individual pixel difference.
 //
-bool Validate(PixelT *val, PixelT *ref, unsigned int count, double thresh) {
+bool Validate(PixelT *val, PixelT *ref, unsigned int count,
+              double psnr_thresh, double pixel_diff_thresh) {
+  // get the maximum value of the pixel
+  constexpr double max_i = std::numeric_limits<PixelT>::max();
+
   // compute the MSE by summing the squared differences
-  double nrmse = 0.0;
+  // also find the maximum difference between the output pixel and the reference
+  double mse = 0.0;
+  double max_percent_diff = 0.0;
   for (unsigned int i = 0; i < count; i++) {
     // cast to a double here because we are subtracting
     auto diff = double(val[i]) - double(ref[i]);
-    if(diff != 0) nrmse += diff * diff;
+    if (diff != 0) mse += diff * diff;
+
+    // compute percent diff
+    double percent_diff = std::fabs(diff) / (max_i + 1);
+    max_percent_diff = std::max(percent_diff, max_percent_diff);
   }
+  mse /= count;
 
-  // compute the RMSE
-  nrmse = std::sqrt(nrmse / count);
+  // compute the PSNR
+  double psnr = 20*std::log10(max_i) - 10*std::log10(mse);
 
-  // normalize by the range of the output to get the NRMSE
-  nrmse /=
-    (std::numeric_limits<PixelT>::max() - std::numeric_limits<PixelT>::min());
-
-  // check MSE
-  if (nrmse >= thresh) {
-    std::cerr << "ERROR: Normalized root-mean-squared-error is too high: "
-              << nrmse << "\n";
+  // check PSNR and maximum pixel difference
+  if (psnr <= psnr_thresh) {
+    std::cerr << "ERROR: Peak signal-to-noise ratio (PSNR) is too low: "
+              << psnr << "\n";
+    return false;
+  } else if(max_percent_diff >= pixel_diff_thresh) {
+    std::cerr << "ERROR: Maximum pixel percent difference is too high: "
+              << max_percent_diff << "\n";
     return false;
   } else {
     //std::cout << "NRMSE = " << nrmse << "\n";
