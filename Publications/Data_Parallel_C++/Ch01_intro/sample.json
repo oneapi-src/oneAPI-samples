@@ -15,9 +15,6 @@
       "LICENSE.txt",
       "README.md",
       "CMakeLists.txt"
-    ],
-    "exclude": [
-      "sample-folder-name/test.sh"
     ]
    },
   "ciTests": {
