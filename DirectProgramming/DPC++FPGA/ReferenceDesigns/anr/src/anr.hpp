@@ -337,7 +337,11 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
   auto vertical_kernel = q.submit([&](handler &h) {
     h.single_task<VerticalKernelID>([=] {
       // copy host side LUTs to the device
+#ifndef DISABLE_GLOBAL_MEM
       IntensitySigmaLUT<PixelT> sig_i_lut(sig_i_lut_data_ptr);
+#else
+      IntensitySigmaLUT<PixelT> sig_i_lut;
+#endif
 
       // the exponential LUT
       auto exp_lut = BuildExpLUT();
