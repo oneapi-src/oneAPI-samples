@@ -81,7 +81,8 @@ void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
                      int cols, int rows);
 
 double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
-              ANRParams params, int cols, int rows, int frames);
+              int cols, int rows, int frames, ANRParams params,
+              float* sig_i_lut_data_ptr);
 
 bool Validate(PixelT *val, PixelT *ref, unsigned int count,
               double psnr_thresh=30.0, double pixel_diff_thresh=0.05);
@@ -171,6 +172,16 @@ int main(int argc, char *argv[]) {
   // copy the input data to the device memory and wait for the copy to finish
   q.memcpy(in, in_pixels.data(), pixel_count * sizeof(PixelT)).wait();
 
+  // allocate space for the intensity sigma LUT
+  float* sig_i_lut_data_ptr = IntensitySigmaLUT<PixelT>::AllocateDevice(q);
+
+  // create the intensity sigma LUT data locally on CPU
+  IntensitySigmaLUT<PixelT> sig_i_lut_host(params);
+
+  // copy the LUT to the decice
+  sig_i_lut_host.CopyDataToDevice(q, sig_i_lut_data_ptr).wait();
+  //////////////////////////////////////////////////////////////////////////////
+
   // track timing information, in ms
   std::vector<double> time(runs);
 
@@ -188,7 +199,8 @@ int main(int argc, char *argv[]) {
     // run the design multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       // run ANR
-      time[i] = RunANR(q, in, out, params, cols, rows, frames);
+      time[i] = RunANR(q, in, out, cols, rows, frames, params,
+                       sig_i_lut_data_ptr);
 
       // Copy the output back from the device
       q.memcpy(out_pixels.data(), out, pixel_count * sizeof(PixelT)).wait();
@@ -206,9 +218,10 @@ int main(int argc, char *argv[]) {
     std::terminate();
   }
 
-  // free the memory allocated with malloc_host or malloc_device
+  // free the memory allocated device memory
   sycl::free(in, q);
   sycl::free(out, q);
+  sycl::free(sig_i_lut_data_ptr, q);
 
   // write the output files if global memory was used (output is meaningless,
   // otherwise)
@@ -246,7 +259,8 @@ class OutputKernelID;
 // Run the ANR algorithm on the FPGA
 //
 double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
-              ANRParams params, int cols, int rows, int frames) {
+              int cols, int rows, int frames, ANRParams params,
+              float* sig_i_lut_data_ptr) {
   // the input and output pipe for the sorter
   using PipeType = DataBundle<PixelT, kPixelsPerCycle>;
   using ANRInPipe = sycl::INTEL::pipe<ANRInPipeID, PipeType>;
@@ -263,9 +277,10 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
 
   // launch ANR kernel
   auto anr_kernel_events =
-    SubmitANRKernels<PixelT, IndexT, ANRInPipe, ANROutPipe, kFilterSize, kPixelsPerCycle>(q, params,
-                                                                                          cols, rows,
-                                                                                          frames);
+    SubmitANRKernels<PixelT, IndexT, ANRInPipe, ANROutPipe, kFilterSize, kPixelsPerCycle>(q,
+                                                                                          cols, rows, frames,
+                                                                                          params,
+                                                                                          sig_i_lut_data_ptr);
 
   // wait for the input and output kernels to finish
   auto start = high_resolution_clock::now();

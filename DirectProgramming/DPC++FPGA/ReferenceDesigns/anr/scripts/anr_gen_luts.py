@@ -18,8 +18,8 @@ diff_filename = '../src/diff_squared_lut.hpp'
 unsigned_pixel_bits = 8
 
 inv_filename = '../src/qfp/qfp_inv_lut.hpp'
-inv_qfp_total_bits = 10
-inv_qfp_exponent_bits = 4
+inv_qfp_total_bits = 12
+inv_qfp_exponent_bits = 6
 ################################################################################
 ################################################################################
 
@@ -43,11 +43,13 @@ def print_autogen_warning():
   print('//   python {}'.format(os.path.basename(__file__)))
   print('//')
 
-def print_array_data(type_name, data):
+def print_array_data(type_name, data, static_cast=False):
   print('  {} ret = {{'.format(type_name))
   for i in range(0, len(data)):
-    print('    {}{}'.format(data[i], (',' if i < (len(data)-1) else '')))
-    #print('    ' + format(exp_lut[i], '.60g') + (',' if i < (lut_depth-1) else ''))
+    if static_cast:
+      print('    static_cast<float>({}){}'.format(data[i], (',' if i < (len(data)-1) else '')))
+    else:
+      print('    {}{}'.format(data[i], (',' if i < (len(data)-1) else '')))
   print('  };')
 
 # converts a QFP to a 32-bit single precision float
@@ -282,17 +284,24 @@ def GenerateInvLUT(filename, qfp_total_bits, qfp_exponent_bits):
     print('')
     print('#include <array>')
     print('')
-    print('// the LUT size')
-    print('constexpr int kInvDepth = {};'.format(lut_depth))
+    print('// the QFP format')
+    print('constexpr int kInvQFPTotalBits = {};'.format(qfp_total_bits))
+    print('constexpr int kInvQFPExponentBits = {};'.format(qfp_exponent_bits))
+    print('')
+    print('// the LUT is sized based on the number QFP bits')
+    print('constexpr int kInvLUTDepth = (1 << kInvQFPTotalBits);')
     print('')
     print('// the LUT type')
-    print('using InvLUT = std::array<float, kInvDepth>;')
+    print('using InvLUT = std::array<float, kInvLUTDepth>;')
+    print('')
+    print('// the QFP format')
+    print('using InvQFP = QFP<kInvQFPTotalBits, kInvQFPExponentBits, false>;')
     print('')
     print('//')
     print('// A constexpr function to build the inverse LUT')
     print('//')
     print('constexpr auto BuildInvLUT() {')
-    print_array_data("InvLUT", inv_lut)
+    print_array_data("InvLUT", inv_lut, True)
     print('')
     print('  return ret;')
     print('}')

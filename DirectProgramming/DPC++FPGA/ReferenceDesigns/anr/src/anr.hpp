@@ -192,6 +192,8 @@ struct HorizontalFunctor {
                   ShiftReg<InT, filter_size> buffer,
                   ShiftReg<float, filter_size_eff> spatial_filter,
                   ANRParams params,
+                  ANRParams::AlphaFixedT alpha_fixed,
+                  ANRParams::AlphaFixedT one_minus_alpha_fixed,
                   ExpLUT& exp_lut) const {
     // static asserts
     static_assert(std::is_arithmetic_v<OutT>);
@@ -210,19 +212,20 @@ struct HorizontalFunctor {
     });
 
     // perform the horizontal 1D bilateral filter
-    auto output_pixel =
+    auto output_pixel_float =
       BilateralFilter1D<float, filter_size>(buffer_pixels, spatial_filter,
                                             params, sig_i_inv_squared_x_half,
                                             exp_lut);
 
     // alpha blending
-    // TODO: use fixed point (9 bits) for alpha blending
-    auto original_pixel = buffer[kMidIdx].pixel_o;
-    auto output_pixel_alpha = (params.alpha * output_pixel) +
-                              (params.one_minus_alpha * original_pixel);
+    const ANRParams::PixelFixedT output_pixel(output_pixel_float);
+    const ANRParams::PixelFixedT original_pixel(buffer[kMidIdx].pixel_o);
+    auto output_pixel_alpha = (alpha_fixed * output_pixel) +
+                              (one_minus_alpha_fixed * original_pixel);
+    ac_int<10, false> output_pixel_tmp = output_pixel_alpha.to_ac_int();
 
     // return the result casted back to a pixel
-    return OutT(output_pixel_alpha);
+    return OutT(output_pixel_tmp);
   }
 };
 
@@ -232,8 +235,9 @@ struct HorizontalFunctor {
 template<typename PixelT, typename IndexT, typename InPipe, 
          typename OutPipe, unsigned filter_size,
          unsigned pixels_per_cycle, unsigned max_cols=4096>
-std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
-                                    int cols, int rows, int frames) {
+std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
+                                    ANRParams params,
+                                    float* sig_i_lut_data_ptr) {
   // datatypes
   using VerticalInT = PixelT;
   using VerticalOutT = DataForwardStruct<PixelT>;
@@ -306,26 +310,6 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
   constexpr int filter_size_eff = (filter_size + 1) / 2; // ceil(filter_size/2)
   auto spatial_filter = BuildGaussianFilter1D<filter_size_eff>(params.sig_s);
 
-  //////////////////////////////////////////////////////////////////////////////
-  //// Build all of the host side LUTs
-  // intensity sigma LUT
-  IntensitySigmaLUT<PixelT> sig_i_lut_host(params);
-  float *sig_i_lut_data_ptr = IntensitySigmaLUT<PixelT>::AllocateDevice(q);
-  sig_i_lut_host.CopyDataToDevice(q, sig_i_lut_data_ptr);
-
-  // Diff squared LUT for raw pixels
-  /*
-  DiffSquaredLUT<PixelT> diff_squared_lut_host;
-  float *diff_squared_lut_ptr = DiffSquaredLUT<PixelT>::AllocateDevice(q);
-  diff_squared_lut_host.CopyDataToDevice(q, diff_squared_lut_ptr);
-
-  // Diff squared LUT for intermediate pixels
-  DiffSquaredQFPLUT diff_squared_qfp_lut_host;
-  float *diff_squared_qfp_lut_ptr = DiffSquaredQFPLUT::AllocateDevice(q);
-  diff_squared_qfp_lut_host.CopyDataToDevice(q, diff_squared_qfp_lut_ptr);
-  */
-  //////////////////////////////////////////////////////////////////////////////
-
   // the functors for the vertical and horizontal kernels.
   // You can either use a functor or a lamda, both work.
   auto vertical_func =
@@ -365,7 +349,10 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
     h.single_task<HorizontalKernelID>([=] {
       // TODO: it would be nice to just have one copy of these
       auto exp_lut = BuildExpLUT();
-      
+
+      ANRParams::AlphaFixedT alpha_fixed(params.alpha);
+      ANRParams::AlphaFixedT one_minus_alpha_fixed(params.one_minus_alpha);
+
       RowStencil<HorizontalInT, HorizontalOutT, IndexT,
                  IntraPipe, OutPipe,
                  filter_size, pixels_per_cycle>(rows_k, cols_k, frames_k,
@@ -373,6 +360,8 @@ std::vector<event> SubmitANRKernels(queue& q, ANRParams params,
                                                 horizontal_func,
                                                 spatial_filter,
                                                 params,
+                                                alpha_fixed,
+                                                one_minus_alpha_fixed,
                                                 std::ref(exp_lut));
     });
   });

@@ -2,13 +2,22 @@
 #define __ANR_PARAMS_HPP__
 
 #include <iostream>
-#include <string> 
+#include <string>
+#include <utility>
+
+#include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/ac_types/ac_fixed.hpp>
 
 //
 // A struct to hold the ANR configuration paremeters
 //
 struct ANRParams {
   using FloatT = float;
+  static constexpr int kAlphaTotalBits = 9;
+  static constexpr int kAlphaIntegerBits = 1;
+  using AlphaFixedT = ac_fixed<kAlphaTotalBits, kAlphaIntegerBits, false>;
+  using PixelFixedT = ac_int<8, false>;
 
   ANRParams() {}
   
@@ -42,7 +51,7 @@ struct ANRParams {
         ret.sig_s = val;
       } else if (name == "alpha") {
         ret.alpha = val;
-        ret.one_minus_alpha = FloatT(1) - val;
+        ret.one_minus_alpha = 1 - val;
       } else if (name == "filter_size") {
         ret.filter_size = val;
       } else if (name == "pixel_bits") {
