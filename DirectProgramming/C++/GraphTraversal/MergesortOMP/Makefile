@@ -23,7 +23,7 @@ endif
 
 TARGET := $(BUILDDIR)/MergeSort
 
-icpc: $(TARGET)
+icpx: $(TARGET)
 
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.cpp=.o))
