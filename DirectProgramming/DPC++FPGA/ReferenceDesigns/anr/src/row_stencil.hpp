@@ -1,14 +1,13 @@
 #ifndef __ROW_STENCIL_HPP__
 #define __ROW_STENCIL_HPP__
 
-#include <limits>
-
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <limits>
 
 #include "data_bundle.hpp"
-#include "shift_reg.hpp"
 #include "mp_math.hpp"
+#include "shift_reg.hpp"
 
 using namespace sycl;
 using namespace hldutils;
@@ -16,29 +15,28 @@ using namespace hldutils;
 //
 // helper function to pad the number of columns based on the filter size
 //
-template<typename IndexT, unsigned filter_size>
+template <typename IndexT, unsigned filter_size>
 IndexT PadColumns(IndexT cols) {
   constexpr int kPaddingPixels = filter_size / 2;
-  return  cols + 2 * kPaddingPixels;
+  return cols + 2 * kPaddingPixels;
 }
 
 //
 // Generic 1D horizontal stencil
 //
-template<typename InType, typename OutType, typename IndexT,
-         typename InPipe, typename OutPipe,
-         unsigned filter_size, unsigned parallel_cols,
-         typename StencilFunction,
-         typename... FunctionArgTypes>
-void RowStencil(IndexT rows, IndexT cols, IndexT frames,
-                const InType zero_val, StencilFunction func,
-                FunctionArgTypes... stencil_args) {
-  // constexpr
+template <typename InType, typename OutType, typename IndexT, typename InPipe,
+          typename OutPipe, unsigned filter_size, unsigned parallel_cols,
+          typename StencilFunction, typename... FunctionArgTypes>
+void RowStencil(IndexT rows, IndexT cols, IndexT frames, const InType zero_val,
+                StencilFunction func, FunctionArgTypes... stencil_args) {
   // types coming into and out of the kernel from pipes, respectively
   using InPipeT = DataBundle<InType, parallel_cols>;
   using OutPipeT = DataBundle<OutType, parallel_cols>;
 
+  // number of pixels to pad to the columns with
   constexpr int kPaddingPixels = filter_size / 2;
+
+  // the size of the shift register to hold the window
   constexpr int kShiftRegSize = filter_size + parallel_cols - 1;
   constexpr IndexT kColThreshLow = kPaddingPixels;
 
@@ -66,7 +64,7 @@ void RowStencil(IndexT rows, IndexT cols, IndexT frames,
   }
 
   [[intel::loop_coalesce(3), intel::initiation_interval(1)]]
-  for (IndexT frame = 0; frame < frames; frame++) {
+  for (IndexT frame = 0; frame < frames;frame++) {
     for (IndexT row = 0; row < rows; row++) {
       for (IndexT col_loop = 0; col_loop < col_loop_bound; col_loop++) {
         IndexT col = col_loop * parallel_cols;
@@ -92,10 +90,8 @@ void RowStencil(IndexT rows, IndexT cols, IndexT frames,
           });
 
           // call the user's callback function for the operator
-          out_data[stencil_idx] = func(row,
-                                       (col_local - kColThreshLow),
-                                       shifty_pixels_copy,
-                                       stencil_args...);
+          out_data[stencil_idx] = func(row, (col_local - kColThreshLow),
+                                       shifty_pixels_copy, stencil_args...);
         });
 
         // write the output data if it is in range (i.e., it is a real pixel

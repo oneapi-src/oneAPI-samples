@@ -5,8 +5,8 @@
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 
 #include "data_bundle.hpp"
-#include "shift_reg.hpp"
 #include "mp_math.hpp"
+#include "shift_reg.hpp"
 
 using namespace sycl;
 using namespace hldutils;
@@ -14,24 +14,23 @@ using namespace hldutils;
 //
 // Generic 1D vertical window stencil
 //
-template<typename InType, typename OutType, typename IndexT,
-         typename InPipe, typename OutPipe,
-         unsigned filter_size, unsigned max_cols, unsigned parallel_cols,
-         typename StencilFunction,
-         typename... FunctionArgTypes>
+template <typename InType, typename OutType, typename IndexT, typename InPipe,
+          typename OutPipe, unsigned filter_size, unsigned max_cols,
+          unsigned parallel_cols, typename StencilFunction,
+          typename... FunctionArgTypes>
 void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
-                    const InType zero_val, StencilFunction func,
-                    FunctionArgTypes... stencil_args) {
+                   const InType zero_val, StencilFunction func,
+                   FunctionArgTypes... stencil_args) {
   // types coming into and out of the kernel from pipes, respectively
   using InPipeT = DataBundle<InType, parallel_cols>;
   using OutPipeT = DataBundle<OutType, parallel_cols>;
 
-  // constexpr
+  // static asserts
   constexpr int kPaddingPixels = filter_size / 2;
   constexpr int kShiftRegCols = 1 + parallel_cols - 1;
   constexpr int kShiftRegRows = filter_size;
   constexpr int kLineBufferFIFODepth =
-    (max_cols / parallel_cols) + /*filter_size*/1;
+      (max_cols / parallel_cols) + /*filter_size*/ 1;
   constexpr int kNumLineBuffers = filter_size - 1;
   constexpr IndexT kColThreshLow = kPaddingPixels;
   constexpr IndexT kRowThreshLow = kPaddingPixels;
@@ -46,12 +45,12 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
                                       ShiftReg<InType, filter_size>,
                                       FunctionArgTypes...>);
 
-  //constants
+  // constants
   const IndexT row_thresh_high = kPaddingPixels + rows;
   const IndexT padded_rows = rows + 2 * kRowThreshLow;
   const IndexT fifo_wrap =
-    (cols + /*filter_size*/1 - 1 + (parallel_cols - 1 /* round up*/))
-    / parallel_cols;
+      (cols + /*filter_size*/ 1 - 1 + (parallel_cols - 1 /* round up*/)) /
+      parallel_cols;
   const IndexT col_loop_bound = (cols / parallel_cols);
 
   [[intel::initiation_interval(1)]]
@@ -65,16 +64,17 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
     InPipeT line_buffer_FIFO[kLineBufferFIFODepth][kNumLineBuffers];
 
     InPipeT last_new_pixels(zero_val);
-    
-    IndexT fifo_idx = 0; // track top of FIFO
-    
+
+    IndexT fifo_idx = 0;  // track top of FIFO
+
     // NOTE: speculated iterations here will cause a bubble, but
     // small number relative padded_rows * col_loop_bound and the
     // increase in Fmax justifies it.
     [[intel::loop_coalesce(2), intel::initiation_interval(1),
       intel::ivdep(line_buffer_FIFO)]]
     for (IndexT row = 0; row < padded_rows; row++) {
-      [[intel::initiation_interval(1), intel::ivdep(line_buffer_FIFO)]]
+      [[intel::initiation_interval(1),
+        intel::ivdep(line_buffer_FIFO)]]
       for (IndexT col_loop = 0; col_loop < col_loop_bound; col_loop++) {
         // the base column index for this iteration
         IndexT col = col_loop * parallel_cols;
@@ -89,9 +89,9 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
 
         InPipeT input_val(last_new_pixels);
         constexpr auto kInputShiftVals =
-          Min(kColThreshLow, (IndexT)parallel_cols);
-        input_val.template ShiftMultiVals<kInputShiftVals,
-                                          parallel_cols>(new_pixels);
+            Min(kColThreshLow, (IndexT)parallel_cols);
+        input_val.template ShiftMultiVals<kInputShiftVals, parallel_cols>(
+            new_pixels);
 
         [[intel::fpga_register]]
         InPipeT pixel_column[filter_size];
@@ -146,10 +146,8 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
           });
 
           // pass a copy of the line buffer's register window.
-          out_data[stencil_idx] = func((row - kRowOutputThreshLow),
-                                        col_local,
-                                        shifty_copy,
-                                        stencil_args...);
+          out_data[stencil_idx] = func((row - kRowOutputThreshLow), col_local,
+                                       shifty_copy, stencil_args...);
         });
 
         // write the output data if it is in range (i.e., it is a real pixel
@@ -159,7 +157,7 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
         }
 
         // increment the fifo
-        if (fifo_idx == (fifo_wrap-1)) {
+        if (fifo_idx == (fifo_wrap - 1)) {
           fifo_idx = 0;
         } else {
           fifo_idx++;

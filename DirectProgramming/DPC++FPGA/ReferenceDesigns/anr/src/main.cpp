@@ -1,25 +1,23 @@
+#include <CL/sycl.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <algorithm>
 #include <array>
 #include <chrono>
 #include <limits>
 #include <numeric>
-#include <sstream> 
+#include <sstream>
 #include <string>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
-#include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
-
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
-
 #include "anr.hpp"
 #include "anr_params.hpp"
 #include "data_bundle.hpp"
 #include "dma_kernels.hpp"
+#include "dpc_common.hpp"
 #include "mp_math.hpp"
 
 using namespace sycl;
@@ -51,7 +49,7 @@ static_assert(IsPow2(kPixelsPerCycle) > 0);
 // The maximum number of columns in the image
 #ifndef MAX_COLS
 //#define MAX_COLS 1920 // HD
-#define MAX_COLS 3840 // 4K
+#define MAX_COLS 3840  // 4K
 #endif
 constexpr unsigned kMaxCols = MAX_COLS;
 static_assert(kMaxCols > 0);
@@ -60,8 +58,8 @@ static_assert(kMaxCols > kPixelsPerCycle);
 // the type to use for the pixel intensity values and a temporary type
 // which should have more bits than the pixel type to check for overflow.
 // We will use subtraction on the temporary type, so it must be signed.
-using PixelT = unsigned char; // 8 bits, unsigned
-using TmpT = long long; // 64 bits, signed
+using PixelT = unsigned char;  // 8 bits, unsigned
+using TmpT = long long;        // 64 bits, signed
 static_assert(std::is_unsigned_v<PixelT>);
 static_assert(std::is_signed_v<TmpT>);
 static_assert(sizeof(TmpT) > sizeof(PixelT));
@@ -80,15 +78,14 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
 void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
                      int cols, int rows);
 
-double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
-              int cols, int rows, int frames, ANRParams params,
-              float* sig_i_lut_data_ptr);
+double RunANR(queue& q, PixelT* in_ptr, PixelT* out_ptr, int cols, int rows,
+              int frames, ANRParams params, float* sig_i_lut_data_ptr);
 
-bool Validate(PixelT *val, PixelT *ref, unsigned int count,
-              double psnr_thresh=30.0, double pixel_diff_thresh=0.05);
+bool Validate(PixelT* val, PixelT* ref, unsigned int count,
+              double psnr_thresh = 30.0, double pixel_diff_thresh = 0.05);
 ////////////////////////////////////////////////////////////////////////////////
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   /////////////////////////////////////////////////////////////
   // reading and validating the command line arguments
   // defaults
@@ -111,7 +108,7 @@ int main(int argc, char *argv[]) {
   if (argc > 2) {
     runs = atoi(argv[2]);
   }
-  
+
   // get the number of frames as the third command line argument
   if (argc > 3) {
     frames = atoi(argv[3]);
@@ -199,8 +196,8 @@ int main(int argc, char *argv[]) {
     // run the design multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       // run ANR
-      time[i] = RunANR(q, in, out, cols, rows, frames, params,
-                       sig_i_lut_data_ptr);
+      time[i] =
+          RunANR(q, in, out, cols, rows, frames, params, sig_i_lut_data_ptr);
 
       // Copy the output back from the device
       q.memcpy(out_pixels.data(), out, pixel_count * sizeof(PixelT)).wait();
@@ -212,7 +209,7 @@ int main(int argc, char *argv[]) {
         passed = true;
       }
     }
-  } catch (exception const &e) {
+  } catch (exception const& e) {
     std::cout << "Caught a synchronous SYCL exception: " << e.what() << "\n";
     std::terminate();
   }
@@ -233,7 +230,7 @@ int main(int argc, char *argv[]) {
     // NOTE: when run in emulation, these results do not accurately represent
     // the performance of the kernels in actual FPGA hardware
     double avg_time_ms =
-      std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
+        std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
 
     size_t input_count_mega = pixel_count * frames * sizeof(PixelT) * 1e-6;
 
@@ -257,9 +254,8 @@ class OutputKernelID;
 //
 // Run the ANR algorithm on the FPGA
 //
-double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
-              int cols, int rows, int frames, ANRParams params,
-              float* sig_i_lut_data_ptr) {
+double RunANR(queue& q, PixelT* in_ptr, PixelT* out_ptr, int cols, int rows,
+              int frames, ANRParams params, float* sig_i_lut_data_ptr) {
   // the input and output pipe for the sorter
   using PipeType = DataBundle<PixelT, kPixelsPerCycle>;
   using ANRInPipe = sycl::INTEL::pipe<ANRInPipeID, PipeType>;
@@ -267,20 +263,18 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
 
   // launch the input and output kernels that read and write from device memory
   auto input_kernel_event =
-    SubmitInputDMA<InputKernelID, PixelT, ANRInPipe,
-                   kPixelsPerCycle, kDisableGlobalMem>(q, in_ptr, rows, cols,
-                                                       frames);
+      SubmitInputDMA<InputKernelID, PixelT, ANRInPipe, kPixelsPerCycle,
+                     kDisableGlobalMem>(q, in_ptr, rows, cols, frames);
 
   auto output_kernel_event =
-    SubmitOutputDMA<OutputKernelID, PixelT, ANROutPipe,
-                   kPixelsPerCycle, kDisableGlobalMem>(q, out_ptr, rows, cols,
-                                                       frames);
+      SubmitOutputDMA<OutputKernelID, PixelT, ANROutPipe, kPixelsPerCycle,
+                      kDisableGlobalMem>(q, out_ptr, rows, cols, frames);
 
   // launch ANR kernel
   auto anr_kernel_events =
-    SubmitANRKernels<PixelT, IndexT, ANRInPipe, ANROutPipe,
-                     kFilterSize, kPixelsPerCycle>(q, cols, rows, frames,
-                                                   params, sig_i_lut_data_ptr);
+      SubmitANRKernels<PixelT, IndexT, ANRInPipe, ANROutPipe, kFilterSize,
+                       kPixelsPerCycle>(q, cols, rows, frames, params,
+                                        sig_i_lut_data_ptr);
 
   // wait for the input and output kernels to finish
   auto start = high_resolution_clock::now();
@@ -289,7 +283,7 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
   auto end = high_resolution_clock::now();
 
   // wait for the ANR kernels to finish
-  for (auto &e : anr_kernel_events) {
+  for (auto& e : anr_kernel_events) {
     e.wait();
   }
 
@@ -301,8 +295,8 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
 //
 // Helper to parse data files
 //
-void ParseDataFile(std::string filename, std::vector<PixelT>& pixels,
-                   int& cols, int& rows) {
+void ParseDataFile(std::string filename, std::vector<PixelT>& pixels, int& cols,
+                   int& rows) {
   // create the file stream to parse
   std::ifstream ifs(filename);
 
@@ -328,11 +322,11 @@ void ParseDataFile(std::string filename, std::vector<PixelT>& pixels,
   header_ss >> cols >> rows;
 
   // expecting to parse cols*rows pixels
-  pixels.resize(cols*rows);
+  pixels.resize(cols * rows);
 
   // parse all of the pixels
   std::stringstream data_ss(data_str);
-  for (int i = 0; i < cols*rows; i++) {
+  for (int i = 0; i < cols * rows; i++) {
     // parse using 64 bit integer
     TmpT x;
 
@@ -379,13 +373,13 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
 
   // ensure dimensions match
   if (noisy_w != ref_w) {
-    std::cerr << "noisy input and reference widths do not match "
-              << noisy_w << " != " << ref_w << "\n";
+    std::cerr << "noisy input and reference widths do not match " << noisy_w
+              << " != " << ref_w << "\n";
     std::terminate();
   }
   if (noisy_h != ref_h) {
-    std::cerr << "noisy input and reference heights do not match "
-              << noisy_h << " != " << ref_h << "\n";
+    std::cerr << "noisy input and reference heights do not match " << noisy_h
+              << " != " << ref_h << "\n";
     std::terminate();
   }
 
@@ -429,7 +423,7 @@ void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
   // write the size
   ofs << cols << " " << rows << "\n";
 
-  // write the pixels 
+  // write the pixels
   for (auto& p : pixels) {
     ofs << static_cast<TmpT>(p) << " ";
   }
@@ -441,8 +435,8 @@ void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
 //
 // Also check the max individual pixel difference.
 //
-bool Validate(PixelT *val, PixelT *ref, unsigned int count,
-              double psnr_thresh, double pixel_diff_thresh) {
+bool Validate(PixelT* val, PixelT* ref, unsigned int count, double psnr_thresh,
+              double pixel_diff_thresh) {
   // get the maximum value of the pixel
   constexpr double max_i = std::numeric_limits<PixelT>::max();
 
@@ -462,19 +456,19 @@ bool Validate(PixelT *val, PixelT *ref, unsigned int count,
   mse /= count;
 
   // compute the PSNR
-  double psnr = 20*std::log10(max_i) - 10*std::log10(mse);
+  double psnr = 20 * std::log10(max_i) - 10 * std::log10(mse);
 
   // check PSNR and maximum pixel difference
   if (psnr <= psnr_thresh) {
-    std::cerr << "ERROR: Peak signal-to-noise ratio (PSNR) is too low: "
-              << psnr << "\n";
+    std::cerr << "ERROR: Peak signal-to-noise ratio (PSNR) is too low: " << psnr
+              << "\n";
     return false;
-  } else if(max_percent_diff >= pixel_diff_thresh) {
+  } else if (max_percent_diff >= pixel_diff_thresh) {
     std::cerr << "ERROR: Maximum pixel percent difference is too high: "
               << max_percent_diff << "\n";
     return false;
   } else {
-    //std::cout << "NRMSE = " << nrmse << "\n";
+    // std::cout << "NRMSE = " << nrmse << "\n";
     return true;
   }
 }

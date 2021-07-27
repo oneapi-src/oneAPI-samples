@@ -26,7 +26,7 @@ struct DataBundle {
     }
   }
 
-  DataBundle& operator=(const DataBundle &op) {
+  DataBundle &operator=(const DataBundle &op) {
     // unroll in case this copy constructor is implemented in an HLS component
 #pragma unroll
     for (int idx = 0; idx < bundle_size; idx++) {
@@ -47,14 +47,10 @@ struct DataBundle {
   }
 
   // get a specific value in the bundle
-  T &operator[](int i) {
-    return data_[i];
-  }
+  T &operator[](int i) { return data_[i]; }
 
   // get a raw pointer to underlying data
-  T *Data() {
-    return &data_[0];
-  }
+  T *Data() { return &data_[0]; }
 
   // For a shift register with N columns, the first piece of data is inserted in
   // index [N-1], and is read out of index [0].
@@ -100,6 +96,6 @@ struct DataBundle {
   }
 };
 
-} // namespace hldutils
+}  // namespace hldutils
 
 #endif /* __DATA_BUNDLE_HPP__ */

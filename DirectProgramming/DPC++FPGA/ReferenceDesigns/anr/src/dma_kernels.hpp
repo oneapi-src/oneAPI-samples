@@ -15,18 +15,25 @@ using namespace hldutils;
 // memory (disable_global_mem == true). The latter allows use to avoid
 // having a global memory interconnect in our kernel system for testing the IP.
 //
-template<typename KernelId, typename T, typename Pipe, int pixels_per_cycle,
-         bool disable_global_mem>
-event SubmitInputDMA(queue& q, T *in_ptr, int rows, int cols, int frames) {
+template <typename KernelId, typename T, typename Pipe, int pixels_per_cycle,
+          bool disable_global_mem>
+event SubmitInputDMA(queue &q, T *in_ptr, int rows, int cols, int frames) {
   using PipeType = DataBundle<T, pixels_per_cycle>;
 
   // LSU attribute to  turn off caching
-  using NonCachingLSU = INTEL::lsu<INTEL::burst_coalesce<true>,
-                                   INTEL::cache<0>,
-                                   INTEL::statically_coalesce<true>,
-                                   INTEL::prefetch<false>>;
+  using NonCachingLSU =
+      INTEL::lsu<INTEL::burst_coalesce<true>, INTEL::cache<0>,
+                 INTEL::statically_coalesce<true>, INTEL::prefetch<false>>;
 
-  assert(((rows * cols) % pixels_per_cycle) == 0);
+  // validate the number of columns
+  if ((cols % pixels_per_cycle) != 0) {
+    std::cerr << "ERROR: the number of columns is not a multiple of the pixels "
+              << "per cycle\n";
+    std::terminate();
+  }
+
+  // the number of iterations is the number of total pixels (rows*cols)
+  // divided by the number of pixels per cycle
   const int iterations = cols * rows / pixels_per_cycle;
 
   if constexpr (!disable_global_mem) {
@@ -72,18 +79,25 @@ event SubmitInputDMA(queue& q, T *in_ptr, int rows, int cols, int frames) {
 // to device memory (disable_global_mem == true). The latter allows use to avoid
 // having a global memory interconnect in our kernel system for testing the IP.
 //
-template<typename KernelId, typename T, typename Pipe, int pixels_per_cycle,
-         bool disable_global_mem>
-event SubmitOutputDMA(queue& q, T *out_ptr, int rows, int cols, int frames) {
-  assert(((rows * cols) % pixels_per_cycle) == 0);
+template <typename KernelId, typename T, typename Pipe, int pixels_per_cycle,
+          bool disable_global_mem>
+event SubmitOutputDMA(queue &q, T *out_ptr, int rows, int cols, int frames) {
+  // validate the number of columns
+  if ((cols % pixels_per_cycle) != 0) {
+    std::cerr << "ERROR: the number of columns is not a multiple of the pixels "
+              << "per cycle\n";
+    std::terminate();
+  }
+
+  // the number of iterations is the number of total pixels (rows*cols)
+  // divided by the number of pixels per cycle
   const int iterations = cols * rows / pixels_per_cycle;
 
-  if constexpr(!disable_global_mem) {
+  if constexpr (!disable_global_mem) {
     return q.submit([&](handler &h) {
       h.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
         device_ptr<T> out(out_ptr);
-        [[intel::loop_coalesce(2)]]
-        for (int f = 0; f < frames; f++) {
+        [[intel::loop_coalesce(2)]] for (int f = 0; f < frames; f++) {
           for (int i = 0; i < iterations; i++) {
             auto pipe_data = Pipe::read();
             #pragma unroll
@@ -96,7 +110,7 @@ event SubmitOutputDMA(queue& q, T *out_ptr, int rows, int cols, int frames) {
     });
   } else {
     return q.submit([&](handler &h) {
-      h.single_task<KernelId>([=] {      
+      h.single_task<KernelId>([=] {
         [[intel::loop_coalesce(2)]]
         for (int f = 0; f < frames; f++) {
           for (int i = 0; i < iterations; i++) {

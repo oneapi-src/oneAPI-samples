@@ -10,7 +10,7 @@ template <typename T, int depth>
 class ShiftReg {
   T registers_[depth];
 
-public:
+ public:
   // DO NOT Create a constructor for this; the compiler does not
   // handle it well.
   // empty default constructor since you should fill a shift-register by
@@ -27,32 +27,27 @@ public:
   //        └───┴───┴───┘
   // ```
   void Shift(T &in) {
-    UnrolledLoop<0, (depth - 1)>([&](int i) {
-      registers_[i] = registers_[i + 1];
-    });
+    UnrolledLoop<0, (depth - 1)>(
+        [&](int i) { registers_[i] = registers_[i + 1]; });
     registers_[depth - 1] = in;
   }
 
   template <int shift_amt>
   void shiftSingleVal(T &in) {
-    UnrolledLoop<0, (depth - shift_amt)>([&](int i) {
-      registers_[i] = registers_[i + shift_amt];
-    });
+    UnrolledLoop<0, (depth - shift_amt)>(
+        [&](int i) { registers_[i] = registers_[i + shift_amt]; });
 
-    UnrolledLoop<(depth - shift_amt), depth>([&](int i) {
-      registers_[i] = in;
-    });
+    UnrolledLoop<(depth - shift_amt), depth>(
+        [&](int i) { registers_[i] = in; });
   }
 
   template <int shift_amt>
   void ShiftMultiVals(DataBundle<T, shift_amt> &in) {
-    UnrolledLoop<0, (depth - shift_amt)>([&](int i) {
-      registers_[i] = registers_[i + shift_amt];
-    });
+    UnrolledLoop<0, (depth - shift_amt)>(
+        [&](int i) { registers_[i] = registers_[i + shift_amt]; });
 
-    UnrolledLoop<0, shift_amt>([&](int i) {
-      registers_[(depth - shift_amt) + i] = in[i];
-    });
+    UnrolledLoop<0, shift_amt>(
+        [&](int i) { registers_[(depth - shift_amt) + i] = in[i]; });
   }
 
   // use an accessor like this to force static accesses
@@ -70,7 +65,7 @@ template <typename T, int rows, int depth>
 class ShiftReg2d {
   ShiftReg<T, depth> registers_[rows];
 
-public:
+ public:
   // DO NOT Create constructor for this; the compiler does not handle it well.
   // empty default constructor since you should fill a shift-register by
   // priming it, and if `T` is a struct, we might get a looping constructor.
@@ -127,6 +122,6 @@ public:
   const ShiftReg<T, depth> &operator[](int i) const { return registers_[i]; }
 };
 
-} // namespace hldutils
+}  // namespace hldutils
 
 #endif /* __SHIFT_REG_HPP__ */
