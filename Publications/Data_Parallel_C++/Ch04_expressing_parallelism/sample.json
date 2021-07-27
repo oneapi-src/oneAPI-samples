@@ -1,8 +1,8 @@
 {
   "guid": "4c16d8f3-0662-4203-9d1f-b2ab2336eedb",
-  "name": "Chapter 4 - Expresssing Parallelism",
+  "name": "Chapter 04 - Expresssing Parallelism",
   "categories": [ "Toolkit/Publication: Data Parallel C++" ],
-  "description": "Chapter 04 source code examples: Expressing Parallelism | fig_4_5_vector_add.cpp * Figure 4-5. Expressing a vector addition kernel with parallel_for | fig_4_6_matrix_add.cpp * Figure 4-6. Expressing a matrix addition kernel with parallel_for | fig_4_7_basic_matrix_multiply.cpp * Figure 4-7. Expressing a naïve matrix multiplication kernel for square matrices, with parallel_for | fig_4_13_nd_range_matrix_multiply.cpp * Figure 4-13. Expressing a naïve matrix multiplication kernel with ND-range parallel_for | fig_4_20_hierarchical_matrix_multiply.cpp * Figure 4-20. Expressing a naïve matrix multiplication kernel with hierarchical parallelism | fig_4_22_hierarchical_logical_matrix_multiply.cpp * Figure 4-22. Expressing a naïve matrix multiplication kernel with hierarchical parallelism and a logical range",
+  "description": "Chapter 4 source code examples: Expressing Parallelism | fig_4_5_vector_add.cpp * Expressing a vector addition kernel with parallel_for | fig_4_6_matrix_add.cpp * Expressing a matrix addition kernel with parallel_for | fig_4_7_basic_matrix_multiply.cpp * Expressing a naïve matrix multiplication kernel for square matrices, with parallel_for | fig_4_13_nd_range_matrix_multiply.cpp * Expressing a naïve matrix multiplication kernel with ND-range parallel_for | fig_4_20_hierarchical_matrix_multiply.cpp * Expressing a naïve matrix multiplication kernel with hierarchical parallelism | fig_4_22_hierarchical_logical_matrix_multiply.cpp * Expressing a naïve matrix multiplication kernel with hierarchical parallelism and a logical range",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],

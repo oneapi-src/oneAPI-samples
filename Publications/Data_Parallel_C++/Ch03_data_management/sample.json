@@ -1,8 +1,8 @@
 {
   "guid": "662c9ce1-c87c-4d70-9432-67b0df0931b0",
-  "name": "Chapter 3 - Data Management",
+  "name": "Chapter 03 - Data Management",
   "categories": [ "Toolkit/Publication: Data Parallel C++" ],
-  "description": "Chapter 03 source code examples: Data Management | fig_3_4_usm_explicit_data_movement.cpp * Figure 3-4. USM explicit data movement  | fig_3_5_usm_implicit_data_movement.cpp * Figure 3-5. USM implicit data movement  | fig_3_6_buffers_and_accessors.cpp * Figure 3-6. Buffers and accessors  | fig_3_10_in_order.cpp * Figure 3-10. In-order queue usage  | fig_3_11_depends_on.cpp * Figure 3-11. Using events and depends_on | fig_3_13_read_after_write.cpp * Figure 3-13. Read-after-Write  | fig_3_15_write_after_read_and_write_after_write.cpp * Figure 3-15. Write-after-Read and Write-after-Write ",
+  "description": "Chapter 3 source code examples: Data Management | fig_3_4_usm_explicit_data_movement.cpp * USM explicit data movement  | fig_3_5_usm_implicit_data_movement.cpp * USM implicit data movement  | fig_3_6_buffers_and_accessors.cpp * Buffers and accessors  | fig_3_10_in_order.cpp * In-order queue usage  | fig_3_11_depends_on.cpp * Using events and depends_on | fig_3_13_read_after_write.cpp * Read-after-Write  | fig_3_15_write_after_read_and_write_after_write.cpp * Write-after-Read and Write-after-Write ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
