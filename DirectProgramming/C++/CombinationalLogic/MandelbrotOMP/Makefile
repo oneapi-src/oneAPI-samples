@@ -10,12 +10,12 @@
 # PURPOSE, NON-INFRINGEMENT OF INTELLECTUAL PROPERTY RIGHTS.
 #
 # =============================================================
-CXX := icpc
+CXX := icpx
 SRCDIR := src
 BUILDDIR := release
 CFLAGS := -O3 -ipo -qopenmp -std=c++11
 EXTRA_CFLAGS :=
-LIBFLAGS := -qopenmp
+LIBFLAGS := -ipo -qopenmp
 
 ifdef perf_num
 	EXTRA_CFLAGS += -D PERF_NUM
@@ -23,7 +23,7 @@ endif
 
 TARGET := $(BUILDDIR)/Mandelbrot
 
-icpc: $(TARGET)
+icpx: $(TARGET)
 
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.cpp=.o))
