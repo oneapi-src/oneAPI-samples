@@ -30,7 +30,8 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
   constexpr int kPaddingPixels = filter_size / 2;
   constexpr int kShiftRegCols = 1 + parallel_cols - 1;
   constexpr int kShiftRegRows = filter_size;
-  constexpr int kLineBufferFIFODepth = (max_cols / parallel_cols) + /*filter_size*/1;
+  constexpr int kLineBufferFIFODepth =
+    (max_cols / parallel_cols) + /*filter_size*/1;
   constexpr int kNumLineBuffers = filter_size - 1;
   constexpr IndexT kColThreshLow = kPaddingPixels;
   constexpr IndexT kRowThreshLow = kPaddingPixels;
@@ -49,7 +50,8 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
   const IndexT row_thresh_high = kPaddingPixels + rows;
   const IndexT padded_rows = rows + 2 * kRowThreshLow;
   const IndexT fifo_wrap =
-    (cols + /*filter_size*/1 - 1 + (parallel_cols - 1 /* round up*/)) / parallel_cols;
+    (cols + /*filter_size*/1 - 1 + (parallel_cols - 1 /* round up*/))
+    / parallel_cols;
   const IndexT col_loop_bound = (cols / parallel_cols);
 
   [[intel::initiation_interval(1)]]
@@ -88,7 +90,8 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
         InPipeT input_val(last_new_pixels);
         constexpr auto kInputShiftVals =
           Min(kColThreshLow, (IndexT)parallel_cols);
-        input_val.template ShiftMultiVals<kInputShiftVals, parallel_cols>(new_pixels);
+        input_val.template ShiftMultiVals<kInputShiftVals,
+                                          parallel_cols>(new_pixels);
 
         [[intel::fpga_register]]
         InPipeT pixel_column[filter_size];

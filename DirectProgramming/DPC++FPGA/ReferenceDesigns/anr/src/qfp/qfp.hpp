@@ -45,6 +45,8 @@ struct QFP {
   static constexpr unsigned fp32_sign_bits = 1;
   static constexpr unsigned fp32_exponent = 8;
   static constexpr unsigned fp32_mantissa_bits = 23;
+  static constexpr unsigned fp32_total_bits =
+    fp32_sign_bits + fp32_exponent + fp32_mantissa_bits;
 
   static constexpr unsigned qfp_mantissa_bits =
     qfp_total_bits - qfp_exponent_bits - is_signed;
@@ -53,7 +55,7 @@ struct QFP {
   static constexpr unsigned mantissa_bit_diff =
     fp32_mantissa_bits - qfp_mantissa_bits;
   
-  static_assert((fp32_sign_bits+fp32_exponent+fp32_mantissa_bits) == (sizeof(float)*8));
+  static_assert(fp32_total_bits == (sizeof(float)*8));
   static_assert(qfp_mantissa_bits <= fp32_mantissa_bits);
   static_assert(qfp_total_bits > qfp_exponent_bits);
 
@@ -94,7 +96,8 @@ struct QFP {
     if constexpr (!is_signed) {
       sign_bit = (i >> (qfp_exponent_bits + qfp_mantissa_bits)) & 0x1;
     }
-    unsigned fp32_exponent_tmp = int((i >> qfp_mantissa_bits) & qfp_exponent_mask);
+    unsigned fp32_exponent_tmp =
+      int((i >> qfp_mantissa_bits) & qfp_exponent_mask);
     unsigned fp32_exponent =
       (fp32_exponent_tmp == 0) ? 0 : (fp32_exponent_tmp - 31 + 127);
     unsigned fp32_mantissa = (i & qfp_mantissa_mask) << mantissa_bit_diff;

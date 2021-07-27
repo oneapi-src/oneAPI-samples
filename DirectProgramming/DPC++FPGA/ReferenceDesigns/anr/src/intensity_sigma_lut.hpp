@@ -29,7 +29,8 @@ public:
   IntensitySigmaLUT(ANRParams params) {
     for (int i = 0; i < lut_depth; i++) {
       float sig_i =
-        sycl::sqrt(params.k * float(i) + params.sig_shot_2) * params.sig_i_coeff;
+        sycl::sqrt(params.k * float(i) + params.sig_shot_2)
+        * params.sig_i_coeff;
       float sig_i_inv = 1.0f / sig_i;
       float sig_i_inv_squared = sig_i_inv * sig_i_inv;
       float sig_i_inv_squared_2 = 0.5f * sig_i_inv_squared;

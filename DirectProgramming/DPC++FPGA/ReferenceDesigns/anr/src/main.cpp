@@ -208,7 +208,6 @@ int main(int argc, char *argv[]) {
       // validate the output
       if constexpr (!kDisableGlobalMem) {
         passed &= Validate(out_pixels.data(), ref_pixels.data(), pixel_count);
-        //passed &= Validate(out_pixels.data(), in_pixels.data(), pixel_count);
       } else {
         passed = true;
       }
@@ -218,12 +217,12 @@ int main(int argc, char *argv[]) {
     std::terminate();
   }
 
-  // free the memory allocated device memory
+  // free the allocated device memory
   sycl::free(in, q);
   sycl::free(out, q);
   sycl::free(sig_i_lut_data_ptr, q);
 
-  // write the output files if global memory was used (output is meaningless,
+  // write the output files if global memory was used (output is meaningless
   // otherwise)
   if constexpr (kDisableGlobalMem) {
     WriteOutputFile(data_dir, out_pixels, cols, rows);
@@ -269,18 +268,19 @@ double RunANR(queue &q, PixelT *in_ptr, PixelT *out_ptr,
   // launch the input and output kernels that read and write from device memory
   auto input_kernel_event =
     SubmitInputDMA<InputKernelID, PixelT, ANRInPipe,
-                   kPixelsPerCycle, kDisableGlobalMem>(q, in_ptr, rows, cols, frames);
+                   kPixelsPerCycle, kDisableGlobalMem>(q, in_ptr, rows, cols,
+                                                       frames);
 
   auto output_kernel_event =
     SubmitOutputDMA<OutputKernelID, PixelT, ANROutPipe,
-                   kPixelsPerCycle, kDisableGlobalMem>(q, out_ptr, rows, cols, frames);
+                   kPixelsPerCycle, kDisableGlobalMem>(q, out_ptr, rows, cols,
+                                                       frames);
 
   // launch ANR kernel
   auto anr_kernel_events =
-    SubmitANRKernels<PixelT, IndexT, ANRInPipe, ANROutPipe, kFilterSize, kPixelsPerCycle>(q,
-                                                                                          cols, rows, frames,
-                                                                                          params,
-                                                                                          sig_i_lut_data_ptr);
+    SubmitANRKernels<PixelT, IndexT, ANRInPipe, ANROutPipe,
+                     kFilterSize, kPixelsPerCycle>(q, cols, rows, frames,
+                                                   params, sig_i_lut_data_ptr);
 
   // wait for the input and output kernels to finish
   auto start = high_resolution_clock::now();

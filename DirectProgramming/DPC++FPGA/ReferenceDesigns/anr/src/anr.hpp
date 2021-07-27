@@ -331,16 +331,13 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
       auto exp_lut = BuildExpLUT();
 
       // start the column stencil
-      ColumnStencil<VerticalInT, VerticalOutT, IndexT,
-                    InPipe, IntraPipe,
-                    filter_size, max_cols, pixels_per_cycle>(rows_k, cols_k,
-                                                             frames_k,
-                                                             VerticalInT(0),
-                                                             vertical_func,
-                                                             spatial_filter,
-                                                             params,
-                                                             std::ref(exp_lut),
-                                                             std::ref(sig_i_lut));
+      ColumnStencil<VerticalInT, VerticalOutT,
+                    IndexT, InPipe, IntraPipe,
+                    filter_size, max_cols,
+                    pixels_per_cycle>(rows_k, cols_k,
+                                      frames_k, VerticalInT(0), vertical_func,
+                                      spatial_filter, params, std::ref(exp_lut),
+                                      std::ref(sig_i_lut));
     });
   });
 
