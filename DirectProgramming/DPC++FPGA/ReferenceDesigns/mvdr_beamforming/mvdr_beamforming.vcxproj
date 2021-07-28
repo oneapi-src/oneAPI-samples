@@ -24,7 +24,6 @@
     <ClInclude Include="src\mvdr_complex.hpp" />
     <ClInclude Include="src\MVDR.hpp" />
     <ClInclude Include="src\ParallelCopyArray.hpp" />
-    <ClInclude Include="src\PipeDuplicator.hpp" />
     <ClInclude Include="src\SteeringVectorGenerator.hpp" />
     <ClInclude Include="src\StreamingQRD.hpp" />
     <ClInclude Include="src\Transpose.hpp" />
