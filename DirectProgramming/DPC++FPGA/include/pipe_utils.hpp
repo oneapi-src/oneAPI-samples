@@ -10,6 +10,27 @@
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 #include <utility>
 
+/*
+
+This header defines the following utilities for use with pipes in oneAPI programs.
+
+1. PipeArray
+    template <class Id,          // identifier for the pipe array
+              typename BaseTy,   // type to write/read for each pipe
+              size_t min_depth,  // minimum capacity of each pipe
+              size_t... dims     // depth of each dimension in the array
+                                 // any number of dimensions are supported
+              >
+    struct PipeArray
+
+2. 
+
+*/
+
+// =============================================================
+// Internal Helper Functions/Structs
+// =============================================================
+
 namespace {
 
 // Templated classes for verifying dimensions when accessing elements in the
@@ -59,6 +80,11 @@ struct write_currying<WriteFunc, BaseTy, std::index_sequence<I...>> {
 };
 
 }  // namespace
+
+
+// =============================================================
+// Pipe Array
+// =============================================================
 
 template <class Id,          // identifier for the pipe array
           typename BaseTy,   // type to write/read for each pipe

@@ -25,7 +25,7 @@ This tutorial provides a convenient pair of header files defining an abstraction
 
 ### Example 1: A simple array of pipes
 
-To create an array of pipes, include the top-level header (from the DirectProgramming/DPC++FPGA/include/ directory) in your design:
+To create an array of pipes, include the pipe_utils.hpp header from the DirectProgramming/DPC++FPGA/include/ directory in your design:
 
 ```c++
 #include "pipe_utils.hpp"
