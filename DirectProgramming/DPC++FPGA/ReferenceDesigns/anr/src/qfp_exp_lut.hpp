@@ -8,7 +8,10 @@
 constexpr unsigned exp_qfp_total_bits = 10;
 constexpr unsigned exp_qfp_exponent_bits = 6;
 constexpr unsigned exp_lut_depth=(1 << exp_qfp_total_bits);
+constexpr int exp_taylor_series_terms = 70;
+
 static_assert(exp_qfp_total_bits >= exp_qfp_exponent_bits);
+static_assert(exp_taylor_series_terms > 3);
 
 //
 // A LUT for computing exp(-x)
@@ -28,7 +31,7 @@ struct ExpLUT : ROMBase<float, exp_lut_depth> {
       // the float to compute exp(-f) (== 1 / exp(f)) and initialize that entry
       // of the ROM
       float f = QFP::ToFP32(x);
-      return (1.0f / hldutils::Exp(f, 70));
+      return (1.0f / hldutils::Exp(f, exp_taylor_series_terms));
     }
     constexpr InitFunctor() = default;
   };

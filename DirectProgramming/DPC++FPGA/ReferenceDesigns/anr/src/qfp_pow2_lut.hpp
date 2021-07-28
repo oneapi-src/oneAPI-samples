@@ -6,13 +6,13 @@
 
 // the QFP bits for the Pow2LUT
 constexpr unsigned pow2_qfp_total_bits = 10;
-constexpr unsigned pow2_qfp_exponent_bits = 6;
+constexpr unsigned pow2_qfp_exponent_bits = 5;
 constexpr unsigned pow2_lut_depth=(1 << exp_qfp_total_bits);
 static_assert(pow2_qfp_total_bits >= pow2_qfp_exponent_bits);
 
 //
 // A LUT for computing x^2
-// Uses ROMBase to create a ROM initialized with the values of exp(-x)
+// Uses ROMBase to create a ROM initialized with the values of x^2
 // using quantized floating point (QFP) numbers for indices.
 //
 struct Pow2LUT : ROMBase<float, pow2_lut_depth> {

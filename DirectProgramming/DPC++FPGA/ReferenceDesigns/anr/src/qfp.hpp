@@ -34,6 +34,8 @@ struct QFP {
   static constexpr unsigned fp32_mantissa_bits = 23;
   static constexpr unsigned fp32_total_bits =
       fp32_sign_bits + fp32_exponent_bits + fp32_mantissa_bits;
+  static constexpr int fp32_exponent_offset =
+    (1 << (fp32_exponent_bits-1)) - 1;
   static constexpr unsigned fp32_exponent_mask = (1 << fp32_exponent_bits) - 1;
   static constexpr unsigned fp32_mantissa_mask = (1 << fp32_mantissa_bits) - 1;
 
@@ -55,6 +57,8 @@ struct QFP {
   static constexpr unsigned qfp_mask = (1 << qfp_total_bits) - 1;
   static constexpr unsigned qfp_exponent_mask = (1 << qfp_exponent_bits) - 1;
   static constexpr unsigned qfp_mantissa_mask = (1 << qfp_mantissa_bits) - 1;
+  static constexpr int qfp_exponent_offset =
+      (1 << (qfp_exponent_bits - 1)) - 1;
 
   // the difference in bits between the QFP and the 32-bit float
   static constexpr unsigned mantissa_bit_diff =
@@ -63,8 +67,10 @@ struct QFP {
   // static asserts
   static_assert(fp32_total_bits == (sizeof(float) * 8));
   static_assert(qfp_mantissa_bits <= fp32_mantissa_bits);
+  static_assert(qfp_exponent_bits > 0);
+  static_assert(qfp_mantissa_bits > 0);
   static_assert(qfp_total_bits > qfp_exponent_bits);
-
+  
   //
   // convert from a 32-bit float to a QFP
   //
@@ -77,11 +83,13 @@ struct QFP {
 
     // get the most significant qfp_mantissa_bits from the float's mantissa
     int qfp_mantissa =
-      (fp32_mantissa >> mantissa_bit_diff) & qfp_mantissa_mask;
+        (fp32_mantissa >> mantissa_bit_diff) & qfp_mantissa_mask;
 
-    // compute the QFP exponent
+    // compute the QFP exponent. Subtract the FP32 offset (127) from the FP32
+    // exponent and add back the QFP exponent offset.
     const int qfp_exponent_tmp =
-      (fp32_exponent == 0) ? 0 : (int(fp32_exponent) - 127 + 31);
+        (fp32_exponent == 0) ? 0 :
+        (int(fp32_exponent) - fp32_exponent_offset + qfp_exponent_offset);
     int qfp_exponent = (qfp_exponent_tmp < 0) ? 0 : qfp_exponent_tmp;
 
     // get the sign bit
@@ -109,10 +117,12 @@ struct QFP {
     }
     int fp32_exponent_tmp =
         int((i >> qfp_mantissa_bits) & qfp_exponent_mask);
-    int fp32_exponent = fp32_exponent_tmp - 31 + 127;
+    int fp32_exponent =
+        fp32_exponent_tmp - qfp_exponent_offset + fp32_exponent_offset;
     int fp32_mantissa = (i & qfp_mantissa_mask) << mantissa_bit_diff;
 
-    int offset_exponent = (fp32_exponent == 0) ? 0 : (fp32_exponent - 127);
+    int offset_exponent =
+        (fp32_exponent == 0) ? 0 : (fp32_exponent - fp32_exponent_offset);
     // https://en.wikipedia.org/wiki/Single-precision_floating-point_format
     //compute the mantissa sum
     float mantissa_sum = (fp32_exponent == 0) ? 0.0 : 1.0;

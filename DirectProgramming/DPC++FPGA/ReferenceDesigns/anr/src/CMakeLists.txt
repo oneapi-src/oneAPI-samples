@@ -100,7 +100,8 @@ if(DISABLE_GLOBAL_MEM)
     message(STATUS "Global memory access has been manually disabled")
 endif()
 
-# TODO
+# Increase the allowable constexpr steps for the front end. This allows the
+# front-end compiler to do more compile-time computation.
 set(CONSTEXPR_STEPS "-fconstexpr-steps=1271242")
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
