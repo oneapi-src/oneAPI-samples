@@ -12,9 +12,12 @@
 
 /*
 
-This header defines the following utilities for use with pipes in oneAPI programs.
+This header defines the following utilities for use with pipes in DPC++ FPGA designs..
 
 1. PipeArray
+
+     Create a collection of pipes that can be indexed like an array.
+
      template <class Id,          // identifier for the pipe array
                typename BaseTy,   // type to write/read for each pipe
                size_t min_depth,  // minimum capacity of each pipe
@@ -24,11 +27,12 @@ This header defines the following utilities for use with pipes in oneAPI program
      struct PipeArray
 
 2. PipeDuplicator 
+
      Connect a kernel that writes to a single pipe to multiple pipe instances,
      each of which will receive the same data.
-     A blocking write will perform a blocking write to each pipe.  A non-blocking
-     write will perform a non-blocking write to each pipe, and set success to
-     true only if ALL writes were successful.
+     A blocking write will perform a blocking write to each pipe.  
+     A non-blocking write will perform a non-blocking write to each pipe, 
+     and set success to true only if ALL writes were successful.
 
      template <class Id,          // name of this PipeDuplicator
                typename T,        // data type to transfer
