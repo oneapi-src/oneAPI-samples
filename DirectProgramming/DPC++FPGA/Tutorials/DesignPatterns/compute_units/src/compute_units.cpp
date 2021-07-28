@@ -11,7 +11,7 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 #include "compute_units.hpp"
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp"
 
 
 using namespace sycl;

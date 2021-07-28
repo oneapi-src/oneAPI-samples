@@ -25,16 +25,16 @@ This tutorial provides a convenient pair of header files defining an abstraction
 
 ### Example 1: A simple array of pipes
 
-To create an array of pipes, include the top-level header (from this code sample) in your design:
+To create an array of pipes, include the top-level header (from the DirectProgramming/DPC++FPGA/include/ directory) in your design:
 
 ```c++
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp"
 ```
 
 As with regular pipes, an array of pipes needs template parameters for an ID, for the `min_capacity` of each pipe, and each pipe's data type. An array of pipes additionally requires one or more template parameters to specify the array size. The following code declares a one dimensional array of 10 pipes, each with `capacity=32`, that operate on `int` values.
 
 ```c++
-using MyPipeArray = PipeArray<     // Defined in "pipe_array.h".
+using MyPipeArray = PipeArray<     // Defined in "pipe_utils.h".
     class MyPipe,                  // An identifier for the pipe.
     int,                           // The type of data in the pipe.
     32,                            // The capacity of each pipe.
@@ -60,7 +60,7 @@ Unroller<0, 10>::Step([](auto i) {
   MyPipeArray::PipeAt<i>::write(17);
 });
 ```
-While this may initially feel foreign to those unaccustomed to C++ template metaprogramming, this is a simple and powerful pattern common to many C++ libraries. It is easy to reuse. In addition to `pipe_array.hpp`, this code sample includes a simple header file `unroller.hpp`, which implements the  `Unroller` functionality.
+While this may initially feel foreign to those unaccustomed to C++ template metaprogramming, this is a simple and powerful pattern common to many C++ libraries. It is easy to reuse. This code sample includes a simple header file `unroller.hpp`, which implements the  `Unroller` functionality.
 
 ### Example 2: A 2D array of pipes
 
@@ -72,7 +72,7 @@ constexpr size_t kNumRows = 2;
 constexpr size_t kNumCols = 2;
 constexpr size_t kDepth = 2;
 
-using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_array.h".
+using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_utils.h".
     class ProducerConsumerPipe,                  // An identifier for the pipe.
     uint64_t,                                    // The type of data in the pipe.
     kDepth,                                      // The capacity of each pipe.

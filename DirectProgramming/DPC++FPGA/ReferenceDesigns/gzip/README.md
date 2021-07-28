@@ -183,14 +183,13 @@ PASSED
 | `CompareGzip.cpp`            | Contains code to compare a GZIP-compatible file with the original input.
 | `WriteGzip.cpp`              | Contains code to write a GZIP compatible file. 
 | `crc32.cpp`                  | Contains code to calculate a 32-bit CRC compatible with the GZIP file format and to combine multiple 32-bit CRC values. It is only used to account for the CRC of the last few bytes in the file, which are not processed by the accelerated CRC kernel. 
-| `kernels.hpp`                  | Contains miscellaneous defines and structure definitions required by the LZReduction and Static Huffman kernels.
-| `crc32.hpp`                    | Header file for `crc32.cpp`.
-| `gzipkernel.hpp`              | Header file for `gzipkernels.cpp`.
-| `gzipkernel)ll.hpp`              | Header file for `gzipkernels_ll.cpp`.
-| `CompareGzip.hpp`              | Header file for `CompareGzip.cpp`.
-| `pipe_array.hpp`                | Header file containing the definition of an array of pipes. 
-| `pipe_array_internal.hpp`       | Helper for pipe_array.hpp. 
-| `WriteGzip.hpp`                | Header file for `WriteGzip.cpp`. 
+| `kernels.hpp`                | Contains miscellaneous defines and structure definitions required by the LZReduction and Static Huffman kernels.
+| `crc32.hpp`                  | Header file for `crc32.cpp`.
+| `gzipkernel.hpp`             | Header file for `gzipkernels.cpp`.
+| `gzipkernel)ll.hpp`          | Header file for `gzipkernels_ll.cpp`.
+| `CompareGzip.hpp`            | Header file for `CompareGzip.cpp`.
+| `pipe_utils.hpp`             | Header file containing the definition of an array of pipes. 
+| `WriteGzip.hpp`              | Header file for `WriteGzip.cpp`. 
 
 ### Compiler Flags Used
 

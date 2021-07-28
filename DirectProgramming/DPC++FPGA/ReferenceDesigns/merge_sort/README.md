@@ -137,15 +137,14 @@ The following source files can be found in the `src/` sub-directory.
 | File                           | Description 
 |:---                            |:---
 |`main.cpp`                      | Contains the `main()` function and the top-level interfaces.
-|`merge_sort.hpp`                 | The function to submit all of the merge sort kernels (`SortingNetwork`, `Produce`, `Merge`, and `Consume`).
+|`merge_sort.hpp`                | The function to submit all of the merge sort kernels (`SortingNetwork`, `Produce`, `Merge`, and `Consume`).
 |`consume.hpp`                   | The `Consume` kernel for the merge unit. This kernel reads from an input pipe and writes out to either a different output pipe, or to device memory.
 |`impu_math.hpp`                 | Metaprogramming math helper functions (*impu* = Intel Metaprogramming Utilities)
 |`merge.hpp`                     | The `Merge` kernel for the merge unit and the merge tree. This kernel streams in two sorted lists, merges them into a single sorted list of double the size, and streams the data out a pipe.
-|`pipe_array.hpp`                | Header file containing the definition of an array of pipes.
-|`pipe_array_internal.hpp`       | Helper for pipe_array.hpp.
+|`pipe_utils.hpp`                | Header file containing the definition of an array of pipes.
 |`produce.hpp`                   | The `Produce` kernel for the merge unit. This kernel reads from input pipes or performs strided reads from device memory and writes the data to an output pipe.
-|`sorting_networks.hpp`           | Contains all of the code relevant to sorting networks, including the `SortingNetwork` kernel, as well as the `BitonicSortingNetwork` and `MergeSortNetwork` helper functions.
-|`unrolled_loop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end.
+|`sorting_networks.hpp`          | Contains all of the code relevant to sorting networks, including the `SortingNetwork` kernel, as well as the `BitonicSortingNetwork` and `MergeSortNetwork` helper functions.
+|`unrolled_loop.hpp`             | A templated-based loop unroller that unrolls loops in the compiler front end.
 
 ### Merge Sort Details
 This section will describe how the merge sort design is structured and how it takes advantage of the spatial compute of the FPGA. <br/>

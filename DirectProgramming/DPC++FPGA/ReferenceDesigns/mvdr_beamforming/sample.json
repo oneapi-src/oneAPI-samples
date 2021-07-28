@@ -9,6 +9,14 @@
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": [
+      "ReferenceDesigns/mvdr_beamforming",
+      "include/pipe_utils.hpp",
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
