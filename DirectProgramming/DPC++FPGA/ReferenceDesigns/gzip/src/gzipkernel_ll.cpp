@@ -53,7 +53,7 @@
 using namespace sycl;
 
 // Pipes, for inter-kernel data transfer..
-using acc_dist_channel_array = PipeArray<  // Defined in "pipe_utils.h".
+using acc_dist_channel_array = PipeArray<  // Defined in "pipe_utils.hpp".
     class dist_channel_pipe_id,            // An identifier for the pipe.
     struct DistLen,                        // The type of data in the pipe.
     32,                                     // The capacity of each pipe.

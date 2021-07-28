@@ -34,7 +34,7 @@ To create an array of pipes, include the top-level header (from the DirectProgra
 As with regular pipes, an array of pipes needs template parameters for an ID, for the `min_capacity` of each pipe, and each pipe's data type. An array of pipes additionally requires one or more template parameters to specify the array size. The following code declares a one dimensional array of 10 pipes, each with `capacity=32`, that operate on `int` values.
 
 ```c++
-using MyPipeArray = PipeArray<     // Defined in "pipe_utils.h".
+using MyPipeArray = PipeArray<     // Defined in "pipe_utils.hpp".
     class MyPipe,                  // An identifier for the pipe.
     int,                           // The type of data in the pipe.
     32,                            // The capacity of each pipe.
@@ -72,7 +72,7 @@ constexpr size_t kNumRows = 2;
 constexpr size_t kNumCols = 2;
 constexpr size_t kDepth = 2;
 
-using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_utils.h".
+using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_utils.hpp".
     class ProducerConsumerPipe,                  // An identifier for the pipe.
     uint64_t,                                    // The type of data in the pipe.
     kDepth,                                      // The capacity of each pipe.
