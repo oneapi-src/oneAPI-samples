@@ -28,7 +28,7 @@ This header defines the following utilities for use with pipes in DPC++ FPGA des
 
 2. PipeDuplicator 
 
-     Connect a kernel that writes to a single pipe to multiple pipe instances,
+     Fan-out a single pipe write to multiple pipe instances,
      each of which will receive the same data.
      A blocking write will perform a blocking write to each pipe.  
      A non-blocking write will perform a non-blocking write to each pipe, 
