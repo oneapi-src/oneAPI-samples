@@ -12,7 +12,8 @@
 
 /*
 
-This header defines the following utilities for use with pipes in DPC++ FPGA designs..
+This header defines the following utilities for use with pipes in DPC++ FPGA
+designs.
 
 1. PipeArray
 
@@ -26,12 +27,12 @@ This header defines the following utilities for use with pipes in DPC++ FPGA des
                >
      struct PipeArray
 
-2. PipeDuplicator 
+2. PipeDuplicator
 
      Fan-out a single pipe write to multiple pipe instances,
      each of which will receive the same data.
-     A blocking write will perform a blocking write to each pipe.  
-     A non-blocking write will perform a non-blocking write to each pipe, 
+     A blocking write will perform a blocking write to each pipe.
+     A non-blocking write will perform a non-blocking write to each pipe,
      and set success to true only if ALL writes were successful.
 
      template <class Id,          // name of this PipeDuplicator
@@ -95,7 +96,6 @@ struct write_currying<WriteFunc, BaseTy, std::index_sequence<I...>> {
 };
 
 }  // namespace
-
 
 // =============================================================
 // PipeArray
@@ -240,4 +240,3 @@ struct PipeDuplicator<Id, T> {
 };
 
 #endif /* __PIPE_ARRAY_HPP__ */
-
