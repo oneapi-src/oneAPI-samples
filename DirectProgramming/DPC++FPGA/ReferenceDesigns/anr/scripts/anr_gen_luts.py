@@ -10,12 +10,9 @@ exp_filename = '../src/qfp/qfp_exp_lut.hpp'
 exp_qfp_total_bits = 10
 exp_qfp_exponent_bits = 6
 
-diff_qfp_filename = '../src/qfp/qfp_diff_squared_lut.hpp'
-diff_qfp_total_bits = 10
-diff_qfp_exponent_bits = 5
-
-diff_filename = '../src/diff_squared_lut.hpp'
-unsigned_pixel_bits = 8
+inv_filename = '../src/qfp/qfp_pow2_lut.hpp'
+inv_qfp_total_bits = 12
+inv_qfp_exponent_bits = 6
 
 inv_filename = '../src/qfp/qfp_inv_lut.hpp'
 inv_qfp_total_bits = 12
@@ -134,126 +131,6 @@ def GenerateExpLUT(filename, qfp_total_bits, qfp_exponent_bits):
     sys.stdout = original_stdout
 
 #
-# Generate the difference^2 LUT when the input is a float (convert to QFP)
-#
-def GenerateDiffSquaredQFPLUT(filename, qfp_total_bits, qfp_exponent_bits):
-  lut_depth_1d = 2**qfp_total_bits
-  lut_depth_2d = lut_depth_1d*lut_depth_1d
-  
-  # build the QFP diff LUT
-  diff_squared_lut_qfp = [None] * lut_depth_2d
-  for i in range(0, lut_depth_1d):
-    for j in range(0, lut_depth_1d):
-      x = QFPtoFP32(i, qfp_total_bits, qfp_exponent_bits)
-      y = QFPtoFP32(j, qfp_total_bits, qfp_exponent_bits)
-      qfp_diff = x - y
-      diff_squared_lut_qfp[i * lut_depth_1d + j] = qfp_diff * qfp_diff
-  
-  # write the file
-  with open(filename, 'w') as f:
-    print('Writing QFP difference squared LUT to {}'.format(filename))
-
-    # Change the standard output to the file we created.
-    original_stdout = sys.stdout
-    sys.stdout = f
-
-    # write out the file
-    print('#ifndef __QFP_DIFF_SQUARED_LUT_HPP__')
-    print('#define __QFP_DIFF_SQUARED_LUT_HPP__')
-    print('')
-    print_autogen_warning()
-    print('')
-    print('#include <array>')
-    print('#include "qfp.hpp"')
-    print('')
-    print('// the QFP format')
-    print('constexpr int kDiffSquaredQFPTotalBits = {};'.format(qfp_total_bits))
-    print('constexpr int kDiffSquaredQFPExponentBits = {};'.format(qfp_exponent_bits))
-    print('')
-    print('// the LUT size')
-    print('constexpr int kDiffSquaredQFPDepth1D =')
-    print('  (1 << kDiffSquaredQFPTotalBits);')
-    print('constexpr int kDiffSquaredQFPDepth =')
-    print('  kDiffSquaredQFPDepth1D * kDiffSquaredQFPDepth1D;')
-    print('')
-    print('// the LUT type')
-    print('using DiffSquaredQFPLUT = std::array<float, kDiffSquaredQFPDepth>;')
-    print('')
-    print('// the QFP format')
-    print('using DiffSquaredQFP =')
-    print('  QFP<kDiffSquaredQFPTotalBits, kDiffSquaredQFPExponentBits, false>;')
-    print('')
-    print('//')
-    print('// A constexpr function to build the differences squared LUT')
-    print('// for float values, which will be converted to QFP format to')
-    print('// index into the LUT')
-    print('//')
-    print('constexpr auto BuildDiffSquaredQFPLUT() {')
-    print_array_data("DiffSquaredQFPLUT", diff_squared_lut_qfp)
-    print('')
-    print('  return ret;')
-    print('}')
-    print('')
-    print('#endif /*__QFP_DIFF_SQUARED_LUT_HPP__*/')
-
-    # restore stdout
-    sys.stdout = original_stdout
-
-#
-# Generate the difference^2 LUT when the input is a pixel (8 bit unsigned)
-#
-def GenerateDiffSquaredLUT(filename, pixel_bits):
-  lut_depth_1d = 2**pixel_bits
-  lut_depth_2d = lut_depth_1d * lut_depth_1d
-
-  # Build the pixel diff LUT
-  diff_squared_lut = [None] * lut_depth_2d
-  for i in range(0, lut_depth_1d):
-    for j in range(0, lut_depth_1d):
-      diff = i - j
-      diff_squared_lut[i * lut_depth_1d + j] = diff * diff
-
-  # write the file
-  with open(filename, 'w') as f:
-    print('Writing difference squared LUT to {}'.format(filename))
-
-    # Change the standard output to the file we created.
-    original_stdout = sys.stdout
-    sys.stdout = f
-
-    # write out the file
-    print('#ifndef __DIFF_SQUARED_LUT_HPP__')
-    print('#define __DIFF_SQUARED_LUT_HPP__')
-    print('')
-    print_autogen_warning()
-    print('')
-    print('#include <array>')
-    print('')
-    print('// the LUT size (based on the number of bits per pixel)')
-    print('constexpr int kDiffSquaredDepth1D = {};'.format(lut_depth_1d))
-    print('constexpr int kDiffSquaredDepth =' )
-    print('  kDiffSquaredDepth1D * kDiffSquaredDepth1D;')
-    print('')
-    print('// the LUT type')
-    print('using DiffSquaredLUT = std::array<float, kDiffSquaredDepth>;')
-    print('')
-    print('//')
-    print('// A constexpr function to build the differences squared LUT')
-    print('// for float values, which will be converted to QFP format to')
-    print('// index into the LUT')
-    print('//')
-    print('constexpr auto BuildDiffSquaredLUT() {')
-    print_array_data("DiffSquaredLUT", diff_squared_lut)
-    print('')
-    print('  return ret;')
-    print('}')
-    print('')
-    print('#endif /*__DIFF_SQUARED_LUT_HPP__*/')
-
-    # restore stdout
-    sys.stdout = original_stdout
-
-#
 # Generate the inverse (1/x) LUT
 #
 def GenerateInvLUT(filename, qfp_total_bits, qfp_exponent_bits):
@@ -316,8 +193,6 @@ def GenerateInvLUT(filename, qfp_total_bits, qfp_exponent_bits):
 #
 if __name__ == "__main__":
   GenerateExpLUT(exp_filename, exp_qfp_total_bits, exp_qfp_exponent_bits)
-  #GenerateDiffSquaredQFPLUT(diff_qfp_filename, diff_qfp_total_bits, diff_qfp_exponent_bits)
-  #GenerateDiffSquaredLUT(diff_filename, unsigned_pixel_bits)
   #GenerateInvLUT(inv_filename, inv_qfp_total_bits, inv_qfp_exponent_bits)
 
   print('Done')

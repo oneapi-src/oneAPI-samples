@@ -25,6 +25,13 @@ if(PROFILE_HW)
     set(PROFILE_FLAG "-Xsprofile")
 endif()
 
+# Allow the user to do a flat compile
+# Profiling can be enabled when running cmake by adding the flag -DFLAT_COMPILE=1
+# e.g. cmake .. -DFLAT_COMPILE=1
+if(FLAG_COMPILE)
+    set(FLAG_COMPILE_FLAG "-Xsbsp-flow=flat")
+endif()
+
 # Choose the random seed for the hardware compile
 # e.g. cmake .. -DSEED=7
 if(NOT DEFINED SEED)
@@ -78,7 +85,7 @@ else()
 endif()
 
 # Allow the user to change the maximum number of pixels per column
-# e.g. cmake .. -DMAX_COLS=9
+# e.g. cmake .. -DMAX_COLS=3840
 if(MAX_COLS)
     set(MAX_COLS_FLAG "-DMAX_COLS=${MAX_COLS}")
     message(STATUS "MAX_COLS explicitly set to ${MAX_COLS}")
@@ -93,14 +100,17 @@ if(DISABLE_GLOBAL_MEM)
     message(STATUS "Global memory access has been manually disabled")
 endif()
 
+# TODO
+set(CONSTEXPR_STEPS "-fconstexpr-steps=1271242")
+
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} -Xsparallel=2 -Xsseed=${SEED} -Xsclock=${CLOCK_TARGET} -Xsboard=${FPGA_BOARD} ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAG_COMPILE_FLAG} -Xsparallel=2 -Xsseed=${SEED} -Xsclock=${CLOCK_TARGET} -Xsboard=${FPGA_BOARD} ${ENABLE_USM} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${DISABLE_GLOBAL_MEM_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

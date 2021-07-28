@@ -11,63 +11,18 @@
 #include <utility>
 #include <vector>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "anr.hpp"
 #include "anr_params.hpp"
+#include "constants.hpp"
 #include "data_bundle.hpp"
 #include "dma_kernels.hpp"
+// dpc_common.hpp can be found in the dev-utilities include folder.
+// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
 #include "mp_math.hpp"
 
 using namespace sycl;
 using namespace std::chrono;
-
-// the user can disable global memory by defining the 'DISABLE_GLOBAL_MEM'
-// macro: -DDISABLE_GLOBAL_MEM
-#if defined(DISABLE_GLOBAL_MEM)
-constexpr bool kDisableGlobalMem = true;
-#else
-constexpr bool kDisableGlobalMem = false;
-#endif
-
-// The size of the filter can be changed at the command line
-#ifndef FILTER_SIZE
-#define FILTER_SIZE 9
-#endif
-constexpr unsigned kFilterSize = FILTER_SIZE;
-static_assert(kFilterSize > 1);
-
-// The number of pixels per cycle
-#ifndef PIXELS_PER_CYCLE
-#define PIXELS_PER_CYCLE 1
-#endif
-constexpr unsigned kPixelsPerCycle = PIXELS_PER_CYCLE;
-static_assert(kPixelsPerCycle > 0);
-static_assert(IsPow2(kPixelsPerCycle) > 0);
-
-// The maximum number of columns in the image
-#ifndef MAX_COLS
-//#define MAX_COLS 1920 // HD
-#define MAX_COLS 3840  // 4K
-#endif
-constexpr unsigned kMaxCols = MAX_COLS;
-static_assert(kMaxCols > 0);
-static_assert(kMaxCols > kPixelsPerCycle);
-
-// the type to use for the pixel intensity values and a temporary type
-// which should have more bits than the pixel type to check for overflow.
-// We will use subtraction on the temporary type, so it must be signed.
-using PixelT = unsigned char;  // 8 bits, unsigned
-using TmpT = long long;        // 64 bits, signed
-static_assert(std::is_unsigned_v<PixelT>);
-static_assert(std::is_signed_v<TmpT>);
-static_assert(sizeof(TmpT) > sizeof(PixelT));
-
-// the type used for indexing the rows and columns of the image
-using IndexT = short;
-static_assert(std::is_integral_v<IndexT>);
-static_assert(!std::is_unsigned_v<IndexT>);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declare functions used in this file by main()
@@ -221,7 +176,7 @@ int main(int argc, char* argv[]) {
 
   // write the output files if global memory was used (output is meaningless
   // otherwise)
-  if constexpr (kDisableGlobalMem) {
+  if constexpr (!kDisableGlobalMem) {
     WriteOutputFile(data_dir, out_pixels, cols, rows);
   }
 
@@ -459,16 +414,18 @@ bool Validate(PixelT* val, PixelT* ref, unsigned int count, double psnr_thresh,
   double psnr = 20 * std::log10(max_i) - 10 * std::log10(mse);
 
   // check PSNR and maximum pixel difference
+  bool passed = true;
   if (psnr <= psnr_thresh) {
     std::cerr << "ERROR: Peak signal-to-noise ratio (PSNR) is too low: " << psnr
               << "\n";
-    return false;
-  } else if (max_percent_diff >= pixel_diff_thresh) {
+    passed = false;
+  }
+  if (max_percent_diff >= pixel_diff_thresh) {
     std::cerr << "ERROR: Maximum pixel percent difference is too high: "
               << max_percent_diff << "\n";
-    return false;
-  } else {
-    // std::cout << "NRMSE = " << nrmse << "\n";
-    return true;
+    passed = false;
   }
+  
+  //std::cout << "PSNR = " << psnr << "\n";
+  return passed;
 }

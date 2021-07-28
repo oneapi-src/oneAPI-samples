@@ -63,6 +63,41 @@ constexpr T RoundUpPow2(T n) {
     return T(1) << (Log2(n) + 1);
   }
 }
+
+// computes x^y where y must be an integer (positive or negative)
+constexpr double Pow(double x, int y) {
+  if (y == 0) {
+    // x^0 = 1
+    return 1.0;
+  } else {
+    // handle both y < 0 and y > 0 by changing loop bound and multiply value
+    bool y_is_negative = (y < 0);
+    double mult_val = y_is_negative ? (1/x) : x;
+    int loop_bound = y_is_negative ? -y : y;
+
+    double ret = 1.0;
+    for (int i = 0; i < loop_bound; i++) {
+      ret *= mult_val;
+    }
+    return ret;
+  }
+}
+
+// estimates e^(x) for x >= 0 using a taylor series expansion
+// https://en.wikipedia.org/wiki/Taylor_series
+constexpr double Exp(double x, unsigned taylor_terms=32) {
+  double factorial = 1.0;
+  double power = 1.0;
+  double answer = 1.0;
+
+  for(int i = 1; i < taylor_terms-1; i++) {
+    power *= x;
+    factorial *= i;
+    answer += power / factorial;
+  }
+  return answer;
+}
+
 }  // namespace hldutils
 
 #endif /* __MP_MATH__ */

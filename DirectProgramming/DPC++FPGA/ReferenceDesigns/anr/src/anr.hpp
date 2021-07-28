@@ -13,8 +13,9 @@
 #include "data_bundle.hpp"
 #include "intensity_sigma_lut.hpp"
 #include "mp_math.hpp"
-#include "qfp/qfp.hpp"
-#include "qfp/qfp_exp_lut.hpp"
+#include "qfp.hpp"
+#include "qfp_exp_lut.hpp"
+#include "qfp_pow2_lut.hpp"
 #include "row_stencil.hpp"
 #include "shift_reg.hpp"
 
@@ -83,7 +84,7 @@ template <typename InT, int filter_size,
 inline float BilateralFilter1D(ShiftReg<InT, filter_size>& buffer,
                                ShiftReg<float, filter_size_eff>& spatial_filter,
                                ANRParams params, float sig_i_inv_squared_x_half,
-                               ExpLUT& exp_lut) {
+                               const ExpLUT& exp_lut, const Pow2LUT& pow2_lut) {
   // the middle pixel index
   constexpr int kMidIdx = filter_size / 2;
 
@@ -101,16 +102,17 @@ inline float BilateralFilter1D(ShiftReg<InT, filter_size>& buffer,
     // NOTE: we could use a LUT for this, but it would have to be bitwidth^2
     // (for 8 bit pixels, that means 256*256 = 65K floats)
     const InT intensity_diff = buffer[kMidIdx] - buffer[i * 2];
-    const float intensity_diff_squared = (intensity_diff * intensity_diff);
+
+    // compute intensity_diff^2
+    const auto pow2_lut_idx = Pow2LUT::QFP::FromFP32(intensity_diff);
+    const float intensity_diff_squared = pow2_lut[pow2_lut_idx];
 
     // 1/2 * (intensity_diff / sig_i)^2 = 1/2 * (1/sig_i)^2 * (intensity_diff)^2
     const float exp_power = sig_i_inv_squared_x_half * intensity_diff_squared;
 
-    // get the index into the exponential LUT
-    const auto lut_idx = ExpQFP::FromFP32(exp_power);
-
-    // e^(-exp_power)
-    const float intensity_gaussian = exp_lut[lut_idx];
+    // compute e(-exp_power)
+    const auto exp_lut_idx = ExpLUT::QFP::FromFP32(exp_power);
+    const float intensity_gaussian = exp_lut[exp_lut_idx];
 
     // compute the filter value based on the intensity and spatial filters
     const float filter_val = spatial_filter[i] * intensity_gaussian;
@@ -140,7 +142,8 @@ template <typename InT, typename OutT, int filter_size,
 struct VerticalFunctor {
   auto operator()(int row, int col, ShiftReg<InT, filter_size> buffer,
                   ShiftReg<float, filter_size_eff> spatial_filter,
-                  ANRParams params, ExpLUT& exp_lut,
+                  ANRParams params, const ExpLUT& exp_lut,
+                  const Pow2LUT& pow2_lut,
                   IntensitySigmaLUT<InT>& sig_i_lut) const {
     // use a short to store the pixels. We need to hold all 8 bits, but
     // need the type to be signed for the BilateralFilter1D
@@ -166,7 +169,7 @@ struct VerticalFunctor {
     // perform the vertical 1D bilateral filter
     auto output_pixel = BilateralFilter1D<SignedInT, filter_size>(
         buffer_signed, spatial_filter, params, sig_i_inv_squared_x_half,
-        exp_lut);
+        exp_lut, pow2_lut);
 
     // return the result, which is the output pixel, as well as the intensity
     // sigma value (sig_i) and the original pixel which area forwarded to the
@@ -188,7 +191,7 @@ struct HorizontalFunctor {
                   ShiftReg<float, filter_size_eff> spatial_filter,
                   ANRParams params, ANRParams::AlphaFixedT alpha_fixed,
                   ANRParams::AlphaFixedT one_minus_alpha_fixed,
-                  ExpLUT& exp_lut) const {
+                  const ExpLUT& exp_lut, const Pow2LUT& pow2_lut) const {
     // static asserts
     static_assert(std::is_arithmetic_v<OutT>);
     static_assert(filter_size > 1);
@@ -208,7 +211,7 @@ struct HorizontalFunctor {
     // perform the horizontal 1D bilateral filter
     auto output_pixel_float = BilateralFilter1D<float, filter_size>(
         buffer_pixels, spatial_filter, params, sig_i_inv_squared_x_half,
-        exp_lut);
+        exp_lut, pow2_lut);
 
     // fixed point alpha blending
     using PixelFixedT = ac_int<sizeof(OutT) * 8, false>;
@@ -324,23 +327,26 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
       IntensitySigmaLUT<PixelT> sig_i_lut;
 #endif
 
-      // build the constexpr exponential LUT ROM
-      auto exp_lut = BuildExpLUT();
+      // build the constexpr exp() and pow2() LUT ROMs
+      constexpr auto exp_lut = ExpLUT();
+      constexpr auto pow2_lut = Pow2LUT();
 
       // start the column stencil
       ColumnStencil<VerticalInT, VerticalOutT, IndexT, InPipe, IntraPipe,
                     filter_size, max_cols, pixels_per_cycle>(
           rows_k, cols_k, frames_k, VerticalInT(0), vertical_func,
-          spatial_filter, params, std::ref(exp_lut), std::ref(sig_i_lut));
+          spatial_filter, params, std::cref(exp_lut), std::cref(pow2_lut),
+          std::ref(sig_i_lut));
     });
   });
 
   // submit the horizontal kernel using a row stencil
   auto horizontal_kernel = q.submit([&](handler& h) {
     h.single_task<HorizontalKernelID>([=] {
-      // build the constexpr exponential LUT ROM
+      // build the constexpr exp() and pow2() LUT ROMs
       // TODO: it would be nice to just have one copy of these
-      auto exp_lut = BuildExpLUT();
+      constexpr auto exp_lut = ExpLUT();
+      constexpr auto pow2_lut = Pow2LUT();
 
       // convert the alpha and (1-alpha) values to fixed point
       ANRParams::AlphaFixedT alpha_fixed(params.alpha);
@@ -351,7 +357,7 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
                  filter_size, pixels_per_cycle>(
           rows_k, cols_k, frames_k, HorizontalInT(0), horizontal_func,
           spatial_filter, params, alpha_fixed, one_minus_alpha_fixed,
-          std::ref(exp_lut));
+          std::cref(exp_lut), std::cref(pow2_lut));
     });
   });
 
