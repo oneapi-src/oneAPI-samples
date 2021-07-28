@@ -197,8 +197,8 @@ PASSED
 | Flag | Description
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
-`-Xsparallel=2` | Uses two cores when compiling the bitstream through Quartus
-`-Xsseed=8` | Uses seed 8 (seed 33 for Low latency Variant) during Quartus, yields slightly higher fmax
+`-Xsparallel=2` | Uses two cores when compiling the bitstream through Quartus®
+`-Xsseed=8` | Uses seed 8 (seed 33 for Low latency Variant) during Quartus®, yields slightly higher fmax
 `-Xsnum-reorder=6` | On Intel Stratix® 10 SX only, specify a wider data path for read data from global memory 
 `-Xsopt-arg="-nocaching"` | Specifies that cached LSUs should not be used.
 `-DNUM_ENGINES=<1|2>` | Specifies that 1 GZIP engine should be compiled when targeting Intel Arria® 10 GX and two engines when targeting Intel Stratix® 10 SX

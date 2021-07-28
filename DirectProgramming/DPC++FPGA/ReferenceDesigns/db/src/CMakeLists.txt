@@ -42,7 +42,7 @@ if(NOT DEFINED SEED)
     endif()
 endif()
 
-# set number of CPU cores to use for quartus compile, default=2
+# set number of CPU cores to use for quartus® compile, default=2
 if(NOT DEFINED QUARTUS_CORES)
     set(QUARTUS_CORES 2)
 endif()

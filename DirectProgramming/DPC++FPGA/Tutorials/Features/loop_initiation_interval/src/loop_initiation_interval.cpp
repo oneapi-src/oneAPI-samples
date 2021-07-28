@@ -94,7 +94,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           // the minimum II * (1/fMAX) Relaxing the II on a short loop with a
           // long feedback path will remove the bottleneck the loop had on the
           // maximum achievable fMAX of the design The default targeted fMAX is
-          // 240MHz for Arria 10 and 480MHz for Stratix 10, so different IIs
+          // 240MHz for Arria® 10 and 480MHz for Stratix® 10, so different IIs
           // need to be specified so the compiler can schedule the loop such
           // that it does not restrict the maximum fMAX
 #if defined(ENABLE_II)
@@ -154,7 +154,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           // operation on "sum" in a given iteration depends on the value of
           // "sum" calculated in the last operation of a previous iteration The
           // compiler is able to achieve an II of 1 and the default targeted
-          // fMAX for Arria 10, but falls a little short on Stratix 10. The
+          // fMAX for Arria® 10, but falls a little short on Stratix® 10. The
           // intel::initiation_interval attribute should not be used to relax the II of this loop
           // as the drop in occupancy of the long loop is not worth achieving a
           // slightly higher fMAX

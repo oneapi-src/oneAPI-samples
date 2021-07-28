@@ -195,8 +195,8 @@ Avg throughput: 66.2 assets/s
 `-Xshardware`                       | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsdaz`                            | Denormals are zero
 `-Xsrounding=faithful`              | Rounds results to either the upper or lower nearest single-precision numbers
-`-Xsparallel=2`                     | Uses 2 cores when compiling the bitstream through Quartus
-`-Xsseed=2`                         | Uses seed 2 during Quartus, yields slightly higher f<sub>MAX</sub>
+`-Xsparallel=2`                     | Uses 2 cores when compiling the bitstream through Quartus®
+`-Xsseed=2`                         | Uses seed 2 during Quartus®, yields slightly higher f<sub>MAX</sub>
 
 ### Preprocessor Define Flags 
 
