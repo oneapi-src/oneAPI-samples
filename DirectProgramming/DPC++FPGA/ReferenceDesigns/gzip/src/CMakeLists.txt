@@ -6,7 +6,7 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(DEVICE_SOURCE_FILE gzipkernel.cpp)
 set(DEVICE_HEADER_FILE gzipkernel.hpp)
-set(HIGH_BW_SEED "-Xsseed=4")
+set(HIGH_BW_SEED "-Xsseed=8")
 
 # Low latency variant
 set(SOURCE_FILE_LL gzip_ll.cpp crc32.cpp WriteGzip.cpp CompareGzip.cpp)
@@ -42,7 +42,7 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(NUM_ENGINES 2)
     set(LL_SEED "-Xsseed=1")
-    set(HIGH_BW_SEED "-Xsseed=8")
+    set(HIGH_BW_SEED "-Xsseed=4")
     set(NUM_REORDER "-Xsnum-reorder=6")
 elseif(FPGA_BOARD MATCHES ".*agilex.*")
     # Agilex
