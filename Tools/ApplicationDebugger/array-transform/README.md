@@ -187,16 +187,11 @@ see the
 1. Right-click on the solution files and open via either Visual Studio 2017
    or in 2019.
 
-2. Open in Visual Studio "Tools > Options > Debugging > General" and
-   ensure that "Require source files to exactly match the original
-   version" Debugging option is **not** checked.  
-   ![](vs-debugger-option.png)
+2. Select Menu "Build > Build Solution" to build the selected configuration.
 
-3. Select Menu "Build > Build Solution" to build the selected configuration.
+3. Select Menu "Debug > Start Debugging" to run the program.
 
-4. Select Menu "Debug > Start Debugging" to run the program.
-
-5. The solution file is configured to pass `cpu` as the argument to the
+4. The solution file is configured to pass `cpu` as the argument to the
    program.  To select a different device, go to the project's "Configuration
    Properties > Debugging" and set the "Command Arguments" field.
    Use `gpu` or `accelerator` to target the GPU or the FPGA emulator device,
