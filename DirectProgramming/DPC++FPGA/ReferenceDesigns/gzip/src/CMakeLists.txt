@@ -6,7 +6,7 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(DEVICE_SOURCE_FILE gzipkernel.cpp)
 set(DEVICE_HEADER_FILE gzipkernel.hpp)
-set(HIGH_BW_SEED "-Xsseed=8")
+set(HIGH_BW_SEED "-Xsseed=4")
 
 # Low latency variant
 set(SOURCE_FILE_LL gzip_ll.cpp crc32.cpp WriteGzip.cpp CompareGzip.cpp)
