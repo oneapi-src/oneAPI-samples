@@ -17,29 +17,51 @@ designs.
 
 1. PipeArray
 
-     Create a collection of pipes that can be indexed like an array.
+      Create a collection of pipes that can be indexed like an array.
 
-     template <class Id,          // identifier for the pipe array
-               typename BaseTy,   // type to write/read for each pipe
-               size_t min_depth,  // minimum capacity of each pipe
-               size_t... dims     // depth of each dimension in the array
-                                  // any number of dimensions are supported
-               >
-     struct PipeArray
+      template <class Id,          // identifier for the pipe array
+                typename BaseTy,   // type to write/read for each pipe
+                size_t min_depth,  // minimum capacity of each pipe
+                size_t... dims     // depth of each dimension in the array
+                                   // any number of dimensions are supported
+                >
+      struct PipeArray
+
+      Example usage:
+    
+      class PipeArrayId;
+      constexpr int min_depth = 0;
+      constexpr int num_pipes = 4;
+      using MyPipeArray = PipeArray<PipeArrayId, int, min_depth, num_pipes>;
+      ...
+      constexpr int pipe_idx = 1;
+      MyPipeArray::PipeAt<pipe_idx>::read(); 
 
 2. PipeDuplicator
 
-     Fan-out a single pipe write to multiple pipe instances,
-     each of which will receive the same data.
-     A blocking write will perform a blocking write to each pipe.
-     A non-blocking write will perform a non-blocking write to each pipe,
-     and set success to true only if ALL writes were successful.
+      Fan-out a single pipe write to multiple pipe instances,
+      each of which will receive the same data.
+      A blocking write will perform a blocking write to each pipe.
+      A non-blocking write will perform a non-blocking write to each pipe,
+      and set success to true only if ALL writes were successful.
 
-     template <class Id,          // name of this PipeDuplicator
-               typename T,        // data type to transfer
-               typename... Pipes  // all pipes to send duplicated writes to
-               >
-     struct PipeDuplicator
+      template <class Id,          // name of this PipeDuplicator
+                typename T,        // data type to transfer
+                typename... Pipes  // all pipes to send duplicated writes to
+                >
+      struct PipeDuplicator
+
+      Example usage:
+
+      class PipeID1;
+      class PipeID2;
+      using MyPipe1 = sycl::INTEL::pipe<PipeID1, int>;
+      using MyPipe2 = sycl::INTEL::pipe<PipeID2, int>;
+
+      class PipeDuplicatorID;
+      using MyPipeDuplicator = PipeDuplicator<PipeDuplicatorID, int, MyPipe1, MyPipe2>;
+      ...
+      MyPipeDuplicator::write(1); // write the value 1 to both MyPipe1 and MyPipe2
 
 */
 
