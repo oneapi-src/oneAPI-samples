@@ -26,8 +26,8 @@ static_assert(IsPow2(kPixelsPerCycle) > 0);
 
 // The maximum number of columns in the image
 #ifndef MAX_COLS
-//#define MAX_COLS 1920 // HD
-#define MAX_COLS 3840  // 4K
+#define MAX_COLS 1920 // HD
+//#define MAX_COLS 3840  // 4K
 #endif
 constexpr unsigned kMaxCols = MAX_COLS;
 static_assert(kMaxCols > 0);

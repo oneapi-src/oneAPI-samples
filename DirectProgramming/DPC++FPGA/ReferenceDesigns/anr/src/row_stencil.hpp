@@ -43,7 +43,7 @@ void RowStencil(IndexT rows, IndexT cols, IndexT frames, const InType zero_val,
   // static asserts
   static_assert(filter_size > 1);
   static_assert(parallel_cols > 0);
-  static_assert(IsPow2(parallel_cols) > 0);
+  static_assert(IsPow2(parallel_cols));
   static_assert(std::is_integral_v<IndexT>);
   static_assert(std::is_invocable_r_v<OutType, StencilFunction, int, int,
                                       ShiftReg<InType, filter_size>,

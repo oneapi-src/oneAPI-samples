@@ -40,7 +40,7 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
   static_assert(filter_size > 1);
   static_assert(max_cols > parallel_cols);
   static_assert(parallel_cols > 0);
-  static_assert(IsPow2(parallel_cols) > 0);
+  static_assert(IsPow2(parallel_cols));
   static_assert(std::is_invocable_r_v<OutType, StencilFunction, int, int,
                                       ShiftReg<InType, filter_size>,
                                       FunctionArgTypes...>);
@@ -53,7 +53,8 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
       parallel_cols;
   const IndexT col_loop_bound = (cols / parallel_cols);
 
-  [[intel::initiation_interval(1)]]
+  //[[intel::initiation_interval(1)]]
+  [[intel::disable_loop_pipelining]]
   for (IndexT frame = 0; frame < frames; frame++) {
     // the 2D shift register to store the 'kShiftRegCols' columns of size
     // 'kShiftRegRows'

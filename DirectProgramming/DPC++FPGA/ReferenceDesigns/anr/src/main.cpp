@@ -228,7 +228,7 @@ double RunANR(queue& q, PixelT* in_ptr, PixelT* out_ptr, int cols, int rows,
   // launch ANR kernel
   auto anr_kernel_events =
       SubmitANRKernels<PixelT, IndexT, ANRInPipe, ANROutPipe, kFilterSize,
-                       kPixelsPerCycle>(q, cols, rows, frames, params,
+                       kPixelsPerCycle, kMaxCols>(q, cols, rows, frames, params,
                                         sig_i_lut_data_ptr);
 
   // wait for the input and output kernels to finish

@@ -237,7 +237,7 @@ struct HorizontalFunctor {
 //
 template <typename PixelT, typename IndexT, typename InPipe, typename OutPipe,
           unsigned filter_size, unsigned pixels_per_cycle,
-          unsigned max_cols = 4096>
+          unsigned max_cols>
 std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
                                     ANRParams params,
                                     float* sig_i_lut_data_ptr) {
