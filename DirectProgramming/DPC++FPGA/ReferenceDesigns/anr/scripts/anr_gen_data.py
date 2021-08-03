@@ -65,7 +65,7 @@ r = anr_util.filter_size//2
 img_ref_noisy_bayer_padded = np.pad(img_ref_noisy_bayer, r)
 sigma_intensity = noise.sqrt(np.abs(img_ref_noisy_bayer_padded), dark_noise_estimate_with_gain, total_effective_gain_estimate)
 sigma_intensity *= anr_util.sigma_intensity_coef
-img_filtered = noise.bilateral_filter_raw(img_ref_noisy_bayer_padded, anr_util.filter_size, sigma_intensity, anr_util.sigma_space, debug=True)[r:-r,r:-r]
+img_filtered = noise.bilateral_filter_raw(img_ref_noisy_bayer_padded, anr_util.filter_size, sigma_intensity, anr_util.sigma_space)[r:-r,r:-r]
 img_filtered_alpha = anr_util.alpha * img_filtered + (1.0 - anr_util.alpha) * img_ref_noisy_bayer
 
 # write out the raw Bayer data

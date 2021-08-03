@@ -274,7 +274,8 @@ void ParseDataFile(std::string filename, std::vector<PixelT>& pixels, int& cols,
 
   // first two elements are the width and height
   std::stringstream header_ss(header_str);
-  header_ss >> cols >> rows;
+  //header_ss >> cols >> rows;
+  header_ss >> rows >> cols;
 
   // expecting to parse cols*rows pixels
   pixels.resize(cols * rows);
@@ -376,7 +377,7 @@ void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
   }
 
   // write the size
-  ofs << cols << " " << rows << "\n";
+  ofs << rows << " " << cols << "\n";
 
   // write the pixels
   for (auto& p : pixels) {
@@ -399,6 +400,7 @@ bool Validate(PixelT* val, PixelT* ref, unsigned int count, double psnr_thresh,
   // also find the maximum difference between the output pixel and the reference
   double mse = 0.0;
   double max_percent_diff = 0.0;
+  PixelT max_percent_diff_ref = 0, max_percent_diff_val = 0;
   for (unsigned int i = 0; i < count; i++) {
     // cast to a double here because we are subtracting
     auto diff = double(val[i]) - double(ref[i]);
@@ -406,7 +408,13 @@ bool Validate(PixelT* val, PixelT* ref, unsigned int count, double psnr_thresh,
 
     // compute percent diff
     double percent_diff = std::fabs(diff) / (max_i + 1);
-    max_percent_diff = std::max(percent_diff, max_percent_diff);
+
+    // check if this is the maximum difference
+    if (percent_diff > max_percent_diff) {
+      max_percent_diff = percent_diff;
+      max_percent_diff_ref = ref[i];
+      max_percent_diff_val = val[i];
+    }
   }
   mse /= count;
 
@@ -423,6 +431,8 @@ bool Validate(PixelT* val, PixelT* ref, unsigned int count, double psnr_thresh,
   if (max_percent_diff >= pixel_diff_thresh) {
     std::cerr << "ERROR: Maximum pixel percent difference is too high: "
               << max_percent_diff << "\n";
+    std::cerr << "reference = " << (TmpT)max_percent_diff_ref
+              << ", value = " << (TmpT)max_percent_diff_val << "\n";
     passed = false;
   }
   

@@ -22,18 +22,6 @@
 
 using namespace sycl;
 
-// sycl::ONEAPI::experimental::printf convenience macro
-#ifdef __SYCL_DEVICE_ONLY__
-#define CL_CONSTANT __attribute__((opencl_constant))
-#else
-#define CL_CONSTANT
-#endif
-#define PRINTF(format, ...)                                     \
-  {                                                             \
-    static const CL_CONSTANT char _format[] = format;           \
-    sycl::ONEAPI::experimental::printf(_format, ##__VA_ARGS__); \
-  }
-
 // declare the kernel and pipe names globally to reduce name mangling
 class IntraPipeID;
 class VerticalKernelID;
@@ -100,19 +88,17 @@ inline float BilateralFilter1D(ShiftReg<InT, filter_size>& buffer,
   float filter_sum = 0.0;
 
   UnrolledLoop<0, filter_size_eff>([&](auto i) {
-    // compute the square difference
-    // NOTE: we could use a LUT for this, but it would have to be bitwidth^2
-    // (for 8 bit pixels, that means 256*256 = 65K floats)
+    // compute the difference between the pixels
     const InT intensity_diff = buffer[kMidIdx] - buffer[i * 2];
 
-    // compute intensity_diff^2
+    // compute difference squared using a LUT
     const auto pow2_lut_idx = Pow2LUT::QFP::FromFP32(intensity_diff);
     const float intensity_diff_squared = pow2_lut[pow2_lut_idx];
 
     // 1/2 * (intensity_diff / sig_i)^2 = 1/2 * (1/sig_i)^2 * (intensity_diff)^2
     const float exp_power = sig_i_inv_squared_x_half * intensity_diff_squared;
 
-    // compute e(-exp_power)
+    // compute e(-exp_power) using a LUT
     const auto exp_lut_idx = ExpLUT::QFP::FromFP32(exp_power);
     const float intensity_gaussian = exp_lut[exp_lut_idx];
 
@@ -219,9 +205,20 @@ struct HorizontalFunctor {
         buffer_pixels, spatial_filter, params, sig_i_inv_squared_x_half,
         exp_lut, pow2_lut, inv_lut);
 
-    // fixed point alpha blending
+    // the fixed point type for the Pixel values
     using PixelFixedT = ac_int<sizeof(OutT) * 8, false>;
-    const PixelFixedT output_pixel(output_pixel_float);
+
+    // saturate the output pixel
+    PixelFixedT output_pixel;
+    if (output_pixel_float >= 255) {
+      output_pixel = 255;
+    } else if (output_pixel_float <= 0) {
+      output_pixel = 0;
+    } else {
+      output_pixel = output_pixel_float;
+    }
+
+    // fixed point alpha blending
     const PixelFixedT original_pixel(buffer[kMidIdx].pixel_o);
     auto output_pixel_alpha =
         (alpha_fixed * output_pixel) + (one_minus_alpha_fixed * original_pixel);
@@ -263,7 +260,7 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
   // validate the arguments
   int padded_cols = PadColumns<IndexT, filter_size>(cols);
   if (cols > max_cols) {
-    std::cerr << "ERROR: cols exceeds the maximum (max_cols)"
+    std::cerr << "ERROR: cols exceeds the maximum (max_cols) "
               << "(" << cols << " > " << max_cols << ")\n";
     std::terminate();
   } else if (cols <= 0) {
@@ -333,7 +330,7 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
       IntensitySigmaLUT<PixelT> sig_i_lut;
 #endif
 
-      // build the constexpr exp() and pow2() LUT ROMs
+      // build the constexpr exp(), pow2(), and inverse LUTs
       constexpr ExpLUT exp_lut;
       constexpr Pow2LUT pow2_lut;
       constexpr InvLUT inv_lut;
@@ -350,8 +347,7 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
   // submit the horizontal kernel using a row stencil
   auto horizontal_kernel = q.submit([&](handler& h) {
     h.single_task<HorizontalKernelID>([=] {
-      // build the constexpr exp() and pow2() LUT ROMs
-      // TODO: it would be nice to just have one copy of these
+      // build the constexpr exp(), pow2(), and inverse LUTs
       constexpr ExpLUT exp_lut;
       constexpr Pow2LUT pow2_lut;
       constexpr InvLUT inv_lut;
