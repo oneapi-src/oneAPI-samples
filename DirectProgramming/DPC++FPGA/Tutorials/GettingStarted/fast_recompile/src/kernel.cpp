@@ -32,7 +32,7 @@ void RunKernel(queue& q, buffer<float,1>& buf_a, buffer<float,1>& buf_b,
       // Data accessors
       accessor a(buf_a, h, read_only);
       accessor b(buf_b, h, read_only);
-      accessor r(buf_r, h, write_only, noinit);
+      accessor r(buf_r, h, write_only, no_init);
 
       // Kernel executes with pipeline parallelism on the FPGA.
       // Use kernel_args_restrict to specify that a, b, and r do not alias.

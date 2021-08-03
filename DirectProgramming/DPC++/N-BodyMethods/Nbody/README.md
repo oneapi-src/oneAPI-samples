@@ -96,7 +96,7 @@ Below are the default parameters:
     ===============================
     Built target run
 
-### Running the Hidden Markov Model sample in the DevCloud<a name="run-nbody-on-devcloud"></a>
+### Running the Nbody sample in the DevCloud<a name="run-nbody-on-devcloud"></a>
 1.  Open a terminal on your Linux system.
 2.	Log in to DevCloud.
 ```
@@ -107,7 +107,7 @@ ssh devcloud
 git clone https://github.com/oneapi-src/oneAPI-samples.git
 ```
 
-4. Change directories to the  Hidden Markov Model sample directory.
+4. Change directories to the Nbody sample directory.
 ```
 cd ~/oneAPI-samples/DirectProgramming/DPC++/N-bodyMethods/Nbody
 ```

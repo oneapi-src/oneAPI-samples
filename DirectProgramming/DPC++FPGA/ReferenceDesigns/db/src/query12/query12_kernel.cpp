@@ -78,6 +78,7 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
     accessor l_receiptdate_accessor(l_receiptdate_buf, h, read_only);
 
     h.single_task<LineItemProducer>([=]() [[intel::kernel_args_restrict]] {
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < l_rows; i += kLineItemJoinWindowSize) {
         // bulk read of data from global memory
         NTuple<kLineItemJoinWindowSize, LineItemRow> data;
@@ -113,6 +114,7 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
     accessor o_orderpriority_accessor(o_orderpriority_buf, h, read_only);
 
     h.single_task<OrdersProducer>([=]() [[intel::kernel_args_restrict]] {
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < o_rows; i += kOrderJoinWindowSize) {
         // bulk read of data from global memory
         NTuple<kOrderJoinWindowSize, OrdersRow> data;
@@ -185,6 +187,7 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
       DBDecimal low_line_count1_local = 0, low_line_count2_local = 0;
       bool done;
 
+      [[intel::initiation_interval(1)]]
       do {
         // get joined row from pipe
         bool pipe_valid;

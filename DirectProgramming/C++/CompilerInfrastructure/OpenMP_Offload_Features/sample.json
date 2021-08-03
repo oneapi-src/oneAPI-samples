@@ -1,0 +1,28 @@
+{
+  "guid": "DBE51810-C64F-45F0-87EF-38898BE1D826",
+  "name": "OpenMP Offload Feature Samples",
+  "categories": [ "Toolkit/DirectProgramming/C++/CompilerInfrastructure/OpenMP_Offload_Features" ],
+  "description": "Samples showing new OpenMP Offload features supported",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "os": [ "linux" ],
+  "builder": [ "ide", "make" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "env": [ "source /opt/intel/oneapi/setvars.sh" ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run_prog1",
+          "make run_prog2",
+          "make run_prog3",
+          "make clean"
+        ]
+      }
+    ]
+  }
+}
