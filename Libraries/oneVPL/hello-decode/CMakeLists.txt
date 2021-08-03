@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 # ##############################################################################
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.10.2)
 project(hello-decode)
 
 # Default install places 64 bit runtimes in the environment, so we want to do a

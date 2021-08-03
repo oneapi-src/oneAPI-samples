@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 # ##############################################################################
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.10.2)
 
 # This sample must be compiled and executed within the oneAPI product enviroment
 # with the dpcpp compiler to use dpcpp features
