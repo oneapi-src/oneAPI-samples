@@ -3,8 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#ifndef __PIPE_ARRAY_HPP__
-#define __PIPE_ARRAY_HPP__
+#ifndef __PIPE_UTILS_HPP__
+#define __PIPE_UTILS_HPP__
 
 #include <CL/sycl.hpp>
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
@@ -261,4 +261,4 @@ struct PipeDuplicator<Id, T> {
   }
 };
 
-#endif /* __PIPE_ARRAY_HPP__ */
+#endif /* __PIPE_UTILS_HPP__ */
