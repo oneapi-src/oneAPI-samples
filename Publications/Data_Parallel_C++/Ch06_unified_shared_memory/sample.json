@@ -2,7 +2,7 @@
   "guid": "1e00e2dd-ffe3-408f-a9ec-77e81532d75a",
   "name": "Chapter 06 - Unified Shared Memory",
   "categories": [ "Toolkit/Publication: Data Parallel C++" ],
-  "description": "Chapter 6 source code examples: Unified Shared Memory | fig_6_5_allocation_styles.cpp * Three styles for allocation | fig_6_6_usm_explicit_data_movement.cpp * USM explicit data movement example | fig_6_7_usm_implicit_data_movement.cpp * USM implicit data movement example | fig_6_8_prefetch_memadvise.cpp * Fine-grained control via prefetch and mem_advise | fig_6_9_queries.cpp * Queries on USM pointers and devices ",
+  "description": "fig_6_5_allocation_styles.cpp - Three styles for allocation * fig_6_6_usm_explicit_data_movement.cpp - USM explicit data movement example * fig_6_7_usm_implicit_data_movement.cpp - USM implicit data movement example * fig_6_8_prefetch_memadvise.cpp - Fine-grained control via prefetch and mem_advise * fig_6_9_queries.cpp - Queries on USM pointers and devices ",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
