@@ -6,7 +6,7 @@
 #include <utility>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // the "detail" namespace is commonly used in C++ as an internal namespace
 // (to a file) that is not meant to be visible to the public and should be
@@ -153,7 +153,7 @@ class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
   ProducerImpl &operator=(ProducerImpl const &) = delete;
 
   // the pipe to connect to in device code
-  using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
+  using Pipe = sycl::ext::intel::pipe<PipeID, T, min_capacity>;
 
   // the implementation of the static
   static std::pair<event, event> Start(queue &q,
@@ -223,7 +223,7 @@ class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
   ConsumerImpl &operator=(ConsumerImpl const &) = delete;
 
   // the pipe to connect to in device code
-  using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
+  using Pipe = sycl::ext::intel::pipe<PipeID, T, min_capacity>;
 
   static std::pair<event, event> Start(queue &q,
                                        size_t count = BaseImpl::count_) {

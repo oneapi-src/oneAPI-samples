@@ -12,7 +12,7 @@
 #include "dpc_common.hpp"
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 using namespace sycl;
 
@@ -33,9 +33,9 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
                 std::vector<int> &r_out) {
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {

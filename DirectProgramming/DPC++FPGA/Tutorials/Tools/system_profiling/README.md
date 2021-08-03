@@ -36,7 +36,7 @@ void profiling_example(const std::vector<float>& vec_in,
   std::vector<float> vec_pp = PreProcess(vec_in);
 
   // FPGA device performs additional processing
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
   queue q(selector, dpc_common::exception_handler,
           property::queue::enable_profiling{});
 

@@ -7,7 +7,7 @@
 */
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cmath>
 #include <numeric>
 
@@ -20,12 +20,12 @@ using namespace sycl;
 // Two identical pipes to demonstrate the behaviour before
 // and after the design re-format
 using ProducerToConsumerBeforePipe =
-    INTEL::pipe<                           // Defined in the SYCL headers.
+    ext::intel::pipe<                           // Defined in the SYCL headers.
         class ProducerConsumerBeforePipe,  // An identifier for the pipe.
         float,                             // The type of data in the pipe.
         20>;                               // The capacity of the pipe.
 using ProducerToConsumerAfterPipe =
-    INTEL::pipe<class ProducerConsumerAfterPipe, float, 20>;
+    ext::intel::pipe<class ProducerConsumerAfterPipe, float, 20>;
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization report.
@@ -185,12 +185,12 @@ bool ProcessOutput(buffer<float, 1> &input_buf, buffer<float, 1> &output_buf) {
 int main() {
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
   std::cout << "\nThe Dynamic Profiler cannot be used in the emulator "
                "flow. Please compile to FPGA hardware to collect "
                "dynamic profiling data. \n\n";
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
