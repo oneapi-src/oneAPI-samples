@@ -17,7 +17,7 @@
 # scan. To see those build targets, type "make help" at the command-line.
 ##############################################################################
 
-cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.4 )
 
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)

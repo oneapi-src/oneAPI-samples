@@ -1,7 +1,8 @@
 # Copyright (C) 2020 Intel Corporation
 
 # SPDX-License-Identifier: MIT
-
+cmake_minimum_required(VERSION 3.4 )
+project(Chap12)
 add_book_sample(
     TEST
     TARGET fig_12_1_assigned_device

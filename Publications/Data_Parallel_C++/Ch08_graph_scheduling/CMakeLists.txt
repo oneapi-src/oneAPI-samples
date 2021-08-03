@@ -1,7 +1,8 @@
 # Copyright (C) 2020 Intel Corporation
 
 # SPDX-License-Identifier: MIT
-
+cmake_minimum_required(VERSION 3.4 )
+project(Chap8)
 add_book_sample(
     TEST
     TARGET fig_8_3_linear_dependence_in_order

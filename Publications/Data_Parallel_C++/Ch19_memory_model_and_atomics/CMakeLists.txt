@@ -1,7 +1,8 @@
 # Copyright (C) 2020 Intel Corporation
 
 # SPDX-License-Identifier: MIT
-
+cmake_minimum_required(VERSION 3.4 )
+project(Chap19)
 add_book_sample(
     TARGET fig_19_3_data_race
     SOURCES fig_19_3_data_race.cpp)
