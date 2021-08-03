@@ -33,6 +33,7 @@
 using std::vector;
 using namespace sycl;
 
+#if COMPLEX == 1
 void ComplexFloatQRDecomposition( vector<ac_complex<float>> &A_matrix, 
                       vector<ac_complex<float>> &QR_matrix,
                       queue &q, size_t matrices, size_t reps) {
@@ -40,3 +41,12 @@ void ComplexFloatQRDecomposition( vector<ac_complex<float>> &A_matrix,
   QRDecomposition<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS>(
                                         A_matrix, QR_matrix, q, matrices, reps);
 }
+#else
+void FloatQRDecomposition(  vector<float> &A_matrix, 
+                            vector<float> &QR_matrix,
+                            queue &q, size_t matrices, size_t reps) {
+
+  QRDecomposition<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS>(
+                                        A_matrix, QR_matrix, q, matrices, reps);
+}
+#endif

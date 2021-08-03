@@ -38,14 +38,20 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-
 using namespace std;
 using namespace std::chrono;
 using namespace sycl;
 
+
+#if COMPLEX == 1
 void ComplexFloatQRDecomposition( vector<ac_complex<float>> &A_matrix, 
-                      vector<ac_complex<float>> &QR_matrix,
-                      queue &q, size_t matrices, size_t reps);
+                                  vector<ac_complex<float>> &QR_matrix,
+                                  queue &q, size_t matrices, size_t reps);
+#else
+void FloatQRDecomposition(  vector<float> &A_matrix, 
+                            vector<float> &QR_matrix,
+                            queue &q, size_t matrices, size_t reps);
+#endif
 
 int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
@@ -77,26 +83,45 @@ int main(int argc, char *argv[]) {
     cout << "Device name: " << device.get_info<info::device::name>().c_str()
          << "\n";
 
+#if COMPLEX == 1
+  cout << "Type is complex" << std::endl;
+#else
+  cout << "Type is not complex" << std::endl;
+#endif
+
+#if COMPLEX == 1
     vector<ac_complex<float>> a_matrix;
     vector<ac_complex<float>> qr_matrix;
+#else
+    vector<float> a_matrix;
+    vector<float> qr_matrix; 
+#endif
 
     a_matrix.resize(matrices * kAMatrixSizeFactor);
     qr_matrix.resize(matrices * kQRMatrixSize);
 
     // For output-postprocessing
+#if COMPLEX == 1
     float q_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT][2];
     float r_matrix_pp[COLS_COMPONENT][COLS_COMPONENT][2];
+#else
+    float q_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT];
+    float r_matrix_pp[COLS_COMPONENT][COLS_COMPONENT];
+#endif
 
     cout << "Generating " << matrices << " random matri"
          << ((matrices == 1) ? "x " : "ces ") << "\n";
 
     srand(kRandomSeed);
+    // cout << "A MATRIX" << std::endl;
 
     for (size_t i = 0; i < matrices; i++) {
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {
         for (size_t col = 0; col < COLS_COMPONENT; col++) {
           int val = rand();
           float random_real = val % (kRandomMax - kRandomMin) + kRandomMin;
+
+#if COMPLEX == 1
           val = rand();
           float random_imag = val % (kRandomMax - kRandomMin) + kRandomMin;
           
@@ -104,12 +129,23 @@ int main(int argc, char *argv[]) {
 
           a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] = 
                                                                 random_complex;
+#else
+          a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] = 
+                                                                random_real;
+          // cout << a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] << " ";
+#endif
+
         }
+        // cout << std::endl;
       }
     }
 
     // Accelerator warmup
+#if COMPLEX == 1
     ComplexFloatQRDecomposition(a_matrix, qr_matrix, q, 1, 1); 
+#else
+    FloatQRDecomposition(a_matrix, qr_matrix, q, 1, 1); 
+#endif
 
 #if defined(FPGA_EMULATOR)
     size_t reps = 2;
@@ -121,7 +157,11 @@ int main(int argc, char *argv[]) {
          << ((reps > 1) ? "repeatedly" : "") << "\n";
 
     high_resolution_clock::time_point start_time = high_resolution_clock::now();
+#if COMPLEX == 1
     ComplexFloatQRDecomposition(a_matrix, qr_matrix, q, matrices, reps);
+#else
+    FloatQRDecomposition(a_matrix, qr_matrix, q, matrices, reps);
+#endif
     high_resolution_clock::time_point end_time = high_resolution_clock::now();
     duration<double> diff = end_time - start_time;
     q.throw_asynchronous();
@@ -144,6 +184,8 @@ int main(int argc, char *argv[]) {
     for (size_t matrix : to_check) {
       cout << " " << matrix << std::endl;
       size_t idx = 0;
+
+#if COMPLEX == 1
       for (size_t i = 0; i < COLS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
           if (j < i)
@@ -153,7 +195,9 @@ int main(int argc, char *argv[]) {
             r_matrix_pp[i][j][1] = qr_matrix[matrix * kQRMatrixSize + idx].i();
             idx++;
           }
+          // cout << r_matrix_pp[matrix * kQMatrixSize + idx] << " ";
         }
+        // cout << std::endl;
       }
 
       // idx = 0;
@@ -163,7 +207,7 @@ int main(int argc, char *argv[]) {
           q_matrix_pp[i][j][1] = qr_matrix[matrix * kQRMatrixSize + idx].i();
           idx++;
 
-          // cout << q_matrix[matrix * kQMatrixSize + idx] << " ";
+          // cout << q_matrix_pp[matrix * kQMatrixSize + idx] << " ";
         }
         // cout << std::endl;
       }
@@ -264,6 +308,111 @@ int main(int argc, char *argv[]) {
           }
         }
       }
+#else
+
+      // cout << "R MATRIX" << std::endl;
+      for (size_t i = 0; i < COLS_COMPONENT; i++) {
+        for (size_t j = 0; j < COLS_COMPONENT; j++) {
+          if (j < i)
+            r_matrix_pp[i][j] = 0;
+          else {
+            r_matrix_pp[i][j] = qr_matrix[matrix * kQRMatrixSize + idx];
+            idx++;
+          }
+          // cout << r_matrix_pp[i][j] << " ";
+        }
+        // cout << std::endl;
+      }
+      
+      // cout << std::endl;
+
+      // cout << "Q MATRIX" << std::endl;
+      // idx = 0;
+      for (size_t j = 0; j < COLS_COMPONENT; j++) {
+        for (size_t i = 0; i < ROWS_COMPONENT; i++) {
+          q_matrix_pp[i][j] = qr_matrix[matrix * kQRMatrixSize + idx];
+          idx++;
+
+          // cout << q_matrix_pp[i][j] << " ";
+        }
+        // cout << std::endl;
+      }
+
+      constexpr float kErrorThreshold = 1e-4;
+      size_t count = 0;
+      bool error = false;
+      float qr_ij = 0;
+      float qtq_ij = 0;
+      for (size_t i = 0; i < ROWS_COMPONENT; i++) {
+        for (size_t j = 0; j < COLS_COMPONENT; j++) {
+          qr_ij = 0;
+          for (size_t k = 0; k < COLS_COMPONENT; k++) {
+            qr_ij += q_matrix_pp[i][k] * r_matrix_pp[k][j];
+          }
+
+          qtq_ij = 0;
+          for (size_t k = 0; k < COLS_COMPONENT; k++) {
+            qtq_ij += q_matrix_pp[i][k] * q_matrix_pp[j][k];
+          }
+
+          bool qr_eq_a = (abs(a_matrix[matrix * kAMatrixSizeFactor +
+                              j * ROWS_COMPONENT + i] - qr_ij) 
+                          < kErrorThreshold);
+
+
+          bool qtq_ortho = (((i == j) && (abs(qtq_ij - 1) < kErrorThreshold))
+                        || ((i != j) && (abs(qtq_ij) < kErrorThreshold)));
+
+          bool r_upper_triang = ((i > j) && 
+                              ((abs(r_matrix_pp[i][j]) < kErrorThreshold) ))
+                                || ((i <= j));
+
+          if (!qr_eq_a || !qtq_ortho || !r_upper_triang
+              || !std::isfinite(qr_ij)
+              || !std::isfinite(qtq_ij)
+              || !std::isfinite(r_matrix_pp[i][j])
+            ) {
+
+            count++;
+
+            if(error){
+              continue;
+            }
+
+            if(!qr_eq_a){
+              cout  << "Error: A[" << i << "][" << j << "] = " << 
+                                  a_matrix[matrix * kAMatrixSizeFactor +
+                                  j * ROWS_COMPONENT + i]
+                    << " but QR[" << i << "][" << j << "] = " << qr_ij 
+                    << std::endl;
+            }
+            if(!qr_eq_a) {
+              cout  << "The difference is greater than tolerated (" 
+                    << kErrorThreshold << ")" << std::endl;
+            }
+            if(!qtq_ortho) {
+              cout  << "Q is not orthogonal" << std::endl;             
+            }
+            if(!r_upper_triang) {
+              cout  << "R is not upper triangular" << std::endl;             
+            }
+            if(!std::isfinite(qr_ij)) {
+              cout  << "QR[" << i << "][" << j << "] = " << qr_ij 
+                    << " is not finite" << std::endl;
+            }
+            if(!std::isfinite(qtq_ij)) {
+              cout  << "QtQ[" << i << "][" << j << "] = " << qtq_ij 
+                    << " is not finite" << std::endl;
+            }
+            if(!std::isfinite(r_matrix_pp[i][j])) {
+              cout  << "R[" << i << "][" << j << "] = " << r_matrix_pp[i][j] 
+                    << " is not finite" << std::endl;
+            }
+            error = true;
+          }
+        }
+      }
+#endif
 
       if (count > 0) {
         cout << "\nFAILED\n";

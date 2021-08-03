@@ -131,6 +131,11 @@ struct Complex {
     yy = y;
   }
 
+  Complex(T v) {
+    xx = v;
+    yy = v;
+  }
+
   // Complex addition
   const Complex operator+(const Complex rhs) const {
     return Complex(xx + rhs.xx, yy + rhs.yy);
@@ -143,6 +148,14 @@ struct Complex {
     c.yy = yy * rhs.xx - xx * rhs.yy;
     return c;
   }
+};
+
+/*
+  A structure that hold a row a of matrix of type T.
+*/
+template<unsigned rows, typename T>
+struct row{
+  T d[rows];
 };
 
 // Forward declare the kernel name
@@ -170,7 +183,7 @@ class QRD;
   - QR_matrix: The output matrix. The function will overwrite this matrix.
                 The first values of this output vector will contain the upper
                 triangular values of the R matrix, row by row.
-                e.g. for a 4x4 QRD, out_matrix[5*2+1] will contain the imaginary
+                e.g. for a 4x4 QRD, QR_matrix[5*2+1] will contain the imaginary
                 part of R[1][1].
                 So there are exactly N*(N+1)/2 elements of R.
                 So rest of the values hold the transposed matrix Q.
@@ -190,13 +203,34 @@ class QRD;
                       method.
   
 */
-template<unsigned columns, unsigned rows, unsigned raw_latency, typename T>
-void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix, 
-                            vector<ac_complex<T>> &QR_matrix,
+template< unsigned columns,
+          unsigned rows,
+          unsigned raw_latency,
+          bool isComplex,
+          typename T>
+void QRDecomposition_impl(  vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> &A_matrix, 
+                            vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> &QR_matrix,
                             queue &q, 
                             size_t matrices, 
-                            size_t reps,
-                            typename std::enable_if<std::is_same<T, float>::value>::type* = 0) {
+                            size_t reps) {
+
+  typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
+  typedef typename std::conditional<isComplex, Complex<T>, T>::type CTT;
+
+  // Functional limitations
+  static_assert(std::is_same<T, float>::value, 
+                                            "only float datatype is supported");
+  static_assert(columns == rows, "only squared are matrices supported");
+  static_assert((columns <= 512) && (columns >= 4), 
+                          "only matrices of size 4x4 to 512x512 are supported");
+  static_assert(columns%4 == 0, 
+                "only matrices of size that are a multiple of 4 are supported");
+
+  // Sanity checks
+  // A least one matrix must be given
+  assert(matrices > 0);
+  // A least one run must be performed
+  assert(reps > 0);
 
   // Number of complex elements in the matrix
   constexpr int kNumComplexElements = columns * rows;
@@ -219,6 +253,7 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
   // memories
   // We want 4 complex elements (8 floating-point values) in each memory bank
   constexpr int kNumElementsPerBank = 4;
+  // constexpr int kNumElementsPerBank = isComplex ? 4 : 8;
   // Set the bankwidth in bytes
   constexpr int kBankwidth = kNumElementsPerBank * 8;
   constexpr int kNumBanks = rows / kNumElementsPerBank;
@@ -248,8 +283,8 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
   constexpr int kVariableIterations = kNValue - raw_latency;
   // Total number of dummy iterations
   constexpr int kDummyIterations = raw_latency > columns ?
-          (columns - 1) * columns / 2 + (raw_latency - columns) * columns :
-          raw_latency * (raw_latency - 1) / 2;
+              (columns - 1) * columns / 2 + (raw_latency - columns) * columns :
+              raw_latency * (raw_latency - 1) / 2;
 
   // Total number of iterations (including dummy iterations)
   constexpr int kIterations = columns +
@@ -286,30 +321,30 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
   }
 
   // Create buffers and allocate space for them.
-  buffer<ac_complex<T>, 1> *A_buffer[kNumBuffers];
-  buffer<ac_complex<T>, 1> *QR_buffer[kNumBuffers];
+  buffer<TT, 1> *A_buffer[kNumBuffers];
+  buffer<TT, 1> *QR_buffer[kNumBuffers];
   for (short i = 0; i < kNumBuffers; i++) {
-    A_buffer[i] = new buffer<ac_complex<T>, 1>(kAMatrixSize * chunk);
-    QR_buffer[i] = new buffer<ac_complex<T>, 1>(kQRMatrixSize * chunk);
+    A_buffer[i] = new buffer<TT, 1>(kAMatrixSize * chunk);
+    QR_buffer[i] = new buffer<TT, 1>(kQRMatrixSize * chunk);
   }
 
   // Repeat the computation multiple times (for performance analysis)
   for (size_t r = 0; r < reps; r++) {
 
     // Go over all the matrices, rotating buffers every time
-    for (size_t b = 0, it = 0; it < matrices; 
-                                      it += chunk, b = (b + 1) % kNumBuffers) {
+    for (size_t bufferIdx = 0, it = 0; it < matrices; 
+                      it += chunk, bufferIdx = (bufferIdx + 1) % kNumBuffers) {
 
       // Pointer to current input/output matrices in host memory 
-      const ac_complex<T> *kPtrA = A_matrix.data() + kAMatrixSize * it;
-      ac_complex<T> *kPtrQR = QR_matrix.data() + kQRMatrixSize * it;
+      const TT *kPtrA = A_matrix.data() + kAMatrixSize * it;
+      TT *kPtrQR = QR_matrix.data() + kQRMatrixSize * it;
 
       int matrices = chunk;
 
       // Copy a new input matrix from the host memory into the FPGA DDR 
       q.submit([&](handler &h) {
         auto A_matrix2 =
-                  A_buffer[b]->template get_access<access::mode::discard_write>(h);
+       A_buffer[bufferIdx]->template get_access<access::mode::discard_write>(h);
         h.copy(kPtrA, A_matrix2);
       });
 
@@ -321,15 +356,16 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
     //// END DEBUG
 
         // Create accessors to the FPGA DDR buffers
-        accessor A_matrix_accessor(*A_buffer[b], h, read_only);
-        accessor QR_matrix_accessor(*QR_buffer[b], h, write_only, noinit);
+        accessor A_matrix_accessor(*A_buffer[bufferIdx], h, read_only);
+        accessor QR_matrix_accessor(*QR_buffer[bufferIdx], h, write_only, 
+                                                                       no_init);
 
         // Create alias to the output matrix accessor
         auto QR_matrix_accessor_2 = QR_matrix_accessor;
 
         h.single_task<class QRD>([=]() [[intel::kernel_args_restrict]] {
           // Go over the matrices
-          for (int l = 0; l < matrices; l++) {
+          for (int matrixIdx = 0; matrixIdx < matrices; matrixIdx++) {
 
             // Instantiate 3 versions of the input matrix
             // There are three loops that:
@@ -339,11 +375,9 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
             // - writes A_store into the output matrix
             [[intel::bankwidth(kBankwidth)]] // NO-FORMAT: Attribute
             [[intel::numbanks(kNumBanksNextPow2)]]   // NO-FORMAT: Attribute
-            struct {
-              Complex<T> d[rows];
-            } A_load[columns],
-              A_compute[columns], 
-              A_store[columns];
+            row<rows, CTT>  A_load[columns], 
+                            A_compute[columns], 
+                            A_store[columns];
 
             /*
               ==================================================================
@@ -351,36 +385,57 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
               ==================================================================
             */
             // Get the index of the first bank of the current matrix l
-            int loadBankIndex = l * kNumComplexElements / kNumElementsPerBank;
+            int loadBankIndex = matrixIdx * kNumComplexElements 
+                                                          / kNumElementsPerBank;
 
             [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
             for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; li++) {
 
               // Load a single bank of the input matrix 
-              Complex<T> bank[kNumElementsPerBank];
+              CTT bank[kNumElementsPerBank];
+
               UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                bank[k].xx = A_matrix_accessor[loadBankIndex * kNumElementsPerBank + k].r();
-                bank[k].yy = A_matrix_accessor[loadBankIndex * kNumElementsPerBank + k].i();
+                if constexpr(isComplex){
+                  bank[k].xx = A_matrix_accessor[
+                                  loadBankIndex * kNumElementsPerBank + k].r();
+                  bank[k].yy = A_matrix_accessor[
+                                  loadBankIndex * kNumElementsPerBank + k].i();
+                }
+                else{
+                  bank[k] = A_matrix_accessor[
+                                      loadBankIndex * kNumElementsPerBank + k];
+                }
               });
 
               // Increase the bank index
               loadBankIndex++;
 
               // Write the current bank to the A_load matrix.
-              ac_int<BitsForMaxValue<kNumBanks>(), false> jtmp = li % (kNumBanks);
+              ac_int<BitsForMaxValue<kNumBanks>(), false> jtmp = 
+                                                              li % (kNumBanks);
               ac_int<kLiNumBankBitSize, false> liNumBank = li / kNumBanks;
               UnrolledLoop<kNumBanks>([&](auto k) {
                 UnrolledLoop<kNumElementsPerBank>([&](auto t) {
                   constexpr auto rowIdx = k * kNumElementsPerBank + t;
                   if (jtmp == k) {
-                    A_load[liNumBank].d[rowIdx].xx = bank[t].xx;
-                    A_load[liNumBank].d[rowIdx].yy = bank[t].yy;
+                    if constexpr(isComplex){
+                      A_load[liNumBank].d[rowIdx].xx = bank[t].xx;
+                      A_load[liNumBank].d[rowIdx].yy = bank[t].yy;
+                    }
+                    else{
+                      A_load[liNumBank].d[rowIdx] = bank[t];
+                    }
                   }
 
                   // Delay data signals to create a vine-based data distribution
                   // to lower signal fanout.
-                  bank[t].xx = sycl::ext::intel::fpga_reg(bank[t].xx);
-                  bank[t].yy = sycl::ext::intel::fpga_reg(bank[t].yy);
+                  if constexpr(isComplex){
+                    bank[t].xx = INTEL::fpga_reg(bank[t].xx);
+                    bank[t].yy = INTEL::fpga_reg(bank[t].yy);
+                  }
+                  else{
+                    bank[t] = INTEL::fpga_reg(bank[t]);
+                  }
                 });
 
                 jtmp = sycl::ext::intel::fpga_reg(jtmp);
@@ -389,8 +444,11 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
 
             /*
               ==================================================================
-              Loop 2: Compute the QR Decomposition.
+              Loop 2: Main computation the QR Decomposition.
               ==================================================================
+            
+              Main computation of the QR Decomposition.
+
               This code implements a OneAPI optimized variation of the following
               algorithm:
 
@@ -418,22 +476,21 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
               -> <x,y> represents the dot product of the vectors x and y
             */
 
+            // Get index in the output at which to start writing the outputs for
+            // input matrix l.
+            int qr_idx = matrixIdx * kQRMatrixSize;
+
             // a local copy of a_{i+1} that is used across multiple j iterations
             // for the computation of pip1 and p
-            Complex<T> a_ip1[rows];
+            CTT a_ip1[rows];
             // a local copy of a_ip1 that is used across multiple j iterations 
             // for the computation of a_j
-            Complex<T> a_i[rows];
+            CTT a_i[rows];
             // Depending on the context, will contain:
             // -> -s[j]: for all the iterations to compute a_j
             // -> ir: for one iteration per j iterations to compute Q_i
-            Complex<T> s_or_i[columns];
-
-
-            // Get index in the output at which to start writing the outputs for
-            // input matrix l.
-            int qr_idx = l * kQRMatrixSize;
-
+            CTT s_or_i[columns];
+           
             // Only the real part of the complex pip1 and ir are needed for the 
             // computation
             T pip1, ir;
@@ -450,14 +507,14 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
             [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
             [[intel::ivdep(raw_latency)]]  // NO-FORMAT: Attribute
             for (int s = 0; s < kIterations; s++) {
-
               // Temporary storage for a column of the input matrix and for
               // partial results.
-              Complex<T> col[rows];
+              CTT col[rows];
 
               // Current value of s_or_i depending on the value of j
               // It is replicated kNumBanks times to reduce fanout
-              Complex<T> sori[kNumBanks];
+              CTT sori[kNumBanks];
+
 
               // All the control signals are precomputed and replicated
               // kNumBanks times to reduce fanout
@@ -468,13 +525,18 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
                     i_lt_0[kNumBanks];
 
               UnrolledLoop<kNumBanks>([&](auto k) {
-                i_gt_0[k] = sycl::ext::intel::fpga_reg(i > 0);
-                i_lt_0[k] = sycl::ext::intel::fpga_reg(i < 0);
-                j_eq_i[k] = sycl::ext::intel::fpga_reg(j == i);
-                i_ge_0_j_ge_i[k] = sycl::ext::intel::fpga_reg(i >= 0 && j >= i);
-                j_eq_i_plus_1[k] = sycl::ext::intel::fpga_reg(j == i + 1);
-                sori[k].xx = sycl::ext::intel::fpga_reg(s_or_i[j].xx);
-                sori[k].yy = sycl::ext::intel::fpga_reg(s_or_i[j].yy);
+                i_gt_0[k] = INTEL::fpga_reg(i > 0);
+                i_lt_0[k] = INTEL::fpga_reg(i < 0);
+                j_eq_i[k] = INTEL::fpga_reg(j == i);
+                i_ge_0_j_ge_i[k] = INTEL::fpga_reg(i >= 0 && j >= i);
+                j_eq_i_plus_1[k] = INTEL::fpga_reg(j == i + 1);
+                if constexpr(isComplex){
+                  sori[k].xx = INTEL::fpga_reg(s_or_i[j].xx);
+                  sori[k].yy = INTEL::fpga_reg(s_or_i[j].yy);
+                }
+                else{
+                  sori[k] = INTEL::fpga_reg(s_or_i[j]);
+                }
               });
 
               // Preload col and a_i with the correct data for the current 
@@ -491,20 +553,36 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
                 // If no i iteration elapsed, we must read the column of matrix
                 // a directly from the A_load 
                 // col then contains a_j
-                if(i_gt_0[bank]){
-                  col[k].xx = A_compute[j].d[k].xx;
-                  col[k].yy = A_compute[j].d[k].yy;
+                if constexpr(isComplex){
+                  if(i_gt_0[bank]){
+                    col[k].xx = A_compute[j].d[k].xx;
+                    col[k].yy = A_compute[j].d[k].yy;
+                  }
+                  else{
+                    col[k].xx = A_load[j].d[k].xx;
+                    col[k].yy = A_load[j].d[k].yy;
+                  }
+                  
+                  // Load a_i for reuse across j iterations
+                  if (j_eq_i[bank]) {
+                    a_i[k].xx = col[k].xx;
+                    a_i[k].yy = col[k].yy;
+                  }
                 }
                 else{
-                  col[k].xx = A_load[j].d[k].xx;
-                  col[k].yy = A_load[j].d[k].yy;
+                  if(i_gt_0[bank]){
+                    col[k] = A_compute[j].d[k];
+                  }
+                  else{
+                    col[k] = A_load[j].d[k];
+                  }
+
+                  // Load a_i for reuse across j iterations
+                  if (j_eq_i[bank]) {
+                    a_i[k] = col[k];
+                  }
                 }
 
-                // Load a_i for reuse across j iterations
-                if (j_eq_i[bank]) {
-                  a_i[k].xx = col[k].xx;
-                  a_i[k].yy = col[k].yy;
-                }
               });
 
               UnrolledLoop<rows>([&](auto k) {
@@ -519,9 +597,8 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
                 //    the i iteration is still required to fill ir and s for
                 //    subsequent iterations
                 auto prod_lhs = a_i[k];
-                auto prod_rhs = i_lt_0[bankIdx] ? Complex<T>(0.0, 0.0) : 
-                                                                  sori[bankIdx];
-                auto add = j_eq_i[bankIdx] ? Complex<T>(0.0, 0.0) : col[k];
+                auto prod_rhs = i_lt_0[bankIdx] ? CTT(0.0) : sori[bankIdx];
+                auto add = j_eq_i[bankIdx] ? CTT(0.0) : col[k];
                 col[k] = prod_lhs * prod_rhs + add;
 
                 // Store Q_i in A_store and the modified a_j in A_compute
@@ -536,8 +613,13 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
                 // -> overwritten for the matrix Q (A_store)
                 // -> unused for the A_compute
                 if (i_ge_0_j_ge_i[bankIdx]) {
-                  A_store[j].d[k].xx = A_compute[j].d[k].xx = col[k].xx;
-                  A_store[j].d[k].yy = A_compute[j].d[k].yy = col[k].yy;
+                  if constexpr(isComplex){
+                    A_store[j].d[k].xx = A_compute[j].d[k].xx = col[k].xx;
+                    A_store[j].d[k].yy = A_compute[j].d[k].yy = col[k].yy;
+                  }
+                  else{
+                    A_store[j].d[k] = A_compute[j].d[k] = col[k];
+                  }
                 }
 
                 // Store a_{i+1} for subsequent iterations of j
@@ -547,33 +629,62 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
               });
 
               // Perform the dot product <a_{i+1},a_{i+1}> or <a_{i+1}, a_j>
-              Complex<T> p_ij = Complex<T>(0.0, 0.0);
+              CTT p_ij = CTT(0.0);
+
               UnrolledLoop<rows>([&](auto k) {
                 p_ij = p_ij + col[k] * a_ip1[k];
               });
 
               if (j == i + 1) {
-                pip1 = p_ij.xx;
-                ir = rsqrt(p_ij.xx);
+                if constexpr(isComplex){
+                  pip1 = p_ij.xx;
+                  ir = rsqrt(p_ij.xx);
+                }
+                else{
+                  pip1 = p_ij;
+                  ir = rsqrt(p_ij); 
+                }
               }
 
-              Complex<T> s_j = Complex<T>(0.0f - (p_ij.xx) / pip1, p_ij.yy / pip1);
+              CTT s_j;
+              if constexpr(isComplex){
+                s_j = CTT(0.0f - (p_ij.xx) / pip1, p_ij.yy / pip1);
+              }
+              else{
+                s_j = - p_ij / pip1;
+              }
 
               // j may be negative if the number of "dummy" iterations is larger
               // than the matrix size
               if (j >= 0) {
-                s_or_i[j] = Complex<T>(j == i + 1 ? ir : s_j.xx,
-                                    j == i + 1 ? 0.0f : s_j.yy);
+                if constexpr(isComplex){
+                  s_or_i[j] = CTT(j == i + 1 ? ir : s_j.xx,
+                                      j == i + 1 ? 0.0f : s_j.yy);
+                }
+                else{
+                  s_or_i[j] = j == i + 1 ? ir : s_j; 
+                }
               }
 
               // Compute the R_{i+1,i+1} or R_{i+1,j} 
-              Complex<T> r_ip1j = j == i + 1 ? Complex<T>(sycl::sqrt(pip1), 0.0) : 
-                                            Complex<T>(ir * p_ij.xx, ir * p_ij.yy);
+              CTT r_ip1j;
+              if constexpr(isComplex){
+                r_ip1j = j == i + 1 ? CTT(sycl::sqrt(pip1), 0.0) : 
+                                        CTT(ir * p_ij.xx, ir * p_ij.yy);
+              }
+              else{
+                r_ip1j = j == i + 1 ? sycl::sqrt(pip1) : ir * p_ij;
+              }
 
               // Write the computed R value when j is not a "dummy" iteration
               // introduced to optimized the triangular loop
               if (j >= i + 1 && i + 1 < kNValue) {
-                QR_matrix_accessor[qr_idx] = {r_ip1j.xx, r_ip1j.yy};
+                if constexpr(isComplex){
+                  QR_matrix_accessor[qr_idx] = {r_ip1j.xx, r_ip1j.yy};
+                }
+                else{
+                  QR_matrix_accessor[qr_idx] = r_ip1j;
+                }
                 qr_idx++;
               }
 
@@ -603,7 +714,8 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
               // Only one bank is going to be stored per si iteration
               // To reduce fanout on si, a "get" table will contain for each 
               // bank a boolean to check if it should store this si iteration
-              ac_int<BitsForMaxValue<kNumBanks>(), false> desired = si % (kNumBanks);
+              ac_int<BitsForMaxValue<kNumBanks>(), false> desired = 
+                                                              si % (kNumBanks);
               bool get[kNumBanks];
               UnrolledLoop<kNumBanks>([&](auto k) {
                 get[k] = desired == k;
@@ -613,33 +725,46 @@ void QRDecomposition_impl(  vector<ac_complex<T>> &A_matrix,
               // Each bank will then check the get table to potentially 
               // read kNumElementsPerBank from A_store and store the elements
               // in bank
-              Complex<T> bank[kNumElementsPerBank];
+              CTT bank[kNumElementsPerBank];
+
               ac_int<kSiNumBankBitSize, false> siNumBank = si / kNumBanks;
               UnrolledLoop<kNumBanks>([&](auto t) {
                 UnrolledLoop<kNumElementsPerBank>([&](auto k) {
                   constexpr auto rowIdx = t * kNumElementsPerBank + k;
-                  bank[k].xx = get[t] ? A_store[siNumBank].d[rowIdx].xx : 
-                                                    sycl::ext::intel::fpga_reg(bank[k].xx);
-                  bank[k].yy = get[t] ? A_store[siNumBank].d[rowIdx].yy : 
-                                                    sycl::ext::intel::fpga_reg(bank[k].yy);
+
+                  if constexpr(isComplex){
+                    bank[k].xx = get[t] ? A_store[siNumBank].d[rowIdx].xx : 
+                                                      INTEL::fpga_reg(bank[k].xx);
+                    bank[k].yy = get[t] ? A_store[siNumBank].d[rowIdx].yy : 
+                                                      INTEL::fpga_reg(bank[k].yy);
+                  }
+                  else{
+                    bank[k] = get[t] ? A_store[siNumBank].d[rowIdx] : 
+                                                      INTEL::fpga_reg(bank[k]);
+                  }
                 });
               });
 
               // Finally, the kNumElementsPerBank elements from bank are 
               // written to the out_matrix2 (alias to out_matrix)
               UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                QR_matrix_accessor_2[qr_idx + k] = {bank[k].xx, bank[k].yy};
+                if constexpr(isComplex){
+                  QR_matrix_accessor_2[qr_idx + k] = {bank[k].xx, bank[k].yy};
+                }
+                else{
+                  QR_matrix_accessor_2[qr_idx + k] = bank[k];
+                }
               });
 
               qr_idx += kNumElementsPerBank;
             } // end for si=0:kStoreIter-1
-          } // end for l=0:matrices-1
+          } // end for matrixIdx=0:matrices-1
         });
       });
 
       // Copy the output result from the FPGA DDR to the host memory
       q.submit([&](handler &h) {
-        accessor final_QR_matrix(*QR_buffer[b], h, read_only);
+        accessor final_QR_matrix(*QR_buffer[bufferIdx], h, read_only);
         h.copy(final_QR_matrix, kPtrQR);
       });
 
@@ -660,6 +785,25 @@ void QRDecomposition( vector<ac_complex<T>> &A_matrix,
                       queue &q, 
                       size_t matrices, 
                       size_t reps) {
-  QRDecomposition_impl<columns, rows, raw_latency, T>(A_matrix, QR_matrix, 
-                                                            q, matrices, reps);
+
+  constexpr bool isComplex = true;
+  QRDecomposition_impl<columns, rows, raw_latency, isComplex, T>( A_matrix, 
+                                                                  QR_matrix,
+                                                                  q, 
+                                                                  matrices, 
+                                                                  reps); 
+}
+
+template<unsigned columns, unsigned rows, unsigned raw_latency, typename T>
+void QRDecomposition( vector<T> &A_matrix, 
+                      vector<T> &QR_matrix,
+                      queue &q, 
+                      size_t matrices, 
+                      size_t reps) {
+  constexpr bool isComplex = false;
+  QRDecomposition_impl<columns, rows, raw_latency, isComplex, T>( A_matrix, 
+                                                                  QR_matrix,
+                                                                  q, 
+                                                                  matrices, 
+                                                                  reps); 
 }

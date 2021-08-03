@@ -35,6 +35,12 @@ else()
     set(COLS_COMPONENT ${COLS_COMPONENT_A10})
 endif()
 
+if(DEFINED ENV{COMPLEX})
+    set(COMPLEX $ENV{COMPLEX})
+else()
+    set(COMPLEX 1)
+endif()
+
 # Check if target is the Intel(R) PAC D5005 (with Intel Stratix(R) 10 SX FPGA)
 if(NOT DEFINED FPGA_BOARD)
     set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
@@ -55,14 +61,14 @@ else()
     message(STATUS "\tAn invalid board name was passed in using the FPGA_BOARD flag. Configuring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Arria(R) 10 GX FPGA. Please refer to the README for the list of valid board names.")
 endif()
 
-set(HARDWARE_COMPILE_FLAGS -fbracket-depth=512 -fintelfpga -c -fno-fast-math -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
+set(HARDWARE_COMPILE_FLAGS -fbracket-depth=512 -fintelfpga -c -fno-fast-math -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 separate_arguments(USER_HARDWARE_FLAGS)
-set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsfp-relaxed -fno-fast-math -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${SELECTED_BOARD} ${USER_HARDWARE_FLAGS} -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
-set(FINAL_LINK_FLAGS -fintelfpga -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
+set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsfp-relaxed -fno-fast-math -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${SELECTED_BOARD} ${USER_HARDWARE_FLAGS} -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
+set(FINAL_LINK_FLAGS -fintelfpga -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 
-set(EMULATOR_COMPILE_FLAGS "-fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFPGA_EMULATOR -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
+set(EMULATOR_COMPILE_FLAGS "-fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFPGA_EMULATOR -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
 set(EMULATOR_LINK_FLAGS -fintelfpga )
 
 # FPGA emulator
