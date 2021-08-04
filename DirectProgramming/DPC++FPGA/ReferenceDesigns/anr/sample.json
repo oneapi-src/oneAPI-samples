@@ -2,7 +2,7 @@
   "guid": "B2974A99-4BC6-4F3E-AD3E-C17FE86AC2A4",
   "name": "Adaptive Noise Reduction",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
-  "description": "TODO",
+  "description": "A highly optimized adaptive noise reduction (ANR) algorithm on an FPGA.",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
