@@ -20,7 +20,7 @@
 cmake_minimum_required(VERSION 3.4 )
 
 set(CMAKE_C_COMPILER clang)
-set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_COMPILER dpcpp)
 
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_CXX_STANDARD 17)
