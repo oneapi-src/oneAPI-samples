@@ -28,7 +28,7 @@ struct ExpLUT : ROMBase<float, exp_lut_depth> {
   struct InitFunctor {
     constexpr float operator () (int x) const {
       // treat the ROM index as a QFP number and convert to a float (f) and use
-      // the float to compute exp(-f) (== 1 / exp(f)) and initialize that entry
+      // the float to compute exp(-f) (== 1/exp(f)) and initialize that entry
       // of the ROM
       float f = QFP::ToFP32(x);
       return (1.0f / hldutils::Exp(f, exp_taylor_series_terms));

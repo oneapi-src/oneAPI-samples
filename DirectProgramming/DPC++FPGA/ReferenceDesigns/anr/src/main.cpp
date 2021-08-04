@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
   int frames = 8;
 #endif
 
-  // get the input directory
+  // get the input data directory
   if (argc > 1) {
     data_dir = std::string(argv[1]);
   }
@@ -127,14 +127,14 @@ int main(int argc, char* argv[]) {
   // allocate space for the intensity sigma LUT
   float* sig_i_lut_data_ptr = IntensitySigmaLUT<PixelT>::AllocateDevice(q);
 
-  // create the intensity sigma LUT data locally on CPU
+  // create the intensity sigma LUT data locally on the CPU host
   IntensitySigmaLUT<PixelT> sig_i_lut_host(params);
 
   // copy the LUT to the decice
   sig_i_lut_host.CopyDataToDevice(q, sig_i_lut_data_ptr).wait();
   //////////////////////////////////////////////////////////////////////////////
 
-  // track timing information, in ms
+  // track timing information in ms
   std::vector<double> time(runs);
 
   // print out some info
@@ -248,20 +248,20 @@ double RunANR(queue& q, PixelT* in_ptr, PixelT* out_ptr, int cols, int rows,
 }
 
 //
-// Helper to parse data files
+// Helper to parse data (.data) files
 //
 void ParseDataFile(std::string filename, std::vector<PixelT>& pixels, int& cols,
                    int& rows) {
   // create the file stream to parse
   std::ifstream ifs(filename);
 
-  // make sure we opened the file fine
+  // make sure we opened the file
   if (!ifs.is_open() || ifs.fail()) {
     std::cerr << "ERROR: failed to open " << filename << " for reading\n";
     std::terminate();
   }
 
-  // get header and data
+  // get the header and data
   std::string header_str, data_str;
   if (!std::getline(ifs, header_str)) {
     std::cerr << "ERROR: failed to get header line from " << filename << "\n";
@@ -272,12 +272,11 @@ void ParseDataFile(std::string filename, std::vector<PixelT>& pixels, int& cols,
     std::terminate();
   }
 
-  // first two elements are the width and height
+  // first two elements are the image dimensions
   std::stringstream header_ss(header_str);
-  //header_ss >> cols >> rows;
   header_ss >> rows >> cols;
 
-  // expecting to parse cols*rows pixels
+  // expecting to parse cols*rows pixels from the 'data_str' line
   pixels.resize(cols * rows);
 
   // parse all of the pixels
@@ -298,7 +297,7 @@ void ParseDataFile(std::string filename, std::vector<PixelT>& pixels, int& cols,
       std::terminate();
     }
 
-    // check if the parsed value fits in given type 'PixelT'
+    // check if the parsed value fits in the pixel type
     if (x > static_cast<TmpT>(std::numeric_limits<PixelT>::max())) {
       std::cerr << "ERROR: value (" << x
                 << ") is too big to store in pixel type 'T'\n";
@@ -316,7 +315,7 @@ void ParseDataFile(std::string filename, std::vector<PixelT>& pixels, int& cols,
 }
 
 //
-// Function that parses an input file and returns the result
+// Function that parses all of the input files
 //
 void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
                 std::vector<PixelT>& ref_pixels, int& cols, int& rows,
@@ -353,7 +352,10 @@ void ParseFiles(std::string data_dir, std::vector<PixelT>& in_pixels,
               << ") does not match the compile time constant filter size "
               << "(kFilterSize = " << kFilterSize << ")\n";
     std::terminate();
-  } else if (params.pixel_bits != (sizeof(PixelT) * 8)) {
+  }
+
+  // ensure the parsed number of pixel bits matches the compile time constant
+  if (params.pixel_bits != (sizeof(PixelT) * 8)) {
     std::cerr << "ERROR: the number of bits per pixel parsed from " << data_dir
               << "/param_config.data (" << params.pixel_bits
               << ") does not match the compile time constant pixel size "
@@ -376,7 +378,7 @@ void WriteOutputFile(std::string data_dir, std::vector<PixelT>& pixels,
     std::terminate();
   }
 
-  // write the size
+  // write the image dimensions
   ofs << rows << " " << cols << "\n";
 
   // write the pixels

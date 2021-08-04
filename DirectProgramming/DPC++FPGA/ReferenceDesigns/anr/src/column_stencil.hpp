@@ -12,7 +12,52 @@ using namespace sycl;
 using namespace hldutils;
 
 //
-// Generic 1D vertical window stencil
+// Generic 1D column (i.e., vertical) stencil.
+//
+// TEMPLATE PARAMETERS
+// InType:            The input pixel type. This is read in by the row stencil
+//                    through a SYCL pipe. The pipe should be hold
+//                    'parallel_cols' elements of this type using the
+//                    'DataBundle' type (DataBundle<InType, parallel_cols>).
+// OutType:           The output pixel type. The same logic as the InType above.
+//                    The data written to the output type is
+//                    DataBundle<OutType, parallel_cols>
+// IndexT:            The datatype used for indexing. This type should have
+//                    enough bits to count up to the number or rows and columns.
+// InPipe:            The input pipe to stream in 'parallel_cols' 'InT' values.
+// OutPipe:           The output pipe to stream out 'parallel_cols' 'OutT'
+//                    values.
+// filter_size:       The filter size (i.e., the number of pixels to convolve).
+// max_cols:          The maximum number of columns in the image. The runtime
+//                    argument 'cols' chooses the actual number of columns, and
+//                    it must be less than or equal to 'max_cols'. Changing
+//                    'max_cols' changes the area necessary for the IP, since
+//                    it sets the size of the FIFOs for the line stores.
+// parallel_cols:     The number of columns to compute in parallel.
+// StencilFunction:   The stencil callback functor, provided by the user, which
+//                    is called for every pixel to perform the actual
+//                    convolution. The function definition should be as follows:
+//
+//    OutT StencilFunction(int, int, ShiftReg<InT, filter_size>,
+//                         FunctionArgTypes...)
+//
+//                    The user can provide extra arguments to the callback by
+//                    using the FunctionArgTypes parameter pack.
+// FunctionArgTypes:  The user-provided type parameter pack of the arguments to
+//                    pass to the callback function.
+//
+//
+// FUNCTION ARGUMENTS
+// rows:            The number of rows in the image.
+// cols:            The number of columns in the image.
+// frames:          The number of frames to compute. The total number of pixels
+//                  computed by the IP is rows*cols*frames.
+// zero_val:        The 'zero' value for the stencil. This is used to pad
+//                  the columns of the image.
+// func:            The user-defined functor. This is a callback that is called
+//                  to perform the 1D convolution.
+// stencil_args...: The parameter pack of arguments to be passed to the
+//                  user-defined callback functor.
 //
 template <typename InType, typename OutType, typename IndexT, typename InPipe,
           typename OutPipe, unsigned filter_size, unsigned max_cols,
@@ -25,7 +70,7 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
   using InPipeT = DataBundle<InType, parallel_cols>;
   using OutPipeT = DataBundle<OutType, parallel_cols>;
 
-  // static asserts
+  // constexpr
   constexpr int kPaddingPixels = filter_size / 2;
   constexpr int kShiftRegCols = 1 + parallel_cols - 1;
   constexpr int kShiftRegRows = filter_size;
@@ -49,7 +94,7 @@ void ColumnStencil(IndexT rows, IndexT cols, IndexT frames,
   const IndexT row_thresh_high = kPaddingPixels + rows;
   const IndexT padded_rows = rows + 2 * kRowThreshLow;
   const IndexT fifo_wrap =
-      (cols + /*filter_size*/ 1 - 1 + (parallel_cols - 1 /* round up*/)) /
+      (cols + /*filter_size*/ 1 - 1 + (parallel_cols - 1 /*round up*/)) /
       parallel_cols;
   const IndexT col_loop_bound = (cols / parallel_cols);
 

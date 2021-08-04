@@ -3,6 +3,37 @@
 
 #include <type_traits>
 
+//
+// A base class for creating a constexpr ROM.
+//
+// TEMPLATE PARAMETERS
+//    T:      the datatype stored in the ROM
+//    _depth: the depth of the ROM
+//
+// EXAMPLE USAGE
+//  To use the ROM, you must create a class that inherits from this class and
+//  provides a constexpr functor to the constructor which determines how the
+//  ROM is initialized. The following examples show two methods for creating
+//  a ROM that stores x^2, where 'x' is the index into the ROM.
+//
+//  USING A FUNCTOR
+//    struct SquareFunctor {
+//      constexpr float operator () (int x) const { return x * x }
+//      constexpr SquareFunctor() = default;
+//    };
+//
+//    constexpr int lut_depth = 1024;
+//    struct SquareLUT : ROMBase<int, lut_depth> {
+//      constexpr SquareLUT() : ROMBase<int, lut_depth>(SquareFunctor()) {}
+//    };
+//
+//  USING A LAMDA
+//    constexpr int lut_depth = 1024;
+//    struct SquareLUT : ROMBase<int, lut_depth> {
+//      constexpr SquareLUT() : ROMBase<int, lut_depth>(
+//        [](int x) { return x * x; }) {}
+//    };
+//
 template<typename T, int _depth>
 struct ROMBase {
   // ensure a positive depth

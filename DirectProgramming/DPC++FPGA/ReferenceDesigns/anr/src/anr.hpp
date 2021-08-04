@@ -44,9 +44,9 @@ struct DataForwardStruct {
 };
 
 //
-// Compute a 1D gaussian (ignores 1/2*pi constant)
+// Compute the 1D gaussian e ^ (-0.5 * (x/sigma)^2)
 //
-constexpr inline float Gaussian1D(float x, float sigma) {
+inline float Gaussian1D(float x, float sigma) {
   float x_over_sig = x / sigma;
   return sycl::exp(-0.5 * x_over_sig * x_over_sig);  // e^(-0.5*(x/sigma)^2)
 }
@@ -55,7 +55,7 @@ constexpr inline float Gaussian1D(float x, float sigma) {
 // Build a 1D gaussian filter
 //
 template <int size>
-constexpr auto BuildGaussianFilter1D(float sigma) {
+auto BuildGaussianFilter1D(float sigma) {
   ShiftReg<float, size> filter;
   for (int x = -size / 2; x <= size / 2; x++) {
     filter[x + size / 2] = Gaussian1D(x, sigma);
@@ -65,8 +65,9 @@ constexpr auto BuildGaussianFilter1D(float sigma) {
 
 //
 // Computes the 1D bilateral filter. The spatial filter is passed as an
-// argument while the intensity filter is computed based on the pixel window
-// ('buffer') and the ANR parameters ('params').
+// argument and the intensity filter is computed based on the pixel window
+// ('buffer') and the ANR parameters ('params'). Together, the spatial and
+// intensity filters create the bilateral filter.
 //
 template <typename InT, int filter_size,
           int filter_size_eff = (filter_size + 1) / 2>
@@ -102,20 +103,19 @@ inline float BilateralFilter1D(ShiftReg<InT, filter_size>& buffer,
     const auto exp_lut_idx = ExpLUT::QFP::FromFP32(exp_power);
     const float intensity_gaussian = exp_lut[exp_lut_idx];
 
-    // compute the filter value based on the intensity and spatial filters
+    // compute the bilateral filter value
     const float filter_val = spatial_filter[i] * intensity_gaussian;
     bilateral_filter[i] = filter_val;
     filter_sum += filter_val;
   });
 
-  // Convolve the 1D bilateral filter with the pixel window to compute the
-  // output pixel
+  // Convolve the 1D bilateral filter with the pixel window
   float filtered_pixel = 0.0;
   UnrolledLoop<0, filter_size_eff>([&](auto i) {
     filtered_pixel += (buffer[i * 2] * bilateral_filter[i]);
   });
   
-  // compute: filtered_pixel /= filter_sum;
+  // compute filtered_pixel /= filter_sum;
   const auto inv_lut_idx = InvLUT::QFP::FromFP32(filter_sum);
   filtered_pixel *= inv_lut[inv_lut_idx];
 
@@ -125,8 +125,8 @@ inline float BilateralFilter1D(ShiftReg<InT, filter_size>& buffer,
 //
 // Functor for the column stencil callback.
 // This performs the 1D vertical bilateral filter. It also computes the
-// intensity sigma value (sig_i) and bundles it with the pixel to be forwarded
-// to the horizontal kernel.
+// intensity sigma value (sig_i) and bundles it with the original and partially
+// filtered pixel to be forwarded to the horizontal kernel.
 //
 template <typename InT, typename OutT, int filter_size,
           int filter_size_eff = (filter_size + 1) / 2>
@@ -205,6 +205,7 @@ struct HorizontalFunctor {
         buffer_pixels, spatial_filter, params, sig_i_inv_squared_x_half,
         exp_lut, pow2_lut, inv_lut);
 
+    // fixed point alpha blending
     // the fixed point type for the Pixel values
     using PixelFixedT = ac_int<sizeof(OutT) * 8, false>;
 
@@ -218,7 +219,7 @@ struct HorizontalFunctor {
       output_pixel = output_pixel_float;
     }
 
-    // fixed point alpha blending
+    // alpha blend with the original pixel
     const PixelFixedT original_pixel(buffer[kMidIdx].pixel_o);
     auto output_pixel_alpha =
         (alpha_fixed * output_pixel) + (one_minus_alpha_fixed * original_pixel);
@@ -257,7 +258,7 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
   static_assert(std::is_arithmetic_v<PixelT>);
   static_assert(std::is_integral_v<IndexT>);
 
-  // validate the arguments
+  // validate the function arguments
   int padded_cols = PadColumns<IndexT, filter_size>(cols);
   if (cols > max_cols) {
     std::cerr << "ERROR: cols exceeds the maximum (max_cols) "
@@ -300,8 +301,8 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
     std::terminate();
   }
 
-  // cast the rows, columns, and frames to to index type and use these variables
-  // inside the kernel to avoid the device dealing with sign conversions
+  // cast the rows, columns, and frames to the index type and use these
+  // variables inside the kernel to avoid the device dealing with conversions
   const IndexT cols_k(cols);
   const IndexT rows_k(rows);
   const IndexT frames_k(frames);
@@ -320,22 +321,26 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
   // submit the vertical kernel using a column stencil
   auto vertical_kernel = q.submit([&](handler& h) {
     h.single_task<VerticalKernelID>([=] {
-    // copy host side LUTs to the device
-    // For testing the kernel system as an IP and check area and Fmax, we allow
-    // the user to turn off connections to device memory. The results will be
-    // incorrect, since there is no way to get the data to/from the device.
+    // copy host side intensity sigma LUT to the device
+    // For testing the kernel system as an IP and checking the area and Fmax,
+    // we allow the user to turn off connections to device memory. In this case
+    // (the DISABLE_GLOBAL_MEM macro IS defined), the results will be incorrect
+    // since there is no way to get the data to/from the device.
 #ifndef DISABLE_GLOBAL_MEM
       IntensitySigmaLUT<PixelT> sig_i_lut(sig_i_lut_data_ptr);
 #else
       IntensitySigmaLUT<PixelT> sig_i_lut;
 #endif
 
-      // build the constexpr exp(), pow2(), and inverse LUTs
+      // build the constexpr exp(), pow2(), and inverse LUT ROMs
       constexpr ExpLUT exp_lut;
       constexpr Pow2LUT pow2_lut;
       constexpr InvLUT inv_lut;
 
-      // start the column stencil
+      // Start the column stencil.
+      // It will callback to 'vertical_func' with the additional all of the
+      // additional arguments listed after 'vertical_func' (i.e.,
+      // spatial_filter, params, ...)
       ColumnStencil<VerticalInT, VerticalOutT, IndexT, InPipe, IntraPipe,
                     filter_size, max_cols, pixels_per_cycle>(
           rows_k, cols_k, frames_k, VerticalInT(0), vertical_func,
@@ -347,7 +352,7 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
   // submit the horizontal kernel using a row stencil
   auto horizontal_kernel = q.submit([&](handler& h) {
     h.single_task<HorizontalKernelID>([=] {
-      // build the constexpr exp(), pow2(), and inverse LUTs
+      // build the constexpr exp(), pow2(), and inverse LUT ROMs
       constexpr ExpLUT exp_lut;
       constexpr Pow2LUT pow2_lut;
       constexpr InvLUT inv_lut;
@@ -356,7 +361,10 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows, int frames,
       ANRParams::AlphaFixedT alpha_fixed(params.alpha);
       ANRParams::AlphaFixedT one_minus_alpha_fixed(params.one_minus_alpha);
 
-      // start the row stencil
+      // Start the row stencil.
+      // It will callback to 'horizontal_func' with the additional all of the
+      // additional arguments listed after 'horizontal_func' (i.e.,
+      // spatial_filter, params, alpha_fixed, ...)
       RowStencil<HorizontalInT, HorizontalOutT, IndexT, IntraPipe, OutPipe,
                  filter_size, pixels_per_cycle>(
           rows_k, cols_k, frames_k, HorizontalInT(0), horizontal_func,
