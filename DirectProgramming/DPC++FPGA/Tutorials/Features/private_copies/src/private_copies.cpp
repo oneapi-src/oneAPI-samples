@@ -47,7 +47,7 @@ void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
 
     event e = q.submit([&](handler &h) {
       accessor accessor_array(buffer_array, h, read_only);
-      accessor accessor_result(buffer_result, h, write_only, noinit);
+      accessor accessor_result(buffer_result, h, write_only, no_init);
 
       h.single_task<Kernel<num_copies>>([=]() [[intel::kernel_args_restrict]] {
         int r = 0;

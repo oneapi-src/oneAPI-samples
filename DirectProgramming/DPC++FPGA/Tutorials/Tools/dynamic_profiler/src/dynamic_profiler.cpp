@@ -91,7 +91,7 @@ void ProducerBefore(queue &q, buffer<float, 1> &buffer_a) {
 void ConsumerBefore(queue &q, buffer<float, 1> &buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
-    accessor a(buffer_a, h, write_only, noinit);
+    accessor a(buffer_a, h, write_only, no_init);
 
     h.single_task<ConsumerBeforeKernel>([=]() {
       for (int i = 0; i < kSize; i++) {
@@ -132,7 +132,7 @@ void ProducerAfter(queue &q, buffer<float, 1> &buffer_a) {
 void ConsumerAfter(queue &q, buffer<float, 1> &buffer_a) {
   auto e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
-    accessor a(buffer_a, h, write_only, noinit);
+    accessor a(buffer_a, h, write_only, no_init);
 
     h.single_task<ConsumerAfterKernel>([=]() {
       for (int i = 0; i < kSize; i++) {

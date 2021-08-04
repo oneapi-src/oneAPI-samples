@@ -27,7 +27,7 @@ event Unoptimized(queue &q, const vector<double> &vec_a,
   auto e = q.submit([&](handler &h) {
     accessor a(b_a, h, read_only);
     accessor b(b_b, h, read_only);
-    accessor result(b_result, h, write_only, noinit);
+    accessor result(b_result, h, write_only, no_init);
 
     h.single_task<UnOptKernel>([=]() {
       double sum = 0;
@@ -52,7 +52,7 @@ event Optimized(queue &q, const vector<double> &vec_a,
   auto e = q.submit([&](handler &h) {
     accessor a(b_a, h, read_only);
     accessor b(b_b, h, read_only);
-    accessor result(b_result, h, write_only, noinit);
+    accessor result(b_result, h, write_only, no_init);
 
     h.single_task<OptKernel>([=]() [[intel::kernel_args_restrict]] {
       double sum = 0;

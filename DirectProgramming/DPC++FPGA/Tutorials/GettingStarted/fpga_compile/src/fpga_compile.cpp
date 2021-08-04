@@ -65,10 +65,10 @@ int main() {
 
         // The SYCL runtime uses the accessors to infer data dependencies.
         // A "read" accessor must wait for data to be copied to the device
-        // before the kernel can start. A "write noinit" accessor does not.
+        // before the kernel can start. A "write no_init" accessor does not.
         accessor a(buf_a, h, read_only);
         accessor b(buf_b, h, read_only);
-        accessor r(buf_r, h, write_only, noinit);
+        accessor r(buf_r, h, write_only, no_init);
 
         // The kernel uses single_task rather than parallel_for.
         // The task's for loop is executed in pipeline parallel on the FPGA,

@@ -59,7 +59,7 @@ event Consumer(queue &q, buffer<int, 1> &out_buf) {
   std::cout << "Enqueuing consumer...\n";
 
   auto e = q.submit([&](handler &h) {
-    accessor out_accessor(out_buf, h, write_only, noinit);
+    accessor out_accessor(out_buf, h, write_only, no_init);
     size_t num_elements = out_buf.get_count();
 
     h.single_task<ConsumerTutorial>([=]() {

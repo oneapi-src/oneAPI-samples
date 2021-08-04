@@ -37,7 +37,7 @@ void TransposeAndFold(const device_selector &selector,
 
     event e = q.submit([&](handler &h) {
       accessor accessor_input(buffer_input, h, read_only);
-      accessor accessor_output(buffer_output, h, write_only, noinit);
+      accessor accessor_output(buffer_output, h, write_only, no_init);
 
       h.single_task<KernelCompute<safe_len>>([=]()
                                              [[intel::kernel_args_restrict]] {

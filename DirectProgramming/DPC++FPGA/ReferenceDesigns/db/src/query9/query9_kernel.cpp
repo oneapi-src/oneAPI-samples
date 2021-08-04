@@ -117,7 +117,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   // a convenient lamda to make the explicit copy code less verbose
   auto submit_copy = [&](auto& buf, const auto& host_data) {
     return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, noinit);
+      accessor accessor(buf, h, write_only, no_init);
       h.copy(host_data, accessor);
     });
   };
@@ -435,7 +435,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     accessor l_discount_accessor(l_discount_buf, h, read_only);
 
     // output accessors
-    accessor sum_profit_accessor(sum_profit_buf, h, write_only, noinit);
+    accessor sum_profit_accessor(sum_profit_buf, h, write_only, no_init);
 
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       // the accumulators

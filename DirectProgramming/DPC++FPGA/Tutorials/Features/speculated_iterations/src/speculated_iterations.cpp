@@ -44,7 +44,7 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
     buffer<int, 1> buffer_res(&res, 1);
 
     event e = q.submit([&](handler &h) {
-      accessor accessor_res(buffer_res, h, write_only, noinit);
+      accessor accessor_res(buffer_res, h, write_only, no_init);
 
       h.single_task<class KernelCompute<spec_iter>>([=]() {
         int x = 1;

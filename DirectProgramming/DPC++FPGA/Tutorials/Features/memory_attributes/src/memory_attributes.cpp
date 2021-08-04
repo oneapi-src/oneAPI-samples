@@ -77,7 +77,7 @@ event submitKernel(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
                       buffer<unsigned, 1>& r_buf) {
   auto e = q.submit([&](handler &h) {
     accessor d_accessor(d_buf, h, read_only);
-    accessor r_accessor(r_buf, h, write_only, noinit);
+    accessor r_accessor(r_buf, h, write_only, no_init);
 
     h.single_task<Kernel<AttrType>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType
@@ -106,7 +106,7 @@ event submitKernel<1>(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
                       buffer<unsigned, 1>& r_buf) {
   auto e = q.submit([&](handler &h) {
     accessor d_accessor(d_buf, h, read_only);
-    accessor r_accessor(r_buf, h, write_only, noinit);
+    accessor r_accessor(r_buf, h, write_only, no_init);
 
     h.single_task<Kernel<1>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType
@@ -139,7 +139,7 @@ event submitKernel<2>(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
                       buffer<unsigned, 1>& r_buf) {
   auto e = q.submit([&](handler &h) {
     accessor d_accessor(d_buf, h, read_only);
-    accessor r_accessor(r_buf, h, write_only, noinit);
+    accessor r_accessor(r_buf, h, write_only, no_init);
 
     h.single_task<Kernel<2>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType

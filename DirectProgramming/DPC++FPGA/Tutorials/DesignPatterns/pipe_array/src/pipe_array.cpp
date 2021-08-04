@@ -69,7 +69,7 @@ void Consumer(queue &q, buffer<uint64_t, 1> &out_buf) {
   std::cout << "Enqueuing consumer " << consumer_id << "...\n";
 
   auto e = q.submit([&](handler &h) {
-    accessor output_accessor(out_buf, h, write_only, noinit);
+    accessor output_accessor(out_buf, h, write_only, no_init);
     auto num_elements = out_buf.get_count();
 
     // The consumer kernel reads from a single pipe, determined by consumer_id

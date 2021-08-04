@@ -79,7 +79,7 @@ void RunKernel(const device_selector &selector,
 
     event e = q.submit([&](handler &h) {
       accessor a(device_a, h, read_only);
-      accessor r(device_r, h, write_only, noinit);
+      accessor r(device_r, h, write_only, no_init);
 
       // FPGA-optimized kernel
       // Using kernel_args_restrict tells the compiler that the input

@@ -121,7 +121,7 @@ void QRDecomposition(vector<float> &in_matrix, vector<float> &out_matrix,
 
       q.submit([&](handler &h) {
         accessor in_matrix(*input_matrix[b], h, read_only);
-        accessor out_matrix(*output_matrix[b], h, write_only, noinit);
+        accessor out_matrix(*output_matrix[b], h, write_only, no_init);
         auto out_matrix2 = out_matrix;
         h.single_task<class QRD>([=]() [[intel::kernel_args_restrict]] {
           for (int l = 0; l < matrices; l++) {

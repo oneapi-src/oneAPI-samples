@@ -44,7 +44,7 @@ void SinkKernel(queue &q, float &out_data) {
   buffer<float, 1> out_buf(&out_data, 1);
 
   q.submit([&](handler &h) {
-    accessor out_accessor(out_buf, h, write_only, noinit);
+    accessor out_accessor(out_buf, h, write_only, no_init);
     h.single_task<Sink>(
         [=] { out_accessor[0] = Pipes::PipeAt<kEngines>::read(); });
   });

@@ -41,7 +41,7 @@ int main() {
     q.submit([&](handler &h) {
 
       // Accessor to the scalar result
-      accessor accessor_c(buffer_c, h, write_only, noinit);
+      accessor accessor_c(buffer_c, h, write_only, no_init);
 
       // Kernel
       h.single_task<class KernelCompute>([=]() {

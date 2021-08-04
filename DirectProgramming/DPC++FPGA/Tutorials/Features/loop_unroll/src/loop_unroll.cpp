@@ -45,7 +45,7 @@ void VecAdd(const std::vector<float> &summands1,
     event e = q.submit([&](handler &h) {
       accessor acc_summands1(buffer_summands1, h, read_only);
       accessor acc_summands2(buffer_summands2, h, read_only);
-      accessor acc_sum(buffer_sum, h, write_only, noinit);
+      accessor acc_sum(buffer_sum, h, write_only, no_init);
 
       h.single_task<VAdd<unroll_factor>>([=]()
                                          [[intel::kernel_args_restrict]] {

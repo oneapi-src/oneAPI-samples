@@ -29,7 +29,7 @@ double BufferKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
     // launch the computation kernel
     auto kernel_event = q.submit([&](handler& h) {
       accessor in_a(in_buf, h, read_only);
-      accessor out_a(out_buf, h, write_only, noinit);
+      accessor out_a(out_buf, h, write_only, no_init);
 
       h.single_task<BufferWorker>([=]() [[intel::kernel_args_restrict]] {
         for (size_t i = 0; i < size; i++) {

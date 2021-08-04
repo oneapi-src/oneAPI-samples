@@ -45,7 +45,7 @@ void profiling_example(const std::vector<float>& vec_in,
 
   event e = q.submit([&](handler &h) {
     accessor acc_in(buf_in, h, read_only);
-    accessor acc_out(buf_out, h, write_only, noinit);
+    accessor acc_out(buf_out, h, write_only, no_init);
 
     h.single_task<class Kernel>([=]() [[intel::kernel_args_restrict]] {
       DeviceProcessing(acc_in, acc_out);

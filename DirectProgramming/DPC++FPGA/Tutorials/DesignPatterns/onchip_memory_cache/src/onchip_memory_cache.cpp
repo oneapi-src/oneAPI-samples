@@ -34,7 +34,7 @@ void Histogram(sycl::queue &q, buffer<uint32_t>& input_buf,
   e = q.submit([&](handler& h) {
     // Get accessors to the SYCL buffers
     accessor input(input_buf, h, read_only);
-    accessor output(output_buf, h, write_only, noinit);
+    accessor output(output_buf, h, write_only, no_init);
 
     h.single_task<Task<use_cache>>([=]() [[intel::kernel_args_restrict]] {
 

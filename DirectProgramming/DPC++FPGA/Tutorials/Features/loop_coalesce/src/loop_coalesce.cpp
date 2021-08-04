@@ -48,7 +48,7 @@ void MatrixMultiply(const device_selector &selector,
     event e = q.submit([&](handler &h) {
       accessor accessor_matrix_a(buffer_in_a, h, read_only);
       accessor accessor_matrix_b(buffer_in_b, h, read_only);
-      accessor accessor_res(buffer_out, h, write_only, noinit);
+      accessor accessor_res(buffer_out, h, write_only, no_init);
 
       // The kernel_args_restrict promises the compiler that this kernel's
       // accessor arguments won't alias (i.e. non-overlapping memory regions).

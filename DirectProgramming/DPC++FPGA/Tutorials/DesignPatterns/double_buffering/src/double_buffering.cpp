@@ -59,7 +59,7 @@ void SimplePow(sycl::queue &q, buffer<float, 1> &buffer_a,
   e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
     accessor accessor_a(buffer_a, h, read_only);
-    accessor accessor_b(buffer_b, h, read_write, noinit);
+    accessor accessor_b(buffer_b, h, read_write, no_init);
 
     const int num = kSize;
     assert(kPow >= 2);
@@ -173,9 +173,9 @@ void ProcessOutput(buffer<float, 1> &input_buf, buffer<float, 1> &output_buf,
    completes.
 */
 void ProcessInput(buffer<float, 1> &buf) {
-  // We are generating completely new input data, so can the noinit property
+  // We are generating completely new input data, so can the no_init property
   // here to indicate we don't care about the SYCL buffer's current contents.
-  host_accessor buf_acc(buf, write_only, noinit);
+  host_accessor buf_acc(buf, write_only, no_init);
 
   // RNG seed
   auto seed = std::chrono::system_clock::now().time_since_epoch().count();

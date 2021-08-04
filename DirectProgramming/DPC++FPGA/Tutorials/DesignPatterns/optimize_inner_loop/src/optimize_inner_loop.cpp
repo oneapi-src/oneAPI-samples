@@ -128,7 +128,7 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
     // submit the Consumer kernel
     event c_e = q.submit([&](handler &h) {
       // the output buffer accessor
-      accessor res_a(res_buf, h, write_only, noinit);
+      accessor res_a(res_buf, h, write_only, no_init);
 
       h.single_task<Consumer<version>>([=]() [[intel::kernel_args_restrict]] {
         // local register to accumulate into
