@@ -17,9 +17,16 @@
     <ClInclude Include="src\anr_params.hpp" />
     <ClInclude Include="src\anr.hpp" />
     <ClInclude Include="src\column_stencil.hpp" />
+    <ClInclude Include="src\constants.hpp" />
     <ClInclude Include="src\data_bundle.hpp" />
     <ClInclude Include="src\dma_kernels.hpp" />
+    <ClInclude Include="src\intensity_sigma_lut.hpp" />
     <ClInclude Include="src\mp_math.hpp" />
+    <ClInclude Include="src\qfp_exp_lut.hpp" />
+    <ClInclude Include="src\qfp_inv_lut.hpp" />
+    <ClInclude Include="src\qfp_pow2_lut.hpp" />
+    <ClInclude Include="src\qfp.hpp" />
+    <ClInclude Include="src\rom_base.hpp" />
     <ClInclude Include="src\row_stencil.hpp" />
     <ClInclude Include="src\shift_reg.hpp" />
     <ClInclude Include="src\unrolled_loop.hpp" />
