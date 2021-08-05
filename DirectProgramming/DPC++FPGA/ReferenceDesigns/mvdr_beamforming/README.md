@@ -178,7 +178,7 @@ PASSED
 |`mvdr_complex.hpp`              | Definition of ComplexType, used throughout this design
 |`MVDR.hpp`                      | Function to launch all MVDR kernels and define the pipes that connect them together
 |`ParallelCopyArray.hpp`         | Defines the ParallelCopyArray class, an array that supports unrolled copy / assign operations
-|`pipe_utils.hpp`                | Header file containing the definition of an array of pipes and a pipe duplicator
+|`pipe_utils.hpp`                | Header file containing the definition of an array of pipes and a pipe duplicator. This header can be found in the DirectProgramming/DPC++FPGA/include/ directory of this repository.
 |`SteeringVectorGenerator.hpp`   | SteeringVectorGenerator kernel, generates steering vectors based on data from the host
 |`StreamingQRD.hpp`              | StreamingQRD kernel, performs Q-R Decompostion on a matrix
 |`Transpose.hpp`                 | Transpose kernel, reorders data for the StreamingQRD kernel

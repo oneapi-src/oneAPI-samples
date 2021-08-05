@@ -188,7 +188,7 @@ PASSED
 | `gzipkernel.hpp`             | Header file for `gzipkernels.cpp`.
 | `gzipkernel)ll.hpp`          | Header file for `gzipkernels_ll.cpp`.
 | `CompareGzip.hpp`            | Header file for `CompareGzip.cpp`.
-| `pipe_utils.hpp`             | Header file containing the definition of an array of pipes. 
+| `pipe_utils.hpp`             | Header file containing the definition of an array of pipes. This header can be found in the DirectProgramming/DPC++FPGA/include/ directory of this repository.
 | `WriteGzip.hpp`              | Header file for `WriteGzip.cpp`. 
 
 ### Compiler Flags Used

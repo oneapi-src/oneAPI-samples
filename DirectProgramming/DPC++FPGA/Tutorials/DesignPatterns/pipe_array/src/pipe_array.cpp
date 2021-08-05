@@ -8,7 +8,7 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
-#include "pipe_utils.hpp"
+#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
 #include "unroller.hpp"
 
 // dpc_common.hpp can be found in the dev-utilities include folder.

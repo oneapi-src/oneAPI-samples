@@ -7,7 +7,7 @@
 
 // utility classes
 #include "mvdr_complex.hpp"
-#include "pipe_utils.hpp"
+#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
 
 // MVDR processing kernels
 #include "BackwardSubstitution.hpp"

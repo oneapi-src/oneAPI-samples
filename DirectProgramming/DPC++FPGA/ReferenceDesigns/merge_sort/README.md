@@ -141,7 +141,7 @@ The following source files can be found in the `src/` sub-directory.
 |`consume.hpp`                   | The `Consume` kernel for the merge unit. This kernel reads from an input pipe and writes out to either a different output pipe, or to device memory.
 |`impu_math.hpp`                 | Metaprogramming math helper functions (*impu* = Intel Metaprogramming Utilities)
 |`merge.hpp`                     | The `Merge` kernel for the merge unit and the merge tree. This kernel streams in two sorted lists, merges them into a single sorted list of double the size, and streams the data out a pipe.
-|`pipe_utils.hpp`                | Header file containing the definition of an array of pipes.
+|`pipe_utils.hpp`                | Header file containing the definition of an array of pipes. This header can be found in the DirectProgramming/DPC++FPGA/include/ directory of this repository.
 |`produce.hpp`                   | The `Produce` kernel for the merge unit. This kernel reads from input pipes or performs strided reads from device memory and writes the data to an output pipe.
 |`sorting_networks.hpp`          | Contains all of the code relevant to sorting networks, including the `SortingNetwork` kernel, as well as the `BitonicSortingNetwork` and `MergeSortNetwork` helper functions.
 |`unrolled_loop.hpp`             | A templated-based loop unroller that unrolls loops in the compiler front end.

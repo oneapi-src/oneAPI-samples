@@ -15,7 +15,7 @@
 #include "produce.hpp"
 #include "sorting_networks.hpp"
 #include "unrolled_loop.hpp"
-#include "pipe_utils.hpp"
+#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
 #include "impu_math.hpp"
 
 using namespace sycl;
