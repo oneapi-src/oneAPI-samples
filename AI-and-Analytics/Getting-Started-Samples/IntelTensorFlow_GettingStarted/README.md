@@ -121,141 +121,22 @@ dnnl_verbose,exec,cpu,convolution,jit:avx512_common,forward_training,src_f32::bl
 ```
 Please see the [DNNL Developer's Guide](https://intel.github.io/mkl-dnn/dev_guide_verbose.html) for more details on the verbose log. 
 
-## Running Samples In DevCloud (Optional)
-### Run TensorFlow_HelloWorld in Jupyter Lab
-1.	Open [Intel DevCloud](https://software.intel.com/content/www/us/en/develop/tools/devcloud.html).
-2.	In the upper right corner, click Sign In.
-3.	Log in with your Intel account username and password.
-4.	Open Jupyter lab: https://jupyter.oneapi.devcloud.intel.com/
+## Running The Sample In DevCloud (Optional)
 
-    a.	If you are redirected to the Intel DevCloud page, scroll to the bottom and select Launch Jupyter Lab.
-![](images/jupyter-button.png)
-    b.  When Jupyter Lab opens, if prompted for a kernel, select **No Kernel**.
-5.	Close the Welcome page. The Launcher tab will appear.
-6.  On the Launcher tab, click **Terminal**.
-![](images/jupyter-terminal.png)
+Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/README.md#using-samples-in-intel-oneapi-devcloud) for general usage instructions.
 
-7.	You will see your login at the prompt.
-8.	Activate the TensorFlow environment: 
-source activate tensorflow
-You will see (tensorflow) in your prompt.
-
-![](images/tf-login.png)
-
-9.	Change directories to the TensorFlow Getting Started sample directory.
-```
-cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted
-```
-10. Run the program:
-```
-python TensorFlow_HelloWorld.py
-```
-With successful execution, it will print out the following results:
- ```
- 0 0.4147554
-    1 0.3561021
-    2 0.33979267
-    3 0.33283564
-    4 0.32920069
-    [CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
-```
-To see verbose output, enable verbose mode:
-
-```
-export DNNL_VERBOSE=1
-```
-
-Run the sample again to see the verbose output:
-```
-python TensorFlow_HelloWorld.py
-```
-The mkldnn run-time verbose trace should look similar to what is shown below:
-
-```
-2021-01-06 10:44:28.875296: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
-dnnl_verbose,info,DNNL v1.2.0 (commit N/A)
-dnnl_verbose,info,cpu,runtime:OpenMP
-dnnl_verbose,info,cpu,isa:Intel AVX-512 with Intel DL Boost
-dnnl_verbose,info,gpu,runtime:none
-dnnl_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:acdb:f0 dst_f32::blocked:abcd:f0,,,4x4x128x128,12.0649
-dnnl_verbose,exec,cpu,reorder,simple:any,undef,src_f32::blocked:cdba:f0 dst_f32:p:blocked:Acdb16a:f0,,,10x4x3x3,0.187012
-dnnl_verbose,exec,cpu,convolution,jit:avx512_common,forward_training,src_f32::blocked:abcd:f0 wei_f32:p:blocked:Acdb16a:f0 bia_undef::undef::f0 dst_f32:p:blocked:aBcd16b:f0,,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.266113
-```
-
- 
-### Running the Sample in DevCloud with a Local Terminal
-1.	Open a terminal on your Linux system.
-2.	Log in to DevCloud.
-```
-ssh devcloud
-```
-3.	Enable job submission to the queue:
-```
-qsub -I
-```
-4.	Change directories to the TensorFlow Getting Started sample directory.
-```
-cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted
-```
-5.  To run the program on Linux* or the environment of Intel DevCloud:
-```
-python TensorFlow_HelloWorld.py
-```
-With successful execution, it will print out the following results:
-```
-    0 0.4147554
-    1 0.3561021
-    2 0.33979267
-    3 0.33283564
-    4 0.32920069
-    [CODE_SAMPLE_COMPLETED_SUCCESSFULLY] 
-```
-
-To see verbose output, enable verbose mode:
-```
-export DNNL_VERBOSE=1
-```
-Run the sample again to see the verbose output:
-```
-python TensorFlow_HelloWorld.py
-```
-
-The mkldnn run-time verbose trace should look similar to what is shown below:
-
-```
-2021-01-06 10:44:28.875296: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
-dnnl_verbose,info,DNNL v1.2.0 (commit N/A)
-dnnl_verbose,info,cpu,runtime:OpenMP
-dnnl_verbose,info,cpu,isa:Intel AVX-512 with Intel DL Boost
-dnnl_verbose,info,gpu,runtime:none
-dnnl_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:acdb:f0 dst_f32::blocked:abcd:f0,,,4x4x128x128,12.0649
-dnnl_verbose,exec,cpu,reorder,simple:any,undef,src_f32::blocked:cdba:f0 dst_f32:p:blocked:Acdb16a:f0,,,10x4x3x3,0.187012
-dnnl_verbose,exec,cpu,convolution,jit:avx512_common,forward_training,src_f32::blocked:abcd:f0 wei_f32:p:blocked:Acdb16a:f0 bia_undef::undef::f0 dst_f32:p:blocked:aBcd16b:f0,,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.266113
-```
-
-### Run in Batch Mode on DevCloud
-The batch script will activate your environment for each sample and run each sample.
+### Submit The Sample in Batch Modeon
 
 1.	Navigate to the directory with the TensorFlow sample:
 ```
 cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelTensorFlow_GettingStarted
 ```
+2. submit this "TensorFlow_HelloWorld" workload on the selected node with the run script.
+```
+./q ./run.sh
+```
+> the run.sh contains all the instructions needed to run this "TensorFlow_HelloWorld" workload
 
-2.	Create a new file titled hello-world.sh.
-```
-vim hello-world.sh
-```
-3.	Add these two lines to the top of the file:
-```
-source activate tensorflow
-python TensorFlow_HelloWorld.py
-```
-4.	Save and exit your text editor
-```
-:wq
-```
-5.	You can now use the script to run in batch mode.
-source hello-world.sh
-6.	To add files to run in bach mode, open hello-world.sh and add each script or sample on a new line.
+
 
 

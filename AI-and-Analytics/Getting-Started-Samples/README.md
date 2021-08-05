@@ -25,10 +25,4 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 
 # Using Samples in Intel oneAPI DevCloud
-
-You can use AI Kit samples in
-the [Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/) environment in the following ways:
-* Log in to a DevCloud system via SSH and
-  * use `git clone` to get a full copy of samples repository, or
-  * use the `oneapi-cli` tool to download specific sample.
-* Launch a JupyterLab server and run Jupyter Notebooks from your web browser.
+Please refer to [Using AI samples in Intel oneAPI DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).

@@ -27,12 +27,5 @@ Third party program Licenses can be found here:
 | OpenVino           | [LidarObjectDetection-PointPillars](LidarObjectDetection-PointPillars) | Performs 3D object detection and classification using point cloud data from a LIDAR sensor as input.
 
 # Using Samples in the Intel oneAPI DevCloud
+Please refer to [Using AI samples in Intel oneAPI DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).
 
-You can use AI Kit samples in the
-[Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/)
-environment using the following methods:
-
-* Login to a DevCloud system using SSH
-* use `git clone` to get a full copy of the oneAPI samples repository
-* or use the `oneapi-cli` tool to download this specific sample
-* Launch a JupyterLab server and run Jupyter Notebooks from your web browser.
