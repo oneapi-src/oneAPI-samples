@@ -18,7 +18,7 @@ namespace detail {
 
 using namespace sycl;
 
-template <typename Id, typename T, bool use_host_alloc>
+template <typename T, bool use_host_alloc>
 class ProducerConsumerBaseImpl {
  protected:
   // private members
@@ -134,10 +134,10 @@ class ProducerConsumerBaseImpl {
 ////////////////////////////////////////////////////////////////////////////////
 // Producer implementation
 template <typename Id, typename T, bool use_host_alloc, size_t min_capacity>
-class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
+class ProducerImpl : public ProducerConsumerBaseImpl<T, use_host_alloc> {
  private:
   // base implementation alias
-  using BaseImpl = ProducerConsumerBaseImpl<Id, T, use_host_alloc>;
+  using BaseImpl = ProducerConsumerBaseImpl<T, use_host_alloc>;
   using kernel_ptr_type = typename BaseImpl::kernel_ptr_type;
 
   // IDs for the pipe and kernel
@@ -186,7 +186,7 @@ class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
 
       // the producing kernel
       // NO-FORMAT comments are for clang-format
-      h.single_task<KernelID>([=
+      h.single_task<Id>([=
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         kernel_ptr_type ptr(kernel_ptr);
         for (size_t i = 0; i < count; i++) {
@@ -204,10 +204,10 @@ class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
 ////////////////////////////////////////////////////////////////////////////////
 // Consumer implementation
 template <typename Id, typename T, bool use_host_alloc, size_t min_capacity>
-class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
+class ConsumerImpl : public ProducerConsumerBaseImpl<T, use_host_alloc> {
  private:
   // base implementation alias
-  using BaseImpl = ProducerConsumerBaseImpl<Id, T, use_host_alloc>;
+  using BaseImpl = ProducerConsumerBaseImpl<T, use_host_alloc>;
   using kernel_ptr_type = typename BaseImpl::kernel_ptr_type;
 
   // IDs for the pipe and kernel
@@ -243,7 +243,7 @@ class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
     // launch the kernel to read the output into device side global memory
     auto kernel_event = q.submit([&](handler &h) {
       // NO-FORMAT comments are for clang-format
-      h.single_task<KernelID>([=
+      h.single_task<Id>([=
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         kernel_ptr_type ptr(kernel_ptr);
         for (size_t i = 0; i < count; i++) {

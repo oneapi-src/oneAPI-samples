@@ -45,7 +45,7 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
     set(HIGH_BW_SEED "-Xsseed=8")
     set(NUM_REORDER "-Xsnum-reorder=6")
 elseif(FPGA_BOARD MATCHES ".*agilex.*")
-    # Agilex
+    # Agilex™
     set(NUM_ENGINES 2)
     set(LL_SEED "-Xsseed=1")
     set(HIGH_BW_SEED "-Xsseed=8")

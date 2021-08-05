@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 3.4)
 project (HELLO-IOT-WORLD CXX)
 
 # Use Intel C++ Compiler Classic when available

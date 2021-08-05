@@ -36,7 +36,7 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
     set(CLOCK_TARGET 480MHz)
     set(SEED 5)
 elseif(FPGA_BOARD MATCHES ".*agilex.*")
-    # Agilex parameters
+    # Agilex™ parameters
     set(ROWS_COMPONENT 256)
     set(COLS_COMPONENT 256)
     set(FIXED_ITERATIONS 105)
