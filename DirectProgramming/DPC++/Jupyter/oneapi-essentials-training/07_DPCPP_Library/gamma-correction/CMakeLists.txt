@@ -7,6 +7,6 @@ if (NOT CMAKE_BUILD_TYPE)
         FORCE)
 endif()
 
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 3.4)
 project(gamma_correction LANGUAGES CXX)
 add_subdirectory (src)
