@@ -489,7 +489,18 @@ void QRDecomposition_impl(  vector<typename std::conditional<isComplex, ac_compl
             // Depending on the context, will contain:
             // -> -s[j]: for all the iterations to compute a_j
             // -> ir: for one iteration per j iterations to compute Q_i
-            CTT s_or_i[columns];
+            constexpr int super_dummy_iterations = raw_latency - columns;
+            constexpr int increasedBufferSize = super_dummy_iterations < 0 ? 0 :
+                                                super_dummy_iterations; 
+            CTT s_or_i[columns + increasedBufferSize];
+            // Adding increasedBufferSize is a waste of resource because we 
+            // are going to read and write only to "columns" different places
+            // If we don't add it, the compiler does not achieve II 1 because 
+            // it is not able to determine that we are not going to read at the 
+            // same location the last iteration just wrote.
+            // This is probably due to the fact that when the access index is 
+            // negative, we are not actually reading/writing to it (gated by 
+            // an if statement) but it seems to make the compiler confused.
            
             // Only the real part of the complex pip1 and ir are needed for the 
             // computation
@@ -535,7 +546,7 @@ void QRDecomposition_impl(  vector<typename std::conditional<isComplex, ac_compl
                   sori[k].yy = INTEL::fpga_reg(s_or_i[j].yy);
                 }
                 else{
-                  sori[k] = INTEL::fpga_reg(s_or_i[j]);
+                  sori[k] = INTEL::fpga_reg(s_or_i[j + increasedBufferSize]);
                 }
               });
 
@@ -573,7 +584,11 @@ void QRDecomposition_impl(  vector<typename std::conditional<isComplex, ac_compl
                   if(i_gt_0[bank]){
                     col[k] = A_compute[j].d[k];
                   }
-                  else{
+                  // Using an else statement makes the compiler throw an
+                  // inexplicable warning:
+                  // "Compiler Warning: Memory instruction with unresolved 
+                  // pointer may lead to bad QoR."
+                  if(!i_gt_0[bank]){
                     col[k] = A_load[j].d[k];
                   }
 
@@ -662,7 +677,7 @@ void QRDecomposition_impl(  vector<typename std::conditional<isComplex, ac_compl
                                       j == i + 1 ? 0.0f : s_j.yy);
                 }
                 else{
-                  s_or_i[j] = j == i + 1 ? ir : s_j; 
+                  s_or_i[j + increasedBufferSize] = j == i + 1 ? ir : s_j; 
                 }
               }
 

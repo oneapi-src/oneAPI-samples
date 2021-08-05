@@ -61,6 +61,10 @@ else()
     message(STATUS "\tAn invalid board name was passed in using the FPGA_BOARD flag. Configuring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Arria(R) 10 GX FPGA. Please refer to the README for the list of valid board names.")
 endif()
 
+if(DEFINED ENV{FIXED_ITERATIONS})
+    set(FIXED_ITERATIONS $ENV{FIXED_ITERATIONS})
+endif()
+
 set(HARDWARE_COMPILE_FLAGS -fbracket-depth=512 -fintelfpga -c -fno-fast-math -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
