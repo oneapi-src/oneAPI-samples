@@ -3,7 +3,7 @@
 #pragma once
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "../db_utils/StreamingData.hpp"
 #include "../dbdata.hpp"

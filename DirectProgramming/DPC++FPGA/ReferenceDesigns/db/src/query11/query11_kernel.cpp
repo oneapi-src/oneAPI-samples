@@ -68,7 +68,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   // a convenient lamda to make the explicit copy code less verbose
   auto submit_copy = [&](auto& buf, const auto& host_data) {
     return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, noinit);
+      accessor accessor(buf, h, write_only, no_init);
       h.copy(host_data, accessor);
     });
   };
@@ -249,8 +249,8 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   //// ConsumeSort kernel
   auto consume_sort_event = q.submit([&](handler& h) {
     // output buffer accessors
-    accessor partkeys_accessor(partkeys_buf, h, write_only, noinit);
-    accessor values_accessor(values_buf, h, write_only, noinit);
+    accessor partkeys_accessor(partkeys_buf, h, write_only, no_init);
+    accessor values_accessor(values_buf, h, write_only, no_init);
 
     h.single_task<ConsumeSort>([=]() [[intel::kernel_args_restrict]] {
       // use a ShannonIterator to track how many items

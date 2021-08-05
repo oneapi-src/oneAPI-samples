@@ -8,7 +8,7 @@
 #include <vector>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
@@ -119,9 +119,9 @@ int main(int argc, char *argv[]) {
 
   // the device selector
 #ifdef FPGA_EMULATOR
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   // create the device queue
@@ -268,9 +268,9 @@ template <typename ValueT, typename IndexT, typename KernelPtrType>
 double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   // the input and output pipe for the sorter
   using SortInPipe =
-      sycl::INTEL::pipe<SortInPipeID, sycl::vec<ValueT, kSortWidth>>;
+      sycl::ext::intel::pipe<SortInPipeID, sycl::vec<ValueT, kSortWidth>>;
   using SortOutPipe =
-      sycl::INTEL::pipe<SortOutPipeID, sycl::vec<ValueT, kSortWidth>>;
+      sycl::ext::intel::pipe<SortOutPipeID, sycl::vec<ValueT, kSortWidth>>;
 
   // the sorter must sort a power of 2, so round up the requested count
   // to the nearest power of 2; we will pad the input to make sure the
