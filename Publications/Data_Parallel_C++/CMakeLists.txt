@@ -5,22 +5,24 @@
 ##############################################################################
 # This top-level CMakeLists.txt file does not define a project or setup any
 # project-specific build configuration variables. That must be done in each
-# sample project's project-specific CMakeLists.txt file.
+# sample project's project-specific CMakeLists.txt file. It does define some
+# general, global options for compiling and linking.
 #
 # This CMakeLists.txt file finds those subdirectories located immediately
 # below it that contain a CMakeLists.txt file, and adds them to its CMake
 # add_subdirectory() list. All other folders and files are ignored.
 #
-# A build file (e.g., Ninja or Makefile) is generated as a result of running
-# this CMakeLists.txt file. That build file will include targets defined by
-# the project-level CMakeLists.txt files located during the add_subdirectory()
-# scan. To see those build targets, type "make help" at the command-line.
+# A build file (e.g., Ninja, Makefile, etc.) is generated as a result of
+# running this CMakeLists.txt file. That build file will include targets
+# defined by the project-level CMakeLists.txt files located during the
+# add_subdirectory() scan. To see those build targets, type "make help"
+# at the command-line.
 ##############################################################################
 
-cmake_minimum_required(VERSION 3.4 )
+cmake_minimum_required(VERSION 3.20) #any older version will not work
 
-set(CMAKE_C_COMPILER clang)
-set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_C_COMPILER icx)
+set(CMAKE_CXX_COMPILER icx)
 
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_CXX_STANDARD 17)
@@ -32,6 +34,7 @@ if(WIN32)
   set(CMAKE_CXX_CREATE_STATIC_LIBRARY "lib <OBJECTS> /out:<TARGET>")
   set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
 endif()
+
 
 if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default to Release")
@@ -67,10 +70,7 @@ function(add_book_sample)
     add_executable(${BOOK_SAMPLE_TARGET} ${BOOK_SAMPLE_SOURCES})
 
     target_compile_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl -fsycl-unnamed-lambda -ferror-limit=1 -Wall -Wpedantic)
-    # Passing -fsycl via target_link_libraries for older versions of CMake:
-    #target_link_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl )
     target_link_libraries(${BOOK_SAMPLE_TARGET} PRIVATE sycl -fsycl )
-
     target_link_libraries(${BOOK_SAMPLE_TARGET} PRIVATE ${BOOK_SAMPLE_LIBS})
 
     if(CMAKE_CONFIGURATION_TYPES)
@@ -110,4 +110,3 @@ find_sample_dirs(${sample_dirs})
 # When done here, CMake will finish the task at hand by recursing through
 # all the folders that were added to the add_subdirectory() list and
 # parsing the CMakeLists.txt files found in those folders.
-
