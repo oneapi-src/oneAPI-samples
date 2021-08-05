@@ -6,7 +6,7 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 #include "compute_units.hpp"
-#include "pipe_utils.hpp"
+#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
 
 
 using namespace sycl;
