@@ -45,6 +45,10 @@ designs.
       A non-blocking write will perform a non-blocking write to each pipe,
       and set success to true only if ALL writes were successful.
 
+      Note that the special case of 0 pipe instances is supported, which can 
+      be useful as a stub for writes to pipes that are not needed in your particular 
+      design.
+
       template <class Id,          // name of this PipeDuplicator
                 typename T,        // data type to transfer
                 typename... Pipes  // all pipes to send duplicated writes to
