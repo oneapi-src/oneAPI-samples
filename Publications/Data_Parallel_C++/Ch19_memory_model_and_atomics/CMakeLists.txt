@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.4 )
 project(Chap19)
-set(CMAKE_CXX_COMPILER "dpcpp")
+
 add_book_sample(
     TARGET fig_19_3_data_race
     SOURCES fig_19_3_data_race.cpp)
