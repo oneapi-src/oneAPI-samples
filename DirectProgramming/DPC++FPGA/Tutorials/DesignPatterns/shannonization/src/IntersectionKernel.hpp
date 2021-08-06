@@ -2,7 +2,7 @@
 #define __INTERSECTIONKERNEL_HPP__
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // the kernel class names
 // templated on the version of the kernel

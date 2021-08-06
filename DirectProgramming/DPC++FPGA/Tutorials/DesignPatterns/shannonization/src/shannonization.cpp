@@ -4,7 +4,7 @@
 #include <vector>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "IntersectionKernel.hpp"
 
@@ -99,7 +99,7 @@ event SubmitKernels(queue& q, std::vector<unsigned int>& a,
   // submit the kernel that performs the intersection
   event e = q.submit([&](handler& h) {
     // output accessor
-    accessor n_accessor(n_buf, h, write_only, noinit);
+    accessor n_accessor(n_buf, h, write_only, no_init);
 
     h.single_task<Worker<Version>>([=]() [[intel::kernel_args_restrict]] {
       // The 'Version' template parameter will choose between the different 
@@ -258,9 +258,9 @@ int main(int argc, char** argv) {
 
     // the device selector
 #ifdef FPGA_EMULATOR
-    INTEL::fpga_emulator_selector device_selector;
+    ext::intel::fpga_emulator_selector device_selector;
 #else
-    INTEL::fpga_selector device_selector;
+    ext::intel::fpga_selector device_selector;
 #endif
 
     // create the device queue

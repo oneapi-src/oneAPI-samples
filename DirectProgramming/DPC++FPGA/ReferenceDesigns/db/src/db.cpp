@@ -15,7 +15,7 @@
 #include <sys/types.h>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <algorithm>
 #include <chrono>
 #include <fstream>
@@ -195,9 +195,9 @@ int main(int argc, char* argv[]) {
 
     // the device selector
 #ifdef FPGA_EMULATOR
-    INTEL::fpga_emulator_selector selector;
+    ext::intel::fpga_emulator_selector selector;
 #else
-    INTEL::fpga_selector selector;
+    ext::intel::fpga_selector selector;
 #endif
 
     // create the device queue

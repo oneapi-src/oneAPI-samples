@@ -36,7 +36,7 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
   // a convenient lamda to make the explicit copy code less verbose
   auto submit_copy = [&](auto& buf, const auto& host_data) {
     return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, noinit);
+      accessor accessor(buf, h, write_only, no_init);
       h.copy(host_data, accessor);
     });
   };
@@ -85,14 +85,14 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
     accessor shipdate_accessor(shipdate_buf, h, read_only);
 
     // write accessors
-    accessor sum_qty_accessor(sum_qty_buf, h, write_only, noinit);
-    accessor sum_base_price_accessor(sum_base_price_buf, h, write_only, noinit);
-    accessor sum_disc_price_accessor(sum_disc_price_buf, h, write_only, noinit);
-    accessor sum_charge_accessor(sum_charge_buf, h, write_only, noinit);
-    accessor avg_qty_accessor(avg_qty_buf, h, write_only, noinit);
-    accessor avg_price_accessor(avg_price_buf, h, write_only, noinit);
-    accessor avg_discount_accessor(avg_discount_buf, h, write_only, noinit);
-    accessor count_accessor(count_buf, h, write_only, noinit);
+    accessor sum_qty_accessor(sum_qty_buf, h, write_only, no_init);
+    accessor sum_base_price_accessor(sum_base_price_buf, h, write_only, no_init);
+    accessor sum_disc_price_accessor(sum_disc_price_buf, h, write_only, no_init);
+    accessor sum_charge_accessor(sum_charge_buf, h, write_only, no_init);
+    accessor avg_qty_accessor(avg_qty_buf, h, write_only, no_init);
+    accessor avg_price_accessor(avg_price_buf, h, write_only, no_init);
+    accessor avg_discount_accessor(avg_discount_buf, h, write_only, no_init);
+    accessor count_accessor(count_buf, h, write_only, no_init);
 
     h.single_task<Query1>([=]() [[intel::kernel_args_restrict]] {
       // local accumulation buffers

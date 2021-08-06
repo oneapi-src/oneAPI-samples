@@ -67,16 +67,16 @@ The following code snippet demonstrates how you can specify the target device in
 
 ```c++
 // FPGA device selectors are defined in this utility header
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 int main() {
   // Select either:
   //  - the FPGA emulator device (CPU emulation of the FPGA)
   //  - the FPGA device (a real FPGA)
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   queue q(device_selector);

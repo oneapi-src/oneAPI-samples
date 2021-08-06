@@ -12,7 +12,7 @@
 #include <type_traits>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -128,7 +128,7 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
     // submit the Consumer kernel
     event c_e = q.submit([&](handler &h) {
       // the output buffer accessor
-      accessor res_a(res_buf, h, write_only, noinit);
+      accessor res_a(res_buf, h, write_only, no_init);
 
       h.single_task<Consumer<version>>([=]() [[intel::kernel_args_restrict]] {
         // local register to accumulate into
@@ -173,9 +173,9 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
 int main(int argc, char *argv[]) {
   // the device selector
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   // set the input size based on whether we are in emulation or FPGA hardware
