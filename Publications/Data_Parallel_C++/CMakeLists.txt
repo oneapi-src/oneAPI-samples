@@ -24,12 +24,12 @@ cmake_minimum_required(VERSION 3.4)
 
 # set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
-# if(WIN32)
-#   set(CMAKE_C_COMPILER icx)
-#   set(CMAKE_CXX_COMPILER icx)
-#   set(CMAKE_CXX_CREATE_STATIC_LIBRARY "lib <OBJECTS> /out:<TARGET>")
-#   set(CMAKE_CXX_LINK_EXECUTABLE "lld-link <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
-# endif(WIN32)
+if(WIN32)
+  set(CMAKE_C_COMPILER icx)
+  set(CMAKE_CXX_COMPILER icx)
+  set(CMAKE_CXX_CREATE_STATIC_LIBRARY "lib <OBJECTS> /out:<TARGET>")
+  set(CMAKE_CXX_LINK_EXECUTABLE "lld-link <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
+endif(WIN32)
 if(UNIX)
   set(CMAKE_C_COMPILER clang)
   set(CMAKE_CXX_COMPILER clang++)
@@ -74,8 +74,10 @@ function(add_book_sample)
 
     add_executable(${BOOK_SAMPLE_TARGET} ${BOOK_SAMPLE_SOURCES})
 
-    target_compile_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl -fsycl-unnamed-lambda -ferror-limit=1 -Wall -Wpedantic)
-    target_link_libraries(${BOOK_SAMPLE_TARGET} PRIVATE sycl -fsycl )
+    #target_compile_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl -fsycl-unnamed-lambda -ferror-limit=1 -Wall -Wpedantic -Wno-pass-failed)
+    target_compile_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl -fsycl-unnamed-lambda -ferror-limit=1 -Wall -Wpedantic -Wno-pass-failed -Wno-unused-variable)
+
+    target_link_libraries(${BOOK_SAMPLE_TARGET} PRIVATE sycl -fsycl)
     target_link_libraries(${BOOK_SAMPLE_TARGET} PRIVATE ${BOOK_SAMPLE_LIBS})
 
     if(CMAKE_CONFIGURATION_TYPES)
