@@ -28,5 +28,5 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | XGBoost | [IntelPython_XGBoost_daal4pyPrediction](IntelPython_XGBoost_daal4pyPrediction) |  Analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction than XGBoost prediction..
 
 # Using Samples in Intel oneAPI DevCloud
-Please refer to [Using AI samples in Intel oneAPI DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).
+To get started using samples in the DevCloud, refer to [Using AI samples in Intel oneAPI DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).
 

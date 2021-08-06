@@ -125,13 +125,13 @@ Please see the [DNNL Developer's Guide](https://intel.github.io/mkl-dnn/dev_guid
 
 Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/README.md#using-samples-in-intel-oneapi-devcloud) for general usage instructions.
 
-### Submit The Sample in Batch Modeon
+### Submit The Sample in Batch Mode
 
 1.	Navigate to the directory with the TensorFlow sample:
 ```
 cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelTensorFlow_GettingStarted
 ```
-2. submit this "TensorFlow_HelloWorld" workload on the selected node with the run script.
+2. Submit this "TensorFlow_HelloWorld" workload on the selected node with the run script.
 ```
 ./q ./run.sh
 ```

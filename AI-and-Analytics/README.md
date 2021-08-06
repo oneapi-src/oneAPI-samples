@@ -26,7 +26,7 @@ the [Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/) envi
 * Log in to a DevCloud system via SSH
 * Launch a JupyterLab server and run Jupyter Notebooks from your web browser.   
 > Please refer to [DevCloud README](DevCloudREADME.md) for more details.
-## Get Samples Codes
+## Get Code Samples
 * use `git clone` to get a full copy of samples repository, or
 * use the `oneapi-cli` tool to download specific sample.
 ## How to submit a workload to a specific architecture

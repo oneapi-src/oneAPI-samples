@@ -59,8 +59,13 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
     ```
     conda activate user_pytorch
     ```
+  
+4.	Navigate to the directory with the TensorFlow sample:
+    ```
+    cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelPyTorch_GettingStarted
+    ```
 
-4. Run the Python script
+5. Run the Python script
     To run the program on Linux*, Windows* and MacOS*, type the following command in the terminal with Python installed:
 
     ```
@@ -83,7 +88,7 @@ With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULL
 
 Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/README.md#using-samples-in-intel-oneapi-devcloud) for general usage instructions.
 
-### Submit The Sample in Batch Modeon
+### Submit The Sample in Batch Mode
 
 1.	Navigate to the directory with the TensorFlow sample:
 ```
