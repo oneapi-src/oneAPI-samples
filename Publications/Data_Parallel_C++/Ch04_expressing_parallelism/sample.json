@@ -5,8 +5,8 @@
   "description": "fig_4_5_vector_add.cpp - Expressing a vector addition kernel with parallel_for * fig_4_6_matrix_add.cpp - Expressing a matrix addition kernel with parallel_for * fig_4_7_basic_matrix_multiply.cpp - Expressing a naïve matrix multiplication kernel for square matrices, with parallel_for * fig_4_13_nd_range_matrix_multiply.cpp - Expressing a naïve matrix multiplication kernel with ND-range parallel_for * fig_4_20_hierarchical_matrix_multiply.cpp - Expressing a naïve matrix multiplication kernel with hierarchical parallelism * fig_4_22_hierarchical_logical_matrix_multiply.cpp - Expressing a naïve matrix multiplication kernel with hierarchical parallelism and a logical range",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
-  "targetDevice": [ "CPU", "GPU" ],
-  "os": [ "linux", "windows" ],
+  "targetDevice": [ "CPU", "GPU" ],  
+  "os": [ "linux" ],
   "builder": [ "ide", "cmake" ],
   "commonFolder": {
     "base": "..",
