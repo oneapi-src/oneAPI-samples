@@ -178,7 +178,7 @@ int main(int argc, char *argv[]) {
     cout << "Verifying results on matrix";
 
     for (size_t matrix : to_check) {
-      cout << " " << matrix << std::endl;
+      cout << " " << matrix;
       size_t idx = 0;
 
 #if COMPLEX == 1
