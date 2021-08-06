@@ -271,6 +271,9 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
 
   // wait for the Compute kernel to finish
+  produce_lineitem_event.wait();
+  produce_orders_event.wait();
+  join_event.wait();
   compute_event.wait();
 
   // stop timer

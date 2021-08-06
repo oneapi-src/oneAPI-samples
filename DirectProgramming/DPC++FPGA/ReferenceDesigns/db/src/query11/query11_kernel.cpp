@@ -291,6 +291,10 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   ///////////////////////////////////////////////////////////////////////////
 
   // wait for kernels to finish
+  produce_ps_event.wait();
+  join_event.wait();
+  compute_event.wait();
+  sort_event.wait();
   consume_sort_event.wait();
 
   high_resolution_clock::time_point host_end = high_resolution_clock::now();
