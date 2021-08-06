@@ -113,7 +113,6 @@ int main(int argc, char *argv[]) {
          << ((matrices == 1) ? "x " : "ces ") << "\n";
 
     srand(kRandomSeed);
-    // cout << "A MATRIX" << std::endl;
 
     for (size_t i = 0; i < matrices; i++) {
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {
@@ -132,11 +131,8 @@ int main(int argc, char *argv[]) {
 #else
           a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] = 
                                                                 random_real;
-          // cout << a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] << " ";
 #endif
-
         }
-        // cout << std::endl;
       }
     }
 
@@ -195,9 +191,7 @@ int main(int argc, char *argv[]) {
             r_matrix_pp[i][j][1] = qr_matrix[matrix * kQRMatrixSize + idx].i();
             idx++;
           }
-          // cout << r_matrix_pp[matrix * kQMatrixSize + idx] << " ";
         }
-        // cout << std::endl;
       }
 
       // idx = 0;
@@ -206,10 +200,7 @@ int main(int argc, char *argv[]) {
           q_matrix_pp[i][j][0] = qr_matrix[matrix * kQRMatrixSize + idx].r();
           q_matrix_pp[i][j][1] = qr_matrix[matrix * kQRMatrixSize + idx].i();
           idx++;
-
-          // cout << q_matrix_pp[matrix * kQMatrixSize + idx] << " ";
         }
-        // cout << std::endl;
       }
 
       constexpr float kErrorThreshold = 1e-4;
@@ -310,7 +301,6 @@ int main(int argc, char *argv[]) {
       }
 #else
 
-      // cout << "R MATRIX" << std::endl;
       for (size_t i = 0; i < COLS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
           if (j < i)
@@ -319,23 +309,14 @@ int main(int argc, char *argv[]) {
             r_matrix_pp[i][j] = qr_matrix[matrix * kQRMatrixSize + idx];
             idx++;
           }
-          // cout << r_matrix_pp[i][j] << " ";
         }
-        // cout << std::endl;
       }
-      
-      // cout << std::endl;
 
-      // cout << "Q MATRIX" << std::endl;
-      // idx = 0;
       for (size_t j = 0; j < COLS_COMPONENT; j++) {
         for (size_t i = 0; i < ROWS_COMPONENT; i++) {
           q_matrix_pp[i][j] = qr_matrix[matrix * kQRMatrixSize + idx];
           idx++;
-
-          // cout << q_matrix_pp[i][j] << " ";
         }
-        // cout << std::endl;
       }
 
       constexpr float kErrorThreshold = 1e-4;
