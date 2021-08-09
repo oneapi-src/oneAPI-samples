@@ -102,8 +102,8 @@ int main(int argc, char *argv[]) {
 
     // For output-postprocessing
 #if COMPLEX == 1
-    float q_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT][2];
-    float r_matrix_pp[COLS_COMPONENT][COLS_COMPONENT][2];
+    ac_complex<float> q_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT];
+    ac_complex<float> r_matrix_pp[COLS_COMPONENT][COLS_COMPONENT];
 #else
     float q_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT];
     float r_matrix_pp[COLS_COMPONENT][COLS_COMPONENT];
@@ -113,6 +113,7 @@ int main(int argc, char *argv[]) {
          << ((matrices == 1) ? "x " : "ces ") << "\n";
 
     srand(kRandomSeed);
+    cout << "A MATRIX" << std::endl;
 
     for (size_t i = 0; i < matrices; i++) {
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {
@@ -132,7 +133,10 @@ int main(int argc, char *argv[]) {
           a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] = 
                                                                 random_real;
 #endif
+          cout << a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] << " ";
+
         }
+        cout << std::endl;
       }
     }
 
@@ -178,29 +182,38 @@ int main(int argc, char *argv[]) {
     cout << "Verifying results on matrix";
 
     for (size_t matrix : to_check) {
-      cout << " " << matrix;
+      cout << " " << matrix << std::endl;
       size_t idx = 0;
 
 #if COMPLEX == 1
+      cout << "R MATRIX" << std::endl;
       for (size_t i = 0; i < COLS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
           if (j < i)
-            r_matrix_pp[i][j][0] = r_matrix_pp[i][j][1] = 0;
+            r_matrix_pp[i][j] = {0};
           else {
-            r_matrix_pp[i][j][0] = qr_matrix[matrix * kQRMatrixSize + idx].r();
-            r_matrix_pp[i][j][1] = qr_matrix[matrix * kQRMatrixSize + idx].i();
+            r_matrix_pp[i][j] = qr_matrix[matrix * kQRMatrixSize + idx];
             idx++;
           }
+          cout << r_matrix_pp[i][j] << " ";
         }
+        cout << std::endl;
       }
 
       // idx = 0;
+      cout << "Q MATRIX" << std::endl;
       for (size_t j = 0; j < COLS_COMPONENT; j++) {
         for (size_t i = 0; i < ROWS_COMPONENT; i++) {
-          q_matrix_pp[i][j][0] = qr_matrix[matrix * kQRMatrixSize + idx].r();
-          q_matrix_pp[i][j][1] = qr_matrix[matrix * kQRMatrixSize + idx].i();
+          q_matrix_pp[i][j] = qr_matrix[matrix * kQRMatrixSize + idx];
           idx++;
         }
+      }
+
+      for (size_t i = 0; i < ROWS_COMPONENT; i++) {
+        for (size_t j = 0; j < COLS_COMPONENT; j++) {
+          cout << q_matrix_pp[i][j] << " ";
+        }
+        cout << std::endl;
       }
 
       constexpr float kErrorThreshold = 1e-4;
@@ -213,21 +226,22 @@ int main(int argc, char *argv[]) {
           qr_ij[0] = 0;
           qr_ij[1] = 0;
           for (size_t k = 0; k < COLS_COMPONENT; k++) {
-            qr_ij[0] += q_matrix_pp[i][k][0] * r_matrix_pp[k][j][0] -
-                        q_matrix_pp[i][k][1] * r_matrix_pp[k][j][1];
-            qr_ij[1] += q_matrix_pp[i][k][0] * r_matrix_pp[k][j][1] +
-                        q_matrix_pp[i][k][1] * r_matrix_pp[k][j][0];
+            qr_ij[0] += q_matrix_pp[i][k].r() * r_matrix_pp[k][j].r() -
+                        q_matrix_pp[i][k].i() * r_matrix_pp[k][j].i();
+            qr_ij[1] += q_matrix_pp[i][k].r() * r_matrix_pp[k][j].i() +
+                        q_matrix_pp[i][k].i() * r_matrix_pp[k][j].r();
           }
 
           qtq_ij[0] = 0;
           qtq_ij[1] = 0;
-          for (size_t k = 0; k < COLS_COMPONENT; k++) {
-            qtq_ij[0] += q_matrix_pp[i][k][0] * q_matrix_pp[j][k][0] +
-                        q_matrix_pp[i][k][1] * q_matrix_pp[j][k][1];
-            qtq_ij[1] += q_matrix_pp[i][k][0] * q_matrix_pp[j][k][1] -
-                        q_matrix_pp[i][k][1] * q_matrix_pp[j][k][0];
+          if(i<COLS_COMPONENT){
+            for (size_t k = 0; k < ROWS_COMPONENT; k++) {
+              qtq_ij[0] += q_matrix_pp[k][i].r() * q_matrix_pp[k][j].r() +
+                          q_matrix_pp[k][i].i() * q_matrix_pp[k][j].i();
+              qtq_ij[1] += q_matrix_pp[k][i].r() * q_matrix_pp[k][j].i() -
+                          q_matrix_pp[k][i].i() * q_matrix_pp[k][j].r();
+            }
           }
-
 
           bool qr_eq_a = (abs(a_matrix[matrix * kAMatrixSizeFactor +
                               j * ROWS_COMPONENT + i].r() - qr_ij[0]) 
@@ -238,21 +252,22 @@ int main(int argc, char *argv[]) {
 
 
           bool qtq_ortho = (((i == j) && (abs(qtq_ij[0] - 1) < kErrorThreshold))
-                        || ((i != j) && (abs(qtq_ij[0]) < kErrorThreshold)))
-                        && (abs(qtq_ij[1]) < kErrorThreshold);
+    || (((i != j) || (i>=COLS_COMPONENT)) && (abs(qtq_ij[0]) < kErrorThreshold)))
+                                          && (abs(qtq_ij[1]) < kErrorThreshold);
 
-          bool r_upper_triang = ((i > j) && 
-                              ((abs(r_matrix_pp[i][j][0]) < kErrorThreshold) &&
-                                (abs(r_matrix_pp[i][j][1]) < kErrorThreshold)))
-                                || ((i <= j));
+          bool r_upper_triang = (i >= COLS_COMPONENT) || 
+                              ((i > j) && 
+                              ((abs(r_matrix_pp[i][j].r()) < kErrorThreshold) &&
+                                (abs(r_matrix_pp[i][j].i()) < kErrorThreshold)))
+                              || ((i <= j));
 
           if (!qr_eq_a || !qtq_ortho || !r_upper_triang
               || !std::isfinite(qr_ij[0])
               || !std::isfinite(qr_ij[1]) 
               || !std::isfinite(qtq_ij[0])
               || !std::isfinite(qtq_ij[1])
-              || !std::isfinite(r_matrix_pp[i][j][0])
-              || !std::isfinite(r_matrix_pp[i][j][1])
+              || !std::isfinite(r_matrix_pp[i][j].r())
+              || !std::isfinite(r_matrix_pp[i][j].i())
             ) {
 
             count++;
@@ -260,6 +275,7 @@ int main(int argc, char *argv[]) {
             if(error){
               continue;
             }
+            cout << "Error at i= " << i << " j= " << j << std::endl;
 
             if(!qr_eq_a){
               cout  << "Error: A[" << i << "][" << j << "] = (" << 
@@ -289,10 +305,10 @@ int main(int argc, char *argv[]) {
               cout  << "QtQ[" << i << "][" << j << "] = (" << qtq_ij[0] << ", " 
                     << qtq_ij[1] << ") is not finite" << std::endl;
             }
-            if(!std::isfinite(r_matrix_pp[i][j][0]) || 
-               !std::isfinite(r_matrix_pp[i][j][1])) {
-              cout  << "R[" << i << "][" << j << "] = (" << r_matrix_pp[i][j][0] 
-                    << ", " << r_matrix_pp[i][j][1] << ") is not finite" \
+            if(!std::isfinite(r_matrix_pp[i][j].r()) || 
+               !std::isfinite(r_matrix_pp[i][j].i())) {
+              cout  << "R[" << i << "][" << j << "] = (" << r_matrix_pp[i][j].r() 
+                    << ", " << r_matrix_pp[i][j].i() << ") is not finite" \
                     << std::endl;
             }
             error = true;
@@ -301,6 +317,7 @@ int main(int argc, char *argv[]) {
       }
 #else
 
+      cout << "R MATRIX" << std::endl;
       for (size_t i = 0; i < COLS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
           if (j < i)
@@ -309,14 +326,27 @@ int main(int argc, char *argv[]) {
             r_matrix_pp[i][j] = qr_matrix[matrix * kQRMatrixSize + idx];
             idx++;
           }
+          cout << r_matrix_pp[i][j] << " ";
         }
+        cout << std::endl;
       }
+      
+      cout << std::endl;
 
+      cout << "Q MATRIX" << std::endl;
+      // idx = 0;
       for (size_t j = 0; j < COLS_COMPONENT; j++) {
         for (size_t i = 0; i < ROWS_COMPONENT; i++) {
           q_matrix_pp[i][j] = qr_matrix[matrix * kQRMatrixSize + idx];
           idx++;
         }
+      }
+
+      for (size_t i = 0; i < ROWS_COMPONENT; i++) {
+        for (size_t j = 0; j < COLS_COMPONENT; j++) {
+          cout << q_matrix_pp[i][j] << " ";
+        }
+        cout << std::endl;
       }
 
       constexpr float kErrorThreshold = 1e-4;
@@ -332,23 +362,26 @@ int main(int argc, char *argv[]) {
           }
 
           qtq_ij = 0;
-          for (size_t k = 0; k < COLS_COMPONENT; k++) {
-            qtq_ij += q_matrix_pp[i][k] * q_matrix_pp[j][k];
+          if(i<COLS_COMPONENT){
+            for (size_t k = 0; k < ROWS_COMPONENT; k++) {
+              qtq_ij += q_matrix_pp[k][i] * q_matrix_pp[k][j];
+            }
           }
 
           bool qr_eq_a = (abs(a_matrix[matrix * kAMatrixSizeFactor +
                               j * ROWS_COMPONENT + i] - qr_ij) 
                           < kErrorThreshold);
 
+          bool qtq_ortho = ((i == j) && (abs(qtq_ij - 1) < kErrorThreshold)) ||
+         (((i != j) || (i>=COLS_COMPONENT)) && (abs(qtq_ij) < kErrorThreshold));
 
-          bool qtq_ortho = (((i == j) && (abs(qtq_ij - 1) < kErrorThreshold))
-                        || ((i != j) && (abs(qtq_ij) < kErrorThreshold)));
-
-          bool r_upper_triang = ((i > j) && 
-                              ((abs(r_matrix_pp[i][j]) < kErrorThreshold) ))
+          bool r_upper_triang = (i >= COLS_COMPONENT) || 
+                      ((i > j) && ((abs(r_matrix_pp[i][j]) < kErrorThreshold) ))
                                 || ((i <= j));
 
-          if (!qr_eq_a || !qtq_ortho || !r_upper_triang
+          if (!qr_eq_a 
+              || !qtq_ortho
+              || !r_upper_triang
               || !std::isfinite(qr_ij)
               || !std::isfinite(qtq_ij)
               || !std::isfinite(r_matrix_pp[i][j])
@@ -372,7 +405,7 @@ int main(int argc, char *argv[]) {
                     << kErrorThreshold << ")" << std::endl;
             }
             if(!qtq_ortho) {
-              cout  << "Q is not orthogonal" << std::endl;             
+              cout  << "Q is not orthogonal " << qtq_ij << std::endl;             
             }
             if(!r_upper_triang) {
               cout  << "R is not upper triangular" << std::endl;             

@@ -183,14 +183,15 @@ namespace QRDInternal{
     // Functional limitations
     static_assert(std::is_same<T, float>::value, 
                                             "only float datatype is supported");
-    static_assert(columns == rows, "only squared are matrices supported");
+    static_assert(rows>=columns, 
+         "only rectangular matrices with rows>=columns are matrices supported");
     static_assert((columns <= 512) && (columns >= 4), 
                           "only matrices of size 4x4 to 512x512 are supported");
     static_assert(columns%4 == 0, 
                 "only matrices of size that are a multiple of 4 are supported");
 
     // Number of complex elements in the matrix
-    constexpr int kNumComplexElements = columns * rows;
+    constexpr int kAMatrixSize = columns * rows;
 
     // Sizes of allocated memories for input and output matrix
     // Both the input matrix and Q are full matrices of complex elements
@@ -201,8 +202,7 @@ namespace QRDInternal{
     //                 etc.
     // So R contains columns * (columns + 1) / 2 complex elements.
     constexpr int kRMatrixSize = columns * (columns + 1) / 2;
-    constexpr int kAMatrixSize = kNumComplexElements;
-    constexpr int kQMatrixSize = kNumComplexElements;
+    constexpr int kQMatrixSize = kAMatrixSize;
     constexpr int kQRMatrixSize = kQMatrixSize + kRMatrixSize;
 
     // Constants related to the memory configuration of the kernel's local
@@ -216,8 +216,8 @@ namespace QRDInternal{
 
     // Number of load and store iterations for a single matrix given the size
     // of the input matrices and the number of elements per bank
-    constexpr int kLoadIter = kNumComplexElements / kNumElementsPerBank;
-    constexpr int kStoreIter = kNumComplexElements / kNumElementsPerBank;
+    constexpr int kLoadIter = kAMatrixSize / kNumElementsPerBank;
+    constexpr int kStoreIter = kAMatrixSize / kNumElementsPerBank;
     // Number of bits required by the loop counters for the load/store iterators
     constexpr int kLoadIterBitSize = BitsForMaxValue<kLoadIter + 1>();
     constexpr int kStoreIterBitSize = BitsForMaxValue<kStoreIter + 1>();
@@ -313,7 +313,7 @@ namespace QRDInternal{
 
           // Create alias to the output matrix accessor
           auto QR_matrix_accessor_2 = QR_matrix_accessor;
-          
+
           h.single_task<class QRD>([=]() [[intel::kernel_args_restrict]] {
             // Go over the matrices
             for (int matrixIdx = 0; matrixIdx < matrices; matrixIdx++) {
@@ -336,7 +336,7 @@ namespace QRDInternal{
                 ================================================================
               */
               // Get the index of the first bank of the current matrix l
-              int loadBankIndex = matrixIdx * kNumComplexElements 
+              int loadBankIndex = matrixIdx * kAMatrixSize 
                                                           / kNumElementsPerBank;
 
               [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
