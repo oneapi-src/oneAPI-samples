@@ -1,4 +1,4 @@
-## Change log
+## oneAPI Code Sample Change log
 
 This document shows the history of when a specific sample was introduced to the oneAPI ecosystem of Code Samples.<br>Current Samples Count: 157
 | Version|Code Sample Name|description|
@@ -73,7 +73,7 @@ This document shows the history of when a specific sample was introduced to the 
 |2021.1.Gold|[Dynamic Profiler](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Tools/dynamic_profiler)|An Intel® FPGA tutorial demonstrating how to use the Intel® FPGA Dynamic Profiler for Intel® oneAPI Data Parallel C++ (DPC++) to dynamically collect performance data and reveal areas for optimization|
 |2021.1.Gold|[Explicit Data Movement](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/DesignPatterns/explicit_data_movement)|An Intel® FPGA tutorial demonstrating an alternative coding style, explicit USM, in which all data movement is controlled explicitly by the author|
 |2021.1.Gold|[FPGA Compile](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/GettingStarted/fpga_compile)|Intel® FPGA tutorial introducing how to compile Intel® oneAPI Data Parallel C++ (DPC++) for Intel® FPGA|
-|2021.1.Gold|[FPGA Reg](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/fpga_reg)|An Intel® FPGA advanced tutorial demonstrating how to apply the Intel® oneAPI Data Parallel C++ (DPC++) extension INTEL::fpga_reg|
+|2021.1.Gold|[FPGA Reg](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/fpga_reg)|An Intel® FPGA advanced tutorial demonstrating how to apply the Intel® oneAPI Data Parallel C++ (DPC++) extension ext::intel::fpga_reg|
 |2021.1.Gold|[Fast Recompile](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/GettingStarted/fast_recompile)|An Intel® FPGA tutorial demonstrating how to separate the compilation of host and device code to save development time|
 |2021.1.Gold|[Folder Options DPCT](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Migration/folder-options-dpct)|Multi-folder project that illustrates migration of a CUDA project that has files located in multiple folders in a directory tree. Uses the `--in-root` and `--out-root` options to tell the Intel® Data Parallel C++ (DPC++) Compatibility Tool where to locate source code to be migrated|
 |2021.1.Gold|[GZIP](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/gzip)|Reference design demonstrating high-performance GZIP compression on Intel® FPGA|
