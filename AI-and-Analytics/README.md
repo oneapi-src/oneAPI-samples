@@ -29,6 +29,7 @@ the [Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/) envi
 ## Get Code Samples
 * use `git clone` to get a full copy of samples repository, or
 * use the `oneapi-cli` tool to download specific sample.
+> Users could refer to [the Download Samples using the oneAPI CLI Samples Browser section](https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-oneapi-hpc-linux/top/run-a-sample-project-using-the-command-line.html).
 ## How to submit a workload to a specific architecture
 * check the available nodes with your DevCloud account 
 ```
@@ -40,6 +41,7 @@ ex: select a skx node to run your workload
 export TARGET_NODE=skx
 ```
 * prepare a run script which contains all needed run commands for your workload. 
+> Users could refer to [run.sh for TensorFlow Getting started sample](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted/run.sh).
 * submit your workload on the selected node with the run script.
 ```
 ./q ./run.sh
