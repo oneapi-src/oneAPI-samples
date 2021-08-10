@@ -187,8 +187,8 @@ namespace QRDInternal{
          "only rectangular matrices with rows>=columns are matrices supported");
     static_assert((columns <= 512) && (columns >= 4), 
                           "only matrices of size 4x4 to 512x512 are supported");
-    static_assert(columns%4 == 0, 
-                "only matrices of size that are a multiple of 4 are supported");
+    // static_assert(columns%4 == 0, 
+    //             "only matrices of size that are a multiple of 4 are supported");
 
     // Number of complex elements in the matrix
     constexpr int kAMatrixSize = columns * rows;
@@ -208,16 +208,21 @@ namespace QRDInternal{
     // Constants related to the memory configuration of the kernel's local
     // memories
     // We want 8 floating-point values in each memory bank
-    constexpr int kNumElementsPerBank = isComplex || columns < 8 ? 4 : 8;
+    constexpr int kNumElementsPerBank = isComplex || rows < 8 ? 4 : 8;
     // Set the bankwidth in bytes
     constexpr int kBankwidth = kNumElementsPerBank * 8;
-    constexpr int kNumBanks = rows / kNumElementsPerBank;
+    constexpr bool kNonCompleteBank = rows%kNumElementsPerBank != 0;
+    constexpr int kExtraBank = kNonCompleteBank ? 1 : 0;
+    constexpr int kNumBanks = rows / kNumElementsPerBank + kExtraBank;
     constexpr int kNumBanksNextPow2 = Pow2(CeilLog2<kNumBanks>());
 
     // Number of load and store iterations for a single matrix given the size
     // of the input matrices and the number of elements per bank
-    constexpr int kLoadIter = kAMatrixSize / kNumElementsPerBank;
-    constexpr int kStoreIter = kAMatrixSize / kNumElementsPerBank;
+    constexpr bool kNonCompleteIter = rows%kNumElementsPerBank != 0;
+    constexpr int kExtraIter = kNonCompleteIter ? 1 : 0;
+    constexpr int kLoadIter = ((rows / kNumElementsPerBank) + kExtraIter) 
+                                                                      * columns;
+    constexpr int kStoreIter = kLoadIter;
     // Number of bits required by the loop counters for the load/store iterators
     constexpr int kLoadIterBitSize = BitsForMaxValue<kLoadIter + 1>();
     constexpr int kStoreIterBitSize = BitsForMaxValue<kStoreIter + 1>();
@@ -314,7 +319,10 @@ namespace QRDInternal{
           // Create alias to the output matrix accessor
           auto QR_matrix_accessor_2 = QR_matrix_accessor;
 
+          sycl::stream out(32000, 32000, h);
+
           h.single_task<class QRD>([=]() [[intel::kernel_args_restrict]] {
+
             // Go over the matrices
             for (int matrixIdx = 0; matrixIdx < matrices; matrixIdx++) {
 
@@ -336,46 +344,74 @@ namespace QRDInternal{
                 ================================================================
               */
               // Get the index of the first bank of the current matrix l
-              int loadBankIndex = matrixIdx * kAMatrixSize 
-                                                          / kNumElementsPerBank;
+              int loadBankIndex = matrixIdx * kAMatrixSize;
 
               [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
               for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; 
                                                                         li++) {
-
                 // Load a single bank of the input matrix 
                 CTT bank[kNumElementsPerBank];
 
+                bool lastRow = false;
+
+                if constexpr(kNonCompleteIter){
+                  constexpr int kLoadItersPerColumn = rows/kNumElementsPerBank 
+                                                                  + kExtraIter; 
+                  lastRow = (li%kLoadItersPerColumn) == kLoadItersPerColumn - 1;
+                }
+
                 UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                  if constexpr(isComplex){
-                    bank[k].xx = A_matrix_accessor[
-                                  loadBankIndex * kNumElementsPerBank + k].r();
-                    bank[k].yy = A_matrix_accessor[
-                                  loadBankIndex * kNumElementsPerBank + k].i();
+
+                  bool outOfBounds = false;
+                  if constexpr(kNonCompleteIter){
+                   outOfBounds = lastRow && 
+                 ((k % kNumElementsPerBank) > ((rows-1) % kNumElementsPerBank));
                   }
-                  else{
-                    bank[k] = A_matrix_accessor[
-                                       loadBankIndex * kNumElementsPerBank + k];
+
+                  if(!outOfBounds){
+                    if constexpr(isComplex){
+                      bank[k].xx = A_matrix_accessor[
+                                    loadBankIndex + k].r();
+                      bank[k].yy = A_matrix_accessor[
+                                    loadBankIndex + k].i();
+                    }
+                    else{
+                      bank[k] = A_matrix_accessor[
+                                         loadBankIndex + k];
+                    }
                   }
                 });
 
-                // Increase the bank index
-                loadBankIndex++;
+                if constexpr(kNonCompleteIter){
+                  int readElements = (rows % kNumElementsPerBank != 0) 
+                                                && lastRow ?
+                                                rows % kNumElementsPerBank :  
+                                                kNumElementsPerBank;
+
+                  // Increase the bank index
+                  loadBankIndex += readElements;
+                }
+                else{
+                  loadBankIndex += kNumElementsPerBank;
+                }
 
                 // Write the current bank to the A_load matrix.
                 ac_int<BitsForMaxValue<kNumBanks>(), false> jtmp = 
                                                               li % (kNumBanks);
                 ac_int<kLiNumBankBitSize, false> liNumBank = li / kNumBanks;
+
                 UnrolledLoop<kNumBanks>([&](auto k) {
                   UnrolledLoop<kNumElementsPerBank>([&](auto t) {
                     constexpr auto rowIdx = k * kNumElementsPerBank + t;
-                    if (jtmp == k) {
-                      if constexpr(isComplex){
-                        A_load[liNumBank].d[rowIdx].xx = bank[t].xx;
-                        A_load[liNumBank].d[rowIdx].yy = bank[t].yy;
-                      }
-                      else{
-                        A_load[liNumBank].d[rowIdx] = bank[t];
+                    if constexpr (rowIdx < rows){
+                      if ((jtmp == k)) {
+                        if constexpr(isComplex){
+                          A_load[liNumBank].d[rowIdx].xx = bank[t].xx;
+                          A_load[liNumBank].d[rowIdx].yy = bank[t].yy;
+                        }
+                        else{
+                          A_load[liNumBank].d[rowIdx] = bank[t];
+                        }
                       }
                     }
 
@@ -659,46 +695,68 @@ namespace QRDInternal{
                 // bank a boolean to check if it should store this si iteration
                 ac_int<BitsForMaxValue<kNumBanks>(), false> desired = 
                                                               si % (kNumBanks);
-              bool get[kNumBanks];
-              UnrolledLoop<kNumBanks>([&](auto k) {
-                get[k] = desired == k;
-                desired = sycl::ext::intel::fpga_reg(desired);
-              });
+                bool get[kNumBanks];
+                UnrolledLoop<kNumBanks>([&](auto k) {
+                  get[k] = desired == k;
+                  desired = INTEL::fpga_reg(desired);
+                });
 
-              // Each bank will then check the get table to potentially 
-              // read kNumElementsPerBank from A_store and store the elements
-              // in bank
-              CTT bank[kNumElementsPerBank];
+                // Each bank will then check the get table to potentially 
+                // read kNumElementsPerBank from A_store and store the elements
+                // in bank
+                CTT bank[kNumElementsPerBank] = {0};
 
-              ac_int<kSiNumBankBitSize, false> siNumBank = si / kNumBanks;
-              UnrolledLoop<kNumBanks>([&](auto t) {
-                UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                  constexpr auto rowIdx = t * kNumElementsPerBank + k;
-                    if constexpr(isComplex){
-                      bank[k].xx = get[t] ? A_store[siNumBank].d[rowIdx].xx : 
-                                                    sycl::ext::intel::fpga_reg(bank[k].xx);
-                      bank[k].yy = get[t] ? A_store[siNumBank].d[rowIdx].yy : 
-                                                    sycl::ext::intel::fpga_reg(bank[k].yy);
-                    }
-                    else{
-                      bank[k] = get[t] ? A_store[siNumBank].d[rowIdx] : 
-                                                      sycl::ext::intel::fpga_reg(bank[k]);
+                ac_int<kSiNumBankBitSize, false> siNumBank = si / kNumBanks;
+                UnrolledLoop<kNumBanks>([&](auto t) {
+                  UnrolledLoop<kNumElementsPerBank>([&](auto k) {
+                    constexpr auto rowIdx = t * kNumElementsPerBank + k;
+                    if constexpr(rowIdx < rows){
+                      if constexpr(isComplex){
+                        bank[k].xx = get[t] ? A_store[siNumBank].d[rowIdx].xx : 
+                                                    INTEL::fpga_reg(bank[k].xx);
+                        bank[k].yy = get[t] ? A_store[siNumBank].d[rowIdx].yy : 
+                                                    INTEL::fpga_reg(bank[k].yy);
+                      }
+                      else{
+                        bank[k] = get[t] ? A_store[siNumBank].d[rowIdx] : 
+                                                      INTEL::fpga_reg(bank[k]);
+                      }
                     }
                   });
                 });
 
+                bool lastRow = false;
+                if constexpr(kNonCompleteIter){
+                  lastRow = si % kNumBanks == kNumBanks-1; 
+                } 
+
                 // Finally, the kNumElementsPerBank elements from bank are 
                 // written to the QR_matrix_accessor
                 UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                  if constexpr(isComplex){
-                    QR_matrix_accessor[qr_idx + k] = {bank[k].xx, bank[k].yy};
+                  bool outOfBounds = false;
+                  if constexpr(kNonCompleteIter){
+                    outOfBounds = lastRow && 
+                          (k > ((rows-1) % kNumElementsPerBank));
                   }
-                  else{
-                    QR_matrix_accessor[qr_idx + k] = bank[k];
+
+                  if(!outOfBounds){
+                    if constexpr(isComplex){
+                      QR_matrix_accessor[qr_idx + k] = {bank[k].xx, bank[k].yy};
+                    }
+                    else{
+                      QR_matrix_accessor[qr_idx + k] = bank[k];
+                    }
                   }
                 });
 
-                qr_idx += kNumElementsPerBank;
+                if constexpr(kNonCompleteIter){
+                  int wroteElements = lastRow ? rows % kNumElementsPerBank :  
+                                                            kNumElementsPerBank;
+                  qr_idx += wroteElements;
+                }
+                else{
+                  qr_idx += kNumElementsPerBank;
+                }                
               } // end for si=0:kStoreIter-1
             } // end for matrixIdx=0:matrices-1
           });
@@ -709,6 +767,7 @@ namespace QRDInternal{
           accessor final_QR_matrix(*QR_buffer[bufferIdx], h, read_only);
           h.copy(final_QR_matrix, kPtrQR);
         });
+
 
       } // end for it=0:matrices-1 
     } // end for r=0:reps-1 
