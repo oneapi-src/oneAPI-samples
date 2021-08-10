@@ -118,7 +118,8 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
     <br><img src="images/jupyter_kernels.png" width="300" height="300"><br>
 8. Run through every cell of the notebook one by one
 
-> NOTE: To compare stock and Intel-optimized TF results in the section "Analyze TF Timeline results among Stock and Intel Tensorflow," users need to run all cells before the comparison section with both stock-tensorflow and intel-tensorflow kernels.
+> NOTE: To compare stock and Intel-optimized TF results in the section "Analyze TF Timeline results among Stock and Intel Tensorflow," users need to run all cells before the comparison section with both stock-tensorflow and intel-tensorflow kernels.  
+
 > NOTE: Users will run the jupyter notebooks on the login node of the DevCloud for now.
 
 ### Example of Output
