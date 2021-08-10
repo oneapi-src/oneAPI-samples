@@ -37,7 +37,8 @@
           "make fig_14_17_nd_range_reduction",
           "make fig_14_13_map",
           "make fig_14_22_local_pack",
-          "make fig_14_15_local_stencil",        ]
+          "make fig_14_15_local_stencil"
+        ]
       }
     ],
     "windows": [

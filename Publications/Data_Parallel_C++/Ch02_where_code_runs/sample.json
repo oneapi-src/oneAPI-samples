@@ -6,7 +6,7 @@
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
-  "os": [ "linux", ],
+  "os": [ "linux" ],
   "builder": [ "ide", "cmake" ],
   "commonFolder": {
     "base": "..",
