@@ -13,7 +13,7 @@
 ![](images/jupyter-terminal.png)
 
 7.	You will see your login at the prompt.
-8.	Follow the instructions for DevCloud in the README of each sample.
+8.	Follow the instructions to [get code samples](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#get-code-samples) and [run samples on DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#how-to-submit-a-workload-to-a-specific-architecture)
 
  
 ### Running the Sample in DevCloud with a Local Terminal
@@ -22,6 +22,6 @@
 ```
 ssh devcloud
 ```
-3.	Follow the instructions for DevCloud in the README of each sample.
+3.	Follow the instructions to [get code samples](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#get-code-samples) and [run samples on DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#how-to-submit-a-workload-to-a-specific-architecture)
 
 
