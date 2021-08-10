@@ -24,10 +24,17 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_17_17_ndrange_func",
+          "make fig_17_18_loop_func",
+          "make fig_17_20_loop_carried_deps",
+          "make fig_17_22_loop_carried_state",
+          "make fig_17_31_inter_kernel_pipe",
+          "make fig_17_9_fpga_selector",
+          "make fig_17_11_fpga_emulator_selector"
         ]
       }
     ],

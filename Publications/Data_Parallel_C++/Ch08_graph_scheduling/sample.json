@@ -24,11 +24,16 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
-        ]
+          "make fig_8_8_y_buffers",
+          "make fig_8_7_y_events",
+          "make fig_8_6_y_in_order",
+          "make fig_8_5_linear_dependence_buffers",
+          "make fig_8_4_linear_dependence_events",
+          "make fig_8_3_linear_dependence_in_order"        ]
       }
     ],
     "windows": [

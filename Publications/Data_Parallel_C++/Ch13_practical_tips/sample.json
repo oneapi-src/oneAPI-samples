@@ -24,10 +24,16 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_13_10_host_accessor_deadlock",
+          "make fig_13_8_host_accessor",
+          "make fig_13_7_common_pattern_bug",
+          "make fig_13_6_common_buffer_pattern",
+          "make fig_13_9_host_accessor_for_init",
+          "make fig_13_4_stream"
         ]
       }
     ],

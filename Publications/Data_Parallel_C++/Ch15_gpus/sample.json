@@ -24,11 +24,17 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
-        ]
+          "make fig_15_12_small_work_group_matrix_multiplication",
+          "make fig_15_10_divergent_control_flow",
+          "make fig_15_18_columns_matrix_multiplication",
+          "make fig_15_7_more_parallel_matrix_multiplication",
+          "make fig_15_5_somewhat_parallel_matrix_multiplication",
+          "make fig_15_3_single_task_matrix_multiplication"
+          ]
       }
     ],
     "windows": [

@@ -24,10 +24,15 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_18_15_pstl_usm",
+          "make fig_18_13_binary_search",
+          "make fig_18_11_std_fill",
+          "make fig_18_7_swap",
+          "make fig_18_1_builtin"
         ]
       }
     ],

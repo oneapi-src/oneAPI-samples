@@ -24,11 +24,20 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
-        ]
+          "make fig_14_8_one_reduction",
+          "make fig_14_11_user_defined_reduction",
+          "make fig_14_14_stencil",
+          "make fig_14_24_local_unpack",
+          "make fig_14_16_basic_reduction",
+          "make fig_14_18-20_inclusive_scan",
+          "make fig_14_17_nd_range_reduction",
+          "make fig_14_13_map",
+          "make fig_14_22_local_pack",
+          "make fig_14_15_local_stencil",        ]
       }
     ],
     "windows": [

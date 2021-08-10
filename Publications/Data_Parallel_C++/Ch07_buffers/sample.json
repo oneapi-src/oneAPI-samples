@@ -24,10 +24,14 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_7_10_accessors",
+          "make fig_7_8_accessors_simple",
+          "make fig_7_5_buffer_properties",
+          "make fig_7_2_3_4_creating_buffers"
         ]
       }
     ],

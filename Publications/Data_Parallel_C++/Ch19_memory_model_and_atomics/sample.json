@@ -24,10 +24,17 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_19_6_avoid_data_race_with_barrier",
+          "make fig_19_7_avoid_data_race_with_atomics",
+          "make fig_19_16_atomic_accessor",
+          "make fig_19_18_histogram",
+          "make fig_19_19-20_device_latch",
+          "make fig_19_15_buffer_and_atomic_ref",
+          "make fig_19_3_data_race"
         ]
       }
     ],

@@ -24,10 +24,16 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_12_7_invocation_parameters",
+          "make fig_12_6_very_curious",
+          "make fig_12_4_curious",
+          "make fig_12_2_try_catch",
+          "make fig_12_3_device_selector",
+          "make fig_12_1_assigned_device"
         ]
       }
     ],

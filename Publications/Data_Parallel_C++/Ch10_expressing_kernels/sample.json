@@ -24,10 +24,18 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_10_2_kernel_lambda",
+          "make fig_10_3_optional_kernel_lambda_elements",
+          "make fig_10_4_named_kernel_lambda",
+          "make fig_10_5_unnamed_kernel_lambda",
+          "make fig_10_6_kernel_functor",
+          "make fig_10_7_opencl_source_interop",
+          "make fig_10_8_opencl_object_interop",
+          "make fig_10_9_kernel_lambda_build_options"
         ]
       }
     ],

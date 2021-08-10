@@ -24,10 +24,13 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_16_18_vector_swizzle",
+          "make fig_16_12_forward_dep",
+          "make fig_16_6_stream_triad"
         ]
       }
     ],

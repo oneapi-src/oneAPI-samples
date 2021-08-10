@@ -24,10 +24,17 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_3_11_depends_on",
+          "make fig_3_6_buffers_and_accessors",
+          "make fig_3_13_read_after_write",
+          "make fig_3_10_in_order",
+          "make fig_3_15_write_after_read_and_write_after_write",
+          "make fig_3_4_usm_explicit_data_movement",
+          "make fig_3_5_usm_implicit_data_movement"
         ]
       }
     ],

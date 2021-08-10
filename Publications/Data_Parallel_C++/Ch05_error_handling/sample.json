@@ -23,10 +23,19 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_5_1_async_task_graph",
+          "make fig_5_2_sync_error",
+          "make fig_5_3_async_error",
+          "make fig_5_4_unhandled_exception",
+          "make fig_5_7_catch",
+          "make fig_5_9_default_handler_proxy",
+          "make fig_5_6_catch_snip",
+          "make fig_5_8_lambda_handler",
+          "make fig_5_5_terminate"  
         ]
       }
     ],

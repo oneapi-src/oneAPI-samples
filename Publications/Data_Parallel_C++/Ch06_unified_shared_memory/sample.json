@@ -24,10 +24,15 @@
     "linux": [
       {
         "steps": [
-          "mkdir build",
-          "cd build",
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
           "cmake ..",
-          "make"
+          "make fig_6_9_queries",
+          "make fig_6_8_prefetch_memadvise",
+          "make fig_6_7_usm_implicit_data_movement",
+          "make fig_6_6_usm_explicit_data_movement",
+          "make fig_6_5_allocation_styles"
         ]
       }
     ],
