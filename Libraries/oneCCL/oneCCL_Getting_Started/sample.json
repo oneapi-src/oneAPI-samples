@@ -17,7 +17,7 @@
 			"mkdir build",
       		        "cd build",
            		"cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp",
-           		"make",
+           		"make make sycl_allreduce_test",
 			"mpirun -n 2 ./out/sycl/sycl_allreduce_test cpu",
 			"mpirun -n 2 ./out/sycl/sycl_allreduce_test gpu"
 		 ]
