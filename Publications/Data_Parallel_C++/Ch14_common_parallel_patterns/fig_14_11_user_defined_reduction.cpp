@@ -34,7 +34,7 @@ int main() {
       std::numeric_limits<float>::max(), std::numeric_limits<int>::min()};
   *res = identity;
 
-  auto red = reduction(res, identity, minloc<float, int>());
+  auto red = sycl::ONEAPI::reduction(res, identity, minloc<float, int>());
 
   Q.submit([&](handler& h) {
      h.parallel_for(nd_range<1>{N, L}, red, [=](nd_item<1> item, auto& res) {
