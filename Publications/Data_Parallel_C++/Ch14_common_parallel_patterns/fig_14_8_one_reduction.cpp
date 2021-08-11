@@ -24,7 +24,7 @@ int main() {
 // BEGIN CODE SNIP
      h.parallel_for(
          nd_range<1>{N, B},
-         //reduction(sum, plus<>()),
+         sycl::ONEAPI::reduction(sum, plus<>()),
          [=](nd_item<1> it, auto& sum) {
            int i = it.get_global_id(0);
            sum += data[i];
