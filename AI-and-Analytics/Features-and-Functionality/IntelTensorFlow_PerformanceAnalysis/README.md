@@ -67,10 +67,10 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 > NOTE: Intel-optimized Tensorflow is on DevCloud. However, users don't have access to install extra packages. 
   Therefore, we need to clone Intel Tensorflow into the user's home directory for installing extra packages.
 1. Source oneAPI environment variables: `$source /opt/intel/oneapi/setvars.sh`
-2. Create conda env: `$conda create --name intel-tensorflow --clone tensorflow`
-3. Activate the created conda env: `$source activate intel-tensorflow`
-4  Install the extra needed package: `(intel-tensorflow) $pip install cxxfilt matplotlib ipykernel psutil pandas gitpython`
-5. Deactivate conda env: `(intel-tensorflow)$conda deactivate`
+2. Create conda env: `$conda create --name intel-tensorflow --clone tensorflow`  
+3. Activate the created conda env: `$source activate intel-tensorflow`  
+4  Install the extra needed package: `(intel-tensorflow) $pip install cxxfilt matplotlib ipykernel psutil pandas gitpython`  
+5. Deactivate conda env: `(intel-tensorflow)$conda deactivate`  
 6. Register the kernel to Jupyter NB: `$~/.conda/envs/intel-tensorflow/bin/python  -m ipykernel install --user --name=intel-tensorflow`
 
 > NOTE: Please change the python path if you have a different folder path for anaconda3. 
