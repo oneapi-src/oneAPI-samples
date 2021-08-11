@@ -16,10 +16,9 @@ using namespace sycl;
 
 // declare the kernel and pipe ID stucts globally to reduce name mangling
 struct LoopBackMainKernel;
-struct LoopBackIOPipes {
-  struct ReadIOPipeID { static constexpr unsigned id = 0; };
-  struct WriteIOPipeID { static constexpr unsigned id = 1; };
-};
+struct LoopBackReadIOPipeID { static constexpr unsigned id = 0; };
+struct LoopBackWriteIOPipeID { static constexpr unsigned id = 1; };
+
 
 //
 // The simplest processing kernel. Streams data in 'IOPipeIn' and streams
@@ -54,9 +53,9 @@ bool RunLoopbackSystem(queue& q, size_t count) {
   constexpr size_t kIOPipeDepth = 4;
 #ifndef USE_REAL_IO_PIPES
   // these are FAKE IO pipes (and their producer/consumer)
-  using FakeIOPipeInProducer = Producer<LoopBackIOPipes::ReadIOPipeID,
+  using FakeIOPipeInProducer = Producer<LoopBackReadIOPipeID,
                                 T, use_usm_host_alloc, kIOPipeDepth>;
-  using FakeIOPipeOutConsumer = Consumer<LoopBackIOPipes::WriteIOPipeID,
+  using FakeIOPipeOutConsumer = Consumer<LoopBackWriteIOPipeID,
                                  T, use_usm_host_alloc, kIOPipeDepth>;
   using ReadIOPipe = typename FakeIOPipeInProducer::Pipe;
   using WriteIOPipe = typename FakeIOPipeOutConsumer::Pipe;
@@ -67,10 +66,10 @@ bool RunLoopbackSystem(queue& q, size_t count) {
 #else
   // these are REAL IO pipes
   using ReadIOPipe = 
-    ext::intel::kernel_readable_io_pipe<LoopBackIOPipes::ReadIOPipeID,
+    ext::intel::kernel_readable_io_pipe<LoopBackReadIOPipeID,
                                    T, kIOPipeDepth>;
   using WriteIOPipe =
-    ext::intel::kernel_writeable_io_pipe<LoopBackIOPipes::WriteIOPipeID,
+    ext::intel::kernel_writeable_io_pipe<LoopBackWriteIOPipeID,
                                     T, kIOPipeDepth>;
 #endif
   //////////////////////////////////////////////////////////////////////////////
