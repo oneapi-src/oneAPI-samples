@@ -34,7 +34,7 @@ int main() {
         N,
         [=](id<1> i) {
           // Useful only as an example
-          int data = accA[i];
+          //int data = accA[i];
         });
     });
 
