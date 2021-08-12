@@ -4,7 +4,7 @@ from datetime import date
 from typing import List
 today=date.today()
 import os
-import sys
+#import sys
 import json
 from collections import OrderedDict
 # Intel oneAPI Toolkit Samples
@@ -13,9 +13,10 @@ fileName = 'sample.json'
 fDeviceTargets="CODESAMPLESLIST.md"
 fChangeLogs = "CHANGELOGS.md"
 freadme="README.md"
-fguidVer="resource_files\guids.json"
+fguidVer="common\Automation_Docs\guids.json"
+absolute_path = os.getcwd()
+pathLength=len(absolute_path)   #used to modify local path length, so only tree structure is left for crafting the url
 rootdir = 'C:\Protex\Joes_OneApiSamples\oneAPI-samples'
-pathLength = 43  #used to modify local path length, so only tree structure is left for crafting the url
 oneAPIURL = 'https://github.com/oneapi-src/oneAPI-samples/tree/master'
 d = today.strftime("%B %d, %Y")
 count=0
@@ -54,17 +55,15 @@ def createFooters(count):
     nf.close()
     
 def openJson(jsonFile):                 #creating a dictionary
-    print(jsonFile+" 1\n")
     jsonData = open(jsonFile)              #open the json file
     try: 
-        print(jsonFile+" 2\n")
         data = json.load(jsonData)      #load json into memory
     except JSONDecodeError as e:
         print(str(e)+': '+jsonFile)
     return data
 
 def readContent():                                  #readin in strings for use in document creation
-    jsonFile ='C:\Protex\Joes_OneApiSamples\oneapi-automation-of-non-ci-tasks\content.json'
+    jsonFile ='common\Automation_Docs\content.json'
     dataContent = openJson(jsonFile)
     return dataContent
 
@@ -140,26 +139,23 @@ def createReadme():
             nf.write("|"+ver+"|["+name+"]("+url+")|"+description+"|\n") 
     nf.close()
    
-def findWindows():
-    print("stuff")
-    
 #main
 checkFileExists(fDeviceTargets)     #Cleaning up from previous run
 checkFileExists(fChangeLogs)        #Cleaning up from previous run
 checkFileExists(freadme)            #Cleaning up from previous run
-print("stuff1")
+print(absolute_path+" Length: "+ str(pathLength) +"\n")
 dataContent = readContent()         #read json for data used in creating document header and footers
 createHeaders(dataContent)          #create headers for the various documents being generated
-print("stuff2")
+
 dict_main={}                        #initializing Dictionary
 dict_version = openJson(fguidVer)
-print("stuff3")
+
 for subdir, dirs, files in os.walk(rootdir):
     for file in files:
         if (file == fileName):
             f = os.path.join(subdir, file)
             fp = os.path.join(subdir)                           #this will be needed to create potential hyperlink
-            getPath = fp[pathLength:len(fp)]
+            getPath = fp[pathLength:len(fp)]                    #Generates the path specific path of url
             getPath = getPath.replace('\\','/')                 #char replace \ for /
             fullURL=oneAPIURL+getPath
             data = openJson(f) 
@@ -171,8 +167,4 @@ addVersion(dict_main,dict_version)
 createChangeLog(count)
 createTtargetedDevices()
 createReadme()
-#print("**********")
-#pprint(dict_main["479AD17C-27E9-42F0-8CB1-14B48D098829"])
-#pprint(dict_main["479AD17C-27E9-42F0-8CB1-14B48D098829"]['name'])
-#pprint(dict_main["479AD17C-27E9-42F0-8CB1-14B48D098829"]['ver'])
 createFooters(count)
