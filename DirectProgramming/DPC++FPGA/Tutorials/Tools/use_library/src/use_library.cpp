@@ -45,7 +45,8 @@ int main() {
 
       // Kernel
       h.single_task<class KernelCompute>([=]() {
-        // SyclSquare is a SYCL library function, defined in lib_sycl.cpp.
+        // SyclSquare and SyclSqrt are SYCL library functions,
+        // defined in lib_sycl.cpp.
         float a_sq = SyclSquare(kA);
         float a_sq_sqrt = SyclSqrt(a_sq);
         float b_sq = SyclSquare(kB);
