@@ -1,5 +1,5 @@
 {
-  "guid": "AE280EFE-9EB1-406D-B32D-5991F707E195",
+  "guid": "C8C8694A-5567-495B-8399-6EAB42AFFB44",
   "name": "Intel(R) Extension for Scikit-learn SVC for Adult dataset",
   "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
   "description": "Run a SVC algorithm with help patching Intel(R) Extension for Scikit-learn for Adult dataset and compare performance results againts original Scikit-learn.",
