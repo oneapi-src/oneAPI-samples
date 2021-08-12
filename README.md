@@ -39,8 +39,8 @@ The oneAPI sample repository is organized as follows:
   * VTuneProfiler
 
 To view an alphabetized list of all samples with descriptions by:
+- Samples in Alphabetical order w/ device target](https://github.com/oneapi-src/CODESAMPLESLIST.md/)
 - Samples by [Change History](https://github.com/oneapi-src/oneAPI-samples/CHANGELOGS.md)
-- Samples by with [Device Target](https://github.com/oneapi-src/CODESAMPLESLIST.md/)
 
 ### On Windows Platform
 
