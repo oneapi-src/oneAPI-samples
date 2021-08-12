@@ -16,7 +16,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 | Compoment      | Folder                                             | Description
 | --------- | ------------------------------------------------ | -
-| daal4py | [IntelPython_daal4py_DistributedKMeans](IntelPython_daal4py_DistributedKMeans)   | Run a distributed K-Means model with oneDAL daal4py library memory objects.
+| Scikit-learn | [IntelScikitLearn_Extensions_SVC_Adult](IntelScikitLearn_Extensions_SVC_Adult)   | Run a SVC algorithm with help patching of the Intel® Extension for Scikit-learn for Adult dataset and compare performance results againts original Scikit-learn.
 | daal4py | [IntelPython_daal4py_DistributedLinearRegression](IntelPython_daal4py_DistributedLinearRegression)    | Run a distributed Linear Regression model with oneDAL daal4py library memory objects .
 | PyTorch | [IntelPyTorch_Extensions_AutoMixedPrecision](IntelPyTorch_Extensions_AutoMixedPrecision)   | Download, compile, and get started with Intel Extension for PyTorch.
 | PyTorch | [IntelPyTorch_TorchCCL_Multinode_Training](IntelPyTorch_TorchCCL_Multinode_Training)   | Perform distributed training with oneCCL in PyTorch.
