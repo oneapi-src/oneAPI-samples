@@ -67,8 +67,6 @@ def readContent():                                  #readin in strings for use i
     return dataContent
 
 def addVersion(dict_main, dict_version):# After walking thu directories we need to add version to dict_main
-    print("\nrunning add version function#2\n")
-
     for key in dict_version.keys():
         try:
             if (key in dict_main):
@@ -153,7 +151,6 @@ for subdir, dirs, files in os.walk('..\\'):
     for file in files:
         if (file == fileName):
             f = os.path.join(subdir, file)
-            print(f)
             fp = os.path.join(subdir)                           #this will be needed to create potential hyperlink
             getPath = fp[pathLength:len(fp)]                    #Generates the path specific path of url
             getPath = getPath.replace('\\','/')                 #char replace \ for /
@@ -168,3 +165,4 @@ createChangeLog(count)
 createTtargetedDevices()
 createReadme()
 createFooters(count)
+print("Finished")

@@ -37,7 +37,7 @@ The oneAPI sample repository is organized as follows:
   * Trace
   * UEFI debug
   * VTuneProfiler
-)
+
 To view an alphabetized list of all samples with descriptions by:
 - Samples by [Change History](https://github.com/oneapi-src/oneAPI-samples/CHANGELOGS.md)
 - Samples by with [Device Target](https://github.com/oneapi-src/CODESAMPLESLIST.md/)

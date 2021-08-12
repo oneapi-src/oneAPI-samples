@@ -11,7 +11,7 @@
   "mdIntro3.2":"* DirectProgramming\n  * C++\n  * DPC++\n  * DPC++FPGA\n    * Reference Designs\n    * Tutorials\n  * Fortran\n",
   "mdIntro3.3":"* Libraries\n  * oneCCl\n  * oneDAL\n  * oneDNN\n  * oneDPL\n  * oneMKL\n  * oneTBB\n  * oneVPL\n",
   "mdIntro3.4":"* Publications\n  * Data Parallel C++\n",
-  "mdIntro3.5":"* Tools\n  * Advisor\n  * ApplicationDebugger\n  * Benchmark/STREAM\n  * IoTConnectionsTools\n  * Migration\n  * Socwatch\n  * Trace\n  * UEFI debug\n  * VTuneProfiler\n)",
+  "mdIntro3.5":"* Tools\n  * Advisor\n  * ApplicationDebugger\n  * Benchmark/STREAM\n  * IoTConnectionsTools\n  * Migration\n  * Socwatch\n  * Trace\n  * UEFI debug\n  * VTuneProfiler\n",
   "mdIntro4":"To view an alphabetized list of all samples with descriptions by:", 
   "mdIntro4.2":"- Samples by with [Device Target](https://github.com/oneapi-src/CODESAMPLESLIST.md/)",
   "mdIntro4.1":"- Samples by [Change History](https://github.com/oneapi-src/oneAPI-samples/CHANGELOGS.md)",
