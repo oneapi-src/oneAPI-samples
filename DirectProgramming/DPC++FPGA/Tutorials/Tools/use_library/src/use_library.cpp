@@ -45,15 +45,9 @@ int main() {
 
       // Kernel
       h.single_task<class KernelCompute>([=]() {
-
-        // OclSquare is an OpenCL function, defined in lib_ocl.cl.
-        float a_sq = OclSquare(kA);
-
-        // HlsSqrtf is an Intel HLS component, defined in lib_hls.cpp.
-        // (Intel HLS is a C++ based High Level Synthesis language for FPGA.)
-        float a_sq_sqrt = HlsSqrtf(a_sq);
-
         // SyclSquare is a SYCL library function, defined in lib_sycl.cpp.
+        float a_sq = SyclSquare(kA);
+        float a_sq_sqrt = SyclSqrt(a_sq);
         float b_sq = SyclSquare(kB);
 
         // RtlByteswap is an RTL library.

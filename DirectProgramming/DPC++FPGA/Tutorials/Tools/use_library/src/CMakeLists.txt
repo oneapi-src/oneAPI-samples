@@ -17,10 +17,6 @@ else()
 endif()
 
 # Library source files
-set(HLS_SOURCE lib_hls.cpp)
-set(HLS_SOURCE_OBJECT lib_hls.o)
-set(OCL_SOURCE lib_ocl.cl)
-set(OCL_SOURCE_OBJECT lib_ocl.o)
 set(SYCL_SOURCE lib_sycl.cpp)
 set(SYCL_SOURCE_OBJECT lib_sycl.o)
 set(RTL_C_MODEL lib_rtl_model.cpp)
@@ -46,18 +42,6 @@ separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}
 # The RTL file (specified in lib_rtl_spec.xml) must be copied to the CMake working directory for the final stage of FPGA hardware compilation
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${RTL_V} ${RTL_V} COPYONLY)
 
-# Create HLS source object
-add_custom_target(
-    create_hls_source_object
-    COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${HLS_SOURCE} --source hls --target sycl -o ${HLS_SOURCE_OBJECT} ${CMAKE_CXX_FLAGS_LIST}
-)
-
-# Create OCL source object
-add_custom_target(
-    create_ocl_source_object
-    COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${OCL_SOURCE} --source ocl --target sycl -o ${OCL_SOURCE_OBJECT}
-)
-
 # Create SYCL source object
 add_custom_target(
     create_sycl_source_object
@@ -72,11 +56,11 @@ add_custom_target(
 
 # Create library archive
 # This executes:
-# fpga_libtool lib_hls.o lib_ocl.o lib_sycl.o lib_rtl.o --target sycl --create lib.a
+# fpga_libtool lib_sycl.o lib_rtl.o --target sycl --create lib.a
 add_custom_target(create_library_archive DEPENDS ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE})
 add_custom_command(OUTPUT ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
-                   COMMAND fpga_libtool ${HLS_SOURCE_OBJECT} ${OCL_SOURCE_OBJECT} ${SYCL_SOURCE_OBJECT} ${RTL_SOURCE_OBJECT} --target sycl --create ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
-                   DEPENDS create_hls_source_object create_ocl_source_object create_sycl_source_object create_rtl_source_object)
+                   COMMAND fpga_libtool ${SYCL_SOURCE_OBJECT} ${RTL_SOURCE_OBJECT} --target sycl --create ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
+                   DEPENDS create_sycl_source_object create_rtl_source_object)
 
 # Tell CMake to recognize our custom library
 add_library(library_archive STATIC IMPORTED GLOBAL)
