@@ -13,10 +13,9 @@ fileName = 'sample.json'
 fDeviceTargets="CODESAMPLESLIST.md"
 fChangeLogs = "CHANGELOGS.md"
 freadme="README.md"
-fguidVer="common\Automation_Docs\guids.json"
+fguidVer=".repo-tools\Docs_Automation\guids.json"
 absolute_path = os.getcwd()
 pathLength=len(absolute_path)   #used to modify local path length, so only tree structure is left for crafting the url
-rootdir = 'C:\Protex\Joes_OneApiSamples\oneAPI-samples'
 oneAPIURL = 'https://github.com/oneapi-src/oneAPI-samples/tree/master'
 d = today.strftime("%B %d, %Y")
 count=0
@@ -55,7 +54,7 @@ def createFooters(count):
     nf.close()
     
 def openJson(jsonFile):                 #creating a dictionary
-    jsonData = open(jsonFile)              #open the json file
+    jsonData = open(jsonFile)           #open the json file
     try: 
         data = json.load(jsonData)      #load json into memory
     except JSONDecodeError as e:
@@ -63,7 +62,7 @@ def openJson(jsonFile):                 #creating a dictionary
     return data
 
 def readContent():                                  #readin in strings for use in document creation
-    jsonFile ='common\Automation_Docs\content.json'
+    jsonFile ='.repo-tools\Docs_Automation\content.json'
     dataContent = openJson(jsonFile)
     return dataContent
 
@@ -143,17 +142,18 @@ def createReadme():
 checkFileExists(fDeviceTargets)     #Cleaning up from previous run
 checkFileExists(fChangeLogs)        #Cleaning up from previous run
 checkFileExists(freadme)            #Cleaning up from previous run
-#print(absolute_path+" Length: "+ str(pathLength) +"\n")
+print(absolute_path+" Length: "+ str(pathLength) +"\n")
 dataContent = readContent()         #read json for data used in creating document header and footers
 createHeaders(dataContent)          #create headers for the various documents being generated
 
 dict_main={}                        #initializing Dictionary
 dict_version = openJson(fguidVer)
 
-for subdir, dirs, files in os.walk(rootdir):
+for subdir, dirs, files in os.walk('..\\'):
     for file in files:
         if (file == fileName):
             f = os.path.join(subdir, file)
+            print(f)
             fp = os.path.join(subdir)                           #this will be needed to create potential hyperlink
             getPath = fp[pathLength:len(fp)]                    #Generates the path specific path of url
             getPath = getPath.replace('\\','/')                 #char replace \ for /
