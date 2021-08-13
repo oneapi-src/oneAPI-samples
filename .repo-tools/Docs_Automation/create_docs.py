@@ -1,4 +1,5 @@
 from json.decoder import JSONDecodeError
+from pathlib import Path
 from datetime import date
 import os
 import json
@@ -152,10 +153,11 @@ for subdir, dirs, files in os.walk('..\\'):
     for file in files:
         if (file == fileName):
             f = os.path.join(subdir, file)
-            fp = os.path.join(subdir)                           #this will be needed to create potential hyperlink
-            getPath = fp[pathLength:len(fp)]                    #Generates the path specific path of url
-            getPath = getPath.replace('\\','/')                 #char replace \ for /
-            fullURL=oneAPIURL+getPath
+            # build url
+            fp = os.path.join(subdir)
+            fp = fp.replace('\\','/')                 #char replace \ for /
+            fullURL=oneAPIURL+(str(fp)[17:])  # removed first 17 characters of the path, which is always "../oneAPI-samples/"
+            #end build url
             data = openJson(f) 
             dict_main[data['guid']]=data   
             dict_main[data['guid']]['url'] = fullURL
