@@ -44,9 +44,14 @@ def createFooters(count):
     nf = open(fDeviceTargets,"a")
     nf.write("Total Samples: " + str(count)+ "\n\n")
     nf.write(str(dataContent['mdDeviceTargetFooter']) + d)
+    nf.write("\nThis doc was created on: " + d)
     nf.close()
     nf = open(freadme,"a+")
     nf.write(dataContent['mdLicense'])
+    nf.write("\nThis doc was created on: " + d)
+    nf.close()
+    nf = open(fDeviceTargets,"a+")
+    nf.write("\nThis doc was created on: " + d)
     nf.close()
     
 def openJson(jsonFile):                 #creating a dictionary
@@ -155,7 +160,9 @@ for subdir, dirs, files in os.walk('..\\'):
             dict_main[data['guid']]=data   
             dict_main[data['guid']]['url'] = fullURL
             count = count+1
-
+        # Future - add a search for license file and if none, show a warning
+        # Future - if no sample.json is present then show a warning
+        # future - if no readme.md is present then show a warning
 addVersion(dict_main,dict_version)
 createChangeLog(count)
 createTtargetedDevices()

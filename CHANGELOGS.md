@@ -4,6 +4,8 @@ This document shows the history of when a specific sample was introduced to the 
 | Version|Code Sample Name|description|
 |-----------------------|------------------|-------------------------|
 |2021.4.0|[Merge Sort](https://github.com/oneapi-src/oneAPI-samples/tree/masterGA/ReferenceDesigns/merge_sort)|A Reference design demonstrating merge sort on an Intel® FPGA|
+|2021.4.0|[OpenMP Offload C++ Tutorials](https://github.com/oneapi-src/oneAPI-samples/tree/masteryter/OpenMP-offload-training)|C++ OpenMP Offload Basics using Jupyter Notebooks|
+|2021.4.0|[OpenMP Offload Fortran Tutorials](https://github.com/oneapi-src/oneAPI-samples/tree/master/Jupyter/OpenMP-offload-training)|Fortran OpenMP Offload Basics using Jupyter Notebooks|
 |2021.4.0|[Private Copies](https://github.com/oneapi-src/oneAPI-samples/tree/masterGA/Tutorials/Features/private_copies)|An Intel® FPGA tutorial demonstrating how to use the private_copies attribute to trade off the resource use and the throughput of a DPC++ FPGA program|
 |2021.4.0|[Stall Enable](https://github.com/oneapi-src/oneAPI-samples/tree/masterGA/Tutorials/Features/stall_enable)|An Intel® FPGA tutorial demonstrating the use_stall_enable_clusters attribute|
 |2021.3.0|[IO streaming with DPC++ IO pipes](https://github.com/oneapi-src/oneAPI-samples/tree/masterGA/Tutorials/DesignPatterns/io_streaming)|An FPGA tutorial describing how to stream data to and from DPC++ IO pipes.|
@@ -11,9 +13,7 @@ This document shows the history of when a specific sample was introduced to the 
 |2021.3.0|[Jacobi](https://github.com/oneapi-src/oneAPI-samples/tree/master/jacobi)|A small Intel® oneAPI Data Parallel C++ (DPC++) example which solves a harcoded linear system with Jacobi iteration. The sample includes two versions of the same program: with and without bugs.|
 |2021.3.0|[Loop Initiation Interval](https://github.com/oneapi-src/oneAPI-samples/tree/masterGA/Tutorials/Features/loop_initiation_interval)|An Intel® FPGA tutorial demonstrating the usage of the initiation_interval attribute|
 |2021.3.0|[MVDR Beamforming](https://github.com/oneapi-src/oneAPI-samples/tree/masterGA/ReferenceDesigns/mvdr_beamforming)|A reference design demonstrating a high-performance streaming MVDR beamformer|
-|2021.3.0|[OpenMP Offload C++ Tutorials](https://github.com/oneapi-src/oneAPI-samples/tree/masteryter/OpenMP-offload-training)|C++ OpenMP Offload Basics using Jupyter Notebooks|
 |2021.3.0|[OpenMP Offload Feature Samples](https://github.com/oneapi-src/oneAPI-samples/tree/masterpilerInfrastructure/OpenMP_Offload_Features)|Samples showing new OpenMP Offload features supported|
-|2021.3.0|[OpenMP Offload Fortran Tutorials](https://github.com/oneapi-src/oneAPI-samples/tree/master/Jupyter/OpenMP-offload-training)|Fortran OpenMP Offload Basics using Jupyter Notebooks|
 |2021.3.0|[Optimize TensorFlow pre-trained model for inference](https://github.com/oneapi-src/oneAPI-samples/tree/master-and-Functionality/IntelTensorFlow_InferenceOptimization)|This tutorial will guide you how to optimize a pre-trained model for a better inference performance, and also analyze the model pb files before and after the inference optimizations.|
 |2021.3.0|[Shannonization](https://github.com/oneapi-src/oneAPI-samples/tree/masterGA/Tutorials/DesignPatterns/shannonization)|An Intel® FPGA tutorial design that demonstrates an optimization for removing computation from the critical path and improves Fmax/II|
 |2021.3.0|[Student's T-test](https://github.com/oneapi-src/oneAPI-samples/tree/mastert_test)|Performing Student's T-test with Intel® oneMKL Vector Statistics functionality|

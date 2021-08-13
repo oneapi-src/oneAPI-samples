@@ -929,5 +929,20 @@
         "guid": "FC7A16DE-9594-4F40-AFA2-71ACABF366B3",
         "ver": "2021.1.Gold",
         "name": "Tutorials"
+    },
+    "2D2AAD9B-29BF-4380-B5E7-575CDECCF686": {
+        "guid": "2D2AAD9B-29BF-4380-B5E7-575CDECCF686",
+        "ver": "2021.4.0",
+        "name": "OpenMP Offload C++ Tutorials"
+    },
+    "D60DAB68-B9CC-4ECE-B10D-03F7B556171E": {
+        "guid": "D60DAB68-B9CC-4ECE-B10D-03F7B556171E",
+        "ver": "2021.4.0",
+        "name": "OpenMP Offload Fortran Tutorials"
+    },
+    "dc8c1c92-1c2a-4edf-abbd-6c35dfab256a": {
+        "guid": "dc8c1c92-1c2a-4edf-abbd-6c35dfab256a",
+        "ver": "2021.4.0",
+        "name": "VisualComputing tutorial"
     }
 }
