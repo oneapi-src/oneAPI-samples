@@ -141,4 +141,4 @@
 |[oneCCL Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/masteretting_Started)|['CPU', 'GPU']|Basic Intel® oneCCL programming model for both Intel® CPU and GPU|
 Total Samples: 138
 
-Report Generated on:  August 12, 2021
+Report Generated on:  August 13, 2021
