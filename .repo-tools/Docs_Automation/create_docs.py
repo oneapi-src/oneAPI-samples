@@ -18,7 +18,6 @@ count = 0
 
 def checkFileExists(checkFile):
     if os.path.exists(checkFile):
-
         os.remove(checkFile)
     else:
         print("The " + checkFile + " file does not exist")
@@ -93,6 +92,7 @@ def createChangeLog(count): #sorted but does not include version
         ver=sorted_by_name[key]['ver']
         name=sorted_by_name[key]['name']
         cat=str(sorted_by_name[key]['categories'])
+
         if (cat=="['Toolkit/Publication: Data Parallel C++']"):
             description=description.replace('*','<br>')
             name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)" + "<br><br>[" + name
@@ -145,7 +145,7 @@ print(absolute_path + " Length: " + str(pathLength) + "\n")
 dataContent = readContent()         #read json for data used in creating document header and footers
 createHeaders(dataContent)          #create headers for the various documents being generated
 
-dict_main={}                        #initializing Dictionary
+dict_main={}                        
 dict_version = openJson(fguidVer)
 
 for subdir, dirs, files in os.walk('..\\'):
