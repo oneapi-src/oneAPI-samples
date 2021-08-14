@@ -293,12 +293,6 @@
         "name": "Tutorials",
         "notes": "-"
     },
-    "748eb906-309f-469b-95c9-5258006c7587": {
-        "guid": "748eb906-309f-469b-95c9-5258006c7587",
-        "ver": "2021.1.Gold",
-        "name": "CRR",
-        "": "#1 dup GUID w/complex mult"
-    },
     "7AC408C8-DF59-46AE-B970-178CF257F364": {
         "guid": "7AC408C8-DF59-46AE-B970-178CF257F364",
         "ver": "2021.1.Gold",
@@ -495,7 +489,7 @@
         "guid": "c52eb5b5-5260-47d3-aded-15c5b27779d5",
         "ver": "2021.1.Gold",
         "name": "OpenMP* Reduction",
-        "": "#2 Duplicate GUID ver 1-3 W/ DPC Reduce"
+        "notes": "-"
     },
     "C56209D9-5CF1-4EEC-AE95-596D81640AEB": {
         "guid": "C56209D9-5CF1-4EEC-AE95-596D81640AEB",
@@ -573,7 +567,7 @@
         "guid": "D725E06E-0ECE-44F8-910D-AD1A8C89ED89",
         "ver": "2021.1.Gold",
         "name": "Complex Mult",
-        "": "#1 Duplicate GUID ver 1-3 w/ crr"
+        "notes": "-"
     },
     "DD113F58-4D91-41BB-B46E-6CF2C0D9F6F9": {
         "guid": "DD113F58-4D91-41BB-B46E-6CF2C0D9F6F9",
@@ -634,12 +628,6 @@
         "ver": "2021.1.Gold",
         "name": "DB",
         "notes": "-"
-    },
-    "ECF6C8EB-753B-4107-AF64-60662CE41726": {
-        "guid": "ECF6C8EB-753B-4107-AF64-60662CE41726",
-        "ver": "2021.1.Gold",
-        "name": "DPC Reduce",
-        "": "#2 Duplicate with openMP Reduction"
     },
     "ED2952EA-04CB-4353-9FE6-80E0F7DCA098": {
         "guid": "ED2952EA-04CB-4353-9FE6-80E0F7DCA098",
@@ -729,7 +717,8 @@
         "guid": "7909FAE1-D3D4-4E97-A963-14A884F33495",
         "ver": "2021.2.1",
         "name": "Max Concurrency",
-        "notes": "-"
+        "notes": "Removed in 2021.4",
+        "removed": "x"
     },
     "8401B5F5-6F09-4727-A080-684C57104CAF": {
         "guid": "8401B5F5-6F09-4727-A080-684C57104CAF",
