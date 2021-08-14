@@ -7,7 +7,7 @@
 #define __PIPE_ARRAY_HPP__
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <utility>
 
 #include "pipe_array_internal.hpp"
@@ -28,7 +28,7 @@ struct PipeArray {
                       idxs...>::IsValid(),
                   "Index out of bounds");
     using VerifiedPipe =
-        cl::sycl::INTEL::pipe<StructId<idxs...>, BaseTy, depth>;
+        cl::sycl::ext::intel::pipe<StructId<idxs...>, BaseTy, depth>;
   };
 
   template <size_t... idxs>

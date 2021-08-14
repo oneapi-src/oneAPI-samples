@@ -8,7 +8,7 @@
 #include <vector>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "common.hpp"
 #include "HostStreamer.hpp"

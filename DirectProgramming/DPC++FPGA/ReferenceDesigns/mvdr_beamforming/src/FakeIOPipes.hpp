@@ -6,7 +6,7 @@
 #include <utility>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // the "detail" namespace is commonly used in C++ as an internal namespace
 // (to a file) that is not meant to be visible to the public and should be
@@ -18,7 +18,7 @@ namespace detail {
 
 using namespace sycl;
 
-template <typename T, bool use_host_alloc>
+template <typename ID, typename T, bool use_host_alloc>
 class ProducerConsumerBaseImpl {
  protected:
   // private members
@@ -134,10 +134,10 @@ class ProducerConsumerBaseImpl {
 ////////////////////////////////////////////////////////////////////////////////
 // Producer implementation
 template <typename Id, typename T, bool use_host_alloc, size_t min_capacity>
-class ProducerImpl : public ProducerConsumerBaseImpl<T, use_host_alloc> {
+class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
  private:
   // base implementation alias
-  using BaseImpl = ProducerConsumerBaseImpl<T, use_host_alloc>;
+  using BaseImpl = ProducerConsumerBaseImpl<Id, T, use_host_alloc>;
   using kernel_ptr_type = typename BaseImpl::kernel_ptr_type;
 
   // IDs for the pipe and kernel
@@ -153,7 +153,7 @@ class ProducerImpl : public ProducerConsumerBaseImpl<T, use_host_alloc> {
   ProducerImpl &operator=(ProducerImpl const &) = delete;
 
   // the pipe to connect to in device code
-  using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
+  using Pipe = sycl::ext::intel::pipe<PipeID, T, min_capacity>;
 
   // the implementation of the static
   static std::pair<event, event> Start(queue &q,
@@ -204,10 +204,10 @@ class ProducerImpl : public ProducerConsumerBaseImpl<T, use_host_alloc> {
 ////////////////////////////////////////////////////////////////////////////////
 // Consumer implementation
 template <typename Id, typename T, bool use_host_alloc, size_t min_capacity>
-class ConsumerImpl : public ProducerConsumerBaseImpl<T, use_host_alloc> {
+class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
  private:
   // base implementation alias
-  using BaseImpl = ProducerConsumerBaseImpl<T, use_host_alloc>;
+  using BaseImpl = ProducerConsumerBaseImpl<Id, T, use_host_alloc>;
   using kernel_ptr_type = typename BaseImpl::kernel_ptr_type;
 
   // IDs for the pipe and kernel
@@ -223,7 +223,7 @@ class ConsumerImpl : public ProducerConsumerBaseImpl<T, use_host_alloc> {
   ConsumerImpl &operator=(ConsumerImpl const &) = delete;
 
   // the pipe to connect to in device code
-  using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
+  using Pipe = sycl::ext::intel::pipe<PipeID, T, min_capacity>;
 
   static std::pair<event, event> Start(queue &q,
                                        size_t count = BaseImpl::count_) {

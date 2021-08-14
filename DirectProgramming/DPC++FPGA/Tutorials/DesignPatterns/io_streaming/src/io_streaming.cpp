@@ -6,7 +6,7 @@
 #include <thread>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
@@ -41,9 +41,9 @@ int main() {
   try {
     // device selector
 #if defined(FPGA_EMULATOR)
-    INTEL::fpga_emulator_selector selector;
+    ext::intel::fpga_emulator_selector selector;
 #else
-    INTEL::fpga_selector selector;
+    ext::intel::fpga_selector selector;
 #endif
 
     // queue properties to enable SYCL profiling of kernels

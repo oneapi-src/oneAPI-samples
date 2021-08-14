@@ -2,7 +2,7 @@
 #define __SIDECHANNELTEST_HPP__
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "FakeIOPipes.hpp"
 #include "HostSideChannel.hpp"
@@ -12,15 +12,11 @@ using namespace std::chrono_literals;
 
 // declare the kernel and pipe ID stucts globally to reduce name mangling
 struct SideChannelMainKernel;
-struct SideChannelIOPipes {
-  struct ReadIOPipeID { static constexpr unsigned id = 0; };
-  struct WriteIOPipeID { static constexpr unsigned id = 1; };
-};
-struct SideChannelPipes {
-  struct HostToDeviceSideChannelID;
-  struct DeviceToHostSideChannelID;
-  struct HostToDeviceTermSideChannelID;
-};
+struct SideChannelReadIOPipeID { static constexpr unsigned id = 0; };
+struct SideChannelWriteIOPipeID { static constexpr unsigned id = 1; };
+struct HostToDeviceSideChannelID;
+struct DeviceToHostSideChannelID;
+struct HostToDeviceTermSideChannelID;
 
 //
 // Submit the main processing kernel (or kernels, in general).
@@ -115,9 +111,9 @@ bool RunSideChannelsSystem(queue& q, size_t count) {
   //////////////////////////////////////////////////////////////////////////////
   // IO pipes
   // these are the FAKE IO pipes
-  using FakeIOPipeInProducer = Producer<SideChannelIOPipes::ReadIOPipeID,
+  using FakeIOPipeInProducer = Producer<SideChannelReadIOPipeID,
                                 T, use_usm_host_alloc>;
-  using FakeIOPipeOutConsumer = Consumer<SideChannelIOPipes::WriteIOPipeID,
+  using FakeIOPipeOutConsumer = Consumer<SideChannelWriteIOPipeID,
                                  T, use_usm_host_alloc>;
   using ReadIOPipe = typename FakeIOPipeInProducer::Pipe;
   using WriteIOPipe = typename FakeIOPipeOutConsumer::Pipe;
@@ -130,10 +126,10 @@ bool RunSideChannelsSystem(queue& q, size_t count) {
   //////////////////////////////////////////////////////////////////////////////
   // the side channels
   using MyHostToDeviceSideChannel = 
-    HostToDeviceSideChannel<SideChannelPipes::HostToDeviceSideChannelID,
+    HostToDeviceSideChannel<HostToDeviceSideChannelID,
                             int, use_usm_host_alloc, 1>;
   using MyHostToDeviceTermSideChannel = 
-    HostToDeviceSideChannel<SideChannelPipes::HostToDeviceTermSideChannelID,
+    HostToDeviceSideChannel<HostToDeviceTermSideChannelID,
                             char, use_usm_host_alloc, 1>;
   
   // This side channel is used to sent updates from the device to the host.
@@ -144,7 +140,7 @@ bool RunSideChannelsSystem(queue& q, size_t count) {
   // frequency of updates from the device is so low that this channel can be
   // shallow.
   using MyDeviceToHostSideChannel = 
-    DeviceToHostSideChannel<SideChannelPipes::DeviceToHostSideChannelID,
+    DeviceToHostSideChannel<DeviceToHostSideChannelID,
                             int, use_usm_host_alloc, 8>;
 
 
