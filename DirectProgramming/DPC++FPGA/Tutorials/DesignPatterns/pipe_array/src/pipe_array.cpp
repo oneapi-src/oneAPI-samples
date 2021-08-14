@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -69,7 +69,7 @@ void Consumer(queue &q, buffer<uint64_t, 1> &out_buf) {
   std::cout << "Enqueuing consumer " << consumer_id << "...\n";
 
   auto e = q.submit([&](handler &h) {
-    accessor output_accessor(out_buf, h, write_only, noinit);
+    accessor output_accessor(out_buf, h, write_only, no_init);
     auto num_elements = out_buf.get_count();
 
     // The consumer kernel reads from a single pipe, determined by consumer_id
@@ -123,9 +123,9 @@ int main(int argc, char *argv[]) {
     producer_input[i] = i;
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {

@@ -8,7 +8,7 @@
 #include <vector>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "Tuple.hpp"
 #include "mvdr_complex.hpp"
@@ -107,10 +107,10 @@ struct WriteIOPipeID {
 };
 
 using DataInPipe =
-    INTEL::kernel_readable_io_pipe<ReadIOPipeID, XrxPipeType, 512>;
+    ext::intel::kernel_readable_io_pipe<ReadIOPipeID, XrxPipeType, 512>;
 
 using DataOutPipe =
-    INTEL::kernel_writeable_io_pipe<WriteIOPipeID, XrxPipeType, 512>;
+    ext::intel::kernel_writeable_io_pipe<WriteIOPipeID, XrxPipeType, 512>;
 #else
 // FAKE IO PIPES
 using DataProducer =
@@ -223,9 +223,9 @@ int main(int argc, char *argv[]) {
   try {
     // device selector
 #if defined(FPGA_EMULATOR)
-    INTEL::fpga_emulator_selector selector;
+    ext::intel::fpga_emulator_selector selector;
 #else
-    INTEL::fpga_selector selector;
+    ext::intel::fpga_selector selector;
 #endif
 
     // create the device queue

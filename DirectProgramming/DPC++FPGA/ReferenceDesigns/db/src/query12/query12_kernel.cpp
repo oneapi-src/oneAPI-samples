@@ -37,7 +37,7 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   // a convenient lamda to make the explicit copy code less verbose
   auto submit_copy = [&](auto& buf, const auto& host_data) {
     return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, noinit);
+      accessor accessor(buf, h, write_only, no_init);
       h.copy(host_data, accessor);
     });
   };
@@ -178,8 +178,8 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   //// Compute Kernel
   auto compute_event = q.submit([&](handler& h) {
     // output write accessors
-    accessor high_line_count_accessor(high_line_count_buf, h, write_only, noinit);
-    accessor low_line_count_accessor(low_line_count_buf, h, write_only, noinit);
+    accessor high_line_count_accessor(high_line_count_buf, h, write_only, no_init);
+    accessor low_line_count_accessor(low_line_count_buf, h, write_only, no_init);
 
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       // local accumulators
@@ -271,6 +271,9 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
 
   // wait for the Compute kernel to finish
+  produce_lineitem_event.wait();
+  produce_orders_event.wait();
+  join_event.wait();
   compute_event.wait();
 
   // stop timer
