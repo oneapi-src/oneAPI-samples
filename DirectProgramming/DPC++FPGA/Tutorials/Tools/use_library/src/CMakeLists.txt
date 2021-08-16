@@ -26,9 +26,9 @@ set(RTL_SOURCE_OBJECT lib_rtl.o)
 
 # Flags
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(EMULATOR_LINK_FLAGS "-fintelfpga -fsycl-device-code-split=none")
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} -fsycl-device-code-split=none ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 # Flag lists for custom commands
@@ -57,7 +57,7 @@ add_custom_target(
 # Create library archive
 # This executes:
 # fpga_libtool lib_sycl.o lib_rtl.o --target sycl --create lib.a
-add_custom_target(create_library_archive 
+add_custom_target(create_library_archive
                   COMMAND fpga_libtool ${SYCL_SOURCE_OBJECT} ${RTL_SOURCE_OBJECT} --target sycl --create ${LIBRARY_ARCHIVE}
                   DEPENDS create_sycl_source_object create_rtl_source_object)
 
@@ -73,7 +73,7 @@ set_target_properties(library_archive PROPERTIES IMPORTED_LOCATION ${LIBRARY_ARC
 #    dpcpp -fintelfpga -DFPGA_EMULATOR use_library.cpp lib.a -o use_library.fpga_emu
 # CMake executes:
 #    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o use_library.cpp.o -c use_library.cpp
-#    [link]    dpcpp -fintelfpga use_library.cpp.o -o use_library.fpga_emu lib.a 
+#    [link]    dpcpp -fintelfpga use_library.cpp.o -o use_library.fpga_emu lib.a
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 target_link_libraries(${EMULATOR_TARGET} library_archive)
@@ -101,7 +101,7 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 #   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp lib.a -o use_library.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o use_library.cpp.o -c use_library.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp.o -o use_library.fpga lib.a 
+#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp.o -o use_library.fpga lib.a
 add_executable(${FPGA_TARGET} ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 target_link_libraries(${FPGA_TARGET} library_archive)
