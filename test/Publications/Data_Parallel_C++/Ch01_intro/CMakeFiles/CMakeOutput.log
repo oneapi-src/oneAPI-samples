@@ -1,0 +1,49 @@
+The system is: Windows - 10.0.18363 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: C:/Program Files (x86)/Intel/oneAPI/compiler/latest/windows/bin/icx.exe 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+Intel(R) oneAPI DPC++/C++ Compiler for applications running on Intel(R) 64, Version 2021.1 Build 20201113
+Copyright (C) 1985-2020 Intel Corporation. All rights reserved.
+
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.exe"
+
+The C compiler identification is IntelLLVM, found in "C:/Protex/Joes_OneApiSamples/oneAPI-samples/test/Publications/Data_Parallel_C++/Ch01_intro/CMakeFiles/3.21.1/CompilerIdC/CMakeCCompilerId.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: C:/Program Files (x86)/Intel/oneAPI/compiler/latest/windows/bin/icx.exe 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+Intel(R) oneAPI DPC++/C++ Compiler for applications running on Intel(R) 64, Version 2021.1 Build 20201113
+Copyright (C) 1985-2020 Intel Corporation. All rights reserved.
+
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.exe"
+
+The CXX compiler identification is IntelLLVM, found in "C:/Protex/Joes_OneApiSamples/oneAPI-samples/test/Publications/Data_Parallel_C++/Ch01_intro/CMakeFiles/3.21.1/CompilerIdCXX/CMakeCXXCompilerId.exe"
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: C:/Protex/Joes_OneApiSamples/oneAPI-samples/test/Publications/Data_Parallel_C++/Ch01_intro/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/PROGRA~2/MIB055~1/2017/ENTERP~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_b7883 && [1/2] Building C object CMakeFiles\cmTC_b7883.dir\CMakeCCompilerABI.c.obj
+[2/2] Linking C executable cmTC_b7883.exe
+
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: C:/Protex/Joes_OneApiSamples/oneAPI-samples/test/Publications/Data_Parallel_C++/Ch01_intro/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/PROGRA~2/MIB055~1/2017/ENTERP~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_c9432 && [1/2] Building CXX object CMakeFiles\cmTC_c9432.dir\CMakeCXXCompilerABI.cpp.obj
+[2/2] Linking CXX executable cmTC_c9432.exe
+
+
+
