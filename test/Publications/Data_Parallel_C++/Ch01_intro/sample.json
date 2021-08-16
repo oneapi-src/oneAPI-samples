@@ -35,8 +35,6 @@
     "windows": [
       {
         "steps": [
-          "set CC=clang",
-	  "set CXX=clang++",
 	  "mkdir build",
           "cd build",
           "cmake -G Ninja ..",
