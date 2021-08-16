@@ -28,7 +28,6 @@
           "mkdir ../build",
           "cd ../build",
           "cmake ..",
-          "make fig_18_11_std_fill",
           "make fig_18_7_swap",
           "make fig_18_1_builtin"
         ]
