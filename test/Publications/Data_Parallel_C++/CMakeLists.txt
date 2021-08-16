@@ -29,13 +29,15 @@ cmake_minimum_required(VERSION 3.4)
 #  set(CMAKE_CXX_COMPILER clang++)
 #  set(CMAKE_CXX_CREATE_STATIC_LIBRARY "lib <OBJECTS> /out:<TARGET>")
 #  set(CMAKE_CXX_LINK_EXECUTABLE "lld-link <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
-#endif(WIN32)
+
 if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
+    set(CMAKE_GENERATOR Ninja) 
     set(CMAKE_C_COMPILER clang)
     set(CMAKE_CXX_COMPILER "dpcpp-cl")
     set(CMAKE_CXX_CREATE_STATIC_LIBRARY "lib <OBJECTS> /out:<TARGET>")
     set(CMAKE_CXX_LINK_EXECUTABLE "lld-link <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
-    
+endif()
+
 if(UNIX)
   set(CMAKE_C_COMPILER clang)
   set(CMAKE_CXX_COMPILER clang++)
