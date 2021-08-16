@@ -1,5 +1,5 @@
 set(CMAKE_CXX_COMPILER dpcpp)
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.4)
 
 project(matrix_multiply)
 set(CMAKE_CXX_FLAGS "-g -O3 -fsycl -Wno-write-strings -w -D_Linux")
