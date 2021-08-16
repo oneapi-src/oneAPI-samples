@@ -47,16 +47,7 @@
           "mkdir build",
           "cd build",
           "cmake -G Ninja ..",
-          "cmake --build fig_2_2_simple_program",
-          "cmake --build fig_2_7_implicit_default_selector",
-          "cmake --build fig_2_10_cpu_selector",
-          "cmake --build fig_2_12_multiple_selectors",
-          "cmake --build fig_2_13_gpu_plus_fpga",
-          "cmake --build fig_2_18_simple_device_code",
-          "cmake --build fig_2_15_custom_selector",
-          "cmake --build fig_2_9_host_selector",
-          "cmake --build fig_2_22_simple_device_code_2",
-          "cmake --build fig_2_23_fallback"
+          "ninja install"
         ]
       }
     ]
