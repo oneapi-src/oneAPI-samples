@@ -38,12 +38,12 @@
          	"set CC=clang",
 			    "set CXX=clang++","mkdir build",
           "cd build",
-          "cmake -G Ninja ..",
-          "ninja"
+          "cmake --build fig_1_4_lambda",
+          "cmake --build fig_1_6_functor",
+          "cmake --build fig_1_3_race",
+          "cmake --build fig_1_1_hello"
         ]
-
       }
     ]
-
   }
 }
