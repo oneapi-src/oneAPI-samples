@@ -54,17 +54,19 @@ add_custom_target(
     COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_SPEC} --emulation_model ${CMAKE_CURRENT_SOURCE_DIR}/${RTL_C_MODEL} --target sycl -o ${RTL_SOURCE_OBJECT}
 )
 
+
 # Create library archive
 # This executes:
-# fpga_libtool lib_sycl.o lib_rtl.o --target sycl --create lib.a
-add_custom_target(create_library_archive
-                  COMMAND fpga_libtool ${SYCL_SOURCE_OBJECT} ${RTL_SOURCE_OBJECT} --target sycl --create ${LIBRARY_ARCHIVE}
-                  DEPENDS create_sycl_source_object create_rtl_source_object)
+# fpga_libtool lib_hls.o lib_ocl.o lib_sycl.o lib_rtl.o --target sycl --create lib.a
+add_custom_target(create_library_archive DEPENDS ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE})
+add_custom_command(OUTPUT ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
+                   COMMAND fpga_libtool ${SYCL_SOURCE_OBJECT} ${RTL_SOURCE_OBJECT} --target sycl --create ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
+                   DEPENDS create_sycl_source_object create_rtl_source_object)
 
 # Tell CMake to recognize our custom library
 add_library(library_archive STATIC IMPORTED GLOBAL)
 add_dependencies(library_archive create_library_archive)
-set_target_properties(library_archive PROPERTIES IMPORTED_LOCATION ${LIBRARY_ARCHIVE})
+set_target_properties(library_archive PROPERTIES IMPORTED_LOCATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE})
 
 ###############################################################################
 ### FPGA Emulator
