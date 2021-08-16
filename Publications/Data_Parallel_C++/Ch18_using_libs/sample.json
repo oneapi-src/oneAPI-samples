@@ -28,7 +28,6 @@
           "mkdir ../build",
           "cd ../build",
           "cmake ..",
-          "make fig_18_15_pstl_usm",
           "make fig_18_13_binary_search",
           "make fig_18_11_std_fill",
           "make fig_18_7_swap",
