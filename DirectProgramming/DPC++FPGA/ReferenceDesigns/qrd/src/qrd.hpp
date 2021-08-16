@@ -152,10 +152,10 @@ namespace QRDInternal{
   };
 
   /*
-    A structure that hold a row a of matrix of type T.
+    A structure that hold a column a of matrix of type T.
   */
   template<unsigned rows, typename T>
-  struct row{
+  struct column{
     T d[rows];
   };
 
@@ -319,12 +319,14 @@ namespace QRDInternal{
           // Create alias to the output matrix accessor
           auto QR_matrix_accessor_2 = QR_matrix_accessor;
 
-          sycl::stream out(32000, 32000, h);
+          sycl::stream out(64000, 64000, h);
 
           h.single_task<class QRD>([=]() [[intel::kernel_args_restrict]] {
 
             // Go over the matrices
             for (int matrixIdx = 0; matrixIdx < matrices; matrixIdx++) {
+
+              // out << "matrixIdx " << matrixIdx << sycl::endl;
 
               // Instantiate 3 versions of the input matrix
               // There are three loops that:
@@ -334,9 +336,11 @@ namespace QRDInternal{
               // - writes A_store into the output matrix
               [[intel::bankwidth(kBankwidth)]] // NO-FORMAT: Attribute
               [[intel::numbanks(kNumBanksNextPow2)]]   // NO-FORMAT: Attribute
-              row<rows, CTT>  A_load[columns], 
-                              A_compute[columns], 
+              column<rows, CTT>  A_load[columns], 
+                              // A_compute[columns], 
                               A_store[columns];
+
+              CTT A_compute[rows*columns];               
 
               /*
                 ================================================================
@@ -430,6 +434,15 @@ namespace QRDInternal{
                 });
               }
 
+      // out << "A_load MATRIX" << sycl::endl;
+      // for (size_t i = 0; i < ROWS_COMPONENT; i++) {
+      //   for (size_t j = 0; j < COLS_COMPONENT; j++) {
+      //     out << A_load[j].d[i] << " ";
+      //   }
+      //   out << sycl::endl;
+      // }
+
+
               /*
                 ================================================================
                 Loop 2: Main computation the QR Decomposition.
@@ -501,7 +514,26 @@ namespace QRDInternal{
               
               [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
               [[intel::ivdep(rawLatency)]]  // NO-FORMAT: Attribute
+              // [[intel::speculated_iterations(0)]]
               for (int s = 0; s < kIterations; s++) {
+
+                ac_int<kIBitSize, true> next_i;
+                ac_int<kJBitSize, true> next_j;
+                // Update the loop indexes.
+                if (j == kNValue - 1) {
+                  // If i reached an index at which the j inner loop don't have
+                  // enough time to write its result for the next i iteration,
+                  // some "dummy" iterations are introduced 
+                  next_j = (kVariableIterations > i) ? 
+                                  ac_int<kJBitSize, true>{i + 1} : 
+                                  ac_int<kJBitSize, true>{kVariableIterations};
+                  next_i = i + 1;
+                } else {
+                  next_j = j + 1;
+                  next_i = i;
+                }
+
+
                 // Temporary storage for a column of the input matrix and for
                 // partial results.
                 CTT col[rows];
@@ -525,8 +557,8 @@ namespace QRDInternal{
                   i_ge_0_j_ge_i[k] = sycl::ext::intel::fpga_reg(i >= 0 && j >= i);
                   j_eq_i_plus_1[k] = sycl::ext::intel::fpga_reg(j == i + 1);
                   if constexpr(isComplex){
-                    sori[k].xx = sycl::ext::intel::fpga_reg(s_or_i[j].xx);
-                    sori[k].yy = sycl::ext::intel::fpga_reg(s_or_i[j].yy);
+                    sori[k].xx = INTEL::fpga_reg(s_or_i[j + increasedBufferSize].xx);
+                    sori[k].yy = INTEL::fpga_reg(s_or_i[j + increasedBufferSize].yy);
                   }
                   else{
                     sori[k] = sycl::ext::intel::fpga_reg(s_or_i[j + increasedBufferSize]);
@@ -548,8 +580,11 @@ namespace QRDInternal{
                   // matrix a directly from the A_load col then contains a_j
                   if constexpr(isComplex){
                     if(i_gt_0[bank]){
-                      col[k].xx = A_compute[j].d[k].xx;
-                      col[k].yy = A_compute[j].d[k].yy;
+                      // col[k].xx = A_compute[j].d[k].xx;
+                      // col[k].yy = A_compute[j].d[k].yy;
+
+                      col[k].xx = A_compute[int(j) + k*columns].xx;
+                      col[k].yy = A_compute[int(j) + k*columns].yy;
                     }
                     else{
                       col[k].xx = A_load[j].d[k].xx;
@@ -562,6 +597,25 @@ namespace QRDInternal{
                       a_i[k].yy = col[k].yy;
                     }
                   }
+                  else{
+                    if(i_gt_0[bank]){
+                      col[k] = A_compute[int(j) + k*columns];
+                      // col[k] = A_compute[j].d[k];
+                    }
+                    // Using an else statement makes the compiler throw an
+                    // inexplicable warning:
+                    // "Compiler Warning: Memory instruction with unresolved 
+                    // pointer may lead to bad QoR."
+                    if(!i_gt_0[bank]){
+                      col[k] = A_load[j].d[k];
+                    }
+
+                    // Load a_i for reuse across j iterations
+                    if (j_eq_i[bank]) {
+                      a_i[k] = col[k];
+                    }
+                  }
+
                 });
 
                 UnrolledLoop<rows>([&](auto k) {
@@ -593,11 +647,15 @@ namespace QRDInternal{
                   // -> unused for the A_compute
                   if (i_ge_0_j_ge_i[bankIdx]) {
                     if constexpr(isComplex){
-                      A_store[j].d[k].xx = A_compute[j].d[k].xx = col[k].xx;
-                      A_store[j].d[k].yy = A_compute[j].d[k].yy = col[k].yy;
+                      // A_store[j].d[k].xx = A_compute[j].d[k].xx = col[k].xx;
+                      // A_store[j].d[k].yy = A_compute[j].d[k].yy = col[k].yy;
+                      // TODO: Remove A_store?
+                      A_store[j].d[k].xx = A_compute[int(j) + k*columns].xx = col[k].xx;
+                      A_store[j].d[k].yy = A_compute[int(j) + k*columns].yy = col[k].yy;                      
                     }
                     else{
-                      A_store[j].d[k] = A_compute[j].d[k] = col[k];
+                      // A_store[j].d[k] = A_compute[j].d[k] = col[k];
+                      A_store[j].d[k] = A_compute[int(j) + k*columns] = col[k];
                     }
                   }
 
@@ -637,7 +695,7 @@ namespace QRDInternal{
                 // larger than the matrix size
                 if (j >= 0) {
                   if constexpr(isComplex){
-                    s_or_i[j] = CTT(j == i + 1 ? ir : s_j.xx,
+                    s_or_i[j + increasedBufferSize] = CTT(j == i + 1 ? ir : s_j.xx,
                                         j == i + 1 ? 0.0f : s_j.yy);
                   }
                   else{
@@ -667,18 +725,27 @@ namespace QRDInternal{
                   qr_idx++;
                 }
 
-                // Update the loop indexes.
-                if (j == kNValue - 1) {
-                  // If i reached an index at which the j inner loop don't have
-                  // enough time to write its result for the next i iteration,
-                  // some "dummy" iterations are introduced 
-                  j = (kVariableIterations > i) ? 
-                                  ac_int<kJBitSize, true>{i + 1} : 
-                                  ac_int<kJBitSize, true>{kVariableIterations};
-                  i++;
-                } else {
-                  j++;
-                }
+
+
+                // // Update the loop indexes.
+                // if (j == kNValue - 1) {
+                //   // If i reached an index at which the j inner loop don't have
+                //   // enough time to write its result for the next i iteration,
+                //   // some "dummy" iterations are introduced 
+                //   j = (kVariableIterations > i) ? 
+                //                   ac_int<kJBitSize, true>{i + 1} : 
+                //                   ac_int<kJBitSize, true>{kVariableIterations};
+                //   i++;
+                // } else {
+                //   j++;
+                // }
+
+
+
+
+                j = next_j;
+                i = next_i;
+
               } // end for s=0:kIterations-1
 
               /*
