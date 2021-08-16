@@ -20,10 +20,12 @@ This sample helps demonstrate AI workloads and deep learning models optimized by
  
 These Jupyter notebooks help users analyze the performance benefit from using Intel Optimizations for Tensorflow with the oneDNN library.
 
-| Notebook | Notes|
-| ------ | ------ |
-| benchmark_perf_comparison.ipynb | Compare performance between Stock and Intel Tensorflow among different models  |
-| benchmark_perf_timeline_analysis.ipynb | Analyze the performance benefit from oneDNN among different layers by using Tensorflow Timeline |
+| Analysis Type | Notebook | Notes|
+| ------ | ------ | ------ |
+|stock vs. Intel Tensorflow | 1. [benchmark_perf_comparison](benchmark_perf_comparison.ipynb)  | Compare performance between Stock and Intel Tensorflow among different models  |
+|^| 2. [benchmark_perf_timeline_analysis](benchmark_perf_timeline_analysis.ipynb) | Analyze the performance benefit from oneDNN among different layers by using Tensorflow Timeline |  
+|fp32 vs. bf16 vs. int8 | 1. [benchmark_data_types_perf_comparison](benchmark_data_types_perf_comparison.ipynb) | Compare Model Zoo benchmark performance among different data types on Intel Optimizations for  Tensorflow  |
+|^| 2.[benchmark_data_types_perf_timeline_analysis](benchmark_data_types_perf_timeline_analysis.ipynb) | Analyze the bf16/int8 data type performance benefit from oneDNN among different layers by using Tensorflow Timeline |  
 
     
 ## License  
@@ -34,11 +36,8 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Build and Run the Sample
 
-## Running Samples on the Intel&reg; DevCloud
-If you are running this sample on the DevCloud, see [Running Samples on the Intel&reg; DevCloud](#run-samples-on-devcloud)
-
-### Pre-requirements
-
+### Prerequisites
+> NOTE: No prerequisite is required if users use Intel DevCloud as their environment. 
  1. **Intel AI Analytics Toolkit**  
        You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation,   
        and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
@@ -47,14 +46,46 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
        Users can install via PIP by `$pip install notebook`.
        Users can also refer to the [installation link](https://jupyter.org/install) for details.
 
-#### **Conda Environment Creation (Local Installation)**
+#### **Conda Environment Creation**
 
+
+##### **1. Intel oneAPI DevCloud**
+---
+###### **Stock TensorFlow**
+
+1. Create conda env: `$conda create -n stock-tensorflow python matplotlib ipykernel psutil pandas gitpython`
+2. Activate the created conda env: `$source activate stock-tensorflow.`
+3. Install stock Tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.5.0`
+4. Install extra needed package: `(stock-tensorflow) $pip install cxxfilt`
+5. Deactivate conda env: `(stock-tensorflow)$conda deactivate`
+6. Register the kernel to Jupyter NB: `$~/.conda/envs/stock-tensorflow/bin/python -m ipykernel install --user --name=stock-tensorflow`
+
+>  NOTE: Please change the python path if you have a different folder path for anaconda3.
+   After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall stock-tensorflow.`
+###### **Intel TensorFlow**
+
+> NOTE: Intel-optimized Tensorflow is on DevCloud. However, users don't have access to install extra packages. 
+  Therefore, we need to clone Intel Tensorflow into the user's home directory for installing extra packages.
+1. Source oneAPI environment variables: `$source /opt/intel/oneapi/setvars.sh`
+2. Create conda env: `$conda create --name intel-tensorflow --clone tensorflow`  
+3. Activate the created conda env: `$source activate intel-tensorflow`  
+4  Install the extra needed package: `(intel-tensorflow) $pip install cxxfilt matplotlib ipykernel psutil pandas gitpython`  
+5. Deactivate conda env: `(intel-tensorflow)$conda deactivate`  
+6. Register the kernel to Jupyter NB: `$~/.conda/envs/intel-tensorflow/bin/python  -m ipykernel install --user --name=intel-tensorflow`
+
+> NOTE: Please change the python path if you have a different folder path for anaconda3. 
+  After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall intel-tensorflow.`
+  
+  
+   
+##### **2. Linux with Intel oneAPI AI Analytics Toolkit**   
+---
 ###### **Stock TensorFlow**
 
 1. Create conda env: `$conda create -n stock-tensorflow python matplotlib ipykernel psutil pandas gitpython`
 
 2. Activate the created conda env: `$conda activate stock-tensorflow`
-3. Install stock tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.3.0`
+3. Install stock tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.5.0`
 4. Install extra needed package: `(stock-tensorflow) $pip install cxxfilt`
 5. Deactivate conda env: `(stock-tensorflow)$conda deactivate`
 6. Register the kernel to Jupyter NB: `$~/anaconda3/envs/stock-tensorflow/bin/python  -m ipykernel install --user --name=stock-tensorflow`
@@ -75,14 +106,11 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
   After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall intel-tensorflow.`
 
 
-### Running the Sample (local installation)
+### Running the Sample
 
 1. Copy the Intel Model Zoo from your AI Analytics Toolkit installation path: `$cp -rf /opt/intel/oneapi/modelzoo/latest/models ~/`
 2. cd ~/models; git init; git add . ; git commit -m 'initial commit'
 3. Launch Jupyter notebook: `$jupyter notebook --ip=0.0.0.0`
-
-> NOTE: Users don't need to apply step 2 on DevCloud Environment.
-
 4. Follow the instructions to open the URL with the token in your browser
 5. Browse to the `models/docs/notebooks/perf_analysis` folder
 6. Click the `benchmark_perf_comparison.ipynb` or `benchmark_perf_timeline_analysis.ipynb` file
@@ -90,62 +118,9 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
     <br><img src="images/jupyter_kernels.png" width="300" height="300"><br>
 8. Run through every cell of the notebook one by one
 
-> NOTE: To compare stock and Intel-optimized TF results in the section "Analyze TF Timeline results among Stock and Intel Tensorflow," users need to run all cells before the comparison section with both stock-tensorflow and intel-tensorflow kernels.
+> NOTE: To compare stock and Intel-optimized TF results in the section "Analyze TF Timeline results among Stock and Intel Tensorflow," users need to run all cells before the comparison section with both stock-tensorflow and intel-tensorflow kernels.  
 
-### **Running Samples on the Intel&reg; DevCloud (Optional)<a name="run-samples-on-devcloud"></a>**
-
-#### **Conda Environment Creation (DevCloud)**
-
-##### **Stock TensorFlow**
-
-1. Create conda env: `$conda create -n stock-tensorflow python matplotlib ipykernel psutil pandas gitpython`
-2. Activate the created conda env: `$source activate stock-tensorflow.`
-3. Install stock Tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.3.0`
-4. Install extra needed package: `(stock-tensorflow) $pip install cxxfilt`
-5. Deactivate conda env: `(stock-tensorflow)$conda deactivate`
-6. Register the kernel to Jupyter NB: `$~/.conda/envs/stock-tensorflow/bin/python -m ipykernel install --user --name=stock-tensorflow`
-
->  NOTE: Please change the python path if you have a different folder path for anaconda3.
-   After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall stock-tensorflow.`
-
-##### **Intel TensorFlow**
-
-> NOTE: Intel-optimized Tensorflow is on DevCloud. However, users don't have access to install extra packages. 
-  Therefore, we need to clone Intel Tensorflow into the user's home directory for installing extra packages.
-
-1. Source oneAPI environment variables: `$source /opt/intel/oneapi/setvars.sh`
-2. Create conda env: `$conda create --name intel-tensorflow --clone tensorflow`
-3. Activate the created conda env: `$source activate intel-tensorflow`
-4  Install the extra needed package: `(intel-tensorflow) $pip install cxxfilt matplotlib ipykernel psutil pandas gitpython`
-5. Deactivate conda env: `(intel-tensorflow)$conda deactivate`
-6. Register the kernel to Jupyter NB: `$~/.conda/envs/intel-tensorflow/bin/python  -m ipykernel install --user --name=intel-tensorflow`
-
-> NOTE: Please change the python path if you have a different folder path for anaconda3. 
-  After profiling, users can remove the kernel from Jupyter NB with `$jupyter kernelspec uninstall intel-tensorflow.`
-
-### **Run in Interactive Mode**
-1. Copy the Intel Model Zoo from your AI Analytics Toolkit installation path: `$cp -rf /opt/intel/oneapi/modelzoo/latest/models ~/`
-2. Launch Jupyter notebook: `$jupyter notebook --ip=0.0.0.0`
-3. Follow the instructions to open the URL with the token in your browser
-4. Browse to the `models/docs/notebooks/perf_analysis` folder
-5. Click the `benchmark_perf_comparison.ipynb` or `benchmark_perf_timeline_analysis.ipynb` file
-6. Change your Jupyter notebook kernel to either "stock-tensorflow" or "intel-tensorflow" (highlighted in the diagram below)
-    <br><img src="images/jupyter_kernels.png" width="300" height="300"><br>
-7. Run through every cell of the notebook one by one
-
-> NOTE: To compare stock and Intel-optimized TF results in the section "Analyze TF Timeline results among Stock and Intel Tensorflow," users need to run all cells before the comparison section with both stock-tensorflow and intel-tensorflow kernels.
-
-### **Request a Compute Node**
-In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.
- This node information must be provided when submitting a job to run your sample in batch mode using the qsub command. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
-
-<!---Mark each compatible Node in BOLD-->
-| Node              | Command                                                 |
-| ----------------- | ------------------------------------------------------- |
-| GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
-| CPU               | qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh          |
-| FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
-| FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
+> NOTE: Users will run the jupyter notebooks on the login node of the DevCloud for now.
 
 ### Example of Output
 Users should be able to see some diagrams for performance comparison and analysis.

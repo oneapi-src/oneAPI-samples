@@ -699,6 +699,14 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   // wait for kernel to finish
   filter_parts_event.wait();
   computation_kernel_event.wait();
+  join_li_o_s_ps_event.wait();
+  sort_event.wait();
+  consume_sort_event.wait();
+  feed_sort_event.wait();
+  produce_part_supplier_event.wait();
+  join_partsupplier_supplier_event.wait();
+  join_lineitem_orders_event.wait();
+  producer_orders_event.wait();
 
   high_resolution_clock::time_point host_end = high_resolution_clock::now();
   duration<double, std::milli> diff = host_end - host_start;
