@@ -39,8 +39,6 @@
 	        "rmdir /s/q build",
           "mkdir build",
           "cd build",
-          "where ninja",
-          "where nmake",
           "cmake -G Ninja ..",
           "ninja fig_1_4_lambda",
           "ninja fig_1_6_functor",
