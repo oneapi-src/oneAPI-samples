@@ -35,9 +35,10 @@
     "windows": [
       {
         "steps": [
-	        "rmdir /s/q ..\\build",
-          "mkdir ..\\build",
-          "cd ..\\build",
+          "cd ..",
+	        "rmdir /s/q build",
+          "mkdir build",
+          "cd build",
           "where ninja",
           "where nmake",
           "cmake -G Ninja ..",
