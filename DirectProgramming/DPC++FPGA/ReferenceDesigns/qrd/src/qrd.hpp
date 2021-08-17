@@ -159,6 +159,15 @@ namespace QRDInternal{
     T d[rows];
   };
 
+  /*
+    A structure that hold a row a of matrix of type T.
+  */
+  template<unsigned columns, typename T>
+  struct row{
+    [[intel::fpga_memory("BLOCK_RAM")]] // NO-FORMAT: Attribute
+    T d[columns];
+  };
+
   // Forward declare the kernel name
   // (This prevents unwanted name mangling in the optimization report.)
   class QRD;
@@ -340,7 +349,8 @@ namespace QRDInternal{
                               // A_compute[columns], 
                               A_store[columns];
 
-              CTT A_compute[rows*columns];               
+              row<columns, CTT> A_compute[rows];
+              // CTT A_compute[rows*columns]; 
 
               /*
                 ================================================================
@@ -494,6 +504,7 @@ namespace QRDInternal{
               constexpr int increasedBufferSize = super_dummy_iterations < 0 ? 
                                                     0 : super_dummy_iterations; 
               CTT s_or_i[columns + increasedBufferSize];
+
               // Adding increasedBufferSize is a waste of resource because we 
               // are going to read and write only to "columns" different places
               // If we don't add it, the compiler does not achieve II 1 because 
@@ -551,17 +562,18 @@ namespace QRDInternal{
                       i_lt_0[kNumBanks];
 
                 UnrolledLoop<kNumBanks>([&](auto k) {
-                  i_gt_0[k] = sycl::ext::intel::fpga_reg(i > 0);
-                  i_lt_0[k] = sycl::ext::intel::fpga_reg(i < 0);
-                  j_eq_i[k] = sycl::ext::intel::fpga_reg(j == i);
-                  i_ge_0_j_ge_i[k] = sycl::ext::intel::fpga_reg(i >= 0 && j >= i);
-                  j_eq_i_plus_1[k] = sycl::ext::intel::fpga_reg(j == i + 1);
+                  i_gt_0[k] = INTEL::fpga_reg(i > 0);
+                  i_lt_0[k] = INTEL::fpga_reg(i < 0);
+                  j_eq_i[k] = INTEL::fpga_reg(j == i);
+                  i_ge_0_j_ge_i[k] = INTEL::fpga_reg(i >= 0 && j >= i);
+                  j_eq_i_plus_1[k] = INTEL::fpga_reg(j == i + 1);
+                  int idx = j + increasedBufferSize;
                   if constexpr(isComplex){
-                    sori[k].xx = INTEL::fpga_reg(s_or_i[j + increasedBufferSize].xx);
-                    sori[k].yy = INTEL::fpga_reg(s_or_i[j + increasedBufferSize].yy);
+                    sori[k].xx = INTEL::fpga_reg(s_or_i[idx].xx);
+                    sori[k].yy = INTEL::fpga_reg(s_or_i[idx].yy);
                   }
                   else{
-                    sori[k] = sycl::ext::intel::fpga_reg(s_or_i[j + increasedBufferSize]);
+                    sori[k] = INTEL::fpga_reg(s_or_i[idx]);
                   }
                 });
 
@@ -583,8 +595,11 @@ namespace QRDInternal{
                       // col[k].xx = A_compute[j].d[k].xx;
                       // col[k].yy = A_compute[j].d[k].yy;
 
-                      col[k].xx = A_compute[int(j) + k*columns].xx;
-                      col[k].yy = A_compute[int(j) + k*columns].yy;
+                      // col[k].xx = A_compute[int(j) + k*columns].xx;
+                      // col[k].yy = A_compute[int(j) + k*columns].yy;
+
+                      col[k].xx = A_compute[k].d[j].xx;
+                      col[k].yy = A_compute[k].d[j].yy;
                     }
                     else{
                       col[k].xx = A_load[j].d[k].xx;
@@ -599,8 +614,9 @@ namespace QRDInternal{
                   }
                   else{
                     if(i_gt_0[bank]){
-                      col[k] = A_compute[int(j) + k*columns];
+                      // col[k] = A_compute[int(j) + k*columns];
                       // col[k] = A_compute[j].d[k];
+                      col[k] = A_compute[k].d[j];
                     }
                     // Using an else statement makes the compiler throw an
                     // inexplicable warning:
@@ -650,12 +666,15 @@ namespace QRDInternal{
                       // A_store[j].d[k].xx = A_compute[j].d[k].xx = col[k].xx;
                       // A_store[j].d[k].yy = A_compute[j].d[k].yy = col[k].yy;
                       // TODO: Remove A_store?
-                      A_store[j].d[k].xx = A_compute[int(j) + k*columns].xx = col[k].xx;
-                      A_store[j].d[k].yy = A_compute[int(j) + k*columns].yy = col[k].yy;                      
+                      // A_store[j].d[k].xx = A_compute[int(j) + k*columns].xx = col[k].xx;
+                      // A_store[j].d[k].yy = A_compute[int(j) + k*columns].yy = col[k].yy;  
+                      A_store[j].d[k].xx = A_compute[k].d[j].xx = col[k].xx;
+                      A_store[j].d[k].yy = A_compute[k].d[j].yy = col[k].yy;                      
                     }
                     else{
                       // A_store[j].d[k] = A_compute[j].d[k] = col[k];
-                      A_store[j].d[k] = A_compute[int(j) + k*columns] = col[k];
+                      // A_store[j].d[k] = A_compute[int(j) + k*columns] = col[k];
+                      A_store[j].d[k] = A_compute[k].d[j] = col[k];
                     }
                   }
 
@@ -694,12 +713,13 @@ namespace QRDInternal{
                 // j may be negative if the number of "dummy" iterations is 
                 // larger than the matrix size
                 if (j >= 0) {
+                  int idx = j + increasedBufferSize;
                   if constexpr(isComplex){
-                    s_or_i[j + increasedBufferSize] = CTT(j == i + 1 ? ir : s_j.xx,
+                    s_or_i[idx] = CTT(j == i + 1 ? ir : s_j.xx,
                                         j == i + 1 ? 0.0f : s_j.yy);
                   }
                   else{
-                    s_or_i[j + increasedBufferSize] = j == i + 1 ? ir : s_j; 
+                    s_or_i[idx] = j == i + 1 ? ir : s_j; 
                   }
                 }
 
