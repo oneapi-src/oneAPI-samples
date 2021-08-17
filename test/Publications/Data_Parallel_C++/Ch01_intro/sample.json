@@ -36,7 +36,7 @@
       {
         "steps": [
           "cd ..",
-	        "rm -Recurse -Force build",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
           "cmake -G Ninja ..",
