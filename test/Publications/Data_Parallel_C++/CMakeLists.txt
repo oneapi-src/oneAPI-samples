@@ -19,16 +19,15 @@
 # at the command-line.
 ##############################################################################
 
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.4)
 
 # set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
 if(WIN32)
-  set(CMAKE_C_COMPILER dpcpp)
-  set(CMAKE_CXX_COMPILER dpcpp-cl)
+  #set(CMAKE_CXX_COMPILER dpcpp)
   set(CMAKE_CXX_CREATE_STATIC_LIBRARY "lib <OBJECTS> /out:<TARGET>")
   set(CMAKE_CXX_LINK_EXECUTABLE "lld-link <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
-  set(CMAKE_MAKE_PROGRAM Ninja)
+  #set(CMAKE_MAKE_PROGRAM Ninja)
 endif(WIN32)
 
 if(UNIX)
