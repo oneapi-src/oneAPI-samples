@@ -39,7 +39,7 @@
 	  "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
-          "cmake -G 'NMake Makefiles' ..",
+          "cmake -G NMake Makefiles ..",
           "nmake fig_1_4_lambda",
           "nmake fig_1_6_functor",
           "nmake fig_1_3_race",
