@@ -51,11 +51,13 @@ To use the generated library in your project, simply add the generated library a
 
 ```bash
 # Compile for FPGA emulator
-dpcpp -fintelfpga use_library.cpp lib.a -o use_library_emu.fpga -DFPGA_EMULATOR
+dpcpp -fintelfpga use_library.cpp lib.a -o use_library_emu.fpga -DFPGA_EMULATOR -fsycl-device-code-split=none
 
 # Compile for FPGA hardware
-dpcpp -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware
+dpcpp -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware -fsycl-device-code-split=none
 ```
+
+_* Note that the_ `-fsycl-device-code-split=none` _is used to avoid splitting the device images by each cpp or .a file._
 
 ## Key Concepts
 
