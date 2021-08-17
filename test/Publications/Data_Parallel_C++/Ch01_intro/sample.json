@@ -36,7 +36,7 @@
       {
         "steps": [
           "cd ..",
-	        "rmdir \/s\/q build",
+	        "rm -Recurse -Force build",
           "mkdir build",
           "cd build",
           "cmake -G Ninja ..",
