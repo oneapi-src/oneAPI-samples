@@ -6,7 +6,7 @@
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
-  "os": [ "linux" ],
+  "os": [ "linux", "windows" ],
   "builder": [ "ide", "cmake" ],
   "commonFolder": {
     "base": "..",
@@ -36,10 +36,16 @@
     "windows": [
       {
         "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
-          "cmake -G Ninja ..",
-          "ninja"
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_18_1_builtin",
+          "nmake fig_18_7_swap",
+          "nmake fig_18_11_std_fill",
+          "nmake fig_18_13_binary_search",
+          "nmake fig_18_15_pstl_usm"
         ]
       }
     ]

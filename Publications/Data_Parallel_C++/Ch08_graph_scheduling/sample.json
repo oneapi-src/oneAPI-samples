@@ -6,7 +6,7 @@
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
-  "os": [ "linux" ],
+  "os": [ "linux", "windows" ],
   "builder": [ "ide", "cmake" ],
   "commonFolder": {
     "base": "..",
@@ -39,10 +39,17 @@
     "windows": [
       {
         "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
-          "cmake -G Ninja ..",
-          "ninja"
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_8_8_y_buffers",
+          "nmake fig_8_7_y_events",
+          "nmake fig_8_6_y_in_order",
+          "nmake fig_8_5_linear_dependence_buffers",
+          "nmake fig_8_4_linear_dependence_events",
+          "nmake fig_8_3_linear_dependence_in_order"   
         ]
       }
     ]

@@ -6,7 +6,7 @@
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
-  "os": [ "linux" ],
+  "os": [ "linux", "windows" ],
   "builder": [ "ide", "cmake" ],
   "commonFolder": {
     "base": "..",
@@ -41,10 +41,18 @@
     "windows": [
       {
         "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
-          "cmake -G Ninja ..",
-          "ninja"
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_19_6_avoid_data_race_with_barrier",
+          "nmake fig_19_7_avoid_data_race_with_atomics",
+          "nmake fig_19_16_atomic_accessor",
+          "nmake fig_19_18_histogram",
+          "nmake fig_19_19-20_device_latch",
+          "nmake fig_19_15_buffer_and_atomic_ref",
+          "nmake fig_19_3_data_race"
         ]
       }
     ]

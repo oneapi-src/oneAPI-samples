@@ -6,7 +6,7 @@
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
-  "os": [ "linux" ],
+  "os": [ "linux", "windows" ],
   "builder": [ "ide", "cmake" ],
   "commonFolder": {
     "base": "..",
@@ -40,10 +40,17 @@
     "windows": [
       {
         "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
-          "cmake -G Ninja ..",
-          "ninja"
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_13_10_host_accessor_deadlock",
+          "nmake fig_13_8_host_accessor",
+          "nmake fig_13_7_common_pattern_bug",
+          "nmake fig_13_6_common_buffer_pattern",
+          "nmake fig_13_9_host_accessor_for_init",
+          "nmake fig_13_4_stream"
         ]
       }
     ]

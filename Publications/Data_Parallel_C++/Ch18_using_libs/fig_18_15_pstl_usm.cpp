@@ -13,7 +13,8 @@ int main(){
                          alloc(Q.get_context(), Q.get_device());
   std::vector<int, decltype(alloc)> vec(n, alloc);
 
-  std::fill(dpstd::execution::make_device_policy(Q), 
+  //std::fill(dpstd::execution::make_device_policy(Q), // original line from book, valid for toolkits 2021.1-2021.22
+  std::fill(oneapi::dpl::execution::make_device_policy(Q), //updated for oneAPI Toolkits 2021.3+  
                               vec.begin(), vec.end(), 78);
   Q.wait();
 

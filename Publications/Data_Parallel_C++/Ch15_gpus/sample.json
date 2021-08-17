@@ -6,7 +6,7 @@
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
-  "os": [ "linux" ],
+  "os": [ "linux", "windows" ],
   "builder": [ "ide", "cmake" ],
   "commonFolder": {
     "base": "..",
@@ -40,10 +40,17 @@
     "windows": [
       {
         "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
-          "cmake -G Ninja ..",
-          "ninja"
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_15_12_small_work_group_matrix_multiplication",
+          "nmake fig_15_10_divergent_control_flow",
+          "nmake fig_15_18_columns_matrix_multiplication",
+          "nmake fig_15_7_more_parallel_matrix_multiplication",
+          "nmake fig_15_5_somewhat_parallel_matrix_multiplication",
+          "nmake fig_15_3_single_task_matrix_multiplication"
         ]
       }
     ]

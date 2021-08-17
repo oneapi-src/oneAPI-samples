@@ -6,7 +6,7 @@
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
-  "os": [ "linux" ],
+  "os": [ "linux", "windows" ],
   "builder": [ "ide", "cmake" ],
   "commonFolder": {
     "base": "..",
@@ -42,10 +42,19 @@
     "windows": [
       {
         "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
-          "cmake -G Ninja ..",
-          "ninja"
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_9_4_naive_matrix_multiplication",
+          "nmake fig_9_7_local_accessors",
+          "nmake fig_9_8_ndrange_tiled_matrix_multiplication",
+          "nmake fig_9_13_matrix_multiplication_broadcast",
+          "nmake fig_9_10_hierarchical_tiled_matrix_multiplication",
+          "nmake fig_9_11_sub_group_barrier",
+          "nmake fig_9_14_ndrange_sub_group_matrix_multiplication",
+          "nmake fig_9_9_local_hierarchical"
         ]
       }
     ]

@@ -2,11 +2,12 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <iostream>
-#include <CL/sycl.hpp>
+
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/iterator>
+#include <iostream>
+#include <CL/sycl.hpp>
 
 using namespace sycl;
 
@@ -27,17 +28,24 @@ int main()
     }
 
     // create dpc++ iterators
-    auto k_beg = dpstd::begin(kB);
-    auto k_end = dpstd::end(kB);
-    auto v_beg = dpstd::begin(vB);
-    auto v_end = dpstd::end(vB);
-    auto r_beg = dpstd::begin(rB);
+    //auto k_beg = dpstd::begin(kB);   // original line from book, valid for toolkits 2021.1-2021.22
+    auto k_beg = oneapi::dpl::begin(kB);  //updated for oneAPI Toolkits 2021.3+  
+    //auto k_end = dpstd::end(kB);     // original line from book, valid for toolkits 2021.1-2021.22
+    auto k_end = oneapi::dpl::end(kB);    //updated for oneAPI Toolkits 2021.3+  
+    //auto v_beg = dpstd::begin(vB);   // original line from book, valid for toolkits 2021.1-2021.22
+    auto v_beg = oneapi::dpl::begin(vB);  //updated for oneAPI Toolkits 2021.3+  
+    //auto v_end = dpstd::end(vB);     // original line from book, valid for toolkits 2021.1-2021.22
+    auto v_end = oneapi::dpl::end(vB);    //updated for oneAPI Toolkits 2021.3+  
+    //auto r_beg = dpstd::begin(rB);   // original line from book, valid for toolkits 2021.1-2021.22  
+    auto r_beg = oneapi::dpl::begin(rB);  //updated for oneAPI Toolkits 2021.3+  
 
     // create named policy from existing one
-    auto policy = dpstd::execution::make_device_policy<class bSearch>(dpstd::execution::default_policy);
+    //auto policy = dpstd::execution::make_device_policy<class bSearch>(dpstd::execution::default_policy); original line from book, valid for toolkits 2021.1-2021.22
+    auto policy = oneapi::dpl::execution::make_device_policy<class bSearch>(oneapi::dpl::execution::dpcpp_default);  //updated for oneAPI Toolkits 2021.3+  
 
     // call algorithm
-    dpstd::binary_search(policy, k_beg, k_end, v_beg, v_end, r_beg);
+    //dpstd::binary_search(policy, k_beg, k_end, v_beg, v_end, r_beg); // original line from book, valid for toolkits 2021.1-2021.22
+    oneapi::dpl::binary_search(policy, k_beg, k_end, v_beg, v_end, r_beg); //updated for oneAPI Toolkits 2021.3+  
 
     // check data
     accessor r{rB};

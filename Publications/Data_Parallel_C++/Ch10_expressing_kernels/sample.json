@@ -6,7 +6,7 @@
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
-  "os": [ "linux" ],
+  "os": [ "linux", "windows" ],
   "builder": [ "ide", "cmake" ],
   "commonFolder": {
     "base": "..",
@@ -42,10 +42,19 @@
     "windows": [
       {
         "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
-          "cmake -G Ninja ..",
-          "ninja"
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_10_2_kernel_lambda",
+          "nmake fig_10_3_optional_kernel_lambda_elements",
+          "nmake fig_10_4_named_kernel_lambda",
+          "nmake fig_10_5_unnamed_kernel_lambda",
+          "nmake fig_10_6_kernel_functor",
+          "nmake fig_10_7_opencl_source_interop",
+          "nmake fig_10_8_opencl_object_interop",
+          "nmake fig_10_9_kernel_lambda_build_options"
         ]
       }
     ]
