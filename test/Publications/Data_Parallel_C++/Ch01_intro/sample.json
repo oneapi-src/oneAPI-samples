@@ -40,10 +40,10 @@
           "mkdir build",
           "cd build",
           "cmake -G 'NMake Makefiles'",
-          "ninja fig_1_4_lambda",
-          "ninja fig_1_6_functor",
-          "ninja fig_1_3_race",
-          "ninja fig_1_1_hello"
+          "nmake fig_1_4_lambda",
+          "nmake fig_1_6_functor",
+          "nmake fig_1_3_race",
+          "nmake fig_1_1_hello"
         ]
       }
     ]
