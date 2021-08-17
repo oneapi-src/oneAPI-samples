@@ -35,10 +35,16 @@
     "windows": [
       {
         "steps": [
-	        "mkdir build",
-          "cd build",
+	        "rmdir /s/q ..\build",
+          "mkdir ..\build",
+          "cd ..\build",
+          "where ninja",
+          "where nmake",
           "cmake -G Ninja ..",
-          "ninja install"
+          "ninja fig_1_4_lambda",
+          "ninja fig_1_6_functor",
+          "ninja fig_1_3_race",
+          "ninja fig_1_1_hello"
         ]
       }
     ]
