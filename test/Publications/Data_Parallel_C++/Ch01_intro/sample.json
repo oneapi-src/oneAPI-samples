@@ -36,10 +36,10 @@
       {
         "steps": [
           "cd ..",
-	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+	  "rmdir -Recurse -Force build >nul 2>nul || echo remove",
           "mkdir build",
           "cd build",
-          "cmake -G Ninja ..",
+          "cmake -G 'NMake Makefiles'",
           "ninja fig_1_4_lambda",
           "ninja fig_1_6_functor",
           "ninja fig_1_3_race",
