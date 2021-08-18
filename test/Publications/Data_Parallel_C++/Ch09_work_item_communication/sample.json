@@ -51,7 +51,6 @@
             "nmake fig_9_7_local_accessors",
             "nmake fig_9_11_sub_group_barrier",
             "nmake fig_9_9_local_hierarchical",
-            "nmake matrix_multiplication_harness"
           ]
         }
       ]
