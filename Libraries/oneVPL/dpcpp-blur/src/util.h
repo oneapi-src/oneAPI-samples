@@ -285,6 +285,7 @@ void ShowImplementationInfo(mfxLoader loader, mfxU32 implnum) {
       printf("unknown\n");
       break;
   }
+  printf("  DeviceID:             %s \n", idesc->Dev.DeviceID);
   MFXDispReleaseImplDescription(loader, idesc);
 
 #if (MFX_VERSION >= 2004)
