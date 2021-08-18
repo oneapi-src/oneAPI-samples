@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
     // for (int test=0; test<61; test++){
 
       for (size_t i = 0; i < matrices; i++) {
-        cout << "A MATRIX" << std::endl;
+        // cout << "A MATRIX" << std::endl;
         for (size_t row = 0; row < ROWS_COMPONENT; row++) {
           for (size_t col = 0; col < COLS_COMPONENT; col++) {
             int val = rand();
@@ -135,11 +135,11 @@ int main(int argc, char *argv[]) {
             a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] = 
                                                                   random_real;
   #endif
-            cout << a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] 
-                 << " ";
+            // cout << a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] 
+            //      << " ";
             // }
           }
-          cout << std::endl;
+          // cout << std::endl;
         }
       }
 
@@ -181,12 +181,12 @@ int main(int argc, char *argv[]) {
     // We will check at least matrix 0
     to_check.push_back(0);
     // Spot check the last and the middle one
-    // if (matrices > 2) to_check.push_back(matrices / 2);
-    // if (matrices > 1) to_check.push_back(matrices - 1);
+    if (matrices > 2) to_check.push_back(matrices / 2);
+    if (matrices > 1) to_check.push_back(matrices - 1);
 
-    for (int i=0; i<matrices; i++){
-      to_check.push_back(i);
-    }
+    // for (int i=0; i<matrices; i++){
+    //   to_check.push_back(i);
+    // }
 
     cout << "Verifying results on matrix";
 
@@ -367,7 +367,7 @@ int main(int argc, char *argv[]) {
       }
 #else
 
-      cout << "R MATRIX" << std::endl;
+      // cout << "R MATRIX" << std::endl;
       for (size_t i = 0; i < COLS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
           if (j < i)
@@ -376,9 +376,9 @@ int main(int argc, char *argv[]) {
             r_matrix_pp[i][j] = qr_matrix[matrix * kQRMatrixSize + idx];
             idx++;
           }
-          cout << r_matrix_pp[i][j] << " ";
+          // cout << r_matrix_pp[i][j] << " ";
         }
-        cout << std::endl;
+        // cout << std::endl;
       }
       
       // cout << std::endl;
@@ -391,13 +391,13 @@ int main(int argc, char *argv[]) {
         }
       }
 
-      cout << "Q MATRIX" << std::endl;
-      for (size_t i = 0; i < ROWS_COMPONENT; i++) {
-        for (size_t j = 0; j < COLS_COMPONENT; j++) {
-          cout << q_matrix_pp[i][j] << " ";
-        }
-        cout << std::endl;
-      }
+      // cout << "Q MATRIX" << std::endl;
+      // for (size_t i = 0; i < ROWS_COMPONENT; i++) {
+      //   for (size_t j = 0; j < COLS_COMPONENT; j++) {
+      //     cout << q_matrix_pp[i][j] << " ";
+      //   }
+      //   cout << std::endl;
+      // }
 
       constexpr float kErrorThreshold = 1e-4;
       float QOrthoErrorThreshold = pow(2.0, -9);
