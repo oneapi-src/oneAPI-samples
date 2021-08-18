@@ -5,7 +5,7 @@
 add_book_sample(
     TEST
     TARGET fig_9_4_naive_matrix_multiplication
-    SOURCES matrix_multiplication_harness.cpp fig_9_4_naive_matrix_multiplication.cpp)
+    SOURCES matrix_multiplication_harness.cpp fig_9_4.cpp)
 
 add_book_sample(
     TEST
