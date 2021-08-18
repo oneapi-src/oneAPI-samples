@@ -43,9 +43,9 @@
       {
         "steps": [
           "cd ..",
-	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
-          "mkdir build",
-          "cd build",
+	        "rmdir -Recurse -Force build09 >nul 2>nul || echo remove",
+          "mkdir build09",
+          "cd build09",
           "cmake -G \"NMake Makefiles\" ..",
           "nmake fig_9_4_naive_matrix_multiplication",
           "nmake fig_9_7_local_accessors",
