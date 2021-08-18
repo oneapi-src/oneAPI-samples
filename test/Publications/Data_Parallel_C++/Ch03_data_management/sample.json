@@ -51,7 +51,7 @@
             "nmake fig_3_13_read_after_write",
             "nmake fig_3_10_in_order",
             "nmake fig_3_4_usm_explicit_data_movement",
-            "nmake_fig_3_15",
+            "nmake fig_3_15",
             "nmake fig_3_5_usm_implicit_data_movement"
           ]
         }
