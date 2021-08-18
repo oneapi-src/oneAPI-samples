@@ -197,11 +197,11 @@ void *InitAcceleratorHandle(mfxSession session) {
   return NULL;
 }
 
-void FreeAcceleratorHandle(void *accelHandle) {
 #ifdef LIBVA_SUPPORT
+void FreeAcceleratorHandle(void *accelHandle) {
   vaTerminate((VADisplay)accelHandle);
-#endif
 }
+#endif
 
 // Shows implementation info for Media SDK or oneVPL
 mfxVersion ShowImplInfo(mfxSession session) {
@@ -285,6 +285,7 @@ void ShowImplementationInfo(mfxLoader loader, mfxU32 implnum) {
       printf("unknown\n");
       break;
   }
+  printf("  DeviceID:             %s \n", idesc->Dev.DeviceID);
   MFXDispReleaseImplDescription(loader, idesc);
 
 #if (MFX_VERSION >= 2004)
