@@ -34,5 +34,5 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_3_15_write_after_read_and_write_after_write
-    SOURCES fig_3_15_write_after_read_and_write_after_write.cpp)
+    TARGET fig_3_15
+    SOURCES fig_3_15.cpp)
