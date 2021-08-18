@@ -46,7 +46,6 @@
             "mkdir build19",
             "cd build19",
             "cmake -G \"NMake Makefiles\" ..",
-            "nmake fig_19_6_avoid_data_race_with_barrier",
             "nmake fig_19_7_avoid_data_race_with_atomics",
             "nmake fig_19_16_atomic_accessor",
             "nmake fig_19_18_histogram",
