@@ -115,43 +115,6 @@ namespace QRDInternal{
   }
 
   /*
-    A structure that represents a complex number.
-    - xx represents its real value
-    - yy represents its imaginary value
-    Two operators are overloaded (+, *) to help with manipulating this structure.
-  */
-  template <typename T>
-  struct Complex {
-    T xx;
-    T yy;
-
-    Complex(){}
-
-    Complex(T x, T y) {
-      xx = x;
-      yy = y;
-    }
-
-    Complex(T v) {
-      xx = v;
-      yy = v;
-    }
-
-    // Complex addition
-    const Complex operator+(const Complex rhs) const {
-      return Complex(xx + rhs.xx, yy + rhs.yy);
-    }
-
-    // Complex multiplication
-    const Complex operator*(const Complex rhs) const {
-      Complex c;
-      c.xx = xx * rhs.xx + yy * rhs.yy;
-      c.yy = yy * rhs.xx - xx * rhs.yy;
-      return c;
-    }
-  };
-
-  /*
     A structure that hold a column a of matrix of type T.
   */
   template<unsigned rows, typename T>
@@ -186,8 +149,6 @@ namespace QRDInternal{
 
     // TT will be ac_complex<T> or T depending on isComplex
     typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
-    // CTT will be Complex<T> or T depending on isComplex
-    typedef typename std::conditional<isComplex, Complex<T>, T>::type CTT;
 
     // Functional limitations
     static_assert(std::is_same<T, float>::value, 
@@ -345,12 +306,11 @@ namespace QRDInternal{
               // - writes A_store into the output matrix
               [[intel::bankwidth(kBankwidth)]] // NO-FORMAT: Attribute
               [[intel::numbanks(kNumBanksNextPow2)]]   // NO-FORMAT: Attribute
-              column<rows, CTT>  A_load[columns], 
+              column<rows, TT>  A_load[columns], 
                               // A_compute[columns], 
                               A_store[columns];
 
-              row<columns, CTT> A_compute[rows];
-              // CTT A_compute[rows*columns]; 
+              row<columns, TT> A_compute[rows];
 
               /*
                 ================================================================
@@ -364,7 +324,7 @@ namespace QRDInternal{
               for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; 
                                                                         li++) {
                 // Load a single bank of the input matrix 
-                CTT bank[kNumElementsPerBank];
+                TT bank[kNumElementsPerBank];
 
                 bool lastRow = false;
 
@@ -383,16 +343,7 @@ namespace QRDInternal{
                   }
 
                   if(!outOfBounds){
-                    if constexpr(isComplex){
-                      bank[k].xx = A_matrix_accessor[
-                                    loadBankIndex + k].r();
-                      bank[k].yy = A_matrix_accessor[
-                                    loadBankIndex + k].i();
-                    }
-                    else{
-                      bank[k] = A_matrix_accessor[
-                                         loadBankIndex + k];
-                    }
+                      bank[k] = A_matrix_accessor[loadBankIndex + k];
                   }
                 });
 
@@ -419,25 +370,13 @@ namespace QRDInternal{
                     constexpr auto rowIdx = k * kNumElementsPerBank + t;
                     if constexpr (rowIdx < rows){
                       if ((jtmp == k)) {
-                        if constexpr(isComplex){
-                          A_load[liNumBank].d[rowIdx].xx = bank[t].xx;
-                          A_load[liNumBank].d[rowIdx].yy = bank[t].yy;
-                        }
-                        else{
-                          A_load[liNumBank].d[rowIdx] = bank[t];
-                        }
+                        A_load[liNumBank].d[rowIdx] = bank[t];
                       }
                     }
 
                     // Delay data signals to create a vine-based data 
                     // distribution to lower signal fanout.
-                    if constexpr(isComplex){
-                      bank[t].xx = sycl::ext::intel::fpga_reg(bank[t].xx);
-                      bank[t].yy = sycl::ext::intel::fpga_reg(bank[t].yy);
-                    }
-                    else{
-                      bank[t] = sycl::ext::intel::fpga_reg(bank[t]);
-                    }
+                    bank[t] = INTEL::fpga_reg(bank[t]);
                   });
 
                   jtmp = sycl::ext::intel::fpga_reg(jtmp);
@@ -493,17 +432,17 @@ namespace QRDInternal{
 
               // a local copy of a_{i+1} that is used across multiple j 
               // iterations for the computation of pip1 and p
-              CTT a_ip1[rows];
+              TT a_ip1[rows];
               // a local copy of a_ip1 that is used across multiple j iterations 
               // for the computation of a_j
-              CTT a_i[rows];
+              TT a_i[rows];
               // Depending on the context, will contain:
               // -> -s[j]: for all the iterations to compute a_j
               // -> ir: for one iteration per j iterations to compute Q_i
               constexpr int super_dummy_iterations = rawLatency - columns;
               constexpr int increasedBufferSize = super_dummy_iterations < 0 ? 
                                                     0 : super_dummy_iterations; 
-              CTT s_or_i[columns + increasedBufferSize];
+              TT s_or_i[columns + increasedBufferSize];
 
               // Adding increasedBufferSize is a waste of resource because we 
               // are going to read and write only to "columns" different places
@@ -547,11 +486,11 @@ namespace QRDInternal{
 
                 // Temporary storage for a column of the input matrix and for
                 // partial results.
-                CTT col[rows];
+                TT col[rows];
 
                 // Current value of s_or_i depending on the value of j
                 // It is replicated kNumBanks times to reduce fanout
-                CTT sori[kNumBanks];
+                TT sori[kNumBanks];
 
                 // All the control signals are precomputed and replicated
                 // kNumBanks times to reduce fanout
@@ -568,13 +507,7 @@ namespace QRDInternal{
                   i_ge_0_j_ge_i[k] = INTEL::fpga_reg(i >= 0 && j >= i);
                   j_eq_i_plus_1[k] = INTEL::fpga_reg(j == i + 1);
                   int idx = j + increasedBufferSize;
-                  if constexpr(isComplex){
-                    sori[k].xx = INTEL::fpga_reg(s_or_i[idx].xx);
-                    sori[k].yy = INTEL::fpga_reg(s_or_i[idx].yy);
-                  }
-                  else{
-                    sori[k] = INTEL::fpga_reg(s_or_i[idx]);
-                  }
+                  sori[k] = INTEL::fpga_reg(s_or_i[idx]);
                 });
 
                 // Preload col and a_i with the correct data for the current 
@@ -590,46 +523,23 @@ namespace QRDInternal{
                   // for the "working copy" A_compute to contain data.
                   // If no i iteration elapsed, we must read the column of 
                   // matrix a directly from the A_load col then contains a_j
-                  if constexpr(isComplex){
-                    if(i_gt_0[bank]){
-                      // col[k].xx = A_compute[j].d[k].xx;
-                      // col[k].yy = A_compute[j].d[k].yy;
 
-                      // col[k].xx = A_compute[int(j) + k*columns].xx;
-                      // col[k].yy = A_compute[int(j) + k*columns].yy;
-
-                      col[k].xx = A_compute[k].d[j].xx;
-                      col[k].yy = A_compute[k].d[j].yy;
-                    }
-                    else{
-                      col[k].xx = A_load[j].d[k].xx;
-                      col[k].yy = A_load[j].d[k].yy;
-                    }
-                    
-                    // Load a_i for reuse across j iterations
-                    if (j_eq_i[bank]) {
-                      a_i[k].xx = col[k].xx;
-                      a_i[k].yy = col[k].yy;
-                    }
+                  if(i_gt_0[bank]){
+                    // col[k] = A_compute[int(j) + k*columns];
+                    // col[k] = A_compute[j].d[k];
+                    col[k] = A_compute[k].d[j];
                   }
-                  else{
-                    if(i_gt_0[bank]){
-                      // col[k] = A_compute[int(j) + k*columns];
-                      // col[k] = A_compute[j].d[k];
-                      col[k] = A_compute[k].d[j];
-                    }
-                    // Using an else statement makes the compiler throw an
-                    // inexplicable warning:
-                    // "Compiler Warning: Memory instruction with unresolved 
-                    // pointer may lead to bad QoR."
-                    if(!i_gt_0[bank]){
-                      col[k] = A_load[j].d[k];
-                    }
+                  // Using an else statement makes the compiler throw an
+                  // inexplicable warning when using non complex types:
+                  // "Compiler Warning: Memory instruction with unresolved 
+                  // pointer may lead to bad QoR."
+                  if(!i_gt_0[bank]){
+                    col[k] = A_load[j].d[k];
+                  }
 
-                    // Load a_i for reuse across j iterations
-                    if (j_eq_i[bank]) {
-                      a_i[k] = col[k];
-                    }
+                  // Load a_i for reuse across j iterations
+                  if (j_eq_i[bank]) {
+                    a_i[k] = col[k];
                   }
 
                 });
@@ -646,9 +556,14 @@ namespace QRDInternal{
                   //    but the i iteration is still required to fill ir and s 
                   //    for subsequent iterations
                   auto prod_lhs = a_i[k];
-                  auto prod_rhs = i_lt_0[bankIdx] ? CTT(0.0) : sori[bankIdx];
-                  auto add = j_eq_i[bankIdx] ? CTT(0.0) : col[k];
-                  col[k] = prod_lhs * prod_rhs + add;
+                  auto prod_rhs = i_lt_0[bankIdx] ? TT{0.0} : sori[bankIdx];
+                  auto add = j_eq_i[bankIdx] ? TT{0.0} : col[k];
+                  if constexpr(isComplex){
+                    col[k] = prod_lhs * prod_rhs.conj() + add;
+                  }
+                  else{
+                    col[k] = prod_lhs * prod_rhs + add;
+                  }
 
                   // Store Q_i in A_store and the modified a_j in A_compute
                   // To reduce the amount of control, A_store and A_compute
@@ -662,20 +577,7 @@ namespace QRDInternal{
                   // -> overwritten for the matrix Q (A_store)
                   // -> unused for the A_compute
                   if (i_ge_0_j_ge_i[bankIdx]) {
-                    if constexpr(isComplex){
-                      // A_store[j].d[k].xx = A_compute[j].d[k].xx = col[k].xx;
-                      // A_store[j].d[k].yy = A_compute[j].d[k].yy = col[k].yy;
-                      // TODO: Remove A_store?
-                      // A_store[j].d[k].xx = A_compute[int(j) + k*columns].xx = col[k].xx;
-                      // A_store[j].d[k].yy = A_compute[int(j) + k*columns].yy = col[k].yy;  
-                      A_store[j].d[k].xx = A_compute[k].d[j].xx = col[k].xx;
-                      A_store[j].d[k].yy = A_compute[k].d[j].yy = col[k].yy;                      
-                    }
-                    else{
-                      // A_store[j].d[k] = A_compute[j].d[k] = col[k];
-                      // A_store[j].d[k] = A_compute[int(j) + k*columns] = col[k];
-                      A_store[j].d[k] = A_compute[k].d[j] = col[k];
-                    }
+                    A_store[j].d[k] = A_compute[k].d[j] = col[k];
                   }
 
                   // Store a_{i+1} for subsequent iterations of j
@@ -685,16 +587,16 @@ namespace QRDInternal{
                 });
 
                 // Perform the dot product <a_{i+1},a_{i+1}> or <a_{i+1}, a_j>
-                CTT p_ij = CTT(0.0);
+                TT p_ij{0.0};
 
                 UnrolledLoop<rows>([&](auto k) {
-                  p_ij = p_ij + col[k] * a_ip1[k];
+                  p_ij = p_ij + col[k] * a_ip1[k].conj();
                 });
 
                 if (j == i + 1) {
                   if constexpr(isComplex){
-                    pip1 = p_ij.xx;
-                    ir = rsqrt(p_ij.xx);
+                    pip1 = p_ij.r();
+                    ir = rsqrt(p_ij.r());
                   }
                   else{
                     pip1 = p_ij;
@@ -702,9 +604,9 @@ namespace QRDInternal{
                   }
                 }
 
-                CTT s_j;
+                TT s_j;
                 if constexpr(isComplex){
-                  s_j = CTT(0.0f - (p_ij.xx) / pip1, p_ij.yy / pip1);
+                  s_j = TT{0.0f - (p_ij.r()) / pip1, p_ij.i() / pip1};
                 }
                 else{
                   s_j = - p_ij / pip1;
@@ -715,8 +617,8 @@ namespace QRDInternal{
                 if (j >= 0) {
                   int idx = j + increasedBufferSize;
                   if constexpr(isComplex){
-                    s_or_i[idx] = CTT(j == i + 1 ? ir : s_j.xx,
-                                        j == i + 1 ? 0.0f : s_j.yy);
+                    s_or_i[idx] = TT{j == i + 1 ? ir : s_j.r(),
+                                        j == i + 1 ? 0.0f : s_j.i()};
                   }
                   else{
                     s_or_i[idx] = j == i + 1 ? ir : s_j; 
@@ -724,10 +626,10 @@ namespace QRDInternal{
                 }
 
                 // Compute the R_{i+1,i+1} or R_{i+1,j} 
-                CTT r_ip1j;
+                TT r_ip1j;
                 if constexpr(isComplex){
-                  r_ip1j = j == i + 1 ? CTT(sycl::sqrt(pip1), 0.0) : 
-                                                CTT(ir * p_ij.xx, ir * p_ij.yy);
+                  r_ip1j = j == i + 1 ? TT{sycl::sqrt(pip1), 0.0} : 
+                                              TT{ir * p_ij.r(), ir * p_ij.i()};
                 }
                 else{
                   r_ip1j = j == i + 1 ? sycl::sqrt(pip1) : ir * p_ij;
@@ -736,16 +638,9 @@ namespace QRDInternal{
                 // Write the computed R value when j is not a "dummy" iteration
                 // introduced to optimized the triangular loop
                 if (j >= i + 1 && i + 1 < kNValue) {
-                  if constexpr(isComplex){
-                    QR_matrix_accessor_2[qr_idx] = {r_ip1j.xx, r_ip1j.yy};
-                  }
-                  else{
-                    QR_matrix_accessor_2[qr_idx] = r_ip1j;
-                  }
+                  QR_matrix_accessor_2[qr_idx] = r_ip1j;
                   qr_idx++;
                 }
-
-
 
                 // // Update the loop indexes.
                 // if (j == kNValue - 1) {
@@ -759,9 +654,6 @@ namespace QRDInternal{
                 // } else {
                 //   j++;
                 // }
-
-
-
 
                 j = next_j;
                 i = next_i;
@@ -791,23 +683,15 @@ namespace QRDInternal{
                 // Each bank will then check the get table to potentially 
                 // read kNumElementsPerBank from A_store and store the elements
                 // in bank
-                CTT bank[kNumElementsPerBank] = {0};
+                TT bank[kNumElementsPerBank] = {0};
 
                 ac_int<kSiNumBankBitSize, false> siNumBank = si / kNumBanks;
                 UnrolledLoop<kNumBanks>([&](auto t) {
                   UnrolledLoop<kNumElementsPerBank>([&](auto k) {
                     constexpr auto rowIdx = t * kNumElementsPerBank + k;
                     if constexpr(rowIdx < rows){
-                      if constexpr(isComplex){
-                        bank[k].xx = get[t] ? A_store[siNumBank].d[rowIdx].xx : 
-                                                    INTEL::fpga_reg(bank[k].xx);
-                        bank[k].yy = get[t] ? A_store[siNumBank].d[rowIdx].yy : 
-                                                    INTEL::fpga_reg(bank[k].yy);
-                      }
-                      else{
-                        bank[k] = get[t] ? A_store[siNumBank].d[rowIdx] : 
+                      bank[k] = get[t] ? A_store[siNumBank].d[rowIdx] : 
                                                       INTEL::fpga_reg(bank[k]);
-                      }
                     }
                   });
                 });
@@ -827,12 +711,7 @@ namespace QRDInternal{
                   }
 
                   if(!outOfBounds){
-                    if constexpr(isComplex){
-                      QR_matrix_accessor[qr_idx + k] = {bank[k].xx, bank[k].yy};
-                    }
-                    else{
-                      QR_matrix_accessor[qr_idx + k] = bank[k];
-                    }
+                    QR_matrix_accessor[qr_idx + k] = bank[k];
                   }
                 });
 
