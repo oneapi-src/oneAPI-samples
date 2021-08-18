@@ -46,7 +46,6 @@
               "rmdir -Recurse -Force build09 >nul 2>nul || echo remove",
             "mkdir build09",
             "cd build09",
-            "nmake fig_9_4",
             "nmake fig_9_7_local_accessors",
             "nmake fig_9_8",
             "nmake fig_9_13",
