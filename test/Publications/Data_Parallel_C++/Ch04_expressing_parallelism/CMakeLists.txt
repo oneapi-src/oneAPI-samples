@@ -29,5 +29,5 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_4_22_hierarchical_logical_matrix_multiply
-    SOURCES fig_4_22_hierarchical_logical_matrix_multiply.cpp)
+    TARGET fig_4_22
+    SOURCES fig_4_22.cpp)

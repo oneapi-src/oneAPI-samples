@@ -8,13 +8,13 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_19_6_avoid_data_race_with_barrier
-    SOURCES fig_19_6_avoid_data_race_with_barrier.cpp)
+    TARGET fig_19_6
+    SOURCES fig_19_6.cpp)
 
 add_book_sample(
     TEST
-    TARGET fig_19_7_avoid_data_race_with_atomics
-    SOURCES fig_19_7_avoid_data_race_with_atomics.cpp)
+    TARGET fig_19_7
+    SOURCES fig_19_7.cpp)
 
 add_book_sample(
     TEST

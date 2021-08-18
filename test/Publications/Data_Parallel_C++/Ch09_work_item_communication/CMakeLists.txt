@@ -14,8 +14,8 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_9_8_ndrange_tiled_matrix_multiplication
-    SOURCES matrix_multiplication_harness.cpp fig_9_8_ndrange_tiled_matrix_multiplication.cpp)
+    TARGET fig_9_8
+    SOURCES matrix_multiplication_harness.cpp fig_9_8.cpp)
 
 add_book_sample(
     TEST
@@ -24,8 +24,8 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_9_10_hierarchical_tiled_matrix_multiplication
-    SOURCES matrix_multiplication_harness.cpp fig_9_10_hierarchical_tiled_matrix_multiplication.cpp)
+    TARGET fig_9_10
+    SOURCES matrix_multiplication_harness.cpp fig_9_10.cpp)
 
 add_book_sample(
     TEST
@@ -34,9 +34,9 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_9_13_matrix_multiplication_broadcast
-    SOURCES matrix_multiplication_harness.cpp fig_9_13_matrix_multiplication_broadcast.cpp)
+    TARGET fig_9_13
+    SOURCES matrix_multiplication_harness.cpp fig_9_13.cpp)
 
 add_book_sample(
-    TARGET fig_9_14_ndrange_sub_group_matrix_multiplication
-    SOURCES matrix_multiplication_harness.cpp fig_9_14_ndrange_sub_group_matrix_multiplication.cpp)
+    TARGET fig_9_14
+    SOURCES matrix_multiplication_harness.cpp fig_9_14.cpp)
