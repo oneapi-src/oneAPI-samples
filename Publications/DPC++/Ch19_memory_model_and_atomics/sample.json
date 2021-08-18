@@ -42,9 +42,9 @@
       {
         "steps": [
           "cd ..",
-	        "rmdir -Recurse -Force build19 >nul 2>nul || echo remove",
-          "mkdir build19",
-          "cd build19",
+	        "rmdir -Recurse -Force b19 >nul 2>nul || echo remove",
+          "mkdir b19",
+          "cd b19",
           "cmake -G \"NMake Makefiles\" ..",
           "nmake fig_19_6_avoid_data_race_with_barrier",
           "nmake fig_19_7_avoid_data_race_with_atomics",

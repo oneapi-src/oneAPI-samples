@@ -42,9 +42,9 @@
       {
         "steps": [
           "cd ..",
-	        "rmdir -Recurse -Force build03 >nul 2>nul || echo remove",
-          "mkdir build03",
-          "cd build03",
+	        "rmdir -Recurse -Force b3 >nul 2>nul || echo remove",
+          "mkdir b3",
+          "cd b3",
           "cmake -G \"NMake Makefiles\" ..",
           "nmake fig_3_11_depends_on",
           "nmake fig_3_6_buffers_and_accessors",
