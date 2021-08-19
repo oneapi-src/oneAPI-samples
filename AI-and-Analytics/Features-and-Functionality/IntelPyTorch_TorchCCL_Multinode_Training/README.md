@@ -2,7 +2,7 @@
 
 torch-ccl holds PyTorch bindings maintained by Intel for the Intel® oneAPI Collective Communications Library (oneCCL).
 
-oneCCL is a library for efficient distributed deep learning training that implements such collectives like allreduce, allgather, and lltoall. For more information on oneCCL, please refer to the oneCCL documentation.
+oneCCL is a library for efficient distributed deep learning training that implements such collectives like allreduce, allgather, and alltoall. For more information on oneCCL, please refer to the oneCCL documentation.
 
 For comprehensive instructions regarding distributed training with oneCCL in PyTorch, go to the following github repos:
 * [PyTorch and oneCCL](https://github.com/intel/torch-ccl) 
