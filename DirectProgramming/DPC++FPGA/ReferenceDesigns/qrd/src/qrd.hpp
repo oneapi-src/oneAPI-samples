@@ -200,6 +200,8 @@ namespace QRDInternal{
     // by kNumBanks. So we precompute the size of the output.
     constexpr int kLiNumBankBitSize = kLoadIterBitSize - Log2(kNumBanks);
     constexpr int kSiNumBankBitSize = kStoreIterBitSize - Log2(kNumBanks);
+    // Number of bank to store a row of a matrix
+    constexpr int kBanksPerRow = (rows / kNumElementsPerBank) + kExtraIter;
 
     // Number of buffers to allocate to be able to read/compute/store 
     // without overlap.
@@ -296,8 +298,6 @@ namespace QRDInternal{
             // Go over the matrices
             for (int matrixIdx = 0; matrixIdx < matrices; matrixIdx++) {
 
-              // out << "matrixIdx " << matrixIdx << sycl::endl;
-
               // Instantiate 3 versions of the input matrix
               // There are three loops that:
               // - load the input matrix into A_load
@@ -307,10 +307,8 @@ namespace QRDInternal{
               [[intel::bankwidth(kBankwidth)]] // NO-FORMAT: Attribute
               [[intel::numbanks(kNumBanksNextPow2)]]   // NO-FORMAT: Attribute
               column<rows, TT>  A_load[columns], 
-                              // A_compute[columns], 
-                              A_store[columns];
-
-              row<columns, TT> A_compute[rows];
+                                A_compute[columns], 
+                                A_store[columns];
 
               /*
                 ================================================================
@@ -320,22 +318,41 @@ namespace QRDInternal{
               // Get the index of the first bank of the current matrix l
               int loadBankIndex = matrixIdx * kAMatrixSize;
 
+              // Keep track of the column number of A_load we are writing to
+              int load_col_idx = 0;
+
+              // Local memory to keep a full column of the input matrix read
+              // from DDR.
+              // The variable will me used in a systolic fashion to reduce
+              // fanout on the read from DDR.
+              // Each read will write to a single load_bank[index], then each
+              // load_bank[k] will be moved to load_banks[k-1] etc.
+              TT load_banks[kBanksPerRow][kNumElementsPerBank];
+
               [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
               for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; 
                                                                         li++) {
-                // Load a single bank of the input matrix 
+                // Will contain the values loaded from DDR representing
+                // kNumElementsPerBank elements of the input matrix 
                 TT bank[kNumElementsPerBank];
 
+                // We need to keep track of the row number we are reading
+                // to handle cases where the read size from DDR does not match
+                // the matrix size.
                 bool lastRow = false;
 
+                // If the read size from DDR does not match the matrix size.
                 if constexpr(kNonCompleteIter){
+                  // Check if the next read will contain the last row of the 
+                  // column we are reading
                   constexpr int kLoadItersPerColumn = rows/kNumElementsPerBank 
                                                                   + kExtraIter; 
                   lastRow = (li%kLoadItersPerColumn) == kLoadItersPerColumn - 1;
                 }
 
                 UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-
+                  // Don't read beyond the last element of the column in the 
+                  // case the DDR read is not a multiple of the column size
                   bool outOfBounds = false;
                   if constexpr(kNonCompleteIter){
                    outOfBounds = lastRow && 
@@ -343,54 +360,61 @@ namespace QRDInternal{
                   }
 
                   if(!outOfBounds){
-                      bank[k] = A_matrix_accessor[loadBankIndex + k];
+                    bank[k] = A_matrix_accessor[loadBankIndex + k];
                   }
                 });
 
+                // Adjust the bank reading index
                 if constexpr(kNonCompleteIter){
                   int readElements = (rows % kNumElementsPerBank != 0) 
                                                 && lastRow ?
                                                 rows % kNumElementsPerBank :  
                                                 kNumElementsPerBank;
 
-                  // Increase the bank index
                   loadBankIndex += readElements;
                 }
                 else{
                   loadBankIndex += kNumElementsPerBank;
                 }
 
-                // Write the current bank to the A_load matrix.
-                ac_int<BitsForMaxValue<kNumBanks>(), false> jtmp = 
-                                                              li % (kNumBanks);
-                ac_int<kLiNumBankBitSize, false> liNumBank = li / kNumBanks;
+                // Store the bank we just read to the last element of load_banks
+                // while shifting all load_banks banks to a lower index
+                // This has the effect of writing bank to only one location
+                // and after kBanksPerRow iterations, load_banks contains a 
+                // full column
+                UnrolledLoop<kBanksPerRow>([&](auto k) {
+                  if constexpr(k != (kBanksPerRow-1)){
+                    UnrolledLoop<kNumElementsPerBank>([&](auto kk) {
+                      load_banks[k][kk] = load_banks[k+1][kk];
+                    });
+                  } 
+                  else {
+                    UnrolledLoop<kNumElementsPerBank>([&](auto kk) {
+                      load_banks[k][kk] = bank[kk];
+                    });
+                  }
+                });
 
-                UnrolledLoop<kNumBanks>([&](auto k) {
-                  UnrolledLoop<kNumElementsPerBank>([&](auto t) {
-                    constexpr auto rowIdx = k * kNumElementsPerBank + t;
-                    if constexpr (rowIdx < rows){
-                      if ((jtmp == k)) {
-                        A_load[liNumBank].d[rowIdx] = bank[t];
+                // Check if we have a complete column in load_banks
+                // if so, copy it to A_load
+                bool current_col_complete = (li % kNumBanks) == (kNumBanks -1);
+
+                UnrolledLoop<kBanksPerRow>([&](auto k) {
+                  UnrolledLoop<kNumElementsPerBank>([&](auto kk) {
+                    if(current_col_complete){
+                      constexpr int kRowIdx = k*kNumElementsPerBank + kk;
+                      if constexpr(kRowIdx < rows){
+                        A_load[load_col_idx].d[kRowIdx] = load_banks[k][kk];
                       }
                     }
-
-                    // Delay data signals to create a vine-based data 
-                    // distribution to lower signal fanout.
-                    bank[t] = INTEL::fpga_reg(bank[t]);
                   });
-
                   jtmp = sycl::ext::intel::fpga_reg(jtmp);
                 });
+
+                if (current_col_complete){
+                  load_col_idx += 1;
+                }
               }
-
-      // out << "A_load MATRIX" << sycl::endl;
-      // for (size_t i = 0; i < ROWS_COMPONENT; i++) {
-      //   for (size_t j = 0; j < COLS_COMPONENT; j++) {
-      //     out << A_load[j].d[i] << " ";
-      //   }
-      //   out << sycl::endl;
-      // }
-
 
               /*
                 ================================================================
@@ -526,8 +550,8 @@ namespace QRDInternal{
 
                   if(i_gt_0[bank]){
                     // col[k] = A_compute[int(j) + k*columns];
-                    // col[k] = A_compute[j].d[k];
-                    col[k] = A_compute[k].d[j];
+                    col[k] = A_compute[j].d[k];
+                    // col[k] = A_compute[k].d[j];
                   }
                   // Using an else statement makes the compiler throw an
                   // inexplicable warning when using non complex types:
@@ -577,7 +601,8 @@ namespace QRDInternal{
                   // -> overwritten for the matrix Q (A_store)
                   // -> unused for the A_compute
                   if (i_ge_0_j_ge_i[bankIdx]) {
-                    A_store[j].d[k] = A_compute[k].d[j] = col[k];
+                    A_store[j].d[k] = A_compute[j].d[k] = col[k];
+                    // A_store[j].d[k] = A_compute[k].d[j] = col[k];
                   }
 
                   // Store a_{i+1} for subsequent iterations of j
@@ -590,7 +615,12 @@ namespace QRDInternal{
                 TT p_ij{0.0};
 
                 UnrolledLoop<rows>([&](auto k) {
-                  p_ij = p_ij + col[k] * a_ip1[k].conj();
+                  if constexpr(isComplex){
+                    p_ij = p_ij + col[k] * a_ip1[k].conj();
+                  }
+                  else{
+                    p_ij = p_ij + col[k] * a_ip1[k];
+                  }
                 });
 
                 if (j == i + 1) {
@@ -642,19 +672,6 @@ namespace QRDInternal{
                   qr_idx++;
                 }
 
-                // // Update the loop indexes.
-                // if (j == kNValue - 1) {
-                //   // If i reached an index at which the j inner loop don't have
-                //   // enough time to write its result for the next i iteration,
-                //   // some "dummy" iterations are introduced 
-                //   j = (kVariableIterations > i) ? 
-                //                   ac_int<kJBitSize, true>{i + 1} : 
-                //                   ac_int<kJBitSize, true>{kVariableIterations};
-                //   i++;
-                // } else {
-                //   j++;
-                // }
-
                 j = next_j;
                 i = next_i;
 
@@ -665,44 +682,50 @@ namespace QRDInternal{
                 Loop 3: Copy the result from on-chip memory to DDR memory.
                 ================================================================
               */
+              // Similarly to the load iterations from DDR, we will load a 
+              // column from A_store to store_banks and send one bank to DDR.
+              // store_banks is then going to be rotated in a systolic manner
+              // to prepare to the next store to DDR from the same store_banks
+              // index
+              TT store_banks[kBanksPerRow][kNumElementsPerBank];
+              
+              // Keep track of the column number of A_store we are reading from
+              int store_col_idx = 0;
 
               [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
               for (ac_int<kStoreIterBitSize, false> si = 0; si < kStoreIter; 
                                                                         si++) {
-                // Only one bank is going to be stored per si iteration
-                // To reduce fanout on si, a "get" table will contain for each 
-                // bank a boolean to check if it should store this si iteration
-                ac_int<BitsForMaxValue<kNumBanks>(), false> desired = 
-                                                              si % (kNumBanks);
-                bool get[kNumBanks];
-                UnrolledLoop<kNumBanks>([&](auto k) {
-                  get[k] = desired == k;
-                  desired = INTEL::fpga_reg(desired);
-                });
 
-                // Each bank will then check the get table to potentially 
-                // read kNumElementsPerBank from A_store and store the elements
-                // in bank
-                TT bank[kNumElementsPerBank] = {0};
+                // Check if we need to load a new column from A_store to 
+                // store_banks
+                bool need_next_col = (si % kNumBanks) == 0;
 
-                ac_int<kSiNumBankBitSize, false> siNumBank = si / kNumBanks;
-                UnrolledLoop<kNumBanks>([&](auto t) {
-                  UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-                    constexpr auto rowIdx = t * kNumElementsPerBank + k;
-                    if constexpr(rowIdx < rows){
-                      bank[k] = get[t] ? A_store[siNumBank].d[rowIdx] : 
-                                                      INTEL::fpga_reg(bank[k]);
+                // Potentially load a column from A_store to store_banks
+                UnrolledLoop<kBanksPerRow>([&](auto k) {
+                  UnrolledLoop<kNumElementsPerBank>([&](auto kk) {
+                    if(need_next_col){
+                      constexpr int kRowIdx = k*kNumElementsPerBank + kk;
+                      if constexpr(kRowIdx < rows){
+                        store_banks[k][kk] = A_store[store_col_idx].d[kRowIdx];
+                      }
                     }
                   });
                 });
 
+                // Update the A_store column index for the next load
+                if(need_next_col){
+                  store_col_idx += 1;
+                }
+
+                // In the case the size of the matrix column is not a multiple
+                // of the DDR write, we need to make sure we don't write 
+                // meaningless data
                 bool lastRow = false;
                 if constexpr(kNonCompleteIter){
                   lastRow = si % kNumBanks == kNumBanks-1; 
                 } 
 
-                // Finally, the kNumElementsPerBank elements from bank are 
-                // written to the QR_matrix_accessor
+                // One bank (0) from store_banks is written to DDR
                 UnrolledLoop<kNumElementsPerBank>([&](auto k) {
                   bool outOfBounds = false;
                   if constexpr(kNonCompleteIter){
@@ -711,10 +734,11 @@ namespace QRDInternal{
                   }
 
                   if(!outOfBounds){
-                    QR_matrix_accessor[qr_idx + k] = bank[k];
+                    QR_matrix_accessor[qr_idx + k] = store_banks[0][k];
                   }
                 });
 
+                // Update the DDR write index
                 if constexpr(kNonCompleteIter){
                   int wroteElements = lastRow ? rows % kNumElementsPerBank :  
                                                             kNumElementsPerBank;
@@ -722,7 +746,17 @@ namespace QRDInternal{
                 }
                 else{
                   qr_idx += kNumElementsPerBank;
-                }                
+                }
+
+                // Rotate the store_banks so that the next iteration can
+                // transfer store_banks[0] again to DDR
+                UnrolledLoop<kBanksPerRow>([&](auto k) {
+                  if constexpr(k != (kBanksPerRow-1)){
+                    UnrolledLoop<kNumElementsPerBank>([&](auto kk) {
+                      store_banks[k][kk] = store_banks[k+1][kk];
+                    });
+                  } 
+                });
               } // end for si=0:kStoreIter-1
             } // end for matrixIdx=0:matrices-1
           });
