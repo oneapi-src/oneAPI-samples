@@ -91,7 +91,7 @@ Built target run_prog1
 
 Kernel Loading Done
 Platforms Found: 3
-Using Platform: Intel(R) FPGA Emulation Platform for OpenCL(TM)
+Using Platform: Intel® FPGA Emulation Platform for OpenCL™
 Devices Found: 1
 Device: Intel(R) FPGA Emulation Device
 Passed!

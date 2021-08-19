@@ -4,8 +4,8 @@ This sample illustrates how two TBB tasks can execute similar computational kern
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
+| Software                          | Intel® oneAPI DPC++ Compiler
+| What you will learn               | How to offload the computation to GPU using Intel DPC++ Compiler
 | Time to complete                  | 15 minutes
 
 ## Purpose

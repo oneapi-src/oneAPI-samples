@@ -1,16 +1,16 @@
 ﻿# `PyTorch HelloWorld` Sample
-PyTorch* is a very popular framework for deep learning. Intel and Facebook* collaborate to boost PyTorch* CPU Performance for years. The official PyTorch has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives by default. This sample demonstrates how to train a PyTorch model and shows how Intel-optimized PyTorch* enables Intel® DNNL calls by default. 
+PyTorch* is a very popular framework for deep learning. Intel and Facebook* collaborate to boost PyTorch* CPU Performance for years. The official PyTorch has been optimized using Intel® Deep Neural Network Library (Intel® DNNL) primitives by default. This sample demonstrates how to train a PyTorch model and shows how Intel-optimized PyTorch* enables Intel DNNL calls by default. 
 
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Intel® Xeon® Scalable Processor family
 | Software                          | Intel&reg; oneAPI AI Analytics Toolkit
-| What you will learn               | How to get started with Intel Optimization for PyTorch
+| What you will learn               | How to get started with Intel® Optimization for PyTorch*
 | Time to complete                  | 15 minutes
 
 ## Purpose
-This sample code shows how to get started with Intel Optimization for PyTorch. It implements an example neural network with one convolution layer, one normalization layer and one ReLU layer. Developers can quickly build and train a PyTorch* neural network using a simple python code. Also, by controlling the build-in environment variable, the sample attempts to show how Intel® DNNL Primitives are called explicitly and their performance during PyTorch* model training and inference.
+This sample code shows how to get started with Intel Optimization for PyTorch. It implements an example neural network with one convolution layer, one normalization layer and one ReLU layer. Developers can quickly build and train a PyTorch* neural network using a simple python code. Also, by controlling the build-in environment variable, the sample attempts to show how Intel DNNL Primitives are called explicitly and their performance during PyTorch* model training and inference.
 
 Intel-optimized PyTorch* is available as part of Intel® AI Analytics Toolkit. For more information on the optimizations as well as performance data, see this blog post http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance.
 
@@ -48,7 +48,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 3. Activate conda environment Without Root Access (Optional)
 
-    By default, the Intel AI Analytics toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+    By default, the Intel AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
     ```
     conda create --name user_pytorch --clone pytorch

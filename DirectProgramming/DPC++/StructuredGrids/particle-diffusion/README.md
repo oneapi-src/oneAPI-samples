@@ -41,7 +41,7 @@ SYCL implementation explained.
 SYCL implementation is explained in further detail in the source code.
 
 ## How Other Tools (Intel Libraries or Intel Tools) are used
-Intel® Math Kernel Library (MKL) is used for random number generation on the CPU and device. Precise generators are used within this library to ensure that the numbers generated on the CPU and device are relatively equivalent (relative accuracy 10E-07).  
+Intel® Math Kernel Library (Intel® MKL) is used for random number generation on the CPU and device. Precise generators are used within this library to ensure that the numbers generated on the CPU and device are relatively equivalent (relative accuracy 10E-07).  
 
 ## License
 Code samples are licensed under the MIT license. See

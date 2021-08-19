@@ -1,8 +1,8 @@
-﻿# `Intel Extension for PyTorch Getting Started` Sample
+﻿# `Intel® Extension for PyTorch* Getting Started` Sample
 
 torch-ccl holds PyTorch bindings maintained by Intel for the Intel® oneAPI Collective Communications Library (oneCCL).
 
-Intel® oneCCL (collective communications library) is a library for efficient distributed deep learning training that implements such collectives like allreduce, allgather, and alltoall. For more information on oneCCL, please refer to the oneCCL documentation.
+oneCCL is a library for efficient distributed deep learning training that implements such collectives like allreduce, allgather, and lltoall. For more information on oneCCL, please refer to the oneCCL documentation.
 
 For comprehensive instructions regarding distributed training with oneCCL in PyTorch, go to the following github repos:
 * [PyTorch and oneCCL](https://github.com/intel/torch-ccl) 
@@ -12,7 +12,7 @@ For comprehensive instructions regarding distributed training with oneCCL in PyT
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel Extension for PyTorch;
+| Software                          | Intel Extension for PyTorch*;
 | What you will learn               | How to perform distributed training with oneCCL in PyTorch
 | Time to complete                  | 60 minutes
 

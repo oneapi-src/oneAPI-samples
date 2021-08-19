@@ -1,4 +1,4 @@
-# Intel DPC++ Compatibility Tool: Foo Bar Example
+# IntelV DPC++ Compatibility Tool: Foo Bar Example
 
 ## Use the Command Line to Migrate Large Code Bases
 
@@ -10,7 +10,7 @@ migrate more complex projects and use options.
 | Optimized for         | Description
 |:---                   |:---
 | OS                    | Linux* Ubuntu* 18.04; Windows 10
-| Software              | Intel® DPC++ Compatibility Tool;
+| Software              | Intel DPC++ Compatibility Tool;
 | What you will learn   | Simple invocation of dpct to migrate CUDA code
 | Time to complete      | 10 minutes
 

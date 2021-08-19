@@ -21,7 +21,7 @@ The sample first generates a portfolio within given constraints using a uniform 
 Examples of both host-based APIs and device-based APIs for random number generation are provided.
 
 Then, the Black-Scholes formula is used in two distinct implementations:
-    * scalar kernel containing SYCL scalar functions, which will be parallelized by the DPC++ compiler
+    * scalar kernel containing SYCL scalar functions, which will be parallelized by the Intel onePAI DPC++ compiler
     * vector-based implementation, which uses oneMKL vector math functionality in sequential calls to evaluate the transcendental functions used in the formula.
 
 This sample performs its computations on the default DPC++ device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
