@@ -2,11 +2,19 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <iostream>
-#include <CL/sycl.hpp>
+// -------------------------------------------------------
+// Changed from Book:
+// dpstd:: is now
+//   oneapi::dpl::
+// dpstd::execution::default_policy is now
+//   oneapi::dpl::execution::dpcpp_default
+// -------------------------------------------------------
+
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/iterator>
+#include <iostream>
+#include <CL/sycl.hpp>
 
 using namespace sycl;
 
@@ -27,17 +35,17 @@ int main()
     }
 
     // create dpc++ iterators
-    auto k_beg = dpstd::begin(kB);
-    auto k_end = dpstd::end(kB);
-    auto v_beg = dpstd::begin(vB);
-    auto v_end = dpstd::end(vB);
-    auto r_beg = dpstd::begin(rB);
+    auto k_beg = oneapi::dpl::begin(kB);
+    auto k_end = oneapi::dpl::end(kB);
+    auto v_beg = oneapi::dpl::begin(vB);
+    auto v_end = oneapi::dpl::end(vB);
+    auto r_beg = oneapi::dpl::begin(rB);
 
     // create named policy from existing one
-    auto policy = dpstd::execution::make_device_policy<class bSearch>(dpstd::execution::default_policy);
+    auto policy = oneapi::dpl::execution::make_device_policy<class bSearch>(oneapi::dpl::execution::dpcpp_default);
 
     // call algorithm
-    dpstd::binary_search(policy, k_beg, k_end, v_beg, v_end, r_beg);
+    oneapi::dpl::binary_search(policy, k_beg, k_end, v_beg, v_end, r_beg);
 
     // check data
     accessor r{rB};

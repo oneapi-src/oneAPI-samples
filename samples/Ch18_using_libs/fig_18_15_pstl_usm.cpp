@@ -2,9 +2,14 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+// -------------------------------------------------------
+// Changed from Book:
+// old naming dpstd:: is now oneapi::dpl::
+// -------------------------------------------------------
+
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/algorithm>
+#include <CL/sycl.hpp>
 
 int main(){
   sycl::queue Q;
@@ -13,7 +18,7 @@ int main(){
                          alloc(Q.get_context(), Q.get_device());
   std::vector<int, decltype(alloc)> vec(n, alloc);
 
-  std::fill(dpstd::execution::make_device_policy(Q), 
+  std::fill(oneapi::dpl::execution::make_device_policy(Q), 
                               vec.begin(), vec.end(), 78);
   Q.wait();
 

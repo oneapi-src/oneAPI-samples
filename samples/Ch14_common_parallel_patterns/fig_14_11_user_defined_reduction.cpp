@@ -2,12 +2,18 @@
 
 // SPDX-License-Identifier: MIT
 
+// -------------------------------------------------------
+// Changed from Book:
+//   dropped 'using namespace sycl::ONEAPI'
+//   this allows reduction to use the sycl::reduction,
+//   added sycl::ONEAPI:: to minimum.
+// -------------------------------------------------------
+
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <random>
 
 using namespace sycl;
-using namespace sycl::ONEAPI;
 
 template <typename T, typename I>
 struct pair {
@@ -19,7 +25,7 @@ struct pair {
 };
 
 template <typename T, typename I>
-using minloc = minimum<pair<T, I>>;
+using minloc = sycl::ONEAPI::minimum<pair<T, I>>;
 
 int main() {
   constexpr size_t N = 16;
@@ -34,7 +40,7 @@ int main() {
       std::numeric_limits<float>::max(), std::numeric_limits<int>::min()};
   *res = identity;
 
-  auto red = reduction(res, identity, minloc<float, int>());
+  auto red = sycl::reduction(res, identity, minloc<float, int>());
 
   Q.submit([&](handler& h) {
      h.parallel_for(nd_range<1>{N, L}, red, [=](nd_item<1> item, auto& res) {

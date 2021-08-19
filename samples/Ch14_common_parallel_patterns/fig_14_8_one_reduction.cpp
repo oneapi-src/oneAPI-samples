@@ -2,12 +2,18 @@
 
 // SPDX-License-Identifier: MIT
 
+// -------------------------------------------------------
+// Changed from Book:
+//   dropped 'using namespace sycl::ONEAPI'
+//   this allows reduction to use the sycl::reduction,
+//   added sycl::ONEAPI:: to plus
+// -------------------------------------------------------
+
 #include <CL/sycl.hpp>
 #include <iostream>
 #include <numeric>
 
 using namespace sycl;
-using namespace sycl::ONEAPI;
 
 int main() {
 
@@ -24,7 +30,7 @@ int main() {
 // BEGIN CODE SNIP
      h.parallel_for(
          nd_range<1>{N, B},
-         reduction(sum, plus<>()),
+         reduction(sum, sycl::ONEAPI::plus<>()),
          [=](nd_item<1> it, auto& sum) {
            int i = it.get_global_id(0);
            sum += data[i];
