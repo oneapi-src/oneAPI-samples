@@ -57,6 +57,7 @@ To build the samples:
     cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=../dpcpp_toolchain.cmake ..
     ```
 
+    NOTE: If you do not have Ninja installed, you can use another Makefile generator such as 'Unix Makefiles'.
     NOTE: If you do not have oneDPL installed, you can disable compilation of those tests with the option `NODPL`
 
     ```sh
