@@ -4,8 +4,8 @@
 
 add_book_sample(
     TEST
-    TARGET fig_9_4_naive_matrix_multiplication
-    SOURCES matrix_multiplication_harness.cpp fig_9_4_naive_matrix_multiplication.cpp)
+    TARGET fig_9_4_naive_matmul
+    SOURCES matmul_harness.cpp fig_9_4_naive_matmul.cpp)
 
 add_book_sample(
     TEST
@@ -14,18 +14,18 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_9_8_ndrange_tiled_matrix_multiplication
-    SOURCES matrix_multiplication_harness.cpp fig_9_8_ndrange_tiled_matrix_multiplication.cpp)
+    TARGET fig_9_8_ndrange_tiled_matmul
+    SOURCES matmul_harness.cpp fig_9_8_ndrange_tiled_matmul.cpp)
 
 add_book_sample(
     TEST
-    TARGET fig_9_9_local_hierarchical
-    SOURCES fig_9_9_local_hierarchical.cpp)
+    TARGET fig_9_9_local_hier
+    SOURCES fig_9_9_local_hier.cpp)
 
 add_book_sample(
     TEST
-    TARGET fig_9_10_hierarchical_tiled_matrix_multiplication
-    SOURCES matrix_multiplication_harness.cpp fig_9_10_hierarchical_tiled_matrix_multiplication.cpp)
+    TARGET fig_9_10_hier_tiled_matmul
+    SOURCES matmul_harness.cpp fig_9_10_hier_tiled_matmul.cpp)
 
 add_book_sample(
     TEST
@@ -34,9 +34,9 @@ add_book_sample(
 
 add_book_sample(
     TEST
-    TARGET fig_9_13_matrix_multiplication_broadcast
-    SOURCES matrix_multiplication_harness.cpp fig_9_13_matrix_multiplication_broadcast.cpp)
+    TARGET fig_9_13_matmul_broadcast
+    SOURCES matmul_harness.cpp fig_9_13_matmul_broadcast.cpp)
 
 add_book_sample(
-    TARGET fig_9_14_ndrange_sub_group_matrix_multiplication
-    SOURCES matrix_multiplication_harness.cpp fig_9_14_ndrange_sub_group_matrix_multiplication.cpp)
+    TARGET fig_9_14_ndrange_sub_group_matmul
+    SOURCES matmul_harness.cpp fig_9_14_ndrange_sub_group_matmul.cpp)
