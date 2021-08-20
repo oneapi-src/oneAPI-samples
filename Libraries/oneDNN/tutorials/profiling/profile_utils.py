@@ -81,13 +81,11 @@ class oneDNNLog:
         self.with_timestamp = True
         data = self.load_log_dnnl_timestamp(log)
         count = data['time'].count()
-        print("1. count : ", count)
+
         if count <= 1:
             data = self.load_log_dnnl(log)
             count = data['time'].count()
             self.with_timestamp = False
-
-        print("2. count : ", count)
 
         if count == 0:
             data = self.load_log_mkldnn(log)
