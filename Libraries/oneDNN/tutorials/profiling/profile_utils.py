@@ -3,7 +3,9 @@ import os, sys
 import subprocess
 
 os.environ['DNNL_VERBOSE'] = '1'
+os.environ['DNNL_VERBOSE_TIMESTAMP'] = '1'
 import psutil
+from pytracing import TraceProfiler
 
 class PlatformUtils:
 
@@ -71,27 +73,60 @@ class oneDNNLog:
         self.filename = ''
         self.data = None
         self.exec_data = None
+        self.with_timestamp = True
         return
 
     def load_log(self, log):
         self.filename = log
-
-        data = self.load_log_dnnl(log)
+        self.with_timestamp = True
+        data = self.load_log_dnnl_timestamp(log)
         count = data['time'].count()
+        print("1. count : ", count)
+        if count <= 1:
+            data = self.load_log_dnnl(log)
+            count = data['time'].count()
+            self.with_timestamp = False
+
+        print("2. count : ", count)
 
         if count == 0:
             data = self.load_log_mkldnn(log)
             count = data['time'].count()
+            self.with_timestamp = False
 
         exec_data = data[data['exec'] == 'exec']
         self.data = data
         self.exec_data = exec_data
+
+        if self.with_timestamp is True:
+            import io
+            with io.open('./oneDNN.json', mode='wb') as fh:
+                tp = TraceProfiler(output=fh)
+                tp.install()
+                for index, row in self.data.iterrows():
+                    if row["time"] != None and row["time"].find('.') != -1:
+                        tp.fire_event(
+                            event_type='exec',
+                            event_name=row["type"],
+                            event_cat='DNNL_Op',
+                            kernel_name=row["jit"],
+                            timestamp=str(float(row["timestamp"])*1000),
+                            duration=str(float(row["time"])*1000),
+                            pass_type=row["pass"],
+                        )
+                tp.shutdown()
         return
 
     def load_log_dnnl(self, log):
         import pandas as pd
         # dnnl_verbose,exec,cpu,convolution,jit:avx2,forward_inference,src_f32::blocked:abcd:f0 wei_f32::blocked:Acdb8a:f0 bia_f32::blocked:a:f0 dst_f32::blocked:aBcd8b:f0,,alg:convolution_direct,mb1_ic3oc96_ih227oh55kh11sh4dh0ph0_iw227ow55kw11sw4dw0pw0,1.21704
         data = pd.read_csv(log, names=[ 'dnnl_verbose','exec','arch','type', 'jit', 'pass', 'fmt', 'opt', 'alg', 'shape', 'time', 'dummy'], engine='python')
+        return data
+
+    def load_log_dnnl_timestamp(self, log):
+        import pandas as pd
+        # dnnl_verbose,629411020589.218018,exec,cpu,convolution,jit:avx2,forward_inference,src_f32::blocked:abcd:f0 wei_f32::blocked:Acdb8a:f0 bia_f32::blocked:a:f0 dst_f32::blocked:aBcd8b:f0,,alg:convolution_direct,mb1_ic3oc96_ih227oh55kh11sh4dh0ph0_iw227ow55kw11sw4dw0pw0,1.21704
+        data = pd.read_csv(log, names=[ 'dnnl_verbose','timestamp','exec','arch','type', 'jit', 'pass', 'fmt', 'opt', 'alg', 'shape', 'time', 'dummy'], engine='python')
         return data
 
     def load_log_mkldnn(self, log):
