@@ -2,6 +2,11 @@ The following are known errors in the book Data Parallel C++: Mastering DPC++ fo
 Programming of Heterogeneous Systems using C++ and SYCL by James Reinders, Ben Ashbaugh,
 James Brodman, Michael Kinsner, John Pennycook, Xinmin Tian (Apress, 2020).
 
+p.106 - Fig 4-11 - Comment in code:
+// Return the offset of this item (if with_offset == true)
+should read:
+// Return the offset of this item (if WithOffset == true)
+
 p.183 - Fig. 7-6 - In the first column, there should be no capitalization,
                    therefore "Write" should be "write"
                    and "read_Write" should be "read_write"
@@ -15,6 +20,32 @@ p.284 - The line "if (dev.is_host()) score += 100;" will need
 
 p.421 - Fig 17-1 - The text at the top should be “ISA-based” instead of “SA-based”
 
+
+
+Some code changes have been needed to keep up with tool updates, and notably final SYCL 2020.
+The code affected has been updated in this github.  The affected code is as follows:
+
+fig_14_8_one_reduction.cpp:
+	dropped 'using namespace sycl::ONEAPI'
+	  this allows reduction to use the sycl::reduction,
+	added sycl::ONEAPI:: to plus
+
+fig_14_11_user_defined_reduction.cpp:
+	dropped 'using namespace sycl::ONEAPI'
+	  this allows reduction to use the sycl::reduction,
+	added sycl::ONEAPI:: to minimum.
+
+fig_18_11_std_fill.cpp:
+	old naming dpstd:: is now oneapi::dpl::
+
+fig_18_13_binary_search.cpp:
+	dpstd:: is now
+	  oneapi::dpl::
+	dpstd::execution::default_policy is now
+	  oneapi::dpl::execution::dpcpp_default
+
+fig_18_15_pstl_usm.cpp:
+	old naming dpstd:: is now oneapi::dpl::
 
 SYCL 2020 was finalized after the book went to press.  The largest
 change, which was not anticipated in the book, was the dropping of the
