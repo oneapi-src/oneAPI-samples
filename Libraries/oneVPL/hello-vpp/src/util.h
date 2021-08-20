@@ -32,7 +32,6 @@ enum {
 
 #ifdef __linux__
 #include <fcntl.h>
-#include <unistd.h>
 #endif
 
 #ifdef LIBVA_SUPPORT
@@ -40,6 +39,15 @@ enum {
 #include "va/va_drm.h"
 #endif
 
+#if defined(_WIN32) || defined(_WIN64)
+    #include <windows.h>
+    #define sleep(msec) Sleep(msec)
+#else
+    #include <unistd.h>
+    #define sleep(msec) usleep(1000 * msec)
+#endif
+
+#define WAIT_5_MILLISECONDS 5
 #define WAIT_100_MILLISECONDS 100
 #define MAX_PATH 260
 #define MAX_WIDTH 3840
