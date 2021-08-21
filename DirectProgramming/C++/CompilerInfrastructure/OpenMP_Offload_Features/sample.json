@@ -1,12 +1,12 @@
 {
   "guid": "DBE51810-C64F-45F0-87EF-38898BE1D826",
-  "name": "OpenMP Offload Feature Samples",
-  "categories": [ "Toolkit/DirectProgramming/C++/CompilerInfrastructure/OpenMP_Offload_Features" ],
-  "description": "Samples showing new OpenMP Offload features supported",
+  "name": "OpenMP Offload",
+  "categories": [ "Toolkit/oneAPI Direct Programming/C++/Compiler Infrastructure" ],
+  "description": "Demonstration of the new OpenMP offload features supported by the Intel(r) oneAPI DPC++/C++ Compiler",
   "toolchain": [ "dpcpp" ],
-  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "languages": [{"cpp":{}}],
   "os": [ "linux" ],
-  "builder": [ "ide", "make" ],
+  "builder": [ "cmake" ],
   "targetDevice": [ "CPU", "GPU" ],
   "ciTests": {
     "linux": [
