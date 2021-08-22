@@ -60,10 +60,10 @@ Notebook Name: Owner
 * __Offload Advisor__ Tool usage and command-line options
 * __Roofline Analysis__ and command-line options
 
-[Intel®_VTune™_Profiler](06_Intel_VTune_Profiler): Rakshith.Krishnappa@intel.com
+[Intel_VTune_Profiler](06_Intel_VTune_Profiler): Rakshith.Krishnappa@intel.com
 * Intel VTune Profiler usage __in Intel DevCloud__ environment using command-line options
 * _Lab Excercise_: VTune Profiling by collecting __gpu_hotspots__ for [iso3dfd](https://github.com/intel/HPCKit-code-samples/tree/master/Compiler/iso3dfd_dpcpp) sample application
 
 [Intel oneAPI DPC++ Library (oneDPL)](07_DPCPP_Library): Praveen.K.Kundurthy@intel.com
-* Introduction to oneAPI DPC++ Library
+* Introduction to DPC++ Library
 * _Lab Excercise_: Gamma Correction with oneDPL

@@ -14,7 +14,7 @@ Gamma correction is a nonlinear operation used to encode and decode the luminanc
 Gamma correction uses nonlinear operations to encode and decode the luminance of each pixel of an image. See https://en.wikipedia.org/wiki/Gamma_correction for more information.
 It does so by creating a fractal image in memory and performs gamma correction on it with `gamma=2`.
 A device policy is created and passed to the `std::for_each` Parallel STL algorithm.
-This example demonstrates how to use Parallel STL algorithms, Parallel STL is a component of Intel&reg; oneAPI DPC++ Library (oneDPL).
+This example demonstrates how to use Parallel STL algorithms, Parallel STL is a component of Intel&reg; oneAPI DPC++ library (oneDPL).
 
 Parallel STL is an implementation of the C++ standard library algorithms with support for execution policies, as specified in ISO/IEC 14882:2017 standard, commonly called C++17. The implementation also supports the unsequenced execution policy specified in the final draft for the C++ 20 standard (N4860).
 

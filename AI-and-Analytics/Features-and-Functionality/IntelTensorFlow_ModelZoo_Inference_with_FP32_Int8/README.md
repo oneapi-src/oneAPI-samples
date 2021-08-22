@@ -9,7 +9,7 @@ This code example provides a sample code to run ResNet50 inference on Intel's pr
 ***DISCLAIMER: These scripts are not intended for benchmarking Intel platforms.
 For any performance and/or benchmarking information on specific Intel platforms, visit [https://www.intel.ai/blog](https://www.intel.ai/blog).***
 ## Key implementation details
-The example uses Intel's pretrained model published as part of [Intel Model Zoo](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow and Intel® Math Kernel Library (Intel® MKL) run time settings to maximize CPU performance on ResNet50 workload.
+The example uses Intel's pretrained model published as part of [Intel Model Zoo](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow and MKL run time settings to maximize CPU performance on ResNet50 workload.
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -22,7 +22,7 @@ If you are running this sample on the DevCloud, skip the Pre-requirements and go
 
 ## Pre-requirements (Local or Remote Host Installation)
 
-TensorFlow* is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
+TensorFlow* is ready for use once you finish the Intel AI Analytics Toolkit installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Intel&reg; oneAPI AI Analytics Toolkit Get Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -54,7 +54,7 @@ conda activate user_tensorflow
 ## Navigate to Intel Model Zoo
 
 Navigate to the Intel Model Zoo source directory. It's located in your oneapi installation path, typically `/opt/intel/oneapi/modelzoo`.
-You can view the available Model Zoo release versions for the Intel AI Analytics Toolkit:
+You can view the available Model Zoo release versions for the Intel AI Analytics toolkit:
 ```
 ls /opt/intel/oneapi/modelzoo
 1.8.0  latest

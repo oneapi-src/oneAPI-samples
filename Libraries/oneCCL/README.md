@@ -1,6 +1,6 @@
 # Intel oneAPI Collective Communications Library (oneCCL)
 
-oneCCL is a library providing an efficient implementation of communication patterns usedin deep learning.
+Collective Communication Library is a library providing an efficient implementation of communication patterns usedin deep learning.
 
 Github : https://github.com/oneapi-src/oneCCL
 

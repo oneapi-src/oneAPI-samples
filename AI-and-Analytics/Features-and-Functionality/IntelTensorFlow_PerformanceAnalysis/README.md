@@ -12,7 +12,7 @@ This sample contains two Jupyter notebooks from Intel Model Zoo to help users an
 ## Purpose
 [Intel Model Zoo](https://github.com/IntelAI/models) contains links to pre-trained models, sample scripts, best practices, and step-by-step tutorials for many popular open-source machine learning models optimized by Intel to run on Intel® Xeon® Scalable processors.
 
-This sample helps demonstrate AI workloads and deep learning models optimized by Intel and validated to run on Intel hardware. Using the Tensorflow Timeline, you can analyze the performance benefits from Intel Optimizations for Tensorflow* and oneAPI Deep Neural Network Library (oneDNN) among different layers to efficiently execute, train, and deploy Intel-optimized models
+This sample helps demonstrate AI workloads and deep learning models optimized by Intel and validated to run on Intel hardware. Using the Tensorflow Timeline, you can analyze the performance benefits from Intel Optimizations for Tensorflow* and oneDNN among different layers to efficiently execute, train, and deploy Intel-optimized models
 
 
 ## Key implementation details

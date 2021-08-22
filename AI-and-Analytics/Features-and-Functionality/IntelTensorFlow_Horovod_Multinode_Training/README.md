@@ -44,7 +44,7 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 
 ### Sourcing the oneAPI AI Analytics Toolkit environment variables
 
-By default, the Intel AI Analytics Toolkit is installed in the `/opt/intel/oneapi` folder. The toolkit may be loaded by sourcing the `setvars.sh` script on a Linux shell. Notice the flag `--ccl-configuration=cpu_icc`. By default, the `ccl-configuration` is set to `cpu_gpu_dpcpp`. However, since we are distributing our TensorFlow workload on multiple CPU nodes, we are configuring the Horovod installation to use CPUs. 
+By default, the Intel AI Analytics toolkit is installed in the `/opt/intel/oneapi` folder. The toolkit may be loaded by sourcing the `setvars.sh` script on a Linux shell. Notice the flag `--ccl-configuration=cpu_icc`. By default, the `ccl-configuration` is set to `cpu_gpu_dpcpp`. However, since we are distributing our TensorFlow workload on multiple CPU nodes, we are configuring the Horovod installation to use CPUs. 
 
 ```
 source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_icc

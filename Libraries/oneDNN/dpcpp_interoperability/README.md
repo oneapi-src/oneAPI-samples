@@ -1,6 +1,8 @@
 # `oneDNN DPC++ Interoperability`Sample
 
-This C++ API example demonstrates programming for Intel&reg; Processor Graphics with SYCL extensions API in oneAPI Deep Neural Network Library (oneDNN). Users will know how to access SYCL buffer and queue via oneDNN SYCL interoperability interfaces, and this interface also helps users to execute a custom SYCL kernel with an oneDNN library.
+This C++ API example demonstrates programming for Intel&reg; Processor Graphics with SYCL extensions API in oneDNN. 
+Users will know how to access SYCL buffer and queue via oneDNN SYCL interoperability interfaces,  
+and this interface also helps users to execute a custom SYCL kernel with an oneDNN library.
 
 | Optimized for                      | Description
 | :---                               | :---

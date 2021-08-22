@@ -5,8 +5,8 @@ This sample illustrates how the computational kernel can be split for execution 
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel® oneAPI DPC++ Compiler
-| What you will learn               | How to offload the computation to GPU using Intel DPC++ Compiler
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
+| What you will learn               | How to offload the computation to GPU using Intel DPC++ compiler
 | Time to complete                  | 15 minutes
 
 ## Purpose
