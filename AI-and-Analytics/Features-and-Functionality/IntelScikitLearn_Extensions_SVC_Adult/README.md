@@ -45,10 +45,10 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
 
 ### Running the Sample as a Jupyter Notebook
 
-1. Launch Jupyter notebook: `$jupyter notebook --ip=0.0.0.0`
-2. Follow the instructions to open the URL with the token in your browser
-3. Click the `IntelScikitLearn_Extensions_SVC_Adult.ipynb` file
-4. Run through every cell of the notebook one by one
+1. Launch Jupyter notebook: `jupyter notebook --ip=0.0.0.0`
+2. Follow the instructions to open the URL with the token in your browser.
+3. Click the `IntelScikitLearn_Extensions_SVC_Adult.ipynb` file.
+4. Run each cell of the notebook one by one.
 
 ### Running the Sample as a Python File
 
