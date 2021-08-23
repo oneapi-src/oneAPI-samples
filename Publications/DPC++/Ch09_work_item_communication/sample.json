@@ -47,14 +47,14 @@
           "mkdir b9",
           "cd b9",
           "cmake -G \"NMake Makefiles\" ..",
-          "nmake fig_9_4_naive_matrix_mult",
+          "nmake fig_9_4_naive_matmul",
           "nmake fig_9_7_local_accessors",
-          "nmake fig_9_8_ndrange_tiled_matrix_mult",
-          "nmake fig_9_13_matrix_multiplication_broadcast",
-          "nmake fig_9_10_hierarchical_tiled_matrix_mult",
+          "nmake fig_9_8_ndrange_tiled_matmul",
+          "nmake fig_9_13_matmul_broadcast",
+          "nmake fig_9_10_hier_tiled_matmul",
           "nmake fig_9_11_sub_group_barrier",
-          "nmake fig_9_14_ndrange_sub_group_matrix_mult",
-          "nmake fig_9_9_local_hierarchical"
+          "nmake fig_9_14_ndrange_sub_group_matmul",
+          "nmake fig_9_9_local_hier"
         ]
       }
     ]
