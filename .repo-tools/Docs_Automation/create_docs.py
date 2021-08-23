@@ -144,7 +144,6 @@ def createReadme():
 checkFileExists(fDeviceTargets)     #Cleaning up from previous run
 checkFileExists(fChangeLogs)        #Cleaning up from previous run
 checkFileExists(freadme)            #Cleaning up from previous run
-print(absolute_path + " Length: " + str(pathLength) + "\n")
 dataContent = readContent()         #read json for data used in creating document header and footers
 createHeaders(dataContent)          #create headers for the various documents being generated
 
