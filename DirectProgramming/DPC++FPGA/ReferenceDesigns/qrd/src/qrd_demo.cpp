@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
 
     // }
 
-    Accelerator warmup
+    // Accelerator warmup
 #if COMPLEX == 1
     ComplexFloatQRDecomposition(a_matrix, qr_matrix, q, 1, 1); 
 #else
