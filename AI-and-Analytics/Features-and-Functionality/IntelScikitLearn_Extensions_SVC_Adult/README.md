@@ -16,7 +16,7 @@ Intel® Extension for Scikit-learn is a seamless way to speed up your Scikit-lea
 In this sample, you will run a SVC algorithm with Intel® Extension for Scikit-learn. You will see a significant increase in performance over the original Scikit-learn while maintaining the same precision.
   
 ## Key Implementation Details 
-This sample code is implemented for CPU using the Python language. The example assumes you have Intel® Extension for Scikit-learn installed.
+The sample code is written in Python and it targets CPU architecture. The example assumes you have Intel® Extension for Scikit-learn installed.
 
 ## License  
 Code samples are licensed under the MIT license. See
