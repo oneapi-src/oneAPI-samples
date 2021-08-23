@@ -70,7 +70,7 @@ Classification report for SVC:
 weighted avg       0.82      0.82      0.82      9769
 
 
-Original Scikit-learn time: 1019.58 s
+Execution time with the original Scikit-learn: 1019.58 s
 Classification report for SVC trained with the original scikit-learn:
               precision    recall  f1-score   support
 
