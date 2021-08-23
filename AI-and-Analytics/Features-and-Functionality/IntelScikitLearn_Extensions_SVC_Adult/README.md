@@ -39,8 +39,8 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
        and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
  2. **Jupyter Notebook**
-       Users can install via PIP by `$pip install notebook`.
-       Users can also refer to the [installation link](https://jupyter.org/install) for details.
+       Install Jupyter Notebook via pip: `pip install notebook`.
+       Refer to [Installing the Jupyter Software](https://jupyter.org/install) for details.
 
 
 ### Running the Sample as a Jupyter Notebook
