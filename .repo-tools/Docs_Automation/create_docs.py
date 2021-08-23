@@ -82,15 +82,17 @@ def createChangeLog(count): #sorted but does not include version
     temp = dict_main.items()
     sorted_items = sorted(temp, key=lambda key_value: key_value[1]["name"], reverse=False) # sorts by name
     sorted_by_name = OrderedDict(sorted_items)
-    temp=sorted_by_name.items()
+
+    temp=dict_version.items()
     sorted_items = sorted(temp, key=lambda key_value: key_value[1]["ver"], reverse=True) # sorts by ver
-    sorted_by_name = OrderedDict(sorted_items)
+    sorted_by_ver = OrderedDict(sorted_items)
+
     nf = open(fChangeLogs,"a+")
     nf.write(str(count) + dataContent['mdChangeLogHeaderp2'])
     for key in sorted_by_name.keys():
         description= str(sorted_by_name[key]['description']) 
         url= sorted_by_name[key]['url']
-        ver=sorted_by_name[key]['ver']
+        ver=sorted_by_ver[key]['ver']
         name=sorted_by_name[key]['name']
         cat=str(sorted_by_name[key]['categories'])
 

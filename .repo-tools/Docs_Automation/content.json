@@ -19,7 +19,7 @@
   "mdIntro5.3":"- If you encounter a compilation error when building a sample program, such as the example error below, the directory path of the sample may be too long. The workaround is to move the sample to a temp directory.",
   "mdIntro5.4":"- Example error: *Error MSB6003 The specified task executable dpcpp.exe could not be run .......",
   "mdIntro6":"See [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) for more information.",
-  "mdIntro7":"\n\n## New Code Samples\n\n|Code Sample    |Supported Intel&reg;   Architecture(s)|Description|\n |-----------------------|-------------------------------------------|---------------|\n",
+  "mdIntro7":"\n\n## New Code Samples\n\n|Version Introduced   |Sample Name|Description|\n |-----------------------|-------------------------------------------|---------------|\n",
   
   "mdDeviceTargetIntrop1": "## oneAPI Code Samples\n\n",
   "mdDeviceTargetIntrop2":  "|Code Sample Name|Supported Intel&reg; Architecture(s)|Description|\n|-----------------------|----------------------|---------------------|\n",

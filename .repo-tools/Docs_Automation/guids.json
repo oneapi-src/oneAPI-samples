@@ -923,5 +923,15 @@
         "guid": "dc8c1c92-1c2a-4edf-abbd-6c35dfab256a",
         "ver": "2021.4.0",
         "name": "VisualComputing tutorial"
+    },
+    "748eb906-309f-469b-95c9-5258006c7587": {
+        "guid": "748eb906-309f-469b-95c9-5258006c7587",
+        "ver": "2021.4.0",
+        "name": "CRR"
+    },
+    "ECF6C8EB-753B-4107-AF64-60662CE41726": {
+        "guid": "ECF6C8EB-753B-4107-AF64-60662CE41726",
+        "ver": "2021.1.Gold",
+        "name": "DPC Reduce"
     }
 }

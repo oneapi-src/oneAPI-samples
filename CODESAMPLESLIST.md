@@ -34,7 +34,7 @@
 |[Dynamic Profiler](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Tools/dynamic_profiler)|['FPGA']|An Intel® FPGA tutorial demonstrating how to use the Intel® FPGA Dynamic Profiler for Intel® oneAPI Data Parallel C++ (DPC++) to dynamically collect performance data and reveal areas for optimization|
 |[Explicit Data Movement](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/DesignPatterns/explicit_data_movement)|['FPGA']|An Intel® FPGA tutorial demonstrating an alternative coding style, explicit USM, in which all data movement is controlled explicitly by the author|
 |[FPGA Compile](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/GettingStarted/fpga_compile)|['FPGA']|Intel® FPGA tutorial introducing how to compile Intel® oneAPI Data Parallel C++ (DPC++) for Intel® FPGA|
-|[FPGA Reg](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/fpga_reg)|['FPGA']|An Intel® FPGA advanced tutorial demonstrating how to apply the Intel® oneAPI Data Parallel C++ (DPC++) extension INTEL::fpga_reg|
+|[FPGA Reg](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/fpga_reg)|['FPGA']|An Intel® FPGA advanced tutorial demonstrating how to apply the Intel® oneAPI Data Parallel C++ (DPC++) extension ext::intel::fpga_reg|
 |[Fast Recompile](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/GettingStarted/fast_recompile)|['FPGA']|An Intel® FPGA tutorial demonstrating how to separate the compilation of host and device code to save development time|
 |[Folder Options DPCT](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Migration/folder-options-dpct)|['CPU']|Multi-folder project that illustrates migration of a CUDA project that has files located in multiple folders in a directory tree. Uses the `--in-root` and `--out-root` options to tell the Intel® Data Parallel C++ (DPC++) Compatibility Tool where to locate source code to be migrated|
 |[Fourier Correlation](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneMKL/fourier_correlation)|['CPU', 'GPU']|Compute 1D Fourier correlation with Intel® oneMKL|
@@ -141,6 +141,6 @@
 |[oneCCL Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneCCL/oneCCL_Getting_Started)|['CPU', 'GPU']|Basic Intel® oneCCL programming model for both Intel® CPU and GPU|
 Total Samples: 138
 
-Report Generated on:  August 13, 2021
-This doc was created on: August 13, 2021
-This doc was created on: August 13, 2021
+Report Generated on:  August 23, 2021
+This doc was created on: August 23, 2021
+This doc was created on: August 23, 2021
