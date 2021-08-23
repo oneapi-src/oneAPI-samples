@@ -9,7 +9,7 @@ int main() {
 
 // START CODE SNIP
 
-  try{
+  try {
     // Do some SYCL work
   } catch (sycl::exception &e) {
     // Do something to output or handle the exceptinon 
