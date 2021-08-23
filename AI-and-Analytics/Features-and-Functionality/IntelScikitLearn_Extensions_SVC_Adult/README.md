@@ -1,19 +1,19 @@
 # `Intel® Extension for Scikit-learn: SVC for Adult dataset` Sample
-This sample code uses [Adult dataset](https://archive.ics.uci.edu/ml/datasets/adult) to show how to train and predict with a SVC algorithm using Intel® Extension for Scikit-learn. It demonstrates how to use software products that can be found in the [Intel(R) oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html), [Intel(R) Extension for Scikit-learn](https://intel.github.io/scikit-learn-intelex/), or [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+This sample code uses [Adult dataset](https://archive.ics.uci.edu/ml/datasets/adult) to show how to train and predict with a SVC algorithm using Intel® Extension for Scikit-learn. It demonstrates how to use software products that can be found in the [Intel® oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html), [Intel(R) Extension for Scikit-learn](https://intel.github.io/scikit-learn-intelex/), or [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
 | Software                          | Intel® oneAPI AI Analytics Toolkit
-| What you will learn               | How to get started with Intel(R) Extension for Scikit-learn
+| What you will learn               | How to get started with Intel® Extension for Scikit-learn
 | Time to complete                  | 25 minutes
 
 ## Purpose
 
-Intel® Extension for Scikit-learn is a seamless way to speed up your Scikit-learn application. The acceleration is achieved through the use of the Intel(R) oneAPI Data Analytics Library ([oneDAL](https://github.com/oneapi-src/oneDAL)). Patching scikit-learn makes it a well-suited machine learning framework for dealing with real-life problems.
+Intel® Extension for Scikit-learn is a seamless way to speed up your Scikit-learn application. The acceleration is achieved through the use of the Intel® oneAPI Data Analytics Library ([oneDAL](https://github.com/oneapi-src/oneDAL)). Patching scikit-learn makes it a well-suited machine learning framework for dealing with real-life problems.
 
-In this sample, you will run a SVC algorithm with Intel® Extension for Scikit-learn. You will see a significant increase in performance over the original Scikit-learn while maintaining the same precision.
+In this sample, you will run a SVC algorithm with Intel® Extension for Scikit-learn and compare its performance against the original stock version of scikit-learn. You will see that patching scikit-learn results in a significant increase in performance over the original scikit-learn while also maintaining the same precision.
   
 ## Key Implementation Details 
 The sample code is written in Python and it targets CPU architecture. The example assumes you have Intel® Extension for Scikit-learn installed.
@@ -35,8 +35,8 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
   Refer to [Intel oneAPI DevCloud](https://intelsoftwaresites.secure.force.com/devcloud/oneapi) for Intel DevCloud.
 
  1. **Intel® AI Analytics Toolkit**
-       You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation,
-       and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
+       Install the toolkit from the [oneAPI main page](https://software.intel.com/en-us/oneapi)
+	     and refer to the [Toolkit Get Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
  2. **Jupyter Notebook**
        Install Jupyter Notebook via pip: `pip install notebook`.
@@ -52,7 +52,7 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
 
 ### Running the Sample as a Python File
 
-1. python `IntelScikitLearn_Extensions_SVC_Adult.py`
+1. `IntelScikitLearn_Extensions_SVC_Adult.py`
 
 ### Example of Output
 
