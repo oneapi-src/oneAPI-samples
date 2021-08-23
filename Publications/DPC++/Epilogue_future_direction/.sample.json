@@ -7,5 +7,43 @@
   "languages": [ { "cpp": {} } ],
   "targetDevice": [ "CPU", "GPU" ],
   "os": [ "linux" ],
-  "builder": [ "ide", "cmake" ]
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Epilogue_future_direction",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "make fig_ep_1_mdspan",
+          "make fig_ep_2-4_generic_space",
+          "make fig_ep_5_extension_mechanism",
+          "make fig_ep_6_device_constexpr",
+          "make fig_ep_7_hierarchical_reduction"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G Ninja ..",
+          "ninja"
+        ]
+      }
+    ]
+  }
 }
