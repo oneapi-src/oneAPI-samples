@@ -6,7 +6,7 @@
 #include <CL/sycl/INTEL/fpga_extensions.hpp> // For fpga_selector
 using namespace sycl;
 
-void say_device (const queue& Q) {
+void say_device(const queue& Q) {
   std::cout << "Device : " 
     << Q.get_device().get_info<info::device::name>() << "\n";
 }
