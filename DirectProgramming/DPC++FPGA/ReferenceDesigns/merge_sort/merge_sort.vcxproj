@@ -115,7 +115,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
-      <AdditionalOptions>-DFPGA_EMULATOR -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>
       </ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
@@ -156,7 +156,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
-      <AdditionalOptions>-DFPGA_EMULATOR -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>
       </ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
