@@ -58,7 +58,7 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
 
 ```
 Intel(R) Extension for Scikit-learn* enabled (https://github.com/intel/scikit-learn-intelex)
-Intel(R) extension for Scikit-learn time: 13.88 s
+Execution time with Intel(R) extension for Scikit-learn: 13.88 s
 Classification report for SVC:
               precision    recall  f1-score   support
 
