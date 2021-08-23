@@ -11,6 +11,12 @@ p.183 - Fig. 7-6 - In the first column, there should be no capitalization,
                    therefore "Write" should be "write"
                    and "read_Write" should be "read_write"
 
+p.187 - Instead, we use the default access mode, which is read-write -> read_write
+
+p.233 - Figure 9-14: defines the template parameter T outside of the code snippet without explanation, reader is left unaware what is T.
+
+p.266 - Figure 11-3: mult_ptr -> multi_ptr (two occurrences)
+
 p.284 - The line "if (dev.is_host()) score += 100;" will need
         deleting when implementations drop support for a host_device (see
         errata below regarding changes in the SYCL 2020 specification that we
@@ -18,7 +24,35 @@ p.284 - The line "if (dev.is_host()) score += 100;" will need
 	consider the implications of such a change: without it, it is possible
 	that this device selector will fail to find a device.
 
+p.294 - Mistakenly have wrong definitions for preferred_work_group_size_multiple (we repeated the prior definiton of preferred_work_group_size).  The correct definition for preferred_work_group_size_multiple is:
+Work-group size should be a multiple of this value (preferred_work_group_size_multiple) for executing a kernel on a particular device for best performance. The value must not be greater than work_group_size.
+
+p.319 - translational unit -> translation unit
+
+p.330 - A scan is said to be exclusive... the range [0, i] -> range [0, i)
+
+p.373 - it may preferable to save trasnfer costs -> it may be preferable...
+
+p.414 - Figure 16-17: get_globalid(0) -> get_global_id(0)
+
 p.421 - Fig 17-1 - The text at the top should be “ISA-based” instead of “SA-based”
+
+p.437 - last paragraph... "which" is incorrectly in monospace font
+
+p.438 - Figure 17-11: one "include" filename is red, the other black
+
+p.474 - std:complex -> std::complex
+
+p.475 - Figure 18-2: description of "fmax" overran "fmin" (fmin should be "Return y if y < x, otherwise it returns x")
+p.475 - Figure 18-2: Square root of x2 + y2 -> x^2 + y^2
+p.475   Figure 18-2: "trunc" should be in bold
+
+p.476 - Figure 18-3: "abs_diff" should be in bold
+p.476 - Figure 18-3: "popcount" should be in bold
+
+p.508 - Figure 19-9: scq_rel -> acq_rel (two occurrences)
+p.508 - The memory model exposes different memory orders through six values -> five
+        (because C++'s "consume" is excluded from SYCL)
 
 
 
@@ -46,6 +80,8 @@ fig_18_13_binary_search.cpp:
 
 fig_18_15_pstl_usm.cpp:
 	old naming dpstd:: is now oneapi::dpl::
+
+
 
 SYCL 2020 was finalized after the book went to press.  The largest
 change, which was not anticipated in the book, was the dropping of the
