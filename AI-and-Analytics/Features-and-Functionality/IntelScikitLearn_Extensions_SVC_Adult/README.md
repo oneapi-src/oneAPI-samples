@@ -6,7 +6,7 @@ This sample code uses [Adult dataset](https://archive.ics.uci.edu/ml/datasets/ad
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
 | Software                          | Intel® oneAPI AI Analytics Toolkit
-| What you will learn               | How to get started with Intel Extension for Intel(R) Extension for Scikit-learn
+| What you will learn               | How to get started with Intel(R) Extension for Scikit-learn
 | Time to complete                  | 25 minutes
 
 ## Purpose
