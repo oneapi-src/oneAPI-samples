@@ -132,7 +132,6 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SpecifyDevCmplAdditionalOptions>-fbracket-depth=512</SpecifyDevCmplAdditionalOptions>
     </Link>
     <Manifest />
   </ItemDefinitionGroup>
@@ -176,7 +175,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SpecifyDevCmplAdditionalOptions>-fbracket-depth=512</SpecifyDevCmplAdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
