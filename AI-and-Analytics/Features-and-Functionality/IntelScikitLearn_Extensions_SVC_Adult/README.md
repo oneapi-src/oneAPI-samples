@@ -31,7 +31,7 @@ If you are running this sample on the DevCloud, see [Running Samples on the Inte
 
 ### Pre-requirement
 
-> NOTE: No action is required if users use Intel DevCloud as their environment.
+> NOTE: No action is required if you are using Intel DevCloud as your environment.
   Please refer to [Intel oneAPI DevCloud](https://intelsoftwaresites.secure.force.com/devcloud/oneapi) for Intel DevCloud.
 
  1. **Intel® AI Analytics Toolkit**
