@@ -10,7 +10,7 @@ using namespace sycl;
 // Our simple asynchronous handler function
 auto handle_async_error = [](exception_list elist) {
   for (auto &e : elist) {
-    try{ std::rethrow_exception(e); }
+    try { std::rethrow_exception(e); }
     catch ( sycl::exception& e ) {
       // Print information about the asynchronous exception
     }
@@ -23,7 +23,7 @@ auto handle_async_error = [](exception_list elist) {
 // END CODE SNIP
 
 
-void say_device (const queue& Q) {
+void say_device(const queue& Q) {
   std::cout << "Device : " 
     << Q.get_device().get_info<info::device::name>() << "\n";
 }
