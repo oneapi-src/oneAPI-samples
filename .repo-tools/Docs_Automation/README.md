@@ -1,4 +1,4 @@
-Due to complexity of th amount of ample, keeping the various charts up to date is challenging. This directory contains a tool for maintaining the several documents contained within this repo
+Due to the complexity of the number of samples, keeping the various charts up to date is challenging. This directory contains a tool for maintaining the several documents contained within this repo
 
 |Files |location|Descriptions|
 |---|-|--|
