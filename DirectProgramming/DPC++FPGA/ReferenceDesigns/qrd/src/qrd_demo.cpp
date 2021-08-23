@@ -145,15 +145,15 @@ int main(int argc, char *argv[]) {
 
     // }
 
-    // Accelerator warmup
-// #if COMPLEX == 1
-//     ComplexFloatQRDecomposition(a_matrix, qr_matrix, q, 1, 1); 
-// #else
-//     FloatQRDecomposition(a_matrix, qr_matrix, q, 1, 1); 
-// #endif
+    Accelerator warmup
+#if COMPLEX == 1
+    ComplexFloatQRDecomposition(a_matrix, qr_matrix, q, 1, 1); 
+#else
+    FloatQRDecomposition(a_matrix, qr_matrix, q, 1, 1); 
+#endif
 
 #if defined(FPGA_EMULATOR)
-    size_t reps = 1;
+    size_t reps = 2;
 #else
     size_t reps = 32;
 #endif

@@ -516,7 +516,8 @@ namespace QRDInternal{
 
                 // Temporary storage for a column of the input matrix and for
                 // partial results.
-                TT col[rows];
+                [[intel::fpga_register]] TT col[rows];
+                [[intel::fpga_register]] TT col1[rows];
 
                 // Current value of s_or_i depending on the value of j
                 // It is replicated kNumBanks times to reduce fanout
@@ -590,10 +591,10 @@ namespace QRDInternal{
                   auto prod_rhs = i_lt_0[bankIdx] ? TT{0.0} : sori[bankIdx];
                   auto add = j_eq_i[bankIdx] ? TT{0.0} : col[k];
                   if constexpr(isComplex){
-                    col[k] = prod_lhs * prod_rhs.conj() + add;
+                    col1[k] = INTEL::fpga_reg(prod_lhs) * INTEL::fpga_reg(prod_rhs.conj()) + INTEL::fpga_reg(add);
                   }
                   else{
-                    col[k] = prod_lhs * prod_rhs + add;
+                    col1[k] = prod_lhs * prod_rhs + add;
                   }
 
                   // Store Q_i in A_store and the modified a_j in A_compute
@@ -608,13 +609,13 @@ namespace QRDInternal{
                   // -> overwritten for the matrix Q (A_store)
                   // -> unused for the A_compute
                   if (i_ge_0_j_ge_i[bankIdx]) {
-                    // A_store[j].d[k] = A_compute[j].d[k] = col[k];
-                    A_store[k].d[j] = A_compute[k].d[j] = col[k];
+                    // A_store[j].d[k] = A_compute[j].d[k] = col1[k];
+                    A_store[k].d[j] = A_compute[k].d[j] = col1[k];
                   }
 
                   // Store a_{i+1} for subsequent iterations of j
                   if (j_eq_i_plus_1[bankIdx]) {
-                    a_ip1[k] = col[k];
+                    a_ip1[k] = col1[k];
                   }
                 });
 
@@ -623,10 +624,10 @@ namespace QRDInternal{
 
                 UnrolledLoop<rows>([&](auto k) {
                   if constexpr(isComplex){
-                    p_ij = p_ij + col[k] * a_ip1[k].conj();
+                    p_ij = p_ij + INTEL::fpga_reg(col1[k]) * INTEL::fpga_reg(a_ip1[k].conj());
                   }
                   else{
-                    p_ij = p_ij + col[k] * a_ip1[k];
+                    p_ij = p_ij + col1[k] * a_ip1[k];
                   }
                 });
 
