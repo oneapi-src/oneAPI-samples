@@ -1,5 +1,17 @@
-Due to the complexity of the number of samples, keeping the various charts up to date is challenging. This directory contains a tool for maintaining the several documents contained within this repo
+## Description
 
+Adding automation for development of various documents, this will elimate making multiple changes per release cycle, effectively making the process less error prone.
+
+## Running the tool
+	1. Update your fork to latest from oneapi-src/oneAPI-samples
+	2. Create a branch ex: (New Docs2021.4)to hold the new docs changes
+	3. Switch Branch navigate to the new Branch
+	4. Update guids.json and content.json as appropriate
+	4. Navigate to oneAPI-samples/.repo-tools/Docs_Automation/
+	5. run create_docs.py
+	6. This will generate the three files in the repo root. CODESMPLESLIST.md, CHNGELOGS.md, REDME.md
+
+## File List
 |Files |location|Descriptions|
 |---|-|--|
 |content.json|.repo-tools/Doc_Automation|This is a json containing various strings to create the documents. Any doc changes need to be made here|
