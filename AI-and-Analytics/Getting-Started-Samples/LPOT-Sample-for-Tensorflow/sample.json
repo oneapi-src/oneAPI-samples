@@ -20,7 +20,8 @@
         ],
 		"id": "lpot tensorflow",
 		"steps": [
-			"runipy lpot_sample_tensorflow.ipynb"
+			"runipy lpot_sample_tensorflow.ipynb", 
+         	"conda deactivate"
 		 ]
 	}
     ]
