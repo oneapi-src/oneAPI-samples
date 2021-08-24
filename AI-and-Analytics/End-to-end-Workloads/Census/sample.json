@@ -5,7 +5,9 @@
   "description": "This sample illustrates using Modin and daal optimized scikit-learn to build and run an end-to-end machine learning workload",
   "builder": ["cli"],
   "languages": [{"python":{}}],
-	@@ -11,11 +11,15 @@
+  "dependencies": ["intelpython"],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
   "ciTests": {
   	"linux": [
     {
