@@ -391,9 +391,11 @@ int main(int argc, char *argv[]) {
 
     auto end_time = high_resolution_clock::now();
 
+#if not defined(REAL_IO_PIPES)
     // Stop the timer before performing the DMA from the consumer. Again,
     // if USM host allocations are used then this is a noop.
     consume_dma_event.wait();
+#endif
 
     // compute latency and throughput
     duration<double, std::milli> process_time(end_time - start_time);

@@ -1,0 +1,60 @@
+{
+  "guid": "6464a02a-c783-457e-92af-915616ae98ea",
+  "name": "Chapter 19 - Memory Model and Atomics",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_19_3_data_race.cpp - Kernel containing a data race * fig_19_6_avoid_data_race_with_barrier.cpp - Avoiding a data race using a barrier *  fig_19_7_avoid_data_race_with_atomics.cpp - Avoiding a data race using atomic operations * fig_19_15_buffer_and_atomic_ref.cpp - Accessing a buffer via an explicitly created atomic_ref * fig_19_16_atomic_accessor.cpp - Accessing a buffer via an atomic_ref implicitly created by an atomic accessor * fig_19_18_histogram.cpp - Computing a histogram using atomic references in different memory spaces *  fig_19_19-20_device_latch.cpp - Combining Figure 19-20. Using and building a simple device-wide latch on top of atomic references * Errata - code samples for 18-10, 18-12, 18-14, and 19-17 are not in the repository",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch19_memory_model_and_atomics",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_19_6_avoid_data_race_with_barrier",
+          "make fig_19_7_avoid_data_race_with_atomics",
+          "make fig_19_16_atomic_accessor",
+          "make fig_19_18_histogram",
+          "make fig_19_19-20_device_latch",
+          "make fig_19_15_buffer_and_atomic_ref",
+          "make fig_19_3_data_race"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force b19 >nul 2>nul || echo remove",
+          "mkdir b19",
+          "cd b19",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_19_6_avoid_data_race_with_barrier",
+          "nmake fig_19_7_avoid_data_race_with_atomics",
+          "nmake fig_19_16_atomic_accessor",
+          "nmake fig_19_18_histogram",
+          "nmake fig_19_19-20_device_latch",
+          "nmake fig_19_15_buffer_and_atomic_ref",
+          "nmake fig_19_3_data_race"
+        ]
+      }
+    ]
+  }
+}

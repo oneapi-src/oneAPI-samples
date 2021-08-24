@@ -36,7 +36,7 @@ if(FPGA_BOARD MATCHES ".*a10.*")
     # A10 parameters
     set(NUM_ENGINES 1)
     set(LL_SEED "-Xsseed=1")
-    set(HIGH_BW_SEED "-Xsseed=8")
+    set(HIGH_BW_SEED "-Xsseed=6")
     set(NUM_REORDER "")
 elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
