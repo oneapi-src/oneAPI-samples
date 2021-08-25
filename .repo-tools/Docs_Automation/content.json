@@ -3,7 +3,7 @@
 
   "mdContribute": "## Contribute\n\nSee [CONTRIBUTING](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) for more itargetedDevices.ormation.\n\n",
 
-  "mdIntro1":"The oneAPI samples repository provides code samples for Intel oneAPI toolkits.<br><br>We recommend checking out a specific stable release version of the repository to [View available stable releases](https//github.com/oneapi-src/oneAPI-samples/tags). ",
+  "mdIntro1":"The oneAPI samples repository provides code samples for Intel oneAPI toolkits.<br><br>We recommend checking out a specific stable release version of the repository. [View available stable releases](https//github.com/oneapi-src/oneAPI-samples/tags). ",
   "mdIntro2":"The latest versions (",
   "mdIntro2.1":") of code samples on the master branch are not guaranteed to be stable.",
   "mdIntro3":"The oneAPI sample repository is organized as follows:",
@@ -21,14 +21,14 @@
   "mdIntro6":"See [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) for more information.",
   "mdIntro7":"\n\n## New Code Samples\n\n|Version Introduced   |Sample Name|Description|\n |-----------------------|-------------------------------------------|---------------|\n",
   
-  "mdDeviceTargetIntrop1": "## oneAPI Code Samples\n\n",
-  "mdDeviceTargetIntrop2":  "|Code Sample Name|Supported Intel&reg; Architecture(s)|Description|\n|-----------------------|----------------------|---------------------|\n",
+  "mdCodeSamplesListIntrop1": "## oneAPI Code Samples\n\n",
+  "mdCodeSamplesListIntrop2":  "|Code Sample Name|Supported Intel&reg; Architecture(s)|Description|\n|-----------------------|----------------------|---------------------|\n",
 
-  "mdDeviceTargetFooter":  "Report Generated on:  ",
+  "mdCodeSamplesListFooter":  "Report Generated on:  ",
   
   "mdVersion": "## Version List of all samples\n\n sorted as found in directories\n\n|Code Sample/URL |Version|\n|-----------------------|------------------------|\n",
 
-  "mdChangeLogHeaderp1":"## oneAPI Code Sample Change log\n\nThis document shows the history of when a specific sample was introduced to the oneAPI ecosystem of Code Samples.<br>Current Samples Count: ",
+  "mdChangeLogHeaderp1":"## oneAPI Code Sample Change log\n\nThis document shows the history of when a specific sample was introduced to the oneAPI ecosystem of Code Samples.",
   "mdChangeLogHeaderp2":"\n| Version|Code Sample Name|description|\n|-----------------------|------------------|-------------------------|\n"
 
 }

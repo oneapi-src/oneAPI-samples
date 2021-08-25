@@ -1,6 +1,6 @@
 ## oneAPI Code Sample Change log
 
-This document shows the history of when a specific sample was introduced to the oneAPI ecosystem of Code Samples.<br>Current Samples Count: 158
+This document shows the history of when a specific sample was introduced to the oneAPI ecosystem of Code Samples.
 | Version|Code Sample Name|description|
 |-----------------------|------------------|-------------------------|
 |2021.4.0|[Merge Sort](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/merge_sort)|A Reference design demonstrating merge sort on an Intel® FPGA|
@@ -160,3 +160,6 @@ This document shows the history of when a specific sample was introduced to the 
 |2021.1.Gold|[Tutorials](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneDNN/tutorials)|Intel® oneDNN Tutorials|
 |2021.1.Gold|[CRR](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/crr)|This sample shows a Binomial Tree Model for Option Pricing using a FPGA-optimized reference design of the Cox-Ross-Rubinstein (CRR) Binomial Tree Model with Greeks for American exercise options|
 |2021.1.Gold|[DPC Reduce](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++/ParallelPatterns/dpc_reduce)|This sample models transform Reduce in different ways showing capability of Intel® oneAPI|
+Total Samples: 158
+
+Report Generated on:  August 25, 2021
