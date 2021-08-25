@@ -304,17 +304,17 @@ namespace QRDInternal{
               // - read A_load and do the computation on A_compute, then 
               //   writes the results in A_store
               // - writes A_store into the output matrix
-              // [[intel::bankwidth(kBankwidth)]] // NO-FORMAT: Attribute
-              // [[intel::numbanks(kNumBanksNextPow2)]]   // NO-FORMAT: Attribute
-              // column<rows, TT>  A_load[columns], 
-              //                   A_compute[columns], 
-              //                   A_store[columns];
-
-
-
-              row<columns, TT>  A_load[columns], 
+              [[intel::bankwidth(kBankwidth)]] // NO-FORMAT: Attribute
+              [[intel::numbanks(kNumBanksNextPow2)]]   // NO-FORMAT: Attribute
+              column<rows, TT>  A_load[columns], 
                                 A_compute[columns], 
                                 A_store[columns];
+
+
+
+              // row<columns, TT>  A_load[columns], 
+              //                   A_compute[columns], 
+              //                   A_store[columns];
 
               /*
                 ================================================================
@@ -410,7 +410,8 @@ namespace QRDInternal{
                     if(current_col_complete){
                       constexpr int kRowIdx = k*kNumElementsPerBank + kk;
                       if constexpr(kRowIdx < rows){
-                        A_load[kRowIdx].d[load_col_idx] = load_banks[k][kk];
+                        // A_load[kRowIdx].d[load_col_idx] = load_banks[k][kk];
+                        A_load[load_col_idx].d[kRowIdx] = load_banks[k][kk];
                       }
                     }
                   });
@@ -557,16 +558,16 @@ namespace QRDInternal{
 
                   if(i_gt_0[bank]){
                     // col[k] = A_compute[int(j) + k*columns];
-                    // col[k] = A_compute[j].d[k];
-                    col[k] = A_compute[k].d[j];
+                    // col[k] = A_compute[k].d[j];
+                    col[k] = A_compute[j].d[k];
                   }
                   // Using an else statement makes the compiler throw an
                   // inexplicable warning when using non complex types:
                   // "Compiler Warning: Memory instruction with unresolved 
                   // pointer may lead to bad QoR."
                   if(!i_gt_0[bank]){
-                    col[k] = A_load[k].d[j];
-                    // col[k] = A_load[j].d[k];
+                    // col[k] = A_load[k].d[j];
+                    col[k] = A_load[j].d[k];
                   }
 
                   // Load a_i for reuse across j iterations
@@ -591,7 +592,7 @@ namespace QRDInternal{
                   auto prod_rhs = i_lt_0[bankIdx] ? TT{0.0} : sori[bankIdx];
                   auto add = j_eq_i[bankIdx] ? TT{0.0} : col[k];
                   if constexpr(isComplex){
-                    col1[k] = INTEL::fpga_reg(prod_lhs) * INTEL::fpga_reg(prod_rhs.conj()) + INTEL::fpga_reg(add);
+                    col1[k] = prod_lhs * prod_rhs.conj() + add;
                   }
                   else{
                     col1[k] = prod_lhs * prod_rhs + add;
@@ -609,8 +610,8 @@ namespace QRDInternal{
                   // -> overwritten for the matrix Q (A_store)
                   // -> unused for the A_compute
                   if (i_ge_0_j_ge_i[bankIdx]) {
-                    // A_store[j].d[k] = A_compute[j].d[k] = col1[k];
-                    A_store[k].d[j] = A_compute[k].d[j] = col1[k];
+                    // A_store[k].d[j] = A_compute[k].d[j] = col1[k];
+                    A_store[j].d[k] = A_compute[j].d[k] = col1[k];
                   }
 
                   // Store a_{i+1} for subsequent iterations of j
@@ -624,7 +625,7 @@ namespace QRDInternal{
 
                 UnrolledLoop<rows>([&](auto k) {
                   if constexpr(isComplex){
-                    p_ij = p_ij + INTEL::fpga_reg(col1[k]) * INTEL::fpga_reg(a_ip1[k].conj());
+                    p_ij = p_ij + col1[k] * a_ip1[k].conj();
                   }
                   else{
                     p_ij = p_ij + col1[k] * a_ip1[k];
@@ -714,7 +715,7 @@ namespace QRDInternal{
                     if(need_next_col){
                       constexpr int kRowIdx = k*kNumElementsPerBank + kk;
                       if constexpr(kRowIdx < rows){
-                        store_banks[k][kk] = A_store[kRowIdx].d[store_col_idx];
+                        store_banks[k][kk] = A_store[store_col_idx].d[kRowIdx];
                       }
                     }
                   });
