@@ -4,26 +4,7 @@ This sample code illustrates how to use Intel® Distribution of Modin for ETL op
 
 | Optimized for                     | Description
 | :---                              | :---
-| OS                                | 64-bit Linux: Ubuntu 18.04 or higher
-| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
-| Software                          | Intel AI Analytics Toolkit (Python version 3.7, Intel® Distribution of Modin , Ray, Intel® oneAPI Data Analytics Library (oneDAL), Scikit-Learn, NumPy)
-| What you will learn               | How to use Intel® Distribution of Modin and oneDAL optimized scikit-learn (developed and owned by Intel) to build end to end ML workloads and gain performance.
-| Time to complete                  | 15-18 minutes
-
-## Purpose
-Intel® Distribution of Modin uses Ray to provide an effortless way to speed up your Pandas notebooks, scripts and libraries. Unlike other distributed DataFrame libraries, Intel® Distribution of Modin provides seamless integration and compatibility with existing Pandas code. Daal4py is a simplified API to Intel oneDAL that allows for fast usage of the framework suited for Data Scientists and Machine Learning users. It is built to help provide an abstraction to Intel® oneDAL for either direct usage or integration into one's own framework.
-
-#### Model and dataset
-In this sample, you will use Intel® Distribution of Modin to ingest and process U.S. census data from 1970 to 2010 in order to build a ridge regression based model to find the relation between education and the total income earned in the US.
-Data transformation stage normalizes the income to the yearly inflation, balances the data such that each year has a similar number of data points, and extracts the features from the transformed dataset. The feature vectors are fed into the ridge regression model to predict the income of each sample.
-
-Dataset is from IPUMS USA, University of Minnesota, [www.ipums.org](https://ipums.org/) (Steven Ruggles, Sarah Flood, Ronald Goeken, Josiah Grover, Erin Meyer, Jose Pacas and Matthew Sobek. IPUMS USA: Version 10.0 [dataset]. Minneapolis, MN: IPUMS, 2020. https://doi.org/10.18128/D010.V10.0)
-
-## Key Implementation Details
-This end-to-end workload sample code is implemented for CPU using the Python language.  With the installation of Intel AI Analytics Toolkit, the conda environment is prepared with Python version 3.7, Intel® Distribution of Modin , Ray, Intel® oneAPI Data Analytics Library (oneDAL), Scikit-Learn, NumPy following which the sample code can be directly run using the underlying steps in this README. 
-
-## License
-
+	@@ -27,17 +27,21 @@ This end-to-end workload sample code is implemented for CPU using the Python lan
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -45,10 +26,7 @@ In the Linux shell, navigate to your oneapi installation path, typically `/opt/i
 
 Activate the conda environment with the following command:
 
-#### Linux
-```
-source activate intel-aikit-modin
-```
+	@@ -48,7 +52,7 @@ source activate intel-aikit-modin
 
 ### Activate conda environment Without Root Access (Optional)
 
@@ -56,13 +34,7 @@ By default, the Intel oneAPI AI Analytics toolkit is installed in the `oneapi` f
 
 #### Linux
 ```
-conda create --name intel-aikit-modin -c intel/label/oneapibeta -c intel -c conda-forge runipy intel-aikit-modin=2021.1b10
-```
-
-Then activate your conda environment with the following command:
-
-```
-conda activate intel-aikit-modin
+	@@ -62,9 +66,9 @@ conda activate intel-aikit-modin
 ```
 
 
@@ -72,11 +44,7 @@ Launch Jupyter Notebook in the directory housing the code example.
 
 ```
 conda install jupyter nb_conda_kernels
-```
-or
-```
-pip install jupyter
-```
+	@@ -76,7 +80,7 @@ pip install jupyter
 
 ### Install wget package
 
@@ -84,8 +52,7 @@ Install wget package to retrieve the Census dataset using HTTPS.
 
 ```
 pip install wget
-```
-
+	@@ -85,7 +89,7 @@ pip install wget
 #### View in Jupyter Notebook
 
 
@@ -93,26 +60,7 @@ Launch Jupyter Notebook in the directory housing the code example.
 
 ```
 jupyter notebook
-```
-
-## Running the end-to-end code sample
-
-### Run as Jupyter Notebook
-
-Open .ipynb file and run cells in Jupyter Notebook using the "Run" button. Alternatively, the entire workbook can be run using the "Restart kernel and re-run whole notebook" button. (see image below using "census modin" sample)
-
-![Click the Run Button in the Jupyter Notebook](Running_Jupyter_notebook.jpg "Run Button on Jupyter Notebook")
-
-### Run as Python File
-
-Open notebook in Jupyter and download as python file (see the image using "census modin" sample)
-
-![Download as python file in the Jupyter Notebook](Running_Jupyter_notebook_as_Python.jpg "Download as python file in the Jupyter Notebook")
-
-Run the Program
-
-`python census_modin.py`
-
+	@@ -112,3 +116,16 @@ Run the Program
 ##### Expected Printed Output:
 Expected Cell Output shown for census_modin.ipynb:
 ![Output](Expected_output.jpg "Expected output for Jupyter Notebook")
