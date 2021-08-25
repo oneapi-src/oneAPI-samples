@@ -196,7 +196,7 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
         // upstream kernel tells this kernel when it is done
         done = joined_data.done && pipe_valid;
 
-        if (!done && pipe_valid) {
+        if (!done && joined_data.valid && pipe_valid) {
           DBDecimal high_line_count1_local_tmp[kLineItemJoinWindowSize];
           DBDecimal high_line_count2_local_tmp[kLineItemJoinWindowSize];
           DBDecimal low_line_count1_local_tmp[kLineItemJoinWindowSize];
