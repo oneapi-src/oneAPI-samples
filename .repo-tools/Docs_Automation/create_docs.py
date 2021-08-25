@@ -67,7 +67,7 @@ def readContent():                                  #readin in strings for use i
     dataContent = openJson(jsonFile)
     return dataContent
 
-def addVersion(dict_main, dict_version):# After walking thu directories we need to add version to dict_main
+def addVersion(dict_main, dict_version):# deprecated
     for key in dict_version.keys():
         try:
             if (key in dict_main):
@@ -78,27 +78,23 @@ def addVersion(dict_main, dict_version):# After walking thu directories we need 
         except KeyError as e: #not working
             print(str(e) + ":No Match for guid: ")
    
-def createChangeLog(count): #sorted but does not include version
-    temp = dict_main.items()
-    sorted_items = sorted(temp, key=lambda key_value: key_value[1]["name"], reverse=False) # sorts by name
-    sorted_by_name = OrderedDict(sorted_items)
-
-    temp=dict_version.items()
-    sorted_items = sorted(temp, key=lambda key_value: key_value[1]["ver"], reverse=True) # sorts by ver
-    sorted_by_ver = OrderedDict(sorted_items)
-
+def createChangeLog(count,sorted_by_name,sorted_by_ver): #sorted but does not include version
     nf = open(fChangeLogs,"a+")
     nf.write(str(count) + dataContent['mdChangeLogHeaderp2'])
-    for key in sorted_by_name.keys():
+    zzz=0
+    for key in sorted_by_ver.keys():
+        zzz=zzz+1
         description= str(sorted_by_name[key]['description']) 
         url= sorted_by_name[key]['url']
         ver=sorted_by_ver[key]['ver']
         name=sorted_by_name[key]['name']
         cat=str(sorted_by_name[key]['categories'])
 
+        # Due to name issues, we need to fix the DPC** books chapter namesas its found and put it into the doc
         if (cat=="['Toolkit/Publication: Data Parallel C++']"):
             description=description.replace('*','<br>')
             name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)" + "<br><br>[" + name
+        
         nf.write("|" + ver + "|[" + name+ "](" + url + ")|" + description + "|\n") 
     nf.close()
 
@@ -121,16 +117,14 @@ def createTtargetedDevices():
         nf.write("|[" + name+ "](" + url + ")|" + target + "|" + description + "|\n") 
     nf.close()
 
-def createReadme():
-    temp = dict_main.items()
-    sorted_items = sorted(temp, key=lambda key_value: key_value[1]["name"], reverse=False) # sorts by name
-    sorted_by_name = OrderedDict(sorted_items)
+def createReadme(sorted_by_name, sorted_by_ver):
+
     nf = open(freadme,"a+")
     
     for key in sorted_by_name.keys():
         description= str(sorted_by_name[key]['description']) 
         url= sorted_by_name[key]['url']
-        ver=sorted_by_name[key]['ver']
+        ver=sorted_by_ver[key]['ver']
         name=sorted_by_name[key]['name']
         cat=str(sorted_by_name[key]['categories'])
         if (cat=="""['Toolkit/Publication: Data Parallel C++']"""):
@@ -166,9 +160,19 @@ for subdir, dirs, files in os.walk('..\\'):
         # Future - add a search for license file and if none, show a warning
         # Future - if no sample.json is present then show a warning
         # future - if no readme.md is present then show a warning
-addVersion(dict_main,dict_version)
-createChangeLog(count)
+
+temp = dict_main.items()
+sorted_items = sorted(temp, key=lambda key_value: key_value[1]["name"], reverse=False) # sorts by name
+sorted_by_name = OrderedDict(sorted_items)
+
+temp=dict_version.items()
+sorted_items = sorted(temp, key=lambda key_value: key_value[1]["ver"], reverse=True) # sorts by ver
+sorted_by_ver = OrderedDict(sorted_items)
+
+
+#addVersion(dict_main,dict_version)
+createChangeLog(count,sorted_by_name,sorted_by_ver)
 createTtargetedDevices()
-createReadme()
+createReadme(sorted_by_name,sorted_by_ver)
 createFooters(count)
 print("Finished")
