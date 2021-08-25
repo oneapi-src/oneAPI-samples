@@ -4,7 +4,10 @@ This sample code illustrates how to use Intel® Distribution of Modin for ETL op
 
 | Optimized for                     | Description
 | :---                              | :---
-	@@ -11,37 +18,75 @@ This sample code illustrates how to use Intel® Distribution of Modin for ETL op
+| OS                                | 64-bit Linux: Ubuntu 18.04 or higher
+| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
+| Software                          | Intel AI Analytics Toolkit (Python version 3.7, Intel® Distribution of Modin , Ray, Intel® oneAPI Data Analytics Library (oneDAL), Scikit-Learn, NumPy)
+| What you will learn               | How to use Intel® Distribution of Modin and oneDAL optimized scikit-learn (developed and owned by Intel) to build end to end ML workloads and gain performance.
 | Time to complete                  | 15-18 minutes
 
 ## Purpose
@@ -42,7 +45,10 @@ In the Linux shell, navigate to your oneapi installation path, typically `/opt/i
 
 Activate the conda environment with the following command:
 
-	@@ -52,9 +97,13 @@ source activate intel-aikit-modin
+#### Linux
+```
+source activate intel-aikit-modin
+```
 
 ### Activate conda environment Without Root Access (Optional)
 
@@ -52,7 +58,10 @@ By default, the Intel oneAPI AI Analytics toolkit is installed in the `oneapi` f
 ```
 conda create --name intel-aikit-modin -c intel/label/oneapibeta -c intel -c conda-forge runipy intel-aikit-modin=2021.1b10
 ```
-	@@ -65,7 +114,6 @@ Then activate your conda environment with the following command:
+
+Then activate your conda environment with the following command:
+
+```
 conda activate intel-aikit-modin
 ```
 
@@ -60,7 +69,22 @@ conda activate intel-aikit-modin
 ### Install Jupyter Notebook*
 
 Launch Jupyter Notebook in the directory housing the code example.
-	@@ -88,7 +136,6 @@ pip install wget
+
+```
+conda install jupyter nb_conda_kernels
+```
+or
+```
+pip install jupyter
+```
+
+### Install wget package
+
+Install wget package to retrieve the Census dataset using HTTPS.
+
+```
+pip install wget
+```
 
 #### View in Jupyter Notebook
 
@@ -68,7 +92,10 @@ Launch Jupyter Notebook in the directory housing the code example.
 Launch Jupyter Notebook in the directory housing the code example.
 
 ```
-	@@ -99,13 +146,16 @@ jupyter notebook
+jupyter notebook
+```
+
+## Running the end-to-end code sample
 
 ### Run as Jupyter Notebook
 
@@ -82,7 +109,8 @@ Open notebook in Jupyter and download as python file (see the image using "censu
 
 ![Download as python file in the Jupyter Notebook](Running_Jupyter_notebook_as_Python.jpg "Download as python file in the Jupyter Notebook")
 
-	@@ -114,18 +164,29 @@ Run the Program
+Run the Program
+
 `python census_modin.py`
 
 ##### Expected Printed Output:
