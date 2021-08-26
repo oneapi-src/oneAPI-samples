@@ -35,31 +35,31 @@ params = {
 start = time()
 from sklearn.svm import SVC
 classifier = SVC(**params).fit(x_train, y_train)
-print(f"Intel(R) extension for Scikit-learn time: {(time() - start):.2f} s")
+print(f"Execution time with Intel(R) Extension for Scikit-learn: {(time() - start):.2f} s")
 
-# Predict and get a result of the SVC algorithm with Intel(R) Extension for Scikit-learn
+# Make predictions with SVC classifier and print a report of the main classification metrics:
 
 predicted = classifier.predict(x_test)
 report = metrics.classification_report(y_test, predicted)
-print(f"Classification report for SVC:\n{report}\n")
+print(f"Classification report for SVC trained with Intel(R) extension for Scikit-learn:\n{report}\n")
 
-# In order to cancel optimizations, we use *unpatch_sklearn* and reimport the class SVC.
+# To cancel optimizations, use *unpatch_sklearn* and reimport the SVC class.
 
 from sklearnex import unpatch_sklearn
 unpatch_sklearn()
 
-# Training of the SVC algorithm with original scikit-learn library for Adult dataset
+# "Train SVC algorithm with original scikit-learn:"
 
 start = time()
 from sklearn.svm import SVC
 classifier = SVC(**params).fit(x_train, y_train)
-print(f"Original Scikit-learn time: {(time() - start):.2f} s")
+print(f"Execution time with the original Scikit-learn: {(time() - start):.2f} s")
 
-# Predict and get a result of the SVC algorithm with original Scikit-learn
+# Make predictions with SVC classifier and print a report of the main classification metrics:
 
 predicted = classifier.predict(x_test)
 report = metrics.classification_report(y_test, predicted)
-print(f"Classification report for SVC:\n{report}\n")
+print(f"Classification report for SVC trained with the original scikit-learn:\n{report}\n")
 
 # With scikit-learn-intelex patching you can:
 # 
