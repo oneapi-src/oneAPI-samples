@@ -1,22 +1,30 @@
 # OpenMP Offload Features
 
-These examples demonstrate some of the new OpenMP Offload features supported by the Intel&reg; oneAPI DPC++/C++ Compiler.
+These examples demonstrate some of the new OpenMP Offload features supported
+by the Intel&reg; oneAPI DPC++/C++ Compiler.
 
-For more information on the compiler , see the [Intel&reg oneAPI DPC++/C++ Compiler Landing Page](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/dpc-compiler.html).
+For more information on the compiler see the
+[Intel&reg oneAPI DPC++/C++ Compiler Landing Page](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/dpc-compiler.html).
 
-| Optimized for                       | Description
-|:---                               |:---
-| OS                                | Ubuntu* 18.04, 20
-| Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler, Intel Devcloud
-| What you will learn               | Understand some of the new OpenMP Offload features supported by the Intel&reg; oneAPI DPC++/C++ Compiler
-| Time to complete                  | 15 minutes
+| Optimized for        | Description
+|:---                  |:---
+| OS                   | Ubuntu* 18.04, 20
+| Hardware             | Skylake with GEN9 or newer
+| Software             | Intel&reg; oneAPI DPC++/C++ Compiler, Intel Devcloud
+| What you will learn  | Understand some of the new OpenMP Offload features supported by the Intel&reg; oneAPI DPC++/C++ Compiler
+| Time to complete     | 15 minutes
+
 
 ## Purpose
-For developers to understand some of the new OpenMP Offload features supported by the Intel oneAPI DPC++/C++ Compiler.
- 
+
+For developers to understand some of the new OpenMP Offload features supported
+by the Intel oneAPI DPC++/C++ Compiler.
+
+
 ## Key Implementation Details
+
 The table below shows the designs and the demonstrated feature(s).
+
 | Design                           | Feature(s) Utilized
 | :---                             |:---
 | class_member_functor             | Usage of functor in an OpenMP offload region
@@ -25,27 +33,39 @@ The table below shows the designs and the demonstrated feature(s).
 | usm_and_composabilty_with_dpcpp  | Unified shared memory and composability with DPC++
 
 
-## License  
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+## License
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+for details.
+
+Third party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
 
 ## Building the Program
 
-> Note: if you have not already done so, set up your CLI 
-> environment by sourcing  the setvars script located in 
-> the root of your oneAPI installation. 
+> Note: if you have not already done so, set up your CLI
+> environment by sourcing  the setvars script located in
+> the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
-> Linux User: . ~/intel/oneapi/setvars.sh  
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux User: . ~/intel/oneapi/setvars.sh
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
+
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get_started/baseToolkitSamples/)
+
+If running a sample in the Intel DevCloud, remember that you must specify the
+compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
+For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
+(https://devcloud.intel.com/oneapi/get_started/baseToolkitSamples/)
+
 
 ### On a Linux* System
+
 Perform the following steps:
+
 1. Build the program
 	```
     $ mkdir build
@@ -68,8 +88,9 @@ Perform the following steps:
     ```
 
 ### Example of Output
+
 ```
-6 8 10 12 14 
+6 8 10 12 14
 Done ......
 Built target run_prog1
 
@@ -94,14 +115,14 @@ Output x = 1720
 Built target run_prog2
 
 Scanning dependencies of target run_prog3
-In :   1   2   4   8 
-Out:   2   4   8  16 
-In :   1   2   4   8 
-Out:   2   4   8  16 
-In :   1   2   4   8  16  32  64 128 
-Out:   2   4   8  16  32  64 128 256 
-In :   1   2   4   8  16  32  64 128 
-Out:   2   4   8  16  32  64 128 256 
+In :   1   2   4   8
+Out:   2   4   8  16
+In :   1   2   4   8
+Out:   2   4   8  16
+In :   1   2   4   8  16  32  64 128
+Out:   2   4   8  16  32  64 128 256
+In :   1   2   4   8  16  32  64 128
+Out:   2   4   8  16  32  64 128 256
 Built target run_prog3
 
 Scanning dependencies of target run_prog4
