@@ -40,7 +40,6 @@ for details.
 
 ## OpenMP Welcome
 * Introduce Developer Training Modules
-* 
 * Describe oneAPI Tool Modules
 
 ## Introduction to OpenMP Offload
