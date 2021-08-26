@@ -41,24 +41,24 @@ Third party program Licenses can be found here:
 
 # Summary of the Jupyter Notebook Directories
 
-## OpenMP Welcome
+[OpenMP Welcome](OpenMP&#32;Welcome.ipynb)
 * Introduce Developer Training Modules
 * Describe oneAPI Tool Modules
 
-## Introduction to OpenMP Offload
+[Introduction to OpenMP Offload](intro) 
 * oneAPI Software Model Overview and Workflow
 * HPC Single-Node Workflow with oneAPI
 * Simple OpenMP Code Example
 * Target Directive Explanation
 * _Lab Exercise_: Vector Increment with Target Directive
 
-## Managing Data Transfers
+[Managing Data Transfers](datatransfer) 
 * Offloading Data
 * Target Data Region
 * _Lab Exercise_: Target Data Region
 * Mapping Global Variable to Device
 
-## Utilizing GPU Parallelism
+[Utilizing GPU Parallelism](parallelism) 
 * Device Parallelism
 * OpenMP Constructs and Teams
 * Host Device Concurrency
