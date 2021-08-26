@@ -12,16 +12,15 @@
 	"linux": [
 	{
 		"env": ["source ${ONEAPI_ROOT}/setvars.sh --force",
-			"conda env remove -y -n user_tensorflow",
-			"conda create -y --name user_tensorflow -y",
+			"conda env remove -n user_tensorflow",
+			"conda create --name user_tensorflow -y",
 			"conda activate user_tensorflow",
 			"conda install -c ${ONEAPI_ROOT}/conda_channel tensorflow numpy pyyaml scikit-learn schema lpot ilit matplotlib -y",
 		    "conda install runipy notebook -y"
         ],
 		"id": "lpot tensorflow",
 		"steps": [
-			"runipy lpot_sample_tensorflow.ipynb", 
-         	"conda deactivate"
+			"runipy lpot_sample_tensorflow.ipynb"
 		 ]
 	}
     ]
