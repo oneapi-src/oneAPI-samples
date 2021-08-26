@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# Intel® Extension for Scikit-learn SVC for Adult dataset
+# Intel® Extension for Scikit-learn: SVC for Adult dataset
 
 from time import time
 from sklearn import metrics
