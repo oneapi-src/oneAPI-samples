@@ -162,4 +162,4 @@ This document shows the history of when a specific sample was introduced to the 
 |2021.1.Gold|[DPC Reduce](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++/ParallelPatterns/dpc_reduce)|This sample models transform Reduce in different ways showing capability of Intel® oneAPI|
 Total Samples: 158
 
-Report Generated on:  August 25, 2021
+Report Generated on:  August 26, 2021

@@ -64,9 +64,8 @@ def createCodeSamplesList():
     sorted_items = sorted(temp, key=lambda key_value: key_value[1]["name"], reverse=False) # sorts by name
     sorted_by_name = OrderedDict(sorted_items)
     temp=sorted_by_name.items()
-    #nf = open(fCodeSamplesLists,"a+")
     nf = open(fCodeSamplesLists,"w+")
-    nf.write(dataContent['mdCodeSamplesListIntrop1'] + dataContent['mdCodeSamplesListIntrop2'])
+    nf.write(dataContent['mdCodeSamplesListIntrop1'] + "\n\n" + dataContent['mdCodeSamplesListIntrop2'])
     for key in sorted_by_name.keys():
         description= str(sorted_by_name[key]['description']) 
         url= sorted_by_name[key]['url']

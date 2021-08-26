@@ -1,6 +1,8 @@
 ## oneAPI Code Samples
 
-This Page is a complete list of onePI Code Samples, sorted by Alphabetical order|Code Sample Name|Supported Intel&reg; Architecture(s)|Description|
+This Page is a complete list of onePI Code Samples, sorted by Alphabetical order
+
+|Code Sample Name|Supported Intel&reg; Architecture(s)|Description|
 |-----------------------|----------------------|---------------------|
 |[1D Heat Transfer](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++/StructuredGrids/1d_HeatTransfer)|['CPU', 'GPU']|The 1D Heat Transfer sample simulates 1D Heat Transfer problem using Intel® oneAPI Data Parallel C++ (DPC++)|
 |[AWS Pub Sub](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/IoTConnectionTools/aws-pub-sub)|['CPU']|This sample uses the Message Broker for AWS* IoT to send and receive messages through an MQTT connection|
@@ -161,5 +163,5 @@ This Page is a complete list of onePI Code Samples, sorted by Alphabetical order
 |[oneCCL Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneCCL/oneCCL_Getting_Started)|['CPU', 'GPU']|Basic Intel® oneCCL programming model for both Intel® CPU and GPU|
 Total Samples: 158
 
-Report Generated on:  August 25, 2021Total Samples: 158
+Report Generated on:  August 26, 2021Total Samples: 158
 
