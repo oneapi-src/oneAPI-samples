@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iostream>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -21,8 +21,8 @@ constexpr size_t kEngines = 5;
 
 using Pipes = PipeArray<class MyPipe, float, 1, kEngines + 1>;
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class Source;
 class Sink;
 template <std::size_t ID> class ChainComputeUnit;
@@ -44,7 +44,7 @@ void SinkKernel(queue &q, float &out_data) {
   buffer<float, 1> out_buf(&out_data, 1);
 
   q.submit([&](handler &h) {
-    accessor out_accessor(out_buf, h, write_only, noinit);
+    accessor out_accessor(out_buf, h, write_only, no_init);
     h.single_task<Sink>(
         [=] { out_accessor[0] = Pipes::PipeAt<kEngines>::read(); });
   });
@@ -53,9 +53,9 @@ void SinkKernel(queue &q, float &out_data) {
 int main() {
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   float out_data = 0;

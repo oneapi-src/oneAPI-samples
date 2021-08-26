@@ -1,4 +1,4 @@
-# Multiple Simple Random Sampling without replacement
+# `Multiple Simple Random Sampling without replacement` Sample
 
 Multiple Simple Random Sampling without replacement shows how to use the oneMKL library's random number generation (RNG) functionality to generate K>>1 simple random length-M samples without replacement from a population of size N (1 ≤ M ≤ N).
 
@@ -32,8 +32,10 @@ In this sample, a Philox 4x32x10 generator is used, and a uniform distribution i
 
 ## License
 
-This code sample is licensed under the MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Multiple Simple Random Sampling without replacement Sample
 

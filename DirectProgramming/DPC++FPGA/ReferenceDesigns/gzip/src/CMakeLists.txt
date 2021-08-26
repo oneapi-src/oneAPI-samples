@@ -1,226 +1,162 @@
-# High Bandwidth variant source files
-set(DEVICE_SOURCE_FILE gzipkernel.cpp)
-set(DEVICE_HEADER_FILE gzipkernel.hpp) 
-set(HOST_SOURCE_FILE gzip.cpp crc32.cpp WriteGzip.cpp CompareGzip.cpp)
-
-# Low Latency variant source files
-set(DEVICE_SOURCE_FILE_LL gzipkernel_ll.cpp)
-set(DEVICE_HEADER_FILE_LL gzipkernel_ll.hpp)
-set(HOST_SOURCE_FILE_LL gzip_ll.cpp crc32.cpp WriteGzip.cpp CompareGzip.cpp)
-
 set(TARGET_NAME gzip)
 
+# High bandwidth variant
+set(SOURCE_FILE gzip.cpp crc32.cpp WriteGzip.cpp CompareGzip.cpp)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
-set(EMULATOR_TARGET_LL ${TARGET_NAME}_ll.fpga_emu)
-
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
+set(DEVICE_SOURCE_FILE gzipkernel.cpp)
+set(DEVICE_HEADER_FILE gzipkernel.hpp)
+set(HIGH_BW_SEED "-Xsseed=8")
+
+# Low latency variant
+set(SOURCE_FILE_LL gzip_ll.cpp crc32.cpp WriteGzip.cpp CompareGzip.cpp)
+set(EMULATOR_TARGET_LL ${TARGET_NAME}_ll.fpga_emu)
 set(FPGA_TARGET_LL ${TARGET_NAME}_ll.fpga)
-
-set(REPORTS_TARGET ${TARGET_NAME}_report)
-set(REPORTS_TARGET_LL ${TARGET_NAME}_ll_report)
-
-set(HIGH_BW_SEED "-Xsseed=22")
-set(LL_SEED "-Xsseed=22")
-
-set (IS_A10 1)
+set(DEVICE_SOURCE_FILE_LL gzipkernel_ll.cpp)
+set(DEVICE_HEADER_FILE_LL gzipkernel_ll.hpp)
+set(LL_SEED "-Xsseed=1")
 
 # FPGA board selection
-set(A10_PAC_BOARD_NAME "intel_a10gx_pac:pac_a10")
-set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10")
-set(S10_PAC_USM_BOARD_NAME "intel_s10sx_pac:pac_s10_usm")
-set(SELECTED_BOARD ${A10_PAC_BOARD_NAME})
-if (NOT DEFINED FPGA_BOARD)
-    message(STATUS "\tFPGA_BOARD was not specified. Configuring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Arria(R) 10 GX FPGA. Please refer to the README for information on board selection.")
-    message(STATUS "\tNote: The Low-Latency Variant of the GZIP reference design not supported on Arria(R) 10 GX.")
-elseif(FPGA_BOARD STREQUAL ${A10_PAC_BOARD_NAME})
-    message(STATUS "\tConfiguring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Arria(R) 10 GX FPGA.")
-    message(STATUS "\tNote: The Low-Latency Variant of the GZIP reference design not supported on Arria(R) 10 GX.")
-elseif(FPGA_BOARD STREQUAL ${S10_PAC_BOARD_NAME})
-    message(FATAL_ERROR "\tGZIP Reference design is not supported on pac_s10 board variant. Please use pac_s10_usm instead.")
-elseif(FPGA_BOARD STREQUAL ${S10_PAC_USM_BOARD_NAME})
-    message(STATUS "\tConfiguring the design to run on the Intel(R) Programmable Acceleration Card (PAC) D5005 (with Intel Stratix(R) 10 SX FPGA).")
-    set(SELECTED_BOARD ${S10_PAC_USM_BOARD_NAME})
-    set (IS_A10 0)
+if(NOT DEFINED FPGA_BOARD)
+    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_BOARD was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+                    \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "\tAn invalid board name was passed in using the FPGA_BOARD flag. Configuring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Arria(R) 10 GX FPGA. Please refer to the README for the list of valid board names.")
-    message(STATUS "\tNote: The Low-Latency Variant of the GZIP reference design not supported on Arria(R) 10 GX.")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
 endif()
 
-# Design specific constant values
-# To increase NUM_ENGINES to greater than 2, must also statically declare more engines in gzipkernel.cpp --> SubmitGzipTasks()
-if(SELECTED_BOARD STREQUAL ${A10_PAC_BOARD_NAME})
+# This is a Windows-specific flag that enables error handling in host code
+if(WIN32)
+    set(WIN_FLAG "/EHsc")
+endif()
+
+# Set design parameters according to the selected chip
+if(FPGA_BOARD MATCHES ".*a10.*")
     # A10 parameters
     set(NUM_ENGINES 1)
+    set(LL_SEED "-Xsseed=1")
+    set(HIGH_BW_SEED "-Xsseed=6")
     set(NUM_REORDER "")
-elseif(SELECTED_BOARD STREQUAL ${S10_PAC_USM_BOARD_NAME})
+elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(NUM_ENGINES 2)
+    set(LL_SEED "-Xsseed=2")
+    set(HIGH_BW_SEED "-Xsseed=2")
+    set(NUM_REORDER "-Xsnum-reorder=6")
+elseif(FPGA_BOARD MATCHES ".*agilex.*")
+    # Agilex™
+    set(NUM_ENGINES 2)
+    set(LL_SEED "-Xsseed=1")
+    set(HIGH_BW_SEED "-Xsseed=8")
+    # For the High Bandwidth variant, specify 6 reordering units to improve global memory read bandwidth across 4 channels of DDR.
+    # For Low Latency variant this is not necessary since only one channel of global memory is used (host memory).
     set(NUM_REORDER "-Xsnum-reorder=6")
 else()
     message(FATAL_ERROR "Unknown board!")
 endif()
 
+# Enable low-latency variant
+# Presence of USM host allocations (and whether to turn on enable the low-latency target) is detected automatically by
+# looking at the name of the BSP, or manually by the user when running CMake.
+# E.g., cmake .. -DUSER_ENABLE_USM=1
+if(FPGA_BOARD MATCHES ".*usm.*" OR DEFINED USER_ENABLE_USM)
+    set(USM_ENABLED 1)
+    set(NUM_REORDER_LL "")
+endif()
 
-# Compiler flags
-set(EMULATOR_COMPILE_FLAGS "-g0 -fintelfpga  -DFPGA_EMULATOR -DNUM_ENGINES=${NUM_ENGINES}")
-set(EMULATOR_LINK_FLAGS -fintelfpga)
+message(STATUS "NUM_ENGINES=${NUM_ENGINES}")
+message(STATUS "LL_SEED=${LL_SEED}")
+message(STATUS "HIGH_BW_SEED=${HIGH_BW_SEED}")
+message(STATUS "NUM_REORDER=${NUM_REORDER}")
+message(STATUS "NUM_REORDER_LL=${NUM_REORDER_LL}")
 
-# specify -MMD -fsycl-link-targets=... instead of -fintelfpga to workaround known issue; lower report quality 
-set(HARDWARE_COMPILE_FLAGS -MMD -fsycl-link-targets=spir64_fpga-unknown-unknown-sycldevice -c -DNUM_ENGINES=${NUM_ENGINES})
-
+# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
+# 2. The "link" stage invokes the compiler's FPGA backend before linking.
+#    For this reason, FPGA backend flags must be passed as link flags in CMake.
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -g0 -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -MMD -fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg=\"-nocaching\" -Xsboard=${FPGA_BOARD} -DNUM_ENGINES=${NUM_ENGINES} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
-separate_arguments(USER_HARDWARE_FLAGS)
-set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg="-nocaching" ${NUM_REORDER} -Xsboard=${SELECTED_BOARD} ${USER_HARDWARE_FLAGS} -DNUM_ENGINES=${NUM_ENGINES})
-set(FINAL_LINK_FLAGS -fintelfpga -DNUM_ENGINES=${NUM_ENGINES})
+
+#//////////////////////////////////////////////////////////////////////////////#
+#//////////////////////////////////////////////////////////////////////////////#
+#                           High Bandwidth Variant                             #
+#//////////////////////////////////////////////////////////////////////////////#
+#//////////////////////////////////////////////////////////////////////////////#
+###############################################################################
+### FPGA Emulator
+###############################################################################
+add_executable(${EMULATOR_TARGET} ${SOURCE_FILE} ${DEVICE_SOURCE_FILE})
+set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
+set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
+
+###############################################################################
+### Generate Report
+###############################################################################
+set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
+# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE} ${DEVICE_SOURCE_FILE})
+add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} ${NUM_REORDER} ${HIGH_BW_SEED} -fsycl-link=early")
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
+
+###############################################################################
+### FPGA Hardware
+###############################################################################
+add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE} ${DEVICE_SOURCE_FILE})
+add_custom_target(fpga DEPENDS ${FPGA_TARGET})
+set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} ${NUM_REORDER} ${HIGH_BW_SEED} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+# The -reuse-exe flag enables rapid recompilation of host-only code changes.
+# See DPC++FPGA/GettingStarted/fast_recompile for details.
+#//////////////////////////////////////////////////////////////////////////////#
+#//////////////////////////////////////////////////////////////////////////////#
+#//////////////////////////////////////////////////////////////////////////////#
+#//////////////////////////////////////////////////////////////////////////////#
 
 
-# FPGA emulator
-if(WIN32)
-    set(WIN_EMULATOR_TARGET ${EMULATOR_TARGET}.exe)
-    add_custom_target(fpga_emu DEPENDS ${WIN_EMULATOR_TARGET})
-    separate_arguments(WIN_EMULATOR_COMPILE_FLAGS WINDOWS_COMMAND "${EMULATOR_COMPILE_FLAGS}")
-    add_custom_command(OUTPUT ${WIN_EMULATOR_TARGET} 
-                       COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_EMULATOR_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/gzip.cpp ${CMAKE_CURRENT_SOURCE_DIR}/crc32.cpp ${CMAKE_CURRENT_SOURCE_DIR}/WriteGzip.cpp ${CMAKE_CURRENT_SOURCE_DIR}/CompareGzip.cpp  -o ${CMAKE_BINARY_DIR}/${WIN_EMULATOR_TARGET}
-                       DEPENDS ${DEVICE_SOURCE_FILE} ${HOST_SOURCE_FILE})
 
-    # Low-Latency Variant
-    if (NOT ${IS_A10})
-      set(WIN_EMULATOR_TARGET_LL ${EMULATOR_TARGET_LL}.exe)
-      add_custom_target(fpga_emu_ll DEPENDS ${WIN_EMULATOR_TARGET_LL})
-      separate_arguments(WIN_EMULATOR_COMPILE_FLAGS WINDOWS_COMMAND "${EMULATOR_COMPILE_FLAGS}")
-      add_custom_command(OUTPUT ${WIN_EMULATOR_TARGET_LL} 
-                         COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_EMULATOR_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE_LL} ${CMAKE_CURRENT_SOURCE_DIR}/gzip_ll.cpp ${CMAKE_CURRENT_SOURCE_DIR}/crc32.cpp ${CMAKE_CURRENT_SOURCE_DIR}/WriteGzip.cpp ${CMAKE_CURRENT_SOURCE_DIR}/CompareGzip.cpp  -o ${CMAKE_BINARY_DIR}/${WIN_EMULATOR_TARGET_LL}
-                         DEPENDS ${DEVICE_SOURCE_FILE_LL} ${HOST_SOURCE_FILE_LL})
-    endif()
-else()
-    add_executable(${EMULATOR_TARGET} ${DEVICE_SOURCE_FILE} ${HOST_SOURCE_FILE})
-    add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
-    set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS ${EMULATOR_COMPILE_FLAGS})
-    set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS ${EMULATOR_LINK_FLAGS})
+#//////////////////////////////////////////////////////////////////////////////#
+#//////////////////////////////////////////////////////////////////////////////#
+#                            Low Latency Variant                               #
+#//////////////////////////////////////////////////////////////////////////////#
+#//////////////////////////////////////////////////////////////////////////////#
+if (${USM_ENABLED})
+###############################################################################
+### FPGA Emulator
+###############################################################################
+add_executable(${EMULATOR_TARGET_LL} ${SOURCE_FILE_LL} ${DEVICE_SOURCE_FILE_LL})
+set_target_properties(${EMULATOR_TARGET_LL} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
+set_target_properties(${EMULATOR_TARGET_LL} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_emu_ll DEPENDS ${EMULATOR_TARGET_LL})
 
-    # Low-Latency Variant
-    if (NOT ${IS_A10})
-      add_executable(${EMULATOR_TARGET_LL} ${DEVICE_SOURCE_FILE_LL} ${HOST_SOURCE_FILE_LL})
-      add_custom_target(fpga_emu_ll DEPENDS ${EMULATOR_TARGET_LL})
-      set_target_properties(${EMULATOR_TARGET_LL} PROPERTIES COMPILE_FLAGS ${EMULATOR_COMPILE_FLAGS})
-      set_target_properties(${EMULATOR_TARGET_LL} PROPERTIES LINK_FLAGS ${EMULATOR_LINK_FLAGS})
-    endif()
+###############################################################################
+### Generate Report
+###############################################################################
+set(FPGA_EARLY_IMAGE_LL ${TARGET_NAME}_ll_report.a)
+# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+add_executable(${FPGA_EARLY_IMAGE_LL} ${SOURCE_FILE_LL} ${DEVICE_SOURCE_FILE_LL})
+add_custom_target(report_ll DEPENDS ${FPGA_EARLY_IMAGE_LL})
+set_target_properties(${FPGA_EARLY_IMAGE_LL} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_EARLY_IMAGE_LL} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} ${NUM_REORDER_LL} ${LL_SEED} -fsycl-link=early")
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 
+###############################################################################
+### FPGA Hardware
+###############################################################################
+add_executable(${FPGA_TARGET_LL} EXCLUDE_FROM_ALL ${SOURCE_FILE_LL} ${DEVICE_SOURCE_FILE_LL})
+add_custom_target(fpga_ll DEPENDS ${FPGA_TARGET_LL})
+set_target_properties(${FPGA_TARGET_LL} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_TARGET_LL} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} ${NUM_REORDER_LL} ${LL_SEED} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_LL}")
+# The -reuse-exe flag enables rapid recompilation of host-only code changes.
+# See DPC++FPGA/GettingStarted/fast_recompile for details.
 endif()
-
-
-# FPGA hardware
-if(WIN32)
-    add_custom_target(fpga COMMAND echo "An FPGA hardware target is not provided on Windows. See README for details.")
-else()
-    add_custom_target(fpga DEPENDS ${FPGA_TARGET})
-    set(DEVICE_FPGA_OBJ "gzipkernel_fpga.o")
-    set(DEVICE_IMAGE_FPGA_OBJ "gzipkernel_fpga.a")
-    set(HOST_SOURCE_FILES_WITH_PATH ${CMAKE_CURRENT_SOURCE_DIR}/gzip.cpp ${CMAKE_CURRENT_SOURCE_DIR}/crc32.cpp ${CMAKE_CURRENT_SOURCE_DIR}/WriteGzip.cpp ${CMAKE_CURRENT_SOURCE_DIR}/CompareGzip.cpp)
-
-    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
-
-    add_custom_command(OUTPUT ${DEVICE_FPGA_OBJ}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${DEVICE_FPGA_OBJ}
-                       DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE})
-
-    set(OBJ_FILES)
-    foreach(HOST_FILE ${HOST_SOURCE_FILES_WITH_PATH})
-      set(HOST_FPGA_OBJ ${HOST_FILE}.o)
-      add_custom_command(OUTPUT ${HOST_FPGA_OBJ}
-                         COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS} ${HOST_FILE} -o ${HOST_FPGA_OBJ}
-                         DEPENDS ${HOST_FILE})
-      list(APPEND OBJ_FILES ${HOST_FPGA_OBJ})
-    endforeach()
-
-    # High BW GZIP Variant
-    add_custom_command(OUTPUT ${DEVICE_IMAGE_FPGA_OBJ}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} ${HIGH_BW_SEED} -fsycl-link=image ${DEVICE_FPGA_OBJ} -o ${DEVICE_IMAGE_FPGA_OBJ}
-                       DEPENDS ${DEVICE_FPGA_OBJ} ${OBJ_FILES})
-
-    add_custom_command(OUTPUT ${FPGA_TARGET}
-                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${FINAL_LINK_FLAGS} ${OBJ_FILES} ${DEVICE_IMAGE_FPGA_OBJ} -o  ${CMAKE_BINARY_DIR}/${FPGA_TARGET}
-                       DEPENDS ${DEVICE_IMAGE_FPGA_OBJ} ${OBJ_FILES})
-
-    # Low Latency GZIP Variant
-    if (NOT ${IS_A10})
-      add_custom_target(fpga_ll DEPENDS ${FPGA_TARGET_LL})
-      set(DEVICE_FPGA_OBJ_LL "gzipkernel_fpga_ll.o")
-      set(DEVICE_IMAGE_FPGA_OBJ_LL "gzipkernel_fpga_ll.a")
-      set(HOST_SOURCE_FILES_WITH_PATH_LL ${CMAKE_CURRENT_SOURCE_DIR}/gzip_ll.cpp ${CMAKE_CURRENT_SOURCE_DIR}/crc32.cpp ${CMAKE_CURRENT_SOURCE_DIR}/WriteGzip.cpp ${CMAKE_CURRENT_SOURCE_DIR}/CompareGzip.cpp)
-
-      add_custom_command(OUTPUT ${DEVICE_FPGA_OBJ_LL}
-                         COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE_LL} -o ${DEVICE_FPGA_OBJ_LL}
-                         DEPENDS ${DEVICE_SOURCE_FILE_LL} ${DEVICE_HEADER_FILE_LL})
-
-      set(OBJ_FILES_LL)
-      foreach(HOST_FILE ${HOST_SOURCE_FILES_WITH_PATH_LL})
-        set(HOST_FPGA_OBJ_LL ${HOST_FILE}.o)
-        add_custom_command(OUTPUT ${HOST_FPGA_OBJ_LL}
-                           COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS} ${HOST_FILE} -o ${HOST_FPGA_OBJ_LL}
-                           DEPENDS ${HOST_FILE})
-        list(APPEND OBJ_FILES_LL ${HOST_FPGA_OBJ_LL})
-      endforeach()
-
-      add_custom_command(OUTPUT ${DEVICE_IMAGE_FPGA_OBJ_LL}
-                         COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} ${LL_SEED} -fsycl-link=image ${DEVICE_FPGA_OBJ_LL} -o ${DEVICE_IMAGE_FPGA_OBJ_LL}
-                         DEPENDS ${DEVICE_FPGA_OBJ_LL} ${OBJ_FILES_LL})
-
-      add_custom_command(OUTPUT ${FPGA_TARGET_LL}
-                         COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${FINAL_LINK_FLAGS} ${OBJ_FILES_LL} ${DEVICE_IMAGE_FPGA_OBJ_LL} -o  ${CMAKE_BINARY_DIR}/${FPGA_TARGET_LL}
-                         DEPENDS ${DEVICE_IMAGE_FPGA_OBJ_LL} ${OBJ_FILES_LL})
-    endif()
-endif()
-
-# FPGA hardware report
-if(WIN32)
-    add_custom_target(report DEPENDS ${REPORTS_TARGET} )
-    separate_arguments(WIN_FLAGS WINDOWS_COMMAND)
-    add_custom_command(OUTPUT ${REPORTS_TARGET}
-                      COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link  ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
-                      DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE})
-
-    # Low-Latency Variant
-    if (NOT ${IS_A10})
-      add_custom_target(report_ll DEPENDS ${REPORTS_TARGET_LL} )
-      separate_arguments(WIN_FLAGS WINDOWS_COMMAND)
-      add_custom_command(OUTPUT ${REPORTS_TARGET_LL}
-                        COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link  ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE_LL} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET_LL}
-                        DEPENDS ${DEVICE_SOURCE_FILE_LL} ${DEVICE_HEADER_FILE_LL})
-    endif()
-else()
-    add_custom_target(report DEPENDS ${REPORTS_TARGET} )
-    
-
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} ${DEVICE_SOURCE_FILE} COPYONLY)
-    
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_HEADER_FILE} ${DEVICE_HEADER_FILE} COPYONLY)
-    
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CompareGzip.hpp CompareGzip.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/crc32.hpp crc32.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gzipkernel.hpp gzipkernel.hpp COPYONLY)
-    
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kernels.hpp kernels.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/WriteGzip.hpp WriteGzip.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pipe_array.hpp pipe_array.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pipe_array_internal.hpp pipe_array_internal.hpp COPYONLY)
-
-    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
-
-    add_custom_command(OUTPUT ${REPORTS_TARGET}
-                      COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} -fsycl-link ${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
-                      DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} kernels.hpp)
-
-    # Low-Latency Variant
-    if (NOT ${IS_A10})
-      add_custom_target(report_ll DEPENDS ${REPORTS_TARGET_LL} )
-      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE_LL} ${DEVICE_SOURCE_FILE_LL} COPYONLY)
-      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_HEADER_FILE_LL} ${DEVICE_HEADER_FILE_LL} COPYONLY)
-      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gzipkernel_ll.hpp gzipkernel_ll.hpp COPYONLY)
-
-      add_custom_command(OUTPUT ${REPORTS_TARGET_LL}
-                        COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} -fsycl-link ${DEVICE_SOURCE_FILE_LL} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET_LL}
-                        DEPENDS ${DEVICE_SOURCE_FILE_LL} ${DEVICE_HEADER_FILE_LL} kernels.hpp)
-    endif()
-endif()
-
+#//////////////////////////////////////////////////////////////////////////////#
+#//////////////////////////////////////////////////////////////////////////////#
+#//////////////////////////////////////////////////////////////////////////////#
+#//////////////////////////////////////////////////////////////////////////////#

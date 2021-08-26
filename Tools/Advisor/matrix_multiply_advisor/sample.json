@@ -2,7 +2,7 @@
  "guid":"6F00053A-11DC-40D1-90C7-1CFF822B874B",
  "name": "Matrix Multiply Advisor",
  "categories": ["Toolkit/oneAPI Tools/Advisor"],
- "description": "Simple program that shows how to improve the Intel® oneAPI Data Parallel C++ (DPC++) Matrix Multiplication program using Intel® VTune™ Profiler and Intel® Advisor",
+ "description": "Simple program that shows how to improve the Intel&reg; oneAPI Data Parallel C++ (DPC++) Matrix Multiplication program using Intel&reg; VTune&trade; Profiler and Intel&reg; Advisor",
  "toolchain": ["dpcpp"],
  "dependencies": ["advisor"],
  "languages": [{"cpp": { }}],

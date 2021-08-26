@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -60,8 +60,8 @@ vector<int> GoldenResult(vector<int> vec) {
   return vec;
 }
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class SimpleMath;
 
 void RunKernel(const device_selector &selector,
@@ -79,7 +79,7 @@ void RunKernel(const device_selector &selector,
 
     event e = q.submit([&](handler &h) {
       accessor a(device_a, h, read_only);
-      accessor r(device_r, h, write_only, noinit);
+      accessor r(device_r, h, write_only, no_init);
 
       // FPGA-optimized kernel
       // Using kernel_args_restrict tells the compiler that the input
@@ -106,7 +106,7 @@ void RunKernel(const device_selector &selector,
 #ifdef USE_FPGA_REG
             // Use fpga_reg to insert a register between the copy of val used
             // in each unrolled iteration.
-            val = INTEL::fpga_reg(val);
+            val = ext::intel::fpga_reg(val);
             // Since val is held constant across the kSize unrolled iterations,
             // the FPGA hardware structure of val's distribution changes from a
             // kSize-way fanout (without fpga_reg) to a chain of of registers
@@ -114,7 +114,7 @@ void RunKernel(const device_selector &selector,
 
             // Use fpga_reg to insert a register between each step in the acc
             // adder chain.
-            acc = INTEL::fpga_reg(acc) + (coeff[j] * (val + kOffset[j]));
+            acc = ext::intel::fpga_reg(acc) + (coeff[j] * (val + kOffset[j]));
             // This transforms a compiler-inferred adder tree into an adder
             // chain, altering the structure of the pipeline. Refer to the
             // diagram in the README.
@@ -196,9 +196,9 @@ int main(int argc, char *argv[]) {
 
   // Run the kernel on either the FPGA emulator, or FPGA
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
   RunKernel(selector, vec_a, vec_r);
 

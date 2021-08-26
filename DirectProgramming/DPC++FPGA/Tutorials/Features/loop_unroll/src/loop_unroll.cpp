@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -15,6 +15,8 @@
 
 using namespace sycl;
 
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template <int unroll_factor> class VAdd;
 
 // This function instantiates the vector add kernel, which contains
@@ -27,9 +29,9 @@ void VecAdd(const std::vector<float> &summands1,
 
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
@@ -43,7 +45,7 @@ void VecAdd(const std::vector<float> &summands1,
     event e = q.submit([&](handler &h) {
       accessor acc_summands1(buffer_summands1, h, read_only);
       accessor acc_summands2(buffer_summands2, h, read_only);
-      accessor acc_sum(buffer_sum, h, write_only, noinit);
+      accessor acc_sum(buffer_sum, h, write_only, no_init);
 
       h.single_task<VAdd<unroll_factor>>([=]()
                                          [[intel::kernel_args_restrict]] {

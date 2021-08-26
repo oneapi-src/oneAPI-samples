@@ -746,8 +746,8 @@ void SubmitGzipTasksSingleEngine(
     buffer<struct GzipOutInfo, 1> *gzip_out_buf,
     buffer<unsigned, 1> *result_crc, bool last_block, event &e_crc, event &e_lz,
     event &e_huff) {
-  using acc_dist_channel = INTEL::pipe<class some_pipe, struct DistLen>;
-  using acc_dist_channel_last = INTEL::pipe<class some_pipe2, struct DistLen>;
+  using acc_dist_channel = ext::intel::pipe<class some_pipe, struct DistLen>;
+  using acc_dist_channel_last = ext::intel::pipe<class some_pipe2, struct DistLen>;
 
   e_crc = q.submit([&](handler &h) {
     auto accessor_isz = block_size;
@@ -2052,7 +2052,7 @@ void SubmitGzipTasksSingleEngine(
       // we compare to
       unsigned int insize_compare = (accessor_isz) / kVec;
 
-      int ctr = insize_compare = insize_compare - 1;
+      int ctr = insize_compare - 1;
 
       char first_valid_pos = 0;
 
@@ -2063,7 +2063,10 @@ void SubmitGzipTasksSingleEngine(
 
       // load in new data
       struct LzInput in;
-      Unroller<0, kVec>::step([&](int i) { in.data[i] = acc_pibuf[inpos++]; });
+      Unroller<0, kVec>::step([&](int i) {
+        // prevent out-of-bounds reads
+        in.data[i] = (inpos < accessor_isz) ? acc_pibuf[inpos++] : 0;
+      });
 
       Unroller<0, kVec>::step(
           [&](int i) { current_window[i + kVec] = in.data[i]; });

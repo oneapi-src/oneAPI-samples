@@ -21,7 +21,7 @@ Environment settings:
 Set MKLDNN_VERBOSE=1 to show DNNL run time verbose
 Set KMP_AFFINITY=verbose to show OpenMP thread information
 '''
-import os; os.environ["MKLDNN_VERBOSE"] = "1"
+#import os; os.environ["DNNL_VERBOSE"] = "1"
 import os; os.environ["KMP_AFFINITY"] = "granularity=fine,compact,1,0"
 '''
 Sanity Check: once Intel-optimized TensorFlow is installed, Intel DNNL optimizations are present by default.

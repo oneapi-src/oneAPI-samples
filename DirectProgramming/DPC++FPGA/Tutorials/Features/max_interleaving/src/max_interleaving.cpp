@@ -5,7 +5,7 @@
 // =============================================================
 #include <array>
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 
@@ -27,6 +27,8 @@ using FloatScalar = std::array<float, 1>;
 // combinational logic from the use of the parameter values to the result
 float SomethingComplicated(float x, float y) { return sycl::sqrt(x) * sycl::sqrt(y); }
 
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template <int interleaving>
 class KernelCompute;
 
@@ -49,7 +51,7 @@ void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
     event e = q.submit([&](handler &h) {
       accessor array_a_accessor(array_a_buffer, h, read_only);
       accessor array_b_accessor(array_b_buffer, h, read_only);
-      accessor accessor_array_r(array_r_buffer, h, write_only, noinit);
+      accessor accessor_array_r(array_r_buffer, h, write_only, no_init);
 
       h.single_task<KernelCompute<interleaving>>([=]() 
                                                  [[intel::kernel_args_restrict]] {
@@ -146,9 +148,9 @@ int main() {
   }
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   // Run the kernel with two different values of the max_interleaving

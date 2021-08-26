@@ -1,4 +1,4 @@
-# Computed Tomography Reconstruction Sample
+# `Computed Tomography Reconstruction` Sample
 
 Computed Tomography shows how to use the oneMKL library's DFT functionality to simulate computed tomography (CT) imaging.
 
@@ -22,16 +22,19 @@ This sample performs its computations on the default DPC++ device. You can set t
 
 ## Key Implementation Details
 
-To use oneMKL DFT routines, the sample creates a descriptor object for the given precision and domain (real-to-complex or complex-to-complex), calls the `commit` method, and provides a `sycl::queue` object to define the device and context. Then the `compute_*` routines are called to perform the actual computation with the appropriate descriptor object and input/output buffers.
+To use oneMKL DFT routines, the sample creates a descriptor object for the given precision and domain (real-to-complex or complex-to-complex), calls the `commit` method, and provides a `sycl::queue` object to define the device and context. The `compute_*` routines are then called to perform the actual computation with the appropriate descriptor object and input/output buffers.
 
 ## License
 
-This code sample is licensed under the MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Computed Tomography Reconstruction Sample
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
 Run `make` to build and run the sample.
@@ -41,12 +44,12 @@ You can remove all generated files with `make clean`.
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
-*Warning*: On Windows, static linking with oneMKL currently takes a very long time, due to a known compiler issue. This will be addressed in an upcoming release.
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time due to a known compiler issue. This will be addressed in an upcoming release.
 
 ## Running the Computed Tomography Reconstruction Sample
 
 ### Example of Output
-If everything is working correctly, the example program will start with the 400x400 example image `input.bmp`, create simulated CT data from it (stored as `restored.bmp`), then reconstruct the original image in grayscale and store it as `restored.bmp`.
+If everything is working correctly, the example program will start with the 400x400 example image `input.bmp` then create simulated CT data from it (stored as `restored.bmp`). It will then reconstruct the original image in grayscale and store it as `restored.bmp`.
 
 ```
 ./computed_tomography 400 400 input.bmp radon.bmp restored.bmp

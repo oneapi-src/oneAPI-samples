@@ -1,14 +1,10 @@
-//==============================================================
-//Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
 #include <algorithm>
+#include <numeric>
 #include <type_traits>
 #include <vector>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "IntersectionKernel.hpp"
 
@@ -103,7 +99,7 @@ event SubmitKernels(queue& q, std::vector<unsigned int>& a,
   // submit the kernel that performs the intersection
   event e = q.submit([&](handler& h) {
     // output accessor
-    accessor n_accessor(n_buf, h, write_only, noinit);
+    accessor n_accessor(n_buf, h, write_only, no_init);
 
     h.single_task<Worker<Version>>([=]() [[intel::kernel_args_restrict]] {
       // The 'Version' template parameter will choose between the different 
@@ -262,9 +258,9 @@ int main(int argc, char** argv) {
 
     // the device selector
 #ifdef FPGA_EMULATOR
-    INTEL::fpga_emulator_selector device_selector;
+    ext::intel::fpga_emulator_selector device_selector;
 #else
-    INTEL::fpga_selector device_selector;
+    ext::intel::fpga_selector device_selector;
 #endif
 
     // create the device queue
@@ -272,28 +268,28 @@ int main(int argc, char** argv) {
 
     bool success = true;
 
-  // Instantiate multiple versions of the kernel
-  // The II achieved by the compiler can differ between FPGA architectures
-  //
-  // On Arria 10, we are able to achieve an II of 1 for versions 1 and 2 of
-  // the kernel (not version 0).
-  // Version 2 of the kernel can achieve the highest Fmax with 
-  // an II of 1 (and therefore has the highest throughput).
-  // Since this tutorial compiles to a single FPGA image, this is not
-  // reflected in the final design (that is, version 1 bottlenecks the Fmax
-  // of the entire design, which contains versions 0, 1 and 2).
-  // However, the difference between versions 1 and 2
-  // can be seen in the "Block Scheduled Fmax" columns in the 
-  // "Loop Analysis" tab of the HTML reports.
-  //
-  // On Stratix 10, the same discussion applies, but version 0
-  // can only achieve an II of 3 while versions 1 and 2 can only achieve
-  // an II of 2. On Stratix 10, we can achieve an II of 1 if we use non-blocking
-  // pipe reads in the IntersectionKernel, which is shown in version 3 of the
-  // kernel.
-  //
+    // Instantiate multiple versions of the kernel
+    // The II achieved by the compiler can differ between FPGA architectures
+    //
+    // On Arria® 10, we are able to achieve an II of 1 for all versions of the
+    // kernel.
+    // Version 2 of the kernel can achieve the highest Fmax with 
+    // an II of 1 (and therefore has the highest throughput).
+    // Since this tutorial compiles to a single FPGA image, this is not
+    // reflected in the final design (that is, version 1 bottlenecks the Fmax
+    // of the entire design, which contains versions 0, 1 and 2).
+    // However, the difference between versions 1 and 2
+    // can be seen in the "Block Scheduled Fmax" columns in the 
+    // "Loop Analysis" tab of the HTML reports.
+    //
+    // On Stratix® 10 and Agilex™, the same discussion applies, but version 0
+    // can only achieve an II of 3 while versions 1 and 2 can only achieve
+    // an II of 2. On Stratix® 10 and Agilex™, we can achieve an II of 1 if we use
+    // non-blocking pipe reads in the IntersectionKernel, which is shown in
+    // version 3 of the kernel.
+    //
 #if defined(A10)
-    success &= Intersection<0,2>(q, a, b, golden_n);
+    success &= Intersection<0,1>(q, a, b, golden_n);
     success &= Intersection<1,1>(q, a, b, golden_n);
     success &= Intersection<2,1>(q, a, b, golden_n);
     success &= Intersection<3,1>(q, a, b, golden_n);
@@ -302,8 +298,16 @@ int main(int argc, char** argv) {
     success &= Intersection<1,2>(q, a, b, golden_n);
     success &= Intersection<2,2>(q, a, b, golden_n);
     success &= Intersection<3,1>(q, a, b, golden_n);
+#elif defined(Agilex)
+    success &= Intersection<0,3>(q, a, b, golden_n);
+    success &= Intersection<1,2>(q, a, b, golden_n);
+    success &= Intersection<2,2>(q, a, b, golden_n);
+    success &= Intersection<3,1>(q, a, b, golden_n);
 #else
-      static_assert(false, "Unknown FPGA architecture!");
+    success &= Intersection<0,3>(q, a, b, golden_n);
+    success &= Intersection<1,3>(q, a, b, golden_n);
+    success &= Intersection<2,3>(q, a, b, golden_n);
+    success &= Intersection<3,3>(q, a, b, golden_n);
 #endif
 
     if (success) {

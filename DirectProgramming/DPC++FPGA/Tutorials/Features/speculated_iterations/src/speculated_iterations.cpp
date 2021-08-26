@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <array>
 #include <iomanip>
 #include <iostream>
@@ -27,8 +27,8 @@ constexpr size_t kExpectedIterations = 1e8;
 
 using namespace sycl;
 
-// This is the class used to name the kernel for the runtime.
-// This must be done when the kernel is expressed as a lambda.
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template <int N> class KernelCompute;
 
 template <int spec_iter>
@@ -44,7 +44,7 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
     buffer<int, 1> buffer_res(&res, 1);
 
     event e = q.submit([&](handler &h) {
-      accessor accessor_res(buffer_res, h, write_only, noinit);
+      accessor accessor_res(buffer_res, h, write_only, no_init);
 
       h.single_task<class KernelCompute<spec_iter>>([=]() {
         int x = 1;
@@ -95,9 +95,9 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
 
 int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   float bound = kUpper;
@@ -112,8 +112,8 @@ int main(int argc, char *argv[]) {
   int r0, r1, r2;
 
 // Choose the number of speculated iterations based on the FPGA board selected.
-// This reflects compute latency differences on different hardware architectures,
-// and is a low-level optimization.
+// This reflects compute latency differences on different hardware
+// architectures, and is a low-level optimization.
 #if defined(A10)
   ComplexExit<0>(selector, bound, r0);
   ComplexExit<10>(selector, bound, r1);
@@ -122,6 +122,10 @@ int main(int argc, char *argv[]) {
   ComplexExit<0>(selector, bound, r0);
   ComplexExit<10>(selector, bound, r1);
   ComplexExit<54>(selector, bound, r2);
+#elif defined(Agilex)
+  ComplexExit<0>(selector, bound, r0);
+  ComplexExit<10>(selector, bound, r1);
+  ComplexExit<50>(selector, bound, r2);
 #else
   std::static_assert(false, "Invalid FPGA board macro");
 #endif
@@ -146,9 +150,7 @@ int main(int argc, char *argv[]) {
     passed = false;
   }
 
-
   std::cout << (passed ? "PASSED: The results are correct" : "FAILED") << "\n";
 
   return passed ? 0 : -1;
 }
-

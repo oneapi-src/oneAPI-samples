@@ -1,0 +1,53 @@
+{
+  "guid": "7f013625-544b-4b54-8302-f88cec8bc8e4",
+  "name": "Chapter 01 - Introduction",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_1_1_hello.cpp - Hello data-parallel programming * fig_1_3_race.cpp - Adding a race condition to illustrate a point about being asynchronous * fig_1_4_lambda.cpp - Lambda function in C++ code * fig_1_6_functor.cpp - Function object instead of a lambda (more on this in Chapter 10)",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch01_intro",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ]
+   },
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_1_4_lambda",
+          "make fig_1_6_functor",
+          "make fig_1_3_race",
+          "make fig_1_1_hello"
+          ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_1_4_lambda",
+          "nmake fig_1_6_functor",
+          "nmake fig_1_3_race",
+          "nmake fig_1_1_hello"
+        ]
+
+      }
+    ]
+
+  }
+}

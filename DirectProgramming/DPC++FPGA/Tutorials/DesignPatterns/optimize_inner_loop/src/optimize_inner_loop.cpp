@@ -3,14 +3,16 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+#include <algorithm>
 #include <array>
 #include <iomanip>
 #include <iostream>
+#include <numeric>
 #include <random>
 #include <type_traits>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -28,13 +30,14 @@ constexpr int kNumKernels = 3;
 constexpr int kRandRangeMax = RAND_RANGE_MAX;
 constexpr double kProbSuccess = 1.0 / kRandRangeMax;
 
-// Declare the kernel class names globally to reduce name mangling.
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 // Templating allows us to instantiate multiple versions of the kernel.
 template <int version> class Producer;
 template <int version> class Consumer;
 
 // Declare the pipe class name globally to reduce name mangling.
-// Templating allows us to instantiate multiple versions of pipes for each
+// Templating allows us to instantiate multiple versions of pipes for each 
 // version of the kernel.
 template <int version> class PipeClass;
 
@@ -125,7 +128,7 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
     // submit the Consumer kernel
     event c_e = q.submit([&](handler &h) {
       // the output buffer accessor
-      accessor res_a(res_buf, h, write_only, noinit);
+      accessor res_a(res_buf, h, write_only, no_init);
 
       h.single_task<Consumer<version>>([=]() [[intel::kernel_args_restrict]] {
         // local register to accumulate into
@@ -170,9 +173,9 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
 int main(int argc, char *argv[]) {
   // the device selector
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   // set the input size based on whether we are in emulation or FPGA hardware

@@ -1,0 +1,23 @@
+{
+  "guid": "f51eea84-5732-4425-a530-113448519667",
+  "name": "DPC++ Essentials Tutorials",
+  "categories": [ "Toolkit/oneAPI Direct Programming/DPC++/Tutorials Jupyter Notebooks" ],
+  "description": "DPC++ Essentials Tutorials using Jupyter Notebooks",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "os": [ "linux" ],
+  "builder": [ "ide", "make" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "env": [ "source /opt/intel/oneapi/setvars.sh" ],
+        "steps": [
+          "make all",
+          "make Run",
+          "make clean"
+        ]
+      }
+    ]
+  }
+}
