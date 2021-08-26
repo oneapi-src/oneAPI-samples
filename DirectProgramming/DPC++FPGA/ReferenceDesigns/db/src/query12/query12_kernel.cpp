@@ -24,37 +24,15 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
                     double& kernel_latency, double& total_latency) {
   // create space for the input buffers
   // LINEITEM table
-  buffer<DBIdentifier,1> l_orderkey_buf(dbinfo.l.orderkey.size());
-  buffer<int,1> l_shipmode_buf(dbinfo.l.shipmode.size());
-  buffer<DBDate,1> l_commitdate_buf(dbinfo.l.commitdate.size());
-  buffer<DBDate,1> l_shipdate_buf(dbinfo.l.shipdate.size());
-  buffer<DBDate,1> l_receiptdate_buf(dbinfo.l.receiptdate.size());
+  buffer l_orderkey_buf(dbinfo.l.orderkey);
+  buffer l_shipmode_buf(dbinfo.l.shipmode);
+  buffer l_commitdate_buf(dbinfo.l.commitdate);
+  buffer l_shipdate_buf(dbinfo.l.shipdate);
+  buffer l_receiptdate_buf(dbinfo.l.receiptdate);
 
   // ORDERS table
-  buffer<DBIdentifier,1> o_orderkey_buf(dbinfo.o.orderkey.size());
-  buffer<int,1> o_orderpriority_buf(dbinfo.o.orderpriority.size());
-
-  // a convenient lamda to make the explicit copy code less verbose
-  auto submit_copy = [&](auto& buf, const auto& host_data) {
-    return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, no_init);
-      h.copy(host_data, accessor);
-    });
-  };
-
-  // start the transers of the input buffers
-  event copy_l_orderkey = submit_copy(l_orderkey_buf, dbinfo.l.orderkey.data());
-  event copy_l_shipmode = submit_copy(l_shipmode_buf, dbinfo.l.shipmode.data());
-  event copy_l_commitdate = 
-    submit_copy(l_commitdate_buf, dbinfo.l.commitdate.data());
-  event copy_l_shipdate = submit_copy(l_shipdate_buf, dbinfo.l.shipdate.data());
-  event copy_l_receiptdate = 
-    submit_copy(l_receiptdate_buf, dbinfo.l.receiptdate.data());
-
-  event copy_o_orderkey =
-    submit_copy(o_orderkey_buf, dbinfo.o.orderkey.data());
-  event copy_o_orderpriority = 
-    submit_copy(o_orderpriority_buf, dbinfo.o.orderpriority.data());
+  buffer o_orderkey_buf(dbinfo.o.orderkey);
+  buffer o_orderpriority_buf(dbinfo.o.orderpriority);
 
   // setup the output buffers
   buffer high_line_count_buf(high_line_count);
@@ -66,10 +44,6 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// LineItemProducer Kernel: produce the LINEITEM table
   auto produce_lineitem_event = q.submit([&](handler& h) {
-    // this kernel depends on the memory transfer for the LINEITEM table
-    h.depends_on({copy_l_orderkey, copy_l_shipmode, copy_l_commitdate,
-                  copy_l_shipdate, copy_l_receiptdate});
-
     size_t l_rows = dbinfo.l.rows;
     accessor l_orderkey_accessor(l_orderkey_buf, h, read_only);
     accessor l_shipmode_accessor(l_shipmode_buf, h, read_only);
@@ -106,9 +80,6 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// OrdersProducer Kernel: produce the ORDERS table
   auto produce_orders_event = q.submit([&](handler& h) {
-    // this kernel depends on the memory transfer for the ORDERS table
-    h.depends_on({copy_o_orderkey, copy_o_orderpriority});
-
     size_t o_rows = dbinfo.o.rows;
     accessor o_orderkey_accessor(o_orderkey_buf, h, read_only);
     accessor o_orderpriority_accessor(o_orderpriority_buf, h, read_only);
@@ -138,9 +109,6 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// Join kernel
   auto join_event = q.submit([&](handler& h) {
-    // this kernel doesn't depend on any memory copies; all data is fed
-    // to/from it via SYCL pipes (see the README)
-
     int o_rows = dbinfo.o.rows;
     int l_rows = dbinfo.l.rows;
 
@@ -228,9 +196,8 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
                 (joined_data.data.get<i>().orderpriority == 1 ||
                  joined_data.data.get<i>().orderpriority == 2);
 
-            const bool do_computation = !done && joined_data.data.get<i>().valid
-                && valid_shipmode && valid_commitdate && valid_shipdate
-                && receipt_within_year_of_date;
+            const bool do_computation = valid_shipmode && valid_commitdate &&
+                valid_shipdate && receipt_within_year_of_date;
 
             if (do_computation) {
               // is this order priority urgent or high
