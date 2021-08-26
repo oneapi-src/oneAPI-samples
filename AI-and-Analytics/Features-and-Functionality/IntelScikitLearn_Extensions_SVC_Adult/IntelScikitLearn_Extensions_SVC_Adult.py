@@ -61,9 +61,8 @@ predicted = classifier.predict(x_test)
 report = metrics.classification_report(y_test, predicted)
 print(f"Classification report for SVC trained with the original scikit-learn:\n{report}\n")
 
-# With scikit-learn-intelex patching you can:
+# With Intel(R) Extension for Scikit-learn you can:
 # 
-# - Use your scikit-learn code for training and prediction with minimal changes (a couple of lines of code);
-# - Fast execution training and prediction of scikit-learn models;
-# - Get the same quality;
-# - Get speedup more than **72** times.
+# - Use your existing scikit-learn code for training and prediction;
+# - Add a couple of lines to execute your code up to **72** times faster;
+# - Get models of the same quality.
