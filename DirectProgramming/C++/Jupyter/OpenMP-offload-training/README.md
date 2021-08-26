@@ -29,3 +29,35 @@ are the steps to access these Jupyter notebooks on the Intel Devcloud:
 1. Open "OpenMP Welcome.ipynb" with JupyterLab
 2. Start the modules of interest
 3. Follow the instructions in each notebook and execute cells when instructed.
+
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+for details.
+
+# Summary of the Jupyter Notebook Directories
+
+## OpenMP Welcome
+* Introduce Developer Training Modules
+* 
+* Describe oneAPI Tool Modules
+
+## Introduction to OpenMP Offload
+* oneAPI Software Model Overview and Workflow
+* HPC Single-Node Workflow with oneAPI
+* Simple OpenMP Code Example
+* Target Directive Explanation
+* _Lab Exercise_: Vector Increment with Target Directive
+
+## Managing Data Transfers
+* Offloading Data
+* Target Data Region
+* _Lab Exercise_: Target Data Region
+* Mapping Global Variable to Device
+
+## Utilizing GPU Parallelism
+* Device Parallelism
+* OpenMP Constructs and Teams
+* Host Device Concurrency
+* _Lab Exercise_: OpenMP Device Parallelism
