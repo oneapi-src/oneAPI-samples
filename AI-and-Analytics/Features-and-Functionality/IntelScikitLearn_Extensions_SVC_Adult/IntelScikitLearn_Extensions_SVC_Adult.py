@@ -22,7 +22,7 @@ patch_sklearn()
 # Intel(R) Extension for Scikit-learn patching affects performance of specific
 # Scikit-learn functionality. Refer to the list of supported algorithms and parameters:
 # https://intel.github.io/scikit-learn-intelex/algorithms.html for details.
-# In cases when unsupported parameters are used, the package fallbacks into original Scikit-learn
+# In cases when unsupported parameters are used, the package fallbacks into original Scikit-learn.
 
 params = {
     'C': 100.0,
