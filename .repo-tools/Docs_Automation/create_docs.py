@@ -48,8 +48,10 @@ def createChangeLog(count,sorted_by_name,sorted_by_ver): #sorted but does not in
 
         # Due to name issues, we need to fix the DPC** books chapter namesas its found and put it into the doc
         if (cat=="['Toolkit/Publication: Data Parallel C++']"):
-            description=description.replace('*','<br>')
-            name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)" + "<br><br>[" + name
+            name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[" + name
+            description=description.replace('*','')
+            description=description.replace('fig_','<br>- Fig_')
+            description="Collection of Code samples for the chapter"+description
         
         nf.write("|" + ver + "|[" + name+ "](" + url + ")|" + description + "|\n") 
     nf.write("Total Samples: " + str(count)+ "\n\n")
@@ -71,8 +73,10 @@ def createCodeSamplesList():
         target= str(sorted_by_name[key]['targetDevice'])
         cat=str(sorted_by_name[key]['categories'])
         if (cat=="""['Toolkit/Publication: Data Parallel C++']"""):
-            description=description.replace('*','<br>')
-            name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)" + "<br><br>[" + name
+            description=description.replace('*','')
+            description=description.replace('fig_','<br>- Fig_')
+            description="Collection of Code samples for the chapter"+description
+            name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[" + name
         nf.write("|[" + name+ "](" + url + ")|" + target + "|" + description + "|\n") 
     
     nf.write("Total Samples: " + str(count)+ "\n\n")
