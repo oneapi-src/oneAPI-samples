@@ -13,7 +13,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_
 
 # Intel(R) Extension for Scikit-learn (previously known as daal4py) contains drop-in replacement
 # functionality for the stock scikit-learn package. You can take advantage of the performance
-# optimizations of Intel Extension for Scikit-learn by adding just two lines of code before the
+# optimizations of Intel® Extension for Scikit-learn by adding just two lines of code before the
 # usual scikit-learn imports:
 
 from sklearnex import patch_sklearn
