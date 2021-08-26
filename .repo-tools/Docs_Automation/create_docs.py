@@ -1,20 +1,20 @@
+from datetime import date
+from collections import OrderedDict
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from datetime import date
 import os
 import json
-from collections import OrderedDict
 today = date.today()
+d = today.strftime("%B %d, %Y")
 currentVersion = "2021.4.0"
 fileName = "sample.json"
 fCodeSamplesLists = "CODESAMPLESLIST.md"
 fChangeLogs = "CHANGELOGS.md"
 freadme = "README.md"
 fguidVer = ".repo-tools\Docs_Automation\guids.json"
-absolute_path = os.getcwd()
-pathLength = len(absolute_path)   #used to modify local path length, so only tree structure is left for crafting the url
+#absolute_path = os.getcwd()
+#pathLength = len(os.getcwd())   #used to modify local path length, so only tree structure is left for crafting the url
 oneAPIURL = 'https://github.com/oneapi-src/oneAPI-samples/tree/master'
-d = today.strftime("%B %d, %Y")
 count = 0
 
 def checkFileExists(checkFile):
@@ -139,6 +139,11 @@ sorted_by_name = OrderedDict(sorted(temp, key=lambda key_value: key_value[1]["na
 
 temp=dict_version.items()
 sorted_by_ver = OrderedDict(sorted(temp, key=lambda key_value: key_value[1]["ver"], reverse=True))
+        # Future - add a search for license file and if none, show a warning
+        # Future - if no sample.json is present then show a warning
+        # future - if no readme.md is present then show a warning
+        # future - Check dict_main vs dict_version for guid present if not then need to add
+        # furure - check dict_version vs dict_main for guid present if not then need to allow if new sample hasnt been uploaded
 
 createChangeLog(count,sorted_by_name,sorted_by_ver)
 createCodeSamplesList()
