@@ -1,0 +1,23 @@
+{
+	"guid": "45690678-8210-42f5-aaf1-d8a71892f04a",
+	"name": "Visual Computing Tutorial",
+	"categories": ["Toolkit/oneAPI Tools/Rendering Toolkit"],
+	"description": "We are starting with an apples-to-apples comparison article between Intel OSPRay and Microsoft DirectX11 (Direct3D11). ",
+	"toolchain": ["dpcpp"],
+	"languages": [{
+		"cpp": {}
+	}],
+	"targetDevice": ["CPU"],
+	"os": ["windows"],
+	"builder": ["ide", "cmake"],
+	"ciTests": {
+		"windows": [{
+			"steps": [
+				"mkdir build",
+				"cd build",
+				"'cmake -G 'Visual Studio 16 2019' -A x64 ..'",
+				"cmake --build . --config Release"
+			]
+		}]
+	}
+}
