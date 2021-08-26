@@ -1,6 +1,6 @@
 {
   "guid": "7D431C27-AC4C-4AFF-9566-5B978C3D1F5D",
-  "name": "TODO",
+  "name": "Experimental Printf",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "TODO",
   "toolchain": ["dpcpp"],

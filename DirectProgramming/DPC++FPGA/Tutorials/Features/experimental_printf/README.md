@@ -1,6 +1,6 @@
 
 # Print Data Using SYCL Experimental Printf
-This FPGA tutorial explains how to use the `sycl::ext::oneapi::experimental::printf` to print from the FPGA device.
+This FPGA tutorial explains how to use the `sycl::ext::oneapi::experimental::printf` to print in a DPC++ FPGA program.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -45,6 +45,7 @@ PRINTF("Hello: %d\n", 123);
 ## Key Concepts
 
 * How to use the `sycl::ext::oneapi::experimental::printf`
+* Advantages and limitations of `sycl::ext::oneapi::experimental::printf`
 
 ## License  
 Code samples are licensed under the MIT license. See
@@ -96,7 +97,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ``` 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded at <TODO GENERATE it after the review is approved>
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded at TODO I will GENERATE it after the review is approved
 
 ### On a Windows* System
 
