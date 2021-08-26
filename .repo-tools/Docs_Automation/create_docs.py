@@ -12,8 +12,6 @@ fCodeSamplesLists = "CODESAMPLESLIST.md"
 fChangeLogs = "CHANGELOGS.md"
 freadme = "README.md"
 fguidVer = ".repo-tools\Docs_Automation\guids.json"
-#absolute_path = os.getcwd()
-#pathLength = len(os.getcwd())   #used to modify local path length, so only tree structure is left for crafting the url
 oneAPIURL = 'https://github.com/oneapi-src/oneAPI-samples/tree/master'
 count = 0
 
@@ -88,9 +86,9 @@ def createReadme(sorted_by_name, sorted_by_ver):
     nf.write("## Introduction\n\n")
     nf.write(dataContent['mdIntro1'] + "\n" +dataContent['mdIntro2'] + currentVersion + dataContent['mdIntro2.1'] + "\n ### Sample Details\n\n")
     nf.write(dataContent['mdIntro3'] + dataContent['mdIntro3.1']+dataContent['mdIntro3.2'] + dataContent['mdIntro3.3'] + dataContent['mdIntro3.4'] + dataContent['mdIntro3.5'])
-    nf.write("\n" +dataContent['mdIntro4'] + "\n" +dataContent['mdIntro4.1'] + "\n" +dataContent['mdIntro4.2'])
-    nf.write("\n\n### On Windows Platform\n\n" + dataContent['mdIntro5.1'] + "\n" + dataContent['mdIntro5.2'] + "\n" + dataContent['mdIntro5.3'] + "\n" + dataContent['mdIntro5.4'])
-    nf.write("\n\n## Known Issues or Limitations\n\n## Contributing\n\n" + dataContent['mdIntro6'] + "\n\n" + dataContent['mdIntro7'])
+    nf.write(dataContent['mdIntro5'] + dataContent['mdIntro5.1'] + "\n" + dataContent['mdIntro5.2'] + "\n" + dataContent['mdIntro5.3'] + "\n" + dataContent['mdIntro5.4'])
+    nf.write("\n\n" +dataContent['mdIntro4'])
+    nf.write(dataContent['mdIntro6'] + "\n\n" + dataContent['mdIntro7'])
         
     for key in sorted_by_name.keys():
         description= str(sorted_by_name[key]['description']) 
@@ -99,11 +97,13 @@ def createReadme(sorted_by_name, sorted_by_ver):
         name=sorted_by_name[key]['name']
         cat=str(sorted_by_name[key]['categories'])
         if (cat=="""['Toolkit/Publication: Data Parallel C++']"""):
-            name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)" + "\n\n[" + name
-            description=description.replace('*','<br>')
+            name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[" + name
+            description=description.replace('*','')
+            description=description.replace('fig_','<br>- Fig_')
+            description="Collection of Code samples for the chapter"+description
         if (ver==currentVersion):
             nf.write("|" + ver + "|[" + name+ "](" + url + ")|" + description + "|\n") 
-    nf.write("Total Samples: " + str(count)+ "\n\n")
+    nf.write("\nTotal Samples: " + str(count)+ "\n\n")
     nf.write(dataContent['mdLicense'])
     nf.write("\n\n")
     nf.write(str(dataContent['mdCodeSamplesListFooter']) + d)
