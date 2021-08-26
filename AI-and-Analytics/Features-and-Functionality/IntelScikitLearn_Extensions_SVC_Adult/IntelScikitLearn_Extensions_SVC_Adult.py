@@ -30,7 +30,7 @@ params = {
     'gamma': 'scale'
 }
 
-# Training of the SVC algorithm with Intel(R) Extension for Scikit-learn for Adult dataset
+# "Train SVC algorithm with Intel(R) Extension for Scikit-learn on Adult dataset:"
 
 start = time()
 from sklearn.svm import SVC
