@@ -41,7 +41,7 @@ Third party program Licenses can be found here:
 
 # Summary of the Jupyter Notebook Directories
 
-## OpenMP Welcome
+[OpenMP Welcome](OpenMP Welcome.ipynb)
 * Introduce Developer Training Modules
 * Describe oneAPI Tool Modules
 
