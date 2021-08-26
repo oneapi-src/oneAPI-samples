@@ -24,9 +24,6 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Running Samples on the Intel&reg; DevCloud
-If you are running this sample on the DevCloud, see [Running Samples on the Intel&reg; DevCloud](#run-samples-on-devcloud)
-
 ## Build and Run the Sample
 
 ### Pre-requirement
