@@ -114,27 +114,9 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
 
     // streaming query12 computation
     h.single_task<Join>([=]() [[intel::kernel_args_restrict]] {
-      //// callbacks for reading and writing data
-      // reader callback for the Orders table (table 1 for MergeJoiner)
-      GenericPipeReader<OrdersProducerPipe,
-                        OrdersRowPipeData> orders_reader;
-
-      // reader callback for the LineItem table (table 2 for MergeJoiner)
-      GenericPipeReader<LineItemProducerPipe,
-                        LineItemRowPipeData> lineitem_reader;
-
-
-      // the writer callback function
-      GenericPipeWriter<JoinedProducerPipe,
-                        JoinedRowPipeData> joined_writer;
-
-      // declare the joiner
-      MergeJoiner<OrdersRow, kOrderJoinWindowSize, LineItemRow,
-                  kLineItemJoinWindowSize, JoinedRow>
-          joiner(o_rows, l_rows);
-
-      // do the join
-      joiner.Go(orders_reader, lineitem_reader, joined_writer);
+      MergeJoin<OrdersProducerPipe, OrdersRow, kOrderJoinWindowSize,
+                LineItemProducerPipe, LineItemRow, kLineItemJoinWindowSize,
+                JoinedProducerPipe, JoinedRow>(o_rows, l_rows);
 
       // join is done, tell downstream
       JoinedProducerPipe::write(JoinedRowPipeData(true, false));
@@ -238,8 +220,8 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
 
   // wait for the Compute kernel to finish
-  produce_lineitem_event.wait();
   produce_orders_event.wait();
+  produce_lineitem_event.wait();
   join_event.wait();
   compute_event.wait();
 

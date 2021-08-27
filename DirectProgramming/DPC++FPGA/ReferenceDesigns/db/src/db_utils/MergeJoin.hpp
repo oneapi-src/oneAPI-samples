@@ -13,6 +13,112 @@
 #include "StreamingData.hpp"
 #include "ShannonIterator.hpp"
 
+using namespace sycl;
+
+template<typename T1Pipe, typename T1Type, int t1_win_size,
+         typename T2Pipe, typename T2Type, int t2_win_size,
+         typename OutPipe, typename JoinType>
+void MergeJoin(int t1_size, int t2_size) {
+  // track the indices into the windows
+  // shannonize the check on whether the index is in range
+  int t1_win_idx = 0, t2_win_idx = 0;
+  bool t1_win_idx_in_range = true; // (0 < t1_size)
+  bool t1_win_idx_next_in_range = (t1_win_size < t1_size);
+  bool t2_win_idx_in_range = true; // (0 < t2_size)
+  bool t2_win_idx_next_in_range = (t2_win_size < t2_size);
+
+  bool t1_done = false, t2_done = false;
+  bool t1_win_valid = false, t2_win_valid = false;
+  bool t1_initialized = false, t2_initialized = false;
+  bool keep_going = true;
+  bool done_comp = false;
+  bool move_t1_win = false;
+
+  // table window data
+  StreamingData<T1Type, t1_win_size> t1_win;
+  StreamingData<T2Type, t2_win_size> t2_win;
+
+  [[intel::initiation_interval(1)]]
+  while (keep_going) {
+    //////////////////////////////////////////////////////
+    // update T1 window
+    if (!t1_initialized || !t1_win_valid || move_t1_win || (done_comp && t1_win_idx_in_range && !t1_done)) {
+      t1_win = T1Pipe::read(t1_win_valid);
+
+      if (t1_win_valid) {
+        t1_done = t1_win.done;
+        t1_initialized = true;
+
+        t1_win_idx_in_range = t1_win_idx_next_in_range;
+        t1_win_idx_next_in_range = (t1_win_idx < (t1_size - t1_win_size*2));
+        t1_win_idx += t1_win_size;
+      }
+    }
+    // update T2 window
+    if (!t2_initialized || !t2_win_valid || !move_t1_win || (done_comp && t2_win_idx_in_range && !t2_done)) {
+      t2_win = T2Pipe::read(t2_win_valid);
+      
+      if (t2_win_valid) {
+        t2_done = t2_win.done;
+        t2_initialized = true;
+
+        t2_win_idx_in_range = t2_win_idx_next_in_range;
+        t2_win_idx_next_in_range = (t2_win_idx < (t2_size - t2_win_size*2));
+        t2_win_idx += t2_win_size;
+      }
+    }
+    //////////////////////////////////////////////////////
+
+    if (!done_comp && t1_win_valid && t2_win_valid) {
+      //////////////////////////////////////////////////////
+      //// join the input data windows into output data
+      StreamingData<JoinType, t2_win_size> join_data(false, true);
+
+      // initialize all outputs to false
+      UnrolledLoop<0, t2_win_size>([&](auto i) {
+        join_data.data.template get<i>().valid = false;
+      });
+
+      // crossbar join
+      UnrolledLoop<0, t2_win_size>([&](auto i) {
+        bool written = false;
+
+        const bool t2_win_valid = t2_win.data.template get<i>().valid;
+        const unsigned int t2_key = t2_win.data.template get<i>().PrimaryKey();
+
+        UnrolledLoop<0, t1_win_size>([&](auto j) {
+          const bool t1_win_valid = t1_win.data.template get<j>().valid;
+          const unsigned int t1_key =
+              t1_win.data.template get<j>().PrimaryKey();
+
+          if (!written && t1_win_valid && t2_win_valid && (t1_key == t2_key)) {
+            // NOTE: order below important if Join() overrides valid
+            join_data.data.template get<i>().valid = true;
+            join_data.data.template get<i>().Join(
+                t1_win.data.template get<j>(), t2_win.data.template get<i>());
+            written = true;
+          }
+        });
+      });
+      //////////////////////////////////////////////////////
+
+      //////////////////////////////////////////////////////
+      //// tell caller to write output data
+      OutPipe::write(join_data);
+      //////////////////////////////////////////////////////
+    }
+
+    //////////////////////////////////////////////////////
+    //// state variables
+    move_t1_win = 
+      t1_win.data.last().PrimaryKey() < t2_win.data.last().PrimaryKey();
+
+    keep_going = (t1_win_idx_in_range && !t1_done) || (t2_win_idx_in_range && !t2_done);
+    done_comp = (!t1_win_idx_in_range || !t2_win_idx_in_range || t1_done || t2_done);
+    //////////////////////////////////////////////////////
+  }
+}
+
 //
 // Joins two tables into a single table
 // Assumptions:
