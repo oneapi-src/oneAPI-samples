@@ -22,7 +22,7 @@ This distributed linear regression sample code is implemented for the CPU using 
  
 
 ## Additional Requirements
-You will need a working Intel MPI Library library. We recommend to use Intel(R) MPI, which is included in the [Intel® oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
+You will need a working Intel® MPI Library, which is included in the [Intel® oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
   
 ## License  
 Code samples are licensed under the MIT license. See
