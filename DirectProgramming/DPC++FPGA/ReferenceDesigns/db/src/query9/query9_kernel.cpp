@@ -89,67 +89,30 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
   // create space for the input buffers
   // the REGEX
-  buffer<char,1> regex_word_buf(regex_word.size());
+  buffer regex_word_buf(regex_word);
 
   // PARTS
-  buffer<char,1> p_name_buf(dbinfo.p.name.size());
+  buffer p_name_buf(dbinfo.p.name);
 
   // SUPPLIER
-  buffer<unsigned char,1> s_nationkey_buf(dbinfo.s.nationkey.size());
+  buffer s_nationkey_buf(dbinfo.s.nationkey);
 
   // PARTSUPPLIER
-  buffer<DBIdentifier,1> ps_partkey_buf(dbinfo.ps.partkey.size());
-  buffer<DBIdentifier,1> ps_suppkey_buf(dbinfo.ps.suppkey.size());
-  buffer<DBDecimal,1> ps_supplycost_buf(dbinfo.ps.supplycost.size());
+  buffer ps_partkey_buf(dbinfo.ps.partkey);
+  buffer ps_suppkey_buf(dbinfo.ps.suppkey);
+  buffer ps_supplycost_buf(dbinfo.ps.supplycost);
 
   // ORDERS
-  buffer<DBIdentifier,1> o_orderkey_buf(dbinfo.o.orderkey.size());
-  buffer<DBDate,1> o_orderdate_buf(dbinfo.o.orderdate.size());
+  buffer o_orderkey_buf(dbinfo.o.orderkey);
+  buffer o_orderdate_buf(dbinfo.o.orderdate);
 
   // LINEITEM
-  buffer<DBIdentifier,1> l_orderkey_buf(dbinfo.l.orderkey.size());
-  buffer<DBIdentifier,1> l_partkey_buf(dbinfo.l.partkey.size());
-  buffer<DBIdentifier,1> l_suppkey_buf(dbinfo.l.suppkey.size());
-  buffer<DBDecimal,1> l_quantity_buf(dbinfo.l.quantity.size());
-  buffer<DBDecimal,1> l_extendedprice_buf(dbinfo.l.extendedprice.size());
-  buffer<DBDecimal,1> l_discount_buf(dbinfo.l.discount.size());
-
-  // a convenient lamda to make the explicit copy code less verbose
-  auto submit_copy = [&](auto& buf, const auto& host_data) {
-    return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, no_init);
-      h.copy(host_data, accessor);
-    });
-  };
-
-  // start the transers of the input buffers
-  event copy_regex_word = submit_copy(regex_word_buf, regex_word.data());
-
-  event copy_p_name = submit_copy(p_name_buf, dbinfo.p.name.data());
-
-  event copy_o_orderkey =
-    submit_copy(o_orderkey_buf, dbinfo.o.orderkey.data());
-  event copy_o_orderdate = 
-    submit_copy(o_orderdate_buf, dbinfo.o.orderdate.data());
-
-  event copy_l_orderkey = submit_copy(l_orderkey_buf, dbinfo.l.orderkey.data());
-  event copy_l_partkey = submit_copy(l_partkey_buf, dbinfo.l.partkey.data());
-  event copy_l_suppkey = submit_copy(l_suppkey_buf, dbinfo.l.suppkey.data());
-
-  event copy_s_nationkey = 
-    submit_copy(s_nationkey_buf, dbinfo.s.nationkey.data());
-
-  event copy_ps_partkey = 
-    submit_copy(ps_partkey_buf, dbinfo.ps.partkey.data());
-  event copy_ps_suppkey = 
-    submit_copy(ps_suppkey_buf, dbinfo.ps.suppkey.data());
-  event copy_ps_supplycost = 
-    submit_copy(ps_supplycost_buf, dbinfo.ps.supplycost.data());
-
-  event copy_l_quantity = submit_copy(l_quantity_buf, dbinfo.l.quantity.data());
-  event copy_l_extendedprice = 
-    submit_copy(l_extendedprice_buf, dbinfo.l.extendedprice.data());
-  event copy_l_discount = submit_copy(l_discount_buf, dbinfo.l.discount.data());
+  buffer l_orderkey_buf(dbinfo.l.orderkey);
+  buffer l_partkey_buf(dbinfo.l.partkey);
+  buffer l_suppkey_buf(dbinfo.l.suppkey);
+  buffer l_quantity_buf(dbinfo.l.quantity);
+  buffer l_extendedprice_buf(dbinfo.l.extendedprice);
+  buffer l_discount_buf(dbinfo.l.discount);
 
   // setup the output buffer (the profit for each nation and year)
   buffer sum_profit_buf(sum_profit);
@@ -161,11 +124,6 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   //// FilterParts Kernel:
   ////    Filter the PARTS table and produce the filtered LINEITEM table
   auto filter_parts_event = q.submit([&](handler& h) {
-    // this kernel depends on the copy of the regex, the PARTS table, and a 
-    // portion of the LINEITEM table (just the keys).
-    h.depends_on({copy_regex_word, copy_p_name, copy_l_orderkey, copy_l_partkey,
-                  copy_l_suppkey});
-
     // REGEX word accessor
     accessor regex_word_accessor(regex_word_buf, h, read_only);
 
@@ -256,9 +214,6 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   ///////////////////////////////////////////////////////////////////////////
   //// ProducerOrders Kernel: produce the ORDERS table
   auto producer_orders_event = q.submit([&](handler& h) {
-    // this kernel depends on the copy of the ORDERS table
-    h.depends_on({copy_o_orderkey, copy_o_orderdate});
-
     // ORDERS table accessors
     size_t o_rows = dbinfo.o.rows;
     accessor o_orderkey_accessor(o_orderkey_buf, h, read_only);
@@ -290,9 +245,6 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   ///////////////////////////////////////////////////////////////////////////
   //// JoinLineItemOrders Kernel: join the LINEITEM and ORDERS table
   auto join_lineitem_orders_event = q.submit([&](handler& h) {
-    // this kernel doesn't depend on any memory copies; all data is fed
-    // to/from it via SYCL pipes (see the README).
-
     // ORDERS table accessors
     size_t o_rows = dbinfo.o.rows;
 
@@ -302,24 +254,10 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     // kernel to join LINEITEM and ORDERS table
     h.single_task<JoineLineItemOrders>([=]() [[intel::kernel_args_restrict]] {
       // JOIN LINEITEM and ORDERS table
-      // callbacks for reading and writing data
-      // readers
-      GenericPipeReader<OrdersPipe,
-                        OrdersRowPipeData> orders_reader;
-      GenericPipeReader<LineItemPipe,
-                        LineItemMinimalRowPipeData> lineitem_reader;
-
-      // writer
-      GenericPipeWriter<LineItemOrdersPipe,
-                        LineItemOrdersMinimalJoinedPipeData> joined_writer;
-
-      // declare the joiner
-      MergeJoiner<OrdersRow, kOrdersJoinWinSize, LineItemMinimalRow,
-                  kLineItemJoinWinSize, LineItemOrdersMinimalJoined>
-          joiner(o_rows, l_rows);
-
-      // do join
-      joiner.Go(orders_reader, lineitem_reader, joined_writer);
+      MergeJoin<OrdersPipe, OrdersRow, kOrdersJoinWinSize,
+                LineItemPipe, LineItemMinimalRow, kLineItemJoinWinSize,
+                LineItemOrdersPipe, LineItemOrdersMinimalJoined>(o_rows,
+                l_rows);
 
       // join is done, tell downstream
       LineItemOrdersPipe::write(
@@ -331,9 +269,6 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   ///////////////////////////////////////////////////////////////////////////
   //// JoinPartSupplierSupplier Kernel: join the PARTSUPPLIER and SUPPLIER tables
   auto join_partsupplier_supplier_event = q.submit([&](handler& h) {
-    // this kernel depends on the copy of the SUPPLIERS table
-    h.depends_on({copy_s_nationkey});
-
     // SUPPLIER table accessors
     size_t s_rows = dbinfo.s.rows;
     accessor s_nationkey_accessor(s_nationkey_buf, h, read_only);
@@ -390,9 +325,6 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   /////////////////////////////////////////////////////////////////////////////
   //// ProducePartSupplier Kernel: produce the PARTSUPPLIER table
   auto produce_part_supplier_event = q.submit([&](handler& h) {
-    // this kernel depends on the copy of the PARTSUPPLIER table
-    h.depends_on({copy_ps_partkey, copy_ps_suppkey, copy_ps_supplycost});
-
     // PARTSUPPLIER table accessors
     size_t ps_rows = dbinfo.ps.rows;
     accessor ps_partkey_accessor(ps_partkey_buf, h, read_only);
@@ -426,9 +358,6 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   /////////////////////////////////////////////////////////////////////////////
   //// Compute Kernel: do the final computation on the data
   auto computation_kernel_event = q.submit([&](handler& h) {
-    // this kernel depends on the copy of the LINEITEM table
-    h.depends_on({copy_l_quantity, copy_l_extendedprice, copy_l_discount});
-
     // LINEITEM table accessors
     accessor l_quantity_accessor(l_quantity_buf, h, read_only);
     accessor l_extendedprice_accessor(l_extendedprice_buf, h, read_only);
@@ -452,11 +381,10 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
       [[intel::initiation_interval(1), intel::ivdep(ACCUM_CACHE_SIZE)]]
       do {
-        bool valid;
-        FinalPipeData pipe_data = FinalPipe::read(valid);
-        done = pipe_data.done && valid;
+        FinalPipeData pipe_data = FinalPipe::read();
+        done = pipe_data.done;
 
-        const bool pipeDataValid = !pipe_data.done && valid && pipe_data.valid;
+        const bool pipeDataValid = !pipe_data.done && pipe_data.valid;
 
         UnrolledLoop<0, kFinalDataMaxSize>([&](auto j) {
           FinalData D = pipe_data.data.get<j>();
@@ -597,9 +525,6 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   /////////////////////////////////////////////////////////////////////////////
   //// ConsumeSort Kernel: consume the output of the sorter
   auto consume_sort_event = q.submit([&](handler& h) {
-    // this kernel doesn't depend on any memory copies; all data is fed
-    // to/from it via SYCL pipes (see the README).
-
     h.single_task<ConsumeSort>([=]() [[intel::kernel_args_restrict]] {
       bool done = false;
       size_t num_rows = 0;
@@ -645,9 +570,6 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   /////////////////////////////////////////////////////////////////////////////
   //// FifoSort Kernel: the sorter
   auto sort_event = q.submit([&](handler& h) {
-    // this kernel doesn't depend on any memory copies; all data is fed
-    // to/from it via SYCL pipes (see the README).
-    
     h.single_task<FifoSort>([=]() [[intel::kernel_args_restrict]] {
       ihc::sort<SortType, kSortSize, SortInPipe, SortOutPipe>(ihc::LessThan());
     });
@@ -658,37 +580,15 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   //// JoinEverything Kernel: join the sorted
   ////    LINEITEM+ORDERS with SUPPLIER+PARTSUPPLIER
   auto join_li_o_s_ps_event = q.submit([&](handler& h) {
-    // this kernel doesn't depend on any memory copies; all data is fed
-    // to/from it via SYCL pipes (see the README).
-
-    // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps.rows;
-
-    // LINEITEM table accessors
-    size_t l_rows = dbinfo.l.rows;
+    // the join will be terminated by upstream 'done' signals,
+    // so make the indices huge
+    int max_int = std::numeric_limits<int>::max();
 
     h.single_task<JoinEverything>([=]() [[intel::kernel_args_restrict]] {
-      // callbacks for reading and writing data
-      // readers
-      GenericPipeReader<PartSupplierPartsPipe,
-                        SupplierPartSupplierJoinedPipeData> s_ps_reader;
-      GenericPipeReader<LineItemOrdersSortedPipe,
-                        LineItemOrdersMinimalSortedPipeData> li_o_parts_reader;
-
-      // writer
-      GenericPipeWriter<FinalPipe,
-                        FinalPipeData> joined_writer;
-
-      // declare the joiner
-      // The PartSupplier table has is sorted by partkey and has EXACTLY
-      // 4 entries per part key
-      DuplicateMergeJoiner<
-          SupplierPartSupplierJoined, kPartSupplierDuplicatePartkeys,
-          LineItemOrdersMinimalJoined, 1, FinalData, true>
-          joiner(ps_rows, l_rows);
-
-      // do join
-      joiner.Go(s_ps_reader, li_o_parts_reader, joined_writer);
+      DuplicateMergeJoin<PartSupplierPartsPipe, SupplierPartSupplierJoined,
+                         kPartSupplierDuplicatePartkeys,
+                         LineItemOrdersSortedPipe, LineItemOrdersMinimalJoined,
+                         1, FinalPipe, FinalData>(max_int, max_int);
 
       // join is done, tell downstream
       FinalPipe::write(FinalPipeData(true, false));

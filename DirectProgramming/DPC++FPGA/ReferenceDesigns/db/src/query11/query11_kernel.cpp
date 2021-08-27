@@ -56,36 +56,14 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
   // create space for the input buffers
   // SUPPLIER
-  buffer<DBIdentifier,1> s_suppkey_buf(dbinfo.s.suppkey.size());
-  buffer<unsigned char,1> s_nationkey_buf(dbinfo.s.nationkey.size());
+  buffer s_suppkey_buf(dbinfo.s.suppkey);
+  buffer s_nationkey_buf(dbinfo.s.nationkey);
   
   // PARTSUPPLIER
-  buffer<DBIdentifier,1> ps_partkey_buf(dbinfo.ps.partkey.size());
-  buffer<DBIdentifier,1> ps_suppkey_buf(dbinfo.ps.suppkey.size());
-  buffer<int,1> ps_availqty_buf(dbinfo.ps.availqty.size());
-  buffer<DBDecimal,1> ps_supplycost_buf(dbinfo.ps.supplycost.size());
-
-  // a convenient lamda to make the explicit copy code less verbose
-  auto submit_copy = [&](auto& buf, const auto& host_data) {
-    return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, no_init);
-      h.copy(host_data, accessor);
-    });
-  };
-
-  // start the transers of the input buffers
-  event copy_s_suppkey = submit_copy(s_suppkey_buf, dbinfo.s.suppkey.data());
-  event copy_s_nationkey = 
-    submit_copy(s_nationkey_buf, dbinfo.s.nationkey.data());
-
-  event copy_ps_partkey = 
-    submit_copy(ps_partkey_buf, dbinfo.ps.partkey.data());
-  event copy_ps_suppkey = 
-    submit_copy(ps_suppkey_buf, dbinfo.ps.suppkey.data());
-  event copy_ps_availqty = 
-    submit_copy(ps_availqty_buf, dbinfo.ps.availqty.data());
-  event copy_ps_supplycost = 
-    submit_copy(ps_supplycost_buf, dbinfo.ps.supplycost.data());
+  buffer ps_partkey_buf(dbinfo.ps.partkey);
+  buffer ps_suppkey_buf(dbinfo.ps.suppkey);
+  buffer ps_availqty_buf(dbinfo.ps.availqty);
+  buffer ps_supplycost_buf(dbinfo.ps.supplycost);
 
   // setup the output buffers
   buffer partkeys_buf(partkeys);
@@ -97,10 +75,6 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   ///////////////////////////////////////////////////////////////////////////
   //// ProducePartSupplier Kernel
   auto produce_ps_event = q.submit([&](handler& h) {
-    // this kernel depends on the transfers of the PARTSUPPLIER table
-    h.depends_on({copy_ps_partkey, copy_ps_suppkey, copy_ps_availqty,
-                  copy_ps_supplycost});
-
     // PARTSUPPLIER table accessors
     size_t ps_rows = dbinfo.ps.rows;
     accessor ps_partkey_accessor(ps_partkey_buf, h, read_only);
@@ -137,9 +111,6 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   ///////////////////////////////////////////////////////////////////////////
   //// JoinPartSupplierParts Kernel
   auto join_event = q.submit([&](handler& h) {
-    // this kernel depends on the transfers of the PARTSUPPLIER table
-    h.depends_on({copy_s_suppkey, copy_s_nationkey});
-
     // PARTSUPPLIER table accessors
     size_t ps_rows = dbinfo.ps.rows;
 
@@ -187,9 +158,6 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   ///////////////////////////////////////////////////////////////////////////
   //// Compute Kernel
   auto compute_event = q.submit([&](handler& h) {
-    // this kernel doesn't depend on any memory copies; all data is fed
-    // to/from it via SYCL pipes (see the README)
-
     // PARTSUPPLIER table accessors
     size_t ps_rows = dbinfo.ps.rows;
 

@@ -25,34 +25,13 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
                   std::array<DBDecimal, kQuery1OutSize>& count,
                   double& kernel_latency, double& total_latency) {
   // create space for input buffers
-  buffer<DBDecimal,1> quantity_buf(dbinfo.l.quantity.size());
-  buffer<DBDecimal,1> extendedprice_buf(dbinfo.l.extendedprice.size());
-  buffer<DBDecimal,1> discount_buf(dbinfo.l.discount.size());
-  buffer<DBDecimal,1> tax_buf(dbinfo.l.tax.size());
-  buffer<char,1> returnflag_buf(dbinfo.l.returnflag.size());
-  buffer<char,1> linestatus_buf(dbinfo.l.linestatus.size());
-  buffer<DBDate,1> shipdate_buf(dbinfo.l.shipdate.size());
-
-  // a convenient lamda to make the explicit copy code less verbose
-  auto submit_copy = [&](auto& buf, const auto& host_data) {
-    return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, no_init);
-      h.copy(host_data, accessor);
-    });
-  };
-
-  // start the transers of the input buffers
-  event copy_quantity = submit_copy(quantity_buf, dbinfo.l.quantity.data());
-  event copy_extendedprice = 
-    submit_copy(extendedprice_buf, dbinfo.l.extendedprice.data());
-  event copy_discount = submit_copy(discount_buf, dbinfo.l.discount.data());
-  event copy_tax = submit_copy(tax_buf, dbinfo.l.tax.data());
-  event copy_returnflag = 
-    submit_copy(returnflag_buf, dbinfo.l.returnflag.data());
-  event copy_linestatus = 
-    submit_copy(linestatus_buf, dbinfo.l.linestatus.data());
-  event copy_shipdate = 
-    submit_copy(shipdate_buf, dbinfo.l.shipdate.data());
+  buffer quantity_buf(dbinfo.l.quantity);
+  buffer extendedprice_buf(dbinfo.l.extendedprice);
+  buffer discount_buf(dbinfo.l.discount);
+  buffer tax_buf(dbinfo.l.tax);
+  buffer returnflag_buf(dbinfo.l.returnflag);
+  buffer linestatus_buf(dbinfo.l.linestatus);
+  buffer shipdate_buf(dbinfo.l.shipdate);
 
   // setup the output buffers
   buffer sum_qty_buf(sum_qty);
@@ -70,10 +49,6 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// Query1 Kernel
   auto event = q.submit([&](handler& h) {
-    // this kernel depends on all the memory transfers from earlier
-    h.depends_on({copy_quantity, copy_extendedprice, copy_discount, copy_tax,
-                 copy_returnflag, copy_linestatus, copy_shipdate});
-
     // read accessors
     int rows = dbinfo.l.rows;
     accessor quantity_accessor(quantity_buf, h, read_only);
