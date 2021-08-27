@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 import os, sys
-import subprocess
 
 os.environ['DNNL_VERBOSE'] = '1'
 os.environ['DNNL_VERBOSE_TIMESTAMP'] = '1'
@@ -25,28 +24,17 @@ class PlatformUtils:
         cpufreq = psutil.cpu_freq()
         print("Max Frequency:", cpufreq.max)
         print("Min Frequency:", cpufreq.min)
-        cpu_socket_count = int(subprocess.check_output(
-            'cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l', shell=True))
-        print("Socket Number:", cpu_socket_count)
+        #cpu_socket_count = int(subprocess.check_output(
+        #    'cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l'))
+        #print("Socket Number:", cpu_socket_count)
         print("=" * 20, "Memory Information", "=" * 20)
         # get the memory details
         svmem = psutil.virtual_memory()
         print("Total: ", int(svmem.total / (1024 ** 3)), "GB")
         self.cpufreq = cpufreq
-        self.cpu_socket_count = cpu_socket_count
+        #self.cpu_socket_count = cpu_socket_count
         self.svmem = svmem
 
-
-def run_workload(outfile='mkldnn_log.csv'):
-    print('Executing:', sys.argv[1:])
-    output = subprocess.getoutput(' '.join(sys.argv[1:]))
-
-    #print('Output:', output)
-
-    with open(outfile, 'w') as f:
-        for l in output.split('\n'):
-            if 'dnnl' in l and 'exec' in l:
-                f.write(l + '\n')
 
 class FileUtils:
 
