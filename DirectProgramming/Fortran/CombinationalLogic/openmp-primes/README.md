@@ -10,7 +10,7 @@ It illustrates two OpenMP* directives to help speed up the code.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | macOS* with Xcode* installed 
-| Software                          | Intel&reg; oneAPI Intel Fortran Compiler
+| Software                          | Intel&reg; Fortran Compiler
 | What you will learn               | How to build and run a Fortran OpenMP application using Intel Fortran compiler
 | Time to complete                  | 10 minutes
 

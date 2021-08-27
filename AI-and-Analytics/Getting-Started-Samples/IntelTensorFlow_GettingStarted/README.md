@@ -1,12 +1,12 @@
 ﻿# `TensorFlow HelloWorld` Sample
-TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel® architecture and to extract maximum performance, the TensorFlow framework has been optimized using Intel® Deep Neural Networks (Intel® DNNL) primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow enables Intel® DNNL calls by default. 
+TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel® architecture and to extract maximum performance, the TensorFlow framework has been optimized using Intel® Deep Neural Networks (Intel® DNNL) primitives. This sample demonstrates how to train an example neural network and shows how Intel® Optimization for TensorFlow* enables Intel® DNNL calls by default. 
 
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 
 | Hardware                          | Intel® Xeon® Scalable processor family or newer
 | Software                          | Intel® oneAPI AI Analytics Toolkit
-| What you will learn               | How to get started to use Intel optimization for TensorFlow*
+| What you will learn               | How to get started to use Intel Optimization for TensorFlow*
 | Time to complete                  | 10 minutes
 
 ## Purpose
