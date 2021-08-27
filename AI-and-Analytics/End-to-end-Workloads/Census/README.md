@@ -1,13 +1,13 @@
 # End-to-end Machine Learning Workload: `Census` Sample
 
-This sample code illustrates how to use Intel® Distribution of Modin for ETL operations and ridge regression algorithm from the Intel® extension of scikit-learn library to build and run an end to end machine learning workload. Both Intel® Distribution of Modin and  Intel® extension of scikit-learn libraries are available together in [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). This sample code demonstrates how to seamlessly run the end-to-end census workload using the toolkit, without any external dependencies.
+This sample code illustrates how to use Intel® Distribution of Modin for ETL operations and ridge regression algorithm from the Intel® extension of scikit-learn library to build and run an end to end machine learning workload. Both Intel® Distribution of Modin and  Intel® Extension for Scikit-learn libraries are available together in [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). This sample code demonstrates how to seamlessly run the end-to-end census workload using the toolkit, without any external dependencies.
 
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
 | Software                          | Intel® AI Analytics Toolkit (Python version 3.7, Intel® Distribution of Modin , Ray, Intel® Extension for Scikit-Learn, NumPy)
-| What you will learn               | How to use Intel® Distribution of Modin and oneDAL optimized scikit-learn (developed and owned by Intel) to build end to end ML workloads and gain performance.
+| What you will learn               | How to use Intel® Distribution of Modin and Intel® Extension for Scikit-learn to build end to end ML workloads and gain performance.
 | Time to complete                  | 15-18 minutes
 
 ## Purpose
