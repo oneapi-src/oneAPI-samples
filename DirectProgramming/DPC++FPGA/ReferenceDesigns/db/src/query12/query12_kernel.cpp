@@ -38,6 +38,13 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   buffer high_line_count_buf(high_line_count);
   buffer low_line_count_buf(low_line_count);
 
+  const size_t l_rows = dbinfo.l.rows;
+  const size_t l_iters =
+      (l_rows + kLineItemJoinWindowSize - 1) / kLineItemJoinWindowSize;
+  const size_t o_rows = dbinfo.o.rows;
+  const size_t o_iters =
+      (o_rows + kOrderJoinWindowSize - 1) / kOrderJoinWindowSize;
+
   // start timer
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
 
@@ -53,18 +60,19 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
 
     h.single_task<LineItemProducer>([=]() [[intel::kernel_args_restrict]] {
       [[intel::initiation_interval(1)]]
-      for (size_t i = 0; i < l_rows; i += kLineItemJoinWindowSize) {
+      for (size_t i = 0; i < l_iters; i++) {
         // bulk read of data from global memory
         NTuple<kLineItemJoinWindowSize, LineItemRow> data;
 
         UnrolledLoop<0, kLineItemJoinWindowSize>([&](auto j) {
-          bool in_range = (i + j) < l_rows;
-          DBIdentifier key = in_range ? l_orderkey_accessor[i + j]
+          size_t idx = (i*kLineItemJoinWindowSize + j);
+          bool in_range = idx < l_rows;
+          DBIdentifier key = in_range ? l_orderkey_accessor[idx]
                               : std::numeric_limits<DBIdentifier>::max();
-          int shipmode = in_range ? l_shipmode_accessor[i + j] : 0;
-          DBDate commitdate = in_range ? l_commitdate_accessor[i + j] : 0;
-          DBDate shipdate = in_range ? l_shipdate_accessor[i + j] : 0;
-          DBDate receiptdate = in_range ? l_receiptdate_accessor[i + j] : 0;
+          int shipmode = in_range ? l_shipmode_accessor[idx] : 0;
+          DBDate commitdate = in_range ? l_commitdate_accessor[idx] : 0;
+          DBDate shipdate = in_range ? l_shipdate_accessor[idx] : 0;
+          DBDate receiptdate = in_range ? l_receiptdate_accessor[idx] : 0;
 
           data.get<j>() = LineItemRow(in_range, key, shipmode, commitdate,
                                       shipdate, receiptdate);
@@ -86,15 +94,16 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
 
     h.single_task<OrdersProducer>([=]() [[intel::kernel_args_restrict]] {
       [[intel::initiation_interval(1)]]
-      for (size_t i = 0; i < o_rows; i += kOrderJoinWindowSize) {
+      for (size_t i = 0; i < o_iters; i++) {
         // bulk read of data from global memory
         NTuple<kOrderJoinWindowSize, OrdersRow> data;
 
         UnrolledLoop<0, kOrderJoinWindowSize>([&](auto j) {
-          bool in_range = (i + j) < o_rows;
-          DBIdentifier key = in_range ? o_orderkey_accessor[i + j]
+          size_t idx = (i*kOrderJoinWindowSize + j);
+          bool in_range = idx < o_rows;
+          DBIdentifier key = in_range ? o_orderkey_accessor[idx]
                               : std::numeric_limits<DBIdentifier>::max();
-          int orderpriority = in_range ? o_orderpriority_accessor[i + j] : 0;
+          int orderpriority = in_range ? o_orderpriority_accessor[idx] : 0;
 
           data.get<j>() = OrdersRow(in_range, key, orderpriority);
         });
@@ -140,16 +149,15 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
       [[intel::initiation_interval(1)]]
       do {
         // get joined row from pipe
-        bool pipe_valid;
-        JoinedRowPipeData joined_data = JoinedProducerPipe::read(pipe_valid);
+        JoinedRowPipeData joined_data = JoinedProducerPipe::read();
 
         // upstream kernel tells this kernel when it is done
-        done = joined_data.done && pipe_valid;
+        done = joined_data.done;
 
-        if (!done && joined_data.valid && pipe_valid) {
+        if (!done && joined_data.valid) {
           DBDecimal high_line_count1_local_tmp[kLineItemJoinWindowSize];
-          DBDecimal high_line_count2_local_tmp[kLineItemJoinWindowSize];
           DBDecimal low_line_count1_local_tmp[kLineItemJoinWindowSize];
+          DBDecimal high_line_count2_local_tmp[kLineItemJoinWindowSize];
           DBDecimal low_line_count2_local_tmp[kLineItemJoinWindowSize];
 
           UnrolledLoop<0, kLineItemJoinWindowSize>([&](auto i) {
