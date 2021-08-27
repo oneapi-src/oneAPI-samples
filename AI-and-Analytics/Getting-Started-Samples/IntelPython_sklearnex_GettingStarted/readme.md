@@ -87,9 +87,9 @@ Open .ipynb file and run cells in Jupyter Notebook using the "Run" button (see i
 
 #### Expected Printed Output for Cells (with similar numbers):
 
-![Click the Run Button in the Jupyter Notebook](sample_digit_images.jpg "Image samples from dataset") 
+![Click the Run Button in the Jupyter Notebook](sample_digit_images.JPG "Image samples from dataset") 
 
-![Click the Run Button in the Jupyter Notebook](predicted.jpg "Predicted digits for random test images") 
+![Click the Run Button in the Jupyter Notebook](predicted.JPG "Predicted digits for random test images") 
 
 0.9833333333333333
 
@@ -122,9 +122,9 @@ In order to run on the DevCloud, you need to request a compute node using node p
 
 #### Expected Printed Output for Cells (with similar numbers):
 
-![Click the Run Button in the Jupyter Notebook](sample_digit_images.jpg "Image samples from dataset") 
+![Click the Run Button in the Jupyter Notebook](sample_digit_images.JPG "Image samples from dataset") 
 
-![Click the Run Button in the Jupyter Notebook](predicted.jpg "Predicted digits for random test images") 
+![Click the Run Button in the Jupyter Notebook](predicted.JPG "Predicted digits for random test images") 
 
 0.9833333333333333
 
