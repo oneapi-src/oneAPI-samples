@@ -1,5 +1,5 @@
 ﻿# `PyTorch HelloWorld` Sample
-PyTorch* is a very popular framework for deep learning. Intel and Facebook* collaborate to boost PyTorch* CPU Performance for years. The official PyTorch has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives by default. This sample demonstrates how to train a PyTorch model and shows how Intel® Optimization for PyTorch* enables Intel® DNNL calls by default. 
+PyTorch* is a very popular framework for deep learning. Intel and Facebook* collaborate to boost PyTorch* CPU Performance for years. The official PyTorch has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives by default. This sample demonstrates how to train a PyTorch model and shows how Intel-optimized PyTorch* enables Intel® DNNL calls by default. 
 
 | Optimized for                       | Description
 |:---                               |:---
