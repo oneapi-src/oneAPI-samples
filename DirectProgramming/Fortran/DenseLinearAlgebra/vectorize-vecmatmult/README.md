@@ -7,15 +7,9 @@ serial version and the version that was compiled with the auto-vectorizer.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | macOS* with Xcode* installed 
-<<<<<<< HEAD
 | Hardware							            | Intel&reg;-based Mac*
 | Software                          | Intel&reg; Fortran Compiler
 | What you will learn               | Vectorization using Intel Fortran Compiler
-=======
-| Hardware							   | Intel-based Mac*
-| Software                          | Intel&reg; oneAPI Intel Fortran Compiler
-| What you will learn               | Vectorization using Intel Fortran compiler
->>>>>>> parent of 5fa54cb (round 1 changes)
 | Time to complete                  | 15 minutes
 
 
