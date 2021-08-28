@@ -5,12 +5,12 @@ This Getting Started sample code shows how to use distributed Pandas using the I
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
-| Software                          | Intel® Distribution of Modin*, Intel® oneAPI AI Analytics Toolkit
-| What you will learn               | Basic Intel® Distribution of Modin* programming model for Intel CPU
+| Software                          | Intel Distribution of Modin*, Intel® oneAPI AI Analytics Toolkit
+| What you will learn               | Basic Intel Distribution of Modin* programming model for Intel CPU
 | Time to complete                  | 5-8 minutes
 
 ## Purpose
-Intel® Distribution of Modin* uses Ray or Dask to provide an effortless way to speed up your Pandas notebooks, scripts, and libraries. Unlike other distributed DataFrame libraries, Intel Distribution of Modin* provides seamless integration and compatibility with existing Pandas code. 
+Intel Distribution of Modin* uses Ray or Dask to provide an effortless way to speed up your Pandas notebooks, scripts, and libraries. Unlike other distributed DataFrame libraries, Intel Distribution of Modin* provides seamless integration and compatibility with existing Pandas code. 
 
 In this sample, you will run Intel Distribution of Modin*-accelerated Pandas functions and note the performance gain when compared to "stock" (aka standard) Pandas functions.
 

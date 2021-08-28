@@ -22,7 +22,7 @@ In this sample, you will run a distributed K-Means model with oneDAL daal4py lib
 This distributed K-means sample code is implemented for CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python* as part of the [oneAPI AI Analytics Toolkit powered by oneAPI](https://software.intel.com/en-us/oneapi/ai-kit). 
 
 ## Additional Requirements
-You will need a working Intel® MPI library, which is included in the [Intel® oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
+You will need a working Intel® MPI Library, which is included in the [Intel® oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
  
 ## License  
 Code samples are licensed under the MIT license. See

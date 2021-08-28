@@ -1,4 +1,4 @@
-# Intel DPC++ Compatibility Tool: Foo Bar Example
+# Intel® DPC++ Compatibility Tool: Foo Bar Example
 
 ## Use the Command Line to Migrate Large Code Bases
 
