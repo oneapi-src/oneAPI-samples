@@ -15,7 +15,7 @@ Intel Distribution of Modin* uses Ray or Dask to provide an effortless way to sp
 In this sample, you will run Intel Distribution of Modin*-accelerated Pandas functions and note the performance gain when compared to "stock" (aka standard) Pandas functions.
 
 ## Key Implementation Details
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Pandas and Intel Distribution of Modin* installed inside a conda environment, similar to what is directed by the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html). 
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Pandas and MoIntel Distribution of Modin* installed inside a conda environment, similar to what is directed by the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html). 
 
 ## License
 
