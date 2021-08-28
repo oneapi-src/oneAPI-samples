@@ -36,8 +36,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 -----
 
-The samples below require the following components, which are part of the [Intel oneAPI DL Framework Developer Toolkit (DLFD Kit)
-](https://software.intel.com/en-us/oneapi/dldev-kit)
+The samples below require the following components, which are part of the [Intel® oneAPI DL Framework Developer Toolkit (DLFD Kit)](https://software.intel.com/en-us/oneapi/dldev-kit)
 *  Intel oneAPI Collective Communications Library (oneCCL)
 
 You can refer to this page [oneAPI](https://software.intel.com/en-us/oneapi) for toolkit installation.

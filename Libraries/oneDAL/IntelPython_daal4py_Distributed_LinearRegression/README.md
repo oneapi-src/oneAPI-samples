@@ -3,7 +3,6 @@
 # `Intel Python daal4py Distributed Linear Regression` Sample
 This sample code shows how to train and predict with a distributed linear regression model using the python API package daal4py for oneAPI Data Analytics Library. It assumes you have a working version of the Intel® MPI Library installed, and it demonstrates how to use software products that can be found in the [Intel® oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or [Intel AI Analytics Toolkit powered by oneAPI](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
-
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
@@ -19,15 +18,11 @@ daal4py is a simplified API to Intel® DAAL that allows for fast usage of the fr
 In this sample, you will run a distributed Linear Regression model with oneDAL daal4py library memory objects. You will also learn how to train a model and save the information to a file.
   
 ## Key Implementation Details 
-This distributed linear regression sample code is implemented for the CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel(R) Distribution for Python as part of the [oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). 
+This distributed linear regression sample code is implemented for the CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel(R) Distribution for Python* as part of the [oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). 
  
 
 ## Additional Requirements
-<<<<<<< HEAD
 You will need a working Intel® MPI Library, which is included in the [Intel® oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
-=======
-You will need a working MPI library. We recommend to use Intel(R) MPI, which is included in the [oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
->>>>>>> parent of 5fa54cb (round 1 changes)
   
 ## License  
 Code samples are licensed under the MIT license. See
