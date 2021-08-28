@@ -5,7 +5,7 @@ TensorFlow* is a widely-used machine learning framework in the deep learning are
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 
 | Hardware                          | Intel® Xeon® Scalable processor family or newer
-| Software                          | Intel® oneAPI AI Analytics Toolkit
+| Software                          | Intel® AI Analytics Toolkit
 | What you will learn               | How to get started to use Intel Optimization for TensorFlow*
 | Time to complete                  | 10 minutes
 
