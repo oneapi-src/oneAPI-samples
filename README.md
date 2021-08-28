@@ -61,7 +61,7 @@ See [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master
 ## New Code Samples
 
 |Version Introduced   |Sample Name|Description|
-|-----------------------|-------------------------------------------|---------------|
+ |-----------------------|-------------------------------------------|---------------|
 |2021.4.0|[Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[Chapter 01 - Introduction](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications/DPC++/Ch01_intro)|Collection of Code samples for the chapter<br>- Fig_1_1_hello.cpp - Hello data-parallel programming  <br>- Fig_1_3_race.cpp - Adding a race condition to illustrate a point about being asynchronous  <br>- Fig_1_4_lambda.cpp - Lambda function in C++ code  <br>- Fig_1_6_functor.cpp - Function object instead of a lambda (more on this in Chapter 10)|
 |2021.4.0|[Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[Chapter 02 - Where Code Executes](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications/DPC++/Ch02_where_code_runs)|Collection of Code samples for the chapter<br>- Fig_2_2_simple_program.cpp - Simple SYCL program   <br>- Fig_2_7_implicit_default_selector.cpp - Implicit default device selector through trivial construction of a queue   <br>- Fig_2_9_host_selector.cpp - Selecting the host device using the host_selector class  <br>- Fig_2_10_cpu_selector.cpp - CPU device selector example  <br>- Fig_2_12_multiple_selectors.cpp  - Example device identification output from various classes of device selectors and demonstration that device selectors can be used for cons  <br>- Fig_2_13_gpu_plus_fpga.cpp - Creating queues to both GPU and FPGA devices   <br>- Fig_2_15_custom_selector.cpp - Custom selector for Intel Arria FPGA device   <br>- Fig_2_18_simple_device_code.cpp - Submission of device code   <br>- Fig_2_22_simple_device_code_2.cpp - Submission of device code   <br>- Fig_2_23_fallback.cpp - Fallback queue example|
 |2021.4.0|[Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[Chapter 03 - Data Management](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications/DPC++/Ch03_data_management)|Collection of Code samples for the chapter<br>- Fig_3_4_usm_explicit_data_movement.cpp - USM explicit data movement   <br>- Fig_3_5_usm_implicit_data_movement.cpp - USM implicit data movement   <br>- Fig_3_6_buffers_and_accessors.cpp - Buffers and accessors   <br>- Fig_3_10_in_order.cpp - In-order queue usage   <br>- Fig_3_11_depends_on.cpp - Using events and depends_on  <br>- Fig_3_13_read_after_write.cpp - Read-after-Write   <br>- Fig_3_15_write_after_read_and_write_after_write.cpp - Write-after-Read and Write-after-Write |
@@ -86,11 +86,12 @@ See [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master
 |2021.4.0|[Private Copies](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/private_copies)|An Intel® FPGA tutorial demonstrating how to use the private_copies attribute to trade off the resource use and the throughput of a DPC++ FPGA program|
 |2021.4.0|[Stall Enable](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/stall_enable)|An Intel® FPGA tutorial demonstrating the use_stall_enable_clusters attribute|
 
-Total Samples: 158
+Total Samples: 157
 
 ## License
 
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-This doc was created on: August 28, 2021
+
+Report Generated on:  August 28, 2021

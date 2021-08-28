@@ -112,7 +112,7 @@ This document shows the history of when a specific sample was introduced to the 
 |2021.1.Gold|[Hidden Markov Models](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++/GraphTraversal/hidden-markov-models)|Hidden Markov Models using Intel® oneAPI Data Parallel C++|
 |2021.1.Gold|[CMake GPU](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++/ProjectTemplates/cmake-gpu)|Project Templates - Linux CMake project for GPU|
 |2021.1.Gold|[Makefile FPGA](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga)|Project Templates - Linux Makefile project for FPGA|
-|2021.1.Gold|[Census end-to-end workload](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/End-to-end-Workloads/Census)|This sample illustrates using Modin and daal optimized scikit-learn to build and run an end-to-end machine learning workload|
+|2021.1.Gold|[Census](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/End-to-end-Workloads/Census)|This sample illustrates using Modin and daal optimized scikit-learn to build and run an end-to-end machine learning workload|
 |2021.1.Gold|[Intel® TensorFlow Horovod Multinode Training](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/IntelTensorFlow_Horovod_Multinode_Training)|This sample illustrates how to train a TensorFlow model on multiple nodes in a cluster using Horovod|
 |2021.1.Gold|[Intrinsics](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C++/CompilerInfrastructure/Intrinsics)|Demonstrates the Intrinsic functions of the Intel® oneAPI C++ Compiler Classic|
 |2021.1.Gold|[Intel® Modin Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelModin_GettingStarted)|This sample illustrates how to use Modin accelerated Pandas functions and notes the performance gain when compared to standard Pandas functions|
@@ -160,6 +160,6 @@ This document shows the history of when a specific sample was introduced to the 
 |2021.1.Gold|[Tutorials](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneDNN/tutorials)|Intel® oneDNN Tutorials|
 |2021.1.Gold|[CRR](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/crr)|This sample shows a Binomial Tree Model for Option Pricing using a FPGA-optimized reference design of the Cox-Ross-Rubinstein (CRR) Binomial Tree Model with Greeks for American exercise options|
 |2021.1.Gold|[DPC Reduce](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++/ParallelPatterns/dpc_reduce)|This sample models transform Reduce in different ways showing capability of Intel® oneAPI|
-Total Samples: 158
+Total Samples: 157
 
-Report Generated on:  August 26, 2021
+Report Generated on:  August 28, 2021
