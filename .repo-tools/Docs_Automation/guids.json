@@ -689,12 +689,6 @@
         "name": "Particle Diffusion",
         "notes": "-"
     },
-    "668A3FF9-12C3-4559-8AF4-54B6792122D3": {
-        "guid": "668A3FF9-12C3-4559-8AF4-54B6792122D3",
-        "ver": "2021.1.Gold",
-        "name": "System Debug",
-        "notes": "-"
-    },
     "314B4C1D-07A0-4527-A9FA-9F87ED9622D7": {
         "guid": "314B4C1D-07A0-4527-A9FA-9F87ED9622D7",
         "ver": "2021.2.1",
@@ -712,13 +706,6 @@
         "ver": "2021.2.1",
         "name": "Fourier Correlation",
         "notes": "-"
-    },
-    "7909FAE1-D3D4-4E97-A963-14A884F33495": {
-        "guid": "7909FAE1-D3D4-4E97-A963-14A884F33495",
-        "ver": "2021.2.1",
-        "name": "Max Concurrency",
-        "notes": "Removed in 2021.4",
-        "removed": "x"
     },
     "8401B5F5-6F09-4727-A080-684C57104CAF": {
         "guid": "8401B5F5-6F09-4727-A080-684C57104CAF",
@@ -918,11 +905,6 @@
         "guid": "FC7A16DE-9594-4F40-AFA2-71ACABF366B3",
         "ver": "2021.1.Gold",
         "name": "Tutorials"
-    },
-    "dc8c1c92-1c2a-4edf-abbd-6c35dfab256a": {
-        "guid": "dc8c1c92-1c2a-4edf-abbd-6c35dfab256a",
-        "ver": "2021.4.0",
-        "name": "VisualComputing tutorial"
     },
     "748eb906-309f-469b-95c9-5258006c7587": {
         "guid": "748eb906-309f-469b-95c9-5258006c7587",
