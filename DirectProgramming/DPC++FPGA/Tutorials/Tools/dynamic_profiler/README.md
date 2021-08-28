@@ -26,12 +26,7 @@ Intel® oneAPI provides two runtime profiling tools to help you analyze your DPC
 
 1. The **Intel® FPGA Dynamic Profiler for DPC++** is a profiling tool used to collect fine-grained device side data during DPC++ kernel execution. When used within the Intel® VTune™ Profiler, some host side performance data is also collected. However, note that the VTune Profiler is not designed to collect detailed system level host-side data. 
 
-<<<<<<< HEAD
 2. The **Intercept Layer for OpenCL™ Applications™** is a profiling tool used to obtain detailed system-level information. 
-=======
-2. The **Intercept Layer for OpenCL™** is a profiling tool used to obtain detailed system-level information. 
->>>>>>> parent of 7811de4 (round3)
-
 This tutorial introduces the Intel® FPGA Dynamic Profiler for DPC++. To learn more about the Intercept Layer, refer to the FPGA tutorial "[Using the OpenCL Intercept Layer to Profile Designs running on the FPGA](https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials/Tools/system_profiling)".
 
 #### The Intel® FPGA Dynamic Profiler for DPC++
