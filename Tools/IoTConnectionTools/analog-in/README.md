@@ -23,7 +23,7 @@ This version of the sample has been tested on Ubuntu Linux. It requires the [Ecl
 
 This sample requires additional system configuration when using Ubuntu OS with the UP series boards. Instructions on installing the custom provided Linux kernel with the required drivers can be [found here](https://wiki.up-community.org/Ubuntu#Ubuntu_18.04_installation_and_configuration).
 
-To enable the ADC on Intel Atom® based UP boards, refer to the following [download](https://downloads.up-community.org/download/how-to-access-adc-for-up-squared-atom/).
+To enable the ADC on Intel® Atom based UP boards, refer to the following [download](https://downloads.up-community.org/download/how-to-access-adc-for-up-squared-atom/).
 
 ## License
 

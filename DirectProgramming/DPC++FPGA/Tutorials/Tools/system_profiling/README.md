@@ -69,7 +69,7 @@ void profiling_example(const std::vector<float>& vec_in,
 
 This tutorial introduces the Intercept Layer for OpenCL™ Applications, a profiling tool that extracts and visualizes system-level profiling information for DPC++ programs.  This tool can extract the same profiling data (and more) as the code snippet above, without requiring any code-level profiling directives.
 
-The Intercept Layer for OpenCL™ Applications provide coarse-grained, system-level profiling information. A complementary tool, the Intel® FPGA Dynamic Profiler for DPC++, provides fine-grained profiling information for the kernels executing on the device. Together, these two tools can be used to optimize both host and device side execution. However, these tools should not be used simultaneously, as the Intercept Layer for OpenCL™ Applications may slow down the runtime execution, rendering the Dynamic Profiler data less accurate. 
+The Intercept Layer for OpenCL™ provides coarse-grained, system-level profiling information. A complementary tool, the Intel® FPGA Dynamic Profiler for DPC++, provides fine-grained profiling information for the kernels executing on the device. Together, these two tools can be used to optimize both host and device side execution. However, these tools should not be used simultaneously, as the Intercept Layer for OpenCL™ may slow down the runtime execution, rendering the Dynamic Profiler data less accurate. 
 
 ### The Intercept Layer for OpenCL™ Applications
 

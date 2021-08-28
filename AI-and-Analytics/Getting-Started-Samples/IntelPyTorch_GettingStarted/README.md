@@ -5,8 +5,8 @@ PyTorch* is a very popular framework for deep learning. Intel and Facebook* coll
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Intel® Xeon® Scalable Processor family
-| Software                          | Intel® oneAPI AI Analytics Toolkit
-| What you will learn               | How to get started with Intel® Optimization for PyTorch*
+| Software                          | Intel&reg; oneAPI AI Analytics Toolkit
+| What you will learn               | How to get started with Intel Optimization for PyTorch
 | Time to complete                  | 15 minutes
 
 ## Purpose
