@@ -6,7 +6,7 @@ This Getting Started sample code shows how to use distributed Pandas using the I
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
 | Software                          | Intel Distribution of Modin*, Intel® oneAPI AI Analytics Toolkit
-| What you will learn               | Basic Intel Distribution of Modin* programming model for Intel CPU
+| What you will learn               | Basic Intel® Distribution of Modin* programming model for Intel CPU
 | Time to complete                  | 5-8 minutes
 
 ## Purpose

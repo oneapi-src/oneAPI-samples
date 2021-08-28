@@ -1,4 +1,4 @@
-# Intel® DPC++ Compatibility Tool: `Vector Add` Sample
+# Intel DPC++ Compatibility Tool: `Vector Add` Sample
 
 This sample demonstrates how to migrate a simple program from CUDA to 
 Data Parallel C++. Vector Add provides an easy way to verify that
