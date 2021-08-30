@@ -116,23 +116,22 @@ void MergeJoin(int t1_size, int t2_size) {
 
       // crossbar join
       UnrolledLoop<0, t2_win_size>([&](auto i) {
-        bool written = false;
+        //bool written = false;
 
         const bool t2_data_valid = t2_win.data.template get<i>().valid;
-        const unsigned int t2_key = t2_win.data.template get<i>().PrimaryKey();
+        const auto t2_key = t2_win.data.template get<i>().PrimaryKey();
 
         UnrolledLoop<0, t1_win_size>([&](auto j) {
           const bool t1_data_valid = t1_win.data.template get<j>().valid;
-          const unsigned int t1_key =
-              t1_win.data.template get<j>().PrimaryKey();
+          const auto t1_key = t1_win.data.template get<j>().PrimaryKey();
 
-          if (!written && t1_data_valid && t2_data_valid &&
+          if (/*!written &&*/ t1_data_valid && t2_data_valid &&
               (t1_key == t2_key)) {
             // NOTE: order below important if Join() overrides valid
             join_data.data.template get<i>().valid = true;
             join_data.data.template get<i>().Join(
                 t1_win.data.template get<j>(), t2_win.data.template get<i>());
-            written = true;
+            //written = true;
           }
         });
       });

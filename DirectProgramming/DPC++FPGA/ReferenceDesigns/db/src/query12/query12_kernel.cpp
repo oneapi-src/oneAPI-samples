@@ -181,13 +181,13 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
                 ((joined_data.data.get<i>().receiptdate >= low_date) &&
                  (joined_data.data.get<i>().receiptdate < high_date));
 
-
             const bool urgent_or_high =
                 (joined_data.data.get<i>().orderpriority == 1 ||
                  joined_data.data.get<i>().orderpriority == 2);
 
-            const bool do_computation = valid_shipmode && valid_commitdate &&
-                valid_shipdate && receipt_within_year_of_date;
+            const bool do_computation = joined_data.data.get<i>().valid &&
+                valid_shipmode && valid_commitdate && valid_shipdate &&
+                receipt_within_year_of_date;
 
             if (do_computation) {
               // is this order priority urgent or high
