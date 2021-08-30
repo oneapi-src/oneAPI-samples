@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.4)
 project (HELLO-IOT-WORLD CXX)
 
-# Use Intel C++ Compiler Classic when available
+# Use Intel® C++ Compiler Classic when available
 find_program(ICPC NAMES icpc icl)
 if(ICPC)
     set(CMAKE_CXX_COMPILER ${ICPC})

@@ -1,7 +1,7 @@
 {
   "guid": "AA055D7B-290C-4FCA-990B-B9FC88AF18D4",
-  "name": "Census end-to-end workload",
-  "categories": ["Toolkit/oneAPI AI And Analytics/End-to-end-Workloads/Census"],
+  "name": "Census",
+  "categories": ["Toolkit/oneAPI AI And Analytics/End-to-End Workloads"],
   "description": "This sample illustrates using Modin and daal optimized scikit-learn to build and run an end-to-end machine learning workload",
   "builder": ["cli"],
   "languages": [{"python":{}}],

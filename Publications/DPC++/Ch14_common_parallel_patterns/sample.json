@@ -1,0 +1,66 @@
+{
+  "guid": "99b2d923-326e-4d0d-8924-a96fca8ada2c",
+  "name": "Chapter 14 - Common Parallel Patterns",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_14_8_one_reduction.cpp - Reduction expressed as an ND-range data-parallel kernel using the reduction library * fig_14_11_user_defined_reduction.cpp - Using a user-defined reduction to find the location of the minimum value with an ND-range kernel * fig_14_13_map.cpp - Implementing the map pattern in a data-parallel kernel * fig_14_14_stencil.cpp - Implementing the stencil pattern in a data-parallel kernel * fig_14_15_local_stencil.cpp - Implementing the stencil pattern in an ND-range kernel, using work-group local memory * fig_14_18-20_inclusive_scan.cpp - Implementing a naïve reduction expressed as a  data-parallel kernel * fig_14_22_local_pack.cpp - Using a sub-group pack operation to build a list of elements needing additional postprocessing * fig_14_24_local_unpack.cpp - Using a sub-group unpack operation to improve load balancing for kernels with divergent control flow",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch14_common_parallel_patterns",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_14_8_one_reduction",
+          "make fig_14_11_user_defined_reduction",
+          "make fig_14_14_stencil",
+          "make fig_14_24_local_unpack",
+          "make fig_14_16_basic_reduction",
+          "make fig_14_18-20_inclusive_scan",
+          "make fig_14_17_nd_range_reduction",
+          "make fig_14_13_map",
+          "make fig_14_22_local_pack",
+          "make fig_14_15_local_stencil"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_14_8_one_reduction",
+          "nmake fig_14_11_user_defined_reduction",
+          "nmake fig_14_14_stencil",
+          "nmake fig_14_24_local_unpack",
+          "nmake fig_14_16_basic_reduction",
+          "nmake fig_14_18-20_inclusive_scan",
+          "nmake fig_14_17_nd_range_reduction",
+          "nmake fig_14_13_map",
+          "nmake fig_14_22_local_pack",
+          "nmake fig_14_15_local_stencil"
+        ]
+      }
+    ]
+  }
+}

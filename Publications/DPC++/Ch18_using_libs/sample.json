@@ -1,0 +1,53 @@
+{
+  "guid": "9d73b58e-73d6-46e1-8c21-66274f6ee170",
+  "name": "Chapter 18 - Libraries",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_18_1_builtin.cpp - Using std::log and sycl::log * fig_18_7_swap.cpp - Using std::swap in device code * fig_18_11_std_fill.cpp - Using std::fill * fig_18_13_binary_search.cpp - Using binary_search *fig_18_15_pstl_usm.cpp - Using Parallel STL with a USM allocator * Errata - code samples for 18-10, 18-12, 18-14, and 19-17 are not in the repository ",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch18_using_libs",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_18_7_swap",
+          "make fig_18_1_builtin"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_18_1_builtin",
+          "nmake fig_18_7_swap",
+          "nmake fig_18_11_std_fill",
+          "nmake fig_18_13_binary_search",
+          "nmake fig_18_15_pstl_usm"
+        ]
+      }
+    ]
+  }
+}

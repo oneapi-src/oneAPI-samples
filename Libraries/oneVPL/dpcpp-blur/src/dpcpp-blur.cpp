@@ -24,29 +24,17 @@
 #define MAX_PLANES_NUMBER 4
 
 #ifdef LIBVA_SUPPORT
-#include <drm/drm_fourcc.h>
-#include <level_zero/ze_api.h>
-#include <unistd.h>
-#include <va/va.h>
-#include <va/va_drm.h>
-#include <va/va_drmcommon.h>
-#include <va/va_vpp.h>
+  #define HAVE_VIDEO_MEMORY_INTEROP
+#endif
 
-#include <CL/sycl/backend.hpp>
-#include <CL/sycl/backend/level_zero.hpp>
+#ifdef HAVE_VIDEO_MEMORY_INTEROP
+  #include <unistd.h>
 
-#include "vaapi_allocator.h"
+  #include <va/va.h>
+  #include <va/va_drmcommon.h>
 
-struct usm_image_context {
-  ze_context_handle_t ze_context;
-  void *ptr;
-  uint64_t drm_format_modifier;
-
-  uint32_t planes_count;
-
-  uint32_t offset[MAX_PLANES_NUMBER];
-  uint32_t pitch[MAX_PLANES_NUMBER];
-};
+  #include <level_zero/ze_api.h>
+  #include <CL/sycl/backend/level_zero.hpp>
 #endif
 
 // DPC++ kernel for image blurring
@@ -60,10 +48,10 @@ void BlurFrame(sycl::queue q, int width, int height, uint8_t *src_ptr,
        // Compute average intensity. Skip borders and set to black color
        float t0 = 0, t1 = 0, t2 = 0;
 
-       if (x >= BLUR_RADIUS && x < width - BLUR_RADIUS && y >= BLUR_RADIUS &&
-           y < height - BLUR_RADIUS) {
-         for (int yy = y - BLUR_RADIUS; yy < y + BLUR_RADIUS; yy++) {
-           for (int xx = x - BLUR_RADIUS; xx < x + BLUR_RADIUS; xx++) {
+       if (x >= BLUR_RADIUS && x < (size_t)width - BLUR_RADIUS && y >= BLUR_RADIUS &&
+           y < (size_t)height - BLUR_RADIUS) {
+         for (size_t yy = y - BLUR_RADIUS; yy < y + BLUR_RADIUS; yy++) {
+           for (size_t xx = x - BLUR_RADIUS; xx < x + BLUR_RADIUS; xx++) {
              t0 += src_ptr[yy * src_stride + 4 * xx];
              t1 += src_ptr[yy * src_stride + 4 * xx + 1];
              t2 += src_ptr[yy * src_stride + 4 * xx + 2];
@@ -86,24 +74,24 @@ void BlurFrame(sycl::queue q, int width, int height, uint8_t *src_ptr,
   }
 }
 
-void Usage(void) {
+void Usage(char* app) {
   printf("\n");
-  printf("   Usage  :  legacy-vpp\n");
+  printf("   Usage  :  %s\n", app);
   printf("     -hw        use hardware implementation\n");
   printf("     -sw        use software implementation\n");
   printf("     -i input file name (sw=I420 raw frames, hw=NV12)\n");
   printf("     -w input width\n");
   printf("     -h input height\n\n");
-  printf("   Example:  legacy-vpp -i in.i420 -w 128 -h 96\n");
+  printf("   Example:  %s -i in.i420 -w 128 -h 96\n", app);
   printf(
-      "   To view:  ffplay -f rawvideo -pixel_format yuv420p -video_size %dx%d "
-      "-pixel_format yuv420p %s\n\n",
+      "   To view:  ffplay -f rawvideo -video_size %dx%d "
+      "-pixel_format bgra %s\n\n",
       OUTPUT_WIDTH, OUTPUT_HEIGHT, OUTPUT_FILE);
-  printf(" * Resize raw frames to %dx%d size in %s\n\n", OUTPUT_WIDTH,
-         OUTPUT_HEIGHT, OUTPUT_FILE);
+  printf(" * Change color format to RGBA, resize raw frames to %dx%d size\n\n",
+         OUTPUT_WIDTH, OUTPUT_HEIGHT);
 
   printf(
-      "   Blur VPP output by using DPCPP kernel (default kernel size is "
+      "   Blur the VPP output by using DPCPP kernel (default kernel size is "
       "[%d]x[%d]) in %s\n",
       2 * BLUR_RADIUS + 1, 2 * BLUR_RADIUS + 1, OUTPUT_FILE);
 
@@ -115,38 +103,38 @@ int main(int argc, char **argv) {
   bool isStillGoing = true;
   FILE *sink = NULL;
   FILE *source = NULL;
-  int nIndexVPPInSurf = 0;
-  int nIndexVPPOutSurf = 0;
   mfxConfig cfg[1];
-  mfxFrameAllocator mfxAllocator = {};
-  mfxFrameAllocRequest VPPRequest[2] = {};
-  mfxFrameAllocResponse mfxResponseIn;
-  mfxFrameAllocResponse mfxResponseOut;
-  mfxFrameSurface1 *vppInSurfacePool = NULL;
-  mfxFrameSurface1 *vppOutSurfacePool = NULL;
   mfxLoader loader = NULL;
-  mfxSession session = {};
+  mfxSession session = NULL;
   mfxStatus sts = MFX_ERR_NONE;
   mfxSyncPoint syncp;
-  mfxU16 nSurfNumVPPIn = 0;
-  mfxU16 nSurfNumVPPOut = 0;
   mfxU32 blur_data_size = 0;
   mfxU32 framenum = 0;
   mfxU8 *blur_data = NULL;
-  mfxU8 *vppInBuf = NULL;
-  mfxU8 *vppOutBuf = NULL;
   mfxVideoParam VPPParams = {};
   Params cliParams = {};
   size_t blur_pitch = 0;
   sycl::queue q;
+#ifdef HAVE_VIDEO_MEMORY_INTEROP
+  VADisplay va_dpy = NULL;
+#endif
+  mfxU32 desiredDevice = 0;
+  // Let's make sure that we are searching oneVPL implementation
+  // assotiated with sycl:queue we have already initialize.
+  // cpu implementation has pci device id equals to 0.
+  mfxU32 sessionIdx = 0;
+  int desiredSessionIdx = -1;
+  mfxImplDescription *implDesc;
+
+  printf("Sample only: should not be used as benchmark.\n");
 
   // Parse command line args to cliParams
   if (ParseArgsAndValidate(argc, argv, &cliParams, PARAMS_VPP) == false) {
-    Usage();
+    Usage(argv[0]);
     return 1;  // return 1 as error code
   }
 
-#ifndef LIBVA_SUPPORT
+#ifndef HAVE_VIDEO_MEMORY_INTEROP
   if (MFX_IMPL_TYPE_SOFTWARE != cliParams.implValue.Data.U32) {
     printf("Only software implementation is supported\n");
     return 1;
@@ -160,6 +148,21 @@ int main(int argc, char **argv) {
   // Print device name selected for this queue.
   printf("Queue initialized on %s\n",
          q.get_device().get_info<sycl::info::device::name>().c_str());
+
+#ifdef HAVE_VIDEO_MEMORY_INTEROP
+  // Get Level-zero context and device from the SYCL backend
+  ze_context_handle_t ze_context =
+              q.get_context().get_native<sycl::backend::level_zero>();
+
+  ze_device_handle_t ze_device =
+              q.get_device().get_native<sycl::backend::level_zero>();
+  if (q.get_device().get_info<sycl::info::device::device_type>() ==
+                                      sycl::info::device_type::gpu) {
+    ze_device_properties_t deviceProperties;
+    zeDeviceGetProperties(ze_device, &deviceProperties);
+    desiredDevice = (mfxU32)deviceProperties.deviceId;
+  }
+#endif
 
   source = fopen(cliParams.infileName, "rb");
   VERIFY(source, "Could not open input file");
@@ -184,112 +187,59 @@ int main(int argc, char **argv) {
                                    cliParams.implValue);
   VERIFY(MFX_ERR_NONE == sts, "MFXSetConfigFilterProperty failed for Impl");
 
-  sts = MFXCreateSession(loader, 0, &session);
+  // Match oneVPL implementation with sycl::q device
+  while (MFX_ERR_NOT_FOUND != MFXEnumImplementations(loader, sessionIdx,
+                  MFX_IMPLCAPS_IMPLDESCSTRUCTURE, (mfxHDL*)&implDesc)) {
+    mfxU32 devID = (mfxU32)std::stoi(implDesc->Dev.DeviceID, nullptr, 16);
+    if (devID == desiredDevice) {
+      desiredSessionIdx = (int)sessionIdx;
+      MFXDispReleaseImplDescription(loader, implDesc);
+      break;
+    }
+    MFXDispReleaseImplDescription(loader, implDesc);
+    sessionIdx++;
+  }
+
+  VERIFY(desiredSessionIdx >= 0,
+         "Cannot create session -- no implementations meet selection criteria");
+
+  sts = MFXCreateSession(loader, desiredSessionIdx, &session);
   VERIFY(MFX_ERR_NONE == sts,
          "Cannot create session -- no implementations meet selection criteria");
 
   // Print info about implementation loaded
   ShowImplementationInfo(loader, 0);
 
-  // Initialize VPP parameters
+  // Initialize VPP parameters:
+  // 1. Describe VPP input
   PrepareFrameInfo(
       &VPPParams.vpp.In,
       (MFX_IMPL_SOFTWARE == cliParams.impl) ? MFX_FOURCC_I420 : MFX_FOURCC_NV12,
       cliParams.srcWidth, cliParams.srcHeight);
+  // 2. Describe VPP output. We want VPP to resize the frame and cover color
+  // space to RGBA.
   PrepareFrameInfo(&VPPParams.vpp.Out, MFX_FOURCC_BGRA, OUTPUT_WIDTH,
                    OUTPUT_HEIGHT);
 
   if (MFX_IMPL_SOFTWARE == cliParams.impl) {
+    // Software based VPL implementation will allocate frames in system memory
     VPPParams.IOPattern =
         MFX_IOPATTERN_IN_SYSTEM_MEMORY | MFX_IOPATTERN_OUT_SYSTEM_MEMORY;
   } else {
-#ifdef LIBVA_SUPPORT
+    // Hardware based VPL implementation will allocate frames in the device
+    // memory. Later on we will try to reuse this memory in SYCL kernel
+    // without any frame data copy (zero-copy).
+#ifdef HAVE_VIDEO_MEMORY_INTEROP
     VPPParams.IOPattern =
         MFX_IOPATTERN_IN_VIDEO_MEMORY | MFX_IOPATTERN_OUT_VIDEO_MEMORY;
     // open VA display, set handle, and set allocator
     va_dpy = (VADisplay)InitAcceleratorHandle(session);
-
-    // set up VAAPI surface allocator
-    mfxAllocator.pthis = &session;
-    mfxAllocator.Alloc = simple_alloc;
-    mfxAllocator.Free = simple_free;
-    mfxAllocator.Lock = simple_lock;
-    mfxAllocator.Unlock = simple_unlock;
-    mfxAllocator.GetHDL = simple_gethdl;
-
-    // For video memory use an external allocator
-    sts = MFXVideoCORE_SetFrameAllocator(session, &mfxAllocator);
-    VERIFY(MFX_ERR_NONE == sts, "SetFrameAllocator failed");
 #endif
   }
 
   // Initialize VPP
   sts = MFXVideoVPP_Init(session, &VPPParams);
   VERIFY(MFX_ERR_NONE == sts, "Could not initialize VPP");
-
-  // Query number of required surfaces for VPP
-  sts = MFXVideoVPP_QueryIOSurf(session, &VPPParams, VPPRequest);
-  VERIFY(MFX_ERR_NONE == sts, "Error in QueryIOSurf");
-
-  if (MFX_IMPL_SOFTWARE == cliParams.impl) {
-    nSurfNumVPPIn = VPPRequest[0].NumFrameSuggested;   // vpp in
-    nSurfNumVPPOut = VPPRequest[1].NumFrameSuggested;  // vpp out
-
-    // Allocate surfaces for VPP in and VPP out
-    // - Width and height of buffer must be aligned, a multiple of 32
-    // - Frame surface array keeps pointers all surface planes and general frame
-    // info
-    vppInSurfacePool =
-        (mfxFrameSurface1 *)calloc(sizeof(mfxFrameSurface1), nSurfNumVPPIn);
-
-    sts = AllocateExternalSystemMemorySurfacePool(
-        &vppInBuf, vppInSurfacePool, VPPParams.vpp.In, nSurfNumVPPIn);
-    VERIFY(MFX_ERR_NONE == sts,
-           "Error in external surface allocation for VPP in\n");
-
-    vppOutSurfacePool =
-        (mfxFrameSurface1 *)calloc(sizeof(mfxFrameSurface1), nSurfNumVPPOut);
-    sts = AllocateExternalSystemMemorySurfacePool(
-        &vppOutBuf, vppOutSurfacePool, VPPParams.vpp.Out, nSurfNumVPPOut);
-    VERIFY(MFX_ERR_NONE == sts,
-           "Error in external surface allocation for VPP out\n");
-  }
-#ifdef LIBVA_SUPPORT
-  else {
-    // Allocate required surfaces
-    sts =
-        mfxAllocator.Alloc(mfxAllocator.pthis, &VPPRequest[0], &mfxResponseIn);
-    VERIFY(MFX_ERR_NONE == sts, "Error allocating input surfaces");
-
-    sts =
-        mfxAllocator.Alloc(mfxAllocator.pthis, &VPPRequest[1], &mfxResponseOut);
-    VERIFY(MFX_ERR_NONE == sts, "Error allocating output surfaces");
-
-    nSurfNumVPPIn = mfxResponseIn.NumFrameActual;    // vpp in
-    nSurfNumVPPOut = mfxResponseOut.NumFrameActual;  // vpp out
-
-    // Allocate surface headers (mfxFrameSurface1) for VPP
-    vppInSurfacePool =
-        (mfxFrameSurface1 *)calloc(sizeof(mfxFrameSurface1), nSurfNumVPPIn);
-    for (int i = 0; i < nSurfNumVPPIn; i++) {
-      memset(&vppInSurfacePool[i], 0, sizeof(mfxFrameSurface1));
-      vppInSurfacePool[i].Info = VPPParams.vpp.In;
-      vppInSurfacePool[i].Data.MemId =
-          mfxResponseIn
-              .mids[i];  // MID (memory id) represent one D3D NV12 surface
-    }
-
-    vppOutSurfacePool =
-        (mfxFrameSurface1 *)calloc(sizeof(mfxFrameSurface1), nSurfNumVPPOut);
-    for (int i = 0; i < nSurfNumVPPOut; i++) {
-      memset(&vppOutSurfacePool[i], 0, sizeof(mfxFrameSurface1));
-      vppOutSurfacePool[i].Info = VPPParams.vpp.Out;
-      vppOutSurfacePool[i].Data.MemId =
-          mfxResponseOut
-              .mids[i];  // MID (memory id) represent one D3D NV12 surface
-    }
-  }
-#endif
 
   // ===================================
   // Start processing the frames
@@ -298,95 +248,89 @@ int main(int argc, char **argv) {
   printf("Processing %s -> %s\n", cliParams.infileName, OUTPUT_FILE);
 
   while (isStillGoing == true) {
-    if (isDraining == false) {
-      nIndexVPPInSurf =
-          GetFreeSurfaceIndex(vppInSurfacePool,
-                              nSurfNumVPPIn);  // Find free input frame surface
-      if ((VPPParams.IOPattern & MFX_IOPATTERN_IN_VIDEO_MEMORY) ==
-          MFX_IOPATTERN_IN_VIDEO_MEMORY) {
-        sts = mfxAllocator.Lock(mfxAllocator.pthis,
-                                vppInSurfacePool[nIndexVPPInSurf].Data.MemId,
-                                &(vppInSurfacePool[nIndexVPPInSurf].Data));
+    mfxFrameSurface1 *inSurface = nullptr, *outSurface = nullptr;
 
-        VERIFY(MFX_ERR_NONE == sts, "Error locking surface for ReadRawFrame");
-      }
-      sts = ReadRawFrame(&vppInSurfacePool[nIndexVPPInSurf],
+    if (isDraining == false) {
+      // Allocate input surface for VPP
+      sts = MFXMemory_GetSurfaceForVPPIn(session, &inSurface);
+      VERIFY(MFX_ERR_NONE == sts, "Error in GetSurfaceForVPPIn");
+
+      // Map surface to the system memory
+      sts = inSurface->FrameInterface->Map(inSurface, MFX_MAP_WRITE);
+      VERIFY(MFX_ERR_NONE == sts, "Error in Map for write");
+
+      // Write input pixels to the surface
+      sts = ReadRawFrame(inSurface,
                          source);  // Load frame from file into surface
       if (sts == MFX_ERR_MORE_DATA)
+        // End of input file is reached. We need to switch to the drain mode
+        // to let VPL output cached frames
         isDraining = true;
       else
         VERIFY(MFX_ERR_NONE == sts, "Unknown error reading input");
-      if ((VPPParams.IOPattern & MFX_IOPATTERN_IN_VIDEO_MEMORY) ==
-          MFX_IOPATTERN_IN_VIDEO_MEMORY) {
-        sts = mfxAllocator.Unlock(mfxAllocator.pthis,
-                                  vppInSurfacePool[nIndexVPPInSurf].Data.MemId,
-                                  &(vppInSurfacePool[nIndexVPPInSurf].Data));
-        VERIFY(MFX_ERR_NONE == sts, "Error unlocking surface for ReadRawFrame");
-      }
+      
+      // Unmap surface to the system memory
+      sts = inSurface->FrameInterface->Unmap(inSurface);
+      VERIFY(MFX_ERR_NONE == sts, "Error in Unmap");
     }
 
-    nIndexVPPOutSurf =
-        GetFreeSurfaceIndex(vppOutSurfacePool,
-                            nSurfNumVPPOut);  // Find free output frame surface
+    // Allocate output surface for VPP
+    sts = MFXMemory_GetSurfaceForVPPOut(session, &outSurface);
+    VERIFY(MFX_ERR_NONE == sts, "Error in GetSurfaceForVPPOut");
 
+    // Schedule resize and color space converion of input frame
     sts = MFXVideoVPP_RunFrameVPPAsync(
         session,
-        (isDraining == true) ? NULL : &vppInSurfacePool[nIndexVPPInSurf],
-        &vppOutSurfacePool[nIndexVPPOutSurf], NULL, &syncp);
+        (isDraining == true) ? NULL : inSurface,
+        outSurface, NULL, &syncp);
 
     switch (sts) {
       case MFX_ERR_NONE: {
+        // Wait for the frame processing complition.
         sts = MFXVideoCORE_SyncOperation(session, syncp,
                                          WAIT_100_MILLISECONDS * 1000);
         VERIFY(MFX_ERR_NONE == sts, "Error in SyncOperation");
-
-        mfxFrameSurface1 *pmfxOutSurface;
-        pmfxOutSurface = &vppOutSurfacePool[nIndexVPPOutSurf];
-#ifdef LIBVA_SUPPORT
+#ifdef HAVE_VIDEO_MEMORY_INTEROP
         if ((VPPParams.IOPattern & MFX_IOPATTERN_IN_VIDEO_MEMORY) ==
             MFX_IOPATTERN_IN_VIDEO_MEMORY) {
-          mfxHDL handle = NULL;
-          sts = mfxAllocator.GetHDL(mfxAllocator.pthis,
-                                    pmfxOutSurface->Data.MemId, &handle);
-          VERIFY(MFX_ERR_NONE == sts, "Error in mfxAllocator.GetHDL");
+          // In this code branch, we assume that VPL allocagted device memory
+          // which we need to share with SYCL kernel through level-zero backend.
+          mfxHDL handle = nullptr;
+          mfxResourceType resource_type;
+
+          // Retrieve native handle for the reviously allocated surface.
+          // Ideally, we need to query the device but we have it already
+          // in va_dpy variable
+          sts = outSurface->FrameInterface->GetNativeHandle(outSurface,
+                                                      &handle, &resource_type);
+          VERIFY(MFX_ERR_NONE == sts, "Error in GetNativeHandle");
+
+          // On Linux, we expect VASurfaceID as the native handle
+          VERIFY(resource_type == MFX_RESOURCE_VA_SURFACE,
+                           "Error: only MFX_RESOURCE_VA_SURFACE is supported");
 
           VASurfaceID va_surface_id = *(VASurfaceID *)handle;
 
-          usm_image_context context;
           VADRMPRIMESurfaceDescriptor prime_desc = {};
 
+          // Export DMA buffer file descriptor from libva library
           VAStatus va_sts = vaExportSurfaceHandle(
               va_dpy, va_surface_id, VA_SURFACE_ATTRIB_MEM_TYPE_DRM_PRIME_2,
               VA_EXPORT_SURFACE_READ_ONLY, &prime_desc);
           VERIFY(VA_STATUS_SUCCESS == va_sts, "error in vaExportHandle");
 
+          // Check memory layout. At this moment we support only linear
+          // memory layout.
+          VERIFY( prime_desc.objects[0].drm_format_modifier == 0,
+              "Error. Only linear memory layout is supported by SYCL kernel.");
+
+          // Retrieve DMA  buf file descriptor to pass it to L0.
           int dma_fd = prime_desc.objects[0].fd;
 
-          context.drm_format_modifier =
-              prime_desc.objects[0]
-                  .drm_format_modifier;  // non-zero if tiled (non-linear) mem
-
-          uint32_t n_planes = 0;
-          for (uint32_t i = 0; i < prime_desc.num_layers; i++) {
-            auto layer = &prime_desc.layers[i];
-            for (uint32_t j = 0; j < layer->num_planes; j++) {
-              if (n_planes < MAX_PLANES_NUMBER) {
-                context.pitch[n_planes] = layer->pitch[j];
-                context.offset[n_planes] = layer->offset[j];
-                n_planes++;
-              }
-            }
-          }
-          context.planes_count = n_planes;
-
-          ze_context_handle_t ze_context =
-              q.get_context().get_native<sycl::backend::level_zero>();
-          context.ze_context = ze_context;
-          ze_device_handle_t ze_device =
-              q.get_device().get_native<sycl::backend::level_zero>();
           void *ptr = nullptr;
           ze_result_t ze_res;
 
+          // Import DMA  buf file descriptor to L0 o convert it to USM.
           ze_device_mem_alloc_desc_t alloc_desc = {};
           alloc_desc.stype = ZE_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMPORT_FD;
           ze_external_memory_import_fd_t import_fd = {
@@ -398,32 +342,48 @@ int main(int argc, char **argv) {
               zeMemAllocDevice(ze_context, &alloc_desc,
                                prime_desc.objects[0].size, 0, ze_device, &ptr);
 
-          if (ze_res != ZE_RESULT_SUCCESS) {
-            throw std::runtime_error("Failed to get USM pointer");
-          }
+          VERIFY(ze_res == ZE_RESULT_SUCCESS,
+             "Error: Failed to get USM pointer");
 
-          close(dma_fd);
-          context.ptr = ptr;
-
+          // Execute SYCL kernel to blur the frame. Here we assume that
+          // i/o frames are in device memory, so SYCL kernel is executed on GPU.
           BlurFrame(q, OUTPUT_WIDTH, OUTPUT_HEIGHT, (uint8_t *)ptr,
                     prime_desc.layers[0].pitch[0], blur_data, blur_pitch);
 
+          // Store blured frame in the file.
           for (int r = 0; r < OUTPUT_HEIGHT; r++) {
             fwrite(blur_data + (r * blur_pitch), 1, blur_pitch, sink);
           }
 
-          // unmap
+          // unmap memory from L0
           ze_res = zeMemFree(ze_context, ptr);
+
+          // close DMA buf file descriptor
+          close(dma_fd);
 
         } else
 #endif
         {
+          // We don't have video memory interop supported or VPP output
+          // already in the system memory.
+          // In this case we need to map VPP'ed surface to the
+          // system memory.
+          sts = outSurface->FrameInterface->Map(outSurface, MFX_MAP_READ);
+          VERIFY(MFX_ERR_NONE == sts, "Error in FrameInterface->Map");
 
-          BlurFrame(q, OUTPUT_WIDTH, OUTPUT_HEIGHT, pmfxOutSurface->Data.B,
-                    pmfxOutSurface->Data.Pitch, blur_data, blur_pitch);
+          // Execute SYCL kernel to blur the frame. Here we assume that
+          // i/o frames are in system memory, so SYCL kernel is executed on CPU.
+          BlurFrame(q, OUTPUT_WIDTH, OUTPUT_HEIGHT, outSurface->Data.B,
+                    outSurface->Data.Pitch, blur_data, blur_pitch);
+
+          // Store blured frame in the file.
           for (int r = 0; r < OUTPUT_HEIGHT; r++) {
             fwrite(blur_data + (r * blur_pitch), 1, blur_pitch, sink);
           }
+
+          // Unmap memory.
+          sts = outSurface->FrameInterface->Unmap(outSurface);
+          VERIFY(MFX_ERR_NONE == sts, "Error in FrameInterface->Unmap");
         }
 
         printf("Frame number: %d\r", ++framenum);
@@ -444,7 +404,7 @@ int main(int argc, char **argv) {
         // Cleanup if device is lost
         break;
       case MFX_WRN_DEVICE_BUSY:
-#ifdef LIBVA_SUPPORT
+#ifdef HAVE_VIDEO_MEMORY_INTEROP
         // For non-CPU implementations,
         // Wait a few milliseconds then try again
         usleep(WAIT_100_MILLISECONDS * 1000);
@@ -455,15 +415,23 @@ int main(int argc, char **argv) {
         isStillGoing = false;
         break;
     }
+    // Release memory allocated for input surface
+    sts = inSurface->FrameInterface->Release(inSurface);
+    VERIFY(MFX_ERR_NONE == sts, "Error in FrameInterface->Release");
+
+    // Release memory allocated for output surface
+    sts = outSurface->FrameInterface->Release(outSurface);
+    VERIFY(MFX_ERR_NONE == sts, "Error in FrameInterface->Release");
   }
 
 end:
   printf("Processed %d frames\n", framenum);
-
+  
+  // Close i/o file
   if (source) fclose(source);
-
   if (sink) fclose(sink);
 
+  // Release VPL resources
   if (session) {
     MFXVideoVPP_Close(session);
     MFXClose(session);
@@ -471,21 +439,11 @@ end:
 
   if (loader) MFXUnload(loader);
 
-  if (vppInBuf) FreeExternalSystemMemorySurfacePool(vppInBuf, vppInSurfacePool);
-  if (vppOutBuf)
-    FreeExternalSystemMemorySurfacePool(vppOutBuf, vppOutSurfacePool);
-
-  // free kernel data
+  // Release memory allocated for blured frame.
   sycl::free(blur_data, q);
 
-#ifdef LIBVA_SUPPORT
-  if (mfxAllocator.pthis != nullptr) {
-    mfxAllocator.Free(mfxAllocator.pthis, &mfxResponseIn);
-    mfxAllocator.Free(mfxAllocator.pthis, &mfxResponseOut);
-    free(vppInSurfacePool);
-    free(vppOutSurfacePool);
-  }
-
+  // Close the display.
+#ifdef HAVE_VIDEO_MEMORY_INTEROP
   if (va_dpy) {
     FreeAcceleratorHandle(va_dpy);
   }
