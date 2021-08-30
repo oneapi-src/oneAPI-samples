@@ -86,7 +86,7 @@ Example: If running a sample in the Intel DevCloud, remember that you must speci
 1. Setup oneAPI environment variables:
     > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
     This will need to be run each time you open a new cmd window(non Persistent)
-    - Aternatively you can search for the oneAPI cmd prompt - startmenu> look for Intel oneAPI 202*> "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017"  
+    - Aternatively you can search for the oneAPI cmd prompt - startmenu> look for `Intel oneAPI 202*`> "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017"  
 
     On Windows:
 
