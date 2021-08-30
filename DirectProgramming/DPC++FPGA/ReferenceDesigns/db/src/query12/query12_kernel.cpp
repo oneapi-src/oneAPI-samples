@@ -45,6 +45,8 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   const size_t o_iters =
       (o_rows + kOrderJoinWindowSize - 1) / kOrderJoinWindowSize;
 
+  constexpr auto max_int = std::numeric_limits<int>::max();
+
   // start timer
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
 
@@ -60,7 +62,10 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
 
     h.single_task<LineItemProducer>([=]() [[intel::kernel_args_restrict]] {
       [[intel::initiation_interval(1)]]
-      for (size_t i = 0; i < l_iters; i++) {
+      for (size_t i = 0; i < l_iters + 1; i++) {
+        bool done = (i == l_iters);
+        bool valid = (i != l_iters);
+
         // bulk read of data from global memory
         NTuple<kLineItemJoinWindowSize, LineItemRow> data;
 
@@ -79,7 +84,7 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
         });
 
         // write to pipe
-        LineItemProducerPipe::write(LineItemRowPipeData(false, true, data));
+        LineItemProducerPipe::write(LineItemRowPipeData(done, valid, data));
       }
     });
   });
@@ -94,7 +99,10 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
 
     h.single_task<OrdersProducer>([=]() [[intel::kernel_args_restrict]] {
       [[intel::initiation_interval(1)]]
-      for (size_t i = 0; i < o_iters; i++) {
+      for (size_t i = 0; i < o_iters + 1; i++) {
+        bool done = (i == o_iters);
+        bool valid = (i != o_iters);
+
         // bulk read of data from global memory
         NTuple<kOrderJoinWindowSize, OrdersRow> data;
 
@@ -109,7 +117,7 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
         });
 
         // write to pipe
-        OrdersProducerPipe::write(OrdersRowPipeData(false, true, data));
+        OrdersProducerPipe::write(OrdersRowPipeData(done, valid, data));
       }
     });
   });
@@ -118,14 +126,14 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// Join kernel
   auto join_event = q.submit([&](handler& h) {
-    int o_rows = dbinfo.o.rows;
-    int l_rows = dbinfo.l.rows;
+    //int o_rows = dbinfo.o.rows;
+    //int l_rows = dbinfo.l.rows;
 
     // streaming query12 computation
     h.single_task<Join>([=]() [[intel::kernel_args_restrict]] {
       MergeJoin<OrdersProducerPipe, OrdersRow, kOrderJoinWindowSize,
                 LineItemProducerPipe, LineItemRow, kLineItemJoinWindowSize,
-                JoinedProducerPipe, JoinedRow>(o_rows, l_rows);
+                JoinedProducerPipe, JoinedRow>(/*o_rows*/max_int, /*l_rows*/max_int);
 
       // join is done, tell downstream
       JoinedProducerPipe::write(JoinedRowPipeData(true, false));

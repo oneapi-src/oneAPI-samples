@@ -42,6 +42,13 @@ if(NOT DEFINED SEED)
     endif()
 endif()
 
+# Error out if trying to run Q9 or Q11 on Arria 10
+if (${FPGA_BOARD} MATCHES ".*a10.*")
+    if(${QUERY} EQUAL 9 or ${QUERY} EQUAL 11)
+      message(FATAL_ERROR "Queries 9 and 11 are only not supported on Arria 10 devices")
+    endif()
+endif()
+
 # set number of CPU cores to use for quartus® compile, default=2
 if(NOT DEFINED QUARTUS_CORES)
     set(QUARTUS_CORES 2)
