@@ -2063,13 +2063,10 @@ void SubmitGzipTasksSingleEngine(
 
       // load in new data
       struct LzInput in;
+      Unroller<0, kVec>::step([&](int i) { in.data[i] = acc_pibuf[inpos++]; });
       Unroller<0, kVec>::step([&](int i) {
-        // prevent out-of-bounds reads
-        in.data[i] = (inpos < accessor_isz) ? acc_pibuf[inpos++] : 0;
+        current_window[i + kVec] = in.data[i];
       });
-
-      Unroller<0, kVec>::step(
-          [&](int i) { current_window[i + kVec] = in.data[i]; });
 
       do {
         //-----------------------------

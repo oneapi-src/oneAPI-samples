@@ -2193,8 +2193,7 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
 
           // load in new data
           Unroller<0, kVec>::step([&](int i) {
-            // guarding against out-of-bounds accesses
-            in.data[i] = (inpos < accessor_isz) ? acc_pibuf[inpos++] : 0;
+            in.data[i] = acc_pibuf[inpos++];
             input_data.arr[16 * (int)crc_ch_load_upper + i] = in.data[i];
           });
 

@@ -306,6 +306,10 @@ int CompressFile(queue &q, std::string &input_file,
     }
   }
 
+  // padding for the input and output buffers to deal with granularity of
+  // kernel reads and writes
+  constexpr size_t kInOutPadding = 16 * kVec;
+
   // This loop allocates host-side USM buffers, to be accessed by the kernel.
   for (size_t eng = 0; eng < kNumEngines; eng++) {
     for (int i = 0; i < buffers_count; i++) {
@@ -313,7 +317,9 @@ int CompressFile(queue &q, std::string &input_file,
       // Allocating slightly larger buffers (+ 16 * kVec) to account for
       // granularity of kernel writes
       kinfo[eng][i].output_size =
-          isz + 16 * kVec < kMinBufferSize ? kMinBufferSize : isz + 16 * kVec;
+          ((isz + kInOutPadding) < kMinBufferSize) ? kMinBufferSize
+                                                   : (isz + kInOutPadding);
+      const size_t input_alloc_size = isz + kInOutPadding;
 
       kinfo[eng][i].last_block = true;
       kinfo[eng][i].pref_buffer = pinbuf;
@@ -351,7 +357,7 @@ int CompressFile(queue &q, std::string &input_file,
                           // since the buffers get subsequently reused.
         for (int b = 0; b < BATCH_SIZE; b++) {
           kinfo[eng][i].pibuf_ptr_array[b] =
-              alloc_char.allocate(kinfo[eng][i].input_size * sizeof(char));
+              alloc_char.allocate(input_alloc_size * sizeof(char));
           kinfo[eng][i].pobuf_ptr_array[b] =
               alloc_char.allocate(kinfo[eng][i].output_size * sizeof(char));
           memset(kinfo[eng][i].pobuf_ptr_array[b], 0,
