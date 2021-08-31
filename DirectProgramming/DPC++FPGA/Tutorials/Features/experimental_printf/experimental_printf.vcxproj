@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\experimental_exp.cpp" />
+    <ClCompile Include="src\experimental_printf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -20,7 +20,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{6658F38F-76DB-4798-ACF8-1850D75DD1CD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>experimental_exp</RootNamespace>
+    <RootNamespace>experimental_printf</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

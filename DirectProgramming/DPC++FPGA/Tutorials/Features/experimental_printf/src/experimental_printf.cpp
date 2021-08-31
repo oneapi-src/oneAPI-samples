@@ -27,16 +27,17 @@ int main(int argc, char* argv[]) {
 #endif
 
   queue q(device_selector);
-
+  // Create some kernel arguments for printing.
+  int x = 123;
+  float y = 1.0f;
   try {
     q.submit([&](handler& h) {
-       h.single_task<BasicKernel>([=
-       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
+       h.single_task<BasicKernel>([=]() {
          PRINTF("PASS Result1: Hello, World!\n");
          PRINTF("PASS Result2: %%\n");
-         PRINTF("PASS Result3: %d\n", 123);
+         PRINTF("PASS Result3: %d\n", x);
          PRINTF("PASS Result4: %u\n", 123);
-         PRINTF("PASS Result5: %.2f\n", 1.0f);
+         PRINTF("PASS Result5: %.2f\n", y);
          PRINTF("PASS Result6: print slash_n \\n \n");
          PRINTF("PASS Result7: Long: %ld\n", 650000L);
          PRINTF("PASS Result8: Preceding with blanks: %10d \n", 1977);
