@@ -20,9 +20,29 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 # Using Samples in Intel oneAPI DevCloud
 
+## General DevCloud Usage Instructions:
 You can use AI Kit samples in
 the [Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/) environment in the following ways:
-* Log in to a DevCloud system via SSH and
-  * use `git clone` to get a full copy of samples repository, or
-  * use the `oneapi-cli` tool to download specific sample.
-* Launch a JupyterLab server and run Jupyter Notebooks from your web browser.
+* Log in to a DevCloud system via SSH
+* Launch a JupyterLab server and run Jupyter Notebooks from your web browser.   
+> Please refer to [DevCloud README](DevCloudREADME.md) for more details.
+## Get Code Samples
+* use `git clone` to get a full copy of samples repository, or
+* use the `oneapi-cli` tool to download specific sample.
+> Users could refer to [the Download Samples using the oneAPI CLI Samples Browser section](https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-oneapi-hpc-linux/top/run-a-sample-project-using-the-command-line.html).
+## How to submit a workload to a specific architecture
+* check the available nodes with your DevCloud account 
+```
+./q -h
+```
+* select one of available node for your workload. 
+ex: select a skx node to run your workload
+```
+export TARGET_NODE=skx
+```
+* prepare a run script which contains all needed run commands for your workload. 
+> Users could refer to [run.sh for TensorFlow Getting started sample](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted/run.sh).
+* submit your workload on the selected node with the run script.
+```
+./q ./run.sh
+```

@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include "lib.hpp"
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -26,9 +26,9 @@ int main() {
 
   // Select either the FPGA emulator (CPU) or FPGA device
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
@@ -41,7 +41,7 @@ int main() {
     q.submit([&](handler &h) {
 
       // Accessor to the scalar result
-      accessor accessor_c(buffer_c, h, write_only, noinit);
+      accessor accessor_c(buffer_c, h, write_only, no_init);
 
       // Kernel
       h.single_task<class KernelCompute>([=]() {

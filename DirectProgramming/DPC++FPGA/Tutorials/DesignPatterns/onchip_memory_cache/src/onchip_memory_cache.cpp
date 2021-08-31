@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -34,7 +34,7 @@ void Histogram(sycl::queue &q, buffer<uint32_t>& input_buf,
   e = q.submit([&](handler& h) {
     // Get accessors to the SYCL buffers
     accessor input(input_buf, h, read_only);
-    accessor output(output_buf, h, write_only, noinit);
+    accessor output(output_buf, h, write_only, no_init);
 
     h.single_task<Task<use_cache>>([=]() [[intel::kernel_args_restrict]] {
 
@@ -112,13 +112,13 @@ int main() {
 
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
   std::cout << "\nEmulator output does not demonstrate true hardware "
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
   try {
     auto prop_list =

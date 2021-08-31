@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <vector>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -60,9 +60,9 @@ double GetExecutionTime(const event &e) {
 
 void RunKernel(std::vector<int> &in, std::vector<int> &out) {
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   try {
@@ -76,7 +76,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
     // submit the kernel
     auto e = q.submit([&](handler &h) {
       accessor in_acc(in_buf, h, read_only);
-      accessor out_acc(out_buf, h, write_only, noinit);
+      accessor out_acc(out_buf, h, write_only, no_init);
 
       // FPGA-optimized kernel
       // Using kernel_args_restrict tells the compiler that the input

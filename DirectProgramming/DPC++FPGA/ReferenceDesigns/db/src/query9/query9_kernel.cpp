@@ -117,7 +117,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   // a convenient lamda to make the explicit copy code less verbose
   auto submit_copy = [&](auto& buf, const auto& host_data) {
     return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, noinit);
+      accessor accessor(buf, h, write_only, no_init);
       h.copy(host_data, accessor);
     });
   };
@@ -435,7 +435,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     accessor l_discount_accessor(l_discount_buf, h, read_only);
 
     // output accessors
-    accessor sum_profit_accessor(sum_profit_buf, h, write_only, noinit);
+    accessor sum_profit_accessor(sum_profit_buf, h, write_only, no_init);
 
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       // the accumulators
@@ -699,6 +699,14 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   // wait for kernel to finish
   filter_parts_event.wait();
   computation_kernel_event.wait();
+  join_li_o_s_ps_event.wait();
+  sort_event.wait();
+  consume_sort_event.wait();
+  feed_sort_event.wait();
+  produce_part_supplier_event.wait();
+  join_partsupplier_supplier_event.wait();
+  join_lineitem_orders_event.wait();
+  producer_orders_event.wait();
 
   high_resolution_clock::time_point host_end = high_resolution_clock::now();
   duration<double, std::milli> diff = host_end - host_start;

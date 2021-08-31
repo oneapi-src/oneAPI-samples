@@ -70,7 +70,7 @@
 */
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <vector>
 
 #include "gzipkernel_ll.hpp"
@@ -2157,7 +2157,7 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
         // what we compare to
         unsigned int insize_compare = (accessor_isz) / kVec;
 
-        int ctr = insize_compare = insize_compare - 1;
+        int ctr = insize_compare - 1;
 
         char first_valid_pos = 0;
 
@@ -2193,7 +2193,8 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
 
           // load in new data
           Unroller<0, kVec>::step([&](int i) {
-            in.data[i] = acc_pibuf[inpos++];
+            // guarding against out-of-bounds accesses
+            in.data[i] = (inpos < accessor_isz) ? acc_pibuf[inpos++] : 0;
             input_data.arr[16 * (int)crc_ch_load_upper + i] = in.data[i];
           });
 

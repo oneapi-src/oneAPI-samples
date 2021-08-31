@@ -9,7 +9,7 @@
 #include <vector>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -18,7 +18,7 @@
 
 using namespace sycl;
 
-using ProducerToConsumerPipe = INTEL::pipe<  // Defined in the SYCL headers.
+using ProducerToConsumerPipe = ext::intel::pipe<  // Defined in the SYCL headers.
     class ProducerConsumerPipe,              // An identifier for the pipe.
     int,                                     // The type of data in the pipe.
     4>;                                      // The capacity of the pipe.
@@ -59,7 +59,7 @@ event Consumer(queue &q, buffer<int, 1> &out_buf) {
   std::cout << "Enqueuing consumer...\n";
 
   auto e = q.submit([&](handler &h) {
-    accessor out_accessor(out_buf, h, write_only, noinit);
+    accessor out_accessor(out_buf, h, write_only, no_init);
     size_t num_elements = out_buf.get_count();
 
     h.single_task<ConsumerTutorial>([=]() {
@@ -108,9 +108,9 @@ int main(int argc, char *argv[]) {
   std::iota(producer_input.begin(), producer_input.begin(), 0);
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   event producer_event, consumer_event;

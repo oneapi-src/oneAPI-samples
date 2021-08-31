@@ -6,7 +6,7 @@
 #include <math.h>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <array>
 #include <iomanip>
 #include <iostream>
@@ -47,7 +47,7 @@ void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
 
     event e = q.submit([&](handler &h) {
       accessor accessor_array(buffer_array, h, read_only);
-      accessor accessor_result(buffer_result, h, write_only, noinit);
+      accessor accessor_result(buffer_result, h, write_only, no_init);
 
       h.single_task<Kernel<num_copies>>([=]() [[intel::kernel_args_restrict]] {
         int r = 0;
@@ -127,9 +127,9 @@ int main() {
   for (size_t i = 0; i < kSize; i++) a[i] = rand() % kMaxValue;
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   // Run the kernel with different values of the private_copies

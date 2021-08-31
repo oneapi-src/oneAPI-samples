@@ -1,0 +1,58 @@
+{
+  "guid": "4c16d8f3-0662-4203-9d1f-b2ab2336eedb",
+  "name": "Chapter 04 - Expresssing Parallelism",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_4_5_vector_add.cpp - Expressing a vector addition kernel with parallel_for * fig_4_6_matrix_add.cpp - Expressing a matrix addition kernel with parallel_for * fig_4_7_basic_matrix_multiply.cpp - Expressing a naïve matrix multiplication kernel for square matrices, with parallel_for * fig_4_13_nd_range_matrix_multiply.cpp - Expressing a naïve matrix multiplication kernel with ND-range parallel_for * fig_4_20_hierarchical_matrix_multiply.cpp - Expressing a naïve matrix multiplication kernel with hierarchical parallelism * fig_4_22_hierarchical_logical_matrix_multiply.cpp - Expressing a naïve matrix multiplication kernel with hierarchical parallelism and a logical range",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],  
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch04_expressing_parallelism",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_4_20_hierarchical_matrix_multiply",
+          "make fig_4_13_nd_range_matrix_multiply",
+          "make fig_4_22_hierarchical_logical_matrix_multiply",
+          "make fig_4_7_basic_matrix_multiply",
+          "make fig_4_6_matrix_add",
+          "make fig_4_5_vector_add" 
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force b4 >nul 2>nul || echo remove",
+          "mkdir b4",
+          "cd b4",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_4_20_hierarchical_matrix_multiply",
+          "nmake fig_4_13_nd_range_matrix_multiply",
+          "nmake fig_4_22_hierarchical_logical_matrix_multiply",
+          "nmake fig_4_7_basic_matrix_multiply",
+          "nmake fig_4_6_matrix_add",
+          "nmake fig_4_5_vector_add" 
+        ]
+      }
+    ]
+  }
+}

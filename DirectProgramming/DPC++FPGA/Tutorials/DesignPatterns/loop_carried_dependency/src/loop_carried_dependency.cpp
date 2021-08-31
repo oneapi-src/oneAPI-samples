@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -27,7 +27,7 @@ event Unoptimized(queue &q, const vector<double> &vec_a,
   auto e = q.submit([&](handler &h) {
     accessor a(b_a, h, read_only);
     accessor b(b_b, h, read_only);
-    accessor result(b_result, h, write_only, noinit);
+    accessor result(b_result, h, write_only, no_init);
 
     h.single_task<UnOptKernel>([=]() {
       double sum = 0;
@@ -52,7 +52,7 @@ event Optimized(queue &q, const vector<double> &vec_a,
   auto e = q.submit([&](handler &h) {
     accessor a(b_a, h, read_only);
     accessor b(b_b, h, read_only);
-    accessor result(b_result, h, write_only, noinit);
+    accessor result(b_result, h, write_only, no_init);
 
     h.single_task<OptKernel>([=]() [[intel::kernel_args_restrict]] {
       double sum = 0;
@@ -120,13 +120,13 @@ int main(int argc, char *argv[]) {
   // Initialize queue with device selector and enabling profiling
   // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
   cout << "\nEmulator output does not demonstrate true hardware "
           "performance. The design may need to run on actual hardware "
           "to observe the performance benefit of the optimization "
           "exemplified in this tutorial.\n\n";
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   double unopt_sum = -1, opt_sum = -1;

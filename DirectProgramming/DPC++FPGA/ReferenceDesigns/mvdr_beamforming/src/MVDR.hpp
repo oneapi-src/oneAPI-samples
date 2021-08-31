@@ -2,7 +2,7 @@
 #define __MVDR_HPP__
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <array>
 
 // utility classes
@@ -186,7 +186,7 @@ MVDREventArray SubmitMVDRKernels(
   constexpr int kTrainingDataPipeMinDepth =
       kTrainingMatrixSize / k_num_complex_per_xrx_read;
   using TrainingDataPipe =
-      sycl::INTEL::pipe<TrainingDataPipeID<k_instance_num>, XrxPipeType,
+      sycl::ext::intel::pipe<TrainingDataPipeID<k_instance_num>, XrxPipeType,
                         kTrainingDataPipeMinDepth>;
   using TrainingDataDupPipe =
       PipeDuplicator<TrainingDataDupPipeID<k_instance_num>, XrxPipeType,
@@ -197,7 +197,7 @@ MVDREventArray SubmitMVDRKernels(
   // data is processed (4 full matrices is adequate)                     
   constexpr int kXrxDataPipeMinDepth =
       (kTrainingMatrixSize / k_num_complex_per_xrx_read) * 4;
-  using XrxDataPipe = sycl::INTEL::pipe<XrxDataPipeID<k_instance_num>,
+  using XrxDataPipe = sycl::ext::intel::pipe<XrxDataPipeID<k_instance_num>,
                                         XrxPipeType, kXrxDataPipeMinDepth>;
 
   // Steering vector generator pipe and duplicator, and related update pipe
@@ -205,18 +205,18 @@ MVDREventArray SubmitMVDRKernels(
   constexpr int kSteeringVectorsPipeMinDepth =
       k_num_steering_vectors * k_num_sensor_inputs * 2;
   using SteeringVectorsPipe =
-      sycl::INTEL::pipe<SteeringVectorsPipeID<k_instance_num>, ComplexType,
+      sycl::ext::intel::pipe<SteeringVectorsPipeID<k_instance_num>, ComplexType,
                         kSteeringVectorsPipeMinDepth>;
   using SteeringVectorsDupPipe =
       PipeDuplicator<SteeringVectorsDupPipeID<k_instance_num>, ComplexType,
                      SteeringVectorsPipe, SteeringVectorsPipeOut>;
   using UpdateSteeringVectorsPipe =
-      sycl::INTEL::pipe<UpdateSteeringVectorsPipeID<k_instance_num>, bool, 1>;
+      sycl::ext::intel::pipe<UpdateSteeringVectorsPipeID<k_instance_num>, bool, 1>;
 
   // Pipe for forwarding steering vectors used by ForwardSubstitution to
   // CalcWeights and pipe duplicator
   using ForwardSteeringVectorsPipe =
-      sycl::INTEL::pipe<ForwardSteeringVectorsPipeID<k_instance_num>,
+      sycl::ext::intel::pipe<ForwardSteeringVectorsPipeID<k_instance_num>,
                         ComplexType, kSteeringVectorsPipeMinDepth>;
   using ForwardSteeringVectorsDupPipe =
       PipeDuplicator<ForwardSteeringVectorsDupPipeID<k_instance_num>,
@@ -254,7 +254,7 @@ MVDREventArray SubmitMVDRKernels(
   // Forward substitution result pipe and duplicator
   // Connect ForwardSubstitution to BackwardSubstitution
   using ForwardSubstitutionResultPipe =
-      sycl::INTEL::pipe<ForwardSubstitutionResultPipeID<k_instance_num>,
+      sycl::ext::intel::pipe<ForwardSubstitutionResultPipeID<k_instance_num>,
                         ComplexType, k_num_sensor_inputs>;
   using ForwardSubstitutionResultDupPipe =
       PipeDuplicator<ForwardSubstitutionResultDupPipeID<k_instance_num>,
@@ -265,7 +265,7 @@ MVDREventArray SubmitMVDRKernels(
   // Y = (inverse(R x Rtranspose) ) * (complex_conjugate(C)) , where
   // R is the R matrix from QRD, and C is the steering vector
   // Connect BackwardSubstitution to CalcWeights
-  using YVectorsPipe = sycl::INTEL::pipe<YVectorsPipeID<k_instance_num>,
+  using YVectorsPipe = sycl::ext::intel::pipe<YVectorsPipeID<k_instance_num>,
                                          ComplexType, k_num_sensor_inputs>;
   using YVectorsDupPipe =
       PipeDuplicator<YVectorsDupPipeID<k_instance_num>, ComplexType,
@@ -276,7 +276,7 @@ MVDREventArray SubmitMVDRKernels(
   constexpr int kWeightVectorsPipeMinDepth =
       k_num_steering_vectors * k_num_sensor_inputs * 2;
   using WeightVectorsPipe =
-      sycl::INTEL::pipe<WeightVectorsPipeID<k_instance_num>, ComplexType,
+      sycl::ext::intel::pipe<WeightVectorsPipeID<k_instance_num>, ComplexType,
                         kWeightVectorsPipeMinDepth>;
   using WeightVectorsDupPipe =
       PipeDuplicator<WeightVectorsDupPipeID<k_instance_num>, ComplexType,
@@ -292,7 +292,7 @@ MVDREventArray SubmitMVDRKernels(
   // transposed training data pipe
   constexpr int kTransposedTrainingDataPipeMinDepth = kTrainingDataPipeMinDepth;
   using TransposedTrainingDataPipe =
-      sycl::INTEL::pipe<TransposedTrainingDataPipeID<k_instance_num>,
+      sycl::ext::intel::pipe<TransposedTrainingDataPipeID<k_instance_num>,
                         XrxPipeType, kTransposedTrainingDataPipeMinDepth>;
   using TransposedTrainingDataDupPipe =
       PipeDuplicator<TransposedTrainingDataDupPipeID<k_instance_num>,
