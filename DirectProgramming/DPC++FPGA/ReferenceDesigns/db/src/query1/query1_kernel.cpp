@@ -43,6 +43,9 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
   buffer avg_discount_buf(avg_discount);
   buffer count_buf(count);
 
+  const int rows = dbinfo.l.rows; 
+  const size_t iters = (rows + kElementsPerCycle - 1) / kElementsPerCycle;
+
   // start timer
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
 
@@ -50,7 +53,6 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
   //// Query1 Kernel
   auto event = q.submit([&](handler& h) {
     // read accessors
-    int rows = dbinfo.l.rows;
     accessor quantity_accessor(quantity_buf, h, read_only);
     accessor extendedprice_accessor(extendedprice_buf, h, read_only);
     accessor discount_accessor(discount_buf, h, read_only);
@@ -88,7 +90,7 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
 
       // stream each row in the DB (kElementsPerCycle rows at a time)
       [[intel::initiation_interval(1)]]
-      for (size_t r = 0; r < rows; r += kElementsPerCycle) {
+      for (size_t r = 0; r < iters; r++) {
         // locals
         DBDecimal qty[kElementsPerCycle];
         DBDecimal extendedprice[kElementsPerCycle];
@@ -104,21 +106,22 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
         UnrolledLoop<0, kElementsPerCycle>([&](auto p) {
           // is data in range of the table
           // (data size may not be divisible by kElementsPerCycle)
-          bool in_range = (r + p) < rows;
+          size_t idx = r * kElementsPerCycle + p;
+          bool in_range = idx < rows;
 
           // get this rows shipdate
-          DBDate shipdate = in_range ? shipdate_accessor[r + p] : 0;
+          DBDate shipdate = in_range ? shipdate_accessor[idx] : 0;
 
           // determine if the row is valid
           row_valid[p] = in_range && (shipdate <= low_date);
 
           // read or set values based on the validity of the data
-          qty[p] = in_range ? quantity_accessor[r + p] : 0;
-          extendedprice[p] = in_range ? extendedprice_accessor[r + p] : 0;
-          discount[p] = in_range ? discount_accessor[r + p] : 0;
-          tax[p] = in_range ? tax_accessor[r + p] : 0;
-          char rf = in_range ? returnflag_accessor[r + p] : 0;
-          char ls = in_range ? linestatus_accessor[r + p] : 0;
+          qty[p] = in_range ? quantity_accessor[idx] : 0;
+          extendedprice[p] = in_range ? extendedprice_accessor[idx] : 0;
+          discount[p] = in_range ? discount_accessor[idx] : 0;
+          tax[p] = in_range ? tax_accessor[idx] : 0;
+          char rf = in_range ? returnflag_accessor[idx] : 0;
+          char ls = in_range ? linestatus_accessor[idx] : 0;
           count_tmp[p] = in_range ? 1 : 0;
 
           // convert returnflag and linestatus into an index

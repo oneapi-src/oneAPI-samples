@@ -38,14 +38,13 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   buffer high_line_count_buf(high_line_count);
   buffer low_line_count_buf(low_line_count);
 
+  // number of producing iterations depends on the number of elements per cycle
   const size_t l_rows = dbinfo.l.rows;
   const size_t l_iters =
       (l_rows + kLineItemJoinWindowSize - 1) / kLineItemJoinWindowSize;
   const size_t o_rows = dbinfo.o.rows;
   const size_t o_iters =
       (o_rows + kOrderJoinWindowSize - 1) / kOrderJoinWindowSize;
-
-  constexpr auto max_int = std::numeric_limits<int>::max();
 
   // start timer
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
@@ -126,14 +125,11 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// Join kernel
   auto join_event = q.submit([&](handler& h) {
-    //int o_rows = dbinfo.o.rows;
-    //int l_rows = dbinfo.l.rows;
-
     // streaming query12 computation
     h.single_task<Join>([=]() [[intel::kernel_args_restrict]] {
       MergeJoin<OrdersProducerPipe, OrdersRow, kOrderJoinWindowSize,
                 LineItemProducerPipe, LineItemRow, kLineItemJoinWindowSize,
-                JoinedProducerPipe, JoinedRow>(/*o_rows*/max_int, /*l_rows*/max_int);
+                JoinedProducerPipe, JoinedRow>();
 
       // join is done, tell downstream
       JoinedProducerPipe::write(JoinedRowPipeData(true, false));

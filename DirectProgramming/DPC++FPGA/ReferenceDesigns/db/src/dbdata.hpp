@@ -24,11 +24,11 @@ using DBDate = unsigned int;
 // The default scale factor for hardware is 1. However,
 // the SF_SMALL flag allows the hardware design to be compiled
 // with a scale factor of 0.01
-//#if defined(FPGA_EMULATOR) || defined(SF_SMALL)
-//constexpr float kSF = 0.01f;
-//#else
+#if defined(FPGA_EMULATOR) || defined(SF_SMALL)
+constexpr float kSF = 0.01f;
+#else
 constexpr float kSF = 1.0f;
-//#endif
+#endif
 
 // ensure the selected scale factor is supported
 static_assert((kSF == 0.01f || kSF == 1.0f), "Unsupported Scale Factor (kSF)");
