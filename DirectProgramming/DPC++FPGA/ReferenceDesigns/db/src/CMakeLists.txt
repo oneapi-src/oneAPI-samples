@@ -3,9 +3,6 @@ set(SOURCE_FILE db.cpp dbdata.cpp)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
-# the set of supported queries
-set(SUPPORTED_QUERIES 1 9 11 12)
-
 # FPGA board selection
 if(NOT DEFINED FPGA_BOARD)
     set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
