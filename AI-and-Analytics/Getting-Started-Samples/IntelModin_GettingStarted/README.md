@@ -93,7 +93,7 @@ Open .ipynb file and run cells in Jupyter Notebook using the "Run" button (see t
 
 #### Intel® DevCloud for oneAPI JupyterLab 
 
-Please note that this sample cannot be run on Intel® DevCloud for oneAPI JupyterLab due to conflicts between the Intel® DevCloud for oneAPI JupyterLab platform and Modin dependencies. This is a known issue that Intel is currently working on resolving. Thank you for your patience.
+Please note that as of right now, this sample cannot be run on Intel® DevCloud for oneAPI JupyterLab due to conflicts between the Intel® DevCloud for oneAPI JupyterLab platform and Modin dependencies. This is a known issue that Intel is currently working on resolving. Thank you for your patience.
 
 ### Run as Python File
 
