@@ -3,6 +3,10 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include "dpc_common.hpp"
 
+// According to OpenCL C spec, the format string must be in constant address space
+// This requires to perform "tricky" declarations of them.
+// To simplify, the following macro is defined.
+
 #ifdef __SYCL_DEVICE_ONLY__
 #define CL_CONSTANT __attribute__((opencl_constant))
 #else
@@ -29,7 +33,7 @@ int main(int argc, char* argv[]) {
   queue q(device_selector);
   // Create some kernel arguments for printing.
   int x = 123;
-  float y = 1.0f;
+  float y = 1.0f; 
   try {
     q.submit([&](handler& h) {
        h.single_task<BasicKernel>([=]() {
