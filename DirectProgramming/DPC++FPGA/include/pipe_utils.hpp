@@ -73,7 +73,7 @@ designs.
 // Internal Helper Functions/Structs
 // =============================================================
 
-namespace {
+namespace detail {
 
 // Templated classes for verifying dimensions when accessing elements in the
 // pipe array.
@@ -145,7 +145,7 @@ struct PipeArray {
     static_assert(sizeof...(idxs) == sizeof...(dims),
                   "Indexing into a PipeArray requires as many indices as "
                   "dimensions of the PipeArray.");
-    static_assert(VerifierDimLayer<dims...>::template VerifierIdxLayer<
+    static_assert(detail::VerifierDimLayer<dims...>::template VerifierIdxLayer<
                       idxs...>::IsValid(),
                   "Index out of bounds");
     using VerifiedPipe =
