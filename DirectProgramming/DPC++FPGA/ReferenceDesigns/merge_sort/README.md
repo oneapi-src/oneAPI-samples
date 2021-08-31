@@ -127,7 +127,7 @@ Execution time: 24.7522 ms
 Throughput: 646.408 Melements/s
 PASSED
 ```
-NOTE: The performance numbers displayed above were achieved using the Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX); your results may vary. <br/>
+NOTE: The performance numbers above were achieved using the Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX); your results may vary. <br/>
 NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance.
 
 ## Additional Design Information
