@@ -99,10 +99,10 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
           size_t idx = i * kJoinWinSize + j;
           bool in_range = idx < ps_rows;
 
-          DBIdentifier partkey = in_range ? ps_partkey_accessor[idx] : 0;
-          DBIdentifier suppkey = in_range ? ps_suppkey_accessor[idx] : 0;
-          int availqty = in_range ? ps_availqty_accessor[idx] : 0;
-          DBDecimal supplycost = in_range ? ps_supplycost_accessor[idx] : 0;
+          DBIdentifier partkey = ps_partkey_accessor[idx];
+          DBIdentifier suppkey = ps_suppkey_accessor[idx];
+          int availqty = ps_availqty_accessor[idx];
+          DBDecimal supplycost = ps_supplycost_accessor[idx];
 
           data.get<j>() =
               PartSupplierRow(in_range, partkey, suppkey, availqty, supplycost);
@@ -186,7 +186,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
             if (data.valid && data.nationkey == nationkey) {
               // partkeys start at 1
               DBIdentifier index = data.partkey - 1;
-              DBDecimal val = data.supplycost*(DBDecimal)(data.availqty);
+              DBDecimal val = data.supplycost * (DBDecimal)(data.availqty);
               partkey_values.Accumulate(index, val);
             }
           });

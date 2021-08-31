@@ -183,14 +183,16 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
           // read in regex string
           UnrolledLoop<0, 55>([&](auto k) {
-            regex[re].str[k] = idx_range ? p_name_accessor[idx * 55 + k] : 0;
+            regex[re].str[k] = p_name_accessor[idx * 55 + k];
           });
 
           // run regex matching
           regex[re].Match();
 
           // mark valid partkey
-          partkeys_matching_regex[partkey] = regex[re].Contains();
+          if (idx_range) {
+            partkeys_matching_regex[partkey] = regex[re].Contains();
+          }
         });
       }
       ///////////////////////////////////////////////
@@ -211,9 +213,9 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           size_t idx = i * kLineItemJoinWinSize + j;
           bool in_range = idx < l_rows;
 
-          DBIdentifier orderkey = in_range ? l_orderkey_accessor[idx] : 0;
-          DBIdentifier partkey = in_range ? l_partkey_accessor[idx] : 0;
-          DBIdentifier suppkey = in_range ? l_suppkey_accessor[idx] : 0;
+          DBIdentifier orderkey = l_orderkey_accessor[idx];
+          DBIdentifier partkey = l_partkey_accessor[idx];
+          DBIdentifier suppkey = l_suppkey_accessor[idx];
 
           bool matches_partkey_name_regex = partkeys_matching_regex[partkey];
           bool data_is_valid = in_range && matches_partkey_name_regex;
@@ -251,9 +253,11 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           size_t idx = i * kOrdersJoinWinSize + j;
           bool in_range = idx < l_rows;
 
-          DBIdentifier orderkey = in_range ? o_orderkey_accessor[idx]
-                                  : std::numeric_limits<DBIdentifier>::max();
-          DBDate orderdate = in_range ? o_orderdate_accessor[idx] : 0;
+          DBIdentifier orderkey_tmp = o_orderkey_accessor[idx];
+          DBDate orderdate = o_orderdate_accessor[idx];
+
+          DBIdentifier orderkey =
+            in_range ? orderkey_tmp : std::numeric_limits<DBIdentifier>::max();
 
           data.get<j>() = OrdersRow(in_range, orderkey, orderdate);
         });
@@ -349,9 +353,9 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
         UnrolledLoop<0, kPartSupplierDuplicatePartkeys>([&](auto j) {
           size_t idx = i * kPartSupplierDuplicatePartkeys + j;
           bool in_range = idx < ps_rows;
-          DBIdentifier partkey = in_range ? ps_partkey_accessor[idx] : 0;
-          DBIdentifier suppkey = in_range ? ps_suppkey_accessor[idx] : 0;
-          DBDecimal supplycost = in_range ? ps_supplycost_accessor[idx] : 0;
+          DBIdentifier partkey = ps_partkey_accessor[idx];
+          DBIdentifier suppkey = ps_suppkey_accessor[idx];
+          DBDecimal supplycost = ps_supplycost_accessor[idx];
 
           data.get<j>() = 
               PartSupplierRow(in_range, partkey, suppkey, supplycost);

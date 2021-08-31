@@ -45,7 +45,7 @@ endif()
 # Error out if trying to run Q9 or Q11 on Arria 10
 if (${FPGA_BOARD} MATCHES ".*a10.*")
     if(${QUERY} EQUAL 9 or ${QUERY} EQUAL 11)
-      message(FATAL_ERROR "Queries 9 and 11 are only not supported on Arria 10 devices")
+      message(FATAL_ERROR "Queries 9 and 11 are not supported on Arria 10 devices")
     endif()
 endif()
 

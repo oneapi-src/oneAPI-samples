@@ -110,19 +110,19 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
           bool in_range = idx < rows;
 
           // get this rows shipdate
-          DBDate shipdate = in_range ? shipdate_accessor[idx] : 0;
+          DBDate shipdate = shipdate_accessor[idx];
 
           // determine if the row is valid
           row_valid[p] = in_range && (shipdate <= low_date);
 
           // read or set values based on the validity of the data
-          qty[p] = in_range ? quantity_accessor[idx] : 0;
-          extendedprice[p] = in_range ? extendedprice_accessor[idx] : 0;
-          discount[p] = in_range ? discount_accessor[idx] : 0;
-          tax[p] = in_range ? tax_accessor[idx] : 0;
-          char rf = in_range ? returnflag_accessor[idx] : 0;
-          char ls = in_range ? linestatus_accessor[idx] : 0;
-          count_tmp[p] = in_range ? 1 : 0;
+          qty[p] = quantity_accessor[idx];
+          extendedprice[p] = extendedprice_accessor[idx];
+          discount[p] = discount_accessor[idx];
+          tax[p] = tax_accessor[idx];
+          char rf = returnflag_accessor[idx];
+          char ls = linestatus_accessor[idx];
+          count_tmp[p] = 1;
 
           // convert returnflag and linestatus into an index
           unsigned char rf_idx;

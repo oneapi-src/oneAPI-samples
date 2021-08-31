@@ -71,12 +71,14 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
         UnrolledLoop<0, kLineItemJoinWindowSize>([&](auto j) {
           size_t idx = (i*kLineItemJoinWindowSize + j);
           bool in_range = idx < l_rows;
-          DBIdentifier key = in_range ? l_orderkey_accessor[idx]
-                              : std::numeric_limits<DBIdentifier>::max();
-          int shipmode = in_range ? l_shipmode_accessor[idx] : 0;
-          DBDate commitdate = in_range ? l_commitdate_accessor[idx] : 0;
-          DBDate shipdate = in_range ? l_shipdate_accessor[idx] : 0;
-          DBDate receiptdate = in_range ? l_receiptdate_accessor[idx] : 0;
+          DBIdentifier key_tmp = l_orderkey_accessor[idx];
+          int shipmode = l_shipmode_accessor[idx];
+          DBDate commitdate = l_commitdate_accessor[idx];
+          DBDate shipdate = l_shipdate_accessor[idx];
+          DBDate receiptdate = l_receiptdate_accessor[idx];
+
+          DBIdentifier key =
+              in_range ? key_tmp : std::numeric_limits<DBIdentifier>::max();
 
           data.get<j>() = LineItemRow(in_range, key, shipmode, commitdate,
                                       shipdate, receiptdate);
@@ -108,9 +110,12 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
         UnrolledLoop<0, kOrderJoinWindowSize>([&](auto j) {
           size_t idx = (i*kOrderJoinWindowSize + j);
           bool in_range = idx < o_rows;
-          DBIdentifier key = in_range ? o_orderkey_accessor[idx]
-                              : std::numeric_limits<DBIdentifier>::max();
-          int orderpriority = in_range ? o_orderpriority_accessor[idx] : 0;
+          
+          DBIdentifier key_tmp = o_orderkey_accessor[idx];
+          int orderpriority = o_orderpriority_accessor[idx];
+
+          DBIdentifier key =
+              in_range ? key_tmp : std::numeric_limits<DBIdentifier>::max();
 
           data.get<j>() = OrdersRow(in_range, key, orderpriority);
         });
