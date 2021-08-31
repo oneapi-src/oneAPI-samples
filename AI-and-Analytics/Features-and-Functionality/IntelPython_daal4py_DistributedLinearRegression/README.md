@@ -1,5 +1,5 @@
 # `Intel Python daal4py Distributed Linear Regression Sample`
-This sample code shows how to train and predict with a distributed linear regression model using the python API package daal4py for oneAPI Data Analytics Library. It assumes you have a working version of the MPI library installed, and it demonstrates how to use software products that can be found in the [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+This sample code shows how to train and predict with a distributed linear regression model using the python API package daal4py for oneAPI Data Analytics Library. It assumes you have a working version of the Intel® MPI Library installed, and it demonstrates how to use software products that can be found in the [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -23,6 +23,9 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
+## Running Samples on the Intel&reg; DevCloud
+If you are running this sample on the DevCloud, see [Running Samples on the Intel&reg; DevCloud](#run-samples-on-devcloud)
 
 ## Building daal4py for CPU
 
@@ -72,7 +75,7 @@ Launch Jupyter Notebook in the directory housing the code example
 jupyter notebook
 ```
 
-## Running the Sample
+## Running the Sample<a name="running-the-sample"></a>
 
 ### Running the Sample as a Python File
 
@@ -85,6 +88,25 @@ Run the Program
 The output of the script will be saved in the included models and result directories. 
 
 _Note: This code samples focus on using daal4py to do distributed ML computations on chunks of data. The `mpirun` command above will only run on a single local node. To launch on a cluster, you will need to create a host file on the master node, among other steps. The **TensorFlow_Multinode_Training_with_Horovod** code sample explains this process well._
+
+### Running Samples on the Intel&reg; DevCloud (Optional)<a name="run-samples-on-devcloud"></a>
+
+<!---Include the next paragraph ONLY if the sample runs in batch mode-->
+### Run in Batch Mode
+This sample runs in batch mode, so you must have a script for batch processing. Once you have a script set up, refer to [Running the Sample](#running-the-sample).
+
+### Request a Compute Node
+In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.
+ This node information must be provided when submitting a job to run your sample in batch mode using the qsub command. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
+
+<!---Mark each compatible Node in BOLD-->
+| Node              | Command                                                 |
+| ----------------- | ------------------------------------------------------- |
+| GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
+| __CPU__           | __qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh__      |
+| FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
+| FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
+
 
 ##### Expected Printed Output (with similar numbers, printed 4 times):
 ```

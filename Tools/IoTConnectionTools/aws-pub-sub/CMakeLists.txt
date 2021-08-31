@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.4)
 project(basic-pub-sub CXX)
 
 option(BUILD_DEPS "Builds aws common runtime dependencies as part of build to control your dependency chain." ON)

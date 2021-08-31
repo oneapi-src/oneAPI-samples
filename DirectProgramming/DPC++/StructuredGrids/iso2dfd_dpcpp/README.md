@@ -1,6 +1,6 @@
 ﻿# `ISO2DFD` Sample
 
-ISO2DFD: Intel® oneAPI DPC++ Language Basics Using 2D-Finite-Difference-Wave Propagation
+ISO2DFD: Intel® oneAPI Data Parallel C++ Language Basics Using 2D-Finite-Difference-Wave Propagation
 
 The ISO2DFD sample refers to Two-Dimensional Finite-Difference Wave Propagation in Isotropic Media.  It is a two-dimensional stencil to simulate a wave propagating in a 2D isotropic medium and illustrates the basics of the DPC++ programming language using direct programming.
 
@@ -12,7 +12,7 @@ For comprehensive instructions regarding DPC++ Programming, see the [oneAPI Prog
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How to offload the computation to GPU using Intel® oneAPI DPC++/C++ Compiler
 | Time to complete                  | 10 minutes
 

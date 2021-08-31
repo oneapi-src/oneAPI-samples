@@ -5,7 +5,7 @@ Mandelbrot is an infinitely complex fractal patterning that is derived from a si
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | MacOS Catalina or newer;
+| OS                                | Linux. MacOS Catalina or newer;
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI C++ Compiler Classic
 | What you will learn               | How to optimize a scalar implementation using OpenMP pragmas

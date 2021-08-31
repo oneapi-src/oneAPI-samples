@@ -1,4 +1,5 @@
 {
+  "guid": "f92e64c7-7a7c-4749-b421-9f7a9e120099",
   "name": "Vectorize VecMatMult",
   "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"],
   "description": "Fortran Tutorial - Using Auto Vectorization",

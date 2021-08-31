@@ -9,8 +9,8 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
+| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               |  Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a *safe* dependence distance <br> How to aid the compiler's dependence analysis to maximize performance
 | Time to complete                  | 30 minutes
@@ -84,23 +84,27 @@ L1: for(i = 1; i < n; i++){
 ### Specifying that memory accesses do *not* cause loop-carried dependencies
 Apply the `ivdep` attribute to a loop to inform the compiler that ***none*** of the memory accesses within a loop incur loop-carried dependencies.
 ```c++
-[[intel::ivdep]]
+[[intel::ivdep(a)]]
 for (int i = 0; i < n; i++) {
     a[i] = a[i - X[i]];
 }
 ```
-The `ivdep` attribute indicates to the compiler that it can disregard assumed loop-carried memory dependencies and generate a pipelined datapath for this loop capable of issuing new iterations as soon as possible (every cycle), maximizing possible throughput.
+The `ivdep(a)` attribute indicates to the compiler that it can disregard assumed loop-carried memory dependencies on accesses to array `a`. Disregarding dependencies on `a` allows the compiler to generate a pipelined datapath for this loop capable of issuing new iterations as soon as possible (every cycle), maximizing possible throughput.
+
+The `ivdep` attribute can also be applied to a loop without a specific array or pointer argument. When applied in this manner, the `ivdep` attribute indicates to the compiler that it can ignore all assumed loop-carried dependencies on accesses to all arrays and pointers with the loop.
+
+***IMPORTANT***: It is recommended best practice that users always apply `ivdep` with an array or pointer specified so that they explicitly understand which accesses are affected. Specifying `ivdep` incorrectly by telling the compiler to disregard loop-carried dependencies where some exist results in undefined (and likely incorrect) behaviour.
 
 ### Specifying that memory accesses do *not* cause loop-carried dependencies across a fixed distance
-Apply the `ivdep` attribute with a `safelen` parameter to set a specific lower bound on the dependence distance that can possibly be attributed to loop-carried dependencies in the associated loop.
+Apply the `ivdep` attribute with an additional `safelen` parameter to set a specific lower bound on the dependence distance that can possibly be attributed to loop-carried dependencies in the associated loop.
 ```c++
 // n is a constant expression of integer type
-[[intel::ivdep(n)]]
+[[intel::ivdep(a,n)]]
 for (int i = 0; i < n; i++) {
     a[i] = a[i - X[i]];
 }
 ```
-The `ivdep` attribute informs the compiler to generate a pipelined loop datapath that can issue a new iteration as soon as the iteration `n` iterations ago has completed. The attribute parameter (`safelen`) is a refinement of the compiler static loop-carried dependence analysis that infers the dependence present in the code but is otherwise unable to determine its distance accurately.
+The `ivdep(a,n)` attribute informs the compiler to generate a pipelined loop datapath that can issue a new iteration as soon as the iteration `n` iterations ago has completed. The attribute parameter (`safelen`) is a refinement of the compiler static loop-carried dependence analysis that infers the dependence present in the code but is otherwise unable to determine its distance accurately.
 
 ***IMPORTANT***: Applying the `ivdep` attribute or the `ivdep` attribute with a `safelen` parameter may lead to incorrect results if the annotated loop exhibits loop-carried memory dependencies. The attribute directs the compiler to generate hardware assuming no loop-carried dependencies. Specifying this assumption incorrectly is an invalid use of the attribute and results in undefined (and likely incorrect) behavior.
 
@@ -143,7 +147,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile, fpga_runtime:arria10, or fpga_runtime:stratix10) and whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -162,6 +166,10 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   ```
+   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+   ```
+   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -196,6 +204,10 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
+   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -207,9 +219,12 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      nmake report
      ``` 
-   * An FPGA hardware target is not provided on Windows*. 
+   * Compile for FPGA hardware (longer compile time, targets FPGA device):
+     ```
+     nmake fpga
+     ``` 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
 

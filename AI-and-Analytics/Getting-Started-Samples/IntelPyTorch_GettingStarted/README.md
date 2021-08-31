@@ -22,21 +22,19 @@ This Hello World sample code is implemented for CPU using the Python language.
 ### Notes
  - The test dataset is inherited from `torch.utils.data.Dataset`.
  - The model is inherited from `torch.nn.Module`.
- - For the inference portion, `to_mkldnn()` function in `torch.utils.mkldnn` can accelerate performance by eliminating data reorders between operations, which are supported by Intel(R) DNNL.
+ - For the inference portion, `to_mkldnn()` function in `torch.utils.mkldnn` can accelerate performance by eliminating data reorders between operations, which are supported by Intel&reg; DNNL.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## How to Build and Run 
-### Running Samples In DevCloud (Optional)
-If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
+## How to Build and Run
 
 1. Pre-requirement
 
-    PyTorch is ready for use once you finish the Intel AI Analytics Toolkit installation and have run the post installation script. These steps apply to DevCloud as well.
+    PyTorch is ready for use once you finish the Intel&reg; AI Analytics Toolkit installation and have run the post installation script. These steps apply to DevCloud as well.
 
     You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -61,8 +59,13 @@ If running a sample in the Intel DevCloud, please follow the below steps to buil
     ```
     conda activate user_pytorch
     ```
+  
+4.	Navigate to the directory with the TensorFlow sample:
+    ```
+    cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelPyTorch_GettingStarted
+    ```
 
-4. Run the Python script
+5. Run the Python script
     To run the program on Linux*, Windows* and MacOS*, type the following command in the terminal with Python installed:
 
     ```
@@ -78,4 +81,21 @@ If running a sample in the Intel DevCloud, please follow the below steps to buil
     Please find more information about the mkldnn log [here](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html).
 
 ## Example of Output
-With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.
+With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.  
+
+
+## Running The Sample In DevCloud (Optional)
+
+Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/README.md#using-samples-in-intel-oneapi-devcloud) for general usage instructions.
+
+### Submit The Sample in Batch Mode
+
+1.	Navigate to the directory with the TensorFlow sample:
+```
+cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelPyTorch_GettingStarted
+```
+2. submit this "IntelPyTorch_GettingStarted" workload on the selected node with the run script.
+```
+./q ./run.sh
+```
+> the run.sh contains all the instructions needed to run this "TensorFlow_HelloWorld" workload

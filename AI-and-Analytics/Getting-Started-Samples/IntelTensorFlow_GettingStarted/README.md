@@ -5,8 +5,8 @@ TensorFlow* is a widely-used machine learning framework in the deep learning are
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 
 | Hardware                          | Intel® Xeon® Scalable processor family or newer
-| Software                          | Intel® oneAPI AI Analytics Toolkit
-| What you will learn               | How to get started to use Intel optimization for TensorFlow*
+| Software                          | Intel® AI Analytics Toolkit
+| What you will learn               | How to get started to use Intel Optimization for TensorFlow*
 | Time to complete                  | 10 minutes
 
 ## Purpose
@@ -33,16 +33,15 @@ Intel-optimized Tensorflow is available as part of the Intel® AI Analytics Tool
 
 Runtime settings for `MKLDNN_VERBOSE`, `KMP_AFFINITY`, and `Inter/Intra-op` Threads are set within the script. You can read more about these settings in this dedicated document: [Maximize TensorFlow Performance on CPU: Considerations and Recommendations for Inference Workloads](https://software.intel.com/en-us/articles/maximize-tensorflow-performance-on-cpu-considerations-and-recommendations-for-inference) 
     
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Build and Run the Sample
+## Build and Run the Sample on your Local Machine
 
-### Running Samples In DevCloud (Optional)
-If running a sample in the Intel DevCloud, please follow the below steps to build the python environment. Also, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/) 
+These instructions demonstrate how to build and run a sample on a machine where you have installed the Intel AI Analytics Toolkit. If you would like to try a sample without installing a toolkit, see [Running Samples in DevCloud](#running-samples-in-devcloud).
 
 ### Pre-requirement
 
@@ -50,8 +49,7 @@ TensorFlow is ready for use once you finish the Intel AI Analytics Toolkit insta
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
-### On a Linux* System
-#### Activate conda environment With Root Access
+### Activate conda environment With Root Access
 
 Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the setvars.sh script. Then, navigate the Linux shell to your oneapi installation path, typically `~/intel/oneapi`. Activate the conda environment with the following command:
 
@@ -62,7 +60,7 @@ source activate tensorflow
 
 please replace ~/intel/oneapi for your oneapi installation path.
 
-#### Activate conda environment Without Root Access (Optional)
+### Activate conda environment Without Root Access (Optional)
 
 By default, the Intel AI Analytics toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
@@ -78,7 +76,15 @@ source activate user_tensorflow
 
 ## Running the Sample
 
-To run the program on Linux* or the environment of Intel DevCloud, type the following command in the terminal with Python installed:
+To run the program on Linux*, type the following command in the terminal with Python installed:
+
+1. Navigate to the directory with the TensorFlow sample:
+
+```
+cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelTensorFlow_GettingStarted
+```
+2. Run the sample:
+
 ```
     python TensorFlow_HelloWorld.py
 ```
@@ -98,7 +104,11 @@ If you export the DNNL_VERBOSE as 1 in the command line, the mkldnn run-time ver
 ```
 export DNNL_VERBOSE=1
 ```
-
+Then run the sample again:
+```
+python TensorFlow_HelloWorld.py
+```
+You will see the verbose output:
 ```
 2021-01-06 10:44:28.875296: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
 dnnl_verbose,info,DNNL v1.2.0 (commit N/A)
@@ -110,4 +120,23 @@ dnnl_verbose,exec,cpu,reorder,simple:any,undef,src_f32::blocked:cdba:f0 dst_f32:
 dnnl_verbose,exec,cpu,convolution,jit:avx512_common,forward_training,src_f32::blocked:abcd:f0 wei_f32:p:blocked:Acdb16a:f0 bia_undef::undef::f0 dst_f32:p:blocked:aBcd16b:f0,,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.266113
 ```
 Please see the [DNNL Developer's Guide](https://intel.github.io/mkl-dnn/dev_guide_verbose.html) for more details on the verbose log. 
+
+## Running The Sample In DevCloud (Optional)
+
+Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/README.md#using-samples-in-intel-oneapi-devcloud) for general usage instructions.
+
+### Submit The Sample in Batch Mode
+
+1.	Navigate to the directory with the TensorFlow sample:
+```
+cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelTensorFlow_GettingStarted
+```
+2. Submit this "TensorFlow_HelloWorld" workload on the selected node with the run script.
+```
+./q ./run.sh
+```
+> the run.sh contains all the instructions needed to run this "TensorFlow_HelloWorld" workload
+
+
+
 

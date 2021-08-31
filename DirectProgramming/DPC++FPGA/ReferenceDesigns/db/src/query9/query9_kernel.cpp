@@ -117,7 +117,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   // a convenient lamda to make the explicit copy code less verbose
   auto submit_copy = [&](auto& buf, const auto& host_data) {
     return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, noinit);
+      accessor accessor(buf, h, write_only, no_init);
       h.copy(host_data, accessor);
     });
   };
@@ -199,7 +199,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       }
 
       // stream in rows of PARTS table and check partname against REGEX
-      [[intel::ivdep]]
+      [[intel::initiation_interval(1), intel::ivdep]]
       for (size_t i = 0; i < p_rows; i += kRegexFilterElementsPerCycle) {
         UnrolledLoop<0, kRegexFilterElementsPerCycle>([&](auto re) {
           const size_t idx = i + re;
@@ -227,6 +227,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       //// Stage 2
       // read in the LINEITEM table (kLineItemJoinWinSize rows at a time)
       // row is valid if its PARTKEY matched the REGEX
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < l_rows; i += kLineItemJoinWinSize) {
         // bulk read of data from global memory
         NTuple<kLineItemJoinWinSize, LineItemMinimalRow> data;
@@ -265,6 +266,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
     // produce ORDERS table (kOrdersJoinWinSize rows at a time)
     h.single_task<ProducerOrders>([=]() [[intel::kernel_args_restrict]] {
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < o_rows; i += kOrdersJoinWinSize) {
         // bulk read of data from global memory
         NTuple<kOrdersJoinWinSize, OrdersRow> data;
@@ -360,7 +362,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       //// Stage 1
       // populate MapJoiner map
       // why a map? keys may not be sequential
-      [[intel::ivdep]]
+      [[intel::initiation_interval(1), intel::ivdep]]
       for (size_t i = 0; i < s_rows; i++) {
         // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed
@@ -399,6 +401,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
     // kernel to produce the PARTSUPPLIER table
     h.single_task<ProducePartSupplier>([=]() [[intel::kernel_args_restrict]] {
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < ps_rows; i += kPartSupplierDuplicatePartkeys) {
         // bulk read of data from global memory
         NTuple<kPartSupplierDuplicatePartkeys, PartSupplierRow> data;
@@ -432,7 +435,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     accessor l_discount_accessor(l_discount_buf, h, read_only);
 
     // output accessors
-    accessor sum_profit_accessor(sum_profit_buf, h, write_only, noinit);
+    accessor sum_profit_accessor(sum_profit_buf, h, write_only, no_init);
 
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       // the accumulators
@@ -447,7 +450,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
       bool done = false;
 
-      [[intel::ivdep(ACCUM_CACHE_SIZE)]]
+      [[intel::initiation_interval(1), intel::ivdep(ACCUM_CACHE_SIZE)]]
       do {
         bool valid;
         FinalPipeData pipe_data = FinalPipe::read(valid);
@@ -513,6 +516,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       bool done = false;
       size_t num_rows = 0;
 
+      [[intel::initiation_interval(1)]]
       do {
         // get data from upstream
         bool valid;
@@ -555,7 +559,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           //    A) Apply the [[intel::speculated_iterations(0)]] attribute
           //    B) Explicitly bound the loop iterations
           // For an explanation why, see the optimize_inner_loops tutorial.
-          [[intel::speculated_iterations(0)]]
+          [[intel::initiation_interval(1), intel::speculated_iterations(0)]]
           for (char i = 0; i < valid_count && 
                 i < kLineItemOrdersJoinWinSize; i++) {
             UnrolledLoop<0, kLineItemOrdersJoinWinSize>([&](auto j) {
@@ -601,6 +605,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       size_t num_rows = 0;
 
       // read out data from the sorter until 'done' signal from upstream
+      [[intel::initiation_interval(1)]]
       do {
         bool valid;
         SortData in_data = SortOutPipe::read(valid);
@@ -694,6 +699,14 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   // wait for kernel to finish
   filter_parts_event.wait();
   computation_kernel_event.wait();
+  join_li_o_s_ps_event.wait();
+  sort_event.wait();
+  consume_sort_event.wait();
+  feed_sort_event.wait();
+  produce_part_supplier_event.wait();
+  join_partsupplier_supplier_event.wait();
+  join_lineitem_orders_event.wait();
+  producer_orders_event.wait();
 
   high_resolution_clock::time_point host_end = high_resolution_clock::now();
   duration<double, std::milli> diff = host_end - host_start;
