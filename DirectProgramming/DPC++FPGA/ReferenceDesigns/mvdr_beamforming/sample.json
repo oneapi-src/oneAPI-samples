@@ -13,7 +13,7 @@
     "base": "../..",
     "include": [
       "ReferenceDesigns/mvdr_beamforming",
-      "include/pipe_utils.hpp",
+      "include/pipe_utils.hpp"
     ],
     "exclude": []
   },
