@@ -18,9 +18,9 @@ int main() {
   accessor pC{C};
 
   Q.submit([&](handler &h) {
-      accessor aA{A, h, write_only, noinit};
-      accessor aB{B, h, write_only, noinit};
-      accessor aC{C, h, write_only, noinit};
+      accessor aA{A, h, write_only, no_init};
+      accessor aB{B, h, write_only, no_init};
+      accessor aC{C, h, write_only, no_init};
       h.parallel_for(N, [=](id<1> i) {
           aA[i] = 1;
           aB[i] = 40;
