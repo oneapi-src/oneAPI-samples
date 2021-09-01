@@ -36,9 +36,9 @@ the [Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/) envi
 ./q -h
 ```
 * select one of available node for your workload. 
-ex: select a skx node to run your workload
+ex: select a Cascade Lake node to run your workload
 ```
-export TARGET_NODE=skx
+export TARGET_NODE=clx
 ```
 * prepare a run script which contains all needed run commands for your workload. 
 > Users could refer to [run.sh for TensorFlow Getting started sample](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted/run.sh).
