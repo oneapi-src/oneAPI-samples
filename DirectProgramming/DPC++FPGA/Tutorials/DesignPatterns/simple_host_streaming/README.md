@@ -13,8 +13,8 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | What you will learn               | How to achieve low-latency host-device streaming while maintaining throughput
 | Time to complete                  | 45 minutes
 
-_Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX)_
-_Notice: This tutorial demonstrates an implementation of host streaming that will be supplanted by better techniques in a future release. See the [Drawbacks and Future Work](#drawbacks-and-future-work)_
+*Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) with USM support (i.e., intel_s10sx_pac:pac_s10_usm)* <br/>
+*Notice: This tutorial demonstrates an implementation of host streaming that will be supplanted by better techniques in a future release. See the [Drawbacks and Future Work](#drawbacks-and-future-work)*
 
 ## Purpose
 The purpose of this tutorial is to show you how to take advantage of SYCL USM host allocations and zero-copy host memory to implement a streaming host-device design with low latency and high throughput. Before starting this tutorial, we recommend first reviewing the **Pipes** (pipes) and **Zero-Copy Data Transfer** (zero_copy_data_transfer) FPGA tutorials, which will teach you more about SYCL pipes and SYCL USM and zero-copy data transfers, respectively.
@@ -113,7 +113,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
    You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -144,7 +144,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
    You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
