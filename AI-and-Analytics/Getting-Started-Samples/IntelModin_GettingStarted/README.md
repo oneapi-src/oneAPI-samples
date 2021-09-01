@@ -91,6 +91,10 @@ Open .ipynb file and run cells in Jupyter Notebook using the "Run" button (see t
 
 ![Click the Run Button in the Jupyter Notebook](Jupyter_Run.jpg "Run Button on Jupyter Notebook")
 
+#### Intel® DevCloud for oneAPI JupyterLab 
+
+Please note that as of right now, this sample cannot be run on Intel® DevCloud for oneAPI JupyterLab due to conflicts between the Intel® DevCloud for oneAPI JupyterLab platform and Modin dependencies. This is a known issue that Intel is currently working on resolving. Thank you for your patience.
+
 ### Run as Python File
 
 Open notebook in Jupyter and download as python file (see the image using "daal4py Hello World" sample):
