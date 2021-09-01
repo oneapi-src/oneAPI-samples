@@ -147,6 +147,7 @@ sorted_by_ver = OrderedDict(sorted(temp, key=lambda key_value: key_value[1]["ver
         # future - if no readme.md is present then show a warning
         # future - Check dict_main vs dict_version for guid present if not then need to add
         # furure - check dict_version vs dict_main for guid present if not then need to allow if new sample hasnt been uploaded
+        # Future - for readme, need to add what samples may have been removed for this "current version" 
 
 createChangeLog(count,sorted_by_name,sorted_by_ver)
 createCodeSamplesList()
