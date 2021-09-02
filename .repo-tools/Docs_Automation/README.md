@@ -2,7 +2,7 @@
 
 Adding automation for development of various documents, this will elimate making multiple changes per release cycle, effectively making the process less error prone.
 
-## Running the tool
+## Running the tool(Windows only)
 	1. Update your fork to latest from oneapi-src/oneAPI-samples
 	2. Create a branch ex: (New Docs2021.4)to hold the new docs changes
 	3. Switch Branch navigate to the new Branch
