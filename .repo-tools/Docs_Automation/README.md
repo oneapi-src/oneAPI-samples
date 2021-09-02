@@ -1,6 +1,6 @@
 ## Description
 
-Adding automation for development of various documents, this will elimate making multiple changes per release cycle, effectively making the process less error prone. Tool currently works on windows only.
+Adding automation for development of various documents, this will elimate making multiple changes per release cycle, effectively making the process less error prone. Tool currently works on Windows* only.
 
 ## Running the tool
 	1. Update your fork to latest from oneapi-src/oneAPI-samples
