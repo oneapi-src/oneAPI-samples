@@ -12,6 +12,7 @@ fCodeSamplesLists = "CODESAMPLESLIST.md"
 fChangeLogs = "CHANGELOGS.md"
 freadme = "README.md"
 fguidVer = ".repo-tools\Docs_Automation\guids.json"
+#fguidVer = ".repo-tools/Docs_Automation/guids.json"  #for use when linux is supported for this tool
 oneAPIURL = 'https://github.com/oneapi-src/oneAPI-samples/tree/master'
 count = 0
 
@@ -30,6 +31,7 @@ def openJson(jsonFile):                 #creating a dictionary
     return data
 
 def readContent():                      #reading in strings for use in document creation
+    #jsonFile = '.repo-tools/Docs_Automation/content.json' #for use when linux is supported for this tool
     jsonFile = '.repo-tools\Docs_Automation\content.json'
     dataContent = openJson(jsonFile)
     return dataContent
@@ -40,12 +42,15 @@ def createChangeLog(count,sorted_by_name,sorted_by_ver): #sorted but does not in
     nf.write(dataContent['mdChangeLogHeaderp2'])
   
     for key in sorted_by_ver.keys():
-        description= str(sorted_by_name[key]['description']) 
-        url= sorted_by_name[key]['url']
+        try:
+            description= str(sorted_by_name[key]['description']) 
+            url= sorted_by_name[key]['url']
+            name=sorted_by_name[key]['name']
+            cat=str(sorted_by_name[key]['categories'])
+        except KeyError as e:
+            print("Error with: "+key+ "Missing from guids.json")  
         ver=sorted_by_ver[key]['ver']
-        name=sorted_by_name[key]['name']
-        cat=str(sorted_by_name[key]['categories'])
-
+        
         # Due to name issues, we need to fix the DPC** books chapter namesas its found and put it into the doc
         if (cat=="['Toolkit/Publication: Data Parallel C++']"):
             name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[" + name
@@ -95,11 +100,16 @@ def createReadme(sorted_by_name, sorted_by_ver):
     nf.write(dataContent['mdIntro6'] + "\n\n" + dataContent['mdIntro7'])
         
     for key in sorted_by_name.keys():
-        description= str(sorted_by_name[key]['description']) 
-        url= sorted_by_name[key]['url']
-        ver=sorted_by_ver[key]['ver']
-        name=sorted_by_name[key]['name']
-        cat=str(sorted_by_name[key]['categories'])
+        try:
+            description= str(sorted_by_name[key]['description']) 
+            url= sorted_by_name[key]['url']
+            name=sorted_by_name[key]['name']
+            cat=str(sorted_by_name[key]['categories'])
+            ver=sorted_by_ver[key]['ver']
+            
+        except KeyError as e:
+            print("Error with: "+key)  
+
         if (cat=="""['Toolkit/Publication: Data Parallel C++']"""):
             name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[" + name
             description=description.replace('*','')
@@ -147,6 +157,7 @@ sorted_by_ver = OrderedDict(sorted(temp, key=lambda key_value: key_value[1]["ver
         # future - if no readme.md is present then show a warning
         # future - Check dict_main vs dict_version for guid present if not then need to add
         # furure - check dict_version vs dict_main for guid present if not then need to allow if new sample hasnt been uploaded
+        # Future - for readme, need to add what samples may have been removed for this "current version" 
 
 createChangeLog(count,sorted_by_name,sorted_by_ver)
 createCodeSamplesList()
