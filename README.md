@@ -1,6 +1,6 @@
 ## Introduction
 
-The oneAPI samples repository provides code samples for Intel oneAPI toolkits.<br><br>We recommend checking out a specific stable release version of the repository. [View available stable releases](https//github.com/oneapi-src/oneAPI-samples/tags). 
+The oneAPI samples repository provides code samples for Intel oneAPI toolkits.<br><br>We recommend checking out a specific stable release version of the repository. The version of the repository you fetch should match the version of the oneAPI compiler you are using. [View available stable releases](https://github.com/oneapi-src/oneAPI-samples/tags). 
 The latest versions (2021.4.0) of code samples on the master branch are not guaranteed to be stable.
  ### Sample Details
 
@@ -94,4 +94,4 @@ Code samples are licensed under the MIT license. See [License.txt](https://githu
 
 Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-Report Generated on:  September 01, 2021
+Report Generated on:  September 02, 2021

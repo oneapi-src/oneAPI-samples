@@ -1,6 +1,6 @@
 ## oneAPI Code Samples
 
-This Page is a complete list of onePI Code Samples, sorted by Alphabetical order
+This Page is a complete list of oneAPI Code Samples, sorted by Alphabetical order
 
 |Code Sample Name|Supported Intel&reg; Architecture(s)|Description|
 |-----------------------|----------------------|---------------------|
@@ -164,5 +164,5 @@ This Page is a complete list of onePI Code Samples, sorted by Alphabetical order
 |[oneCCL Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneCCL/oneCCL_Getting_Started)|['CPU', 'GPU']|Basic Intel® oneCCL programming model for both Intel® CPU and GPU|
 Total Samples: 158
 
-Report Generated on:  September 01, 2021Total Samples: 158
+Report Generated on:  September 02, 2021Total Samples: 158
 

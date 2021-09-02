@@ -3,8 +3,7 @@
 
   "mdContribute": "## Contribute\n\nSee [CONTRIBUTING](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) for more itargetedDevices.ormation.\n\n",
 
-  "mdIntro1":"The oneAPI samples repository provides code samples for Intel oneAPI toolkits.<br><br>We recommend checking out a specific stable release version of the repository. [View available stable releases](https//github.com/oneapi-src/oneAPI-samples/tags). ",
-  "mdIntro2":"The latest versions (",
+  "mdIntro1":"The oneAPI samples repository provides code samples for Intel oneAPI toolkits.<br><br>We recommend checking out a specific stable release version of the repository. The version of the repository you fetch should match the version of the oneAPI compiler you are using. [View available stable releases](https://github.com/oneapi-src/oneAPI-samples/tags). ",  "mdIntro2":"The latest versions (",
   "mdIntro2.1":") of code samples on the master branch are not guaranteed to be stable.",
   "mdIntro3":"The oneAPI sample repository is organized as follows:",
   "mdIntro3.1":"\n\n* [AI-and-Analytics:](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics)\n  * [End-to-End-Workloads](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/End-to-end-Workloads)\n  * [Features-and-Functionality](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality)\n  * [Getting-Started-Samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples)\n",
@@ -21,7 +20,7 @@
   "mdIntro6":"\n\n## Contributing\n\nSee [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) for more information.",
   "mdIntro7":"\n\n## New Code Samples\n\n|Version Introduced   |Sample Name|Description|\n |-----------------------|-------------------------------------------|---------------|\n",
   
-  "mdCodeSamplesListIntrop1": "## oneAPI Code Samples\n\nThis Page is a complete list of onePI Code Samples, sorted by Alphabetical order",
+  "mdCodeSamplesListIntrop1": "## oneAPI Code Samples\n\nThis Page is a complete list of oneAPI Code Samples, sorted by Alphabetical order",
   "mdCodeSamplesListIntrop2":  "|Code Sample Name|Supported Intel&reg; Architecture(s)|Description|\n|-----------------------|----------------------|---------------------|\n",
 
   "mdCodeSamplesListFooter":  "Report Generated on:  ",
