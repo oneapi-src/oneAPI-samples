@@ -21,7 +21,7 @@
   "mdIntro6":"\n\n## Contributing\n\nSee [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) for more information.",
   "mdIntro7":"\n\n## New Code Samples\n\n|Version Introduced   |Sample Name|Description|\n |-----------------------|-------------------------------------------|---------------|\n",
   
-  "mdCodeSamplesListIntrop1": "## oneAPI Code Samples\n\nThis Page is a complete list of oneAPI Code Samples, sorted by Alphabetical order",
+  "mdCodeSamplesListIntrop1": "## oneAPI Code Samples\n\nThis Page is a complete list of oneAPI Code Samples, sorted in alphabetical order",
   "mdCodeSamplesListIntrop2":  "|Code Sample Name|Supported Intel&reg; Architecture(s)|Description|\n|-----------------------|----------------------|---------------------|\n",
 
   "mdCodeSamplesListFooter":  "Report Generated on:  ",
