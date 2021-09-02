@@ -3,11 +3,34 @@ set(SOURCE_FILE db.cpp dbdata.cpp)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
+# which query are we doing?
+if(NOT DEFINED QUERY)
+    message(STATUS "\t!!QUERY variable is NOT set, defaulting to QUERY=1!!")
+    set(QUERY 1)
+else()
+    message(STATUS "\tQUERY=${QUERY}")
+endif()
+
+# select default board based on query
+if(${QUERY} EQUAL 1)
+    set(DEFAULT_BOARD "intel_a10gx_pac:pac_a10")
+    set(DEFAULT_BOARD_STR "Intel Arria(R) 10 GX")
+elseif(${QUERY} EQUAL 9)
+    set(DEFAULT_BOARD "intel_s10sx_pac:pac_s10")
+    set(DEFAULT_BOARD_STR "Intel Stratix(R) 10 SX")
+elseif(${QUERY} EQUAL 11)
+    set(DEFAULT_BOARD "intel_s10sx_pac:pac_s10")
+    set(DEFAULT_BOARD_STR "Intel Stratix(R) 10 SX")
+elseif(${QUERY} EQUAL 12)
+    set(DEFAULT_BOARD "intel_a10gx_pac:pac_a10")
+    set(DEFAULT_BOARD_STR "Intel Arria(R) 10 GX")
+endif()
+
 # FPGA board selection
 if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
+    set(FPGA_BOARD ${DEFAULT_BOARD})
     message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with ${DEFAULT_BOARD_STR} FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
@@ -16,14 +39,6 @@ endif()
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
-endif()
-
-# which query are we doing?
-if(NOT DEFINED QUERY)
-    message(STATUS "\t!!QUERY variable is NOT set, defaulting to QUERY=1!!")
-    set(QUERY 1)
-else()
-    message(STATUS "\tQUERY=${QUERY}")
 endif()
 
 # ensure a supported query was requested
