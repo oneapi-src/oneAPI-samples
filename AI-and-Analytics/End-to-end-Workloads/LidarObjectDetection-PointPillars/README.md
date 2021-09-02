@@ -1,12 +1,12 @@
 # `PointPillars` Sample
-This sample performs 3D object detection and classification using data (point cloud) from a LIDAR sensor as input. The Intel® oneAPI implementation is based on the paper 'PointPillars: Fast Encoders for Object Detection from Point Clouds' [1] and the implementation in [2]. It shows how Intel® oneAPI kernels (using SYCL and DPCPP) can be used in combination with the Intel® Distribution of OpenVINO™ toolkit for CNN inference.
+This sample performs 3D object detection and classification using data (point cloud) from a LIDAR sensor as input. The Intel® oneAPI implementation is based on the paper 'PointPillars: Fast Encoders for Object Detection from Point Clouds' [1] and the implementation in [2]. It shows how DPCPP and SYCL kernels can be used in combination with the Intel® Distribution of OpenVINO™ toolkit, both part of Intel® oneAPI.
 
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Skylake with GEN9 or newer / Intel Xe Graphics
 | Software                          | Intel® oneAPI DPC++/C++ Compiler, Intel® Distribution of OpenVINO™ toolkit
-| What you will learn               | How to combine Intel® Distribution of OpenVINO™ toolkit and Intel® oneAPI to offload the computation of a complex workload to one of Intel's supported accelerators (e.g., GPU or CPU)
+| What you will learn               | How to combine Intel® Distribution of OpenVINO™ toolkit and Intel® oneAPI Base Toolkit to offload the computation of a complex workload to one of Intel's supported accelerators (e.g., GPU or CPU)
 | Time to complete                  | 30 minutes
 
 ## Purpose
@@ -14,18 +14,18 @@ PointPillars is an AI algorithm that uses LIDAR point clouds to detect and class
 
 ![Overview](data/point_pillars_overview.png)
 
-1. Pre-processing of the LiDAR input point cloud is performed. This is realized with the help of kernels implemented using Intel® oneAPI.
-2. An anchor grid is generated. The anchors in the grid are later used in object detection to refine detected boxes by the RegionProposalNetwork (RPN). The anchor grid generation is also implemented using Intel® oneAPI.
+1. Pre-processing of the LiDAR input point cloud is performed. This is realized with the help of kernels implemented using SYCL and DPCPP.
+2. An anchor grid is generated. The anchors in the grid are later used in object detection to refine detected boxes by the RegionProposalNetwork (RPN). The anchor grid generation is also implemented using SYCL and DPCPP.
 3. Afterward, the pre-processed data is used by a so-called Pillar Feature Extraction (PFE) CNN to create a 2D image-like representation of the sensor environment. For the inference, this sample uses the Intel® Distribution of OpenVINO™ toolkit. The output of this CNN is a list of dense tensors (learned pillar features).
-4. To convert these dense tensors into an pseudo-image, a scatter operation is performed. This operation is again realized with Intel® oneAPI.
+4. To convert these dense tensors into an pseudo-image, a scatter operation is performed. This operation is again realized with SYCL and DPCPP.
 5. This pseudo-image is consumed by the second CNN, the so-called Region Proposal Network (RPN). The inference is performed with the help of the Intel® Distribution of OpenVINO™ toolkit. The output is an unfiltered list of possible object detections, their position, dimensions and classifications.
-6. Finally, this output data (object list) is post-processed with the help of the anchors created in the 2nd step. The anchors are used to decode the object position, dimension and class. Afterwards, a Non-Maximum-Suppression (NMS) is used to filter out redundant/clutter objects. Finally, the objects are sorted according to their likelihood, and then provided as output. All of these steps are implemented as Intel® oneAPI kernels. 
+6. Finally, this output data (object list) is post-processed with the help of the anchors created in the 2nd step. The anchors are used to decode the object position, dimension and class. Afterwards, a Non-Maximum-Suppression (NMS) is used to filter out redundant/clutter objects. Finally, the objects are sorted according to their likelihood, and then provided as output. All of these steps are implemented as SYCL and DPCPP kernels. 
 
-By default, the application will use 'host' as the Intel® oneAPI execution device and CPU (single-threaded) for Intel® Distribution of OpenVINO™ toolkit inferencing part. The Intel® oneAPI execution device and the inferencing device are displayed in the output, along with the elapsed time of each of the five steps described above. For more details refer to section: [Execution Options for the Sample Program](#execution-options-for-the-sample-program).
+By default, the application will use 'host' as the execution device for SYCL/DPCPP kernels and CPU (single-threaded) for Intel® Distribution of OpenVINO™ toolkit inferencing part. The execution device and the inferencing device are displayed in the output, along with the elapsed time of each of the five steps described above. For more details refer to section: [Execution Options for the Sample Program](#execution-options-for-the-sample-program).
 
 ## Key Implementation Details
-This sample demonstrates a real-world, end-to-end example that uses a combination of Intel® oneAPI and the Intel® Distribution of OpenVINO™ to solve object detection's complex task in a given environment. Hence, this sample will give you insights into the following aspects:
- - You will learn how to transfer data from a oneAPI device/kernel to an OpenVINO-based inference task and back.
+This sample demonstrates a real-world, end-to-end example that uses a combination of Intel® oneAPI Base Toolkit (DPCPP, SYCL) and the Intel® Distribution of OpenVINO™ to solve object detection's complex task in a given environment. Hence, this sample will give you insights into the following aspects:
+ - You will learn how to transfer data from a DPCPP/SYCL device/kernel to an OpenVINO-based inference task and back.
  - You will learn how to implement a device manager that allows choosing the target hardware for execution, i.e., CPU, GPU or an accelerator, at runtime in a user transparent manner. As a result, the target hardware can be chosen via a command-line argument without requiring a time-consuming re-compilation (further details on the execution are provided below)
  - You will learn how to implement oneAPI-based function kernels that can be executed on the host system, on a multi-threaded CPU or a GPU.
  - You will learn how to implement standard algorithms for AI-based object detection, for example, _Non-Maximum-Suppression_, using oneAPI.
