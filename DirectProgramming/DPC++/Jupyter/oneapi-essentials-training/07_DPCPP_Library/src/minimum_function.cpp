@@ -22,7 +22,7 @@ int main() {
         buffer buf(v);
         buffer buf_res(result);
 
-        //dpstd buffer iterators for both the input and the result vectors
+        //oneDPL buffer iterators for both the input and the result vectors
         auto start_v = oneapi::dpl::begin(buf);
         auto end_v = oneapi::dpl::end(buf);
         auto start_res = oneapi::dpl::begin(buf_res);
