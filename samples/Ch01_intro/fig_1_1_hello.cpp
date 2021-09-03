@@ -23,6 +23,7 @@ int main() {
       }).wait();
 
   std::cout << result << "\n";
+  free(result, Q);
   return 0;
 }
 
