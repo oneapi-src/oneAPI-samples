@@ -29,7 +29,7 @@ set(EMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga")
 if(FPGA_BOARD STREQUAL "intel_a10gx_pac:pac_a10")
-    # hyper-optimized-handshaking does not apply to Intel Arria 10 FPGAs
+    # hyper-optimized-handshaking does not apply to Intel Arria 10® FPGAs
     set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 else()
     set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
@@ -60,7 +60,7 @@ add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
-# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
 ### FPGA Hardware

@@ -8,11 +8,11 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04, Windows 10 
-| Hardware                          | Skylake with GEN9 or newer, Intel(R) Programmable Acceleration Card with Intel(R) Arria(R) 10 GX FPGA
+| Hardware                          | Skylake with GEN9 or newer, Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler  
   
 ## Purpose
-The `vector-add` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators.
+The `vector-add` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel&reg; CPU and accelerators.
 
 In this sample, you can learn how to use the most basic code in C++ language that offloads computations to a GPU using the DPC++ language. This includes using Unified Shared Memory (USM) and buffers. USM requires an explicit wait for the asynchronous kernel's computation to complete.  Buffers, at the time they go out of scope, bring main memory in sync with device memory implicitly; the explicit wait on the event is not required as a result. This sample provides examples of both implementations for simple side-by-side reviews (the Windows sample only supports USM).
 
@@ -31,6 +31,12 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+## Known Issues
+With oneAPI 2021.4 the argument for accessors was changed from 'noinit' to 'no_init'. The change was derived from a change between the SYCL 2020 provisional spec and that of the 2020Rev3 spec
+
+If running this sample and it fails, do one of the following
+- Update the oneAPI base toolkit to 2021.4
+- Change the 'no_init' argument  to 'noinit'
 ## Building the `vector-add` Program for CPU and GPU 
 
 > Note: if you have not already done so, set up your CLI 
@@ -95,7 +101,7 @@ Perform the following steps:
 6. Select **Project** > **Build** menu option to build the selected configuration.
 7. Select **Debug** > **Start Without Debugging** menu option to run the program.
 
-## Building the `vector-add` Program for Intel(R) FPGA
+## Building the `vector-add` Program for Intel&reg; FPGA
 
 ### On a Linux* System
 

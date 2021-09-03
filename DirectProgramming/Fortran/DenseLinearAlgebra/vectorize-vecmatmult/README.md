@@ -7,14 +7,14 @@ serial version and the version that was compiled with the auto-vectorizer.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | macOS* with Xcode* installed 
-| Hardware							   | Intel-based Mac*
-| Software                          | Intel&reg; oneAPI Intel Fortran Compiler
-| What you will learn               | Vectorization using Intel Fortran compiler
+| Hardware							            | Intel&reg;-based Mac*
+| Software                          | Intel&reg; Fortran Compiler
+| What you will learn               | Vectorization using Intel Fortran Compiler
 | Time to complete                  | 15 minutes
 
 
 ## Purpose
-The Intel® Compiler has an auto-vectorizer that detects operations in the application 
+The Intel® Fortran Compiler has an auto-vectorizer that detects operations in the application 
 that can be done in parallel and converts sequential operations 
 to parallel operations by using the 
 Single Instruction Multiple Data (SIMD) instruction set.

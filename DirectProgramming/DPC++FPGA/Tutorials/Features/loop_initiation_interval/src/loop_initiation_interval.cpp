@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <vector>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -60,9 +60,9 @@ double GetExecutionTime(const event &e) {
 
 void RunKernel(std::vector<int> &in, std::vector<int> &out) {
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   try {
@@ -76,7 +76,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
     // submit the kernel
     auto e = q.submit([&](handler &h) {
       accessor in_acc(in_buf, h, read_only);
-      accessor out_acc(out_buf, h, write_only, noinit);
+      accessor out_acc(out_buf, h, write_only, no_init);
 
       // FPGA-optimized kernel
       // Using kernel_args_restrict tells the compiler that the input
@@ -94,7 +94,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           // the minimum II * (1/fMAX) Relaxing the II on a short loop with a
           // long feedback path will remove the bottleneck the loop had on the
           // maximum achievable fMAX of the design The default targeted fMAX is
-          // 240MHz for Arria 10 and 480MHz for Stratix 10, so different IIs
+          // 240MHz for Arria® 10 and 480MHz for Stratix® 10, so different IIs
           // need to be specified so the compiler can schedule the loop such
           // that it does not restrict the maximum fMAX
 #if defined(ENABLE_II)
@@ -154,7 +154,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           // operation on "sum" in a given iteration depends on the value of
           // "sum" calculated in the last operation of a previous iteration The
           // compiler is able to achieve an II of 1 and the default targeted
-          // fMAX for Arria 10, but falls a little short on Stratix 10. The
+          // fMAX for Arria® 10, but falls a little short on Stratix® 10. The
           // intel::initiation_interval attribute should not be used to relax the II of this loop
           // as the drop in occupancy of the long loop is not worth achieving a
           // slightly higher fMAX

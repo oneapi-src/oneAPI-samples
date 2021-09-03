@@ -55,7 +55,7 @@
         "steps": [
           "mkdir build-q1",
           "cd build-q1",
-          "cmake .. -DQUERY=1",
+          "cmake .. -DQUERY=1 -DSF_SMALL=1",
           "make report"
         ]
       },
@@ -64,7 +64,7 @@
         "steps": [
           "mkdir build-q11",
           "cd build-q11",
-          "cmake .. -DQUERY=11",
+          "cmake .. -DQUERY=11 -DSF_SMALL=1",
           "make report"
         ]
       },
@@ -73,7 +73,7 @@
         "steps": [
           "mkdir build-q12",
           "cd build-q12",
-          "cmake .. -DQUERY=12",
+          "cmake .. -DQUERY=12 -DSF_SMALL=1",
           "make report"
         ]
       }

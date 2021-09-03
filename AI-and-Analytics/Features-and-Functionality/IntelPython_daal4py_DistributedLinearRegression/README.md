@@ -1,5 +1,5 @@
 # `Intel Python daal4py Distributed Linear Regression Sample`
-This sample code shows how to train and predict with a distributed linear regression model using the python API package daal4py for oneAPI Data Analytics Library. It assumes you have a working version of the MPI library installed, and it demonstrates how to use software products that can be found in the [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+This sample code shows how to train and predict with a distributed linear regression model using the python API package daal4py for oneAPI Data Analytics Library. It assumes you have a working version of the Intel® MPI Library installed, and it demonstrates how to use software products that can be found in the [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -94,10 +94,6 @@ _Note: This code samples focus on using daal4py to do distributed ML computation
 <!---Include the next paragraph ONLY if the sample runs in batch mode-->
 ### Run in Batch Mode
 This sample runs in batch mode, so you must have a script for batch processing. Once you have a script set up, refer to [Running the Sample](#running-the-sample).
-
-<!---Include the next paragraph ONLY if the sample DOES NOT RUN in batch mode-->
-### Run in Interactive Mode
-This sample runs in interactive mode. For more information, see [Run as Juypter Notebook](#run-as-jupyter-notebook).
 
 ### Request a Compute Node
 In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.

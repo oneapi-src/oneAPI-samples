@@ -1,12 +1,8 @@
-if (NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 14)
-endif()
-
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE RelWithDebInfo)
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 
 # Add an executable target from source files

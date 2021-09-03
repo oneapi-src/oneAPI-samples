@@ -1,0 +1,23 @@
+{
+  "guid": "81B93386-B5EB-4998-B91B-3453263EC03E",
+  "name": "Intel® Python Scikit-learn Extension Getting Started",
+  "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+  "description": "This sample illustrates how to do Image classification using SVM classifier from Python API package SKlearnex with the use of Intel® oneAPI Data Analytics Library (oneDAL).",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "dependencies": ["intelpython"],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],
+  		"id": "idp_sklex_gs_py",
+  		"steps": [
+         "python ci_test.py" 
+  		 ]
+  	}
+    ]
+}
+}
+

@@ -188,6 +188,27 @@ bool Database::ParseLineItemTable(std::string f, LineItemTable& tbl) {
     tbl.rows++;
   }
 
+  for (size_t i = 0; i < kPaddingRows; i++) {
+    tbl.orderkey.push_back(0);
+    tbl.partkey.push_back(0);
+    tbl.suppkey.push_back(0);
+    tbl.linenumber.push_back(0);
+    tbl.quantity.push_back(0);
+
+    tbl.extendedprice.push_back(0);
+    tbl.discount.push_back(0);
+    tbl.tax.push_back(0);
+
+    tbl.returnflag.push_back(0);
+    tbl.linestatus.push_back(0);
+
+    tbl.shipdate.push_back(0);
+    tbl.commitdate.push_back(0);
+    tbl.receiptdate.push_back(0);
+
+    tbl.shipmode.push_back(0);
+  }
+
   std::cout << "Finished parsing LINEITEM table with " << tbl.rows << " rows\n";
 
   return true;
@@ -227,6 +248,17 @@ bool Database::ParseOrdersTable(std::string f, OrdersTable& tbl) {
 
     tbl.rows++;
   }
+
+  for (size_t i = 0; i < kPaddingRows; i++) {
+    tbl.orderkey.push_back(0);
+    tbl.custkey.push_back(0);
+    tbl.orderstatus.push_back(0);
+    tbl.totalprice.push_back(0);
+    tbl.orderdate.push_back(0);
+    tbl.orderpriority.push_back(0);
+    tbl.shippriority.push_back(0);
+  }
+
 
   std::cout << "Finished parsing ORDERS table with " << tbl.rows << " rows\n";
 
@@ -272,6 +304,11 @@ bool Database::ParsePartsTable(std::string f, PartsTable& tbl) {
     tbl.rows++;
   }
 
+  for (size_t i = 0; i < kPaddingRows; i++) {
+    tbl.partkey.push_back(0);
+    AppendStringToCharVec(tbl.name, "INVALID", 55);
+  }
+
   std::cout << "Finished parsing PARTS table with " << tbl.rows << " rows\n";
 
   return true;
@@ -309,6 +346,13 @@ bool Database::ParseSupplierTable(std::string f, SupplierTable& tbl) {
     tbl.rows++;
   }
 
+  for (size_t i = 0; i < kPaddingRows; i++) {
+    tbl.suppkey.push_back(0);
+    AppendStringToCharVec(tbl.name, "INVALID", 25);
+    tbl.nationkey.push_back(0);
+    tbl.acctbal.push_back(0);
+  }
+
   std::cout << "Finished parsing SUPPLIER table with " << tbl.rows << " rows\n";
 
   return true;
@@ -342,6 +386,13 @@ bool Database::ParsePartSupplierTable(std::string f, PartSupplierTable& tbl) {
     AppendStringToCharVec(tbl.comment, column_data[4], 199);
 
     tbl.rows++;
+  }
+
+  for (size_t i = 0; i < kPaddingRows; i++) {
+    tbl.partkey.push_back(0);
+    tbl.suppkey.push_back(0);
+    tbl.availqty.push_back(0);
+    tbl.supplycost.push_back(0);
   }
 
   std::cout << "Finished parsing PARTSUPPLIER table with " << tbl.rows
