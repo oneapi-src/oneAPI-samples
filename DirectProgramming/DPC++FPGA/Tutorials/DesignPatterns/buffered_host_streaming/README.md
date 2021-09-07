@@ -13,7 +13,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | What you will learn               | How to optimally stream data between the host and device to maximize throughput
 | Time to complete                  | 45 minutes
 
-_Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix® 10 SX)_
+*Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) with USM support (i.e., intel_s10sx_pac:pac_s10_usm)* <br/>
 _Notice: This tutorial demonstrates an implementation of host streaming that will be supplanted by better techniques in a future release. See the [Drawbacks and Future Work](#drawbacks-and-future-work)_
 
 ## Purpose
@@ -114,7 +114,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
    You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -146,7 +146,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
    You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
    ```
  
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:

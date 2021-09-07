@@ -50,7 +50,7 @@ int main() {
 
     //function object to be passed to sort function  
 
-    //Calling the dpstd binary search algorithm. We pass in the policy, the buffer iterators for the input vectors and the output. 
+    //Calling the oneDPL binary search algorithm. We pass in the policy, the buffer iterators for the input vectors and the output. 
     // Default comparator is the operator < used here. 
     const auto i =  oneapi::dpl::binary_search(policy,keys_begin,keys_end,vals_begin,vals_end,result_begin);
    

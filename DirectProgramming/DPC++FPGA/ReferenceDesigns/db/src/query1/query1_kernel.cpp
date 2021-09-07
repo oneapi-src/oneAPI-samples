@@ -25,34 +25,13 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
                   std::array<DBDecimal, kQuery1OutSize>& count,
                   double& kernel_latency, double& total_latency) {
   // create space for input buffers
-  buffer<DBDecimal,1> quantity_buf(dbinfo.l.quantity.size());
-  buffer<DBDecimal,1> extendedprice_buf(dbinfo.l.extendedprice.size());
-  buffer<DBDecimal,1> discount_buf(dbinfo.l.discount.size());
-  buffer<DBDecimal,1> tax_buf(dbinfo.l.tax.size());
-  buffer<char,1> returnflag_buf(dbinfo.l.returnflag.size());
-  buffer<char,1> linestatus_buf(dbinfo.l.linestatus.size());
-  buffer<DBDate,1> shipdate_buf(dbinfo.l.shipdate.size());
-
-  // a convenient lamda to make the explicit copy code less verbose
-  auto submit_copy = [&](auto& buf, const auto& host_data) {
-    return q.submit([&](handler &h) {
-      accessor accessor(buf, h, write_only, no_init);
-      h.copy(host_data, accessor);
-    });
-  };
-
-  // start the transers of the input buffers
-  event copy_quantity = submit_copy(quantity_buf, dbinfo.l.quantity.data());
-  event copy_extendedprice = 
-    submit_copy(extendedprice_buf, dbinfo.l.extendedprice.data());
-  event copy_discount = submit_copy(discount_buf, dbinfo.l.discount.data());
-  event copy_tax = submit_copy(tax_buf, dbinfo.l.tax.data());
-  event copy_returnflag = 
-    submit_copy(returnflag_buf, dbinfo.l.returnflag.data());
-  event copy_linestatus = 
-    submit_copy(linestatus_buf, dbinfo.l.linestatus.data());
-  event copy_shipdate = 
-    submit_copy(shipdate_buf, dbinfo.l.shipdate.data());
+  buffer quantity_buf(dbinfo.l.quantity);
+  buffer extendedprice_buf(dbinfo.l.extendedprice);
+  buffer discount_buf(dbinfo.l.discount);
+  buffer tax_buf(dbinfo.l.tax);
+  buffer returnflag_buf(dbinfo.l.returnflag);
+  buffer linestatus_buf(dbinfo.l.linestatus);
+  buffer shipdate_buf(dbinfo.l.shipdate);
 
   // setup the output buffers
   buffer sum_qty_buf(sum_qty);
@@ -64,18 +43,16 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
   buffer avg_discount_buf(avg_discount);
   buffer count_buf(count);
 
+  const int rows = dbinfo.l.rows; 
+  const size_t iters = (rows + kElementsPerCycle - 1) / kElementsPerCycle;
+
   // start timer
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
 
   /////////////////////////////////////////////////////////////////////////////
   //// Query1 Kernel
   auto event = q.submit([&](handler& h) {
-    // this kernel depends on all the memory transfers from earlier
-    h.depends_on({copy_quantity, copy_extendedprice, copy_discount, copy_tax,
-                 copy_returnflag, copy_linestatus, copy_shipdate});
-
     // read accessors
-    int rows = dbinfo.l.rows;
     accessor quantity_accessor(quantity_buf, h, read_only);
     accessor extendedprice_accessor(extendedprice_buf, h, read_only);
     accessor discount_accessor(discount_buf, h, read_only);
@@ -113,7 +90,7 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
 
       // stream each row in the DB (kElementsPerCycle rows at a time)
       [[intel::initiation_interval(1)]]
-      for (size_t r = 0; r < rows; r += kElementsPerCycle) {
+      for (size_t r = 0; r < iters; r++) {
         // locals
         DBDecimal qty[kElementsPerCycle];
         DBDecimal extendedprice[kElementsPerCycle];
@@ -129,22 +106,23 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
         UnrolledLoop<0, kElementsPerCycle>([&](auto p) {
           // is data in range of the table
           // (data size may not be divisible by kElementsPerCycle)
-          bool in_range = (r + p) < rows;
+          size_t idx = r * kElementsPerCycle + p;
+          bool in_range = idx < rows;
 
           // get this rows shipdate
-          DBDate shipdate = in_range ? shipdate_accessor[r + p] : 0;
+          DBDate shipdate = shipdate_accessor[idx];
 
           // determine if the row is valid
           row_valid[p] = in_range && (shipdate <= low_date);
 
           // read or set values based on the validity of the data
-          qty[p] = in_range ? quantity_accessor[r + p] : 0;
-          extendedprice[p] = in_range ? extendedprice_accessor[r + p] : 0;
-          discount[p] = in_range ? discount_accessor[r + p] : 0;
-          tax[p] = in_range ? tax_accessor[r + p] : 0;
-          char rf = in_range ? returnflag_accessor[r + p] : 0;
-          char ls = in_range ? linestatus_accessor[r + p] : 0;
-          count_tmp[p] = in_range ? 1 : 0;
+          qty[p] = quantity_accessor[idx];
+          extendedprice[p] = extendedprice_accessor[idx];
+          discount[p] = discount_accessor[idx];
+          tax[p] = tax_accessor[idx];
+          char rf = returnflag_accessor[idx];
+          char ls = linestatus_accessor[idx];
+          count_tmp[p] = 1;
 
           // convert returnflag and linestatus into an index
           unsigned char rf_idx;

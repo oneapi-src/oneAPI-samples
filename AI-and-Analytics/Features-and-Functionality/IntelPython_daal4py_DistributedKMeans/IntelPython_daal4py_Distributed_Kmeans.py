@@ -62,7 +62,7 @@ X = pd.read_csv(infile)
 
 
 # computing inital centroids
-init_result = d4p.kmeans_init(nClusters = 3, method = "plusPlusDense").compute(X)
+init_result = d4p.kmeans_init(nClusters = 3, method = "plusPlusDense", distributed=True).compute(X)
 
 
 # To **get initial centroid information and save it** to a file:

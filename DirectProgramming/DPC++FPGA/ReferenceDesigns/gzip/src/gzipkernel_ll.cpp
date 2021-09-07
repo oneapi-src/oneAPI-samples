@@ -2157,7 +2157,7 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
         // what we compare to
         unsigned int insize_compare = (accessor_isz) / kVec;
 
-        int ctr = insize_compare = insize_compare - 1;
+        int ctr = insize_compare - 1;
 
         char first_valid_pos = 0;
 

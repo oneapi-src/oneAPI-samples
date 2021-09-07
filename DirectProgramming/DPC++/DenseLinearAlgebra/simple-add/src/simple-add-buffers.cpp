@@ -53,7 +53,7 @@ void IotaParallel(queue &q, IntArray &a_array, int value) {
   // data access permission and device computation (kernel).
   q.submit([&](auto &h) {
     // Create an accessor with write permission.
-    accessor a(a_buf, h, write_only, noinit);
+    accessor a(a_buf, h, write_only, no_init);
 
     // Use parallel_for to populate consecutive numbers starting with a
     // specified value in parallel on device. This executes the kernel.

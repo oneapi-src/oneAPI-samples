@@ -7,8 +7,22 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(REPORTS_TARGET ${TARGET_NAME}_report)
 
-# USM is only supported on the PAC S10 board
-set(FPGA_BOARD "intel_s10sx_pac:pac_s10_usm")
+# FPGA board selection
+if(NOT DEFINED FPGA_BOARD)
+    set(FPGA_BOARD "intel_s10sx_pac:pac_s10_usm")
+    message(STATUS "FPGA_BOARD was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Stratix(R) 10 SX FPGA with USM support). \
+                    \nPlease refer to the README for information on board selection.")
+else()
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+endif()
+
+# this tutorial requires USM host allocations. Check the BSP name (which should contain the text 'usm')
+# to ensure the BSP has the required support. Allow the user to define USM_HOST_ALLOCATIONS_ENABLED
+# to override this check (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
+if(NOT FPGA_BOARD MATCHES ".usm.*" AND NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED)
+    message(FATAL_ERROR "This tutorial requires a BSP that has USM host allocations enabled")
+endif()
 
 if(UNIX)
     set(THREAD_FLAG "-lpthread")

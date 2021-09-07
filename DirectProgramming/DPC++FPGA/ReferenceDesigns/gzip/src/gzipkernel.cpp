@@ -2052,7 +2052,7 @@ void SubmitGzipTasksSingleEngine(
       // we compare to
       unsigned int insize_compare = (accessor_isz) / kVec;
 
-      int ctr = insize_compare = insize_compare - 1;
+      int ctr = insize_compare - 1;
 
       char first_valid_pos = 0;
 
@@ -2064,9 +2064,9 @@ void SubmitGzipTasksSingleEngine(
       // load in new data
       struct LzInput in;
       Unroller<0, kVec>::step([&](int i) { in.data[i] = acc_pibuf[inpos++]; });
-
-      Unroller<0, kVec>::step(
-          [&](int i) { current_window[i + kVec] = in.data[i]; });
+      Unroller<0, kVec>::step([&](int i) {
+        current_window[i + kVec] = in.data[i];
+      });
 
       do {
         //-----------------------------
