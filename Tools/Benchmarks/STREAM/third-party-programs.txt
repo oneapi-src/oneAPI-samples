@@ -84,11 +84,19 @@ zlib License
 
 --------------------------------------------------------------------------------
 
-3. Nbody
+3. Microsoft DirectX 11 Toolkit Engine Template: d3d11game_win32
+    copyright 2015-2021 Microsoft Corp.
+
+   Microsoft DirectX 11 Tutorial Wiki
+
+   Nbody
    (c) 2019 Fabio Baruffa
 
    Plotly.js
    Copyright (c) 2020 Plotly, Inc
+
+   pytracing
+   Copyright (c) 2015 Kris Wilson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -487,8 +495,5 @@ Apache License
 *  4. Use of this program or creation of derived works based on this
 *     program constitutes acceptance of these licensing restrictions.
 *  5. Absolutely no warranty is expressed or implied.
-
---------------------------------------------------------------------------------
-Other names and brands may be claimed as the property of others. 
 
 --------------------------------------------------------------------------------
