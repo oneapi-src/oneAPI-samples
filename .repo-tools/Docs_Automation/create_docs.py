@@ -6,33 +6,15 @@ import os
 import json
 today = date.today()
 d = today.strftime("%B %d, %Y")
+currentVersion = "2021.4.0"
 fileName = "sample.json"
 fCodeSamplesLists = "CODESAMPLESLIST.md"
 fChangeLogs = "CHANGELOGS.md"
 freadme = "README.md"
 fguidVer = ".repo-tools\Docs_Automation\guids.json"
-#fguidVer = ".repo-tools/Docs_Automation/guids.json"  #for use when Linux is supported for this tool
+#fguidVer = ".repo-tools/Docs_Automation/guids.json"  #for use when linux is supported for this tool
 oneAPIURL = 'https://github.com/oneapi-src/oneAPI-samples/tree/master'
 count = 0
-def addVer(str_guid, str_name, str_description):
-    #Guid, Sample Name, CurrentVersion, notes
-    print("Do you want to add Sample? (y/n): Name - GUID")
-    strAnswer =str(input())
-    if (strAnswer == "y"):
-        new_entry={ 
-            key= guid
-            description = str_description
-            name=str_name
-            dataContent['currentVersion']
-         
-          
-      }
-      verData=json.load(fguidVer)
-
-
-        
-
-
 
 def checkFileExists(checkFile):
     if os.path.exists(checkFile):
@@ -49,7 +31,7 @@ def openJson(jsonFile):                 #creating a dictionary
     return data
 
 def readContent():                      #reading in strings for use in document creation
-    #jsonFile = '.repo-tools/Docs_Automation/content.json' #for use when Linux is supported for this tool
+    #jsonFile = '.repo-tools/Docs_Automation/content.json' #for use when linux is supported for this tool
     jsonFile = '.repo-tools\Docs_Automation\content.json'
     dataContent = openJson(jsonFile)
     return dataContent
@@ -111,7 +93,7 @@ def createCodeSamplesList():
 def createReadme(sorted_by_name, sorted_by_ver):
     nf = open(freadme,"w+")
     nf.write("## Introduction\n\n")
-    nf.write(dataContent['mdIntro1'] + "\n" +dataContent['mdIntro2'] + dataContent['currentVersion'] + dataContent['mdIntro2.1'] + "\n ### Sample Details\n\n")
+    nf.write(dataContent['mdIntro1'] + "\n" +dataContent['mdIntro2'] + currentVersion + dataContent['mdIntro2.1'] + "\n ### Sample Details\n\n")
     nf.write(dataContent['mdIntro3'] + dataContent['mdIntro3.1']+dataContent['mdIntro3.2'] + dataContent['mdIntro3.3'] + dataContent['mdIntro3.4'] + dataContent['mdIntro3.5'])
     nf.write(dataContent['mdIntro5'] + dataContent['mdIntro5.1'] + "\n" + dataContent['mdIntro5.2'] + "\n" + dataContent['mdIntro5.3'] + "\n" + dataContent['mdIntro5.4'])
     nf.write("\n\n" +dataContent['mdIntro4'])
@@ -123,16 +105,17 @@ def createReadme(sorted_by_name, sorted_by_ver):
             url= sorted_by_name[key]['url']
             name=sorted_by_name[key]['name']
             cat=str(sorted_by_name[key]['categories'])
+            ver=sorted_by_ver[key]['ver']
+            
         except KeyError as e:
-            print("Error with: "+key+ "Missing from guids.json")  
-        ver=sorted_by_ver[key]['ver']
-        
+            print("Error with: "+key)  
+
         if (cat=="""['Toolkit/Publication: Data Parallel C++']"""):
             name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[" + name
             description=description.replace('*','')
             description=description.replace('fig_','<br>- Fig_')
             description="Collection of Code samples for the chapter"+description
-        if (ver==dataContent['currentVersion']):
+        if (ver==currentVersion):
             nf.write("|" + ver + "|[" + name+ "](" + url + ")|" + description + "|\n") 
     nf.write("\nTotal Samples: " + str(count)+ "\n\n")
     nf.write(dataContent['mdLicense'])
@@ -142,7 +125,7 @@ def createReadme(sorted_by_name, sorted_by_ver):
     print("Readme has been created")
 
 #main
-checkFileExists(fCodeSamplesLists)  #Cleaning up from previous run
+checkFileExists(fCodeSamplesLists)     #Cleaning up from previous run
 checkFileExists(fChangeLogs)        #Cleaning up from previous run
 checkFileExists(freadme)            #Cleaning up from previous run
 dataContent = readContent()         #read json for data used in creating document header and footers
