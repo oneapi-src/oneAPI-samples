@@ -14,6 +14,25 @@ fguidVer = ".repo-tools\Docs_Automation\guids.json"
 #fguidVer = ".repo-tools/Docs_Automation/guids.json"  #for use when Linux is supported for this tool
 oneAPIURL = 'https://github.com/oneapi-src/oneAPI-samples/tree/master'
 count = 0
+def addVer(str_guid, str_name, str_description):
+    #Guid, Sample Name, CurrentVersion, notes
+    print("Do you want to add Sample? (y/n): Name - GUID")
+    strAnswer =str(input())
+    if (strAnswer == "y"):
+        new_entry={ 
+            key= guid
+            description = str_description
+            name=str_name
+            dataContent['currentVersion']
+         
+          
+      }
+      verData=json.load(fguidVer)
+
+
+        
+
+
 
 def checkFileExists(checkFile):
     if os.path.exists(checkFile):
@@ -123,7 +142,7 @@ def createReadme(sorted_by_name, sorted_by_ver):
     print("Readme has been created")
 
 #main
-checkFileExists(fCodeSamplesLists)     #Cleaning up from previous run
+checkFileExists(fCodeSamplesLists)  #Cleaning up from previous run
 checkFileExists(fChangeLogs)        #Cleaning up from previous run
 checkFileExists(freadme)            #Cleaning up from previous run
 dataContent = readContent()         #read json for data used in creating document header and footers
