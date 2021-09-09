@@ -1,6 +1,6 @@
 ## oneAPI Code Samples
 
-This Page is a complete list of oneAPI Code Samples, sorted by Alphabetical order
+This Page is a complete list of oneAPI Code Samples, sorted in alphabetical order
 
 |Code Sample Name|Supported Intel&reg; Architecture(s)|Description|
 |-----------------------|----------------------|---------------------|
