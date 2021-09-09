@@ -1,5 +1,5 @@
 
-# Print Data Using SYCL Experimental Printf
+# Print Data Using SYCL Printf
 This FPGA tutorial explains how to use the `sycl::ext::oneapi::experimental::printf` to print in a DPC++ FPGA program.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
@@ -11,17 +11,21 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
-| What you will learn               | How to declare and use experimental::printf in a DPC++ program
+| What you will learn               | How to declare and use printf in a DPC++ program
 | Time to complete                  | 10 minutes
 
 
 ## Purpose
-This tutorial demonstrates how to use SYCL experimental printf in a DPC++ FPGA program.
+This tutorial shows how to use some simple macros to enable easy use of the SYCL printf() function in a DPC++ FPGA program. This function allows printing from within code running on the FPGA.
 
 ### Motivation
-Previously, we've provided examples for how to print data in DPC++ using the Stream class in the [Intel oneAPI GPU Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/software-development-process/debugging-the-dpc-and-openmp-offload-process/debug-the-offload-process.html).
+Previously, we've provided examples for how to print data in DPC++ using the Stream class in the [Intel oneAPI GPU Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-gpu-optimization-guide/top/debugging-and-profiling/doing-io-in-the-kernel.html).
 
-Compare to the Stream class, experimental::printf is a free function that can be called anywhere without needing to pass it as kernel arguements. It also has better performance in FPGA device.
+Compare to the Stream class, printf() has the following advantages:
+
+* printf() is a function that is globally available; Stream is an object which can only be obtained by passing it as a kernel argument from the host. In order to use Stream somewhere within your application, you have to pass the Stream object through the whole call stack. For debugging in large applications, using printf() has a great advantage allowing you to quickly add some print statements and easy to remove later without changing your main code.
+
+* On the FPGA device, printf() has smaller area usage (less LSUs) and better performance (Stream could introduce massive II inner loops).
 
 ### Simple Code Example
 
@@ -44,8 +48,8 @@ PRINTF("Hello: %d\n", 123);
 
 ## Key Concepts
 
-* How to use the `sycl::ext::oneapi::experimental::printf`
-* Advantages and limitations of `sycl::ext::oneapi::experimental::printf`
+* How to use `printf`
+* [Advantages](#motivation) and [limitations](#known-issues-and-limitations) of `printf`
 
 ## License  
 Code samples are licensed under the MIT license. See
@@ -53,7 +57,7 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `experimental_printf` Tutorial
+## Building the `printf` Tutorial
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -97,7 +101,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ``` 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/experimental_printf.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/printf.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
@@ -141,41 +145,41 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Examining the Reports
-Locate `report.html` in the `experimental_printf.prj/reports/` or `experimental_printf_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the `printf.prj/reports/` or `printf_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
 ## Running the Sample
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
-     ./experimental_printf.fpga_emu     (Linux)
-     experimental_printf.fpga_emu.exe   (Windows)
+     ./printf.fpga_emu     (Linux)
+     printf.fpga_emu.exe   (Windows)
      ```
 2. Run the sample on the FPGA device:
      ```
-     ./experimental_printf.fpga         (Linux)
+     ./printf.fpga         (Linux)
      ```
 
 ### Example of Output
 ```
-PASS Result1: Hello, World!
-PASS Result2: %
-PASS Result3: 123
-PASS Result4: 123
-PASS Result5: 1.00
-PASS Result6: print slash_n \n 
-PASS Result7: Long: 650000
-PASS Result8: Preceding with blanks:       1977 
-PASS Result9: Preceding with zeros: 0000001977 
-PASS Resulta: Some different radices: 100 64 144 0x64 0144 
-PASS Resultb: ABCD
+Result1: Hello, World!
+Result2: %
+Result3: 123
+Result4: 123
+Result5: 1.00
+Result6: print slash_n \n 
+Result7: Long: 650000
+Result8: Preceding with blanks:       1977 
+Result9: Preceding with zeros: 0000001977 
+Result10: Some different radices: 100 64 144 0x64 0144 
+Result11: ABCD
 ```
 
 ## Known issues and limitations
 
-There are some known issues with the experimental::printf and that's why the function is in the experimental namespace. We are actively resolving those issues. The following issues only happen in hardware (eumlator works fine).
+There are some known issues with the experimental::printf and that's why the function is in the experimental namespace. The following limitations exist when using experimental::printf() on FPGA hardware:
 
-* Printing string literals %s is not supported yet. You can put the string directly in the format as a workaround.
+* Printing string literals %s is not supported yet. You can put the string directly in the format as a workaround. For example: `PRINTF("Hello, World!\n")`
 * Printing pointer address %p is not supported yet.
-* In rare cases, if you have multiple PRINTF statements in the kernel, the order of printed data in the stdout might not obey the sequential order of those statements in the code.
+* If you have multiple PRINTF statements in the kernel, the order of printed data in the stdout might not obey the sequential order of those statements in the code.
 * Buffer is only flushed to stdout after the kernel finishes in hardware.
 

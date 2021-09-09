@@ -1,6 +1,6 @@
 {
   "guid": "7D431C27-AC4C-4AFF-9566-5B978C3D1F5D",
-  "name": "Experimental Printf",
+  "name": "Printf",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "TODO",
   "toolchain": ["dpcpp"],
@@ -17,7 +17,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./experimental_printf.fpga_emu"
+          "./printf.fpga_emu"
         ]
       },
       {
@@ -38,7 +38,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ..",
           "nmake fpga_emu",
-          "experimental_printf.fpga_emu.exe"
+          "printf.fpga_emu.exe"
         ]
       },
       {

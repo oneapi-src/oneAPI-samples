@@ -1,8 +1,8 @@
 # To see a Makefile equivalent of this build system:
 # https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
 
-set(SOURCE_FILE experimental_printf.cpp)
-set(TARGET_NAME experimental_printf)
+set(SOURCE_FILE printf.cpp)
+set(TARGET_NAME printf)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
@@ -35,10 +35,10 @@ set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_H
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR experimental_printf.cpp -o experimental_printf.fpga_emu
+#    dpcpp -fintelfpga -DFPGA_EMULATOR printf.cpp -o printf.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o experimental_printf.cpp.o -c experimental_printf.cpp
-#    [link]    dpcpp -fintelfpga experimental_printf.cpp.o -o experimental_printf.fpga_emu
+#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o printf.cpp.o -c printf.cpp
+#    [link]    dpcpp -fintelfpga printf.cpp.o -o printf.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
@@ -48,7 +48,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early experimental_printf.cpp -o experimental_printf_report.a
+#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early printf.cpp -o printf_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -61,10 +61,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> experimental_printf.cpp -o experimental_printf.fpga
+#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> printf.cpp -o printf.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o experimental_printf.cpp.o -c experimental_printf.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> experimental_printf.cpp.o -o experimental_printf.fpga
+#   [compile] dpcpp -fintelfpga -o printf.cpp.o -c printf.cpp
+#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> printf.cpp.o -o printf.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")

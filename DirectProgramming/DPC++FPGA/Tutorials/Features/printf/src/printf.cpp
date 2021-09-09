@@ -3,9 +3,9 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include "dpc_common.hpp"
 
-// According to OpenCL C spec, the format string must be in constant address
-// space This requires to perform "tricky" declarations of them. To simplify,
-// the following macro is defined.
+// According to the OpenCL C spec, the format string must be in the constant
+// address space. To simplify code when invoking printf, the following macros
+// are defined.
 
 #ifdef __SYCL_DEVICE_ONLY__
 #define CL_CONSTANT __attribute__((opencl_constant))
@@ -37,18 +37,18 @@ int main(int argc, char* argv[]) {
   try {
     q.submit([&](handler& h) {
        h.single_task<BasicKernel>([=]() {
-         PRINTF("PASS Result1: Hello, World!\n");
-         PRINTF("PASS Result2: %%\n");
-         PRINTF("PASS Result3: %d\n", x);
-         PRINTF("PASS Result4: %u\n", 123);
-         PRINTF("PASS Result5: %.2f\n", y);
-         PRINTF("PASS Result6: print slash_n \\n \n");
-         PRINTF("PASS Result7: Long: %ld\n", 650000L);
-         PRINTF("PASS Result8: Preceding with blanks: %10d \n", 1977);
-         PRINTF("PASS Result9: Preceding with zeros: %010d \n", 1977);
-         PRINTF("PASS Resulta: Some different radices: %d %x %o %#x %#o \n",
-                100, 100, 100, 100, 100);
-         PRINTF("PASS Resultb: ABC%c\n", 'D');
+         PRINTF("Result1: Hello, World!\n");
+         PRINTF("Result2: %%\n");
+         PRINTF("Result3: %d\n", x);
+         PRINTF("Result4: %u\n", 123);
+         PRINTF("Result5: %.2f\n", y);
+         PRINTF("Result6: print slash_n \\n \n");
+         PRINTF("Result7: Long: %ld\n", 650000L);
+         PRINTF("Result8: Preceding with blanks: %10d \n", 1977);
+         PRINTF("Result9: Preceding with zeros: %010d \n", 1977);
+         PRINTF("Result10: Some different radices: %d %x %o %#x %#o \n", 100,
+                100, 100, 100, 100);
+         PRINTF("Result11: ABC%c\n", 'D');
        });
      })
         .wait();
