@@ -495,5 +495,3 @@ Apache License
 *  4. Use of this program or creation of derived works based on this
 *     program constitutes acceptance of these licensing restrictions.
 *  5. Absolutely no warranty is expressed or implied.
-
---------------------------------------------------------------------------------

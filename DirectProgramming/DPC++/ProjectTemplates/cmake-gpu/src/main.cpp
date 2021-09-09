@@ -11,6 +11,9 @@
 
 using namespace cl::sycl;
 
+// declare the kernel name as a global to reduce name mangling
+class ExampleKernel;
+
 int main() {
   // create GPU device selector
   gpu_selector device_selector;
@@ -21,7 +24,6 @@ int main() {
   buffer<int> A{ R };
 
   // create a kernel
-  class ExampleKernel;
   queue q{device_selector };
   q.submit([&](handler& h) {
     auto out = A.get_access<access::mode::write>(h);
