@@ -12,25 +12,15 @@
 
 using namespace sycl;
 
+constexpr unsigned seed = 1313;
+
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 class NoSchedulerTargetFMAX;
 class SchedulerTargetFMAX;
 
-// BKDR hash function
-unsigned int BKDRHash(const char *str, unsigned int length) {
-  unsigned int seed = 1313;
-  unsigned int hash = 0;
-  unsigned int i = 0;
-  for (i = 0; i < length; ++str, ++i) {
-    hash = (hash * seed) + (*str);
-  }
-  return hash;
-}
-
 // Runs the Kernel
-void KernelRun(size_t size, const std::vector<std::string> &input_data,
-               std::vector<unsigned> &output_data_n,
+void KernelRun(size_t size, const std::vector<char> &input_data,
                std::vector<unsigned> &output_data) {
 
 #if defined(FPGA_EMULATOR)
@@ -45,18 +35,19 @@ void KernelRun(size_t size, const std::vector<std::string> &input_data,
             property::queue::enable_profiling{});
 
     buffer input_buffer(input_data);
-    buffer output_n_buffer(output_data_n);
     buffer output_buffer(output_data);
 
     auto e_g = q.submit([&](handler &h) {
       accessor input_a(input_buffer, h, read_only);
-      accessor output_a(output_n_buffer, h, write_only, no_init);
+      accessor output_a(output_buffer, h, write_only, no_init);
 
       h.single_task<NoSchedulerTargetFMAX>([=
       ]() [[intel::kernel_args_restrict]] {
+        unsigned hash = 0;
         for (size_t i = 0; i < size; i++) {
-          output_a[i] = BKDRHash(input_a[i].c_str(), input_a[i].length());
+          hash = (hash * seed) + input_a[i];
         }
+        output_a[0] = hash;
       });
     });
 
@@ -67,9 +58,11 @@ void KernelRun(size_t size, const std::vector<std::string> &input_data,
       h.single_task<SchedulerTargetFMAX>([=
       ]() [[intel::kernel_args_restrict,
             intel::scheduler_target_fmax_mhz(480)]] {
+        unsigned hash = 0;
         for (size_t i = 0; i < size; i++) {
-          output_a[i] = BKDRHash(input_a[i].c_str(), input_a[i].length());
+          hash = (hash * seed) + input_a[i];
         }
+        output_a[1] = hash;
       });
     });
 
@@ -89,30 +82,35 @@ void KernelRun(size_t size, const std::vector<std::string> &input_data,
   }
 }
 
-int main() {
-  std::vector<std::string> input_data = {"VwEEB",           "P7pX1",
-                                         "jgwkwWV4vc",      "Hja9fr3u4x",
-                                         "qr6KUBBmLtVUlX9", "si9NUUs6ghvcxBj"};
-  std::vector<unsigned> output_data_n(input_data.size()),
-      output_data(input_data.size());
+inline unsigned BKDRHashGolden(std::vector<char> input_data) {
+  unsigned hash = 0;
+  for (int i = 0; i < input_data.size(); ++i) {
+    hash = (hash * seed) + input_data[i];
+  }
+  return hash;
+}
 
-  KernelRun(input_data.size(), input_data, output_data_n, output_data);
+int main() {
+  // input string "qr6KUBBmLtVUlX9"
+  std::vector<char> input_data = {'q', 'r', '6', 'K', 'U', 'B', 'B', 'm',
+                                  'L', 't', 'V', 'U', 'l', 'X', '9'};
+  std::vector<unsigned> output_data(2);
+
+  KernelRun(input_data.size(), input_data, output_data);
 
   bool passed = true;
-  for (size_t i = 0; i < input_data.size(); i++) {
-    unsigned golden = BKDRHash(input_data[i].c_str(), input_data[i].length());
-    if (output_data_n[i] != golden) {
-      std::cout << "Output Mismatch: \n"
-                << "output_data_n[" << i << "] = " << output_data_n[i] << "\n"
-                << "golden = " << golden << "\n";
-      passed = false;
-    }
-    if (output_data[i] != golden) {
-      std::cout << "Output Mismatch: \n"
-                << "output_data[" << i << "] = " << output_data[i] << "\n"
-                << "golden = " << golden << "\n";
-      passed = false;
-    }
+  unsigned golden = BKDRHashGolden(input_data);
+  if (output_data[0] != golden) {
+    std::cout << "Kernel NoSchedulerTargetFMAX Output Mismatch: \n"
+              << "output = " << output_data[0] << ", golden = " << golden
+              << "\n";
+    passed = false;
+  }
+  if (output_data[1] != golden) {
+    std::cout << "Kernel SchedulerTargetFMAX Output Mismatch: \n"
+              << "output = " << output_data[1] << ", golden = " << golden
+              << "\n";
+    passed = false;
   }
 
   if (passed) {
