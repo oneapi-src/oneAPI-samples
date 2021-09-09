@@ -126,7 +126,7 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ## Examining the Reports
 Locate `report.html` in the `scheduler_target_fmax_report.prj/reports/` or `scheduler_target_fmax_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Navigate to the Loop Analysis table (Throughput Analysis > Loop Analysis). In kernel `NoSchedulerTargetFMAX`, block `B2` is scheduled at less than 240 MHz, so this block is limiting this kernel's fMAX but is able to achieve II=1. In kernel `SchedulerTargetFMAX`, all blocks are scheduled at the target fMAX, but they have II>1.
+Navigate to the Loop Analysis table (Throughput Analysis > Loop Analysis). In kernel `NoSchedulerTargetFMAX`, block `B1` is scheduled at less than 240 MHz, so this block is limiting this kernel's fMAX but is able to achieve II=1. In kernel `SchedulerTargetFMAX`, all blocks are scheduled at the target fMAX, but they have II>1.
 
 ## Running the Sample
 
