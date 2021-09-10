@@ -22,6 +22,7 @@
 #include <CL/sycl.hpp>
 #include <array>
 #include <iostream>
+#include <string>
 #if FPGA || FPGA_EMULATOR
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 #endif
