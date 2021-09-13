@@ -8,7 +8,9 @@
 #include <array>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <type_traits>
+
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
