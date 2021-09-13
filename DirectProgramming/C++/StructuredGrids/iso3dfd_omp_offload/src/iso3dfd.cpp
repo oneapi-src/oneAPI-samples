@@ -1,10 +1,10 @@
 
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright ï¿½ 2020 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-
+#include <string>
 #include "../include/iso3dfd.h"
 
 /*

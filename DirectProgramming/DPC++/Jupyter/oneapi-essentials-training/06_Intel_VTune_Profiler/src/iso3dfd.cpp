@@ -32,6 +32,7 @@
 //
 #include "../include/iso3dfd.h"
 #include <iostream>
+#include <string>
 #include "../include/device_selector.hpp"
 
 #define MIN(a, b) (a) < (b) ? (a) : (b)
