@@ -5,6 +5,7 @@
 // =============================================================
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <string>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
