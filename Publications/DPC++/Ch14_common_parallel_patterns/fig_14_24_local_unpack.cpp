@@ -126,9 +126,9 @@ int main() {
 
             // Replace pixels that have converged using an unpack
             // Pixels that haven't converged are not replaced
-            uint32_t index = exclusive_scan(sg, converged, std::plus<>());
+            uint32_t index = exclusive_scan(sg, converged, sycl::ONEAPI::plus<>());
             i = (converged) ? iq + index : i;
-            iq += reduce(sg, converged, std::plus<>());
+            iq += reduce(sg, converged, sycl::ONEAPI::plus<>());
 
             // Reset the iterator variables for the new i
             if (converged) {
