@@ -58,7 +58,7 @@ int main() {
 
            // Pack neighbors that require post-processing into a list
            uint32_t pack = (i != j) and (r <= CUTOFF);
-           uint32_t offset = exclusive_scan(sg, pack, plus<>());
+           uint32_t offset = exclusive_scan(sg, pack, std::plus<>());
            if (pack) {
              neighbors[i * MAX_K + k + offset] = j;
            }

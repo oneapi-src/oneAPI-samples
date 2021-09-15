@@ -25,7 +25,7 @@ int main() {
 
   Q.parallel_for(nd_range<1>{N, B}, [=](nd_item<1> it) {
      int i = it.get_global_id(0);
-     int group_sum = reduce(it.get_group(), data[i], plus<>());
+     int group_sum = reduce(it.get_group(), data[i], std::plus<>());
      if (it.get_local_id(0) == 0) {
        atomic_ref<
            int,
