@@ -102,7 +102,9 @@ C:\Program Files (x86)\Intel\oneAPI\setvars.bat
 cd C:\Program Files (x86)\Intel\oneAPI\dnnl\latest\cpu_dpcpp_gpu_dpcpp\examples\
 mkdir build
 cd build
-cmake -G Ninja ..
+set CC=clang
+set CXX=clang++
+cmake -G Ninja .. -DDNNL_CPU_RUNTIME=DPCPP -DDNNL_GPU_RUNTIME=DPCPP
 cmake --build .
 ```
 
