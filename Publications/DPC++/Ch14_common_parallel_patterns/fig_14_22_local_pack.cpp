@@ -66,7 +66,7 @@ int main() {
            // Keep track of how many neighbors have been packed so far
            k += reduce(sg, pack, sycl::ONEAPI::plus<>());
          }
-         num_neighbors[i] = reduce(sg, k, maximum<>());
+         num_neighbors[i] = reduce(sg, k, sycl::ONEAPI::maximum<>());
        })
       .wait();
 
