@@ -152,7 +152,6 @@ Example passed on CPU.
 
 When executed with `DNNL_VERBOSE=1`:
 ```
-dnnl_verbose,info,oneDNN v1.95.0 (commit ae08a30fff7f76759fd4c5093c01707d0ee12c4c)
 dnnl_verbose,info,cpu,runtime:DPC++
 dnnl_verbose,info,cpu,isa:Intel AVX2
 dnnl_verbose,info,gpu,runtime:DPC++
