@@ -49,7 +49,10 @@ PRINTF("Hello: %d\n", 123);
 ## Key Concepts
 
 * How to use `printf`
-* [Advantages](#motivation) and [limitations](#known-issues-and-limitations) of `printf`
+* Advantages of `printf`
+    * Easy to use
+    * Smaller area usage and better performance
+* [Limitations](#known-issues-and-limitations) of `printf`
 
 ## License  
 Code samples are licensed under the MIT license. See
@@ -145,7 +148,9 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Examining the Reports
-Locate `report.html` in the `printf.prj/reports/` or `printf_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the `printf_report.prj/reports/` or `printf_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+
+From the report, you can find the compilation information of the design and the estimated FPGA resource usage. For example, navigate to the Area Analysis section of the report (Kernel System -> BasicKernel->Computaion), you can see the estimated resource usage(ALUTs, FFs, RAMs, etc.) for each printf() call.
 
 ## Running the Sample
 
