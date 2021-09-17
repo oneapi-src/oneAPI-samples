@@ -1,4 +1,4 @@
-# `ISO3DFD OpenMP Offload` Sample
+﻿# `ISO3DFD OpenMP Offload` Sample
 
 The ISO3DFD sample refers to Three-Dimensional Finite-Difference Wave Propagation in Isotropic Media.  It is a three-dimensional stencil to simulate a wave propagating in a 3D isotropic medium and shows some of the more common challenges and techniques when targeting OMP Offload devices (GPU) in more complex applications to achieve good performance. 
 
@@ -22,31 +22,34 @@ Performance number tabulation
 
 ## Purpose
 
-ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic isotropic wave equation which can be used as a proxy for propogating a seismic wave. Kernels in this sample are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions.. Using OpenMP Offload, the sample can explicitly run on the GPU to propagate a seismic wave which is a compute intensive task.
+ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic isotropic wave equation, which can be used as a proxy for propagating a seismic wave. In this sample, kernels are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions. Using OpenMP Offload, the sample can explicitly run on the GPU to propagate a seismic wave, which is a compute-intensive task.
 
-The code will attempt to find an available GPU or OpenMP Offload capable device and exit if a compatible device is not detected. By default, the output will print the device name where the OpenMP Offload code ran along with the grid computation metrics - flops and effective throughput. For validating results, a OpenMP/CPU-only version of the application will be run on host/CPU and results will be compared to the OpenMP Offload version.
+The code will attempt to find an available GPU or OpenMP Offload capable device and exit if a compatible device is not detected. By default, the output will print the device name where the OpenMP Offload code ran along with the grid computation metrics - flops and effective throughput. For validating results, an OpenMP/CPU-only version of the application will be run on host/CPU, and results will be compared to the OpenMP Offload version.
 
-The code also demonstrates some of the common optimization techniques which can be used to improve performance of 3D-stencil code running on a GPU device.
+The code also demonstrates some of the common optimization techniques that can be used to improve 3D-stencil code running on a GPU device.
  
 ## Key Implementation Details 
 
 The basic OpenMP Offload implementation explained in the code includes the use of the following : 
 * OpenMP offload target data map construct
-* Default Baseline version demonstrates use of OpenMP offload target parallel for construct with collapse 
-* Optimized version 1 demonstrates use of OpenMP offload teams distribute construct and use of num_teams and thread_limit clause
-* Incremental Optimized version 2 demonstrates use of OpenMP offload teams distribute construct with improved data-access pattern
+* Default Baseline version demonstrates the use of OpenMP offload target parallel for construct with the collapse 
+* Optimized version 1 demonstrates the use of OpenMP offload teams distribute construct and use of num_teams and thread_limit clause
+* Incremental Optimized version 2 demonstrates the use of OpenMP offload teams distribute construct with improved data-access pattern
 * Incremental Optimized version 3 demonstrates use of OpenMP CPU threads along with OpenMP offload target construct
 
  
 ## License  
 
-This code sample is licensed under MIT license. 
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `ISO3DFD` Program for GPU
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/) and Intel® oneAPI HPC Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
+Running samples in the Intel DevCloud requires you to specify a compute node. For specific instructions, jump to [Run the ISO3DFD OpenMP Offload sample in the DevCloud](#run-iso3dfd-omp-on-devcloud)
 
 ### On a Linux* System
 Perform the following steps:
@@ -58,7 +61,7 @@ $ cmake ..
 $ make -j
 ```
 
-> Note: by default, executable is build with default baseline version. You can build the kernel with optimized versions with the following:
+> Note: by default, the executable is built with the default baseline version. You can build the kernel with optimized versions with the following:
 ```
 cmake -DUSE_OPT1=1 ..
 make -j
@@ -98,7 +101,7 @@ You can modify the ISO3DFD parameters from the command line.
                                 	: OR TILE sizes for OMP Offload
  	Iterations                     	: No. of timesteps.
 
-### Example of Output with default baseline version
+### Example of Output with the default baseline version
 ```
 Grid Sizes: 256 256 256
 Tile sizes ignored for OMP Offload
@@ -138,3 +141,117 @@ Checking Results ...
 Final wavefields from OMP Offload device and CPU are equivalent: Success
 
 ```
+### Running the ISO3DFD OpenMP Offload sample in the DevCloud<a name="run-iso3dfd-omp-on-devcloud"></a>
+1.  Open a terminal on your Linux system.
+2.	Log in to DevCloud.
+```
+ssh devcloud
+```
+3.	Download the samples.
+```
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+```
+
+4. Change directories to the  ISO3DFD OpenMP Offload sample directory.
+```
+cd ~/oneAPI-samples/DirectProgramming/C++/StructuredGrids/iso3dfd_omp_offload
+```
+#### Build and run the sample in batch mode
+The following describes the process of submitting build and run jobs to PBS.
+A job is a script that is submitted to PBS through the qsub utility. By default, the qsub utility does not inherit the current environment variables or your current working directory. For this reason, it is necessary to submit jobs as scripts that handle the setup of the environment variables. In order to address the working directory issue, you can either use absolute paths or pass the -d \<dir\> option to qsub to set the working directory.
+
+#### Create the Job Scripts
+1.	Create a build.sh script with your preferred text editor:
+```
+nano build.sh
+```
+2.	 Add this text into the build.sh file:
+```
+source /opt/intel/inteloneapi/setvars.sh > /dev/null 2>&1
+mkdir build
+cd build
+cmake ..
+make -j
+```
+
+3.	Save and close the build.sh file.
+
+4.	Create a run.sh script with with your preferred text editor:
+```
+nano run.sh
+```
+
+5.	 Add this text into the run.sh file:
+```
+source /opt/intel/inteloneapi/setvars.sh > /dev/null 2>&1
+cd build
+make run
+```
+6.	Save and close the run.sh file.
+
+#### Build and run
+Jobs submitted in batch mode are placed in a queue waiting for the necessary resources (compute nodes) to become available. The jobs will be executed on a first come basis on the first available node(s) having the requested property or label.
+1.	Build the sample on a gpu node.
+
+```
+qsub -l nodes=1:gpu:ppn=2 -d . build.sh
+```
+
+Note: -l nodes=1:gpu:ppn=2 (lower case L) is used to assign one full GPU node to the job.
+Note: The -d . is used to configure the current folder as the working directory for the task.
+
+2.	In order to inspect the job progress, use the qstat utility.
+```
+watch -n 1 qstat -n -1
+```
+Note: The watch -n 1 command is used to run qstat -n -1 and display its results every second. The **Req’d Time** column will give an estimate for when the job will complete.
+
+3.	After the build job completes successfully, run the sample on a gpu node:
+```
+qsub -l nodes=1:gpu:ppn=2 -d . run.sh
+```
+4.	When a job terminates, a couple of files are written to the disk:
+
+    <script_name>.sh.eXXXX, which is the job stderr
+
+    <script_name>.sh.oXXXX, which is the job stdout
+
+    Here XXXX is the job ID, which gets printed to the screen after each qsub command.
+
+5.	Inspect the output of the sample.
+```
+cat run.sh.oXXXX
+```
+You should see output similar to this:
+
+```
+Grid Sizes: 256 256 256
+Tile sizes ignored for OMP Offload
+--Using Baseline version with omp target with collapse
+Memory Usage (MBytes): 230
+--------------------------------------
+time         : 9.912 secs
+throughput   : 169.262 Mpts/s
+flops        : 10.325 GFlops
+bytes        : 2.03114 GBytes/s
+
+--------------------------------------
+
+--------------------------------------
+Checking Results ...
+Final wavefields from OMP Offload device and CPU are equivalent: Success
+```
+
+6.	Remove the stdout and stderr files and clean-up the project files.
+```
+rm build.sh.*; rm run.sh.*; make clean
+```
+7.	Disconnect from the Intel DevCloud.
+```
+exit
+```
+### Build and run additional samples
+Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to iso3dfd_omp_offload. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
+
+
+

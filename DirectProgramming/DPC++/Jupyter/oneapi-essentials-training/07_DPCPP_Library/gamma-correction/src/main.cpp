@@ -4,14 +4,12 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <iomanip>
-#include <iostream>
-
-#include <CL/sycl.hpp>
-
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
+#include <iomanip>
+#include <iostream>
+#include <CL/sycl.hpp>
 
 #include "utils.hpp"
 

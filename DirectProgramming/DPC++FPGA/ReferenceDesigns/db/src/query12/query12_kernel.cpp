@@ -22,7 +22,7 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
                     std::array<DBDecimal, 2>& high_line_count,
                     std::array<DBDecimal, 2>& low_line_count,
                     double& kernel_latency, double& total_latency) {
-  // setup the input buffers
+  // create space for the input buffers
   // LINEITEM table
   buffer l_orderkey_buf(dbinfo.l.orderkey);
   buffer l_shipmode_buf(dbinfo.l.shipmode);
@@ -35,16 +35,16 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   buffer o_orderpriority_buf(dbinfo.o.orderpriority);
 
   // setup the output buffers
-  // constructing the output buffers WITHOUT a backed host pointer allows
-  // us to avoid copying the output data from the host to the device before
-  // launching the kernels. Using the set_final_data() function tells the
-  // runtime to copy the contents of the buffer from the device to the given
-  // host pointer (the argument to set_final_data) upon buffer destruction.
-  buffer<DBDecimal, 1> high_line_count_buf(high_line_count.size());
-  high_line_count_buf.set_final_data(high_line_count.data());
+  buffer high_line_count_buf(high_line_count);
+  buffer low_line_count_buf(low_line_count);
 
-  buffer<DBDecimal, 1> low_line_count_buf(low_line_count.size());
-  low_line_count_buf.set_final_data(low_line_count.data());
+  // number of producing iterations depends on the number of elements per cycle
+  const size_t l_rows = dbinfo.l.rows;
+  const size_t l_iters =
+      (l_rows + kLineItemJoinWindowSize - 1) / kLineItemJoinWindowSize;
+  const size_t o_rows = dbinfo.o.rows;
+  const size_t o_iters =
+      (o_rows + kOrderJoinWindowSize - 1) / kOrderJoinWindowSize;
 
   // start timer
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
@@ -60,25 +60,32 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
     accessor l_receiptdate_accessor(l_receiptdate_buf, h, read_only);
 
     h.single_task<LineItemProducer>([=]() [[intel::kernel_args_restrict]] {
-      for (size_t i = 0; i < l_rows; i += kLineItemJoinWindowSize) {
+      [[intel::initiation_interval(1)]]
+      for (size_t i = 0; i < l_iters + 1; i++) {
+        bool done = (i == l_iters);
+        bool valid = (i != l_iters);
+
         // bulk read of data from global memory
         NTuple<kLineItemJoinWindowSize, LineItemRow> data;
 
         UnrolledLoop<0, kLineItemJoinWindowSize>([&](auto j) {
-          bool in_range = (i + j) < l_rows;
-          DBIdentifier key = in_range ? l_orderkey_accessor[i + j]
-                              : std::numeric_limits<DBIdentifier>::max();
-          int shipmode = in_range ? l_shipmode_accessor[i + j] : 0;
-          DBDate commitdate = in_range ? l_commitdate_accessor[i + j] : 0;
-          DBDate shipdate = in_range ? l_shipdate_accessor[i + j] : 0;
-          DBDate receiptdate = in_range ? l_receiptdate_accessor[i + j] : 0;
+          size_t idx = (i*kLineItemJoinWindowSize + j);
+          bool in_range = idx < l_rows;
+          DBIdentifier key_tmp = l_orderkey_accessor[idx];
+          int shipmode = l_shipmode_accessor[idx];
+          DBDate commitdate = l_commitdate_accessor[idx];
+          DBDate shipdate = l_shipdate_accessor[idx];
+          DBDate receiptdate = l_receiptdate_accessor[idx];
+
+          DBIdentifier key =
+              in_range ? key_tmp : std::numeric_limits<DBIdentifier>::max();
 
           data.get<j>() = LineItemRow(in_range, key, shipmode, commitdate,
                                       shipdate, receiptdate);
         });
 
         // write to pipe
-        LineItemProducerPipe::write(LineItemRowPipeData(false, true, data));
+        LineItemProducerPipe::write(LineItemRowPipeData(done, valid, data));
       }
     });
   });
@@ -92,21 +99,29 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
     accessor o_orderpriority_accessor(o_orderpriority_buf, h, read_only);
 
     h.single_task<OrdersProducer>([=]() [[intel::kernel_args_restrict]] {
-      for (size_t i = 0; i < o_rows; i += kOrderJoinWindowSize) {
+      [[intel::initiation_interval(1)]]
+      for (size_t i = 0; i < o_iters + 1; i++) {
+        bool done = (i == o_iters);
+        bool valid = (i != o_iters);
+
         // bulk read of data from global memory
         NTuple<kOrderJoinWindowSize, OrdersRow> data;
 
         UnrolledLoop<0, kOrderJoinWindowSize>([&](auto j) {
-          bool in_range = (i + j) < o_rows;
-          DBIdentifier key = in_range ? o_orderkey_accessor[i + j]
-                              : std::numeric_limits<DBIdentifier>::max();
-          int orderpriority = in_range ? o_orderpriority_accessor[i + j] : 0;
+          size_t idx = (i*kOrderJoinWindowSize + j);
+          bool in_range = idx < o_rows;
+          
+          DBIdentifier key_tmp = o_orderkey_accessor[idx];
+          int orderpriority = o_orderpriority_accessor[idx];
+
+          DBIdentifier key =
+              in_range ? key_tmp : std::numeric_limits<DBIdentifier>::max();
 
           data.get<j>() = OrdersRow(in_range, key, orderpriority);
         });
 
         // write to pipe
-        OrdersProducerPipe::write(OrdersRowPipeData(false, true, data));
+        OrdersProducerPipe::write(OrdersRowPipeData(done, valid, data));
       }
     });
   });
@@ -115,33 +130,11 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
   //// Join kernel
   auto join_event = q.submit([&](handler& h) {
-    // read accessors
-    int o_rows = dbinfo.o.rows;
-    int l_rows = dbinfo.l.rows;
-
     // streaming query12 computation
     h.single_task<Join>([=]() [[intel::kernel_args_restrict]] {
-      //// callbacks for reading and writing data
-      // reader callback for the Orders table (table 1 for MergeJoiner)
-      GenericPipeReader<OrdersProducerPipe,
-                        OrdersRowPipeData> orders_reader;
-
-      // reader callback for the LineItem table (table 2 for MergeJoiner)
-      GenericPipeReader<LineItemProducerPipe,
-                        LineItemRowPipeData> lineitem_reader;
-
-
-      // the writer callback function
-      GenericPipeWriter<JoinedProducerPipe,
-                        JoinedRowPipeData> joined_writer;
-
-      // declare the joiner
-      MergeJoiner<OrdersRow, kOrderJoinWindowSize, LineItemRow,
-                  kLineItemJoinWindowSize, JoinedRow>
-          joiner(o_rows, l_rows);
-
-      // do the join
-      joiner.Go(orders_reader, lineitem_reader, joined_writer);
+      MergeJoin<OrdersProducerPipe, OrdersRow, kOrderJoinWindowSize,
+                LineItemProducerPipe, LineItemRow, kLineItemJoinWindowSize,
+                JoinedProducerPipe, JoinedRow>();
 
       // join is done, tell downstream
       JoinedProducerPipe::write(JoinedRowPipeData(true, false));
@@ -153,8 +146,8 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   //// Compute Kernel
   auto compute_event = q.submit([&](handler& h) {
     // output write accessors
-    accessor high_line_count_accessor(high_line_count_buf, h, write_only, noinit);
-    accessor low_line_count_accessor(low_line_count_buf, h, write_only, noinit);
+    accessor high_line_count_accessor(high_line_count_buf, h, write_only, no_init);
+    accessor low_line_count_accessor(low_line_count_buf, h, write_only, no_init);
 
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       // local accumulators
@@ -162,18 +155,18 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
       DBDecimal low_line_count1_local = 0, low_line_count2_local = 0;
       bool done;
 
+      [[intel::initiation_interval(1)]]
       do {
         // get joined row from pipe
-        bool pipe_valid;
-        JoinedRowPipeData joined_data = JoinedProducerPipe::read(pipe_valid);
+        JoinedRowPipeData joined_data = JoinedProducerPipe::read();
 
         // upstream kernel tells this kernel when it is done
-        done = joined_data.done && pipe_valid;
+        done = joined_data.done;
 
-        if (!done && pipe_valid) {
+        if (!done && joined_data.valid) {
           DBDecimal high_line_count1_local_tmp[kLineItemJoinWindowSize];
-          DBDecimal high_line_count2_local_tmp[kLineItemJoinWindowSize];
           DBDecimal low_line_count1_local_tmp[kLineItemJoinWindowSize];
+          DBDecimal high_line_count2_local_tmp[kLineItemJoinWindowSize];
           DBDecimal low_line_count2_local_tmp[kLineItemJoinWindowSize];
 
           UnrolledLoop<0, kLineItemJoinWindowSize>([&](auto i) {
@@ -197,14 +190,13 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
                 ((joined_data.data.get<i>().receiptdate >= low_date) &&
                  (joined_data.data.get<i>().receiptdate < high_date));
 
-
             const bool urgent_or_high =
                 (joined_data.data.get<i>().orderpriority == 1 ||
                  joined_data.data.get<i>().orderpriority == 2);
 
-            const bool do_computation = !done && joined_data.data.get<i>().valid
-                && valid_shipmode && valid_commitdate && valid_shipdate
-                && receipt_within_year_of_date;
+            const bool do_computation = joined_data.data.get<i>().valid &&
+                valid_shipmode && valid_commitdate && valid_shipdate &&
+                receipt_within_year_of_date;
 
             if (do_computation) {
               // is this order priority urgent or high
@@ -245,6 +237,9 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   /////////////////////////////////////////////////////////////////////////////
 
   // wait for the Compute kernel to finish
+  produce_orders_event.wait();
+  produce_lineitem_event.wait();
+  join_event.wait();
   compute_event.wait();
 
   // stop timer

@@ -1,4 +1,4 @@
-﻿# Hello IoT World
+﻿# `Hello IoT World` Sample
 
 ## Introduction
 
@@ -16,6 +16,13 @@ Any Intel® CPU
 ## Software requirements
 
 Intel® C++ Compiler Classic
+
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Build and Run
 

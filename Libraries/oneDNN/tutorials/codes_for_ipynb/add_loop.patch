@@ -1,0 +1,21 @@
+--- performance_profiling.cpp	2021-05-20 15:46:23.096622928 -0700
++++ performance_profiling_new.cpp	2021-05-20 15:48:28.381936105 -0700
+@@ -557,14 +557,16 @@
+     if (implementation == "naive" || implementation == "validation") {
+         std::cout << "Implementation: naive.\n";
+         // run conv + relu w/o fusing
+-        conv_relu_naive(user_src, user_wei, user_dst, eng, s);
++	for (int i=0; i < 20; i++)
++            conv_relu_naive(user_src, user_wei, user_dst, eng, s);
+         std::cout << "Conv + ReLU w/ nchw format completed.\n";
+     }
+ 
+     if (implementation == "blocked" || implementation == "validation") {
+         std::cout << "Implementation: blocked.\n";
+         // run conv + relu w/o fusing
+-        conv_relu_blocked(user_src, user_wei, user_dst, eng, s);
++	for (int i=0; i < 20; i++)
++            conv_relu_blocked(user_src, user_wei, user_dst, eng, s);
+         std::cout << "Conv + ReLU w/ blocked format completed.\n";
+     }
+ 

@@ -3,7 +3,7 @@
 ## Use the Command Line to Migrate Large Code Bases
 
 The Intel DPC++ Compatibility Tool (dpct) can migrate projects that include
-of multiple source and header files. This sample provides an example of how to
+multiple source and header files. This sample provides an example of how to
 migrate more complex projects and use options.
 
 
@@ -38,14 +38,16 @@ extensions are changed to `.dp.cpp`.
 ## Key Implementation Details
 
 Use --in-root and --out-root for projects which contain more than one source
-file.  Addtitional migration options are can be reviewed at:
+file.  Additional migration options can be reviewed at:
 [Command Line Options Reference](https://software.intel.com/content/www/us/en/develop/documentation/intel-dpcpp-compatibility-tool-user-guide/top/command-line-options-reference.html).
 
 
 ## License
 
-This code sample is licensed under the MIT license, which is located in the
-[LICENSE.txt file](LICENSE.txt) in this sample project's folder.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Migrating the CUDA Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
@@ -60,7 +62,7 @@ to a Data Parallel C++ project.
 [cuda-headers]: <https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.html#top_BEFORE_YOU_BEGIN>
 
 
-### Command Line on a Linux* System
+### Command-Line on a Linux* System
 
 1. Ensure your environment is configured to use the OneAPI tools.
 
@@ -74,8 +76,8 @@ $ source /opt/intel/oneapi/setvars.sh
 ```
  foo
  ├── bar
- │   ├── util.cu
- │   └── util.h
+ │   ├── util.cu
+ │   └── util.h
  └── main.cu
 ```
 
@@ -98,8 +100,8 @@ by the `--out-root` option:
 ```
  result/foo
         ├── bar
-        │   ├── util.dp.cpp
-        │   └── util.h
+        │   ├── util.dp.cpp
+        │   └── util.h
         └── main.dp.cpp
 ```
 
@@ -132,7 +134,7 @@ CXX = dpcpp
 # Remainder of the Makefile should work without changes.
 ```
 
-> **NOTE:** the above Makefile changes work for this sample project. The
+> **NOTE:** The above Makefile changes work for this sample project. The
 > modifications needed to update the build files in your own projects will vary
 > greatly depending on the nature and complexity of your migrated projects.
 
@@ -159,8 +161,8 @@ CXX = dpcpp
 ```
  foo
  ├── bar
- │   ├── util.cu
- │   └── util.h
+ │   ├── util.cu
+ │   └── util.h
  └── main.cu
 ```
 
@@ -191,12 +193,12 @@ by the `--out-root` option:
 ```
 result/foo
         ├── bar
-        │   ├── util.dp.cpp
-        │   └── util.h
+        │   ├── util.dp.cpp
+        │   └── util.h
         └── main.dp.cpp
 ```
 
-In order to build this migrated application, on Windows, you must modify the
+To build this migrated application on Windows, you must modify the
 original `Makefile` to be compatible with Microsoft `nmake` and Windows
 command-line tools.
 
@@ -240,7 +242,7 @@ stream_ct1 << "kernel_main!" << sycl::endl;
 
 # Example Output
 
-When you run the migrated application you should see the following console
+When you run the migrated application, you should see the following console
 output:
 
 ```
@@ -249,7 +251,7 @@ kernel_main!
 kernel_util,2
 ```
 
-> **NOTE:** If you see the following TBB error message you can safely it.
+> **NOTE:** If you see the following TBB error message, you can safely it.
 > Not all users will see this TBB error message. It has nothing to do with the
 > migration of your application and does not mean that your application is not
 > running correctly. The issue will be resolved in a future oneAPI release.

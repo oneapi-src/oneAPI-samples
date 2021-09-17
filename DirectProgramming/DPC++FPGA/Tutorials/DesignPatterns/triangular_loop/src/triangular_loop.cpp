@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -36,7 +36,8 @@ constexpr int kM = 50;
 // do not use with unary operators, e.g., kMin(x++, y++)
 constexpr int Min(int X, int Y) { return (((X) < (Y)) ? (X) : (Y)); };
 
-// Forward declaration of kernel
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class Task;
 
 // This method represents the operation you perform on the loop-carried variable
@@ -46,14 +47,14 @@ int SomethingComplicated(int x) { return (int)sycl::sqrt((float)x); }
 
 // This kernel function implements two data paths: with and without the
 // optimization. 'optimize' specifies which path to take.
-void TriangularLoop(std::unique_ptr<queue>& q, buffer<uint32_t>& input_buf,
+void TriangularLoop(sycl::queue&q, buffer<uint32_t>& input_buf,
                     buffer<uint32_t>& output_buf, uint32_t n, event& e,
                     bool optimize) {
   // Enqueue kernel
-  e = q->submit([&](handler& h) {
+  e = q.submit([&](handler& h) {
     // Get accessors to the SYCL buffers
     accessor input(input_buf, h, read_only);
-    accessor output(output_buf, h, write_only, noinit);
+    accessor output(output_buf, h, write_only, no_init);
 
     h.single_task<Task>([=]() [[intel::kernel_args_restrict]] {
       // See README for description of the loop_bound calculation.
@@ -124,24 +125,23 @@ int main() {
   double time_kernel;
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
   std::cout << "\nEmulator output does not demonstrate true hardware "
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
     auto prop_list =
         property_list{property::queue::enable_profiling()};
 
-    std::unique_ptr<queue> q;
-    q.reset(new queue(device_selector, dpc_common::exception_handler, prop_list));
+    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
 
-    platform platform = q->get_context().get_platform();
-    device device = q->get_device();
+    platform platform = q.get_context().get_platform();
+    device device = q.get_device();
     std::cout << "Platform name: "
               << platform.get_info<info::platform::name>().c_str() << "\n";
     std::cout << "Device name: "
@@ -200,7 +200,7 @@ int main() {
       }
 
       // Wait for kernels to finish
-      q->wait();
+      q.wait();
 
       t1_kernel = e.get_profiling_info<info::event_profiling::command_start>();
       t2_kernel = e.get_profiling_info<info::event_profiling::command_end>();
@@ -244,14 +244,14 @@ int main() {
   } catch (sycl::exception const& e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
-    
+
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
       std::cerr << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR.\n"; 
+                   "-DFPGA_EMULATOR.\n";
     }
     std::terminate();
   }

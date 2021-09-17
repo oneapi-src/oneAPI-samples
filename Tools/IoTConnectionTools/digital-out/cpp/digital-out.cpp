@@ -49,8 +49,6 @@ void initPlatform(int& gpioPin) {
       break;
 #endif
     case INTEL_UP:
-    case INTEL_EDISON_FAB_C:
-    case INTEL_GALILEO_GEN2:
       break;
     case INTEL_MINNOWBOARD_MAX:  // Same for Minnowboard Turbot
       gpioPin = 104;

@@ -27,7 +27,7 @@
 // California and by the laws of the United States of America.
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 #include <fstream>
 #include <string>
@@ -151,9 +151,9 @@ int main(int argc, char *argv[]) {
 
   try {
 #ifdef FPGA_EMULATOR
-    INTEL::fpga_emulator_selector device_selector;
+    ext::intel::fpga_emulator_selector device_selector;
 #else
-    INTEL::fpga_selector device_selector;
+    ext::intel::fpga_selector device_selector;
 #endif
     auto prop_list = property_list{property::queue::enable_profiling()};
     queue q(device_selector, dpc_common::exception_handler, prop_list);
@@ -277,6 +277,10 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
 
   int buffers_count = iterations;
 
+  // padding for the input and output buffers to deal with granularity of
+  // kernel reads and writes
+  constexpr size_t kInOutPadding = 16 * kVec;
+
   // Create an array of kernel info structures and create buffers for kernel
   // input/output. The buffers are re-used between iterations, but enough 
   // disjoint buffers are created to support double-buffering.
@@ -292,9 +296,10 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
       kinfo[eng][i].file_size = isz;
       // Allocating slightly larger buffers (+ 16 * kVec) to account for
       // granularity of kernel writes
-      int outputSize = kinfo[eng][i].file_size + 16 * kVec < kMinBufferSize
-                           ? kMinBufferSize
-                           : kinfo[eng][i].file_size + 16 * kVec;
+      int outputSize =
+          ((isz + kInOutPadding) < kMinBufferSize) ? kMinBufferSize
+                                                   : (isz + kInOutPadding);
+      const size_t input_alloc_size = isz + kInOutPadding;
 
       // Pre-pin buffer using malloc_host() to improve DMA bandwidth.
       if (i >= 3) {
@@ -308,7 +313,7 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
         }
         if (kinfo[eng][i].poutput_buffer == NULL) {
           std::cout << "Cannot allocate output buffer.\n";
-          free(kinfo);
+          free(kinfo[eng]);
           return 1;
         }
         // zero pages to fully allocate them
@@ -327,7 +332,7 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
                                       : new buffer<unsigned, 1>(kMinBufferSize);
       kinfo[eng][i].pibuf = i >= 3
                                 ? kinfo[eng][i - 3].pibuf
-                                : new buffer<char, 1>(kinfo[eng][i].file_size);
+                                : new buffer<char, 1>(input_alloc_size);
       kinfo[eng][i].pobuf =
           i >= 3 ? kinfo[eng][i - 3].pobuf : new buffer<char, 1>(outputSize);
       kinfo[eng][i].pobuf_decompress = (char *)malloc(kinfo[eng][i].file_size);

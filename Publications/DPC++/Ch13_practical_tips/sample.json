@@ -1,0 +1,58 @@
+{
+  "guid": "df1ff4bd-e4b7-4b56-a23c-32c1abb06dfb",
+  "name": "Chapter 13 - Practical Tips",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_13_4_stream.cpp - sycl::stream * fig_13_6_common_buffer_pattern.cpp - Common pattern—buffer creation from a host allocation * fig_13_7_common_pattern_bug.cpp - Common bug: Reading data directly from host allocation during buffer lifetime * fig_13_8_host_accessor.cpp - Recommendation: Use a host accessor to read kernel result * fig_13_9_host_accessor_for_init.cpp - Recommendation: Use host accessors for buffer initialization and reading of results * fig_13_10_host_accessor_deadlock.cpp - Bug (hang!) from improper use of host_accessors ",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch13_practical_tips",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_13_10_host_accessor_deadlock",
+          "make fig_13_8_host_accessor",
+          "make fig_13_7_common_pattern_bug",
+          "make fig_13_6_common_buffer_pattern",
+          "make fig_13_9_host_accessor_for_init",
+          "make fig_13_4_stream"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_13_10_host_accessor_deadlock",
+          "nmake fig_13_8_host_accessor",
+          "nmake fig_13_7_common_pattern_bug",
+          "nmake fig_13_6_common_buffer_pattern",
+          "nmake fig_13_9_host_accessor_for_init",
+          "nmake fig_13_4_stream"
+        ]
+      }
+    ]
+  }
+}

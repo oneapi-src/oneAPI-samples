@@ -47,113 +47,62 @@ class ArrayMap {
 //
 // MapJoin implementation
 //
-template <typename MapType, int map_size, typename T2Data, int t2_win_size,
-          typename JoinType, bool drain=false>
-class MapJoiner {
+template<typename MapType, typename T2Pipe, typename T2Data, int t2_win_size,
+         typename JoinPipe, typename JoinType>
+void MapJoin(MapType& map) {
+  //////////////////////////////////////////////////////////////////////////////
   // static asserts
-  static_assert(map_size > 0,
-    "Map size must be positive and non-zero");
   static_assert(t2_win_size > 0,
     "Table 2 window size must be positive and non-zero");
   static_assert(
       std::is_same<unsigned int, decltype(T2Data().PrimaryKey())>::value,
       "T2Data must have 'PrimaryKey()' function that returns an 'unsigned "
       "int'");
-  static_assert(std::is_same<bool, decltype(MapType().valid)>::value,
-    "MapType must have a 'valid' boolean member");
   static_assert(std::is_same<bool, decltype(T2Data().valid)>::value,
     "T2Data must have a 'valid' boolean member");
   static_assert(std::is_same<bool, decltype(JoinType().valid)>::value,
     "JoinType must have a 'valid' boolean member");
+  //////////////////////////////////////////////////////////////////////////////
 
- public:
-  MapJoiner(unsigned int t2_size) : t2_size_(t2_size) {}
+  bool done = false;
 
-  void Init() {
-    map.Init();
-  }
+  while (!done) {
+    // read from the input pipe
+    bool valid_pipe_read;
+    StreamingData<T2Data, t2_win_size> in_data = T2Pipe::read(valid_pipe_read);
 
-  //
-  // do the join
-  //
-  template<typename JoinReadCallback, typename JoinWriteCallback>
-  void Go(JoinReadCallback t2_reader, JoinWriteCallback out_writer) {
-    ////////////////////////////////////////////////////////////////////////////
-    // static asserts
-    static_assert(std::is_invocable_r<StreamingData<T2Data, t2_win_size>,
-                                      JoinReadCallback>::value,
-      "JoinTable1ReadCallback must be invocable and return "
-      "NTuple<T1WinSize,T2Data>");
-    static_assert(std::is_invocable<JoinWriteCallback,
-                                    StreamingData<JoinType, t2_win_size>>::value,
-      "JoinWriteCallback must be invocable and accept one "
-      "NTuple<t2_win_size,JoinType> argument");
-    ////////////////////////////////////////////////////////////////////////////
+    // check if the producer is done
+    done = in_data.done && valid_pipe_read;
 
-    bool done = false;
-    ShannonIterator<int,3,t2_win_size> i(0,t2_size_);
+    if (!done && valid_pipe_read) {
+      // join the input data windows into output data
+      StreamingData<JoinType, t2_win_size> join_data(false, true);
 
-    do {
-      // grab data from callback
-      StreamingData<T2Data, t2_win_size> in_data = t2_reader();
+      // initialize all outputs to false
+      UnrolledLoop<0, t2_win_size>([&](auto i) { 
+        join_data.data.template get<i>().valid = false;
+      });
 
-      // check if upstream is telling us we are done
-      done = in_data.done;
+      // check for match in the map and join if valid
+      UnrolledLoop<0, t2_win_size>([&](auto j) {
+        const bool t2_win_valid = in_data.data.template get<j>().valid;
+        const unsigned int t2_key =
+            in_data.data.template get<j>().PrimaryKey();
 
-      if (in_data.valid && !done) {
-        // join the input data windows into output data
-        StreamingData<JoinType, t2_win_size> join_data(false, true);
+        auto [data_valid, map_data] = map.Get(t2_key);
 
-        // initialize all outputs to false
-        UnrolledLoop<0, t2_win_size>([&](auto i) { 
-          join_data.data.template get<i>().valid = false;
-        });
-
-        // check for match in the map and join if valid
-        UnrolledLoop<0, t2_win_size>([&](auto j) {
-          const bool t2_win_valid = in_data.data.template get<j>().valid;
-          const unsigned int t2_key =
-              in_data.data.template get<j>().PrimaryKey();
-
-          bool dataValid;
-          MapType mapData;
-          std::tie(dataValid, mapData) = map.Get(t2_key);
-
-          if (t2_win_valid && dataValid) {
-            // NOTE: order below important if Join() overrides valid
-            join_data.data.template get<j>().valid = true;
-            join_data.data.template get<j>().Join(mapData,
-                                                 in_data.data.template get<j>());
-          }
-        });
-
-        // write out joined data
-        out_writer(join_data);
-
-        // move table 2 iterator
-        i.Step();
-      }
-
-    } while (i.InRange() && !done);
-
-    // drain the input if told to by template parameter
-    if (drain) {
-      while (!done && i.InRange()) {
-        auto in_data = t2_reader();
-        if(in_data.valid) {
-          done = in_data.done;
-          i.Step();
+        if (t2_win_valid && data_valid) {
+          // NOTE: order below important if Join() overrides valid
+          join_data.data.template get<j>().valid = true;
+          join_data.data.template get<j>().Join(map_data,
+                                                in_data.data.template get<j>());
         }
-      }
+      });
+
+      // write out joined data
+      JoinPipe::write(join_data);
     }
   }
-
-  // the map for table 1
-  ArrayMap<MapType, map_size> map;
-
- private:
-  // the size of table 2 (maximum number of rows we will see for table 2)
-  unsigned int t2_size_;
-};
+}
 
 #endif /* __MAPJOIN_HPP__ */

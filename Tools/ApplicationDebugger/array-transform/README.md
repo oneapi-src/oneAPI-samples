@@ -1,6 +1,6 @@
 # `array-transform` Sample
 
-This is a small DPC++ example for exercising application debugging using
+This is a small DPC++ code sample for exercising application debugging using
 Intel&reg; Distribution for GDB\*.  It is highly recommended that you go
 through this sample *after* you familiarize yourself with the basics of
 DPC++, and *before* you start using the debugger.
@@ -22,12 +22,12 @@ of the application debugger.
 The `array-transform` sample is a DPC++ application with a small
 computation kernel that is designed to illustrate key debugger
 features such as breakpoint definition, thread switching,
-scheduler-locking, and SIMD lane views.  The sample is intended
+scheduler-locking and SIMD lane views.  The sample is intended
 for exercising the debugger, not for performance benchmarking.
 
 The debugger supports debugging kernels that run on the CPU, GPU, or
-the accelerator devices.  For convenience, the `array-transform`
-sample provides ability to select the target device by passing the
+accelerator devices.  For convenience, the `array-transform`
+code sample provides the ability to select the target device by passing the
 program `cpu`, `gpu`, or `accelerator` as the command-line argument.
 The selected device is displayed in the output.  Concrete instructions
 about how to run the program and example outputs are given further
@@ -45,7 +45,10 @@ illustrate (in)active SIMD lanes on a GPU.
 
 ## License
 
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building and Running the `array-transform` Program
 
@@ -76,7 +79,7 @@ system.
 ### Running Samples In DevCloud
 
 If running a sample in the Intel DevCloud, remember that you must
-specify the compute node (CPU, GPU, FPGA) as well whether to run in
+specify the compute node (CPU, GPU, FPGA) and whether to run in
 batch or interactive mode.  For the array transform sample, a node
 with GPU and an interactive shell is recommended.
 
@@ -84,7 +87,7 @@ with GPU and an interactive shell is recommended.
 $ qsub -I -l nodes=1:gpu:ppn=2
 ```
 
-For more information see the Intel® oneAPI
+For more information, see the Intel® oneAPI
 Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
@@ -94,7 +97,7 @@ Base Toolkit Get Started Guide
 The debugger has a feature called _auto-attach_ that automatically
 starts and connects an instance of `gdbserver-gt` so that kernels
 offloaded to the GPU can be debugged conveniently.  Auto-attach is
-by default enabled.  To turn this feature off, if desired (e.g. if
+by default enabled.  To turn this feature off, if desired (e.g., if
 interested in debugging CPU or FPGA-emu only), do:
 ```
 $ export INTELGT_AUTO_ATTACH_DISABLE=1
@@ -147,7 +150,7 @@ compilation of the kernel.  However, it also offers an option for
 ahead-of-time for a specific device, set the `DPCPP_COMPILE_TARGET`
 option to the desired device during configuration.  For CPU, use the
 `cpu` value; for FPGA-emu, use the `fpga-emu` value.  Other values are
-assumed to be for GPU, and are passed directly to the GPU AoT
+assumed to be for GPU and are passed directly to the GPU AoT
 compiler.
 
 > *Hint:* Run `ocloc compile --help` to see available GPU device options.
@@ -182,19 +185,14 @@ see the
 #### Visual Studio IDE
 
 1. Right-click on the solution files and open via either Visual Studio 2017
-   or 2019.
+   or in 2019.
 
-2. Open in Visual Studio "Tools > Options > Debugging > General" and
-   ensure that "Require source files to exactly match the original
-   version" Debugging option is **not** checked.  
-   ![](vs-debugger-option.png)
+2. Select Menu "Build > Build Solution" to build the selected configuration.
 
-3. Select Menu "Build > Build Solution" to build the selected configuration.
+3. Select Menu "Debug > Start Debugging" to run the program.
 
-4. Select Menu "Debug > Start Debugging" to run the program.
-
-5. The solution file is configured to pass `cpu` as the argument to the
-   program.  To select a different device, go to project's "Configuration
+4. The solution file is configured to pass `cpu` as the argument to the
+   program.  To select a different device, go to the project's "Configuration
    Properties > Debugging" and set the "Command Arguments" field.
    Use `gpu` or `accelerator` to target the GPU or the FPGA emulator device,
    respectively.
@@ -213,7 +211,7 @@ Reading symbols from ./array-transform...
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) Core(TM) i9-7900X CPU @ 3.30GHz] from [Intel(R) OpenCL]
+[SYCL] Using device: [Intel(R) Core(TM) i9-7900X processor] from [Intel(R) OpenCL]
 [Switching to Thread 0x7fffe3bfe700 (LWP 925)]
 
 Thread 16 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
@@ -230,7 +228,7 @@ Reading symbols from ./array-transform...
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM)]
+[SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 [Switching to Thread 0x7fffe1ffb700 (LWP 2387)]
 
 Thread 9 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
@@ -247,7 +245,7 @@ Reading symbols from ./array-transform...
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) Gen9] from [Intel(R) Level-Zero]
+[SYCL] Using device: [Intel(R) Iris(R) Plus Graphics 650 [0x5927]] from [Intel(R) Level-Zero]
 ...<snip>...
 [Switching to Thread 1073741824 lane 0]
 
@@ -268,7 +266,7 @@ at array-transform.cpp:56
 : Start the program, optionally with arguments.
 
 `break <filename>:<line>`
-: Define a breakpoint at given source file's specified line.
+: Define a breakpoint at the given source file's specified line.
 
 `info break`
 : Show the defined breakpoints.
@@ -277,7 +275,7 @@ at array-transform.cpp:56
 : Remove the `N`th breakpoint.
 
 `watch <exp>`
-: Stop when value of the expression `exp` changes.
+: Stop when the value of the expression `exp` changes.
 
 `step`, `next`
 : Single-step a source line, stepping into/over function calls.
@@ -318,14 +316,14 @@ at array-transform.cpp:56
 
 `thread apply <thread_id>:<lane> <cmd>`
 : Apply command `cmd` to the specified lane of the thread.
-  E.g: `thread apply 2.3:* print element` prints
+  E.g.: `thread apply 2.3:* print element` prints
   `element` for each active lane of thread 2.3.
   Useful for inspecting vectorized values.
 
 `x /<format> <addr>`
 : Examine the memory at address `addr` according to
-  `format`.  E.g: `x /i $pc` shows the instruction pointed by
-  the program counter.  `x /8wd &count` shows 8 words in decimal
+  `format`.  E.g.: `x /i $pc` shows the instruction pointed by
+  the program counter.  `x /8wd &count` shows eight words in decimal
   format located at the address of `count`.
 
 `set nonstop on/off`

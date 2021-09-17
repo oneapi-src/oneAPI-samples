@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iostream>
 #include <vector>
 
@@ -17,8 +17,9 @@ using namespace sycl;
 // Vector size for this example
 constexpr size_t kSize = 1024;
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declare the kernel name in the global scope to reduce name mangling. 
+// This is an FPGA best practice that makes it easier to identify the kernel in 
+// the optimization reports.
 class VectorAdd;
 
 
@@ -35,9 +36,9 @@ int main() {
   //  - the FPGA emulator device (CPU emulation of the FPGA)
   //  - the FPGA device (a real FPGA)
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
@@ -64,15 +65,19 @@ int main() {
 
         // The SYCL runtime uses the accessors to infer data dependencies.
         // A "read" accessor must wait for data to be copied to the device
-        // before the kernel can start. A "write noinit" accessor does not.
+        // before the kernel can start. A "write no_init" accessor does not.
         accessor a(buf_a, h, read_only);
         accessor b(buf_b, h, read_only);
-        accessor r(buf_r, h, write_only, noinit);
+        accessor r(buf_r, h, write_only, no_init);
 
         // The kernel uses single_task rather than parallel_for.
         // The task's for loop is executed in pipeline parallel on the FPGA,
         // exploiting the same parallelism as an equivalent parallel_for.
-        h.single_task<VectorAdd>([=]() {
+        //
+        // The "kernel_args_restrict" tells the compiler that a, b, and r
+        // do not alias. For a full explanation, see:
+        //    DPC++FPGA/Tutorials/Features/kernel_args_restrict
+        h.single_task<VectorAdd>([=]() [[intel::kernel_args_restrict]] {
           for (int i = 0; i < kSize; ++i) {
             r[i] = a[i] + b[i];
           }
