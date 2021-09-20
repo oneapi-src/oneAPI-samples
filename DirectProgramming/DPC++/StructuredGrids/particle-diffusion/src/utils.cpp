@@ -7,7 +7,7 @@
 // utils: Intel® oneAPI DPC++ utility functions
 // used in motionsim.cpp and motionsim_kernel.cpp
 //
-
+#include <string>
 #include "motionsim.hpp"
 using namespace std;
 

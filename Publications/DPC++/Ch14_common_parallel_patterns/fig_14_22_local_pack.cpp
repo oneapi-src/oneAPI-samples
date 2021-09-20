@@ -58,15 +58,15 @@ int main() {
 
            // Pack neighbors that require post-processing into a list
            uint32_t pack = (i != j) and (r <= CUTOFF);
-           uint32_t offset = exclusive_scan(sg, pack, plus<>());
+           uint32_t offset = exclusive_scan(sg, pack, sycl::ONEAPI::plus<>());
            if (pack) {
              neighbors[i * MAX_K + k + offset] = j;
            }
 
            // Keep track of how many neighbors have been packed so far
-           k += reduce(sg, pack, plus<>());
+           k += reduce(sg, pack, sycl::ONEAPI::plus<>());
          }
-         num_neighbors[i] = reduce(sg, k, maximum<>());
+         num_neighbors[i] = reduce(sg, k, sycl::ONEAPI::maximum<>());
        })
       .wait();
 

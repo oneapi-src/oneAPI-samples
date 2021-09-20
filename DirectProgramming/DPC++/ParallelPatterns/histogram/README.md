@@ -1,6 +1,6 @@
 ﻿# `Histogram` Sample
 
-This sample demonstrates a histogram that groups numbers together and provides the count of a particular number in the input. In this sample we are using dpstd APIs to offload the computation to the selected device.
+This sample demonstrates a histogram that groups numbers together and provides the count of a particular number in the input. In this sample we are using oneDPL APIs to offload the computation to the selected device.
 
 For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
 
@@ -12,7 +12,7 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 
 
 ## Purpose
-This sample creates both dense and sparse histograms using dpstd APIs, on an input array of 1000 elements with values chosen randomly berween 0 and 9. To differentiate between sparse and dense histogram, we make sure that one of the values never occurs in the input array, i.e. one bin will have always have 0 value.
+This sample creates both dense and sparse histograms using oneDPL APIs, on an input array of 1000 elements with values chosen randomly berween 0 and 9. To differentiate between sparse and dense histogram, we make sure that one of the values never occurs in the input array, i.e. one bin will have always have 0 value.
 
 For the dense histogram all the bins(including the zero-size bins) are stored, whereas for the sparse algorithm only non-zero sized bins are stored.
 

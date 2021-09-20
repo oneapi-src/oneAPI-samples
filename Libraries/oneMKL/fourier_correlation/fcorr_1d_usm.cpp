@@ -13,6 +13,7 @@
 #include <mkl.h>
 #include <CL/sycl.hpp>
 #include <iostream>
+#include <string>
 #include <oneapi/mkl/dfti.hpp>
 #include <oneapi/mkl/rng.hpp>
 #include <oneapi/mkl/vm.hpp>

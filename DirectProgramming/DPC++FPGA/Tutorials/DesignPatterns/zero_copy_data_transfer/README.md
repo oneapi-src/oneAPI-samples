@@ -13,7 +13,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | What you will learn               | How to use SYCL USM host allocations for the FPGA
 | Time to complete                  | 15 minutes
 
-_Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX)_
+*Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) with USM support (i.e., intel_s10sx_pac:pac_s10_usm)*
 
 ## Purpose
 The purpose of this tutorial is to show you how to take advantage of zero-copy host memory for the FPGA to improve the performance of your design. On FPGA, DPC++ implements all host and shared allocations as *zero-copy* data in host memory. This means that the FPGA will access the data directly over PCIe, which can improve performance in cases where there is little or no temporal reuse of data in the FPGA kernel. This tutorial includes two different kernels: one using traditional SYCL buffers (`src/buffer_kernel.hpp`) and one using USM host allocations (`src/restricted_usm_kernel.hpp`) that takes advantage of zero-copy host memory. Before completing this tutorial, it is suggested you review the **Explicit USM** (explicit_usm) tutorial.
@@ -78,7 +78,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
    You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -111,7 +111,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
    You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
