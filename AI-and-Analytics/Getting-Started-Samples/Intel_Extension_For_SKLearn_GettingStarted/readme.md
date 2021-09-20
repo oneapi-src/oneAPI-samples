@@ -17,7 +17,7 @@ Intel(R) Extension for Scikit-learn* depends on Intel(R) daal4py. daal4py is a s
 In this sample, you will run a support vector classifier model from sklearn with oneDAL daal4py library memory objects. You will also learn how to train a model and save the information to a file.
   
 ## Key Implementation Details 
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Intel(R) Extension for Scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). Intel(R) Extension for Scikit-learn is available as a part of [Intel® oneAPI AI Analytics Toolkit(AI kit)]   
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Intel(R) Extension for Scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python* as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). Intel(R) Extension for Scikit-learn is available as a part of [Intel® oneAPI AI Analytics Toolkit(AI kit)]   
 
 ## License  
 Code samples are licensed under the MIT license. See

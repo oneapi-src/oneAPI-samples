@@ -6,7 +6,7 @@
 
 /*******************************************************************************
 !  Content:
-!      Black-Scholes formula MKL VML based Example
+!      Black-Scholes formula Intel® Math Kernel Library (Intel® MKL) VML based Example
 !******************************************************************************/
 
 #include <algorithm>
