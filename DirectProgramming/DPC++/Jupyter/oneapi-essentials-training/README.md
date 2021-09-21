@@ -35,7 +35,7 @@ Notebook Name: Owner
 * Introduction and Motivation for oneAPI and DPC++
 * DPC++ __Hello World__
 * Compiling DPC++ and __DevCloud__ Usage
-* _Lab Excercise_: Vector Increment to Vector Add
+* _Lab Exercise_: Vector Increment to Vector Add
 
 [DPCPP_Program_Structure](02_DPCPP_Program_Structure): Praveen.K.Kundurthy@intel.com
 * __Classes__ - device, device_selector, queue, basic kernels and ND-Range kernels, Buffers-Accessor memory model
@@ -62,8 +62,12 @@ Notebook Name: Owner
 
 [Intel_VTune_Profiler](06_Intel_VTune_Profiler): Rakshith.Krishnappa@intel.com
 * Intel VTune Profiler usage __in Intel DevCloud__ environment using command-line options
-* _Lab Excercise_: VTune Profiling by collecting __gpu_hotspots__ for [iso3dfd](https://github.com/intel/HPCKit-code-samples/tree/master/Compiler/iso3dfd_dpcpp) sample application
+* _Lab Exercise_: VTune Profiling by collecting __gpu_hotspots__ for [iso3dfd](https://github.com/intel/HPCKit-code-samples/tree/master/Compiler/iso3dfd_dpcpp) sample application
 
 [Intel oneAPI DPC++ Library (oneDPL)](07_DPCPP_Library): Praveen.K.Kundurthy@intel.com
 * Introduction to DPC++ Library
-* _Lab Excercise_: Gamma Correction with oneDPL
+* _Lab Exercise_: Gamma Correction with oneDPL
+
+[Intel_Distribution_for_GDB](11_Intel_Distribution_for_GDB): Karl.Qi@intel.com
+* Debug GPU Applications with the Intel Distribution for GDB in __Intel DevCloud__ environment 
+* _Lab Exercise_: Debug array transform running on GPU
