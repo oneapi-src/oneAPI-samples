@@ -44,7 +44,7 @@ from tensorflow import keras
 tf.compat.v1.disable_eager_execution()
 '''
 Environment settings:
-Set MKLDNN_VERBOSE=1 to show Intel Deep Neural Network Library (Intel® DNNL) run time verbose
+Set MKLDNN_VERBOSE=1 to show Intel Deep Neural Network Library (Intel DNNL) run time verbose
 Set KMP_AFFINITY=verbose to show OpenMP thread information
 '''
 #import os; os.environ["MKLDNN_VERBOSE"] = "1"
