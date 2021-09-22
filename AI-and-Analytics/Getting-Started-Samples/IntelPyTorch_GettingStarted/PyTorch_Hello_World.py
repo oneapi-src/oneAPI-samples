@@ -110,7 +110,7 @@ def main():
 
         model.eval()
         '''
-        1. User is suggested to use JIT mode to get best performance with Intel® Deep Neural Network Library (Intel® DNNL) with minimum change of Pytorch code. User may need to pass an explicit flag or invoke a specific Intel DNNL optimization pass. The PyTorch DNNL JIT backend is under development (RFC link https://github.com/pytorch/pytorch/issues/23657), so the example below is given in imperative mode.
+        1. User is suggested to use JIT mode to get best performance with Intel Deep Neural Network Library (Intel DNNL) with minimum change of Pytorch code. User may need to pass an explicit flag or invoke a specific Intel DNNL optimization pass. The PyTorch DNNL JIT backend is under development (RFC link https://github.com/pytorch/pytorch/issues/23657), so the example below is given in imperative mode.
         2. To have model accelerated by Intel DNNL under imperative mode, user needs to explicitly insert format conversion for Intel DNNL operations using tensor.to_mkldnn() and to_dense(). For best result, user needs to insert the format conversion on the boundary of a sequence of Intel DNNL operations. This could boost performance significantly.
         3. For inference task, user needs to prepack the model’s weight using mkldnn_utils.to_mkldnn(model) to save the weight format conversion overhead. It could bring good performance gain sometime for single batch inference.
         '''
