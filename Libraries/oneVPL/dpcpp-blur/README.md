@@ -7,7 +7,7 @@ oneAPI Video Processing Library to perform a simple video content blur.
 |----------------- | ----------------------------------------
 | OS               | Ubuntu* 20.04
 | Hardware         | Intel® Processor Graphics GEN9 or newer
-| Software         | Intel® oneAPI Video Processing Library(oneVPL)
+| Software         | oneAPI Video Processing Library (oneVPL)
 | What You Will Learn | How to use oneVPL and DPC++ to convert raw video files into BGRA and blur each frame.
 | Time to Complete | 5 minutes
 
@@ -21,7 +21,7 @@ This sample is a command line application that takes a file containing a raw
 format video file as an argument, converts it to BGRA with oneVPL, blurs each frame with DPC++ by using SYCL kernel,
 and writes the processed output to `out.bgra` in BGRA format.
 
-GPU optimization is available in Linux, including oneAPI level zero optimizations allowing the kernel to run 
+GPU optimization is available in Linux, including oneAPI Level Zero optimizations allowing the kernel to run 
 directly on VPL output without copies to/from CPU memory.
 
 ## Key Implementation details

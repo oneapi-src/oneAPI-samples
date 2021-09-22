@@ -16,7 +16,7 @@ Stable sort by key is a sorting operation when sorting two sequences (keys and v
 The sample models stable sorting by key: during the sorting of 2 sequences (keys and values), only keys are compared, but keys and values are swapped.
 It fills two buffers (one of the buffers is filled using `counting_iterator`) and then sorts them using `zip_iterator`.
 
-The sample demonstrates how to use `counting_iterator` and `zip_iterator` using Intel&reg; oneAPI DPC++ library (oneDPL).
+The sample demonstrates how to use `counting_iterator` and `zip_iterator` using Intel&reg; oneAPI DPC++ Library (oneDPL).
 * `counting_iterator` helps fill the sequence with the numbers zero through `n` using std::copy.
 * `zip_iterator` provides the ability to iterate over several sequences simultaneously.
 
