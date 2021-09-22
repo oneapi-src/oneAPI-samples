@@ -22,7 +22,7 @@ if (InferenceEngine_FOUND)
 endif()
 
 if (NOT InferenceEngine_FOUND)
-  message(STATUS "ERROR: OpenVINO™ with version 2021.2 or newer required.")
+  message(STATUS "ERROR: OpenVINO with version 2021.2 or newer required.")
   if (IE_VERSION)
     message(STATUS "   Found only ${IE_VERSION}")
   endif()
