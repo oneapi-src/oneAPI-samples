@@ -14,12 +14,12 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Time to complete                  | 15 minutes
 
 ## Purpose
-This tutorial demonstrates how to use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute to set the fMAX target for a single kernel. The purpose this attribute serves is to direct the compiler to prioritize a high fMAX over a low II. If you are not yet familiar with the `[[intel::initiation_interval(N)]]` attribute which can change the initiation interval (II) of a loop to improve performance, refer to the prerequisite tutorial "Loop initiation_interval attribute".
+This tutorial demonstrates how to use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute to set the fMAX target for a single kernel. The purpose this attribute serves is to direct the compiler to prioritize a high fMAX over a low initiation interval (II). If you are not yet familiar with the `[[intel::initiation_interval(N)]]` attribute which can change the II of a loop to improve performance, refer to the prerequisite tutorial "Loop initiation_interval attribute".
 
 ### Specifying Schedule fMAX Target for Kernels
-The compiler provides two methods as following to specify fMAX target for kernels.
+The compiler provides two methods to specify fMAX target for kernels:
 * By using the `[[intel::scheduler_target_fmax_mhz(N)]]` source-level attribute on a given kernel. This is the focus of this tutorial.
-* By using the `-Xsclock=<clock target in Hz/KHz/MHz/GHz or s/ms/us/ns/ps>` option in the dpcpp command to direct the compiler to globally compile all kernels at a specifit fMAX target.
+* By using the `-Xsclock=<clock target in Hz/KHz/MHz/GHz or s/ms/us/ns/ps>` option in the dpcpp command to direct the compiler to globally compile all kernels at a specific fMAX target.
 
 If you use both the command-line option `-Xsclock` and the source-level attribute `[[intel::scheduler_target_fmax_mhz(N)]]`, the attribute takes priority.
 
@@ -31,7 +31,7 @@ You should use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute if you wa
 It is recommended that you use `[[intel::initiation_interval(N)]]` attribute on performance critical loops when using the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute. The `[[intel::initiation_interval(N)]]` attribute takes priority over the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute when they are both used on the same kernel.
 
 ### Understanding the Tutorial Design
-In the tutorial, all three kernels implement the same function (BKDR Hash). The only difference is how the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute and the `[[intel::initiation_interval(N)]]` attribute are applied.
+In the tutorial, all four kernels implement the same function (BKDR Hash). The only difference is how the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute and the `[[intel::initiation_interval(N)]]` attribute are applied. All specific numbers mentioned below are expected observations on Intel Arria® 10 GX FPGA. Even so, the tradeoff between fMAX and II is also expected on other devices.
 
 In kernel `Default`, no fMAX or II constraints are provided. By default, the compiler tries to optimize throughput using heuristics to balance high fMAX and small II. The block `B1` is scheduled at less than 240 MHz, so this block is limiting this kernel's fMAX but is able to achieve II=1.
 
@@ -141,7 +141,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Examining the Reports
-Locate `report.html` in the `scheduler_target_fmax_report.prj/reports/` or `scheduler_target_fmax_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the `scheduler_target_fmax_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
 Navigate to the Loop Analysis table (Throughput Analysis > Loop Analysis). In kernel `Default`, block `B1` is scheduled at less than 240 MHz but has II=1. In kernel `Fmax240Attr` and `Fmax480Attr`, all blocks are scheduled at the target fMAX, but they have II>1. In kernel `Fmax240IIAttr`, similar to kernel `Default`, block `B1` is scheduled at less than 240 MHz but has II=1.
 
