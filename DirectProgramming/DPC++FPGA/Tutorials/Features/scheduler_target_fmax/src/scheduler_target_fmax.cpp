@@ -16,8 +16,10 @@ constexpr unsigned seed = 1313;
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-class NoSchedulerTargetFMAX;
-class SchedulerTargetFMAX;
+class Default;
+class Fmax480Attr;
+class Fmax240Attr;
+class Fmax240IIAttr;
 
 // Runs the Kernel
 void KernelRun(size_t size, const std::vector<char> &input_data,
@@ -37,11 +39,11 @@ void KernelRun(size_t size, const std::vector<char> &input_data,
     buffer input_buffer(input_data);
     buffer output_buffer(output_data);
 
-    auto e_g = q.submit([&](handler &h) {
+    q.submit([&](handler &h) {
       accessor input_a(input_buffer, h, read_only);
       accessor output_a(output_buffer, h, write_only, no_init);
 
-      h.single_task<NoSchedulerTargetFMAX>([=
+      h.single_task<Default>([=
       ]() [[intel::kernel_args_restrict]] {
         unsigned hash = 0;
         for (size_t i = 0; i < size; i++) {
@@ -51,11 +53,11 @@ void KernelRun(size_t size, const std::vector<char> &input_data,
       });
     });
 
-    auto e_l = q.submit([&](handler &h) {
+    q.submit([&](handler &h) {
       accessor input_a(input_buffer, h, read_only);
       accessor output_a(output_buffer, h, write_only, no_init);
 
-      h.single_task<SchedulerTargetFMAX>([=
+      h.single_task<Fmax480Attr>([=
       ]() [[intel::kernel_args_restrict,
             intel::scheduler_target_fmax_mhz(480)]] {
         unsigned hash = 0;
@@ -63,6 +65,37 @@ void KernelRun(size_t size, const std::vector<char> &input_data,
           hash = (hash * seed) + input_a[i];
         }
         output_a[1] = hash;
+      });
+    });
+
+    q.submit([&](handler &h) {
+      accessor input_a(input_buffer, h, read_only);
+      accessor output_a(output_buffer, h, write_only, no_init);
+
+      h.single_task<Fmax240Attr>([=
+      ]() [[intel::kernel_args_restrict,
+            intel::scheduler_target_fmax_mhz(240)]] {
+        unsigned hash = 0;
+        for (size_t i = 0; i < size; i++) {
+          hash = (hash * seed) + input_a[i];
+        }
+        output_a[2] = hash;
+      });
+    });
+
+    q.submit([&](handler &h) {
+      accessor input_a(input_buffer, h, read_only);
+      accessor output_a(output_buffer, h, write_only, no_init);
+
+      h.single_task<Fmax240IIAttr>([=
+      ]() [[intel::kernel_args_restrict,
+            intel::scheduler_target_fmax_mhz(240)]] {
+        unsigned hash = 0;
+        [[intel::initiation_interval(1)]]
+        for (size_t i = 0; i < size; i++) {
+          hash = (hash * seed) + input_a[i];
+        }
+        output_a[3] = hash;
       });
     });
 
@@ -94,21 +127,33 @@ int main() {
   // input string "qr6KUBBmLtVUlX9"
   std::vector<char> input_data = {'q', 'r', '6', 'K', 'U', 'B', 'B', 'm',
                                   'L', 't', 'V', 'U', 'l', 'X', '9'};
-  std::vector<unsigned> output_data(2);
+  std::vector<unsigned> output_data(4);
 
   KernelRun(input_data.size(), input_data, output_data);
 
   bool passed = true;
   unsigned golden = BKDRHashGolden(input_data);
   if (output_data[0] != golden) {
-    std::cout << "Kernel NoSchedulerTargetFMAX Output Mismatch: \n"
+    std::cout << "Kernel Default Output Mismatch: \n"
               << "output = " << output_data[0] << ", golden = " << golden
               << "\n";
     passed = false;
   }
   if (output_data[1] != golden) {
-    std::cout << "Kernel SchedulerTargetFMAX Output Mismatch: \n"
+    std::cout << "Kernel Fmax480Attr Output Mismatch: \n"
               << "output = " << output_data[1] << ", golden = " << golden
+              << "\n";
+    passed = false;
+  }
+  if (output_data[2] != golden) {
+    std::cout << "Kernel Fmax240Attr Output Mismatch: \n"
+              << "output = " << output_data[2] << ", golden = " << golden
+              << "\n";
+    passed = false;
+  }
+  if (output_data[3] != golden) {
+    std::cout << "Kernel Fmax240IIAttr Output Mismatch: \n"
+              << "output = " << output_data[3] << ", golden = " << golden
               << "\n";
     passed = false;
   }
