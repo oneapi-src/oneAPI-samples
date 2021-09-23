@@ -14,7 +14,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Time to complete                  | 15 minutes
 
 ## Purpose
-This tutorial demonstrates how to use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute to direct the compiler to prioritize a high fMAX over a low II. If you are not yet familiar with the `[[intel::initiation_interval(N)]]` attribute which can change the initiation interval (II) of a loop to improve performance, refer to the prerequisite tutorial "Loop initiation_interval attribute".
+This tutorial demonstrates how to use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute to set the fMAX target for a single kernel. The purpose this attribute serves is to direct the compiler to prioritize a high fMAX over a low II. If you are not yet familiar with the `[[intel::initiation_interval(N)]]` attribute which can change the initiation interval (II) of a loop to improve performance, refer to the prerequisite tutorial "Loop initiation_interval attribute".
 
 ### Specifying Schedule fMAX Target for Kernels
 The compiler provides two methods as following to specify fMAX target for kernels.
