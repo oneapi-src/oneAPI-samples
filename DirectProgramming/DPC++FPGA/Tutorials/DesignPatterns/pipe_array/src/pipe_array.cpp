@@ -7,6 +7,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <vector>
 #include "pipe_array.hpp"
 #include "unroller.hpp"

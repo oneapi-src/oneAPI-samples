@@ -46,7 +46,7 @@ Currently, only Linux platforms are supported. It is recommended to use Ubuntu 1
 To build and run the PointPillars sample, the following libraries have to be installed:
 1. Intel® Distribution of OpenVINO™ toolkit (at least 2021.1)
 2. Intel® oneAPI Base Toolkit (at least 2021.2)
-3. Boost (including `boost::program_options` library)
+3. Boost (including `boost::program_options` and `boost::filesystem` library). For Ubuntu, you may install the libboost-all-dev package.
 4. Optional: If the sample should be run on an Intel GPU, it might be necessary to upgrade the corresponding drivers. Therefore, please consult the following page: https://github.com/intel/compute-runtime/releases/
 
 
