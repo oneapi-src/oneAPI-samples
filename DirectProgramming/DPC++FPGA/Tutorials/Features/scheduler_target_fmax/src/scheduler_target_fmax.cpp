@@ -24,7 +24,6 @@ class Fmax240IIAttr;
 // Runs the Kernel
 void KernelRun(size_t size, const std::vector<char> &input_data,
                std::vector<unsigned> &output_data) {
-
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
 #else
@@ -43,8 +42,7 @@ void KernelRun(size_t size, const std::vector<char> &input_data,
       accessor input_a(input_buffer, h, read_only);
       accessor output_a(output_buffer, h, write_only, no_init);
 
-      h.single_task<Default>([=
-      ]() [[intel::kernel_args_restrict]] {
+      h.single_task<Default>([=]() [[intel::kernel_args_restrict]] {
         unsigned hash = 0;
         for (size_t i = 0; i < size; i++) {
           hash = (hash * seed) + input_a[i];
@@ -57,30 +55,30 @@ void KernelRun(size_t size, const std::vector<char> &input_data,
       accessor input_a(input_buffer, h, read_only);
       accessor output_a(output_buffer, h, write_only, no_init);
 
-      h.single_task<Fmax480Attr>([=
-      ]() [[intel::kernel_args_restrict,
-            intel::scheduler_target_fmax_mhz(480)]] {
-        unsigned hash = 0;
-        for (size_t i = 0; i < size; i++) {
-          hash = (hash * seed) + input_a[i];
-        }
-        output_a[1] = hash;
-      });
+      h.single_task<Fmax480Attr>([=]()
+                                     [[intel::kernel_args_restrict,
+                                       intel::scheduler_target_fmax_mhz(480)]] {
+                                       unsigned hash = 0;
+                                       for (size_t i = 0; i < size; i++) {
+                                         hash = (hash * seed) + input_a[i];
+                                       }
+                                       output_a[1] = hash;
+                                     });
     });
 
     q.submit([&](handler &h) {
       accessor input_a(input_buffer, h, read_only);
       accessor output_a(output_buffer, h, write_only, no_init);
 
-      h.single_task<Fmax240Attr>([=
-      ]() [[intel::kernel_args_restrict,
-            intel::scheduler_target_fmax_mhz(240)]] {
-        unsigned hash = 0;
-        for (size_t i = 0; i < size; i++) {
-          hash = (hash * seed) + input_a[i];
-        }
-        output_a[2] = hash;
-      });
+      h.single_task<Fmax240Attr>([=]()
+                                     [[intel::kernel_args_restrict,
+                                       intel::scheduler_target_fmax_mhz(240)]] {
+                                       unsigned hash = 0;
+                                       for (size_t i = 0; i < size; i++) {
+                                         hash = (hash * seed) + input_a[i];
+                                       }
+                                       output_a[2] = hash;
+                                     });
     });
 
     q.submit([&](handler &h) {
@@ -91,8 +89,7 @@ void KernelRun(size_t size, const std::vector<char> &input_data,
       ]() [[intel::kernel_args_restrict,
             intel::scheduler_target_fmax_mhz(240)]] {
         unsigned hash = 0;
-        [[intel::initiation_interval(1)]]
-        for (size_t i = 0; i < size; i++) {
+        [[intel::initiation_interval(1)]] for (size_t i = 0; i < size; i++) {
           hash = (hash * seed) + input_a[i];
         }
         output_a[3] = hash;
@@ -165,4 +162,3 @@ int main() {
   }
   return passed ? 0 : 1;
 }
-
