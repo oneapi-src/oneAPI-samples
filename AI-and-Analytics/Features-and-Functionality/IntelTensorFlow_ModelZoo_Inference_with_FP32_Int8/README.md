@@ -1,4 +1,4 @@
-# `Intel Model Zoo` Sample
+# `Intel® Model Zoo` Sample
 This code example provides a sample code to run ResNet50 inference on Intel's pretrained FP32 and Int8 model
 
 ## Purpose
@@ -54,7 +54,7 @@ conda activate user_tensorflow
 ## Navigate to Intel Model Zoo
 
 Navigate to the Intel Model Zoo source directory. It's located in your oneapi installation path, typically `/opt/intel/oneapi/modelzoo`.
-You can view the available Model Zoo release versions for the Intel AI Analytics toolkit:
+You can view the available Model Zoo release versions for the Intel AI Analytics Toolkit:
 ```
 ls /opt/intel/oneapi/modelzoo
 1.8.0  latest

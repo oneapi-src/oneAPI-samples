@@ -2,7 +2,7 @@
   "guid": "8E31124E-3F21-4A8F-A14A-950B7F008480",
   "name": "DPCPP Blur",
   "categories": ["Toolkit/oneAPI Libraries/oneVPL"],
-  "description": "Sample that shows how to use Intel® Video Processing Library (VPL) and Intel® oneAPI Data Parallel C++ (DPC++) to convert I420 raw video file in to BGRA and blur each frame",
+  "description": "Sample that shows how to use Intel(r) oneAPI Video Processing Library (VPL) and Intel(r) oneAPI Data Parallel C++ (DPC++) to convert I420 raw video file in to BGRA and blur each frame",
   "dependencies": ["vpl"],
   "os": ["linux"],
   "languages": [{"cpp":{}}],

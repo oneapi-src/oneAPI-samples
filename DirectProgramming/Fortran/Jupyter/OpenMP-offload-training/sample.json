@@ -3,7 +3,7 @@
   "name": "OpenMP Offload Fortran Tutorials",
   "categories": [ "Toolkit/oneAPI Direct Programming/Fortran/Tutorials Jupyter Notebooks" ],
   "description": "Fortran OpenMP Offload Basics using Jupyter Notebooks",
-  "toolchain": [ "ifx"],
+  "toolchain": [ "ifx" ],
   "languages": [ { "fortran": {} } ],
   "os": [ "linux" ],
   "builder": [ "make" ],
