@@ -123,12 +123,12 @@ You should see output similar to the following in the console:
 ```
 Running sort 17 times for an input size of 16777216 using 8 4-way merge units
 Streaming data from device memory
-Execution time: 69.9848 ms
-Throughput: 228.621 Melements/s
+Execution time: 24.7522 ms
+Throughput: 646.408 Melements/s
 PASSED
 ```
+NOTE: The performance numbers above were achieved using the Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX); your results may vary. <br/>
 NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance.
-    
 
 ## Additional Design Information
 ### Source Code Breakdown

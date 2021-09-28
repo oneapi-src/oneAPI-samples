@@ -41,7 +41,7 @@ if(FPGA_BOARD MATCHES ".*a10.*")
 elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(NUM_ENGINES 2)
-    set(LL_SEED "-Xsseed=6")
+    set(LL_SEED "-Xsseed=2")
     set(HIGH_BW_SEED "-Xsseed=2")
     set(NUM_REORDER "-Xsnum-reorder=6")
 elseif(FPGA_BOARD MATCHES ".*agilex.*")
@@ -77,7 +77,7 @@ message(STATUS "NUM_REORDER_LL=${NUM_REORDER_LL}")
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -g0 -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -MMD -fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg=\"-nocaching\" -Xsboard=${FPGA_BOARD} -DNUM_ENGINES=${NUM_ENGINES} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 

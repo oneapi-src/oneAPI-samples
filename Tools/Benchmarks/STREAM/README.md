@@ -1,6 +1,6 @@
 # STREAM Sample
 
-This sample contains a [STREAM](http://www.cs.virginia.edu/stream/) implementation using DPC++ for CPU and GPU. 
+This package contains a modified version of the [Stream Benchmark](http://www.cs.virginia.edu/stream/) implementation using DPC++ for CPU and GPU. 
 
 
 | Optimized for                       | Description

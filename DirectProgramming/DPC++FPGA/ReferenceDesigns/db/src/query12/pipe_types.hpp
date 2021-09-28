@@ -100,7 +100,7 @@ class JoinedRow {
 
 // JOIN window sizes
 constexpr int kOrderJoinWindowSize = 4;
-constexpr int kLineItemJoinWindowSize = 16;
+constexpr int kLineItemJoinWindowSize = 8;
 
 // pipe data types
 using OrdersRowPipeData = StreamingData<OrdersRow, kOrderJoinWindowSize>;

@@ -3,7 +3,7 @@
 This sample demonstrates how to migrate a simple program from CUDA to 
 Data Parallel C++. Vector Add provides an easy way to verify that
 your development environment is set up correctly to use the Intel® DPC++
-Compatibility Tool (dpct).
+Compatibility Tool (DPCT).
 
 
 | Optimized for         | Description

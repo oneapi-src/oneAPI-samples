@@ -16,7 +16,7 @@
 #include <oneapi/mkl/dfti.hpp>
 #include <oneapi/mkl/rng.hpp>
 #include <oneapi/mkl/vm.hpp>
-
+#include <string>
 int main(int argc, char **argv) {
   unsigned int N = (argc == 1) ? 32 : std::stoi(argv[1]);
   if ((N % 2) != 0) N++;

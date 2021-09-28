@@ -35,7 +35,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 With oneAPI 2021.4 the argument for accessors was changed from 'noinit' to 'no_init'. The change was derived from a change between the SYCL 2020 provisional spec and that of the 2020Rev3 spec
 
 If running this sample and it fails, do one of the following
-- Update the oneAPI base toolkit to 2021.4
+- Update the Intel® oneAPI Base Toolkit to 2021.4
 - Change the 'no_init' argument  to 'noinit'
 ## Building the `vector-add` Program for CPU and GPU
 

@@ -157,7 +157,7 @@ but generally, O2 is sufficient for most applications.
 
 ### Further Exploration
 The Intel® Fortran Compiler has many options for optimization. 
-If you have a genuine Intel® Architecture processor, try these additional options
+If you have a genuine Intel® processor, try these additional options
 
    edit 'Makefile' using your favorite editor. To set additional optimizations uncomment FC = ifort -O3 and add additional options shown:
    

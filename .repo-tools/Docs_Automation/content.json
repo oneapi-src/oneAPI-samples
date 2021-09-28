@@ -3,7 +3,7 @@
 
   "mdContribute": "## Contribute\n\nSee [CONTRIBUTING](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) for more itargetedDevices.ormation.\n\n",
 
-  "mdIntro1":"The oneAPI samples repository provides code samples for Intel oneAPI toolkits.<br><br>We recommend checking out a specific stable release version of the repository. [View available stable releases](https//github.com/oneapi-src/oneAPI-samples/tags). ",
+  "mdIntro1":"The oneAPI samples repository provides code samples for Intel oneAPI toolkits.<br><br>We recommend checking out a specific stable release version of the repository. The version of the repository you fetch should match the version of the oneAPI compiler you are using. [View available stable releases](https://github.com/oneapi-src/oneAPI-samples/tags). ",  
   "mdIntro2":"The latest versions (",
   "mdIntro2.1":") of code samples on the master branch are not guaranteed to be stable.",
   "mdIntro3":"The oneAPI sample repository is organized as follows:",
@@ -11,7 +11,7 @@
   "mdIntro3.2":"* [DirectProgramming](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming)\n  * [C++](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2B)\n  * [DPC++](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2B)\n  * [DPC++FPGA](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA)\n    * [Reference Designs](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/ReferenceDesigns)\n    * [Tutorials](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials)\n  * [Fortran](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA)\n",
   "mdIntro3.3":"* [Libraries](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries)\n  * [oneCCl](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneCCL)\n  * [oneDAL](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneDAL)\n  * [oneDNN](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneDNN)\n  * [oneDPL](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneDPL)\n  * [oneMKL](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneMKL)\n  * [oneTBB](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneTBB)\n  * [oneVPL](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneVPL)\n",
   "mdIntro3.4":"* [Publications](https://github.com/oneapi-src/oneAPI-samples/Publications/)\n  * [Data Parallel C++](https://github.com/oneapi-src/oneAPI-samples/Publications/Data_Parallel_C%2B%2B)\n",
-  "mdIntro3.5":"* [Tools](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/)\n  * [Advisor](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Advisor)\n  * [Application Debugger](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/ApplicationDebugger)\n  * [Benchmark](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Benchmark)\n  * [IoT Connections Tools](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/IoTConnectionsTools)\n  * [Migration](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Migration)\n  * [Socwatch](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Socwatch)\n  * [Trace](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Trace)\n  * [UEFI debug](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/UEFI%20debug)\n  * [VTune Profiler](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/VTuneProfiler)\n)",  "mdIntro4":"To view an alphabetized list of all samples with descriptions by:", 
+  "mdIntro3.5":"* [Tools](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/)\n  * [Advisor](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Advisor)\n  * [Application Debugger](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/ApplicationDebugger)\n  * [Benchmark](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Benchmark)\n  * [IoT Connections Tools](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/IoTConnectionsTools)\n  * [Migration](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Migration)\n  * [Socwatch](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Socwatch)\n  * [Trace](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Trace)\n  * [UEFI debug](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/UEFI%20debug)\n  * [VTune Profiler](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/VTuneProfiler)\n)",
   "mdIntro4":"## Additional Resources\n- Samples in [Alphabetical order w/ device target](https://github.com/oneapi-src/CODESAMPLESLIST.md/)\n- Samples by [Change History](https://github.com/oneapi-src/oneAPI-samples/CHANGELOGS.md)",
   "mdIntro5":"\n\n## Known Issues or Limitations\n\n### On Windows Platform\n\n",
   "mdIntro5.1":"- If you are using Visual Studio 2019, Visual Studio 2019 version 16.4.0 or newer is required.",
@@ -21,7 +21,7 @@
   "mdIntro6":"\n\n## Contributing\n\nSee [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) for more information.",
   "mdIntro7":"\n\n## New Code Samples\n\n|Version Introduced   |Sample Name|Description|\n |-----------------------|-------------------------------------------|---------------|\n",
   
-  "mdCodeSamplesListIntrop1": "## oneAPI Code Samples\n\nThis Page is a complete list of onePI Code Samples, sorted by Alphabetical order",
+  "mdCodeSamplesListIntrop1": "## oneAPI Code Samples\n\nThis Page is a complete list of oneAPI Code Samples, sorted by Alphabetical order",
   "mdCodeSamplesListIntrop2":  "|Code Sample Name|Supported Intel&reg; Architecture(s)|Description|\n|-----------------------|----------------------|---------------------|\n",
 
   "mdCodeSamplesListFooter":  "Report Generated on:  ",
@@ -30,5 +30,4 @@
 
   "mdChangeLogHeaderp1":"## oneAPI Code Sample Change log\n\nThis document shows the history of when a specific sample was introduced to the oneAPI ecosystem of Code Samples.",
   "mdChangeLogHeaderp2":"\n| Version|Code Sample Name|description|\n|-----------------------|------------------|-------------------------|\n"
-
 }

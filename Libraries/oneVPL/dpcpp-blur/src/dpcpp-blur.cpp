@@ -11,7 +11,7 @@
 /// https://oneapi-src.github.io/oneAPI-spec/elements/oneVPL/source/index.html
 ///
 /// @file
-
+#include <string>
 #include <CL/sycl.hpp>
 
 #include "util.h"

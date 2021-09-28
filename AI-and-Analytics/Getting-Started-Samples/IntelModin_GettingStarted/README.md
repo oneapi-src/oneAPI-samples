@@ -6,7 +6,7 @@ This Getting Started sample code shows how to use distributed Pandas using the I
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
 | Software                          | Intel Distribution of Modin*, Intel® oneAPI AI Analytics Toolkit
-| What you will learn               | Basic Intel® Distribution of Modin* programming model for Intel CPU
+| What you will learn               | Basic Intel Distribution of Modin* programming model for Intel CPU
 | Time to complete                  | 5-8 minutes
 
 ## Purpose
@@ -90,6 +90,10 @@ jupyter notebook
 Open .ipynb file and run cells in Jupyter Notebook using the "Run" button (see the image using "daal4py Hello World" sample):
 
 ![Click the Run Button in the Jupyter Notebook](Jupyter_Run.jpg "Run Button on Jupyter Notebook")
+
+#### Intel® DevCloud for oneAPI JupyterLab 
+
+Please note that as of right now, this sample cannot be run on Intel® DevCloud for oneAPI JupyterLab due to conflicts between the Intel® DevCloud for oneAPI JupyterLab platform and Modin dependencies. This is a known issue that Intel is currently working on resolving. Thank you for your patience.
 
 ### Run as Python File
 
