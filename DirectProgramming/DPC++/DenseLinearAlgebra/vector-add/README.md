@@ -37,6 +37,7 @@ With oneAPI 2021.4 the argument for accessors was changed from 'noinit' to 'no_i
 If running this sample and it fails, do one of the following
 - Update the oneAPI base toolkit to 2021.4
 - Change the 'no_init' argument  to 'noinit'
+
 ## Building the `vector-add` Program for CPU and GPU
 
 > Note: if you have not already done so, set up your CLI
@@ -50,7 +51,25 @@ If running this sample and it fails, do one of the following
 ### Running Samples in DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
-### On a Linux* System
+
+### Using Visual Studio Code*  (VS Code)
+
+You can use VS Code extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
+
+### On a Linux* System using the Command Line
 Perform the following steps:
 
 1. Build the program using the following `make` commands (default uses buffers):
@@ -70,12 +89,6 @@ Perform the following steps:
     make clean
     ```
 
-
-### Using Visual Studio Code*  (VS Code)
-
-You can use VS Code extensions to set your environment, create launch configurations,
-and browse and download samples. To learn more, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ### On a Windows* System Using a Command Line Interface
 
