@@ -47,11 +47,11 @@ def createReadMeFillerText(textFillers, count):
         + textFillers['mdIntro5'] + textFillers['mdIntro5.1'] + "\n" + textFillers['mdIntro5.2'] + "\n" + textFillers['mdIntro5.3'] + "\n" + textFillers['mdIntro5.4']
         + "\n\n" +textFillers['mdIntro4'] + textFillers['mdIntro6'] + "\n\n" + textFillers['mdIntro7'] )
     
-    removedSamplesHeader = ( "\nTotal Samples: " + str(count) + "\n\n"
+    removedSamplesHeader = ( "\nTotal Samples: " + str(count) + "\n"
         + textFillers["mdDeletedSample"]
     )
 
-    footer = (textFillers['mdLicense']
+    footer = ('\n\n' + textFillers['mdLicense']
         + "\n\n" + str(textFillers['mdCodeSamplesListFooter']) + d + "\n")
     return header, removedSamplesHeader, footer
 
