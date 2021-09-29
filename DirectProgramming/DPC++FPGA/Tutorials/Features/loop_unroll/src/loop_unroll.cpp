@@ -7,6 +7,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <vector>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.

@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// ISO3DFD: Intel oneAPI DPC++ Language Basics Using 3D-Finite-Difference-Wave
+// ISO3DFD: Intel(r) oneAPI DPC++ Language Basics Using 3D-Finite-Difference-Wave
 // Propagation
 //
 // ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic
@@ -32,6 +32,7 @@
 //
 #include "../include/iso3dfd.h"
 #include <iostream>
+#include <string>
 #include "../include/device_selector.hpp"
 
 #define MIN(a, b) (a) < (b) ? (a) : (b)
