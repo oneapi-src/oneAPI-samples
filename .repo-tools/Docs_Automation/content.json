@@ -20,7 +20,7 @@
   "mdIntro5.4":"    - Example error: *Error MSB6003 The specified task executable dpcpp.exe could not be run .......",
   "mdIntro6":"\n\n## Contributing\n\nSee [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) for more information.",
   "mdIntro7":"\n\n## New Code Samples\n\n|Version Introduced   |Sample Name|Description|\n |-----------------------|-------------------------------------------|---------------|\n",
-  "mdDeletedSample":"\n\n## Deleted Code Samples\n\n|Version Introduced   |Sample Name|Description|\n |-----------------------|-------------------------------------------|---------------|\n",
+  "mdDeletedSample":"\n\n## Deleted Code Samples\n\n|Version Introduced|Version Deleted|Sample Name|Description|Path|\n |---|---|------|---------------|------|\n",
   
   "mdCodeSamplesListIntrop1": "## oneAPI Code Samples\n\nThis Page is a complete list of oneAPI Code Samples, sorted by Alphabetical order",
   "mdCodeSamplesListIntrop2":  "|Code Sample Name|Supported Intel&reg; Architecture(s)|Description|\n|-----------------------|----------------------|---------------------|\n",

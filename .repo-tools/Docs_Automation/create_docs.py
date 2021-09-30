@@ -111,8 +111,11 @@ def generateReadmeLines(currentData, guidsVersions):
 
 def generateReadmeDeleted(guidsVersions):
     for item in guidsVersions.values():
-        if item['removed'] == "True":
-            yield (f"|{item['ver']} |{item['name']} |{item['notes']}")
+        if item['removed'] != "False":
+            yield (f"| {item['ver']} | {item['removed']} | {item['name']} | {item['notes']} |"
+                + f" [{item['removed']}](https://github.com/oneapi-src/oneAPI-samples/releases/tag/{item['removed']})" 
+                + (f" Path: {item['path']}" if 'path' in item else '')
+                + "|\n")
 
 def createChangeLog(textFillers, count, currentData, guidsVersions): #sorted but does not include version
     print("Creating ChangeLog started")
@@ -208,7 +211,7 @@ def main():
 
     currentData = OrderedDict(sorted(currentData.items(), key=lambda key_value: key_value[1]["name"]))
     #stable sort so, sort by names first then by version 
-    temp = sorted(guidsVersions.items(), key=lambda key_value: key_value[1]['name'])
+    temp = sorted(guidsVersions.items(), key=lambda key_value: key_value[1]['name'].lower())
     guidsVersions = OrderedDict(sorted(temp, key=lambda key_value: key_value[1]["ver"], reverse=True))
 
     if guidsNeedsUpdate:

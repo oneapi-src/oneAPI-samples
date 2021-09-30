@@ -93,9 +93,10 @@ Total Samples: 158
 
 ## Deleted Code Samples
 
-|Version Introduced   |Sample Name|Description|
- |-----------------------|-------------------------------------------|---------------|
-|2021.1.Gold |Use Library |Removed for 2021.4 - Remove the tutorial use_library due to HLS/OCL library support being removed in oneAPI 2021.4. Also note that RTL libraries has an issue (with a known workaround) so that part of the flow is also removed, but we will likely have a KDB to showcase the workaround. The fix for this is expected in 2022.1. Please use 2022.3 if you either need HLS/OCL library support in SYCL, or if you need continued access to RTL libraries.
+|Version Introduced|Version Deleted|Sample Name|Description|Path|
+ |---|---|------|---------------|------|
+| 2021.1.Gold | 2021.3.0 | Use Library | Removed for 2021.4 - Remove the tutorial use_library due to HLS/OCL library support being removed in oneAPI 2021.4. Also note that RTL libraries has an issue (with a known workaround) so that part of the flow is also removed, but we will likely have a KDB to showcase the workaround. The fix for this is expected in 2022.1. Please use 2021.3 if you either need HLS/OCL library support in SYCL, or if you need continued access to RTL libraries. | [2021.3.0](https://github.com/oneapi-src/oneAPI-samples/releases/tag/2021.3.0) Path: DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library|
+
 
 ## License
 
@@ -103,4 +104,4 @@ Code samples are licensed under the MIT license. See [License.txt](https://githu
 
 Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-Report Generated on:  September 29, 2021
+Report Generated on:  September 30, 2021
