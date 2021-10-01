@@ -29,7 +29,7 @@
 #include <math.h>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 #include <list>
 
@@ -69,9 +69,9 @@ int main(int argc, char *argv[]) {
 
   try {
 #if defined(FPGA_EMULATOR)
-    INTEL::fpga_emulator_selector device_selector;
+    ext::intel::fpga_emulator_selector device_selector;
 #else
-    INTEL::fpga_selector device_selector;
+    ext::intel::fpga_selector device_selector;
 #endif
 
     queue q = queue(device_selector, dpc_common::exception_handler);

@@ -5,7 +5,7 @@
 #include <cmath>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "mvdr_complex.hpp"
 
@@ -72,8 +72,8 @@ event SubmitSteeringVectorGeneratorKernel(queue& q) {
         // The fence here ensures that all writes to the SteeringVectorsOutPipe
         // above will occur before the write to the pipe below.  Without the
         // fence, the compiler could re-order these pipe writes.
-        atomic_fence(sycl::ONEAPI::memory_order::acq_rel,
-                     sycl::ONEAPI::memory_scope::device);
+        sycl::ONEAPI::atomic_fence(sycl::ONEAPI::memory_order::acq_rel,
+                                   sycl::ONEAPI::memory_scope::device);
         UpdateSteeringOutPipe::write(true);
 
       }  // end of while( 1 )

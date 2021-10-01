@@ -22,6 +22,7 @@
 #include <CL/sycl.hpp>
 #include <vector>
 #include <iostream>
+#include <string>
 #if FPGA || FPGA_EMULATOR
 #include <CL/sycl/INTEL/fpga_extensions.hpp>
 #endif
@@ -71,7 +72,7 @@ void VectorAdd(queue &q, const IntVector &a_vector, const IntVector &b_vector,
     accessor b(b_buf, h, read_only);
 
     // The sum_accessor is used to store (with write permission) the sum data.
-    accessor sum(sum_buf, h, write_only, noinit);
+    accessor sum(sum_buf, h, write_only, no_init);
 
     // Use parallel_for to run vector addition in parallel on device. This
     // executes the kernel.

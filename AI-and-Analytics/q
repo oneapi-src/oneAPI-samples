@@ -1,0 +1,66 @@
+#!/bin/bash
+#========================================
+# Script to submit job in Intel devcloud
+#
+# Version: 0.5
+#========================================
+
+if [[ -z "${TARGET_NODE}" ]]; then
+     properties=("icx" "clx" "skx" "cfl" "xe_hp" "dg1" "gpu" ) 
+else
+     properties=("${TARGET_NODE}" "icx" "clx" "skx" "cfl" "xe_hp" "dg1" "gpu" ) 
+fi
+avail_1=$(pbsnodes | grep properties | sort |  cut -d',' -f6 |  uniq)
+avail_2=$(pbsnodes | grep properties | sort |  cut -d',' -f2 |  uniq)
+for value in "${properties[@]}"
+do
+     for avail in $avail_1
+     do
+	 if [ "$avail" == "$value" ]; then
+             property="$value"
+	     break 2
+         fi
+     done
+     for avail in $avail_2
+     do
+	 if [ "$avail" == "$value" ]; then
+             property="$value"
+	     break 2
+         fi
+     done
+done
+
+if [ -z "$1" ]; then
+	echo "Missing script argument, Usage: ./q run.sh"
+	echo "Users could know available nodes by : ./q -h"
+elif [ "$1" == "-h" ];then 
+    echo "Available Nodes:"
+    echo $avail_2 $avail_1   
+    echo "users could select a prefer worker node by : export a value to TARGET_NODE. ex: export TARGET_NODE=icx" 
+elif [ ! -f "$1" ]; then
+    echo "File $1 does not exist"
+else
+        echo "submit $1 to $property node"
+	script=$1
+	rm *.sh.* > /dev/null 2>&1
+	#qsub
+	echo "Submitting job:"
+	qsub -l nodes=1:$property:ppn=2 -d . $script
+	# qsub -q batch@v-qsvr-nda-l nodes=ppn=2 -I
+	# pbsnodes
+	#qstat
+	qstat 
+	#wait for output file to be generated and display
+	echo -ne "Waiting for Output."
+	until [ -f $script.o* ]; do
+		sleep 1
+		echo -ne "."
+		((timeout++))
+		if [ $timeout == 60 ]; then
+			echo "TimeOut 60 seconds: Job is still queued for execution, check for output file later (*.sh.o)"
+			break
+		fi
+	done
+	cat $script.o*
+	cat $script.e*
+fi

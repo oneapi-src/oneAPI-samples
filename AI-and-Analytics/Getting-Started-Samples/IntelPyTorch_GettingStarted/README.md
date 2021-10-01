@@ -1,12 +1,12 @@
 ﻿# `PyTorch HelloWorld` Sample
-PyTorch* is a very popular framework for deep learning. Intel and Facebook* collaborate to boost PyTorch* CPU Performance for years. The official PyTorch has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives by default. This sample demonstrates how to train a PyTorch model and shows how Intel-optimized PyTorch* enables Intel® DNNL calls by default. 
+PyTorch* is a very popular framework for deep learning. Intel and Facebook* collaborate to boost PyTorch* CPU Performance for years. The official PyTorch has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives by default. This sample demonstrates how to train a PyTorch model and shows how Intel-optimized PyTorch* enables Intel® Deep Neural Network Library (Intel® DNNL) calls by default. 
 
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Intel® Xeon® Scalable Processor family
-| Software                          | Intel&reg; oneAPI AI Analytics Toolkit
-| What you will learn               | How to get started with Intel Optimization for PyTorch
+| Software                          | Intel® oneAPI AI Analytics Toolkit
+| What you will learn               | How to get started with Intel® Optimization for PyTorch
 | Time to complete                  | 15 minutes
 
 ## Purpose
@@ -31,29 +31,6 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## How to Build and Run
-### Running Samples In DevCloud (Optional)
-
-<!---Include the next paragraph ONLY if the sample runs in batch mode-->
-### Run in Batch Mode
-This sample runs in batch mode, so you must have a script for batch processing. Once you have a script set up, refer to the [Tensorflow Hello World](https://github.com/oneapi-src/oneAPI-samples/blob/master/AI-and-Analytics/Getting-Started-Samples/IntelTensorFlow_GettingStarted/README.md) instructions or the [PyTorch Hello World](https://github.com/oneapi-src/oneAPI-samples/blob/master/AI-and-Analytics/Getting-Started-Samples/IntelPyTorch_GettingStarted/README.md) instructions to run the sample.
-
-<!---Include the next paragraph ONLY if the sample DOES NOT RUN in batch mode-->
-### Run in Interactive Mode
-This sample runs in interactive mode. Follow the directions in the README.md for the sample you want to run. If the sample can be run in interactive mode, the sample will have directions on how to run the sample in a Jupyter Notebook. An example can be found in the [Intel&reg; Modin Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelModin_GettingStarted) sample.
-
-### Request a Compute Node
-In order to run on the DevCloud, you need to request a compute node using node properties such as: `gpu`, `xeon`, `fpga_compile`, `fpga_runtime` and others. For more information about the node properties, execute the `pbsnodes` command.
- This node information must be provided when submitting a job to run your sample in batch mode using the qsub command. When you see the qsub command in the Run section of the [Hello World instructions](https://devcloud.intel.com/oneapi/get_started/aiAnalyticsToolkitSamples/), change the command to fit the node you are using. Nodes which are in bold indicate they are compatible with this sample:
-
-<!---Mark each compatible Node in BOLD-->
-| Node              | Command                                                 |
-| ----------------- | ------------------------------------------------------- |
-| GPU               | qsub -l nodes=1:gpu:ppn=2 -d . hello-world.sh           |
-| CPU               | qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh          |
-| FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
-| FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
-
-
 
 1. Pre-requirement
 
@@ -82,8 +59,13 @@ In order to run on the DevCloud, you need to request a compute node using node p
     ```
     conda activate user_pytorch
     ```
+  
+4.	Navigate to the directory with the TensorFlow sample:
+    ```
+    cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelPyTorch_GettingStarted
+    ```
 
-4. Run the Python script
+5. Run the Python script
     To run the program on Linux*, Windows* and MacOS*, type the following command in the terminal with Python installed:
 
     ```
@@ -99,4 +81,21 @@ In order to run on the DevCloud, you need to request a compute node using node p
     Please find more information about the mkldnn log [here](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html).
 
 ## Example of Output
-With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.
+With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.  
+
+
+## Running The Sample In DevCloud (Optional)
+
+Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/README.md#using-samples-in-intel-oneapi-devcloud) for general usage instructions.
+
+### Submit The Sample in Batch Mode
+
+1.	Navigate to the directory with the TensorFlow sample:
+```
+cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelPyTorch_GettingStarted
+```
+2. submit this "IntelPyTorch_GettingStarted" workload on the selected node with the run script.
+```
+./q ./run.sh
+```
+> the run.sh contains all the instructions needed to run this "TensorFlow_HelloWorld" workload

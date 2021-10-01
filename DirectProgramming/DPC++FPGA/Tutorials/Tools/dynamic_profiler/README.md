@@ -26,8 +26,7 @@ Intel® oneAPI provides two runtime profiling tools to help you analyze your DPC
 
 1. The **Intel® FPGA Dynamic Profiler for DPC++** is a profiling tool used to collect fine-grained device side data during DPC++ kernel execution. When used within the Intel® VTune™ Profiler, some host side performance data is also collected. However, note that the VTune Profiler is not designed to collect detailed system level host-side data. 
 
-2. The **Intercept Layer for OpenCL\*** is a profiling tool used to obtain detailed system-level information. 
-
+2. The **Intercept Layer for OpenCL™ Applications™** is a profiling tool used to obtain detailed system-level information. 
 This tutorial introduces the Intel® FPGA Dynamic Profiler for DPC++. To learn more about the Intercept Layer, refer to the FPGA tutorial "[Using the OpenCL Intercept Layer to Profile Designs running on the FPGA](https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials/Tools/system_profiling)".
 
 #### The Intel® FPGA Dynamic Profiler for DPC++
@@ -71,7 +70,7 @@ There are two ways of obtaining data from a DPC++ program containing performance
     Instructions on installing, configure and opening the Intel® VTune™ Profiler can be found in the [Intel® Vtune™ Profiler User Guide](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/installation.html). Further instructions on setting up the Dynamic Profiler via the CPU/FPGA Interaction View can be found in the [CPU/FPGA Interaction Analysis](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html) section of the Intel® VTune™ Profiler User Guide. To extract device performance counter data, please ensure the source for the FPGA profiling data is set to "AOCL Profiler".
 
 2. Run the design from the command line using the Profiler Runtime Wrapper.
-  The Profiler Runtime Wrapper comes as part of the DPC++ Compiler and can be run as follows:
+  The Profiler Runtime Wrapper comes as part of the oneAPI DPC++ Compiler and can be run as follows:
    ```
    aocl profile <executable>
    ```

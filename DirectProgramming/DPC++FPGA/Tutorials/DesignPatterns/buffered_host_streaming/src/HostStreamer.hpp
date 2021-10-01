@@ -16,7 +16,7 @@
 #include <tuple>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 using namespace sycl;
 
@@ -321,10 +321,10 @@ public:
   // The Producer and Consumer SYCL pipes.
   // This allows device code (i.e. user kernels) to connect to the input and
   // the output.
-  using ProducerPipe = sycl::INTEL::pipe<ProducerPipeId<Id>,
+  using ProducerPipe = sycl::ext::intel::pipe<ProducerPipeId<Id>,
                                          ProducerType,
                                          min_producer_capacity>;
-  using ConsumerPipe = sycl::INTEL::pipe<ConsumerPipeId<Id>,
+  using ConsumerPipe = sycl::ext::intel::pipe<ConsumerPipeId<Id>,
                                          ConsumerType,
                                          min_consumer_capacity>;
 

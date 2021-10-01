@@ -4,10 +4,11 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <array>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <type_traits>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -44,7 +45,7 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
     buffer<int, 1> buffer_res(&res, 1);
 
     event e = q.submit([&](handler &h) {
-      accessor accessor_res(buffer_res, h, write_only, noinit);
+      accessor accessor_res(buffer_res, h, write_only, no_init);
 
       h.single_task<class KernelCompute<spec_iter>>([=]() {
         int x = 1;
@@ -95,9 +96,9 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
 
 int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   float bound = kUpper;

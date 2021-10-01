@@ -2,7 +2,7 @@
 #define __STREAMING_QRD_HPP__
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // utility classes
 #include "Tuple.hpp"
@@ -168,10 +168,10 @@ event SubmitStreamingQRDKernel(queue& q) {
 
               // Delay data signal to create a vine to lower signal fanout
               data_in.template get<element>() =
-                  INTEL::fpga_reg(data_in.template get<element>());
+                  ext::intel::fpga_reg(data_in.template get<element>());
             });
 
-            write_row_group = INTEL::fpga_reg(write_row_group);
+            write_row_group = ext::intel::fpga_reg(write_row_group);
           });
         }
 
@@ -209,12 +209,12 @@ event SubmitStreamingQRDKernel(queue& q) {
           ComplexType sori[kNumBanks];
 
           UnrolledLoop<kNumBanks>([&](auto k) {
-            j_eq_i[k] = INTEL::fpga_reg(j == i);
-            i_gt_0[k] = INTEL::fpga_reg(i > 0);
-            i_ge_0_j_ge_i[k] = INTEL::fpga_reg(i >= 0 && j >= i);
-            j_eq_i_plus_1[k] = INTEL::fpga_reg(j == i + 1);
-            i_lt_0[k] = INTEL::fpga_reg(i < 0);
-            sori[k] = INTEL::fpga_reg(s_or_i[j_nonneg]);
+            j_eq_i[k] = ext::intel::fpga_reg(j == i);
+            i_gt_0[k] = ext::intel::fpga_reg(i > 0);
+            i_ge_0_j_ge_i[k] = ext::intel::fpga_reg(i >= 0 && j >= i);
+            j_eq_i_plus_1[k] = ext::intel::fpga_reg(j == i + 1);
+            i_lt_0[k] = ext::intel::fpga_reg(i < 0);
+            sori[k] = ext::intel::fpga_reg(s_or_i[j_nonneg]);
           });
 
           // fetch data from a_matrix_in or a_matrix, based on value of i
@@ -223,12 +223,12 @@ event SubmitStreamingQRDKernel(queue& q) {
           UnrolledLoop<k_a_num_rows>([&](auto row) {
             // load vector_t from a_matrix_in
             vector_t.template get<row>() =
-                INTEL::fpga_reg(a_matrix_in[j_nonneg].template get<row>());
+                ext::intel::fpga_reg(a_matrix_in[j_nonneg].template get<row>());
 
             // overwrite vector_t from a_matrix if i > 0
             if (i_gt_0[row / kNumElementsPerBank]) {
               vector_t.template get<row>() =
-                  INTEL::fpga_reg(a_matrix[j_nonneg].template get<row>());
+                  ext::intel::fpga_reg(a_matrix[j_nonneg].template get<row>());
             }
 
             // store the 'unaltered' column in vector_ai if j == i
@@ -281,11 +281,7 @@ event SubmitStreamingQRDKernel(queue& q) {
           s_ij.set_i(p_ij.imag() / p_ii_real);
 
           if (j >= 0) {
-            if (j == i + 1) {
-              s_or_i[j_nonneg] = i_r_ii_real;
-            } else {
-              s_or_i[j_nonneg] = s_ij;
-            }
+            s_or_i[j_nonneg] = (j == i + 1) ? ComplexType{i_r_ii_real} : s_ij;
           }
 
           // calculate 1/R value

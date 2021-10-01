@@ -29,6 +29,12 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+## Known Issues
+With oneAPI 2021.4 the argument for accessors was changed from 'noinit' to 'no_init'. The change was derived from a change between the SYCL 2020 provisional spec and that of the 2020Rev3 spec
+
+If running this sample and it fails, do one of the following
+- Update the Intel® oneAPI Base Toolkit to 2021.4
+- Change the 'no_init' argument  to 'noinit'
 ## Building the `simple add DPC++` Program for CPU and GPU 
 
 ### Include Files

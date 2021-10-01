@@ -2,7 +2,7 @@
 #define __INPUT_DEMUX_HPP__
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cmath>
 
 // utility classes
