@@ -104,4 +104,4 @@ Code samples are licensed under the MIT license. See [License.txt](https://githu
 
 Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-Report Generated on:  September 30, 2021
+Report Generated on:  October 01, 2021

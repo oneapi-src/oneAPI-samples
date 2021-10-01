@@ -209,7 +209,7 @@ def main():
                 logIfReadmeNotExists(subdir)
 
 
-    currentData = OrderedDict(sorted(currentData.items(), key=lambda key_value: key_value[1]["name"]))
+    currentData = OrderedDict(sorted(currentData.items(), key=lambda key_value: key_value[1]["name"].lower()))
     #stable sort so, sort by names first then by version 
     temp = sorted(guidsVersions.items(), key=lambda key_value: key_value[1]['name'].lower())
     guidsVersions = OrderedDict(sorted(temp, key=lambda key_value: key_value[1]["ver"], reverse=True))
