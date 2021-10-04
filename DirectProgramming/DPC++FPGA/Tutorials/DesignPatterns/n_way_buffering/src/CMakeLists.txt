@@ -21,20 +21,19 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
+# On linux, link the pthreading library
+if(not WIN32)
+    set(THREAD_LIB "-lpthread")
+endif()
+
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
-if(WIN32)
-	set(EMULATOR_LINK_FLAGS " -fintelfpga")
-	set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
-else()
-	set(EMULATOR_LINK_FLAGS " -lpthread -fintelfpga")
-	set(HARDWARE_LINK_FLAGS "-lpthread -fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
-endif()
-
-set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "${THREAD_LIB} -fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga")
+set(HARDWARE_LINK_FLAGS "${THREAD_LIB} -fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
