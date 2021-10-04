@@ -1,8 +1,3 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iostream>
@@ -29,10 +24,7 @@ template <std::size_t ID> class ChainComputeUnit;
 
 // Write the data into the chain
 void SourceKernel(queue &q, float data) {
-
-  q.submit([&](handler &h) {
-    h.single_task<Source>([=] { Pipes::PipeAt<0>::write(data); });
-  });
+  q.single_task<Source>([=] { Pipes::PipeAt<0>::write(data); });
 }
 
 // Get the data out of the chain and return it to the host
@@ -45,8 +37,9 @@ void SinkKernel(queue &q, float &out_data) {
 
   q.submit([&](handler &h) {
     accessor out_accessor(out_buf, h, write_only, no_init);
-    h.single_task<Sink>(
-        [=] { out_accessor[0] = Pipes::PipeAt<kEngines>::read(); });
+    h.single_task<Sink>([=] {
+      out_accessor[0] = Pipes::PipeAt<kEngines>::read();
+    });
   });
 }
 
