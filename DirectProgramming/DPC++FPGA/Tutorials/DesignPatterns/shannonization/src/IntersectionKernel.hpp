@@ -147,10 +147,10 @@ struct IntersectionKernel<2, II, APipe, BPipe> {
     // initialize variables
     unsigned int a = APipe::read();
     unsigned int b = BPipe::read();
-    int a_count = 1;
-    int b_count = 1;
-    int a_count_next = 2;
-    int b_count_next = 2;
+    //int a_count = 1;
+    //int b_count = 1;
+    //int a_count_next = 2;
+    //int b_count_next = 2;
     int a_count_next_next = 3;
     int b_count_next_next = 3;
     int n = 0;
@@ -185,8 +185,8 @@ struct IntersectionKernel<2, II, APipe, BPipe> {
 
         // next, update the counter variables
         // NOTE: this is just a shift register
-        a_count = a_count_next;
-        a_count_next = a_count_next_next;
+        //a_count = a_count_next;
+        //a_count_next = a_count_next_next;
         a_count_next_next++;
       } else if (b_count_inrange) {
         b = BPipe::read();
@@ -198,8 +198,8 @@ struct IntersectionKernel<2, II, APipe, BPipe> {
 
         // next, update the counter variables
         // NOTE: this is just a shift register
-        b_count = b_count_next;
-        b_count_next = b_count_next_next;
+        //b_count = b_count_next;
+        //b_count_next = b_count_next_next;
         b_count_next_next++;
       }
       ///////////////////////////////////////////////////////////////////////
@@ -263,7 +263,7 @@ struct IntersectionKernel<3, II, APipe, BPipe> {
       } else {
         if (a == b) {
           n++;
-          num_compares_in_range = num_compares_next < total_compares;
+          num_compares_in_range = num_compares_next_in_range;
           num_compares_next_in_range = num_compares_next_next < total_compares;
           num_compares = num_compares_next;
           num_compares_next = num_compares_next_next;

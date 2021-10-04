@@ -49,11 +49,10 @@ class Producer;
 class Consumer;
 
 // pipes
-constexpr size_t kPipeDepth = 64;
 template <typename T>
-using ProducePipe = pipe<class ProducePipeClass, T, kPipeDepth>;
+using ProducePipe = pipe<class ProducePipeClass, T>;
 template <typename T>
-using ConsumePipe = pipe<class ConsumePipeClass, T, kPipeDepth>;
+using ConsumePipe = pipe<class ConsumePipeClass, T>;
 
 //
 // reads the input data from the hosts memory
@@ -61,20 +60,16 @@ using ConsumePipe = pipe<class ConsumePipeClass, T, kPipeDepth>;
 //
 template <typename T>
 event SubmitProducer(queue& q, T* in_data, size_t size) {
-  auto e = q.submit([&](handler& h) {
-    h.single_task<Producer>([=]() [[intel::kernel_args_restrict]] {
-      // using a host_ptr tells the compiler that this pointer lives in the
-      // hosts address space
-      host_ptr<T> h_in_data(in_data);
+  return q.single_task<Producer>([=]() [[intel::kernel_args_restrict]] {
+    // using a host_ptr tells the compiler that this pointer lives in the
+    // hosts address space
+    host_ptr<T> h_in_data(in_data);
 
-      for (size_t i = 0; i < size; i++) {
-        T data_from_host_memory = *(h_in_data + i);
-        ProducePipe<T>::write(data_from_host_memory);
-      }
-    });
+    for (size_t i = 0; i < size; i++) {
+      T data_from_host_memory = *(h_in_data + i);
+      ProducePipe<T>::write(data_from_host_memory);
+    }
   });
-
-  return e;
 }
 
 //
@@ -85,17 +80,13 @@ event SubmitProducer(queue& q, T* in_data, size_t size) {
 //
 template <typename T>
 event SubmitWorker(queue& q, size_t size) {
-  auto e = q.submit([&](handler& h) {
-    h.single_task<RestrictedUSM>([=]() [[intel::kernel_args_restrict]] {
-      for (size_t i = 0; i < size; i++) {
-        T data = ProducePipe<T>::read();
-        T value = data * i; // perform computation
-        ConsumePipe<T>::write(value);
-      }
-    });
+  return q.single_task<RestrictedUSM>([=]() [[intel::kernel_args_restrict]] {
+    for (size_t i = 0; i < size; i++) {
+      T data = ProducePipe<T>::read();
+      T value = data * i; // perform computation
+      ConsumePipe<T>::write(value);
+    }
   });
-
-  return e;
 }
 
 //
@@ -104,20 +95,16 @@ event SubmitWorker(queue& q, size_t size) {
 //
 template <typename T>
 event SubmitConsumer(queue& q, T* out_data, size_t size) {
-  auto e = q.submit([&](handler& h) {
+  return q.single_task<Consumer>([=]() [[intel::kernel_args_restrict]] {
     // using a host_ptr tells the compiler that this pointer lives in the
     // hosts address space
     host_ptr<T> h_out_data(out_data);
 
-    h.single_task<Consumer>([=]() [[intel::kernel_args_restrict]] {
-      for (size_t i = 0; i < size; i++) {
-        T data_to_host_memory = ConsumePipe<T>::read();
-        *(h_out_data + i) = data_to_host_memory;
-      }
-    });
+    for (size_t i = 0; i < size; i++) {
+      T data_to_host_memory = ConsumePipe<T>::read();
+      *(h_out_data + i) = data_to_host_memory;
+    }
   });
-
-  return e;
 }
 
 template <typename T>

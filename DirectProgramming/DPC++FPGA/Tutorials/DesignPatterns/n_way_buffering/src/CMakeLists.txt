@@ -22,7 +22,7 @@ if(WIN32)
 endif()
 
 # On linux, link the pthreading library
-if(not WIN32)
+if(NOT WIN32)
     set(THREAD_LIB "-lpthread")
 endif()
 
