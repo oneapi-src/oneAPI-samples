@@ -6,6 +6,7 @@
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
+#include <oneapi/dpl/numeric>
 
 using namespace sycl;
 using namespace oneapi::dpl::execution;
@@ -22,7 +23,7 @@ int main() {
         buffer buf(v);
         buffer buf_res(result);
 
-        //oneDPL buffer iterators for both the input and the result vectors
+        //dpstd buffer iterators for both the input and the result vectors
         auto start_v = oneapi::dpl::begin(buf);
         auto end_v = oneapi::dpl::end(buf);
         auto start_res = oneapi::dpl::begin(buf_res);
