@@ -1,6 +1,6 @@
 {
   "guid": "748eb906-309f-469b-95c9-5258006c7587",
-  "name": "CRR",
+  "name": "CRR Binomial Tree",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "This sample shows a Binomial Tree Model for Option Pricing using a FPGA-optimized reference design of the Cox-Ross-Rubinstein (CRR) Binomial Tree Model with Greeks for American exercise options",
   "toolchain": ["dpcpp"],
