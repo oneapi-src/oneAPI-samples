@@ -52,9 +52,9 @@ If running this sample and it fails, do one of the following
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
 
-### Using Visual Studio Code*  (VS Code)
+### Using Visual Studio Code*  (Optional)
 
-You can use VS Code extensions to set your environment, create launch configurations,
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:

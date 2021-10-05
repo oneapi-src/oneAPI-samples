@@ -3,7 +3,7 @@ Today's modern computer systems are becoming heavily distributed. It is importan
 
 | Optimized for                       | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 
+| OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Intel® Xeon® Scalable processor family or newer
 | Software                          | Intel® oneAPI AI Analytics Toolkit
 | What you will learn               | How to get scale-out (distribute) the training of a model on multiple compute nodes
@@ -17,14 +17,14 @@ Intel-optimized Tensorflow is available as part of Intel® AI Analytics Toolkit.
 ## Key implementation details
 
  - The training dataset comes from Keras*'s built-in dataset.
- - The dataset will be split based on the number of MPI ranks 
+ - The dataset will be split based on the number of MPI ranks
  - We load Horovod and initialize the framework using `hvd.init()`
  - We then wrap the optimizer around Horovod's distributed optimizer with `opt = hvd.DistributedOptimizer(opt)`
  - The appropriate hooks are configured, and we make sure that only rank 0 writes the checkpoints
-    
-Runtime settings for `OMP_NUM_THREADS`, `KMP_AFFINITY`, and `Inter/Intra-op` Threads are set within the script. You can read more about these settings in this dedicated document: [Maximize TensorFlow Performance on CPU: Considerations and Recommendations for Inference Workloads](https://software.intel.com/en-us/articles/maximize-tensorflow-performance-on-cpu-considerations-and-recommendations-for-inference) 
-    
-## License  
+
+Runtime settings for `OMP_NUM_THREADS`, `KMP_AFFINITY`, and `Inter/Intra-op` Threads are set within the script. You can read more about these settings in this dedicated document: [Maximize TensorFlow Performance on CPU: Considerations and Recommendations for Inference Workloads](https://software.intel.com/en-us/articles/maximize-tensorflow-performance-on-cpu-considerations-and-recommendations-for-inference)
+
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -44,7 +44,7 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 
 ### Sourcing the oneAPI AI Analytics Toolkit environment variables
 
-By default, the Intel® AI Analytics Toolkit is installed in the `/opt/intel/oneapi` folder. The toolkit may be loaded by sourcing the `setvars.sh` script on a Linux shell. Notice the flag `--ccl-configuration=cpu_icc`. By default, the `ccl-configuration` is set to `cpu_gpu_dpcpp`. However, since we are distributing our TensorFlow workload on multiple CPU nodes, we are configuring the Horovod installation to use CPUs. 
+By default, the Intel® AI Analytics Toolkit is installed in the `/opt/intel/oneapi` folder. The toolkit may be loaded by sourcing the `setvars.sh` script on a Linux shell. Notice the flag `--ccl-configuration=cpu_icc`. By default, the `ccl-configuration` is set to `cpu_gpu_dpcpp`. However, since we are distributing our TensorFlow workload on multiple CPU nodes, we are configuring the Horovod installation to use CPUs.
 
 ```
 source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_icc
@@ -55,11 +55,11 @@ source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_icc
 Let's proceed with creating a conda environment with the Intel-optimized TensorFlow and horovod installed. Execute the following commands:
 
 ```
-conda create --name tensorflow_horovod 
-conda activate tensorflow_horovod 
+conda create --name tensorflow_horovod
+conda activate tensorflow_horovod
 ```
 
-Find the path where the `tensorflow_horovod` conda environment has been created. 
+Find the path where the `tensorflow_horovod` conda environment has been created.
 
 ```
 conda install -c "/opt/intel/oneapi/conda_channel" -p <path_of_tensorflow_horovod_env>/tensorflow_horovod -y -q conda python=3.7 numpy intel-openmp tensorflow --offline
@@ -82,13 +82,31 @@ To run the script with Horovod, we invoke MPI:
     horovodrun -np 2 `pwd`/TensorFlow_Multinode_Training_with_Horovod.py
 ```
 
-In the example above, we run the script on two MPI threads but on the same node. To use multiple nodes, we pass the `-hosts` flag, where host1 and host2 are the hostnames of two nodes on your cluster. 
+In the example above, we run the script on two MPI threads but on the same node. To use multiple nodes, we pass the `-hosts` flag, where host1 and host2 are the hostnames of two nodes on your cluster.
 
 Example:
 
 ```
     horovodrun -n 2 -H host1,host2 `pwd`/TensorFlow_Multinode_Training_with_Horovod.py
 ```
+
+### Using Visual Studio Code*  (VS Code)
+
+You can use VS Code extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
+
 ### Running Samples on the Intel&reg; DevCloud (Optional)<a name="run-samples-on-devcloud"></a>
 
 <!---Include the next paragraph ONLY if the sample runs in batch mode-->

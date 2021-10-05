@@ -22,11 +22,11 @@ The Monte Carlo procedure for estimating pi is easily parallelized, as each calc
 The code will attempt to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected.  The device used for the compilation is displayed in the output, along with the elapsed time to complete the computation. A rendered image plot of the computation is also written to a file.
 
 
-## Key Implementation Details 
+## Key Implementation Details
 
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and reduction.
 
-## License  
+## License
 
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
@@ -35,22 +35,39 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the `Monte Carlo Pi` Program for CPU and GPU
 
-> Note: if you have not already done so, set up your CLI 
-> environment by sourcing  the setvars script located in 
-> the root of your oneAPI installation. 
+> Note: if you have not already done so, set up your CLI
+> environment by sourcing  the setvars script located in
+> the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
-> Linux User: . ~/intel/oneapi/setvars.sh  
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux User: . ~/intel/oneapi/setvars.sh
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
 Perform the following steps:
-1. Build the program using the following `cmake` commands. 
-``` 
+1. Build the program using the following `cmake` commands.
+```
 $ mkdir build
 $ cd build
 $ cmake ..
@@ -66,7 +83,7 @@ $ make
     ```
     make clean
     ```
-    
+
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 - Build the program using VS2017 or VS2019
     - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
