@@ -1,0 +1,21 @@
+{
+  "guid": "1de1f2df-f068-4d46-b280-4f2f8150c24e",
+  "name": "Numba DPPY Essentials training",
+  "categories": ["Toolkit/oneAPI AI And Analytics/Numba DPPY Samples"],
+  "description": "Numba DPPY Essentials Tutorials using Jupyter Notebooks",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "dependencies": ["intelpython"],
+  "os":["linux"],
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],  		
+  		"steps": [
+         "make all" 
+  		 ]
+  	}
+    ]
+}
+}
