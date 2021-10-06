@@ -189,10 +189,11 @@ int main(int argc, char *argv[]) {
       constexpr float kErrorThreshold = 1e-4;
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {
         for (size_t col = 0; col < COLS_COMPONENT; col++) {
-          if (std::isnan(v_matrix[row][col][0]) ||
-              std::isnan(v_matrix[row][col][1])) {
+          if (sycl::isnan(v_matrix[row][col][0]) ||
+              sycl::isnan(v_matrix[row][col][1])) {
             count++;
           }
+
           float real = v_matrix[row][col][0] -
                        a_matrix[matrix * kAMatrixSizeFactor +
                                 col * ROWS_COMPONENT * kIndexAccessFactor +
@@ -242,7 +243,7 @@ int main(int argc, char *argv[]) {
          << (((long long)matrices * (kAMatrixSizeFactor + kQRMatrixSizeFactor) *
               sizeof(float)) /
              pow(2, 30))
-         << " GBs of memory was requested for " << matrices
+         << " GB of memory was requested for " << matrices
          << " matrices, each of size " << ROWS_COMPONENT << " x "
          << COLS_COMPONENT << "\n";
 

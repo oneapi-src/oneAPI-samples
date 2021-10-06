@@ -20,9 +20,9 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-set(EMULATOR_COMPILE_FLAGS ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR -c)
+set(EMULATOR_COMPILE_FLAGS -Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR -c)
 set(EMULATOR_LINK_FLAGS -fintelfpga)
-set(HARDWARE_COMPILE_FLAGS ${WIN_FLAG} -fintelfpga -c)
+set(HARDWARE_COMPILE_FLAGS -Wall ${WIN_FLAG} -fintelfpga -c)
 set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS})
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
