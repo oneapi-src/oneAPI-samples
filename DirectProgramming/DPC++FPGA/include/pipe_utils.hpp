@@ -7,7 +7,7 @@
 #define __PIPE_UTILS_HPP__
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <utility>
 
 /*
@@ -59,8 +59,8 @@ designs.
 
       class PipeID1;
       class PipeID2;
-      using MyPipe1 = sycl::INTEL::pipe<PipeID1, int>;
-      using MyPipe2 = sycl::INTEL::pipe<PipeID2, int>;
+      using MyPipe1 = sycl::ext::intel::pipe<PipeID1, int>;
+      using MyPipe2 = sycl::ext::intel::pipe<PipeID2, int>;
 
       class PipeDuplicatorID;
       using MyPipeDuplicator = PipeDuplicator<PipeDuplicatorID, int, MyPipe1, MyPipe2>;
@@ -149,7 +149,7 @@ struct PipeArray {
                       idxs...>::IsValid(),
                   "Index out of bounds");
     using VerifiedPipe =
-        cl::sycl::INTEL::pipe<StructId<idxs...>, BaseTy, min_depth>;
+        cl::sycl::ext::intel::pipe<StructId<idxs...>, BaseTy, min_depth>;
   };
 
   // helpers for accessing the dimensions of the pipe array
