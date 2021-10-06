@@ -1,0 +1,16 @@
+# Intel(R) GPU Occupancy Calculator
+
+HTML based **Intel GPU Occupancy Calculator** for GPU/HPC application development
+
+* Allows user to pick a GPU SKU, input Global Size of HPC application, Work-Group(WG) size, Sub-Group size, Shared Local Memory(SLM) size and barrier usage.
+* Computes Sub-Slice/Dual Sub-Slice (SS/DSS) Occupancy based on the inputs.
+* Generates charts for Impact of varying Work-Group size and Impact of varying Shared Local Memory size.
+* Generates a list of all valid Work-Group sizes that can be used and corresponding Occupancy.
+* Generates a list of optimal configuration values for WG, SG and SLM limit that will get 100% Occupancy.
+
+__Usage:__
+* Download the __gpu_occupancy_calculator.html__ and open in Chrome browser
+* Select a GPU from the dropdown and change "EU Count" if necessary OR select the option to enter PCI ID for GPU.
+* The tool will load some default values for  Global Size, WG size, SG size, SLM size and will compute Occupancy and generate graphs.
+* Change the values of GPU target, Global size, WG size, SG size, SLM size or Barrier usage based on your HPC application to calculate Occupancy and tune application.
+
