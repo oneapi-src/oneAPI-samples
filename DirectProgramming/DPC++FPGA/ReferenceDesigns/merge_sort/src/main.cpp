@@ -301,8 +301,8 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   const IndexT total_pipe_accesses = sorter_count / kSortWidth;
 
   // launch the kernel that provides data into the sorter
-  auto input_kernel_event = q.submit([&](handler &h) {
-    h.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
+  auto input_kernel_event =
+    q.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the input pointer and write it to the sorter's input pipe
       KernelPtrType in(in_ptr);
 
@@ -321,11 +321,10 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
         SortInPipe::write(data);
       }
     });
-  });
 
   // launch the kernel that reads out data from the sorter
-  auto output_kernel_event = q.submit([&](handler &h) {
-    h.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
+  auto output_kernel_event =
+    q.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the sorter's output pipe and write to the output pointer
       KernelPtrType out(out_ptr);
       
@@ -346,7 +345,6 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
         }
       }
     });
-  });
 
   // launch the merge sort kernels
   auto merge_sort_events =

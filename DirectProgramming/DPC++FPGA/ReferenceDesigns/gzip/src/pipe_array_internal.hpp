@@ -1,9 +1,3 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-
 namespace {
 template <size_t dim1, size_t... dims>
 struct VerifierDimLayer {
