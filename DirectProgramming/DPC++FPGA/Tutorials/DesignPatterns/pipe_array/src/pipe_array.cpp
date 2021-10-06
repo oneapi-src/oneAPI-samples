@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 #include "pipe_utils.hpp"
-#include "unroller.hpp"
+#include "unrolled_loop.hpp"
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
