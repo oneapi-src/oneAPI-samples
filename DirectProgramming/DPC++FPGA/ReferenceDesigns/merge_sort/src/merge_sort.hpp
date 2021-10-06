@@ -15,7 +15,7 @@
 #include "produce.hpp"
 #include "sorting_networks.hpp"
 #include "unrolled_loop.hpp"
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp"
 #include "impu_math.hpp"
 
 using namespace sycl;

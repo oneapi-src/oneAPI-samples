@@ -8,6 +8,14 @@
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": [
+      "ReferenceDesigns/merge_sort",
+      "include/pipe_utils.hpp",
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
