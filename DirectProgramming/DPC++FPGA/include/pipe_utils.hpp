@@ -145,7 +145,7 @@ struct PipeArray {
     static_assert(sizeof...(idxs) == sizeof...(dims),
                   "Indexing into a PipeArray requires as many indices as "
                   "dimensions of the PipeArray.");
-    static_assert(detail::VerifierDimLayer<dims...>::template VerifierIdxLayer<
+    static_assert(::detail::VerifierDimLayer<dims...>::template VerifierIdxLayer<
                       idxs...>::IsValid(),
                   "Index out of bounds");
     using VerifiedPipe =
