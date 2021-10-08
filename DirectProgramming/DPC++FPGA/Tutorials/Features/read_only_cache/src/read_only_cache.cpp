@@ -3,75 +3,188 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <math.h>
-
 #include <CL/sycl.hpp>
+#include <chrono>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <array>
-#include <iomanip>
-#include <iostream>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 using namespace sycl;
+using namespace sycl::ext::oneapi;
 
-constexpr size_t kSize = 8192;
-constexpr size_t kMaxIter = 50000;
-constexpr size_t kTotalOps = 2 * kMaxIter * kSize;
-constexpr size_t kMaxValue = 128;
-
-using IntArray = std::array<int, kSize>;
-using IntScalar = std::array<int, 1>;
+constexpr int kLUTSize = 1024;       // Default number of inputs.
+constexpr int kNumInputs = 1024; // Default number of inputs.
+constexpr int kInitSeed = 42;        // Seed for randomizing data inputs
+constexpr int kNumRuns = 2;          // runs twice to show the impact of cache
+constexpr double kNs = 1000000000.0; // number of nanoseconds in a second
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-template <int num_copies>
-class Kernel;
+class SqrtWithoutCaching;
+class SqrtWithCaching;
 
-// Launch a kernel on the device specified by selector.
-// The kernel's functionality is designed to show the
-// performance impact of the private_copies attribute.
-template <int num_copies>
-void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
-                         int shift, IntScalar &result) {
-  double kernel_time = 0.0;
+void ComputeSqrtWithoutCaching(sycl::queue &q, buffer<float> &sqrt_lut_buf,
+                               buffer<uint32_t> &input_buf,
+                               buffer<float> &output_buf, event &e) {
+  // Enqueue  kernel
+  e = q.submit([&](handler &h) {
+    // Get accessors to the SYCL buffers
+    accessor sqrt_lut(sqrt_lut_buf, h, read_only,
+                      accessor_property_list{no_alias});
+    accessor input(input_buf, h, read_write, accessor_property_list{no_alias});
+    accessor output(output_buf, h, write_only,
+                    accessor_property_list{no_alias, no_init});
 
-  try {
-    queue q(selector, dpc_common::exception_handler,
-            property::queue::enable_profiling{});
-
-    buffer buffer_array(array);
-    buffer<int, 1> buffer_result(result.data(), 1);
-
-    event e = q.submit([&](handler &h) {
-      accessor accessor_array(buffer_array, h, read_only);
-      accessor accessor_result(buffer_result, h, write_only, no_init);
-
-      h.single_task<Kernel<num_copies>>([=]() [[intel::kernel_args_restrict]] {
-        int r = 0;
-
-        for (size_t i = 0; i < kMaxIter; i++) {
-          // Request num_copies private copies for array a. This limits the
-          // concurrency of the outer loop to num_copies and also limits the
-          // memory use of a.
-          [[intel::private_copies(num_copies)]] int a[kSize];
-          for (size_t j = 0; j < kSize; j++) {
-            a[j] = accessor_array[(i * 4 + j) % kSize] * shift;
-          }
-          for (size_t j = 0; j < kSize; j++) r += a[j];
-        }
-
-        accessor_result[0] = r;
-      });
+    h.single_task<SqrtWithoutCaching>([=]() {
+      for (int i = 0; i < kNumInputs; ++i) {
+        output[i] = sqrt_lut[input[i]];
+      }
     });
+  });
+}
 
-    // SYCL event profiling allows the kernel execution to be timed
-    double start = e.get_profiling_info<info::event_profiling::command_start>();
-    double end = e.get_profiling_info<info::event_profiling::command_end>();
-    kernel_time = (double)(end - start) * 1e-6;
+void ComputeSqrtWithCaching(sycl::queue &q, buffer<float> &sqrt_lut_buf,
+                            buffer<uint32_t> &input_buf,
+                            buffer<float> &output_buf, event &e) {
+  // Enqueue  kernel
+  e = q.submit([&](handler &h) {
+    // Get accessors to the SYCL buffers
+    accessor sqrt_lut(sqrt_lut_buf, h, read_write,
+                      accessor_property_list{no_alias});
+    accessor input(input_buf, h, read_write, accessor_property_list{no_alias});
+    accessor output(output_buf, h, write_only,
+                    accessor_property_list{no_alias, no_init});
 
+    h.single_task<SqrtWithCaching>([=]() {
+      for (int i = 0; i < kNumInputs; i++) {
+        output[i] = sqrt_lut[input[i]];
+      }
+    });
+  });
+}
+
+int main() {
+  // Host and kernel profiling
+  event e;
+  ulong t1_kernel, t2_kernel;
+  double time_kernel;
+
+// Create queue, get platform and device
+#if defined(FPGA_EMULATOR)
+  ext::intel::fpga_emulator_selector device_selector;
+  std::cout << "\nEmulator output does not demonstrate true hardware "
+               "performance. The design may need to run on actual hardware "
+               "to observe the performance benefit of the optimization "
+               "exemplified in this tutorial.\n\n";
+#else
+  ext::intel::fpga_selector device_selector;
+#endif
+  try {
+    auto prop_list =
+        sycl::property_list{sycl::property::queue::enable_profiling()};
+
+    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
+
+    platform platform = q.get_context().get_platform();
+    device device = q.get_device();
+    std::cout << "Platform name: "
+              << platform.get_info<info::platform::name>().c_str() << "\n";
+    std::cout << "Device name: "
+              << device.get_info<info::device::name>().c_str() << "\n\n\n";
+
+    std::cout << "\nSQRT LUT Size: " << kLUTSize << "\n";
+    std::cout << "Number of inputs: " << kNumInputs << "\n";
+
+    // Create input and output buffers
+    auto sqrt_lut_buf = buffer<float>(range<1>(kLUTSize));
+    auto input_buf = buffer<uint32_t>(range<1>(kNumInputs));
+    auto output_buf = buffer<float>(range<1>(kNumInputs));
+
+    srand(kInitSeed);
+
+    // Compute the reference solution
+    float gold[kNumInputs];
+
+    {
+      // Get host-side accessors to the SYCL buffers
+      host_accessor sqrt_lut_host(sqrt_lut_buf, write_only);
+      host_accessor input_host(input_buf, write_only);
+      // Initialize random input
+      for (int i = 0; i < kNumInputs; ++i) {
+        sqrt_lut_host[i] = sqrt(i);
+      }
+
+      for (int i = 0; i < kNumInputs; ++i) {
+        input_host[i] = rand() % kLUTSize;
+      }
+
+      for (int i = 0; i < kNumInputs; ++i) {
+        gold[i] = sqrt_lut_host[input_host[i]];
+      }
+    }
+
+    // Host accessor is now out-of-scope and is destructed. This is required
+    // in order to unblock the kernel's subsequent accessor to the same buffer.
+
+    for (int i = 0; i < kNumRuns; i++) {
+      switch (i) {
+      case 0: {
+        std::cout << "Beginning run with caching disabled.\n\n";
+        ComputeSqrtWithoutCaching(q, sqrt_lut_buf, input_buf, output_buf, e);
+        break;
+      }
+      case 1: {
+        std::cout << "Beginning run with caching enabled.\n\n";
+        ComputeSqrtWithCaching(q, sqrt_lut_buf, input_buf, output_buf, e);
+        break;
+      }
+      default: {
+        ComputeSqrtWithoutCaching(q, sqrt_lut_buf, input_buf, output_buf, e);
+      }
+      }
+
+      // Wait for kernels to finish
+      q.wait();
+
+      // Compute kernel execution time
+      t1_kernel = e.get_profiling_info<info::event_profiling::command_start>();
+      t2_kernel = e.get_profiling_info<info::event_profiling::command_end>();
+      time_kernel = (t2_kernel - t1_kernel) / kNs;
+
+      // Get accessor to output buffer. Accessing the buffer at this point in
+      // the code will block on kernel completion.
+      host_accessor output_host(output_buf, read_only);
+
+      // Verify output and print pass/fail
+      bool passed = true;
+      int num_errors = 0;
+      for (int b = 0; b < kNumInputs; b++) {
+        if (num_errors < 10 && output_host[b] != gold[b]) {
+          passed = false;
+          std::cout << " (mismatch, expected " << gold[b] << ")\n";
+          num_errors++;
+        }
+      }
+
+      if (passed) {
+        std::cout << "Verification PASSED\n\n";
+
+        // Report host execution time and throughput
+        std::cout.setf(std::ios::fixed);
+        double N_MB = (kNumInputs * sizeof(uint32_t)) /
+                      (1024 * 1024); // Input size in MB
+
+        // Report kernel execution time and throughput
+        std::cout << "Kernel execution time: " << time_kernel << " seconds\n";
+        std::cout << "Kernel throughput " << (i == 0 ? "without" : "with")
+                  << " caching: " << N_MB / time_kernel << " MB/s\n\n";
+      } else {
+        std::cout << "Verification FAILED\n";
+        return 1;
+      }
+    }
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
@@ -86,98 +199,5 @@ void SimpleMathWithShift(const device_selector &selector, const IntArray &array,
     }
     std::terminate();
   }
-
-  // The performance of the kernel is measured in GFlops, based on:
-  // 1) the number of operations performed by the kernel.
-  //    This can be calculated easily for the simple example kernel.
-  // 2) the kernel execution time reported by SYCL event profiling.
-  std::cout << "Kernel time when private_copies is set to " << num_copies
-            << ": " << kernel_time << " ms\n";
-  std::cout << "Kernel throughput when private_copies is set to " << num_copies
-            << ": ";
-  std::cout << std::fixed << std::setprecision(3)
-            << ((double)(kTotalOps) / kernel_time) / 1e6f << " GFlops\n";
-}
-
-// Calculates the expected results. Used to verify that the kernel
-// is functionally correct.
-int GoldenResult(const IntArray &input_arr, int shift) {
-  int gr = 0;
-
-  for (size_t i = 0; i < kMaxIter; i++) {
-    int a[kSize];
-    for (size_t j = 0; j < kSize; j++) {
-      a[j] = input_arr[(i * 4 + j) % kSize] * shift;
-    }
-    for (size_t j = 0; j < kSize; j++) gr += a[j];
-  }
-
-  return gr;
-}
-
-int main() {
-  bool success = true;
-
-  IntArray a;
-  IntScalar R0, R1, R2, R3, R4;
-
-  int shift = rand() % kMaxValue;
-
-  // initialize the input data
-  for (size_t i = 0; i < kSize; i++) a[i] = rand() % kMaxValue;
-
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
-
-  // Run the kernel with different values of the private_copies
-  // attribute to determine the optimal private_copies number.
-  SimpleMathWithShift<0>(selector, a, shift, R0);
-  SimpleMathWithShift<1>(selector, a, shift, R1);
-  SimpleMathWithShift<2>(selector, a, shift, R2);
-  SimpleMathWithShift<3>(selector, a, shift, R3);
-  SimpleMathWithShift<4>(selector, a, shift, R4);
-
-  // compute the actual result here
-  int gr = GoldenResult(a, shift);
-
-  // verify the results are correct
-  if (gr != R0[0]) {
-    std::cout << "Private copies 0: mismatch: " << R0[0] << " != " << gr
-              << " (kernel != expected)" << '\n';
-    success = false;
-  }
-
-  if (gr != R1[0]) {
-    std::cout << "Private copies 1: mismatch: " << R1[0] << " != " << gr
-              << " (kernel != expected)" << '\n';
-    success = false;
-  }
-
-  if (gr != R2[0]) {
-    std::cout << "Private copies 2: mismatch: " << R2[0] << " != " << gr
-              << " (kernel != expected)" << '\n';
-    success = false;
-  }
-
-  if (gr != R3[0]) {
-    std::cout << "Private copies 3: mismatch: " << R3[0] << " != " << gr
-              << " (kernel != expected)" << '\n';
-    success = false;
-  }
-
-  if (gr != R4[0]) {
-    std::cout << "Private copies 4: mismatch: " << R4[0] << " != " << gr
-              << " (kernel != expected)" << '\n';
-    success = false;
-  }
-
-  if (success) {
-    std::cout << "PASSED: The results are correct\n";
-    return 0;
-  }
-
-  return 1;
+  return 0;
 }
