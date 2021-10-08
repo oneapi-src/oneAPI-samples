@@ -14,8 +14,8 @@
 using namespace sycl;
 using namespace sycl::ext::oneapi;
 
-constexpr int kLUTSize = 1024;       // Default number of inputs.
-constexpr int kNumInputs = 1024; // Default number of inputs.
+constexpr int kLUTSize = 512;        // Default number of inputs.
+constexpr int kNumInputs = 65536;    // Default number of inputs.
 constexpr int kInitSeed = 42;        // Seed for randomizing data inputs
 constexpr int kNumRuns = 2;          // runs twice to show the impact of cache
 constexpr double kNs = 1000000000.0; // number of nanoseconds in a second
@@ -112,7 +112,7 @@ int main() {
       host_accessor sqrt_lut_host(sqrt_lut_buf, write_only);
       host_accessor input_host(input_buf, write_only);
       // Initialize random input
-      for (int i = 0; i < kNumInputs; ++i) {
+      for (int i = 0; i < kLUTSize; ++i) {
         sqrt_lut_host[i] = sqrt(i);
       }
 
