@@ -1,0 +1,22 @@
+{
+  "guid": "40C26D31-D553-4BD9-9E1D-63DDF352CB85",
+  "name": "Intel® OSPRay Getting Started",
+  "categories": ["Toolkit/oneAPI Rendering Toolkit/OSPRay/OSPRay-Getting-Started"],
+  "description": "This introductory hellorenderingtoolkit sample illustrates how to render triangle data with the pathtracer from Intel OSPRay",
+  "builder": ["cli"],
+  "languages": [{"c":{}}, {"cpp":{}}],
+  "dependencies": ["tbb","ospray","openvkl","embree","rkcommon"],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n ospray-tutorial-test -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
+  		"id": "Intel_OSPRay_ospTutorial",
+  		"steps": [
+         "ospTutorialCpp.exe" 
+  		 ]
+  	}
+    ]
+}
+}

@@ -1,0 +1,22 @@
+{
+  "guid": "80BB7E55-6FCA-491F-8541-E271324CF169",
+  "name": "Intel® Open VKL Getting Started",
+  "categories": ["Toolkit/oneAPI Rendering Toolkit/Open VKL/Open-VKL-Getting-Started"],
+  "description": "This introductory hello rendering toolkit sample illustrates how to sample with Intel Open VKL",
+  "builder": ["cli"],
+  "languages": [{"c":{}}],
+  "dependencies": ["tbb","openvkl","embree","rkcommon"],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n ospray-tutorial-test -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
+  		"id": "Intel_Open_VKL_vklTutorial",
+  		"steps": [
+         "vklTutorial.exe" 
+  		 ]
+  	}
+    ]
+}
+}

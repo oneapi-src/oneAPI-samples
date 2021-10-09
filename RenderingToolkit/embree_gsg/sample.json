@@ -1,0 +1,22 @@
+{
+  "guid": "87FA013D-0B19-45AE-BCD5-43412BE0A99F",
+  "name": "Intel® Embree Getting Started",
+  "categories": ["Toolkit/oneAPI Rendering Toolkit/Embree/Embree-Getting-Started"],
+  "description": "This introductory hello rendering toolkit sample illustrates how to cast a ray into a scene with Intel Embree",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","rkcommon"],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n ospray-tutorial-test -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
+  		"id": "Intel_Embree_minimal",
+  		"steps": [
+         "minimal.exe" 
+  		 ]
+  	}
+    ]
+}
+}

@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.16)
+project(OPENVKL_GSG LANGUAGES C)
+
+find_package(openvkl REQUIRED)
+
+set(ONEAPI_ROOT "")
+if($ENV{ONEAPI_ROOT})
+        set(ONEAPI_ROOT $ENV{ONEAPI_ROOT})
+else()
+        if(WIN32)
+                set(ONEAPI_ROOT "C:/Program Files (x86)/Intel/oneAPI")
+        else()
+                set(ONEAPI_ROOT /opt/intel/oneapi)
+        endif()
+endif($ENV{ONEAPI_ROOT})
+
+set(OPENVKL_ROOT ${ONEAPI_ROOT}/openvkl/latest)
+set(OPENVKL_INCLUDE_DIR ${OPENVKL_ROOT}/include)
+message(STATUS "OPENVKL_INCLUDE_DIR: ${OPENVKL_INCLUDE_DIR}")
+message(STATUS "ONEAPI_ROOT: ${ONEAPI_ROOT}")
+include_directories(${OPENVKL_INCLUDE_DIR} ${ONEAPI_ROOT}/rkcommon/latest/include)
+link_directories(${OPENVKL_ROOT}/lib)
+
+add_executable(vklTutorial src/vklTutorial.c)
+target_link_libraries(vklTutorial PRIVATE openvkl)
+install(TARGETS vklTutorial RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
