@@ -4,7 +4,7 @@ TBD
 
 You can find more information at the [ Intel oneAPI Rendering Toolkit portal](https://software.intel.com/content/www/us/en/develop/tools/oneapi/rendering-toolkit.html).
 
-Users could learn how to run samples for different components in oneAPI Rendering Toolkit
+Users learn how to build and run samples for the component libraries in oneAPI Rendering Toolkit
 
 ## License
 
