@@ -61,9 +61,9 @@
 #pragma once
 
 #include <CL/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/ac_types/ac_int.hpp>
-#include <sycl/ext/intel/ac_types/ac_complex.hpp>
+#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <CL/sycl/INTEL/ac_types/ac_complex.hpp>
 #include <chrono>
 #include <cstring>
 #include <vector>
@@ -73,27 +73,28 @@
 #include "UnrolledLoop.hpp"
 #include "Utils.hpp"
 #include "StreamingQRD.hpp"
+#include "StreamingQRI.hpp"
 #include "MemoryTransfers.hpp"
 
 using std::vector;
 using namespace sycl;
 
-namespace QRDInternal{
+// namespace QRIInternal{
 
   // Forward declare the kernel name
   // (This prevents unwanted name mangling in the optimization report.)
-  class QRD;
+  class QRI;
        
   template< unsigned columns,    // Number of columns in the input matrix
             unsigned rows,       // Number of rows in the input matrix
             unsigned rawLatency, // RAW latency for triangular loop optimization
             bool isComplex,      // Selects between ac_complex<T> and T datatype
             typename T>          // The datatype for the computation
-  void QRDecomposition_impl(  
+  void QRI_impl(  
             vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
                                                                       &A_matrix, 
             vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
-                                                                     &QR_matrix,
+                                                                     &inverse_matrix,
                                        queue &q, size_t matrices, size_t reps) {
 
     // TT will be ac_complex<T> or T depending on isComplex
@@ -110,7 +111,7 @@ namespace QRDInternal{
     using dim = QRInversionDim<isComplex, rows, columns, rawLatency>;
 
     constexpr int kAMatrixSize = dim::AMatrixSize;
-    constexpr int kQRMatrixSize = dim::QRMatrixSize;
+    constexpr int kInverseMatrixSize = dim::InverseMatrixSize;
     constexpr int kNumElementsPerBank = dim::NumElementsPerBank;
 
     using PipeType = NTuple<TT, kNumElementsPerBank>;
@@ -119,9 +120,11 @@ namespace QRDInternal{
     // without overlap.
     constexpr short kNumBuffers = 3;
     
-    using AMatrixPipe = INTEL::pipe<class APipe, PipeType, 4>;
-    using QMatrixPipe = INTEL::pipe<class QPipe, PipeType, 4>;
-    using RMatrixPipe = INTEL::pipe<class RPipe, PipeType, 4>;
+    using AP = sycl::ext::intel::pipe<class APipe, PipeType, 4>;
+    // using QP = sycl::ext::intel::pipe<class QPipe, TT, 4>;
+    using QP = sycl::ext::intel::pipe<class QPipe, PipeType, 4>;
+    using RP = sycl::ext::intel::pipe<class RPipe, TT, 4>;
+    using IP = sycl::ext::intel::pipe<class IPipe, PipeType, 4>;
 
     // We will process 'chunk' number of matrices in each run of the kernel
     short chunk = 2048;
@@ -131,10 +134,10 @@ namespace QRDInternal{
 
     // Create buffers and allocate space for them.
     buffer<TT, 1> *A_buffer[kNumBuffers];
-    buffer<TT, 1> *QR_buffer[kNumBuffers];
+    buffer<TT, 1> *inverse_buffer[kNumBuffers];
     for (short i = 0; i < kNumBuffers; i++) {
       A_buffer[i] = new buffer<TT, 1>(kAMatrixSize * chunk);
-      QR_buffer[i] = new buffer<TT, 1>(kQRMatrixSize * chunk);
+      inverse_buffer[i] = new buffer<TT, 1>(kInverseMatrixSize * chunk);
     }
 
     // Repeat the computation multiple times (for performance analysis)
@@ -146,9 +149,9 @@ namespace QRDInternal{
 
         // Pointer to current input/output matrices in host memory 
         const TT *kPtrA = A_matrix.data() + kAMatrixSize * it;
-        TT *kPtrQR = QR_matrix.data() + kQRMatrixSize * it;
+        TT *kPtrInverse = inverse_matrix.data() + kInverseMatrixSize * it;
 
-        int matrices = chunk;
+        // int matrices = chunk;
 
         // Copy a new input matrix from the host memory into the FPGA DDR 
         q.submit([&](handler &h) {
@@ -157,39 +160,48 @@ namespace QRDInternal{
           h.copy(kPtrA, A_matrix2);
         });
 
-        DDRToLocalMemoryCopy< class QRD_DDR_to_local_mem, 
+        DDRToLocalMemoryCopy< class QRI_DDR_to_local_mem, 
                               isComplex,
                               TT,
                               rows,
                               columns,
-                              AMatrixPipe,
+                              AP,
                               kNumBuffers>
-                              (q, matrices, A_buffer, bufferIdx);
+                              (q, A_buffer, bufferIdx);
 
-        StreamingQRDKernel< class QRD_compute, 
-                            isComplex, 
-                            T, 
-                            rawLatency, 
-                            rows, 
-                            columns,
-                            AMatrixPipe,
-                            QMatrixPipe,
-                            RMatrixPipe>(q);
+        StreamingQRDKernel<   class QRD_compute, 
+                              isComplex, 
+                              T, 
+                              rawLatency, 
+                              rows, 
+                              columns,
+                              AP,
+                              QP,
+                              RP>(q);
 
-        LocalMemoryToDDRCopy< class QRD_local_mem_to_DDR, 
+        StreamingQRIKernel<   class QRI_compute, 
+                              isComplex, 
+                              T, 
+                              rawLatency, 
+                              rows, 
+                              columns,
+                              QP,
+                              RP,
+                              IP>(q);
+
+        LocalMemoryToDDRCopy< class QRI_local_mem_to_DDR, 
                               isComplex,
                               TT,
                               rows,
                               columns,
-                              QMatrixPipe,
-                              RMatrixPipe,
+                              IP,
                               kNumBuffers>
-                              (q, matrices, QR_buffer, bufferIdx);
+                              (q, inverse_buffer, bufferIdx);
 
         // Copy the output result from the FPGA DDR to the host memory
         q.submit([&](handler &h) {
-          accessor final_QR_matrix(*QR_buffer[bufferIdx], h, read_only);
-          h.copy(final_QR_matrix, kPtrQR);
+          accessor final_inverse_matrix(*inverse_buffer[bufferIdx], h, read_only);
+          h.copy(final_inverse_matrix, kPtrInverse);
         });
 
 
@@ -199,16 +211,16 @@ namespace QRDInternal{
     // Clean allocated buffers
     for (short b = 0; b < kNumBuffers; b++) {
       delete A_buffer[b];
-      delete QR_buffer[b];
+      delete inverse_buffer[b];
     }
   }
 
-} // namespace QRDInternal
+// } // namespace QRIInternal
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
-/////////////////////////// User facing QRD functions //////////////////////////
+/////////////////////////// User facing QRI functions //////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 /*
@@ -226,10 +238,10 @@ namespace QRDInternal{
 
   Function arguments:
   - A_matrix:   The input matrix. Interpreted as a transposed matrix.
-  - QR_matrix:  The output matrix. The function will overwrite this matrix.
+  - inverse_matrix:  The output matrix. The function will overwrite this matrix.
                 The first values of this output vector will contain the upper
                 triangular values of the R matrix, row by row.
-                e.g. for a 4x4 QRD, QR_matrix[5] will contain R[1][1].
+                e.g. for a 4x4 QRI, inverse_matrix[5] will contain R[1][1].
                 There are exactly N*(N+1)/2 elements of R.
                 So rest of the values hold the transposed matrix Q (N*N).
   - q:          The device queue.
@@ -251,26 +263,26 @@ namespace QRDInternal{
 
 // Complex single precision floating-point QR Decomposition
 template<unsigned columns, unsigned rows, unsigned rawLatency, typename T>
-void QRDecomposition( vector<ac_complex<T>> &A_matrix, 
-                      vector<ac_complex<T>> &QR_matrix,
-                      queue &q, 
-                      size_t matrices, 
-                      size_t reps) {
+void QRI( vector<ac_complex<T>> &A_matrix, 
+                  vector<ac_complex<T>> &inverse_matrix,
+                  queue &q, 
+                  size_t matrices, 
+                  size_t reps) {
 
   constexpr bool isComplex = true;
-  QRDInternal::QRDecomposition_impl<columns, rows, rawLatency, isComplex, T>
-                                      (A_matrix, QR_matrix, q, matrices, reps); 
+  QRI_impl<columns, rows, rawLatency, isComplex, T>
+                                      (A_matrix, inverse_matrix, q, matrices, reps); 
 }
 
 // Real single precision floating-point QR Decomposition
 template<unsigned columns, unsigned rows, unsigned rawLatency, typename T>
-void QRDecomposition( vector<T> &A_matrix, 
-                      vector<T> &QR_matrix,
-                      queue &q, 
-                      size_t matrices, 
-                      size_t reps) {
+void QRI( vector<T> &A_matrix, 
+                  vector<T> &inverse_matrix,
+                  queue &q, 
+                  size_t matrices, 
+                  size_t reps) {
 
   constexpr bool isComplex = false;
-  QRDInternal::QRDecomposition_impl<columns, rows, rawLatency, isComplex, T>
-                                      (A_matrix, QR_matrix, q, matrices, reps); 
+  QRI_impl<columns, rows, rawLatency, isComplex, T>
+                                      (A_matrix, inverse_matrix, q, matrices, reps); 
 }

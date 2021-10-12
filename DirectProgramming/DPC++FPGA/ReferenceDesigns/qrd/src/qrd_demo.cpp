@@ -57,13 +57,11 @@ int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
   constexpr size_t kRandomMin = 1;
   constexpr size_t kRandomMax = 10;
-  constexpr size_t kAMatrixSizeFactor = ROWS_COMPONENT * COLS_COMPONENT;
+  constexpr size_t kAMatrixSize = ROWS_COMPONENT * COLS_COMPONENT;
   
   constexpr size_t kQMatrixSize = ROWS_COMPONENT * COLS_COMPONENT;
   constexpr size_t kRMatrixSize = COLS_COMPONENT * (COLS_COMPONENT + 1) / 2;
   constexpr size_t kQRMatrixSize = kQMatrixSize + kRMatrixSize;
-
-  constexpr size_t kIndexAccessFactor = 2;
 
   size_t matrices = argc > 1 ? atoi(argv[1]) : 1;
   if (matrices < 1) {
@@ -97,7 +95,7 @@ int main(int argc, char *argv[]) {
     vector<float> qr_matrix; 
 #endif
 
-    a_matrix.resize(matrices * kAMatrixSizeFactor);
+    a_matrix.resize(matrices * kAMatrixSize);
     qr_matrix.resize(matrices * kQRMatrixSize);
 
     // For output-postprocessing
@@ -115,33 +113,33 @@ int main(int argc, char *argv[]) {
     srand(kRandomSeed);
     // for (int test=0; test<61; test++){
 
-      for (size_t i = 0; i < matrices; i++) {
-        // cout << "A MATRIX" << std::endl;
-        for (size_t row = 0; row < ROWS_COMPONENT; row++) {
-          for (size_t col = 0; col < COLS_COMPONENT; col++) {
-            int val = rand();
-            float random_real = val % (kRandomMax - kRandomMin) + kRandomMin;
+    for (size_t i = 0; i < matrices; i++) {
+      // cout << "A MATRIX" << std::endl;
+      for (size_t row = 0; row < ROWS_COMPONENT; row++) {
+        for (size_t col = 0; col < COLS_COMPONENT; col++) {
+          int val = rand();
+          float random_real = val % (kRandomMax - kRandomMin) + kRandomMin;
 
-  #if COMPLEX == 1
-            val = rand();
-            float random_imag = val % (kRandomMax - kRandomMin) + kRandomMin;
-            
-            ac_complex<float> random_complex = {random_real, random_imag};
+#if COMPLEX == 1
+          val = rand();
+          float random_imag = val % (kRandomMax - kRandomMin) + kRandomMin;
+          
+          ac_complex<float> random_complex = {random_real, random_imag};
 
-            a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] = 
-                                                                  random_complex;
-  #else
-            // if(test == 60){
-            a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] = 
-                                                                  random_real;
-  #endif
-            // cout << a_matrix[i * kAMatrixSizeFactor + col * ROWS_COMPONENT + row] 
-            //      << " ";
-            // }
-          }
-          // cout << std::endl;
+          a_matrix[i * kAMatrixSize + col * ROWS_COMPONENT + row] = 
+                                                                random_complex;
+#else
+          // if(test == 60){
+          a_matrix[i * kAMatrixSize + col * ROWS_COMPONENT + row] = 
+                                                                random_real;
+#endif
+          // cout << a_matrix[i * kAMatrixSize + col * ROWS_COMPONENT + row] 
+          //      << " ";
+          // }
         }
+        // cout << std::endl;
       }
+    }
 
     // }
 
@@ -270,10 +268,10 @@ int main(int argc, char *argv[]) {
             }
           }
 
-          bool qr_eq_a = (abs(a_matrix[matrix * kAMatrixSizeFactor +
+          bool qr_eq_a = (abs(a_matrix[matrix * kAMatrixSize +
                               j * ROWS_COMPONENT + i].r() - qr_ij[0]) 
                           < kErrorThreshold)
-                      && (abs(a_matrix[matrix * kAMatrixSizeFactor +
+                      && (abs(a_matrix[matrix * kAMatrixSize +
                               j * ROWS_COMPONENT + i].i() - qr_ij[1]) 
                           < kErrorThreshold);
 
@@ -322,10 +320,10 @@ int main(int argc, char *argv[]) {
 
             if(!qr_eq_a){
               cout  << "Error: A[" << i << "][" << j << "] = (" << 
-                                  a_matrix[matrix * kAMatrixSizeFactor +
+                                  a_matrix[matrix * kAMatrixSize +
                                   j * ROWS_COMPONENT + i].r()
                                   << ", " <<
-                                  a_matrix[matrix * kAMatrixSizeFactor +
+                                  a_matrix[matrix * kAMatrixSize +
                                   j * ROWS_COMPONENT + i].i()
                     << ") but QR[" << i << "][" << j << "] = (" << qr_ij[0] 
                     << ", " << qr_ij[1] << ")" << std::endl;
@@ -429,7 +427,7 @@ int main(int argc, char *argv[]) {
             }
           }
 
-          bool qr_eq_a = (abs(a_matrix[matrix * kAMatrixSizeFactor +
+          bool qr_eq_a = (abs(a_matrix[matrix * kAMatrixSize +
                               j * ROWS_COMPONENT + i] - qr_ij) 
                           < kErrorThreshold);
 
@@ -465,7 +463,7 @@ int main(int argc, char *argv[]) {
 
             if(!qr_eq_a){
               cout  << "Error: A[" << i << "][" << j << "] = " << 
-                                  a_matrix[matrix * kAMatrixSizeFactor +
+                                  a_matrix[matrix * kAMatrixSize +
                                   j * ROWS_COMPONENT + i]
                     << " but QR[" << i << "][" << j << "] = " << qr_ij 
                     << std::endl;
@@ -539,7 +537,7 @@ int main(int argc, char *argv[]) {
             "executable."
          << "\n";
     cerr << "   In this run, more than "
-         << (((long long)matrices * (kAMatrixSizeFactor + kQRMatrixSize) *
+         << (((long long)matrices * (kAMatrixSize + kQRMatrixSize) *
               sizeof(float)) /
              pow(2, 30))
          << " GB of memory was requested for " << matrices

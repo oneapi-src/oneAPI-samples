@@ -1,23 +1,32 @@
-set(TARGET_NAME qrd)
-set(SOURCE_FILE qrd_demo.cpp)
-set(DEVICE_SOURCE_FILE qrd.cpp)
-set(DEVICE_HEADER_FILE qrd.hpp)
+set(DEVICE_SOURCE_FILE qri.cpp)
+set(DEVICE_HEADER_FILE qri.hpp)
 
 set(UNROLLED_LOOP_HEADER UnrolledLoop.hpp)
 set(TUPLE_HEADER Tuple.hpp)
 set(STREAMING_QRD_HEADER StreamingQRD.hpp)
+set(STREAMING_QRI_HEADER StreamingQRI.hpp)
 set(UTILS_HEADER Utils.hpp)
 set(MEMORY_TRANSFERS_HEADER MemoryTransfers.hpp)
 set(DIM_HEADER QRInversionDim.hpp)
 
-set(HOST_SOURCE_FILE qrd_demo.cpp)
-set(TARGET_NAME qrd)
+set(HOST_SOURCE_FILE qri_demo.cpp)
+set(TARGET_NAME qri)
 
-set(EMULATOR_TARGET ${TARGET_NAME}.prj)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
+set(REPORTS_TARGET ${TARGET_NAME}_report)
 
-# FPGA board selection
+# Intel supported FPGA Boards and their names
+set(A10_PAC_BOARD_NAME "intel_a10gx_pac:pac_a10")
+set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10")
+
+# Design specific constant values
+set(ROWS_COMPONENT_A10 128)
+set(COLS_COMPONENT_A10 128)
+
+set(ROWS_COMPONENT_S10 256)
+set(COLS_COMPONENT_S10 256)
+
 set(FIXED_ITERATIONS_A10 64)
 set(FIXED_ITERATIONS_S10 105)
 
@@ -49,10 +58,7 @@ endif()
 
 # Check if target is the Intel(R) PAC D5005 (with Intel Stratix(R) 10 SX FPGA)
 if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
-                    \nPlease refer to the README for information on board selection.")
+    message(STATUS "\tFPGA_BOARD was not specified. Configuring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Arria(R) 10 GX FPGA. Please refer to the README for information on board selection.")
 elseif(FPGA_BOARD STREQUAL ${A10_PAC_BOARD_NAME})
     message(STATUS "\tConfiguring the design to run on the Intel(R) Programmable Acceleration Card (PAC) with Intel Arria(R) 10 GX FPGA.")
 elseif(FPGA_BOARD STREQUAL ${S10_PAC_BOARD_NAME})
@@ -78,8 +84,8 @@ separate_arguments(USER_HARDWARE_FLAGS)
 set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsfp-relaxed -fno-fast-math -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${SELECTED_BOARD} ${USER_HARDWARE_FLAGS} -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 set(FINAL_LINK_FLAGS -fintelfpga -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 
-set(EMULATOR_COMPILE_FLAGS "-fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFPGA_EMULATOR -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
-set(EMULATOR_LINK_FLAGS -fintelfpga )
+set(EMULATOR_COMPILE_FLAGS "-I/p/psg/ctools/mpfr/2.4.2/linux64/include/ -I/p/psg/ctools/gmp/6.1.2/linux64/include/ -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFPGA_EMULATOR -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
+set(EMULATOR_LINK_FLAGS "-fintelfpga -L/p/psg/ctools/mpfr/2.4.2/linux64/lib/ -lmpfr" )
 
 # FPGA emulator
 if(WIN32)
@@ -90,23 +96,26 @@ if(WIN32)
                        COMMAND ${CMAKE_CXX_COMPILER} ${WIN_EMULATOR_COMPILE_FLAGS} /F 2097152 /EHsc ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/${HOST_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${WIN_EMULATOR_TARGET}
                        DEPENDS ${DEVICE_SOURCE_FILE} ${HOST_SOURCE_FILE})
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    add_executable(${EMULATOR_TARGET} ${DEVICE_SOURCE_FILE} ${HOST_SOURCE_FILE})
+    add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
+    set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS ${EMULATOR_COMPILE_FLAGS})
+    set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS ${EMULATOR_LINK_FLAGS})
 endif()
 
-# This is a Windows-specific flag that enables error handling in host code
+# FPGA hardware
 if(WIN32)
     add_custom_target(fpga COMMAND echo "An FPGA hardware target is not provided on Windows. See README for details.")
 else()
     add_custom_target(fpga DEPENDS ${FPGA_TARGET})
-    set(DEVICE_FPGA_OBJ "qrd_fpga.o")
-    set(DEVICE_IMAGE_FPGA_OBJ "qrd_fpga.a")
-    set(HOST_FPGA_OBJ "qrd_host.o")
+    set(DEVICE_FPGA_OBJ "qri_fpga.o")
+    set(DEVICE_IMAGE_FPGA_OBJ "qri_fpga.a")
+    set(HOST_FPGA_OBJ "qri_host.o")
 
     separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
 
     add_custom_command(OUTPUT ${DEVICE_FPGA_OBJ}
                        COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${DEVICE_FPGA_OBJ}
-                       DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} ${UNROLLED_LOOP_HEADER} ${TUPLE_HEADER} ${STREAMING_QRD_HEADER} ${UTILS_HEADER} ${MEMORY_TRANSFERS_HEADER} ${DIM_HEADER})
+                       DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} ${UNROLLED_LOOP_HEADER} ${TUPLE_HEADER} ${STREAMING_QRD_HEADER} ${UTILS_HEADER} ${MEMORY_TRANSFERS_HEADER} ${DIM_HEADER} ${STREAMING_QRI_HEADER})
 
     add_custom_command(OUTPUT ${HOST_FPGA_OBJ}
                        COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${HOST_SOURCE_FILE} -o ${HOST_FPGA_OBJ}
@@ -128,7 +137,7 @@ if(WIN32)
     separate_arguments(CMAKE_CXX_FLAGS_LIST WINDOWS_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${REPORTS_TARGET}
         COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${CMAKE_CXX_FLAGS_LIST} ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
-                      DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} ${UNROLLED_LOOP_HEADER} ${TUPLE_HEADER} ${STREAMING_QRD_HEADER} ${UTILS_HEADER} ${MEMORY_TRANSFERS_HEADER} ${DIM_HEADER})
+                      DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} ${UNROLLED_LOOP_HEADER} ${TUPLE_HEADER} ${STREAMING_QRD_HEADER} ${UTILS_HEADER} ${MEMORY_TRANSFERS_HEADER} ${DIM_HEADER} ${STREAMING_QRI_HEADER})
 else()
     add_custom_target(report DEPENDS ${REPORTS_TARGET} )
 
@@ -137,6 +146,7 @@ else()
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${UNROLLED_LOOP_HEADER} ${UNROLLED_LOOP_HEADER} COPYONLY)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${TUPLE_HEADER} ${TUPLE_HEADER} COPYONLY) 
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${STREAMING_QRD_HEADER} ${STREAMING_QRD_HEADER} COPYONLY) 
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${STREAMING_QRI_HEADER} ${STREAMING_QRI_HEADER} COPYONLY) 
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${UTILS_HEADER} ${UTILS_HEADER} COPYONLY) 
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${MEMORY_TRANSFERS_HEADER} ${MEMORY_TRANSFERS_HEADER} COPYONLY) 
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${DIM_HEADER} ${DIM_HEADER} COPYONLY)
@@ -144,10 +154,11 @@ else()
     separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
     add_custom_command(OUTPUT ${REPORTS_TARGET}
                       COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS} -fsycl-link ${DEVICE_SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
-                      DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} ${UNROLLED_LOOP_HEADER} ${TUPLE_HEADER} ${STREAMING_QRD_HEADER} ${UTILS_HEADER} ${MEMORY_TRANSFERS_HEADER} ${DIM_HEADER})
+                      DEPENDS ${DEVICE_SOURCE_FILE} ${DEVICE_HEADER_FILE} ${UNROLLED_LOOP_HEADER} ${TUPLE_HEADER} ${STREAMING_QRD_HEADER} ${UTILS_HEADER} ${MEMORY_TRANSFERS_HEADER} ${DIM_HEADER} ${STREAMING_QRI_HEADER})
 endif()
 
 # Run emulator
 add_custom_target(run
                   COMMAND ../${TARGET_NAME}.fpga_emu
                   DEPENDS ${TARGET_NAME}.fpga_emu)
+ 
