@@ -5,22 +5,22 @@
 #include "rom_base.hpp"
 
 // the QFP bits for the ExpLUT
-constexpr unsigned exp_qfp_total_bits = 10;
-constexpr unsigned exp_qfp_exponent_bits = 6;
-constexpr unsigned exp_lut_depth=(1 << exp_qfp_total_bits);
-constexpr int exp_taylor_series_terms = 70;
+constexpr unsigned kExpQFPTotalBits = 10;
+constexpr unsigned kExpQFPExponentBits = 6;
+constexpr unsigned kExpLUTDepth = (1 << kExpQFPTotalBits);
+constexpr int kExpTaylorSeriesTerms = 70;
 
-static_assert(exp_qfp_total_bits >= exp_qfp_exponent_bits);
-static_assert(exp_taylor_series_terms > 3);
+static_assert(kExpQFPTotalBits >= kExpQFPExponentBits);
+static_assert(kExpTaylorSeriesTerms > 3);
 
 //
 // A LUT for computing exp(-x)
 // Uses ROMBase to create a ROM initialized with the values of exp(-x)
 // using quantized floating point (QFP) numbers for indices.
 //
-struct ExpLUT : ROMBase<unsigned short, exp_lut_depth> {
+struct ExpLUT : ROMBase<unsigned short, kExpLUTDepth> {
   // the QFP format
-  using QFP = QFP<exp_qfp_total_bits, exp_qfp_exponent_bits, false>;
+  using QFP = QFP<kExpQFPTotalBits, kExpQFPExponentBits, false>;
 
   // the functor used to initialize the ROM
   // NOTE: anything called from within the functor's operator() MUST be
@@ -31,14 +31,14 @@ struct ExpLUT : ROMBase<unsigned short, exp_lut_depth> {
       // the float to compute exp(-f) (== 1/exp(f)) and initialize that entry
       // of the ROM
       float f = QFP::ToFP32CE(x);
-      float val = 1.0f / hldutils::Exp(f, exp_taylor_series_terms);
+      float val = 1.0f / hldutils::Exp(f, kExpTaylorSeriesTerms);
       return QFP::FromFP32CE(val);
     }
     constexpr InitFunctor() = default;
   };
 
   // constexpr constructor using the initializer above
-  constexpr ExpLUT() : ROMBase<unsigned short, exp_lut_depth>(InitFunctor()) {}
+  constexpr ExpLUT() : ROMBase<unsigned short, kExpLUTDepth>(InitFunctor()) {}
 };
 
 #endif /*__QFP_EXP_LUT_HPP__*/

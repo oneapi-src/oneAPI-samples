@@ -34,16 +34,16 @@
 //        [](int x) { return x * x; }) {}
 //    };
 //
-template<typename T, int _depth>
+template<typename T, int rom_depth>
 struct ROMBase {
   // ensure a positive depth
-  static_assert(_depth > 0);
+  static_assert(rom_depth > 0);
   
   // allows the depth of the ROM to be queried
-  static constexpr int depth = _depth;
+  static constexpr int depth = rom_depth;
 
   // allows the type stored in the ROM to be queried
-  using val_type = T;
+  using ValType = T;
 
   // constexpr constructor that initializes the contents of the ROM
   // using a user specified Functor. NOTE: the functor must be constexpr,
@@ -53,7 +53,7 @@ struct ROMBase {
   constexpr ROMBase(const InitFunctor& func) : data_() {
     static_assert(std::is_invocable_r_v<T, InitFunctor, int>);
 
-    for (int i = 0; i < depth; i++) {
+    for (int i = 0; i < rom_depth; i++) {
       data_[i] = func(i);
     }
   }
@@ -62,7 +62,7 @@ struct ROMBase {
   const T& operator[](int i) const { return data_[i]; }
 
  protected:
-  T data_[depth];
+  T data_[rom_depth];
 };
 
 #endif /* __ROM_BASE_HPP__ */

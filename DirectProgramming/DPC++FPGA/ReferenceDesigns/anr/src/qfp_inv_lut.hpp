@@ -5,17 +5,17 @@
 #include "rom_base.hpp"
 
 // the QFP bits for the Pow2LUT
-constexpr unsigned inv_qfp_total_bits = 10;
-constexpr unsigned inv_qfp_exponent_bits = 3;
-constexpr unsigned inv_lut_depth=(1 << inv_qfp_total_bits);
-static_assert(inv_qfp_total_bits >= inv_qfp_exponent_bits);
+constexpr unsigned kInvQFPTotalBits = 10;
+constexpr unsigned kInvQFPExponentBits = 3;
+constexpr unsigned kInvLutDepth = (1 << kInvQFPTotalBits);
+static_assert(kInvQFPTotalBits >= kInvQFPExponentBits);
 
 //
 // A LUT for computing 1/x
 //
-struct InvLUT : ROMBase<unsigned short, inv_lut_depth> {
+struct InvLUT : ROMBase<unsigned short, kInvLutDepth> {
   // the QFP format
-  using QFP = QFP<inv_qfp_total_bits, inv_qfp_exponent_bits, false>;
+  using QFP = QFP<kInvQFPTotalBits, kInvQFPExponentBits, false>;
 
   // the functor used to initialize the ROM
   // NOTE: anything called from within the functor's operator() MUST be
@@ -32,7 +32,7 @@ struct InvLUT : ROMBase<unsigned short, inv_lut_depth> {
   };
 
   // constexpr constructor using the initializer above
-  constexpr InvLUT() : ROMBase<unsigned short, inv_lut_depth>(InitFunctor()) {}
+  constexpr InvLUT() : ROMBase<unsigned short, kInvLutDepth>(InitFunctor()) {}
 };
 
 #endif /* __QFP_INV_LUT_HPP__ */

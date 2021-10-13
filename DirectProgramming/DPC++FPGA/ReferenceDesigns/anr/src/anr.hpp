@@ -69,18 +69,18 @@ auto BuildGaussianPowers1D(float sigma) {
 // in the extremes (i.e., min/max).
 //
 PixelT Saturate(float pixel_float) {
-  constexpr unsigned MaxPixelVal = std::numeric_limits<PixelT>::max();
-  constexpr unsigned MinPixelVal = std::numeric_limits<PixelT>::min();
+  constexpr unsigned kMaxPixelVal = std::numeric_limits<PixelT>::max();
+  constexpr unsigned kMinPixelVal = std::numeric_limits<PixelT>::min();
   constexpr unsigned kFloatSignOffset = ((sizeof(float) * 8) - 1);
 
   // get the bits of the float for the negative check
   unsigned int pixel_float_bits = reinterpret_cast<unsigned int&>(pixel_float);
 
   PixelT pixel;
-  if (pixel_float >= MaxPixelVal) {
-    pixel = MaxPixelVal;
+  if (pixel_float >= kMaxPixelVal) {
+    pixel = kMaxPixelVal;
   } else if ((pixel_float_bits >> kFloatSignOffset) & 0x1) { // pixel_float < 0
-    pixel = MinPixelVal;
+    pixel = kMinPixelVal;
   } else {
     pixel = pixel_float;
   }
@@ -105,7 +105,7 @@ inline float BilateralFilter1D(ShiftReg<PixelT, filter_size>& buffer,
   using SignedPixelT = ac_int<kPixelBits + 1, true>;
 
   // the middle pixel index
-  constexpr int kMidIdx = filter_size / 2;
+  constexpr int mid_idx = filter_size / 2;
 
   // static asserts
   static_assert(filter_size > 1);
@@ -123,22 +123,22 @@ inline float BilateralFilter1D(ShiftReg<PixelT, filter_size>& buffer,
   UnrolledLoop<filter_size_eff>([&](auto i) {
     // get the absolute value of the pixel differences
     float intensity_diff_squared;
-    if constexpr (kMidIdx == (i * 2)) {
+    if constexpr (mid_idx == (i * 2)) {
       // special case for middle pixel, the absolute difference will be 0
       // and therefore the absolute value difference squared will also be 0
       intensity_diff_squared = 0.0f;
     } else {
       // compute differences squared
       const SignedPixelT intensity_diff =
-          buffer_signed[kMidIdx] - buffer_signed[i * 2];
+          buffer_signed[mid_idx] - buffer_signed[i * 2];
       intensity_diff_squared = intensity_diff * intensity_diff;
     }
 
     // compute the filter value as e^-(intensity_component + spatial_component)
     // Use a LUT to compute the exp(-x) value
     float filter_val;
-    if constexpr (kMidIdx == (i * 2)) {
-      // (buffer[kMidIdx] - buffer[i * 2]) = 0 in this case, so the intensity
+    if constexpr (mid_idx == (i * 2)) {
+      // (buffer[mid_idx] - buffer[i * 2]) = 0 in this case, so the intensity
       // component is 0. For similar reasons, the spatial component is also 0
       // and therefore filter_val is e^(-0) = 1.
       filter_val = 1.0f;
@@ -202,8 +202,8 @@ struct VerticalFunctor {
     static_assert(filter_size > 1);
 
     // get the middle index and compute the intensity sigma from it
-    constexpr int kMidIdx = filter_size / 2;
-    const PixelT middle_pixel = buffer[kMidIdx];
+    constexpr int mid_idx = filter_size / 2;
+    const PixelT middle_pixel = buffer[mid_idx];
     const auto sig_i_inv_squared_x_half = sig_i_lut[middle_pixel];
 
     // perform the vertical 1D bilateral filter
@@ -241,8 +241,8 @@ struct HorizontalFunctor {
 
     // grab the intensity sigma for the middle pixel (forwarded from the
     // vertical kernel)
-    constexpr int kMidIdx = filter_size / 2;
-    const float sig_i_inv_squared_x_half = buffer[kMidIdx].sig_i;
+    constexpr int mid_idx = filter_size / 2;
+    const float sig_i_inv_squared_x_half = buffer[mid_idx].sig_i;
 
     // grab just the pixel data, pixel_n is the 'new' pixel forwarded from the
     // vertical kernel (i.e., the partially filtered one)
@@ -260,7 +260,7 @@ struct HorizontalFunctor {
     PixelT output_pixel = Saturate(output_pixel_float);
 
     // fixed-point alpha blending with the original pixel
-    const PixelT original_pixel(buffer[kMidIdx].pixel_o);
+    const PixelT original_pixel(buffer[mid_idx].pixel_o);
     auto output_pixel_alpha =
         (alpha_fixed * output_pixel) + (one_minus_alpha_fixed * original_pixel);
     auto output_pixel_tmp = output_pixel_alpha.to_ac_int();
