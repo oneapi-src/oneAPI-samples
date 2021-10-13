@@ -8,7 +8,7 @@ This Getting Started sample code show how to do batch linear regression using th
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
-| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
+| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable processor family
 | Software                          | oneDAL Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
 | What you will learn               | basic oneDAL programming model for Intel CPU
 | Time to complete                  | 5 minutes

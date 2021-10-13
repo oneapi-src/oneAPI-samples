@@ -1,6 +1,6 @@
 ﻿# `ISO2DFD` Sample
 
-ISO2DFD: Intel® oneAPI Data Parallel C++ Language Basics Using 2D-Finite-Difference-Wave Propagation
+ISO2DFD: Data Parallel C++ Language Basics Using 2D-Finite-Difference-Wave Propagation
 
 The ISO2DFD sample refers to Two-Dimensional Finite-Difference Wave Propagation in Isotropic Media.  It is a two-dimensional stencil to simulate a wave propagating in a 2D isotropic medium and illustrates the basics of the DPC++ programming language using direct programming.
 

@@ -4,7 +4,7 @@ This Getting Started sample code shows how to use distributed Pandas using the I
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
-| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
+| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable processor family
 | Software                          | Intel Distribution of Modin*, Intel® oneAPI AI Analytics Toolkit
 | What you will learn               | Basic Intel Distribution of Modin* programming model for Intel CPU
 | Time to complete                  | 5-8 minutes
@@ -26,7 +26,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building Intel Distribution of Modin* for CPU
 
-Intel Distribution of Modin* is ready for use once you finish the Intel Distribution of Modin installation and have run the post installation script.
+Intel® Distribution of Modin* is ready for use once you finish the Intel® Distribution of Modin installation and have run the post installation script.
 
 For this sample, you will also have to install the matplotlib module. 
 
@@ -41,7 +41,7 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 
 ### Activate conda environment With Root Access
 
-Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the `setvars.sh` script and [Intel Distribution of Modin environment installation] (https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html). Then navigate in Linux shell to your oneapi installation path, typically `/opt/intel/oneapi/` when installed as root or sudo, and `~/intel/oneapi/` when not installed as a superuser. If you customized the installation folder, the `setvars.sh` file is in your custom folder.
+Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the `setvars.sh` script and [Intel® Distribution of Modin* environment installation] (https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html). Then navigate in Linux shell to your oneapi installation path, typically `/opt/intel/oneapi/` when installed as root or sudo, and `~/intel/oneapi/` when not installed as a superuser. If you customized the installation folder, the `setvars.sh` file is in your custom folder.
 
 Activate the conda environment with the following command:
 

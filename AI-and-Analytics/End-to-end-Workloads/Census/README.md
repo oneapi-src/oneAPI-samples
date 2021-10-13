@@ -5,7 +5,7 @@ This sample code illustrates how to use Intel® Distribution of Modin* for ETL o
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
-| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
+| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable processor family
 | Software                          | Intel® AI Analytics Toolkit (Python version 3.7, Intel Distribution of Modin* , Ray, Intel® Extension for Scikit-Learn, NumPy)
 | What you will learn               | How to use Intel Distribution of Modin* and Intel® Extension for Scikit-learn to build end to end ML workloads and gain performance.
 | Time to complete                  | 15-18 minutes
@@ -36,7 +36,7 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 
 ### Activate conda environment
 
-To install the Intel Distribution of Modin python environment, use the following command:
+To install the Intel® Distribution of Modin* python environment, use the following command:
 #### Linux
 ```
 conda create -n aikit-modin --override-channels intel-aikit-modin omniscidbe4py python=3.7 -c intel -c conda-forge
