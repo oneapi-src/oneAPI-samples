@@ -4,7 +4,7 @@ This sample code illustrates how to analyze the performance benefit from using I
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
-| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
+| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable processor family
 | Software                          | XGBoost, Intel® oneAPI AI Analytics Toolkit
 | What you will learn               | How to analyze the performance benefit from using Intel optimizations upstreamed by Intel to the latest XGBoost compared to un-optimized XGBoost 0.81
 | Time to complete                  | 10-15 minutes

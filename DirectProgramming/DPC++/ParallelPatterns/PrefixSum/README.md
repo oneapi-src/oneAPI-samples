@@ -1,6 +1,6 @@
 ﻿# `Prefix Sum` Sample
 
-This code sample demonstrates the implementation of parallel prefix sum using Intel$reg; oneAPI Data Parallel C++ (DPC++) to
+This code sample demonstrates the implementation of parallel prefix sum using Data Parallel C++ (DPC++) to
 offload the computation to a GPU. In this implementation, a random sequence of 2**n elements is given
 (n is a positive number) as input. The algorithm computes the prefix sum in parallel. The result sequence is
 in ascending order.

@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// motionsim: Intel® oneAPI DPC++ Language Basics Using a Monte Carlo
+// motionsim: Data Parallel C++ Language Basics Using a Monte Carlo
 // Simulation
 //
 // This code sample will implement a simple example of a Monte Carlo

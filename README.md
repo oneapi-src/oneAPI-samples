@@ -85,10 +85,12 @@ See [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master
 |2021.4.0|[Intel(R) Extension for Scikit-learn: SVC for Adult dataset](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/IntelScikitLearn_Extensions_SVC_Adult)|Use Intel(R) Extension for Scikit-learn to accelerate the training and prediction with SVC algorithm on Adult dataset. Compare the performance of SVC algorithm optimized through Intel(R) Extension for Scikit-learn against original Scikit-learn.|
 |2021.4.0|[Intel® Python Scikit-learn Extension Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_SKLearn_GettingStarted)|This sample illustrates how to do Image classification using SVM classifier from Python API package SKlearnex with the use of Intel® oneAPI Data Analytics Library (oneDAL).|
 |2021.4.0|[Merge Sort](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/merge_sort)|A Reference design demonstrating merge sort on an Intel® FPGA|
+|2021.4.0|[Printf](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/printf)|This FPGA tutorial explains how to use the printf() to print in a DPC++ FPGA program|
 |2021.4.0|[Private Copies](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/private_copies)|An Intel® FPGA tutorial demonstrating how to use the private_copies attribute to trade off the resource use and the throughput of a DPC++ FPGA program|
+|2021.4.0|[Scheduler Target FMAX](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/scheduler_target_fmax)|Explain the scheduler_target_fmax_mhz attribute and its effect on the performance of Intel® FPGA kernels|
 |2021.4.0|[Stall Enable](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/stall_enable)|An Intel® FPGA tutorial demonstrating the use_stall_enable_clusters attribute|
 
-Total Samples: 158
+Total Samples: 160
 
 
 ## Deleted Code Samples
@@ -104,4 +106,4 @@ Code samples are licensed under the MIT license. See [License.txt](https://githu
 
 Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-Report Generated on:  October 01, 2021
+Report Generated on:  October 14, 2021
