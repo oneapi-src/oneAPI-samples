@@ -16,7 +16,7 @@ int main() {
   std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
   //# initialize data array using usm
-  int *data = malloc_shared<int>(N, q);
+  auto data = malloc_shared<int>(N, q);
   for (int i = 0; i < N; i++) data[i] = i;
 
   //# use parallel_for and sub_groups to calculate sum
@@ -25,7 +25,7 @@ int main() {
     auto i = item.get_global_id(0);
 
     //# Adds all elements in sub_group using sub_group reduce
-    int sum_sg = ONEAPI::reduce(sg, data[i], ONEAPI::plus<>());
+    int sum_sg = reduce_over_group(sg, data[i], plus<>());
 
     //# write sub_group sum to first location for each sub_group
     if (sg.get_local_id()[0] == 0) data[i] = sum_sg;

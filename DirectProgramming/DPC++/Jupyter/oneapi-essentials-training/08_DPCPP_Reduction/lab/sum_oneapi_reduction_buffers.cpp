@@ -28,7 +28,7 @@ int main() {
       accessor acc_sum(buf_sum, h);
 
       //# nd-range kernel parallel_for with reduction parameter
-      h.parallel_for(nd_range<1>{N, B}, ONEAPI::reduction(acc_sum, 0, ONEAPI::plus<>()), [=](nd_item<1> it, auto& temp) {
+      h.parallel_for(nd_range<1>{N, B}, ext::oneapi::reduction(acc_sum, 0, plus<>()), [=](nd_item<1> it, auto& temp) {
         auto i = it.get_global_id(0);
         temp.combine(acc_data[i]);
       });
