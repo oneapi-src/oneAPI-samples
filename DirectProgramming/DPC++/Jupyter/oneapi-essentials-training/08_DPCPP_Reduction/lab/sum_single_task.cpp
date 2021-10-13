@@ -14,7 +14,7 @@ int main() {
   std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
   //# initialize data array using usm
-  int *data = malloc_shared<int>(N, q);
+  auto data = malloc_shared<int>(N, q);
   for (int i = 0; i < N; i++) data[i] = i;
 
   //# user single_task to add all numbers
