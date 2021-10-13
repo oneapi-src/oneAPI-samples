@@ -1,5 +1,5 @@
 ## Title
-DPC++ Reduction: This is part 4 of the oneAPI essentials training series
+DPC++ Reductions: This is part 8 of the oneAPI essentials training series
   
 ## Requirements
 | Optimized for                       | Description
@@ -9,7 +9,7 @@ DPC++ Reduction: This is part 4 of the oneAPI essentials training series
 | Software                          | Intel&reg; oneAPI DPC++ Compiler, Jupyter Notebooks, Intel Devcloud
   
 ## Purpose
-The hands-on exercises in this notebook demonstrate the enhanced features that DPC++ brings to reductions. The code samples demonstrate how to implement a reductions on device, group reduction and simplified reductions.
+This hands-on exercise demonstrates various ways to optimizes reduction operations using DPC++. You will learn how to use ND-Range kernels to parallelize reductions on accelerators and also learn how to optimize reductions using new reduction extensions in DPC++.
 
 ## License  
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
@@ -24,4 +24,4 @@ Below are the steps to access these Jupyter notebooks on Intel Devcloud
 2. Go to the "Terminal" in the Intel Devcloud
 3. Type in the below command to download the oneAPI-essentials series notebooks into your Devcloud account
     /data/oneapi_workshop/get_jupyter_notebooks.sh
-4. Navigate to oneAPI_Essentials folder and open the Welcome.ipynb, click on "Module 8 - DPC++ Reductions" notebook and follow the instructions
+4. Navigate to oneAPI_Essentials folder and open the Welcome.ipynb, click on "DPC++ Reductions" notebook and follow the instructions
