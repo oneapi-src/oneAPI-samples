@@ -16,7 +16,7 @@ int main() {
   std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
   //# initialize data array using usm
-  int *data = malloc_shared<int>(N, q);
+  auto data = malloc_shared<int>(N, q);
   for (int i = 0; i < N; i++) data[i] = i;
 
   //# use parallel_for to calculate sum for work_group using reduce
@@ -25,7 +25,7 @@ int main() {
     auto i = item.get_global_id(0);
 
     //# Adds all elements in work_group using work_group reduce
-    int sum_wg = ONEAPI::reduce(wg, data[i], ONEAPI::plus<>());
+    int sum_wg = reduce_over_group(wg, data[i], plus<>());
 
     //# write work_group sum to first location for each work_group
     if (item.get_local_id(0) == 0) data[i] = sum_wg;

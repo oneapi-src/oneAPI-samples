@@ -6,8 +6,8 @@
 #include <CL/sycl.hpp>
 using namespace sycl;
 
-static const size_t N = 64; // global size
-static const size_t B = 64; // work-group size
+static constexpr size_t N = 64; // global size
+static constexpr size_t B = 64; // work-group size
 
 int main() {
   queue q;
@@ -20,7 +20,7 @@ int main() {
     //# nd-range kernel
     h.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item) {
       //# get sub_group handle
-      ONEAPI::sub_group sg = item.get_sub_group();
+      auto sg = item.get_sub_group();
 
       //# query sub_group and print sub_group info once per sub_group
       if (sg.get_local_id()[0] == 0) {
@@ -31,3 +31,4 @@ int main() {
     });
   }).wait();
 }
+

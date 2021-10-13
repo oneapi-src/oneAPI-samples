@@ -24,7 +24,7 @@ int main() {
   *sum = 0;
 
   //# nd-range kernel parallel_for with reduction parameter
-  q.parallel_for(nd_range<1>{N, B}, ONEAPI::reduction(sum, 0, ONEAPI::plus<>()), [=](nd_item<1> it, auto& temp) {
+  q.parallel_for(nd_range<1>{N, B}, ext::oneapi::reduction(sum, 0, plus<>()), [=](nd_item<1> it, auto& temp) {
     auto i = it.get_global_id(0);
     temp.combine(data[i]);
   }).wait();
