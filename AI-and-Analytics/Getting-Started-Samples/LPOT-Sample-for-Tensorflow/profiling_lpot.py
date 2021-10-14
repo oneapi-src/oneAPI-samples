@@ -1,6 +1,6 @@
 
 import tensorflow as tf
-+print("Tensorflow version {}".format(tf.__version__))
+print("Tensorflow version {}".format(tf.__version__))
 
 import numpy as np
 import time
