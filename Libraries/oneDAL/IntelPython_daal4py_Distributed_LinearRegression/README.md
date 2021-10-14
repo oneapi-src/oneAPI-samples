@@ -7,7 +7,7 @@ This sample code shows how to train and predict with a distributed linear regres
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
-| Software                          | oneDAL Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
+| Software                          | oneAPI Data Analytics Library (oneDAL) Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
 | What you will learn               | distributed oneDAL Linear Regression programming model for Intel CPU
 | Time to complete                  | 5 minutes
 
@@ -22,11 +22,7 @@ This distributed linear regression sample code is implemented for the CPU using 
  
 
 ## Additional Requirements
-<<<<<<< HEAD
-You will need a working Intel® MPI Library, which is included in the [Intel® oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
-=======
 You will need a working MPI library. We recommend to use Intel(R) MPI Library, which is included in the [Intel oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
->>>>>>> parent of 5fa54cb (round 1 changes)
   
 ## License  
 Code samples are licensed under the MIT license. See

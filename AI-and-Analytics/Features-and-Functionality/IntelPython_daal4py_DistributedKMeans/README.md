@@ -1,11 +1,11 @@
 # `Intel Python daal4py Distributed K-Means` Sample 
-This sample code shows how to train and predict with a distributed k-means model using the python API package daal4py for oneAPI Data Analytics Library. It assumes you have a working version of the MPI library installed, and it demonstrates how to use software products that can be found in the [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+This sample code shows how to train and predict with a distributed k-means model using the python API package daal4py for oneAPI Data Analytics Library. It assumes you have a working version of the MPI library installed, and it demonstrates how to use software products that can be found in the [oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
 
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
-| Software                          | oneDAL Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
+| Software                          | oneAPI Data Analytics Library (oneDAL), Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
 | What you will learn               | distributed oneDAL K-Means programming model for Intel CPU
 | Time to complete                  | 5 minutes
 

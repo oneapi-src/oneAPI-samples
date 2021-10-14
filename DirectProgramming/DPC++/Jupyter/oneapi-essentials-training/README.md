@@ -64,6 +64,6 @@ Notebook Name: Owner
 * Intel VTune™ Profiler usage __in Intel DevCloud__ environment using command-line options
 * _Lab Excercise_: VTune Profiling by collecting __gpu_hotspots__ for [iso3dfd](https://github.com/intel/HPCKit-code-samples/tree/master/Compiler/iso3dfd_dpcpp) sample application
 
-[Intel oneAPI DPC++ Library (oneDPL)](07_DPCPP_Library): Praveen.K.Kundurthy@intel.com
+[oneAPI DPC++ Library (oneDPL)](07_DPCPP_Library): Praveen.K.Kundurthy@intel.com
 * Introduction to oneAPI DPC++ Library
 * _Lab Excercise_: Gamma Correction with oneDPL
