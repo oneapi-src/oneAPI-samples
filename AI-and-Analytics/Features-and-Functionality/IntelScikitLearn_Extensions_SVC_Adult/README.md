@@ -11,7 +11,7 @@ This sample code uses [Adult dataset](https://archive.ics.uci.edu/ml/datasets/ad
 
 ## Purpose
 
-Intel® Extension for Scikit-learn is a seamless way to speed up your Scikit-learn application. The acceleration is achieved through the use of the Intel® oneAPI Data Analytics Library ([oneDAL](https://github.com/oneapi-src/oneDAL)). Patching scikit-learn makes it a well-suited machine learning framework for dealing with real-life problems.
+Intel® Extension for Scikit-learn is a seamless way to speed up your Scikit-learn application. The acceleration is achieved through the use of the Intel® oneAPI Data Analytics Library ([oneAPI Data Analytics Library (oneDAL)](https://github.com/oneapi-src/oneDAL)). Patching scikit-learn makes it a well-suited machine learning framework for dealing with real-life problems.
 
 In this sample, you will run a SVC algorithm with Intel® Extension for Scikit-learn and compare its performance against the original stock version of scikit-learn. You will see that patching scikit-learn results in a significant increase in performance over the original scikit-learn while also maintaining the same precision.
 
@@ -29,7 +29,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 ### Pre-requirement
 
 > NOTE: No action is required if you are using Intel DevCloud as your environment.
-  Refer to [Intel oneAPI DevCloud](https://intelsoftwaresites.secure.force.com/devcloud/oneapi) for Intel DevCloud.
+  Refer to [DevCloud Connector for Intel® oneAPI Toolkits](https://intelsoftwaresites.secure.force.com/devcloud/oneapi) for Intel DevCloud.
 
  1. **Intel® AI Analytics Toolkit**
        Install the toolkit from the [oneAPI main page](https://software.intel.com/en-us/oneapi)
