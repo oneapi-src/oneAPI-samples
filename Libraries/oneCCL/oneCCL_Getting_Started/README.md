@@ -6,7 +6,7 @@ By using all reduce collective operation samples, users can understand how to co
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; 
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel oneAPI Collective Communications Library (oneCCL), Intel oneAPI DPC++/C++ Compiler, Intel oneAPI DPC++ Library (oneDPL), GNU Compiler
+| Software                          | oneAPI Collective Communications Library (oneCCL), oneAPI DPC++/C++ Compiler, v, GNU Compiler
 | What you will learn               | basic oneCCL programming model for both Intel CPU and GPU
 | Time to complete                  | 15 minutes
 
@@ -15,7 +15,7 @@ By using all reduce collective operation samples, users can understand how to co
 | ------ | ------ |
 | sycl_allreduce_test.cpp |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
 | cpu_allreduce_test.cpp/cpu_allreduce_bf16_test.c |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
->  Notice: Please use Intel oneAPI DevCloud as the environment for jupyter notebook samples. \
+>  Notice: Please use DevCloud Connector for Intel® oneAPI Toolkits as the environment for jupyter notebook samples. \
 Users can refer to [DevCloud Getting Started](https://devcloud.intel.com/oneapi/get-started/) for using DevCloud \
 Users can use JupyterLab from DevCloud via "One-click Login in", and download samples via "git clone" or the "oneapi-cli" tool \
 Once users are in the JupyterLab with download jupyter notebook samples, they can start following the steps without further installation needed.
@@ -38,7 +38,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 The samples below require the following components, which are part of the [Intel® oneAPI DL Framework Developer Toolkit (DLFD Kit)
 ](https://software.intel.com/en-us/oneapi/dldev-kit)
-*  Intel oneAPI Collective Communications Library (oneCCL)
+*  oneAPI Collective Communications Library (oneCCL)
 
 You can refer to this page [oneAPI](https://software.intel.com/en-us/oneapi) for toolkit installation.
 
@@ -47,10 +47,10 @@ You can refer to this page [oneAPI](https://software.intel.com/en-us/oneapi) for
 
 -----
 
-The samples below require the following components, which are part of the [Intel oneAPI Base Tookit](https://software.intel.com/en-us/oneapi/oneapi-kit)
-*  Intel oneAPI Collective Communications Library (oneCCL)
-*  Intel oneAPI DPC++/C++ Compiler
-*  Intel oneAPI DPC++ Library (oneDPL)
+The samples below require the following components, which are part of the [Intel® oneAPI Base Toolkit (Base Kit)](https://software.intel.com/en-us/oneapi/oneapi-kit)
+*  oneAPI Collective Communications Library (oneCCL)
+*  oneAPI DPC++/C++ Compiler
+*  oneAPI DPC++ Library (oneDPL)
 
 The samples also require an OpenCL driver. Please refer [System Requirements](https://software.intel.com/en-us/articles/intel-oneapi-base-toolkit-system-requirements) for OpenCL driver installation.
 

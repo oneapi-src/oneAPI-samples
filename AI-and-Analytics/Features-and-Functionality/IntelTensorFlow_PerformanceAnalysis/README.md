@@ -49,7 +49,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 #### **Conda Environment Creation**
 
 
-##### **1. Intel oneAPI DevCloud**
+##### **1. DevCloud Connector for Intel® oneAPI Toolkit**
 ---
 ###### **Stock TensorFlow**
 
@@ -78,7 +78,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
   
   
    
-##### **2. Linux with Intel oneAPI AI Analytics Toolkit**   
+##### **2. Linux with Intel® oneAPI AI Analytics Toolkit (AI Kit)**   
 ---
 ###### **Stock TensorFlow**
 

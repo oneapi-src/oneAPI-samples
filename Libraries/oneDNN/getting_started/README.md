@@ -11,13 +11,13 @@ You can find library source code and code used by these samples at the oneDNN Gi
 This sample is implemented in C++ and executes on CPU or GPU. The sample also
 also includes [a Jupyer Notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_getting_started.ipynb) that
 demonstrates how to compile the code with various oneDNN configurations
-in Intel oneAPI DevCloud environment.
+in DevCloud Connector for Intel® oneAPI Toolkits environment.
 
 | Optimized for                      | Description
 | :---                               | :---
 | OS                                 | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                           | Skylake with GEN9 or newer
-| Software                           | Intel oneAPI Deep Neural Network Library (oneDNN), Intel oneAPI DPC++/C++ Compiler, Intel oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel C++ Compiler
+| Software                           | oneAPI Deep Neural Network Library (oneDNN), oneAPI DPC++/C++ Compiler, oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel C++ Compiler
 | What you will learn                | Running a simple convolutional model on Intel CPU or Intel GPU
 | Time to complete                   | 15 minutes
 

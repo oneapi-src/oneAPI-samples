@@ -17,7 +17,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | Compoment      | Folder                                             | Description
 | --------- | ------------------------------------------------ | -
 | Scikit-learn | [IntelScikitLearn_Extensions_SVC_Adult](IntelScikitLearn_Extensions_SVC_Adult)   | Use Intel® Extension for Scikit-learn to accelerate the training and prediction with SVC algorithm on Adult dataset. Compare the performance of SVC algorithm optimized through Intel® Extension for Scikit-learn against original Scikit-learn.
-| daal4py | [IntelPython_daal4py_DistributedLinearRegression](IntelPython_daal4py_DistributedLinearRegression)    | Run a distributed Linear Regression model with oneDAL daal4py library memory objects.
+| daal4py | [IntelPython_daal4py_DistributedLinearRegression](IntelPython_daal4py_DistributedLinearRegression)    | Run a distributed Linear Regression model with oneAPI Data Analytics Library (oneDAL) daal4py library memory objects.
 | PyTorch | [IntelPyTorch_Extensions_AutoMixedPrecision](IntelPyTorch_Extensions_AutoMixedPrecision)   | Download, compile, and get started with Intel® Extension for PyTorch*.
 | PyTorch | [IntelPyTorch_TorchCCL_Multinode_Training](IntelPyTorch_TorchCCL_Multinode_Training)   | Perform distributed training with oneAPI Collective Communications Library (oneCCL) in PyTorch.
 | TensorFlow & Model Zoo | [IntelTensorFlow_ModelZoo_Inference_with_FP32_Int8](IntelTensorFlow_ModelZoo_Inference_with_FP32_Int8)               | Run ResNet50 inference on Intel's pretrained FP32 and Int8 model.
@@ -27,6 +27,6 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | XGBoost | [IntelPython_XGBoost_Performance](IntelPython_XGBoost_Performance) |  Analyze the performance benefit from using Intel optimized XGBoost compared to un-optimized XGBoost 0.81.
 | XGBoost | [IntelPython_XGBoost_daal4pyPrediction](IntelPython_XGBoost_daal4pyPrediction) |  Analyze the performance benefit of minimal code changes to port pre-trained XGBoost model to daal4py prediction for much faster prediction than XGBoost prediction..
 
-# Using Samples in Intel oneAPI DevCloud
-To get started using samples in the DevCloud, refer to [Using AI samples in Intel oneAPI DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).
+# Using Samples in DevCloud Connector for Intel® oneAPI Toolkits
+To get started using samples in the DevCloud, refer to [Using AI samples in DevCloud Connector for Intel® oneAPI Toolkits](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).
 
