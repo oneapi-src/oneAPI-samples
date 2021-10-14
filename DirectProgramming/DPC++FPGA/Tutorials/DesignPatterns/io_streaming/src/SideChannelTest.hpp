@@ -44,61 +44,59 @@ event SubmitSideChannelKernels(queue& q, int initial_match_num,
   constexpr size_t kTimeoutCounterMax = 1024;
 
   // submit the main processing kernel
-  return q.submit([&](handler& h) {
-    h.single_task<SideChannelMainKernel>([=] {
-      int match_num = initial_match_num;
-      size_t timeout_counter;
-      size_t samples_processed = 0;
-      bool terminate = false;
+  return q.single_task<SideChannelMainKernel>([=] {
+    int match_num = initial_match_num;
+    size_t timeout_counter;
+    size_t samples_processed = 0;
+    bool terminate = false;
 
-      while (!terminate) {
-        // check for an update to the sum_threshold from the host
-        bool valid_update;
-        int tmp = HostToDeviceSideChannel::read(valid_update);
-        if (valid_update) match_num = tmp;
+    while (!terminate) {
+      // check for an update to the sum_threshold from the host
+      bool valid_update;
+      int tmp = HostToDeviceSideChannel::read(valid_update);
+      if (valid_update) match_num = tmp;
 
-        // reset the timeout counter
-        timeout_counter = 0;
+      // reset the timeout counter
+      timeout_counter = 0;
 
-        // if we processed a full frame, reset the counter
-        // this places a maximum on the number of elements we process before
-        // checking for an update from the host
-        if (samples_processed == frame_size) samples_processed = 0;
+      // if we processed a full frame, reset the counter
+      // this places a maximum on the number of elements we process before
+      // checking for an update from the host
+      if (samples_processed == frame_size) samples_processed = 0;
 
-        // do the main processing
-        while ((samples_processed != frame_size) && 
-               (timeout_counter != kTimeoutCounterMax)) {
-          // read from the input IO pipe
-          bool valid_read;
-          auto val = IOPipeIn::read(valid_read);
+      // do the main processing
+      while ((samples_processed != frame_size) && 
+              (timeout_counter != kTimeoutCounterMax)) {
+        // read from the input IO pipe
+        bool valid_read;
+        auto val = IOPipeIn::read(valid_read);
 
-          if (valid_read) {
-            // reset the timeout counter since we read a valid piece of data
-            timeout_counter = 0;
+        if (valid_read) {
+          // reset the timeout counter since we read a valid piece of data
+          timeout_counter = 0;
 
-            // processed another sample in this frame
-            samples_processed++;
+          // processed another sample in this frame
+          samples_processed++;
 
-            // check if the value matches
-            if (val == match_num) {
-              // value matches, so tell the host about it
-              DeviceToHostSideChannel::write(val);
-            }
-            
-            // propagate the input value to the output
-            IOPipeOut::write(val);
-          } else {
-            // increment the timeout counter since the read was invalid
-            timeout_counter++;
+          // check if the value matches
+          if (val == match_num) {
+            // value matches, so tell the host about it
+            DeviceToHostSideChannel::write(val);
           }
+          
+          // propagate the input value to the output
+          IOPipeOut::write(val);
+        } else {
+          // increment the timeout counter since the read was invalid
+          timeout_counter++;
         }
-
-        // the host uses this side channel to tell the kernel to exit
-        // Any successful read from this channel means the host wants this
-        // kernel to end; the actual value read doesn't matter
-        (void)HostToDeviceTermSideChannel::read(terminate);
       }
-    });
+
+      // the host uses this side channel to tell the kernel to exit
+      // Any successful read from this channel means the host wants this
+      // kernel to end; the actual value read doesn't matter
+      (void)HostToDeviceTermSideChannel::read(terminate);
+    }
   });
 }
 

@@ -30,17 +30,13 @@ class C;
 //
 template<typename T, typename InPipe>
 event SubmitProducer(queue &q, T* in_ptr, size_t size) {
-  auto e = q.submit([&](handler& h) {
-    h.single_task<P>([=]() [[intel::kernel_args_restrict]] {
-      host_ptr<T> in(in_ptr);
-      for (size_t i = 0; i < size; i++) {
-        auto data = in[i];
-        InPipe::write(data);
-      }
-    });
+  return q.single_task<P>([=]() [[intel::kernel_args_restrict]] {
+    host_ptr<T> in(in_ptr);
+    for (size_t i = 0; i < size; i++) {
+      auto data = in[i];
+      InPipe::write(data);
+    }
   });
-
-  return e;
 }
 
 //
@@ -56,17 +52,13 @@ event SubmitProducer(queue &q, T* in_ptr, size_t size) {
 //
 template<typename T, typename OutPipe>
 event SubmitConsumer(queue &q, T* out_ptr, size_t size) {
-  auto e = q.submit([&](handler& h) {
-    h.single_task<C>([=]() [[intel::kernel_args_restrict]] {
-      host_ptr<T> out(out_ptr);
-      for (size_t i = 0; i < size; i++) {
-        auto data = OutPipe::read();
-        *(out + i) = data;
-      }
-    });
+  return q.single_task<C>([=]() [[intel::kernel_args_restrict]] {
+    host_ptr<T> out(out_ptr);
+    for (size_t i = 0; i < size; i++) {
+      auto data = OutPipe::read();
+      *(out + i) = data;
+    }
   });
-
-  return e;
 }
 
 // A generic kernel that reads from an input pipe and writes to an output pipe
@@ -78,17 +70,13 @@ event SubmitConsumer(queue &q, T* out_ptr, size_t size) {
 //              |--------|
 template<typename KernelClass, typename T, typename InPipe, typename OutPipe>
 event SubmitSinglePipeWorker(queue &q, size_t size) {
-  auto e = q.submit([&](handler& h) {
-    h.single_task<KernelClass>([=]() [[intel::kernel_args_restrict]] {
-      for (size_t i = 0; i < size; i++) {
-        auto data = InPipe::read();
-        // computation could be placed here
-        OutPipe::write(data);
-      }
-    });
+  return q.single_task<KernelClass>([=]() [[intel::kernel_args_restrict]] {
+    for (size_t i = 0; i < size; i++) {
+      auto data = InPipe::read();
+      // computation could be placed here
+      OutPipe::write(data);
+    }
   });
-
-  return e;
 }
 
 //

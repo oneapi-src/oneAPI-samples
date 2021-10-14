@@ -325,21 +325,17 @@ class Kernel;
 //
 template<typename T>
 event SubmitKernel(queue &q, T *in_ptr, size_t count, T *out_ptr) {
-  auto e = q.submit([&](handler& h) {
-    h.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
-      // using a host_ptr class tells the compiler that this pointer lives in
-      // the host's address space
-      host_ptr<T> in(in_ptr);
-      host_ptr<T> out(out_ptr);
+  return q.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
+    // using a host_ptr class tells the compiler that this pointer lives in
+    // the host's address space
+    host_ptr<T> in(in_ptr);
+    host_ptr<T> out(out_ptr);
 
-      for (size_t i = 0; i < count; i++) {
-        T data = *(in + i);
-        *(out + i) = data;
-      }
-    });
+    for (size_t i = 0; i < count; i++) {
+      T data = *(in + i);
+      *(out + i) = data;
+    }
   });
-
-  return e;
 }
 
 #endif /* __STREAMING_WITHOUT_API_HPP__ */
