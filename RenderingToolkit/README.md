@@ -33,7 +33,7 @@ Please try the getting started sample programs in order.  Outputs of a sample ma
 
 | Order | Component      | Folder                                             | Description |
 | -- | --------- | ------------------------------------------------ | - |
-| 1 | Intel OSPRay | [01_ospray_gsg](ospray_gsg)                     | Get started with Intel OSPRay |
-| 2 | Intel Embree | [02_embree_gsg](embree_gsg)| Get started with Intel Embree |
-| 3 | Intel Open Volume Kernel Library | [03_openvkl_gsg](openvkl_gsg)| Get started with Intel Open VKL |
-| 4 | Intel Open Image Denoise | [04_oidn_gsg](oidn_gsg) | Get started with Intel Open Image Denoise |
+| 1 | Intel OSPRay | [01_ospray_gsg](01_ospray_gsg)                     | Get started with Intel OSPRay |
+| 2 | Intel Embree | [02_embree_gsg](02_embree_gsg)| Get started with Intel Embree |
+| 3 | Intel Open Volume Kernel Library | [03_openvkl_gsg](03_openvkl_gsg)| Get started with Intel Open VKL |
+| 4 | Intel Open Image Denoise | [04_oidn_gsg](04_oidn_gsg) | Get started with Intel Open Image Denoise |
