@@ -1,7 +1,7 @@
 {
   "guid": "87FA013D-0B19-45AE-BCD5-43412BE0A99F",
   "name": "Intel® Embree Getting Started",
-  "categories": ["Toolkit/oneAPI Rendering Toolkit/Embree/Embree-Getting-Started"],
+  "categories": ["Toolkit/oneAPI Libraries/Embree"],
   "description": "This introductory hello rendering toolkit sample illustrates how to cast a ray into a scene with Intel Embree",
   "builder": ["cli"],
   "languages": [{"cpp":{}}],
@@ -9,14 +9,50 @@
   "os":["linux", "windows", "darwin"],
   "targetDevice": ["CPU"],
   "ciTests": {
-  	"linux": [
-    {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n ospray-tutorial-test -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
-  		"id": "Intel_Embree_minimal",
-  		"steps": [
-         "minimal.exe" 
-  		 ]
-  	}
-    ]
-}
+        "linux": [
+                {
+                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
+                "id": "Intel_Embree_minimal_lin",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake --build . ",
+                    "cd Release",
+                    "./minimal"
+                 ]
+                 }
+        ],
+        "windows":[
+                {
+                "env": ["call C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat"],
+                "id": "Intel_Embree_minimal_win",
+                "steps":[
+                    "mkdir build",
+                    "cd build",
+                    "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
+                    "cmake --build . --config Release",
+                    "cd Release",
+                    "minimal.exe"
+                ]
+
+                }
+        ],
+        "darwin": [
+                {
+                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
+                "id": "Intel_Embree_minimal_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake --build . ",
+                    "cd Release",
+                    "./minimal"
+                 ]
+                 }
+        ]
+
+
+  }
 }

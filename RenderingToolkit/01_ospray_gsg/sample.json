@@ -1,22 +1,58 @@
 {
   "guid": "40C26D31-D553-4BD9-9E1D-63DDF352CB85",
   "name": "Intel® OSPRay Getting Started",
-  "categories": ["Toolkit/oneAPI Rendering Toolkit/OSPRay/OSPRay-Getting-Started"],
-  "description": "This introductory hellorenderingtoolkit sample illustrates how to render triangle data with the pathtracer from Intel OSPRay",
+  "categories": ["Toolkit/oneAPI Libraries/OSPRay"],
+  "description": "This introductory 'hello rendering toolkit' sample program demonstrates how to render triangle data with the pathtracer from Intel OSPRay",
   "builder": ["cli"],
-  "languages": [{"c":{}}, {"cpp":{}}],
+  "languages": [{"cpp":{}}],
   "dependencies": ["tbb","ospray","openvkl","embree","rkcommon"],
   "os":["linux", "windows", "darwin"],
   "targetDevice": ["CPU"],
   "ciTests": {
   	"linux": [
-    {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n ospray-tutorial-test -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
-  		"id": "Intel_OSPRay_ospTutorial",
+                {
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force"],
+  		"id": "Intel_OSPRay_ospTutorial_lin",
   		"steps": [
-         "ospTutorialCpp.exe" 
+                    "mkdir build",
+                    "cd build",
+                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake --build . ",
+                    "cd Release",
+                    "./ospTutorialCpp"
   		 ]
-  	}
-    ]
-}
+  	         }
+        ],
+        "windows":[
+		{
+		"env": ["call C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat"],
+		"id": "Intel_OSPRay_ospTutorial_win",
+		"steps":[
+                    "mkdir build",
+                    "cd build",
+		    "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
+		    "cmake --build . --config Release",
+		    "cd Release",
+		    "ospTutorialCpp.exe"
+		]
+
+		}
+	],
+        "macos": [
+                {
+                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
+                "id": "Intel_OSPRay_ospTutorial_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake --build . ",
+                    "cd Release",
+                    "./ospTutorialCpp"
+                 ]
+                 }
+        ]
+
+
+  }
 }

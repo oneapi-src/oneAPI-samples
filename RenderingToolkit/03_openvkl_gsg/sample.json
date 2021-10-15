@@ -1,22 +1,56 @@
 {
   "guid": "80BB7E55-6FCA-491F-8541-E271324CF169",
   "name": "Intel® Open VKL Getting Started",
-  "categories": ["Toolkit/oneAPI Rendering Toolkit/Open VKL/Open-VKL-Getting-Started"],
-  "description": "This introductory hello rendering toolkit sample illustrates how to sample with Intel Open VKL",
+  "categories": ["Toolkit/oneAPI Libraries/Open VKL"],
+  "description": "This introductory hello rendering toolkit sample program demonstrates how to sample into volumes with Intel Open VKL",
   "builder": ["cli"],
   "languages": [{"c":{}}],
   "dependencies": ["tbb","openvkl","embree","rkcommon"],
   "os":["linux", "windows", "darwin"],
   "targetDevice": ["CPU"],
   "ciTests": {
-  	"linux": [
-    {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n ospray-tutorial-test -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
-  		"id": "Intel_Open_VKL_vklTutorial",
-  		"steps": [
-         "vklTutorial.exe" 
-  		 ]
-  	}
-    ]
-}
+        "linux": [
+                {
+                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
+                "id": "Intel_OpenVKL_vklTutorial_lin",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake --build . ",
+                    "cd Release",
+                    "./vklTutorial"
+                 ]
+                 }
+        ],
+        "windows":[
+                {
+                "env": ["call C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat"],
+                "id": "Intel_OpenVKL_vklTutorial_win",
+                "steps":[
+                    "mkdir build",
+                    "cd build",
+                    "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
+                    "cmake --build . --config Release",
+                    "cd Release",
+                    "vklTutorial.exe"
+                ]
+
+                }
+        ],
+        "darwin": [
+                {
+                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
+                "id": "Intel_OpenVKL_vklTutorial_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake --build . ",
+                    "cd Release",
+                    "./vklTutorial"
+                 ]
+                 }
+        ]
+  }
 }

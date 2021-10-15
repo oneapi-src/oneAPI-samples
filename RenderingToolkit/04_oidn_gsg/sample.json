@@ -1,22 +1,58 @@
 {
   "guid": "41F82C06-A9FA-4521-B87A-8F7304CB6631",
   "name": "Intel® Open Image Denoise Getting Started",
-  "categories": ["Toolkit/oneAPI Rendering Toolkit/Open Image Denoise/OIDN-Getting-Started"],
-  "description": "This introductory hello rendering toolkit sample illustrates how to denoise a raytraced image with Intel Open Image Denoise",
+  "categories": ["Toolkit/oneAPI Libraries/Open Image Denoise"],
+  "description": "This introductory 'hello rendering toolkit' sample program demonstrates how to denoise a raytraced image with Intel Open Image Denoise",
   "builder": ["cli"],
   "languages": [{"cpp":{}}],
   "dependencies": ["tbb","rkcommon"],
   "os":["linux", "windows", "darwin"],
   "targetDevice": ["CPU"],
   "ciTests": {
-  	"linux": [
-    {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n ospray-tutorial-test -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
-  		"id": "Intel_OIDN_oidnDenoise",
-  		"steps": [
-         "oidnDenoise.exe" 
-  		 ]
-  	}
-    ]
-}
+        "linux": [
+                {
+                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
+                "id": "Intel_OIDN_oidnDenoise_lin",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake --build . ",
+                    "cd Release",
+                    "./oidnDenoise"
+                 ]
+                 }
+        ],
+        "windows":[
+                {
+                "env": ["call C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat"],
+                "id": "Intel_OIDN_oidnDenoise_win",
+                "steps":[
+                    "mkdir build",
+                    "cd build",
+                    "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
+                    "cmake --build . --config Release",
+                    "cd Release",
+                    "oidnDenoise.exe"
+                ]
+
+                }
+        ],
+        "darwin": [
+                {
+                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
+                "id": "Intel_OIDN_oidnDenoise_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake --build . ",
+                    "cd Release",
+                    "./oidnDenoise"
+                 ]
+                 }
+        ]
+
+
+  }
 }
