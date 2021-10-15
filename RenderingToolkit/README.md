@@ -29,7 +29,7 @@ Imaging Tools:
 
 ## Getting Started Samples
 
-Please try the getting started sample programs in order.  Outputs of a sample may serve as inputs for anothe sample.
+Please try the getting started sample programs in order.  Outputs of a sample may serve as inputs for another sample.
 
 | Order | Component      | Folder                                             | Description |
 | -- | --------- | ------------------------------------------------ | - |
