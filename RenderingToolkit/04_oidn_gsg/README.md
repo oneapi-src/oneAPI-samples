@@ -87,7 +87,7 @@ cmake --build .
 
 Convert the accumulatedFrameCpp.ppm image to LSB data ordering and .pfm format. Example conversion with ImageMagick convert:
 ```
-<path-to-ImageMagick>/magick convert ../../../01_ospray_gsg\build\Release\accumulatedFrameCpp.ppm -endian LSB PFM:accumulatedFrameCpp.pfm
+<path-to-ImageMagick>/convert-im6 ../../../01_ospray_gsg/build/accumulatedFrameCpp.ppm -endian LSB PFM:accumulatedFrameCpp.pfm
 ```
 
 Denoise the image:
@@ -99,7 +99,7 @@ Denoise the image:
 Review the output for visual comparison to the input. Example view with ImageMagick display:
 
 ```
-<path-to-ImageMagick>/imdisplay denoised.pfm
+<path-to-ImageMagick>/display-im6 denoised.pfm
 ```
 
 
@@ -119,13 +119,13 @@ cmake --build .
 
 Convert the accumulatedFrameCpp.ppm image to LSB data ordering and .pfm format. Example conversion with ImageMagick convert:
 ```
-<path-to-ImageMagick>/magick convert ../../../01_ospray_gsg\build\Release\accumulatedFrameCpp.ppm -endian LSB PFM:accumulatedFrameCpp.pfm
+<path-to-ImageMagick>/magick convert ../../../01_ospray_gsg/build/accumulatedFrameCpp.ppm -endian LSB PFM:accumulatedFrameCpp.pfm
 ```
 
 Denoise the image:
 
 ```
-oidnDenoise.exe -hdr accumulatedFrameCpp.pfm -o denoised.pfm
+./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm
 ```
 
 Review the output for visual comparison to the input. Example view with ImageMagick display:
