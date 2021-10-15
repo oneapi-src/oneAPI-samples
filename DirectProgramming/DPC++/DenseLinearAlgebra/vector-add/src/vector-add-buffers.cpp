@@ -24,7 +24,7 @@
 #include <iostream>
 #include <string>
 #if FPGA || FPGA_EMULATOR
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <CL/sycl/ext/intel/fpga_extensions.hpp>
 #endif
 
 using namespace sycl;
@@ -100,10 +100,10 @@ int main(int argc, char* argv[]) {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // DPC++ extension: FPGA emulator selector on systems without FPGA card.
-  INTEL::fpga_emulator_selector d_selector;
+  ext::intel::fpga_emulator_selector d_selector;
 #elif FPGA
   // DPC++ extension: FPGA selector on systems with FPGA card.
-  INTEL::fpga_selector d_selector;
+  ext::intel::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
   default_selector d_selector;
