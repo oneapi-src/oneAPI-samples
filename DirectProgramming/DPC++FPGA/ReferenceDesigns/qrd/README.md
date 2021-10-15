@@ -21,7 +21,7 @@ Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 25k matrices/s for matrices of size 128 * 128
+| Intel® PAC with Intel Arria® 10 GX FPGA        | 24k matrices/s for matrices of size 128 * 128
 | Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for matrices of size 256 * 256
 
 
@@ -39,8 +39,6 @@ QR decomposition is used extensively in signal processing applications such as b
 The QR decomposition algorithm factors a complex _m_×_n_ matrix, where _m_ ≥ _n_. The algorithm computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _m_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. 
 
 We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
-
-Note: the compiler flag '-fp-relaxed' will be deprecated in the next release and replaced by a new implementation.
 
 With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product. Thus, the matrix size is constrained by the total FPGA DSP resources available. Note that this upper bound is a consequence of this particular implementation.
 
@@ -192,8 +190,8 @@ Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 327
 Device name: pac_a10 : Intel PAC Platform (pac_f000000)
 Generating 32768 random matrices
 Running QR decomposition of 32768 matrices repeatedly
-   Total duration:   41.3763 s
-Throughput: 25.3425k matrices/s
+   Total duration:   43.3474 s
+Throughput: 24.1901k matrices/s
 Verifying results on matrix 0 16384 32767
 PASSED
 ```
@@ -205,8 +203,8 @@ Device name: pac_s10 : Intel PAC Platform (pac_f100000)
 Generating 4096 random matrices
 Running QR decomposition of 4096 matrices repeatedly
    Total duration:   17.3197 s
-Throughput: 7.5678k matrices/s
-Verifying results on matrix 0 2048 4095
+Throughput: 7.36231k matrices/s
+Verifying results on matrix 0 20480 40959
 PASSED
 ```
 
@@ -217,7 +215,7 @@ PASSED
 | Flag | Description
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
-`-Xsclock=330MHz` | The FPGA backend attempts to achieve 330 MHz
+`-Xsclock=360MHz` | The FPGA backend attempts to achieve 360 MHz
 `-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) ) 
 `-Xsparallel=2` | Use 2 cores when compiling the bitstream through Quartus
 `-Xsseed` | Specifies the Quartus compile seed, to yield slightly higher fmax
