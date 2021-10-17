@@ -26,7 +26,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building Intel Distribution of Modin* for CPU
 
-Intel® Distribution of Modin* is ready for use once you finish the Intel® Distribution of Modin installation and have run the post installation script.
+Intel® Distribution of Modin* is ready for use once you finish the Intel® Distribution of Modin* installation and have run the post installation script.
 
 For this sample, you will also have to install the matplotlib module. 
 
