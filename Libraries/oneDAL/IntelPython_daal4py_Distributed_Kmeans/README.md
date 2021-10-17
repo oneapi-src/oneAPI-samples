@@ -7,13 +7,8 @@ This sample code shows how to train and predict with a distributed k-means model
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
-<<<<<<< HEAD
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable processor family
-| Software                          | oneDAL Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
-=======
-| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
 | Software                          | oneAPI Data Analytics Library (oneDAL) Software Library, Python version >= 3.6, conda-build version >= 3, C++ compiler with C++11 support, Pickle, Pandas, NumPy
->>>>>>> 2d11fb4 (Modify potential property leak)
 | What you will learn               | distributed oneDAL K-Means programming model for Intel CPU
 | Time to complete                  | 5 minutes
 
@@ -27,11 +22,7 @@ In this sample, you will run a distributed K-Means model with oneDAL daal4py lib
 This distributed K-means sample code is implemented for CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python* as part of the [oneAPI AI Analytics Toolkit powered by oneAPI](https://software.intel.com/en-us/oneapi/ai-kit). 
 
 ## Additional Requirements
-<<<<<<< HEAD
-You will need a working MPI library. We recommend to use Intel® MPI Library, which is included in the [Intel oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
-=======
-You will need a working MPI library. We recommend to use Intel MPI Library, which is included in the [Intel oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
->>>>>>> 2d11fb4 (Modify potential property leak)
+You will need a working Intel MPI library. We recommend to use Intel® MPI Library, which is included in the [Intel oneAPI HPC Toolkit](https://software.intel.com/en-us/oneapi/hpc-kit).
  
 ## License  
 Code samples are licensed under the MIT license. See

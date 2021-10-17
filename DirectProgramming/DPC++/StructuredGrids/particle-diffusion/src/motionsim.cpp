@@ -331,7 +331,7 @@ int main(int argc, char* argv[]) {
       particle_Y[i] = center;
     }
 
-    // Use Math Kernel Library (MKL) VSL Gaussian function for RNG with
+    // Use oneAPI Math Kernel Library (MKL) VSL Gaussian function for RNG with
     // mean of alpha and standard deviation of sigma
     //
 
