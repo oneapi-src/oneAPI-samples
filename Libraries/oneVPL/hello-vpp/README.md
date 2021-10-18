@@ -7,7 +7,7 @@ perform simple video processing using 2.x enhanced programming model APIs.
 |-------------------- | ----------------------------------------
 | OS                  | Ubuntu* 20.04
 | Hardware            | CPU: See [System Requirements](https://software.intel.com/content/www/us/en/develop/articles/oneapi-video-processing-library-system-requirements.html)
-|                     | GPU: Future Intel® Graphics platforms supporting oneVPL 2.x API features 
+|                     | GPU: Future Intel® Graphics platforms supporting oneVPL 2.x API features
 | Software            | Intel® oneAPI Video Processing Library(oneVPL)
 | What You Will Learn | How to use oneVPL to resize and change color format of a raw video file
 | Time to Complete    | 5 minutes
@@ -39,11 +39,27 @@ Third-party program Licenses can be found here: [third-party-programs.txt](https
 
 ### Include Files
 The oneVPL include folder is located at these locations on your development system:
- - Windows: %ONEAPI_ROOT%\vpl\latest\include 
+ - Windows: %ONEAPI_ROOT%\vpl\latest\include
  - Linux: $ONEAPI_ROOT/vpl/latest/include
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 
 ### On a Linux* System
