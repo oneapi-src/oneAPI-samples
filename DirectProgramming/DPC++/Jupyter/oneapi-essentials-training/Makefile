@@ -1,4 +1,4 @@
-all: prog1 prog2 prog3 prog4 prog5 prog6 prog7 prog8 prog9 prog10 prog11 prog12 prog13 prog14 prog15 prog16 prog17 prog18 prog19 prog20 prog21 prog22 prog23 prog24 prog25 prog26 prog27 prog28 prog29 prog30 prog31 prog32 prog33 prog34 prog35 prog36 prog37 prog38 prog39 prog40 prog41 prog42 prog43 prog44 prog45 prog46 prog47 prog48 prog49 prog50 prog51 prog52 prog53 prog54 prog55 prog56 prog57 prog58 prog59
+all: prog1 prog2 prog3 prog4 prog5 prog6 prog7 prog8 prog9 prog10 prog11 prog12 prog13 prog14 prog15 prog16 prog17 prog18 prog19 prog20 prog21 prog22 prog23 prog24 prog25 prog26 prog27 prog28 prog29 prog30 prog31 prog32 prog33 prog34 prog35 prog36 prog37 prog38 prog39 prog40 prog41 prog42 prog43 prog44 prog45 prog46 prog47 prog48 prog49 prog50 prog51 prog52 prog53 prog54 prog55 prog56 prog57 prog58 prog59 prog60
 
 prog1: 01_oneAPI_Intro/lab/simple.cpp
 	dpcpp -o 01_oneAPI_Intro/bin/prog1 01_oneAPI_Intro/lab/simple.cpp
