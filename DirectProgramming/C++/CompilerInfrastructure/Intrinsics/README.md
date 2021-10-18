@@ -17,15 +17,15 @@ Intrinsics are assembly-coded functions that allow you to use C++ function calls
 
 Further information on intrinsics can be found [here](https://software.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/compiler-reference/intrinsics.html#intrinsics_GUID-D70F9A9A-BAE1-4242-963E-C3A12DE296A1):
 
-## Key Implementation Details 
+## Key Implementation Details
 
 This sample makes use of intrinsic functions to perform common mathematical operations, including:
 - Computing a dot product of two vectors
 - Computing the product of two complex numbers
 The implementations include multiple functions to accomplish these tasks, each one leveraging a different set of intrinsics available to Intel&reg; processors.
 
- 
-## License  
+
+## License
 
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
@@ -33,11 +33,27 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ## Building the `Intrinsics` Program
 
 Perform the following steps:
-1. Build the program using the following `make` commands. 
-``` 
+1. Build the program using the following `make` commands.
+```
 $ make (or "make debug" to compile with the -g flag)
 ```
 
@@ -52,7 +68,7 @@ $ make (or "make debug" to compile with the -g flag)
     ```
 
 
-### Application Parameters 
+### Application Parameters
 
 These intrinsics samples have relatively few modifiable parameters. However, specific options are available to the user:
 

@@ -8,8 +8,8 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and when to implement the double buffering optimization technique
 | Time to complete                  | 30 minutes
 
@@ -17,13 +17,13 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 ## Purpose
 In an application where the FPGA kernel is executed multiple times, the host must perform the following processing and buffer transfers before each kernel invocation.
-1. The output data from the *previous* invocation must be transferred from the device to the host and then processed by the host. Examples of this processing include: 
+1. The output data from the *previous* invocation must be transferred from the device to the host and then processed by the host. Examples of this processing include:
    * Copying the data to another location
-   * Rearranging the data 
+   * Rearranging the data
    * Verifying it in some way
-2. The input data for the *next* invocation must be processed by the host and then transferred to the device. Examples of this processing include: 
-   * Copying the data from another location 
-   * Rearranging the data for kernel consumption 
+2. The input data for the *next* invocation must be processed by the host and then transferred to the device. Examples of this processing include:
+   * Copying the data from another location
+   * Rearranging the data for kernel consumption
    * Generating the data in some way
 
 Without double buffering, host processing and buffer transfers occur *between* kernel executions. Therefore, there is a gap in time between kernel executions, which you can refer to as kernel *downtime* (see diagram below). If these operations overlap with kernel execution, the kernels can execute back-to-back with minimal downtime, thereby increasing overall application performance.
@@ -56,23 +56,23 @@ This can be done by querying the total kernel execution time from the runtime an
 
 ### Tutorial Implementation Notes
 
-The basic idea is to: 
-1. Perform the input processing for the first two kernel executions and queue them both. 
-2. Immediately call the `process_output()` method (automatically blocked by the SYCL* runtime) on the first kernel completing because of the implicit data dependency. 
-3. When the first kernel completes, the second kernel begins executing immediately because it was already queued. 
-4. While the second kernel runs, the host processes the output data from the first kernel and prepares the third kernel's input data. 
-5. As long as the above operations complete before the second kernel completes, the third kernel is queued early enough to allow it to be launched immediately after the second kernel. 
+The basic idea is to:
+1. Perform the input processing for the first two kernel executions and queue them both.
+2. Immediately call the `process_output()` method (automatically blocked by the SYCL* runtime) on the first kernel completing because of the implicit data dependency.
+3. When the first kernel completes, the second kernel begins executing immediately because it was already queued.
+4. While the second kernel runs, the host processes the output data from the first kernel and prepares the third kernel's input data.
+5. As long as the above operations complete before the second kernel completes, the third kernel is queued early enough to allow it to be launched immediately after the second kernel.
 
 The process then repeats.
 
 The impact of double buffering on the total runtime of the tutorial program will be analyzed in the "Running the Sample" section below.
 
 ## Key Concepts
-* The double buffering optimization technique 
+* The double buffering optimization technique
 * Determining when double buffering is beneficial
 * How to measure the impact of double buffering
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -88,6 +88,23 @@ If running a sample in the Intel DevCloud, remember that you must specify the ty
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
@@ -95,7 +112,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
     ```
     cmake ..
    ```
@@ -111,18 +128,18 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
       ```
       make fpga_emu
       ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      make report
-     ``` 
-   * Compile for FPGA hardware (longer compile time, targets FPGA device): 
+     ```
+   * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
-     ``` 
+     ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/double_buffering.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
@@ -132,7 +149,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
@@ -148,18 +165,18 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
      ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      nmake report
-     ``` 
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
-     ``` 
+     ```
 
 *Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 

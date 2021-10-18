@@ -308,7 +308,7 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
 
       for (IndexT i = 0; i < total_pipe_accesses; i++) {
         // read data from device memory
-        bool in_range = i < sorter_count;
+        bool in_range = i * kSortWidth < count;
 
         // build the input pipe data
         sycl::vec<ValueT, kSortWidth> data;
@@ -333,7 +333,7 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
         auto data = SortOutPipe::read();
 
         // sorter_count is a multiple of kSortWidth
-        bool in_range = i < sorter_count;
+        bool in_range = i * kSortWidth < count;
 
         // only write out to device memory if the index is in range
         if (in_range) {
