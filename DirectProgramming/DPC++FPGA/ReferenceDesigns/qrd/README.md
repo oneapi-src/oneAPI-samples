@@ -233,7 +233,7 @@ PASSED
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsclock=360MHz` | The FPGA backend attempts to achieve 360 MHz
-`-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) ) 
+`-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) )
 `-Xsparallel=2` | Use 2 cores when compiling the bitstream through Quartus
 `-Xsseed` | Specifies the Quartus compile seed, to yield slightly higher fmax
 `-DROWS_COMPONENT` | Specifies the number of rows of the matrix
