@@ -17,11 +17,18 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Requirements
 
-To build and run the samples you will need a compiler toolchain and imaging tools:
+To build and run the samples you will need a compiler toolchain, the libraries, and imaging tools:
 
 Compiler:
 - MSVS 2019 on Windows* OS
 - On other platforms a C++11 compiler and a C99 compiler. (Ex: gcc/g++/clang)
+
+oneAPI Libraries:
+Install the Intel oneAPI Rendering Toolkit
+- OSPRay
+- Embree
+- Open VKL
+- Open Image Denoise
 
 Imaging Tools:
 - An image **display program** for .ppm and .pfm filetypes . Ex: [ImageMagick](https://www.imagemagick.org/)
