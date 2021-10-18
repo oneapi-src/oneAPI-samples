@@ -24,7 +24,7 @@
 #include <iostream>
 #include <string>
 #if FPGA || FPGA_EMULATOR
-#include <CL/sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #endif
 
 using namespace sycl;
