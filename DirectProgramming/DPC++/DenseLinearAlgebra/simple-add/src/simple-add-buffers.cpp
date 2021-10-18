@@ -27,7 +27,7 @@
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 #if FPGA || FPGA_EMULATOR
-  #include <CL/sycl/ext/intel/fpga_extensions.hpp>
+  #include <sycl/ext/intel/fpga_extensions.hpp>
 #endif
 
 using namespace sycl;
