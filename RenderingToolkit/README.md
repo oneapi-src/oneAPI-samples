@@ -1,10 +1,10 @@
 # Getting Started Samples for Intel® oneAPI Rendering Toolkit (RenderKit)
 
-TBD
+The Intel® oneAPI Rendering Toolkit is designed to accelerate photorealistic rendering workloads with rendering and ray-tracing libraries to create high-performance, high-fidelity visual experiences. With the libraries, get the most from Intel® hardware by optimizing performance at any scale. Creators, scientists, and engineers can push the boundaries of visualization by using the toolkit to develop studio animation and visual effects or to create scientific and industrial visualizations.
 
 You can find more information at the [ Intel oneAPI Rendering Toolkit portal](https://software.intel.com/content/www/us/en/develop/tools/oneapi/rendering-toolkit.html).
 
-Users learn how to build and run samples for the component libraries in Render Kit.
+Users will learn how to build and run samples for the component libraries in Render Kit.
 
 ## License
 
