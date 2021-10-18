@@ -13,6 +13,7 @@
 #include "dpc_common.hpp"
 
 constexpr size_t N = 2048;
+constexpr size_t M = 5;
 
 using namespace sycl;
 
@@ -24,8 +25,8 @@ class DefaultNoFusionKernel;
 class FusionFunctionKernel;
 
 void DefaultFusion(const device_selector &selector,
-                   std::array<int, N> &m_array_1,
-                   std::array<int, N> &m_array_2) {
+                   std::array<int, M> &m_array_1, std::array<int, M> &m_array_2,
+                   const size_t kInnerIters) {
   try {
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
@@ -39,13 +40,14 @@ void DefaultFusion(const device_selector &selector,
 
       h.single_task<DefaultFusionKernel>([=
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-        for (size_t i = 0; i < N; i++) {
-          accessor_array_1[i] = i;
+        for (size_t j = 0; j < N; j++) {
+          for (size_t i = 0; i < kInnerIters; i++) {
+            accessor_array_1[i] = i;
+          }
+          for (size_t i = 0; i < kInnerIters; i++) {
+            accessor_array_2[i] = i;
+          }
         }
-        for (size_t i = 0; i < N; i++) {
-          accessor_array_2[i] = i;
-        }
-
       });
     });
 
@@ -56,19 +58,18 @@ void DefaultFusion(const device_selector &selector,
     double kernel_time = (end - start) * 1e-6;
 
     // kernel consists of two loops with one array assignment in each.
-    constexpr int num_ops_per_kernel = 2 * N;
+    int num_ops_per_kernel = 2 * N * kInnerIters;
     std::cout << "Throughput for kernel with default loop fusion and with "
                  "arrays of size "
-              << N << ": " << ((double)num_ops_per_kernel / kernel_time) / 1.0e6
-              << " GFlops\n";
-    ;
+              << M << ": " << ((double)num_ops_per_kernel / kernel_time)
+              << " Ops/ms\n";
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
@@ -79,8 +80,8 @@ void DefaultFusion(const device_selector &selector,
   }
 }
 
-void NoFusion(const device_selector &selector, std::array<int, N> &m_array_1,
-              std::array<int, N> &m_array_2) {
+void NoFusion(const device_selector &selector, std::array<int, M> &m_array_1,
+              std::array<int, M> &m_array_2, const size_t kInnerIters) {
   try {
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
@@ -94,12 +95,14 @@ void NoFusion(const device_selector &selector, std::array<int, N> &m_array_1,
 
       h.single_task<NoFusionKernel>([=
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-        [[intel::nofusion]]                  // NO-FORMAT: Attribute
-        for (size_t i = 0; i < N; i++) {
-          accessor_array_1[i] = i;
-        }
-        for (size_t i = 0; i < N; i++) {
-          accessor_array_2[i] = i;
+        for (size_t j = 0; j < N; j++) {
+          [[intel::nofusion]]  // NO-FORMAT: Attribute
+          for (size_t i = 0; i < kInnerIters; i++) {
+            accessor_array_1[i] = i;
+          }
+          for (size_t i = 0; i < kInnerIters; i++) {
+            accessor_array_2[i] = i;
+          }
         }
 
       });
@@ -112,19 +115,18 @@ void NoFusion(const device_selector &selector, std::array<int, N> &m_array_1,
     double kernel_time = (end - start) * 1e-6;
 
     // kernel consists of two loops with one array assignment in each.
-    constexpr int num_ops_per_kernel = 2 * N;
+    int num_ops_per_kernel = 2 * N * kInnerIters;
     std::cout << "Throughput for kernel with the nofusion attribute and with "
                  "arrays of size "
-              << N << ": " << ((double)num_ops_per_kernel / kernel_time) / 1.0e6
-              << " GFlops\n";
-    ;
+              << M << ": " << ((double)num_ops_per_kernel / kernel_time)
+              << " Ops/ms\n";
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
@@ -136,8 +138,8 @@ void NoFusion(const device_selector &selector, std::array<int, N> &m_array_1,
 }
 
 void DefaultNoFusion(const device_selector &selector,
-                     std::array<int, N + 1> &m_array_1,
-                     std::array<int, N + 1> &m_array_2) {
+                     std::array<int, M> &m_array_1,
+                     std::array<int, M + 1> &m_array_2, const size_t kInnerIters) {
   try {
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
@@ -151,12 +153,14 @@ void DefaultNoFusion(const device_selector &selector,
 
       h.single_task<DefaultNoFusionKernel>([=
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
-        // Different tripcounts, does not fuse by default
-        for (size_t i = 0; i < N; i++) {
-          accessor_array_1[i] = i;
-        }
-        for (size_t i = 0; i < N + 1; i++) {
-          accessor_array_2[i] = i;
+        for (size_t j = 0; j < N; j++) {
+          // Different tripcounts, does not fuse by default
+          for (size_t i = 0; i < kInnerIters; i++) {
+            accessor_array_1[i] = i;
+          }
+          for (size_t i = 0; i < kInnerIters + 1; i++) {
+            accessor_array_2[i] = i;
+          }
         }
 
       });
@@ -168,21 +172,20 @@ void DefaultNoFusion(const device_selector &selector,
     // unit is nano second, convert to ms
     double kernel_time = (end - start) * 1e-6;
 
+
     // kernel consists of two loops with one array assignment in each.
-    constexpr int num_ops_per_kernel = 2 * N + 1;
+    int num_ops_per_kernel = N * (2 * kInnerIters + 1);
     std::cout << "Throughput for kernel without fusion by default and with "
                  "arrays of sizes "
-              << N << " and " << N + 1 << ": "
-              << ((double)num_ops_per_kernel / kernel_time) / 1.0e6
-              << " GFlops\n";
-    ;
+              << M << " and " << M + 1 << ": "
+              << ((double)num_ops_per_kernel / kernel_time) << " Ops/ms\n";
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
@@ -194,8 +197,8 @@ void DefaultNoFusion(const device_selector &selector,
 }
 
 void FusionFunction(const device_selector &selector,
-                    std::array<int, N + 1> &m_array_1,
-                    std::array<int, N + 1> &m_array_2) {
+                    std::array<int, M> &m_array_1,
+                    std::array<int, M + 1> &m_array_2, const size_t kInnerIters) {
   try {
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
@@ -209,15 +212,16 @@ void FusionFunction(const device_selector &selector,
 
       h.single_task<FusionFunctionKernel>([=
       ]() [[intel::kernel_args_restrict,
-            intel::loop_fuse]] {  // NO-FORMAT: Attribute
-        // Different tripcounts, does not fuse by default
-        for (size_t i = 0; i < N; i++) {
-          accessor_array_1[i] = i;
+            intel::loop_fuse(2)]] {  // NO-FORMAT: Attribute
+        for (size_t j = 0; j < N; j++) {
+          // Different tripcounts, does not fuse by default
+          for (size_t i = 0; i < kInnerIters; i++) {
+            accessor_array_1[i] = i;
+          }
+          for (size_t i = 0; i < kInnerIters + 1; i++) {
+            accessor_array_2[i] = i;
+          }
         }
-        for (size_t i = 0; i < N + 1; i++) {
-          accessor_array_2[i] = i;
-        }
-
       });
     });
 
@@ -228,20 +232,18 @@ void FusionFunction(const device_selector &selector,
     double kernel_time = (end - start) * 1e-6;
 
     // kernel consists of two loops with one array assignment in each.
-    constexpr int num_ops_per_kernel = 2 * N + 1;
+    int num_ops_per_kernel = N * (2 * kInnerIters + 1);
     std::cout << "Throughput for kernel with the loop fusion function wrapper "
                  "and with arrays of sizes "
-              << N << " and " << N + 1 << ": "
-              << ((double)num_ops_per_kernel / kernel_time) / 1.0e6
-              << " GFlops\n";
-    ;
+              << M << " and " << M + 1 << ": "
+              << ((double)num_ops_per_kernel / kernel_time) << " Ops/ms\n";
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
@@ -252,10 +254,9 @@ void FusionFunction(const device_selector &selector,
   }
 }
 int main() {
-  std::array<int, N> default_fusion_1, default_fusion_2, no_fusion_1,
-      no_fusion_2;
-  std::array<int, N + 1> fusion_function_1, fusion_function_2,
-      default_nofusion_1, default_nofusion_2;
+  std::array<int, M> default_fusion_1, default_fusion_2, no_fusion_1,
+      no_fusion_2, fusion_function_1, default_nofusion_1;
+  std::array<int, M + 1> fusion_function_2, default_nofusion_2;
 
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector selector;
@@ -263,15 +264,15 @@ int main() {
   ext::intel::fpga_selector selector;
 #endif
 
-  // Instantiate kernel logic with the min and max correct safelen parameter
-  // to compare performance.
-  DefaultFusion(selector, default_fusion_1, default_fusion_2);
-  NoFusion(selector, no_fusion_1, no_fusion_2);
-  DefaultNoFusion(selector, default_nofusion_1, fusion_function_2);
-  FusionFunction(selector, fusion_function_1, fusion_function_2);
+  // Instantiate kernel logic with and without loop fusion to compare
+  // performance
+  DefaultFusion(selector, default_fusion_1, default_fusion_2, M);
+  NoFusion(selector, no_fusion_1, no_fusion_2, M);
+  DefaultNoFusion(selector, default_nofusion_1, fusion_function_2, M);
+  FusionFunction(selector, fusion_function_1, fusion_function_2, M);
 
   // Verify results: first N elements of arrays should be equal, and equal to i
-  for (size_t i = 0; i < N; i++) {
+  for (size_t i = 0; i < M; i++) {
     if (default_fusion_1[i] != default_fusion_2[i] ||
         default_fusion_1[i] != i) {
       std::cout << "FAILED: The DefaultFusionKernel results are incorrect"
@@ -279,13 +280,13 @@ int main() {
       return 1;
     }
   }
-  for (size_t i = 0; i < N; i++) {
+  for (size_t i = 0; i < M; i++) {
     if (no_fusion_1[i] != no_fusion_2[i] || no_fusion_1[i] != i) {
       std::cout << "FAILED: The NoFusionKernel results are incorrect" << '\n';
       return 1;
     }
   }
-  for (size_t i = 0; i < N; i++) {
+  for (size_t i = 0; i < M; i++) {
     if (default_nofusion_1[i] != fusion_function_2[i] ||
         fusion_function_1[i] != i) {
       std::cout << "FAILED: The DefaultNoFusionKernel results are incorrect"
@@ -294,7 +295,7 @@ int main() {
     }
   }
 
-  for (size_t i = 0; i < N; i++) {
+  for (size_t i = 0; i < M; i++) {
     if (fusion_function_1[i] != fusion_function_2[i] ||
         fusion_function_1[i] != i) {
       std::cout << "FAILED: The FusionFunctionKernel results are incorrect"
