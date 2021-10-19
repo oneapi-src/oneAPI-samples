@@ -82,6 +82,7 @@ See [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master
 |2021.4.0|[Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[Chapter 18 - Libraries](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications/DPC++/Ch18_using_libs)|Collection of Code samples for the chapter<br>- Fig_18_1_builtin.cpp - Using std::log and sycl::log  <br>- Fig_18_7_swap.cpp - Using std::swap in device code  <br>- Fig_18_11_std_fill.cpp - Using std::fill  <br>- Fig_18_13_binary_search.cpp - Using binary_search <br>- Fig_18_15_pstl_usm.cpp - Using Parallel STL with a USM allocator  Errata - code samples for 18-10, 18-12, 18-14, and 19-17 are not in the repository |
 |2021.4.0|[Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[Chapter 19 - Memory Model and Atomics](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications/DPC++/Ch19_memory_model_and_atomics)|Collection of Code samples for the chapter<br>- Fig_19_3_data_race.cpp - Kernel containing a data race  <br>- Fig_19_6_avoid_data_race_with_barrier.cpp - Avoiding a data race using a barrier   <br>- Fig_19_7_avoid_data_race_with_atomics.cpp - Avoiding a data race using atomic operations  <br>- Fig_19_15_buffer_and_atomic_ref.cpp - Accessing a buffer via an explicitly created atomic_ref  <br>- Fig_19_16_atomic_accessor.cpp - Accessing a buffer via an atomic_ref implicitly created by an atomic accessor  <br>- Fig_19_18_histogram.cpp - Computing a histogram using atomic references in different memory spaces   <br>- Fig_19_19-20_device_latch.cpp - Combining Figure 19-20. Using and building a simple device-wide latch on top of atomic references  Errata - code samples for 18-10, 18-12, 18-14, and 19-17 are not in the repository|
 |2021.4.0|[Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[Chapter 20 - Epilogue Future Direction](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications/DPC++/Epilogue_future_direction)|Collection of Code samples for the chapterEpilogue source code examples: Future Direction of DPC++  <br>- Fig_ep_1_mdspan.cpp - Attaching accessor-like indexing to a USM pointer using mdspan  <br>- Fig_ep_2-4_generic_space.cpp - Storing pointers to a specific address space in a class - Figure EP-3. Storing pointers to the generic address space in a class - Figure EP-4. Storing pointers with an optional address space in a class  <br>- Fig_ep_5_extension_mechanism.cpp - Checking for Intel sub-group extension compiler support with #ifdef  <br>- Fig_ep_6_device_constexpr.cpp - Specializing kernel code based on device aspects at kernel compile time  <br>- Fig_ep_7_hierarchical_reduction.cpp - Using hierarchical parallelism for a hierarchical reduction|
+|2021.4.0|[Intel(R) Extension for Scikit-learn: SVC for Adult dataset](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/IntelScikitLearn_Extensions_SVC_Adult)|Use Intel(R) Extension for Scikit-learn to accelerate the training and prediction with SVC algorithm on Adult dataset. Compare the performance of SVC algorithm optimized through Intel(R) Extension for Scikit-learn against original Scikit-learn.|
 |2021.4.0|[Intel® Python Scikit-learn Extension Getting Started](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_SKLearn_GettingStarted)|This sample illustrates how to do Image classification using SVM classifier from Python API package SKlearnex with the use of Intel® oneAPI Data Analytics Library (oneDAL).|
 |2021.4.0|[Merge Sort](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/merge_sort)|A Reference design demonstrating merge sort on an Intel® FPGA|
 |2021.4.0|[Private Copies](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/private_copies)|An Intel® FPGA tutorial demonstrating how to use the private_copies attribute to trade off the resource use and the throughput of a DPC++ FPGA program|
@@ -89,10 +90,18 @@ See [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master
 
 Total Samples: 158
 
+
+## Deleted Code Samples
+
+|Version Introduced|Version Deleted|Sample Name|Description|Path|
+ |---|---|------|---------------|------|
+| 2021.1.Gold | 2021.3.0 | Use Library | Removed for 2021.4 - Remove the tutorial use_library due to HLS/OCL library support being removed in oneAPI 2021.4. Also note that RTL libraries has an issue (with a known workaround) so that part of the flow is also removed, but we will likely have a KDB to showcase the workaround. The fix for this is expected in 2022.1. Please use 2021.3 if you either need HLS/OCL library support in SYCL, or if you need continued access to RTL libraries. | [2021.3.0](https://github.com/oneapi-src/oneAPI-samples/releases/tag/2021.3.0) Path: DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library|
+
+
 ## License
 
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-Report Generated on:  September 20, 2021
+Report Generated on:  October 01, 2021

@@ -1,36 +1,3 @@
-// ==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-// OTHER DEALINGS IN THE SOFTWARE.
-//
-// This agreement shall be governed in all respects by the laws of the State of
-// California and by the laws of the United States of America.
-
-/*
- * Copyright (C) 1995-2006, 2010, 2011, 2012, 2016 Mark Adler
- * For conditions of distribution and use, see copyright notice in zlib.h
- */
-
 #include <CL/sycl.hpp>
 
 #include "gzipkernel.hpp"
@@ -158,9 +125,11 @@ int GetHuffRunLen(int len, int initial_dist) {
   unsigned code;
   int extra;
   int dist;
-  int local_lbits, local_llen;
-  int local_dbits, local_dlen;
-  local_lbits = 0;
+  //int local_lbits;
+  int local_llen;
+  //int local_dbits;
+  int local_dlen;
+  //local_lbits = 0;
   local_llen = 0;
 
   int base_length[kLengthCodes] = {
@@ -290,28 +259,28 @@ int GetHuffRunLen(int len, int initial_dist) {
   lc = len - kMinMatch;
   code = length_code[lc];
 
-  local_lbits = static_ltree[code + kLiterals + 1].code;
+  //local_lbits = static_ltree[code + kLiterals + 1].code;
   local_llen = static_ltree[code + kLiterals + 1].len;
   extra = extra_lbits[code];
   if (extra) {
     lc -= base_length[code];
-    local_lbits |= lc << local_llen;
+    //local_lbits |= lc << local_llen;
     local_llen += extra;
   }
 
   dist = initial_dist;
   dist--;
   code = d_code(dist);
-  local_dbits = static_dtree[code].code;
+  //local_dbits = static_dtree[code].code;
   local_dlen = static_dtree[code].len;
   extra = extra_dbits[code];
   if (extra) {
     dist -= base_dist[code];
-    local_dbits |= dist << local_dlen;
+    //local_dbits |= dist << local_dlen;
     local_dlen += extra;
   }
 
-  local_lbits |= local_dbits << local_llen;
+  //local_lbits |= local_dbits << local_llen;
   local_llen += local_dlen;
 
   return local_llen;
@@ -2058,7 +2027,6 @@ void SubmitGzipTasksSingleEngine(
 
       struct DistLen dist_offs_data;
 
-      int distchan_ndx = 0;
       size_t inpos = 0;
 
       // load in new data
@@ -2291,7 +2259,6 @@ void SubmitGzipTasksSingleEngine(
 
         // increment input position
         inpos_minus_vec_div_16++;
-        distchan_ndx += 1;
         ctr--;
 
       } while (ctr >= 0);
