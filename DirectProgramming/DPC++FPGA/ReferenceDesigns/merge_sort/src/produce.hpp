@@ -19,7 +19,6 @@ event Produce(queue& q, ValueT *in_ptr, IndexT count, IndexT in_block_count,
 
   return q.submit([&](handler& h) {
     h.depends_on(depend_events);
-
     h.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
       // Pointer to the input data.
       // Creating a device_ptr tells the compiler that this pointer is in
