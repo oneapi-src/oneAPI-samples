@@ -1,8 +1,3 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
 #include <iomanip>
 #include <iostream>
 #include <numeric>
@@ -36,7 +31,7 @@ event Producer(queue &q, buffer<int, 1> &input_buffer) {
 
   auto e = q.submit([&](handler &h) {
     accessor input_accessor(input_buffer, h, read_only);
-    size_t num_elements = input_buffer.get_count();
+    size_t num_elements = input_buffer.size();
 
     h.single_task<ProducerTutorial>([=]() {
       for (size_t i = 0; i < num_elements; ++i) {
@@ -60,7 +55,7 @@ event Consumer(queue &q, buffer<int, 1> &out_buf) {
 
   auto e = q.submit([&](handler &h) {
     accessor out_accessor(out_buf, h, write_only, no_init);
-    size_t num_elements = out_buf.get_count();
+    size_t num_elements = out_buf.size();
 
     h.single_task<ConsumerTutorial>([=]() {
       for (size_t i = 0; i < num_elements; ++i) {
@@ -136,7 +131,7 @@ int main(int argc, char *argv[]) {
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
