@@ -1,13 +1,13 @@
 ﻿# `simple-add-dpc++` Sample
 
-`simple-add-dpc++` provides the simplest example of DPC++ while providing an example of using both buffers and Unified Shared Memory.   
+`simple-add-dpc++` provides the simplest example of DPC++ while providing an example of using both buffers and Unified Shared Memory.
 
 For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04, Windows 10 
+| OS                                | Linux* Ubuntu* 18.04, Windows 10
 | Hardware                          | Skylake with GEN9 or newer, Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 
@@ -20,10 +20,10 @@ In this sample, you can learn how to use the most basic code in C++ language tha
 
 The code will attempt to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected. If successful, the name of the offload device and a success message is displayed. Confirming your development environment is set up correctly!
 
-## Key Implementation Details 
+## Key Implementation Details
 The basic DPC++ implementation explained in the code includes device selector, USM, buffer, accessor, kernel, and command groups.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -35,7 +35,7 @@ With oneAPI 2021.4 the argument for accessors was changed from 'noinit' to 'no_i
 If running this sample and it fails, do one of the following
 - Update the Intel® oneAPI Base Toolkit to 2021.4
 - Change the 'no_init' argument  to 'noinit'
-## Building the `simple add DPC++` Program for CPU and GPU 
+## Building the `simple add DPC++` Program for CPU and GPU
 
 ### Include Files
 The include folder is located at "%ONEAPI_ROOT%\dev-utilities\latest\include" on your development system.
@@ -43,23 +43,40 @@ The include folder is located at "%ONEAPI_ROOT%\dev-utilities\latest\include" on
 ### Running Samples in DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
 Perform the following steps:
-1. Build the `simple-add-dpc++` program using the following make commands (default uses USM): 
+1. Build the `simple-add-dpc++` program using the following make commands (default uses USM):
     ```
     make all
     ```
 > Note! To build with buffers use: `make build_buffers`
 
-2. Run the program using:  
+2. Run the program using:
     ```
     make run
     ```
 > Note! To run with buffers use: `make run_buffers`
 
-3. Clean the program using:  
+3. Clean the program using:
     ```
-    make clean 
+    make clean
     ```
 
 ### On a Windows* System Using a Command Line Interface
@@ -70,24 +87,24 @@ Perform the following steps:
     nmake -f Makefile.win
     ```
 
-3. Run the program using:  
+3. Run the program using:
     ```
     nmake -f Makefile.win run
     ```
 
-4. Clean the program using:  
+4. Clean the program using:
     ```
-    nmake -f Makefile.win clean 
+    nmake -f Makefile.win clean
     ```
-	
+
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 Perform the following steps:
 1. Launch the Visual Studio* 2017.
-2. Select the menu sequence **File** > **Open** > **Project/Solution**. 
+2. Select the menu sequence **File** > **Open** > **Project/Solution**.
 3. Locate the `simple-add` folder.
 4. Select the `simple-add.sln` file.
-5. Select the configuration 'Debug' or 'Release'  
+5. Select the configuration 'Debug' or 'Release'
 6. Select **Project** > **Build** menu option to build the selected configuration.
 7. Select **Debug** > **Start Without Debugging** menu option to run the program.
 
@@ -109,7 +126,7 @@ Perform the following steps:
     make fpga_emu -f Makefile.fpga
     make run_emu -f Makefile.fpga
     ```
-    * Build and run for FPGA hardware. 
+    * Build and run for FPGA hardware.
       **NOTE:** The hardware compilation takes a long time to complete.
     ```
     make hw -f Makefile.fpga
@@ -132,7 +149,7 @@ Perform the following steps:
    nmake -f Makefile.win.fpga
    nmake -f Makefile.win.fpga run
    ```
-               
+
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 Perform the following steps:
 1. Launch the Visual Studio* 2017.

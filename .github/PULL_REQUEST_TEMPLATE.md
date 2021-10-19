@@ -40,7 +40,7 @@ Please include a description of the sample
 ## Checklist
 Administrative
 - [ ] Review sample design with the appropriate [Domain Expert](https://github.com/oneapi-src/oneAPI-samples/wiki/Reviewers-and-Domain-Experts): <insert Name Here>
-- [ ] If you have any new dependencies/binaries, inform the oneAPI Code Samples Project Manager: @JoeOster
+- [ ] If you have any new dependencies/binaries, inform the oneAPI Code Samples Project Manager
 
 Code Development
 - [ ] Implement coding guidelines and ensure code quality. [see wiki for details](https://github.com/oneapi-src/oneAPI-samples/wiki/General-Code-Guidelines)
@@ -51,12 +51,12 @@ Code Development
 - [ ] Run jsonlint on sample.json to verify json syntax. www.jsonlint.com
 
 Security and Legal
-- [ ] OSPDT Approval (see @JoeOster for assistance)
+- [ ] OSPDT Approval (see Project Manager for assistance)
 - [ ] Compile using the following compiler flags and fix any warnings, the falgs are: "/Wall -Wformat-security -Werror=format-security"
 - [ ] Bandit Scans (Python only)
 - [ ] Virus scan
 
 Review
 - [ ] Review DPC++ code with Paul Peterseon. (GitHub User: pmpeter1)
-- [ ] Review readme with Tom Lenth(@tomlenth) and/or Joe Oster(@JoeOster)
+- [ ] Review readme with Tom Lenth(@tomlenth) and/or Project Manager
 - [ ] Tested using Dev Cloud when applicable

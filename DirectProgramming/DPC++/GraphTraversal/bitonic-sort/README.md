@@ -6,7 +6,7 @@ offload the computation to a GPU. In this implementation, a random sequence of 2
 in ascending order.
 
 For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
-  
+
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
@@ -51,20 +51,37 @@ if a compatible GPU is not detected.
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command g
 roups. Unified Shared Memory (USM) and Buffer Object are used for data management.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ## Building the `bitonic-sort` Program for CPU and GPU
 
-> Note: if you have not already done so, set up your CLI 
-> environment by sourcing  the setvars script located in 
-> the root of your oneAPI installation. 
+> Note: if you have not already done so, set up your CLI
+> environment by sourcing  the setvars script located in
+> the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
-> Linux User: . ~/intel/oneapi/setvars.sh  
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux User: . ~/intel/oneapi/setvars.sh
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Include Files
@@ -76,8 +93,8 @@ FPGA) as well as whether to run in batch or interactive mode. For more informati
 Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
-1. Build the program using the following `cmake` commands. 
-    ``` 
+1. Build the program using the following `cmake` commands.
+    ```
     $ cd bitonic-sort
     $ mkdir build
     $ cd build
@@ -107,7 +124,7 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 
 ## Running the sample
 ### Application Parameters
-	
+
         Usage: bitonic-sort <exponent> <seed>
 
 where
