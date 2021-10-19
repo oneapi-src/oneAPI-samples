@@ -14,11 +14,11 @@ This sample code uses [Adult dataset](https://archive.ics.uci.edu/ml/datasets/ad
 Intel® Extension for Scikit-learn is a seamless way to speed up your Scikit-learn application. The acceleration is achieved through the use of the Intel® oneAPI Data Analytics Library ([oneAPI Data Analytics Library (oneDAL)](https://github.com/oneapi-src/oneDAL)). Patching scikit-learn makes it a well-suited machine learning framework for dealing with real-life problems.
 
 In this sample, you will run a SVC algorithm with Intel® Extension for Scikit-learn and compare its performance against the original stock version of scikit-learn. You will see that patching scikit-learn results in a significant increase in performance over the original scikit-learn while also maintaining the same precision.
-  
-## Key Implementation Details 
+
+## Key Implementation Details
 The sample code is written in Python and it targets CPU architecture. The example assumes you have Intel® Extension for Scikit-learn installed.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -78,3 +78,18 @@ Classification report for SVC trained with the original scikit-learn:
    macro avg       0.76      0.74      0.75      9769
 weighted avg       0.82      0.82      0.82      9769
 ```
+### Using Visual Studio Code*  (VS Code)
+
+You can use VS Code extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.

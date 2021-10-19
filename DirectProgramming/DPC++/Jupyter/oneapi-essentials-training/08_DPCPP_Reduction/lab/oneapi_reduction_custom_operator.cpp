@@ -37,7 +37,7 @@ int main() {
   //# custom operator for reduction to find minumum and index
   pair<int, int> operator_identity = {std::numeric_limits<int>::max(), std::numeric_limits<int>::min()};
   *result = operator_identity;
-  auto reduction_object = ONEAPI::reduction(result, operator_identity, ONEAPI::minimum<pair<int, int>>());
+  auto reduction_object = ext::oneapi::reduction(result, operator_identity, minimum<pair<int, int>>());
 
   //# parallel_for with user defined reduction object
   q.parallel_for(nd_range<1>{N, B}, reduction_object, [=](nd_item<1> item, auto& temp) {
