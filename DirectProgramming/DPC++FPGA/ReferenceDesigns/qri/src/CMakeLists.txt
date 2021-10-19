@@ -21,11 +21,11 @@ set(A10_PAC_BOARD_NAME "intel_a10gx_pac:pac_a10")
 set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10")
 
 # Design specific constant values
-set(ROWS_COMPONENT_A10 128)
-set(COLS_COMPONENT_A10 128)
+set(ROWS_COMPONENT_A10 32)
+set(COLS_COMPONENT_A10 32)
 
-set(ROWS_COMPONENT_S10 256)
-set(COLS_COMPONENT_S10 256)
+set(ROWS_COMPONENT_S10 32)
+set(COLS_COMPONENT_S10 32)
 
 set(FIXED_ITERATIONS_A10 64)
 set(FIXED_ITERATIONS_S10 105)
@@ -53,7 +53,7 @@ endif()
 if(DEFINED ENV{COMPLEX})
     set(COMPLEX $ENV{COMPLEX})
 else()
-    set(COMPLEX 1)
+    set(COMPLEX 0)
 endif()
 
 # Check if target is the Intel(R) PAC D5005 (with Intel Stratix(R) 10 SX FPGA)
