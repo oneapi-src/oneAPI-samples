@@ -19,7 +19,7 @@ PointPillars is an AI algorithm that uses LIDAR point clouds to detect and class
 3. Afterward, the pre-processed data is used by a so-called Pillar Feature Extraction (PFE) CNN to create a 2D image-like representation of the sensor environment. For the inference, this sample uses the Intel® Distribution of OpenVINO™ toolkit. The output of this CNN is a list of dense tensors (learned pillar features).
 4. To convert these dense tensors into an pseudo-image, a scatter operation is performed. This operation is again realized with SYCL and DPCPP.
 5. This pseudo-image is consumed by the second CNN, the so-called Region Proposal Network (RPN). The inference is performed with the help of the Intel® Distribution of OpenVINO™ toolkit. The output is an unfiltered list of possible object detections, their position, dimensions and classifications.
-6. Finally, this output data (object list) is post-processed with the help of the anchors created in the 2nd step. The anchors are used to decode the object position, dimension and class. Afterwards, a Non-Maximum-Suppression (NMS) is used to filter out redundant/clutter objects. Finally, the objects are sorted according to their likelihood, and then provided as output. All of these steps are implemented as SYCL and DPCPP kernels. 
+6. Finally, this output data (object list) is post-processed with the help of the anchors created in the 2nd step. The anchors are used to decode the object position, dimension and class. Afterwards, a Non-Maximum-Suppression (NMS) is used to filter out redundant/clutter objects. Finally, the objects are sorted according to their likelihood, and then provided as output. All of these steps are implemented as SYCL and DPCPP kernels.
 
 By default, the application will use 'host' as the execution device for SYCL/DPCPP kernels and CPU (single-threaded) for Intel® Distribution of OpenVINO™ toolkit inferencing part. The execution device and the inferencing device are displayed in the output, along with the elapsed time of each of the five steps described above. For more details refer to section: [Execution Options for the Sample Program](#execution-options-for-the-sample-program).
 
@@ -30,7 +30,7 @@ This sample demonstrates a real-world, end-to-end example that uses a combinatio
  - You will learn how to implement oneAPI-based function kernels that can be executed on the host system, on a multi-threaded CPU or a GPU.
  - You will learn how to implement standard algorithms for AI-based object detection, for example, _Non-Maximum-Suppression_, using oneAPI.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -49,17 +49,32 @@ To build and run the PointPillars sample, the following libraries have to be ins
 3. Boost (including `boost::program_options` and `boost::filesystem` library). For Ubuntu, you may install the libboost-all-dev package.
 4. Optional: If the sample should be run on an Intel GPU, it might be necessary to upgrade the corresponding drivers. Therefore, please consult the following page: https://github.com/intel/compute-runtime/releases/
 
+### Using Visual Studio Code*  (VS Code)
+
+You can use VS Code extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### Build process (Local or Remote Host Installation)
 Perform the following steps:
 1. Prepare the environment to be able to use the Intel® Distribution of OpenVINO™ toolkit and oneAPI
-``` 
+```
 $ source /opt/intel/openvino_2021/bin/setupvars.sh
 $ source /opt/intel/oneapi/setvars.sh
 ```
 
-2. Build the program using the following `cmake` commands. 
-``` 
+2. Build the program using the following `cmake` commands.
+```
 $ mkdir build && cd build
 $ cmake ..
 $ make
@@ -134,8 +149,8 @@ In order to run on the DevCloud, you need to request a compute node using node p
 | FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
 
 ### Build process (DevCloud)
-1. Build the program using the following `cmake` commands. 
-``` 
+1. Build the program using the following `cmake` commands.
+```
 $ mkdir build && cd build
 $ cmake ..
 $ make
