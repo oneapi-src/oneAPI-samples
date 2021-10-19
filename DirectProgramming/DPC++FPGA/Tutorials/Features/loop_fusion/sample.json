@@ -1,5 +1,5 @@
 {
-  "guid": "CD8FE0A5-B31A-4906-8386-27416361FE24",
+  "guid": "79A181D7-D5AD-4D28-8508-3A04465265FB",
   "name": "Loop Fusion",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of the loop_fusion attribute",
