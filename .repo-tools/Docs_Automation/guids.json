@@ -763,6 +763,13 @@
         "removed": "False",
         "ver": "2021.1.Gold"
     },
+    "B2974A99-4BC6-4F3E-AD3E-C17FE86AC2A4": {
+        "guid": "B2974A99-4BC6-4F3E-AD3E-C17FE86AC2A4",
+        "name": "Adaptive Noise Reduction",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
+    },
     "B69FAC86-88BF-41BD-B4E0-ACDF753ED3CE": {
         "guid": "B69FAC86-88BF-41BD-B4E0-ACDF753ED3CE",
         "name": "Intel Python Daal4py Distributed K-Means",

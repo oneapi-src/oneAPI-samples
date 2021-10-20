@@ -5,6 +5,7 @@ This Page is a complete list of oneAPI Code Samples, sorted by Alphabetical orde
 |Code Sample Name|Supported Intel&reg; Architecture(s)|Description|
 |-----------------------|----------------------|---------------------|
 |[1D Heat Transfer](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++/StructuredGrids/1d_HeatTransfer)|['CPU', 'GPU']|The 1D Heat Transfer sample simulates 1D Heat Transfer problem using Data Parallel C++ (DPC++)|
+|[Adaptive Noise Reduction](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/anr)|['FPGA']|A highly optimized adaptive noise reduction (ANR) algorithm on an FPGA.|
 |[All Pairs Shortest Paths](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++/GraphAlgorithms/all-pairs-shortest-paths)|['CPU', 'GPU']|All Pairs Shortest Paths finds the shortest paths between pairs of vertices in a graph using a parallel blocked algorithm that enables the application to efficiently offload compute intensive work to the GPU.|
 |[Analog In](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/IoTConnectionTools/analog-in)|['CPU']|Demonstrate how to read an analog voltage value from an input pin using the Eclipse* MRAA library|
 |[AWS Pub Sub](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/IoTConnectionTools/aws-pub-sub)|['CPU']|This sample uses the Message Broker for AWS* IoT to send and receive messages through an MQTT connection|
@@ -164,6 +165,6 @@ This Page is a complete list of oneAPI Code Samples, sorted by Alphabetical orde
 |[Vector Add DPCT](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Migration/vector-add-dpct)|['CPU']|Simple project to illustrate the basic migration of CUDA code. Use this sample to ensure your environment is configured correctly and to understand the basics of migrating existing CUDA projects to Data Parallel C++ (DPC++)|
 |[Vectorize VecMatMult](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/Fortran/DenseLinearAlgebra/vectorize-vecmatmult)|['CPU']|Fortran Tutorial - Using Auto Vectorization|
 |[Zero Copy Data Transfer](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/DesignPatterns/zero_copy_data_transfer)|['FPGA']|An Intel® FPGA tutorial demonstrating zero-copy host memory using the SYCL restricted Unified Shared Memory (USM) model|
-Total Samples: 160
+Total Samples: 161
 
-Report Generated on:  October 18, 2021
+Report Generated on:  October 20, 2021
