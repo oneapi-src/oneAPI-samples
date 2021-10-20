@@ -53,7 +53,7 @@
         "name": "Scheduler Target FMAX",
         "notes": "-",
         "removed": "False",
-        "ver": "2021.4.0"
+        "ver": "2022.1.0"
     },
     "1C2AD9C2-D977-4586-9584-BF65A1AED0A2": {
         "guid": "1C2AD9C2-D977-4586-9584-BF65A1AED0A2",
@@ -494,7 +494,7 @@
         "name": "Printf",
         "notes": "-",
         "removed": "False",
-        "ver": "2021.4.0"
+        "ver": "2022.1.0"
     },
     "7F805BC5-F9A9-43B3-BBCB-580063CD59F8": {
         "guid": "7F805BC5-F9A9-43B3-BBCB-580063CD59F8",
