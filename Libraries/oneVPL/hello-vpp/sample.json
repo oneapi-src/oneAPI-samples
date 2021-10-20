@@ -1,24 +1,11 @@
 {
   "guid": "36C96B55-4DE0-4764-8A41-0F67D2300389",
   "name": "Hello VPP",
-  "categories": ["Toolkit/oneAPI Libraries/oneVPL"],
-  "description": "Sample that shows how to use the Intel® oneAPI Video Processing Library (VPL) to perform simple video processing",
-  "dependencies": ["vpl"],
-  "os": ["linux"],
+  "categories": [ "Toolkit/oneAPI Libraries/oneVPL" ],
+  "description": "Shows how to use the Intel® oneAPI Video Processing Library (VPL) to perform simple video processing",
+  "dependencies": [ "vpl" ],
+  "os": [ "linux" ],
   "languages": [{"cpp":{}}],
-  "builder": [ "ide", "cmake"],
-  "targetDevice": ["CPU", "GPU"],
-  "ciTests": {
-    "linux": [
-      { "id": "builds and runs successfully with CMake",
-        "env": [ ],
-        "steps": [
-          "mkdir build",
-          "cd build",
-          "cmake ..",
-          "cmake --build .",
-          "cmake --build . --target run"
-        ] }
-    ]
-  }
+  "builder": [ "cmake"],
+  "targetDevice": [ "CPU", "GPU" ]
 }
