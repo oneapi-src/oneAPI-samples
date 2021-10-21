@@ -84,9 +84,9 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
       TT inverse[rows][columns];
 
       /*
-        ======================================================================
+        ========================================================================
         Read the R matrix from the pipe
-        ======================================================================
+        ========================================================================
       */
 
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
@@ -101,10 +101,19 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
         }
       }
 
+      // PRINTF("R\n");
+      // for(int i = 0; i < rows; i++){
+      //   for(int j = 0; j < columns; j++){
+      //     PRINTF("(%f, %f) ", R[i][j].r(), R[i][j].i());
+      //   }
+      //   PRINTF("\n");
+      // }
+
+
       /*
-        ======================================================================
+        ========================================================================
         Read Q from the pipe
-        ======================================================================
+        ========================================================================
       */
 
       [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
@@ -142,9 +151,9 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
       }
 
       /*
-        ======================================================================
+        ========================================================================
         Compute the inverse of R
-        ======================================================================
+        ========================================================================
       */
 /*
           [[intel::bankwidth(kBankwidth), intel::numbanks(kNumBanks)]] 
@@ -186,8 +195,10 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
       int ip2 = 2;
       int diagSize = columns;
       int diagSizem1 = columns - 1;
-      int cp1Limit = RAWTriang-columns-columns > 0 ? RAWTriang-columns : columns;
-      int nextcp1Limit = RAWTriang-columns-1-columns > 0 ? RAWTriang-columns-1 : columns;
+      int cp1Limit = RAWTriang-columns-columns > 0 ? 
+                                                    RAWTriang-columns : columns;
+      int nextcp1Limit = RAWTriang-columns-1-columns > 0 ? 
+                                                  RAWTriang-columns-1 : columns;
 
       // [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
       [[intel::ivdep(RAWTriang)]]  // NO-FORMAT: Attribute
@@ -251,16 +262,66 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
 
       }
 
+
+      // TT rinv[rows][columns];
+      // for(int i = 0; i < rows; i++){
+      //   UnrolledLoop<rows>([&](auto k) {
+      //      rinv[i][k] = R_inverse[i].template get<k>(); 
+      //   });
+      // }
+      // PRINTF("R inverse\n");
+      // for(int i = 0; i < rows; i++){
+      //   for(int j = 0; j < columns; j++){
+      //     PRINTF("(%f, %f) ", rinv[i][j].r(), rinv[i][j].i());
+      //   }
+      //   PRINTF("\n");
+      // }
+
+      // TT qp[rows][columns];
+      // for(int i = 0; i < columns; i++){
+      //   UnrolledLoop<columns>([&](auto k) {
+      //      qp[k][i] = Q_matrix[i].template get<k>(); 
+      //   });
+      // }
+      // PRINTF("Q\n");
+      // for(int i = 0; i < rows; i++){
+      //   for(int j = 0; j < columns; j++){
+      //     PRINTF("(%f, %f) ", qp[i][j].r(), qp[i][j].i());
+      //   }
+      //   PRINTF("\n");
+      // }
+
+      // PRINTF("QR\n");
+      // for(int i = 0; i < rows; i++){
+      //   for(int j = 0; j < columns; j++){
+      //     TT value = {0};
+      //     for(int k = 0; k < columns; k++){
+      //       value += qp[i][k] * R[k][j];
+      //     }
+      //     PRINTF("(%f, %f) ", value.r(), value.i());
+      //   }
+      //   PRINTF("\n");
+      // }
+
+
+
       /*
-        ======================================================================
+        ========================================================================
         Multiply the inverse of R by the transposition of Q
-        ======================================================================
+        ========================================================================
       */
       for(int i = 0; i < rows; i++){
         for(int j = 0; j < columns; j++){
           TT dotProduct = {0.0};
           UnrolledLoop<rows>([&](auto k) {
-             dotProduct += R_inverse[i].template get<k>() * Q_matrix[j].template get<k>(); 
+            if constexpr(isComplex){
+              dotProduct += R_inverse[i].template get<k>() * 
+                            Q_matrix[j].template get<k>().conj(); 
+            }
+            else{
+              dotProduct += R_inverse[i].template get<k>() * 
+                            Q_matrix[j].template get<k>();
+            }
              // dotProduct += inverseOfR[i][k] * Q_matrix[j].template get<k>();
              // dotProduct += inverseOfR[k][i] * Q_matrix[j].template get<k>();
           });
@@ -269,9 +330,9 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
       }
 
       /*
-        ======================================================================
+        ========================================================================
         Write result to the output pipe
-        ======================================================================
+        ========================================================================
       */
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
       for (ac_int<kStoreIterBitSize, false> si = 0; si < kStoreIter; 

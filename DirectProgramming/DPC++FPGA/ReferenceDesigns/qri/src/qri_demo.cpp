@@ -33,6 +33,7 @@
 #include <CL/sycl/INTEL/ac_types/ac_complex.hpp>
 #include <chrono>
 #include <list>
+#include <iomanip> 
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -53,7 +54,7 @@ void FloatQRI(  vector<float> &A,
 #endif
 
 /*
-  returns a random floating-point value between min and max
+  Returns a random floating-point value between min and max
 */
 float randomValueInInterval(float min, float max){
   return min + static_cast <float>(rand()) 
@@ -66,54 +67,6 @@ float randomValueInInterval(float min, float max){
 template <int size, typename T>
 void QRD(vector<T> &input, vector<T> &Q, vector<T> &R){
 
-  // for (int i = -1; i < size; i++) {
-  //   for (int j = i; j < size; j++) {
-
-  //     T vector_t[size];
-  //     T sori = s_or_i[j];
-
-  //     for(int k=0; k<size; k++){
-  //       vector_t[k] = input[j][k];
-  //       if (j == i) {
-  //         vector_ai[k] = vector_t[k];
-  //       }
-  //     }
-
-  //     for(int k=0; k<size; k++){
-  //       T sum_rhs = j == i ? {0} : vector_t[k];
-  //       T mul_rhs = i < 0 ? {0} : sori + sum_rhs;
-  //       vector_t[k] = vector_ai[k] * mul_rhs;
-  //       if (i >= 0) {
-  //         ap_matrix[j][k] = a_matrix[j][k] = vector_t[k];
-  //       }
-  //       if (j == i + 1) {
-  //         vector_ti[k] = vector_t[k];
-  //       }
-  //     }
-
-  //     T p_ij = {0};
-  //     for(int k=0; k<size; k++){
-  //       p_ij = p_ij + vector_t[k] * vector_ti[k];
-  //     }
-
-  //     if (j == i + 1) {
-  //       p_ii_x = p_ij;
-  //       i_r_ii_x = rsqrt(p_ij);
-  //     }
-
-  //     T s_ij = - p_ij / pip1
-
-  //     if (j >= 0) {
-  //       s_or_i[j] = j == i + 1 ? i_r_ii_x : s_ij; 
-  //     }
-
-  //     r_ii = j == i + 1 ? sycl::sqrt(p_ii_x) : i_r_ii_x * p_ij;
-
-  //     if (j >= i + 1 && i + 1 < size) {
-  //       R[i][j] = r_ii;
-  //     }
-  //   }
-  // }
   int rows = size;
   int columns = size;
   for(int i=0; i<columns; i++){
@@ -141,7 +94,7 @@ void QRD(vector<T> &input, vector<T> &Q, vector<T> &R){
   T pii = a1a1;
 
   // ir_{1,1} = 1/sqrt(p_{1,1})
-  T irii = rsqrt(pii);
+  T irii = 1.0/sqrt(pii);
 
   // r_{1,1} = sqrt(p_{1,1})
   T rii = sqrt(pii);
@@ -152,7 +105,6 @@ void QRD(vector<T> &input, vector<T> &Q, vector<T> &R){
     // <a_1, a_j>
     T a1aj = 0;
     for(int k=0; k<rows; k++){
-      // We should keep this matrix line a_1 localy as we reuse it many times
       T ak1 = input[(k*columns + 0)];
       T akj = input[(k*columns + j)];
       a1aj += ak1*akj;
@@ -172,7 +124,6 @@ void QRD(vector<T> &input, vector<T> &Q, vector<T> &R){
   // for i=1:n-1 do
   for(int i=0; i<rows-1; i++){
     // q_i = a_i * ir_{i,i}
-    // out << "irii = " << irii << endl;
     for(int k=0; k<rows; k++){
       T aki = input[(k*columns + i)];
       // out << "A[" << i << "][" << k << "] = " << aki << endl;
@@ -204,14 +155,13 @@ void QRD(vector<T> &input, vector<T> &Q, vector<T> &R){
         pii = ajaj;
 
         // ir_{j,j} = 1/sqrt(p_{j,j})
-        irii = rsqrt(pii);
+        irii = 1.0/sqrt(pii);
 
         // r_{i+1, i+1} = sqrt(p_{i+1, i+1})
         rii = sqrt(pii);
         R[j*columns + j] = rii;
       } 
       else{
-        // We should keep aj locally because we reuse it every iteration of the loop
         // <a_{i+1}, aj>
         T aip1aj = 0;
         for(int k=0; k<rows; k++){
@@ -244,7 +194,7 @@ void QRD(vector<T> &input, vector<T> &Q, vector<T> &R){
   Generate a random matrix with a given condition number
 */
 template <int size, typename T>
-void generateRandomMatrixWithGivenCondtitionNumber(float cn, vector<T> &output){
+void generateMatrixWithCondititionNumber(float cn, vector<T> &output){
 
   constexpr float kRandomMin = -10;
   constexpr float kRandomMax = 10;
@@ -256,9 +206,16 @@ void generateRandomMatrixWithGivenCondtitionNumber(float cn, vector<T> &output){
   for(int row=0; row<size; row++){
     for(int col=0; col<size; col++){
       float random1 = randomValueInInterval(kRandomMin, kRandomMax);
-      M1[row*size + col] = random1;
       float random2 = randomValueInInterval(kRandomMin, kRandomMax);
+#if COMPLEX == 1
+      float random1I = randomValueInInterval(kRandomMin, kRandomMax);
+      M1[row*size + col] = {random1, random1I};
+      float random2I = randomValueInInterval(kRandomMin, kRandomMax);
+      M2[row*size + col] = {random2, random2I};
+#else
+      M1[row*size + col] = random1;
       M2[row*size + col] = random2;
+#endif
     }
   }
 
@@ -369,65 +326,30 @@ int main(int argc, char *argv[]) {
     inverse_matrix.resize(matrices * kInverseMatrixSize);
     precomputed_inverse_matrix.resize(matrices * kInverseMatrixSize);
 
-    // For output-postprocessing
-#if COMPLEX == 1
-    ac_complex<float> inverse_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT];
-#else
-    float inverse_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT];
-#endif
-
     cout << "Generating " << matrices << " random matri"
          << ((matrices == 1) ? "x " : "ces ") << "\n";
 
     srand(kRandomSeed);
 
-    // float maxConditionNumber = 0.0;
-    int count = 0;
     for (size_t i = 0; i < matrices; i++) {
       // Generate a random matrix
-      count++;
-      // cout << "A MATRIX" << std::endl;
-      for (size_t row = 0; row < ROWS_COMPONENT; row++) {
-        for (size_t col = 0; col < COLS_COMPONENT; col++) {
-          // Generate a random floating-point number between kRandomMin and
-          // kRandomMax.
-          float random_real = kRandomMin + static_cast <float>(rand())
-                        /(static_cast<float>(RAND_MAX)/(kRandomMax-kRandomMin));
 
 #if COMPLEX == 1
-          float random_imag = kRandomMin + static_cast <float>(rand())
-                        /(static_cast<float>(RAND_MAX)/(kRandomMax-kRandomMin));
-          
-          ac_complex<float> random_complex = {random_real, random_imag};
-
-          A[i * kAMatrixSize + col * ROWS_COMPONENT + row] = random_complex;
+      vector<ac_complex<float>> randomRealMatrix;
 #else
-          A[i * kAMatrixSize + col * ROWS_COMPONENT + row] = random_real;
+      vector<float> randomRealMatrix;
 #endif
-          // cout << A[i * kAMatrixSize + col * ROWS_COMPONENT + row] 
-          //      << " ";
-        }
-        // cout << std::endl;
-      }
+      randomRealMatrix.resize(kAMatrixSize);
 
-      vector<float> test;
-      test.resize(kAMatrixSize);
-
-      generateRandomMatrixWithGivenCondtitionNumber<ROWS_COMPONENT>(3.2, test);
+      generateMatrixWithCondititionNumber<ROWS_COMPONENT>(3.2, 
+                                                              randomRealMatrix);
 
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {
         for (size_t col = 0; col < COLS_COMPONENT; col++) {
-          // A[i * kAMatrixSize + col * ROWS_COMPONENT + row] = random_real;
-          A[i * kAMatrixSize + col * ROWS_COMPONENT + row] = test[row*COLS_COMPONENT + col];
+          A[i * kAMatrixSize + col * ROWS_COMPONENT + row] = 
+                                   {randomRealMatrix[row*COLS_COMPONENT + col]};
         }
       }
-
-      for (size_t row = 0; row < ROWS_COMPONENT; row++) {
-        for (size_t col = 0; col < COLS_COMPONENT; col++) {
-          std::cout << A[i * kAMatrixSize + row * COLS_COMPONENT + col] << " ";
-        }
-        std::cout << std::endl;
-      }      
 
       // Check if the generated matrix is ill-conditioned for inversion
       // To do so, we compute de matrix inverse condition number:
@@ -436,20 +358,23 @@ int main(int argc, char *argv[]) {
       // compute the condition number
 
       // To compute the inverse of A, we use the Gaussian elimination 
-      long double A_copy[COLS_COMPONENT][ROWS_COMPONENT];
-      long double inverse[COLS_COMPONENT][ROWS_COMPONENT];
+#if COMPLEX == 1
+      ac_complex<double> A_copy[COLS_COMPONENT][ROWS_COMPONENT];
+      ac_complex<double> inverse[COLS_COMPONENT][ROWS_COMPONENT];
+#else
+      double A_copy[COLS_COMPONENT][ROWS_COMPONENT];
+      double inverse[COLS_COMPONENT][ROWS_COMPONENT];
+#endif
 
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {
         for (size_t col = 0; col < COLS_COMPONENT; col++) {\
           if(row == col){
-            // precomputed_inverse_matrix[i * kAMatrixSize + row*COLS_COMPONENT + col] = 1.0;
-            inverse[row][col] = 1.0;
+            inverse[row][col] = {1.0};
           }
           else{
-            // precomputed_inverse_matrix[i * kAMatrixSize + row*COLS_COMPONENT + col] = 0.0;
-            inverse[row][col] = 0.0;
+            inverse[row][col] = {0.0};
           }
-          A_copy[row][col] = test[row*COLS_COMPONENT + col];
+          A_copy[row][col] = randomRealMatrix[row*COLS_COMPONENT + col];
           // A_copy[row][col] = A[i * kAMatrixSize + col*COLS_COMPONENT + row];
         }
       }
@@ -468,23 +393,23 @@ int main(int argc, char *argv[]) {
      
       for (int row = 0; row < ROWS_COMPONENT; row++){
         // Find the next pivot
-        float pivot = A_copy[row][row];
+        auto pivot = A_copy[row][row];
 
         // If the pivot is zero, we need to swap the current row with 
         // another row that would give a non zero pivot.
         bool pivotIsZero = pivot == 0.0 || pivot == -0.0;
         if(pivotIsZero){ 
           for(int nextRow=row+1; nextRow<ROWS_COMPONENT; nextRow++){
-            long double potentialPivotd = A_copy[nextRow][row];
-            bool nextRowPivotIsZero = potentialPivotd == 0.0 || potentialPivotd == -0.0;
+            auto potentialPivotd = A_copy[nextRow][row];
+            bool nextRowPivotIsZero = potentialPivotd == 0.0 
+                                   || potentialPivotd == -0.0;
             // row can be used to swap
             if(!nextRowPivotIsZero){
               // We swap the two rows
               for(int j=0; j<COLS_COMPONENT; j++){
-                long double tmp = A_copy[row][j];
+                auto tmp = A_copy[row][j];
                 A_copy[row][j] = A_copy[nextRow][j];
                 A_copy[nextRow][j] = tmp;
-
 
                 tmp = inverse[row][j];
                 inverse[row][j] = inverse[nextRow][j];
@@ -514,20 +439,23 @@ int main(int argc, char *argv[]) {
         }
 
         // Eliminate the current row in all other rows
-        for(int rowToEliminate = ROWS_COMPONENT-1; rowToEliminate>=0; rowToEliminate--){
+        for(int rowToEliminate = ROWS_COMPONENT-1; rowToEliminate>=0; 
+                                                              rowToEliminate--){
           if(rowToEliminate == row){
             continue;
           }
 
-          long double factor = A_copy[rowToEliminate][row];
+          auto factor = A_copy[rowToEliminate][row];
           for(int k=0; k<COLS_COMPONENT; k++){
             if(k == row){
               A_copy[rowToEliminate][k] = A_copy[rowToEliminate][k] - factor;
             }
             else{
-              A_copy[rowToEliminate][k] = A_copy[rowToEliminate][k] - (A_copy[row][k] * factor);
+              A_copy[rowToEliminate][k] = A_copy[rowToEliminate][k] 
+                                          - (A_copy[row][k] * factor);
             }
-            inverse[rowToEliminate][k] = inverse[rowToEliminate][k] - (inverse[row][k] * factor);
+            inverse[rowToEliminate][k] = inverse[rowToEliminate][k] 
+                                        - (inverse[row][k] * factor);
 
             // precomputed_inverse_matrix[i * kAMatrixSize + rowToEliminate*COLS_COMPONENT + k] = 
             //       precomputed_inverse_matrix[i * kAMatrixSize + rowToEliminate*COLS_COMPONENT + k]
@@ -555,14 +483,14 @@ int main(int argc, char *argv[]) {
 
       // Compute the norm inf of both the input and the inverse matrices
       // to compute the condition number
-      long double norm_inf_A = 0.0;
-      long double norm_inf_inverse = 0.0;
+      double norm_inf_A = 0.0;
+      double norm_inf_inverse = 0.0;
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {
-        long double norm_i_A = 0.0;
-        long double norm_i_inverse = 0.0;
+        double norm_i_A = 0.0;
+        double norm_i_inverse = 0.0;
         for (size_t col = 0; col < COLS_COMPONENT; col++) {
           // norm_i_A += abs(A[i * kAMatrixSize + col*COLS_COMPONENT + row]);
-          norm_i_A += abs(test[row*COLS_COMPONENT + col]);
+          norm_i_A += abs(randomRealMatrix[row*COLS_COMPONENT + col]);
           // norm_i_inverse += abs(precomputed_inverse_matrix[i * kAMatrixSize + row*COLS_COMPONENT + col]);
           norm_i_inverse += abs(inverse[row][col]);
         }
@@ -576,29 +504,43 @@ int main(int argc, char *argv[]) {
 
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {
         for (size_t col = 0; col < COLS_COMPONENT; col++) {
-          precomputed_inverse_matrix[i * kAMatrixSize + row*COLS_COMPONENT + col] = inverse[row][col];
+#if COMPLEX == 1
+          if(!std::isfinite(inverse[row][col].r()) || 
+            !std::isfinite(inverse[row][col].i()))
+#else
+          if(!std::isfinite(inverse[row][col]))
+#endif       
+          {
+            give_up = true;
+          }
+          else{
+            precomputed_inverse_matrix[i * kAMatrixSize + 
+                                  row*COLS_COMPONENT + col] = inverse[row][col];
+          }
         }
       }
 
       // cout << "A inverse matrix" << std::endl;
       // for (size_t row = 0; row < ROWS_COMPONENT; row++) {
       //   for (size_t col = 0; col < COLS_COMPONENT; col++) {
-      //     cout << precomputed_inverse_matrix[i * kAMatrixSize + row*COLS_COMPONENT + col] << " ";
+      //     cout << precomputed_inverse_matrix[i * kAMatrixSize + 
+      //                                         row*COLS_COMPONENT + col] << " ";
       //   }
       //   cout << std::endl;
       // }
 
       // Compute the confidition number
       float condition_number = norm_inf_A * norm_inf_inverse;
-      cout << "norm_inf_A " << norm_inf_A << std::endl;
-      cout << "norm_inf_inverse " << norm_inf_inverse << std::endl;
-      cout << "condition_number " << condition_number << std::endl;
+      // cout << "norm_inf_A " << norm_inf_A << std::endl;
+      // cout << "norm_inf_inverse " << norm_inf_inverse << std::endl;
+      // cout << "condition_number " << condition_number << std::endl;
 
       // Regenerate this matrix if:
       // - the condition number is higher than the threshold
       // - we gave up on computing its inverse
       // if(std::log2(condition_number) > 10 || give_up){
-      if(condition_number > 700 || give_up){
+      // if(condition_number > 700 || give_up){
+      if(condition_number > 7000 || give_up){
         i--;
       }
       else{
@@ -609,11 +551,20 @@ int main(int argc, char *argv[]) {
         // cout << "norm_inf_A " << norm_inf_A << std::endl;
         // cout << "norm_inf_inverse " << norm_inf_inverse << std::endl;
         // cout << "condition number: " << norm_inf_A * norm_inf_inverse << std::endl;
-        cout << "matrix " << i << " found after " << count << " iterations " << std::endl;
+
+      // std::cout << "A matrix" << std::endl;
+      // for (size_t row = 0; row < ROWS_COMPONENT; row++) {
+      //   for (size_t col = 0; col < COLS_COMPONENT; col++) {
+      //     std::cout << std::setprecision(3) << A[i * kAMatrixSize + col * COLS_COMPONENT + row] << " ";
+      //   }
+      //   std::cout << std::endl;
+      // }      
+
         cout << "norm_inf_A " << norm_inf_A << std::endl;
         cout << "norm_inf_inverse " << norm_inf_inverse << std::endl;
         cout << "condition_number " << condition_number << std::endl;
-        count =0;
+        // if(i ==36)
+        //     exit(0);
       }
 
     }
@@ -667,189 +618,42 @@ int main(int argc, char *argv[]) {
     double maxErrorTotal = 0.0;
     double totalError = 0.0;
 
+    // For output-postprocessing
+#if COMPLEX == 1
+    ac_complex<float> inverse_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT];
+#else
+    float inverse_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT];
+#endif
+
     cout << "Verifying results on matrix";
     for (size_t matrix : to_check) {
       cout << " " << matrix << std::endl;
       size_t idx = 0;
 
 #if COMPLEX == 1
-      // cout << "R MATRIX" << std::endl;
-      for (size_t i = 0; i < COLS_COMPONENT; i++) {
-        for (size_t j = 0; j < COLS_COMPONENT; j++) {
-          if (j < i)
-            r_matrix_pp[i][j] = {0};
-          else {
-            r_matrix_pp[i][j] = inverse_matrix[matrix * kInverseMatrixSize + idx];
-            idx++;
-          }
-          // cout << r_matrix_pp[i][j] << " ";
-        }
-        // cout << std::endl;
-      }
-
-      // idx = 0;
-      // cout << "Q MATRIX" << std::endl;
       for (size_t j = 0; j < COLS_COMPONENT; j++) {
         for (size_t i = 0; i < ROWS_COMPONENT; i++) {
-          inverse_matrix_pp[i][j] = inverse_matrix[matrix * kInverseMatrixSize + idx];
+          inverse_matrix_pp[j][i] = 
+                              inverse_matrix[matrix * kInverseMatrixSize + idx];
           idx++;
         }
       }
 
-      // for (size_t i = 0; i < ROWS_COMPONENT; i++) {
-      //   for (size_t j = 0; j < COLS_COMPONENT; j++) {
-      //     cout << inverse_matrix_pp[i][j] << " ";
+      // std::cout << "Kernel inverse" << std::endl;
+      // for(int row=0; row<ROWS_COMPONENT; row++){
+      //   for(int col=0; col<COLS_COMPONENT; col++){
+      //     std::cout << inverse_matrix_pp[row][col] << " ";
       //   }
-      //   cout << std::endl;
+      //   std::cout << std::endl;
       // }
 
-      constexpr float kErrorThreshold = 1e-4;
-
-      float QOrthoErrorThreshold = pow(2.0, -9);
-      size_t count = 0;
-      bool error = false;
-      float qr_ij[2] = {0};
-      float qtq_ij[2] = {0};
-      float qqt_ij[2] = {0};
-      for (size_t i = 0; i < ROWS_COMPONENT; i++) {
-        for (size_t j = 0; j < COLS_COMPONENT; j++) {
-          qr_ij[0] = 0;
-          qr_ij[1] = 0;
-          for (size_t k = 0; k < COLS_COMPONENT; k++) {
-            qr_ij[0] += inverse_matrix_pp[i][k].r() * r_matrix_pp[k][j].r() -
-                        inverse_matrix_pp[i][k].i() * r_matrix_pp[k][j].i();
-            qr_ij[1] += inverse_matrix_pp[i][k].r() * r_matrix_pp[k][j].i() +
-                        inverse_matrix_pp[i][k].i() * r_matrix_pp[k][j].r();
-          }
-
-          qtq_ij[0] = 0;
-          qtq_ij[1] = 0;
-          if(i<COLS_COMPONENT){
-            for (size_t k = 0; k < ROWS_COMPONENT; k++) {
-              qtq_ij[0] += inverse_matrix_pp[k][i].r() * inverse_matrix_pp[k][j].r() +
-                          inverse_matrix_pp[k][i].i() * inverse_matrix_pp[k][j].i();
-              qtq_ij[1] += inverse_matrix_pp[k][i].r() * inverse_matrix_pp[k][j].i() -
-                          inverse_matrix_pp[k][i].i() * inverse_matrix_pp[k][j].r();
-            }
-          }
-
-          if(squareMatrices){
-            qqt_ij[0] = 0;
-            qqt_ij[1] = 0;
-            if(i<COLS_COMPONENT){
-              for (size_t k = 0; k < ROWS_COMPONENT; k++) {
-                qqt_ij[0] += inverse_matrix_pp[i][k].r() * inverse_matrix_pp[j][k].r() +
-                            inverse_matrix_pp[i][k].i() * inverse_matrix_pp[j][k].i();
-                qqt_ij[1] += inverse_matrix_pp[i][k].r() * inverse_matrix_pp[j][k].i() -
-                            inverse_matrix_pp[i][k].i() * inverse_matrix_pp[j][k].r();
-              }
-            }
-          }
-
-          bool qr_eq_a = (abs(A[matrix * kAMatrixSize +
-                              j * ROWS_COMPONENT + i].r() - qr_ij[0]) 
-                          < kErrorThreshold)
-                      && (abs(A[matrix * kAMatrixSize +
-                              j * ROWS_COMPONENT + i].i() - qr_ij[1]) 
-                          < kErrorThreshold);
-
-
-          bool qtq_is_id = 
-                      (((i == j) && (abs(qtq_ij[0] - 1) < QOrthoErrorThreshold))
-            || (((i != j) || (j>=ROWS_COMPONENT)) 
-                                    && (abs(qtq_ij[0]) < QOrthoErrorThreshold)))
-                                    && (abs(qtq_ij[1]) < QOrthoErrorThreshold);
-
-          bool qqt_is_id = !squareMatrices ||
-                    ((((i == j) && (abs(qqt_ij[0] - 1) < QOrthoErrorThreshold))
-            || (((i != j) || (j>=ROWS_COMPONENT)) 
-                                    && (abs(qqt_ij[0]) < QOrthoErrorThreshold)))
-                                    && (abs(qqt_ij[1]) < QOrthoErrorThreshold));
-
-          bool r_upper_triang = (i >= COLS_COMPONENT) || 
-                              ((i > j) && 
-                              ((abs(r_matrix_pp[i][j].r()) < kErrorThreshold) &&
-                                (abs(r_matrix_pp[i][j].i()) < kErrorThreshold)))
-                              || ((i <= j));
-
-          bool r_is_not_finite = (i < COLS_COMPONENT) && 
-                                  (!(std::isfinite(r_matrix_pp[i][j].r())) ||
-                                    !(std::isfinite(r_matrix_pp[i][j].i())));
-
-          if (!qr_eq_a 
-              || !qtq_is_id 
-              || !qqt_is_id 
-              || !r_upper_triang
-              || !std::isfinite(qr_ij[0])
-              || !std::isfinite(qr_ij[1]) 
-              || !std::isfinite(qtq_ij[0])
-              || !std::isfinite(qtq_ij[1])
-              || !std::isfinite(qqt_ij[1])
-              || !std::isfinite(qqt_ij[1])
-              || r_is_not_finite
-            ) {
-
-            count++;
-
-            if(error){
-              continue;
-            }
-            cout << "Error at i= " << i << " j= " << j << std::endl;
-
-            if(!qr_eq_a){
-              cout  << "Error: A[" << i << "][" << j << "] = (" << 
-                                  A[matrix * kAMatrixSize +
-                                  j * ROWS_COMPONENT + i].r()
-                                  << ", " <<
-                                  A[matrix * kAMatrixSize +
-                                  j * ROWS_COMPONENT + i].i()
-                    << ") but QR[" << i << "][" << j << "] = (" << qr_ij[0] 
-                    << ", " << qr_ij[1] << ")" << std::endl;
-            }
-            if(!qr_eq_a) {
-              cout  << "The difference is greater than tolerated (" 
-                    << kErrorThreshold << ")" << std::endl;
-            }
-            if(!qtq_is_id || !qqt_is_id) {
-              cout  << "Q is not orthogonal at i=" << i << " j=" << j 
-              << " qtq=(" << qtq_ij[0] << ", " << qtq_ij[1] << ")"  
-              << " qqt=(" << qqt_ij[0] << ", " << qqt_ij[1] << ")"
-              << std::endl;             
-              cout << "kQOrthoErrorThreshold=" << QOrthoErrorThreshold 
-                    << std::endl;
-              cout << "kErrorThreshold=" << kErrorThreshold 
-                    << std::endl;
-            }
-            if(!r_upper_triang) {
-              cout  << "R is not upper triangular" << std::endl;             
-            }
-            if(!std::isfinite(qr_ij[0]) || !std::isfinite(qr_ij[1])) {
-              cout  << "QR[" << i << "][" << j << "] = (" << qr_ij[0] << ", " 
-                    << qr_ij[1] << ") is not finite" << std::endl;
-            }
-            if(!std::isfinite(qtq_ij[0]) || !std::isfinite(qtq_ij[1])) {
-              cout  << "QtQ[" << i << "][" << j << "] = (" << qtq_ij[0] << ", " 
-                    << qtq_ij[1] << ") is not finite" << std::endl;
-            }
-            if(r_is_not_finite) {
-              cout  << "R[" << i << "][" << j << "] = (" 
-                    << r_matrix_pp[i][j].r() 
-                    << ", " << r_matrix_pp[i][j].i() << ") is not finite"
-                    << std::endl;
-            }
-            error = true;
-          }
-        }
-      }
-#else
-
-      // idx = 0;
-      for (size_t j = 0; j < COLS_COMPONENT; j++) {
-        for (size_t i = 0; i < ROWS_COMPONENT; i++) {
-          inverse_matrix_pp[j][i] = inverse_matrix[matrix * kInverseMatrixSize + idx];
-          idx++;
-        }
-      }
+      // std::cout << "Precomputed inverse" << std::endl;
+      // for(int row=0; row<ROWS_COMPONENT; row++){
+      //   for(int col=0; col<COLS_COMPONENT; col++){
+      //     std::cout << precomputed_inverse_matrix[matrix * kAMatrixSize + row*COLS_COMPONENT + col] << " ";
+      //   }
+      //   std::cout << std::endl;
+      // }
 
       constexpr float kErrorThreshold = 1e-3;
 
@@ -859,32 +663,23 @@ int main(int argc, char *argv[]) {
       for (size_t i = 0; i < ROWS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
 
-          double kernelDiffDouble = abs(inverse_matrix_pp[i][j] - 
-      precomputed_inverse_matrix[matrix * kAMatrixSize + i*COLS_COMPONENT + j]);
+          double diffR = abs(inverse_matrix_pp[i][j].r() - 
+  precomputed_inverse_matrix[matrix * kAMatrixSize + i*COLS_COMPONENT + j].r());
 
-          // unsigned int kernel_bits = *((unsigned int*)&(inverse_matrix_pp[i][j]));
-          // unsigned int tb_bits = *((unsigned int*)&(precomputed_inverse_matrix[matrix * kAMatrixSize + i*COLS_COMPONENT + j]));
+          double diffI = abs(inverse_matrix_pp[i][j].i() - 
+  precomputed_inverse_matrix[matrix * kAMatrixSize + i*COLS_COMPONENT + j].i());
 
-          // unsigned int bits_diff; 
-          // if(kernel_bits > tb_bits){
-          //   bits_diff = kernel_bits - tb_bits;
-          // }
-          // else{
-          //   bits_diff = tb_bits - kernel_bits;
-          // }
-          // if(bits_diff > max_bit_diff){
-          //   cout << "new max kernel_bits diff "  << bits_diff << std::endl;
-          //   cout << "kernel value "  << inverse_matrix_pp[i][j] << std::endl;
-          //   cout << "tb value "  << precomputed_inverse_matrix[matrix * kAMatrixSize + i*COLS_COMPONENT + j] << std::endl;
-
-          //   max_bit_diff = bits_diff;
-          // }
-
-          if(kernelDiffDouble > maxError){
-            maxError = kernelDiffDouble;
+          if(diffR > maxError){
+            maxError = diffR;
+          }
+          if(diffI > maxError){
+            maxError = diffI;
           }
 
-          if(kernelDiffDouble > kErrorThreshold){
+          if(diffR > kErrorThreshold){
+            kernelGreaterThanErrorThreshold++;
+          }
+          if(diffI > kErrorThreshold){
             kernelGreaterThanErrorThreshold++;
           }
         }
@@ -897,10 +692,54 @@ int main(int argc, char *argv[]) {
       }
       totalError += maxError;
 
-      std::cout << "Kernel errors: " << kernelGreaterThanErrorThreshold << std::endl; 
+      std::cout << "Kernel errors: " << kernelGreaterThanErrorThreshold 
+                << std::endl; 
       if(kernelGreaterThanErrorThreshold>0){
         error_count++;
-        continue;
+        break;
+      }
+#else
+      for (size_t j = 0; j < COLS_COMPONENT; j++) {
+        for (size_t i = 0; i < ROWS_COMPONENT; i++) {
+          inverse_matrix_pp[j][i] = 
+                              inverse_matrix[matrix * kInverseMatrixSize + idx];
+          idx++;
+        }
+      }
+
+      constexpr float kErrorThreshold = 1e-3;
+
+      int kernelGreaterThanErrorThreshold = 0;
+      double maxError = 0.0;
+
+      for (size_t i = 0; i < ROWS_COMPONENT; i++) {
+        for (size_t j = 0; j < COLS_COMPONENT; j++) {
+
+          double diff = abs(inverse_matrix_pp[i][j] - 
+      precomputed_inverse_matrix[matrix * kAMatrixSize + i*COLS_COMPONENT + j]);
+
+          if(diff > maxError){
+            maxError = diff;
+          }
+
+          if(diff > kErrorThreshold){
+            kernelGreaterThanErrorThreshold++;
+          }
+        }
+      }
+      
+      std::cout << "Max error: " << maxError << std::endl; 
+
+      if(maxError > maxErrorTotal){
+        maxErrorTotal = maxError;
+      }
+      totalError += maxError;
+
+      std::cout << "Kernel errors: " << kernelGreaterThanErrorThreshold 
+                << std::endl; 
+      if(kernelGreaterThanErrorThreshold>0){
+        error_count++;
+        break;
       }
 #endif
     }
