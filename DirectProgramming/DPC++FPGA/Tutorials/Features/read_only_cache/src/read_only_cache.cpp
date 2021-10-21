@@ -45,6 +45,18 @@ void runSqrtTest(sycl::queue &q, const std::vector<float> &sqrt_lut_vec,
         index = (index >> 1) | (bits << 15);
         output[i] = sqrt_lut[index % kLUTSize];
       }
+
+      for (int i = 0; i < kNumInputs; i++) {
+        bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 3)) & 1u;
+        index = (index >> 1) | (bits << 15);
+        output[i] = sqrt_lut[index % kLUTSize];
+      }
+
+      for (int i = 0; i < kNumInputs; i++) {
+        bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 5)) & 1u;
+        index = (index >> 1) | (bits << 15);
+        output[i] = sqrt_lut[index % kLUTSize];
+      }
     });
   });
 }
@@ -119,6 +131,18 @@ int main() {
   float gold[kNumInputs];
   for (int i = 0; i < kNumInputs; ++i) {
     bits = ((index >> 0) ^ (index >> 3) ^ (index >> 4) ^ (index >> 5)) & 1u;
+    index = (index >> 1) | (bits << 15);
+    gold[i] = sqrt_lut_vec[index % kLUTSize];
+  }
+
+  for (int i = 0; i < kNumInputs; ++i) {
+    bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 3)) & 1u;
+    index = (index >> 1) | (bits << 15);
+    gold[i] = sqrt_lut_vec[index % kLUTSize];
+  }
+
+  for (int i = 0; i < kNumInputs; ++i) {
+    bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 5)) & 1u;
     index = (index >> 1) | (bits << 15);
     gold[i] = sqrt_lut_vec[index % kLUTSize];
   }
