@@ -305,12 +305,6 @@ void PointPillars::PreProcessing(const float *in_points_array, const int in_num_
     queue.memset(dev_pillar_y_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
     queue.memset(dev_pillar_z_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
     queue.memset(dev_pillar_i_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
-    queue.memset(dev_x_coors_, 0, max_num_pillars_ * sizeof(int));
-    queue.memset(dev_y_coors_, 0, max_num_pillars_ * sizeof(int));
-    queue.memset(dev_num_points_per_pillar_, 0, max_num_pillars_ * sizeof(float));
-    queue.memset(dev_anchor_mask_, 0, num_anchor_ * sizeof(int));
-    queue.memset(dev_cumsum_workspace_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
-
     queue.memset(dev_x_coors_for_sub_shaped_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
     queue.memset(dev_y_coors_for_sub_shaped_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
     queue.memset(dev_pillar_feature_mask_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
@@ -347,15 +341,14 @@ void PointPillars::PreProcessing(const float *in_points_array, const int in_num_
       });
     });
     e.wait();
-    queue.memset(dev_sparse_pillar_map_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
-    queue.memset(dev_x_coors_, 0, max_num_pillars_ * sizeof(int));
-    queue.memset(dev_y_coors_, 0, max_num_pillars_ * sizeof(int));
-    queue.memset(dev_num_points_per_pillar_, 0, max_num_pillars_ * sizeof(float));
-    queue.memset(dev_anchor_mask_, 0, num_anchor_ * sizeof(int));
-    queue.memset(dev_cumsum_workspace_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
-    queue.wait();
-
   }
+  queue.memset(dev_sparse_pillar_map_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
+  queue.memset(dev_x_coors_, 0, max_num_pillars_ * sizeof(int));
+  queue.memset(dev_y_coors_, 0, max_num_pillars_ * sizeof(int));
+  queue.memset(dev_num_points_per_pillar_, 0, max_num_pillars_ * sizeof(float));
+  queue.memset(dev_anchor_mask_, 0, num_anchor_ * sizeof(int));
+  queue.memset(dev_cumsum_workspace_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
+  queue.wait();
 
   // Run the PreProcessing operations and generate the input feature map
   preprocess_points_ptr_->DoPreProcess(dev_points, in_num_points, dev_x_coors_, dev_y_coors_,
