@@ -14,9 +14,9 @@
 using namespace sycl;
 using namespace sycl::ext::oneapi;
 
-constexpr int kLUTSize = 512;        // Default number of inputs.
-constexpr int kNumInputs = 524288;   // Default number of inputs.
-constexpr double kNs = 1000000000.0; // number of nanoseconds in a second
+constexpr int kLUTSize = 512;         // Size of the LUT.
+constexpr int kNumOutputs = 524288;   // Number of outputs.
+constexpr double kNs = 1000000000.0;  // number of nanoseconds in a second
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
@@ -40,19 +40,19 @@ void runSqrtTest(sycl::queue &q, const std::vector<float> &sqrt_lut_vec,
       uint16_t index = 0xFFFu;
       uint16_t bits = 0;
 
-      for (int i = 0; i < kNumInputs; i++) {
+      for (int i = 0; i < kNumOutputs; i++) {
         bits = ((index >> 0) ^ (index >> 3) ^ (index >> 4) ^ (index >> 5)) & 1u;
         index = (index >> 1) | (bits << 15);
         output[i] = sqrt_lut[index % kLUTSize];
       }
 
-      for (int i = 0; i < kNumInputs; i++) {
+      for (int i = 0; i < kNumOutputs; i++) {
         bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 3)) & 1u;
         index = (index >> 1) | (bits << 15);
         output[i] += sqrt_lut[index % kLUTSize];
       }
 
-      for (int i = 0; i < kNumInputs; i++) {
+      for (int i = 0; i < kNumOutputs; i++) {
         bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 5)) & 1u;
         index = (index >> 1) | (bits << 15);
         output[i] += sqrt_lut[index % kLUTSize];
@@ -69,7 +69,7 @@ int main() {
 
   // Create input and output vectors
   std::vector<float> sqrt_lut_vec(kLUTSize);
-  std::vector<float> output_vec(kNumInputs);
+  std::vector<float> output_vec(kNumOutputs);
   for (int i = 0; i < kLUTSize; ++i) {
     sqrt_lut_vec[i] = sqrt(i);
   }
@@ -97,8 +97,8 @@ int main() {
     std::cout << "Device name: "
               << device.get_info<info::device::name>().c_str() << "\n\n\n";
 
-    std::cout << "\nSQRT LUT Size: " << kLUTSize << "\n";
-    std::cout << "Number of inputs: " << kNumInputs << "\n";
+    std::cout << "\nSQRT LUT size: " << kLUTSize << "\n";
+    std::cout << "Number of outputs: " << kNumOutputs << "\n";
 
     runSqrtTest(q, sqrt_lut_vec, output_vec, e);
 
@@ -128,20 +128,20 @@ int main() {
   // Compute the reference solution
   uint16_t index = 0xFFFu;
   uint16_t bits = 0;
-  float gold[kNumInputs];
-  for (int i = 0; i < kNumInputs; ++i) {
+  float gold[kNumOutputs];
+  for (int i = 0; i < kNumOutputs; ++i) {
     bits = ((index >> 0) ^ (index >> 3) ^ (index >> 4) ^ (index >> 5)) & 1u;
     index = (index >> 1) | (bits << 15);
     gold[i] = sqrt_lut_vec[index % kLUTSize];
   }
 
-  for (int i = 0; i < kNumInputs; ++i) {
+  for (int i = 0; i < kNumOutputs; ++i) {
     bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 3)) & 1u;
     index = (index >> 1) | (bits << 15);
     gold[i] += sqrt_lut_vec[index % kLUTSize];
   }
 
-  for (int i = 0; i < kNumInputs; ++i) {
+  for (int i = 0; i < kNumOutputs; ++i) {
     bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 5)) & 1u;
     index = (index >> 1) | (bits << 15);
     gold[i] += sqrt_lut_vec[index % kLUTSize];
@@ -150,7 +150,7 @@ int main() {
   // Verify output and print pass/fail
   bool passed = true;
   int num_errors = 0;
-  for (int b = 0; b < kNumInputs; b++) {
+  for (int b = 0; b < kNumOutputs; b++) {
     if (num_errors < 10 && output_vec[b] != gold[b]) {
       passed = false;
       std::cout << " (mismatch, expected " << gold[b] << ")\n";
@@ -164,7 +164,7 @@ int main() {
     // Report host execution time and throughput
     std::cout.setf(std::ios::fixed);
     double N_MB =
-        (kNumInputs * sizeof(uint32_t)) / (1024 * 1024); // Input size in MB
+        (kNumOutputs * sizeof(uint32_t)) / (1024 * 1024); // Input size in MB
 
     // Report kernel execution time and throughput
     std::cout << "Kernel execution time: " << time_kernel << " seconds\n";
