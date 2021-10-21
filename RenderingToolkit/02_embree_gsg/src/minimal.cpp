@@ -2,38 +2,38 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <embree3/rtcore.h>
-#include <stdio.h>
 #include <math.h>
-#include <limits>
 #include <stdio.h>
 
+#include <limits>
+
 #if defined(_WIN32)
-#  include <conio.h>
-#  include <windows.h>
+#include <conio.h>
+#include <windows.h>
 #endif
 
 /*
- * A minimal tutorial. 
+ * A minimal tutorial.
  *
  * It demonstrates how to intersect a ray with a single triangle. It is
  * meant to get you started as quickly as possible, and does not output
- * an image. 
+ * an image.
  *
  * For more complex examples, see the other tutorials.
  *
  * Compile this file using
- *   
+ *
  *   gcc -std=c99 \
  *       -I<PATH>/<TO>/<EMBREE>/include \
  *       -o minimal \
  *       minimal.c \
  *       -L<PATH>/<TO>/<EMBREE>/lib \
- *       -lembree3 
+ *       -lembree3
  *
  * You should be able to compile this using a C or C++ compiler.
  */
 
-/* 
+/*
  * This is only required to make the tutorial compile even when
  * a custom namespace is set.
  */
@@ -47,15 +47,14 @@ RTC_NAMESPACE_USE
  * This is extremely helpful for finding bugs in your code, prevents you
  * from having to add explicit error checking to each Embree API call.
  */
-void errorFunction(void* userPtr, enum RTCError error, const char* str)
-{
+void errorFunction(void* userPtr, enum RTCError error, const char* str) {
   printf("error %d: %s\n", error, str);
 }
 
 /*
- * Embree has a notion of devices, which are entities that can run 
+ * Embree has a notion of devices, which are entities that can run
  * raytracing kernels.
- * We initialize our device here, and then register the error handler so that 
+ * We initialize our device here, and then register the error handler so that
  * we don't miss any errors.
  *
  * rtcNewDevice() takes a configuration string as an argument. See the API docs
@@ -63,8 +62,7 @@ void errorFunction(void* userPtr, enum RTCError error, const char* str)
  *
  * Note that RTCDevice is reference-counted.
  */
-RTCDevice initializeDevice()
-{
+RTCDevice initializeDevice() {
   RTCDevice device = rtcNewDevice(NULL);
 
   if (!device)
@@ -75,17 +73,16 @@ RTCDevice initializeDevice()
 }
 
 /*
- * Create a scene, which is a collection of geometry objects. Scenes are 
- * what the intersect / occluded functions work on. You can think of a 
+ * Create a scene, which is a collection of geometry objects. Scenes are
+ * what the intersect / occluded functions work on. You can think of a
  * scene as an acceleration structure, e.g. a bounding-volume hierarchy.
  *
  * Scenes, like devices, are reference-counted.
  */
-RTCScene initializeScene(RTCDevice device)
-{
+RTCScene initializeScene(RTCDevice device) {
   RTCScene scene = rtcNewScene(device);
 
-  /* 
+  /*
    * Create a triangle mesh geometry, and initialize a single triangle.
    * You can look up geometry types in the API documentation to
    * find out which type expects which buffers.
@@ -96,27 +93,27 @@ RTCScene initializeScene(RTCDevice device)
    * more detail in the API documentation.
    */
   RTCGeometry geom = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE);
-  float* vertices = (float*) rtcSetNewGeometryBuffer(geom,
-                                                     RTC_BUFFER_TYPE_VERTEX,
-                                                     0,
-                                                     RTC_FORMAT_FLOAT3,
-                                                     3*sizeof(float),
-                                                     3);
+  float* vertices = (float*)rtcSetNewGeometryBuffer(
+      geom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, 3 * sizeof(float), 3);
 
-  unsigned* indices = (unsigned*) rtcSetNewGeometryBuffer(geom,
-                                                          RTC_BUFFER_TYPE_INDEX,
-                                                          0,
-                                                          RTC_FORMAT_UINT3,
-                                                          3*sizeof(unsigned),
-                                                          1);
+  unsigned* indices = (unsigned*)rtcSetNewGeometryBuffer(
+      geom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, 3 * sizeof(unsigned),
+      1);
 
-  if (vertices && indices)
-  {
-    vertices[0] = 0.f; vertices[1] = 0.f; vertices[2] = 0.f;
-    vertices[3] = 1.f; vertices[4] = 0.f; vertices[5] = 0.f;
-    vertices[6] = 0.f; vertices[7] = 1.f; vertices[8] = 0.f;
+  if (vertices && indices) {
+    vertices[0] = 0.f;
+    vertices[1] = 0.f;
+    vertices[2] = 0.f;
+    vertices[3] = 1.f;
+    vertices[4] = 0.f;
+    vertices[5] = 0.f;
+    vertices[6] = 0.f;
+    vertices[7] = 1.f;
+    vertices[8] = 0.f;
 
-    indices[0] = 0; indices[1] = 1; indices[2] = 2;
+    indices[0] = 0;
+    indices[1] = 1;
+    indices[2] = 2;
   }
 
   /*
@@ -150,10 +147,8 @@ RTCScene initializeScene(RTCDevice device)
  * Cast a single ray with origin (ox, oy, oz) and direction
  * (dx, dy, dz).
  */
-void castRay(RTCScene scene, 
-             float ox, float oy, float oz,
-             float dx, float dy, float dz)
-{
+void castRay(RTCScene scene, float ox, float oy, float oz, float dx, float dy,
+             float dz) {
   /*
    * The intersect context can be used to set intersection
    * filters or flags, and it also contains the instance ID stack
@@ -188,8 +183,7 @@ void castRay(RTCScene scene,
   rtcIntersect1(scene, &context, &rayhit);
 
   printf("%f, %f, %f: ", ox, oy, oz);
-  if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID)
-  {
+  if (rayhit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
     /* Note how geomID and primID identify the geometry we just hit.
      * We could use them here to interpolate geometry information,
      * compute shading, etc.
@@ -197,41 +191,34 @@ void castRay(RTCScene scene,
      * get geomID=0 / primID=0 for all hits.
      * There is also instID, used for instancing. See
      * the instancing tutorials for more information */
-    printf("Found intersection on geometry %d, primitive %d at tfar=%f\n", 
-           rayhit.hit.geomID,
-           rayhit.hit.primID,
-           rayhit.ray.tfar);
-  }
-  else
+    printf("Found intersection on geometry %d, primitive %d at tfar=%f\n",
+           rayhit.hit.geomID, rayhit.hit.primID, rayhit.ray.tfar);
+  } else
     printf("Did not find any intersection.\n");
 }
 
-void waitForKeyPressedUnderWindows()
-{
+void waitForKeyPressedUnderWindows() {
 #if defined(_WIN32)
   HANDLE hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-  
+
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   if (!GetConsoleScreenBufferInfo(hStdOutput, &csbi)) {
     printf("GetConsoleScreenBufferInfo failed: %d\n", GetLastError());
     return;
   }
-  
+
   /* do not pause when running on a shell */
-  if (csbi.dwCursorPosition.X != 0 || csbi.dwCursorPosition.Y != 0)
-    return;
-  
+  if (csbi.dwCursorPosition.X != 0 || csbi.dwCursorPosition.Y != 0) return;
+
   /* only pause if running in separate console window. */
   printf("\n\tPress any key to exit...\n");
   int ch = getch();
 #endif
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int main()
-{
+int main() {
   /* Initialization. All of this may fail, but we will be notified by
    * our errorFunction. */
   RTCDevice device = initializeDevice();
@@ -247,10 +234,9 @@ int main()
    * always make sure to release resources allocated through Embree. */
   rtcReleaseScene(scene);
   rtcReleaseDevice(device);
-  
+
   /* wait for user input under Windows when opened in separate window */
   waitForKeyPressedUnderWindows();
-  
+
   return 0;
 }
-
