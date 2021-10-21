@@ -34,12 +34,11 @@
 
 using namespace rkcommon::math;
 
-int main(int argc, const char **argv)
-{
+int main(int argc, const char **argv) {
   // image size
   vec2i imgSize;
-  imgSize.x = 1024; // width
-  imgSize.y = 768; // height
+  imgSize.x = 1024;  // width
+  imgSize.y = 768;   // height
 
   // camera
   vec3f cam_pos{0.f, 0.f, 0.f};
@@ -47,15 +46,13 @@ int main(int argc, const char **argv)
   vec3f cam_view{0.1f, 0.f, 1.f};
 
   // triangle mesh data
-  std::vector<vec3f> vertex = {vec3f(-1.0f, -1.0f, 3.0f),
-      vec3f(-1.0f, 1.0f, 3.0f),
-      vec3f(1.0f, -1.0f, 3.0f),
-      vec3f(0.1f, 0.1f, 0.3f)};
+  std::vector<vec3f> vertex = {
+      vec3f(-1.0f, -1.0f, 3.0f), vec3f(-1.0f, 1.0f, 3.0f),
+      vec3f(1.0f, -1.0f, 3.0f), vec3f(0.1f, 0.1f, 0.3f)};
 
-  std::vector<vec4f> color = {vec4f(0.9f, 0.5f, 0.5f, 1.0f),
-      vec4f(0.8f, 0.8f, 0.8f, 1.0f),
-      vec4f(0.8f, 0.8f, 0.8f, 1.0f),
-      vec4f(0.5f, 0.9f, 0.5f, 1.0f)};
+  std::vector<vec4f> color = {
+      vec4f(0.9f, 0.5f, 0.5f, 1.0f), vec4f(0.8f, 0.8f, 0.8f, 1.0f),
+      vec4f(0.8f, 0.8f, 0.8f, 1.0f), vec4f(0.5f, 0.9f, 0.5f, 1.0f)};
 
   std::vector<vec3ui> index = {vec3ui(0, 1, 2), vec3ui(1, 2, 3)};
 
@@ -71,8 +68,7 @@ int main(int argc, const char **argv)
   // initialize OSPRay; OSPRay parses (and removes) its commandline parameters,
   // e.g. "--osp:debug"
   OSPError init_error = ospInit(&argc, argv);
-  if (init_error != OSP_NO_ERROR)
-    return init_error;
+  if (init_error != OSP_NO_ERROR) return init_error;
 
   // use scoped lifetimes of wrappers to release everything before ospShutdown()
   {
@@ -82,7 +78,7 @@ int main(int argc, const char **argv)
     camera.setParam("position", cam_pos);
     camera.setParam("direction", cam_view);
     camera.setParam("up", cam_up);
-    camera.commit(); // commit each object to indicate modifications are done
+    camera.commit();  // commit each object to indicate modifications are done
 
     // create and setup model and mesh
     ospray::cpp::Geometry mesh("mesh");
@@ -120,12 +116,12 @@ int main(int argc, const char **argv)
 
     // complete setup of renderer
     renderer.setParam("aoSamples", 1);
-    renderer.setParam("backgroundColor", 1.0f); // white, transparent
+    renderer.setParam("backgroundColor", 1.0f);  // white, transparent
     renderer.commit();
 
     // create and setup framebuffer
-    ospray::cpp::FrameBuffer framebuffer(
-        imgSize.x, imgSize.y, OSP_FB_SRGBA, OSP_FB_COLOR | OSP_FB_ACCUM);
+    ospray::cpp::FrameBuffer framebuffer(imgSize.x, imgSize.y, OSP_FB_SRGBA,
+                                         OSP_FB_COLOR | OSP_FB_ACCUM);
     framebuffer.clear();
 
     // render one frame
@@ -143,8 +139,8 @@ int main(int argc, const char **argv)
       framebuffer.renderFrame(renderer, camera, world);
 
     fb = (uint32_t *)framebuffer.map(OSP_FB_COLOR);
-    rkcommon::utility::writePPM(
-        "accumulatedFrameCpp.ppm", imgSize.x, imgSize.y, fb);
+    rkcommon::utility::writePPM("accumulatedFrameCpp.ppm", imgSize.x, imgSize.y,
+                                fb);
     framebuffer.unmap(fb);
     std::cout << "rendering 10 accumulated frames to accumulatedFrameCpp.ppm"
               << std::endl;
