@@ -3,34 +3,29 @@
 
 #pragma once
 
-#include "platform.h"
 #include <chrono>
+
+#include "platform.h"
 
 namespace oidn {
 
-  class Timer
-  {
-  private:
-    using clock = std::chrono::high_resolution_clock;
+class Timer {
+ private:
+  using clock = std::chrono::high_resolution_clock;
 
-    std::chrono::time_point<clock> start;
+  std::chrono::time_point<clock> start;
 
-  public:
-    Timer()
-    {
-      reset();
-    }
+ public:
+  Timer() { reset(); }
 
-    void reset()
-    {
-      start = clock::now();
-    }
+  void reset() { start = clock::now(); }
 
-    double query() const
-    {
-      auto end = clock::now();
-      return std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
-    }
-  };
+  double query() const {
+    auto end = clock::now();
+    return std::chrono::duration_cast<std::chrono::duration<double>>(end -
+                                                                     start)
+        .count();
+  }
+};
 
-} // namespace oidn
+}  // namespace oidn

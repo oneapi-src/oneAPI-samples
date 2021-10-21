@@ -3,64 +3,59 @@
 
 #pragma once
 
+#include <array>
 #include <memory>
 #include <string>
-#include <vector>
-#include <array>
 #include <tuple>
+#include <vector>
 
 namespace oidn {
 
-  struct ImageBuffer
-  {
-    std::vector<float> buffer;
-    int width;
-    int height;
-    int numChannels;
+struct ImageBuffer {
+  std::vector<float> buffer;
+  int width;
+  int height;
+  int numChannels;
 
-    ImageBuffer()
-      : width(0),
-        height(0),
-        numChannels(0) {}
+  ImageBuffer() : width(0), height(0), numChannels(0) {}
 
-    ImageBuffer(int width, int height, int numChannels)
+  ImageBuffer(int width, int height, int numChannels)
       : buffer(size_t(width) * height * numChannels),
         width(width),
         height(height),
         numChannels(numChannels) {}
 
-    operator bool() const
-    {
-      return data() != nullptr;
-    }
+  operator bool() const { return data() != nullptr; }
 
-    const float& operator [](size_t i) const { return buffer[i]; }
-    float& operator [](size_t i) { return buffer[i]; }
+  const float& operator[](size_t i) const { return buffer[i]; }
+  float& operator[](size_t i) { return buffer[i]; }
 
-    const float* data() const { return buffer.data(); }
-    float* data() { return buffer.data(); }
-  
-    size_t size() const { return buffer.size(); }
-    std::array<int, 3> dims() const { return {width, height, numChannels}; }
-  };
+  const float* data() const { return buffer.data(); }
+  float* data() { return buffer.data(); }
 
-  // Loads an image with an optionally specified number of channels (loads all
-  // channels by default)
-  std::shared_ptr<ImageBuffer> loadImage(const std::string& filename, int numChannels = 0);
+  size_t size() const { return buffer.size(); }
+  std::array<int, 3> dims() const { return {width, height, numChannels}; }
+};
 
-  // Loads an image with/without sRGB to linear conversion
-  std::shared_ptr<ImageBuffer> loadImage(const std::string& filename, int numChannels, bool srgb);
+// Loads an image with an optionally specified number of channels (loads all
+// channels by default)
+std::shared_ptr<ImageBuffer> loadImage(const std::string& filename,
+                                       int numChannels = 0);
 
-  // Saves an image
-  void saveImage(const std::string& filename, const ImageBuffer& image);
+// Loads an image with/without sRGB to linear conversion
+std::shared_ptr<ImageBuffer> loadImage(const std::string& filename,
+                                       int numChannels, bool srgb);
 
-  // Saves an image with/without linear to sRGB conversion
-  void saveImage(const std::string& filename, const ImageBuffer& image, bool srgb);
+// Saves an image
+void saveImage(const std::string& filename, const ImageBuffer& image);
 
-  // Compares an image to a reference image and returns the number of errors
-  // and the maximum error value
-  std::tuple<size_t, float> compareImage(const ImageBuffer& image,
-                                         const ImageBuffer& ref,
-                                         float threshold);
+// Saves an image with/without linear to sRGB conversion
+void saveImage(const std::string& filename, const ImageBuffer& image,
+               bool srgb);
 
-} // namespace oidn
+// Compares an image to a reference image and returns the number of errors
+// and the maximum error value
+std::tuple<size_t, float> compareImage(const ImageBuffer& image,
+                                       const ImageBuffer& ref, float threshold);
+
+}  // namespace oidn
