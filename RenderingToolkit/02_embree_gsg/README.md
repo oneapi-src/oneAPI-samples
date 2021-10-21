@@ -15,7 +15,7 @@ Embree is a collection of high-performance ray tracing kernels. Improve performa
 
 | Objective                         | Description
 |:---                               |:---
-| What you will learn               | How to build and run a basic sample programing the Embree API from the Render Kit.
+| What you will learn               | How to build and run a basic sample program using the Embree API from the Render Kit.
 | Time to complete                  | 5 minutes
 
 ## Purpose
