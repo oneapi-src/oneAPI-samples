@@ -31,7 +31,7 @@ This getting started sample program, `oidnDenoise`, denoises a raytraced image. 
 
 - The program input is a noisy image. In this example, the `accumulatedFrameCpp` image is used for input. Recall, this image was originally generated from the Intel OSPRay getting started sample, `ospTutorial`. 
 - The program writes a denoised .pfm image file to disk.
-Of course, oidnDenoise can denoise other, user-provided noisy input images. Along with the input image, the program can take in albedo and normal buffers corresponding to the same pixels of the input image. Inclusion of such auxialiary feature images can significantly improve denoising quality. See 
+- Of course, oidnDenoise can denoise other, user-provided noisy input images. Along with the input image, the program can take in albedo and normal buffers corresponding to the same pixels of the input image. Inclusion of such auxialiary feature images can significantly improve denoising quality. See 
 - The Intel OSPRay Studio showcase application demonstrates in-source denoising with the Intel OSPRay library. The noisy image buffer and auxiliary buffers are readily emitted from the OSPRay API. All buffers are fed through the denoiser for a higher quality interactive experience.
 
 ## License
