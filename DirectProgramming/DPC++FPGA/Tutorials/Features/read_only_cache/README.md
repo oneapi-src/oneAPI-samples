@@ -25,102 +25,37 @@ resource for target-independent DPC++ programming.
 
 
 ## Purpose
-In DPC++ task kernels for FPGA, our objective is to achieve an initiation
-interval (II) of 1 on performance-critical loops. This means that a new loop
-iteration is launched on every clock cycle, maximizing the loop's throughput. 
 
-When the loop contains a loop-carried variable implemented in on-chip memory,
-the compiler often *cannot* achieve II=1 because the memory access takes more
-than one clock cycle. If the updated memory location may be needed on the next
-loop iteration, the next iteration must be delayed to allow time for the
-update, hence II > 1.
+This FPGA tutorial demonstrates an example of using the read-only cache to
+boost the throughput of a oneAPI FPGA design. Specifically, the read-only cache
+is most appropriate for table lookups that are constant throughput the
+execution of a kernel and is optimized for high cache hit performance.
 
-The on-chip memory cache technique breaks this dependency by storing
-recently-accessed values in a cache capable of a 1-cycle read-modify-write
-operation. The cache is implemented in FPGA registers rather than on-chip
-memory. By pulling memory accesses preferentially from the register cache, the
-loop-carried dependency is broken.
+To enabled the read-only cache, the `-Xsread-only-cache-size<N>` flag should be
+passed to the `dpcpp` command. Each kernel will gets its own version of the
+cache that serves all reads in the kernel from read-only no-alias accessors.
+Each private cache is also replicated as many times as needed to expose extra
+read ports. The size of each replicate is `<N>` bytes as specified by the
+`-Xsread-only-cache-size=<N>` flag.
 
-### When is the on-chip memory cache technique applicable?
+### Understanding the Tutorial Design
 
-***Failure to achieve II=1 because of a loop-carried memory dependency in on-chip memory***:
-The on-chip memory cache technique is applicable if the compiler could not
-pipeline a loop with II=1 because of an on-chip memory dependency. (If the
-compiler could not achieve II=1 because of a *global* memory dependency, this
-technique does not apply as the access latencies are too great.)
+The basic function performed by the tutorial kernel is a computing and
+accumulating the square root of a large number of randomly generated integers
+using a look-up table generated on the host. 
 
-To check this for a given design, view the "Loops Analysis" section of its
-optimization report. The report lists the II of all loops and explains why a
-lower II is not achievable. Check whether the reason given resembles "the
-compiler failed to schedule this loop with smaller II due to memory
-dependency". The report will describe the "most critical loop feedback path
-during scheduling". Check whether this includes on-chip memory load/store
-operations on the critical path.
+#### Part 1: Without the `-Xsread-only-cache-size=<N>` flag
 
-***An II=1 loop with a load operation of latency 1***:
-The compiler is capable of reducing the latency of on-chip memory accesses to
-achieve II=1. In doing so, the compiler makes a trade-off by sacrificing
-f<sub>MAX</sub> to improve the II. 
+...
 
-In a design with II=1 critical loops but lower than desired f<sub>MAX</sub>,
-the on-chip memory cache technique may still be applicable. It can help recover
-f<sub>MAX</sub> by enabling the compiler to achieve II=1 with a higher latency
-memory access.
+#### Part 2: With the `-Xsread-only-cache-size=<N>` flag
 
-To check whether this is the case for a given design, view the "Kernel Memory
-Viewer" section of the optimization report. Select the on-chip memory of
-interest from the Kernel Memory List, and mouse over the load operation "LD" to
-check its latency. If the latency of the load operation is 1, this is a clear
-sign that the compiler has attempted to sacrifice f<sub>MAX</sub> to improve
-loop II.
-
-
-### Implementing the on-chip memory cache technique
-
-The tutorial demonstrates the technique using a program that computes a
-histogram. The histogram operation accepts an input vector of values, separates
-the values into buckets, and counts the number of values per bucket. For each
-input value, an output bucket location is determined, and the count for the
-bucket is incremented. This count is stored in the on-chip memory, and the
-increment operation requires reading from memory, performing the increment, and
-storing the result. This read-modify-write operation is the critical path that
-can result in II > 1.
-
-To reduce II, the idea is to store recently-accessed values in an FPGA
-register-implemented cache that is capable of a 1-cycle read-modify-write
-operation. If the memory location required on a given iteration exists in the
-cache, it is pulled from there. The updated count is written back to *both* the
-cache and the on-chip memory. The `ivdep` pragma is added to inform the
-compiler that if a loop-carried variable (namely, the variable storing the
-histogram output) is needed within `CACHE_DEPTH` iterations, it is guaranteed
-to be available right away.
-
-### Selecting the cache depth
-
-While any value of `CACHE_DEPTH` results in functional hardware, the ideal
-value of `CACHE_DEPTH` requires some experimentation. The depth of the cache
-needs to roughly cover the latency of the on-chip memory access. To determine
-the correct value, it is suggested to start with a value of 2 and then increase
-it until both II = 1 and load latency > 1. In this tutorial, a `CACHE_DEPTH` of
-5 is needed. 
-
-Each iteration takes only a few moments by running `make report` (refer to the
-section below on how to build the design). It is important to find the
-*minimal* value of `CACHE_DEPTH` that results in a maximal performance
-increase. Unnecessarily large values of `CACHE_DEPTH` consume unnecessary FPGA
-resources and can reduce f<sub>MAX</sub>. Therefore, at a `CACHE_DEPTH` that
-results in II=1 and load latency = 1, if further increases to `CACHE_DEPTH`
-show no improvement, `CACHE_DEPTH` should not be increased any further.
-
-Two versions of the histogram kernel are implemented in the tutorial: one with
-and one without caching. The report shows II > 1 for the loop in the kernel
-without caching and II = 1 for the one with caching.
+...
 
 ## Key Concepts
 * How to use the read-only cache feature 
 * The scenarios in which this feature can help improve the throughput of a
   design 
-* How to tune the cache size 
 
 ## License  
 Code samples are licensed under the MIT license. See
@@ -250,14 +185,15 @@ IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow
 
 
 ## Examining the Reports
-Locate `report.html` in the `read_only_cache.prj/reports/` or
-`read_only_cache_s10_pac_report.prj/reports/` directory. Open the report in any
-of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate the pair of `report.html` files in either:
 
-Compare the Loop Analysis reports with and without the on-chip memory cache
-optimization, as described in the "When is the on-chip memory cache technique
-applicable?" section.
+* **Report-only compile**: `read_only_cache_disabled_report.prj` and
+  `read_only_cache_enabled_report.prj`
+* **FPGA hardware compile**: `read_only_cache_disabled.prj` and
+  `read_only_cache_enabled.prj`
 
+Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Notice that ...
 
 ## Running the Sample
 
@@ -268,7 +204,8 @@ applicable?" section.
      ```
 2. Run the sample on the FPGA device:
      ```
-     ./read_only_cache.fpga         (Linux)
+     ./read_only_cache_disabled.fpga         (Linux)
+     ./read_only_cache_enabled.fpga         (Linux)
      ```
 
 ### Example of Output
@@ -278,22 +215,13 @@ Platform name: Intel(R) FPGA SDK for OpenCL(TM)
 Device name: pac_a10 : Intel PAC Platform (pac_ee00000)
 
 
-Number of inputs: 16777216
+SQRT LUT size: 16777216
 Number of outputs: 64
-
-Beginning run with caching disabled.
 
 Verification PASSED
 
 Kernel execution time: 0.114106 seconds
-Kernel throughput without caching: 560.884047 MB/s
-
-Beginning run with caching enabled.
-
-Verification PASSED
-
-Kernel execution time: 0.059061 seconds
-Kernel throughput with caching: 1083.623184 MB/s
+Kernel throughput: 560.884047 MB/s
 ```
 
 ### Discussion of Results
