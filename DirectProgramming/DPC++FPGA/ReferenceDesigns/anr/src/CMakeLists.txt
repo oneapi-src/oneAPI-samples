@@ -13,9 +13,14 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
 endif()
 
-# This is a Windows-specific flag that enables error handling in host code
+# These are Windows-specific flags:
+# 1. /EHsc This is a Windows-specific flag that enables exception handling in host code
+# 2. /Qactypes Include ac_types headers and link against ac_types emulation libraries
 if(WIN32)
     set(WIN_FLAG "/EHsc")
+    set(AC_TYPES_FLAG "/Qactypes")
+else()
+    set(AC_TYPES_FLAG "-qactypes")
 endif()
 
 # Allow the user to enable hardware profiling
@@ -108,10 +113,11 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${FPGA_BOARD} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} ${IP_MODE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG}")
+set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${FPGA_BOARD} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} ${IP_MODE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
