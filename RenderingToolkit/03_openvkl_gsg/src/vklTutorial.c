@@ -9,8 +9,7 @@
 #include <windows.h>  // Sleep
 #endif
 
-void demoScalarAPI(VKLDevice device, VKLVolume volume)
-{
+void demoScalarAPI(VKLDevice device, VKLVolume volume) {
   printf("demo of 1-wide API\n");
 
   VKLSampler sampler = vklNewSampler(volume);
@@ -29,9 +28,7 @@ void demoScalarAPI(VKLDevice device, VKLVolume volume)
   // value range for all attributes
   for (unsigned int i = 0; i < numAttributes; i++) {
     vkl_range1f valueRange = vklGetValueRange(volume, i);
-    printf("\tvalue range (attribute %u) = (%f %f)\n",
-           i,
-           valueRange.lower,
+    printf("\tvalue range (attribute %u) = (%f %f)\n", i, valueRange.lower,
            valueRange.upper);
   }
 
@@ -41,15 +38,15 @@ void demoScalarAPI(VKLDevice device, VKLVolume volume)
 
   // sample, gradient (first attribute)
   unsigned int attributeIndex = 0;
-  float time                  = 0.f;
-  float sample   = vklComputeSample(sampler, &coord, attributeIndex, time);
+  float time = 0.f;
+  float sample = vklComputeSample(sampler, &coord, attributeIndex, time);
   vkl_vec3f grad = vklComputeGradient(sampler, &coord, attributeIndex, time);
   printf("\tsampling and gradient computation (first attribute)\n");
   printf("\t\tsample = %f\n", sample);
   printf("\t\tgrad   = %f %f %f\n\n", grad.x, grad.y, grad.z);
 
   // sample (multiple attributes)
-  unsigned int M                  = 3;
+  unsigned int M = 3;
   unsigned int attributeIndices[] = {0, 1, 2};
   float samples[3];
   vklComputeSampleM(sampler, &coord, samples, M, attributeIndices, time);
@@ -58,7 +55,7 @@ void demoScalarAPI(VKLDevice device, VKLVolume volume)
 
   // interval iterator context setup
   vkl_range1f ranges[2] = {{10, 20}, {50, 75}};
-  int num_ranges        = 2;
+  int num_ranges = 2;
   VKLData rangesData =
       vklNewData(device, num_ranges, VKL_BOX1F, ranges, VKL_DATA_DEFAULT, 0);
 
@@ -74,7 +71,7 @@ void demoScalarAPI(VKLDevice device, VKLVolume volume)
 
   // hit iterator context setup
   float values[2] = {32, 96};
-  int num_values  = 2;
+  int num_values = 2;
   VKLData valuesData =
       vklNewData(device, num_values, VKL_FLOAT, values, VKL_DATA_DEFAULT, 0);
 
@@ -88,13 +85,11 @@ void demoScalarAPI(VKLDevice device, VKLVolume volume)
   vklCommit(hitContext);
 
   // ray definition for iterators
-  vkl_vec3f rayOrigin    = {0, 1, 1};
+  vkl_vec3f rayOrigin = {0, 1, 1};
   vkl_vec3f rayDirection = {1, 0, 0};
-  vkl_range1f rayTRange  = {0, 200};
+  vkl_range1f rayTRange = {0, 200};
   printf("\trayOrigin = %f %f %f\n", rayOrigin.x, rayOrigin.y, rayOrigin.z);
-  printf("\trayDirection = %f %f %f\n",
-         rayDirection.x,
-         rayDirection.y,
+  printf("\trayDirection = %f %f %f\n", rayDirection.x, rayDirection.y,
          rayDirection.z);
   printf("\trayTRange = %f %f\n", rayTRange.lower, rayTRange.upper);
 
@@ -108,32 +103,21 @@ void demoScalarAPI(VKLDevice device, VKLVolume volume)
 #else
     char buffer[vklGetIntervalIteratorSize(intervalContext)];
 #endif
-    VKLIntervalIterator intervalIterator =
-        vklInitIntervalIterator(intervalContext,
-                                &rayOrigin,
-                                &rayDirection,
-                                &rayTRange,
-                                time,
-                                buffer);
+    VKLIntervalIterator intervalIterator = vklInitIntervalIterator(
+        intervalContext, &rayOrigin, &rayDirection, &rayTRange, time, buffer);
 
     printf("\n\tinterval iterator for value ranges {%f %f} {%f %f}\n",
-           ranges[0].lower,
-           ranges[0].upper,
-           ranges[1].lower,
-           ranges[1].upper);
+           ranges[0].lower, ranges[0].upper, ranges[1].lower, ranges[1].upper);
 
     for (;;) {
       VKLInterval interval;
       int result = vklIterateInterval(intervalIterator, &interval);
-      if (!result)
-        break;
+      if (!result) break;
       printf(
           "\t\ttRange (%f %f)\n\t\tvalueRange (%f %f)\n\t\tnominalDeltaT "
           "%f\n\n",
-          interval.tRange.lower,
-          interval.tRange.upper,
-          interval.valueRange.lower,
-          interval.valueRange.upper,
+          interval.tRange.lower, interval.tRange.upper,
+          interval.valueRange.lower, interval.valueRange.upper,
           interval.nominalDeltaT);
     }
 #if defined(_MSC_VER)
@@ -150,23 +134,16 @@ void demoScalarAPI(VKLDevice device, VKLVolume volume)
 #else
     char buffer[vklGetHitIteratorSize(hitContext)];
 #endif
-    VKLHitIterator hitIterator = vklInitHitIterator(hitContext,
-                                                    &rayOrigin,
-                                                    &rayDirection,
-                                                    &rayTRange,
-                                                    time,
-                                                    buffer);
+    VKLHitIterator hitIterator = vklInitHitIterator(
+        hitContext, &rayOrigin, &rayDirection, &rayTRange, time, buffer);
 
     printf("\thit iterator for values %f %f\n", values[0], values[1]);
 
     for (;;) {
       VKLHit hit;
       int result = vklIterateHit(hitIterator, &hit);
-      if (!result)
-        break;
-      printf("\t\tt %f\n\t\tsample %f\n\t\tepsilon %f\n\n",
-             hit.t,
-             hit.sample,
+      if (!result) break;
+      printf("\t\tt %f\n\t\tsample %f\n\t\tepsilon %f\n\n", hit.t, hit.sample,
              hit.epsilon);
     }
 #if defined(_MSC_VER)
@@ -179,8 +156,7 @@ void demoScalarAPI(VKLDevice device, VKLVolume volume)
   vklRelease(sampler);
 }
 
-void demoVectorAPI(VKLVolume volume)
-{
+void demoVectorAPI(VKLVolume volume) {
   printf("demo of 4-wide API (8- and 16- follow the same pattern)\n");
 
   VKLSampler sampler = vklNewSampler(volume);
@@ -193,17 +169,17 @@ void demoVectorAPI(VKLVolume volume)
     coord4.x[i] = i * 3 + 0;
     coord4.y[i] = i * 3 + 1;
     coord4.z[i] = i * 3 + 2;
-    valid[i]    = -1;  // valid mask: 0 = not valid, -1 = valid
+    valid[i] = -1;  // valid mask: 0 = not valid, -1 = valid
   }
 
   for (int i = 0; i < 4; i++) {
-    printf(
-        "\tcoord[%d] = %f %f %f\n", i, coord4.x[i], coord4.y[i], coord4.z[i]);
+    printf("\tcoord[%d] = %f %f %f\n", i, coord4.x[i], coord4.y[i],
+           coord4.z[i]);
   }
 
   // sample, gradient (first attribute)
   unsigned int attributeIndex = 0;
-  float time4[4]              = {0.f};
+  float time4[4] = {0.f};
   float sample4[4];
   vkl_vvec3f4 grad4;
   vklComputeSample4(valid, sampler, &coord4, sample4, attributeIndex, time4);
@@ -213,27 +189,24 @@ void demoVectorAPI(VKLVolume volume)
 
   for (int i = 0; i < 4; i++) {
     printf("\t\tsample[%d] = %f\n", i, sample4[i]);
-    printf(
-        "\t\tgrad[%d]   = %f %f %f\n", i, grad4.x[i], grad4.y[i], grad4.z[i]);
+    printf("\t\tgrad[%d]   = %f %f %f\n", i, grad4.x[i], grad4.y[i],
+           grad4.z[i]);
   }
 
   // sample (multiple attributes)
-  unsigned int M                  = 3;
+  unsigned int M = 3;
   unsigned int attributeIndices[] = {0, 1, 2};
   float samples[3 * 4];
-  vklComputeSampleM4(
-      valid, sampler, &coord4, samples, M, attributeIndices, time4);
+  vklComputeSampleM4(valid, sampler, &coord4, samples, M, attributeIndices,
+                     time4);
 
   printf("\n\tsampling (multiple attributes)\n");
 
   printf("\t\tsamples = ");
 
   for (unsigned int j = 0; j < M; j++) {
-    printf("%f %f %f %f\n",
-           samples[j * 4 + 0],
-           samples[j * 4 + 1],
-           samples[j * 4 + 2],
-           samples[j * 4 + 3]);
+    printf("%f %f %f %f\n", samples[j * 4 + 0], samples[j * 4 + 1],
+           samples[j * 4 + 2], samples[j * 4 + 3]);
     printf("\t\t          ");
   }
 
@@ -242,8 +215,7 @@ void demoVectorAPI(VKLVolume volume)
   vklRelease(sampler);
 }
 
-void demoStreamAPI(VKLVolume volume)
-{
+void demoStreamAPI(VKLVolume volume) {
   printf("demo of stream API\n");
 
   VKLSampler sampler = vklNewSampler(volume);
@@ -265,7 +237,7 @@ void demoStreamAPI(VKLVolume volume)
   // sample, gradient (first attribute)
   printf("\n\tsampling and gradient computation (first attribute)\n");
   unsigned int attributeIndex = 0;
-  float time[5]               = {0.f};
+  float time[5] = {0.f};
   float sample[5];
   vkl_vec3f grad[5];
   vklComputeSampleN(sampler, 5, coord, sample, attributeIndex, time);
@@ -277,7 +249,7 @@ void demoStreamAPI(VKLVolume volume)
   }
 
   // sample (multiple attributes)
-  unsigned int M                  = 3;
+  unsigned int M = 3;
   unsigned int attributeIndices[] = {0, 1, 2};
   float samples[3 * 5];
   vklComputeSampleMN(sampler, 5, coord, samples, M, attributeIndices, time);
@@ -298,8 +270,7 @@ void demoStreamAPI(VKLVolume volume)
   vklRelease(sampler);
 }
 
-int main()
-{
+int main() {
   vklLoadModule("cpu_device");
 
   VKLDevice device = vklNewDevice("cpu");
@@ -312,8 +283,8 @@ int main()
   const int numAttributes = 3;
 
   VKLVolume volume = vklNewVolume(device, "structuredRegular");
-  vklSetVec3i(
-      volume, "dimensions", dimensions[0], dimensions[1], dimensions[2]);
+  vklSetVec3i(volume, "dimensions", dimensions[0], dimensions[1],
+              dimensions[2]);
   vklSetVec3f(volume, "gridOrigin", 0, 0, 0);
   vklSetVec3f(volume, "gridSpacing", 1, 1, 1);
 
@@ -356,8 +327,8 @@ int main()
 
   VKLData attributes[] = {data0, data1, data2};
 
-  VKLData attributesData = vklNewData(
-      device, numAttributes, VKL_DATA, attributes, VKL_DATA_DEFAULT, 0);
+  VKLData attributesData = vklNewData(device, numAttributes, VKL_DATA,
+                                      attributes, VKL_DATA_DEFAULT, 0);
 
   vklRelease(data0);
   vklRelease(data1);
