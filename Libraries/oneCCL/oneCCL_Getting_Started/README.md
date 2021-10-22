@@ -15,7 +15,7 @@ By using all reduce collective operation samples, users can understand how to co
 | ------ | ------ |
 | sycl_allreduce_test.cpp |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
 | cpu_allreduce_test.cpp/cpu_allreduce_bf16_test.c |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
->  Notice: Please use DevCloud Connector for Intel® oneAPI Toolkits as the environment for jupyter notebook samples. \
+>  Notice: Please use Intel® DevCloud for oneAPI as the environment for jupyter notebook samples. \
 Users can refer to [DevCloud Getting Started](https://devcloud.intel.com/oneapi/get-started/) for using DevCloud \
 Users can use JupyterLab from DevCloud via "One-click Login in", and download samples via "git clone" or the "oneapi-cli" tool \
 Once users are in the JupyterLab with download jupyter notebook samples, they can start following the steps without further installation needed.

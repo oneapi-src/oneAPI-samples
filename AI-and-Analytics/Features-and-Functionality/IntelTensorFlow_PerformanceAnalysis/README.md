@@ -49,7 +49,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 #### **Conda Environment Creation**
 
 
-##### **1. DevCloud Connector for Intel® oneAPI Toolkit**
+##### **1. Intel® DevCloud for oneAPI**
 ---
 ###### **Stock TensorFlow**
 

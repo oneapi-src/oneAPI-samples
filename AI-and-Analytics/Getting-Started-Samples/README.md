@@ -24,5 +24,5 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | XGBoost | [IntelPython_XGBoost_GettingStarted](IntelPython_XGBoost_GettingStarted)                     | Set up and train an XGBoost* model on datasets for prediction.
 
 
-# Using Samples in DevCloud Connector for Intel® oneAPI Toolkits
-Please refer to [Using AI samples in DevCloud Connector for Intel® oneAPI Toolkits](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).
+# Using Samples in Intel® DevCloud for oneAPI
+Please refer to [Using AI samples in Intel® DevCloud for oneAPI](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).

@@ -11,7 +11,7 @@ You can find library source code and code used by these samples at the oneDNN Gi
 This sample is implemented in C++ and executes on CPU or GPU. The sample also
 also includes [a Jupyer Notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_getting_started.ipynb) that
 demonstrates how to compile the code with various oneDNN configurations
-in DevCloud Connector for Intel® oneAPI Toolkits environment.
+in Intel® DevCloud for oneAPI environment.
 
 | Optimized for                      | Description
 | :---                               | :---

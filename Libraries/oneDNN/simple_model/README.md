@@ -3,7 +3,7 @@
 This sample is implemented in C++ and DPC++ and runs on CPU or GPU. The sample
 also includes [Jupyer notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_simple_model.ipynb) that
 demonstrates how to port an oneDNN code sample from CPU-only version to CPU & GPU
-in DevCloud Connector for Intel® oneAPI Toolkits environment.
+in Intel® DevCloud for oneAPI environment.
 
 | Optimized for                      | Description
 | :---                               | :---

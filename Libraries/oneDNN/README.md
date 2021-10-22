@@ -24,10 +24,10 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | Component | [simple_model](simple_model)                     | A C++ example demonstrating implmentation of simple convolutional model with oneDNN.
 | Component | [tutorials](tutorials)                           | Hands-on Jupyter notebook tutorials among different topics.
 
-# Using Samples in DevCloud Connector for Intel® oneAPI Toolkits
+# Using Samples in Intel® DevCloud for oneAPI
 
 You can use oneDNN samples in
-[DevCloud Connector for Intel® oneAPI Toolkits](https://devcloud.intel.com/oneapi/get-started/)
+[Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get-started/)
 the environment in the following ways:
 * Login to a DevCloud system via SSH and
   * use `git clone` to get a full copy of samples repository, or
