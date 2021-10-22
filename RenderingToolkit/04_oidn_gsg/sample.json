@@ -26,7 +26,7 @@
         ],
         "windows":[
                 {
-                "env": ["call C:\\Program\ Files\ (x86)\\Intel\\oneAPI\\setvars.bat"],
+                "env": ["call \"C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat\""],
                 "id": "Intel_OIDN_oidnDenoise_win",
                 "steps":[
                     "mkdir build",
