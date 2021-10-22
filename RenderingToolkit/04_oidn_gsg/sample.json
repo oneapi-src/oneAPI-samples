@@ -33,8 +33,8 @@
                     "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
                     "cmake --build . --config Release",
                     "cd Release",
-		    "copy ..\..\accumulatedFrameCpp.pfm .",
-                    ".\oidnDenoise.exe -hdr accumulatedFrame.pfm -o denoised.pfm"
+		    "copy ..\\..\\accumulatedFrameCpp.pfm .",
+                    ".\\oidnDenoise.exe -hdr accumulatedFrame.pfm -o denoised.pfm"
                 ]
 
                 }
