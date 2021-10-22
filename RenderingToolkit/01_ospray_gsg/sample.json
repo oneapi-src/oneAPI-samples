@@ -18,7 +18,6 @@
                     "cd build",
                     "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
                     "cmake --build . ",
-                    "cd Release",
                     "./ospTutorialCpp"
   		 ]
   	         }
@@ -47,7 +46,6 @@
                     "cd build",
                     "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
                     "cmake --build . ",
-                    "cd Release",
                     "./ospTutorialCpp"
                  ]
                  }
