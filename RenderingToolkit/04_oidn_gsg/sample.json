@@ -18,8 +18,7 @@
                     "cd build",
                     "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneapi\" ..",
                     "cmake --build . ",
-                    "cd Release",
-		    "cp ../../accumulatedFrameCpp.pfm .",
+		    "cp ../accumulatedFrameCpp.pfm .",
                     "./oidnDenoise -hdr accumulatedFrame.pfm -o denoised.pfm"
                  ]
                  }
@@ -49,8 +48,7 @@
                     "cd build",
                     "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneapi\" ..",
                     "cmake --build . ",
-                    "cd Release",
-		    "cp ../../accumulatedFrameCpp.pfm .",
+		    "cp ../accumulatedFrameCpp.pfm .",
                     "./oidnDenoise -hdr accumulatedFrame.pfm -o denoised.pfm"
                  ]
                  }
