@@ -38,7 +38,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ### Prerequisites
 > NOTE: No prerequisite is required if users use Intel DevCloud as their environment. 
- 1. **Intel AI Analytics Toolkit**  
+ 1. **Intel® AI Analytics Toolkit**  
        You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation,   
        and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
