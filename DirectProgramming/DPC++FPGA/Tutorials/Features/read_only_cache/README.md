@@ -39,10 +39,9 @@ read ports. The size of each replicate is `<N>` bytes as specified by the
 `-Xsread-only-cache-size=<N>` flag.
 
 ### Understanding the Tutorial Design
-
-The basic function performed by the tutorial kernel is a computing and
-accumulating the square root of a large number of randomly generated integers
-using a look-up table generated on the host. 
+The basic function performed by the tutorial kernel is a a series of table
+lookups from a buffer that contains the square root values of the first 512
+integers.
 
 #### Part 1: Without the `-Xsread-only-cache-size=<N>` flag
 
@@ -210,29 +209,44 @@ Notice that ...
 
 ### Example of Output
 
+Running `./read_only_cache_disabled.fpga`:
 ```
 Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Device name: pac_a10 : Intel PAC Platform (pac_ee00000)
+Device name: pac_a10 : Intel PAC Platform (pac_f100000)
 
 
-SQRT LUT size: 16777216
-Number of outputs: 64
 
+SQRT LUT size: 512
+Number of outputs: 524288
 Verification PASSED
 
-Kernel execution time: 0.114106 seconds
-Kernel throughput: 560.884047 MB/s
+Kernel execution time: 0.011597 seconds
+Kernel throughput 172.457160 MB/s
+```
+
+Running `./read_only_cache_disabled.fpga`:
+```
+Platform name: Intel(R) FPGA SDK for OpenCL(TM)
+Device name: pac_a10 : Intel PAC Platform (pac_f100000)
+
+
+
+SQRT LUT size: 512
+Number of outputs: 524288
+Verification PASSED
+
+Kernel execution time: 0.006537 seconds
+Kernel throughput 305.933426 MB/s
 ```
 
 ### Discussion of Results
 
-A test compile of this tutorial design achieved an f<sub>MAX</sub> of
-approximately <fmax> MHz on the Intel® Programmable Acceleration Card with
-Intel® Arria® 10 GX FPGA. The results are shown in the following table:
+A test compile of this tutorial design achieved the following results on the
+Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA: 
 
 Configuration | Execution Time (ms) | Throughput (MB/s)
 -|-|-
-Without caching | <t> | <t>
-With caching | <t> | <t>
+Without caching | 11.597 | 172.457160
+With caching | 6.537 | 305.933426
 
-When caching is used, performance notably increases. As previously mentioned, 
+When the read-only cache is enabled, performance notably increases. As previously mentioned, 
