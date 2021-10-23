@@ -11,12 +11,11 @@
   "ciTests": {
         "linux": [
                 {
-                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
                 "id": "Intel_Embree_minimal_lin",
                 "steps": [
                     "mkdir build",
                     "cd build",
-                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake ..",
                     "cmake --build . ",
                     "./minimal"
                  ]
@@ -39,12 +38,11 @@
         ],
         "darwin": [
                 {
-                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
                 "id": "Intel_Embree_minimal_mac",
                 "steps": [
                     "mkdir build",
                     "cd build",
-                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake ..",
                     "cmake --build . ",
                     "./minimal"
                  ]
