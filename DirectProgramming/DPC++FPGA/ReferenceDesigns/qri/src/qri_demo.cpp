@@ -62,222 +62,96 @@ float randomValueInInterval(float min, float max){
 }
 
 /*
-  QR decomposition of the input matrix
+  Generate a random matrix M with a given epsilon such that
+  cond(M, inf) <= (1+epsilon)/(1-epsilon)
+
+  Algorithm courtesy of Carl Christian Kjelgaard Mikkelsen 
+
+  function [A, B]=myDiagonal(m,epsilon)
+
+  % Returns a matrix that is diagonally dominant by rows
+  %
+  % CALL SEQUENCE:
+  %    [A, B]=ccDiagonally(m, epsilon)
+  %   
+  % INPUT:
+  %    m        the dimension
+  %    epsilon  the dominance factor epsilon in (0,1]
+  %
+  % OUTPUT:
+  %    A        a matrix which is strictly diagonally domimant by rows
+  %    B        B = D\A, where D is the diagonal of A
+  %
+  % The main purpose of this function is to construct test matrices
+  % for, say, Gaussian elimination with no pivoting.
+  %
+  % The matrix A is not necessarily well-conditioned, but the matrix B
+  % the infinity norm condition number of the matrix B is bounded by 
+  %
+  %                  (1+epsilon)/(1 - epsilon)
+
+  % PROGRAMMING by Carl Christian Kjelgaard Mikkelsen (spock@cs.umu.se)
+  %   2021-10-21  Initial programming and testing.
+
+  % Generate a random matrix
+  R=rand(m,m)-rand(m,m);
+
+  % Eliminate the diagonal
+  D=diag(diag(R)); R=R-D;
+
+  % Measure the weight of the off diagonal entries
+  w=abs(R)*ones(m,1);
+
+  % Construct the new diagonal elements
+  d=w/epsilon;
+
+  % Construct the matrix which is diagonally dominant
+  A=R+diag(d);
+
+  % Do the diagonal scaling
+  B=diag(diag(A))\A;
+
 */
 template <int size, typename T>
-void QRD(vector<T> &input, vector<T> &Q, vector<T> &R){
+void generateMatrixWithCondititionNumber(float epsilon, vector<T> &output){
 
-  int rows = size;
-  int columns = size;
-  for(int i=0; i<columns; i++){
-    for(int j=0; j<columns; j++){
-      R[i*columns + j] = 0;
-    }
-  }
-  for(int i=0; i<rows; i++){
-    for(int j=0; j<columns; j++){
-      Q[i*columns + j] = 0;
-    }
-  }
+  constexpr float kRandomMin = 0;
+  constexpr float kRandomMax = 1;
 
-  vector<T> S;
-  S.resize(size*size);
-
-  // <a_1, a_1>
-  T a1a1 = 0;
-  for(int k=0; k<rows; k++){
-    T ak1 = input[k*columns + 0];
-    a1a1 += ak1*ak1;
-  }
-
-  // P_{1,1} = <a_1, a_1>
-  T pii = a1a1;
-
-  // ir_{1,1} = 1/sqrt(p_{1,1})
-  T irii = 1.0/sqrt(pii);
-
-  // r_{1,1} = sqrt(p_{1,1})
-  T rii = sqrt(pii);
-  R[0*columns + 0] = rii;
-
-  // for j=2:n do
-  for(int j=1; j<rows; j++){
-    // <a_1, a_j>
-    T a1aj = 0;
-    for(int k=0; k<rows; k++){
-      T ak1 = input[(k*columns + 0)];
-      T akj = input[(k*columns + j)];
-      a1aj += ak1*akj;
-    }  
-
-    // p_{1,j} = <a_1, a_j>
-    T p1j = a1aj;
-
-    // s_{1,j} = p_{1,j} / p_{1,1}
-    S[0*columns + j] = p1j / pii;
-
-    // r_{1,j} = p_{1,j} * ir{1,1}
-    R[0*columns + j] = p1j * irii;
-
-  }
-
-  // for i=1:n-1 do
-  for(int i=0; i<rows-1; i++){
-    // q_i = a_i * ir_{i,i}
-    for(int k=0; k<rows; k++){
-      T aki = input[(k*columns + i)];
-      // out << "A[" << i << "][" << k << "] = " << aki << endl;
-      T akiirii = aki * irii;
-      // out << "Q[" << i << "][" << k << "] = " << akiirii << endl;
-      Q[(k*columns + i)] = akiirii;
-    }  
-
-    // for j=i+1:n do
-    for(int j=i+1; j<rows; j++){
-      // a_j = a_j - s_{i,j}*a_i
-      for(int k=0; k<rows; k++){
-        T sijaki = S[i*columns + j] * input[(k*columns + i)];
-        T ajmsijaki = input[(k*columns + j)] - sijaki;
-        input[(k*columns + j)] = ajmsijaki;
-      }     
-
-      // if j=i+1 then
-      if(j == (i+1)){
-
-        // <a_{i+1}, a_{i+1}>
-        T ajaj = 0;
-        for(int k=0; k<rows; k++){
-          T akj = input[(k*columns + j)];
-          ajaj += akj*akj;
-        }  
-
-        // p_{i+1, i+1} = <a_{i+1}, a_{i+1}>
-        pii = ajaj;
-
-        // ir_{j,j} = 1/sqrt(p_{j,j})
-        irii = 1.0/sqrt(pii);
-
-        // r_{i+1, i+1} = sqrt(p_{i+1, i+1})
-        rii = sqrt(pii);
-        R[j*columns + j] = rii;
-      } 
-      else{
-        // <a_{i+1}, aj>
-        T aip1aj = 0;
-        for(int k=0; k<rows; k++){
-          T akip1 = input[(k*columns + (i+1))];
-          T akj = input[(k*columns + j)];
-          aip1aj += akip1*akj;
-        }
-
-        // P_{i+1, j} = <a_{i+1}, aj>
-        T pip1j = aip1aj;
-
-        // s_{i+1, j} = p_{i+1, j} / p_{i+1, i+1}
-        S[(i+1)*columns + j] = pip1j / pii;
-
-        // r_{i+1,j} = p{i+1, j} * ir_{i+1, i+1}
-        R[(i+1)*columns + j] = pip1j * irii;
-      } 
-    }
-  }
-
-  // q_n = a_n * ir_{n,n}
-  for(int k=0; k<rows; k++){
-    T akn = input[k*columns + (rows-1)];
-    Q[k*columns + (rows-1)] = akn * irii;
-  }
-
-}
-
-/*
-  Generate a random matrix with a given condition number
-*/
-template <int size, typename T>
-void generateMatrixWithCondititionNumber(float cn, vector<T> &output){
-
-  constexpr float kRandomMin = -10;
-  constexpr float kRandomMax = 10;
-
-  // Start by generating two random matrices of size "size"
-  vector<T> M1, M2;
-  M1.resize(size*size);
-  M2.resize(size*size);
+  // Start by generating a random matrices R with diagonal elements set to 0
+  // and measuring the weights of the off diagonal entries
+  vector<T> R, weights;
+  R.resize(size*size);
+  weights.resize(size);
   for(int row=0; row<size; row++){
+    weights[row] = {0};
     for(int col=0; col<size; col++){
-      float random1 = randomValueInInterval(kRandomMin, kRandomMax);
-      float random2 = randomValueInInterval(kRandomMin, kRandomMax);
-#if COMPLEX == 1
-      float random1I = randomValueInInterval(kRandomMin, kRandomMax);
-      M1[row*size + col] = {random1, random1I};
-      float random2I = randomValueInInterval(kRandomMin, kRandomMax);
-      M2[row*size + col] = {random2, random2I};
-#else
-      M1[row*size + col] = random1;
-      M2[row*size + col] = random2;
-#endif
-    }
-  }
-
-  // Get the QR decomposition of both matrices
-  vector<T> Q1, R1;
-  Q1.resize(size*size);
-  R1.resize(size*size); 
-  QRD<size>(M1, Q1, R1);
-
-  vector<T> Q2, R2;
-  Q2.resize(size*size);
-  R2.resize(size*size); 
-  QRD<size>(M2, Q2, R2);
-
-  int j = size - 1;
-  float l = pow(cn, 1.0/j);
-
-  // Construct the singular value matrix l^0 = 1, then l^(k-1) = 1/cn
-  vector<T> S;
-  S.resize(size*size);
-  
-  for(int row=0; row<size; row++){
-    for(int col=0; col<size; col++){
-      if(row == col){
-        S[row*size + col] = pow(l, -row);
-      }
-      else{
-        S[row*size + col] = 0.0;
+      if(col != row){
+        float random1 = randomValueInInterval(kRandomMin, kRandomMax);
+        T elem;
+  #if COMPLEX == 1
+        float random1I = randomValueInInterval(kRandomMin, kRandomMax);
+        elem = {random1, random1I};
+        R[row*size + col] = elem;
+  #else
+        elem = random1;
+        R[row*size + col] = elem;
+  #endif
+        weights[row] += elem;
       }
     }
+    // construct the new diagonal element
+    weights[row] /= epsilon; 
+    R[row*size + row] = weights[row];
   }
 
-  // Compute the final matrix Q1*S*Q2
-  // Start by computing Q1*S
-  vector<T> Q1S;
-  Q1S.resize(size*size);
+  // Now we need to do the diagonal scaling by solving:
+  // diag(diag(A))*output = A
   for(int row=0; row<size; row++){
     for(int col=0; col<size; col++){
-      T value = {0};
-      for(int k=0; k<size; k++){
-        value += Q1[row*size+k] * S[k*size+col];
-      }
-      Q1S[row*size+col] = value;
+      output[row*size + col] = R[row*size + col] / R[row*size + row];
     }
   }
-  // Then compute Q1S*Q2
-  for(int row=0; row<size; row++){
-    for(int col=0; col<size; col++){
-      T value = {0};
-      for(int k=0; k<size; k++){
-        value += Q1S[row*size+k] * Q2[k*size+col];
-      }
-      output[row*size+col] = value;
-    }
-  } 
-
-  // Then compute Q1S*Q2
-  for(int row=0; row<size; row++){
-    for(int col=0; col<size; col++){
-      output[row*size+col] = output[row*size+col];
-    }
-  } 
 
 }
 
@@ -341,7 +215,7 @@ int main(int argc, char *argv[]) {
 #endif
       randomRealMatrix.resize(kAMatrixSize);
 
-      generateMatrixWithCondititionNumber<ROWS_COMPONENT>(3.2, 
+      generateMatrixWithCondititionNumber<ROWS_COMPONENT>(0.5, 
                                                               randomRealMatrix);
 
       for (size_t row = 0; row < ROWS_COMPONENT; row++) {

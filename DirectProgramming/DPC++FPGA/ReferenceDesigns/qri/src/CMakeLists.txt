@@ -13,6 +13,7 @@ set(HOST_SOURCE_FILE qri_demo.cpp)
 set(TARGET_NAME qri)
 
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SOFTWARE_TARGET ${TARGET_NAME}.fpga_soft)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(REPORTS_TARGET ${TARGET_NAME}_report)
 
@@ -84,8 +85,8 @@ separate_arguments(USER_HARDWARE_FLAGS)
 set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsfp-relaxed -fno-fast-math -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${SELECTED_BOARD} ${USER_HARDWARE_FLAGS} -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 set(FINAL_LINK_FLAGS -fintelfpga -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 
-set(EMULATOR_COMPILE_FLAGS "-I/p/psg/ctools/mpfr/2.4.2/linux64/include/ -I/p/psg/ctools/gmp/6.1.2/linux64/include/ -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFPGA_EMULATOR -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
-set(EMULATOR_LINK_FLAGS "-fintelfpga -L/p/psg/ctools/mpfr/2.4.2/linux64/lib/ -lmpfr" )
+set(EMULATOR_COMPILE_FLAGS "-v -v -I/p/psg/ctools/mpfr/2.4.2/linux64/include/ -I/p/psg/ctools/gmp/6.1.2/linux64/include/ -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFPGA_EMULATOR -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
+set(EMULATOR_LINK_FLAGS "-v -v -fintelfpga -L/p/psg/ctools/mpfr/2.4.2/linux64/lib/ -lmpfr" )
 
 # FPGA emulator
 if(WIN32)
@@ -101,6 +102,7 @@ else()
     set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS ${EMULATOR_COMPILE_FLAGS})
     set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS ${EMULATOR_LINK_FLAGS})
 endif()
+
 
 # FPGA hardware
 if(WIN32)

@@ -73,14 +73,23 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
 
     h.single_task<kernelName>([=] {
 
-      [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+/*      // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       Column Q_matrix[columns];
+*/
 
+      TT Q_matrix[rows][columns];
+      TT QT_matrix[rows][columns];
+
+      [[intel::numbanks(1)]]  // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT R[rows][columns];
 
+      TT RT_matrix[rows][columns];
+
+      // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT inverse[rows][columns];
 
       /*
@@ -91,14 +100,19 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
 
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
       for(int i = 0; i < rows; i++){
+        TT Rcol[columns];
         for(int j = 0; j < columns; j++){
           if(j>=i){
-            R[i][j] = RIn::read();
+            Rcol[j] = RIn::read();
           }
           else{
-            R[i][j] = {0.0};
+            Rcol[j] = {0.0};
           }
         }
+
+        UnrolledLoop<columns>([&](auto k) {
+          R[i][k] = Rcol[k];
+        });
       }
 
       // PRINTF("R\n");
@@ -109,6 +123,11 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
       //   PRINTF("\n");
       // }
 
+      for(int row=0; row<rows; row++){
+        for(int col=0; col<columns; col++){
+          RT_matrix[row][col] = R[col][row];
+        }
+      }
 
       /*
         ========================================================================
@@ -119,35 +138,80 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
       [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
       for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; 
                                                                 li++) {
+        TT rowToTranspose[rows];
+
         // Load a single bank of the input matrix 
         PipeType pipeData = QIn::read();
 
         // Write the current bank to the A_load matrix.
-        ac_int<BitsForMaxValue<kNumBanks>(), false> bankToWrite = 
+        ac_int<BitsForMaxValue<kNumBanks>(), false> write_row_group = 
                                                       li % (kNumBanks);
-        ac_int<kLiNumBankBitSize, false> rowToWrite = li / kNumBanks;
+        ac_int<kLiNumBankBitSize, false> liNumBank = li / kNumBanks;
 
-        
-        UnrolledLoop<rows>([&](auto r) {
-          bool getr = rowToWrite == r;
-          UnrolledLoop<kNumBanks>([&](auto b) {
-            bool getb = getr && (bankToWrite == b);
-
-            UnrolledLoop<kNumElementsPerBank>([&](auto t) {
-              constexpr auto idx = b * kNumElementsPerBank + t;
-              if(getb){
-                 if constexpr (idx < rows){
-                   Q_matrix[idx].template get<r>() = 
-                                      pipeData.template get<t>();
-                 }
+        UnrolledLoop<kNumBanks>([&](auto k) {
+          UnrolledLoop<kNumElementsPerBank>([&](auto t) {
+            constexpr auto rowIdx = k * kNumElementsPerBank + t;
+            if constexpr (rowIdx < rows){
+              if ((write_row_group == k)) {
+                rowToTranspose[rowIdx] = pipeData.template get<t>();;
+                // Q_matrix[rowIdx][liNumBank] = pipeData.template get<t>();
               }
-            });
+            }
 
+            // Delay data signals to create a vine-based data 
+            // distribution to lower signal fanout.
+            pipeData = sycl::ext::intel::fpga_reg(pipeData);
           });
-          // Delay data signals to create a vine-based data 
-          // distribution to lower signal fanout.
-          pipeData = sycl::ext::intel::fpga_reg(pipeData);
+
+          write_row_group = sycl::ext::intel::fpga_reg(write_row_group);
         });
+      
+        UnrolledLoop<rows>([&](auto k) {
+          // Q_matrix[liNumBank].template get<k>() = rowToTranspose[k];
+          Q_matrix[liNumBank][k] = rowToTranspose[k];
+        });
+
+      }
+
+
+      /*
+        ========================================================================
+        Compute the transpose of Q
+        ========================================================================
+      */
+
+      // {
+      //   constexpr int iterations = (rows-1) * rows / 2; 
+      //   int row = 0;
+      //   int col = 1;
+      //   int colp1 = 2;
+      //   int rowp1 = 1;
+      //   int rowp2 = 2;
+
+      //   [[intel::ivdep(iterations)]]  // NO-FORMAT: Attribute
+      //   for(int it=0; it<iterations; it++){
+      //     PRINTF("row %d, col %d\n", row, col);
+      //     TT tmp = Q_matrix[row][col];
+      //     Q_matrix[row][col] = Q_matrix[col][row];
+      //     Q_matrix[col][row] = tmp;
+
+      //     if(col==columns-1){
+      //       row = rowp1;
+      //       col = rowp2;
+      //     }
+      //     else{
+      //       colp1 = col + 1;
+      //       col = colp1;
+      //       rowp1 = row + 1;
+      //       rowp2 = row + 2;          
+      //     }
+      //   }
+      // }
+
+      for(int row=0; row<rows; row++){
+        for(int col=0; col<columns; col++){
+          QT_matrix[row][col] = Q_matrix[col][row];
+        }
       }
 
       /*
@@ -163,17 +227,22 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
 
 
 */
-      [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
-      [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+      // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+      // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-      [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      Row R_inverse[columns];
+      // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
 
 
       TT inverseOfR[rows][columns];
+
+      // TT R_inverse[rows][columns] = {0};
+      TT R_inverse[rows][columns];
+
+      // Row R_inverse[columns];
       for(int i=0; i<rows; i++){
         UnrolledLoop<columns>([&](auto k) {
-          R_inverse[i].template get<k>() = {0};
+          // R_inverse[i].template get<k>() = {0};
+          R_inverse[i][k] = {0};
           // inverseOfR[i][k] = {0};
           // inverseOfR[k][i] = {0};
         });
@@ -207,15 +276,26 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
           TT idMatrixValue = row == col ? TT{1} : TT{0};
 
           TT current_sum = {0};
-          TT div_val = R[col][col];
+          // TT div_val = R[col][col];
+          TT div_val;
+           // = RT_matrix[col][col];
 
           UnrolledLoop<columns>([&](auto k) {
           // #pragma unroll
           // for(int k = 0; k < columns; k++){
-            auto lhs = R[k][col];
-            auto rhs = R_inverse[row].template get<k>();
+
+            auto lhs = RT_matrix[col][k];
+            // auto lhs = R[k][col];
+            // auto rhs = R_inverse[row].template get<k>();
+            auto rhs = R_inverse[row][k];
+
+
             // auto rhs = inverseOfR[row][k];
             // auto rhs = inverseOfR[k][row];
+
+            if(k==col){
+              div_val = lhs;
+            }
 
             if(k!=col){
               current_sum += lhs * rhs;
@@ -226,17 +306,20 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
           TT result = (idMatrixValue - current_sum)/div_val;
           // PRINTF("divided by R[%d][%d]\n", col, col);
           // inverseOfR[col][row] = result;
+            
+          R_inverse[row][col] = result;
 
-          UnrolledLoop<columns>([&](auto k) {
-          // #pragma unroll
-          // for(int k = 0; k < columns; k++){
-            if(k==col){
-              R_inverse[row].template get<k>() = result;
-              // inverseOfR[row][k] = result;
-              // inverseOfR[k][row] = result;
-            }
-          // }
-          });
+          // UnrolledLoop<columns>([&](auto k) {
+          // // #pragma unroll
+          // // for(int k = 0; k < columns; k++){
+          //   if(k==col){
+          //     // R_inverse[row].template get<k>() = result;
+          //     R_inverse[row][k] = result;
+          //     // inverseOfR[row][k] = result;
+          //     // inverseOfR[k][row] = result;
+          //   }
+          // // }
+          // });
         }
 
         // PRINTF("i: %d, j: %d\n", i, j);
@@ -280,13 +363,15 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
       // TT qp[rows][columns];
       // for(int i = 0; i < columns; i++){
       //   UnrolledLoop<columns>([&](auto k) {
-      //      qp[k][i] = Q_matrix[i].template get<k>(); 
+      //      qp[k][i] = Q_matrix[i][k]; 
+      //      // qp[k][i] = Q_matrix[i].template get<k>(); 
       //   });
       // }
-      // PRINTF("Q\n");
+      // PRINTF("QRI Q\n");
       // for(int i = 0; i < rows; i++){
       //   for(int j = 0; j < columns; j++){
-      //     PRINTF("(%f, %f) ", qp[i][j].r(), qp[i][j].i());
+      //     PRINTF("%f ", qp[i][j]);
+      //     // PRINTF("(%f, %f) ", qp[i][j].r(), qp[i][j].i());
       //   }
       //   PRINTF("\n");
       // }
@@ -315,12 +400,15 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
           TT dotProduct = {0.0};
           UnrolledLoop<rows>([&](auto k) {
             if constexpr(isComplex){
-              dotProduct += R_inverse[i].template get<k>() * 
-                            Q_matrix[j].template get<k>().conj(); 
+              // dotProduct += R_inverse[i].template get<k>() * 
+              //               Q_matrix[j].template get<k>().conj(); 
             }
             else{
-              dotProduct += R_inverse[i].template get<k>() * 
-                            Q_matrix[j].template get<k>();
+              // dotProduct += R_inverse[i].template get<k>() * 
+              dotProduct += R_inverse[i][k] * 
+                            // Q_matrix[j][k];
+                            QT_matrix[j][k];
+                            // Q_matrix[j].template get<k>();
             }
              // dotProduct += inverseOfR[i][k] * Q_matrix[j].template get<k>();
              // dotProduct += inverseOfR[k][i] * Q_matrix[j].template get<k>();
@@ -359,7 +447,6 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
             constexpr auto rowIdx = t * kNumElementsPerBank + k;
             if constexpr(rowIdx < rows){
               pipeData.template get<k>() = get[t] ? inverse[siNumBank][rowIdx] :
-                                // Q_matrix[siNumBank].template get<rowIdx>() : 
                         sycl::ext::intel::fpga_reg(pipeData.template get<k>());
             }
           });

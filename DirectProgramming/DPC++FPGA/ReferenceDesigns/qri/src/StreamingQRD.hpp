@@ -1,5 +1,14 @@
 #pragma once 
 
+#ifdef __SYCL_DEVICE_ONLY__
+  #define CL_CONSTANT __attribute__((opencl_constant))
+#else
+  #define CL_CONSTANT
+#endif
+#define PRINTF(format, ...) { \
+            static const CL_CONSTANT char _format[] = format; \
+            sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
+
 #include "QRInversionDim.hpp"
 
 template <typename kernelName,      // Name to use for the Kernel
@@ -70,16 +79,17 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
         // The compiler has difficulty automatically figuring out an optimal
         // configuration for these memories, so force all relevant parameters.
         // NO-FORMAT comments are for clang-format
-        [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+        // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
         [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
-        [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-        [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+        // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+        // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
         Column A_load[columns];
-        [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+        // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
         [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
-        [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-        [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+        // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+        // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
         Column A_compute[columns];
+        [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
         Column Q_Result[columns];
         
         TT R_result[kRMatrixSize];
@@ -448,6 +458,21 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
           QOut::write(pipeData);
              
         } // end for si=0:kStoreIter-1
+
+      // TT qp[rows][columns];
+      // for(int i = 0; i < columns; i++){
+      //   UnrolledLoop<columns>([&](auto k) {
+      //      qp[k][i] = Q_Result[i].template get<k>(); 
+      //   });
+      // }
+      // PRINTF("QRD Q\n");
+      // for(int i = 0; i < rows; i++){
+      //   for(int j = 0; j < columns; j++){
+      //     PRINTF("%f ", qp[i][j]);
+      //   }
+      //   PRINTF("\n");
+      // }
+
 
         // [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
         // for (int col = 0; col < columns; col++) {
