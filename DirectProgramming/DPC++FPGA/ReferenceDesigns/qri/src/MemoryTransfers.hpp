@@ -32,6 +32,7 @@ sycl::event DDRToLocalMemoryCopy( sycl::queue& q,
   constexpr int kLoadItersPerColumn = dim::LoadItersPerColumn; 
 
   using PipeType = NTuple<TT, kNumElementsPerBank>;
+  // using PipeTypeFull = NTuple<TT, columns>;
 
   auto e = q.submit([&](sycl::handler &h) {
 
@@ -53,24 +54,26 @@ sycl::event DDRToLocalMemoryCopy( sycl::queue& q,
       [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
       for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; 
                                                                 li++) {
-        PipeType pipeData;
+        column<rows, TT> readColumn;
 
         bool lastRow = false;
 
-        if constexpr(kNonCompleteIter){
+        // if constexpr(kNonCompleteIter){
           lastRow = (li%kLoadItersPerColumn) == kLoadItersPerColumn - 1;
-        }
+        // }
 
         UnrolledLoop<kNumElementsPerBank>([&](auto k) {
 
           bool outOfBounds = false;
           if constexpr(kNonCompleteIter){
            outOfBounds = lastRow && 
-         ((k % kNumElementsPerBank) > ((rows-1) % kNumElementsPerBank));
+                ((k % kNumElementsPerBank) > ((rows-1) % kNumElementsPerBank));
           }
 
           if(!outOfBounds){
-            pipeData.template get<k>() = A_matrix_accessor[loadBankIndex + k];
+            readColumn.row[k + 
+                            (int(li)%kLoadItersPerColumn)*kNumElementsPerBank] =
+                                           A_matrix_accessor[loadBankIndex + k];
           }
         });
 
@@ -87,7 +90,11 @@ sycl::event DDRToLocalMemoryCopy( sycl::queue& q,
           loadBankIndex += kNumElementsPerBank;
         }
 
-        AMatrixOutPipe::write(pipeData);
+
+        if(lastRow){
+          AMatrixOutPipe::write(readColumn);
+        }
+
       } // end of li
 
     }); // end of h
@@ -124,8 +131,6 @@ sycl::event LocalMemoryToDDRCopy( sycl::queue& q,
   constexpr int kExtraBank = dim::ExtraBank;
   constexpr int kNumRBanks = dim::NumRBanks;
 
-  using PipeType = NTuple<TT, kNumElementsPerBank>;
-
   auto e = q.submit([&](sycl::handler &h) {
 
     // Create accessor to the FPGA DDR buffers
@@ -145,21 +150,17 @@ sycl::event LocalMemoryToDDRCopy( sycl::queue& q,
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
       for (ac_int<kStoreIterBitSize, false> si = 0; si < kStoreIter; 
                                                                 si++) {
-        PipeType pipeData = InverseMatrixOutPipe::read();
-#define WORKING
-#ifdef WORKING
-        TT pipeDataArray[kNumElementsPerBank];
-        UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-          pipeDataArray[k] = pipeData.template get<k>();
-        });
-#endif
+        column<rows, TT> pipeData;
+        if((si % kNumBanks) == 0){
+          pipeData = InverseMatrixOutPipe::read();
+        }
+
 
         bool lastRow = false;
         if constexpr(kNonCompleteIter){
           lastRow = si % kNumBanks == kNumBanks-1; 
         } 
 
-#ifdef WORKING
         #pragma unroll 
         for(int k = 0; k<kNumElementsPerBank; k++){
           bool outOfBounds = false;
@@ -169,24 +170,9 @@ sycl::event LocalMemoryToDDRCopy( sycl::queue& q,
           }
 
           if(!outOfBounds){
-            inverse_matrix_accessor[qr_idx + k] = pipeDataArray[k];
+            inverse_matrix_accessor[qr_idx + k] = pipeData.row[k +  (si % kNumBanks)*kNumElementsPerBank];
           }
         }
-#else
-        // Finally, the kNumElementsPerBank elements from bank are 
-        // written to the inverse_matrix_accessor
-        UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-          bool outOfBounds = false;
-          if constexpr(kNonCompleteIter){
-            outOfBounds = lastRow && 
-                  (k > ((rows-1) % kNumElementsPerBank));
-          }
-
-          if(!outOfBounds){
-            inverse_matrix_accessor[qr_idx + k] = pipeData.template get<k>();
-          }
-        });
-#endif
 
         if constexpr(kNonCompleteIter){
           int wroteElements = lastRow ? rows % kNumElementsPerBank :  

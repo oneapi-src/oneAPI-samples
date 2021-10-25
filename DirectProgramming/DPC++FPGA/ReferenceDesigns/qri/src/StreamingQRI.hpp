@@ -136,41 +136,14 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
       */
 
       [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
-      for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; 
-                                                                li++) {
-        TT rowToTranspose[rows];
-
+      for (int col=0; col<columns; col++) {
         // Load a single bank of the input matrix 
-        PipeType pipeData = QIn::read();
+        column<rows, TT> pipeData = QIn::read();
 
-        // Write the current bank to the A_load matrix.
-        ac_int<BitsForMaxValue<kNumBanks>(), false> write_row_group = 
-                                                      li % (kNumBanks);
-        ac_int<kLiNumBankBitSize, false> liNumBank = li / kNumBanks;
-
-        UnrolledLoop<kNumBanks>([&](auto k) {
-          UnrolledLoop<kNumElementsPerBank>([&](auto t) {
-            constexpr auto rowIdx = k * kNumElementsPerBank + t;
-            if constexpr (rowIdx < rows){
-              if ((write_row_group == k)) {
-                rowToTranspose[rowIdx] = pipeData.template get<t>();;
-                // Q_matrix[rowIdx][liNumBank] = pipeData.template get<t>();
-              }
-            }
-
-            // Delay data signals to create a vine-based data 
-            // distribution to lower signal fanout.
-            pipeData = sycl::ext::intel::fpga_reg(pipeData);
-          });
-
-          write_row_group = sycl::ext::intel::fpga_reg(write_row_group);
+        // Write the current column to the A_load matrix.
+        UnrolledLoop<columns>([&](auto k) {
+          Q_matrix[col][k] = pipeData.row[k];
         });
-      
-        UnrolledLoop<rows>([&](auto k) {
-          // Q_matrix[liNumBank].template get<k>() = rowToTranspose[k];
-          Q_matrix[liNumBank][k] = rowToTranspose[k];
-        });
-
       }
 
 
@@ -422,39 +395,22 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
         Write result to the output pipe
         ========================================================================
       */
+
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
-      for (ac_int<kStoreIterBitSize, false> si = 0; si < kStoreIter; 
-                                                                si++) {
-        // Only one bank is going to be stored per si iteration
-        // To reduce fanout on si, a "get" table will contain for each 
-        // bank a boolean to check if it should store this si iteration
-        ac_int<BitsForMaxValue<kNumBanks>(), false> desired = 
-                                                      si % (kNumBanks);
-        bool get[kNumBanks];
-        UnrolledLoop<kNumBanks>([&](auto k) {
-          get[k] = desired == k;
-          desired = sycl::ext::intel::fpga_reg(desired);
-        });
+      for (int col = 0; col < columns; col++) {
 
-        // Each bank will then check the get table to potentially 
-        // read kNumElementsPerBank from Q_matrix and store the elements
-        // in bank
-        PipeType pipeData;
+        // Load a single bank of the input matrix 
+        column<rows, TT> pipeData;
 
-        ac_int<kSiNumBankBitSize, false> siNumBank = si / kNumBanks;
-        UnrolledLoop<kNumBanks>([&](auto t) {
-          UnrolledLoop<kNumElementsPerBank>([&](auto k) {
-            constexpr auto rowIdx = t * kNumElementsPerBank + k;
-            if constexpr(rowIdx < rows){
-              pipeData.template get<k>() = get[t] ? inverse[siNumBank][rowIdx] :
-                        sycl::ext::intel::fpga_reg(pipeData.template get<k>());
-            }
-          });
+        // Write the current column to the A_load matrix.
+        UnrolledLoop<columns>([&](auto k) {
+          pipeData.row[k] = inverse[col][k];
         });
 
         IOut::write(pipeData);
-           
-      } // end for si=0:kStoreIter-1
+          
+      } // end for col=0:columns-1
+
 
     }); // end of h.single_task
   }); // end of q.submit

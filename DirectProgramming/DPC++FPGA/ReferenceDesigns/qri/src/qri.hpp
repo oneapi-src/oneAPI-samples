@@ -114,17 +114,16 @@ using namespace sycl;
     constexpr int kInverseMatrixSize = dim::InverseMatrixSize;
     constexpr int kNumElementsPerBank = dim::NumElementsPerBank;
 
-    using PipeType = NTuple<TT, kNumElementsPerBank>;
-
     // Number of buffers to allocate to be able to read/compute/store 
     // without overlap.
     constexpr short kNumBuffers = 3;
     
-    using AP = sycl::ext::intel::pipe<class APipe, PipeType, 4>;
+    // using AP = sycl::ext::intel::pipe<class APipe, PipeType, 4>;
+    using AP = sycl::ext::intel::pipe<class APipe, column<rows, TT>, 4>;
     // using QP = sycl::ext::intel::pipe<class QPipe, TT, 4>;
-    using QP = sycl::ext::intel::pipe<class QPipe, PipeType, 4>;
+    using QP = sycl::ext::intel::pipe<class QPipe, column<rows, TT>, 4>;
     using RP = sycl::ext::intel::pipe<class RPipe, TT, 4>;
-    using IP = sycl::ext::intel::pipe<class IPipe, PipeType, 4>;
+    using IP = sycl::ext::intel::pipe<class IPipe, column<rows, TT>, 4>;
 
     // We will process 'chunk' number of matrices in each run of the kernel
     short chunk = 2048;

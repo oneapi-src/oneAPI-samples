@@ -45,7 +45,7 @@ static constexpr inline unsigned int BitsForMaxValue()
 */
 template<unsigned rows, typename T>
 struct column{
-  T d[rows];
+  T row[rows];
 };
 
 /*
@@ -54,5 +54,5 @@ struct column{
 template<unsigned columns, typename T>
 struct row{
   // [[intel::fpga_memory("BLOCK_RAM")]] // NO-FORMAT: Attribute
-  T d[columns];
+  T col[columns];
 };
