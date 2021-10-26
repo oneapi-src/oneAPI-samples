@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(embree_gsg LANGUAGES CXX)
+project(EMBREE_GSG LANGUAGES CXX)
 
 set(ONEAPI_ROOT "")
 if($ENV{ONEAPI_ROOT})
