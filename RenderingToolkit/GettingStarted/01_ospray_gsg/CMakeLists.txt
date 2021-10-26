@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(OSPRay_gsg LANGUAGES C CXX)
-
-find_package(ospray REQUIRED)
+project(ospray_gsg LANGUAGES CXX)
 
 set(ONEAPI_ROOT "")
 if($ENV{ONEAPI_ROOT})
@@ -14,8 +12,8 @@ else()
 	endif()
 endif($ENV{ONEAPI_ROOT})
 
-
 message(STATUS "ONEAPI_ROOT: ${ONEAPI_ROOT}")
+find_package(ospray REQUIRED PATHS ${ONEAPI_ROOT})
 include_directories(${OSPRAY_INCLUDE_DIR} ${RKCOMMON_INCLUDE_DIRS})
 link_directories(${OSPRAY_ROOT}/lib ${ONEAPI_ROOT}/rkcommon/latest/lib)
 
