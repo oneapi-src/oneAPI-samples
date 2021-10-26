@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(OIDN_GSG LANGUAGES C CXX)
-
-find_package(OpenImageDenoise REQUIRED)
-find_package(TBB REQUIRED)
+project(oidn_gsg LANGUAGES C CXX)
 
 set(ONEAPI_ROOT "")
 if($ENV{ONEAPI_ROOT})
@@ -18,6 +15,8 @@ set(OIDN_ROOT ${ONEAPI_ROOT}/oidn/latest)
 set(OIDN_INCLUDE_DIR ${OIDN_ROOT}/include)
 set(OIDN_LIB_DIR ${OIDN_ROOT}/lib)
 message(STATUS "ONEAPI_ROOT: ${ONEAPI_ROOT}")
+find_package(OpenImageDenoise REQUIRED PATHS ${ONEAPI_ROOT})
+find_package(TBB REQUIRED PATHS ${ONEAPI_ROOT})
 
 add_subdirectory(src/common)
 add_subdirectory(src/apps/utils)
