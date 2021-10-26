@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(oidn_gsg LANGUAGES C CXX)
+project(OIDN_GSG LANGUAGES C CXX)
 
 set(ONEAPI_ROOT "")
 if($ENV{ONEAPI_ROOT})
