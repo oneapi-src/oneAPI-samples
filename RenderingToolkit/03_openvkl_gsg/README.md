@@ -24,7 +24,7 @@ This sample program, `vklTutorial`, shows sampling amongst a proceedurally gener
 
 ## Key Implementation Details
 
-`vklTutorial` is written in C99.
+`vklTutorial` is written in C99 and is constructed to compile with a C++ or C99 compiler.
 
 ## License
 
@@ -41,10 +41,10 @@ Run a new **x64 Native Tools Command Prompt for MSVS 2019**
 
 ```
 call <path-to-oneapi-folder>\setvars.bat
-cd <path-to-oneAPI-samples>\RenderingToolkit\openvkl_gsg
+cd <path-to-oneAPI-samples>\RenderingToolkit\GettingStarted\03_openvkl_gsg
 mkdir build
 cd build
-cmake -G"Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH="<path-to-oneapi-folder>" ..
+cmake ..
 cmake --build . --config Release
 cd Release
 vklTutorial.exe
@@ -58,10 +58,10 @@ Review the terminal output (stdout)
 Start a new Terminal session
 ```
 source <path-to-oneapi-folder>/setvars.sh
-cd <path-to-oneAPI-samples>/RenderingToolkit/openvkl_gsg
+cd <path-to-oneAPI-samples>/RenderingToolkit/GettingStarted/03_openvkl_gsg
 mkdir build
 cd build
-cmake -DCMAKE_PREFIX_PATH="<path-to-oneapi-folder>" ..
+cmake ..
 cmake --build .
 ./vklTutorial
 ```
@@ -75,10 +75,10 @@ Start a new Terminal session
 
 ```
 source <path-to-oneapi-folder>/setvars.sh
-cd <path-to-oneAPI-samples>/RenderingToolkit/openvkl_gsg
+cd <path-to-oneAPI-samples>/RenderingToolkit/GettingStarted/03_openvkl_gsg
 mkdir build
 cd build
-cmake -DCMAKE_PREFIX_PATH="<path-to-oneapi-folder>" ..
+cmake ..
 cmake --build .
 ./vklTutorial
 ```
