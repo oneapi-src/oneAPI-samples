@@ -52,10 +52,10 @@ Run a new **x64 Native Tools Command Prompt for MSVS 2019**
 
 ```
 call <path-to-oneapi-folder>\setvars.bat
-cd <path-to-oneAPI-samples>\RenderingToolkit\oidn_gsg
+cd <path-to-oneAPI-samples>\RenderingToolkit\GettingStarted\04_oidn_gsg
 mkdir build
 cd build
-cmake -G"Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH="<path-to-oneapi-folder>" ..
+cmake ..
 cmake --build . --config Release
 cd Release
 ```
@@ -63,7 +63,7 @@ cd Release
 Convert the accumulatedFrameCpp.ppm image to LSB data ordering and .pfm format. Example conversion with ImageMagick convert:
 
 ```
-<path-to-ImageMagick>\magick.exe convert ..\..\..\01_ospray_gsg\build\Release\accumulatedFrameCpp.ppm -endian LSB PFM:accumulatedFrameCpp.pfm
+<path-to-ImageMagick>\magick.exe convert <path-to-gsg>\01_ospray_gsg\build\Release\accumulatedFrameCpp.ppm -endian LSB PFM:accumulatedFrameCpp.pfm
 ```
 
 Denoise the image:
@@ -83,16 +83,16 @@ Review the output for visual comparison to the input. Example view with ImageMag
 Start a new Terminal session
 ```
 source <path-to-oneapi-folder>/setvars.sh
-cd <path-to-oneAPI-samples>/RenderingToolkit/oidn_gsg
+cd <path-to-oneAPI-samples>/RenderingToolkit/GettingStarted/04_oidn_gsg
 mkdir build
 cd build
-cmake -DCMAKE_PREFIX_PATH="<path-to-oneapi-folder>" ..
+cmake ..
 cmake --build .
 ```
 
 Convert the accumulatedFrameCpp.ppm image to LSB data ordering and .pfm format. Example conversion with ImageMagick convert:
 ```
-<path-to-ImageMagick>/convert-im6 ../../../01_ospray_gsg/build/accumulatedFrameCpp.ppm -endian LSB PFM:accumulatedFrameCpp.pfm
+<path-to-ImageMagick>/convert-im6 <path-to-gsg>/01_ospray_gsg/build/accumulatedFrameCpp.ppm -endian LSB PFM:accumulatedFrameCpp.pfm
 ```
 
 Denoise the image:
@@ -115,16 +115,16 @@ Start a new Terminal session
 
 ```
 source <path-to-oneapi-folder>/setvars.sh
-cd <path-to-oneAPI-samples>/RenderingToolkit/oidn_gsg
+cd <path-to-oneAPI-samples>/RenderingToolkit/GettingStarted/04_oidn_gsg
 mkdir build
 cd build
-cmake -DCMAKE_PREFIX_PATH="<path-to-oneapi-folder>" ..
+cmake ..
 cmake --build .
 ```
 
 Convert the accumulatedFrameCpp.ppm image to LSB data ordering and .pfm format. Example conversion with ImageMagick convert:
 ```
-<path-to-ImageMagick>/magick convert ../../../01_ospray_gsg/build/accumulatedFrameCpp.ppm -endian LSB PFM:accumulatedFrameCpp.pfm
+<path-to-ImageMagick>/magick convert <path-to-gsg>/01_ospray_gsg/build/accumulatedFrameCpp.ppm -endian LSB PFM:accumulatedFrameCpp.pfm
 ```
 
 Denoise the image:
