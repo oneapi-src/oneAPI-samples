@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(openvkl_gsg LANGUAGES CXX)
+project(OPENVKL_GSG LANGUAGES CXX)
 
 set(ONEAPI_ROOT "")
 if($ENV{ONEAPI_ROOT})
