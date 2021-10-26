@@ -41,10 +41,10 @@ Run a new **x64 Native Tools Command Prompt for MSVS 2019**
 
 ```
 call <path-to-oneapi-folder>\setvars.bat
-cd <path-to-oneAPI-samples>\RenderingToolkit\embree_gsg
+cd <path-to-oneAPI-samples>\RenderingToolkit\02_embree_gsg
 mkdir build
 cd build
-cmake -G"Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH="<path-to-oneapi-folder>" ..
+cmake ..
 cmake --build . --config Release
 cd Release
 minimal.exe
@@ -58,10 +58,10 @@ Review the terminal output (stdout)
 Start a new Terminal session
 ```
 source <path-to-oneapi-folder>/setvars.sh
-cd <path-to-oneAPI-samples>/RenderingToolkit/embree_gsg
+cd <path-to-oneAPI-samples>/RenderingToolkit/02_embree_gsg
 mkdir build
 cd build
-cmake -DCMAKE_PREFIX_PATH="<path-to-oneapi-folder>" ..
+cmake ..
 cmake --build .
 ./minimal
 ```
@@ -75,10 +75,10 @@ Start a new Terminal session
 
 ```
 source <path-to-oneapi-folder>/setvars.sh
-cd <path-to-oneAPI-samples>/RenderingToolkit/ospray_gsg
+cd <path-to-oneAPI-samples>/RenderingToolkit/02_embree_gsg
 mkdir build
 cd build
-cmake -DCMAKE_PREFIX_PATH="<path-to-oneapi-folder>" ..
+cmake ..
 cmake --build .
 ./minimal
 ```
