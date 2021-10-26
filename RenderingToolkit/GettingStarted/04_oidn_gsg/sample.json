@@ -18,7 +18,7 @@
                     "cmake ..",
                     "cmake --build . ",
 		    "cp ../accumulatedFrameCpp.pfm .",
-                    "./oidnDenoise -hdr accumulatedFrame.pfm -o denoised.pfm"
+                    "./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
                  ]
                  }
         ],
@@ -32,7 +32,7 @@
                     "cmake --build . --config Release",
                     "cd Release",
 		    "copy ..\\..\\accumulatedFrameCpp.pfm .",
-                    ".\\oidnDenoise.exe -hdr accumulatedFrame.pfm -o denoised.pfm"
+                    ".\\oidnDenoise.exe -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
                 ]
 
                 }
@@ -46,7 +46,7 @@
                     "cmake ..",
                     "cmake --build . ",
 		    "cp ../accumulatedFrameCpp.pfm .",
-                    "./oidnDenoise -hdr accumulatedFrame.pfm -o denoised.pfm"
+                    "./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
                  ]
                  }
         ]
