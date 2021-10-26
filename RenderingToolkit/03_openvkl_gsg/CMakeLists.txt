@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(OPENVKL_GSG LANGUAGES C)
-
-find_package(openvkl REQUIRED)
+project(openvkl_gsg LANGUAGES CXX)
 
 set(ONEAPI_ROOT "")
 if($ENV{ONEAPI_ROOT})
@@ -18,6 +16,8 @@ set(OPENVKL_ROOT ${ONEAPI_ROOT}/openvkl/latest)
 set(OPENVKL_INCLUDE_DIR ${OPENVKL_ROOT}/include)
 message(STATUS "OPENVKL_INCLUDE_DIR: ${OPENVKL_INCLUDE_DIR}")
 message(STATUS "ONEAPI_ROOT: ${ONEAPI_ROOT}")
+find_package(openvkl REQUIRED PATHS ${ONEAPI_ROOT})
+
 include_directories(${OPENVKL_INCLUDE_DIR} ${ONEAPI_ROOT}/rkcommon/latest/include)
 link_directories(${OPENVKL_ROOT}/lib)
 
