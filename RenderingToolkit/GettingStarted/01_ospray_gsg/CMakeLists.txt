@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(ospray_gsg LANGUAGES CXX)
+project(OSPRAY_GSG LANGUAGES CXX)
 
 set(ONEAPI_ROOT "")
 if($ENV{ONEAPI_ROOT})
