@@ -1,6 +1,6 @@
 {
   "guid": "40C26D31-D553-4BD9-9E1D-63DDF352CB85",
-  "name": "Intel® OSPRay Getting Started",
+  "name": "Intel OSPRay Getting Started",
   "categories": ["Toolkit/oneAPI Libraries/OSPRay"],
   "description": "This introductory 'hello rendering toolkit' sample program demonstrates how to render triangle data with the pathtracer from Intel OSPRay",
   "builder": ["cli"],
