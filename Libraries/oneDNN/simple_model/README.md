@@ -3,13 +3,13 @@
 This sample is implemented in C++ and DPC++ and runs on CPU or GPU. The sample
 also includes [Jupyer notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_simple_model.ipynb) that
 demonstrates how to port an oneDNN code sample from CPU-only version to CPU & GPU
-in Intel oneAPI DevCloud environment.
+in Intel® DevCloud for oneAPI environment.
 
 | Optimized for                      | Description
 | :---                               | :---
 | OS                                 | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                           | Skylake with GEN9 or newer
-| Software                           | Intel oneAPI Deep Neural Network Library (oneDNN), Intel oneAPI DPC++/C++ Compiler, Intel oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel C++ Compiler
+| Software                           | oneAPI Deep Neural Network Library (oneDNN), oneAPI DPC++/C++ Compiler, oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel® C++ Compiler
 | What you will learn                | Running a simple convolutional model on Intel CPU or Intel GPU
 | Time to complete                   | 15 minutes
 
@@ -22,7 +22,7 @@ unit (ReLU), linear response normalization (LRN), and inner product.
 
 With this sample, you will learn:
 * How to run a simple convolutional network on Intel CPU or Intel GPU
-* How to compile examples with Intel oneAPI DPC++/C++ Compiler, Intel C++ Compiler,
+* How to compile examples with oneAPI DPC++/C++ Compiler, Intel® C++ Compiler,
 and GNU C++ Compiler
 * How to switch between OpenMP and TBB for CPU parallelization
 * How to describe tensors with oneDNN memory objects
@@ -75,12 +75,12 @@ and threading runtimes:
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_gomp
 CC=GCC CXX=g++ cmake ..
 ```
-* Intel C++ Compiler and Intel OpenMP runtime
+* Intel® C++ Compiler and Intel OpenMP runtime
 ```
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_iomp
 CC=icc CXX=icpc cmake ..
 ```
-* Intel C++ Compiler and TBB runtime
+* Intel® C++ Compiler and TBB runtime
 ```
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_tbb
 CC=icc CXX=icpc cmake ..

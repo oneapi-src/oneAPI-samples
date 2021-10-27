@@ -7,7 +7,7 @@ import json
 
 today = date.today()
 d = today.strftime("%B %d, %Y")
-currentVersion = "2021.4.0"
+currentVersion = "2022.1.0"
 fCodeSamplesLists = "CODESAMPLESLIST.md"
 fChangeLogs = "CHANGELOGS.md"
 freadme = "README.md"
