@@ -8,7 +8,7 @@ and this interface also helps users to execute a custom SYCL kernel with an oneD
 | :---                               | :---
 | OS                                 | Linux Ubuntu 18.04;
 | Hardware                           | Kaby Lake with GEN9 or newer
-| Software                           | Intel oneAPI Deep Neural Network Library (oneDNN), Intel oneAPI DPC++/C++ Compiler, Intel oneAPI Threading Building Blocks (oneTBB)
+| Software                           | oneAPI Deep Neural Network Library (oneDNN), oneAPI DPC++/C++ Compiler, oneAPI Threading Building Blocks (oneTBB)
 | What you will learn                | Using oneDNN in DPC++ application targeting Intel CPU or Intel GPU
 | Time to complete                   | 15 minutes
 

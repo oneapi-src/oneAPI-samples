@@ -48,7 +48,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 ### Pre-requirement
 
 > NOTE: No action is required if users use Intel DevCloud as their environment. 
-  Please refer to [Intel oneAPI DevCloud](https://intelsoftwaresites.secure.force.com/devcloud/oneapi) for Intel DevCloud.
+  Please refer to [Intel® DevCloud for oneAPI](https://intelsoftwaresites.secure.force.com/devcloud/oneapi) for Intel DevCloud.
 
  1. **Intel® AI Analytics Toolkit**  
        You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation,   

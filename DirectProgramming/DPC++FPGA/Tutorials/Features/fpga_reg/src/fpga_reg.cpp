@@ -101,7 +101,7 @@ void RunKernel(const device_selector &selector,
 
           // Fully unroll the accumulator loop.
           // All of the unrolled operations can be freely scheduled by the
-          // oneAPI DPC++ compiler's FPGA backend as part of a common data pipeline.
+          // oneAPI DPC++ Compiler's FPGA backend as part of a common data pipeline.
           #pragma unroll
           for (size_t j = 0; j < kSize; j++) {
 #ifdef USE_FPGA_REG
@@ -128,7 +128,7 @@ void RunKernel(const device_selector &selector,
 
           // Rotate the values of the coefficient array.
           // The loop is fully unrolled. This is a canonical code structure;
-          // the oneAPI DPC++ compiler's FPGA backend infers a shift register here.
+          // the oneAPI DPC++ Compiler's FPGA backend infers a shift register here.
           int tmp = coeff[0];
           #pragma unroll
           for (size_t j = 0; j < kSize - 1; j++) {

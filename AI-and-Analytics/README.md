@@ -18,11 +18,11 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | Component & Segment | [Features-and-Functionality](Features-and-Functionality) | Demonstrate features from components like Int8 inference in Model Zoo.
 | Reference | [End-to-end-Workloads](End-to-end-Workloads)                     | AI End-to-end reference workloads with real world data.
 
-# Using Samples in Intel oneAPI DevCloud
+# Using Samples in Intel® DevCloud for oneAPI
 
 ## General DevCloud Usage Instructions:
 You can use AI Kit samples in
-the [Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/) environment in the following ways:
+the [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get-started/) environment in the following ways:
 * Log in to a DevCloud system via SSH
 * Launch a JupyterLab server and run Jupyter Notebooks from your web browser.   
 > Please refer to [DevCloud README](DevCloudREADME.md) for more details.

@@ -48,6 +48,13 @@
         "removed": "False",
         "ver": "2021.1.Gold"
     },
+    "1ADD31DD-8D83-45E8-8AC4-6972C80354EB": {
+        "guid": "1ADD31DD-8D83-45E8-8AC4-6972C80354EB",
+        "name": "Scheduler Target FMAX",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
+    },
     "1C2AD9C2-D977-4586-9584-BF65A1AED0A2": {
         "guid": "1C2AD9C2-D977-4586-9584-BF65A1AED0A2",
         "name": "Computed Tomography",
@@ -482,6 +489,13 @@
         "removed": "False",
         "ver": "2021.1.Gold"
     },
+    "7D431C27-AC4C-4AFF-9566-5B978C3D1F5D": {
+        "guid": "7D431C27-AC4C-4AFF-9566-5B978C3D1F5D",
+        "name": "Printf",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
+    },
     "7F805BC5-F9A9-43B3-BBCB-580063CD59F8": {
         "guid": "7F805BC5-F9A9-43B3-BBCB-580063CD59F8",
         "name": "Monte Carlo Pi",
@@ -748,6 +762,13 @@
         "notes": "-",
         "removed": "False",
         "ver": "2021.1.Gold"
+    },
+    "B2974A99-4BC6-4F3E-AD3E-C17FE86AC2A4": {
+        "guid": "B2974A99-4BC6-4F3E-AD3E-C17FE86AC2A4",
+        "name": "Adaptive Noise Reduction",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
     },
     "B69FAC86-88BF-41BD-B4E0-ACDF753ED3CE": {
         "guid": "B69FAC86-88BF-41BD-B4E0-ACDF753ED3CE",

@@ -4,7 +4,7 @@ XGBoost* is a widely used gradient boosting library in the classical ML area. De
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
-| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
+| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable processor family
 | Software                          | XGBoost, Intel® oneAPI AI Analytics Toolkit
 | What you will learn               | basic XGBoost programming model for Intel CPU
 | Time to complete                  | 5 minutes

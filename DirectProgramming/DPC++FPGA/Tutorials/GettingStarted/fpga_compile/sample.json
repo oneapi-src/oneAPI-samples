@@ -2,7 +2,7 @@
   "guid": "A211FDE2-B037-4069-BD84-C45E354798B7",
   "name": "FPGA Compile",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Getting Started Tutorials"],
-  "description": "Intel® FPGA tutorial introducing how to compile Intel® oneAPI Data Parallel C++ (DPC++) for Intel® FPGA",
+  "description": "Intel® FPGA tutorial introducing how to compile Data Parallel C++ (DPC++) for Intel® FPGA",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
