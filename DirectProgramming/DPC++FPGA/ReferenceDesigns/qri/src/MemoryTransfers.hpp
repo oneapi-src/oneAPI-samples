@@ -52,8 +52,7 @@ sycl::event DDRToLocalMemoryCopy( sycl::queue& q,
       int loadBankIndex = 0;
 
       [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
-      for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; 
-                                                                li++) {
+      for (ac_int<kLoadIterBitSize, false> li = 0; li < kLoadIter; li++) {
         column<rows, TT> readColumn;
 
         bool lastRow = false;

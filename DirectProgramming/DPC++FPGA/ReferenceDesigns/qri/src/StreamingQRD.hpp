@@ -79,16 +79,16 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
       // configuration for these memories, so force all relevant parameters.
       // NO-FORMAT comments are for clang-format
       // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
-      [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+      // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       Column A_load[columns];
       // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
-      [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+      // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       Column A_compute[columns];
-      [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+      // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       Column Q_Result[columns];
       
       TT R_result[kRMatrixSize];
@@ -159,7 +159,8 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
       // -> ir: for one iteration per j iterations to compute Q_i
       constexpr int kSuper_dummy_iterations = RAWLatency - columns;
       constexpr int kIncreasedBufferSize = kSuper_dummy_iterations < 0 ? 
-                                            0 : kSuper_dummy_iterations; 
+                                            0 : kSuper_dummy_iterations;
+      [[intel::fpga_memory]]
       TT s_or_i[columns + kIncreasedBufferSize];
 
       // Adding kIncreasedBufferSize is a waste of resource because we 

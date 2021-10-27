@@ -100,18 +100,17 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
 
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
       for(int i = 0; i < rows; i++){
-        TT Rcol[columns];
+        TT Rrow[columns];
         for(int j = 0; j < columns; j++){
-          if(j>=i){
-            Rcol[j] = RIn::read();
+          #pragma unroll          
+          for(int col = 0; col<columns-1; col++){
+            Rrow[col] = Rrow[col+1];
           }
-          else{
-            Rcol[j] = {0.0};
-          }
+          Rrow[columns-1] = j>=i ? RIn::read() : TT{0.0};
         }
 
         UnrolledLoop<columns>([&](auto k) {
-          R[i][k] = Rcol[k];
+          R[i][k] = Rrow[k];
         });
       }
 
@@ -192,32 +191,90 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
         Compute the inverse of R
         ========================================================================
       */
-/*
-          [[intel::bankwidth(kBankwidth), intel::numbanks(kNumBanks)]] 
-          struct {
-            TT c[rows];
-          } inverseOfR[columns];
 
 
-*/
-      // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
-      // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
-      // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-      // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+      // constexpr int RAWTriang = 300;
+      // constexpr int kNormalIterations = rows * (rows+1) / 2;
+      // constexpr int kExtraIterations =
+      // RAWTriang > rows ?
+      // (RAWTriang-2)*(RAWTriang-2+1)/2 - (RAWTriang-rows-1)*(RAWTriang-rows)/2 :
+      // (RAWTriang-2)*(RAWTriang-2+1)/2;
+      // constexpr int kTotalIterations = kNormalIterations + kExtraIterations;
+      // constexpr int kInitExtraIterations = rows-1 > RAWTriang-1 ? rows-1 : RAWTriang-1;
+      // constexpr int kInitIterations = (rows-2) * (rows-1) / 2 + kInitExtraIterations;
 
+      // int row = rows-1;
+      // int rowp1 = rows;
+      // int col = 0;
+      // int rowLimit = rows-1;
+      // int diagSize = 1;
+      // int diagSizem1 = 0;
+      // int diagSizep1 = 2;
+      // int diagIteration = 0;
+      // int diagIterationp1 = 1;
+      // int diagIterationp2 = 2;
+      // int startRow = rows-1;
+      // int startRowP1 = startRow;
+      // int nextDiagSize = 2;
+      // int nextRowLimit = rows-1;
+      // int nextStartRow = rows - 1 - diagIterationp1;
 
-      TT inverseOfR[rows][columns];
+      // [[intel::ivdep(RAWTriang)]]  // NO-FORMAT: Attribute
+      // for(int it = 0; it < kTotalIterations + kInitIterations; it++){
+      //   PRINTF("iteration: %d row: %d, col: %d, diagSize: %d, rowLimit: %d, startRow: %d\n", diagIteration, row, col, diagSize, rowLimit, startRow);
+      //   if(row<rows & col<columns){
+      //     TT idMatrixValue = row == col ? TT{1} : TT{0};
+      //     TT current_sum = {0};
+      //     TT div_val;
 
-      // TT R_inverse[rows][columns] = {0};
+      //     UnrolledLoop<columns>([&](auto k) {
+      //       auto lhs = RT_matrix[col][k];
+      //       auto rhs = R_inverse[row][k];
+      //       if(k==col){
+      //         div_val = lhs;
+      //       }
+
+      //       if(k!=col){
+      //         current_sum += lhs * rhs;
+      //       }
+      //     });
+
+      //     TT result = (idMatrixValue - current_sum)/div_val;
+          
+      //     TT toWrite = col < row ? TT{0} : result;
+      //     R_inverse[row][col] = toWrite;
+      //   }
+
+      //   if(row == rowLimit){
+      //     diagIteration = diagIterationp1;
+      //     diagIterationp1 = diagIterationp2;
+      //     diagSize = nextDiagSize;
+      //     rowLimit = nextRowLimit;
+      //     startRow = nextStartRow;
+      //     row = startRow;
+      //     rowp1 = startRowP1;
+      //     PRINTF("rowp1 %d\n", rowp1);
+      //     col = diagIteration < rows-1 ? 0 : diagIteration - rows + 1;
+      //   }
+      //   else{
+      //     row = rowp1;
+      //     rowp1 = rowp1 + 1;
+      //     col = col + 1;
+      //     diagSizem1 = diagSize-1;
+      //     diagSizep1 = diagSize+1;
+      //     diagIterationp2 = diagIteration + 2;
+      //     nextDiagSize = diagIterationp1 >= rows ? diagSizem1 : diagSizep1;
+      //     nextRowLimit = diagIterationp1 >= rows-2 ? sycl::max(nextDiagSize, RAWTriang) -1: rows-1;
+      //     nextStartRow = diagIterationp1 >= rows-1 ? 0 : rows - 1 - diagIterationp1;
+      //     startRowP1 = diagIterationp1 >= rows-1 ? 1 : rows - diagIteration-1;
+      //   }
+      // }
+
       TT R_inverse[rows][columns];
 
-      // Row R_inverse[columns];
       for(int i=0; i<rows; i++){
         UnrolledLoop<columns>([&](auto k) {
-          // R_inverse[i].template get<k>() = {0};
           R_inverse[i][k] = {0};
-          // inverseOfR[i][k] = {0};
-          // inverseOfR[k][i] = {0};
         });
       }
 
@@ -242,30 +299,17 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
       int nextcp1Limit = RAWTriang-columns-1-columns > 0 ? 
                                                   RAWTriang-columns-1 : columns;
 
-      // [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
       [[intel::ivdep(RAWTriang)]]  // NO-FORMAT: Attribute
       for(int it = 0; it < kTotalIterations; it++){
         if(row<rows && col<columns){
           TT idMatrixValue = row == col ? TT{1} : TT{0};
 
           TT current_sum = {0};
-          // TT div_val = R[col][col];
           TT div_val;
-           // = RT_matrix[col][col];
 
           UnrolledLoop<columns>([&](auto k) {
-          // #pragma unroll
-          // for(int k = 0; k < columns; k++){
-
             auto lhs = RT_matrix[col][k];
-            // auto lhs = R[k][col];
-            // auto rhs = R_inverse[row].template get<k>();
             auto rhs = R_inverse[row][k];
-
-
-            // auto rhs = inverseOfR[row][k];
-            // auto rhs = inverseOfR[k][row];
-
             if(k==col){
               div_val = lhs;
             }
@@ -273,26 +317,11 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
             if(k!=col){
               current_sum += lhs * rhs;
             }
-          // }
           });
 
           TT result = (idMatrixValue - current_sum)/div_val;
-          // PRINTF("divided by R[%d][%d]\n", col, col);
-          // inverseOfR[col][row] = result;
-            
-          R_inverse[row][col] = result;
 
-          // UnrolledLoop<columns>([&](auto k) {
-          // // #pragma unroll
-          // // for(int k = 0; k < columns; k++){
-          //   if(k==col){
-          //     // R_inverse[row].template get<k>() = result;
-          //     R_inverse[row][k] = result;
-          //     // inverseOfR[row][k] = result;
-          //     // inverseOfR[k][row] = result;
-          //   }
-          // // }
-          // });
+          R_inverse[row][col] = result;
         }
 
         // PRINTF("i: %d, j: %d\n", i, j);
