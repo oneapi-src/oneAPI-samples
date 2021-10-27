@@ -1,6 +1,6 @@
 {
   "guid": "87FA013D-0B19-45AE-BCD5-43412BE0A99F",
-  "name": "Intel® Embree Getting Started",
+  "name": "Intel Embree Getting Started",
   "categories": ["Toolkit/oneAPI Libraries/Embree"],
   "description": "This introductory hello rendering toolkit sample illustrates how to cast a ray into a scene with Intel Embree",
   "builder": ["cli"],
