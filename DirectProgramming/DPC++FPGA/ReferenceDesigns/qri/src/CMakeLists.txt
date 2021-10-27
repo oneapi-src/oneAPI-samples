@@ -85,8 +85,8 @@ separate_arguments(USER_HARDWARE_FLAGS)
 set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsfp-relaxed -fno-fast-math -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${SELECTED_BOARD} ${USER_HARDWARE_FLAGS} -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 set(FINAL_LINK_FLAGS -fintelfpga -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT})
 
-set(EMULATOR_COMPILE_FLAGS "-v -v -I/p/psg/ctools/mpfr/2.4.2/linux64/include/ -I/p/psg/ctools/gmp/6.1.2/linux64/include/ -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFPGA_EMULATOR -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
-set(EMULATOR_LINK_FLAGS "-v -v -fintelfpga -L/p/psg/ctools/mpfr/2.4.2/linux64/lib/ -lmpfr" )
+set(EMULATOR_COMPILE_FLAGS "-Wall -I/p/psg/ctools/mpfr/2.4.2/linux64/include/ -I/p/psg/ctools/gmp/6.1.2/linux64/include/ -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFPGA_EMULATOR -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
+set(EMULATOR_LINK_FLAGS "-Wall -fintelfpga -L/p/psg/ctools/mpfr/2.4.2/linux64/lib/ -lmpfr" )
 
 # FPGA emulator
 if(WIN32)

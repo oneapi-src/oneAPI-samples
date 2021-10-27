@@ -157,8 +157,6 @@ void generateMatrixWithCondititionNumber(float epsilon, vector<T> &output){
 
 int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
-  constexpr float kRandomMin = -2;
-  constexpr float kRandomMax = 2;
   constexpr size_t kAMatrixSize = ROWS_COMPONENT * COLS_COMPONENT;
   constexpr size_t kInverseMatrixSize = ROWS_COMPONENT * COLS_COMPONENT;
 
@@ -394,45 +392,23 @@ int main(int argc, char *argv[]) {
         }
       }
 
-      // cout << "A inverse matrix" << std::endl;
-      // for (size_t row = 0; row < ROWS_COMPONENT; row++) {
-      //   for (size_t col = 0; col < COLS_COMPONENT; col++) {
-      //     cout << precomputed_inverse_matrix[i * kAMatrixSize + 
-      //                                         row*COLS_COMPONENT + col] << " ";
-      //   }
-      //   cout << std::endl;
-      // }
-
       // Compute the confidition number
       float condition_number = norm_inf_A * norm_inf_inverse;
-      // cout << "norm_inf_A " << norm_inf_A << std::endl;
-      // cout << "norm_inf_inverse " << norm_inf_inverse << std::endl;
-      // cout << "condition_number " << condition_number << std::endl;
 
       // Regenerate this matrix if:
       // - the condition number is higher than the threshold
       // - we gave up on computing its inverse
-      // if(std::log2(condition_number) > 10 || give_up){
-      // if(condition_number > 700 || give_up){
-      if(condition_number > 7000 || give_up){
+      if(condition_number > 8 || give_up){
         i--;
       }
       else{
-        // if(condition_number > maxConditionNumber){
-        //   maxConditionNumber = condition_number;
-        // }
-        // cout << "Matrix " << counter << std::endl;
-        // cout << "norm_inf_A " << norm_inf_A << std::endl;
-        // cout << "norm_inf_inverse " << norm_inf_inverse << std::endl;
-        // cout << "condition number: " << norm_inf_A * norm_inf_inverse << std::endl;
-
-      // std::cout << "A matrix" << std::endl;
-      // for (size_t row = 0; row < ROWS_COMPONENT; row++) {
-      //   for (size_t col = 0; col < COLS_COMPONENT; col++) {
-      //     std::cout << std::setprecision(3) << A[i * kAMatrixSize + col * COLS_COMPONENT + row] << " ";
-      //   }
-      //   std::cout << std::endl;
-      // }      
+        // std::cout << "A matrix" << std::endl;
+        // for (size_t row = 0; row < ROWS_COMPONENT; row++) {
+        //   for (size_t col = 0; col < COLS_COMPONENT; col++) {
+        //     std::cout << std::setprecision(3) << A[i * kAMatrixSize + col * COLS_COMPONENT + row] << " ";
+        //   }
+        //   std::cout << std::endl;
+        // }      
 
         cout << "norm_inf_A " << norm_inf_A << std::endl;
         cout << "norm_inf_inverse " << norm_inf_inverse << std::endl;
@@ -499,12 +475,13 @@ int main(int argc, char *argv[]) {
     float inverse_matrix_pp[ROWS_COMPONENT][COLS_COMPONENT];
 #endif
 
+    constexpr float kErrorThreshold = 1e-3;
+    
     cout << "Verifying results on matrix";
     for (size_t matrix : to_check) {
       cout << " " << matrix << std::endl;
       size_t idx = 0;
 
-#if COMPLEX == 1
       for (size_t j = 0; j < COLS_COMPONENT; j++) {
         for (size_t i = 0; i < ROWS_COMPONENT; i++) {
           inverse_matrix_pp[j][i] = 
@@ -529,10 +506,10 @@ int main(int argc, char *argv[]) {
       //   std::cout << std::endl;
       // }
 
-      constexpr float kErrorThreshold = 1e-3;
-
       int kernelGreaterThanErrorThreshold = 0;
       double maxError = 0.0;
+
+#if COMPLEX == 1
 
       for (size_t i = 0; i < ROWS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
@@ -542,6 +519,10 @@ int main(int argc, char *argv[]) {
 
           double diffI = abs(inverse_matrix_pp[i][j].i() - 
   precomputed_inverse_matrix[matrix * kAMatrixSize + i*COLS_COMPONENT + j].i());
+
+          if(!std::isfinite(diffR) || !std::isfinite(diffR)){
+            kernelGreaterThanErrorThreshold++;
+          }
 
           if(diffR > maxError){
             maxError = diffR;
@@ -559,38 +540,17 @@ int main(int argc, char *argv[]) {
         }
       }
       
-      std::cout << "Max error: " << maxError << std::endl; 
-
-      if(maxError > maxErrorTotal){
-        maxErrorTotal = maxError;
-      }
-      totalError += maxError;
-
-      std::cout << "Kernel errors: " << kernelGreaterThanErrorThreshold 
-                << std::endl; 
-      if(kernelGreaterThanErrorThreshold>0){
-        error_count++;
-        break;
-      }
 #else
-      for (size_t j = 0; j < COLS_COMPONENT; j++) {
-        for (size_t i = 0; i < ROWS_COMPONENT; i++) {
-          inverse_matrix_pp[j][i] = 
-                              inverse_matrix[matrix * kInverseMatrixSize + idx];
-          idx++;
-        }
-      }
-
-      constexpr float kErrorThreshold = 1e-3;
-
-      int kernelGreaterThanErrorThreshold = 0;
-      double maxError = 0.0;
 
       for (size_t i = 0; i < ROWS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
 
           double diff = abs(inverse_matrix_pp[i][j] - 
       precomputed_inverse_matrix[matrix * kAMatrixSize + i*COLS_COMPONENT + j]);
+
+          if(!std::isfinite(diff)){
+            kernelGreaterThanErrorThreshold++;
+          }
 
           if(diff > maxError){
             maxError = diff;
@@ -602,6 +562,8 @@ int main(int argc, char *argv[]) {
         }
       }
       
+#endif
+
       std::cout << "Max error: " << maxError << std::endl; 
 
       if(maxError > maxErrorTotal){
@@ -615,7 +577,6 @@ int main(int argc, char *argv[]) {
         error_count++;
         break;
       }
-#endif
     }
 
     cout << "maxErrorTotal " << maxErrorTotal << std::endl;

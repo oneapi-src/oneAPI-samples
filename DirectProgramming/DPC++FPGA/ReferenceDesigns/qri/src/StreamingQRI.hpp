@@ -1,7 +1,5 @@
 #pragma once 
 
-#include "QRInversionDim.hpp"
-
 #ifdef __SYCL_DEVICE_ONLY__
   #define CL_CONSTANT __attribute__((opencl_constant))
 #else
@@ -40,33 +38,6 @@ template <typename kernelName,          // Name to use for the Kernel
 sycl::event StreamingQRIKernel(sycl::queue& q) {
 
   typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
-
-  using dim = QRInversionDim<isComplex, rows, columns, RAWLatency>;
-  using Column = NTuple<TT, rows>;
-  using Row = NTuple<TT, columns>;
-
-  constexpr int kRMatrixSize = dim::RMatrixSize;
-  constexpr int kNumElementsPerBank = dim::NumElementsPerBank;
-  constexpr int kBankwidth = dim::BankWidth;
-  constexpr int kNumBanks = dim::NumBanks;
-  constexpr int kNumBanksNextPow2 = dim::NumBanksNextPow2;
-  constexpr bool kNonCompleteIter = dim::NonCompleteIter;
-  constexpr int kExtraIter = dim::ExtraIter;
-  constexpr int kLoadIter = dim::LoadIter;
-  constexpr int kStoreIter = dim::StoreIter;
-  constexpr int kLoadIterBitSize = dim::LoadIterBitSize;
-  constexpr int kStoreIterBitSize = dim::StoreIterBitSize;
-  constexpr int kLiNumBankBitSize = dim::LiNumBankBitSize;
-  constexpr int kSiNumBankBitSize = dim::SiNumBankBitSize;
-  constexpr int kNValue = dim::NValue;
-  constexpr int kVariableIterations = dim::VariableIterations;
-  constexpr int kIterations = dim::Iterations;
-  constexpr int kIBitSize = dim::IBitSize;
-  constexpr int kJBitSize = dim::JBitSize;
-  constexpr int kLoadItersPerColumn = dim::LoadItersPerColumn;
-  constexpr int kNumRBanks = dim::NumRBanks;
-
-  using PipeType = NTuple<TT, kNumElementsPerBank>;
 
   auto e = q.submit([&](sycl::handler& h) {
     sycl::stream out(21387, 21387, h);
@@ -301,7 +272,7 @@ sycl::event StreamingQRIKernel(sycl::queue& q) {
 
       [[intel::ivdep(RAWTriang)]]  // NO-FORMAT: Attribute
       for(int it = 0; it < kTotalIterations; it++){
-        if(row<rows && col<columns){
+        if((row < rows) & (col < columns)){
           TT idMatrixValue = row == col ? TT{1} : TT{0};
 
           TT current_sum = {0};

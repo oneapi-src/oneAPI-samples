@@ -112,7 +112,6 @@ using namespace sycl;
 
     constexpr int kAMatrixSize = dim::AMatrixSize;
     constexpr int kInverseMatrixSize = dim::InverseMatrixSize;
-    constexpr int kNumElementsPerBank = dim::NumElementsPerBank;
 
     // Number of buffers to allocate to be able to read/compute/store 
     // without overlap.

@@ -45,27 +45,12 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
 
   constexpr int kRMatrixSize = dim::RMatrixSize;
   constexpr int kNumElementsPerBank = dim::NumElementsPerBank;
-  constexpr int kBankwidth = dim::BankWidth;
   constexpr int kNumBanks = dim::NumBanks;
-  constexpr int kNumBanksNextPow2 = dim::NumBanksNextPow2;
-  constexpr bool kNonCompleteIter = dim::NonCompleteIter;
-  constexpr int kExtraIter = dim::ExtraIter;
-  constexpr int kLoadIter = dim::LoadIter;
-  constexpr int kStoreIter = dim::StoreIter;
-  constexpr int kLoadIterBitSize = dim::LoadIterBitSize;
-  constexpr int kStoreIterBitSize = dim::StoreIterBitSize;
-  constexpr int kLiNumBankBitSize = dim::LiNumBankBitSize;
-  constexpr int kSiNumBankBitSize = dim::SiNumBankBitSize;
   constexpr int kNValue = dim::NValue;
   constexpr int kVariableIterations = dim::VariableIterations;
   constexpr int kIterations = dim::Iterations;
   constexpr int kIBitSize = dim::IBitSize;
   constexpr int kJBitSize = dim::JBitSize;
-  constexpr int kLoadItersPerColumn = dim::LoadItersPerColumn;
-  constexpr int kNumRBanks = dim::NumRBanks;
-
-  using PipeType = NTuple<TT, kNumElementsPerBank>;
-  using PipeTypeFull = NTuple<TT, columns>;
 
   auto e = q.submit([&](sycl::handler& h) {
     h.single_task<kernelName>([=] {
@@ -73,22 +58,10 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
       // Three copies of the full matrix, so that each matrix has a single
       // load and a single store.
       // A_load is the initial matrix received from the pipe
-      // a_matrix is used and modified during calculations
-      // q_matrix is a copy of a_matrix and is used to send the final output
-      // The compiler has difficulty automatically figuring out an optimal
-      // configuration for these memories, so force all relevant parameters.
-      // NO-FORMAT comments are for clang-format
-      // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
-      // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
-      // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-      // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+      // A_compute is used and modified during calculations
+      // Q_Result is a copy of A_compute and is used to send the final output
       Column A_load[columns];
-      // [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
-      // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
-      // [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-      // [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       Column A_compute[columns];
-      // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       Column Q_Result[columns];
       
       TT R_result[kRMatrixSize];
@@ -222,7 +195,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
           i_gt_0[k] = sycl::ext::intel::fpga_reg(i > 0);
           i_lt_0[k] = sycl::ext::intel::fpga_reg(i < 0);
           j_eq_i[k] = sycl::ext::intel::fpga_reg(j == i);
-          i_ge_0_j_ge_i[k] = sycl::ext::intel::fpga_reg(i >= 0 && j >= i);
+          i_ge_0_j_ge_i[k] = sycl::ext::intel::fpga_reg(i >= 0 & j >= i);
           j_eq_i_plus_1[k] = sycl::ext::intel::fpga_reg(j == i + 1);
           int idx = j + kIncreasedBufferSize;
           sori[k] = sycl::ext::intel::fpga_reg(s_or_i[idx]);
@@ -363,7 +336,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
 
         // Write the computed R value when j is not a "dummy" iteration
         // introduced to optimized the triangular loop
-        if (j >= i + 1 && i + 1 < kNValue) {
+        if ((j >= i + 1) & (i + 1 < kNValue)) {
           R_result[RElementIndex] = r_ip1j;
           RElementIndex++;
         }
@@ -406,43 +379,6 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
         QOut::write(pipeData);
           
       } // end for col=0:columns-1
-
-
-
-
-
-
-    // TT qp[rows][columns];
-    // for(int i = 0; i < columns; i++){
-    //   UnrolledLoop<columns>([&](auto k) {
-    //      qp[k][i] = Q_Result[i].template get<k>(); 
-    //   });
-    // }
-    // PRINTF("QRD Q\n");
-    // for(int i = 0; i < rows; i++){
-    //   for(int j = 0; j < columns; j++){
-    //     PRINTF("%f ", qp[i][j]);
-    //   }
-    //   PRINTF("\n");
-    // }
-
-
-      // [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
-      // for (int col = 0; col < columns; col++) {
-      //   QOut::write(Q_Result[col]);
-      // } // end for col
-
-      // [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
-      // for (int col = 0; col < columns; col++) {
-      //   TT tmp[rows];
-      //   UnrolledLoop<rows>([&](auto k) {
-      //     tmp[k] = Q_Result[col].template get<k>();
-      //   });
-      //   for (int row = 0; row < rows; row++) {
-      //     QOut::write(tmp[row]);
-      //   } // end for col
-      // } // end for col
-
 
     }); // end of h.single_task
   }); // end of q.submit
