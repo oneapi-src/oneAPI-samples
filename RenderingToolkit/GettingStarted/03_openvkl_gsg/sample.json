@@ -1,6 +1,6 @@
 {
   "guid": "80BB7E55-6FCA-491F-8541-E271324CF169",
-  "name": "Intel® Open VKL Getting Started",
+  "name": "Intel Open VKL Getting Started",
   "categories": ["Toolkit/oneAPI Libraries/Open VKL"],
   "description": "This introductory hello rendering toolkit sample program demonstrates how to sample into volumes with Intel Open VKL",
   "builder": ["cli"],
