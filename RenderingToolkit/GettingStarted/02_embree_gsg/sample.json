@@ -44,7 +44,7 @@
                     "cd build",
                     "cmake ..",
                     "cmake --build . ",
-                    "./minimal"
+                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./minimal"
                  ]
                  }
         ]
