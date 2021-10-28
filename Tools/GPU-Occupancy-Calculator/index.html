@@ -30,7 +30,8 @@
     	.button, .button_light {text-align:center;line-height:34px;border-color: #0071c4;color:#fff;background-color:#0071c4; border-radius: 5px; border-width: 1px;margin:10px 0; width:100%;font-size:18px;cursor:pointer;}
     	.left {float:left; width:170px;}
     	.help {color: #0071c4; border:2px solid #0071c4;border-radius: 100%;float:left; width:20px;height:20px;line-height: 20px;font-size: 11px;font-weight:bold;margin:15px 10px 0 0; text-align:center;text-decoration:none;}
-    	.button_light {border-color: #444;color:#fff;background-color:#777; width:80px; float: right;}
+    	.notes {padding:20px 5px 5px;color:#777;}
+	.button_light {border-color: #444;color:#fff;background-color:#777; width:80px; float: right;}
     	.result{margin-top:20px; background-color:#cec;font-size: 12px; line-height: 24px; padding:10px;border-radius:5px}
     	.result td {background-color: transparent;font-size: 12px}
     	.result td b {font-size: 20px}
@@ -744,7 +745,7 @@ function cal_occupancy(){
 
 		let gpu_output = compute_gpu_occupancy(input_wg, ss_output.num_wg, ss_output.occupancy, num_ss, global_size);
 
-		document.querySelector('#occ_cal .output').innerHTML = '<div class="result"><table><tr><td>SS/DSS Occupancy</td><td><b>' + ss_output.occupancy.toFixed(2) + '%</b></td></tr><tr><td>GPU Occupancy </td><td>' + gpu_output.gpu_occ.toFixed(2) + '%</td><tr><tr><td>Number of Work-Groups per SS/DSS </td><td>' + ss_output.num_wg + '</td></tr><tr><td>Total Number of Work-Groups</td><td>' + wg_count + '</td></tr></table></div>';
+		document.querySelector('#occ_cal .output').innerHTML = '<div class="result"><table><tr><td>SS/DSS Occupancy</td><td><b>' + ss_output.occupancy.toFixed(2) + '%</b></td></tr><tr><td>GPU Occupancy </td><td>' + gpu_output.gpu_occ.toFixed(2) + '%</td><tr><tr><td>Number of Work-Groups per SS/DSS </td><td>' + ss_output.num_wg + '</td></tr><tr><td>Total Number of Work-Groups</td><td>' + wg_count + '</td></tr></table></div><div class="notes">The GPU Occupancy Calculator gives a theoretical estimate of GPU Occupancy, actual occupancy on the hardware may be different. Note that higher occupancy does not always translate to higher performance.</div>';
 
 		opt_occupancy(target_value, input_wg, input_sg, input_slm, large_grf, ss_output.occupancy, wg_count);
 		update_valid_wg_sizes();
