@@ -41,15 +41,16 @@ read ports. The size of each replicate is `<N>` bytes as specified by the
 ### Understanding the Tutorial Design
 The basic function performed by the tutorial kernel is a a series of table
 lookups from a buffer that contains the square root values of the first 512
-integers.
+integers. By default, the compiler will generate load-store units (LSUs) that
+are optimized for when the global memory accesses are contiguous. When the
+memory accesses are non-contiguous, like it is the case with this tutorial
+design, these LSUs tend to suffer major throughput loss. The read-only cache
+can sometimes help in these situations, especially if sized correctly.
 
-#### Part 1: Without the `-Xsread-only-cache-size=<N>` flag
-
-...
-
-#### Part 2: With the `-Xsread-only-cache-size=<N>` flag
-
-...
+This tutorial requires compiling the source code twice: with and without the
+`-Xsread-only-cache-size=<N>` flag. Because the look-up table contains 512
+integers, the chosen size of the cache is `512*4 bytes = 2048 bytes`, and so,
+the flag `-Xsread-only-cache-size=2048` is passed to `dpcpp`.
 
 ## Key Concepts
 * How to use the read-only cache feature 
@@ -249,4 +250,8 @@ Configuration | Execution Time (ms) | Throughput (MB/s)
 Without caching | 11.597 | 172.457160
 With caching | 6.537 | 305.933426
 
-When the read-only cache is enabled, performance notably increases. As previously mentioned, 
+When the read-only cache is enabled, performance notably increases. As
+previously mentioned, the compiler will generate load-store units that are
+optimized for contiguous global memory accesses.  For random global memory
+accesses, enabling the read-only cache and sizing it correctly enables the
+design to achieve a higher throughput.
