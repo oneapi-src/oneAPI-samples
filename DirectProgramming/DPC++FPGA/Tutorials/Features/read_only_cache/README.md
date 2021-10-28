@@ -43,7 +43,7 @@ The `read_only` property is required because the cache is *read_only*. The
 `no_alias` property is required to guarantee that the buffer will not be
 written to from the kernel through another accessor or through a USM pointer.
 Note that the same no-alias behavior can be achieved using the kernel attribute
-`[[intel::kernel_args_restrict]]`.
+`[[intel::kernel_args_restrict]]`, when applicable.
 
 Each private cache is also replicated as many times as needed to expose extra
 read ports. The size of each replicate is `<N>` bytes as specified by the
@@ -197,15 +197,15 @@ IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow
 
 
 ## Examining the Reports
-Locate the pair of `report.html` files in either:
+Locate the pair of `report.html` files in the
+`read_only_cache_disabled_report.prj` and `read_only_cache_enabled_report.prj`
+directories. Open the reports in any of Chrome*, Firefox*, Edge*, or Internet
+Explorer*. Navigate to the "Area Analysis of System" section of each report
+(Area Analysis > Area Analysis of System) and expand the "Kernel System" entry
+in the table. Notice that when the read-only cache is enabled, a new entry
+shows up in the table called "Constant cache interconnect" indicating that the
+cache has been created.
 
-* **Report-only compile**: `read_only_cache_disabled_report.prj` and
-  `read_only_cache_enabled_report.prj`
-* **FPGA hardware compile**: `read_only_cache_disabled.prj` and
-  `read_only_cache_enabled.prj`
-
-Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
-Notice that ...
 
 ## Running the Sample
 
@@ -214,7 +214,7 @@ Notice that ...
      ./read_only_cache.fpga_emu     (Linux)
      read_only_cache.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA device (two executables should be generated):
      ```
      ./read_only_cache_disabled.fpga         (Linux)
      ./read_only_cache_enabled.fpga         (Linux)
@@ -234,7 +234,7 @@ Number of outputs: 524288
 Verification PASSED
 
 Kernel execution time: 0.011597 seconds
-Kernel throughput 172.457160 MB/s
+Kernel throughput 172.457160 MB/s
 ```
 
 Running `./read_only_cache_disabled.fpga`:
@@ -263,7 +263,6 @@ Without caching | 11.597 | 172.457160
 With caching | 6.537 | 305.933426
 
 When the read-only cache is enabled, performance notably increases. As
-previously mentioned, the compiler will generate load-store units that are
-optimized for contiguous global memory accesses.  For random global memory
-accesses, enabling the read-only cache and sizing it correctly enables the
-design to achieve a higher throughput.
+previously mentioned, when the global memory accesses are random (i.e.
+non-contiguous), enabling the read-only cache and sizing it correctly may allow
+the design to achieve a higher throughput.
