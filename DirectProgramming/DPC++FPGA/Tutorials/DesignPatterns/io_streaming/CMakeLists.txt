@@ -5,7 +5,7 @@ else() # Windows
     # Force CMake to use dpcpp rather than the default C++ compiler/linker
     # (needed on Windows only)
     include (CMakeForceCompiler)
-    CMAKE_FORCE_CXX_COMPILER (dpcpp IntelDPCPP)
+    set(CMAKE_CXX_COMPILER dpcpp)
     include (Platform/Windows-Clang)
 endif()
 

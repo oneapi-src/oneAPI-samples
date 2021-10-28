@@ -193,7 +193,7 @@ unsigned RunKernel(unsigned init, const unsigned dict_offset_init[]) {
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
+    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
