@@ -61,9 +61,9 @@
 #pragma once
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_complex.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <chrono>
 #include <cstring>
 #include <vector>
