@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
+    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
@@ -241,15 +241,19 @@ int CompressFile(queue &q, std::string &input_file,
                  "application throughput.\n\n";
   }
 
+  // padding for the input and output buffers to deal with granularity of
+  // kernel reads and writes
+  constexpr size_t kInOutPadding = 16 * kVec;  
+  
   std::ifstream file(input_file,
                      std::ios::in | std::ios::binary | std::ios::ate);
   if (file.is_open()) {
     isz = file.tellg();
     if (prepin) {
       pinbuf = (char *)malloc_host(
-          isz, q.get_context());  // Pre-pin the buffer, for faster DMA
+          isz + kInOutPadding, q.get_context());  // Pre-pin the buffer, for faster DMA
     } else {                      // throughput, using malloc_host().
-      pinbuf = new char[isz];
+      pinbuf = new char[isz + kInOutPadding];
     }
     file.seekg(0, std::ios::beg);
     file.read(pinbuf, isz);
@@ -277,10 +281,6 @@ int CompressFile(queue &q, std::string &input_file,
       return 1;
     }
   }
-
-  // padding for the input and output buffers to deal with granularity of
-  // kernel reads and writes
-  constexpr size_t kInOutPadding = 16 * kVec;
 
   // This loop allocates host-side USM buffers, to be accessed by the kernel.
   for (size_t eng = 0; eng < kNumEngines; eng++) {
