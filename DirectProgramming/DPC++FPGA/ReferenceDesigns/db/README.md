@@ -162,7 +162,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
      ```
      ./db.fpga_emu --dbroot=../data/sf0.01 --test       (Linux)
-     db.q1.fpga_emu.exe --dbroot=../data/sf0.01 --test  (Windows)
+     db.fpga_emu.exe --dbroot=../data/sf0.01 --test  (Windows)
      <likewise for queries 9, 11 and 12>
      ```
 
