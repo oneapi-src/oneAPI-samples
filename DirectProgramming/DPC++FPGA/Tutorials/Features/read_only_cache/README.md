@@ -27,30 +27,42 @@ resource for target-independent DPC++ programming.
 ## Purpose
 
 This FPGA tutorial demonstrates an example of using the read-only cache to
-boost the throughput of a oneAPI FPGA design. Specifically, the read-only cache
-is most appropriate for table lookups that are constant throughput the
+boost the throughput of an FPGA DPC++ design. Specifically, the read-only cache
+is most appropriate for table lookups that are constant throughout the
 execution of a kernel and is optimized for high cache hit performance.
 
-To enabled the read-only cache, the `-Xsread-only-cache-size<N>` flag should be
-passed to the `dpcpp` command. Each kernel will gets its own version of the
-cache that serves all reads in the kernel from read-only no-alias accessors.
+To enable the read-only cache, the `-Xsread-only-cache-size<N>` flag should be
+passed to the `dpcpp` command. Each kernel will gets its own *private* version
+of the cache that serves all reads in the kernel from read-only no-alias
+accessors. Read-only no-alias accessors are accessors that have both the
+`read_only` and the `no_alias` properties:
+```c++
+accessor sqrt_lut(sqrt_lut_buf, h, read_only, accessor_property_list{no_alias});
+```
+The `read_only` property is required because the cache is *read_only*. The
+`no_alias` property is required to guarantee that the buffer will not be
+written to from the kernel through another accessor or through a USM pointer.
+Note that the same no-alias behavior can be achieved using the kernel attribute
+`[[intel::kernel_args_restrict]]`.
+
 Each private cache is also replicated as many times as needed to expose extra
 read ports. The size of each replicate is `<N>` bytes as specified by the
 `-Xsread-only-cache-size=<N>` flag.
 
-### Understanding the Tutorial Design
+### Tutorial Design 
 The basic function performed by the tutorial kernel is a a series of table
-lookups from a buffer that contains the square root values of the first 512
-integers. By default, the compiler will generate load-store units (LSUs) that
-are optimized for when the global memory accesses are contiguous. When the
-memory accesses are non-contiguous, like it is the case with this tutorial
-design, these LSUs tend to suffer major throughput loss. The read-only cache
-can sometimes help in these situations, especially if sized correctly.
+lookups from a buffer (`sqrt_lut_buf`) that contains the square root values of
+the first 512 integers. By default, the compiler will generate load-store units
+(LSUs) that are optimized for when the global memory accesses are contiguous.
+When the memory accesses are non-contiguous, like it is the case with this
+tutorial design, these LSUs tend to suffer major throughput loss. The read-only
+cache can sometimes help in such situations, especially when sized correctly.
 
-This tutorial requires compiling the source code twice: with and without the
-`-Xsread-only-cache-size=<N>` flag. Because the look-up table contains 512
-integers, the chosen size of the cache is `512*4 bytes = 2048 bytes`, and so,
-the flag `-Xsread-only-cache-size=2048` is passed to `dpcpp`.
+This tutorial requires compiling the source code twice: once with the
+`-Xsread-only-cache-size=<N>` flag and once without it. Because the look-up
+table contains 512 integers as indicated by the `kLUTSize` constant, the chosen
+size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
+`-Xsread-only-cache-size=2048` is passed to `dpcpp`.
 
 ## Key Concepts
 * How to use the read-only cache feature 
