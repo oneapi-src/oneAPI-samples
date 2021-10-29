@@ -1,4 +1,4 @@
-# Matrix Multiplication with oneMKL Sample
+# `Matrix Multiplication with oneMKL` Sample
 
 Matrix Multiplication with oneMKL shows how to use the oneMKL's optimized matrix multiplication routines. 
 
@@ -22,17 +22,20 @@ This sample performs its computations on the default DPC++ device. You can set t
 
 ## Key Implementation Details
 
-oneMKL's `blas::gemm` routine performs a generalized matrix multiplication operation. Both row-major and column-major matrix layouts are supported by oneMKL BLAS routines; this sample uses row-major layouts, the traditional choice for C++.
+oneMKL's `blas::gemm` routine performs a generalized matrix multiplication operation. OneMKL BLAS routines support both row-major and column-major matrix layouts; this sample uses row-major layouts, the traditional choice for C++.
 
 ## License
 
-This code sample is licensed under the MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the Matrix Multiplication with oneMKL Sample
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System
 Run `make` to build and run the sample.
@@ -42,10 +45,12 @@ You can remove all generated files with `make clean`.
 ### On a Windows* System
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
+*Warning*: On Windows, static linking with oneMKL currently takes a very long time due to a known compiler issue. This will be addressed in an upcoming release.
+
 ## Running the Matrix Multiplication with oneMKL Sample
 
 ### Example of Output
-If everything is working correctly, the program will generate two input matrices, and call oneMKL to multiply them. It will also compute the product matrix itself to verify the results from oneMKL.
+If everything is working correctly, the program will generate two input matrices and call oneMKL to multiply them. It will also compute the product matrix itself to verify the results from oneMKL.
 
 ```
 ./matrix_mul_mkl

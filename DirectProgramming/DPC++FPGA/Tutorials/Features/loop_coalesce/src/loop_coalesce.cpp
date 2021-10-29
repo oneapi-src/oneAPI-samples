@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 
@@ -23,8 +23,8 @@ constexpr size_t kNumElements = kNumRows * kNumCols;
 constexpr size_t kTotalOps = (4 + (3*kNumCols)) * kNumElements;
 
 
-// Forward declare the kernel name
-// (This prevents unwanted name mangling in the optimization report.)
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 template <int N> class KernelCompute;
 
 // The kernel implements a matrix multiplication.
@@ -48,7 +48,7 @@ void MatrixMultiply(const device_selector &selector,
     event e = q.submit([&](handler &h) {
       accessor accessor_matrix_a(buffer_in_a, h, read_only);
       accessor accessor_matrix_b(buffer_in_b, h, read_only);
-      accessor accessor_res(buffer_out, h, write_only, noinit);
+      accessor accessor_res(buffer_out, h, write_only, no_init);
 
       // The kernel_args_restrict promises the compiler that this kernel's
       // accessor arguments won't alias (i.e. non-overlapping memory regions).
@@ -143,9 +143,9 @@ int main() {
   }
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   // Two versions of the simple matrix multiply kernel will be enqueued:

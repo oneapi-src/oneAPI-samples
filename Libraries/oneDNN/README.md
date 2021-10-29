@@ -10,7 +10,10 @@ performance on Intel CPUs and GPUs.
 You can find library source code and code used by these samples at [oneDNN Github repository](https://github.com/oneapi-src/oneDNN).
 
 ## License
-The code samples are licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 # oneDNN Samples
 
@@ -25,8 +28,8 @@ The code samples are licensed under MIT license.
 
 You can use oneDNN samples in
 [Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/)
-environment in the following ways:
+the environment in the following ways:
 * Login to a DevCloud system via SSH and
   * use `git clone` to get a full copy of samples repository, or
-  * use `oneapi-cli` tool to download specific sample.
+  * use the `oneapi-cli` tool to download specific sample.
 * Launch a JupyterLab server and run Jupyter Notebooks from your web browser.

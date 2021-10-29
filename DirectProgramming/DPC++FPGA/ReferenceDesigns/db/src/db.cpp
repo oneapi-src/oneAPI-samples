@@ -15,7 +15,7 @@
 #include <sys/types.h>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <algorithm>
 #include <chrono>
 #include <fstream>
@@ -195,9 +195,9 @@ int main(int argc, char* argv[]) {
 
     // the device selector
 #ifdef FPGA_EMULATOR
-    INTEL::fpga_emulator_selector selector;
+    ext::intel::fpga_emulator_selector selector;
 #else
-    INTEL::fpga_selector selector;
+    ext::intel::fpga_selector selector;
 #endif
 
     // create the device queue
@@ -262,12 +262,6 @@ int main(int argc, char* argv[]) {
     if (success) {
       // don't analyze the runtime in emulation
 #ifndef FPGA_EMULATOR
-      // compute the average kernel latency (not including data transfer)
-      // across all iterations, excluding the first 'warmup' iteration
-      double kernel_latency_avg = std::accumulate(kernel_latency.begin() + 1,
-                                                  kernel_latency.end(), 0.0) /
-                                  (double)(runs - 1);
-
       // compute the average total latency across all iterations,
       // excluding the first 'warmup' iteration
       double total_latency_avg =
@@ -275,8 +269,7 @@ int main(int argc, char* argv[]) {
           (double)(runs - 1);
 
       // print the performance results
-      std::cout << "Average Kernel latency: " << kernel_latency_avg << " ms\n";
-      std::cout << "Average Host latency: " << total_latency_avg << " ms\n";
+      std::cout << "Processing time: " << total_latency_avg << " ms\n";
 #endif
 
       std::cout << "PASSED\n";

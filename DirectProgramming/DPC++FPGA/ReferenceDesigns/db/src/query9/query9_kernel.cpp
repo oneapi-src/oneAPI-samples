@@ -28,7 +28,7 @@ class ProducerOrders;
 class FilterParts;
 class ProducePartSupplier;
 class JoinPartSupplierSupplier;
-class JoineLineItemOrders;
+class JoinLineItemOrders;
 class FeedSort;
 class FifoSort;
 class ConsumeSort;
@@ -87,7 +87,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     regex_word[i] = (i < colour.size()) ? colour[i] : '\0';
   }
 
-  // setup input buffers
+  // create space for the input buffers
   // the REGEX
   buffer regex_word_buf(regex_word);
 
@@ -96,6 +96,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
   // SUPPLIER
   buffer s_nationkey_buf(dbinfo.s.nationkey);
+
   // PARTSUPPLIER
   buffer ps_partkey_buf(dbinfo.ps.partkey);
   buffer ps_suppkey_buf(dbinfo.ps.suppkey);
@@ -113,14 +114,24 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   buffer l_extendedprice_buf(dbinfo.l.extendedprice);
   buffer l_discount_buf(dbinfo.l.discount);
 
-  // setup the output buffers (the profit for each nation and year)
-  // constructing the output buffers WITHOUT a backed host pointer allows
-  // us to avoid copying the output data from the host to the device before
-  // launching the kernels. Using the set_final_data() function tells the
-  // runtime to copy the contents of the buffer from the device to the given
-  // host pointer (the argument to set_final_data) upon buffer destruction.
-  buffer<DBDecimal, 1> sum_profit_buf(sum_profit.size());  // = 25*2020
-  sum_profit_buf.set_final_data(sum_profit.data());
+  // setup the output buffer (the profit for each nation and year)
+  buffer sum_profit_buf(sum_profit);
+
+  // number of producing iterations depends on the number of elements per cycle
+  const size_t l_rows = dbinfo.l.rows;
+  const size_t l_iters =
+      (l_rows + kLineItemJoinWinSize - 1) / kLineItemJoinWinSize;
+  const size_t o_rows = dbinfo.o.rows;
+  const size_t o_iters =
+      (o_rows + kOrdersJoinWinSize - 1) / kOrdersJoinWinSize;
+  const size_t ps_rows = dbinfo.ps.rows;
+  const size_t ps_iters =
+      (ps_rows + kPartSupplierDuplicatePartkeys - 1)
+      / kPartSupplierDuplicatePartkeys;
+  const size_t p_rows = dbinfo.p.rows;
+  const size_t p_iters =
+      (p_rows + kRegexFilterElementsPerCycle - 1)
+      / kRegexFilterElementsPerCycle;
 
   // start timer
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
@@ -133,11 +144,9 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     accessor regex_word_accessor(regex_word_buf, h, read_only);
 
     // PARTS table accessors
-    size_t p_rows = dbinfo.p.rows;
     accessor p_name_accessor(p_name_buf, h, read_only);
 
     // LINEITEM table accessors
-    size_t l_rows = dbinfo.l.rows;
     accessor l_orderkey_accessor(l_orderkey_buf, h, read_only);
     accessor l_partkey_accessor(l_partkey_buf, h, read_only);
     accessor l_suppkey_accessor(l_suppkey_buf, h, read_only);
@@ -156,16 +165,16 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       // initialize regex word
       for (size_t i = 0; i < 11; i++) {
         const char c = regex_word_accessor[i];
-        UnrolledLoop<0, kRegexFilterElementsPerCycle>([&](auto re) {
+        UnrolledLoop<0, kRegexFilterElementsPerCycle>([&](auto re) { 
           regex[re].word[i] = c;
         });
       }
 
       // stream in rows of PARTS table and check partname against REGEX
-      [[intel::ivdep]]
-      for (size_t i = 0; i < p_rows; i += kRegexFilterElementsPerCycle) {
+      [[intel::initiation_interval(1), intel::ivdep]]
+      for (size_t i = 0; i < p_iters; i++) {
         UnrolledLoop<0, kRegexFilterElementsPerCycle>([&](auto re) {
-          const size_t idx = i + re;
+          const size_t idx = i * kRegexFilterElementsPerCycle + re;
           const bool idx_range = idx < p_rows;
 
           // read in partkey
@@ -174,14 +183,16 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
           // read in regex string
           UnrolledLoop<0, 55>([&](auto k) {
-            regex[re].str[k] = idx_range ? p_name_accessor[idx * 55 + k] : 0;
+            regex[re].str[k] = p_name_accessor[idx * 55 + k];
           });
 
           // run regex matching
           regex[re].Match();
 
           // mark valid partkey
-          partkeys_matching_regex[partkey] = regex[re].Contains();
+          if (idx_range) {
+            partkeys_matching_regex[partkey] = regex[re].Contains();
+          }
         });
       }
       ///////////////////////////////////////////////
@@ -190,25 +201,31 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       //// Stage 2
       // read in the LINEITEM table (kLineItemJoinWinSize rows at a time)
       // row is valid if its PARTKEY matched the REGEX
-      for (size_t i = 0; i < l_rows; i += kLineItemJoinWinSize) {
+      [[intel::initiation_interval(1)]]
+      for (size_t i = 0; i < l_iters + 1; i++) {
+        bool done = (i == l_iters);
+        bool valid = (i != l_iters);
+
         // bulk read of data from global memory
         NTuple<kLineItemJoinWinSize, LineItemMinimalRow> data;
 
         UnrolledLoop<0, kLineItemJoinWinSize>([&](auto j) {
-          bool in_range = i + j < l_rows;
-          DBIdentifier orderkey = in_range ? l_orderkey_accessor[i + j] : 0;
-          DBIdentifier partkey = in_range ? l_partkey_accessor[i + j] : 0;
-          DBIdentifier suppkey = in_range ? l_suppkey_accessor[i + j] : 0;
+          size_t idx = i * kLineItemJoinWinSize + j;
+          bool in_range = idx < l_rows;
+
+          DBIdentifier orderkey = l_orderkey_accessor[idx];
+          DBIdentifier partkey = l_partkey_accessor[idx];
+          DBIdentifier suppkey = l_suppkey_accessor[idx];
 
           bool matches_partkey_name_regex = partkeys_matching_regex[partkey];
           bool data_is_valid = in_range && matches_partkey_name_regex;
 
-          data.get<j>() = LineItemMinimalRow(data_is_valid, i + j, orderkey,
+          data.get<j>() = LineItemMinimalRow(data_is_valid, idx, orderkey,
                                              partkey, suppkey);
         });
 
         // write to pipe
-        LineItemPipe::write(LineItemMinimalRowPipeData(false, true, data));
+        LineItemPipe::write(LineItemMinimalRowPipeData(done, valid, data));
       }
       ///////////////////////////////////////////////
     });
@@ -219,27 +236,34 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   //// ProducerOrders Kernel: produce the ORDERS table
   auto producer_orders_event = q.submit([&](handler& h) {
     // ORDERS table accessors
-    size_t o_rows = dbinfo.o.rows;
     accessor o_orderkey_accessor(o_orderkey_buf, h, read_only);
     accessor o_orderdate_accessor(o_orderdate_buf, h, read_only);
 
     // produce ORDERS table (kOrdersJoinWinSize rows at a time)
     h.single_task<ProducerOrders>([=]() [[intel::kernel_args_restrict]] {
-      for (size_t i = 0; i < o_rows; i += kOrdersJoinWinSize) {
+      [[intel::initiation_interval(1)]]
+      for (size_t i = 0; i < o_iters + 1; i++) {
+        bool done = (i == o_iters);
+        bool valid = (i != o_iters);
+
         // bulk read of data from global memory
         NTuple<kOrdersJoinWinSize, OrdersRow> data;
 
         UnrolledLoop<0, kOrdersJoinWinSize>([&](auto j) {
-          bool in_range = (i + j) < o_rows;
-          DBIdentifier orderkey = in_range ? o_orderkey_accessor[i + j]
-                                  : std::numeric_limits<DBIdentifier>::max();
-          DBDate orderdate = in_range ? o_orderdate_accessor[i + j] : 0;
+          size_t idx = i * kOrdersJoinWinSize + j;
+          bool in_range = idx < l_rows;
+
+          DBIdentifier orderkey_tmp = o_orderkey_accessor[idx];
+          DBDate orderdate = o_orderdate_accessor[idx];
+
+          DBIdentifier orderkey =
+            in_range ? orderkey_tmp : std::numeric_limits<DBIdentifier>::max();
 
           data.get<j>() = OrdersRow(in_range, orderkey, orderdate);
         });
 
         // write to pipe
-        OrdersPipe::write(OrdersRowPipeData(false, true, data));
+        OrdersPipe::write(OrdersRowPipeData(done, valid, data));
       }
     });
   });
@@ -248,33 +272,12 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   ///////////////////////////////////////////////////////////////////////////
   //// JoinLineItemOrders Kernel: join the LINEITEM and ORDERS table
   auto join_lineitem_orders_event = q.submit([&](handler& h) {
-    // ORDERS table accessors
-    size_t o_rows = dbinfo.o.rows;
-
-    // LINEITEM table accessors
-    size_t l_rows = dbinfo.l.rows;
-
     // kernel to join LINEITEM and ORDERS table
-    h.single_task<JoineLineItemOrders>([=]() [[intel::kernel_args_restrict]] {
+    h.single_task<JoinLineItemOrders>([=]() [[intel::kernel_args_restrict]] {
       // JOIN LINEITEM and ORDERS table
-      // callbacks for reading and writing data
-      // readers
-      GenericPipeReader<OrdersPipe,
-                        OrdersRowPipeData> orders_reader;
-      GenericPipeReader<LineItemPipe,
-                        LineItemMinimalRowPipeData> lineitem_reader;
-
-      // writer
-      GenericPipeWriter<LineItemOrdersPipe,
-                        LineItemOrdersMinimalJoinedPipeData> joined_writer;
-
-      // declare the joiner
-      MergeJoiner<OrdersRow, kOrdersJoinWinSize, LineItemMinimalRow,
-                  kLineItemJoinWinSize, LineItemOrdersMinimalJoined>
-          joiner(o_rows, l_rows);
-
-      // do join
-      joiner.Go(orders_reader, lineitem_reader, joined_writer);
+      MergeJoin<OrdersPipe, OrdersRow, kOrdersJoinWinSize,
+                LineItemPipe, LineItemMinimalRow, kLineItemJoinWinSize,
+                LineItemOrdersPipe, LineItemOrdersMinimalJoined>();
 
       // join is done, tell downstream
       LineItemOrdersPipe::write(
@@ -290,31 +293,19 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     size_t s_rows = dbinfo.s.rows;
     accessor s_nationkey_accessor(s_nationkey_buf, h, read_only);
 
-    // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps.rows;
-
     // kernel to join partsupplier and supplier tables
     h.single_task<JoinPartSupplierSupplier>(
           [=]() [[intel::kernel_args_restrict]] {
-      // callbacks for reading and writing data
-      // reader
-      GenericPipeReader<PartSupplierPipe,
-                        PartSupplierRowPipeData> partsupplier_reader;
-
-      // writer
-      GenericPipeWriter<PartSupplierPartsPipe,
-                        SupplierPartSupplierJoinedPipeData> joined_writer;
-
       // +1 is to account for fact that SUPPKEY is [1,kSF*10000]
-      MapJoiner<SupplierRow, kSupplierTableSize + 1, PartSupplierRow,
-                kPartSupplierDuplicatePartkeys, SupplierPartSupplierJoined>
-          mapJoiner(ps_rows);
+      using ArrayMapType = ArrayMap<SupplierRow, kSupplierTableSize + 1>;
+      ArrayMapType array_map;
+      array_map.Init();
 
       ///////////////////////////////////////////////
       //// Stage 1
-      // populate MapJoiner map
-      // why a map? keys may not be sequential
-      [[intel::ivdep]]
+      // populate the array map
+      // why a map? keys may not be sequential.
+      [[intel::initiation_interval(1), intel::ivdep]]
       for (size_t i = 0; i < s_rows; i++) {
         // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed
@@ -322,19 +313,21 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
         DBIdentifier s_suppkey = i + 1;
         unsigned char s_nationkey = s_nationkey_accessor[i];
 
-        mapJoiner.map.Set(s_suppkey, SupplierRow(true, s_suppkey, s_nationkey));
+        array_map.Set(s_suppkey, SupplierRow(true, s_suppkey, s_nationkey));
       }
       ///////////////////////////////////////////////
 
       ///////////////////////////////////////////////
       //// Stage 2
       // MAPJOIN PARTSUPPLIER and SUPPLIER tables by suppkey
-      mapJoiner.Go(partsupplier_reader, joined_writer);
-      ///////////////////////////////////////////////
+      MapJoin<ArrayMapType, PartSupplierPipe, PartSupplierRow,
+              kPartSupplierDuplicatePartkeys, PartSupplierPartsPipe,
+              SupplierPartSupplierJoined>(array_map);
 
       // tell downstream we are done
       PartSupplierPartsPipe::write(
         SupplierPartSupplierJoinedPipeData(true, false));
+      ///////////////////////////////////////////////
     });
   });
   /////////////////////////////////////////////////////////////////////////////
@@ -343,29 +336,33 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   //// ProducePartSupplier Kernel: produce the PARTSUPPLIER table
   auto produce_part_supplier_event = q.submit([&](handler& h) {
     // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps.rows;
     accessor ps_partkey_accessor(ps_partkey_buf, h, read_only);
     accessor ps_suppkey_accessor(ps_suppkey_buf, h, read_only);
     accessor ps_supplycost_accessor(ps_supplycost_buf, h, read_only);
 
     // kernel to produce the PARTSUPPLIER table
     h.single_task<ProducePartSupplier>([=]() [[intel::kernel_args_restrict]] {
-      for (size_t i = 0; i < ps_rows; i += kPartSupplierDuplicatePartkeys) {
+      [[intel::initiation_interval(1)]]
+      for (size_t i = 0; i < ps_iters + 1; i++) {
+        bool done = (i == ps_iters);
+        bool valid = (i != ps_iters);
+
         // bulk read of data from global memory
         NTuple<kPartSupplierDuplicatePartkeys, PartSupplierRow> data;
 
         UnrolledLoop<0, kPartSupplierDuplicatePartkeys>([&](auto j) {
-          bool in_range = (i + j) < ps_rows;
-          DBIdentifier partkey = in_range ? ps_partkey_accessor[i + j] : 0;
-          DBIdentifier suppkey = in_range ? ps_suppkey_accessor[i + j] : 0;
-          DBDecimal supplycost = in_range ? ps_supplycost_accessor[i + j] : 0;
+          size_t idx = i * kPartSupplierDuplicatePartkeys + j;
+          bool in_range = idx < ps_rows;
+          DBIdentifier partkey = ps_partkey_accessor[idx];
+          DBIdentifier suppkey = ps_suppkey_accessor[idx];
+          DBDecimal supplycost = ps_supplycost_accessor[idx];
 
-          data.get<j>() =
+          data.get<j>() = 
               PartSupplierRow(in_range, partkey, suppkey, supplycost);
         });
 
         // write to pipe
-        PartSupplierPipe::write(PartSupplierRowPipeData(false, true, data));
+        PartSupplierPipe::write(PartSupplierRowPipeData(done, valid, data));
       }
     });
   });
@@ -380,7 +377,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     accessor l_discount_accessor(l_discount_buf, h, read_only);
 
     // output accessors
-    accessor sum_profit_accessor(sum_profit_buf, h, write_only, noinit);
+    accessor sum_profit_accessor(sum_profit_buf, h, write_only, no_init);
 
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       // the accumulators
@@ -395,13 +392,12 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
       bool done = false;
 
-      [[intel::ivdep(ACCUM_CACHE_SIZE)]]
+      [[intel::initiation_interval(1), intel::ivdep(ACCUM_CACHE_SIZE)]]
       do {
-        bool valid;
-        FinalPipeData pipe_data = FinalPipe::read(valid);
+        FinalPipeData pipe_data = FinalPipe::read();
         done = pipe_data.done;
 
-        const bool pipeDataValid = !pipe_data.done && valid && pipe_data.valid;
+        const bool pipeDataValid = !pipe_data.done && pipe_data.valid;
 
         UnrolledLoop<0, kFinalDataMaxSize>([&](auto j) {
           FinalData D = pipe_data.data.get<j>();
@@ -461,10 +457,11 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       bool done = false;
       size_t num_rows = 0;
 
+      [[intel::initiation_interval(1)]]
       do {
         // get data from upstream
         bool valid;
-        LineItemOrdersMinimalJoinedPipeData pipe_data =
+        LineItemOrdersMinimalJoinedPipeData pipe_data = 
             LineItemOrdersPipe::read(valid);
         done = pipe_data.done && valid;
 
@@ -503,8 +500,8 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           //    A) Apply the [[intel::speculated_iterations(0)]] attribute
           //    B) Explicitly bound the loop iterations
           // For an explanation why, see the optimize_inner_loops tutorial.
-          [[intel::speculated_iterations(0)]]
-          for (char i = 0; i < valid_count &&
+          [[intel::initiation_interval(1), intel::speculated_iterations(0)]]
+          for (char i = 0; i < valid_count && 
                 i < kLineItemOrdersJoinWinSize; i++) {
             UnrolledLoop<0, kLineItemOrdersJoinWinSize>([&](auto j) {
               if (j == i) {
@@ -512,7 +509,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
               }
             });
           }
-
+          
           num_rows += valid_count;
         }
       } while (!done);
@@ -530,7 +527,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       // drain the input pipe
       while (!done) {
         bool valid;
-        LineItemOrdersMinimalJoinedPipeData pipe_data =
+        LineItemOrdersMinimalJoinedPipeData pipe_data = 
             LineItemOrdersPipe::read(valid);
         done = pipe_data.done && valid;
       }
@@ -546,6 +543,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       size_t num_rows = 0;
 
       // read out data from the sorter until 'done' signal from upstream
+      [[intel::initiation_interval(1)]]
       do {
         bool valid;
         SortData in_data = SortOutPipe::read(valid);
@@ -595,34 +593,11 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   //// JoinEverything Kernel: join the sorted
   ////    LINEITEM+ORDERS with SUPPLIER+PARTSUPPLIER
   auto join_li_o_s_ps_event = q.submit([&](handler& h) {
-    // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps.rows;
-
-    // LINEITEM table accessors
-    size_t l_rows = dbinfo.l.rows;
-
     h.single_task<JoinEverything>([=]() [[intel::kernel_args_restrict]] {
-      // callbacks for reading and writing data
-      // readers
-      GenericPipeReader<PartSupplierPartsPipe,
-                        SupplierPartSupplierJoinedPipeData> s_ps_reader;
-      GenericPipeReader<LineItemOrdersSortedPipe,
-                        LineItemOrdersMinimalSortedPipeData> li_o_parts_reader;
-
-      // writer
-      GenericPipeWriter<FinalPipe,
-                        FinalPipeData> joined_writer;
-
-      // declare the joiner
-      // The PartSupplier table has is sorted by partkey and has EXACTLY
-      // 4 entries per part key
-      DuplicateMergeJoiner<
-          SupplierPartSupplierJoined, kPartSupplierDuplicatePartkeys,
-          LineItemOrdersMinimalJoined, 1, FinalData, true>
-          joiner(ps_rows, l_rows);
-
-      // do join
-      joiner.Go(s_ps_reader, li_o_parts_reader, joined_writer);
+      DuplicateMergeJoin<PartSupplierPartsPipe, SupplierPartSupplierJoined,
+                         kPartSupplierDuplicatePartkeys,
+                         LineItemOrdersSortedPipe, LineItemOrdersMinimalJoined,
+                         1, FinalPipe, FinalData>();
 
       // join is done, tell downstream
       FinalPipe::write(FinalPipeData(true, false));
@@ -633,6 +608,14 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
   // wait for kernel to finish
   filter_parts_event.wait();
   computation_kernel_event.wait();
+  join_li_o_s_ps_event.wait();
+  sort_event.wait();
+  consume_sort_event.wait();
+  feed_sort_event.wait();
+  produce_part_supplier_event.wait();
+  join_partsupplier_supplier_event.wait();
+  join_lineitem_orders_event.wait();
+  producer_orders_event.wait();
 
   high_resolution_clock::time_point host_end = high_resolution_clock::now();
   duration<double, std::milli> diff = host_end - host_start;

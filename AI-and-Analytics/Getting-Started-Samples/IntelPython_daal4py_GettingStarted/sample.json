@@ -5,7 +5,7 @@
   "description": "This sample illustrates how to do Batch Linear Regression using the Python API package Daal4py for Intel® oneDAL",
   "builder": ["cli"],
   "languages": [{"python":{}}],
-  "dependencies": ["oneDAL"],
+  "dependencies": ["intelpython"],
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {

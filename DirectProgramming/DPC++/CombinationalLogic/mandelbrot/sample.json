@@ -1,7 +1,7 @@
 {
   "guid": "8572B85D-0B32-40B1-8112-538F480C8660",	
   "name": "Mandelbrot",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Combinational Logic"],
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Combinational Logic", "Toolkit/oneAPI Tools/Advisor"],
   "description": "The Mandelbrot Set - a fractal example in mathematics",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],

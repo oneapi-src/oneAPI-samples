@@ -1,9 +1,9 @@
-# Intel DPC++ Compatibility Tool: Vector Add Sample
+# Intel DPC++ Compatibility Tool: `Vector Add` Sample
 
 This sample demonstrates how to migrate a simple program from CUDA to 
 Data Parallel C++. Vector Add provides an easy way to verify that
-your development environment is setup correctly to use the Intel® DPC++
-Compatibility Tool (dpct).
+your development environment is set up correctly to use the Intel® DPC++
+Compatibility Tool (DPCT).
 
 
 | Optimized for         | Description
@@ -16,33 +16,31 @@ Compatibility Tool (dpct).
 
 ## Purpose
 
-This simple project adds two vectors of `[1..N]` and prints the result of that
-addition. It starts as a CUDA project in order to provide you with an example
-of how to migrate from an existing CUDA project to a Data Parallel C++
-project.
+This simple project adds two vectors of `[1..N]` and prints the result. It starts as a CUDA project to provide you with an example of migrating from an existing CUDA project to a Data Parallel C++ project.
 
 The migration of existing CUDA projects to Data Parallel C++ projects may
-result in warnings which are printed to the console and added as comments in
-the migrated source, which will use .dp.cpp file extensions. Warnings represent
+result in warnings printed to the console and added as comments in
+the migrated source, which will use .dp.cpp file extensions. Signs represent
 areas in the resulting source code that require additional attention from the
 developer. This is because the code could not be migrated by the tool or some
-other reasons that require additional review and manual work in order for the
+other reasons that need further review and manual work for the
 code to be Data Parallel C++ compliant, correct, or performant. For this sample,
-the warning is the result of difference in how the original code and generated
+the warning results from a difference in how the original code and generated
 code handle errors.
 
 
 ## Key Implementation Details
 
-In addition to verifying that the necessary tools and files are installed and
-configured correctly on your system, this sample shows the basic invocation
-and work flow for using dpct.
+In addition to verifying that the necessary tools and files are installed, please ensure that they are 
+configured correctly on your system. This sample shows the basic invocation and workflow for using dpct.
 
 
 ## License
 
-This code sample is licensed under the MIT license, which is located in the
-[LICENSE.txt file](LICENSE.txt) in this sample project's folder.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Migrating the CUDA Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
@@ -51,7 +49,7 @@ Building and running the CUDA sample is not required to migrate this project
 to a Data Parallel C++ project.
 
 > **NOTE:** Certain CUDA header files, referenced by the CUDA application 
-> source files to be migrated, need to be accessible for the migration step.  
+> source files to be migrated need to be accessible for the migration step.  
 > See the [Getting Started Guide][cuda-headers] for more details.
 
 [cuda-headers]: <https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.html#top_BEFORE_YOU_BEGIN>
@@ -121,7 +119,7 @@ SRCS = src/vector_add.dp.cpp
 2. Configure and run the migration. Use the default settings to create a new
    project, which will be added to the open solution.
 
-Notice the migrated command line invocation. You can run this from the command
+Notice the migrated command-line invocation. You can run this from the command
 line as long as you first initialize your environment with:
 
 ```sh
@@ -139,8 +137,8 @@ warning: DPCT1003:0: Migrated API does not return error code. (*, 0) is inserted
 ```
 See below **Addressing Warnings in the Migrated Code** to understand how to resolve the warning.
 
-4. Build and run the migrated project by right clicking the project in the
-   solution explorer, selecting it as the startup project, and running it with
+4. Build and run the migrated project by right-clicking the project in the
+   solution explorer, selecting it as the startup project and running it with
    the green play button in the top bar.
 
 
@@ -165,7 +163,7 @@ is not needed.
 
 # Example Output
 
-When you run the migrated application you should see console output which
+When you run the migrated application, you should see console output, which
 lists a group of even numbers produced by the kernel code's execution of
 `((index+1) + (index+1))`.
 

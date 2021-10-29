@@ -4,7 +4,8 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <cmath>
 #include <iomanip>
 #include <random>
 
@@ -35,6 +36,8 @@ constexpr int kNumRuns = 2;
 
 bool pass = true;
 
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class SimpleVpow;
 
 /*  Kernel function.
@@ -50,13 +53,13 @@ class SimpleVpow;
    transfer to occur at the end of overall execution, not at the end of each
    individual kernel execution.
 */
-void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
+void SimplePow(sycl::queue &q, buffer<float, 1> &buffer_a,
                buffer<float, 1> &buffer_b, event &e) {
   // Submit to the queue and execute the kernel
-  e = q->submit([&](handler &h) {
+  e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
     accessor accessor_a(buffer_a, h, read_only);
-    accessor accessor_b(buffer_b, h, read_write, noinit);
+    accessor accessor_b(buffer_b, h, read_write, no_init);
 
     const int num = kSize;
     assert(kPow >= 2);
@@ -78,7 +81,7 @@ void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
   });
 
   event update_host_event;
-  update_host_event = q->submit([&](handler &h) {
+  update_host_event = q.submit([&](handler &h) {
     accessor accessor_b(buffer_b, h, read_only);
 
     /*
@@ -101,8 +104,7 @@ void SimplePow(std::unique_ptr<queue> &q, buffer<float, 1> &buffer_a,
 ulong SyclGetExecTimeNs(event e) {
   ulong start_time =
       e.get_profiling_info<info::event_profiling::command_start>();
-  ulong end_time =
-      e.get_profiling_info<info::event_profiling::command_end>();
+  ulong end_time = e.get_profiling_info<info::event_profiling::command_end>();
   return (end_time - start_time);
 }
 
@@ -120,13 +122,18 @@ float MyPow(float input, int pow) {
    is a natural place to do this because ProcessOutput() is blocked on kernel
    completion.
 */
-void ProcessOutput(buffer<float, 1> &input_buf,
-                   buffer<float, 1> &output_buf, int exec_number, event e,
+void ProcessOutput(buffer<float, 1> &input_buf, buffer<float, 1> &output_buf,
+                   int exec_number, event e,
                    ulong &total_kernel_time_per_slot) {
   host_accessor input_buf_acc(input_buf, read_only);
   host_accessor output_buf_acc(output_buf, read_only);
   int num_errors = 0;
   int num_errors_to_print = 10;
+
+  // Max fractional difference between FPGA pow result and CPU pow result
+  // Anything greater than this will be considered an error
+  constexpr double epsilon = 0.01;
+
   /*  The use of update_host() in the kernel function allows for additional
      host-side operations to be performed here, in parallel with the buffer copy
      operation from device to host, before the blocking access to the output
@@ -134,8 +141,10 @@ void ProcessOutput(buffer<float, 1> &input_buf,
      done here and this is just a note that this is the place
       where you *could* do it. */
   for (int i = 0; i < kSize / 8; i++) {
-    const bool out_valid = (MyPow(input_buf_acc[i], kPow) != output_buf_acc[i]);
-    if ((num_errors < num_errors_to_print) && out_valid) {
+    const double expected_value = MyPow(input_buf_acc[i], kPow);
+    const bool out_invalid = std::abs((output_buf_acc[i] - expected_value) /
+                                      expected_value) > epsilon;
+    if ((num_errors < num_errors_to_print) && out_invalid) {
       if (num_errors == 0) {
         pass = false;
         std::cout << "Verification failed on kernel execution # " << exec_number
@@ -144,8 +153,8 @@ void ProcessOutput(buffer<float, 1> &input_buf,
       }
       std::cout << "Verification failed on kernel execution # " << exec_number
                 << ", at element " << i << ". Expected " << std::fixed
-                << std::setprecision(16) << MyPow(input_buf_acc[i], kPow)
-                << " but got " << output_buf_acc[i] << "\n";
+                << std::setprecision(16) << expected_value << " but got "
+                << output_buf_acc[i] << "\n";
       num_errors++;
     }
   }
@@ -164,9 +173,9 @@ void ProcessOutput(buffer<float, 1> &input_buf,
    completes.
 */
 void ProcessInput(buffer<float, 1> &buf) {
-  // We are generating completely new input data, so can the noinit property
+  // We are generating completely new input data, so can the no_init property
   // here to indicate we don't care about the SYCL buffer's current contents.
-  host_accessor buf_acc(buf, write_only, noinit);
+  host_accessor buf_acc(buf, write_only, no_init);
 
   // RNG seed
   auto seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -191,162 +200,161 @@ void ProcessInput(buffer<float, 1> &buf) {
 int main() {
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
-    INTEL::fpga_emulator_selector device_selector;
-    std::cout << "\nEmulator output does not demonstrate true hardware "
-                 "performance. The design may need to run on actual hardware "
-                 "to observe the performance benefit of the optimization "
-                 "exemplified in this tutorial.\n\n";
+  ext::intel::fpga_emulator_selector device_selector;
+  std::cout << "\nEmulator output does not demonstrate true hardware "
+               "performance. The design may need to run on actual hardware "
+               "to observe the performance benefit of the optimization "
+               "exemplified in this tutorial.\n\n";
 #else
-    INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
-    try {
-      auto prop_list =
-          property_list{property::queue::enable_profiling()};
+  try {
+    auto prop_list = property_list{property::queue::enable_profiling()};
 
-      std::unique_ptr<queue> q;
-      q.reset(new queue(device_selector, dpc_common::exception_handler, prop_list));
+    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
 
-      platform platform = q->get_context().get_platform();
-      device device = q->get_device();
-      std::cout << "Platform name: "
-                << platform.get_info<info::platform::name>().c_str() << "\n";
-      std::cout << "Device name: "
-                << device.get_info<info::device::name>().c_str() << "\n\n\n";
+    platform platform = q.get_context().get_platform();
+    device device = q.get_device();
+    std::cout << "Platform name: "
+              << platform.get_info<info::platform::name>().c_str() << "\n";
+    std::cout << "Device name: "
+              << device.get_info<info::device::name>().c_str() << "\n\n\n";
 
-      std::cout << "Executing kernel " << kTimes << " times in each round.\n\n";
+    std::cout << "Executing kernel " << kTimes << " times in each round.\n\n";
 
-      // Create a vector to store the input/output SYCL buffers
-      std::vector<buffer<float, 1>> input_buf;
-      std::vector<buffer<float, 1>> output_buf;
+    // Create a vector to store the input/output SYCL buffers
+    std::vector<buffer<float, 1>> input_buf;
+    std::vector<buffer<float, 1>> output_buf;
 
-      // SYCL events for each kernel launch.
-      event sycl_events[2];
+    // SYCL events for each kernel launch.
+    event sycl_events[2];
 
-      // In nanoseconds. Total execution time of kernels in a given slot.
-      ulong total_kernel_time_per_slot[2];
+    // In nanoseconds. Total execution time of kernels in a given slot.
+    ulong total_kernel_time_per_slot[2];
 
-      // Total execution time of all kernels.
-      ulong total_kernel_time = 0;
+    // Total execution time of all kernels.
+    ulong total_kernel_time = 0;
 
-      // Allocate vectors to store the host-side copies of the input data
-      // Create and allocate the SYCL buffers
-      for (int i = 0; i < 2; i++) {
-        input_buf.push_back(buffer<float, 1>(range<1>(kSize)));
-        output_buf.push_back(buffer<float, 1>(range<1>(kSize)));
-      }
-
-      /*
-        Main loop. This loop runs twice to show the performance difference without
-        and with double buffering.
-      */
-      for (int i = 0; i < kNumRuns; i++) {
-        for (int i = 0; i < 2; i++) {
-          total_kernel_time_per_slot[i] = 0;  // Initialize timers to zero.
-        }
-
-        switch (i) {
-          case 0: {
-            std::cout << "*** Beginning execution, without double buffering\n";
-            break;
-          }
-          case 1: {
-            std::cout << "*** Beginning execution, with double buffering.\n";
-            break;
-          }
-          default: {
-            std::cout << "*** Beginning execution.\n";
-          }
-        }
-
-        // Start the timer. This will include the time to process the input data
-        // for the first 2 kernel executions.
-        dpc_common::TimeInterval exec_time;
-
-        if (i == 0) {  // Single buffering
-          for (int i = 0; i < kTimes; i++) {
-            // Only print every few iterations, just to limit the prints.
-            if (i % 10 == 0) {
-              std::cout << "Launching kernel #" << i << "\n";
-            }
-
-            ProcessInput(input_buf[0]);
-            SimplePow(q, input_buf[0], output_buf[0], sycl_events[0]);
-            ProcessOutput(input_buf[0], output_buf[0], i, sycl_events[0],
-                          total_kernel_time_per_slot[0]);
-          }
-        } else {  // Double buffering
-          // Process input for first 2 kernel launches and queue them. Then block
-          // on processing the output of the first kernel.
-          ProcessInput(input_buf[0]);
-          ProcessInput(input_buf[1]);
-
-          std::cout << "Launching kernel #0\n";
-
-          SimplePow(q, input_buf[0], output_buf[0], sycl_events[0]);
-          for (int i = 1; i < kTimes; i++) {
-            if (i % 10 == 0) {
-              std::cout << "Launching kernel #" << i << "\n";
-            }  // Only print every few iterations, just to limit the prints.
-
-            // Launch the next kernel
-            SimplePow(q, input_buf[i % 2], output_buf[i % 2], sycl_events[i % 2]);
-
-            // Process output from previous kernel. This will block on kernel
-            // completion.
-            ProcessOutput(input_buf[(i - 1) % 2], output_buf[(i - 1) % 2], i,
-                          sycl_events[(i - 1) % 2],
-                          total_kernel_time_per_slot[(i - 1) % 2]);
-
-            // Generate input for the next kernel.
-            ProcessInput(input_buf[(i - 1) % 2]);
-          }
-
-          // Process output of the final kernel
-          ProcessOutput(input_buf[(kTimes - 1) % 2], output_buf[(kTimes - 1) % 2],
-                        i, sycl_events[(kTimes - 1) % 2],
-                        total_kernel_time_per_slot[(kTimes - 1) % 2]);
-        }
-
-        // Add up the overall kernel execution time.
-        total_kernel_time = 0;
-        for (int i = 0; i < 2; i++) {
-          total_kernel_time += total_kernel_time_per_slot[i];
-        }
-
-        // Stop the timer.
-        double time_span = exec_time.Elapsed();
-
-        std::cout << "\nOverall execution time "
-                  << ((i == 0) ? "without" : "with") << " double buffering = "
-                  << (unsigned)(time_span * 1000) << " ms\n";
-        std::cout << "Total kernel-only execution time "
-                  << ((i == 0) ? "without" : "with") << " double buffering = "
-                  << (unsigned)(total_kernel_time / 1000000) << " ms\n";
-        std::cout << "Throughput = " << std::setprecision(8)
-                  << (float)kSize * (float)kTimes * (float)sizeof(float) /
-                         (float)time_span / 1000000
-                  << " MB/s\n\n\n";
-      }
-      if (pass) {
-        std::cout << "Verification PASSED\n";
-      } else {
-        std::cout << "Verification FAILED\n";
-        return 1;
-      }
-    } catch (sycl::exception const& e) {
-      // Catches exceptions in the host code
-      std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
-
-      // Most likely the runtime couldn't find FPGA hardware!
-      if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
-        std::cerr << "If you are targeting an FPGA, please ensure that your "
-                     "system has a correctly configured FPGA board.\n";
-        std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
-        std::cerr << "If you are targeting the FPGA emulator, compile with "
-                     "-DFPGA_EMULATOR.\n";
-      }
-      std::terminate();
+    // Allocate vectors to store the host-side copies of the input data
+    // Create and allocate the SYCL buffers
+    for (int i = 0; i < 2; i++) {
+      input_buf.push_back(buffer<float, 1>(range<1>(kSize)));
+      output_buf.push_back(buffer<float, 1>(range<1>(kSize)));
     }
+
+    /*
+      Main loop. This loop runs twice to show the performance difference without
+      and with double buffering.
+    */
+    for (int i = 0; i < kNumRuns; i++) {
+      for (int i = 0; i < 2; i++) {
+        total_kernel_time_per_slot[i] = 0;  // Initialize timers to zero.
+      }
+
+      switch (i) {
+        case 0: {
+          std::cout << "*** Beginning execution, without double buffering\n";
+          break;
+        }
+        case 1: {
+          std::cout << "*** Beginning execution, with double buffering.\n";
+          break;
+        }
+        default: {
+          std::cout << "*** Beginning execution.\n";
+        }
+      }
+
+      // Start the timer. This will include the time to process the input data
+      // for the first 2 kernel executions.
+      dpc_common::TimeInterval exec_time;
+
+      if (i == 0) {  // Single buffering
+        for (int i = 0; i < kTimes; i++) {
+          // Only print every few iterations, just to limit the prints.
+          if (i % 10 == 0) {
+            std::cout << "Launching kernel #" << i << "\n";
+          }
+
+          ProcessInput(input_buf[0]);
+          SimplePow(q, input_buf[0], output_buf[0], sycl_events[0]);
+          ProcessOutput(input_buf[0], output_buf[0], i, sycl_events[0],
+                        total_kernel_time_per_slot[0]);
+        }
+      } else {  // Double buffering
+        // Process input for first 2 kernel launches and queue them. Then block
+        // on processing the output of the first kernel.
+        ProcessInput(input_buf[0]);
+        ProcessInput(input_buf[1]);
+
+        std::cout << "Launching kernel #0\n";
+
+        SimplePow(q, input_buf[0], output_buf[0], sycl_events[0]);
+        for (int i = 1; i < kTimes; i++) {
+          if (i % 10 == 0) {
+            std::cout << "Launching kernel #" << i << "\n";
+          }  // Only print every few iterations, just to limit the prints.
+
+          // Launch the next kernel
+          SimplePow(q, input_buf[i % 2], output_buf[i % 2], sycl_events[i % 2]);
+
+          // Process output from previous kernel. This will block on kernel
+          // completion.
+          ProcessOutput(input_buf[(i - 1) % 2], output_buf[(i - 1) % 2], i,
+                        sycl_events[(i - 1) % 2],
+                        total_kernel_time_per_slot[(i - 1) % 2]);
+
+          // Generate input for the next kernel.
+          ProcessInput(input_buf[(i - 1) % 2]);
+        }
+
+        // Process output of the final kernel
+        ProcessOutput(input_buf[(kTimes - 1) % 2], output_buf[(kTimes - 1) % 2],
+                      i, sycl_events[(kTimes - 1) % 2],
+                      total_kernel_time_per_slot[(kTimes - 1) % 2]);
+      }
+
+      // Add up the overall kernel execution time.
+      total_kernel_time = 0;
+      for (int i = 0; i < 2; i++) {
+        total_kernel_time += total_kernel_time_per_slot[i];
+      }
+
+      // Stop the timer.
+      double time_span = exec_time.Elapsed();
+
+      std::cout << "\nOverall execution time "
+                << ((i == 0) ? "without" : "with")
+                << " double buffering = " << (unsigned)(time_span * 1000)
+                << " ms\n";
+      std::cout << "Total kernel-only execution time "
+                << ((i == 0) ? "without" : "with") << " double buffering = "
+                << (unsigned)(total_kernel_time / 1000000) << " ms\n";
+      std::cout << "Throughput = " << std::setprecision(8)
+                << (float)kSize * (float)kTimes * (float)sizeof(float) /
+                       (float)time_span / 1000000
+                << " MB/s\n\n\n";
+    }
+    if (pass) {
+      std::cout << "Verification PASSED\n";
+    } else {
+      std::cout << "Verification FAILED\n";
+      return 1;
+    }
+  } catch (sycl::exception const &e) {
+    // Catches exceptions in the host code
+    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
+
+    // Most likely the runtime couldn't find FPGA hardware!
+    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+      std::cerr << "If you are targeting an FPGA, please ensure that your "
+                   "system has a correctly configured FPGA board.\n";
+      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+      std::cerr << "If you are targeting the FPGA emulator, compile with "
+                   "-DFPGA_EMULATOR.\n";
+    }
+    std::terminate();
+  }
   return 0;
 }

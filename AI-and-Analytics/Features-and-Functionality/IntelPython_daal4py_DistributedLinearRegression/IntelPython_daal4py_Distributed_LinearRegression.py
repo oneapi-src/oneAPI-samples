@@ -20,7 +20,7 @@ SPDX-License-Identifier: MIT
 # When using daal4py for distributed memory systems, the command needed to execute the program should be **executed 
 # in a bash shell**. In order to run this example, please download it as a .py file then run the following command (**the number 4 means that it will run on 4 processes**):
 
-# mpirun -n 4 python ./daal4py_Distributed_LinearRegression.py
+# mpirun -n 4 python ./IntelPython_daal4py_Distributed_LinearRegression.py
 
 # ## Importing and Organizing Data
 
