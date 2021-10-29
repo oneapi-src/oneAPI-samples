@@ -46,7 +46,7 @@
                     "cmake ..",
                     "cmake --build . ",
 		    "cp ../accumulatedFrameCpp.pfm .",
-                    "./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
+                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
                  ]
                  }
         ]
