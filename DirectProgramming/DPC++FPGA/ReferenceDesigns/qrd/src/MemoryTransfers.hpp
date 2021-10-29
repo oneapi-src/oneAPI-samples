@@ -375,7 +375,6 @@ sycl::event VectorReadPipeByElementsToDDR(
         for(int k = 0; k<numElemPerBank; k++){
           if(vectorIdx + k < size){
             bank[k] = vectorPipe::read();
-            PRINTF("%f \n", bank[k]);
           }
         }
 

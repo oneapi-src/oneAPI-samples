@@ -157,8 +157,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
       constexpr int kSuper_dummy_iterations = RAWLatency - columns;
       constexpr int kIncreasedBufferSize = kSuper_dummy_iterations < 0 ? 
                                             0 : kSuper_dummy_iterations;
-      // [[intel::fpga_register]]
-      [[intel::fpga_memory]]
+      // [[intel::fpga_memory]]
       TT s_or_i[columns + kIncreasedBufferSize];
 
       // Adding kIncreasedBufferSize is a waste of resource because we 

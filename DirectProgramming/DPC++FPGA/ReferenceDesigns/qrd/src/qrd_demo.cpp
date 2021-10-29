@@ -374,7 +374,7 @@ int main(int argc, char *argv[]) {
       }
 #else
 
-      cout << "R MATRIX" << std::endl;
+      // cout << "R MATRIX" << std::endl;
       for (size_t i = 0; i < COLS_COMPONENT; i++) {
         for (size_t j = 0; j < COLS_COMPONENT; j++) {
           if (j < i)
@@ -383,14 +383,12 @@ int main(int argc, char *argv[]) {
             RMatrixOP[i][j] = RMatrix[matrix * kRMatrixSize + RIdx];
             RIdx++;
           }
-          cout << RMatrixOP[i][j] << " ";
+          // cout << RMatrixOP[i][j] << " ";
         }
-        cout << std::endl;
+        // cout << std::endl;
       }
-      
-      cout << std::endl;
+      // cout << std::endl;
 
-      // idx = 0;
       for (size_t j = 0; j < COLS_COMPONENT; j++) {
         for (size_t i = 0; i < ROWS_COMPONENT; i++) {
           QMatrixOP[i][j] = QMatrix[matrix * kQMatrixSize + QIdx];
@@ -398,13 +396,13 @@ int main(int argc, char *argv[]) {
         }
       }
 
-      cout << "Q MATRIX" << std::endl;
-      for (size_t i = 0; i < ROWS_COMPONENT; i++) {
-        for (size_t j = 0; j < COLS_COMPONENT; j++) {
-          cout << QMatrixOP[i][j] << " ";
-        }
-        cout << std::endl;
-      }
+      // cout << "Q MATRIX" << std::endl;
+      // for (size_t i = 0; i < ROWS_COMPONENT; i++) {
+      //   for (size_t j = 0; j < COLS_COMPONENT; j++) {
+      //     cout << QMatrixOP[i][j] << " ";
+      //   }
+      //   cout << std::endl;
+      // }
 
       constexpr float kErrorThreshold = 1e-4;
       float QOrthoErrorThreshold = pow(2.0, -9);

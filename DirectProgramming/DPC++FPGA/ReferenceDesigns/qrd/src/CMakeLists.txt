@@ -1,6 +1,7 @@
 # # Intel supported FPGA Boards
 # "intel_a10gx_pac:pac_a10"
 # "intel_s10sx_pac:pac_s10"
+# "de10_agilex"
 # "agilex_ref:de10_agilex"
 
 set(TARGET_NAME qrd)
@@ -30,7 +31,7 @@ if(FPGA_BOARD MATCHES ".*a10.*")
     # A10 parameters
     set(ROWS_COMPONENT 128)
     set(COLS_COMPONENT 128)
-    set(COMPLEX 0)
+    set(COMPLEX 1)
     set(FIXED_ITERATIONS 64)
     set(CLOCK_TARGET 360MHz)
     set(SEED 10)
@@ -38,7 +39,7 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(ROWS_COMPONENT 256)
     set(COLS_COMPONENT 256)
-    set(COMPLEX 0)
+    set(COMPLEX 1)
     set(FIXED_ITERATIONS 110)
     set(CLOCK_TARGET 500MHz)
     set(SEED 5)
@@ -47,6 +48,7 @@ elseif(FPGA_BOARD MATCHES ".*agilex.*")
     set(ROWS_COMPONENT 256)
     set(COLS_COMPONENT 256)
     set(FIXED_ITERATIONS 110)
+    set(COMPLEX 1)
     set(CLOCK_TARGET 650MHz)
     set(SEED 5)
 else()
