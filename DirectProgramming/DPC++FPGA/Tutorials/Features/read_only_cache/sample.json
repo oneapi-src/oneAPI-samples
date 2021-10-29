@@ -1,5 +1,5 @@
 {
-  "guid": "CDC9540F-B89F-499E-BC27-E8EC9EA3B2D7",
+  "guid": "4A9A5E59-D877-4FFF-A44C-0B96491840C0",
   "name": "Read-Only Cache",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating how to use the read-only cache feature to boost the throughput of a DPC++ FPGA program",

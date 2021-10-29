@@ -4,61 +4,66 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <chrono>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+
+#include <chrono>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 using namespace sycl;
-using namespace sycl::ext::oneapi;
+namespace oa = sycl::ext::oneapi;
 
-constexpr int kLUTSize = 512;         // Size of the LUT.
-constexpr int kNumOutputs = 524288;   // Number of outputs.
-constexpr double kNs = 1000000000.0;  // number of nanoseconds in a second
+constexpr int kLUTSize = 512;       // Size of the LUT.
+constexpr int kNumOutputs = 524288; // Number of outputs.
+constexpr double kNs = 1e9;         // number of nanoseconds in a second
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 class SqrtTest;
 
-void runSqrtTest(sycl::queue &q, const std::vector<float> &sqrt_lut_vec,
-                 std::vector<float> &output_vec, event &e) {
-  range<1> N{output_vec.size()};
-  buffer sqrt_lut_buf(sqrt_lut_vec);
-  buffer output_buf(output_vec.data(), N);
+uint16_t rand1(uint16_t &index, uint16_t &bits) {
+  bits = ((index >> 0) ^ (index >> 3) ^ (index >> 4) ^ (index >> 5)) & 1u;
+  return index = (index >> 1) | (bits << 15);
+}
 
-  // Enqueue  kernel
-  e = q.submit([&](handler &h) {
-    // Get accessors to the SYCL buffers
+uint16_t rand2(uint16_t &index, uint16_t &bits) {
+  bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 3)) & 1u;
+  return index = (index >> 1) | (bits << 15);
+}
+
+uint16_t rand3(uint16_t &index, uint16_t &bits) {
+  bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 5)) & 1u;
+  return index = (index >> 1) | (bits << 15);
+}
+
+event runSqrtTest(sycl::queue &q, const std::vector<float> &sqrt_lut_vec,
+                 std::vector<float> &output_vec) {
+  buffer sqrt_lut_buf(sqrt_lut_vec);
+  buffer output_buf(output_vec);
+
+  event e = q.submit([&](handler &h) {
     accessor sqrt_lut(sqrt_lut_buf, h, read_only,
-                      accessor_property_list{no_alias});
+                      oa::accessor_property_list{oa::no_alias});
     accessor output(output_buf, h, write_only,
-                    accessor_property_list{no_alias, no_init});
+                    oa::accessor_property_list{oa::no_alias, no_init});
 
     h.single_task<SqrtTest>([=]() {
       uint16_t index = 0xFFFu;
       uint16_t bits = 0;
 
-      for (int i = 0; i < kNumOutputs; i++) {
-        bits = ((index >> 0) ^ (index >> 3) ^ (index >> 4) ^ (index >> 5)) & 1u;
-        index = (index >> 1) | (bits << 15);
-        output[i] = sqrt_lut[index % kLUTSize];
-      }
+      for (int i = 0; i < kNumOutputs; i++)
+        output[i] = sqrt_lut[rand1(index, bits) % kLUTSize];
 
-      for (int i = 0; i < kNumOutputs; i++) {
-        bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 3)) & 1u;
-        index = (index >> 1) | (bits << 15);
-        output[i] += sqrt_lut[index % kLUTSize];
-      }
+      for (int i = 0; i < kNumOutputs; i++)
+        output[i] += sqrt_lut[rand2(index, bits) % kLUTSize];
 
-      for (int i = 0; i < kNumOutputs; i++) {
-        bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 5)) & 1u;
-        index = (index >> 1) | (bits << 15);
-        output[i] += sqrt_lut[index % kLUTSize];
-      }
+      for (int i = 0; i < kNumOutputs; i++)
+        output[i] += sqrt_lut[rand3(index, bits) % kLUTSize];
     });
   });
+  return e;
 }
 
 int main() {
@@ -77,10 +82,6 @@ int main() {
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
-  std::cout << "\nEmulator output does not demonstrate true hardware "
-               "performance. The design may need to run on actual hardware "
-               "to observe the performance benefit of the optimization "
-               "exemplified in this tutorial.\n\n";
 #else
   ext::intel::fpga_selector device_selector;
 #endif
@@ -90,20 +91,11 @@ int main() {
 
     sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
 
-    platform platform = q.get_context().get_platform();
-    device device = q.get_device();
-    std::cout << "Platform name: "
-              << platform.get_info<info::platform::name>().c_str() << "\n";
-    std::cout << "Device name: "
-              << device.get_info<info::device::name>().c_str() << "\n\n\n";
-
     std::cout << "\nSQRT LUT size: " << kLUTSize << "\n";
     std::cout << "Number of outputs: " << kNumOutputs << "\n";
 
-    runSqrtTest(q, sqrt_lut_vec, output_vec, e);
-
-    // Wait for kernels to finish
-    q.wait();
+    e = runSqrtTest(q, sqrt_lut_vec, output_vec);
+    e.wait();
 
     // Compute kernel execution time
     t1_kernel = e.get_profiling_info<info::event_profiling::command_start>();
@@ -129,23 +121,14 @@ int main() {
   uint16_t index = 0xFFFu;
   uint16_t bits = 0;
   float gold[kNumOutputs];
-  for (int i = 0; i < kNumOutputs; ++i) {
-    bits = ((index >> 0) ^ (index >> 3) ^ (index >> 4) ^ (index >> 5)) & 1u;
-    index = (index >> 1) | (bits << 15);
-    gold[i] = sqrt_lut_vec[index % kLUTSize];
-  }
+  for (int i = 0; i < kNumOutputs; ++i)
+    gold[i] = sqrt_lut_vec[rand1(index, bits) % kLUTSize];
 
-  for (int i = 0; i < kNumOutputs; ++i) {
-    bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 3)) & 1u;
-    index = (index >> 1) | (bits << 15);
-    gold[i] += sqrt_lut_vec[index % kLUTSize];
-  }
+  for (int i = 0; i < kNumOutputs; ++i)
+    gold[i] += sqrt_lut_vec[rand2(index, bits) % kLUTSize];
 
-  for (int i = 0; i < kNumOutputs; ++i) {
-    bits = ((index >> 0) ^ (index >> 1) ^ (index >> 2) ^ (index >> 5)) & 1u;
-    index = (index >> 1) | (bits << 15);
-    gold[i] += sqrt_lut_vec[index % kLUTSize];
-  }
+  for (int i = 0; i < kNumOutputs; ++i)
+    gold[i] += sqrt_lut_vec[rand3(index, bits) % kLUTSize];
 
   // Verify output and print pass/fail
   bool passed = true;
@@ -153,7 +136,7 @@ int main() {
   for (int b = 0; b < kNumOutputs; b++) {
     if (num_errors < 10 && output_vec[b] != gold[b]) {
       passed = false;
-      std::cout << " (mismatch, expected " << gold[b] << ")\n";
+      std::cerr << " (mismatch, expected " << gold[b] << ")\n";
       num_errors++;
     }
   }
@@ -163,14 +146,15 @@ int main() {
 
     // Report host execution time and throughput
     std::cout.setf(std::ios::fixed);
-    double N_MB =
-        (kNumOutputs * sizeof(uint32_t)) / (1024 * 1024); // Input size in MB
+
+    // Input size in MB
+    constexpr double num_mb = (kNumOutputs * sizeof(uint32_t)) / (1024 * 1024);
 
     // Report kernel execution time and throughput
     std::cout << "Kernel execution time: " << time_kernel << " seconds\n";
-    std::cout << "Kernel throughput " << N_MB / time_kernel << " MB/s\n\n";
+    std::cout << "Kernel throughput " << (num_mb / time_kernel) << " MB/s\n\n";
   } else {
-    std::cout << "Verification FAILED\n";
+    std::cerr << "Verification FAILED\n";
     return 1;
   }
   return 0;

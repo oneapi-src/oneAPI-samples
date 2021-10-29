@@ -32,7 +32,7 @@ is most appropriate for table lookups that are constant throughout the
 execution of a kernel and is optimized for high cache hit performance.
 
 To enable the read-only cache, the `-Xsread-only-cache-size<N>` flag should be
-passed to the `dpcpp` command. Each kernel will gets its own *private* version
+passed to the `dpcpp` command. Each kernel will get its own *private* version
 of the cache that serves all reads in the kernel from read-only no-alias
 accessors. Read-only no-alias accessors are accessors that have both the
 `read_only` and the `no_alias` properties:
@@ -45,18 +45,19 @@ written to from the kernel through another accessor or through a USM pointer.
 Note that the same no-alias behavior can be achieved using the kernel attribute
 `[[intel::kernel_args_restrict]]`, when applicable.
 
-Each private cache is also replicated as many times as needed to expose extra
-read ports. The size of each replicate is `<N>` bytes as specified by the
-`-Xsread-only-cache-size=<N>` flag.
+Each private cache is also replicated as many times as needed so that it can
+expose extra read ports. The size of each replicate is `<N>` bytes as specified
+by the `-Xsread-only-cache-size=<N>` flag.
 
 ### Tutorial Design 
-The basic function performed by the tutorial kernel is a a series of table
+The basic function performed by the tutorial kernel is a series of table
 lookups from a buffer (`sqrt_lut_buf`) that contains the square root values of
 the first 512 integers. By default, the compiler will generate load-store units
-(LSUs) that are optimized for when the global memory accesses are contiguous.
-When the memory accesses are non-contiguous, like it is the case with this
-tutorial design, these LSUs tend to suffer major throughput loss. The read-only
-cache can sometimes help in such situations, especially when sized correctly.
+(LSUs) that are optimized for the case where global memory accesses are
+contiguous. When the memory accesses are non-contiguous, like it is the case
+with this tutorial design, these LSUs tend to suffer major throughput loss. The
+read-only cache can sometimes help in such situations, especially when sized
+correctly.
 
 This tutorial requires compiling the source code twice: once with the
 `-Xsread-only-cache-size=<N>` flag and once without it. Because the look-up
@@ -224,10 +225,6 @@ cache has been created.
 
 Running `./read_only_cache_disabled.fpga`:
 ```
-Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Device name: pac_a10 : Intel PAC Platform (pac_f100000)
-
-
 
 SQRT LUT size: 512
 Number of outputs: 524288
@@ -239,10 +236,6 @@ Kernel throughput 172.457160 MB/s
 
 Running `./read_only_cache_disabled.fpga`:
 ```
-Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Device name: pac_a10 : Intel PAC Platform (pac_f100000)
-
-
 
 SQRT LUT size: 512
 Number of outputs: 524288
