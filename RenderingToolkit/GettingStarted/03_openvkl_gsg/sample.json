@@ -11,12 +11,11 @@
   "ciTests": {
         "linux": [
                 {
-                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
                 "id": "Intel_OpenVKL_vklTutorial_lin",
                 "steps": [
                     "mkdir build",
                     "cd build",
-                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake ..",
                     "cmake --build . ",
                     "./vklTutorial"
                  ]
@@ -24,12 +23,11 @@
         ],
         "windows":[
                 {
-                "env": ["call \"C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat\""],
                 "id": "Intel_OpenVKL_vklTutorial_win",
                 "steps":[
                     "mkdir build",
                     "cd build",
-                    "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
+                    "cmake ..",
                     "cmake --build . --config Release",
                     "cd Release",
                     ".\\vklTutorial.exe"
@@ -39,14 +37,13 @@
         ],
         "darwin": [
                 {
-                "env": ["source /opt/intel/oneapi/setvars.sh --force"],
                 "id": "Intel_OpenVKL_vklTutorial_mac",
                 "steps": [
                     "mkdir build",
                     "cd build",
-                    "cmake -DCMAKE_PREFIX_PATH=\"/opt/intel/oneAPI\" ..",
+                    "cmake ..",
                     "cmake --build . ",
-                    "./vklTutorial"
+                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./vklTutorial"
                  ]
                  }
         ]
