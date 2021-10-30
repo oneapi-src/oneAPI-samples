@@ -1,4 +1,4 @@
-set(SOURCE_FILE use_library.cpp)
+set(SOURCE_FILE use_library.cpp lib_sycl.cpp)
 set(HEADER_FILE lib.hpp)
 set(LIBRARY_ARCHIVE lib.a)
 set(TARGET_NAME use_library)
@@ -17,12 +17,6 @@ else()
 endif()
 
 # Library source files
-set(HLS_SOURCE lib_hls.cpp)
-set(HLS_SOURCE_OBJECT lib_hls.o)
-set(OCL_SOURCE lib_ocl.cl)
-set(OCL_SOURCE_OBJECT lib_ocl.o)
-set(SYCL_SOURCE lib_sycl.cpp)
-set(SYCL_SOURCE_OBJECT lib_sycl.o)
 set(RTL_C_MODEL lib_rtl_model.cpp)
 set(RTL_SPEC lib_rtl_spec.xml)
 set(RTL_V lib_rtl.v)
@@ -46,24 +40,6 @@ separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}
 # The RTL file (specified in lib_rtl_spec.xml) must be copied to the CMake working directory for the final stage of FPGA hardware compilation
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${RTL_V} ${RTL_V} COPYONLY)
 
-# Create HLS source object
-add_custom_target(
-    create_hls_source_object
-    COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${HLS_SOURCE} --source hls --target sycl -o ${HLS_SOURCE_OBJECT} ${CMAKE_CXX_FLAGS_LIST}
-)
-
-# Create OCL source object
-add_custom_target(
-    create_ocl_source_object
-    COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${OCL_SOURCE} --source ocl --target sycl -o ${OCL_SOURCE_OBJECT}
-)
-
-# Create SYCL source object
-add_custom_target(
-    create_sycl_source_object
-    COMMAND fpga_crossgen ${CMAKE_CURRENT_SOURCE_DIR}/${SYCL_SOURCE} --source sycl --target sycl -o ${SYCL_SOURCE_OBJECT} ${CMAKE_CXX_FLAGS_LIST}
-)
-
 # Create RTL source object
 add_custom_target(
     create_rtl_source_object
@@ -72,11 +48,11 @@ add_custom_target(
 
 # Create library archive
 # This executes:
-# fpga_libtool lib_hls.o lib_ocl.o lib_sycl.o lib_rtl.o --target sycl --create lib.a
+# fpga_libtool lib_rtl.o --target sycl --create lib.a
 add_custom_target(create_library_archive DEPENDS ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE})
 add_custom_command(OUTPUT ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
-                   COMMAND fpga_libtool ${HLS_SOURCE_OBJECT} ${OCL_SOURCE_OBJECT} ${SYCL_SOURCE_OBJECT} ${RTL_SOURCE_OBJECT} --target sycl --create ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
-                   DEPENDS create_hls_source_object create_ocl_source_object create_sycl_source_object create_rtl_source_object)
+                   COMMAND fpga_libtool ${RTL_SOURCE_OBJECT} --target sycl --create ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/${LIBRARY_ARCHIVE}
+                   DEPENDS create_rtl_source_object)
 
 # Tell CMake to recognize our custom library
 add_library(library_archive STATIC IMPORTED GLOBAL)
@@ -87,10 +63,11 @@ set_target_properties(library_archive PROPERTIES IMPORTED_LOCATION ${CMAKE_ARCHI
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR use_library.cpp lib.a -o use_library.fpga_emu
+#    dpcpp -fintelfpga -DFPGA_EMULATOR use_library.cpp lib_sycl.cpp lib.a -o use_library.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o use_library.cpp.o -c use_library.cpp
-#    [link]    dpcpp -fintelfpga use_library.cpp.o -o use_library.fpga_emu lib.a 
+#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o lib_sycl.o -c lib_sycl.cpp
+#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o use_library.o -c use_library.cpp
+#    [link]    dpcpp -fintelfpga use_library.cpp.o -o use_library.fpga_emu lib.a lib_sycl.o
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 target_link_libraries(${EMULATOR_TARGET} library_archive)
@@ -101,7 +78,7 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early use_library.cpp lib.a -o use_library_report.a
+#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early use_library.cpp lib_sycl.cpp lib.a -o use_library_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -115,10 +92,11 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp lib.a -o use_library.fpga
+#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp lib_sycl.cpp lib.a -o use_library.fpga
 # CMake executes:
+#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o lib_sycl.o -c lib_sycl.cpp
 #   [compile] dpcpp -fintelfpga -o use_library.cpp.o -c use_library.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp.o -o use_library.fpga lib.a 
+#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
 add_executable(${FPGA_TARGET} ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 target_link_libraries(${FPGA_TARGET} library_archive)

@@ -13,10 +13,6 @@
 
 using namespace sycl;
 
-// Values used as input to the kernel
-constexpr float kA = 2.0f;
-constexpr float kB = 3.0f;
-
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization report.
 class KernelCompute;
@@ -38,6 +34,11 @@ int main() {
     // but a SYCL buffer must be used to return a scalar from the kernel.
     buffer<unsigned, 1> buffer_c(&result, 1);
 
+    //  Values used as input to the kernel
+    float kA = 2.0f;
+    float kB = 3.0f;
+
+
     q.submit([&](handler &h) {
 
       // Accessor to the scalar result
@@ -46,14 +47,8 @@ int main() {
       // Kernel
       h.single_task<class KernelCompute>([=]() {
 
-        // OclSquare is an OpenCL function, defined in lib_ocl.cl.
-        float a_sq = OclSquare(kA);
-
-        // HlsSqrtf is an Intel HLS component, defined in lib_hls.cpp.
-        // (Intel HLS is a C++ based High Level Synthesis language for FPGA.)
-        float a_sq_sqrt = HlsSqrtf(a_sq);
-
         // SyclSquare is a SYCL library function, defined in lib_sycl.cpp.
+        float a_sq = SyclSquare(kA);
         float b_sq = SyclSquare(kB);
 
         // RtlByteswap is an RTL library.
@@ -61,7 +56,7 @@ int main() {
         //    is instantiated in the datapath by the compiler.
         //  - When compiled for FPGA emulator (CPU), the C model of RtlByteSwap
         //    in lib_rtl_model.cpp is used instead.
-        accessor_c[0] = RtlByteswap((unsigned)(a_sq_sqrt + b_sq));
+        accessor_c[0] = RtlByteswap((unsigned)(a_sq + b_sq));
       });
     });
   } catch (sycl::exception const &e) {
@@ -79,8 +74,10 @@ int main() {
     std::terminate();
   }
 
+  float kA = 2.0f;
+  float kB = 3.0f;
   // Compute the expected "golden" result
-  unsigned gold = sqrt(kA * kA) + (kB * kB);
+  unsigned gold = (kA * kA) + (kB * kB);
   gold = gold << 16 | gold >> 16;
 
   // Check the results
