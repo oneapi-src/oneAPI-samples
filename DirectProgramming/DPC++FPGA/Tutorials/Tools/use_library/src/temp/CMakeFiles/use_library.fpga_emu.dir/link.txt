@@ -1,1 +1,0 @@
-/usr/bin/c++     -fintelfpga CMakeFiles/use_library.fpga_emu.dir/use_library.o CMakeFiles/use_library.fpga_emu.dir/lib_sycl.o  -o use_library.fpga_emu -rdynamic /lib.a 
