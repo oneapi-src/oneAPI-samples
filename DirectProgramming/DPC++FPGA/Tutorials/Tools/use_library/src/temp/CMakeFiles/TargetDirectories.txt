@@ -1,0 +1,10 @@
+/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/CMakeFiles/rebuild_cache.dir
+/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/CMakeFiles/use_library.fpga.dir
+/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/CMakeFiles/edit_cache.dir
+/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/CMakeFiles/report.dir
+/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/CMakeFiles/use_library_report.a.dir
+/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/CMakeFiles/use_library.fpga_emu.dir
+/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/CMakeFiles/create_rtl_source_object.dir
+/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/CMakeFiles/create_library_archive.dir
+/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/CMakeFiles/fpga.dir
+/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/CMakeFiles/fpga_emu.dir

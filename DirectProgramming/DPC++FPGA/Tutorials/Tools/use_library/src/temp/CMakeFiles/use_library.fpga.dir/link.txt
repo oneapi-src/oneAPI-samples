@@ -1,0 +1,1 @@
+/usr/bin/c++     -fintelfpga -Xshardware -Xsboard=intel_a10gx_pac:pac_a10  -reuse-exe=/nfs/sc/disks/swuser_work_kannanaj/qshells/oneAPI-samples/DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library/src/temp/use_library.fpga CMakeFiles/use_library.fpga.dir/use_library.o CMakeFiles/use_library.fpga.dir/lib_sycl.o  -o use_library.fpga -rdynamic /lib.a 

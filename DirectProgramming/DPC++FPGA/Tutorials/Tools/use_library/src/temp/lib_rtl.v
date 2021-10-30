@@ -3,7 +3,7 @@
 module byteswap_uint (
   input   clock,
   input   resetn,
-  input   ivalid,
+  input   ivalid, 
   input   iready,
   output  ovalid,
   output  oready,
