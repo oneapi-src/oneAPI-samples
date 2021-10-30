@@ -17,6 +17,11 @@ using namespace sycl;
 // This FPGA best practice reduces name mangling in the optimization report.
 class KernelCompute;
 
+// SYCL function to get the square a number
+SYCL_EXTERNAL float SyclSquare(float x) {
+  return x * x;
+}
+
 int main() {
   unsigned result = 0;
 
