@@ -1,6 +1,6 @@
 {
   "guid": "41F82C06-A9FA-4521-B87A-8F7304CB6631",
-  "name": "Intel® Open Image Denoise Getting Started",
+  "name": "Intel Open Image Denoise Getting Started",
   "categories": ["Toolkit/oneAPI Libraries/Open Image Denoise"],
   "description": "This introductory 'hello rendering toolkit' sample program demonstrates how to denoise a raytraced image with Intel Open Image Denoise",
   "builder": ["cli"],
@@ -46,7 +46,7 @@
                     "cmake ..",
                     "cmake --build . ",
 		    "cp ../accumulatedFrameCpp.pfm .",
-                    "./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
+                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
                  ]
                  }
         ]
