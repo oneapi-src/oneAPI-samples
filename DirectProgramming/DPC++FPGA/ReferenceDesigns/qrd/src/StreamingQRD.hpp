@@ -154,20 +154,8 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
       // Depending on the context, will contain:
       // -> -s[j]: for all the iterations to compute a_j
       // -> ir: for one iteration per j iterations to compute Q_i
-      constexpr int kSuper_dummy_iterations = RAWLatency - columns;
-      constexpr int kIncreasedBufferSize = kSuper_dummy_iterations < 0 ? 
-                                            0 : kSuper_dummy_iterations;
-      // [[intel::fpga_memory]]
-      TT s_or_i[columns + kIncreasedBufferSize];
-
-      // Adding kIncreasedBufferSize is a waste of resource because we 
-      // are going to read and write only to "columns" different places
-      // If we don't add it, the compiler does not achieve II 1 because 
-      // it is not able to determine that we are not going to read at 
-      // the same location the last iteration just wrote.
-      // This is probably due to the fact that when the access index is 
-      // negative, we are not actually reading/writing to it (gated by 
-      // an if statement) but it seems to make the compiler confused.
+      [[intel::fpga_memory]]
+      TT s_or_i[columns];
      
       T pip1, ir;
 
@@ -205,7 +193,6 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
 
         // Current value of s_or_i depending on the value of j
         // It is replicated kFanoutReduction times to reduce fanout
-        // [[intel::fpga_memory]]
         TT sori[kBanksForFanout];
 
         // All the control signals are precomputed and replicated
@@ -222,8 +209,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
           j_eq_i[k] = sycl::ext::intel::fpga_reg(j == i);
           i_ge_0_j_ge_i[k] = sycl::ext::intel::fpga_reg(i >= 0 & j >= i);
           j_eq_i_plus_1[k] = sycl::ext::intel::fpga_reg(j == i + 1);
-          int idx = j + kIncreasedBufferSize;
-          sori[k] = sycl::ext::intel::fpga_reg(s_or_i[idx]);
+          sori[k] = sycl::ext::intel::fpga_reg(s_or_i[j]);
         });
 
         // Preload col and a_i with the correct data for the current 
@@ -339,13 +325,12 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
         // j may be negative if the number of "dummy" iterations is 
         // larger than the matrix size
         if (j >= 0) {
-          int idx = j + kIncreasedBufferSize;
           if constexpr(isComplex){
-            s_or_i[idx] = TT{j == i + 1 ? ir : s_j.r(),
+            s_or_i[j] = TT{j == i + 1 ? ir : s_j.r(),
                                 j == i + 1 ? 0.0f : s_j.i()};
           }
           else{
-            s_or_i[idx] = j == i + 1 ? ir : s_j; 
+            s_or_i[j] = j == i + 1 ? ir : s_j; 
           }
         }
 

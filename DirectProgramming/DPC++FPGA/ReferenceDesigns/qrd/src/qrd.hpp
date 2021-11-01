@@ -120,9 +120,9 @@ namespace QRDInternal{
     // without overlap.
     constexpr short kNumBuffers = 3;
     
-    using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeCol, 1>;
-    using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeCol, 1>;
-    using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, TT, 1>;
+    using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeCol, 1*2>;
+    using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeCol, 1*2>;
+    using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, TT, kNumElementsPerBank*3>;
 
     // Create buffers and allocate space for them.
     buffer<TT, 1> *ABuffer[kNumBuffers];
