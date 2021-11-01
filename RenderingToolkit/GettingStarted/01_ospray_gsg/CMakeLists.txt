@@ -14,6 +14,7 @@ else()
   message(STATUS "ONEAPI_ROOT DEFAULT: ${ONEAPI_ROOT}")
 endif(DEFINED ENV{ONEAPI_ROOT})
 
+list(APPEND CMAKE_PREFIX_PATH "${ONEAPI_ROOT}/rkcommon/latest")
 find_package(ospray REQUIRED PATHS ${ONEAPI_ROOT})
 
 if(MSVC)
