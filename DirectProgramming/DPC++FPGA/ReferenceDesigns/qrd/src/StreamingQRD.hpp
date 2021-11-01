@@ -102,7 +102,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
         column<rows, TT> pipeData = AIn::read();
 
         // Write the current column to the A_load matrix.
-        UnrolledLoop<columns>([&](auto k) {
+        UnrolledLoop<rows>([&](auto k) {
           A_load[col].template get<k>() = pipeData.row[k];
         });
       }
@@ -397,7 +397,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q) {
         column<rows, TT> pipeData;
 
         // Write the current column to the A_load matrix.
-        UnrolledLoop<columns>([&](auto k) {
+        UnrolledLoop<rows>([&](auto k) {
           pipeData.row[k] = Q_Result[col].template get<k>();
         });
 

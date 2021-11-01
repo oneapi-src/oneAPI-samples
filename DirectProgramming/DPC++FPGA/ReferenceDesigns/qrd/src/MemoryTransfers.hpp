@@ -67,7 +67,7 @@ sycl::event MatrixReadFromDDRToPipeByColumns(
               readColumn.row[i*numElemPerBank+k] = banks[i][k];
             }
           }
-          
+
           matrixPipe::write(readColumn);
         }
 

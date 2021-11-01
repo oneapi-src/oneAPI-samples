@@ -143,8 +143,6 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    // }
-
 #if defined(FPGA_EMULATOR)
 #else
     // Accelerator warmup
