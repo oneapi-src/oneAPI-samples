@@ -21,7 +21,7 @@ This sample is a command line application that takes a file containing a raw
 format video file as an argument, converts it to BGRA with oneVPL, blurs each frame with DPC++ by using SYCL kernel,
 and writes the processed output to `out.bgra` in BGRA format.
 
-GPU optimization is available in Linux, including oneAPI Level Zero optimizations allowing the kernel to run 
+GPU optimization is available in Linux, including oneAPI Level Zero optimizations allowing the kernel to run
 directly on VPL output without copies to/from CPU memory.
 
 ## Key Implementation details
@@ -42,6 +42,22 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `dpcpp-blur` Program
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 
@@ -87,7 +103,7 @@ Perform the following steps:
 The instructions given above run the sample executable with these arguments
 `-i <sample_dir>/content/cars_128x96.i420 -w 128 -h 96`.
 
-In Linux, an additional '-hw' parameter will run on GPU if GPU stack components 
+In Linux, an additional '-hw' parameter will run on GPU if GPU stack components
 are found in your environment.
 
 ### Example of Output
@@ -95,9 +111,9 @@ are found in your environment.
 ```
 Queue initialized on Intel(R) Core(TM) i5-9400 CPU @ 2.90GHz
 Implementation details:
-  ApiVersion:           2.4  
+  ApiVersion:           2.4
   Implementation type:  SW
-  AccelerationMode via: NA 
+  AccelerationMode via: NA
   Path: /opt/intel/oneapi/vpl/2021.4.0/lib/libvplswref64.so.1
 
 Processing ../../content/cars_128x96.nv12 -> out.raw

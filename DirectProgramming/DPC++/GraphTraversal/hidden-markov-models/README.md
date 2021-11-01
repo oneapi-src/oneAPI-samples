@@ -1,8 +1,8 @@
 ﻿# DPC++ Hidden Markov Model` Sample
 The HMM (Hidden Markov Model) sample presents a statistical model using a Markov process to present graphable nodes that are otherwise in an unobservable state or “hidden”.  This technique helps with pattern recognition such as speech, handwriting, gesture recognition, part-of-speech tagging, partial discharges and bioinformatics. The sample offloads the complexity of the Markov process to the GPU.
 
-The directed edges of this graph are possible transitions between nodes or states defined with the following parameters: 
-- the number of states is N, the transition matrix A is a square matrix of size N. 
+The directed edges of this graph are possible transitions between nodes or states defined with the following parameters:
+- the number of states is N, the transition matrix A is a square matrix of size N.
 - Each element with indexes (i,j) of this matrix determines the probability to move from the state i to the state j on any step of the Markov process (i and j can be the same if the state does not change on the taken step).
 
 HMM's main assumption is that there are visible observations that depend on the current Markov process. That dependency can be described as a conditional probability distribution (represented by emission matrix). The problem is to find out the most likely chain of the hidden Markov states using the given observations set.
@@ -44,6 +44,23 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ### Running Samples In DevCloud
 Running samples in the Intel DevCloud requires you to specify a compute node. For specific instructions, jump to [Run the Hidden Markov Model sample in the DevCloud](#run-hmm-on-devcloud)
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### Include Files
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.

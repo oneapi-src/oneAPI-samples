@@ -102,26 +102,23 @@ event SortNetworkKernel(queue& q, ValueT* out_ptr, IndexT total_count,
   // the number of loop iterations required to process all of the data
   const IndexT iterations = total_count / k_width;
 
-  return q.submit([&](handler& h) {
-    h.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
-      device_ptr<ValueT> out(out_ptr);
+  return q.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
+    device_ptr<ValueT> out(out_ptr);
+    for (IndexT i = 0; i < iterations; i++) {
+      // read the input data from the pipe
+      sycl::vec<ValueT, k_width> data = InPipe::read();
 
-      for (IndexT i = 0; i < iterations; i++) {
-        // read the input data from the pipe
-        sycl::vec<ValueT, k_width> data = InPipe::read();
+      // bitonic sort network sorts the k_width elements of 'data' in-place
+      // NOTE: there are no dependencies across loop iterations on 'data'
+      // here, so this sorting network can be fully pipelined
+      BitonicSortNetwork<ValueT, k_width>(data, compare);
 
-        // bitonic sort network sorts the k_width elements of 'data' in-place
-        // NOTE: there are no dependencies across loop iterations on 'data'
-        // here, so this sorting network can be fully pipelined
-        BitonicSortNetwork<ValueT, k_width>(data, compare);
-
-        // write the 'k_width' sorted elements to device memory
-        #pragma unroll
-        for (unsigned char j = 0; j < k_width; j++) {
-          out[i * k_width + j] = data[j];
-        }
+      // write the 'k_width' sorted elements to device memory
+      #pragma unroll
+      for (unsigned char j = 0; j < k_width; j++) {
+        out[i * k_width + j] = data[j];
       }
-    });
+    }
   });
 }
 

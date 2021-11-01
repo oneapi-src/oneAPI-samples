@@ -38,7 +38,7 @@ conda activate tensorflow
 
 ## Activate conda environment Without Root Access (Optional)
 
-By default, the Intel oneAPI AI Analytics toolkit is installed in the `/opt/intel/oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel® oneAPI AI Analytics Toolkit (AI Kit) is installed in the `/opt/intel/oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### Linux
 ```
