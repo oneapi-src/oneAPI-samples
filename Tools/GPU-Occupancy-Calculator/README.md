@@ -13,7 +13,7 @@ Intel GPU Occupancy Calculator is HTML Web Application to compute GPU Occupancy 
 * Generates a list of optimal configuration values for WG, SG and SLM limit that will get 100% Occupancy.
 
 ## Usage
-* Open Page: [oneapi-src.github.io/oneAPI-Samples/Tools/GPU-Occupancy-Calculator/](https://oneapi-src.github.io/oneAPI-Samples/Tools/GPU-Occupancy-Calculator/)
+* Open Page: [oneapi-src.github.io/oneAPI-samples/Tools/GPU-Occupancy-Calculator/](https://oneapi-src.github.io/oneAPI-samples/Tools/GPU-Occupancy-Calculator/)
 * Select a GPU from the dropdown and change "EU Count" if necessary OR select the option to enter PCI ID for GPU.
 * The tool will load some default values for  Global Size, WG size, SG size, SLM size and will compute Occupancy and generate graphs.
 * Change the values of GPU target, Global size, WG size, SG size, SLM size or Barrier usage based on your HPC application to calculate Occupancy and tune application.
