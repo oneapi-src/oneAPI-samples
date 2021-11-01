@@ -5,7 +5,16 @@
   "description": "Shows how to use the Intel® oneAPI Video Processing Library (VPL) to perform simple video processing",
   "dependencies": [ "vpl" ],
   "os": [ "linux" ],
-  "languages": [{"cpp":{}}],
-  "builder": [ "cmake"],
-  "targetDevice": [ "CPU", "GPU" ]
+  "languages": [ { "cpp": {} } ],
+  "builder": [ "cmake" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "No build required, readmes only",
+        "env": [],
+        "steps": []
+      }
+    ]
+  }
 }

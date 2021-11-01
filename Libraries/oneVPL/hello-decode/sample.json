@@ -7,5 +7,14 @@
   "os": [ "linux" ],
   "languages": [ { "cpp": {} } ],
   "builder": [ "cmake" ],
-  "targetDevice": [ "CPU", "GPU" ]
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "No build required, readmes only",
+        "env": [],
+        "steps": []
+      }
+    ]
+  }
 }
