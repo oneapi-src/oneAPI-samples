@@ -495,7 +495,7 @@ function print_gpu_info(){
 		grf_mode = '<input type="hidden" id="large_grf" value="0" />';
 	}
 
-	document.querySelector('#occ_cal .target_info').innerHTML = '<b>' + gpu.product_name + '</b><br><b>' + gpu.name + '</b><br>EUs Per SS/DSS: ' + gpu.EU_Per_Sub_Slice + '<br>+ Threads Per EU: ' + gpu.Threads_Per_EU + '<br>+ EU Count: ' + eu_count + grf_mode;
+	document.querySelector('#occ_cal .target_info').innerHTML = '<b>' + gpu.product_name + '</b><br><b>' + gpu.name + '</b><br>+ EUs Per SS/DSS: ' + gpu.EU_Per_Sub_Slice + '<br>+ Threads Per EU: ' + gpu.Threads_Per_EU + '<br>+ EU Count: ' + eu_count + grf_mode;
 }
 
 // If url param exists load gpu info
@@ -514,7 +514,7 @@ function load_url_params(){
 			gpu["Threads_Per_EU"] = parseInt(value[1]);
 			gpu["EU_Count"] = parseInt(value[2]);
 			gpu["Max_Threads_Per_Sub_Slice"] = parseInt(value[3]);
-			gpu["Large_GRF_Mode"] = parseInt(value[4]);
+			gpu["Large_GRF_Mode"] = value[4];
 			gpu["Subgroup_Sizes"] = JSON.parse(value[5]);
 			gpu["SLM_Size_Per_Sub_Slice"] = parseInt(value[6]);
 			gpu["SLM_Size_Per_Work_Group"] = parseInt(value[7]);
