@@ -1,4 +1,3 @@
-%%writefile lab/sub_group_reqd_size.cpp
 //==============================================================
 // Copyright © 2020 Intel Corporation
 //
