@@ -27,7 +27,7 @@ else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif(MSVC)
 
-include_directories(${OPENVKL_INCLUDE_DIR} ${ONEAPI_ROOT}/rkcommon/latest/include)
+include_directories(${OPENVKL_INCLUDE_DIR})
 link_directories(${OPENVKL_ROOT}/lib)
 
 add_executable(vklTutorial src/vklTutorial.c)
