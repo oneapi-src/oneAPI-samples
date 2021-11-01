@@ -43,7 +43,7 @@
                     "cd build",
                     "cmake ..",
                     "cmake --build . ",
-                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./vklTutorial"
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib && ./vklTutorial"
                  ]
                  }
         ]
