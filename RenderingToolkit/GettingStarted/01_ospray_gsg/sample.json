@@ -5,7 +5,7 @@
   "description": "This introductory 'hello rendering toolkit' sample program demonstrates how to render triangle data with the pathtracer from Intel OSPRay",
   "builder": ["cli"],
   "languages": [{"cpp":{}}],
-  "dependencies": ["tbb","ospray","openvkl","embree","rkcommon"],
+  "dependencies": ["tbb","ospray","openvkl","embree","rkcommon","oidn"],
   "os":["linux", "windows", "darwin"],
   "targetDevice": ["CPU"],
   "ciTests": {
@@ -43,7 +43,7 @@
                     "cd build",
                     "cmake ..",
                     "cmake --build . ",
-                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./ospTutorialCpp"
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib && ./ospTutorialCpp"
                  ]
                  }
         ]
