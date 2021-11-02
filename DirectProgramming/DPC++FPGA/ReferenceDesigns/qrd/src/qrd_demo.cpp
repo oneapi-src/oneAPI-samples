@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
     size_t reps = 1;
 #else
     // Accelerator warmup
-    QRDecomposition(AMatrix, QMatrix, RMatrix, q, 1, 1); 
+    QRDecomposition(AMatrix, QMatrix, RMatrix, q, 2048, 1); 
     size_t reps = 32;
 #endif
     std::cout << "Running QR decomposition of " << matrices << " matri"
