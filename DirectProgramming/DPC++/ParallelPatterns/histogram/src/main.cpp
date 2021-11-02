@@ -5,10 +5,10 @@
 // =============================================================
 
 #include <CL/sycl.hpp>
-#include <iostream>
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/numeric>
+#include <iostream>
 #include <random>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
