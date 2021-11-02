@@ -23,7 +23,7 @@ Third party program Licenses can be found here:
 
 | Components         | Folder                 | Description
 | ------------------ | ---------------------- | -----------
-| Modin*, oneDAL, IDP | [Census](Census)       | Use Intel® Distribution of Modin* to ingest and process U.S. census data from 1970 to 2010 in order to build a ridge regression based model to find the relation between education and the total income earned in the US.
+| Modin*, oneAPI Data Analytics Library (oneDAL), IDP | [Census](Census)       | Use Intel® Distribution of Modin* to ingest and process U.S. census data from 1970 to 2010 in order to build a ridge regression based model to find the relation between education and the total income earned in the US.
 | OpenVino™           | [LidarObjectDetection-PointPillars](LidarObjectDetection-PointPillars) | Performs 3D object detection and classification using point cloud data from a LIDAR sensor as input.
 
 # Using Samples in the Intel oneAPI DevCloud

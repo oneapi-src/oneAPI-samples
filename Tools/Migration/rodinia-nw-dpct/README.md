@@ -13,7 +13,7 @@ Data Parallel C++ using the Intel DPC++ Compatibility Tool.
 The program, `needleman-Wunsch`, naively implements the [Needleman-Wunsch
 algorithm][nw-algorithm], which is used in bioinformatics to align protein and
 nucleotide sequences. The code is based on [Rodinia][rodinia], a set of
-benchmarks for heterogeneous computing. As compared to the `Intel DPC++
+benchmarks for heterogeneous computing. As compared to the `Intel® DPC++
 Compatibility Tool: Vector Add` sample, this sample represents a more typical
 example of migrating a working project.
 
@@ -30,7 +30,7 @@ a compilation database by running the intercept-build script described below.
 ## Key Implementation Details
 
 Use the `intercept-build` tool to automatically generate a compilation
-database in a JSON file that contains the build commands for the Intel DPC++
+database in a JSON file that contains the build commands for the Intel® DPC++
 Compatibility Tool to use. Migrate the project and prepare the project to
 build and run using the Intel&reg; oneAPI DPC++ Compiler
 

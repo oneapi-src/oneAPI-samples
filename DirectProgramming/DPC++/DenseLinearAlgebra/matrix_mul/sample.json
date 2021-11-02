@@ -2,7 +2,7 @@
   "guid": "E6115777-E2CE-4839-8900-24DC3D1AD572",
   "name": "Matrix Multiply",
   "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra"],
-  "description": "This sample Multiplies two large Matrices in parallel using Intel® oneAPI Data Parallel C++ (DPC++) and OpenMP* (OMP)",
+  "description": "This sample Multiplies two large Matrices in parallel using Data Parallel C++ (DPC++) and OpenMP* (OMP)",
   "toolchain": [ "dpcpp", "icc" ],
   "dependencies": [ "compiler|icc" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],

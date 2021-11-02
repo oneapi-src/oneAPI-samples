@@ -223,15 +223,19 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
     std::cout << "Warning: Host allocations are not supported on this platform, which means that pre-pinning is not supported. DMA transfers may be slower than expected which may reduce application throughput.\n\n";
   }
 
+  // padding for the input and output buffers to deal with granularity of
+  // kernel reads and writes
+  constexpr size_t kInOutPadding = 16 * kVec;
+  
   std::ifstream file(input_file,
                      std::ios::in | std::ios::binary | std::ios::ate);
   if (file.is_open()) {
     isz = file.tellg();
     if (prepin) {
       pinbuf = (char *)malloc_host(
-          isz, q.get_context());  // Pre-pin the buffer, for faster DMA
+          isz + kInOutPadding, q.get_context());  // Pre-pin the buffer, for faster DMA
     } else {                      // throughput, using malloc_host().
-      pinbuf = new char[isz];
+      pinbuf = new char[isz + kInOutPadding];
     }
     file.seekg(0, std::ios::beg);
     file.read(pinbuf, isz);
@@ -248,10 +252,6 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
   }
 
   int buffers_count = iterations;
-
-  // padding for the input and output buffers to deal with granularity of
-  // kernel reads and writes
-  constexpr size_t kInOutPadding = 16 * kVec;
 
   // Create an array of kernel info structures and create buffers for kernel
   // input/output. The buffers are re-used between iterations, but enough 
