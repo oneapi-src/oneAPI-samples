@@ -6,7 +6,8 @@ oneAPI Video Processing Library to perform a simple video content blur.
 | Optimized for    | Description
 |----------------- | ----------------------------------------
 | OS               | Ubuntu* 20.04
-| Hardware         | Intel® Processor Graphics GEN9 or newer
+| Hardware         | CPU: See [System Requirements](https://software.intel.com/content/www/us/en/develop/articles/oneapi-video-processing-library-system-requirements.html)
+|                  | GPU: Compatible with Intel® oneAPI Video Processing Library(oneVPL) GPU implementation, which can be found at https://github.com/oneapi-src/oneVPL-intel-gpu 
 | Software         | oneAPI Video Processing Library (oneVPL)
 | What You Will Learn | How to use oneVPL and DPC++ to convert raw video files into BGRA and blur each frame.
 | Time to Complete | 5 minutes
@@ -31,7 +32,7 @@ directly on VPL output without copies to/from CPU memory.
 | Target device     | CPU
 | Input format      | I420
 | Output format     | BGRA raw video elementary stream
-| Output resolution | same as input
+| Output resolution | 256 x 192
 
 
 ## License
@@ -39,25 +40,8 @@ directly on VPL output without copies to/from CPU memory.
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `dpcpp-blur` Program
-
-### Using Visual Studio Code*  (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
-
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 
@@ -83,45 +67,46 @@ Perform the following steps:
 
 3. Build the program using the following commands:
    ```
+   cp $ONEAPI_ROOT/vpl/latest/examples .
+   cd examples/interop/dpcpp-blur
    mkdir build
    cd build
    cmake ..
    cmake --build .
    ```
 
-4. Run the program using the following command:
+4. Run the program with default arguments using the following command:
    ```
    cmake --build . --target run
    ```
-
-
 
 ## Running the Sample
 
 ### Application Parameters
 
 The instructions given above run the sample executable with these arguments
-`-i <sample_dir>/content/cars_128x96.i420 -w 128 -h 96`.
+`-i ${CONTENTPATH}/cars_128x96.i420 -w 128 -h 96`.
 
 In Linux, an additional '-hw' parameter will run on GPU if GPU stack components
 are found in your environment.
 
-### Example of Output
+### Example Output
 
 ```
-Queue initialized on Intel(R) Core(TM) i5-9400 CPU @ 2.90GHz
+Queue initialized on 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz
 Implementation details:
-  ApiVersion:           2.4
+
+  ApiVersion:           2.5  
   Implementation type:  SW
-  AccelerationMode via: NA
-  Path: /opt/intel/oneapi/vpl/2021.4.0/lib/libvplswref64.so.1
+  AccelerationMode via: NA 
+  DeviceID:             0000 
+  Path: /opt/intel/oneapi/vpl/2021.6.0/lib/libvplswref64.so.1
 
-Processing ../../content/cars_128x96.nv12 -> out.raw
+Processing /home/test/intel_innersource/frameworks.media.onevpl.dispatcher/examples/interop/dpcpp-blur/content/cars_128x96.i420 -> out.raw
 Processed 60 frames
-
 ```
 
-You can find the output file ``out.raw`` in the build directory.
+You can find the 256x192 BGRA output file ``out.raw`` in the build directory.
 
 You can display the output with a video player that supports raw streams such as
 FFplay. You can use the following command to display the output with FFplay:
