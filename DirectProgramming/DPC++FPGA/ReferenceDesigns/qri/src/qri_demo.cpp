@@ -38,20 +38,68 @@
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
+#include "qri.hpp"
 
 using namespace std;
 using namespace std::chrono;
 using namespace sycl;
 
-#if COMPLEX == 1
-void ComplexFloatQRI( vector<ac_complex<float>> &A, 
-                                  vector<ac_complex<float>> &inverse_matrix,
-                                  queue &q, size_t matrices, size_t reps);
+/*
+  Each matrix (input and output) are represented using vectors in a column
+  fashion.
+
+  Function arguments:
+  - A_matrix:   The input matrix. Interpreted as a transposed matrix.
+  - inverse_matrix:  The output matrix. The function will overwrite this matrix.
+                The first values of this output vector will contain the upper
+                triangular values of the R matrix, row by row.
+                e.g. for a 4x4 QRI, inverse_matrix[5] will contain R[1][1].
+                There are exactly N*(N+1)/2 elements of R.
+                So rest of the values hold the transposed matrix Q (N*N).
+  - q:          The device queue.
+  - matrices:   The number of matrices to be processed.
+                The input matrices are read sequentially from the A_matrix 
+                vector.
+  - reps:       The number of repetitions of the computation to execute.
+                (for performance evaluation)
+
+  This function requires the following template parameters:
+  - columns:    The number of columns in the matrix
+  - rows:       The number of rows in the matrix     
+  - rawLatency: The latency between the RAW dependency in the triangular
+                loop that prevents the compiler to achieve an II of 1.
+                This helps create a loop structure that can reach an II
+                of 1 following the triangular loop optimization tutorial
+                method.
+*/
+
+
+#if COMPLEX == 0
+// Real single precision floating-point QR Decomposition
+void QRI( std::vector<float> &A_matrix, 
+          std::vector<float> &inverse_matrix,
+          sycl::queue &q, 
+          size_t matrices, 
+          size_t reps) {
+
+  constexpr bool isComplex = false;
+  QRI_impl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS, isComplex, float>
+                                  (A_matrix, inverse_matrix, q, matrices, reps); 
+}
 #else
-void FloatQRI(  vector<float> &A, 
-                            vector<float> &inverse_matrix,
-                            queue &q, size_t matrices, size_t reps);
+// Complex single precision floating-point QR Decomposition
+void QRI( std::vector<ac_complex<float>> &A_matrix, 
+          std::vector<ac_complex<float>> &inverse_matrix,
+          sycl::queue &q, 
+          size_t matrices, 
+          size_t reps) {
+
+  constexpr bool isComplex = true;
+  QRI_impl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS, isComplex, float>
+                                  (A_matrix, inverse_matrix, q, matrices, reps); 
+}
 #endif
+
 
 /*
   Returns a random floating-point value between min and max
@@ -428,9 +476,9 @@ int main(int argc, char *argv[]) {
     size_t reps = 32;
     // Accelerator warmup
 #if COMPLEX == 1
-    ComplexFloatQRI(A, inverse_matrix, q, 1, 1); 
+    QRI(A, inverse_matrix, q, 1, 1); 
 #else
-    FloatQRI(A, inverse_matrix, q, 1, 1);
+    QRI(A, inverse_matrix, q, 1, 1);
 #endif
 #endif
     cout << "Running QR inversion of " << matrices << " matri"
@@ -439,9 +487,9 @@ int main(int argc, char *argv[]) {
 
     high_resolution_clock::time_point start_time = high_resolution_clock::now();
 #if COMPLEX == 1
-    ComplexFloatQRI(A, inverse_matrix, q, matrices, reps);
+    QRI(A, inverse_matrix, q, matrices, reps);
 #else
-    FloatQRI(A, inverse_matrix, q, matrices, reps);
+    QRI(A, inverse_matrix, q, matrices, reps);
 #endif
     high_resolution_clock::time_point end_time = high_resolution_clock::now();
     duration<double> diff = end_time - start_time;
