@@ -1,52 +1,52 @@
-// ==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-// OTHER DEALINGS IN THE SOFTWARE.
-//
-// This agreement shall be governed in all respects by the laws of the State of
-// California and by the laws of the United States of America.
-
-
-
 #include "qrd.hpp"
 
-using std::vector;
-using namespace sycl;
+/*
+  COMPLEX, COLS_COMPONENT, ROWS_COMPONENT and FIXED_ITERATIONS are defined
+  by the build system.
+  Depending on the value of COMPLEX, the real or complex QRDecomposition
+
+  Function arguments:
+  - AMatrix:    The input matrix. Interpreted as a transposed matrix.
+  - QMatrix:    The Q matrix. The function will overwrite this matrix.
+  - RMatrix     The R matrix. The function will overwrite this matrix.
+                The vector will only contain the upper triangular elements
+                of the matrix, in a row by row fashion.
+  - q:          The device queue.
+  - matrices:   The number of matrices to be processed.
+                The input matrices are read sequentially from the AMatrix 
+                vector.
+  - reps:       The number of repetitions of the computation to execute.
+                (for performance evaluation)
+*/
 
 #if COMPLEX == 0
-void FloatQRDecomposition(  vector<float> &AMatrix, 
-                            vector<float> &QMatrix,
-                            vector<float> &RMatrix,
-                            queue &q, size_t matrices, size_t reps) {
-  QRDecomposition<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS>(
-                                  AMatrix, QMatrix, RMatrix, q, matrices, reps);
+// Real single precision floating-point QR Decomposition
+void FloatQRDecomposition(std::vector<float> &AMatrix, 
+                          std::vector<float> &QMatrix,
+                          std::vector<float> &RMatrix,
+                          sycl::queue &q, 
+                          size_t matrices, 
+                          size_t reps) {
+  constexpr bool isComplex = false;
+  QRDecomposition_impl< COLS_COMPONENT, 
+                        ROWS_COMPONENT, 
+                        FIXED_ITERATIONS, 
+                        isComplex, 
+                        float>(AMatrix, QMatrix, RMatrix, q, matrices, reps); 
 }
 #else
-void ComplexFloatQRDecomposition( vector<ac_complex<float>> &AMatrix, 
-                                  vector<ac_complex<float>> &QMatrix,
-                                  vector<ac_complex<float>> &RMatrix,
-                                  queue &q, size_t matrices, size_t reps) {
-  QRDecomposition<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS>(
-                                  AMatrix, QMatrix, RMatrix, q, matrices, reps);
+// Complex single precision floating-point QR Decomposition
+void ComplexFloatQRDecomposition( std::vector<ac_complex<float>> &AMatrix, 
+                                  std::vector<ac_complex<float>> &QMatrix,
+                                  std::vector<ac_complex<float>> &RMatrix,
+                                  sycl::queue &q, 
+                                  size_t matrices, 
+                                  size_t reps) {
+  constexpr bool isComplex = true;
+  QRDecomposition_impl< COLS_COMPONENT, 
+                        ROWS_COMPONENT, 
+                        FIXED_ITERATIONS, 
+                        isComplex, 
+                        float>(AMatrix, QMatrix, RMatrix, q, matrices, reps); 
 }
 #endif

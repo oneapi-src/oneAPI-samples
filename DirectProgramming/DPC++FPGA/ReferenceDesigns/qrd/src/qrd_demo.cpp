@@ -1,31 +1,3 @@
-// ==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-// OTHER DEALINGS IN THE SOFTWARE.
-//
-// This agreement shall be governed in all respects by the laws of the State of
-// California and by the laws of the United States of America.
-
 #include <math.h>
 
 #include <CL/sycl.hpp>
@@ -38,16 +10,26 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
+/*
+  COMPLEX, COLS_COMPONENT, ROWS_COMPONENT and FIXED_ITERATIONS are defined
+  by the build system.
+  Depending on the value of COMPLEX, the real or complex QRDecomposition
+*/
+
 #if COMPLEX == 0
-void FloatQRDecomposition(  std::vector<float> &AMatrix, 
-                            std::vector<float> &QMatrix,
-                            std::vector<float> &RMatrix,
-                            sycl::queue &q, size_t matrices, size_t reps);
+void FloatQRDecomposition(std::vector<float> &AMatrix,
+                          std::vector<float> &QMatrix,
+                          std::vector<float> &RMatrix,
+                          sycl::queue &q, 
+                          size_t matrices, 
+                          size_t reps);
 #else
-void ComplexFloatQRDecomposition( std::vector<ac_complex<float>> &AMatrix, 
+void ComplexFloatQRDecomposition( std::vector<ac_complex<float>> &AMatrix,
                                   std::vector<ac_complex<float>> &QMatrix,
                                   std::vector<ac_complex<float>> &RMatrix,
-                                  sycl::queue &q, size_t matrices, size_t reps);
+                                  sycl::queue &q, 
+                                  size_t matrices, 
+                                  size_t reps);
 #endif
 
 

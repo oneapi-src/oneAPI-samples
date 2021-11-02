@@ -1,9 +1,3 @@
-# # Intel supported FPGA Boards
-# "intel_a10gx_pac:pac_a10"
-# "intel_s10sx_pac:pac_s10"
-# "de10_agilex"
-# "agilex_ref:de10_agilex"
-
 set(TARGET_NAME qrd)
 set(DEVICE_SOURCE_FILE qrd.cpp)
 set(HOST_SOURCE_FILE qrd_demo.cpp)

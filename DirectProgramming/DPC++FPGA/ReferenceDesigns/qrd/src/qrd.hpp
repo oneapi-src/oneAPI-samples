@@ -1,63 +1,3 @@
-// ==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-// OTHER DEALINGS IN THE SOFTWARE.
-//
-// This agreement shall be governed in all respects by the laws of the State of
-// California and by the laws of the United States of America.
-
-// The values for FIXED_ITERATIONS, ROWS_COMPONENT and COLS_COMPONENT will be
-// supplied by the build system 
-
-
-// ==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-// OTHER DEALINGS IN THE SOFTWARE.
-//
-// This agreement shall be governed in all respects by the laws of the State of
-// California and by the laws of the United States of America.
-
 #pragma once
 
 #include <CL/sycl.hpp>
@@ -124,7 +64,6 @@ void QRDecomposition_impl(
   constexpr int matricesPerIter = 2048;
   assert(matrices%matricesPerIter == 0);
 #endif
-
 
   // Create buffers and allocate space for them.
   sycl::buffer<TT, 1> *ABuffer[kNumBuffers];
@@ -222,69 +161,4 @@ void QRDecomposition_impl(
     delete QBuffer[b];
     delete RBuffer[b];
   }
-}
-
-
-/*
-  Computes Q and R matrices such that A=QR where:
-  - A is the input matrix
-  - Q is a unitary/orthogonal matrix
-  - R is an upper triangular matrix
-
-  This function implements a OneAPI optimized version of the "High performance
-  QR Decomposition for FPGAs" FPGA'18 paper by Martin Langhammer and Bogdan 
-  Pasca.
-
-  Each matrix (input and output) are represented using vectors in a column
-  fashion (transposed).
-
-  Function arguments:
-  - AMatrix:    The input matrix. Interpreted as a transposed matrix.
-  - QMatrix:    The Q matrix. The function will overwrite this matrix.
-  - RMatrix     The R matrix. The function will overwrite this matrix.
-                The vector will only contain the upper triangular elements
-                of the matrix, in a row by row fashion.
-  - q:          The device queue.
-  - matrices:   The number of matrices to be processed.
-                The input matrices are read sequentially from the AMatrix 
-                vector.
-  - reps:       The number of repetitions of the computation to execute.
-                (for performance evaluation)
-
-  This function requires the following template parameters:
-  - columns:    The number of columns in the matrix
-  - rows:       The number of rows in the matrix     
-  - rawLatency: The latency between the RAW dependency in the triangular
-                loop that prevents the compiler to achieve an II of 1.
-                This helps create a loop structure that can reach an II
-                of 1 following the triangular loop optimization tutorial
-                method.
-*/
-
-// Complex single precision floating-point QR Decomposition
-template<unsigned columns, unsigned rows, unsigned rawLatency, typename T>
-void QRDecomposition( std::vector<ac_complex<T>> &AMatrix, 
-                      std::vector<ac_complex<T>> &QMatrix,
-                      std::vector<ac_complex<T>> &RMatrix,
-                      sycl::queue &q, 
-                      size_t matrices, 
-                      size_t reps) {
-
-  constexpr bool isComplex = true;
-  QRDecomposition_impl<columns, rows, rawLatency, isComplex, T>
-                                (AMatrix, QMatrix, RMatrix, q, matrices, reps); 
-}
-
-// Real single precision floating-point QR Decomposition
-template<unsigned columns, unsigned rows, unsigned rawLatency, typename T>
-void QRDecomposition( std::vector<T> &AMatrix, 
-                      std::vector<T> &QMatrix,
-                      std::vector<T> &RMatrix,
-                      sycl::queue &q, 
-                      size_t matrices, 
-                      size_t reps) {
-
-  constexpr bool isComplex = false;
-  QRDecomposition_impl<columns, rows, rawLatency, isComplex, T>
-                                (AMatrix, QMatrix, RMatrix, q, matrices, reps); 
 }
