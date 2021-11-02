@@ -75,147 +75,155 @@
 #include "StreamingQRD.hpp"
 #include "MemoryTransfers.hpp"
 
-using std::vector;
-using namespace sycl;
+/*
+  Implementation of the QR decomposition using multiple streaming kernels
+  Can be configured by datatype, matrix size (4x4 to 
+  512x512) and works with square or rectangular matrices, real and complex. 
 
-namespace QRDInternal{
+*/
+template< unsigned columns,    // Number of columns in the input matrix
+          unsigned rows,       // Number of rows in the input matrix
+          unsigned rawLatency, // RAW latency for triangular loop optimization
+          bool isComplex,      // Selects between ac_complex<T> and T datatype
+          typename T>          // The datatype for the computation
+void QRDecomposition_impl(  
+    std::vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
+                                                                    &AMatrix, 
+    std::vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
+                                                                    &QMatrix,
+    std::vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
+                                                                    &RMatrix,
+                                sycl::queue &q, size_t matrices, size_t reps) {
 
-  // Forward declare the kernel name
-  // (This prevents unwanted name mangling in the optimization report.)
-  class QRD;
-       
-  template< unsigned columns,    // Number of columns in the input matrix
-            unsigned rows,       // Number of rows in the input matrix
-            unsigned rawLatency, // RAW latency for triangular loop optimization
-            bool isComplex,      // Selects between ac_complex<T> and T datatype
-            typename T>          // The datatype for the computation
-  void QRDecomposition_impl(  
-            vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
-                                                                      &AMatrix, 
-            vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
-                                                                      &QMatrix,
-            vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
-                                                                      &RMatrix,
-                                       queue &q, size_t matrices, size_t reps) {
+  // TT will be ac_complex<T> or T depending on isComplex
+  typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
+  
+  constexpr int kAMatrixSize = columns * rows;
+  constexpr int kQMatrixSize = columns * rows;
+  constexpr int kRMatrixSize = columns * (columns + 1) / 2;
+  constexpr int kNumElementsPerDDRBurst = isComplex ? 4 : 8;
 
-    // TT will be ac_complex<T> or T depending on isComplex
-    typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
+  using PipeType = column<rows, TT>;
 
-    // Functional limitations
-    static_assert(std::is_same<T, float>::value, 
-                                            "only float datatype is supported");
-    static_assert(rows>=columns, 
-         "only rectangular matrices with rows>=columns are matrices supported");
-    static_assert((columns <= 512) && (columns >= 4), 
-                          "only matrices of size 4x4 to 512x512 are supported");
-    
-    constexpr int kAMatrixSize = columns * rows;
-    constexpr int kQMatrixSize = columns * rows;
-    constexpr int kRMatrixSize = columns * (columns + 1) / 2;
-    constexpr int kNumElementsPerBank = isComplex ? 4 : 8;
+  // Number of buffers to allocate to be able to read/compute/store without 
+  // overlap.
+  constexpr short kNumBuffers = 3;
+  
+  // Pipes to communicate the A, Q and R matrices between kernels
+  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 1*2>;
+  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 1*2>;
+  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, TT, 
+                                                    kNumElementsPerDDRBurst*3>;
 
-    using PipeCol = column<rows, TT>;
+  // We will process 'matricesPerIter' number of matrices in each run of the 
+  // kernel
+#if defined(FPGA_EMULATOR)
+  constexpr int matricesPerIter = 1;
+  assert(matrices%matricesPerIter == 0);
+#else
+  constexpr int matricesPerIter = 2048;
+  assert(matrices%matricesPerIter == 0);
+#endif
 
-    // Number of buffers to allocate to be able to read/compute/store 
-    // without overlap.
-    constexpr short kNumBuffers = 3;
-    
-    using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeCol, 1*2>;
-    using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeCol, 1*2>;
-    using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, TT, kNumElementsPerBank*3>;
 
-    // Create buffers and allocate space for them.
-    buffer<TT, 1> *ABuffer[kNumBuffers];
-    buffer<TT, 1> *QBuffer[kNumBuffers];
-    buffer<TT, 1> *RBuffer[kNumBuffers];
-    for (short i = 0; i < kNumBuffers; i++) {
-      ABuffer[i] = new buffer<TT, 1>(kAMatrixSize);
-      QBuffer[i] = new buffer<TT, 1>(kQMatrixSize);
-      RBuffer[i] = new buffer<TT, 1>(kRMatrixSize);
-    }
+  // Create buffers and allocate space for them.
+  sycl::buffer<TT, 1> *ABuffer[kNumBuffers];
+  sycl::buffer<TT, 1> *QBuffer[kNumBuffers];
+  sycl::buffer<TT, 1> *RBuffer[kNumBuffers];
+  for (short i = 0; i < kNumBuffers; i++) {
+    ABuffer[i] = new sycl::buffer<TT, 1>(kAMatrixSize * matricesPerIter);
+    QBuffer[i] = new sycl::buffer<TT, 1>(kQMatrixSize * matricesPerIter);
+    RBuffer[i] = new sycl::buffer<TT, 1>(kRMatrixSize * matricesPerIter);
+  }
 
-    // Repeat the computation multiple times (for performance analysis)
-    for (size_t r = 0; r < reps; r++) {
+  // Repeat the computation multiple times (for performance analysis)
+  for (size_t r = 0; r < reps; r++) {
 
-      // Go over all the matrices, rotating buffers every time
-      for (size_t bufferIdx = 0, it = 0; it < matrices; 
-                      it += 1, bufferIdx = (bufferIdx + 1) % kNumBuffers) {
+    // Go over all the matrices, rotating buffers every time
+    for (size_t bufferIdx = 0, it = 0; it < matrices; 
+            it += matricesPerIter, bufferIdx = (bufferIdx + 1) % kNumBuffers) {
 
-        // Pointer to current input/output matrices in host memory 
-        const TT *kPtrA = AMatrix.data() + kAMatrixSize * it;
-        TT *kPtrQ = QMatrix.data() + kQMatrixSize * it;
-        TT *kPtrR = RMatrix.data() + kRMatrixSize * it;
+      // Pointers to current input/output matrices in host memory 
+      const TT *kPtrA = AMatrix.data() + kAMatrixSize * it;
+      TT *ptrQ = QMatrix.data() + kQMatrixSize * it;
+      TT *ptrR = RMatrix.data() + kRMatrixSize * it;
 
-        // Copy a new input matrix from the host memory into the FPGA DDR 
-        q.submit([&](handler &h) {
-          auto AMatrixDevice =
-       ABuffer[bufferIdx]->template get_access<access::mode::discard_write>(h);
-          h.copy(kPtrA, AMatrixDevice);
-        });
+      // Copy a new input matrix from the host memory to the FPGA DDR 
+      q.submit([&](sycl::handler &h) {
+        auto AMatrixDevice = ABuffer[bufferIdx]->
+                      template get_access<sycl::access::mode::discard_write>(h);
+        h.copy(kPtrA, AMatrixDevice);
+      });
 
-        MatrixReadFromDDRToPipeByColumns< class QRD_DDR_to_local_mem, 
-                                        TT,
-                                        rows,
-                                        columns,
-                                        kNumElementsPerBank,
-                                        AMatrixPipe>
-                                        (q, ABuffer[bufferIdx]);
-
-        StreamingQRDKernel< class QRD_compute, 
-                            T, 
-                            isComplex,
-                            rows, 
-                            columns,
-                            rawLatency, 
-                            AMatrixPipe,
-                            QMatrixPipe,
-                            RMatrixPipe>(q);
-
-        MatrixReadPipeByColumnsToDDR< class QRD_local_mem_to_DDR_Q, 
+      // Read an input matrix A from the host memory to the FPGA DDR
+      // Stream the A matrix to the AMatrixPipe pipe
+      MatrixReadFromDDRToPipeByColumns< class QRD_DDR_to_local_mem, 
                                       TT,
                                       rows,
                                       columns,
-                                      kNumElementsPerBank,
-                                      QMatrixPipe>
-                                      (q, QBuffer[bufferIdx]);
+                                      kNumElementsPerDDRBurst,
+                                      matricesPerIter,
+                                      AMatrixPipe>
+                                      (q, ABuffer[bufferIdx]);
 
-        VectorReadPipeByElementsToDDR<  class QRD_local_mem_to_DDR_R, 
-                                        TT,
-                                        kRMatrixSize,
-                                        kNumElementsPerBank,
-                                        RMatrixPipe>
-                                        (q, RBuffer[bufferIdx]);
+      // Read the A matrix from the AMatrixPipe pipe and compute the QR 
+      // decomposition. Write the Q and R output matrices to the QMatrixPipe
+      // and RMatrixPipe pipes.
+      StreamingQRDKernel< class QRD_compute, 
+                          T, 
+                          isComplex,
+                          rows, 
+                          columns,
+                          rawLatency, 
+                          matricesPerIter,
+                          AMatrixPipe,
+                          QMatrixPipe,
+                          RMatrixPipe>(q);
 
-        // Copy the output result from the FPGA DDR to the host memory
-        q.submit([&](handler &h) {
-          accessor QMatrix(*QBuffer[bufferIdx], h, read_only);
-          h.copy(QMatrix, kPtrQ);
-        });
+      // Read the Q matrix from the QMatrixPipe pipe and copy it to the
+      // FPGA DDR
+      MatrixReadPipeByColumnsToDDR< class QRD_local_mem_to_DDR_Q, 
+                                    TT,
+                                    rows,
+                                    columns,
+                                    kNumElementsPerDDRBurst,
+                                    matricesPerIter,
+                                    QMatrixPipe>
+                                    (q, QBuffer[bufferIdx]);
 
-        // Copy the output result from the FPGA DDR to the host memory
-        q.submit([&](handler &h) {
-          accessor RMatrix(*RBuffer[bufferIdx], h, read_only);
-          h.copy(RMatrix, kPtrR);
-        });
+      // Read the R matrix from the RMatrixPipe pipe and copy it to the
+      // FPGA DDR
+      VectorReadPipeByElementsToDDR<  class QRD_local_mem_to_DDR_R, 
+                                      TT,
+                                      kRMatrixSize,
+                                      kNumElementsPerDDRBurst,
+                                      matricesPerIter,
+                                      RMatrixPipe>
+                                      (q, RBuffer[bufferIdx]);
 
-      } // end for it=0:matrices-1 
-    } // end for r=0:reps-1 
+      // Copy the Q matrix result from the FPGA DDR to the host memory
+      q.submit([&](sycl::handler &h) {
+        sycl::accessor QMatrix(*QBuffer[bufferIdx], h, sycl::read_only);
+        h.copy(QMatrix, ptrQ);
+      });
 
-    // Clean allocated buffers
-    for (short b = 0; b < kNumBuffers; b++) {
-      delete ABuffer[b];
-      delete QBuffer[b];
-      delete RBuffer[b];
-    }
+      // Copy the R matrix result from the FPGA DDR to the host memory
+      q.submit([&](sycl::handler &h) {
+        sycl::accessor RMatrix(*RBuffer[bufferIdx], h, sycl::read_only);
+        h.copy(RMatrix, ptrR);
+      });
+
+    } // end for it=0:matrices-1 
+  } // end for r=0:reps-1 
+
+  // Clean allocated buffers
+  for (short b = 0; b < kNumBuffers; b++) {
+    delete ABuffer[b];
+    delete QBuffer[b];
+    delete RBuffer[b];
   }
+}
 
-} // namespace QRDInternal
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-/////////////////////////// User facing QRD functions //////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 
 /*
   Computes Q and R matrices such that A=QR where:
@@ -228,16 +236,14 @@ namespace QRDInternal{
   Pasca.
 
   Each matrix (input and output) are represented using vectors in a column
-  fashion.
+  fashion (transposed).
 
   Function arguments:
-  - AMatrix:   The input matrix. Interpreted as a transposed matrix.
-  - QRMatrix:  The output matrix. The function will overwrite this matrix.
-                The first values of this output vector will contain the upper
-                triangular values of the R matrix, row by row.
-                e.g. for a 4x4 QRD, QRMatrix[5] will contain R[1][1].
-                There are exactly N*(N+1)/2 elements of R.
-                So rest of the values hold the transposed matrix Q (N*N).
+  - AMatrix:    The input matrix. Interpreted as a transposed matrix.
+  - QMatrix:    The Q matrix. The function will overwrite this matrix.
+  - RMatrix     The R matrix. The function will overwrite this matrix.
+                The vector will only contain the upper triangular elements
+                of the matrix, in a row by row fashion.
   - q:          The device queue.
   - matrices:   The number of matrices to be processed.
                 The input matrices are read sequentially from the AMatrix 
@@ -257,28 +263,28 @@ namespace QRDInternal{
 
 // Complex single precision floating-point QR Decomposition
 template<unsigned columns, unsigned rows, unsigned rawLatency, typename T>
-void QRDecomposition( vector<ac_complex<T>> &AMatrix, 
-                      vector<ac_complex<T>> &QMatrix,
-                      vector<ac_complex<T>> &RMatrix,
-                      queue &q, 
+void QRDecomposition( std::vector<ac_complex<T>> &AMatrix, 
+                      std::vector<ac_complex<T>> &QMatrix,
+                      std::vector<ac_complex<T>> &RMatrix,
+                      sycl::queue &q, 
                       size_t matrices, 
                       size_t reps) {
 
   constexpr bool isComplex = true;
-  QRDInternal::QRDecomposition_impl<columns, rows, rawLatency, isComplex, T>
+  QRDecomposition_impl<columns, rows, rawLatency, isComplex, T>
                                 (AMatrix, QMatrix, RMatrix, q, matrices, reps); 
 }
 
 // Real single precision floating-point QR Decomposition
 template<unsigned columns, unsigned rows, unsigned rawLatency, typename T>
-void QRDecomposition( vector<T> &AMatrix, 
-                      vector<T> &QMatrix,
-                      vector<T> &RMatrix,
-                      queue &q, 
+void QRDecomposition( std::vector<T> &AMatrix, 
+                      std::vector<T> &QMatrix,
+                      std::vector<T> &RMatrix,
+                      sycl::queue &q, 
                       size_t matrices, 
                       size_t reps) {
 
   constexpr bool isComplex = false;
-  QRDInternal::QRDecomposition_impl<columns, rows, rawLatency, isComplex, T>
+  QRDecomposition_impl<columns, rows, rawLatency, isComplex, T>
                                 (AMatrix, QMatrix, RMatrix, q, matrices, reps); 
 }

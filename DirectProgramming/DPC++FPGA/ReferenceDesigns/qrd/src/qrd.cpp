@@ -43,9 +43,9 @@ void FloatQRDecomposition(  vector<float> &AMatrix,
 }
 #else
 void ComplexFloatQRDecomposition( vector<ac_complex<float>> &AMatrix, 
-                      vector<ac_complex<float>> &QMatrix,
-                      vector<ac_complex<float>> &RMatrix,
-                      queue &q, size_t matrices, size_t reps) {
+                                  vector<ac_complex<float>> &QMatrix,
+                                  vector<ac_complex<float>> &RMatrix,
+                                  queue &q, size_t matrices, size_t reps) {
   QRDecomposition<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS>(
                                   AMatrix, QMatrix, RMatrix, q, matrices, reps);
 }
