@@ -46,7 +46,7 @@ void QRDecomposition_impl(
   constexpr int kRMatrixSize = columns * (columns + 1) / 2;
   constexpr int kNumElementsPerDDRBurst = isComplex ? 4 : 8;
 
-  using PipeType = column<rows, TT>;
+  using PipeType = pipeTable<rows, TT>;
 
   // Number of buffers to allocate to be able to read/compute/store without 
   // overlap.

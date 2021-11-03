@@ -1,6 +1,6 @@
 #pragma once 
-
 #include "Tuple.hpp"
+#include "Utils.hpp"
 
 /*
   QRD (QR decomposition) - Computes Q and R matrices such that A=QR where:
@@ -18,7 +18,7 @@
 */
 template <typename kernelName,  // Name to use for the Kernel
           typename T,           // The datatype for the computation
-          bool isComplex,       // True if T is ac_complex<T>
+          bool isComplex,       // True if T is ac_complex<X>
           int rows,             // Number of rows in the incoming A matrices
           int columns,          // Number of columns in the incoming A
                                 // matrices, must be <= rows
@@ -121,10 +121,10 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
   // -> enough bits to encode columns+1 for the positive iterations and 
   //    the exit condition
   // -> enough bits to encode the maximum number of negative iterations
-  static constexpr int kJNegativeIterations = 
-                          kVariableIterations < 0 ? -kVariableIterations : 1;
-  static constexpr int kJBitSize = BitsForMaxValue<columns + 1>() 
-                                    + BitsForMaxValue<kJNegativeIterations>();
+  static constexpr int kJNegativeIterations = kVariableIterations < 0 ? 
+                                                      -kVariableIterations : 1;
+  static constexpr int kJBitSize =  BitsForMaxValue<columns + 1>() + 
+                                    BitsForMaxValue<kJNegativeIterations>();
 
   auto e = q.submit([&](sycl::handler& h) {
     h.single_task<kernelName>([=] {
@@ -153,11 +153,11 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
         [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
         for (int col=0; col<columns; col++) {
           // Read a column of the input matrix from the pipe 
-          column<rows, TT> pipeData = AIn::read();
+          pipeTable<rows, TT> pipeData = AIn::read();
 
           // Write the current column to the ALoad matrix.
           UnrolledLoop<rows>([&](auto k) {
-            ALoad[col].template get<k>() = pipeData.row[k];
+            ALoad[col].template get<k>() = pipeData.elem[k];
           });
         }
 
@@ -389,9 +389,9 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
         [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
         for (int col = 0; col < columns; col++) {
           // Load a full column of Q to the correct pipe type
-          column<rows, TT> pipeData;
+          pipeTable<rows, TT> pipeData;
           UnrolledLoop<rows>([&](auto k) {
-            pipeData.row[k] = QResult[col].template get<k>();
+            pipeData.elem[k] = QResult[col].template get<k>();
           });
 
           // Write the Q column to the pipe
