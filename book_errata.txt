@@ -37,6 +37,8 @@ p.414 - Figure 16-17: get_globalid(0) -> get_global_id(0)
 
 p.421 - Fig 17-1 - The text at the top should be “ISA-based” instead of “SA-based”
 
+p.436 - Fig 17-10 - The text "Valdation" should be "Validation"
+
 p.437 - last paragraph... "which" is incorrectly in monospace font
 
 p.438 - Figure 17-11: one "include" filename is red, the other black
