@@ -9,7 +9,6 @@
 #include <vector>
 #include <type_traits>
 
-#include "Tuple.hpp"
 #include "UnrolledLoop.hpp"
 #include "Utils.hpp"
 #include "StreamingQRD.hpp"
@@ -28,12 +27,16 @@ template< unsigned columns,    // Number of columns in the input matrix
           typename T>          // The datatype for the computation
 void QRDecomposition_impl(  
     std::vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
-                                                                    &AMatrix, 
+                          &AMatrix,         // Input matrix to decompose
     std::vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
-                                                                    &QMatrix,
+                          &QMatrix,         // Output matrix Q
     std::vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
-                                                                    &RMatrix,
-                                sycl::queue &q, size_t matrices, size_t reps) {
+                          &RMatrix,         // Output matrix R
+                          sycl::queue &q,   // Device queue
+                          size_t matrices,  // Number of matrices to process
+                          size_t reps       // Number of repetitions (for 
+                                            // performance evaluation)
+                          ) {
 
   // TT will be ac_complex<T> or T depending on isComplex
   typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
@@ -87,7 +90,7 @@ void QRDecomposition_impl(
       TT *ptrQ = QMatrix.data() + kQMatrixSize * it;
       TT *ptrR = RMatrix.data() + kRMatrixSize * it;
 
-      // Copy a new input matrix from the host memory to the FPGA DDR 
+      // Copy a new set of input matrices from the host memory to the FPGA DDR 
       q.submit([&](sycl::handler &h) {
         auto AMatrixDevice = ABuffer[bufferIdx]->
                       template get_access<sycl::access::mode::discard_write>(h);
@@ -152,8 +155,8 @@ void QRDecomposition_impl(
         h.copy(RMatrix, ptrR);
       });
 
-    } // end for it=0:matrices-1 
-  } // end for r=0:reps-1 
+    } // end of it 
+  } // end of r 
 
   // Clean allocated buffers
   for (short b = 0; b < kNumBuffers; b++) {

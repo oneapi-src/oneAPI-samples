@@ -41,18 +41,9 @@ static constexpr inline unsigned int BitsForMaxValue()
 }
 
 /*
-  A structure that hold a column a of matrix of type T.
+  A structure that holds a table a of count elements of type T.
 */
-template<unsigned rows, typename T>
-struct column{
-  T row[rows];
-};
-
-/*
-  A structure that hold a row a of matrix of type T.
-*/
-template<unsigned columns, typename T>
-struct row{
-  // [[intel::fpga_memory("BLOCK_RAM")]] // NO-FORMAT: Attribute
-  T col[columns];
+template<unsigned count, typename T>
+struct pipeTable{
+  T elem[count];
 };

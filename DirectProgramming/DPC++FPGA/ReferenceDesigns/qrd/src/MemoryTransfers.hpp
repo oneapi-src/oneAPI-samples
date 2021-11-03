@@ -42,7 +42,7 @@ sycl::event MatrixReadFromDDRToPipeByColumns(
       // "Shift register" that will contain a full column after 
       // kLoopIterPerColumn iterations.
       // Each DDR burst read will write to banks[kLoopIterPerColumn-1] and
-      // and each loop iteration each banks[x] will be assigned banks[x+1]
+      // at each loop iteration each banks[x] will be assigned banks[x+1]
       // This ensures that the fanout is kept to a minimum
       TT banks[kLoopIterPerColumn][numElemPerBank];
       

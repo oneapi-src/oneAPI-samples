@@ -9,28 +9,31 @@
 #include <vector>
 #include <type_traits>
 
-#include "Tuple.hpp"
 #include "UnrolledLoop.hpp"
 #include "Utils.hpp"
 #include "StreamingQRD.hpp"
 #include "StreamingQRI.hpp"
 #include "MemoryTransfers.hpp"
-#include "QRInversionDim.hpp"
 
-using std::vector;
-using namespace sycl;
-
-template< unsigned columns,    // Number of columns in the input matrix
-          unsigned rows,       // Number of rows in the input matrix
-          unsigned rawLatency, // RAW latency for triangular loop optimization
-          bool isComplex,      // Selects between ac_complex<T> and T datatype
-          typename T>          // The datatype for the computation
+template< unsigned columns,       // Number of columns in the input matrix
+          unsigned rows,          // Number of rows in the input matrix
+          unsigned RAWLatencyQRD, // RAW latency for triangular loop 
+                                  // optimization in the QRD kernel
+          unsigned RAWLatencyQRI, // RAW latency for triangular loop 
+                                  // optimization in the QRI kernel
+          bool isComplex,         // Selects between ac_complex<T> and T 
+                                  // datatype
+          typename T>             // The datatype for the computation
 void QRI_impl(  
-          vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
-                                                                    &A_matrix, 
-          vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
-                                                                   &inverse_matrix,
-                                     queue &q, size_t matrices, size_t reps) {
+      std::vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
+              &AMatrix,         // Input matrix to inverse
+      std::vector<typename std::conditional<isComplex, ac_complex<T>, T>::type> 
+              &inverseMatrix,   // Output inverse matrix 
+              sycl::queue &q,   // Device queue
+              size_t matrices,  // Number of matrices to process
+              size_t reps       // Number of repetitions (for performance 
+                                //evaluation)
+              ) {
 
   // TT will be ac_complex<T> or T depending on isComplex
   typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
@@ -43,33 +46,39 @@ void QRI_impl(
   static_assert((columns <= 512) && (columns >= 4), 
                         "only matrices of size 4x4 to 512x512 are supported");
   
-  using dim = QRInversionDim<isComplex, rows, columns, rawLatency>;
-
-  constexpr int kAMatrixSize = dim::AMatrixSize;
-  constexpr int kInverseMatrixSize = dim::InverseMatrixSize;
+  constexpr int kAMatrixSize = rows * columns;
+  constexpr int kInverseMatrixSize = rows * columns;
   constexpr int kNumElementsPerDDRBurst = isComplex ? 4 : 8;
 
-  // Number of buffers to allocate to be able to read/compute/store 
-  // without overlap.
+  // Number of buffers to allocate to be able to read/compute/store without 
+  // overlap.
   constexpr short kNumBuffers = 3;
   
-  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, column<rows, TT>, 4>;
-  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, column<rows, TT>, 4>;
-  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, TT, 4>;
-  using InverseMatrixPipe = sycl::ext::intel::pipe<class IPipe, column<rows, TT>, 4>;
+  using PipeType = pipeTable<rows, TT>;
 
-  // We will process 'chunk' number of matrices in each run of the kernel
-  short chunk = 2048;
-  if (matrices % chunk) {
-    chunk = 1;
-  }
+  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 4>;
+  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 4>;
+  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, TT, 
+                                                    kNumElementsPerDDRBurst*3>;
+  using InverseMatrixPipe = sycl::ext::intel::pipe<class IPipe, PipeType, 4>;
+
+  // We will process 'matricesPerIter' number of matrices in each run of the 
+  // kernel
+#if defined(FPGA_EMULATOR)
+  constexpr int matricesPerIter = 1;
+  assert(matrices%matricesPerIter == 0);
+#else
+  constexpr int matricesPerIter = 2048;
+  assert(matrices%matricesPerIter == 0);
+#endif
 
   // Create buffers and allocate space for them.
-  buffer<TT, 1> *ABuffer[kNumBuffers];
-  buffer<TT, 1> *inverseBuffer[kNumBuffers];
+  sycl::buffer<TT, 1> *ABuffer[kNumBuffers];
+  sycl::buffer<TT, 1> *inverseBuffer[kNumBuffers];
   for (short i = 0; i < kNumBuffers; i++) {
-    ABuffer[i] = new buffer<TT, 1>(kAMatrixSize * chunk);
-    inverseBuffer[i] = new buffer<TT, 1>(kInverseMatrixSize * chunk);
+    ABuffer[i] = new sycl::buffer<TT, 1>(kAMatrixSize * matricesPerIter);
+    inverseBuffer[i] = new sycl::buffer<TT, 1>(kInverseMatrixSize * 
+                                                              matricesPerIter);
   }
 
   // Repeat the computation multiple times (for performance analysis)
@@ -77,21 +86,17 @@ void QRI_impl(
 
     // Go over all the matrices, rotating buffers every time
     for (size_t bufferIdx = 0, it = 0; it < matrices; 
-                    it += chunk, bufferIdx = (bufferIdx + 1) % kNumBuffers) {
-
-      constexpr int matricesPerIter = 1;
+            it += matricesPerIter, bufferIdx = (bufferIdx + 1) % kNumBuffers) {
 
       // Pointer to current input/output matrices in host memory 
-      const TT *kPtrA = A_matrix.data() + kAMatrixSize * it;
-      TT *kPtrInverse = inverse_matrix.data() + kInverseMatrixSize * it;
+      const TT *kPtrA = AMatrix.data() + kAMatrixSize * it;
+      TT *kPtrInverse = inverseMatrix.data() + kInverseMatrixSize * it;
 
-      // int matrices = chunk;
-
-      // Copy a new input matrix from the host memory into the FPGA DDR 
-      q.submit([&](handler &h) {
-        auto A_matrix2 =
-     ABuffer[bufferIdx]->template get_access<access::mode::discard_write>(h);
-        h.copy(kPtrA, A_matrix2);
+      // Copy a new set of input matrices from the host memory into the FPGA DDR
+      q.submit([&](sycl::handler &h) {
+        auto AMatrixDevice = ABuffer[bufferIdx]->
+                      template get_access<sycl::access::mode::discard_write>(h);
+        h.copy(kPtrA, AMatrixDevice);
       });
 
       // Read an input matrix A from the host memory to the FPGA DDR
@@ -113,24 +118,27 @@ void QRI_impl(
                           isComplex,
                           rows, 
                           columns,
-                          rawLatency, 
+                          RAWLatencyQRD, 
                           matricesPerIter,
                           AMatrixPipe,
                           QMatrixPipe,
                           RMatrixPipe>(q);
 
+      // Read the Q and R matrices from pipes and compute the inverse of A. 
+      // Write the result to the InverseMatrixPipe pipe.
       StreamingQRIKernel< class QRI_compute, 
-                          isComplex, 
                           T, 
-                          rawLatency, 
+                          isComplex, 
                           rows, 
                           columns,
+                          RAWLatencyQRI, 
+                          matricesPerIter,
                           QMatrixPipe,
                           RMatrixPipe,
                           InverseMatrixPipe>(q);
 
-      // Read the Q matrix from the QMatrixPipe pipe and copy it to the
-      // FPGA DDR
+      // Read the inverse matrix from the InverseMatrixPipe pipe and copy it to
+      // the FPGA DDR
       MatrixReadPipeByColumnsToDDR< class QRI_local_mem_to_DDR, 
                                     TT,
                                     rows,
@@ -141,14 +149,13 @@ void QRI_impl(
                                     (q, inverseBuffer[bufferIdx]);
 
       // Copy the output result from the FPGA DDR to the host memory
-      q.submit([&](handler &h) {
-        accessor final_inverse_matrix(*inverseBuffer[bufferIdx], h, read_only);
-        h.copy(final_inverse_matrix, kPtrInverse);
+      q.submit([&](sycl::handler &h) {
+        sycl::accessor inverseMatrixAcc(*inverseBuffer[bufferIdx], h, 
+                                                              sycl::read_only);
+        h.copy(inverseMatrixAcc, kPtrInverse);
       });
-
-
-    } // end for it=0:matrices-1 
-  } // end for r=0:reps-1 
+    } // end of it 
+  } // end of r 
 
   // Clean allocated buffers
   for (short b = 0; b < kNumBuffers; b++) {

@@ -42,7 +42,7 @@ sycl::event MatrixReadFromDDRToPipeByColumns(
       // "Shift register" that will contain a full column after 
       // kLoopIterPerColumn iterations.
       // Each DDR burst read will write to banks[kLoopIterPerColumn-1] and
-      // and each loop iteration each banks[x] will be assigned banks[x+1]
+      // at each loop iteration each banks[x] will be assigned banks[x+1]
       // This ensures that the fanout is kept to a minimum
       TT banks[kLoopIterPerColumn][numElemPerBank];
       
@@ -70,14 +70,14 @@ sycl::event MatrixReadFromDDRToPipeByColumns(
         // If so, we are going to copy the column stored in banks to the pipe
         if(lastBurstOfCol){
           // The pipe type
-          column<rows, TT> readColumn;
+          pipeTable<rows, TT> readColumn;
 
           // Copy the banks data to the correct datatype for the pipe write
           #pragma unroll
           for(int i=0; i<kLoopIterPerColumn; i++){
             #pragma unroll
             for(int k=0; k<numElemPerBank; k++){
-              readColumn.row[i*numElemPerBank+k] = banks[i][k];
+              readColumn.elem[i*numElemPerBank+k] = banks[i][k];
             }
           }
 
@@ -174,7 +174,7 @@ sycl::event MatrixReadFromDDRToPipeByColumns(
         // copy the column stored in banks to the pipe
         if(lastBurstOfCol){
           // The pipe type
-          column<rows, TT> readColumn;
+          pipeTable<rows, TT> readColumn;
 
           // Copy the banks data to the correct datatype for the pipe write
           #pragma unroll
@@ -182,7 +182,7 @@ sycl::event MatrixReadFromDDRToPipeByColumns(
             #pragma unroll
             for(int k=0; k<numElemPerBank; k++){
               if(i*numElemPerBank+k < rows){
-                readColumn.row[i*numElemPerBank+k] = banks[i][k];
+                readColumn.elem[i*numElemPerBank+k] = banks[i][k];
               }
             }
           }
@@ -247,13 +247,13 @@ sycl::event MatrixReadPipeByColumnsToDDR(
         // Read a new column from the pipe every kLoopIterPerColumn iterations
         if((li % kLoopIterPerColumn) == 0){
           // Read the column from the pipe
-          column<rows, TT> pipeRead = matrixPipe::read();
+          pipeTable<rows, TT> pipeRead = matrixPipe::read();
 
           // Place the column into the banks "shift register"
           #pragma unroll
           for(int i=0; i<kLoopIterPerColumn; i++){
             UnrolledLoop<numElemPerBank>([&](auto k) {
-              banks[i][k] = pipeRead.row[i*numElemPerBank+k];
+              banks[i][k] = pipeRead.elem[i*numElemPerBank+k];
             });
           }
         }
@@ -331,13 +331,13 @@ sycl::event MatrixReadPipeByColumnsToDDR(
         // Read a new column from the pipe every kLoopIterPerColumn iterations
         if((li % kLoopIterPerColumn) == 0){
           // Read the column from the pipe
-          column<rows, TT> pipeRead = matrixPipe::read();
+          pipeTable<rows, TT> pipeRead = matrixPipe::read();
 
           // Place the column into the banks "shift register"
           #pragma unroll
           for(int i=0; i<kLoopIterPerColumn; i++){
             UnrolledLoop<numElemPerBank>([&](auto k) {
-              banks[i][k] = pipeRead.row[i*numElemPerBank+k];
+              banks[i][k] = pipeRead.elem[i*numElemPerBank+k];
             });
           }
         }

@@ -1,4 +1,6 @@
 #pragma once 
+#include "Tuple.hpp"
+#include "Utils.hpp"
 
 /*
   QRD (QR decomposition) - Computes Q and R matrices such that A=QR where:
@@ -121,8 +123,8 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
   // -> enough bits to encode the maximum number of negative iterations
   static constexpr int kJNegativeIterations = 
                           kVariableIterations < 0 ? -kVariableIterations : 1;
-  static constexpr int kJBitSize = BitsForMaxValue<columns + 1>() 
-                                    + BitsForMaxValue<kJNegativeIterations>();
+  static constexpr int kJBitSize = BitsForMaxValue<columns + 1>() + 
+                                BitsForMaxValue<kJNegativeIterations>();
 
   auto e = q.submit([&](sycl::handler& h) {
     h.single_task<kernelName>([=] {
@@ -132,12 +134,12 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
 
         // Three copies of the full matrix, so that each matrix has a single
         // load and a single store.
-        // A_load is the initial matrix received from the pipe
-        // A_compute is used and modified during calculations
-        // Q_Result is a copy of A_compute and is used to send the final output
-        ColumnTuple A_load[columns];
-        ColumnTuple A_compute[columns];
-        ColumnTuple Q_Result[columns];
+        // ALoad is the initial matrix received from the pipe
+        // ACompute is used and modified during calculations
+        // QResult is a copy of ACompute and is used to send the final output
+        ColumnTuple ALoad[columns];
+        ColumnTuple ACompute[columns];
+        ColumnTuple QResult[columns];
         
         // Contains the values of the upper-right part of R in a row by row 
         // fashion, starting by row 0
@@ -151,11 +153,11 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
         [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
         for (int col=0; col<columns; col++) {
           // Read a column of the input matrix from the pipe 
-          column<rows, TT> pipeData = AIn::read();
+          pipeTable<rows, TT> pipeData = AIn::read();
 
-          // Write the current column to the A_load matrix.
+          // Write the current column to the ALoad matrix.
           UnrolledLoop<rows>([&](auto k) {
-            A_load[col].template get<k>() = pipeData.row[k];
+            ALoad[col].template get<k>() = pipeData.elem[k];
           });
         }
 
@@ -186,7 +188,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
         ac_int<kJBitSize, true> j = 0;
         
         [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
-        [[intel::ivdep(RAWLatency)]]  // NO-FORMAT: Attribute
+        [[intel::ivdep(RAWLatency)]]        // NO-FORMAT: Attribute
         for (int s = 0; s < kIterations; s++) {
           // Pre-compute the next values of i and j
           ac_int<kIBitSize, true> nextI;
@@ -238,19 +240,19 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
 
             // Load col with the current column of matrix A.
             // At least one iteration of the outer loop i is required
-            // for the "working copy" A_compute to contain data.
+            // for the "working copy" ACompute to contain data.
             // If no i iteration elapsed, we must read the column of 
-            // matrix A directly from the A_load; col then contains a_j
+            // matrix A directly from the ALoad; col then contains a_j
 
             if(iGt0[fanoutBankIdx]){
-              col[k] = A_compute[j].template get<k>();
+              col[k] = ACompute[j].template get<k>();
             }
             // Using an else statement makes the compiler throw an
             // inexplicable warning when using non complex types:
             // "Compiler Warning: Memory instruction with unresolved 
             // pointer may lead to bad QoR."
             if(!iGt0[fanoutBankIdx]){
-              col[k] = A_load[j].template get<k>();
+              col[k] = ALoad[j].template get<k>();
             }
 
             // Load a_i for reuse across j iterations
@@ -281,20 +283,20 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
               col1[k] = prodLHS * prodRHS + add;
             }
 
-            // Store Q_i in Q_Result and the modified a_j in A_compute
-            // To reduce the amount of control, Q_Result and A_compute
+            // Store Q_i in QResult and the modified a_j in ACompute
+            // To reduce the amount of control, QResult and ACompute
             // are both written to for each iteration of i>=0 && j>=i
             // In fact:
-            // -> Q_Result could only be written to at iterations i==j
-            // -> A_compute could only be written to at iterations 
+            // -> QResult could only be written to at iterations i==j
+            // -> ACompute could only be written to at iterations 
             //    j!=i && i>=0  
             // The extra writes are harmless as the locations written to 
             // are either going to be:
-            // -> overwritten for the matrix Q (Q_Result)
-            // -> unused for the A_compute
+            // -> overwritten for the matrix Q (QResult)
+            // -> unused for the ACompute
             if (iGe0JGeI[fanoutBankIdx]) {
-              Q_Result[j].template get<k>() = col1[k];
-              A_compute[j].template get<k>() = col1[k];
+              QResult[j].template get<k>() = col1[k];
+              ACompute[j].template get<k>() = col1[k];
             }
 
             // Store a_{i+1} for subsequent iterations of j
@@ -387,11 +389,9 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
         [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
         for (int col = 0; col < columns; col++) {
           // Load a full column of Q to the correct pipe type
-          column<rows, TT> pipeData;
-
-          // Write the current column to the A_load matrix.
+          pipeTable<rows, TT> pipeData;
           UnrolledLoop<rows>([&](auto k) {
-            pipeData.row[k] = Q_Result[col].template get<k>();
+            pipeData.elem[k] = QResult[col].template get<k>();
           });
 
           // Write the Q column to the pipe

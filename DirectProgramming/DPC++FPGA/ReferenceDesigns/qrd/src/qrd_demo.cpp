@@ -15,7 +15,8 @@
 /*
   COMPLEX, COLS_COMPONENT, ROWS_COMPONENT and FIXED_ITERATIONS are defined
   by the build system.
-  Depending on the value of COMPLEX, the real or complex QRDecomposition
+  Depending on the value of COMPLEX, the real or complex QRDecomposition is 
+  defined
 
   Function arguments:
   - AMatrix:    The input matrix. Interpreted as a transposed matrix.
@@ -30,7 +31,6 @@
   - reps:       The number of repetitions of the computation to execute.
                 (for performance evaluation)
 */
-
 #if COMPLEX == 0
 // Real single precision floating-point QR Decomposition
 void QRDecomposition( std::vector<float> &AMatrix, 
@@ -42,7 +42,7 @@ void QRDecomposition( std::vector<float> &AMatrix,
   constexpr bool isComplex = false;
   QRDecomposition_impl< COLS_COMPONENT, 
                         ROWS_COMPONENT, 
-                        FIXED_ITERATIONS, 
+                        FIXED_ITERATIONS,
                         isComplex, 
                         float>(AMatrix, QMatrix, RMatrix, q, matrices, reps); 
 }
@@ -57,7 +57,7 @@ void QRDecomposition( std::vector<ac_complex<float>> &AMatrix,
   constexpr bool isComplex = true;
   QRDecomposition_impl< COLS_COMPONENT, 
                         ROWS_COMPONENT, 
-                        FIXED_ITERATIONS, 
+                        FIXED_ITERATIONS,
                         isComplex, 
                         float>(AMatrix, QMatrix, RMatrix, q, matrices, reps); 
 }
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
     typedef typename std::conditional<kComplex, ac_complex<float>, 
                                                 float>::type T;
 
-    // Create vectors to hold all the input and ouput matrices
+    // Create vectors to hold all the input and output matrices
     std::vector<T> AMatrix;
     std::vector<T> QMatrix; 
     std::vector<T> RMatrix; 
@@ -259,7 +259,7 @@ int main(int argc, char *argv[]) {
 #endif
 
       // Count the number of errors found for this matrix
-      size_t count = 0;
+      size_t errorCount = 0;
       bool error = false;
 
       for (size_t i = 0; i < kRows; i++) {
@@ -369,7 +369,7 @@ int main(int argc, char *argv[]) {
             ) {
 
             // Increase the error count for this matrix
-            count++;
+            errorCount++;
 
             // Continue counting the errors even if we now we are going to 
             // produce an error
@@ -421,9 +421,9 @@ int main(int argc, char *argv[]) {
         } // end of j
       } // end of i
 
-      if (count > 0) {
+      if (errorCount > 0) {
         std::cout << std::endl << "FAILED" << std::endl;
-        std::cout << std::endl << "!!!!!!!!!!!!!! " << count << " errors" 
+        std::cout << std::endl << "!!!!!!!!!!!!!! " << errorCount << " errors" 
                   << std::endl;
         return 1;
       }
