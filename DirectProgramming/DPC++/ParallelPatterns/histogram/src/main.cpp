@@ -4,12 +4,12 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <oneapi/dpl/execution>
-#include <oneapi/dpl/algorithm>
-#include <oneapi/dpl/numeric>
 #include <CL/sycl.hpp>
-#include <random>
 #include <iostream>
+#include <oneapi/dpl/algorithm>
+#include <oneapi/dpl/execution>
+#include <oneapi/dpl/numeric>
+#include <random>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -111,18 +111,15 @@ int main(void) {
   std::vector<uint64_t> input, dense, sparse;
   srand((unsigned)time(0));
   // initialize the input array with randomly generated values between 0 and 9
-  for (int i = 0; i < N; i++)
-    input.push_back(rand() % 9);
+  for (int i = 0; i < N; i++) input.push_back(rand() % 9);
 
   // replacing all input entries of "4" with random number between 1 and 3
   // this is to ensure that we have atleast one entry with zero-bin size,
   // which shows the difference between sparse and dense algorithm output
   for (int i = 0; i < N; i++)
-    if (input[i] == 4)
-      input[i] = rand() % 3;
+    if (input[i] == 4) input[i] = rand() % 3;
   std::cout << "Input:\n";
-  for (int i = 0; i < N; i++)
-    std::cout << input[i] << " ";
+  for (int i = 0; i < N; i++) std::cout << input[i] << " ";
   std::cout << "\n";
   dense = input;
   dense_histogram(dense);
