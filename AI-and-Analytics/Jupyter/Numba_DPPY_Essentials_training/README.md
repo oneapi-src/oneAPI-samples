@@ -1,8 +1,8 @@
-# Numba Data parallel Python training Jupyter notebooks
+# Numba Data parallel python training Jupyter notebooks
 
 The purpose of this repo is to be the central aggregation, curation, and
 distribution point for Juypter notebooks that are developed in support of
-Numba Data parallel Python training programs.
+Numba Data parallel python training programs.
 
 The Jupyter notebooks are tested and can be run on the Intel Devcloud. Below
 are the steps to access these Jupyter notebooks on the Intel Devcloud:
@@ -37,7 +37,7 @@ Notebook Name: Owner
 * @dppy.kernel decorator
 * _Lab Excercise_: Matrix multiplication using numba_dppy
 
-[DPCTL Intro](02_DPCTL_Intro): Praveen.K.Kundurthy@intel.com
+[DPCTL Intro](02_dpctl_Intro): Praveen.K.Kundurthy@intel.com
 * __Classes__ - device, device_selector, queue using dpctl
 * USM and memory management using __dpctl__
 
