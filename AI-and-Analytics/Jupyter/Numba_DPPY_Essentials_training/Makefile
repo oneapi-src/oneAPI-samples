@@ -19,24 +19,24 @@ prog6: 02_dpctl_Intro/lab/simple_dpctl.py
 	python 02_dpctl_Intro/lab/simple_dpctl.py
 
 prog8: 03_DPPY_Pairwise_Distance/lab/pairwise_distance.py
-	python 03_DPPY_Pairwise_Distance/lab/pairwise_distance.py --steps 1 --size 1024 --repeat 1
+	python 03_DPPY_Pairwise_Distance/lab/pairwise_distance.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
 
 prog9: 03_DPPY_Pairwise_Distance/lab/pairwise_distance_gpu.py
-	python 03_DPPY_Pairwise_Distance/lab/pairwise_distance_gpu.py --steps 1 --size 1024 --repeat 1
+	python 03_DPPY_Pairwise_Distance/lab/pairwise_distance_gpu.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
 prog10: 03_DPPY_Pairwise_Distance/lab/pair_wise_kernel.py
-	python 03_DPPY_Pairwise_Distance/lab/pair_wise_kernel.py --steps 1 --size 1024 --repeat 1
+	python 03_DPPY_Pairwise_Distance/lab/pair_wise_kernel.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
 
 prog11: 04_DPPY_Black_Sholes/lab/black_sholes_jit_cpu.py
-	python 04_DPPY_Black_Sholes/lab/black_sholes_jit_cpu.py --steps 1 --size 1024 --repeat 1
+	python 04_DPPY_Black_Sholes/lab/black_sholes_jit_cpu.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
 
 prog12: 04_DPPY_Black_Sholes/lab/black_sholes_jit_gpu.py
-	python 04_DPPY_Black_Sholes/lab/black_sholes_jit_gpu.py --steps 1 --size 1024 --repeat 1
+	python 04_DPPY_Black_Sholes/lab/black_sholes_jit_gpu.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
 
 prog14: 05_DPPY_Kmeans/lab/kmeans.py
-	python 05_DPPY_Kmeans/lab/kmeans.py --steps 1 --size 1024 --repeat 1
+	python 05_DPPY_Kmeans/lab/kmeans.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
 
 prog15: 05_DPPY_Kmeans/lab/kmeans_kernel.py
-	python 05_DPPY_Kmeans/lab/kmeans_kernel.py --steps 1 --size 1024 --repeat 1
+	python 05_DPPY_Kmeans/lab/kmeans_kernel.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
 
 prog16: 05_DPPY_Kmeans/lab/kmeans_kernel_atomic.py
-	python 05_DPPY_Kmeans/lab/kmeans_kernel_atomic.py --steps 1 --size 1024 --repeat 1
+	python 05_DPPY_Kmeans/lab/kmeans_kernel_atomic.py --steps 1 --size 1024 --repeat 1 --json result_gpu.json
