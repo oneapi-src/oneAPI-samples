@@ -29,7 +29,6 @@ Third party program Licenses can be found here:
 
 Notebook Name: Owner
 * Descriptions
-*
 
 [DPPY Intro](01_DPPY_Intro): Praveen.K.Kundurthy@intel.com
 * Introduction and Motivation for Data parallel python: These initial hands-on exercises introduce you to concepts of Data Parallel Python. In addition, it familiarizes you how to execute on multiple devices using Data Parallel Python (DPPY), utilize Numba and Numba-DPPY to write paralle code on GPU 
@@ -40,27 +39,27 @@ Notebook Name: Owner
 
 [DPCTL Intro](02_DPCTL_Intro): Praveen.K.Kundurthy@intel.com
 * __Classes__ - device, device_selector, queue using dpctl
-* USM and memory management using dpctl_
+* USM and memory management using __dpctl__
 
 [DPPY Pairwise Distance Algorithm](03_DPPY_Pairwise_Distance): Praveen.K.Kundurthy@intel.com
-* Pairwise distance algorithm targeting CPU and GPU using __Numba Jit decorator
-* Pairwise distance algorithm targeting GPU using __Kernel decorator
-* Pairwise distance algorithm targeting GPU using __Numpy approach
+* Pairwise distance algorithm targeting CPU and GPU using __Numba__ Jit decorator
+* Pairwise distance algorithm targeting GPU using __Kernel__ decorator
+* Pairwise distance algorithm targeting GPU using __Numpy__ approach
 
 [DPPY Black Scholes Algorithm](04_DPPY_Black_Sholes): Praveen.K.Kundurthy@intel.com
-* Black Scholes algorithm targeting CPU and GPU using __Numba Jit decorator
-* Black Scholes algorithm targeting GPU using __Kernel decorator
-* Black Scholes algorithm targeting GPU using __Numpy approach
+* Black Scholes algorithm targeting CPU and GPU using __Numba_ Jit decorator
+* Black Scholes algorithm targeting GPU using __Kernel__ decorator
+* Black Scholes algorithm targeting GPU using __Numpy__ approach
 
 [DPPY K-Means Algorithm](05_DPPY_Kmeans): Praveen.K.Kundurthy@intel.com
-* K-Means algorithm targeting CPU and GPU using __Numba Jit decorator
-* K-Means algorithm targeting GPU using __Kernel decorator
-* K-Means algorithm targeting GPU using __Numpy and __Atomics
+* K-Means algorithm targeting CPU and GPU using __Numba__ Jit decorator
+* K-Means algorithm targeting GPU using __Kernel__ decorator
+* K-Means algorithm targeting GPU using __Numpy__ and __Atomics__
 
 [DPPY Gpairs Algorithm](05_DPPY_Gpairs): Praveen.K.Kundurthy@intel.com
-* Gpairs algorithm targeting CPU and GPU using __Numba Jit decorator
-* Gpairs algorithm targeting GPU using __Kernel decorator
+* Gpairs algorithm targeting CPU and GPU using __Numba__ Jit decorator
+* Gpairs algorithm targeting GPU using __Kernel__ decorator
 
-__Note: Please take care to secure the connection while using functions like __Pickle and establish an appropriate trust verification mechanism.
+__Note__: Please take care to secure the connection while using functions like __Pickle__ and establish an appropriate trust verification mechanism.
 
 
