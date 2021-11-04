@@ -16,32 +16,18 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 *Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) with USM support (i.e., intel_s10sx_pac:pac_s10_usm)*
 
 ## Purpose
-The purpose of this tutorial is to show you how to take advantage of zero-copy host memory for the FPGA to improve the performance of your design. On FPGA, DPC++ implements all host and shared allocations as *zero-copy* data in host memory. This means that the FPGA will access the data directly over PCIe, which can improve performance in cases where there is little or no temporal reuse of data in the FPGA kernel. This tutorial includes two different kernels: one using traditional SYCL buffers (`src/buffer_kernel.hpp`) and one using USM host allocations (`src/restricted_usm_kernel.hpp`) that takes advantage of zero-copy host memory. Before completing this tutorial, it is suggested you review the **Explicit USM** (explicit_usm) tutorial.
+The purpose of this tutorial is to show you how to take advantage of zero-copy host memory for the FPGA to improve the performance of your design. On FPGA, DPC++ implements all host and shared allocations as *zero-copy* data in host memory. This means that the FPGA will access the data directly over PCIe, which can improve performance in cases where there is little or no temporal reuse of data in the FPGA kernel. This tutorial includes two different kernels: one using traditional SYCL buffers (`src/buffer_kernel.hpp`) and one using USM host allocations (`src/zero_copy_kernel.hpp`) that takes advantage of zero-copy host memory. Before completing this tutorial, it is suggested you review the **Explicit USM** (explicit_usm) tutorial.
 
 ### USM host allocations
-Restricted USM allows the host and device to share their respective memories. A typical SYCL design, which transfers data using either SYCL buffers/accessors or USM device allocations, copies its input data from the Host Memory to the FPGA's Device Memory. To do this, the data is sent to the FPGA board over PCIe. Once all the data is copied to the FPGA's Device Memory, the FPGA kernel is run and produces output that is also stored in Device Memory. Finally, the output data is transferred from the FPGA's Device Memory back to the CPU's Host Memory over PCIe. This model is shown in the figure below.
+USM host allocations allows the host and device to share their respective memories. A typical SYCL design, which transfers data using either SYCL buffers/accessors or USM device allocations, copies its input data from the Host Memory to the FPGA's Device Memory. To do this, the data is sent to the FPGA board over PCIe. Once all the data is copied to the FPGA's Device Memory, the FPGA kernel is run and produces output that is also stored in Device Memory. Finally, the output data is transferred from the FPGA's Device Memory back to the CPU's Host Memory over PCIe. This model is shown in the figure below.
 
-```
-|-------------|                                   |---------------|
-|             |   |-------|   PCIe   |--------|   |               |
-| Host Memory |<=>|  CPU  |<========>|  FPGA  |<=>| Device Memory |
-|             |   |-------|          |--------|   |               |
-|-------------|                                   |---------------|
-```
+<img src="basic.png" alt="basic" width="800"/>
 
 Consider a kernel that simply performs computation for each entry in a buffer independently. Using SYCL buffers or explicit USM, we would bulk transfer the data from the Host Memory to the FPGA's Device Memory, run the kernel that performs the computation on each entry in the buffer, and then bulk transfer the buffer back to the host.
 
-However, a better approach would simply stream the data from the host memory to the FPGA over PCIe, perform the computation on each piece of data, and then stream it back to host memory over PCIe. The desired structure is illustrated below. This would enable us to eliminate the overhead of copying the data to and from the Host Memory and the FPGA's Device Memory. This is done by using zero-copy host memory via the SYCL USM host allocations. This technique is demonstrated in `src/restricted_usm_kernel.hpp`.
+However, a better approach would simply stream the data from the host memory to the FPGA over PCIe, perform the computation on each piece of data, and then stream it back to host memory over PCIe. The desired structure is illustrated below. This would enable us to eliminate the overhead of copying the data to and from the Host Memory and the FPGA's Device Memory. This is done by using zero-copy host memory via the SYCL USM host allocations. This technique is demonstrated in `src/zero_copy_kernel.hpp`.
 
-```
-|---------------|
-|               |    |-------|  PCIe   |--------|
-|               |    |       |========>|        |
-|  Host Memory  |<==>|  CPU  |         |  FPGA  |
-|               |    |       |<========|        |
-|               |    |-------|  PCIe   |--------|
-|---------------|
-```
+<img src="zero_copy.png" alt="zero_copy" width="800"/>
 
 This approach is not considered host streaming since the CPU and FPGA cannot (reliably) access the input/output data simultaneously. In other words, the host must wait until all the FPGA kernels have finished before accessing the output data. However, we did avoid copying the data to and from the FPGA's Device Memory and therefore, we get overall savings in total latency. This savings can be seen by running the sample on FPGA hardware or the example output later in the [Example of Output](#example-of-output) section. Another FPGA tutorial, **Simple Host Streaming** (simple_host_streaming), describes how to achieve true host streaming using USM host allocations.
 
@@ -173,15 +159,15 @@ You should see the following output in the console:
 1. When running on the FPGA emulator
     ```
     Running the buffer kernel version with size=10000
-    Running the restricted USM kernel version with size=10000
+    Running the zero-copy kernel version with size=10000
     PASSED
     ```
 
 2. When running on the FPGA device
     ```
     Running the buffer kernel with size=100000000
-    Running the restricted USM kernel with size=100000000
+    Running the zero-copy kernel version with size=100000000
     Average latency for the buffer kernel: 479.713 ms
-    Average latency for the restricted USM kernel: 310.734 ms
+    Average latency for the zero-copy kernel: 310.734 ms
     PASSED
     ```
