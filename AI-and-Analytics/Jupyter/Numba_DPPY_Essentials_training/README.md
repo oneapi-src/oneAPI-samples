@@ -56,7 +56,7 @@ Notebook Name: Owner
 * K-Means algorithm targeting GPU using __Kernel__ decorator
 * K-Means algorithm targeting GPU using __Numpy__ and __Atomics__
 
-[DPPY Gpairs Algorithm](05_DPPY_Gpairs): Praveen.K.Kundurthy@intel.com
+[DPPY Gpairs Algorithm](05_DPPY_GPAIRS): Praveen.K.Kundurthy@intel.com
 * Gpairs algorithm targeting CPU and GPU using __Numba__ Jit decorator
 * Gpairs algorithm targeting GPU using __Kernel__ decorator
 
