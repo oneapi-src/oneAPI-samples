@@ -51,7 +51,7 @@ def main():
     print("Using device ...")
     device.print_device_info()
 
-    with dpctl.device_context("opencl:gpu"):
+    with dpctl.device_context(device):
         driver(a, b, c, global_size)
 
     print(c)

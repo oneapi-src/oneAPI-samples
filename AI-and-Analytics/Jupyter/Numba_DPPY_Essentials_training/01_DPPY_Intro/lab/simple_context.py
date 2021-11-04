@@ -36,7 +36,6 @@ def add_two_arrays(b, c):
 
     return a
 
-
 def main():
     N = 10
     b = np.ones(N)
@@ -48,7 +47,7 @@ def main():
     print("Using device ...")
     device.print_device_info()
 
-    with dpctl.device_context("opencl:gpu"):
+    with dpctl.device_context(device):
         result = add_two_arrays(b, c)
 
     print("Result :", result)

@@ -25,3 +25,4 @@ Below are the steps to access these Jupyter notebooks on Intel Devcloud
 3. Type in the below command to download the AI-Essentials series notebooks into your Devcloud account
     /data/oneapi_workshop/get_jupyter_notebooks.sh
 4. Navigate to AI_Analytics_Toolkit/Numba_DPPY_Essentials folder and open the Welcome.ipynb, click on "Module 5 - DPPY Kmeans" notebook and follow the instructions
+__Note: Please take care to secure the connection while using functions like __Pickle and establish an appropriate trust verification mechanism.

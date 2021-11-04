@@ -19,7 +19,7 @@ import numba_dppy as dppy
 import dpctl
 
 #***Step1: Uncomment the following lines to enable the dppy.kernel decorator***
-#@dppy.kernel
+@dppy.kernel
 def dppy_gemm(a, b, c):
     """
     A basic DGEMM implemented as a ``kernel`` function.
@@ -59,7 +59,7 @@ def main():
     device.print_device_info()
 
     #***Step2: Uncomment the following lines to set the device context and target a GPU***
-    #with dpctl.device_context("opencl:gpu"):
+    with dpctl.device_context(device):
         driver(a, b, c)
 
     # Host compute using standard NumPy

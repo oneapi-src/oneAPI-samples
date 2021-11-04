@@ -8,8 +8,9 @@ import base_pair_wise
 import numpy as np
 import numba
 
-@numba.jit(nopython=True,parallel=True,fastmath=True)
-def pw_distance(X1,X2,D):
+
+@numba.jit(nopython=True, parallel=True, fastmath=True)
+def pw_distance(X1, X2, D):
     M = X1.shape[0]
     N = X2.shape[0]
     O = X1.shape[1]
@@ -20,5 +21,6 @@ def pw_distance(X1,X2,D):
                 tmp = X1[i, k] - X2[j, k]
                 d += tmp * tmp
             D[i, j] = np.sqrt(d)
+
 
 base_pair_wise.run("Numba par_for", pw_distance) 

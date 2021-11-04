@@ -7,6 +7,8 @@
 # Script to submit job in Intel(R) DevCloud
 # Version: 0.7
 #==========================================
+properties=("xe_hp" "gen9" "skx" "clx" "gpu") 
+
 if [ -z "$1" ]; then
     echo "Missing script argument, Usage: ./q run.sh"
 elif [ ! -f "$1" ]; then
@@ -18,10 +20,32 @@ else
     echo " Kernel -> 'Restart Kernel and Clear All Outputs...' and then try again"
     echo ""
     script=$1
+    property=$2
+     if [ "$property" == "GEN9" ]; then
+             value="gen9"   
+         
+        elif [ "$property" == "DG1" ]; then
+            value="iris_xe_max"
+        elif [ "$property" == "DUAL_GPU" ]; then
+            value="dual_gpu"
+        elif [ "$property" == "QUAD_GPU" ]; then
+            value="quad_gpu"
+        elif [ "$property" == "CPU" ]; then
+            value="xeon"
+        else
+            value="gpu" 
+    fi
+    if [ "$property" == "{device.value}" ]; then
+        echo "Selected Device is: GPU"
+    else
+        echo "Selected Device is: "$property
+    fi
+    
     # Remove old output files
     rm *.sh.* > /dev/null 2>&1
     # Submit job using qsub
-    qsub_id=`qsub -l nodes=1:gpu:ppn=2 -d . $script`
+    qsub_id=`qsub -l nodes=1:$value:ppn=2 -d . $script`
+    # qsub_id=`qsub -l nodes=1:xeon:ppn=2 -d . -F"$2" $script`
     job_id="$(cut -d'.' -f1 <<<"$qsub_id")"
     # Print qstat output
     qstat 
@@ -33,10 +57,10 @@ else
         echo -ne "█"
         ((timeout++))
         # Timeout if no output file generated within 60 seconds
-        if [ $timeout == 60 ]; then
+        if [ $timeout == 240 ]; then
             echo ""
             echo ""
-            echo "TimeOut 60 seconds: Job is still queued for execution, check for output file later ($script.o$job_id)"
+            echo "TimeOut 240 seconds: Job is still queued for execution, check for output file later ($script.o$job_id)"
             echo ""
             break
         fi

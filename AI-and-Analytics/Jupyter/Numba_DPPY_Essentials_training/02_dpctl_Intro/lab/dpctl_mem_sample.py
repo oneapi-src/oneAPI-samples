@@ -92,7 +92,7 @@ def main():
     print("Using device ...")
     device.print_device_info()
 
-    with dpctl.device_context("level_zero:gpu"):
+    with dpctl.device_context(device):
         times = driver()
 
     times = np.asarray(times, dtype=np.float32)
