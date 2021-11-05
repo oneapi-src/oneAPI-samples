@@ -24,10 +24,10 @@ int main() {
     auto sg = item.get_sub_group();
     auto i = item.get_global_id(0);
 
-    //# swap adjacent items in array using sub_group shuffle_xor
+    //# swap adjacent items in array using sub_group permute_group_by_xor 
     data[i] = permute_group_by_xor(sg, data[i], 1);
 
-    //# reverse the order of items in sub_group using shuffle_xor
+    //# reverse the order of items in sub_group using permute_group_by_xor
     //data[i] = permute_group_by_xor(sg, data[i], sg.get_max_local_range() - 1);
 
   }).wait();
