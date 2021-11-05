@@ -11,7 +11,7 @@ static constexpr size_t B = 64; // work-group size
 
 int main() {
   queue q;
-  std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
+  std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
   q.submit([&](handler &h) {
     //# setup sycl stream class to print standard output from device code
@@ -26,7 +26,7 @@ int main() {
       if (sg.get_local_id()[0] == 0) {
         out << "sub_group id: " << sg.get_group_id()[0] << " of "
             << sg.get_group_range()[0] << ", size=" << sg.get_local_range()[0]
-            << endl;
+            << "\n";
       }
     });
   }).wait();

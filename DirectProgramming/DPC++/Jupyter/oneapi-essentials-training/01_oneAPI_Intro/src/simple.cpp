@@ -9,7 +9,7 @@ static const int N = 16;
 int main(){
   //# define queue which has default device associated for offload
   queue q;
-  std::cout << "Device: " << q.get_device().get_info<info::device::name>() << std::endl;
+  std::cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
 
   //# Unified Shared Memory Allocation enables data access on host and device
   int *data = malloc_shared<int>(N, q);
@@ -23,7 +23,7 @@ int main(){
   }).wait();
 
   //# Print Output
-  for(int i=0; i<N; i++) std::cout << data[i] << std::endl;
+  for(int i=0; i<N; i++) std::cout << data[i] << "\n";
 
   free(data, q);
   return 0;

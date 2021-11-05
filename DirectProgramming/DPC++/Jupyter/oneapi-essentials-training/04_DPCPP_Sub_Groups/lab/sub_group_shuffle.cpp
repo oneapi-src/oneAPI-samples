@@ -12,13 +12,13 @@ static constexpr size_t B = 64;  // work-group size
 
 int main() {
   queue q;
-  std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
+  std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
   //# initialize data array using usm
   int *data = malloc_shared<int>(N, q);
   for (int i = 0; i < N; i++) data[i] = i;
   for (int i = 0; i < N; i++) std::cout << data[i] << " ";
-  std::cout << std::endl << std::endl;
+  std::cout << "\n\n";
 
   q.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item) {
     auto sg = item.get_sub_group();
@@ -33,6 +33,8 @@ int main() {
   }).wait();
 
   for (int i = 0; i < N; i++) std::cout << data[i] << " ";
+  std::cout << "\n";
+
   free(data, q);
   return 0;
 }

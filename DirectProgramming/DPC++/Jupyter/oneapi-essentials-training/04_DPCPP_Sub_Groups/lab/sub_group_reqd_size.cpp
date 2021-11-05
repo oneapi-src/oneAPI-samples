@@ -35,7 +35,7 @@ int main() {
       if (sg.get_local_id()[0] == 0) {
         out << "sub_group id: " << sg.get_group_id()[0] << " of "
             << sg.get_group_range()[0] << ", size=" << sg.get_local_range()[0]
-            << endl;
+            << "\n";
       }
     });
   }).wait();
