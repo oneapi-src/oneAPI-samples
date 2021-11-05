@@ -1,0 +1,128 @@
+The following are known errors in the book Data Parallel C++: Mastering DPC++ for
+Programming of Heterogeneous Systems using C++ and SYCL by James Reinders, Ben Ashbaugh,
+James Brodman, Michael Kinsner, John Pennycook, Xinmin Tian (Apress, 2020).
+
+p.183 - Fig. 7-6 - In the first column, there should be no capitalization,
+                   therefore "Write" should be "write"
+                   and "read_Write" should be "read_write"
+
+p.284 - The line "if (dev.is_host()) score += 100;" will need
+        deleting when implementations drop support for a host_device (see
+        errata below regarding changes in the SYCL 2020 specification that we
+        did not anticipate in the book.)  The accompanying text needs to
+	consider the implications of such a change: without it, it is possible
+	that this device selector will fail to find a device.
+
+p.421 - Fig 17-1 - The text at the top should be “ISA-based” instead of “SA-based”
+
+
+SYCL 2020 was finalized after the book went to press.  The largest
+change, which was not anticipated in the book, was the dropping of the
+host device.
+
+    This is a good thing, but we explained and promoted the host device
+    which is not longer part of the specification.  We advise against
+    usign a host device, because long term we expect it will disappear
+    from all SYCL compilers.
+    
+    The SYCL 2020 specification, has an Appendix on "what changed," that
+    explains it as this:
+        A SYCL implementation is no longer required to provide a host
+        device. Instead, an implementation is only required to provide at
+        least one device. Implementations are still allowed to provide devices
+        that are implemented on the host, but it is no longer required. The
+        specification no longer defines any special semantics for a "host
+        device" and APIs specific to the host device have been removed.  The
+        default constructors for the device and platform classes have been
+        changed to construct a copy of the default device and a copy of the
+        platform containing the default device. Previously, they returned a
+        copy of the host device and a copy of the platform containing the host
+        device. The default constructor for the event class has also been
+        changed to construct an event that comes from a default-constructed
+        queue. Previously, it constructed an event that used the host backend.
+    
+    Here is a quick explanation of how to interpret the book in light of
+    this change:
+    
+    Chapter 2: Method #2 discusses "running device code on the host, which
+    is often used for debugging."  Broadly speaking, the usual answer is
+    to request a CPU device to get this behavior.  We say broadly, because
+    what you really want is a device that supports the best debugging.  In
+    all implementation that we are aware of, this will be a CPU.  However,
+    SYCL does not guarantee that any device on a given system will support
+    advanced debugging.  The environment where this will occur most
+    frequently is an embedded systems enviroment.  When developing in such
+    an environment, it is not uncommon to have diminished debugging
+    options and often have a different system entirely for debugging.
+    Regardless, the best debugging environment is what we seek in Method
+    #2 in Chapter 2.  Unless we know better, we would expect that would be
+    from a CPU device.
+    
+    Chapter 2: "The host device is guaranteed to be always avaialble on
+    any system." This is no longer true - the some what "magical" host
+    device is not longer in the SYCL specification.  Instead all devices
+    have properties that can be queried, and SYCL only guarantees that one
+    device must be offered on a system.  We'll note, just to be annoying,
+    that if you don't install any drivers your program can still fail at
+    runtime because effectively no device will be present.  This is
+    because the guarantee only holds for a properly setup system
+    supporting SYCL.
+    
+    Chapter 12: mentioned host device, and for the same reasons explained
+    for Chapter 2, the general answer here is to request a CPU device with
+    the caveat that there may not be such a device. In Figures 12-2 and
+    12-3, the "host_selector()" would need to be changed to
+    "cpu_selector()" but that will lose the quality of always being
+    guaranteed to work.
+    
+    
+    Chapter 13: Mentioned host device as well, so the guarantee mentioned
+    on page 299 is no longer correct - as we have mentioned already in
+    this errata.  The mention of "Method#2" from Chapter 2, that is foudn
+    on pages 305 and 306 (Chapter 13) needs to consider the errata for
+    Chapter 2 we have already covered.
+    
+    
+    Chapter 19, page 496, "host device" is now "CPU device."
+    
+    Chapter 19, page 511, "(i.e., a host device...)" can just be ignored.
+    
+    Chapter 19, page 513, "host device is required to support all memory
+    orderings." There is no device with has this requirement any more,
+    although generally CPU device will have this quality. Properties of a
+    device must be queried to determine what is actually supported.
+
+
+An additional subtle change was spliting sycl::vec into sycl::vec and sycl::marray.
+This is a very good thing, and makes vec better.
+
+    The SYCL 2020 specification, has an Appendix on "what changed," that
+    explains it as this:
+    
+        A new math array type marray has been defined to begin disambiguation
+        of the multiple possible interpretations of how sycl::vec should be
+        interpreted and implemented.
+
+     In the book, we anticipated this coming since parts were in the
+     early drafts for SYCL 2020, and we tried to avoid covering it in
+     a way that would become invalid. We succeeded on that, but it
+     means that we really didn't dive into it as deeply as we could
+     have.  Of course the book was probably long enough!  In the book
+     we simply said: "the need for this section of the book (talking
+     about interpretations of vectors) highlights that there is
+     confusion on what a vector means, and that will be solved in sYCL
+     in the future. There is a hint of this in the SYCL 2020
+     provisional specification where a math array type (marray) has
+     been described, which is explicitly the first interpretation from
+     this section—a convenience type unrelated to vector hardware
+     instructions. We should expect another type to also eventually
+     appear to cover the second interpretation, likely aligned with
+     the C++ std::simd templates. With these two types being clearly
+     associated with specific interpretations of a vector data type,
+     our intent as programmers will be clear from the code that we
+     write. this will be less error prone and less confusing and may
+     even reduce the number of heated discussions between expert
+     developers when the question arises “What is a vector?”
+     
+     So, we hope to write more about that in the future.  Stay tuned, we'll
+     add a note here is we expand upon this in a future blog.

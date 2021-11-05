@@ -54,7 +54,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   partkeys.resize(kPartTableSize);
   values.resize(kPartTableSize);
 
-  // setup the input buffers
+  // create space for the input buffers
   // SUPPLIER
   buffer s_suppkey_buf(dbinfo.s.suppkey);
   buffer s_nationkey_buf(dbinfo.s.nationkey);
@@ -66,16 +66,12 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   buffer ps_supplycost_buf(dbinfo.ps.supplycost);
 
   // setup the output buffers
-  // constructing the output buffers WITHOUT a backed host pointer allows
-  // us to avoid copying the output data from the host to the device before
-  // launching the kernels. Using the set_final_data() function tells the
-  // runtime to copy the contents of the buffer from the device to the given
-  // host pointer (the argument to set_final_data) upon buffer destruction.
-  buffer<DBIdentifier, 1> partkeys_buf(partkeys.size());
-  partkeys_buf.set_final_data(partkeys.data());
+  buffer partkeys_buf(partkeys);
+  buffer values_buf(values);
 
-  buffer<DBDecimal, 1> values_buf(values.size());
-  values_buf.set_final_data(values.data());
+  // number of producing iterations depends on the number of elements per cycle
+  const size_t ps_rows = dbinfo.ps.rows;
+  const size_t ps_iters = (ps_rows + kJoinWinSize - 1) / kJoinWinSize;
 
   // start timer
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
@@ -84,7 +80,6 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   //// ProducePartSupplier Kernel
   auto produce_ps_event = q.submit([&](handler& h) {
     // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps.rows;
     accessor ps_partkey_accessor(ps_partkey_buf, h, read_only);
     accessor ps_suppkey_accessor(ps_suppkey_buf, h, read_only);
     accessor ps_availqty_accessor(ps_availqty_buf, h, read_only);
@@ -92,16 +87,22 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
     // kernel to produce the PARTSUPPLIER table
     h.single_task<ProducePartSupplier>([=]() [[intel::kernel_args_restrict]] {
-      for (size_t i = 0; i < ps_rows; i += kJoinWinSize) {
+      [[intel::initiation_interval(1)]]
+      for (size_t i = 0; i < ps_iters + 1; i++) {
+        bool done = (i == ps_iters);
+        bool valid = (i != ps_iters);
+
         // bulk read of data from global memory
         NTuple<kJoinWinSize, PartSupplierRow> data;
 
         UnrolledLoop<0, kJoinWinSize>([&](auto j) {
-          bool in_range = (i + j) < ps_rows;
-          DBIdentifier partkey = in_range ? ps_partkey_accessor[i + j] : 0;
-          DBIdentifier suppkey = in_range ? ps_suppkey_accessor[i + j] : 0;
-          int availqty = in_range ? ps_availqty_accessor[i + j] : 0;
-          DBDecimal supplycost = in_range ? ps_supplycost_accessor[i + j] : 0;
+          size_t idx = i * kJoinWinSize + j;
+          bool in_range = idx < ps_rows;
+
+          DBIdentifier partkey = ps_partkey_accessor[idx];
+          DBIdentifier suppkey = ps_suppkey_accessor[idx];
+          int availqty = ps_availqty_accessor[idx];
+          DBDecimal supplycost = ps_supplycost_accessor[idx];
 
           data.get<j>() =
               PartSupplierRow(in_range, partkey, suppkey, availqty, supplycost);
@@ -109,7 +110,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
         // write to pipe
         ProducePartSupplierPipe::write(
-            PartSupplierRowPipeData(false, true, data));
+            PartSupplierRowPipeData(done, valid, data));
       }
     });
   });
@@ -118,34 +119,21 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   ///////////////////////////////////////////////////////////////////////////
   //// JoinPartSupplierParts Kernel
   auto join_event = q.submit([&](handler& h) {
-    // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps.rows;
-
     // SUPPLIER table accessors
     size_t s_rows = dbinfo.s.rows;
     accessor s_suppkey_accessor(s_suppkey_buf, h, read_only);
     accessor s_nationkey_accessor(s_nationkey_buf, h, read_only);
 
     h.single_task<JoinPartSupplierParts>([=]() [[intel::kernel_args_restrict]] {
-      // callbacks for reading and writing data
-      // reader
-      GenericPipeReader<ProducePartSupplierPipe,
-                        PartSupplierRowPipeData> partsupplier_reader;
-      // writer
-      GenericPipeWriter<PartSupplierPartsPipe,
-                        SupplierPartSupplierJoinedPipeData> joined_writer;
-
-      // +1 is to account for fact that SUPPKEY is [1,kSF*10000]
-      MapJoiner<SupplierRow, kSupplierTableSize + 1, PartSupplierRow,
-                kJoinWinSize, SupplierPartSupplierJoined>
-          mapJoiner(ps_rows);
-
       // initialize the mapper
-      mapJoiner.Init();
+      // +1 is to account for fact that SUPPKEY is [1,kSF*10000]
+      using ArrayMapType = ArrayMap<SupplierRow, kSupplierTableSize + 1>;
+      ArrayMapType array_map;
+      array_map.Init();
 
       // populate MapJoiner map
       // why a map? keys may not be sequential
-      [[intel::ivdep]]
+      [[intel::initiation_interval(1), intel::ivdep]]
       for (size_t i = 0; i < s_rows; i++) {
         // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed to be unique
@@ -153,11 +141,17 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
         DBIdentifier s_suppkey = s_suppkey_accessor[i];
         unsigned char s_nationkey = s_nationkey_accessor[i];
 
-        mapJoiner.map.Set(s_suppkey, SupplierRow(true,s_suppkey,s_nationkey));
+        array_map.Set(s_suppkey, SupplierRow(true,s_suppkey,s_nationkey));
       }
 
       // MAPJOIN PARTSUPPLIER and SUPPLIER tables by suppkey
-      mapJoiner.Go(partsupplier_reader, joined_writer);
+      MapJoin<ArrayMapType, ProducePartSupplierPipe, PartSupplierRow,
+              kJoinWinSize, PartSupplierPartsPipe,
+              SupplierPartSupplierJoined>(array_map);
+      
+      // tell downstream we are done
+      PartSupplierPartsPipe::write(
+          SupplierPartSupplierJoinedPipeData(true,false));
     });
   });
   ///////////////////////////////////////////////////////////////////////////
@@ -165,9 +159,6 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   ///////////////////////////////////////////////////////////////////////////
   //// Compute Kernel
   auto compute_event = q.submit([&](handler& h) {
-    // PARTSUPPLIER table accessors
-    size_t ps_rows = dbinfo.ps.rows;
-
     // kernel to produce the PARTSUPPLIER table
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       constexpr int ACCUM_CACHE_SIZE = 5;
@@ -179,10 +170,14 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
       // initialize accumulator
       partkey_values.Init();
 
-      [[intel::ivdep]]
-      for (size_t i = 0; i < ps_rows; i += kJoinWinSize) {
+      bool done = false;
+
+      [[intel::initiation_interval(1), intel::ivdep]]
+      while (!done) {
         SupplierPartSupplierJoinedPipeData pipe_data = 
             PartSupplierPartsPipe::read();
+
+        done = pipe_data.done;
 
         if (pipe_data.valid) {
           UnrolledLoop<0, kJoinWinSize>([&](auto j) {
@@ -191,7 +186,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
             if (data.valid && data.nationkey == nationkey) {
               // partkeys start at 1
               DBIdentifier index = data.partkey - 1;
-              DBDecimal val = data.supplycost*(DBDecimal)(data.availqty);
+              DBDecimal val = data.supplycost * (DBDecimal)(data.availqty);
               partkey_values.Accumulate(index, val);
             }
           });
@@ -200,6 +195,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
       // sort the {partkey, partvalue} pairs based on partvalue.
       // send in first kPartTableSize valid pairs
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < kPartTableSize; i++) {
         SortInPipe::write(OutputData(i + 1, partkey_values.Get(i)));
       }
@@ -223,8 +219,8 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   //// ConsumeSort kernel
   auto consume_sort_event = q.submit([&](handler& h) {
     // output buffer accessors
-    accessor partkeys_accessor(partkeys_buf, h, write_only, noinit);
-    accessor values_accessor(values_buf, h, write_only, noinit);
+    accessor partkeys_accessor(partkeys_buf, h, write_only, no_init);
+    accessor values_accessor(values_buf, h, write_only, no_init);
 
     h.single_task<ConsumeSort>([=]() [[intel::kernel_args_restrict]] {
       // use a ShannonIterator to track how many items
@@ -234,6 +230,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
       ShannonIterator<int, 3> i(0, kSortSize);
 
       // grab all kSortSize elements from the sorter
+      [[intel::initiation_interval(1)]]
       while (i.InRange()) {
         bool valid;
         OutputData D = SortOutPipe::read(valid);
@@ -264,6 +261,10 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   ///////////////////////////////////////////////////////////////////////////
 
   // wait for kernels to finish
+  produce_ps_event.wait();
+  join_event.wait();
+  compute_event.wait();
+  sort_event.wait();
   consume_sort_event.wait();
 
   high_resolution_clock::time_point host_end = high_resolution_clock::now();

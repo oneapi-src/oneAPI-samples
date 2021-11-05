@@ -30,6 +30,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <CL/sycl.hpp>
 #include <cmath>
 #include <cstring>

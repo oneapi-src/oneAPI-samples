@@ -24,7 +24,7 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
                   std::array<DBDecimal, kQuery1OutSize>& avg_discount,
                   std::array<DBDecimal, kQuery1OutSize>& count,
                   double& kernel_latency, double& total_latency) {
-  // setup the input buffers
+  // create space for input buffers
   buffer quantity_buf(dbinfo.l.quantity);
   buffer extendedprice_buf(dbinfo.l.extendedprice);
   buffer discount_buf(dbinfo.l.discount);
@@ -34,34 +34,17 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
   buffer shipdate_buf(dbinfo.l.shipdate);
 
   // setup the output buffers
-  // constructing the output buffers WITHOUT a backed host pointer allows
-  // us to avoid copying the output data from the host to the device before
-  // launching the kernels. Using the set_final_data() function tells the
-  // runtime to copy the contents of the buffer from the device to the given
-  // host pointer (the argument to set_final_data) upon buffer destruction.
-  buffer<DBDecimal, 1> sum_qty_buf(sum_qty.size());
-  sum_qty_buf.set_final_data(sum_qty.data());
+  buffer sum_qty_buf(sum_qty);
+  buffer sum_base_price_buf(sum_base_price);
+  buffer sum_disc_price_buf(sum_disc_price);
+  buffer sum_charge_buf(sum_charge);
+  buffer avg_qty_buf(avg_qty);
+  buffer avg_price_buf(avg_price);
+  buffer avg_discount_buf(avg_discount);
+  buffer count_buf(count);
 
-  buffer<DBDecimal, 1> sum_base_price_buf(sum_base_price.size());
-  sum_base_price_buf.set_final_data(sum_base_price.data());
-
-  buffer<DBDecimal, 1> sum_disc_price_buf(sum_disc_price.size());
-  sum_disc_price_buf.set_final_data(sum_disc_price.data());
-
-  buffer<DBDecimal, 1> sum_charge_buf(sum_charge.size());
-  sum_charge_buf.set_final_data(sum_charge.data());
-
-  buffer<DBDecimal, 1> avg_qty_buf(avg_qty.size());
-  avg_qty_buf.set_final_data(avg_qty.data());
-
-  buffer<DBDecimal, 1> avg_price_buf(avg_price.size());
-  avg_price_buf.set_final_data(avg_price.data());
-
-  buffer<DBDecimal, 1> avg_discount_buf(avg_discount.size());
-  avg_discount_buf.set_final_data(avg_discount.data());
-
-  buffer<DBDecimal, 1> count_buf(count.size());
-  count_buf.set_final_data(count.data());
+  const int rows = dbinfo.l.rows; 
+  const size_t iters = (rows + kElementsPerCycle - 1) / kElementsPerCycle;
 
   // start timer
   high_resolution_clock::time_point host_start = high_resolution_clock::now();
@@ -70,7 +53,6 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
   //// Query1 Kernel
   auto event = q.submit([&](handler& h) {
     // read accessors
-    int rows = dbinfo.l.rows;
     accessor quantity_accessor(quantity_buf, h, read_only);
     accessor extendedprice_accessor(extendedprice_buf, h, read_only);
     accessor discount_accessor(discount_buf, h, read_only);
@@ -80,14 +62,14 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
     accessor shipdate_accessor(shipdate_buf, h, read_only);
 
     // write accessors
-    accessor sum_qty_accessor(sum_qty_buf, h, write_only, noinit);
-    accessor sum_base_price_accessor(sum_base_price_buf, h, write_only, noinit);
-    accessor sum_disc_price_accessor(sum_disc_price_buf, h, write_only, noinit);
-    accessor sum_charge_accessor(sum_charge_buf, h, write_only, noinit);
-    accessor avg_qty_accessor(avg_qty_buf, h, write_only, noinit);
-    accessor avg_price_accessor(avg_price_buf, h, write_only, noinit);
-    accessor avg_discount_accessor(avg_discount_buf, h, write_only, noinit);
-    accessor count_accessor(count_buf, h, write_only, noinit);
+    accessor sum_qty_accessor(sum_qty_buf, h, write_only, no_init);
+    accessor sum_base_price_accessor(sum_base_price_buf, h, write_only, no_init);
+    accessor sum_disc_price_accessor(sum_disc_price_buf, h, write_only, no_init);
+    accessor sum_charge_accessor(sum_charge_buf, h, write_only, no_init);
+    accessor avg_qty_accessor(avg_qty_buf, h, write_only, no_init);
+    accessor avg_price_accessor(avg_price_buf, h, write_only, no_init);
+    accessor avg_discount_accessor(avg_discount_buf, h, write_only, no_init);
+    accessor count_accessor(count_buf, h, write_only, no_init);
 
     h.single_task<Query1>([=]() [[intel::kernel_args_restrict]] {
       // local accumulation buffers
@@ -107,8 +89,8 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
       count_local.Init();
 
       // stream each row in the DB (kElementsPerCycle rows at a time)
-      [[intel::ii(1)]]
-      for (size_t r = 0; r < rows; r += kElementsPerCycle) {
+      [[intel::initiation_interval(1)]]
+      for (size_t r = 0; r < iters; r++) {
         // locals
         DBDecimal qty[kElementsPerCycle];
         DBDecimal extendedprice[kElementsPerCycle];
@@ -124,22 +106,23 @@ bool SubmitQuery1(queue& q, Database& dbinfo, DBDate low_date,
         UnrolledLoop<0, kElementsPerCycle>([&](auto p) {
           // is data in range of the table
           // (data size may not be divisible by kElementsPerCycle)
-          bool in_range = (r + p) < rows;
+          size_t idx = r * kElementsPerCycle + p;
+          bool in_range = idx < rows;
 
           // get this rows shipdate
-          DBDate shipdate = in_range ? shipdate_accessor[r + p] : 0;
+          DBDate shipdate = shipdate_accessor[idx];
 
           // determine if the row is valid
           row_valid[p] = in_range && (shipdate <= low_date);
 
           // read or set values based on the validity of the data
-          qty[p] = in_range ? quantity_accessor[r + p] : 0;
-          extendedprice[p] = in_range ? extendedprice_accessor[r + p] : 0;
-          discount[p] = in_range ? discount_accessor[r + p] : 0;
-          tax[p] = in_range ? tax_accessor[r + p] : 0;
-          char rf = in_range ? returnflag_accessor[r + p] : 0;
-          char ls = in_range ? linestatus_accessor[r + p] : 0;
-          count_tmp[p] = in_range ? 1 : 0;
+          qty[p] = quantity_accessor[idx];
+          extendedprice[p] = extendedprice_accessor[idx];
+          discount[p] = discount_accessor[idx];
+          tax[p] = tax_accessor[idx];
+          char rf = returnflag_accessor[idx];
+          char ls = linestatus_accessor[idx];
+          count_tmp[p] = 1;
 
           // convert returnflag and linestatus into an index
           unsigned char rf_idx;

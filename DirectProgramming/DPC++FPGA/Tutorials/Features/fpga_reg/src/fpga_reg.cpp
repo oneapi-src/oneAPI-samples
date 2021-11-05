@@ -4,9 +4,10 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <vector>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -18,12 +19,12 @@ using namespace std;
 
 // Artificial coefficient and offset data for our math function
 constexpr size_t kSize = 64;
-constexpr std::array<int, kSize> kCoeff = {
+constexpr int kCoeff[kSize] = {
             1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16,
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
             33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
             49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64};
-constexpr std::array<int, kSize> kOffset = {
+constexpr int kOffset[kSize] = {
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
             49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64,
             33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
@@ -34,7 +35,10 @@ constexpr std::array<int, kSize> kOffset = {
 vector<int> GoldenResult(vector<int> vec) {
 
   // The coefficients will be modified with each iteration of the outer loop.
-  std::array coeff = kCoeff;
+  int coeff[kSize];
+  for (size_t i = 0; i < kSize; i++) {
+    coeff[i] = kCoeff[i];
+  }
 
   for (int &val : vec) {
     // Do some arithmetic
@@ -57,8 +61,8 @@ vector<int> GoldenResult(vector<int> vec) {
   return vec;
 }
 
-// Forward declaration of the kernel name
-// (This will become unnecessary in a future compiler version.)
+// Forward declare the kernel name in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
 class SimpleMath;
 
 void RunKernel(const device_selector &selector,
@@ -76,7 +80,7 @@ void RunKernel(const device_selector &selector,
 
     event e = q.submit([&](handler &h) {
       accessor a(device_a, h, read_only);
-      accessor r(device_r, h, write_only, noinit);
+      accessor r(device_r, h, write_only, no_init);
 
       // FPGA-optimized kernel
       // Using kernel_args_restrict tells the compiler that the input
@@ -85,7 +89,10 @@ void RunKernel(const device_selector &selector,
 
         // Force the compiler to implement the coefficient array in FPGA
         // pipeline registers rather than in on-chip memory.
-        [[intel::fpga_register]] std::array coeff = kCoeff;
+        [[intel::fpga_register]] int coeff[kSize];
+        for (size_t i = 0; i < kSize; i++) {
+          coeff[i] = kCoeff[i];
+        }
 
         // The compiler will pipeline the outer loop.
         for (size_t i = 0; i < input_size; ++i) {
@@ -94,13 +101,13 @@ void RunKernel(const device_selector &selector,
 
           // Fully unroll the accumulator loop.
           // All of the unrolled operations can be freely scheduled by the
-          // DPC++ compiler's FPGA backend as part of a common data pipeline.
+          // oneAPI DPC++ compiler's FPGA backend as part of a common data pipeline.
           #pragma unroll
           for (size_t j = 0; j < kSize; j++) {
 #ifdef USE_FPGA_REG
             // Use fpga_reg to insert a register between the copy of val used
             // in each unrolled iteration.
-            val = INTEL::fpga_reg(val);
+            val = ext::intel::fpga_reg(val);
             // Since val is held constant across the kSize unrolled iterations,
             // the FPGA hardware structure of val's distribution changes from a
             // kSize-way fanout (without fpga_reg) to a chain of of registers
@@ -108,7 +115,7 @@ void RunKernel(const device_selector &selector,
 
             // Use fpga_reg to insert a register between each step in the acc
             // adder chain.
-            acc = INTEL::fpga_reg(acc) + (coeff[j] * (val + kOffset[j]));
+            acc = ext::intel::fpga_reg(acc) + (coeff[j] * (val + kOffset[j]));
             // This transforms a compiler-inferred adder tree into an adder
             // chain, altering the structure of the pipeline. Refer to the
             // diagram in the README.
@@ -121,7 +128,7 @@ void RunKernel(const device_selector &selector,
 
           // Rotate the values of the coefficient array.
           // The loop is fully unrolled. This is a canonical code structure;
-          // the DPC++ compiler's FPGA backend infers a shift register here.
+          // the oneAPI DPC++ compiler's FPGA backend infers a shift register here.
           int tmp = coeff[0];
           #pragma unroll
           for (size_t j = 0; j < kSize - 1; j++) {
@@ -190,9 +197,9 @@ int main(int argc, char *argv[]) {
 
   // Run the kernel on either the FPGA emulator, or FPGA
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
   RunKernel(selector, vec_a, vec_r);
 

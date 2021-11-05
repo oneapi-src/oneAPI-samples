@@ -1,10 +1,10 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright Â© 2020 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// ISO3DFD: Intel® oneAPI DPC++ Language Basics Using 3D-Finite-Difference-Wave
+// ISO3DFD: IntelÂ® oneAPI DPC++ Language Basics Using 3D-Finite-Difference-Wave
 // Propagation
 //
 // ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic
@@ -32,6 +32,7 @@
 //
 #include "iso3dfd.h"
 #include <iostream>
+#include <string>
 #include "device_selector.hpp"
 #include "dpc_common.hpp"
 

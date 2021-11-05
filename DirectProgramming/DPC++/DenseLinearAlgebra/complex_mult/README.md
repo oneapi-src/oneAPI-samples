@@ -1,52 +1,55 @@
-# Complex Multiplication sample
+﻿# `Complex Multiplication` Sample
 
 complex multiplication is a program that multiplies two large vectors of 
 Complex numbers in parallel and verifies the results. It also implements 
-custom device selector to target a specific vendor device. This program is 
+a custom device selector to target a specific vendor device. This program is 
 implemented using C++ and DPC++ language for Intel CPU and accelerators. 
-The Complex class is a custom class and this program shows how we can use 
-custom types of classes in a DPC++ program
-  
-| Optimized for                       | Description
-ii|:---                               |:---
-| OS                                | Linux Ubuntu 18.04, Windows 10 
+The Complex class is a custom class, and this program shows how we can use 
+custom types of classes in a DPC++ program.
+
+ 
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | Linux Ubuntu 18.04, Windows* 10 
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
-| What you will learn               | Using custom type classes and offloads complex number computations to GPU using Intel DPC++
+| What you will learn               | Using custom type classes and offloads complex number computations to GPU using DPC++
 | Time to complete                  | 15 minutes  
   
 
 ## Purpose	
 
 Complex multiplication multiplies two vectors with complex numbers. The 
-code will attempt to run the calculation on both the GPU and CPU, and then 
+code will attempt to run the calculation on both the GPU and CPU and then 
 verifies the results. The size of the computation can be adjusted for 
 heavier workloads. If successful, the name of the offload device and a 
-success message are displayed.
+success message is displayed.
 
 This sample uses buffers to manage memory. For more information regarding
 different memory management options, refer to the vector_add sample.
 
-complex multiplication includes C++ implementations of both Data Parallel 
-(DPC++). 
+Complex multiplication includes both C++ and DPC++ implementations.
 
 This program shows how to create a custom device selector and to target 
 GPU or CPU of a specific vendor. The program also shows how to pass in a 
-vector of custom Complex class objects that you can do the parallel 
-executions on the device. The device used for compilation is displayed in 
+vector of custom Complex class objects to do the parallel 
+executions on the device. The device used for the compilation is displayed in 
 the output.
 
 
 ## Key implementation details 
 
 This program shows how we can use custom types of classes in a DPC++ 
-program and explains the basic DPC++ implementation including device 
+program and explains the basic DPC++ implementation, including device 
 selector, buffer, accessor, kernel and command group.  
 
 
-## License  
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-This code sample is licensed under MIT license. 
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
 
 ## Building the complex_mult Program for CPU and GPU 
 
@@ -55,8 +58,8 @@ The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on y
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify 
-the compute node (CPU, GPU, FPGA) as well whether to run in batch or 
-interactive mode. For more information see the Intel® oneAPI Base Toolkit 
+the compute node (CPU, GPU, FPGA) and whether to run in batch or 
+interactive mode. For more information, see the Intel® oneAPI Base Toolkit 
 Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 ### On a Linux* System 
@@ -70,18 +73,15 @@ Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
     make clean 
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
-* Build the program using VS2017 or VS2019
-      Right click on the solution file and open using either VS2017 or 
-      VS2019 IDE.
-      Right click on the project in Solution explorer and select Rebuild.
-      From top menu select Debug -> Start without Debugging.
+- Build the program using VS2017 or VS2019
+    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
+    - Right-click on the project in Solution Explorer and select Rebuild.
+    - From the top menu, select Debug -> Start without Debugging.
 
-* Build the program using MSBuild
-      Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native 
-      Tools Command Prompt for VS2019"
-      Run - MSBuild complex_mult.sln /t:Rebuild /p:Configuration="debug"
-
-
+- Build the program using MSBuild
+     - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
+     - Run the following command: `MSBuild complex_mult.sln /t:Rebuild /p:Configuration="debug"`
+     
 ## Running the Sample
 
 ### Application Parameters

@@ -7,6 +7,7 @@
 // The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include
 // on your development system.
 #include <oneapi/dpl/algorithm>
+#include <oneapi/dpl/numeric>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
 
@@ -493,7 +494,7 @@ float calc_pi_onedpl_native4(size_t num_steps, int groups, Policy&& policy) {
   return answer[0]/(float)num_steps; 
 }
 
-// This function shows the use of two different DPC++ library calls.
+// This function shows the use of two different oneAPI DPC++ Library calls.
 // The first is a transform calls which will fill a buff with the
 // calculations of each small rectangle.   The second call is the reduce
 // call which sums up the results of all the elements in the buffer.
@@ -504,7 +505,7 @@ float calc_pi_onedpl_two_steps_lib(int num_steps, Policy&& policy) {
   auto calc_begin2 = oneapi::dpl::begin(calc_values);
   auto calc_end2 = oneapi::dpl::end(calc_values);
 
-  // use DPC++ library call transform to fill the buffer with
+  // use oneAPI DPC++ Library call transform to fill the buffer with
   // the area calculations for each rectangle.
   std::transform(policy, oneapi::dpl::counting_iterator<int>(1),
                  oneapi::dpl::counting_iterator<int>(num_steps), calc_begin2,
@@ -515,7 +516,7 @@ float calc_pi_onedpl_two_steps_lib(int num_steps, Policy&& policy) {
 
   policy.queue().wait();
 
-  // use the DPC++ library call to reduce the array using plus
+  // use the oneAPI DPC++ Library call to reduce the array using plus
   float result =
       std::reduce(policy, calc_begin2, calc_end2, 0.0f, std::plus<float>());
   policy.queue().wait();
@@ -525,7 +526,7 @@ float calc_pi_onedpl_two_steps_lib(int num_steps, Policy&& policy) {
   return result;
 }
 
-// This function uses the DPC++ library call
+// This function uses the oneAPI DPC++ Library call
 // transform reduce.  It does everything in one library
 // call.
 template <typename Policy>
@@ -602,7 +603,7 @@ void mpi_native(float* results, int rank_num, int num_procs,
   }
 }
 
-// This function uses the DPC++ library call transform reduce.
+// This function uses the oneAPI DPC++ Library call transform reduce.
 // It does everything in one library call.
 template <typename Policy>
 float mpi_onedpl_onestep(int id, int num_procs, long total_num_steps,
@@ -736,7 +737,7 @@ int main(int argc, char** argv) {
 
   float local_sum = 0.0;
 
-  // Use the DPC++ library call to reduce the array using plus
+  // Use the oneAPI DPC++ Library call to reduce the array using plus
   buffer<float> calc_values(results_per_rank, num_step_per_rank);
   auto calc_begin2 = oneapi::dpl::begin(calc_values);
   auto calc_end2 =  oneapi::dpl::end(calc_values);

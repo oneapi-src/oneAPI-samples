@@ -19,7 +19,7 @@ SPDX-License-Identifier: MIT
 # When using daal4py for distributed memory systems, the command needed to execute the program should be **executed 
 # in a bash shell**. In order to run this example, please download it as a .py file then run the following command (**the number 4 means that it will run on 4 processes**):
 
-# mpirun -n 4 python ./daal4py_Distributed_Kmeans.py
+# mpirun -n 4 python ./IntelPython_daal4py_Distributed_Kmeans.py
 
 # ## Importing and Organizing Data
 
@@ -62,7 +62,7 @@ X = pd.read_csv(infile)
 
 
 # computing inital centroids
-init_result = d4p.kmeans_init(nClusters = 3, method = "plusPlusDense").compute(X)
+init_result = d4p.kmeans_init(nClusters = 3, method = "plusPlusDense", distributed=True).compute(X)
 
 
 # To **get initial centroid information and save it** to a file:

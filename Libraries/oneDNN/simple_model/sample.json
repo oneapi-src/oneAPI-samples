@@ -5,9 +5,9 @@
  "description": "Run a simple CNN on both Intel® CPU and GPU with sample C++ codes",
  "toolchain": ["dpcpp","gcc","icc"],
  "languages": [{"cpp":{}}],
- "dependencies": ["oneDNN", "tbb","compiler|icc"],
+ "dependencies": ["dnnl", "tbb","compiler|icc"],
  "os": ["linux", "windows"],
- "builder": ["cmake"],
+ "builder": ["cli","cmake"],
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
 	"linux": [{
@@ -30,7 +30,7 @@
 			"set CXX=clang++",
 			"mkdir build_cpu",
                         "cd build_cpu",
-                        "cmake -G Ninja ..",
+                        "cmake -G Ninja .. -DDNNL_CPU_RUNTIME=DPCPP -DDNNL_GPU_RUNTIME=DPCPP",
                         "cmake --build .",
                         "bin\\cnn-inference-f32-cpp.exe"
 		 ]
@@ -42,7 +42,7 @@
 			"set CXX=clang++",
                         "mkdir build_gpu",
                         "cd build_gpu",
-                        "cmake -G Ninja ..",
+                        "cmake -G Ninja .. -DDNNL_CPU_RUNTIME=DPCPP -DDNNL_GPU_RUNTIME=DPCPP",
                         "cmake --build .",
                         "bin\\cnn-inference-f32-cpp.exe gpu"
 		 ]

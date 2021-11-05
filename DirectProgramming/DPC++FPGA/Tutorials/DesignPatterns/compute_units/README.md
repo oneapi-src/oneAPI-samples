@@ -2,12 +2,14 @@
 # Using Compute Units To Duplicate Kernels
 This FPGA tutorial showcases a design pattern that allows you to make multiple copies of a kernel, called compute units.
 
-***Documentation***: The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)  provides comprehensive instructions for targeting FPGAs through DPC++. The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. 
+***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
+The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
+The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
 
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux* Ubuntu* 18.04; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX FPGA)
+| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
 | What you will learn               | A design pattern to generate multiple compute units in DPC++ using template metaprogramming
 | Time to complete                  | 15 minutes
@@ -15,7 +17,7 @@ This FPGA tutorial showcases a design pattern that allows you to make multiple c
 
 
 ## Purpose
-The performance of a design can sometimes by increased by making multiple copies of kernels, to make full use of the FPGA resources. Each kernel copy is called a compute unit.  
+A design's performance can sometimes be increased by making multiple copies of kernels to make full use of the FPGA resources. Each kernel copy is called a compute unit.  
 
 This tutorial provides a header file that defines an abstraction for making multiple copies of a single-task kernel. This header can be used in any DPC++ design and can be extended as necessary.
 
@@ -23,7 +25,7 @@ This tutorial provides a header file that defines an abstraction for making mult
 
 This code sample builds on the pipe_array tutorial. It includes the header files `pipe_array.hpp`, `pipe_array_internal.hpp`, and `unroller.hpp` from the pipe_array tutorial, and provides the `compute_units.hpp` header as well.
 
-This code sample defines a `Source` kernel, and a `Sink` kernel. Data is read from host memory by the `Source` kernel, and sent to the `Sink` kernel via a chain of compute units. The number of compute units in the chain between `Source` and `Sink` is determined by the following parameter:
+This code sample defines a `Source` kernel, and a `Sink` kernel. Data is read from host memory by the `Source` kernel and sent to the `Sink` kernel via a chain of compute units. The number of compute units in the chain between `Source` and `Sink` is determined by the following parameter:
 
 ``` c++
 constexpr size_t kEngines = 5;
@@ -58,14 +60,14 @@ void SinkKernel(queue &q, float &out_data) {
   buffer<float, 1> out_buf(&out_data, 1);
 
   q.submit([&](handler &h) {
-    accessor out_accessor(out_buf, h, write_only, noinit);
+    accessor out_accessor(out_buf, h, write_only, no_init);
     h.single_task<Sink>(
         [=] { out_accessor[0] = Pipes::PipeAt<kEngines>::read(); });
   });
 }
 ```
 
- The following line defines the functionality of each compute unit, and submits each compute unit to the given queue `q`. The number of copies to submit is provided by the first template parameter of `SubmitComputeUnits`, while the second template parameter allows you to give the compute units a shared base name, e.g., `ChainComputeUnit`. The functionality of each compute unit must be specified by a generic lambda expression, that takes a single argument (with type `auto`) that provides an ID for each compute unit:
+ The following line defines each compute unit's functionality and submits each compute unit to the given queue `q`. The number of copies to submit is provided by the first template parameter of `SubmitComputeUnits`, while the second template parameter allows you to give the compute units a shared base name, e.g., `ChainComputeUnit`. The functionality of each compute unit must be specified by a generic lambda expression that takes a single argument (with type `auto`) that provides an ID for each compute unit:
 
 ``` c++
 SubmitComputeUnits<kEngines, ChainComputeUnit>(q, [=](auto ID) {
@@ -74,13 +76,16 @@ SubmitComputeUnits<kEngines, ChainComputeUnit>(q, [=](auto ID) {
   });
 ```
 
-Each compute unit in the chain from `Source` to `Sink` must read from a unique pipe, and write to the next pipe. As seen above, each compute unit knows its own ID and therefore its behavior can depend on this ID. Each compute unit in the chain will read from pipe `ID` and write to pipe `ID + 1`.
+Each compute unit in the chain from `Source` to `Sink` must read from a unique pipe and write to the next pipe. As seen above, each compute unit knows its ID and therefore, its behavior can depend on this ID. Each compute unit in the chain will read from pipe `ID` and write to pipe `ID + 1`.
 
 ## Key Concepts
 * A design pattern to generate multiple compute units in DPC++ using template metaprogramming
 
 ## License  
-This code sample is licensed under MIT license.
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the `compute_units` Tutorial
@@ -89,7 +94,7 @@ This code sample is licensed under MIT license.
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -104,10 +109,14 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   ```
+   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+   ```
+   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -137,10 +146,14 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA), run `cmake` using the command:
+   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   ```
+   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+   ```
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -153,9 +166,12 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      nmake report
      ``` 
-   * An FPGA hardware target is not provided on Windows*. 
+   * Compile for FPGA hardware (longer compile time, targets FPGA device):
+     ```
+     nmake fpga
+     ``` 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® PAC D5005 (with Intel Stratix® 10 SX FPGA) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
  
  ### In Third-Party Integrated Development Environments (IDEs)
 

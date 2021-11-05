@@ -3,10 +3,11 @@
   "name": "Hello IoT World",
   "categories": ["Toolkit/oneAPI Tools/IoT Connection Tools"],
   "description": "This is a basic sample that outputs the classic 'Hello World' message along with the compiler identification string",
-  "os": ["linux", "windows"],
+  "os": ["linux"],
   "builder": ["cmake"],
   "toolchain": ["icc", "gcc"],
   "languages": [{"cpp":{}}],
+  "targetDevice": [ "CPU" ],
   "ciTests": {
     "linux": [
         { "id": "hello-iot-world",
@@ -17,18 +18,6 @@
             "cmake ..",
             "make",
             "make run"
-            ]
-        }
-    ],
-    "windows": [
-        { "id": "hello-iot-world",
-          "env": [],
-          "steps": [
-            "mkdir build",
-            "cd build",
-            "cmake -G \"NMake Makefiles\" ..",
-            "nmake",
-            "nmake run"
             ]
         }
     ]

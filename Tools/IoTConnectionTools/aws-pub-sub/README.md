@@ -7,13 +7,13 @@
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 16.04, Linux* Ubuntu* 18.04
 | Software                          | C++ 11 or higher, CMake 3.1+, Clang 3.9+ or GCC 4.4+, AWS IoT Device SDK C++ v2
-| What you will learn               | Use the Message Broker for AWS IoT to send and receive messages through an MQTT connection
+| What you will learn               | Use the Message Broker for AWS IoT to send and receive messages through an MQTT connection
 
 
-This version of the sample has been tested on Ubuntu Linux. This sample requires additional system configuration when using Ubuntu OS. Instructions on how to install the custom provided all dependency libraries for Linux can be [found here]().
+This version of the sample has been tested on Ubuntu Linux. This sample requires additional system configuration when using the Ubuntu OS. Instructions on installing the custom provided all dependency libraries for Linux can be [found here]().
 
 ## Purpose
-`AWS Pub Sub` is a simple program that helps user to execute the example of the AWS code and toconfigure and run Amazon Cloud services.
+`AWS Pub Sub` is a simple program that helps the user execute the AWS code example and configure and run Amazon Cloud services.
 
 ## Key Implementation Details
 This sample uses the Message Broker for AWS IoT to send and receive messages through an MQTT connection.
@@ -54,13 +54,13 @@ make clean
 ### Application Parameters
 
 endpoint: the endpoint of the mqtt server not including a port
-cert: path to your client certificate in PEM format. If this is not set you must specify use_websocket
-key: path to your key in PEM format. If this is not set you must specify use_websocket
+cert: path to your client certificate in PEM format. If this is not set, you must specify use_websocket
+key: path to your key in PEM format. If this is not set, you must specify use_websocket
 topic: topic to publish, subscribe to.
 client_id: client id to use (optional)
 ca_file: Optional, if the mqtt server uses a certificate that's not already in your trust store, set this.
 	It's the path to a CA file in PEM format
-use_websocket: if specified, uses a websocket over https (optional)
+use_websocket: if specified, uses a websocket over HTTPS (optional)
 signing_region: used for websocket signer it should only be specific if websockets are used. (required for websockets)
 proxy_host: if you want to use a proxy with websockets, specify the host here (optional).
 proxy_port: defaults to 8080 is proxy_host is set. Set this to any value you'd like (optional).

@@ -32,7 +32,7 @@ typedef TYPE Array[NUM];
 
 // Select which multiply kernel to use via the following macro so that the
 // kernel being used can be reported when the test is run.
-#define MULTIPLY multiply1
+#define MULTIPLY multiply1_1
 
 extern void multiply1(int msize, int tidx, int numt, TYPE a[][NUM],
                       TYPE b[][NUM], TYPE c[][NUM], TYPE t[][NUM]);

@@ -5,13 +5,12 @@
   "description": "This sample illustrates how to use Modin accelerated Pandas functions and notes the performance gain when compared to standard Pandas functions",
   "builder": ["cli"],
   "languages": [{"python":{}}],
-  "dependencies": ["Modin, AI Analytics Toolkit"],
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {
   	"linux": [
     {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n aikit-modin-test -c intel/label/oneapibeta -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
+  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n aikit-modin-test -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
   		"id": "Intel_Modin_GS_py",
   		"steps": [
          "runipy IntelModin_GettingStarted.ipynb" 

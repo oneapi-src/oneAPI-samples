@@ -27,6 +27,7 @@
 // California and by the laws of the United States of America.
 
 #include <CL/sycl.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 #include <fstream>
 #include <string>
@@ -41,15 +42,6 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-// Header locations and some DPC++ extensions changed between beta09 and beta10
-// Temporarily modify the code sample to accept either version
-#define BETA09 20200827
-#if __SYCL_COMPILER_VERSION <= BETA09
-  #include <CL/sycl/intel/fpga_extensions.hpp>
-  namespace INTEL = sycl::intel;  // Namespace alias for backward compatibility
-#else
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
-#endif
 
 using namespace sycl;
 
@@ -164,9 +156,9 @@ int main(int argc, char *argv[]) {
 
   try {
 #ifdef FPGA_EMULATOR
-    INTEL::fpga_emulator_selector device_selector;
+    ext::intel::fpga_emulator_selector device_selector;
 #else
-    INTEL::fpga_selector device_selector;
+    ext::intel::fpga_selector device_selector;
 #endif
     auto prop_list = property_list{property::queue::enable_profiling()};
     queue q(device_selector, dpc_common::exception_handler, prop_list);
@@ -314,6 +306,10 @@ int CompressFile(queue &q, std::string &input_file,
     }
   }
 
+  // padding for the input and output buffers to deal with granularity of
+  // kernel reads and writes
+  constexpr size_t kInOutPadding = 16 * kVec;
+
   // This loop allocates host-side USM buffers, to be accessed by the kernel.
   for (size_t eng = 0; eng < kNumEngines; eng++) {
     for (int i = 0; i < buffers_count; i++) {
@@ -321,7 +317,9 @@ int CompressFile(queue &q, std::string &input_file,
       // Allocating slightly larger buffers (+ 16 * kVec) to account for
       // granularity of kernel writes
       kinfo[eng][i].output_size =
-          isz + 16 * kVec < kMinBufferSize ? kMinBufferSize : isz + 16 * kVec;
+          ((isz + kInOutPadding) < kMinBufferSize) ? kMinBufferSize
+                                                   : (isz + kInOutPadding);
+      const size_t input_alloc_size = isz + kInOutPadding;
 
       kinfo[eng][i].last_block = true;
       kinfo[eng][i].pref_buffer = pinbuf;
@@ -359,7 +357,7 @@ int CompressFile(queue &q, std::string &input_file,
                           // since the buffers get subsequently reused.
         for (int b = 0; b < BATCH_SIZE; b++) {
           kinfo[eng][i].pibuf_ptr_array[b] =
-              alloc_char.allocate(kinfo[eng][i].input_size * sizeof(char));
+              alloc_char.allocate(input_alloc_size * sizeof(char));
           kinfo[eng][i].pobuf_ptr_array[b] =
               alloc_char.allocate(kinfo[eng][i].output_size * sizeof(char));
           memset(kinfo[eng][i].pobuf_ptr_array[b], 0,
@@ -478,7 +476,7 @@ int CompressFile(queue &q, std::string &input_file,
   if (report) {
     std::cout << "Total execution time: " << (double)diff_total * 1000000
               << "us \n";
-    std::cout << "Average per-batch latency: "
+    std::cout << "Average per batch_latency: "
               << (double)diff_total * 1000000 / iterations << " us \n";
   }
   double gbps = BATCH_SIZE * iterations * isz / (double)diff_total /
@@ -539,8 +537,7 @@ int CompressFile(queue &q, std::string &input_file,
   size_t time_k_crc[kNumEngines];
   size_t time_k_lz[kNumEngines];
   size_t time_k_huff[kNumEngines];
-  size_t time_input_dma[kNumEngines];
-  size_t time_output_dma[kNumEngines];
+  
   for (int eng = 0; eng < kNumEngines; eng++) {
     time_k_crc[eng] = 0;
     time_k_lz[eng] = 0;
