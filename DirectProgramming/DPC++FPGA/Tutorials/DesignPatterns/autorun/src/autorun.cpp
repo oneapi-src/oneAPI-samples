@@ -66,7 +66,8 @@ struct MyAutorunForever {
     ARForeverConsumePipe::write(d);
   }
 };
-fpga_tools::AutorunForever<ARForeverKernelID> ar_forever_kernel{ds, MyAutorunForever{}};
+fpga_tools::AutorunForever<ARForeverKernelID> ar_forever_kernel{ds,
+    MyAutorunForever{}};
 ////////////////////////////////////////////////////////////////////////////////
 
 //
@@ -135,8 +136,10 @@ int main() {
       // Create input and output buffers
       buffer in_buf(in_data);
       buffer out_buf(out_data);
-      SubmitProducerKernel<ARForeverProducerId, ARForeverProducePipe>(q, in_buf);
-      SubmitConsumerKernel<ARForeverConsumerId, ARForeverConsumePipe>(q, out_buf);
+      SubmitProducerKernel<ARForeverProducerId, ARForeverProducePipe>(q,
+          in_buf);
+      SubmitConsumerKernel<ARForeverConsumerId, ARForeverConsumePipe>(q,
+          out_buf);
     }
 
     // validate the results
