@@ -129,14 +129,14 @@ int main() {
     DpcppParallel(q, input_vect1, input_vect2, out_vect_parallel);
   } catch (...) {
     // some other exception detected
-    std::cout << "Failure" << std::endl;
+    std::cout << "Failure" << "\n";
     std::terminate();
   }
 
   std::cout
       << "****************************************Multiplying Complex numbers "
          "in Parallel********************************************************"
-      << std::endl;
+      << "\n";
   // Print the outputs of the Parallel function
   int indices[]{0, 1, 2, 3, 4, (num_elements - 1)};
   constexpr size_t indices_size = sizeof(indices) / sizeof(int);

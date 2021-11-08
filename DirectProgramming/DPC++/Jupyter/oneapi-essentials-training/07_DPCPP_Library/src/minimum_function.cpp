@@ -35,6 +35,6 @@ int main() {
         std::exclusive_scan(oneapi::dpl::execution::dpcpp_default, start_v, end_v, start_res, int(0), oneapi::dpl::minimum<int>() );        
     }    
     
-    for(int i = 0; i < result.size(); i++) std::cout << result[i] << std::endl;
+    for(int i = 0; i < result.size(); i++) std::cout << result[i] << "\n";
     return 0;
 }
