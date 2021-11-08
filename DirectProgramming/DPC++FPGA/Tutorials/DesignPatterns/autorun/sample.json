@@ -1,0 +1,55 @@
+{
+  "guid": "916298A4-0094-4B63-A6AD-30DE9F8CAF4B",
+  "name": "Autorun kernels",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "description": "Intel® FPGA tutorial demonstrating autorun kernels",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./autorun.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fpga_emu",
+          "autorun.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake report"
+        ]
+      }
+    ]
+  }
+}
