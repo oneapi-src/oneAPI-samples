@@ -36,6 +36,6 @@ int main() {
     }
     
     
-    for(int i = 0; i < result.size(); i++) std::cout << result[i] << std::endl;
+    for(int i = 0; i < result.size(); i++) std::cout << result[i] << "\n";
     return 0;
 }
