@@ -180,7 +180,7 @@ prog59: 04_DPCPP_Sub_Groups/lab/sub_group_votes.cpp
 prog60: 11_Intel_Distribution_for_GDB/src/array-transform.cpp
 	dpcpp -g -O0 -o 11_Intel_Distribution_for_GDB/prog60 11_Intel_Distribution_for_GDB/src/array-transform.cpp
 
-prog61: 08_DPCPP_Reduction/lab/sum_multiple_reductions_buffers.cpp
+prog61: 08_DPCPP_Reduction/lab/multiple_reductions_buffers.cpp
 	dpcpp -o 08_DPCPP_Reduction/prog61 08_DPCPP_Reduction/lab/multiple_reductions_buffers.cpp
 
 Run:
