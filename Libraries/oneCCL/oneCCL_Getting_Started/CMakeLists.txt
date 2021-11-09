@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11)
 if("${CMAKE_CXX_COMPILER}" STREQUAL "")
-       set(CMAKE_C_COMPILER "clang")
+       set(CMAKE_C_COMPILER "icx")
        set(CMAKE_CXX_COMPILER "dpcpp")
 endif()
 project (oneCCL_Getting_Started)
