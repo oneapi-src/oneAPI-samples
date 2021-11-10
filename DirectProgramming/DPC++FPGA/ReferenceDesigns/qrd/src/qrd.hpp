@@ -11,8 +11,8 @@
 
 #include "UnrolledLoop.hpp"
 #include "Utils.hpp"
-#include "StreamingQRD.hpp"
 #include "MemoryTransfers.hpp"
+#include "StreamingQRD.hpp"
 
 /*
   Implementation of the QR decomposition using multiple streaming kernels
@@ -53,8 +53,10 @@ void QRDecomposition_impl(
   constexpr short kNumBuffers = 3;
   
   // Pipes to communicate the A, Q and R matrices between kernels
-  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 1*2>;
-  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 1*2>;
+  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, TT, kNumElementsPerDDRBurst*2>;
+  // using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 1*2>;
+  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, TT, kNumElementsPerDDRBurst*2>;
+  // using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 1*2>;
   using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, TT, 
                                                     kNumElementsPerDDRBurst*3>;
 
@@ -130,6 +132,7 @@ void QRDecomposition_impl(
                                     columns,
                                     kNumElementsPerDDRBurst,
                                     matricesPerIter,
+                                    // AMatrixPipe>
                                     QMatrixPipe>
                                     (q, QBuffer[bufferIdx]);
 

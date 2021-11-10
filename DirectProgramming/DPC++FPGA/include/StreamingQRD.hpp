@@ -150,6 +150,21 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
           Copy a matrix from the pipe to a local memory
           ======================================================================
         */
+        ShiftReg<TT, rows> shreg;
+        [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
+        for (int col=0; col<columns; col++) {
+          for(int row=0; row<rows; row++){
+            TT read = AIn::read();
+            shreg.shift(read);
+          }
+
+          // Write the current column to the ALoad matrix.
+          UnrolledLoop<rows>([&](auto k) {
+            ALoad[col].template get<k>() = shreg.template get<k>();
+          });
+        }
+
+/*        
         [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
         for (int col=0; col<columns; col++) {
           // Read a column of the input matrix from the pipe 
@@ -157,9 +172,10 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
 
           // Write the current column to the ALoad matrix.
           UnrolledLoop<rows>([&](auto k) {
-            ALoad[col].template get<k>() = pipeData.elem[k];
+            ALoad[col].template get<k>() = pipeData.template get<k>();
           });
         }
+*/
 
         /*
           ======================================================================
@@ -389,14 +405,32 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
         [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
         for (int col = 0; col < columns; col++) {
           // Load a full column of Q to the correct pipe type
+          ShiftReg<TT, rows> shreg;
+          UnrolledLoop<rows>([&](auto k) {
+            TT tmp = QResult[col].template get<k>();
+            shreg.template set<k>(tmp); 
+          });
+
+          for(int row=0; row<rows; row++){
+            // Write the Q column to the pipe
+            QOut::write(shreg.shift());
+          }
+        } // end of col
+
+/*
+        [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
+        for (int col = 0; col < columns; col++) {
+          // Load a full column of Q to the correct pipe type
           pipeTable<rows, TT> pipeData;
           UnrolledLoop<rows>([&](auto k) {
-            pipeData.elem[k] = QResult[col].template get<k>();
+            TT tmp = QResult[col].template get<k>();
+            pipeData.template set<k>(tmp); 
           });
 
           // Write the Q column to the pipe
           QOut::write(pipeData);
         } // end of col
+*/
       } // end of matrixIter
     }); // end of h
   }); // end of q submit

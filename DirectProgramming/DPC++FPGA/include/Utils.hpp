@@ -46,4 +46,14 @@ static constexpr inline unsigned int BitsForMaxValue()
 template<unsigned count, typename T>
 struct pipeTable{
   T elem[count];
+
+  template <int idx>
+  T get() {
+    return elem[idx];
+  }
+
+  template <int idx>
+  void set(T &in) {
+    elem[idx] = in;
+  }
 };
