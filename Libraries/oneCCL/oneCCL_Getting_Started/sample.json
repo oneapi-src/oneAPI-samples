@@ -11,7 +11,7 @@
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
 	"linux": [{
-		"env": ["source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp --force" ],
+		"env": ["source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp" ],
 		"id": "gsg",
 		"steps": [
 			"mkdir build",
