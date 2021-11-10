@@ -12,7 +12,7 @@
  "ciTests": {
 	"linux": [{
 		"env": ["source activate base",
-			"source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp" ],
+			"source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp --force" ],
 		"id": "gsg",
 		"steps": [
 			"mkdir build",
