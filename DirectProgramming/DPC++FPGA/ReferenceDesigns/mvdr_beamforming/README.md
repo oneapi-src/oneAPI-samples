@@ -157,7 +157,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 | 2                     | The output directory (default=`.`)
 
 ### Example of Output
-You should see the following output in the console:
+You should see the following typical output in the console:
 
 ```
 Matrices:         1024
@@ -166,17 +166,19 @@ Output Directory: '.'
 
 Reading training data from '../data/A_real.txt and ../data/A_imag.txt
 Reading input data from ../data/X_real.txt and ../data/X_imag.txt
+Launched MVDR kernels
 
 *** Launching throughput test of 1024 matrices ***
 Sensor inputs                 : 16
 Training matrix rows          : 48
 Data rows per training matrix : 48
 Steering vectors              : 25
-Throughput: 34.6133 matrices/second
-Throughput: 82.5219 matrices/second
+Streaming pipe width          : 4
+Throughput: 233793 matrices/second
 Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
 Output data check succeeded
 PASSED
+
 ```
 
 ## Additional Design Information
