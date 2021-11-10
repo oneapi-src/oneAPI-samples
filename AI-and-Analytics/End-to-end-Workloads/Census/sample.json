@@ -13,8 +13,9 @@
     {
   		"env": ["source activate base"],
   		"steps": [
-         "conda create -y -n modin-conda-forge -c conda-forge --strict-channel-priority modin-all scikit-learn-intelex runipy",
+         "conda create -y -n modin-conda-forge -c conda-forge --strict-channel-priority modin-all",
          "conda activate modin-conda-forge",
+	 "conda install -y -c conda-forge scikit-learn-intelex runipy",
          "pip install opencensus",
          "runipy census_modin.ipynb" 
   		 ]
