@@ -16,7 +16,7 @@ static const size_t N = 2;
 void work(queue &q) {
   std::cout << "Device : "
             << q.get_device().get_info<info::device::name>()
-            << std::endl;
+            << "\n";
   // ### Step 1 - Inspect
   // The code presents one input buffer (vector1) for which Sycl buffer memory
   // is allocated. The associated with vector1_accessor set to read/write gets
@@ -24,7 +24,7 @@ void work(queue &q) {
   int vector1[N] = {10, 10};
   auto R = range(N);
   
-  std::cout << "Input  : " << vector1[0] << ", " << vector1[1] << std::endl;
+  std::cout << "Input  : " << vector1[0] << ", " << vector1[1] << "\n";
 
   // ### Step 2 - Add another input vector - vector2
   // Uncomment the following line to add input vector2
@@ -32,7 +32,7 @@ void work(queue &q) {
 
   // ### Step 3 - Print out for vector2
   // Uncomment the following line
-  //std::cout << "Input  : " << vector2[0] << ", " << vector2[1] << std::endl;
+  //std::cout << "Input  : " << vector2[0] << ", " << vector2[1] << "\n";
   buffer vector1_buffer(vector1,R);
 
   // ### Step 4 - Add another Sycl buffer - vector2_buffer
@@ -57,7 +57,7 @@ void work(queue &q) {
   });
   q.wait();
   host_accessor h_a(vector1_buffer,read_only);
-  std::cout << "Output : " << vector1[0] << ", " << vector1[1] << std::endl;
+  std::cout << "Output : " << vector1[0] << ", " << vector1[1] << "\n";
 }
 
 // ############################################################
@@ -68,10 +68,10 @@ int main() {
     queue q;
     work(q);
   } catch (exception e) {
-    std::cerr << "Exception: " << e.what() << std::endl;
+    std::cerr << "Exception: " << e.what() << "\n";
     std::terminate();
   } catch (...) {
-    std::cerr << "Unknown exception" << std::endl;
+    std::cerr << "Unknown exception" << "\n";
     std::terminate();
   }
 }

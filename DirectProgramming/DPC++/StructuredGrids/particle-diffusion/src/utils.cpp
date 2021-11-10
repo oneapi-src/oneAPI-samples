@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// utils: Intel® oneAPI DPC++ utility functions
+// utils: Data Parallel C++ utility functions
 // used in motionsim.cpp and motionsim_kernel.cpp
 //
 #include <string>

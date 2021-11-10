@@ -21,16 +21,16 @@ The parallel implementation of the blocked Floyd-Warshall algorithm has three ph
 The inner loop of the sequential implementation is:
   g[i][j] = min(g[i][j], g[i][k] + g[k][j])
 
-A careful observation shows that for the kth iteration of the outer loop, the computation depends on cells either on the kth column, g[i][k] or on the kth row, g[k][j] of the graph. Phase 1 handles g[k][k], phase 2 handles g[\*][k] and g[k][\*], and phase 3 handles g[\*][\*] in that sequence. These cell level observations largely propagate to the blocks as well. 
+A careful observation shows that for the kth iteration of the outer loop, the computation depends on cells either on the kth column, g[i][k] or on the kth row, g[k][j] of the graph. Phase 1 handles g[k][k], phase 2 handles g[\*][k] and g[k][\*], and phase 3 handles g[\*][\*] in that sequence. These cell level observations largely propagate to the blocks as well.
 
-In each phase, computation within a block can proceed independently in parallel. 
+In each phase, computation within a block can proceed independently in parallel.
 
 
 ## Key implementation details
-Includes device selector, unified shared memory, kernel, and command groups to implement a solution using a parallel block method targeting the GPU. 
+Includes device selector, unified shared memory, kernel, and command groups to implement a solution using a parallel block method targeting the GPU.
 
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -44,6 +44,23 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 
 ### Running Samples in DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and run in batch or interactive mode. For more information, see the [Intel&reg; oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 

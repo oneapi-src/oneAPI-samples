@@ -5,7 +5,7 @@
 // =============================================================
 
 // motionsim_kernel:
-// Intel® oneAPI DPC++ Language Basics Using a Monte Carlo
+// Data Parallel C++ Language Basics Using a Monte Carlo
 // Simulation (Device)
 //
 

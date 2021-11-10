@@ -98,7 +98,7 @@ size_t CountErrors(T* out, size_t count, T* ref) {
   size_t errors = 0;
   for (size_t i = 0; i < count; i++) {
     auto comp = (out[i] == ref[i]);
-    for (auto j = 0; j < comp.get_count(); j++) {
+    for (auto j = 0; j < comp.size(); j++) {
       if (!comp[j]) {
         errors++;
       }

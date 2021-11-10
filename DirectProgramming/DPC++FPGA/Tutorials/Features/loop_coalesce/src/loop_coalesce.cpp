@@ -107,7 +107,7 @@ void MatrixMultiply(const device_selector &selector,
 
   } catch (exception const &exc) {
     std::cerr << "Caught synchronous SYCL exception:\n" << exc.what() << '\n';
-    if (exc.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (exc.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

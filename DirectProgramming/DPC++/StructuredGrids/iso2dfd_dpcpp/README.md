@@ -1,6 +1,6 @@
 ﻿# `ISO2DFD` Sample
 
-ISO2DFD: Intel® oneAPI Data Parallel C++ Language Basics Using 2D-Finite-Difference-Wave Propagation
+ISO2DFD: Data Parallel C++ Language Basics Using 2D-Finite-Difference-Wave Propagation
 
 The ISO2DFD sample refers to Two-Dimensional Finite-Difference Wave Propagation in Isotropic Media.  It is a two-dimensional stencil to simulate a wave propagating in a 2D isotropic medium and illustrates the basics of the DPC++ programming language using direct programming.
 
@@ -18,27 +18,27 @@ For comprehensive instructions regarding DPC++ Programming, see the [oneAPI Prog
 
 ## Purpose
 
-ISO2DFD is a finite difference stencil kernel for solving the 2D acoustic isotropic wave equation.  In 
-this sample, we chose the problem of solving a Partial Differential Equation (PDE), using a 
-finite-difference method, to illustrate the essential elements of the DPC++ programming language: 
-queues, buffers/accessors, and kernels. Use it as an entry point to start programming in DPC++ or as a 
-proxy to develop or better understand complicated code for similar problems. 
+ISO2DFD is a finite difference stencil kernel for solving the 2D acoustic isotropic wave equation.  In
+this sample, we chose the problem of solving a Partial Differential Equation (PDE), using a
+finite-difference method, to illustrate the essential elements of the DPC++ programming language:
+queues, buffers/accessors, and kernels. Use it as an entry point to start programming in DPC++ or as a
+proxy to develop or better understand complicated code for similar problems.
 
-Using Data Parallel C++, the sample will explicitly run on the GPU as well as CPU to calculate a 
-result. The output will include GPU device name. The results from the two devices are compared and, if 
-the sample ran correctly, report a success message. The output of the wavefield can be plotted using 
-the SU Seismic processing library, which  has utilities to display seismic wavefields and can be 
+Using Data Parallel C++, the sample will explicitly run on the GPU as well as CPU to calculate a
+result. The output will include GPU device name. The results from the two devices are compared and, if
+the sample ran correctly, report a success message. The output of the wavefield can be plotted using
+the SU Seismic processing library, which  has utilities to display seismic wavefields and can be
 downloaded from [John Stockwell’s SeisUnix GitHub](https://https://github.com/JohnWStockwellJr/SeisUnix/wiki/Seismic-Unix-install-on-Ubuntu)
 
 ## Key implementation details
 
-SYCL implementation explained.  
+SYCL implementation explained.
 
 * DPC++ queues (including device selectors and exception handlers).
-* DPC++ buffers and accessors.  
-* The ability to call a function inside a kernel definition and pass accessor arguments as pointers. A 
-function called inside the kernel performs a computation (it updates a grid point specified by the 
-global ID variable) for a single time step.  
+* DPC++ buffers and accessors.
+* The ability to call a function inside a kernel definition and pass accessor arguments as pointers. A
+function called inside the kernel performs a computation (it updates a grid point specified by the
+global ID variable) for a single time step.
 
 ## License
 
@@ -49,44 +49,61 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ##  Building the `iso2dfd` Program for CPU and GPU
 
-> Note: if you have not already done so, set up your CLI environment by sourcing  the setvars script located in the root of your oneAPI installation. 
+> Note: if you have not already done so, set up your CLI environment by sourcing  the setvars script located in the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
-> Linux User: . ~/intel/oneapi/setvars.sh  
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux User: . ~/intel/oneapi/setvars.sh
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
-### Include Files 
+### Include Files
 
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ### Running Samples In DevCloud
 
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, 
-FPGA) as well whether to run in batch or interactive mode. For more information see the [Intel® oneAPI 
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU,
+FPGA) as well whether to run in batch or interactive mode. For more information see the [Intel® oneAPI
 Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 Perform the following steps:
-1. Build the program using the following `cmake` commands. 
+1. Build the program using the following `cmake` commands.
 
-   ```    
-    cd iso2dfd_dpcpp &&  
-    mkdir build &&  
-    cd build &&  
-    cmake .. &&  
-    make -j 
+   ```
+    cd iso2dfd_dpcpp &&
+    mkdir build &&
+    cd build &&
+    cmake .. &&
+    make -j
     ```
 
-2. Run the program on Gen9 
+2. Run the program on Gen9
 
     ```
-    make run  
+    make run
     ```
 
-3. Clean the program  
-  
+3. Clean the program
+
     ```
-    make clean  
+    make clean
     ```
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
@@ -96,14 +113,14 @@ Perform the following steps:
     - From the top menu, select Debug -> Start without Debugging.
 
 ## Running the Sample
-### Application Parameters 
+### Application Parameters
 
 You can  execute the code with different parameters. For example the following command will run the iso2dfd executable using a 1000x1000 grid size and it will iterate over 2000 time steps.
 
     ```
     ./iso2dfd 1000 1000 2000
-    ```	
- 	
+    ```
+
    Usage: ./iso2dfd n1 n2 Iterations
 
 	 n1 n2      : Grid sizes for the stencil
@@ -111,10 +128,10 @@ You can  execute the code with different parameters. For example the following c
 
    * Find graphical output for sample execution in the [online tutorial](https://software.intel.com/en-us/articles/code-sample-two-dimensional-finite-difference-wave-propagation-in-isotropic-media-iso2dfd)
 
-### Example of Output 
+### Example of Output
 
     ```
-    Initializing ... 
+    Initializing ...
     Grid Sizes: 1000 1000
     Iterations: 2000
 
@@ -125,11 +142,11 @@ You can  execute the code with different parameters. For example the following c
     SYCL time: 3282 ms
 
     Computing wavefield in CPU ..
-    Initializing ... 
+    Initializing ...
     CPU time: 8846 ms
 
     Final wavefields from device and CPU are equivalent: Success
     Final wavefields (from device and CPU) written to disk
-    Finished.  
+    Finished.
     [100%] Built target run
     ```

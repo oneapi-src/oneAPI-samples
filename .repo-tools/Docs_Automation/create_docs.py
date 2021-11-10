@@ -4,25 +4,25 @@ from json.decoder import JSONDecodeError
 from pathlib import Path
 import os
 import json
+
 today = date.today()
 d = today.strftime("%B %d, %Y")
-currentVersion = "2021.4.0"
-fileName = "sample.json"
+currentVersion = "2022.1.0"
 fCodeSamplesLists = "CODESAMPLESLIST.md"
 fChangeLogs = "CHANGELOGS.md"
 freadme = "README.md"
-fguidVer = ".repo-tools\Docs_Automation\guids.json"
-#fguidVer = ".repo-tools/Docs_Automation/guids.json"  #for use when linux is supported for this tool
+guidsVerPath = os.path.join('.repo-tools', 'Docs_Automation', 'guids.json')
+contentPath = os.path.join('.repo-tools', 'Docs_Automation', 'content.json')
+bookPath = os.path.join('Publications','DPC++')
 oneAPIURL = 'https://github.com/oneapi-src/oneAPI-samples/tree/master'
-count = 0
 
-def checkFileExists(checkFile):
-    if os.path.exists(checkFile):
-        os.remove(checkFile)
+def removeIfFileExist(fileName):
+    if os.path.exists(fileName):
+        os.remove(fileName)
     else:
-        print("The " + checkFile + " file does not exist")
+        print("The " + fileName + " file does not exist")
 
-def openJson(jsonFile):                 #creating a dictionary
+def readJsonDataFromFile(jsonFile):                 #creating a dictionary
     jsonData = open(jsonFile)           #open the json file
     try: 
         data = json.load(jsonData)      #load json into memory
@@ -30,137 +30,201 @@ def openJson(jsonFile):                 #creating a dictionary
         print(str(e)+': ' + jsonFile)
     return data
 
-def readContent():                      #reading in strings for use in document creation
-    #jsonFile = '.repo-tools/Docs_Automation/content.json' #for use when linux is supported for this tool
-    jsonFile = '.repo-tools\Docs_Automation\content.json'
-    dataContent = openJson(jsonFile)
-    return dataContent
-   
-def createChangeLog(count,sorted_by_name,sorted_by_ver): #sorted but does not include version
-    nf = open(fChangeLogs,"w+")
-    nf.write(dataContent['mdChangeLogHeaderp1'])
-    nf.write(dataContent['mdChangeLogHeaderp2'])
-  
-    for key in sorted_by_ver.keys():
-        try:
-            description= str(sorted_by_name[key]['description']) 
-            url= sorted_by_name[key]['url']
-            name=sorted_by_name[key]['name']
-            cat=str(sorted_by_name[key]['categories'])
-        except KeyError as e:
-            print("Error with: "+key+ "Missing from guids.json")  
-        ver=sorted_by_ver[key]['ver']
-        
-        # Due to name issues, we need to fix the DPC** books chapter namesas its found and put it into the doc
-        if (cat=="['Toolkit/Publication: Data Parallel C++']"):
-            name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[" + name
-            description=description.replace('*','')
-            description=description.replace('fig_','<br>- Fig_')
-            description="Collection of Code samples for the chapter"+description
-        
-        nf.write("|" + ver + "|[" + name+ "](" + url + ")|" + description + "|\n") 
-    nf.write("Total Samples: " + str(count)+ "\n\n")
-    nf.write(str(dataContent['mdCodeSamplesListFooter']) + d)
-    nf.close()
-    print("Change Log has been created")
+def createChangeLogFillerText(textFillers, count):
+    header = textFillers['mdChangeLogHeaderp1'] + textFillers['mdChangeLogHeaderp2']
+    footer = "Total Samples: " + str(count)+ "\n\n" + textFillers['mdCodeSamplesListFooter'] + d + "\n"
+    return header, footer
 
-def createCodeSamplesList():
-    temp = dict_main.items()
-    sorted_items = sorted(temp, key=lambda key_value: key_value[1]["name"], reverse=False) # sorts by name
-    sorted_by_name = OrderedDict(sorted_items)
-    temp=sorted_by_name.items()
-    nf = open(fCodeSamplesLists,"w+")
-    nf.write(dataContent['mdCodeSamplesListIntrop1'] + "\n\n" + dataContent['mdCodeSamplesListIntrop2'])
-    for key in sorted_by_name.keys():
-        description= str(sorted_by_name[key]['description']) 
-        url= sorted_by_name[key]['url']
-        name=sorted_by_name[key]['name']
-        target= str(sorted_by_name[key]['targetDevice'])
-        cat=str(sorted_by_name[key]['categories'])
-        if (cat=="""['Toolkit/Publication: Data Parallel C++']"""):
-            description=description.replace('*','')
-            description=description.replace('fig_','<br>- Fig_')
-            description="Collection of Code samples for the chapter"+description
-            name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[" + name
-        nf.write("|[" + name+ "](" + url + ")|" + target + "|" + description + "|\n") 
+def createCodeSamplesListFillerText(textFillers, count):
+    header = textFillers['mdCodeSamplesListIntrop1'] + "\n\n" + textFillers['mdCodeSamplesListIntrop2']
+    footer = "Total Samples: " + str(count)+ "\n\n" + str(textFillers['mdCodeSamplesListFooter']) + d + "\n"
+    return header, footer
+
+def createReadMeFillerText(textFillers, count):
+    header = ("## Introduction\n\n"
+        + textFillers['mdIntro1'] + "\n" +textFillers['mdIntro2'] + currentVersion + textFillers['mdIntro2.1'] + "\n ### Sample Details\n\n"
+        + textFillers['mdIntro3'] + textFillers['mdIntro3.1']+textFillers['mdIntro3.2'] + textFillers['mdIntro3.3'] + textFillers['mdIntro3.4'] + textFillers['mdIntro3.5']
+        + textFillers['mdIntro5'] + textFillers['mdIntro5.1'] + "\n" + textFillers['mdIntro5.2'] + "\n" + textFillers['mdIntro5.3'] + "\n" + textFillers['mdIntro5.4']
+        + "\n\n" +textFillers['mdIntro4'] + textFillers['mdIntro6'] + "\n\n" + textFillers['mdIntro7'] )
     
-    nf.write("Total Samples: " + str(count)+ "\n\n")
-    nf.write(str(dataContent['mdCodeSamplesListFooter']) + d)
-    nf.write("Total Samples: " + str(count)+ "\n\n")
-    nf.close()
+    removedSamplesHeader = ( "\nTotal Samples: " + str(count) + "\n"
+        + textFillers["mdDeletedSample"]
+    )
+
+    footer = ('\n\n' + textFillers['mdLicense']
+        + "\n\n" + str(textFillers['mdCodeSamplesListFooter']) + d + "\n")
+    return header, removedSamplesHeader, footer
+
+def replaceIfBook(cat, name, description):
+    # Due to name issues, we need to fix the DPC** books chapter namesas its found and put it into the doc
+    if (cat == "['Toolkit/Publication: Data Parallel C++']"):
+        name = "Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[" + name
+        description = description.replace('*', '')
+        description = description.replace('fig_', '<br>- Fig_')
+        description = "Collection of Code samples for the chapter" + description
+
+    return name, description
+
+def generateChangeLogLines(currentData, guidsVersions):
+    for key in guidsVersions.keys():
+        try:
+            description = currentData[key]['description']
+            url = currentData[key]['url']
+            name = currentData[key]['name']
+            cat = str(currentData[key]['categories'])
+        except KeyError as e:
+            print("\tWarning with: " + key + " Missing from guids.json\n\t\t" + guidsVersions[key]['notes'][:50] + "...")
+            continue
+        ver = guidsVersions[key]['ver']
+
+        name, description = replaceIfBook(cat, name, description)
+
+        yield "|" + ver + "|[" + name+ "](" + url + ")|" + description + "|\n"
+
+def generateCodeSamplesListLines(currentData):
+    for item in currentData.values():
+        description = item['description'] 
+        url = item['url']
+        name = item['name']
+        target = str(item['targetDevice'])
+        cat = str(item['categories'])
+        
+        name, description = replaceIfBook(cat, name, description)
+
+        yield "|[" + name+ "](" + url + ")|" + target + "|" + description + "|\n"
+
+def generateReadmeLines(currentData, guidsVersions):
+    for key, item in currentData.items():
+        try:
+            description= item['description']
+            url = item['url']
+            name =item['name']
+            cat=str(item['categories'])
+            ver=guidsVersions[key]['ver']
+        except KeyError as e:
+            print("\tError with: " + key + " Missing in guids.json")  
+
+        name, description = replaceIfBook(cat, name, description)
+        
+        if (ver == currentVersion):
+            yield ("|" + ver + "|[" + name+ "](" + url + ")|" + description + "|\n") 
+
+def generateReadmeDeleted(guidsVersions):
+    for item in guidsVersions.values():
+        if item['removed'] != "False":
+            yield (f"| {item['ver']} | {item['removed']} | {item['name']} | {item['notes']} |"
+                + f" [{item['removed']}](https://github.com/oneapi-src/oneAPI-samples/releases/tag/{item['removed']})" 
+                + (f" Path: {item['path']}" if 'path' in item else '')
+                + "|\n")
+
+def createChangeLog(textFillers, count, currentData, guidsVersions): #sorted but does not include version
+    print("Creating ChangeLog started")
+    header, footer = createChangeLogFillerText(textFillers, count)
+    with open(fChangeLogs,"w+") as file:
+        file.write(header)
+        for line in generateChangeLogLines(currentData, guidsVersions):        
+            file.write(line) 
+        file.write(footer)
+    print("ChangeLog has been created")
+
+def createCodeSamplesList(currentData, textFillers, count):
+    print("Creating CodeSamplesList started")
+    header, footer = createCodeSamplesListFillerText(textFillers, count)
+    with open(fCodeSamplesLists,"w+") as file:
+        file.write(header)
+        for line in generateCodeSamplesListLines(currentData):
+            file.write(line) 
+        file.write(footer)
     print("Code Samples List has been created")
 
-def createReadme(sorted_by_name, sorted_by_ver):
-    nf = open(freadme,"w+")
-    nf.write("## Introduction\n\n")
-    nf.write(dataContent['mdIntro1'] + "\n" +dataContent['mdIntro2'] + currentVersion + dataContent['mdIntro2.1'] + "\n ### Sample Details\n\n")
-    nf.write(dataContent['mdIntro3'] + dataContent['mdIntro3.1']+dataContent['mdIntro3.2'] + dataContent['mdIntro3.3'] + dataContent['mdIntro3.4'] + dataContent['mdIntro3.5'])
-    nf.write(dataContent['mdIntro5'] + dataContent['mdIntro5.1'] + "\n" + dataContent['mdIntro5.2'] + "\n" + dataContent['mdIntro5.3'] + "\n" + dataContent['mdIntro5.4'])
-    nf.write("\n\n" +dataContent['mdIntro4'])
-    nf.write(dataContent['mdIntro6'] + "\n\n" + dataContent['mdIntro7'])
-        
-    for key in sorted_by_name.keys():
-        try:
-            description= str(sorted_by_name[key]['description']) 
-            url= sorted_by_name[key]['url']
-            name=sorted_by_name[key]['name']
-            cat=str(sorted_by_name[key]['categories'])
-            ver=sorted_by_ver[key]['ver']
-            
-        except KeyError as e:
-            print("Error with: "+key)  
+def createReadme(textFillers, count, currentData, guidsVersions):
+    print("Creating ReadMe started")
+    header, removedSamplesHeader, footer = createReadMeFillerText(textFillers, count)
+    with open(freadme,"w+") as file:
+        file.write(header)    
+        for line in generateReadmeLines(currentData, guidsVersions):
+            file.write(line)
 
-        if (cat=="""['Toolkit/Publication: Data Parallel C++']"""):
-            name ="Pub: Data Parallel C++:](https://www.apress.com/9781484255735)<br>[" + name
-            description=description.replace('*','')
-            description=description.replace('fig_','<br>- Fig_')
-            description="Collection of Code samples for the chapter"+description
-        if (ver==currentVersion):
-            nf.write("|" + ver + "|[" + name+ "](" + url + ")|" + description + "|\n") 
-    nf.write("\nTotal Samples: " + str(count)+ "\n\n")
-    nf.write(dataContent['mdLicense'])
-    nf.write("\n\n")
-    nf.write(str(dataContent['mdCodeSamplesListFooter']) + d)
-    nf.close()
-    print("Readme has been created")
+        file.write(removedSamplesHeader)
+        for line in generateReadmeDeleted(guidsVersions):
+            file.write(line)
 
-#main
-checkFileExists(fCodeSamplesLists)     #Cleaning up from previous run
-checkFileExists(fChangeLogs)        #Cleaning up from previous run
-checkFileExists(freadme)            #Cleaning up from previous run
-dataContent = readContent()         #read json for data used in creating document header and footers
+        file.write(footer)
+        print("Readme has been created")
 
-dict_main={}                        
-dict_version = openJson(fguidVer)
+def logIfLicenseNotExists(dir):
+    if Path(bookPath) in Path(dir).parents:
+        return
+    if not( os.path.exists(os.path.join(dir, "License.txt")) or
+            os.path.exists(os.path.join(dir, "license.txt")) or
+            os.path.exists(os.path.join(dir, "LICENSE.txt"))):
+        for _1, _2, files in os.walk(dir): # Additional check if subdirs contains License e.g. \DirectProgramming\DPC++\Jupyter\oneapi-essentials-training
+            for file in files:
+                if(file == "License.txt"):
+                    return
+        print("Warning, License.txt not exists in: " + dir)
 
-for subdir, dirs, files in os.walk('..\\'):  # walk through samples repo looking for samples.json, if found add data to dict_main
-    for file in files:
-        if (file == fileName):
-            f = os.path.join(subdir, file)
-            data = openJson(f) 
-            dict_main[data['guid']]=data   
-            # build url
-            fp = os.path.join(subdir)
-            fp = fp.replace('\\','/')                 #char replace \ for /
-            fullURL=oneAPIURL+(str(fp)[17:])  # removed first 17 characters of the path, which is always "../oneAPI-samples/"
-            #end build url
-            dict_main[data['guid']]['url'] = fullURL
-            count = count+1
+def logIfReadmeNotExists(dir):
+    if Path(bookPath) in Path(dir).parents:
+        return
+    if not( os.path.exists(os.path.join(dir, "Readme.md")) or
+            os.path.exists(os.path.join(dir, "README.md")) or
+            os.path.exists(os.path.join(dir, "readme.md"))):
+        print("Warning, README.md not exists in: " + dir)
 
-temp = dict_main.items()
-sorted_by_name = OrderedDict(sorted(temp, key=lambda key_value: key_value[1]["name"], reverse=False))
+def createNewGuidRecord(data):
+    print(f"Adding new GUID to guid.json: {data['guid']}")
+    return {'guid':data['guid'], 'ver': currentVersion, 'name':data['name'], 'notes':'-', 'removed':'False'}
 
-temp=dict_version.items()
-sorted_by_ver = OrderedDict(sorted(temp, key=lambda key_value: key_value[1]["ver"], reverse=True))
-        # Future - add a search for license file and if none, show a warning
-        # Future - if no sample.json is present then show a warning
-        # future - if no readme.md is present then show a warning
-        # future - Check dict_main vs dict_version for guid present if not then need to add
-        # furure - check dict_version vs dict_main for guid present if not then need to allow if new sample hasnt been uploaded
-        # Future - for readme, need to add what samples may have been removed for this "current version" 
+def updateGuids(guidsVersions):
+    with open(guidsVerPath, "w") as file:
+        json.dump(guidsVersions, file, indent=4, sort_keys=True)
+    
 
-createChangeLog(count,sorted_by_name,sorted_by_ver)
-createCodeSamplesList()
-createReadme(sorted_by_name,sorted_by_ver)
+def main():
+    removeIfFileExist(fCodeSamplesLists)     #Cleaning up from previous run
+    removeIfFileExist(fChangeLogs)        #Cleaning up from previous run
+    removeIfFileExist(freadme)            #Cleaning up from previous run
+    textFillers = readJsonDataFromFile(contentPath)         #read json for data used in creating document header and footers
+    guidsVersions = readJsonDataFromFile(guidsVerPath)
+    currentData={}                        
+    count = 0
+    guidsNeedsUpdate = False
 
-print("Finished")
+    for subdir, dirs, files in os.walk('.'):  # walk through samples repo looking for samples.json, if found add data to currentData
+        for file in files:
+            if (file == 'sample.json'):
+                pathToFile = os.path.join(subdir, file)
+                data = readJsonDataFromFile(pathToFile) 
+                currentData[data['guid']]=data                  
+                fullURL = oneAPIURL + subdir[1:].replace('\\', '/') # removed first character which points to current directory "."
+                currentData[data['guid']]['url'] = fullURL
+                count += 1
+
+                if data['guid'] not in guidsVersions: #Check if new sample is added and update guids.json if necessary
+                    guidsVersions[data['guid']] = createNewGuidRecord(data)
+                    guidsNeedsUpdate = True
+
+                logIfLicenseNotExists(subdir)
+                logIfReadmeNotExists(subdir)
+
+
+    currentData = OrderedDict(sorted(currentData.items(), key=lambda key_value: key_value[1]["name"].lower()))
+    #stable sort so, sort by names first then by version 
+    temp = sorted(guidsVersions.items(), key=lambda key_value: key_value[1]['name'].lower())
+    guidsVersions = OrderedDict(sorted(temp, key=lambda key_value: key_value[1]["ver"], reverse=True))
+
+    if guidsNeedsUpdate:
+        updateGuids(guidsVersions)
+
+    createChangeLog(textFillers, count, currentData, guidsVersions)
+    createCodeSamplesList(currentData, textFillers, count)
+    createReadme(textFillers, count, currentData, guidsVersions)
+
+    # print("Finished")
+
+
+if __name__ == "__main__":
+    main()
+
+
