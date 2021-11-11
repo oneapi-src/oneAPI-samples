@@ -1,7 +1,7 @@
 # Read-Only Cache 
 This FPGA tutorial demonstrates how to use the read-only cache feature to boost
-the throughput of an FPGA DPC++ design that uses a read-only look-up table
-defined in host code.
+the throughput of an FPGA DPC++ design that requires reading from off-chip
+memory in a non-contiguous manner.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples
 Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html)
@@ -28,8 +28,9 @@ resource for target-independent DPC++ programming.
 
 This FPGA tutorial demonstrates an example of using the read-only cache to
 boost the throughput of an FPGA DPC++ design. Specifically, the read-only cache
-is most appropriate for table lookups that are constant throughout the
-execution of a kernel and is optimized for high cache hit performance.
+is most appropriate for non-contiguous read accesses from off-chip memory
+buffers that are guaranteed to be constant throughout the execution of a
+kernel. The read-only cache is optimized for high cache hit performance.
 
 To enable the read-only cache, the `-Xsread-only-cache-size<N>` flag should be
 passed to the `dpcpp` command. Each kernel will get its own *private* version
@@ -42,11 +43,11 @@ accessor sqrt_lut(sqrt_lut_buf, h, read_only, accessor_property_list{no_alias});
 The `read_only` property is required because the cache is *read_only*. The
 `no_alias` property is required to guarantee that the buffer will not be
 written to from the kernel through another accessor or through a USM pointer.
-Note that the same no-alias behavior can be achieved using the kernel attribute
-`[[intel::kernel_args_restrict]]`, when applicable.
+You do not need to apply the `no_alias` property if the kernel already has the
+`[[intel::kernel_args_restrict]]` attribute.
 
 Each private cache is also replicated as many times as needed so that it can
-expose extra read ports. The size of each replicate is `<N>` bytes as specified
+expose extra read ports. The size of each replicate is `N` bytes as specified
 by the `-Xsread-only-cache-size=<N>` flag.
 
 ### Tutorial Design 
@@ -54,10 +55,9 @@ The basic function performed by the tutorial kernel is a series of table
 lookups from a buffer (`sqrt_lut_buf`) that contains the square root values of
 the first 512 integers. By default, the compiler will generate load-store units
 (LSUs) that are optimized for the case where global memory accesses are
-contiguous. When the memory accesses are non-contiguous, like it is the case
-with this tutorial design, these LSUs tend to suffer major throughput loss. The
-read-only cache can sometimes help in such situations, especially when sized
-correctly.
+contiguous. When the memory accesses are non-contiguous, as is the case in this
+tutorial design, these LSUs tend to suffer major throughput loss. The read-only
+cache can sometimes help in such situations, especially when sized correctly.
 
 This tutorial requires compiling the source code twice: once with the
 `-Xsread-only-cache-size=<N>` flag and once without it. Because the look-up
@@ -215,10 +215,13 @@ cache has been created.
      ./read_only_cache.fpga_emu     (Linux)
      read_only_cache.fpga_emu.exe   (Windows)
      ```
+    Note that the read-only cache is not implemented in emulation. The
+    `-Xsread-only-cache-size<N>` flag does not impact the emulator in any way
+    which is why we only have a single executable for this flow.
 2. Run the sample on the FPGA device (two executables should be generated):
      ```
      ./read_only_cache_disabled.fpga         (Linux)
-     ./read_only_cache_enabled.fpga         (Linux)
+     ./read_only_cache_enabled.fpga          (Linux)
      ```
 
 ### Example of Output

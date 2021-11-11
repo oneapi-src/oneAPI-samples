@@ -23,6 +23,9 @@ constexpr double kNs = 1e9;         // number of nanoseconds in a second
 // This FPGA best practice reduces name mangling in the optimization reports.
 class SqrtTest;
 
+// Below are three different random number generators that are used to generate
+// arbitrary indices to be used when accessing the LUT. Each generator is
+// implemented using a "Linear-Feedback Shift Register" (LFSR).
 uint16_t rand1(uint16_t &index, uint16_t &bits) {
   bits = ((index >> 0) ^ (index >> 3) ^ (index >> 4) ^ (index >> 5)) & 1u;
   return index = (index >> 1) | (bits << 15);
