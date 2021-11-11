@@ -16,7 +16,7 @@
 		"steps": [
 			"mkdir build",
       		        "cd build",
-           		"cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp",
+           		"cmake .. -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=dpcpp",
            		"make sycl-interop-buffer-cpp",
 			"./bin/sycl-interop-buffer-cpp cpu",
 			"SYCL_BE=PI_OPENCL ./bin/sycl-interop-buffer-cpp gpu"

@@ -33,7 +33,8 @@
 		 ]
 	},
 	{
-		"env": ["source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_gomp --force" ],
+		"env": ["source activate base",
+			"source /opt/intel/oneapi/setvars.sh --dnnl-configuration=cpu_gomp --force" ],
 		"id": "vtune_itt",
 		"steps": [
 			"runipy tutorial_vtune_profiling.ipynb"
