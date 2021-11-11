@@ -147,15 +147,13 @@ sycl::event MatrixReadFromDDRToPipeByColumns(
       [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
       for(ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
 
-        TT burst[numElemPerBank];
+        pipeTable<numElemPerBank, TT> DDRRead;
         // Perform the DDR burst read of numElemPerBank elements
         UnrolledLoop<numElemPerBank>([&](auto k) {
-          burst[k] = matrixAccessor[(int)(li)*numElemPerBank + k];
+          DDRRead.elem[k] = matrixAccessor[(int)(li)*numElemPerBank + k];
         });
 
-        for(int i=0; i<numElemPerBank; i++){
-          matrixPipe::write(burst[i]);
-        }
+        matrixPipe::write(DDRRead);
       } // end of li
 
 /*
@@ -402,15 +400,12 @@ sycl::event MatrixReadPipeByColumnsToDDR(
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
 
-        TT pipeRead[numElemPerBank];
-        for(int k = 0; k<numElemPerBank; k++){
-          pipeRead[k] = matrixPipe::read();
-        }
+        pipeTable<numElemPerBank, TT> pipeRead = matrixPipe::read();
 
         // Write the banks[0] to DDR
         #pragma unroll 
         for(int k = 0; k<numElemPerBank; k++){
-          matrixAccessor[(int)(li*numElemPerBank + k)] = pipeRead[k];
+          matrixAccessor[(int)(li*numElemPerBank + k)] = pipeRead.elem[k];
         }
 
       } // end of li
@@ -596,99 +591,142 @@ sycl::event VectorReadPipeByElementsToDDR(
 
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-
-        // Read numElemPerBank elements from the input pipe
-        TT bank[numElemPerBank];
-        for(int k = 0; k<numElemPerBank; k++){
-          bank[k] = vectorPipe::read();
-        }
+        pipeTable<numElemPerBank, TT> pipeRead = vectorPipe::read();
 
         // Write a burst of numElemPerBank elements to DDR
         #pragma unroll 
         for(int k = 0; k<numElemPerBank; k++){
-          vectorAccessor[(int)(li*numElemPerBank + k)] = bank[k];
+          vectorAccessor[(int)(li*numElemPerBank + k)] = pipeRead.elem[k];
         }              
       } // end of li
+
+      // [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
+      // for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
+
+      //   // Read numElemPerBank elements from the input pipe
+      //   TT bank[numElemPerBank];
+      //   for(int k = 0; k<numElemPerBank; k++){
+      //     bank[k] = vectorPipe::read();
+      //   }
+
+      //   // Write a burst of numElemPerBank elements to DDR
+      //   #pragma unroll 
+      //   for(int k = 0; k<numElemPerBank; k++){
+      //     vectorAccessor[(int)(li*numElemPerBank + k)] = bank[k];
+      //   }              
+      // } // end of li
     }); // end of h
   }); // end of q submit
 
   return e;
 }
 
-/*
-  Read "vectorCount" vectors of type TT from a pipe, element by element and 
-  write them to DDR by bursts of numElemPerBank elements.
-  This implementation is used for vectors that have a size that is a not a 
-  multiple of the number of elements per DDR burst write (numElemPerBank).
-  Another version of this function is written above and will be selected 
-  automatically at compile time if the size is a multiple of numElemPerBank.
-*/
-template <typename kernelName,    // Name to use for the Kernel
-          typename TT,            // Datatype of the elements of the matrix
-          int size,               // Number of elements in the vector
-          int numElemPerBank,     // Number of TT elements per DDR burst access
-          int vectorCount,        // Number of vectors to read from the buffer 
-                                  // sequentially
-          typename vectorPipe     // Input vector pipe, receive an element
-                                  // with each read
-          >
-sycl::event VectorReadPipeByElementsToDDR( 
-            sycl::queue& q,                      // Device queue
-            sycl::buffer<TT, 1> * VectorBuffer,  // Output vector buffer
-            typename std::enable_if<(size % numElemPerBank) != 0>::type* = 0) {
+// /*
+//   Read "vectorCount" vectors of type TT from a pipe, element by element and 
+//   write them to DDR by bursts of numElemPerBank elements.
+//   This implementation is used for vectors that have a size that is a not a 
+//   multiple of the number of elements per DDR burst write (numElemPerBank).
+//   Another version of this function is written above and will be selected 
+//   automatically at compile time if the size is a multiple of numElemPerBank.
+// */
+// template <typename kernelName,    // Name to use for the Kernel
+//           typename TT,            // Datatype of the elements of the matrix
+//           int size,               // Number of elements in the vector
+//           int numElemPerBank,     // Number of TT elements per DDR burst access
+//           int vectorCount,        // Number of vectors to read from the buffer 
+//                                   // sequentially
+//           typename vectorPipe     // Input vector pipe, receive an element
+//                                   // with each read
+//           >
+// sycl::event VectorReadPipeByElementsToDDR( 
+//             sycl::queue& q,                      // Device queue
+//             sycl::buffer<TT, 1> * VectorBuffer,  // Output vector buffer
+//             typename std::enable_if<(size % numElemPerBank) != 0>::type* = 0) {
 
-  // Number of DDR burst of numElemPerBank required to write all the vectors 
-  constexpr int kLoopIter = (size / numElemPerBank + 1) * vectorCount;
-  // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+//   // Number of DDR burst of numElemPerBank required to write all the vectors 
+//   constexpr int kLoopIter = (size / numElemPerBank + 1) * vectorCount;
+//   // Size in bits of the loop iterator over kLoopIter iterations
+//   constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
   
-  auto e = q.submit([&](sycl::handler &h) {
+//   auto e = q.submit([&](sycl::handler &h) {
 
-    // Create accessor to the FPGA DDR buffer containing the output vectors
-    sycl::accessor vectorAccessor(*VectorBuffer, h, sycl::write_only, 
-                                                                sycl::no_init);
+//     // Create accessor to the FPGA DDR buffer containing the output vectors
+//     sycl::accessor vectorAccessor(*VectorBuffer, h, sycl::write_only, 
+//                                                                 sycl::no_init);
 
-    h.single_task<kernelName>([=]() [[intel::kernel_args_restrict]] {
+//     h.single_task<kernelName>([=]() [[intel::kernel_args_restrict]] {
 
-      // Keep track of the current element index in the current vector
-      int vectorIdx = 0;
-      // Keep track of the current vector index
-      int vectorCountIdx = 0;
+//       // Keep track of the current element index in the current vector
+//       int vectorIdx = 0;
+//       // Keep track of the current vector index
+//       int vectorCountIdx = 0;
 
-      [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
-      [[intel::ivdep]]                    // NO-FORMAT: Attribute
-      for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
+//       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
+//       [[intel::ivdep]]                    // NO-FORMAT: Attribute
+//       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
+//         pipeTable<numElemPerBank, TT> pipeRead = vectorPipe::read();
 
-        // Read up to numElemPerBank elements from the input pipe by checking
-        // that the read index is not beyond the vector size
-        TT bank[numElemPerBank];
-        for(int k = 0; k<numElemPerBank; k++){
-          if(vectorIdx + k < size){
-            bank[k] = vectorPipe::read();
-          }
-        }
+//         // Write a burst of numElemPerBank elements to DDR
+//         #pragma unroll 
+//         for(int k = 0; k<numElemPerBank; k++){
+//           if ((vectorIdx + k) < size){
+//             vectorAccessor[vectorCountIdx * size + vectorIdx + k] = pipeRead.elem[k];
+//           }
+//         }             
 
-        // Write a burst of numElemPerBank elements to DDR
-        #pragma unroll 
-        for(int k = 0; k<numElemPerBank; k++){
-          if ((vectorIdx + k) < size){
-            vectorAccessor[vectorCountIdx * size + vectorIdx + k] = bank[k];
-          }
-        }             
+//         // Update the indexes
+//         int vectorIdxPlusNumElemPerBank = vectorIdx + numElemPerBank;
+//         if(vectorIdxPlusNumElemPerBank > size){
+//           vectorIdx = 0;
+//           vectorCountIdx += 1;
+//         }
+//         else{
+//           vectorIdx = vectorIdxPlusNumElemPerBank;
+//         }
 
-        // Update the indexes
-        int vectorIdxPlusNumElemPerBank = vectorIdx + numElemPerBank;
-        if(vectorIdxPlusNumElemPerBank > size){
-          vectorIdx = 0;
-          vectorCountIdx += 1;
-        }
-        else{
-          vectorIdx = vectorIdxPlusNumElemPerBank;
-        }
+//       } // end of li
 
-      } // end of li
-    }); // end of h
-  }); // end of q submit
+// /*
+//       // Keep track of the current element index in the current vector
+//       int vectorIdx = 0;
+//       // Keep track of the current vector index
+//       int vectorCountIdx = 0;
 
-  return e;
-}
+//       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
+//       [[intel::ivdep]]                    // NO-FORMAT: Attribute
+//       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
+
+//         // Read up to numElemPerBank elements from the input pipe by checking
+//         // that the read index is not beyond the vector size
+//         TT bank[numElemPerBank];
+//         for(int k = 0; k<numElemPerBank; k++){
+//           if(vectorIdx + k < size){
+//             bank[k] = vectorPipe::read();
+//           }
+//         }
+
+//         // Write a burst of numElemPerBank elements to DDR
+//         #pragma unroll 
+//         for(int k = 0; k<numElemPerBank; k++){
+//           if ((vectorIdx + k) < size){
+//             vectorAccessor[vectorCountIdx * size + vectorIdx + k] = bank[k];
+//           }
+//         }             
+
+//         // Update the indexes
+//         int vectorIdxPlusNumElemPerBank = vectorIdx + numElemPerBank;
+//         if(vectorIdxPlusNumElemPerBank > size){
+//           vectorIdx = 0;
+//           vectorCountIdx += 1;
+//         }
+//         else{
+//           vectorIdx = vectorIdxPlusNumElemPerBank;
+//         }
+
+//       } // end of li
+// */
+//     }); // end of h
+//   }); // end of q submit
+
+//   return e;
+// }

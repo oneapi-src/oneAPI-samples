@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
       std::cout << "A MATRIX " << i << std::endl;
       for (size_t row = 0; row < kRows; row++) {
         for (size_t col = 0; col < kColumns; col++) {
-          std::cout << AMatrix[i * kAMatrixSize + col * kRows + row] << " "
+          std::cout << AMatrix[i * kAMatrixSize + col * kRows + row] << " ";
         } // end of col
         std::cout << std::endl;
       } // end of row      

@@ -46,19 +46,18 @@ void QRDecomposition_impl(
   constexpr int kRMatrixSize = columns * (columns + 1) / 2;
   constexpr int kNumElementsPerDDRBurst = isComplex ? 4 : 8;
 
-  using PipeType = pipeTable<rows, TT>;
+  using PipeType = pipeTable<kNumElementsPerDDRBurst, TT>;
 
   // Number of buffers to allocate to be able to read/compute/store without 
   // overlap.
   constexpr short kNumBuffers = 3;
   
   // Pipes to communicate the A, Q and R matrices between kernels
-  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, TT, kNumElementsPerDDRBurst*2>;
+  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, kNumElementsPerDDRBurst*3>;
   // using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 1*2>;
-  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, TT, kNumElementsPerDDRBurst*2>;
+  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, kNumElementsPerDDRBurst*3>;
   // using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 1*2>;
-  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, TT, 
-                                                    kNumElementsPerDDRBurst*3>;
+  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, PipeType, kNumElementsPerDDRBurst*3>;
 
   // We will process 'matricesPerIter' number of matrices in each run of the 
   // kernel
@@ -120,6 +119,7 @@ void QRDecomposition_impl(
                           columns,
                           rawLatency, 
                           matricesPerIter,
+                          kNumElementsPerDDRBurst,
                           AMatrixPipe,
                           QMatrixPipe,
                           RMatrixPipe>(q);

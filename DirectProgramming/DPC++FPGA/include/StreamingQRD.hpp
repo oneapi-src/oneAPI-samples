@@ -2,6 +2,15 @@
 #include "Tuple.hpp"
 #include "Utils.hpp"
 
+#ifdef __SYCL_DEVICE_ONLY__
+  #define CL_CONSTANT __attribute__((opencl_constant))
+#else
+  #define CL_CONSTANT
+#endif
+#define PRINTF(format, ...) { \
+            static const CL_CONSTANT char _format[] = format; \
+            sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
+
 /*
   QRD (QR decomposition) - Computes Q and R matrices such that A=QR where:
   - A is the input matrix
@@ -34,6 +43,8 @@ template <typename kernelName,  // Name to use for the Kernel
                                 // go down from there.
           int matrixCount,      // Number of matrices to read from the input 
                                 // pipe sequentially
+          int pipeElemSize,     // Number of elements read/write per pipe 
+                                // operation
           typename AIn,         // A matrix input pipe, receive a full column
                                 // of TT elements with each read
           typename QOut,        // Q matrix output pipe, send a full column
@@ -137,19 +148,64 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
         // ALoad is the initial matrix received from the pipe
         // ACompute is used and modified during calculations
         // QResult is a copy of ACompute and is used to send the final output
+
+        // Break memories up to store 4 complex numbers (32 bytes) per bank
+        constexpr short kBankwidth = pipeElemSize * sizeof(TT);
+        constexpr short kNumBanks = rows / pipeElemSize;
+
+        // When specifying numbanks for a memory, it must be a power of 2.
+        // Unused banks will be automatically optimized away.
+        constexpr short kNumBanksNextPow2 = Pow2(CeilLog2<kNumBanks>());
+
+        [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+        [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+        [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+        [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
         ColumnTuple ALoad[columns];
         ColumnTuple ACompute[columns];
         ColumnTuple QResult[columns];
         
         // Contains the values of the upper-right part of R in a row by row 
         // fashion, starting by row 0
-        TT R_result[kRMatrixSize];
+        // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+        TT R_result[kRMatrixSize/pipeElemSize][pipeElemSize];
 
         /*
           ======================================================================
           Copy a matrix from the pipe to a local memory
           ======================================================================
         */
+
+        // Number of DDR burst reads of pipeElemSize required to read a full column 
+        constexpr int kLoopIterPerColumn = rows/pipeElemSize; 
+        // Number of DDR burst reads of pipeElemSize to read all the matrices
+        constexpr int kLoopIter = kLoopIterPerColumn * columns;
+        // Size in bits of the loop iterator over kLoopIter iterations
+        constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+
+        [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
+        for (ac_int<kLoopIterBitSize, false> li=0; li<kLoopIter; li++) {
+          pipeTable<pipeElemSize, TT> pipeRead = AIn::read();
+
+          int writeIdx = li % kLoopIterPerColumn;
+
+          UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+            UnrolledLoop<pipeElemSize>([&](auto t) {
+              if (writeIdx == k) {
+                ALoad[li / kLoopIterPerColumn].template get<k * pipeElemSize + t>() = pipeRead.elem[t];
+              }
+
+              // Delay data signals to create a vine-based data distribution
+              // to lower signal fanout.
+              pipeRead.elem[t] = sycl::ext::intel::fpga_reg(pipeRead.elem[t]);
+            });
+
+            writeIdx = sycl::ext::intel::fpga_reg(writeIdx);
+          });
+        }
+
+
+/*
         ShiftReg<TT, rows> shreg;
         [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
         for (int col=0; col<columns; col++) {
@@ -163,7 +219,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
             ALoad[col].template get<k>() = shreg.template get<k>();
           });
         }
-
+*/
 /*        
         [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
         for (int col=0; col<columns; col++) {
@@ -377,7 +433,8 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
 
           // Write the computed R value when j is not a "dummy" iteration
           if ((j >= i + 1) & (i + 1 < columns)) {
-            R_result[RElementIndex] = r_ip1j;
+            R_result[RElementIndex/pipeElemSize][RElementIndex%pipeElemSize] = 
+                                                                        r_ip1j;
             RElementIndex++;
           }
 
@@ -393,15 +450,46 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
           ======================================================================
         */
         [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
-        for (int r_idx = 0; r_idx < kRMatrixSize; r_idx++) {
-          ROut::write(R_result[r_idx]);
+        for (int r_idx = 0; r_idx < kRMatrixSize/pipeElemSize; r_idx++) {
+          pipeTable<pipeElemSize, TT> pipeWrite;
+          UnrolledLoop<pipeElemSize>([&](auto k) {
+            pipeWrite.elem[k] = R_result[r_idx][k];
+          });
+          ROut::write(pipeWrite);
+
+          // ROut::write(R_result[r_idx]);
         }
+
 
         /*
           ======================================================================
           Copy the Q matrix result to the QOut output pipe
           ======================================================================
         */
+
+        [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
+        for (ac_int<kLoopIterBitSize, false> li=0; li<kLoopIter; li++) {
+
+          int columnIter = li % kLoopIterPerColumn;
+          bool get[kLoopIterPerColumn];
+          UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+            get[k] = columnIter == k;
+            columnIter = sycl::ext::intel::fpga_reg(columnIter);
+          });
+
+          pipeTable<pipeElemSize, TT> pipeWrite;
+          UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
+            UnrolledLoop<pipeElemSize>([&](auto k) {
+              pipeWrite.elem[k] = get[t] ? 
+          QResult[li/kLoopIterPerColumn].template get<t * pipeElemSize + k>() :
+                                  sycl::ext::intel::fpga_reg(pipeWrite.elem[k]);
+            });
+          });
+
+          QOut::write(pipeWrite);
+        }
+
+/*        
         [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
         for (int col = 0; col < columns; col++) {
           // Load a full column of Q to the correct pipe type
@@ -416,7 +504,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
             QOut::write(shreg.shift());
           }
         } // end of col
-
+*/
 /*
         [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
         for (int col = 0; col < columns; col++) {
