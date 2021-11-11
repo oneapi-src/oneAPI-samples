@@ -13,8 +13,9 @@
     {
   		"env": ["source activate base"],
   		"steps": [
-         "conda create -y -n aikit-modin --override-channels intel-aikit-modin omniscidbe4py python=3.7 runipy ray-dashboard -c intel -c conda-forge",
-         "conda activate aikit-modin",
+         "conda create -y -n modin-conda-forge -c conda-forge --strict-channel-priority modin-all",
+         "conda activate modin-conda-forge",
+	 "conda install -y -c conda-forge scikit-learn-intelex runipy",
          "pip install opencensus",
          "runipy census_modin.ipynb" 
   		 ]
