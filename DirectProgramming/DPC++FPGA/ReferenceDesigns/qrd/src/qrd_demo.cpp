@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
 
     // For output post-processing (OP)
     T QMatrixOP[kRows][kColumns];
-    T RMatrixOP[kColumns][kColumns];
+    T RMatrixOP[kRows][kColumns];
 
     // For rectangular matrices, Q is only going to have orthogonal columns 
     // so we won't check if the rows are orthogonal
@@ -221,7 +221,7 @@ int main(int argc, char *argv[]) {
       size_t QIdx = 0;
 
       // Read the R matrix from the output vector to the RMatrixOP matrix
-      for (size_t i = 0; i < kColumns; i++) {
+      for (size_t i = 0; i < kRows; i++) {
         for (size_t j = 0; j < kColumns; j++) {
           if (j < i)
             RMatrixOP[i][j] = 0;
@@ -323,7 +323,6 @@ int main(int argc, char *argv[]) {
                     ((i > j) && ((abs(RMatrixOP[i][j]) < kErrorThreshold) )) ||
                             ((i <= j));
 
-          RIsFinite = (i < kColumns) && isFinite(RMatrixOP[i][j]);
 #else
           QREqA = (abs(AMatrix[matrix * kAMatrixSize + j * kRows + i].r()
                                               - QRij.r()) < kErrorThreshold)
@@ -354,8 +353,10 @@ int main(int argc, char *argv[]) {
                             )
                             || (i <= j);
 
-          RIsFinite = (i < kColumns) && isFinite(RMatrixOP[i][j]);
 #endif
+
+          RIsFinite = ((i < kColumns) && isFinite(RMatrixOP[i][j])) || 
+                      (i >= kColumns);
 
           // If any of the checks failed
           if (!QREqA ||

@@ -100,7 +100,7 @@ void QRDecomposition_impl(
 
       // Read an input matrix A from the host memory to the FPGA DDR
       // Stream the A matrix to the AMatrixPipe pipe
-      MatrixReadFromDDRToPipeByColumns< class QRD_DDR_to_local_mem, 
+      MatrixReadFromDDRToPipe< class QRD_DDR_to_local_mem, 
                                       TT,
                                       rows,
                                       columns,
@@ -126,7 +126,7 @@ void QRDecomposition_impl(
 
       // Read the Q matrix from the QMatrixPipe pipe and copy it to the
       // FPGA DDR
-      MatrixReadPipeByColumnsToDDR< class QRD_local_mem_to_DDR_Q, 
+      MatrixReadPipeToDDR< class QRD_local_mem_to_DDR_Q, 
                                     TT,
                                     rows,
                                     columns,
@@ -138,7 +138,7 @@ void QRDecomposition_impl(
 
       // Read the R matrix from the RMatrixPipe pipe and copy it to the
       // FPGA DDR
-      VectorReadPipeByElementsToDDR<  class QRD_local_mem_to_DDR_R, 
+      VectorReadPipeToDDR<  class QRD_local_mem_to_DDR_R, 
                                       TT,
                                       kRMatrixSize,
                                       kNumElementsPerDDRBurst,

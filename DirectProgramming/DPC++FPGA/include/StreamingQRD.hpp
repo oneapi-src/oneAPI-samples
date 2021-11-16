@@ -11,6 +11,175 @@
             static const CL_CONSTANT char _format[] = format; \
             sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
 
+
+template <typename T,           // The datatype for the computation
+          bool isComplex,       // True if T is ac_complex<X>
+          int rows,             // Number of rows in the incoming A matrices
+          int columns,          // Number of columns in the incoming A
+                                // matrices, must be <= rows
+          int pipeElemSize,     // Number of elements read/write per pipe 
+                                // operation
+          typename AIn         // A matrix input pipe, receive a full column
+                                // of TT elements with each read
+          >
+inline void readPipeAndWriteA(NTuple<
+                    typename std::conditional<isComplex, ac_complex<T>,T>::type, 
+                                      rows> *ALoad
+                              ) {
+  typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
+
+  // Number of DDR burst reads of pipeElemSize required to read a full column 
+  constexpr int kExtraIteration = (rows % pipeElemSize) != 0 ? 1 : 0;
+  constexpr int kLoopIterPerColumn = rows/pipeElemSize + kExtraIteration; 
+  // Number of DDR burst reads of pipeElemSize to read all the matrices
+  constexpr int kLoopIter = kLoopIterPerColumn * columns;
+  // Size in bits of the loop iterator over kLoopIter iterations
+  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+
+  [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
+  for (ac_int<kLoopIterBitSize, false> li=0; li<kLoopIter; li++) {
+    pipeTable<pipeElemSize, TT> pipeRead = AIn::read();
+
+    int writeIdx = li % kLoopIterPerColumn;
+
+    UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+      UnrolledLoop<pipeElemSize>([&](auto t) {
+        if (writeIdx == k) {
+          if constexpr(k * pipeElemSize + t < rows){
+            ALoad[li / kLoopIterPerColumn].
+                    template get<k * pipeElemSize + t>() = pipeRead.elem[t];
+          }
+        }
+
+        // Delay data signals to create a vine-based data distribution
+        // to lower signal fanout.
+        pipeRead.elem[t] = sycl::ext::intel::fpga_reg(pipeRead.elem[t]);
+      });
+
+      writeIdx = sycl::ext::intel::fpga_reg(writeIdx);
+    });
+  }
+}
+
+template <typename T,           // The datatype for the computation
+          bool isComplex,       // True if T is ac_complex<X>
+          int rows,             // Number of rows in the incoming A matrices
+          int columns,          // Number of columns in the incoming A
+                                // matrices, must be <= rows
+          int pipeElemSize,     // Number of elements read/write per pipe 
+                                // operation
+          typename QOut         // Q matrix output pipe, send a full column
+                                // of TT elements with each write
+          >
+inline void readQAndWriteToPipe(NTuple<
+                  typename std::conditional<isComplex, ac_complex<T>, T>::type, 
+                                        rows> *QResult
+                              ) {
+  typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
+
+  // Number of DDR burst reads of pipeElemSize required to read a full column 
+  constexpr int kExtraIteration = (rows % pipeElemSize) != 0 ? 1 : 0;
+  constexpr int kLoopIterPerColumn = rows/pipeElemSize + kExtraIteration; 
+  // Number of DDR burst reads of pipeElemSize to read all the matrices
+  constexpr int kLoopIter = kLoopIterPerColumn * columns;
+  // Size in bits of the loop iterator over kLoopIter iterations
+  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+
+  [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
+  for (ac_int<kLoopIterBitSize, false> li=0; li<kLoopIter; li++) {
+
+    int columnIter = li % kLoopIterPerColumn;
+    bool get[kLoopIterPerColumn];
+    UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+      get[k] = columnIter == k;
+      columnIter = sycl::ext::intel::fpga_reg(columnIter);
+    });
+
+    pipeTable<pipeElemSize, TT> pipeWrite;
+    UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
+      UnrolledLoop<pipeElemSize>([&](auto k) {
+        if constexpr(t * pipeElemSize + k < rows){
+        pipeWrite.elem[k] = get[t] ? 
+          QResult[li/kLoopIterPerColumn].template get<t * pipeElemSize + k>() :
+                                  sycl::ext::intel::fpga_reg(pipeWrite.elem[k]);
+        }
+      });
+    });
+
+    QOut::write(pipeWrite);
+  }
+}
+
+template <typename T,           // The datatype for the computation
+          bool isComplex,       // True if T is ac_complex<X>
+          int rows,             // Number of rows in the incoming A matrices
+          int columns,          // Number of columns in the incoming A
+                                // matrices, must be <= rows
+          int pipeElemSize,     // Number of elements read/write per pipe 
+                                // operation
+          typename ROut         // R matrix output pipe, send one TT element
+                                // per write. Only upper-right elements of R are
+                                // sent in row order, starting with row 0.
+          >
+inline void readRAndWriteToPipe(
+  // typename std::conditional<isComplex,
+  //                                              ac_complex<T>, T>::type *RResult
+
+typename std::conditional<isComplex, ac_complex<T>, T>::type RResult[(columns * (columns + 1) / 2)/pipeElemSize][pipeElemSize],
+typename std::enable_if<((columns * (columns + 1) / 2) % pipeElemSize) == 0>::type* = 0
+                              ) {
+  typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
+
+  // Number of upper-right elements in the R output matrix 
+  constexpr int kRMatrixSize = columns * (columns + 1) / 2;
+
+  [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
+  for (int r_idx = 0; r_idx < kRMatrixSize/pipeElemSize; r_idx++) {
+    pipeTable<pipeElemSize, TT> pipeWrite;
+    UnrolledLoop<pipeElemSize>([&](auto k) {
+      pipeWrite.elem[k] = RResult[r_idx][k];
+    });
+    ROut::write(pipeWrite);
+  }
+}
+
+template <typename T,           // The datatype for the computation
+          bool isComplex,       // True if T is ac_complex<X>
+          int rows,             // Number of rows in the incoming A matrices
+          int columns,          // Number of columns in the incoming A
+                                // matrices, must be <= rows
+          int pipeElemSize,     // Number of elements read/write per pipe 
+                                // operation
+          typename ROut         // R matrix output pipe, send one TT element
+                                // per write. Only upper-right elements of R are
+                                // sent in row order, starting with row 0.
+          >
+inline void readRAndWriteToPipe(
+  // typename std::conditional<isComplex,
+  //                                              ac_complex<T>, T>::type *RResult
+
+typename std::conditional<isComplex, ac_complex<T>, T>::type RResult[((columns * (columns + 1) / 2)/pipeElemSize) + 1][pipeElemSize],
+typename std::enable_if<((columns * (columns + 1) / 2) % pipeElemSize) != 0>::type* = 0
+                              ) {
+  typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
+
+  // Number of upper-right elements in the R output matrix 
+  constexpr int kRMatrixSize = columns * (columns + 1) / 2;
+
+  [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
+  for (int r_idx = 0; r_idx < (kRMatrixSize/pipeElemSize) + 1; r_idx++) {
+    pipeTable<pipeElemSize, TT> pipeWrite;
+    UnrolledLoop<pipeElemSize>([&](auto k) {
+      // if(r_idx*pipeElemSize+k < kRMatrixSize){
+        pipeWrite.elem[k] = RResult[r_idx][k];
+      // }
+    });
+    ROut::write(pipeWrite);
+  }
+}
+
+
+
 /*
   QRD (QR decomposition) - Computes Q and R matrices such that A=QR where:
   - A is the input matrix
@@ -137,6 +306,13 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
   static constexpr int kJBitSize =  BitsForMaxValue<columns + 1>() + 
                                     BitsForMaxValue<kJNegativeIterations>();
 
+  // Number of DDR burst reads of pipeElemSize required to read a full column 
+  constexpr int kLoopIterPerColumn = rows/pipeElemSize; 
+  // Number of DDR burst reads of pipeElemSize to read all the matrices
+  constexpr int kLoopIter = kLoopIterPerColumn * columns;
+  // Size in bits of the loop iterator over kLoopIter iterations
+  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+
   auto e = q.submit([&](sycl::handler& h) {
     h.single_task<kernelName>([=] {
 
@@ -168,7 +344,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
         // Contains the values of the upper-right part of R in a row by row 
         // fashion, starting by row 0
         // [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
-        TT R_result[kRMatrixSize/pipeElemSize][pipeElemSize];
+        TT RResult[kRMatrixSize/pipeElemSize + 1][pipeElemSize];
 
         /*
           ======================================================================
@@ -176,69 +352,15 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
           ======================================================================
         */
 
-        // Number of DDR burst reads of pipeElemSize required to read a full column 
-        constexpr int kLoopIterPerColumn = rows/pipeElemSize; 
-        // Number of DDR burst reads of pipeElemSize to read all the matrices
-        constexpr int kLoopIter = kLoopIterPerColumn * columns;
-        // Size in bits of the loop iterator over kLoopIter iterations
-        constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
-
-        [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
-        for (ac_int<kLoopIterBitSize, false> li=0; li<kLoopIter; li++) {
-          pipeTable<pipeElemSize, TT> pipeRead = AIn::read();
-
-          int writeIdx = li % kLoopIterPerColumn;
-
-          UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-            UnrolledLoop<pipeElemSize>([&](auto t) {
-              if (writeIdx == k) {
-                ALoad[li / kLoopIterPerColumn].template get<k * pipeElemSize + t>() = pipeRead.elem[t];
-              }
-
-              // Delay data signals to create a vine-based data distribution
-              // to lower signal fanout.
-              pipeRead.elem[t] = sycl::ext::intel::fpga_reg(pipeRead.elem[t]);
-            });
-
-            writeIdx = sycl::ext::intel::fpga_reg(writeIdx);
-          });
-        }
-
-
-/*
-        ShiftReg<TT, rows> shreg;
-        [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
-        for (int col=0; col<columns; col++) {
-          for(int row=0; row<rows; row++){
-            TT read = AIn::read();
-            shreg.shift(read);
-          }
-
-          // Write the current column to the ALoad matrix.
-          UnrolledLoop<rows>([&](auto k) {
-            ALoad[col].template get<k>() = shreg.template get<k>();
-          });
-        }
-*/
-/*        
-        [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
-        for (int col=0; col<columns; col++) {
-          // Read a column of the input matrix from the pipe 
-          pipeTable<rows, TT> pipeData = AIn::read();
-
-          // Write the current column to the ALoad matrix.
-          UnrolledLoop<rows>([&](auto k) {
-            ALoad[col].template get<k>() = pipeData.template get<k>();
-          });
-        }
-*/
+        readPipeAndWriteA<T, isComplex, rows, columns, pipeElemSize, AIn>
+                                                                        (ALoad);
 
         /*
           ======================================================================
           Compute the QR Decomposition
           ======================================================================
         */
-        // R_result write index
+        // RResult write index
         int RElementIndex = 0;
 
         // a local copy of a_{i+1} that is used across multiple j iterations 
@@ -433,7 +555,7 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
 
           // Write the computed R value when j is not a "dummy" iteration
           if ((j >= i + 1) & (i + 1 < columns)) {
-            R_result[RElementIndex/pipeElemSize][RElementIndex%pipeElemSize] = 
+            RResult[RElementIndex/pipeElemSize][RElementIndex%pipeElemSize] = 
                                                                         r_ip1j;
             RElementIndex++;
           }
@@ -449,17 +571,8 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
           Copy the R matrix result to the ROut output pipe
           ======================================================================
         */
-        [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
-        for (int r_idx = 0; r_idx < kRMatrixSize/pipeElemSize; r_idx++) {
-          pipeTable<pipeElemSize, TT> pipeWrite;
-          UnrolledLoop<pipeElemSize>([&](auto k) {
-            pipeWrite.elem[k] = R_result[r_idx][k];
-          });
-          ROut::write(pipeWrite);
-
-          // ROut::write(R_result[r_idx]);
-        }
-
+        readRAndWriteToPipe<T, isComplex, rows, columns, pipeElemSize, ROut>
+                                                                      (RResult);
 
         /*
           ======================================================================
@@ -467,58 +580,9 @@ sycl::event StreamingQRDKernel(sycl::queue& q // Device queue
           ======================================================================
         */
 
-        [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
-        for (ac_int<kLoopIterBitSize, false> li=0; li<kLoopIter; li++) {
+        readQAndWriteToPipe<T, isComplex, rows, columns, pipeElemSize, QOut>
+                                                                      (QResult);
 
-          int columnIter = li % kLoopIterPerColumn;
-          bool get[kLoopIterPerColumn];
-          UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-            get[k] = columnIter == k;
-            columnIter = sycl::ext::intel::fpga_reg(columnIter);
-          });
-
-          pipeTable<pipeElemSize, TT> pipeWrite;
-          UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
-            UnrolledLoop<pipeElemSize>([&](auto k) {
-              pipeWrite.elem[k] = get[t] ? 
-          QResult[li/kLoopIterPerColumn].template get<t * pipeElemSize + k>() :
-                                  sycl::ext::intel::fpga_reg(pipeWrite.elem[k]);
-            });
-          });
-
-          QOut::write(pipeWrite);
-        }
-
-/*        
-        [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
-        for (int col = 0; col < columns; col++) {
-          // Load a full column of Q to the correct pipe type
-          ShiftReg<TT, rows> shreg;
-          UnrolledLoop<rows>([&](auto k) {
-            TT tmp = QResult[col].template get<k>();
-            shreg.template set<k>(tmp); 
-          });
-
-          for(int row=0; row<rows; row++){
-            // Write the Q column to the pipe
-            QOut::write(shreg.shift());
-          }
-        } // end of col
-*/
-/*
-        [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
-        for (int col = 0; col < columns; col++) {
-          // Load a full column of Q to the correct pipe type
-          pipeTable<rows, TT> pipeData;
-          UnrolledLoop<rows>([&](auto k) {
-            TT tmp = QResult[col].template get<k>();
-            pipeData.template set<k>(tmp); 
-          });
-
-          // Write the Q column to the pipe
-          QOut::write(pipeData);
-        } // end of col
-*/
       } // end of matrixIter
     }); // end of h
   }); // end of q submit
