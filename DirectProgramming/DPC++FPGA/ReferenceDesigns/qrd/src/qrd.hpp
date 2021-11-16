@@ -18,7 +18,6 @@
   Implementation of the QR decomposition using multiple streaming kernels
   Can be configured by datatype, matrix size (4x4 to 
   512x512) and works with square or rectangular matrices, real and complex. 
-
 */
 template< unsigned columns,    // Number of columns in the input matrix
           unsigned rows,       // Number of rows in the input matrix
@@ -53,11 +52,12 @@ void QRDecomposition_impl(
   constexpr short kNumBuffers = 3;
   
   // Pipes to communicate the A, Q and R matrices between kernels
-  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, kNumElementsPerDDRBurst*3>;
-  // using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 1*2>;
-  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, kNumElementsPerDDRBurst*3>;
-  // using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 1*2>;
-  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, PipeType, kNumElementsPerDDRBurst*3>;
+  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 
+                                                    kNumElementsPerDDRBurst*3>;
+  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 
+                                                    kNumElementsPerDDRBurst*3>;
+  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, PipeType, 
+                                                    kNumElementsPerDDRBurst*3>;
 
   // We will process 'matricesPerIter' number of matrices in each run of the 
   // kernel
@@ -81,11 +81,9 @@ void QRDecomposition_impl(
 
   // Repeat the computation multiple times (for performance analysis)
   for (size_t r = 0; r < reps; r++) {
-
     // Go over all the matrices, rotating buffers every time
     for (size_t bufferIdx = 0, it = 0; it < matrices; 
             it += matricesPerIter, bufferIdx = (bufferIdx + 1) % kNumBuffers) {
-
       // Pointers to current input/output matrices in host memory 
       const TT *kPtrA = AMatrix.data() + kAMatrixSize * it;
       TT *ptrQ = QMatrix.data() + kQMatrixSize * it;
@@ -100,51 +98,51 @@ void QRDecomposition_impl(
 
       // Read an input matrix A from the host memory to the FPGA DDR
       // Stream the A matrix to the AMatrixPipe pipe
-      MatrixReadFromDDRToPipe< class QRD_DDR_to_local_mem, 
-                                      TT,
-                                      rows,
-                                      columns,
-                                      kNumElementsPerDDRBurst,
-                                      matricesPerIter,
-                                      AMatrixPipe>
-                                      (q, ABuffer[bufferIdx]);
+      MatrixReadFromDDRToPipe<class QRD_DDR_to_local_mem, 
+                              TT,
+                              rows,
+                              columns,
+                              kNumElementsPerDDRBurst,
+                              matricesPerIter,
+                              AMatrixPipe>
+                              (q, ABuffer[bufferIdx]);
 
       // Read the A matrix from the AMatrixPipe pipe and compute the QR 
       // decomposition. Write the Q and R output matrices to the QMatrixPipe
       // and RMatrixPipe pipes.
-      StreamingQRDKernel< class QRD_compute, 
-                          T, 
-                          isComplex,
-                          rows, 
-                          columns,
-                          rawLatency, 
-                          matricesPerIter,
-                          kNumElementsPerDDRBurst,
-                          AMatrixPipe,
-                          QMatrixPipe,
-                          RMatrixPipe>(q);
+      StreamingQRD< class QRD_compute, 
+                    T, 
+                    isComplex,
+                    rows, 
+                    columns,
+                    rawLatency, 
+                    matricesPerIter,
+                    kNumElementsPerDDRBurst,
+                    AMatrixPipe,
+                    QMatrixPipe,
+                    RMatrixPipe>(q);
 
       // Read the Q matrix from the QMatrixPipe pipe and copy it to the
       // FPGA DDR
-      MatrixReadPipeToDDR< class QRD_local_mem_to_DDR_Q, 
-                                    TT,
-                                    rows,
-                                    columns,
-                                    kNumElementsPerDDRBurst,
-                                    matricesPerIter,
-                                    // AMatrixPipe>
-                                    QMatrixPipe>
-                                    (q, QBuffer[bufferIdx]);
+      MatrixReadPipeToDDR<class QRD_local_mem_to_DDR_Q, 
+                          TT,
+                          rows,
+                          columns,
+                          kNumElementsPerDDRBurst,
+                          matricesPerIter,
+                          // AMatrixPipe>
+                          QMatrixPipe>
+                          (q, QBuffer[bufferIdx]);
 
       // Read the R matrix from the RMatrixPipe pipe and copy it to the
       // FPGA DDR
-      VectorReadPipeToDDR<  class QRD_local_mem_to_DDR_R, 
-                                      TT,
-                                      kRMatrixSize,
-                                      kNumElementsPerDDRBurst,
-                                      matricesPerIter,
-                                      RMatrixPipe>
-                                      (q, RBuffer[bufferIdx]);
+      VectorReadPipeToDDR<class QRD_local_mem_to_DDR_R, 
+                          TT,
+                          kRMatrixSize,
+                          kNumElementsPerDDRBurst,
+                          matricesPerIter,
+                          RMatrixPipe>
+                          (q, RBuffer[bufferIdx]);
 
       // Copy the Q matrix result from the FPGA DDR to the host memory
       q.submit([&](sycl::handler &h) {
@@ -157,7 +155,6 @@ void QRDecomposition_impl(
         sycl::accessor RMatrix(*RBuffer[bufferIdx], h, sycl::read_only);
         h.copy(RMatrix, ptrR);
       });
-
     } // end of it 
   } // end of r 
 

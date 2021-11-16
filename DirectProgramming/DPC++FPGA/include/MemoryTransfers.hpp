@@ -2,18 +2,10 @@
 
 #include "Utils.hpp"
 
-#ifdef __SYCL_DEVICE_ONLY__
-  #define CL_CONSTANT __attribute__((opencl_constant))
-#else
-  #define CL_CONSTANT
-#endif
-#define PRINTF(format, ...) { \
-            static const CL_CONSTANT char _format[] = format; \
-            sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
-
 /*
   Read "matrixCount" matrices of type TT from DDR by bursts of numElemPerBank 
-  elements, and write the matrices to the "matrixPipe" pipe column by column.
+  elements, and write the matrices to the "matrixPipe" pipe numElemPerBank by 
+  numElemPerBank.
   This implementation is used for matrices that have a number of rows that is a 
   multiple of the number of elements per DDR burst read (numElemPerBank).
   Another version of this function is written below and will be selected at 
@@ -24,10 +16,8 @@ template <typename kernelName,    // Name to use for the Kernel
           int rows,               // Number of rows of the matrix
           int columns,            // Number of columns of the matrix
           int numElemPerBank,     // Number of TT elements per DDR burst access
-          int matrixCount,        // Number of matrices to read
-                                  // from the buffer sequentially
-          typename matrixPipe     // Output matrix pipe, send a full column
-                                  // with each write
+          int matrixCount,        // Number of matrices to read from the buffer
+          typename matrixPipe     // Output matrix pipe
           >
 sycl::event MatrixReadFromDDRToPipe( 
             sycl::queue& q,                     // Device queue
@@ -67,7 +57,8 @@ sycl::event MatrixReadFromDDRToPipe(
 
 /*
   Read "matrixCount" matrices of type TT from DDR by bursts of numElemPerBank 
-  elements, and write the matrices to the "matrixPipe" pipe column by column.
+  elements, and write the matrices to the "matrixPipe" pipe numElemPerBank by 
+  numElemPerBank.
   This implementation is used for matrices that have a number of rows that is 
   not a multiple of the number of elements per DDR burst read (numElemPerBank).
   Another version of this function is written above and will be selected at 
@@ -78,10 +69,8 @@ template <typename kernelName,    // Name to use for the Kernel
           int rows,               // Number of rows of the matrix
           int columns,            // Number of columns of the matrix
           int numElemPerBank,     // Number of TT elements per DDR burst access
-          int matrixCount,        // Number of matrices to read
-                                  // from the buffer sequentially
-          typename matrixPipe     // Output matrix pipe, send a full column
-                                  // with each write
+          int matrixCount,        // Number of matrices to read from the buffer
+          typename matrixPipe     // Output matrix pipe
           >
 sycl::event MatrixReadFromDDRToPipe( 
             sycl::queue& q,                     // Device queue
@@ -131,7 +120,7 @@ sycl::event MatrixReadFromDDRToPipe(
         // to the read size of the current iteration
         loadIndex += lastBurstOfCol ? rows % numElemPerBank : numElemPerBank;
 
-        // Send the column over the pipe
+        // Send the pipe read data over the pipe
         matrixPipe::write(DDRRead);
 
       } // end of li
@@ -142,8 +131,8 @@ sycl::event MatrixReadFromDDRToPipe(
 }
 
 /*
-  Read "matrixCount" matrices of type TT from a pipe, column by column and 
-  write them to DDR by bursts of numElemPerBank elements.
+  Read "matrixCount" matrices of type TT from a pipe, numElemPerBank by 
+  numElemPerBank and  write them to DDR by bursts of numElemPerBank elements.
   This implementation is used for matrices that have a number of rows that is 
   a multiple of the number of elements per DDR burst write (numElemPerBank).
   Another version of this function is written below and will be selected at 
@@ -154,10 +143,8 @@ template <typename kernelName,    // Name to use for the Kernel
           int rows,               // Number of rows of the matrix
           int columns,            // Number of columns of the matrix
           int numElemPerBank,     // Number of TT elements per DDR burst access
-          int matrixCount,        // Number of matrices to write to the 
-                                  // buffer sequentially
-          typename matrixPipe     // Input matrix, receive a full column
-                                  // with each read
+          int matrixCount,        // Number of matrices to write to the buffer
+          typename matrixPipe     // Input matrix
           >
 sycl::event MatrixReadPipeToDDR( 
             sycl::queue& q,                      // Device queue
@@ -199,8 +186,8 @@ sycl::event MatrixReadPipeToDDR(
 }
 
 /*
-  Read "matrixCount" matrices of type TT from a pipe, column by column and 
-  write them to DDR by bursts of numElemPerBank elements.
+  Read "matrixCount" matrices of type TT from a pipe, numElemPerBank by 
+  numElemPerBank and write them to DDR by bursts of numElemPerBank elements.
   This implementation is used for matrices that have a number of rows that is 
   not a multiple of the number of elements per DDR burst read (numElemPerBank).
   Another version of this function is written above and will be selected at 
@@ -211,10 +198,8 @@ template <typename kernelName,    // Name to use for the Kernel
           int rows,               // Number of rows of the matrix
           int columns,            // Number of columns of the matrix
           int numElemPerBank,     // Number of TT elements per DDR burst access
-          int matrixCount,        // Number of matrices to write to the 
-                                  // buffer sequentially
-          typename matrixPipe     // Input matrix, receive a full column
-                                  // with each read
+          int matrixCount,        // Number of matrices to write to the buffer
+          typename matrixPipe     // Input matrix
           >
 sycl::event MatrixReadPipeToDDR( 
             sycl::queue& q,                      // Device queue
@@ -241,7 +226,6 @@ sycl::event MatrixReadPipeToDDR(
       
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        // Read the column from the pipe
         pipeTable<numElemPerBank, TT> pipeRead = matrixPipe::read();
 
         // Check if we are writing the last DDR burst of the current column 
@@ -273,8 +257,8 @@ sycl::event MatrixReadPipeToDDR(
 }
 
 /*
-  Read "vectorCount" vectors of type TT from a pipe, element by element and 
-  write them to DDR by bursts of numElemPerBank elements.
+  Read "vectorCount" vectors of type TT from a pipe, numElemPerBank by 
+  numElemPerBank and write them to DDR by bursts of numElemPerBank elements.
   This implementation is used for vectors that have a size that is a multiple 
   of the number of elements per DDR burst write (numElemPerBank).
   Another version of this function is written below and will be selected 
@@ -285,9 +269,7 @@ template <typename kernelName,    // Name to use for the Kernel
           int size,               // Number of elements in the vector
           int numElemPerBank,     // Number of TT elements per DDR burst access
           int vectorCount,        // Number of vectors to read from the buffer 
-                                  // sequentially
-          typename vectorPipe     // Input vector pipe, receive an element
-                                  // with each read
+          typename vectorPipe     // Input vector pipe
           >
 sycl::event VectorReadPipeToDDR( 
             sycl::queue& q,                      // Device queue
@@ -325,8 +307,8 @@ sycl::event VectorReadPipeToDDR(
 }
 
 /*
-  Read "vectorCount" vectors of type TT from a pipe, element by element and 
-  write them to DDR by bursts of numElemPerBank elements.
+  Read "vectorCount" vectors of type TT from a pipe, numElemPerBank by 
+  numElemPerBank and write them to DDR by bursts of numElemPerBank elements.
   This implementation is used for vectors that have a size that is a not a 
   multiple of the number of elements per DDR burst write (numElemPerBank).
   Another version of this function is written above and will be selected 
@@ -336,10 +318,8 @@ template <typename kernelName,    // Name to use for the Kernel
           typename TT,            // Datatype of the elements of the matrix
           int size,               // Number of elements in the vector
           int numElemPerBank,     // Number of TT elements per DDR burst access
-          int vectorCount,        // Number of vectors to read from the buffer 
-                                  // sequentially
-          typename vectorPipe     // Input vector pipe, receive an element
-                                  // with each read
+          int vectorCount,        // Number of vectors to read from the buffer
+          typename vectorPipe     // Input vector pipe
           >
 sycl::event VectorReadPipeToDDR( 
             sycl::queue& q,                      // Device queue
