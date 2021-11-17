@@ -13,10 +13,10 @@
 	{
 		"env": ["source ${ONEAPI_ROOT}/setvars.sh --force",
 			"conda env remove -n user_tensorflow",
-			"conda create --name user_tensorflow -y",
+			"conda create -n user_tensorflow -y",
 			"conda activate user_tensorflow",
-			"conda install -c ${ONEAPI_ROOT}/conda_channel tensorflow numpy pyyaml scikit-learn schema lpot ilit matplotlib -y",
-		    "conda install runipy notebook -y"
+			"conda install -n user_tensorflow -c ${ONEAPI_ROOT}/conda_channel tensorflow numpy pyyaml scikit-learn schema lpot ilit matplotlib -y",
+		        "conda install -n user_tensorflow runipy notebook python-flatbuffers prompt_toolkit=2.0.9 -y"
         ],
 		"id": "lpot tensorflow",
 		"steps": [
