@@ -16,7 +16,7 @@
 			"conda create --name user_tensorflow -y",
 			"conda activate user_tensorflow",
 			"conda install -c ${ONEAPI_ROOT}/conda_channel tensorflow numpy pyyaml scikit-learn schema lpot ilit matplotlib -y",
-		        "conda install runipy notebook flatbuffers -y"
+		        "conda install runipy notebook python-flatbuffers prompt_toolkit=2.0.9 -y"
         ],
 		"id": "lpot tensorflow",
 		"steps": [
