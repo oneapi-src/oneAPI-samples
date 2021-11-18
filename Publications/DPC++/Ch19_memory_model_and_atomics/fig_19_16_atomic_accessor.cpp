@@ -7,7 +7,7 @@
 #include <iostream>
 
 using namespace sycl;
-using namespace sycl::ONEAPI;
+using namespace sycl::ext::oneapi;
 
 int main() {
   queue Q;

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp> // For fpga_selector
+#include <sycl/ext/intel/fpga_extensions.hpp> // For fpga_selector
 #include <array>
 using namespace sycl;
 
@@ -21,7 +21,7 @@ int main() {
   buffer <int> B_out{ range{count} };
 
   // Acquire queue to emulated FPGA device
-  queue Q{ INTEL::fpga_emulator_selector{} };
+  queue Q{ ext::intel::fpga_emulator_selector{} };
 
 // BEGIN CODE SNIP
   // Create alias for pipe type so that consistent across uses

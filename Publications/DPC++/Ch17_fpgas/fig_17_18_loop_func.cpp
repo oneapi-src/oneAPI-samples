@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp> // For fpga_selector
+#include <sycl/ext/intel/fpga_extensions.hpp> // For fpga_selector
 using namespace sycl;
 
 int generate_random_number(const int& state) {
@@ -12,7 +12,7 @@ int generate_random_number(const int& state) {
 
 int main() {
   constexpr int size = 64; 
-  queue Q{ INTEL::fpga_emulator_selector{} };
+  queue Q{ ext::intel::fpga_emulator_selector{} };
 
   buffer <int> B{ range{size} };
 
