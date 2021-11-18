@@ -12,8 +12,11 @@ to launch kernels that run forever.
 Two classes are defined in this header file: Autorun and AutorunForever.
 Autorun creates an autorun kernel that is NOT implicitly wrapped in an infinite
 loop.
-AutorunForever creates an autorun kernel that is implicitly wrapped in an
-infinite loop.
+
+AutorunForever creates a kernel and wraps it in a while(1) loop.
+Autorun creates the kernel and does not wrap it in a while(1) loop.
+Usually when using Autorun the user will have the while(1) loop explicitly in
+their code.
 
 The following describes the common template and constructor arguments for both
 the Autorun and AutorunForever.
@@ -27,21 +30,15 @@ Constructor Arguments:
     kernel: the user-defined kernel functor.
             This defines the logic of the autorun kernel.
 */
-
 namespace fpga_tools {
-  //
-  // Autorun kernel wrapper.
-  // If the user wants the kernel to run forever, they must explicitly add a
-  // while(1) loop into their kernel code.
-  //
-  template<typename KernelID = void>
-  struct Autorun {
+
+namespace detail {
+  // Autorun implementation
+  template<bool run_forever, typename KernelID>
+  struct Autorun_impl {
     // Constructor with a kernel name
-    template<typename DeviceSelector, typename KernelFunctor,
-             typename KernelID2 = KernelID>
-    Autorun(DeviceSelector device_selector, KernelFunctor kernel,
-            typename std::enable_if_t<!std::is_same_v<KernelID2, void>> *
-            = nullptr) {
+    template<typename DeviceSelector, typename KernelFunctor>
+    Autorun_impl(DeviceSelector device_selector, KernelFunctor kernel) {
       // static asserts to ensure KernelFunctor is callable
       static_assert(std::is_invocable_r_v<void, KernelFunctor>,
                    "KernelFunctor must be callable with no arguments");
@@ -49,77 +46,45 @@ namespace fpga_tools {
       // create the device queue
       sycl::queue q{device_selector};
 
-      // run the single task kernel
-      q.single_task<KernelID>(kernel);
-    }
-
-    // Constructor without a kernel name
-    template<typename DeviceSelector, typename KernelFunctor,
-             typename KernelID2 = KernelID>
-    Autorun(DeviceSelector device_selector, KernelFunctor kernel,
-            typename std::enable_if_t<std::is_same_v<KernelID2, void>> *
-            = nullptr) {
-      // static asserts to ensure KernelFunctor is callable
-      static_assert(std::is_invocable_r_v<void, KernelFunctor>,
-                   "KernelFunctor must be callable with no arguments");
-
-      // create the device queue
-      sycl::queue q{device_selector};
-
-      // run the single task kernel
-      q.single_task(kernel);
+      // submit the user's kernel
+      if constexpr (run_forever) {
+        if constexpr (std::is_same_v<KernelID, void>) {
+          // AutorunForever, kernel name not given
+          q.single_task([=] {
+            while (1) {
+              kernel();
+            }
+          });
+        } else {
+          // AutorunForever, kernel name given
+          q.single_task<KernelID>([=] {
+            while (1) {
+              kernel();
+            }
+          });
+        }
+      } else {
+        // run the kernel as-is, if the user wanted it to run forever they
+        // will write their own explicit while-loop
+        if constexpr (std::is_same_v<KernelID, void>) {
+          // Autorun, kernel name not given
+          q.single_task(kernel);
+        } else {
+          // Autorun, kernel name given
+          q.single_task<KernelID>(kernel);
+        }
+      }
     }
   };
+}  // namespace detail
 
-  //
-  // AutorunForever kernel wrapper.
-  // The user's code is implicitly wrapped in an infinite wile(1) loop.
-  //
+  // Autorun
   template<typename KernelID = void>
-  struct AutorunForever {
-    // Constructor with a kernel name
-    template<typename DeviceSelector, typename KernelFunctor,
-             typename KernelID2 = KernelID>
-    AutorunForever(DeviceSelector device_selector, KernelFunctor kernel,
-                   typename std::enable_if_t<!std::is_same_v<KernelID2, void>> *
-                   = nullptr) {
-      // static asserts to ensure KernelFunctor is callable
-      static_assert(std::is_invocable_r_v<void, KernelFunctor>,
-                   "KernelFunctor must be callable with no arguments");
-      
-      // create the device queue
-      sycl::queue q{device_selector};
+  using Autorun = detail::Autorun_impl<false, KernelID>;
 
-      // run the single task
-      q.single_task<KernelID>([=] {
-        while (1) {
-          kernel();
-        }
-      });
-    }
-
-    // Constructor without a kernel name
-    template<typename DeviceSelector, typename KernelFunctor,
-             typename KernelID2 = KernelID>
-    AutorunForever(DeviceSelector device_selector, KernelFunctor kernel,
-                   typename std::enable_if_t<std::is_same_v<KernelID2, void>> *
-                   = nullptr) {
-      // static asserts to ensure KernelFunctor is callable
-      static_assert(std::is_invocable_r_v<void, KernelFunctor>,
-                   "KernelFunctor must be callable with no arguments");
-      
-      // create the device queue
-      sycl::queue q{device_selector};
-
-      // run the single task
-      q.single_task([=] {
-        while (1) {
-          kernel();
-        }
-      });
-    }
-
-  };
+  // AutorunForever
+  template<typename KernelID = void>
+  using AutorunForever = detail::Autorun_impl<true, KernelID>;
 }  // namespace fpga_tools
 
 

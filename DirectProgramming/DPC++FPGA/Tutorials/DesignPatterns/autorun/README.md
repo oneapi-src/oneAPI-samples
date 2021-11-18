@@ -1,5 +1,5 @@
 # Autorun Kernels
-This FPGA tutorial demonstrates how to create autorun kernels. These kernels are submitted before the main function begins and typically loop forever.
+This FPGA tutorial demonstrates how to create the equivalent of OpenCL 'autorun' kernels in oneAPI. An autorun kernel is one that is submitted before the main() function begins. Typically autorun kernels will never finish.. These kernels are submitted before the main function begins and typically loop forever.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -16,7 +16,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 ## Purpose
 The purpose of this tutorial is to demonstrate how to create autorun kernels in DPCPP. Autorun kernels are submitted to the SYCL queue automatically before `main()` begins and are meant to have no direct interaction with the host. This means that they should not directly access global memory (e.g., via USM pointers or SYCL acccessors) and the host should not wait for them to finish.
 
-Typically, these kernels are meant to run forever, and data is streamed to and from them using producer and consumer kernels and SYCL pipes. This technique is illustrated in the figures below where the middle light-blue kernels (`ARKernel` and `ARForeverKernel`) are autorun kernels, and the dark-blue kernels on the left and right are regular SYCL kernels. The images below correspond to the `Autorun` and `AutorunForever` kernels used in this tutorial. See the comments and code in `autorun.cpp` for more details on the differences.
+Typically, these kernels are meant to run forever, and data is streamed to and from them using SYCL pipes. This technique is illustrated in the figures below where the middle light-blue kernels (`ARKernel` and `ARForeverKernel`) are autorun kernels, and the dark-blue kernels on the left and right are regular SYCL kernels. The images below correspond to the `Autorun` and `AutorunForever` kernels used in this tutorial. See the comments and code in `autorun.cpp` for more details on the differences.
 
 <img src="autorun.png" alt="autorun" width="800"/>
 

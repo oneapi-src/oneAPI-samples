@@ -22,12 +22,12 @@ using namespace sycl;
 #endif
 
 // declare the kernel names globally to reduce name mangling
-class ARProducerId;
+class ARProducerID;
 class ARKernelID;
-class ARConsumerId;
-class ARForeverProducerId;
+class ARConsumerID;
+class ARForeverProducerID;
 class ARForeverKernelID;
-class ARForeverConsumerId;
+class ARForeverConsumerID;
 
 // declare the pipe names globally to reduce name mangling
 class ARProducePipeID;
@@ -52,6 +52,9 @@ struct MyAutorun {
     }
   }
 };
+
+// declaring a global instance of this class causes the constructor to be called
+// before main() starts, and the constructor launches the kernel.
 fpga_tools::Autorun<ARKernelID> ar_kernel{ds, MyAutorun{}};
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -66,6 +69,9 @@ struct MyAutorunForever {
     ARForeverConsumePipe::write(d);
   }
 };
+
+// declaring a global instance of this class causes the constructor to be called
+// before main() starts, and the constructor launches the kernel.
 fpga_tools::AutorunForever<ARForeverKernelID> ar_forever_kernel{ds,
     MyAutorunForever{}};
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,8 +128,8 @@ int main() {
       // Create input and output buffers
       buffer in_buf(in_data);
       buffer out_buf(out_data);
-      SubmitProducerKernel<ARProducerId, ARProducePipe>(q, in_buf);
-      SubmitConsumerKernel<ARConsumerId, ARConsumePipe>(q, out_buf);
+      SubmitProducerKernel<ARProducerID, ARProducePipe>(q, in_buf);
+      SubmitConsumerKernel<ARConsumerID, ARConsumePipe>(q, out_buf);
     }
 
     // validate the results
@@ -136,9 +142,9 @@ int main() {
       // Create input and output buffers
       buffer in_buf(in_data);
       buffer out_buf(out_data);
-      SubmitProducerKernel<ARForeverProducerId, ARForeverProducePipe>(q,
+      SubmitProducerKernel<ARForeverProducerID, ARForeverProducePipe>(q,
           in_buf);
-      SubmitConsumerKernel<ARForeverConsumerId, ARForeverConsumePipe>(q,
+      SubmitConsumerKernel<ARForeverConsumerID, ARForeverConsumePipe>(q,
           out_buf);
     }
 
