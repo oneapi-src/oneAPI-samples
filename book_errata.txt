@@ -34,6 +34,7 @@ p.330 - A scan is said to be exclusive... the range [0, i] -> range [0, i)
 p.368 - Figure 15-13: the rightmost "Op" box should be moved to the right since it cannot overlap the bottommost "Long Operation" box
 
 p.373 - it may preferable to save trasnfer costs -> it may be preferable...
+p.375 - our somewhat-parallel matrix multiplication kernel in Figure 15-15 -> Figure 15-5
 
 p.414 - Figure 16-17: get_globalid(0) -> get_global_id(0)
 
