@@ -19,8 +19,8 @@ using local_accessor =
 int main() {
   queue Q;
 
-  const size_t N = 8;
-  const size_t M = 8;
+  const size_t N = 16;
+  const size_t M = 16;
   range<2> stencil_range(N, M);
   range<2> alloc_range(N + 2, M + 2);
   std::vector<float> input(alloc_range.size()), output(alloc_range.size());
@@ -54,7 +54,6 @@ int main() {
                 tile[ti][tj] = input[gi][gj];
               }
             }
-
             it.barrier(access::fence_space::local_space);
 
             // Compute the stencil using values from local memory
