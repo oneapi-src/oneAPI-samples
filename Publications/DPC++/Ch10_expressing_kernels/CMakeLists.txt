@@ -28,18 +28,9 @@ add_book_sample(
     TARGET fig_10_6_kernel_functor
     SOURCES fig_10_6_kernel_functor.cpp)
 
-# add_book_sample(
-#     TEST
-#     TARGET fig_10_7_opencl_source_interop
-#     SOURCES fig_10_7_opencl_source_interop.cpp)
-
 add_book_sample(
     TEST
     TARGET fig_10_8_opencl_object_interop
     SOURCES fig_10_8_opencl_object_interop.cpp
     LIBS OpenCL)
 
-# add_book_sample(
-#     TEST
-#     TARGET fig_10_9_kernel_lambda_build_options
-#     SOURCES fig_10_9_kernel_lambda_build_options.cpp)
