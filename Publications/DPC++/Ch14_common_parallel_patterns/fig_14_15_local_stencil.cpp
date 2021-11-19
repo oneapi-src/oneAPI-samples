@@ -23,46 +23,28 @@ int main() {
   const size_t M = 8;
   range<2> stencil_range(N, M);
   range<2> alloc_range(N + 2, M + 2);
-  std::vector<float> input(alloc_range.size()), output(alloc_range.size()), vec(alloc_range.size());
+  std::vector<float> input(alloc_range.size()), output(alloc_range.size());
   std::iota(input.begin(), input.end(), 1);
   std::fill(output.begin(), output.end(), 0);
-  std::fill(vec.begin(), vec.end(), 0);
-
-    for(int i = 0; i< 10; i++, std::cout<<std::endl)
-      for(int j = 0; j<10; j++)
-      {
-          std::cout<<input[i*10 +j] << "\t";
-      }
-
-    for(int i = 0; i< 10; i++, std::cout<<std::endl)
-      for(int j = 0; j<10; j++)
-      {
-          std::cout<<output[i*10 +j] << "\t";
-      }
 
   {
     // Create SYCL buffers associated with input/output
     buffer<float, 2> input_buf(input.data(), alloc_range);
     buffer<float, 2> output_buf(output.data(), alloc_range);
-    buffer<float, 2> buf(vec.data(), alloc_range);
 
     Q.submit([&](handler& h) {
       accessor input{ input_buf, h };
       accessor output{ output_buf, h };
-      accessor acc{buf, h};
 
       constexpr size_t B = 4;
       range<2> local_range(B, B);
       range<2> tile_size = local_range + range<2>(2, 2); // Includes boundary cells
       auto tile = local_accessor<float, 2>(tile_size, h);
-      auto out = stream(1024 * 1024, 768, h);
       // Compute the average of each cell and its immediate neighbors
-      id<2> offset(1, 1);
       h.parallel_for(
-          nd_range<2>(stencil_range, local_range, offset), [=](nd_item<2> it) {
+          nd_range<2>(stencil_range, local_range), [=](nd_item<2> it) {
             // Load this tile into work-group local memory
             id<2> lid = it.get_local_id();
-            id<2> gid = it.get_global_id();
             range<2> lrange = it.get_local_range();
 
             for (int ti = lid[0]; ti < B + 2; ti += lrange[0]) {
@@ -70,15 +52,14 @@ int main() {
               for (int tj = lid[1]; tj < B + 2; tj += lrange[1]) {
                 int gj = tj + B * it.get_group(1);
                 tile[ti][tj] = input[gi][gj];
-                out<< "value: " << input[gi][gj]<<"\tgid: "<< gid <<"\tlid: "<<lid << "\ttij: {" << ti <<", "<<tj<<"}\tgij: {"<<gi <<", "<<gj<<"}\n";
               }
             }
 
             it.barrier(access::fence_space::local_space);
 
             // Compute the stencil using values from local memory
-            int gi = it.get_global_id(0);
-            int gj = it.get_global_id(1);
+            int gi = it.get_global_id(0) + 1;
+            int gj = it.get_global_id(1) + 1;
 
             int ti = it.get_local_id(0) + 1;
             int tj = it.get_local_id(1) + 1;
