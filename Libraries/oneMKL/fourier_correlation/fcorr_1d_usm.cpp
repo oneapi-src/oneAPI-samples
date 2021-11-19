@@ -28,7 +28,7 @@ struct pair {
 };
 
 template <typename T, typename I>
-using maxloc = sycl::ONEAPI::maximum<pair<T, I>>;
+using maxloc = sycl::ext::oneapi::maximum<pair<T, I>>;
 
 int main(int argc, char** argv) {
   unsigned int N = (argc == 1) ? 32 : std::stoi(argv[1]);

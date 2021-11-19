@@ -7,12 +7,8 @@
 #include <cstdio>
 
 using namespace sycl;
-using namespace sycl::ONEAPI;
 
 struct device_latch {
-  using memory_order = ONEAPI::memory_order;
-  using memory_scope = ONEAPI::memory_scope;
-
   explicit device_latch(size_t num_groups) : counter(0), expected(num_groups) {}
 
   template <int Dimensions>
@@ -21,7 +17,7 @@ struct device_latch {
     // Elect one work-item per work-group to be involved in the synchronization
     // All other work-items wait at the barrier after the branch
     if (it.get_local_linear_id() == 0) {
-      atomic_ref<
+      ext::oneapi::atomic_ref<
           size_t,
           memory_order::acq_rel,
           memory_scope::device,

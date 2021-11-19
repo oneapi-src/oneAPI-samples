@@ -25,7 +25,7 @@ struct pair {
 };
 
 template <typename T, typename I>
-using minloc = sycl::ONEAPI::minimum<pair<T, I>>;
+using minloc = minimum<pair<T, I>>;
 
 int main() {
   constexpr size_t N = 16;

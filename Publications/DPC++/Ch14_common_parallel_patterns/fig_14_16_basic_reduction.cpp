@@ -7,13 +7,8 @@
 #include <numeric>
 
 using namespace sycl;
-using namespace sycl::ONEAPI;
 
 int main() {
-
-  using memory_order = sycl::ONEAPI::memory_order;
-  using memory_scope = sycl::ONEAPI::memory_scope;
-
   constexpr size_t N = 16;
 
   queue Q;
@@ -23,7 +18,7 @@ int main() {
   *sum = 0;
 
   Q.parallel_for(N, [=](id<1> i) {
-     atomic_ref<
+     ext::oneapi::atomic_ref<
          int,
          memory_order::relaxed,
          memory_scope::system,

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <CL/sycl.hpp>
+#include <CL/sycl/backend/opencl.hpp>
 #include <iostream>
 using namespace sycl;
 
@@ -30,7 +31,7 @@ int main() {
                 data[index] = data[index] + 1;
             }
         )CLC";
-    cl_context c = sc.get();
+    cl_context c = get_native<backend::opencl, context>(sc);
     cl_program p =
         clCreateProgramWithSource(c, 1, &kernelSource, nullptr, nullptr);
     clBuildProgram(p, 0, nullptr, nullptr, nullptr, nullptr);
@@ -43,7 +44,7 @@ int main() {
       accessor data_acc{data_buf, h};
 
       h.set_args(data_acc);
-      h.parallel_for(size, kernel{k, sc});
+      h.parallel_for(size,  make_kernel<backend::opencl>(k, sc));
     });
 
     clReleaseContext(c);
