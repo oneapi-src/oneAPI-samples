@@ -17,8 +17,7 @@
           "cd build",
           "cmake ..",
           "make",
-          "make run_prog1",
-          "make run_prog2",
+          "make run",
           "make clean"
         ]
       }
