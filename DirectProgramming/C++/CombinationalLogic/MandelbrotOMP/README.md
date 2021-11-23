@@ -114,3 +114,12 @@ Starting OMP SIMD + Parallel Mandelbrot...
 Calculation finished. Processing time was 31ms
 Saving image as mandelbrot_simd_parallel.png
 ```
+
+
+### Debug Your Application
+
+The Generate launch configurations extension for Visual Studio Code
+enables additional features of GPU debugging with GDB for Intel®
+oneAPI toolkits.
+To learn more, see
+[GDB GPU Support for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top/intel-oneapi-extensions-for-visual-studio-code/gdb-debug-ext.html).
