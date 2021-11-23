@@ -10,7 +10,7 @@ This reference design demonstrates IO streaming in DPC++ on an FPGA for a large 
 
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux™ Ubuntu™ 18.04/20.04, RHEL™/CentOS™ 8, SUSE™ 15; Windows™ 10
+| OS                                | Linux\* Ubuntu\* 18.04/20.04, RHEL\*/CentOS\* 8, SUSE\* 15; Windows\* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to create a full, complex system that performs IO streaming in DPC++ using the IO pipes DPC++ extension.
@@ -52,7 +52,7 @@ If running a sample in the Intel DevCloud, remember that you must specify the ty
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
 
-### Using Visual Studio Code™  (Optional)
+### Using Visual Studio Code\*  (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
 and browse and download samples.
@@ -67,7 +67,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 [Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
-### On a Linux™ System
+### On a Linux\* System
 
 1. Install the design into a directory `build` from the design directory by running `cmake`:
 
@@ -110,7 +110,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux *Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/mvdr_beamforming.fpga.tar.gz" download>here</a>.
 
-### On a Windows™ System
+### On a Windows\* System
 
 1. Generate the `Makefile` by running `cmake`.
 
@@ -144,7 +144,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      nmake report
      ```
 
-   * An FPGA hardware target is not provided on Windows™.
+   * An FPGA hardware target is not provided on Windows\*.
 
 *Note:* The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
