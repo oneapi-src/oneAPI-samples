@@ -13,7 +13,7 @@
 #include "dpc_common.hpp"
 
 using namespace sycl;
-namespace oa = sycl::ext::oneapi;
+namespace ext_oneapi = sycl::ext::oneapi;
 
 constexpr int kLUTSize = 512;       // Size of the LUT.
 constexpr int kNumOutputs = 524288; // Number of outputs.
@@ -42,18 +42,19 @@ uint16_t rand3(uint16_t &index, uint16_t &bits) {
 }
 
 event runSqrtTest(sycl::queue &q, const std::vector<float> &sqrt_lut_vec,
-                 std::vector<float> &output_vec) {
+                  std::vector<float> &output_vec) {
   buffer sqrt_lut_buf(sqrt_lut_vec);
   buffer output_buf(output_vec);
 
   event e = q.submit([&](handler &h) {
     accessor sqrt_lut(sqrt_lut_buf, h, read_only,
-                      oa::accessor_property_list{oa::no_alias});
-    accessor output(output_buf, h, write_only,
-                    oa::accessor_property_list{oa::no_alias, no_init});
+                      ext_oneapi::accessor_property_list{ext_oneapi::no_alias});
+    accessor output(
+        output_buf, h, write_only,
+        ext_oneapi::accessor_property_list{ext_oneapi::no_alias, no_init});
 
     h.single_task<SqrtTest>([=]() {
-      uint16_t index = 0xFFFu;
+      uint16_t index = 0xFFFu; // An arbitrary non-zero starting state
       uint16_t bits = 0;
 
       for (int i = 0; i < kNumOutputs; i++)
@@ -121,7 +122,7 @@ int main() {
   }
 
   // Compute the reference solution
-  uint16_t index = 0xFFFu;
+  uint16_t index = 0xFFFu; // An arbitrary non-zero starting state
   uint16_t bits = 0;
   float gold[kNumOutputs];
   for (int i = 0; i < kNumOutputs; ++i)
