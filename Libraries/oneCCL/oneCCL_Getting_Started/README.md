@@ -71,7 +71,7 @@ You can refer to this page [oneAPI](https://software.intel.com/en-us/oneapi) for
   ex : /opt/intel/oneapi \
   Don't need to replace {DPCPP_CMPLR_ROOT} 
   ```
-  source ${ONEAPI_ROOT}/setvars.sh --ccl-configuration=cpu_icc
+  source ${ONEAPI_ROOT}/setvars.sh --ccl-configuration=cpu
 
   cd oneapi-toolkit/oneCCL/oneCCL_Getting_Started   
   mkdir build  
