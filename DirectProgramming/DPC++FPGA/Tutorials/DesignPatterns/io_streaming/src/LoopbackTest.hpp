@@ -30,14 +30,12 @@ struct LoopBackWriteIOPipeID { static constexpr unsigned id = 1; };
 //
 template<class IOPipeIn, class IOPipeOut>
 event SubmitLoopbackKernel(queue& q, size_t count) {
-  return q.submit([&](handler& h) {
-    h.single_task<LoopBackMainKernel>([=] {
-      for (size_t i = 0; i < count; i++) {
-        auto data = IOPipeIn::read();
-        // !!! Your processing can go here !!!
-        IOPipeOut::write(data);
-      }
-    });
+  return q.single_task<LoopBackMainKernel>([=] {
+    for (size_t i = 0; i < count; i++) {
+      auto data = IOPipeIn::read();
+      // !!! Your processing can go here !!!
+      IOPipeOut::write(data);
+    }
   });
 }
 

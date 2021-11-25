@@ -5,12 +5,11 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-
-#include <CL/sycl.hpp>
-
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
+
+#include <CL/sycl.hpp>
 
 using namespace sycl;
 using namespace oneapi::dpl::execution;
@@ -22,7 +21,7 @@ int main() {
     
     //Create queue with default selector  
     queue q;
-    std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
+    std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
     //Initialize the input vector for Keys
     std::vector<int> input_keys{ 0,0,0,1,1,1 };

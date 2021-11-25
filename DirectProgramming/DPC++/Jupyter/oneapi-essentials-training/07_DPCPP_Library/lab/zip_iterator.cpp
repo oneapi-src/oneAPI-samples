@@ -12,7 +12,7 @@ using namespace oneapi::dpl::execution;
 
 int main() {
     queue q;
-    std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
+    std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
     constexpr int num_elements = 16;
     std::vector<int> input_v1(num_elements, 2), input_v2(num_elements, 5), input_v3(num_elements, 0);
     //Zip Iterator zips up the iterators of individual containers of interest.

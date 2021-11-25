@@ -1,6 +1,6 @@
 {
   "guid": "3FF02594-2431-4C39-A71B-FA54D34D6A97",
-  "name": "Matrix Mul MKL",
+  "name": "Matrix Multiply MKL",
   "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
   "description": "Accelerate Matrix Multiplication with Intel® oneMKL",
   "toolchain": [ "dpcpp" ],

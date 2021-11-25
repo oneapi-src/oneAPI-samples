@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// motionsim: Intel® oneAPI DPC++ Language Basics Using a Monte Carlo
+// motionsim: Data Parallel C++ Language Basics Using a Monte Carlo
 // Simulation
 //
 // This code sample will implement a simple example of a Monte Carlo
@@ -331,7 +331,7 @@ int main(int argc, char* argv[]) {
       particle_Y[i] = center;
     }
 
-    // Use Math Kernel Library (MKL) VSL Gaussian function for RNG with
+    // Use oneAPI Math Kernel Library (MKL) VSL Gaussian function for RNG with
     // mean of alpha and standard deviation of sigma
     //
 

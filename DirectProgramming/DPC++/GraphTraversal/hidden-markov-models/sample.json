@@ -2,7 +2,7 @@
   "guid": "A63E408B-75ED-4379-A6B5-AF013C0EBA58",
   "name": "Hidden Markov Models",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Graph Traversal"],
-  "description": "Hidden Markov Models using Intel® oneAPI Data Parallel C++",
+  "description": "Hidden Markov Models using Data Parallel C++",
   "toolchain": [ "dpcpp" ],
   "targetDevice": [ "CPU", "GPU" ],
   "languages": [ { "cpp": {} } ],

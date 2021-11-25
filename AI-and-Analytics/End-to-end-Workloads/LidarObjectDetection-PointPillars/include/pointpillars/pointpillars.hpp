@@ -151,6 +151,9 @@ class PointPillars {
   float *rpn_2_output_;
   float *rpn_3_output_;
 
+  InferenceEngine::InferRequest::Ptr pfe_infer_request_ptr_;
+  InferenceEngine::InferRequest::Ptr rpn_infer_request_ptr_;
+
   void InitComponents();
 
   /**

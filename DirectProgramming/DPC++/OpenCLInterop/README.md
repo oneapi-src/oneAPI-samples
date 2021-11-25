@@ -24,13 +24,9 @@ existing OpenCL kernels occur simultaneously.
 
 ## Key Implementation Details
 
-Two common OpenCL to DPC++ conversion scenarios are demonstrated.
+Common OpenCL to DPC++ conversion scenario is demonstrated.
 
-1. In `dpcpp_with_opencl_kernel.dp.cpp`, the DPC++ program compiles and runs
-   an OpenCL kernel. (For this, OpenCL must be set as the backend and not Level
-   0, the environment variable SYCL_DEVICE_FILTER=OPENCL is used).
-
-2. In `dpcpp_with_opencl_objects.dp.cpp`, the program converts OpenCL objects
+1. In `dpcpp_with_opencl_objects.dp.cpp`, the program converts OpenCL objects
    (Memory Objects, Platform, Context, Program, Kernel) to DPC++ and execute the
    program.
 
@@ -59,6 +55,23 @@ If running a sample in the Intel DevCloud, remember that you must specify the
 compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
 For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get_started/baseToolkitSamples/)
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 

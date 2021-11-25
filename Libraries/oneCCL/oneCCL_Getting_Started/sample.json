@@ -11,12 +11,13 @@
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
 	"linux": [{
-		"env": ["source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp --force" ],
+		"env": ["source activate base",
+			"source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp --force" ],
 		"id": "gsg",
 		"steps": [
 			"mkdir build",
       		        "cd build",
-           		"cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp",
+           		"cmake .. -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=dpcpp",
            		"make",
 			"mpirun -n 2 ./out/sycl/sycl_allreduce_test cpu",
 			"mpirun -n 2 ./out/sycl/sycl_allreduce_test gpu"
