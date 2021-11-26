@@ -1,4 +1,4 @@
-# Read-Only Cache 
+# Memory Channels 
 This FPGA tutorial demonstrates how to use the `mem_channel` buffer property in
 conjuction with the `-Xsno-interleaving` flag to reduce the area consumed by a
 DPC++ FPGA design.
