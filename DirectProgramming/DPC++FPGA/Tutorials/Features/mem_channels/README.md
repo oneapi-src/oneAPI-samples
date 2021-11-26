@@ -1,7 +1,7 @@
 # Read-Only Cache 
-This FPGA tutorial demonstrates how to use the read-only cache feature to boost
-the throughput of an FPGA DPC++ design that uses a read-only look-up table
-defined in host code.
+This FPGA tutorial demonstrates how to use the `mem_channel` buffer property in
+conjuction with the `-Xsno-interleaving` flag to reduce the area consumed by a
+DPC++ FPGA design.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples
 Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html)
@@ -19,7 +19,7 @@ resource for target-independent DPC++ programming.
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
-| What you will learn               | How and when to use the read-only cache feature
+| What you will learn               | How and when to use the `mem_channel` buffer property and the `-Xsno-interleaving` flag
 | Time to complete                  | 30 minutes
 
 
@@ -66,9 +66,10 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
 `-Xsread-only-cache-size=2048` is passed to `dpcpp`.
 
 ## Key Concepts
-* How to use the read-only cache feature 
-* The scenarios in which this feature can help improve the throughput of a
-  design 
+* How to use the `mem_channel` buffer property in conjuction with the
+  `-Xsno-interleaving` flag.
+* The scenarios in which this feature can help reduce the area consumed by a
+  DPC++ FPGA design.
 
 ## License  
 Code samples are licensed under the MIT license. See
@@ -78,7 +79,7 @@ for details.
 Third party program Licenses can be found here:
 [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `read_only_cache` Tutorial
+## Building the `mem_channels` Tutorial
 
 ### Include Files
 The included header `dpc_common.hpp` is located at
@@ -140,7 +141,7 @@ to 12h.
 3. (Optional) As the above hardware compile may take several hours to complete,
    FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be
    downloaded <a
-   href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/read_only_cache.fpga.tar.gz"
+   href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/mem_channels.fpga.tar.gz"
    download>here</a>.
 
 ### On a Windows* System
@@ -199,7 +200,7 @@ IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow
 
 ## Examining the Reports
 Locate the pair of `report.html` files in the
-`read_only_cache_disabled_report.prj` and `read_only_cache_enabled_report.prj`
+`mem_channels_disabled_report.prj` and `mem_channels_enabled_report.prj`
 directories. Open the reports in any of Chrome*, Firefox*, Edge*, or Internet
 Explorer*. Navigate to the "Area Analysis of System" section of each report
 (Area Analysis > Area Analysis of System) and expand the "Kernel System" entry
@@ -212,50 +213,54 @@ cache has been created.
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
-     ./read_only_cache.fpga_emu     (Linux)
-     read_only_cache.fpga_emu.exe   (Windows)
+     ./mem_channels.fpga_emu     (Linux)
+     mem_channels.fpga_emu.exe   (Windows)
      ```
+    Note that the `mem_channel` property and the `-Xsno-interleaving` flag have
+    no impact on the emulator which is why we only have a single executable for
+    this flow.
 2. Run the sample on the FPGA device (two executables should be generated):
      ```
-     ./read_only_cache_disabled.fpga         (Linux)
-     ./read_only_cache_enabled.fpga         (Linux)
+     ./mem_channels_disabled.fpga         (Linux)
+     ./mem_channels_enabled.fpga         (Linux)
      ```
 
 ### Example of Output
 
-Running `./read_only_cache_disabled.fpga`:
+Running `./mem_channels_disabled.fpga`:
 ```
 
-SQRT LUT size: 512
-Number of outputs: 524288
+Vector size: 100000 
 Verification PASSED
 
-Kernel execution time: 0.011597 seconds
-Kernel throughput 172.457160 MB/s
+Kernel execution time: <> seconds
+Kernel throughput <> MB/s
 ```
 
-Running `./read_only_cache_disabled.fpga`:
+Running `./mem_channels_disabled.fpga`:
 ```
 
-SQRT LUT size: 512
-Number of outputs: 524288
+Vector size: 100000 
 Verification PASSED
 
-Kernel execution time: 0.006537 seconds
-Kernel throughput 305.933426 MB/s
+Kernel execution time: <> seconds
+Kernel throughput <> MB/s
 ```
 
 ### Discussion of Results
 
 A test compile of this tutorial design achieved the following results on the
 Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA: 
+Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
+-|-|-|-|-|-|-|-
+Without `-Xsno-interleaving` | <> | <> | 14,999.6 | 47,532 | 11 | 345 | 0 
+With `-Xsno-interleaving` | <> | <> | 9,564.1 | 28,616 | 11 | 186 | 0
 
-Configuration | Execution Time (ms) | Throughput (MB/s)
--|-|-
-Without caching | 11.597 | 172.457160
-With caching | 6.537 | 305.933426
+When compiled for the Intel® Programmable Acceleration Card with Intel®
+Stratix® 10 SX FPGA, the tutorial design achieved the following results:
+Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
+-|-|-|-|-|-|-|-
+Without `-Xsno-interleaving` | <> | <> | 14,999.6 | 47,532 | 11 | 345 | 0 
+With `-Xsno-interleaving` | <> | <> | 9,564.1 | 28,616 | 11 | 186 | 0
 
-When the read-only cache is enabled, performance notably increases. As
-previously mentioned, when the global memory accesses are random (i.e.
-non-contiguous), enabling the read-only cache and sizing it correctly may allow
-the design to achieve a higher throughput.
+When the interleaving is disabled ...
