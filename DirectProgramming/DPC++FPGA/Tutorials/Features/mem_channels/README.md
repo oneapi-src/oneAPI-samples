@@ -71,16 +71,25 @@ in the board specification XML file.
 ### Tutorial Design 
 The basic function performed by the tutorial kernel is an addition of 3
 vectors. When burst-interleaving is disabled, each buffer is assigned to a
-specific memory channel depending on how many channels are available. Due to
-the nature of this design and the fact that all the buffers have the same size,
-we expect accesses to the different memory channels to be well balanced. 
+specific memory channel depending on how many channels are available. 
 
-In the `CMakeLists.txt` file, the macro `NO_INTERLEAVING` is defined when the
-`-Xsno-interleaving` flag is passed to the `dpcpp` command. 
+Due to the nature of this design and the fact that all the buffers have the
+same size, we expect accesses to the different memory channels to be well
+balanced. Therefore, we can predict that disabling burst-interleaving will most
+likely not impact the throughput of the design, and so, it is probably
+beneficial to disable interleaving to avoid the area overhead imposed by the
+interleaving logic.
 
-The macro `FOUR_CHANNELS` is defined only when the design is compiled for the
-Stratix® 10 GX FPGA because that board has an external memory with four
-available channels. In that case, each of the 4 buffers in this design is
+This tutorial requires compiling the source code twice: once with the
+`-Xsno-interleaving` flag and once without it. In the `CMakeLists.txt` file,
+the macro `NO_INTERLEAVING` is defined when the `-Xsno-interleaving` flag is
+passed to the `dpcpp` command. The macro controls whether the buffers are
+created with our without the `mem_channel` property.
+
+To decide what channel IDs to select in the source code, the macro
+`FOUR_CHANNELS` is used. The macro is only defined when the design is compiled
+for the Stratix® 10 GX FPGA because that board has an external memory with four
+available channels. In that case, each of the 4 buffers in the design is
 assigned to one of the available channels. 
 
 When the design is compiled for the Arria® 10 GX FPGA, the 4 buffers are
