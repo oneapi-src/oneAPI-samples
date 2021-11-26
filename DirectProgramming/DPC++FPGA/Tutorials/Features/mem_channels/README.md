@@ -27,66 +27,69 @@ resource for target-independent DPC++ programming.
 ## Purpose
 
 This FPGA tutorial demonstrates an example of using the `mem_channel` buffer
-property in conjucation with the `-Xsno-interleaving` flag to reduce the amount
+property in conjuction with the `-Xsno-interleaving` flag to reduce the amount
 of resources required to implement a DPC++ FPGA design.
 
 By default, the Intel® oneAPI DPC++ compiler configures each global memory type
 in a burst-interleaved manner where memory words are interleaved across the
-memory channels. This generally leads to better throughput because it prevents
-load imbalance by ensuring that memory accesses to not favor one external
-memory channel over another. This configuration is usually expensive in terms
-of FPGA resources because the global memory interconnect required to
-orchestrate the memory accesses across all the channels is complex. 
+available memory channels. This usually leads to better throughput because it
+prevents load imbalance by ensuring that memory accesses to not favor one
+external memory channel over another. However, this configuration can be
+expensive in terms of FPGA resources because the global memory interconnect
+required to orchestrate the memory accesses across all the channels is complex. 
 
-The Intel® oneAPI DPC++ compiler enables you to disable burst-interleaving and
-to assign buffers to invidual channels. There are two advantages for such
-configuration:
+The Intel® oneAPI DPC++ compiler allows to avoid this area overhead by
+disabling burst-interleaving and assigning buffers to invidual channels. There
+are two advantages for such configuration:
 1. A simpler global memory interconnect is built which requires a smaller
-   amount of FPGA resources than the interconnect needed for the interleaving
-   configuration.
+   amount of FPGA resources than the interconnect needed for the
+   burst-interleaving configuration.
 2. Potential improvements to the global memory bandwidth utilization due to
    less contention at each memory channel.
 
 Burst-interleaving should only be disabled in situations where satisfactory
-load balancing can be achived by assigning buffers to individual banks.
-Otherwise, the global memory bandwidth utilization may go down which will
-negatively impact your throughput. 
+load balancing can be achived by assigning buffers to individual channels.
+Otherwise, the global memory bandwidth utilization may be reduced down which
+will negatively impact the throughput of your design. 
 
-To disable burst-interleaving, you need to assign a memory channel to each 
+To disable burst-interleaving, you need to assign a memory channel to each
 buffer using the `mem_channel` buffer property:
 ```c++
 buffer a_buf(a_vec, {property::buffer::mem_channel{1}});
 buffer b_buf(b_vec, {property::buffer::mem_channel{2}});
 ```
-You also need to pass the `-Xsno-interleaving` to your `dpcpp` command. The ID
-of the lowest available memory channel is 1.
+The ID of the lowest available memory channel is 1. You also need to pass the
+`-Xsno-interleaving` to your `dpcpp` command. 
 
 Note that for FPGA boards that have multiple memory types, it is possible to
-select which memory you want disable interleaving for by passing the memory
-type to the `-Xsno-interleaving` flag:
+select which memory you want to disable burst-interleaving for by passing the
+memory type to the `-Xsno-interleaving` flag:
 `-Xsno-interleaving=<global_memory_type>`. The memory type is usually indicated
 in the board specification XML file.
 
 
 ### Tutorial Design 
 The basic function performed by the tutorial kernel is an addition of 3
-vectors. When interleaving is disabled, each buffer is assigned to a specific
-memory channel depending on how many channels are available. In the
-`CMakeLists.txt` file, the macro `NO_INTERLEAVING` is defined when the
-`-Xsno-interleaving` flag is passed to the `dpcpp` command. Moreover, the macro
-`FOUR_CHANNELS` is defined only when the design is compiled for the Stratix® 10
-GX FPGA because that board has an external memory with four available channels
-. In that case, each of the 4 buffers required in this design is assigned to
-one of the available channels. On the other hand, when the design is compiled
-for Arria® 10 GX FPGA, only two channels are available and the 4 buffers are
-equally assigned to the those two channels.
+vectors. When burst-interleaving is disabled, each buffer is assigned to a
+specific memory channel depending on how many channels are available. 
+
+In the `CMakeLists.txt` file, the macro `NO_INTERLEAVING` is defined when the
+`-Xsno-interleaving` flag is passed to the `dpcpp` command. 
+
+The macro `FOUR_CHANNELS` is defined only when the design is compiled for the
+Stratix® 10 GX FPGA because that board has an external memory with four
+available channels. In that case, each of the 4 buffers in this design is
+assigned to one of the available channels. 
+
+When the design is compiled for the Arria® 10 GX FPGA, the 4 buffers are
+equally assigned to the those two available channels on that board.
 
 
 ## Key Concepts
 * How to use the `mem_channel` buffer property in conjuction with the
   `-Xsno-interleaving` flag.
 * The scenarios in which this feature can help reduce the area consumed by a
-  DPC++ FPGA design.
+  DPC++ FPGA design without impacting throughput.
 
 ## License  
 Code samples are licensed under the MIT license. See
@@ -220,9 +223,9 @@ Locate the pair of `report.html` files in the `mem_channels_interleaving.prj`
 and `mem_channels_no_interleaving.prj` directories. Open the reports in any of
 Chrome*, Firefox*, Edge*, or Internet Explorer*. In the "Summary" tab, locate
 the "Quartus Fitter Resource Utilization Summary" entry and expand it to see a
-table showing the FPGA resources that were allocated for the design. Notice tha
-when interleaving is disabled the FPGA resources required are significantly
-lower than the case where interleaving is enabled.
+table showing the FPGA resources that were allocated for the design. Notice
+that when burst-interleaving is disabled, the FPGA resources required are
+significantly lower than the case where burst-interleaving is enabled.
 
 
 ## Running the Sample
@@ -281,6 +284,6 @@ With `-Xsno-interleaving` | <> | <> | 9,564.1 | 28,616 | 11 | 186 | 0
 
 Notice that the throughput of the design when burst-interleaving is disabled is
 equal or better than when burst-interleaving is enabled. However, the resource
-utilization is significantly lower without interleaving. Therefore, this is a
-design where disabling interleaving and manually assigning buffers to channels
-is a net win.
+utilization is significantly lower without burst-interleaving. Therefore, this
+is a design where disabling burst-interleaving and manually assigning buffers
+to channels is a net win.
