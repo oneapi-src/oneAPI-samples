@@ -272,15 +272,15 @@ shows the performance of the design as well as the resources consumed by the
 kernel system.
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
 -|-|-|-|-|-|-|-
-Without `-Xsno-interleaving` | 0.004004 | 749.230914 | 23,815.4 | 26,727  | 1094 | 53 | 0 
-With `-Xsno-interleaving` | 0.003767 | 796.379552 | 7,060.7  | 16,396  | 38 | 41  | 0
+Without `-Xsno-interleaving` | 4.004 | 749.23 | 23,815.4 | 26,727  | 1094 | 53 | 0 
+With `-Xsno-interleaving` | 3.767 | 796.38 | 7,060.7  | 16,396  | 38 | 41  | 0
 
 Similarly, when compiled for the Intel® Programmable Acceleration Card with
 Intel® Stratix® 10 SX FPGA, the tutorial design achieved the following results:
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
 -|-|-|-|-|-|-|-
-Without `-Xsno-interleaving` | <> | <> | 14,999.6 | 47,532 | 11 | 345 | 0 
-With `-Xsno-interleaving` | <> | <> | 9,564.1 | 28,616 | 11 | 186 | 0
+Without `-Xsno-interleaving` | 2.913  | 1029.90 | 14,999.6 | 47,532 | 11 | 345 | 0 
+With `-Xsno-interleaving` | 2.913 | 1029.77 | 9,564.1 | 28,616 | 11 | 186 | 0
 
 Notice that the throughput of the design when burst-interleaving is disabled is
 equal or better than when burst-interleaving is enabled. However, the resource
