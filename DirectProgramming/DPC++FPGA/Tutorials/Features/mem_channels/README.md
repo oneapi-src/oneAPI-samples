@@ -33,14 +33,14 @@ of resources required to implement a DPC++ FPGA design.
 By default, the Intel® oneAPI DPC++ compiler configures each global memory type
 in a burst-interleaved manner where memory words are interleaved across the
 available memory channels. This usually leads to better throughput because it
-prevents load imbalance by ensuring that memory accesses to not favor one
+prevents load imbalance by ensuring that memory accesses do not favor one
 external memory channel over another. However, this configuration can be
 expensive in terms of FPGA resources because the global memory interconnect
 required to orchestrate the memory accesses across all the channels is complex. 
 
-The Intel® oneAPI DPC++ compiler allows to avoid this area overhead by
+The Intel® oneAPI DPC++ compiler allows you to avoid this area overhead by
 disabling burst-interleaving and assigning buffers to invidual channels. There
-are two advantages for such configuration:
+are two advantages to such configuration:
 1. A simpler global memory interconnect is built which requires a smaller
    amount of FPGA resources than the interconnect needed for the
    burst-interleaving configuration.
@@ -49,8 +49,8 @@ are two advantages for such configuration:
 
 Burst-interleaving should only be disabled in situations where satisfactory
 load balancing can be achived by assigning buffers to individual channels.
-Otherwise, the global memory bandwidth utilization may be reduced down which
-will negatively impact the throughput of your design. 
+Otherwise, the global memory bandwidth utilization may be reduced which will
+negatively impact the throughput of your design. 
 
 To disable burst-interleaving, you need to assign a memory channel to each
 buffer using the `mem_channel` buffer property:
@@ -71,7 +71,9 @@ in the board specification XML file.
 ### Tutorial Design 
 The basic function performed by the tutorial kernel is an addition of 3
 vectors. When burst-interleaving is disabled, each buffer is assigned to a
-specific memory channel depending on how many channels are available. 
+specific memory channel depending on how many channels are available. Due to
+the nature of this design and the fact that all the buffers have the same size,
+we expect accesses to the different memory channels to be well balanced. 
 
 In the `CMakeLists.txt` file, the macro `NO_INTERLEAVING` is defined when the
 `-Xsno-interleaving` flag is passed to the `dpcpp` command. 
@@ -82,14 +84,14 @@ available channels. In that case, each of the 4 buffers in this design is
 assigned to one of the available channels. 
 
 When the design is compiled for the Arria® 10 GX FPGA, the 4 buffers are
-equally assigned to the those two available channels on that board.
+equally assigned to the two available channels on that board.
 
 
 ## Key Concepts
-* How to use the `mem_channel` buffer property in conjuction with the
-  `-Xsno-interleaving` flag.
-* The scenarios in which this feature can help reduce the area consumed by a
-  DPC++ FPGA design without impacting throughput.
+* How to disable global memory burst-interleaving using the
+  `-Xsno-interleaving` flag and the `mem_channel` buffer property.
+* The scenarios in which disabling burst-interactive can help reduce the area
+  consumed by a DPC++ FPGA design without impacting throughput.
 
 ## License  
 Code samples are licensed under the MIT license. See
