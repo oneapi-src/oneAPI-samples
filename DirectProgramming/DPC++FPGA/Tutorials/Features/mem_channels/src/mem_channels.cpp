@@ -15,7 +15,7 @@
 using namespace sycl;
 
 constexpr size_t vector_size = 1000000; // size of input vectors
-constexpr double kNs = 1e9;           // number of nanoseconds in a second
+constexpr double kNs = 1e9;             // number of nanoseconds in a second
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
@@ -27,10 +27,10 @@ event runVecAdd(sycl::queue &q, const std::vector<int> &a_vec,
 #if defined(NO_INTERLEAVING)
   buffer a_buf(a_vec, {property::buffer::mem_channel{1}});
   buffer b_buf(b_vec, {property::buffer::mem_channel{2}});
-#if defined(FOUR_CHANNELS) // Stratix 10
+#if defined(FOUR_CHANNELS)
   buffer c_buf(c_vec, {property::buffer::mem_channel{3}});
   buffer sum_buf(sum_vec, {property::buffer::mem_channel{4}}); 
-#else // Arria 10
+#else
   buffer c_buf(c_vec, {property::buffer::mem_channel{1}});
   buffer sum_buf(sum_vec, {property::buffer::mem_channel{2}});
 #endif
