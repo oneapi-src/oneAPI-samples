@@ -21,7 +21,7 @@ Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 24k matrices/s for matrices of size 128 * 128
+| Intel® PAC with Intel Arria® 10 GX FPGA        | 24.5k matrices/s for matrices of size 128 * 128
 | Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for matrices of size 256 * 256
 
 
@@ -207,8 +207,8 @@ Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 327
 Device name: pac_a10 : Intel PAC Platform (pac_f000000)
 Generating 32768 random matrices
 Running QR decomposition of 32768 matrices repeatedly
-   Total duration:   43.3474 s
-Throughput: 24.1901k matrices/s
+   Total duration:   42.3408 s
+Throughput: 24.7652k matrices/s
 Verifying results on matrix 0 16384 32767
 PASSED
 ```
