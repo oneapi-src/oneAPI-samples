@@ -21,7 +21,7 @@ Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 24.7k matrices/s for matrices of size 128 * 128
+| Intel® PAC with Intel Arria® 10 GX FPGA        | 24.5k matrices/s for matrices of size 128 * 128
 | Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for matrices of size 256 * 256
 
 
