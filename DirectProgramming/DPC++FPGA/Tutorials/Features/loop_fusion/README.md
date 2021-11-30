@@ -1,4 +1,5 @@
 
+
 # Loop Fusion
 This FPGA tutorial demonstrates how loop fusion is used and how it affects performance.
 
@@ -17,12 +18,12 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 
 ## Purpose
-In order to understand and apply loop fusion to loops in your design, it is necessary to understand the motivation and consequences of loop fusion. Unlike many attributes that can improve a design's performance, loop fusion may have functional implications. Using it incorrectly may result in undefined behavior for your design!
+In order to understand and apply loop fusion to loops in your design, it is necessary to understand the motivation and consequences of loop fusion. Unlike many attributes that can improve a design's performance, loop fusion may have functional implications. Using it incorrectly may result in functionally-incorrect behavior for your design!
 
 ### Loop Fusion
 Loop fusion is a compiler transformation in which adjacent loops are merged into a single loop over the same index range. This transformation is typically applied to reduce loop overhead and improve runtime performance. Loop control structures represent a significant area overhead on designs produced by the Intel® oneAPI DPC++ compiler. Fusing two loops into one loop reduces the number of required loop-control structures, which reduces overhead.
  
-In addition, fusing outer loops can introduce concurrency where there was previously none. Combining the bodies of two adjacent loops L<sub>j</sub> and L<sub>k</sub> forms a single loop L<sub>f</sub> with a body that spans the bodies of L<sub>j</sub> and L<sub>k</sub>. The combined loop body creates an opportunity for operations that are independent across a given iteration of L<sub>j</sub> and L<sub>k</sub> to execute concurrently. In effect, the two loops now execute as one, in a lockstep fashion, giving latency improvements.
+In addition, fusing outer loops can introduce concurrency where there was previously none. Consider two adjacent loops L<sub>j</sub> and L<sub>k</sub>. Within each loop, independent operations can be run concurrently, but concurrency cannot be attained <i>across</i> the loops. Combining the bodies of L<sub>j</sub> and L<sub>k</sub> forms a single loop L<sub>f</sub> with a body that spans the bodies of L<sub>j</sub> and L<sub>k</sub>. In the combined loops, concurrency can be attained for independent instructions which were formerly in separate loops. In effect, the two loops now execute as one in L<sub>f</sub> in a lockstep fashion, providing possible latency improvements.
 
 #### Default Loop Fusion
 
@@ -48,11 +49,11 @@ When `N=1`, `fpga_loop_fuse<N>(f)` tells the compiler to fuse L<sub>11</sub> wit
 
 #### Negative-Distance Dependencies
 
-The case when there are two adjacent loops L<sub>j</sub> and L<sub>k</sub>, and iteration *m* of L<sub>k</sub> depends on iteration *n* > *m* of L<sub>j</sub> is known as a *negative-distance dependency*. The Intel® oneAPI DPC++ compiler will not fuse loops that are believed to have a negative-distance dependency, even when the `fpga_loop_fuse<N>(f)` function is used. 
+The case when there are two adjacent loops L<sub>j</sub> and L<sub>k</sub>, and iteration *m* of L<sub>k</sub> depends on iteration *n* > *m* of L<sub>j</sub> is known as a *negative-distance dependency*.  A negative-distance dependency cannot be fulfilled when loop fusion is performed. The Intel® oneAPI DPC++ compiler will therefore not fuse loops that are believed to have a negative-distance dependency, even when the `fpga_loop_fuse<N>(f)` function is used. 
 
 #### Overriding Compiler Memory Checks
 
-The compiler can be told to ignore memory safety checks by using the `fpga_loop_fuse_independent<N>(f)` function. This function requires the same parameters as the `fpga_loop_fuse<N>(f)` function. 
+The compiler may conservatively not fuse a pair of loops due to a suspected memory dependency when such a dependency may not exist. In this situation the compiler can be told to ignore memory safety checks by using the `fpga_loop_fuse_independent<N>(f)` function. This function requires the same parameters as the `fpga_loop_fuse<N>(f)` function. 
 
 ***IMPORTANT***: Functional incorrectness may result if `fpga_loop_fuse_independent<N>(f)` is applied where a negative-distance dependency exists.
 
