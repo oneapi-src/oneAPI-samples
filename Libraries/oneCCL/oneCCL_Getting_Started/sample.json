@@ -17,7 +17,7 @@
 		"steps": [
 			"mkdir build",
       		        "cd build",
-           		"cmake .. -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=dpcpp",
+           		"cmake .. -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=dpcpp -DCOMPUTE_BACKEND=dpcpp_level_zero",
            		"make",
 			"mpirun -n 2 ./out/sycl/sycl_allreduce_test cpu",
 			"mpirun -n 2 ./out/sycl/sycl_allreduce_test gpu"
