@@ -62,6 +62,7 @@ cd build
 cmake ..
 make
 ```
+>NOTE: The source file "cnn_inference_f32.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/dnnl/latest/cpu_dpcpp_gpu_dpcpp/examples/ to build/src folder. Users can rebuild the cnn_inference_f32.cpp by typing "make" under build folder.
 3. Run the program
 ```
 ./bin/cnn-inference-f32-cpp

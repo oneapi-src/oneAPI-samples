@@ -60,6 +60,7 @@ cd build
 cmake ..
 make
 ```
+>NOTE: The source file "sycl_interop_buffer.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/dnnl/latest/cpu_dpcpp_gpu_dpcpp/examples/ to build/src folder. Users can rebuild the sycl_interop_buffer.cpp by typing "make" under build folder.
 3. Run the program
 ```
 ./bin/sycl-interop-buffer-cpp
