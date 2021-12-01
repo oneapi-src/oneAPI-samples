@@ -57,7 +57,7 @@ By default, the Intel® oneAPI AI Analytics toolkit is installed in the `oneapi`
 #### Linux
 
 ```
-conda create -y -n modin-conda-forge -c conda-forge --strict-channel-priority modin-all matplotlib
+conda create -y -n modin-conda-forge -c conda-forge modin-all matplotlib
 ```
 Then activate your conda environment with the following command:
 ```
