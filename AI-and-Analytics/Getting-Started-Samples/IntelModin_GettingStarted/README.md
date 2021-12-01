@@ -52,17 +52,16 @@ source activate intel-aikit-modin
 
 ### Activate conda environment Without Root Access (Optional)
 
-By default, the Intel® oneAPI AI Analytics toolkit is installed in the `oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel® oneAPI AI Analytics toolkit is installed in the `oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can install the Intel® Distribution of Modin* python environment with the following command:
 
 #### Linux
-```
-conda create --name user-intel-aikit-modin --clone intel-aikit-modin
-```
 
+```
+conda create -y -n modin-conda-forge -c conda-forge --strict-channel-priority modin-all matplotlib
+```
 Then activate your conda environment with the following command:
-
 ```
-source activate user-intel-aikit-modin
+conda activate modin-conda-forge
 ```
 
 
@@ -71,7 +70,7 @@ source activate user-intel-aikit-modin
 Launch Jupyter Notebook in the directory housing the code example:
 
 ```
-conda install jupyter nb_conda_kernels
+conda install jupyter nb_conda_kernels -c conda-forge -y
 ```
 
 #### View in Jupyter Notebook
