@@ -28,14 +28,11 @@ int main() {
     q.submit([&](handler& h) {
       //# create accessors for data and results
       accessor acc_data(buf_data, h, read_only);
-      accessor acc_sum(buf_sum, h);
-      accessor acc_min(buf_min, h);
-      accessor acc_max(buf_max, h);
         
       //# define reduction objects for sum, min, max reduction
-      auto reduction_sum = ext::oneapi::reduction(acc_sum, 0, plus<>());
-      auto reduction_min = ext::oneapi::reduction(acc_min, 0, minimum<>());
-      auto reduction_max = ext::oneapi::reduction(acc_max, 0, maximum<>());
+      auto reduction_sum = reduction(buf_sum, h, plus<>());
+      auto reduction_min = reduction(buf_min, h, minimum<>());
+      auto reduction_max = reduction(buf_max, h, maximum<>());
       
       //# parallel_for with multiple reduction objects
       h.parallel_for(nd_range<1>{N, B}, reduction_sum, reduction_min, reduction_max, [=](nd_item<1> it, auto& temp_sum, auto& temp_min, auto& temp_max) {
