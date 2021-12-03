@@ -7,6 +7,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include <chrono>
+#include <numeric>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -55,12 +56,6 @@ event runVecAdd(sycl::queue &q, const std::vector<int> &a_vec,
   return e;
 }
 
-// Initialize the vector from 0 to vector_size - 1
-void initialize_vector(std::vector<int> &a) {
-  for (size_t i = 0; i < a.size(); i++)
-    a.at(i) = i;
-}
-
 int main() {
   // Host and kernel profiling
   event e;
@@ -76,9 +71,9 @@ int main() {
   sum_cpu.resize(vector_size);
 
   // Initialize input vectors with values from 0 to vector_size - 1
-  initialize_vector(a);
-  initialize_vector(b);
-  initialize_vector(c);
+  std::iota(a.begin(), a.end(), 0);
+  std::iota(b.begin(), b.end(), 0);
+  std::iota(c.begin(), c.end(), 0);
 
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)

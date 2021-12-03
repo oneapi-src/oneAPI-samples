@@ -39,12 +39,14 @@ to view a multi-channel memory as one large channel so you can write your code
 without worrying about where each buffer should be allocated. However, this
 configuration can be expensive in terms of FPGA resources because the global
 memory interconnect required to orchestrate the memory accesses across all the
-channels is complex. 
+channels is complex. For more information about burst-interleaving, please
+refer to the [DPC++ FPGA Code Samples
+Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html).
 
 The Intel® oneAPI DPC++ compiler allows you to avoid this area overhead by
-disabling burst-interleaving and assigning buffers to invidual channels. There
+disabling burst-interleaving and assigning buffers to individual channels. There
 are two advantages to such configuration:
-1. A simpler global memory interconnect is built which requires a smaller
+1. A simpler global memory interconnect is built, which requires a smaller
    amount of FPGA resources than the interconnect needed for the
    burst-interleaving configuration.
 2. Potential improvements to the global memory bandwidth utilization due to
@@ -52,17 +54,19 @@ are two advantages to such configuration:
 
 Burst-interleaving should only be disabled in situations where satisfactory
 load balancing can be achived by assigning buffers to individual channels.
-Otherwise, the global memory bandwidth utilization may be reduced which will
+Otherwise, the global memory bandwidth utilization may be reduced, which will
 negatively impact the throughput of your design. 
 
-To disable burst-interleaving, you need to assign a memory channel to each
-buffer using the `mem_channel` buffer property:
+To disable burst-interleaving, you need to pass the `-Xsno-interleaving` flag
+to your `dpcpp` command. With interleaving disabled, you can now specify, using
+the `mem_channel` property, in which memory channel each buffer should be
+allocated:
 ```c++
 buffer a_buf(a_vec, {property::buffer::mem_channel{1}});
 buffer b_buf(b_vec, {property::buffer::mem_channel{2}});
 ```
-The ID of the lowest available memory channel is 1. You also need to pass the
-`-Xsno-interleaving` flag to your `dpcpp` command. 
+The channels are assumed to have IDs `1,2,...,N` where `N` is the number of
+available channels.
 
 For FPGA boards that have multiple memory types, it is possible to select which
 memory you want to disable burst-interleaving for by passing the memory type to
@@ -272,7 +276,7 @@ Kernel execution time: 0.004004 seconds
 Kernel throughput 749.230914 MB/s
 ```
 
-Running `./mem_channels_interleaving.fpga`:
+Running `./mem_channels_no_interleaving.fpga`:
 ```
 Vector size: 100000 
 Verification PASSED
