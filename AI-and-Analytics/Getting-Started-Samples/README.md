@@ -16,13 +16,13 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 | Compoment      | Folder                                             | Description
 | --------- | ------------------------------------------------ | -
-| daal4py | [IntelPython_daal4py_GettingStarted](IntelPython_daal4py_GettingStarted)                     | Batch linear regression using the python API package daal4py from oneDAL .
-| INC | [INC-Sample-for-Tensorflow](INC-Sample-for-Tensorflow)                     |Quantize a fp32 model into int8, and compare the performance between fp32 and int8 .
+| daal4py | [IntelPython_daal4py_GettingStarted](IntelPython_daal4py_GettingStarted)                     | Batch linear regression using the python API package daal4py from oneAPI Data Analytics Library (oneDAL) .
+| INC | [INC-Sample-for-Tensorflow](INC-Sample-for-Tensorflow)                     |Quantize a fp32 model into int8 by Intel®  Neural Compressor (INC), and compare the performance between fp32 and int8 .
 | Modin | [IntelModin_GettingStarted](IntelModin_GettingStarted)                     | Run Modin-accelerated Pandas functions and note the performance gain .
 | PyTorch | [IntelPyTorch_GettingStarted](IntelPyTorch_GettingStarted) | A simple training example for PyTorch.
 | TensorFlow | [IntelTensorFlow_GettingStarted](IntelTensorFlow_GettingStarted)               | A simple training example for TensorFlow.
 | XGBoost | [IntelPython_XGBoost_GettingStarted](IntelPython_XGBoost_GettingStarted)                     | Set up and train an XGBoost* model on datasets for prediction.
 
 
-# Using Samples in Intel oneAPI DevCloud
-Please refer to [Using AI samples in Intel oneAPI DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).
+# Using Samples in Intel® DevCloud for oneAPI
+Please refer to [Using AI samples in Intel® DevCloud for oneAPI](https://github.com/intel-ai-tce/oneAPI-samples/tree/devcloud/AI-and-Analytics#using-samples-in-intel-oneapi-devcloud).
