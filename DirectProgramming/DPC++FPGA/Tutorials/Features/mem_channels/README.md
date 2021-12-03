@@ -40,8 +40,8 @@ without worrying about where each buffer should be allocated. However, this
 configuration can be expensive in terms of FPGA resources because the global
 memory interconnect required to orchestrate the memory accesses across all the
 channels is complex. For more information about burst-interleaving, please
-refer to the [DPC++ FPGA Code Samples
-Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html).
+refer to the [oneAPI DPC++ FPGA Optimization
+Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
 
 The Intel® oneAPI DPC++ compiler allows you to avoid this area overhead by
 disabling burst-interleaving and assigning buffers to individual channels. There
