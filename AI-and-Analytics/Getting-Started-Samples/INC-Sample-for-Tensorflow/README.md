@@ -130,19 +130,13 @@ conda activate tensorflow
 ### Install Intel INC by Local Channel
 
 ```
-conda install -c ${ONEAPI_ROOT}/conda_channel numpy pyyaml scikit-learn schema lpot -y
+conda install -c ${ONEAPI_ROOT}/conda_channel neural-compressor -y --offline
 ```
 
 ### Install Jupyter Notebook
 
 ```
 python -m pip install notebook
-```
-
-### Install Matplotlib
-
-```
-python -m pip install matplotlib
 ```
 
 ## Running the Sample <a name="running-the-sample"></a>
