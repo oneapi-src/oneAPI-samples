@@ -96,14 +96,14 @@ prog31: 07_DPCPP_Library/lab/maximum_function.cpp
 prog32: 07_DPCPP_Library/lab/minimum_function.cpp
 	dpcpp -o 07_DPCPP_Library/bin/prog32 07_DPCPP_Library/lab/minimum_function.cpp
     
-prog33: 08_DPCPP_Reduction/lab/oneapi_reduction_custom_operator.cpp
-	dpcpp -o 08_DPCPP_Reduction/prog33 08_DPCPP_Reduction/lab/oneapi_reduction_custom_operator.cpp
+prog33: 08_DPCPP_Reduction/lab/reduction_custom_operator.cpp
+	dpcpp -o 08_DPCPP_Reduction/prog33 08_DPCPP_Reduction/lab/reduction_custom_operator.cpp
 
-prog34: 08_DPCPP_Reduction/lab/sum_oneapi_reduction_buffers.cpp
-	dpcpp -o 08_DPCPP_Reduction/prog34 08_DPCPP_Reduction/lab/sum_oneapi_reduction_buffers.cpp
+prog34: 08_DPCPP_Reduction/lab/sum_reduction_buffers.cpp
+	dpcpp -o 08_DPCPP_Reduction/prog34 08_DPCPP_Reduction/lab/sum_reduction_buffers.cpp
     
-prog35: 08_DPCPP_Reduction/lab/sum_oneapi_reduction_usm.cpp
-	dpcpp -o 08_DPCPP_Reduction/prog35 08_DPCPP_Reduction/lab/sum_oneapi_reduction_usm.cpp
+prog35: 08_DPCPP_Reduction/lab/sum_reduction_usm.cpp
+	dpcpp -o 08_DPCPP_Reduction/prog35 08_DPCPP_Reduction/lab/sum_reduction_usm.cpp
 
 prog36: 08_DPCPP_Reduction/lab/sum_single_task.cpp
 	dpcpp -o 08_DPCPP_Reduction/prog36 08_DPCPP_Reduction/lab/sum_single_task.cpp
