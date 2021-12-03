@@ -1,3 +1,5 @@
+version: 1.0
+
 model:
   name: hello_world
   framework: tensorflow                          # possible values are tensorflow, mxnet and pytorch
