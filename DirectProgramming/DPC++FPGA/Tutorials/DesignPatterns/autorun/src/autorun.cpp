@@ -167,10 +167,10 @@ int main() {
   }
 
   if (passed) {
-    std::cout << "PASS\n";
+    std::cout << "PASSED\n";
     return 0;
   } else {
-    std::cout << "FAIL\n";
+    std::cout << "FAILED\n";
     return 1;
   }
 }
