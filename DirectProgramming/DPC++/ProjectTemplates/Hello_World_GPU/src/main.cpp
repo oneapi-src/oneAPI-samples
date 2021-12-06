@@ -4,32 +4,30 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include <iostream>
 #include <CL/sycl.hpp>
+#include <iostream>
 
 using namespace cl::sycl;
 
-int main() {
-  
-  // GPU Device selector
-  gpu_selector device_selector;
-  
-  // Buffer creation
-  constexpr int num = 16; 
-  auto R = range<1>{ num };
-  buffer<int> A{ R };
-  
-  // create a kernel
-  queue q{ device_selector };
-  q.submit([&](handler& h) {
-    auto out = A.get_access<access::mode::write>(h);
-    h.parallel_for(R, [=](id<1> idx) { out[idx] = idx[0]; }); 
-  });
-  
-  // Consume result
-  auto result = A.get_access<access::mode::read>();
-  for (int i = 0; i < num; ++i)
-    std::cout << result[i] << "\n";
+static const int num = 16;
 
-  return 0;
+int main() {
+  // create GPU device selector
+  gpu_selector device_selector;
+
+  // create a kernel
+  queue q{device_selector};
+
+  // USM allocation using malloc_shared
+  int *data = malloc_shared<int>(num, q);
+
+  q.submit([&](handler& h) {
+    h.parallel_for(range<1>{num}, [=](id<1> idx) {data[idx] = idx[0];});
+  }).wait();
+
+  // print output
+  for (int i = 0; i < num; i++) std::cout << data[i] << std::endl;
+  free(data, q);
+
+  return (EXIT_SUCCESS);
 }
