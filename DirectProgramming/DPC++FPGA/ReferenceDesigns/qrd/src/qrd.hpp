@@ -52,12 +52,9 @@ void QRDecomposition_impl(
   constexpr short kNumBuffers = 3;
   
   // Pipes to communicate the A, Q and R matrices between kernels
-  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 
-                                                    kNumElementsPerDDRBurst*3>;
-  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 
-                                                    kNumElementsPerDDRBurst*3>;
-  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, PipeType, 
-                                                    kNumElementsPerDDRBurst*3>;
+  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 3>;
+  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 3>;
+  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, PipeType, 3>;
 
   // We will process 'matricesPerIter' number of matrices in each run of the 
   // kernel

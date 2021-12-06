@@ -54,13 +54,12 @@ void QRI_impl(
   // overlap.
   constexpr short kNumBuffers = 3;
   
-  using PipeType = pipeTable<rows, TT>;
+  using PipeType = pipeTable<kNumElementsPerDDRBurst, TT>;
 
-  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 4>;
-  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 4>;
-  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, TT, 
-                                                    kNumElementsPerDDRBurst*3>;
-  using InverseMatrixPipe = sycl::ext::intel::pipe<class IPipe, PipeType, 4>;
+  using AMatrixPipe = sycl::ext::intel::pipe<class APipe, PipeType, 3>;
+  using QMatrixPipe = sycl::ext::intel::pipe<class QPipe, PipeType, 3>;
+  using RMatrixPipe = sycl::ext::intel::pipe<class RPipe, PipeType, 3>;
+  using InverseMatrixPipe = sycl::ext::intel::pipe<class IPipe, PipeType, 3>;
 
   // We will process 'matricesPerIter' number of matrices in each run of the 
   // kernel
@@ -101,28 +100,29 @@ void QRI_impl(
 
       // Read an input matrix A from the host memory to the FPGA DDR
       // Stream the A matrix to the AMatrixPipe pipe
-      MatrixReadFromDDRToPipeByColumns< class QRI_DDR_to_local_mem, 
-                                        TT,
-                                        rows,
-                                        columns,
-                                        kNumElementsPerDDRBurst,
-                                        matricesPerIter,
-                                        AMatrixPipe>
-                                        (q, ABuffer[bufferIdx]);
+      MatrixReadFromDDRToPipe<class QRI_DDR_to_local_mem, 
+                              TT,
+                              rows,
+                              columns,
+                              kNumElementsPerDDRBurst,
+                              matricesPerIter,
+                              AMatrixPipe>
+                              (q, ABuffer[bufferIdx]);
 
       // Read the A matrix from the AMatrixPipe pipe and compute the QR 
       // decomposition. Write the Q and R output matrices to the QMatrixPipe
       // and RMatrixPipe pipes.
-      StreamingQRDKernel< class QRD_compute, 
-                          T, 
-                          isComplex,
-                          rows, 
-                          columns,
-                          RAWLatencyQRD, 
-                          matricesPerIter,
-                          AMatrixPipe,
-                          QMatrixPipe,
-                          RMatrixPipe>(q);
+      StreamingQRD< class QRD_compute, 
+                    T, 
+                    isComplex,
+                    rows, 
+                    columns,
+                    RAWLatencyQRD, 
+                    matricesPerIter,
+                    kNumElementsPerDDRBurst,
+                    AMatrixPipe,
+                    QMatrixPipe,
+                    RMatrixPipe>(q);
 
       // Read the Q and R matrices from pipes and compute the inverse of A. 
       // Write the result to the InverseMatrixPipe pipe.
@@ -133,20 +133,21 @@ void QRI_impl(
                           columns,
                           RAWLatencyQRI, 
                           matricesPerIter,
+                          kNumElementsPerDDRBurst,
                           QMatrixPipe,
                           RMatrixPipe,
                           InverseMatrixPipe>(q);
 
       // Read the inverse matrix from the InverseMatrixPipe pipe and copy it to
       // the FPGA DDR
-      MatrixReadPipeByColumnsToDDR< class QRI_local_mem_to_DDR, 
-                                    TT,
-                                    rows,
-                                    columns,
-                                    kNumElementsPerDDRBurst,
-                                    matricesPerIter,
-                                    InverseMatrixPipe>
-                                    (q, inverseBuffer[bufferIdx]);
+      MatrixReadPipeToDDR<class QRI_local_mem_to_DDR, 
+                          TT,
+                          rows,
+                          columns,
+                          kNumElementsPerDDRBurst,
+                          matricesPerIter,
+                          InverseMatrixPipe>
+                          (q, inverseBuffer[bufferIdx]);
 
       // Copy the output result from the FPGA DDR to the host memory
       q.submit([&](sycl::handler &h) {

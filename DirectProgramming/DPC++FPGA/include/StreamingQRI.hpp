@@ -2,15 +2,6 @@
 
 #include "Utils.hpp"
 
-#ifdef __SYCL_DEVICE_ONLY__
-  #define CL_CONSTANT __attribute__((opencl_constant))
-#else
-  #define CL_CONSTANT
-#endif
-#define PRINTF(format, ...) { \
-            static const CL_CONSTANT char _format[] = format; \
-            sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
-
 /*
   QRI (QR inversion) - Given two matrices Q and R from the QR decomposition 
   of a matrix A such that A=QR, this kernel compute the inverse of A.
@@ -37,6 +28,8 @@ template <typename kernelName,  // Name to use for the Kernel
                                 // go down from there.
           int matrixCount,      // Number of matrices to read from the input 
                                 // pipes sequentially
+          int pipeElemSize,     // Number of elements read/write per pipe 
+                                // operation
           typename QIn,         // Q input pipe, receive a full column with each
                                 // read.
           typename RIn,         // R input pipe. Receive one element per read.  
@@ -81,6 +74,9 @@ sycl::event StreamingQRIKernel(sycl::queue& q // Device queue
           Copy a R matrix from the pipe to a local memory
           ======================================================================
         */
+        int readCounter = 0;
+        int nextReadCounter = 1;
+        pipeTable<pipeElemSize, TT> read;
         [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
         for(int i = 0; i < rows; i++){
           // "Shift register" that will contain a full row of R after 
@@ -97,9 +93,16 @@ sycl::event StreamingQRIKernel(sycl::queue& q // Device queue
               RRow[col] = RRow[col+1];
             }
 
+            if(j>=i && (readCounter % pipeElemSize == 0) ){
+              read = RIn::read();
+            }
             // Read a new value from the pipe if the current row element
             // belongs to the upper-right part of R. Otherwise write 0. 
-            RRow[columns-1] = j>=i ? RIn::read() : TT{0.0};
+            RRow[columns-1] = j>=i ? read.elem[readCounter % pipeElemSize] : TT{0.0};
+              
+            readCounter = j>=i ? nextReadCounter : readCounter;
+            nextReadCounter = j>=i ? nextReadCounter + 1 : nextReadCounter;
+
           }
 
           // Copy the entire row to the R matrix
@@ -113,14 +116,37 @@ sycl::event StreamingQRIKernel(sycl::queue& q // Device queue
           Copy a Q matrix from the pipe to a local memory
           ======================================================================
         */
-        [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
-        for (int row=0; row<rows; row++) {
-          // Read a row of the Q matrix from the pipe 
-          pipeTable<columns, TT> pipeData = QIn::read();
 
-          // Write the current column to the QMatrix matrix.
-          UnrolledLoop<columns>([&](auto k) {
-            QMatrix[row][k] = pipeData.elem[k];
+        // Number of DDR burst reads of pipeElemSize required to read a full 
+        // column 
+        constexpr int kExtraIteration = (rows % pipeElemSize) != 0 ? 1 : 0;
+        constexpr int kLoopIterPerColumn = rows/pipeElemSize + kExtraIteration; 
+        // Number of DDR burst reads of pipeElemSize to read all the matrices
+        constexpr int kLoopIter = kLoopIterPerColumn * columns;
+        // Size in bits of the loop iterator over kLoopIter iterations
+        constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+
+        [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
+        for (ac_int<kLoopIterBitSize, false> li=0; li<kLoopIter; li++) {
+          pipeTable<pipeElemSize, TT> pipeRead = QIn::read();
+
+          int writeIdx = li % kLoopIterPerColumn;
+
+          UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+            UnrolledLoop<pipeElemSize>([&](auto t) {
+              if (writeIdx == k) {
+                if constexpr(k * pipeElemSize + t < rows){
+                  QMatrix[li / kLoopIterPerColumn][k * pipeElemSize + t] = 
+                                                              pipeRead.elem[t];
+                }
+              }
+
+              // Delay data signals to create a vine-based data distribution
+              // to lower signal fanout.
+              pipeRead.elem[t] = sycl::ext::intel::fpga_reg(pipeRead.elem[t]);
+            });
+
+            writeIdx = sycl::ext::intel::fpga_reg(writeIdx);
           });
         }
 
@@ -270,17 +296,29 @@ sycl::event StreamingQRIKernel(sycl::queue& q // Device queue
           Copy the inverse matrix result to the output pipe
           ======================================================================
         */
-        [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
-        for (int col = 0; col < columns; col++) {
-          // Load a full column of the inverse matrix to the correct pipe type
-          pipeTable<rows, TT> pipeData;
-          UnrolledLoop<columns>([&](auto k) {
-            pipeData.elem[k] = IMatrix[col][k];
+        [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
+        for (ac_int<kLoopIterBitSize, false> li=0; li<kLoopIter; li++) {
+
+          int columnIter = li % kLoopIterPerColumn;
+          bool get[kLoopIterPerColumn];
+          UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+            get[k] = columnIter == k;
+            columnIter = sycl::ext::intel::fpga_reg(columnIter);
           });
 
-          // Write the inverse matrix column to the pipe
-          IOut::write(pipeData);
-        } // end of col
+          pipeTable<pipeElemSize, TT> pipeWrite;
+          UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
+            UnrolledLoop<pipeElemSize>([&](auto k) {
+              if constexpr(t * pipeElemSize + k < rows){
+              pipeWrite.elem[k] = get[t] ? 
+                IMatrix[li/kLoopIterPerColumn][t * pipeElemSize + k] :
+                                  sycl::ext::intel::fpga_reg(pipeWrite.elem[k]);
+              }
+            });
+          });
+
+          IOut::write(pipeWrite);
+        }
       } // end of matrixIter
     }); // end of h
   }); // end of q submit

@@ -262,7 +262,7 @@ sycl::event StreamingQRD(sycl::queue& q) {
             iGt0[k] = sycl::ext::intel::fpga_reg(i > 0);
             iLt0[k] = sycl::ext::intel::fpga_reg(i < 0);
             jEqI[k] = sycl::ext::intel::fpga_reg(j == i);
-            iGe0JGeI[k] = sycl::ext::intel::fpga_reg(i >= 0 & j >= i);
+            iGe0JGeI[k] = sycl::ext::intel::fpga_reg(i >= 0 && j >= i);
             jEqI_plus_1[k] = sycl::ext::intel::fpga_reg(j == i + 1);
             sOrIrJ[k] = sycl::ext::intel::fpga_reg(sOrIr[j]);
           });
@@ -396,7 +396,7 @@ sycl::event StreamingQRD(sycl::queue& q) {
           }
 
           // Write the computed R value when j is not a "dummy" iteration
-          if ((j >= i + 1) & (i + 1 < columns)) {
+          if ((j >= i + 1) && (i + 1 < columns)) {
             RResult[RElementIndex/pipeElemSize][RElementIndex%pipeElemSize] = 
                                                                         r_ip1j;
             RElementIndex++;
