@@ -185,7 +185,7 @@ struct PipeArray {
             typename... IndexSequences>
   static void write_currying_helper(const BaseTy &data, bool &success,
                                     IndexSequences...) {
-    write_currying<WriteFunc, BaseTy, std::index_sequence<>,
+    ::detail::write_currying<WriteFunc, BaseTy, std::index_sequence<>,
                    IndexSequences...>()(data, success);
   }
 
