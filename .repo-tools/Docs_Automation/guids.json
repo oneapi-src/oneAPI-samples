@@ -1127,6 +1127,31 @@
         "removed": "False",
         "ver": "2021.1.Gold"
     },
+    "81B93386-B5EB-4998-B91B-3453263EC03E": {
+        "guid": "81B93386-B5EB-4998-B91B-3453263EC03E",
+        "ver": "2021.4.0",
+        "name": "Intel® Python Scikit-learn Extension Getting Started"
+    },
+    "87FA013D-0B19-45AE-BCD5-43412BE0A99F" : {
+        "guid": "87FA013D-0B19-45AE-BCD5-43412BE0A99F",
+        "ver": "2021.4.0",
+        "name": "Intel oneAPI Rendering Toolkit Embree Getting Started"
+    },
+    "41F82C06-A9FA-4521-B87A-8F7304CB6631" : {
+        "guid": "41F82C06-A9FA-4521-B87A-8F7304CB6631",
+        "ver": "2021.4.0",
+        "name": "Intel oneAPI Rendering Toolkit Open Image Denoise Getting Started"
+    },
+    "80BB7E55-6FCA-491F-8541-E271324CF169" : {
+        "guid": "80BB7E55-6FCA-491F-8541-E271324CF169",
+        "ver": "2021.4.0",
+        "name": "Intel oneAPI Rendering Toolkit Open VKL Getting Started"
+    },
+    "40C26D31-D553-4BD9-9E1D-63DDF352CB85" : {
+        "guid": "40C26D31-D553-4BD9-9E1D-63DDF352CB85",
+        "ver": "2021.4.0",
+        "name": "Intel oneAPI Rendering Toolkit OSPRay Getting Started"
+    },
     "f92e64c7-7a7c-4749-b421-9f7a9e120099": {
         "guid": "f92e64c7-7a7c-4749-b421-9f7a9e120099",
         "name": "Vectorize VecMatMult",

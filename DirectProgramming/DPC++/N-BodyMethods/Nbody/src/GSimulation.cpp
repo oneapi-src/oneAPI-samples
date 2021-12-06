@@ -164,7 +164,7 @@ void GSimulation::Start() {
        #if(__SYCL_COMPILER_VERSION <= 20200827)
        h.parallel_for(ndrange, intel::reduction(energy, 0.f, std::plus<RealType>()), [=](nd_item<1> it, auto& energy) {
        #else
-       h.parallel_for(ndrange, ONEAPI::reduction(energy, 0.f, std::plus<RealType>()), [=](nd_item<1> it, auto& energy) {
+       h.parallel_for(ndrange, ext::oneapi::reduction(energy, 0.f, std::plus<RealType>()), [=](nd_item<1> it, auto& energy) {
        #endif
 	 auto i = it.get_global_id();
          p[i].vel[0] += p[i].acc[0] * dt;  // 2flops

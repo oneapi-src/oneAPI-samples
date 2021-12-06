@@ -6,7 +6,6 @@
 #include <iostream>
 
 using namespace sycl;
-using namespace sycl::ONEAPI;
 
 int main()
 {

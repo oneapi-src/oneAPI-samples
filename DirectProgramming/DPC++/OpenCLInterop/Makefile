@@ -1,16 +1,10 @@
-all: prog1 prog2 
+all: prog 
 
-prog1: src/dpcpp_with_opencl_kernel.dp.cpp
-	dpcpp -o bin/prog1 src/dpcpp_with_opencl_kernel.dp.cpp
-
-prog2: src/dpcpp_with_opencl_objects.dp.cpp
-	dpcpp -lOpenCL -o bin/prog2 src/dpcpp_with_opencl_objects.dp.cpp
-
-#Run: prog1 prog2
+prog: src/dpcpp_with_opencl_objects.dp.cpp
+	dpcpp -lOpenCL -o bin/prog src/dpcpp_with_opencl_objects.dp.cpp
 
 Run:
-	bin/prog1
-	bin/prog2	
+	bin/prog	
 
 clean:
-	rm -rf bin/prog1 bin/prog2
+	rm -rf bin/prog

@@ -27,7 +27,7 @@ if(FPGA_BOARD MATCHES ".*a10.*")
     set(COLS_COMPONENT 128)
     set(FIXED_ITERATIONS 64)
     set(CLOCK_TARGET 360MHz)
-    set(SEED 13)
+    set(SEED 31)
 elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(ROWS_COMPONENT 256)

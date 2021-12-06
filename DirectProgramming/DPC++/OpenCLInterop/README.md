@@ -24,13 +24,9 @@ existing OpenCL kernels occur simultaneously.
 
 ## Key Implementation Details
 
-Two common OpenCL to DPC++ conversion scenarios are demonstrated.
+Common OpenCL to DPC++ conversion scenario is demonstrated.
 
-1. In `dpcpp_with_opencl_kernel.dp.cpp`, the DPC++ program compiles and runs
-   an OpenCL kernel. (For this, OpenCL must be set as the backend and not Level
-   0, the environment variable SYCL_DEVICE_FILTER=OPENCL is used).
-
-2. In `dpcpp_with_opencl_objects.dp.cpp`, the program converts OpenCL objects
+1. In `dpcpp_with_opencl_objects.dp.cpp`, the program converts OpenCL objects
    (Memory Objects, Platform, Context, Program, Kernel) to DPC++ and execute the
    program.
 

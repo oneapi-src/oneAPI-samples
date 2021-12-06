@@ -32,10 +32,9 @@ int main() {
       accessor output{ output_buf, h };
 
       // Compute the average of each cell and its immediate neighbors
-      id<2> offset(1, 1);
-      h.parallel_for(stencil_range, offset, [=](id<2> idx) {
-        int i = idx[0];
-        int j = idx[1];
+      h.parallel_for(stencil_range, [=](id<2> idx) {
+        int i = idx[0] + 1;
+        int j = idx[1] + 1;
 
         float self = input[i][j];
         float north = input[i - 1][j];

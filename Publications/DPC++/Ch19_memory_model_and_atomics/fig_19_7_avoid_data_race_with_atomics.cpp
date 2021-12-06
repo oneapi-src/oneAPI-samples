@@ -7,12 +7,8 @@
 #include <iostream>
 
 using namespace sycl;
-using namespace sycl::ONEAPI;
-
+using namespace sycl::ext::oneapi;
 int main() {
-
-  using memory_order = sycl::ONEAPI::memory_order;
-  using memory_scope = sycl::ONEAPI::memory_scope;
 
   queue Q;
 

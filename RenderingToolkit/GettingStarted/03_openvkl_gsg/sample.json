@@ -1,0 +1,51 @@
+{
+  "guid": "80BB7E55-6FCA-491F-8541-E271324CF169",
+  "name": "Intel Open VKL Getting Started",
+  "categories": ["Toolkit/oneAPI Libraries/Open VKL"],
+  "description": "This introductory hello rendering toolkit sample program demonstrates how to sample into volumes with Intel Open VKL",
+  "builder": ["cli"],
+  "languages": [{"c":{}}],
+  "dependencies": ["tbb","openvkl","embree","rkcommon"],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "Intel_OpenVKL_vklTutorial_lin",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "./vklTutorial"
+                 ]
+                 }
+        ],
+        "windows":[
+                {
+                "id": "Intel_OpenVKL_vklTutorial_win",
+                "steps":[
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . --config Release",
+                    "cd Release",
+                    ".\\vklTutorial.exe"
+                ]
+
+                }
+        ],
+        "darwin": [
+                {
+                "id": "Intel_OpenVKL_vklTutorial_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib && ./vklTutorial"
+                 ]
+                 }
+        ]
+  }
+}
