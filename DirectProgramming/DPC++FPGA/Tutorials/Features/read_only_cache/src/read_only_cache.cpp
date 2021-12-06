@@ -156,7 +156,12 @@ int main() {
 
     // Report kernel execution time and throughput
     std::cout << "Kernel execution time: " << time_kernel << " seconds\n";
-    std::cout << "Kernel throughput " << (num_mb / time_kernel) << " MB/s\n\n";
+#if defined(CACHE_ENABLED)
+    std::cout << "Kernel throughput with the read-only cache: "
+#else
+    std::cout << "Kernel throughput: "
+#endif
+              << (num_mb / time_kernel) << " MB/s\n\n";
   } else {
     std::cerr << "Verification FAILED\n";
     return 1;
