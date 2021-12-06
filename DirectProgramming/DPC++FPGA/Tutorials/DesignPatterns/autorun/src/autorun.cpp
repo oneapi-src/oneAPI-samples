@@ -16,9 +16,9 @@ using namespace sycl;
 // choose the device selector based on emulation or actual hardware
 // we make this a global variable so it can be used by the autorun kernels
 #if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector ds;
+ext::intel::fpga_emulator_selector ds;
 #else
-  ext::intel::fpga_selector ds;
+ext::intel::fpga_selector ds;
 #endif
 
 // declare the kernel names globally to reduce name mangling
@@ -38,7 +38,7 @@ class ARForeverConsumePipeID;
 // pipes
 using ARProducePipe = ext::intel::pipe<ARProducePipeID, int>;
 using ARConsumePipe = ext::intel::pipe<ARConsumePipeID, int>;
-using ARForeverProducePipe = ext::intel::pipe<ARForeverProducePipeID, int>;   
+using ARForeverProducePipe = ext::intel::pipe<ARForeverProducePipeID, int>;
 using ARForeverConsumePipe = ext::intel::pipe<ARForeverConsumePipeID, int>;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ fpga_tools::Autorun<ARKernelID> ar_kernel{ds, MyAutorun{}};
 // The AutorunForever kernel implicitly wraps the code below in a while(1) loop
 struct MyAutorunForever {
   void operator()() const {
-    // this code is implicitly placed in a while(1)-loop by the 
+    // this code is implicitly placed in a while(1)-loop by the
     // fpga_tools::AutorunForever class
     auto d = ARForeverProducePipe::read();
     ARForeverConsumePipe::write(d);
@@ -72,16 +72,16 @@ struct MyAutorunForever {
 
 // declaring a global instance of this class causes the constructor to be called
 // before main() starts, and the constructor launches the kernel.
-fpga_tools::AutorunForever<ARForeverKernelID> ar_forever_kernel{ds,
-    MyAutorunForever{}};
+fpga_tools::AutorunForever<ARForeverKernelID> ar_forever_kernel{
+    ds, MyAutorunForever{}};
 ////////////////////////////////////////////////////////////////////////////////
 
 //
 // Submit a kernel to read data from global memory and write to a pipe
 //
-template<typename KernelID, typename Pipe>
+template <typename KernelID, typename Pipe>
 event SubmitProducerKernel(queue& q, buffer<int, 1>& in_buf) {
-  return q.submit([&](handler &h) {
+  return q.submit([&](handler& h) {
     accessor in(in_buf, h, read_only);
     int size = in_buf.size();
     h.single_task<KernelID>([=] {
@@ -95,9 +95,9 @@ event SubmitProducerKernel(queue& q, buffer<int, 1>& in_buf) {
 //
 // Submit a kernel to read data from a pipe and write to global memory
 //
-template<typename KernelID, typename Pipe>
+template <typename KernelID, typename Pipe>
 event SubmitConsumerKernel(queue& q, buffer<int, 1>& out_buf) {
-  return q.submit([&](handler &h) {
+  return q.submit([&](handler& h) {
     accessor out(out_buf, h, write_only, no_init);
     int size = out_buf.size();
     h.single_task<KernelID>([=] {
@@ -115,7 +115,7 @@ int main() {
   std::vector<int> in_data(count), out_data(count);
 
   // populate random input data, clear output data
-  std::generate(in_data.begin(), in_data.end(), [] { return rand() % 100; } );
+  std::generate(in_data.begin(), in_data.end(), [] { return rand() % 100; });
   std::fill(out_data.begin(), out_data.end(), -1);
 
   try {
@@ -143,9 +143,9 @@ int main() {
       buffer in_buf(in_data);
       buffer out_buf(out_data);
       SubmitProducerKernel<ARForeverProducerID, ARForeverProducePipe>(q,
-          in_buf);
+                                                                      in_buf);
       SubmitConsumerKernel<ARForeverConsumerID, ARForeverConsumePipe>(q,
-          out_buf);
+                                                                      out_buf);
     }
 
     // validate the results
