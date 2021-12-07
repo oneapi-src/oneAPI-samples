@@ -1,10 +1,17 @@
 import sys
-try:
-    import lpot
-except:
-    import ilit as lpot
 
-if lpot.__version__ == '1.2':
+try:
+    import neural_compressor as inc
+    print("neural_compressor version {}".format(inc.__version__))
+except:
+    try:
+        import lpot as inc
+        print("LPOT version {}".format(inc.__version__))
+    except:
+        import ilit as inc
+        print("iLiT version {}".format(inc.__version__))
+
+if inc.__version__ == '1.2':
     print("This script doesn't support LPOT 1.2, please install LPOT 1.1, 1.2.1 or newer")
     sys.exit(1)
 
@@ -39,7 +46,7 @@ class Dataloader(object):
 
 def auto_tune(input_graph_path, yaml_config, batch_size):
     fp32_graph = alexnet.load_pb(input_graph_path)
-    quan = lpot.Quantization(yaml_config)
+    quan = inc.Quantization(yaml_config)
     dataloader = Dataloader(batch_size)
 
     q_model = quan(
