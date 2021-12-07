@@ -3,6 +3,7 @@ from importlib import util
 tensorflow_found = util.find_spec("tensorflow") is not None
 pytorch_found = util.find_spec("torch") is not None
 pytorch_ext_found = util.find_spec("intel_pytorch_extension") is not None
+tensorflow_ext_found = util.find_spec("intel_extension_for_tensorflow") is not None
 
 if tensorflow_found == True:
 
@@ -28,6 +29,9 @@ if tensorflow_found == True:
 
     print ("We are using Tensorflow version", tf.__version__)
     print("MKL enabled :", get_mkl_enabled_flag())
+    if tensorflow_ext_found == True:
+        import intel_extension_for_tensorflow as itex
+        print("itex_version : ", itex.__version__)
 
 if pytorch_found == True:
     import torch
