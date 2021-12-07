@@ -85,24 +85,34 @@ sycl::event StreamingQRIKernel(sycl::queue& q // Device queue
           // each RRow[x] will be assigned RRow[x+1]
           // This ensures that the fanout is kept to a minimum
           TT RRow[columns];
-
+          bool cond;
+          bool nextCond = 0>=i;
+          int tosum = -i+2;
           for(int j = 0; j < columns; j++){
+            cond = nextCond;
+            nextCond = j + tosum > 0;
+            // For shannonization
+            int potentialNextReadCounter = readCounter + 2;
+
             // Perform the register shifting of the banks
             #pragma unroll          
             for(int col = 0; col<columns-1; col++){
               RRow[col] = RRow[col+1];
             }
 
-            if(j>=i && (readCounter % pipeElemSize == 0) ){
+            if(cond && (readCounter == 0)){
               read = RIn::read();
             }
             // Read a new value from the pipe if the current row element
             // belongs to the upper-right part of R. Otherwise write 0. 
-            RRow[columns-1] = j>=i ? read.elem[readCounter % pipeElemSize] : TT{0.0};
-              
-            readCounter = j>=i ? nextReadCounter : readCounter;
-            nextReadCounter = j>=i ? nextReadCounter + 1 : nextReadCounter;
-
+            if(cond){
+              RRow[columns-1] = read.elem[readCounter];
+              readCounter = nextReadCounter % pipeElemSize;
+              nextReadCounter = potentialNextReadCounter;
+            }
+            else{
+              RRow[columns-1] = TT{0.0};
+            }
           }
 
           // Copy the entire row to the R matrix

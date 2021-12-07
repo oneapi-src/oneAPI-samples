@@ -11,10 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\qrd.cpp" />
     <ClCompile Include="src\qrd_demo.cpp" />
   </ItemGroup>
-  <ItemGroup>
+  <!--   <ItemGroup>
     <ClInclude Include="src\qrd.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
-# QR Decomposition of Matrices
-This DPC++ reference design demonstrates high performance QR decomposition of complex/real matrices on FPGA.
+# QR-based inversion of Matrices
+This DPC++ reference design demonstrates high performance QR-based inversion of complex/real matrices on FPGA.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -13,30 +13,16 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | What you will learn               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm.
 | Time to complete                  | 1 hr (not including compile time)
 
-
-
-
-**Performance**
-Please refer to the performance disclaimer at the end of this README.
-
-| Device                                         | Throughput
-|:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 25k matrices/s for matrices of size 128 * 128
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for matrices of size 256 * 256
-
-
 ## Purpose
 
-This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
+This FPGA reference design demonstrates QR-based inversion of complex/real matrices, a common operation employed in linear algebra.
 
 The algorithms employed by the reference design are the Gram-Schmidt QR decomposition algorithm and the thin QR factorization method. Background information on these algorithms can be found in Wikipedia's [QR decomposition](https://en.wikipedia.org/wiki/QR_decomposition) article. The original algorithm has been modified and optimized for performance on FPGAs in this implementation.
-
-QR decomposition is used extensively in signal processing applications such as beamforming, multiple-input multiple-output (MIMO) processing, and Space Time Adaptive Processing (STAP).
-
+The inverse of the input matrix A: inv(A) is then computed as inv(R) * transpose(Q).
 
 ### Matrix dimensions and FPGA resources
 
-The QR decomposition algorithm factors a complex _m_×_n_ matrix, where _m_ ≥ _n_. The algorithm computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _m_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. 
+The QR-based matrix inversion algorithm factors a complex _n_×_n_ matrix. The algorithm computes the QR decomposition of the input matrix. To do so, it computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. The computation of the inverse of R also requires a dot product in a loop over _n_ elements. Finally, the final matrix multiplication requires _n_ multiplications.
 
 We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
 
@@ -44,27 +30,30 @@ Note: the compiler flag '-fp-relaxed' will be deprecated in the next release and
 
 With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. Thus, the matrix size is constrained by the total FPGA DSP resources available. Note that this upper bound is a consequence of this particular implementation.
 
-By default, the design is parameterized to process 128 × 128 matrices when compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), a larger device. However, the design can process matrices from 4 x 4 to 512 x 512.
+By default, the design is parameterized to process 32 × 32 matrices.
  
 
 ## Key Implementation Details
 | Kernel            | Description
 ---                 |---
-| QRD               | Implements a modified Gram-Schmidt QR decomposition algorithm. 
+| QRD_compute       | Implements a modified Gram-Schmidt QR decomposition algorithm. 
+| QRI_compute       | Implements an inversion based of the provided Q and R matrices.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials: 
 * **Triangular Loop Optimization** (triangular_loop)
 * **Explicit Pipelining with `fpga_reg`** (fpga_register)
 * **Loop `ivdep` Attribute** (loop_ivdep)
 * **Unrolling Loops** (loop_unroll)
+* **Shannonization** (shannonization)
 
  The key optimization techniques used are as follows:
-   1. Refactoring the algorithm to merge two dot products into one, reducing the total number of dot products needed to three from two. This helps us reduce the DSPs required for the implementation.
+   1. Refactoring the algorithm to merge two dot products of the QR decomposition into one, reducing the total number of dot products needed to three from two. This helps us reduce the DSPs required for the implementation.
    2. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
    3. Fully vectorizing the dot products using loop unrolling.
    4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialised dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
    5. Using an efficient memory banking scheme to generate high performance hardware.
    6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
+   7. Using the triangular loop optimization technique to maintain high throughput in triangular loops
 
 ## License  
 Code samples are licensed under the MIT license. See
@@ -168,15 +157,15 @@ NOTE: The design is optimized to perform best when run on a large number of matr
  Increase the amount of memory that the emulator runtime is permitted to allocate by setting the CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE environment variable before running the executable.
      ```
      export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
-     ./qrd.fpga_emu           (Linux)
+     ./qri.fpga_emu           (Linux)
  
      set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
-     qrd.fpga_emu.exe         (Windows)
+     qri.fpga_emu.exe         (Windows)
      ```
 
 2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative.
      ```
-     ./qrd.fpga 40960         (Linux)
+     ./qri.fpga 40960         (Linux)
      ```
 ### Application Parameters
 
@@ -186,27 +175,18 @@ NOTE: The design is optimized to perform best when run on a large number of matr
 
 ### Example of Output
 
-Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 32768 matrices (each consisting of 128*128 complex numbers):
+Example output when running the emulator on 2048 matrices (each consisting of 32*32 real numbers):
 
 ```
-Device name: pac_a10 : Intel PAC Platform (pac_f000000)
-Generating 32768 random matrices
-Running QR decomposition of 32768 matrices repeatedly
-   Total duration:   41.3763 s
-Throughput: 25.3425k matrices/s
-Verifying results on matrix 0 16384 32767
-PASSED
-```
+Device name: Intel(R) FPGA Emulation Device
+Generating 2048 random real matrices of size 32x32 
+Running QR inversion of 2048 matrices 
+   Total duration:   1.3809 s
+Throughput: 1.4831k matrices/s
+Verifying results on matrix 0
+1024
+2047
 
-Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for 40960 matrices (each consisting of 256*256 complex numbers):
-
-```
-Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 4096 random matrices
-Running QR decomposition of 4096 matrices repeatedly
-   Total duration:   17.3197 s
-Throughput: 7.5678k matrices/s
-Verifying results on matrix 0 2048 4095
 PASSED
 ```
 
@@ -223,13 +203,14 @@ PASSED
 `-Xsseed` | Specifies the Quartus compile seed, to yield slightly higher fmax
 `-DROWS_COMPONENT` | Specifies the number of rows of the matrix
 `-DCOLS_COMPONENT` | Specifies the number of columns of the matrix
-`-DFIXED_ITERATIONS` | Used to set the ivdep safelen attribute for the performance critical triangular loop
+`-DFIXED_ITERATIONS_QRD` | Used to set the ivdep safelen attribute for the performance critical triangular loop in the QR decomposition kernel
+`-DFIXED_ITERATIONS_QRI` | Used to set the ivdep safelen attribute for the performance critical triangular loop in the QR inversion kernel
 `-DCOMPLEX` | Used to select between the complex and real QR decomposition
 
-NOTE: The values for `seed`, `FIXED_ITERATIONS`, `ROWS_COMPONENT`, `COLS_COMPONENT` are set according to the board being targeted.
+NOTE: The values for `seed`, `FIXED_ITERATIONS_QRD`, `FIXED_ITERATIONS_QRI`, `ROWS_COMPONENT`, `COLS_COMPONENT` are set according to the board being targeted.
 
 ### Host Limitations
-The QRD demo host is not optimized for a very large number of matrices. Running the QRD executable with number of matrices that occupy more memory than what is physically available on the host machine will result in system performance degradation due to virtual memory thrashing by the operating system.
+The QRI demo host is not optimized for a very large number of matrices. Running the QRI executable with a number of matrices that occupy more memory than what is physically available on the host machine will result in system performance degradation due to virtual memory thrashing by the operating system.
 
 ### Performance disclaimers
 
