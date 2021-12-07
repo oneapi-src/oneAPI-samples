@@ -1,15 +1,15 @@
-# `Intel®  Neural Compressor (Intel® INC)` Sample for TensorFlow*
+# `Intel® Neural Compressor` Sample for TensorFlow*
 
 ## Background
 Low-precision inference can speed up inference obviously, by converting the fp32 model to int8 or bf16 model. Intel provides Intel&reg; Deep Learning Boost technology in the Second Generation Intel&reg; Xeon&reg; Scalable Processors and newer Xeon&reg;, which supports to speed up int8 and bf16 model by hardware.
 
-Intel&reg; Low Precision Optimization Tool (Intel INC) helps the user to simplify the processing to convert the fp32 model to int8/bf16.
+Intel&reg; Neural Compressor helps the user to simplify the processing to convert the fp32 model to int8/bf16.
 
-At the same time, Intel INC will tune the quanization method to reduce the accuracy loss, which is a big blocker for low-precision inference.
+At the same time, Intel&reg; Neural Compressor will tune the quanization method to reduce the accuracy loss, which is a big blocker for low-precision inference.
 
-Intel INC is released in Intel&reg; AI Analytics Toolkit and works with Intel&reg; Optimization of TensorFlow*.
+Intel&reg; Neural Compressor is released in Intel&reg; AI Analytics Toolkit and works with Intel&reg; Optimization of TensorFlow*.
 
-Please refer to the official website for detailed info and news: [https://github.com/intel/lp-opt-tool](https://github.com/intel/lp-opt-tool)
+Please refer to the official website for detailed info and news: [https://github.com/intel/neural-compressor](https://github.com/intel/neural-compressor)
 
 ## License
 
@@ -19,18 +19,18 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Purpose
-This sample will show a whole process to build up a CNN model to recognize handwriting number and speed up it by Intel INC.
+This sample will show a whole process to build up a CNN model to recognize handwriting number and speed up it by Intel&reg; Neural Compressor.
 
-We will learn how to train a CNN model based on Keras with TensorFlow, use Intel INC to quantize the model and compare the performance to understand the benefit of Intel INC.
+We will learn how to train a CNN model based on Keras with TensorFlow, use Intel&reg; Neural Compressor to quantize the model and compare the performance to understand the benefit of Intel&reg; Neural Compressor.
 
 ## Key Implementation Details
 
 - Use Keras on TensorFlow to build and train the CNN model.
 
 
-- Define function and class for Intel INC to quantize the CNN model.
+- Define function and class for Intel&reg; Neural Compressor to quantize the CNN model.
 
-  The Intel INC can run on any Intel&reg; CPU to quantize the AI model.
+  The Intel&reg; Neural Compressor can run on any Intel&reg; CPU to quantize the AI model.
   
   The quantized AI model has better inference performance than the FP32 model on Intel CPU.
   
@@ -47,7 +47,7 @@ We will learn how to train a CNN model based on Keras with TensorFlow, use Intel
 | OS                                | Linux* Ubuntu* 18.04 
 | Hardware                          | The Second Generation Intel&reg; Xeon&reg; Scalable processor family or newer
 | Software                          | Intel&reg; oneAPI AI Analytics Toolkit 2021.1 or newer
-| What you will learn               | How to use Intel INC tool to quantize the AI model based on TensorFlow and speed up the inference on Intel&reg; Xeon&reg; CPU
+| What you will learn               | How to use Intel&reg; Neural Compressor tool to quantize the AI model based on TensorFlow and speed up the inference on Intel&reg; Xeon&reg; CPU
 | Time to complete                  | 10 minutes
 
 ## Running Environment
@@ -127,7 +127,7 @@ conda activate tensorflow
             
 ```
 
-### Install Intel INC by Local Channel
+### Install Intel&reg; Neural Compressor by Local Channel
 
 ```
 conda install -c ${ONEAPI_ROOT}/conda_channel neural-compressor -y --offline
