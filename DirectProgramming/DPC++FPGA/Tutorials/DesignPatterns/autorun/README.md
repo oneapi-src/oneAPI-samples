@@ -155,5 +155,5 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ```
 Running the Autorun kernel test
 Running the AutorunForever kernel test
-PASS
+PASSED
 ```
