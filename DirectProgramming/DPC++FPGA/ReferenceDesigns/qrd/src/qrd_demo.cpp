@@ -92,7 +92,11 @@ int main(int argc, char *argv[]) {
 
   // Get the number of random matrices to decompose from the command line
   // If no value is given, will only decompose 1 random matrix
+#if defined(FPGA_EMULATOR)
   size_t matrices = argc > 1 ? atoi(argv[1]) : 1;
+#else
+  size_t matrices = argc > 1 ? atoi(argv[1]) : 2048;
+#endif
   if (matrices < 1) {
     std::cout << "Must run at least 1 matrix"  << std::endl;
     return 1;
