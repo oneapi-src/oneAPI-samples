@@ -1,5 +1,5 @@
 # Autorun Kernels
-This FPGA tutorial demonstrates how to create the equivalent of OpenCL 'autorun' kernels in oneAPI. An autorun kernel is one that is submitted before the main() function begins. Typically autorun kernels will never finish.. These kernels are submitted before the main function begins and typically loop forever.
+This FPGA tutorial demonstrates how to create the equivalent of OpenCL 'autorun' kernels in oneAPI. An autorun kernel is one that is submitted before the `main()` function begins, and typically (though not necessarily) never finishes.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -94,7 +94,6 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/autorun.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 

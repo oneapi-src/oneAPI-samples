@@ -1,5 +1,5 @@
 {
-  "guid": "916298A4-0094-4B63-A6AD-30DE9F8CAF4B",
+  "guid": "00BBDEF2-F34E-46EA-9D41-DF871CC7272F",
   "name": "Autorun kernels",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "Intel® FPGA tutorial demonstrating autorun kernels",
