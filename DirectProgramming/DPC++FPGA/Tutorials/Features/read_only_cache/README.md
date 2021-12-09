@@ -234,7 +234,7 @@ Number of outputs: 524288
 Verification PASSED
 
 Kernel execution time: 0.011597 seconds
-Kernel throughput 172.457160 MB/s
+Kernel throughput: 172.457160 MB/s
 ```
 
 Running `./read_only_cache_disabled.fpga`:
@@ -245,7 +245,7 @@ Number of outputs: 524288
 Verification PASSED
 
 Kernel execution time: 0.006537 seconds
-Kernel throughput 305.933426 MB/s
+Kernel throughput with the read-only cache: 305.933426 MB/s
 ```
 
 ### Discussion of Results
