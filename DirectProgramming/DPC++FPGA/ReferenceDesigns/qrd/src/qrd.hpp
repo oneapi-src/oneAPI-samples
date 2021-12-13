@@ -67,13 +67,13 @@ void QRDecomposition_impl(
 #endif
 
   // Create buffers and allocate space for them.
-  sycl::buffer<TT, 1> *ABuffer[kNumBuffers];
-  sycl::buffer<TT, 1> *QBuffer[kNumBuffers];
-  sycl::buffer<TT, 1> *RBuffer[kNumBuffers];
+  TT * ADevice[kNumBuffers];
+  TT * QDevice[kNumBuffers];
+  TT * RDevice[kNumBuffers];
   for (short i = 0; i < kNumBuffers; i++) {
-    ABuffer[i] = new sycl::buffer<TT, 1>(kAMatrixSize * matricesPerIter);
-    QBuffer[i] = new sycl::buffer<TT, 1>(kQMatrixSize * matricesPerIter);
-    RBuffer[i] = new sycl::buffer<TT, 1>(kRMatrixSize * matricesPerIter);
+    ADevice[i] = sycl::malloc_device<TT>(kAMatrixSize * matricesPerIter, q);
+    QDevice[i] = sycl::malloc_device<TT>(kAMatrixSize * matricesPerIter, q);
+    RDevice[i] = sycl::malloc_device<TT>(kRMatrixSize * matricesPerIter, q);
   }
 
   // Repeat the computation multiple times (for performance analysis)
@@ -86,79 +86,92 @@ void QRDecomposition_impl(
       TT *ptrQ = QMatrix.data() + kQMatrixSize * it;
       TT *ptrR = RMatrix.data() + kRMatrixSize * it;
 
-      // Copy a new set of input matrices from the host memory to the FPGA DDR 
-      q.submit([&](sycl::handler &h) {
-        auto AMatrixDevice = ABuffer[bufferIdx]->
-                      template get_access<sycl::access::mode::discard_write>(h);
-        h.copy(kPtrA, AMatrixDevice);
+      auto copyAEvent = q.memcpy(ADevice[bufferIdx], kPtrA, 
+                                    kAMatrixSize * matricesPerIter*sizeof(TT));
+
+      auto readEvent = q.submit([&](sycl::handler &h) {
+        h.depends_on(copyAEvent);
+        h.single_task<class QRD_DDR_to_local_mem>
+                                        ([=]() [[intel::kernel_args_restrict]] {
+          MatrixReadFromDDRToPipe<TT,
+                                  rows,
+                                  columns,
+                                  kNumElementsPerDDRBurst,
+                                  matricesPerIter,
+                                  AMatrixPipe>
+                                  (ADevice[bufferIdx]);
+        });
       });
 
-      // Read an input matrix A from the host memory to the FPGA DDR
-      // Stream the A matrix to the AMatrixPipe pipe
-      MatrixReadFromDDRToPipe<class QRD_DDR_to_local_mem, 
-                              TT,
+      // q.submit([&](sycl::handler &h) {
+      //   h.single_task<class QRD_compute>([=]() [[intel::kernel_args_restrict]] {
+          // Read the A matrix from the AMatrixPipe pipe and compute the QR 
+          // decomposition. Write the Q and R output matrices to the QMatrixPipe
+          // and RMatrixPipe pipes.
+      q.single_task(
+          StreamingQRD< T, 
+                        isComplex,
+                        rows, 
+                        columns,
+                        rawLatency, 
+                        matricesPerIter,
+                        kNumElementsPerDDRBurst,
+                        AMatrixPipe,
+                        QMatrixPipe,
+                        RMatrixPipe>()
+      );
+      //   });
+      // });
+
+      auto QEvent = q.submit([&](sycl::handler &h) {
+        h.single_task<class QRD_local_mem_to_DDR_Q>
+                                        ([=]() [[intel::kernel_args_restrict]] {
+          // Read the Q matrix from the QMatrixPipe pipe and copy it to the
+          // FPGA DDR
+          MatrixReadPipeToDDR<TT,
                               rows,
                               columns,
                               kNumElementsPerDDRBurst,
                               matricesPerIter,
-                              AMatrixPipe>
-                              (q, ABuffer[bufferIdx]);
-
-      // Read the A matrix from the AMatrixPipe pipe and compute the QR 
-      // decomposition. Write the Q and R output matrices to the QMatrixPipe
-      // and RMatrixPipe pipes.
-      StreamingQRD< class QRD_compute, 
-                    T, 
-                    isComplex,
-                    rows, 
-                    columns,
-                    rawLatency, 
-                    matricesPerIter,
-                    kNumElementsPerDDRBurst,
-                    AMatrixPipe,
-                    QMatrixPipe,
-                    RMatrixPipe>(q);
-
-      // Read the Q matrix from the QMatrixPipe pipe and copy it to the
-      // FPGA DDR
-      MatrixReadPipeToDDR<class QRD_local_mem_to_DDR_Q, 
-                          TT,
-                          rows,
-                          columns,
-                          kNumElementsPerDDRBurst,
-                          matricesPerIter,
-                          // AMatrixPipe>
-                          QMatrixPipe>
-                          (q, QBuffer[bufferIdx]);
-
-      // Read the R matrix from the RMatrixPipe pipe and copy it to the
-      // FPGA DDR
-      VectorReadPipeToDDR<class QRD_local_mem_to_DDR_R, 
-                          TT,
-                          kRMatrixSize,
-                          kNumElementsPerDDRBurst,
-                          matricesPerIter,
-                          RMatrixPipe>
-                          (q, RBuffer[bufferIdx]);
-
-      // Copy the Q matrix result from the FPGA DDR to the host memory
-      q.submit([&](sycl::handler &h) {
-        sycl::accessor QMatrix(*QBuffer[bufferIdx], h, sycl::read_only);
-        h.copy(QMatrix, ptrQ);
+                              QMatrixPipe>
+                              (QDevice[bufferIdx]);
+        });
       });
 
-      // Copy the R matrix result from the FPGA DDR to the host memory
-      q.submit([&](sycl::handler &h) {
-        sycl::accessor RMatrix(*RBuffer[bufferIdx], h, sycl::read_only);
-        h.copy(RMatrix, ptrR);
+      auto REvent = q.submit([&](sycl::handler &h) {
+        h.single_task<class QRD_local_mem_to_DDR_R>
+                                        ([=]() [[intel::kernel_args_restrict]] {
+          // Read the R matrix from the RMatrixPipe pipe and copy it to the
+          // FPGA DDR
+          VectorReadPipeToDDR<TT,
+                              kRMatrixSize,
+                              kNumElementsPerDDRBurst,
+                              matricesPerIter,
+                              RMatrixPipe>
+                              (RDevice[bufferIdx]);
+        });
       });
+
+      REvent.wait();
+      QEvent.wait();
+
+      // Copy the Q and R matrices result from the FPGA DDR to the host memory
+      auto copyQEvent = q.memcpy(ptrQ, QDevice[bufferIdx], 
+                                    kAMatrixSize * matricesPerIter*sizeof(TT));
+      auto copyREvent = q.memcpy(ptrR, RDevice[bufferIdx], 
+                                    kRMatrixSize * matricesPerIter*sizeof(TT));
+
+      copyREvent.wait();
+      copyQEvent.wait();
+      readEvent.wait();
     } // end of it 
   } // end of r 
 
+
   // Clean allocated buffers
   for (short b = 0; b < kNumBuffers; b++) {
-    delete ABuffer[b];
-    delete QBuffer[b];
-    delete RBuffer[b];
+    free(ADevice[b], q);
+    free(QDevice[b], q);
+    free(RDevice[b], q);
   }
 }
