@@ -103,11 +103,9 @@ void QRDecomposition_impl(
         });
       });
 
-      // q.submit([&](sycl::handler &h) {
-      //   h.single_task<class QRD_compute>([=]() [[intel::kernel_args_restrict]] {
-          // Read the A matrix from the AMatrixPipe pipe and compute the QR 
-          // decomposition. Write the Q and R output matrices to the QMatrixPipe
-          // and RMatrixPipe pipes.
+      // Read the A matrix from the AMatrixPipe pipe and compute the QR 
+      // decomposition. Write the Q and R output matrices to the QMatrixPipe
+      // and RMatrixPipe pipes.
       q.single_task(
           StreamingQRD< T, 
                         isComplex,
@@ -120,8 +118,6 @@ void QRDecomposition_impl(
                         QMatrixPipe,
                         RMatrixPipe>()
       );
-      //   });
-      // });
 
       auto QEvent = q.submit([&](sycl::handler &h) {
         h.single_task<class QRD_local_mem_to_DDR_Q>

@@ -72,12 +72,12 @@ void QRI_impl(
 #endif
 
   // Create buffers and allocate space for them.
-  sycl::buffer<TT, 1> *ABuffer[kNumBuffers];
-  sycl::buffer<TT, 1> *inverseBuffer[kNumBuffers];
+  TT * ADevice[kNumBuffers];
+  TT * IDevice[kNumBuffers];
   for (short i = 0; i < kNumBuffers; i++) {
-    ABuffer[i] = new sycl::buffer<TT, 1>(kAMatrixSize * matricesPerIter);
-    inverseBuffer[i] = new sycl::buffer<TT, 1>(kInverseMatrixSize * 
-                                                              matricesPerIter);
+    ADevice[i] = sycl::malloc_device<TT>(kAMatrixSize * matricesPerIter, q);
+    IDevice[i] = sycl::malloc_device<TT>(kInverseMatrixSize * matricesPerIter, 
+                                                                            q);
   }
 
   // Repeat the computation multiple times (for performance analysis)
@@ -91,76 +91,84 @@ void QRI_impl(
       const TT *kPtrA = AMatrix.data() + kAMatrixSize * it;
       TT *kPtrInverse = inverseMatrix.data() + kInverseMatrixSize * it;
 
-      // Copy a new set of input matrices from the host memory into the FPGA DDR
-      q.submit([&](sycl::handler &h) {
-        auto AMatrixDevice = ABuffer[bufferIdx]->
-                      template get_access<sycl::access::mode::discard_write>(h);
-        h.copy(kPtrA, AMatrixDevice);
-      });
+      auto copyAEvent = q.memcpy(ADevice[bufferIdx], kPtrA, 
+                                    kAMatrixSize * matricesPerIter*sizeof(TT));
 
-      // Read an input matrix A from the host memory to the FPGA DDR
-      // Stream the A matrix to the AMatrixPipe pipe
-      MatrixReadFromDDRToPipe<class QRI_DDR_to_local_mem, 
-                              TT,
-                              rows,
-                              columns,
-                              kNumElementsPerDDRBurst,
-                              matricesPerIter,
-                              AMatrixPipe>
-                              (q, ABuffer[bufferIdx]);
+      auto readEvent = q.submit([&](sycl::handler &h) {
+        h.depends_on(copyAEvent);
+        h.single_task<class QRI_DDR_to_local_mem>
+                                        ([=]() [[intel::kernel_args_restrict]] {
+          MatrixReadFromDDRToPipe<TT,
+                                  rows,
+                                  columns,
+                                  kNumElementsPerDDRBurst,
+                                  matricesPerIter,
+                                  AMatrixPipe>
+                                  (ADevice[bufferIdx]);
+        });
+      });
 
       // Read the A matrix from the AMatrixPipe pipe and compute the QR 
       // decomposition. Write the Q and R output matrices to the QMatrixPipe
       // and RMatrixPipe pipes.
-      StreamingQRD< class QRD_compute, 
-                    T, 
-                    isComplex,
-                    rows, 
-                    columns,
-                    RAWLatencyQRD, 
-                    matricesPerIter,
-                    kNumElementsPerDDRBurst,
-                    AMatrixPipe,
-                    QMatrixPipe,
-                    RMatrixPipe>(q);
+      q.single_task(
+          StreamingQRD< T, 
+                        isComplex,
+                        rows, 
+                        columns,
+                        RAWLatencyQRD, 
+                        matricesPerIter,
+                        kNumElementsPerDDRBurst,
+                        AMatrixPipe,
+                        QMatrixPipe,
+                        RMatrixPipe>()
+      );
 
-      // Read the Q and R matrices from pipes and compute the inverse of A. 
-      // Write the result to the InverseMatrixPipe pipe.
-      StreamingQRIKernel< class QRI_compute, 
-                          T, 
-                          isComplex, 
-                          rows, 
-                          columns,
-                          RAWLatencyQRI, 
-                          matricesPerIter,
-                          kNumElementsPerDDRBurst,
-                          QMatrixPipe,
-                          RMatrixPipe,
-                          InverseMatrixPipe>(q);
+      q.single_task(
+        // Read the Q and R matrices from pipes and compute the inverse of A. 
+        // Write the result to the InverseMatrixPipe pipe.
+        StreamingQRI< T, 
+                      isComplex, 
+                      rows, 
+                      columns,
+                      RAWLatencyQRI, 
+                      matricesPerIter,
+                      kNumElementsPerDDRBurst,
+                      QMatrixPipe,
+                      RMatrixPipe,
+                      InverseMatrixPipe>()
+      );
 
-      // Read the inverse matrix from the InverseMatrixPipe pipe and copy it to
-      // the FPGA DDR
-      MatrixReadPipeToDDR<class QRI_local_mem_to_DDR, 
-                          TT,
-                          rows,
-                          columns,
-                          kNumElementsPerDDRBurst,
-                          matricesPerIter,
-                          InverseMatrixPipe>
-                          (q, inverseBuffer[bufferIdx]);
 
-      // Copy the output result from the FPGA DDR to the host memory
-      q.submit([&](sycl::handler &h) {
-        sycl::accessor inverseMatrixAcc(*inverseBuffer[bufferIdx], h, 
-                                                              sycl::read_only);
-        h.copy(inverseMatrixAcc, kPtrInverse);
+      auto IEvent = q.submit([&](sycl::handler &h) {
+        h.single_task<class QRI_local_mem_to_DDR_Q>
+                                        ([=]() [[intel::kernel_args_restrict]] {
+          // Read the Q matrix from the QMatrixPipe pipe and copy it to the
+          // FPGA DDR
+          MatrixReadPipeToDDR<TT,
+                              rows,
+                              columns,
+                              kNumElementsPerDDRBurst,
+                              matricesPerIter,
+                              InverseMatrixPipe>
+                              (IDevice[bufferIdx]);
+        });
       });
+
+      IEvent.wait();
+
+      // Copy the Q and R matrices result from the FPGA DDR to the host memory
+      auto copyIEvent = q.memcpy(kPtrInverse, IDevice[bufferIdx], 
+                              kInverseMatrixSize * matricesPerIter*sizeof(TT));
+
+      copyIEvent.wait();
+      readEvent.wait();
     } // end of it 
   } // end of r 
 
   // Clean allocated buffers
   for (short b = 0; b < kNumBuffers; b++) {
-    delete ABuffer[b];
-    delete inverseBuffer[b];
+    free(ADevice[b], q);
+    free(IDevice[b], q);
   }
 }
