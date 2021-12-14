@@ -4,6 +4,9 @@ tensorflow_found = util.find_spec("tensorflow") is not None
 pytorch_found = util.find_spec("torch") is not None
 pytorch_ext_found = util.find_spec("intel_pytorch_extension") is not None
 tensorflow_ext_found = util.find_spec("intel_extension_for_tensorflow") is not None
+xgboost_found = util.find_spec("xgboost") is not None
+sklearn_found = util.find_spec("sklearn") is not None
+sklearnex_found = util.find_spec("sklearnex") is not None
 
 if tensorflow_found == True:
 
@@ -27,7 +30,7 @@ if tensorflow_found == True:
             mkl_enabled = tf.pywrap_tensorflow.IsMklEnabled()
         return mkl_enabled
 
-    print ("We are using Tensorflow version", tf.__version__)
+    print ("TensorTlow version: ", tf.__version__)
     print("MKL enabled :", get_mkl_enabled_flag())
     if tensorflow_ext_found == True:
         import intel_extension_for_tensorflow as itex
@@ -35,7 +38,7 @@ if tensorflow_found == True:
 
 if pytorch_found == True:
     import torch
-    print(torch.__version__)
+    print("PyTorch Version: ", torch.__version__)
     mkldnn_enabled = torch.backends.mkldnn.is_available()
     mkl_enabled = torch.backends.mkl.is_available()
     openmp_enabled = torch.backends.openmp.is_available()
@@ -45,3 +48,15 @@ if pytorch_found == True:
     if pytorch_ext_found == True:
         import intel_pytorch_extension as ipex
         print("ipex_verion : ",ipex.__version__)
+
+if xgboost_found == True:
+    import xgboost as xgb
+    print("XGBoost Version: ", xgb.__version__)
+
+if sklearn_found == True:
+    import sklearn
+    print("scikit learn Version: ", sklearn.__version__)
+    if sklearnex_found == True:
+        import sklearnex
+        print("have scikit learn ext 2021.4 : ", sklearnex._utils.get_sklearnex_version((2021, 'P', 400)))
+   
