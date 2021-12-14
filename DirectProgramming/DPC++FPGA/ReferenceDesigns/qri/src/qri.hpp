@@ -94,6 +94,9 @@ void QRI_impl(
       auto copyAEvent = q.memcpy(ADevice[bufferIdx], kPtrA, 
                                     kAMatrixSize * matricesPerIter*sizeof(TT));
 
+      TT * currentABuffer = ADevice[bufferIdx];
+      TT * currentIBuffer = IDevice[bufferIdx];
+
       auto readEvent = q.submit([&](sycl::handler &h) {
         h.depends_on(copyAEvent);
         h.single_task<class QRI_DDR_to_local_mem>
@@ -104,7 +107,7 @@ void QRI_impl(
                                   kNumElementsPerDDRBurst,
                                   matricesPerIter,
                                   AMatrixPipe>
-                                  (ADevice[bufferIdx]);
+                                  (currentABuffer);
         });
       });
 
@@ -151,7 +154,7 @@ void QRI_impl(
                               kNumElementsPerDDRBurst,
                               matricesPerIter,
                               InverseMatrixPipe>
-                              (IDevice[bufferIdx]);
+                              (currentIBuffer);
         });
       });
 

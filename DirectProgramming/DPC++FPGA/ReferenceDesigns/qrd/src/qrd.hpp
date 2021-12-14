@@ -89,6 +89,10 @@ void QRDecomposition_impl(
       auto copyAEvent = q.memcpy(ADevice[bufferIdx], kPtrA, 
                                     kAMatrixSize * matricesPerIter*sizeof(TT));
 
+      TT * currentABuffer = ADevice[bufferIdx];
+      TT * currentQBuffer = QDevice[bufferIdx];
+      TT * currentRBuffer = RDevice[bufferIdx];
+
       auto readEvent = q.submit([&](sycl::handler &h) {
         h.depends_on(copyAEvent);
         h.single_task<class QRD_DDR_to_local_mem>
@@ -99,7 +103,7 @@ void QRDecomposition_impl(
                                   kNumElementsPerDDRBurst,
                                   matricesPerIter,
                                   AMatrixPipe>
-                                  (ADevice[bufferIdx]);
+                                  (currentABuffer);
         });
       });
 
@@ -130,7 +134,7 @@ void QRDecomposition_impl(
                               kNumElementsPerDDRBurst,
                               matricesPerIter,
                               QMatrixPipe>
-                              (QDevice[bufferIdx]);
+                              (currentQBuffer);
         });
       });
 
@@ -144,7 +148,7 @@ void QRDecomposition_impl(
                               kNumElementsPerDDRBurst,
                               matricesPerIter,
                               RMatrixPipe>
-                              (RDevice[bufferIdx]);
+                              (currentRBuffer);
         });
       });
 
