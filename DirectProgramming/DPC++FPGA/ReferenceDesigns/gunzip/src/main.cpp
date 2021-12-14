@@ -49,7 +49,7 @@ using OutPipe = ext::intel::pipe<OutPipeID, FlagBundle<unsigned char>>;
 
 // Max compression ratio. For example, 5 means the decompressed file is 5x
 // bigger than the compressed file.
-constexpr int kInflateFactor = 5;
+constexpr int kMaxInflateFactor = 5;
 
 ////////////////////////////////////////////////////////////////////////////////
 event SubmitProducer(queue&, unsigned char*, int);
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
   // read input file
   std::vector<unsigned char> in_bytes = ReadInputFile(in_filename);
   int in_count = in_bytes.size();
-  int max_out_count = in_count * kInflateFactor;
+  int max_out_count = in_count * kMaxInflateFactor;
   std::vector<unsigned char> out_bytes(max_out_count);
   int inflated_count_host = 0;
   HeaderData hdr_data_host;
@@ -149,6 +149,15 @@ int main(int argc, char* argv[]) {
       std::terminate();
     }
 
+    // DEBUG
+    USMDebugger huffman_debugger;
+    USMDebugger lit_table_debugger, dist_table_debugger;
+    USMDebugger lz77_debugger;
+    huffman_debugger.Init(q);
+    lit_table_debugger.Init(q, 286);
+    dist_table_debugger.Init(q, 32);
+    lz77_debugger.Init(q);
+
     // copy the input data to the device memory and wait for the copy to finish
     q.memcpy(in, in_bytes.data(), in_count * sizeof(unsigned char)).wait();
 
@@ -160,24 +169,36 @@ int main(int argc, char* argv[]) {
 
       // run the decompression kernels
       auto header_event = SubmitHeaderKernel<InPipe, HeaderToHuffmanPipe>(q, hdr_data, in_count, crc, size);
-      auto huffman_event = SubmitHuffmanDecoderKernel<HeaderToHuffmanPipe, HuffmanToLZ77Pipe>(q);
-      auto lz77_kernel = SubmitLZ77DecoderKernel<HuffmanToLZ77Pipe, OutPipe>(q);
+      auto huffman_event = SubmitHuffmanDecoderKernel<HeaderToHuffmanPipe, HuffmanToLZ77Pipe>(q, huffman_debugger, lit_table_debugger, dist_table_debugger);
+      auto lz77_event = SubmitLZ77DecoderKernel<HuffmanToLZ77Pipe, OutPipe>(q, lz77_debugger);
+
+      // DEBUG
+      std::cout << "DEBUG: sleeping...\n";
+      using namespace std::chrono_literals;
+      std::this_thread::sleep_for(5000ms);
+      std::cout << "DEBUG: ... done sleeping\n";
+      huffman_debugger.Print(16);
+      lz77_debugger.Print(4);
+      lit_table_debugger.Print(286);
+      dist_table_debugger.Print(32);
 
       // wait for the producer and consumer to finish
       auto start = high_resolution_clock::now();
+      /*
       producer_event.wait();
-      //std::cout << "producer_event\n";
+      //std::cout << "producer_event done\n";
       consumer_event.wait();
-      //std::cout << "consumer_event\n";
+      //std::cout << "consumer_event done\n";
+      */
       auto end = high_resolution_clock::now();
 
       // wait for the decompression kernels to finish
       header_event.wait();
-      //std::cout << "header_event\n";
+      std::cout << "header_event\n";
       huffman_event.wait();
-      //std::cout << "huffman_event\n";
-      lz77_kernel.wait();
-      //std::cout << "lz77_kernel\n";
+      std::cout << "huffman_event done\n";
+      lz77_event.wait();
+      std::cout << "lz77_event done\n";
 
       // calculate the time the kernels ran for, in milliseconds
       time[i] = duration<double, std::milli>(end - start).count();
@@ -192,7 +213,10 @@ int main(int argc, char* argv[]) {
       // validate the results
       // keep the first inflated_count_host bytes
       out_bytes.resize(inflated_count_host);
-      assert(inflated_count_host == size_host);
+      if (inflated_count_host != size_host) {
+        std::cerr << "ERROR: inflated_count_host != size_host ("
+                  << inflated_count_host << " != " << size_host << ")\n";
+      }
 
       // TODO
       std::cout << "inflated_count_host = " << inflated_count_host << " bytes\n";
@@ -201,6 +225,12 @@ int main(int argc, char* argv[]) {
       std::cout << "size = " << size_host << "\n";
       std::cout << "\n";
     }
+
+    // DEBUG
+    huffman_debugger.Destroy(q);
+    lz77_debugger.Destroy(q);
+    lit_table_debugger.Destroy(q);
+    dist_table_debugger.Destroy(q);
   } catch (exception const& e) {
     std::cout << "Caught a synchronous SYCL exception: " << e.what() << "\n";
     std::terminate();
@@ -211,6 +241,7 @@ int main(int argc, char* argv[]) {
   sycl::free(out, q);
 
   // write output file
+  std::cout << "Writing output file\n";
   WriteOutputFile(out_filename, out_bytes);
 
   // print the performance results
@@ -261,11 +292,10 @@ event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr, 
       bool done;
       do {
         // read the pipe data
-        bool valid_pipe_read;
-        auto pipe_data = OutPipe::read(valid_pipe_read);
-        done = pipe_data.flag && valid_pipe_read;
+        auto pipe_data = OutPipe::read();
+        done = pipe_data.flag;
 
-        if (!done && valid_pipe_read) {
+        if (!done) {
           out[i] = pipe_data.data;
           i++;
         }

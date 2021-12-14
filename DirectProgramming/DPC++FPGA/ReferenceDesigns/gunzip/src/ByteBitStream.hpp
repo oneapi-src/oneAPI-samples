@@ -23,9 +23,9 @@ using namespace sycl;
 
 //using namespace sycl;
 
-constexpr unsigned int kBufferSizeBits = 64;
+constexpr unsigned int kBufferSizeBits = 32;
 constexpr unsigned int kBufferSizeBitsMask = (kBufferSizeBits - 1);
-constexpr unsigned short kMaxReadBits = 16;
+constexpr unsigned short kMaxReadBits = 15;
 
 static_assert(fpga_tools::IsPow2(kBufferSizeBits));
 
@@ -33,27 +33,33 @@ class ByteBitStream {
 public:
   ByteBitStream() : widx_(0), ridx_(0), size_(0) {}
 
-  unsigned short ReadUInt(unsigned short bits) {
-    // read the bits requested
-    // NOTE: assumption here is that the maximum number of bits requested
-    // will be 'kMaxReadBits'
-    //PrintBuffer();
+  unsigned short ReadUInt(unsigned char bits) {
     unsigned short result = 0;
     #pragma unroll
-    for (unsigned short i = 0; i < kMaxReadBits; i++) {
+    for (unsigned char i = 0; i < kMaxReadBits; i++) {
       unsigned short the_bit =
         (buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1);
       unsigned short val = (i < bits) ? (the_bit << i) : 0;
       result |= val;
     }
 
-    //PRINTF("ReadUInt = %hu\n", result);
+    return result;
+  }
+
+  unsigned short ReadUInt15() {
+    unsigned short result = 0;
+    #pragma unroll
+    for (unsigned char i = 0; i < 15; i++) {
+      unsigned short the_bit = (buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1);
+      unsigned short val = (the_bit << i);
+      result |= val;
+    }
 
     return result;
   }
 
-  void Shift(unsigned short bits) {
-    ridx_ += bits;
+  void Shift(unsigned char bits) {
+    ridx_ = (ridx_ + bits) & kBufferSizeBitsMask;
     size_ -= bits;
   }
 
@@ -68,7 +74,7 @@ public:
     return Size() == 0;
   }
 
-  bool HasEnoughBits(unsigned short bits) {
+  bool HasEnoughBits(unsigned char bits) {
     return Size() >= bits;
   }
 
@@ -89,18 +95,15 @@ public:
     }
 
     // move the write index
-    widx_ += 8;
+    widx_ = (widx_ + 8) & kBufferSizeBitsMask;
     size_ += 8;
   }
 
-  void SkipBits(unsigned short bits) {
-    ridx_ += bits;
-  }
-
 private:
+  // TODO: validate unsigned char is enough bits?
   ac_int<kBufferSizeBits, false> buf_;
   unsigned short widx_, ridx_;
-  unsigned short size_;
+  short size_;
 
   void PrintBuffer() {
     PRINTF("%hu: ", Size());
