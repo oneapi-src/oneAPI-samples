@@ -21,8 +21,6 @@ using namespace sycl;
     ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
   }
 
-//using namespace sycl;
-
 constexpr unsigned int kBufferSizeBits = 32;
 constexpr unsigned int kBufferSizeBitsMask = (kBufferSizeBits - 1);
 constexpr unsigned short kMaxReadBits = 15;
@@ -64,9 +62,6 @@ public:
   }
 
   unsigned short Size() {
-    // unsigned integer overflow is defined
-    // TODO: shannonize this?
-    //return widx_ - ridx_;
     return size_;
   }
 
@@ -79,7 +74,6 @@ public:
   }
 
   unsigned short Space() {
-    // TODO: shannonize this?
     return (kBufferSizeBits - Size());
   }
 
@@ -100,6 +94,7 @@ public:
   }
 
 private:
+  // TODO: unsigned char here for indices and size?
   // TODO: validate unsigned char is enough bits?
   ac_int<kBufferSizeBits, false> buf_;
   unsigned short widx_, ridx_;

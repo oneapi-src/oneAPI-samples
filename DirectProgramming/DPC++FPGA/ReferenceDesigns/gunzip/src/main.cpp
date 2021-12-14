@@ -110,8 +110,6 @@ int main(int argc, char* argv[]) {
   HeaderData hdr_data_host;
   unsigned int crc_host, size_host;
 
-  std::cout << "in_count = " << in_count << " bytes\n";
-
   // track timing information in ms
   std::vector<double> time(runs);
 
@@ -149,15 +147,6 @@ int main(int argc, char* argv[]) {
       std::terminate();
     }
 
-    // DEBUG
-    USMDebugger huffman_debugger;
-    USMDebugger lit_table_debugger, dist_table_debugger;
-    USMDebugger lz77_debugger;
-    huffman_debugger.Init(q);
-    lit_table_debugger.Init(q, 286);
-    dist_table_debugger.Init(q, 32);
-    lz77_debugger.Init(q);
-
     // copy the input data to the device memory and wait for the copy to finish
     q.memcpy(in, in_bytes.data(), in_count * sizeof(unsigned char)).wait();
 
@@ -169,36 +158,19 @@ int main(int argc, char* argv[]) {
 
       // run the decompression kernels
       auto header_event = SubmitHeaderKernel<InPipe, HeaderToHuffmanPipe>(q, hdr_data, in_count, crc, size);
-      auto huffman_event = SubmitHuffmanDecoderKernel<HeaderToHuffmanPipe, HuffmanToLZ77Pipe>(q, huffman_debugger, lit_table_debugger, dist_table_debugger);
-      auto lz77_event = SubmitLZ77DecoderKernel<HuffmanToLZ77Pipe, OutPipe>(q, lz77_debugger);
-
-      // DEBUG
-      std::cout << "DEBUG: sleeping...\n";
-      using namespace std::chrono_literals;
-      std::this_thread::sleep_for(5000ms);
-      std::cout << "DEBUG: ... done sleeping\n";
-      huffman_debugger.Print(16);
-      lz77_debugger.Print(4);
-      lit_table_debugger.Print(286);
-      dist_table_debugger.Print(32);
+      auto huffman_event = SubmitHuffmanDecoderKernel<HeaderToHuffmanPipe, HuffmanToLZ77Pipe>(q);
+      auto lz77_event = SubmitLZ77DecoderKernel<HuffmanToLZ77Pipe, OutPipe>(q);
 
       // wait for the producer and consumer to finish
       auto start = high_resolution_clock::now();
-      /*
       producer_event.wait();
-      //std::cout << "producer_event done\n";
       consumer_event.wait();
-      //std::cout << "consumer_event done\n";
-      */
       auto end = high_resolution_clock::now();
 
       // wait for the decompression kernels to finish
       header_event.wait();
-      std::cout << "header_event\n";
       huffman_event.wait();
-      std::cout << "huffman_event done\n";
       lz77_event.wait();
-      std::cout << "lz77_event done\n";
 
       // calculate the time the kernels ran for, in milliseconds
       time[i] = duration<double, std::milli>(end - start).count();
@@ -225,12 +197,6 @@ int main(int argc, char* argv[]) {
       std::cout << "size = " << size_host << "\n";
       std::cout << "\n";
     }
-
-    // DEBUG
-    huffman_debugger.Destroy(q);
-    lz77_debugger.Destroy(q);
-    lit_table_debugger.Destroy(q);
-    dist_table_debugger.Destroy(q);
   } catch (exception const& e) {
     std::cout << "Caught a synchronous SYCL exception: " << e.what() << "\n";
     std::terminate();

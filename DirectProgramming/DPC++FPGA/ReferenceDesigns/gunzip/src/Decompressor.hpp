@@ -105,7 +105,7 @@ using HuffmanToLZ77Pipe =
   ext::intel::pipe<HuffmanToLZ77PipeID, FlagBundle<HuffmanData>>;
 
 template<typename InPipe, typename OutPipe>
-event SubmitLZ77DecoderKernel(queue& q, USMDebugger debugger) {
+event SubmitLZ77DecoderKernel(queue& q) {
   return q.single_task<LZ77DecoderKernelID>([=] {
     unsigned idx = 0;
     constexpr unsigned kMaxHistory = 32768;
@@ -116,7 +116,6 @@ event SubmitLZ77DecoderKernel(queue& q, USMDebugger debugger) {
 
     FlagBundle<HuffmanData> pipe_data;
     bool done;
-    int debug_pipe_read_count = 0;
 
     do {
       // TODO: Non-blocking pipe read?
@@ -124,21 +123,16 @@ event SubmitLZ77DecoderKernel(queue& q, USMDebugger debugger) {
       // TODO: history memory is bad :(
       pipe_data = InPipe::read();
       done = pipe_data.flag;
-      debug_pipe_read_count++;
-      debugger.Write(0, debug_pipe_read_count);
 
       if (!done) {
         if (pipe_data.data.dist_or_flag == -1) {
           unsigned char c = (unsigned char)(pipe_data.data.len_or_sym & 0xFF);
           history[idx] = c;
           idx = (idx + 1) & kMaxHistoryMask;
-          //PRINTF("out: %d\n", (unsigned int)c);
           OutPipe::write(FlagBundle<unsigned char>(c));
         } else {
           unsigned short len = pipe_data.data.len_or_sym;
           unsigned short dist = pipe_data.data.dist_or_flag;
-
-          //PRINTF("copy %d back %d\n", len, dist);
 
           unsigned int ridx = (idx - dist) & kMaxHistoryMask;
           [[intel::ivdep(history)]]
@@ -152,16 +146,13 @@ event SubmitLZ77DecoderKernel(queue& q, USMDebugger debugger) {
         }
       }
     } while (!done);
-
-    debugger.Write(1, 1);
     
     OutPipe::write(FlagBundle<unsigned char>(0, true));
-    debugger.Write(2, 1);
   });
 }
 
 template<typename InPipe, typename OutPipe>
-event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit_table_debugger, USMDebugger dist_table_debugger) {
+event SubmitHuffmanDecoderKernel(queue& q) {
   return q.single_task<HuffmanDecoderKernelID>([=]() [[intel::kernel_args_restrict]] {
     ByteBitStream bbs;
     bool last_block;
@@ -179,14 +170,11 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
         {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13};
       unsigned char codelencodelen[19] = {0};
 
-      int debug_pipe_read_count = 0;
       do {
         if (bbs.HasSpaceForByte()) {
           auto pd = InPipe::read();
           unsigned char c = pd.data;
           bbs.NewByte(c);
-          debug_pipe_read_count++;
-          debugger.Write(0, debug_pipe_read_count);
         }
 
         if (bbs.Size() >= 5) {
@@ -194,35 +182,27 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
             last_block_num = bbs.ReadUInt(1);
             bbs.Shift(1);
             last_block = (last_block_num == 1);
-            //PRINTF("last_block_num = %hu\n", last_block_num);
           } else if (type == 0xFF) {
             type = bbs.ReadUInt(2);
             bbs.Shift(2);
-            //PRINTF("type = %hu\n", type);
           } else if (numlitlencodes == 0) {
             numlitlencodes = bbs.ReadUInt(5) + (unsigned short)257;
             bbs.Shift(5);
-            //PRINTF("numlitlencodes = %hu\n", numlitlencodes);
           } else if (numdistcodes == 0) {
             numdistcodes = bbs.ReadUInt(5) + (unsigned short)1;
             bbs.Shift(5);
-            //PRINTF("numdistcodes = %hu\n", numdistcodes);
           } else if (numcodelencodes == 0) {
             numcodelencodes = bbs.ReadUInt(4) + (unsigned short)4;
             bbs.Shift(4);
-            //PRINTF("numcodelencodes = %hu\n", numcodelencodes);
           } else if (codelencodelen_count < numcodelencodes) {
             unsigned short tmp = bbs.ReadUInt(3);
             bbs.Shift(3);
-            //PRINTF("tmp = %hu\n", tmp);
             codelencodelen[codelencodelen_idxs[codelencodelen_count]] = tmp;
             codelencodelen_count++;
             parsing_first_table = (codelencodelen_count != numcodelencodes);
           }
         }
       } while (parsing_first_table);
-
-      debugger.Write(1, 1);
 
       // TODO: revisit 1024
       int codelencode[1024];
@@ -259,8 +239,6 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
           auto pd = InPipe::read();
           unsigned char c = pd.data;
           bbs.NewByte(c);
-          debug_pipe_read_count++;
-          debugger.Write(2, debug_pipe_read_count);
         }
 
         if (reading_next_symbol) {
@@ -330,8 +308,6 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
         parsing_second_table = (codelens_idx < (numlitlencodes + numdistcodes));
       } while (parsing_second_table);
 
-      debugger.Write(3, 1);
-
       if (onecount == 1 && otherpositivecount == 0) {
         int extend_amount = 32 - numdistcodes;
         for (int i = 0; i < extend_amount; i++) {
@@ -362,7 +338,6 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
           unsigned short inner_codelen = codelens[symbol];
           if (inner_codelen == codelen) {
             lit_map[lit_map_counter] = symbol;
-            lit_table_debugger.Write(lit_map_counter, symbol);
             lit_map_counter++;
             lit_map_next_code++; 
           }
@@ -380,7 +355,6 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
           unsigned short inner_codelen = codelens[numlitlencodes + symbol];
           if (inner_codelen == codelen) {
             dist_map[dist_map_counter] = symbol;
-            dist_table_debugger.Write(dist_map_counter, symbol);
             dist_map_counter++;
             dist_map_next_code++; 
           }
@@ -388,10 +362,6 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
         dist_map_last_code[codelen - 1] = dist_map_next_code;
       }
 
-      // DEBUG
-      debugger.Write(4, 1);
-
-      //PRINTF("DONE litlencode and distcode\n");
       bool stop_code_hit = false;
       bool out_ready = false;
       unsigned int num_extra_bits = 0;
@@ -415,10 +385,6 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
       };
       BlockParsingState state = Symbol;
 
-      // DEBUG
-      int debug_pipe_write_count = 0;
-      bool first_symbol_written = false;
-
       // main processing loop
       /*ac_int<9, false>*/unsigned short symbol;
       do {
@@ -429,10 +395,6 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
           done_reading = pd.flag;
           bbs.NewByte(c);
           out_ready = false;
-
-          // DEBUG
-          debug_pipe_read_count++;
-          debugger.Write(5, debug_pipe_read_count);
         } else if (bbs.Size() >= 15) {
           if (state == Symbol || state == DistanceSymbol) {
             // read the next 15 bits (we know we have them)
@@ -452,7 +414,6 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
                 codebits_tmp[codelen - bit - 1] = next_bits[bit] & 0x1;
               }
               unsigned short codebits = codebits_tmp;
-              //PRINTF("codebits: %u\n", codebits);
 
               auto lit_base_idx = lit_map_base_idx[codelen - 1];
               auto lit_first_code = lit_map_first_code[codelen - 1];
@@ -501,49 +462,34 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
             }
             //symbol = (state == Symbol) ? lit_symbol : dist_symbol;
 
-            if (!first_symbol_written) {
-              debugger.Write(6, symbol);
-              debugger.Write(7, (unsigned short)next_bits);
-              first_symbol_written = true;
-            }
-
             // shift by however many bits we matched
             bbs.Shift(shortest_match_len);
 
-            //PRINTF("TMP: %d %d\n", tmp_symbol, codebits);
             if (symbol == 256) {
               stop_code_hit = true;
               out_ready = false;
               state = ExtraDistanceBits;
             } else if (state == Symbol) {
               if (symbol < 256) {
-                //PRINTF("SYMBOL: %d\n", tmp_symbol);
                 out_data.len_or_sym = symbol;
                 out_data.dist_or_flag = -1;
                 out_ready = true;
                 state = Symbol;
               } else if (symbol <= 264) {
-                //PRINTF("RUN LEN SYMBOL: %d\n", tmp_symbol);
                 out_data.len_or_sym = symbol - 254;
-                //PRINTF("STATIC RUN LEN: %d\n", out_data.len_or_sym);
                 state = DistanceSymbol;
               } else if (symbol <= 284) {
-                //PRINTF("RUN LEN SYMBOL: %d\n", tmp_symbol);
                 num_extra_bits = (symbol - 261) / 4;
                 state = ExtraRunLengthBits;
               } else if (symbol == 285) {
-                //PRINTF("RUN LEN SYMBOL: %d\n", tmp_symbol);
                 out_data.len_or_sym = 258;
-                //PRINTF("STATIC RUN LEN: 258\n");
                 state = DistanceSymbol;
               } // else error, ignored
             } else if (state == DistanceSymbol) {
-              //PRINTF("DIST SYMBOL: %d\n", tmp_symbol);
               if (symbol <= 3) {
                 out_data.dist_or_flag = symbol + 1;
                 state = Symbol;
                 out_ready = true;
-                //PRINTF("STATIC DIST: %d\n", out_data.dist_or_flag);
               } else {
                 // NOTE: should be <= 29, but not doing error checking
                 num_extra_bits = (symbol / 2) - 1;
@@ -557,11 +503,9 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
 
               if (state == ExtraRunLengthBits) {
                 out_data.len_or_sym = (((symbol - 265) % 4 + 4) << num_extra_bits) + 3 + extra_bits;
-                //PRINTF("DYNAMIC RUN LEN: %d\n", out_data.len_or_sym);
                 state = DistanceSymbol;
               } else if (state == ExtraDistanceBits) {
                 out_data.dist_or_flag = ((symbol % 2 + 2) << num_extra_bits) + 1 + extra_bits;
-                //PRINTF("DYNAMIC DIST: %d\n", out_data.dist_or_flag);
                 out_ready = true;
                 state = Symbol;
               }
@@ -570,31 +514,19 @@ event SubmitHuffmanDecoderKernel(queue& q, USMDebugger debugger, USMDebugger lit
         }
 
         if (out_ready) {
-          //PRINTF("%d %d\n", out_data.len_or_sym, out_data.dist_or_flag);
           OutPipe::write(FlagBundle<HuffmanData>(out_data));
           out_ready = false;
-
-          // DEBUG
-          debug_pipe_write_count++;
-          debugger.Write(8, debug_pipe_write_count);
         }
       } while (!stop_code_hit);
-      debugger.Write(9, 1);
     } while (!last_block);
-    debugger.Write(10, 1);
 
     // NOTE: don't really care about performance here
-    int debug_pipe_read_count2 = 0;
     while (!done_reading) {
       auto pd = InPipe::read();
       done_reading = pd.flag;
-      debug_pipe_read_count2++;
-      debugger.Write(11, debug_pipe_read_count2);
     }
-    debugger.Write(12, 1);
 
     OutPipe::write(FlagBundle<HuffmanData>(HuffmanData(), true));
-    debugger.Write(13, 1);
   });
 }
 
