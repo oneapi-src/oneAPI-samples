@@ -13,9 +13,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../Tutorials/DesignPatterns/loop_carried_dependency",
           "make fpga_emu",
           "./loop_carried_dependency.fpga_emu"
         ]
@@ -23,9 +25,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../Tutorials/DesignPatterns/loop_carried_dependency",
           "make report"
         ]
       }
@@ -34,9 +38,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ..\..\..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ..\Tutorials\DesignPatterns\loop_carried_dependency",
           "nmake fpga_emu",
           "loop_carried_dependency.fpga_emu.exe"
         ]
@@ -44,9 +50,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ..\..\..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ..\Tutorials\DesignPatterns\loop_carried_dependency",
           "nmake report"
         ]
       }
