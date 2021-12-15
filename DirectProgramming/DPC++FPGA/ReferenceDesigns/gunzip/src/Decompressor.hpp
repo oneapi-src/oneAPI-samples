@@ -320,13 +320,13 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       // TODO reconsider types here, use ac_int for smaller widths
       [[intel::fpga_register]] unsigned short lit_map_first_code[15];
       [[intel::fpga_register]] unsigned short lit_map_last_code[15];
-      [[intel::fpga_register]] /*ac_int<9, false>*/ unsigned short  lit_map_base_idx[15];
-      [[intel::fpga_register]] /*ac_int<9, false>*/ unsigned short lit_map[286];
+      [[intel::fpga_register]] ac_int<9, false> lit_map_base_idx[15];
+      [[intel::fpga_register]] ac_int<9, false> lit_map[286];
 
       [[intel::fpga_register]] unsigned short dist_map_first_code[15];
       [[intel::fpga_register]] unsigned short dist_map_last_code[15];
-      [[intel::fpga_register]] /*ac_int<5, false>*/ unsigned short dist_map_base_idx[15];
-      [[intel::fpga_register]] /*ac_int<5, false>*/ unsigned short dist_map[32];
+      [[intel::fpga_register]] ac_int<5, false> dist_map_base_idx[15];
+      [[intel::fpga_register]] ac_int<5, false> dist_map[32];
 
       unsigned short lit_map_next_code = 0;
       unsigned short lit_map_counter = 0;
@@ -386,9 +386,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       BlockParsingState state = Symbol;
 
       // main processing loop
-      /*ac_int<9, false>*/unsigned short symbol;
+      ac_int<9, false> symbol;
       do {
-        // TODO: make this if then if, rather then if-elseif
+        // TODO: make this if then if, rather than if-elseif
         if (bbs.Size() < 15 && !done_reading) {
           auto pd = InPipe::read();
           unsigned char c = pd.data;
@@ -398,14 +398,13 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         } else if (bbs.Size() >= 15) {
           if (state == Symbol || state == DistanceSymbol) {
             // read the next 15 bits (we know we have them)
-            //ac_int<15, false> next_bits = bbs.ReadUInt(15);
             ac_int<15, false> next_bits = bbs.ReadUInt15();
 
             // find all possible code lengths and offsets
             //ac_int<15, false> codelen_valid_bitmap;
             bool codelen_valid_bitmap[15];
-            /*ac_int<9, false>*/ unsigned short codelen_offset[15];
-            /*ac_int<9, false>*/ unsigned short codelen_base_idx[15];
+            ac_int<9, false> codelen_offset[15];
+            ac_int<9, false> codelen_base_idx[15];
             #pragma unroll
             for (unsigned char codelen = 1; codelen <= 15; codelen++) {
               ac_int<15, false> codebits_tmp(0);
@@ -423,11 +422,11 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               auto dist_last_code = dist_map_last_code[codelen - 1];
 
               auto base_idx = (state == Symbol) ? (unsigned short)lit_base_idx
-                                                  : (unsigned short)dist_base_idx;
+                                                : (unsigned short)dist_base_idx;
               auto first_code = (state == Symbol) ? lit_first_code
-                                                    : dist_first_code;
+                                                  : dist_first_code;
               auto last_code = (state == Symbol) ? lit_last_code
-                                                   : dist_last_code;
+                                                 : dist_last_code;
               
               codelen_base_idx[codelen - 1] = base_idx;
 
@@ -439,20 +438,20 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             }
 
             unsigned char shortest_match_len;
-            unsigned short base_addr;
+            unsigned short base_idx;
             unsigned short offset;
             #pragma unroll
             for (unsigned char codelen = 15; codelen >= 1; codelen--) {
               if (codelen_valid_bitmap[codelen - 1]) {
                 shortest_match_len = codelen;
-                base_addr = codelen_base_idx[codelen - 1];
+                base_idx = codelen_base_idx[codelen - 1];
                 offset = codelen_offset[codelen - 1];
               }
             }
 
-            // lookup symbol using base_addr and
-            auto lit_symbol = lit_map[base_addr + offset];
-            auto dist_symbol =  dist_map[base_addr + offset];
+            // lookup symbol using base_idx and offset
+            auto lit_symbol = lit_map[base_idx + offset];
+            auto dist_symbol =  dist_map[base_idx + offset];
 
             // TODO: file bug about below
             if (state == Symbol) {
