@@ -39,10 +39,10 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ..\..\..",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..\Tutorials\DesignPatterns\loop_carried_dependency",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/loop_carried_dependency",
           "nmake fpga_emu",
           "loop_carried_dependency.fpga_emu.exe"
         ]
@@ -51,10 +51,10 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ..\..\..",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..\Tutorials\DesignPatterns\loop_carried_dependency",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/loop_carried_dependency",
           "nmake report"
         ]
       }
