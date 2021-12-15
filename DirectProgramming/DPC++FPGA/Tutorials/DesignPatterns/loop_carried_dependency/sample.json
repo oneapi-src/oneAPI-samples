@@ -13,6 +13,8 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -23,6 +25,8 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -34,6 +38,8 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" ..",
@@ -44,6 +50,8 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" ..",
