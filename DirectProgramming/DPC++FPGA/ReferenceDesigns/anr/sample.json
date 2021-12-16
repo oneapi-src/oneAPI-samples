@@ -13,9 +13,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../ReferenceDesigns/anr",
           "make fpga_emu",
           "./anr.fpga_emu"
         ]
@@ -23,9 +25,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../ReferenceDesigns/anr",
           "make report"
         ]
       }
@@ -34,9 +38,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/anr",
           "nmake fpga_emu",
           "anr.fpga_emu.exe"
         ]
@@ -44,9 +50,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/anr",
           "nmake report"
         ]
       }
