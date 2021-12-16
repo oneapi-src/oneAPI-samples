@@ -39,11 +39,11 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 To install the Intel® Distribution of Modin* python environment, use the following command:
 #### Linux
 ```
-conda create -y -n modin-conda-forge -c conda-forge --strict-channel-priority modin-all scikit-learn-intelex
+conda create -y -n intel-aikit-modin intel-aikit-modin -c intel
 ```
 Then activate your conda environment with the following command:
 ```
-conda activate modin-conda-forge
+conda activate intel-aikit-modin
 ```
 
 Additionally, install the following in the conda environment
@@ -51,7 +51,7 @@ Additionally, install the following in the conda environment
 ### Install Jupyter Notebook
 Needed to launch Jupyter Notebook in the directory housing the code example
 ```
-conda install jupyter nb_conda_kernels -c conda-forge
+conda install jupyter nb_conda_kernels
 ```
 
 ### opencensus
