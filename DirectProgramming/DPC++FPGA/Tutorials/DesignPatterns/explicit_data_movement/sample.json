@@ -13,9 +13,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../Tutorials/DesignPatterns/explicit_data_movement",
           "make fpga_emu",
           "./explicit_data_movement.fpga_emu"
         ]
@@ -23,9 +25,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../Tutorials/DesignPatterns/explicit_data_movement",
           "make report"
         ]
       }
@@ -34,9 +38,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/explicit_data_movement",
           "nmake fpga_emu",
           "explicit_data_movement.fpga_emu.exe"
         ]
@@ -44,9 +50,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/explicit_data_movement",
           "nmake report"
         ]
       }

@@ -13,9 +13,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../Tutorials/DesignPatterns/pipe_array",
           "make fpga_emu",
           "./pipe_array.fpga_emu"
         ]
@@ -23,9 +25,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../Tutorials/DesignPatterns/pipe_array",
           "make report"
         ]
       }
@@ -34,9 +38,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/pipe_array",
           "nmake fpga_emu",
           "pipe_array.fpga_emu.exe"
         ]
@@ -44,9 +50,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/pipe_array",
           "nmake report"
         ]
       }
