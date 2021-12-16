@@ -13,8 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\qrd_demo.cpp" />
   </ItemGroup>
-  <!--   <ItemGroup>
-    <ClInclude Include="src\qrd.h" />
+    <ClInclude Include="src\qrd.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -107,7 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
-      <AdditionalOptions>-DFPGA_EMULATOR -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DFPGA_EMULATOR -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 -DCOMPLEX=1 /Qactypes %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>
       </ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
@@ -149,7 +148,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <EnableFPGACompilationAhead>true</EnableFPGACompilationAhead>
-      <AdditionalOptions>-DFPGA_EMULATOR -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DFPGA_EMULATOR -DFIXED_ITERATIONS=64 -DROWS_COMPONENT=128 -DCOLS_COMPONENT=128 -DCOMPLEX=1 /Qactypes %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>
       </ObjectFileName>
       <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
