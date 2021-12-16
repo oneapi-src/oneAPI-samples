@@ -153,24 +153,35 @@ int main(int argc, char* argv[]) {
     // run the design multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       // run the producer and consumer kernels
+      std::cout << "Launching Producer and Consumer kernels\n";
       auto producer_event = SubmitProducer(q, in, in_count);
       auto consumer_event = SubmitConsumer(q, out, inflated_count, max_out_count);
 
       // run the decompression kernels
+      std::cout << "Launching gzip kernels\n";
       auto header_event = SubmitHeaderKernel<InPipe, HeaderToHuffmanPipe>(q, hdr_data, in_count, crc, size);
       auto huffman_event = SubmitHuffmanDecoderKernel<HeaderToHuffmanPipe, HuffmanToLZ77Pipe>(q);
       auto lz77_event = SubmitLZ77DecoderKernel<HuffmanToLZ77Pipe, OutPipe>(q);
 
       // wait for the producer and consumer to finish
+      std::cout << "Waiting on producer and consumer kernels\n";
       auto start = high_resolution_clock::now();
       producer_event.wait();
+      //std::cout << "producer_event done\n";
       consumer_event.wait();
+      //std::cout << "consumer_event done\n";
       auto end = high_resolution_clock::now();
 
       // wait for the decompression kernels to finish
+      std::cout << "Waiting on decompress kernels\n";
       header_event.wait();
+      //std::cout << "header_event done\n";
       huffman_event.wait();
+      //std::cout << "huffman_event done\n";
       lz77_event.wait();
+      //std::cout << "lz77_event done\n";
+
+      std::cout << "Done waiting\n";
 
       // calculate the time the kernels ran for, in milliseconds
       time[i] = duration<double, std::milli>(end - start).count();
@@ -218,7 +229,8 @@ int main(int argc, char* argv[]) {
         std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
 
     // TODO: what should the count be here? Input size? Output size?
-    size_t megabytes = in_count * sizeof(unsigned char) * 1e-6;
+    //size_t megabytes = in_count * sizeof(unsigned char) * 1e-6;
+    size_t megabytes = inflated_count_host * sizeof(unsigned char) * 1e-6;
 
     std::cout << "Execution time: " << avg_time_ms << " ms\n";
     std::cout << "Throughput: " << (megabytes / (avg_time_ms * 1e-3))
@@ -254,18 +266,25 @@ event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr, 
       device_ptr<unsigned char> out(out_ptr);
       device_ptr<int> inflated_count(inflated_count_ptr);
 
+      // TODO: get II=1 here
       int i = 0;
+      bool i_in_range = 0 < max_count;
+      bool i_next_in_range = 1 < max_count;
       bool done;
+
       do {
         // read the pipe data
-        auto pipe_data = OutPipe::read();
-        done = pipe_data.flag;
+        bool valid_pipe_read;
+        auto pipe_data = OutPipe::read(valid_pipe_read);
+        done = pipe_data.flag && valid_pipe_read;
 
-        if (!done) {
+        if (!done && valid_pipe_read) {
           out[i] = pipe_data.data;
+          i_in_range = i_next_in_range;
+          i_next_in_range = i < (max_count - 2);
           i++;
         }
-      } while (i < max_count && !done);
+      } while (i_in_range && !done);
 
       // write out the actual output count (inflated_count <= max_count)
       *inflated_count = i;

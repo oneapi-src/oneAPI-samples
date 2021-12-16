@@ -167,9 +167,14 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       unsigned short codelencodelen_count = 0;
 
       constexpr unsigned short codelencodelen_idxs[] =
-        {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13};
+        {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
       unsigned char codelencodelen[19] = {0};
 
+      // NOTE: the compiler chose an II=2 here and sacrificed Fmax. However,
+      // we know this loop will have a low trip count, so set the II higher
+      // so we don't lower the Fmax with this non-critical loop.
+      // Trial-and-error to arrive upon this II.
+      [[intel::initiation_interval(4)]]
       do {
         if (bbs.HasSpaceForByte()) {
           auto pd = InPipe::read();
@@ -180,33 +185,38 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         if (bbs.Size() >= 5) {
           if (last_block_num == 0xFF) {
             last_block_num = bbs.ReadUInt(1);
+            //PRINTF("last_block_num: %u\n", last_block_num);
             bbs.Shift(1);
             last_block = (last_block_num == 1);
           } else if (type == 0xFF) {
             type = bbs.ReadUInt(2);
+            //PRINTF("type: %u\n", type);
             bbs.Shift(2);
           } else if (numlitlencodes == 0) {
             numlitlencodes = bbs.ReadUInt(5) + (unsigned short)257;
+            //PRINTF("numlitlencodes: %u\n", numlitlencodes);
             bbs.Shift(5);
           } else if (numdistcodes == 0) {
             numdistcodes = bbs.ReadUInt(5) + (unsigned short)1;
+            //PRINTF("numdistcodes: %u\n", numdistcodes);
             bbs.Shift(5);
           } else if (numcodelencodes == 0) {
             numcodelencodes = bbs.ReadUInt(4) + (unsigned short)4;
+            //PRINTF("numcodelencodes: %u\n", numcodelencodes);
             bbs.Shift(4);
           } else if (codelencodelen_count < numcodelencodes) {
             unsigned short tmp = bbs.ReadUInt(3);
             bbs.Shift(3);
             codelencodelen[codelencodelen_idxs[codelencodelen_count]] = tmp;
+            //PRINTF("codelencodelen[%u] = %u\n", codelencodelen_idxs[codelencodelen_count], tmp);
             codelencodelen_count++;
             parsing_first_table = (codelencodelen_count != numcodelencodes);
           }
         }
       } while (parsing_first_table);
 
-      // TODO: revisit 1024
-      int codelencode[1024];
-      for (int i = 0; i < 1024; i++) { codelencode[i] = -1; }
+      int codelencode[256];  // 1 << 8 = 256
+      for (int i = 0; i < 256; i++) { codelencode[i] = -1; }
       unsigned short next_code = 0;
       for (unsigned short codelen = 1; codelen < 8; codelen++) {
         next_code <<= 1;
@@ -215,6 +225,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           unsigned short inner_codelen = codelencodelen[symbol];
           if (inner_codelen == codelen) {
             codelencode[start_bit | next_code] = symbol;
+            //PRINTF("(%u) %u : %u\n", codelen, (start_bit | next_code), symbol);
             next_code++;
           }
         }
@@ -389,20 +400,24 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       ac_int<9, false> symbol;
       do {
         // TODO: make this if then if, rather than if-elseif
-        if (bbs.Size() < 15 && !done_reading) {
-          auto pd = InPipe::read();
-          unsigned char c = pd.data;
-          done_reading = pd.flag;
-          bbs.NewByte(c);
-          out_ready = false;
-        } else if (bbs.Size() >= 15) {
+        if (bbs.HasSpaceForByte() && !done_reading) {
+          bool read_valid;
+          auto pd = InPipe::read(read_valid);
+
+          if (read_valid) {
+            unsigned char c = pd.data;
+            done_reading = pd.flag;
+            bbs.NewByte(c);
+          }
+        }
+        
+        if (bbs.Size() >= 15) {
           if (state == Symbol || state == DistanceSymbol) {
             // read the next 15 bits (we know we have them)
             ac_int<15, false> next_bits = bbs.ReadUInt15();
 
             // find all possible code lengths and offsets
-            //ac_int<15, false> codelen_valid_bitmap;
-            bool codelen_valid_bitmap[15];
+            bool codelen_valid_bitmap[15];  // TODO: use ac_int here?
             ac_int<9, false> codelen_offset[15];
             ac_int<9, false> codelen_base_idx[15];
             #pragma unroll
@@ -429,10 +444,8 @@ event SubmitHuffmanDecoderKernel(queue& q) {
                                                  : dist_last_code;
               
               codelen_base_idx[codelen - 1] = base_idx;
-
-              bool match = (codebits >= first_code) & (codebits < last_code);
-              //codelen_valid_bitmap[codelen - 1] = match ? 1 : 0;
-              codelen_valid_bitmap[codelen - 1] = match;
+              codelen_valid_bitmap[codelen - 1] =
+                  (codebits >= first_code) & (codebits < last_code);;
               
               codelen_offset[codelen - 1] = codebits - first_code;
             }
@@ -453,7 +466,8 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             auto lit_symbol = lit_map[base_idx + offset];
             auto dist_symbol =  dist_map[base_idx + offset];
 
-            // TODO: file bug about below
+            // Cannot use ternary operator here:
+            //    https://hsdes.intel.com/appstore/article/#/14015701798
             if (state == Symbol) {
               symbol = lit_symbol;
             } else {
@@ -464,6 +478,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             // shift by however many bits we matched
             bbs.Shift(shortest_match_len);
 
+            // TODO: can we precompute the compares on symbol?
             if (symbol == 256) {
               stop_code_hit = true;
               out_ready = false;
@@ -512,6 +527,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           }
         }
 
+        // output data to downstream kernel if ready
         if (out_ready) {
           OutPipe::write(FlagBundle<HuffmanData>(out_data));
           out_ready = false;
@@ -545,23 +561,37 @@ event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc
     //    if flags & 0x02 != 0: CRC-16, read 2 bytes
     //    if flags & 0x10 != 0: Comment, read nullterminated string
     int i = 0;
+    bool i_in_range = 0 < count;
+    bool i_next_in_range = 1 < count;
     short state_counter = 0;
     short errata_len = 0;
     unsigned char curr_byte;
     HeaderState state = MagicNumber;
     device_ptr<HeaderData> hdr_data(hdr_data_ptr);
-    HeaderData hdr_data_loc;
-    hdr_data_loc.filename[0] = '\0';
+
+    unsigned char header_magic[2];
+    unsigned char header_compression_method;
+    unsigned char header_flags;
+    unsigned char header_time[4];
+    unsigned char header_os;
+    unsigned char header_filename[256];
+    unsigned char header_crc[2];
+    header_filename[0] = '\0';
 
     device_ptr<int> crc(crc_ptr);
     device_ptr<int> size(size_ptr);
 
+    // NOTE: the compiler chose an II=2 here and sacrificed Fmax. However,
+    // we know this loop will have a low trip count, so set the II higher
+    // so we don't lower the Fmax with this non-critical loop.
+    // Trial-and-error to arrive upon this II.
+    [[intel::initiation_interval(4)]]
     while (state != SteadyState) {
       curr_byte = InPipe::read();
 
       switch (state) {
         case MagicNumber: {
-          hdr_data_loc.magic[state_counter] = curr_byte;
+          header_magic[state_counter] = curr_byte;
           state_counter++;
           if (state_counter == 2) {
             state = CompressionMethod;
@@ -570,17 +600,17 @@ event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc
           break;
         }
         case CompressionMethod: {
-          hdr_data_loc.compression_method = curr_byte;
+          header_compression_method = curr_byte;
           state = Flags;
           break;
         }
         case Flags: {
-          hdr_data_loc.flags = curr_byte;
+          header_flags = curr_byte;
           state = Time;
           break;
         }
         case Time: {
-          hdr_data_loc.time[state_counter] = curr_byte;
+          header_time[state_counter] = curr_byte;
           state_counter++;
           if (state_counter == 4) {
             state = ExtraFlags;
@@ -593,14 +623,14 @@ event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc
           break;
         }
         case OS: {
-          hdr_data_loc.os = curr_byte;
-          if (hdr_data_loc.flags & 0x04) {
+          header_os = curr_byte;
+          if (header_flags & 0x04) {
             state = Errata;
-          } else if(hdr_data_loc.flags & 0x08) {
+          } else if(header_flags & 0x08) {
             state = Filename;
-          } else if(hdr_data_loc.flags & 0x02) {
+          } else if(header_flags & 0x02) {
             state = CRC;
-          } else if(hdr_data_loc.flags & 0x10) {
+          } else if(header_flags & 0x10) {
             state = Comment;
           } else {
             state = SteadyState;
@@ -616,11 +646,11 @@ event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc
             state_counter++;
           } else {
             if ((state_counter - 2) == errata_len) {
-              if(hdr_data_loc.flags & 0x08) {
+              if(header_flags & 0x08) {
                 state = Filename;
-              } else if(hdr_data_loc.flags & 0x02) {
+              } else if(header_flags & 0x02) {
                 state = CRC;
-              } else if(hdr_data_loc.flags & 0x10) {
+              } else if(header_flags & 0x10) {
                 state = Comment;
               } else {
                 state = SteadyState;
@@ -633,11 +663,11 @@ event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc
           break;
         }
         case Filename: {
-          hdr_data_loc.filename[state_counter] = curr_byte;
+          header_filename[state_counter] = curr_byte;
           if (curr_byte == '\0') {
-            if(hdr_data_loc.flags & 0x02) {
+            if(header_flags & 0x02) {
               state = CRC;
-            } else if(hdr_data_loc.flags & 0x10) {
+            } else if(header_flags & 0x10) {
               state = Comment;
             } else {
               state = SteadyState;
@@ -649,11 +679,14 @@ event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc
           break;
         }
         case CRC: {
-          if (state_counter == 0 || state_counter == 1) {
-            hdr_data_loc.crc[state_counter] = curr_byte;
+          if (state_counter == 0) {
+            header_crc[0] = curr_byte;
+            state_counter++;
+          } else if (state_counter == 1) {
+            header_crc[1] = curr_byte;
             state_counter++;
           } else {
-            if(hdr_data_loc.flags & 0x10) {
+            if(header_flags & 0x10) {
               state = Comment;
             } else {
               state = SteadyState;
@@ -676,24 +709,33 @@ event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc
         }
       }
 
+      i_in_range = i_next_in_range;
+      i_next_in_range = i < (count - 2);
       i++;
     }
 
     unsigned char crc_bytes[4];
     unsigned char size_bytes[4];
 
-    while (i < count) {
-      curr_byte = InPipe::read();
-      int tmp = (count - i - 1);
-      if (tmp < 8) {
-        if (tmp < 4) {
-          size_bytes[3 - tmp] = curr_byte;
-        } else {
-          crc_bytes[7 - tmp] = curr_byte;
+    while (i_in_range) {
+      bool valid_pipe_read;
+      curr_byte = InPipe::read(valid_pipe_read);
+
+      if (valid_pipe_read) {
+        int tmp = (count - i - 1);
+        if (tmp < 8) {
+          if (tmp < 4) {
+            size_bytes[3 - tmp] = curr_byte;
+          } else {
+            crc_bytes[7 - tmp] = curr_byte;
+          }
         }
+        OutPipe::write(FlagBundle<unsigned char>(curr_byte, (i == (count-1))));
+
+        i_in_range = i_next_in_range;
+        i_next_in_range = i < (count - 2);
+        i++;
       }
-      OutPipe::write(FlagBundle<unsigned char>(curr_byte, (i == (count-1))));
-      i++;
     }
 
     unsigned int crc_local = 0, size_local = 0;
@@ -701,6 +743,18 @@ event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc
       crc_local |= (unsigned int)(crc_bytes[i]) << (i*8);
       size_local |= (unsigned int)(size_bytes[i]) << (i*8);
     }
+
+    // construct header data
+    HeaderData hdr_data_loc;
+    hdr_data_loc.magic[0] = header_magic[0];
+    hdr_data_loc.magic[1] = header_magic[1];
+    hdr_data_loc.compression_method = header_compression_method;
+    hdr_data_loc.flags = header_flags;
+    for(int i = 0; i < 4; i++) hdr_data_loc.time[i] = header_time[i];
+    hdr_data_loc.os = header_os;
+    for(int i = 0; i < 256; i++) hdr_data_loc.filename[i] = header_filename[i];
+    hdr_data_loc.crc[0] = header_crc[0];
+    hdr_data_loc.crc[1] = header_crc[1];
 
     // write back header data, crc, and size
     *hdr_data = hdr_data_loc;

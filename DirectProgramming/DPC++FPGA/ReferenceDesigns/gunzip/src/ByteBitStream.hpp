@@ -27,6 +27,9 @@ constexpr unsigned short kMaxReadBits = 15;
 
 static_assert(fpga_tools::IsPow2(kBufferSizeBits));
 
+//
+// TODO
+//
 class ByteBitStream {
 public:
   ByteBitStream() : widx_(0), ridx_(0), size_(0) {}
@@ -45,6 +48,7 @@ public:
   }
 
   unsigned short ReadUInt15() {
+    // TODO: can we always have the next 15 bits ready to go??
     unsigned short result = 0;
     #pragma unroll
     for (unsigned char i = 0; i < 15; i++) {
@@ -57,6 +61,7 @@ public:
   }
 
   void Shift(unsigned char bits) {
+    // TODO: percompute these calculations
     ridx_ = (ridx_ + bits) & kBufferSizeBitsMask;
     size_ -= bits;
   }
@@ -66,6 +71,7 @@ public:
   }
 
   unsigned short Empty() {
+    // TODO: precompute this compare
     return Size() == 0;
   }
 
@@ -74,10 +80,12 @@ public:
   }
 
   unsigned short Space() {
+    // TODO: precompute this calculation
     return (kBufferSizeBits - Size());
   }
 
   bool HasSpaceForByte() {
+    // TODO: precompute this compare
     return Space() >= 8; 
   }
 
