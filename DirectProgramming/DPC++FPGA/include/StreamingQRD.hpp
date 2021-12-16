@@ -3,7 +3,7 @@
 #include "Utils.hpp"
 
 /*
-  Forward declarations for the StreamingQRD kernel
+  Forward declarations for the StreamingQRD function
 */
 namespace qrd_internal{
 template <typename T, bool isComplex, int rows, int columns, int pipeElemSize,
@@ -53,7 +53,7 @@ template <typename T,           // The datatype for the computation
           int columns,          // Number of columns in the incoming A
                                 // matrices, must be <= rows
           int RAWLatency,       // Read after write latency (in iterations) of 
-                                // the triangular loop of this kernel.
+                                // the triangular loop of this function.
                                 // This value depends on the FPGA target, the 
                                 // datatype, the target frequency, etc.
                                 // This value will have to be tuned for optimal
@@ -158,7 +158,7 @@ struct StreamingQRD {
     static constexpr int kJBitSize =  BitsForMaxValue<columns + 1>() + 
                                       BitsForMaxValue<kJNegativeIterations>();
 
-    // Iterate over the number of matrices to decompose per kernel call
+    // Iterate over the number of matrices to decompose per function call
     for (int matrixIter = 0; matrixIter < matrixCount; matrixIter++) {
 
       // Three copies of the full matrix, so that each matrix has a single
@@ -421,11 +421,11 @@ struct StreamingQRD {
                                         QOut>(QResult);
     } // end of matrixIter
   } // end of operator
-};
+}; // end of struct
 
 namespace qrd_internal{
 /*
-  Utility function for the StreamingQRD kernel
+  Utility function for the StreamingQRD function
   Reads a matrix, pipeElemSize by pipeElemSize elements from the AIn pipe.
   Writes the matrix read in ALoad;
   If the matrix row count is not a multiple of pipeElemSize; will read 
@@ -480,7 +480,7 @@ inline void readPipeAndWriteA(NTuple<
 }
 
 /*
-  Utility function for the StreamingQRD kernel
+  Utility function for the StreamingQRD function
   Write a matrix, pipeElemSize by pipeElemSize elements to the QOut pipe.
   Reads the matrix read from QResult;
   If the matrix row count is not a multiple of pipeElemSize; will write 
@@ -534,7 +534,7 @@ inline void readQAndWriteToPipe(NTuple<
 }
 
 /*
-  Utility function for the StreamingQRD kernel
+  Utility function for the StreamingQRD function
   Reads the R matrix from RResult and writes it to the ROut pipe by bursts
   of pipeElemSize elements.
   This version of the function is enabled if the number of elements in R is a
@@ -571,7 +571,7 @@ typename std::enable_if<
 }
 
 /*
-  Utility function for the StreamingQRD kernel
+  Utility function for the StreamingQRD function
   Reads the R matrix from RResult and writes it to the ROut pipe by bursts
   of pipeElemSize elements.
   This version of the function is enabled if the number of elements in R is not

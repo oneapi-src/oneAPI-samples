@@ -110,7 +110,7 @@ void QRDecomposition_impl(
       // Read the A matrix from the AMatrixPipe pipe and compute the QR 
       // decomposition. Write the Q and R output matrices to the QMatrixPipe
       // and RMatrixPipe pipes.
-      q.single_task(
+      q.single_task<class QRD>(
           StreamingQRD< T, 
                         isComplex,
                         rows, 

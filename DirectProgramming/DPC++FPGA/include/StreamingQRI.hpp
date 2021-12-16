@@ -4,7 +4,7 @@
 
 /*
   QRI (QR inversion) - Given two matrices Q and R from the QR decomposition 
-  of a matrix A such that A=QR, this kernel compute the inverse of A.
+  of a matrix A such that A=QR, this function computes the inverse of A.
   - Input matrix Q (unitary/orthogonal)
   - Input matrix R (upper triangular)
   - Output matrix I, the inverse of A such that A=QR
@@ -16,7 +16,7 @@ template <typename T,           // The datatype for the computation
           int rows,             // Number of rows in the input matrices 
           int columns,          // Number of columns in the input matrices
           int RAWLatency,       // Read after write latency (in iterations) of 
-                                // the triangular loop of this kernel.
+                                // the triangular loop of this function.
                                 // This value depends on the FPGA target, the 
                                 // datatype, the target frequency, etc.
                                 // This value will have to be tuned for optimal
@@ -50,7 +50,7 @@ struct StreamingQRI {
     // of isComplex
     typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
 
-    // Iterate over the number of matrices to decompose per kernel call
+    // Iterate over the number of matrices to decompose per function call
     for (int matrixIter = 0; matrixIter < matrixCount; matrixIter++) {
       // Q matrix read from pipe
       TT QMatrix[rows][columns];
@@ -327,4 +327,4 @@ struct StreamingQRI {
       }
     } // end of matrixIter
   } // end of operator
-};
+}; // end of struct

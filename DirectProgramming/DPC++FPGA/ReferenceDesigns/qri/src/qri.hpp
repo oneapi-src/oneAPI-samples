@@ -114,7 +114,7 @@ void QRI_impl(
       // Read the A matrix from the AMatrixPipe pipe and compute the QR 
       // decomposition. Write the Q and R output matrices to the QMatrixPipe
       // and RMatrixPipe pipes.
-      q.single_task(
+      q.single_task<class QRD>(
           StreamingQRD< T, 
                         isComplex,
                         rows, 
@@ -127,7 +127,7 @@ void QRI_impl(
                         RMatrixPipe>()
       );
 
-      q.single_task(
+      q.single_task<class QRI>(
         // Read the Q and R matrices from pipes and compute the inverse of A. 
         // Write the result to the InverseMatrixPipe pipe.
         StreamingQRI< T, 
