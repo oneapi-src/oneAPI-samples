@@ -16,9 +16,9 @@ endif()
 
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
-    set(PLATFORM_SPECIFIC_FLAGS "/EHsc /Qactypes")
+    set(PLATFORM_SPECIFIC_FLAGS "/EHsc /Qactypes /Wall")
 else()
-    set(PLATFORM_SPECIFIC_FLAGS "-qactypes")
+    set(PLATFORM_SPECIFIC_FLAGS "-qactypes -Wall")
 endif()
 
 
@@ -75,9 +75,9 @@ message(STATUS "SEED=${SEED}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_FLAGS} -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "${PLATFORM_SPECIFIC_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_FLAGS} -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fno-fast-math -Xsfp-relaxed")
+set(HARDWARE_COMPILE_FLAGS "${PLATFORM_SPECIFIC_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fno-fast-math -Xsfp-relaxed")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fno-fast-math -Xsfp-relaxed")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utils.hpp"
+#include "UnrolledLoop.hpp"
 
 /*
   Read "matrixCount" matrices of type TT from DDR by bursts of numElemPerBank

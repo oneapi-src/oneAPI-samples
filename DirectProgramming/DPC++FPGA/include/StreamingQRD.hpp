@@ -1,6 +1,8 @@
 #pragma once
 #include "Tuple.hpp"
 #include "Utils.hpp"
+#include "UnrolledLoop.hpp"
+
 
 /*
   Forward declarations for the StreamingQRD function

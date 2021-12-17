@@ -1,17 +1,17 @@
 #pragma once
 
 #include <CL/sycl.hpp>
-#include <chrono>
-#include <cstring>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
+
+#include <chrono>
+#include <cstring>
 #include <type_traits>
 #include <vector>
 
 #include "MemoryTransfers.hpp"
 #include "StreamingQRD.hpp"
-#include "UnrolledLoop.hpp"
 #include "Utils.hpp"
 
 /*

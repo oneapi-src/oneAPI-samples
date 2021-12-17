@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Utils.hpp"
+#include "UnrolledLoop.hpp"
+
 
 /*
   QRI (QR inversion) - Given two matrices Q and R from the QR decomposition
