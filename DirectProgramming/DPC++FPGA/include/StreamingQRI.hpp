@@ -42,7 +42,7 @@ struct StreamingQRI {
 
     // Functional limitations
     static_assert(rows==columns, 
-                        "only square matrices with rows==columns are supported");
+                      "only square matrices with rows==columns are supported");
     static_assert((columns <= 512) && (columns >= 4), 
                           "only matrices of size 4x4 to 512x512 are supported");
 

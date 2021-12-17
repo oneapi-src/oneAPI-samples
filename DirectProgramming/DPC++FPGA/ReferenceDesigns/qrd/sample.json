@@ -2,7 +2,7 @@
   "guid": "3228581F-9DF8-4696-9B1C-0B31286B97C3",
   "name": "QRD",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
-  "description": "Reference design demonstrating high-performance QR Decomposition (QRD) of complex matrices on a Intel® FPGA",
+  "description": "Reference design demonstrating high-performance QR Decomposition (QRD) of real and complex matrices on a Intel® FPGA",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
@@ -16,9 +16,11 @@
           "export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
         ],
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../ReferenceDesigns/qrd",
           "make fpga_emu",
           "./qrd.fpga_emu"
         ]
@@ -26,9 +28,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../ReferenceDesigns/qrd",
           "make report"
         ]
       }
@@ -40,9 +44,11 @@
           "set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
         ],
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/qrd",
           "nmake fpga_emu",
           "qrd.fpga_emu.exe"
         ]
@@ -50,9 +56,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/qrd",
           "nmake report"
         ]
       }
