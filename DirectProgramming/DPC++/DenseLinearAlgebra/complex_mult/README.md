@@ -118,7 +118,8 @@ There are no editable parameters for this sample.
 	...
 	[9999] (10001 : 10003i) * (10003 : 10005i) = (-40012 : 200120014i)
 	Complex multiplication successfully run on the device
-
-    ```
+	
+```
+    
 ## Additional Samples
 --Add Text--
