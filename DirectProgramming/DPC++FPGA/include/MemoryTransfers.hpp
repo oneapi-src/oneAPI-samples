@@ -13,12 +13,12 @@
 
 
 /*
-  Read "matrixCount" matrices of type TT from DDR by bursts of numElemPerBank 
-  elements, and write the matrices to the "matrixPipe" pipe numElemPerBank by 
+  Read "matrixCount" matrices of type TT from DDR by bursts of numElemPerBank
+  elements, and write the matrices to the "matrixPipe" pipe numElemPerBank by
   numElemPerBank.
-  This implementation is used for matrices that have a number of rows that is a 
+  This implementation is used for matrices that have a number of rows that is a
   multiple of the number of elements per DDR burst read (numElemPerBank).
-  Another version of this function is written below and will be selected at 
+  Another version of this function is written below and will be selected at
   compile time if the row count is not a multiple numElemPerBank.
 */
 template <typename TT,            // Datatype of the elements of the matrix
@@ -31,8 +31,8 @@ template <typename TT,            // Datatype of the elements of the matrix
 void MatrixReadFromDDRToPipe(TT * MatrixPtr, // Input matrix buffer
             typename std::enable_if<(rows % numElemPerBank) == 0>::type* = 0) {
 
-  // Number of DDR burst reads of numElemPerBank required to read a full column 
-  constexpr int kLoopIterPerColumn = rows/numElemPerBank; 
+  // Number of DDR burst reads of numElemPerBank required to read a full column
+  constexpr int kLoopIterPerColumn = rows/numElemPerBank;
   // Number of DDR burst reads of numElemPerBank to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns * matrixCount;
   // Size in bits of the loop iterator over kLoopIter iterations
@@ -54,12 +54,12 @@ void MatrixReadFromDDRToPipe(TT * MatrixPtr, // Input matrix buffer
 }
 
 /*
-  Read "matrixCount" matrices of type TT from DDR by bursts of numElemPerBank 
-  elements, and write the matrices to the "matrixPipe" pipe numElemPerBank by 
+  Read "matrixCount" matrices of type TT from DDR by bursts of numElemPerBank
+  elements, and write the matrices to the "matrixPipe" pipe numElemPerBank by
   numElemPerBank.
-  This implementation is used for matrices that have a number of rows that is 
+  This implementation is used for matrices that have a number of rows that is
   not a multiple of the number of elements per DDR burst read (numElemPerBank).
-  Another version of this function is written above and will be selected at 
+  Another version of this function is written above and will be selected at
   compile time if the row count is a multiple numElemPerBank.
 */
 template <typename TT,            // Datatype of the elements of the matrix
@@ -72,8 +72,8 @@ template <typename TT,            // Datatype of the elements of the matrix
 void MatrixReadFromDDRToPipe(TT * MatrixPtr, // Input matrix buffer
             typename std::enable_if<(rows % numElemPerBank) != 0>::type* = 0) {
 
-  // Number of DDR burst reads of numElemPerBank required to read a full column 
-  constexpr int kLoopIterPerColumn = rows/numElemPerBank + 1; 
+  // Number of DDR burst reads of numElemPerBank required to read a full column
+  constexpr int kLoopIterPerColumn = rows/numElemPerBank + 1;
   // Number of DDR burst reads of numElemPerBank to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns * matrixCount;
   // Size in bits of the loop iterator over kLoopIter iterations
@@ -83,11 +83,11 @@ void MatrixReadFromDDRToPipe(TT * MatrixPtr, // Input matrix buffer
 
   // Keep track of the current element index in the read buffer
   int loadIndex = 0;
-  
+
   [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
   for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
 
-    // Check if we are reading the last DDR burst of the current column 
+    // Check if we are reading the last DDR burst of the current column
     bool lastBurstOfCol = (li%kLoopIterPerColumn) == kLoopIterPerColumn - 1;
 
     pipeTable<numElemPerBank, TT> DDRRead;
@@ -96,7 +96,7 @@ void MatrixReadFromDDRToPipe(TT * MatrixPtr, // Input matrix buffer
     for(int k=0; k<numElemPerBank; k++){
       // Check if the current read index is beyond the end of the current
       // matrix column
-      bool outOfBounds = lastBurstOfCol && 
+      bool outOfBounds = lastBurstOfCol &&
                       ((k % numElemPerBank) > ((rows-1) % numElemPerBank));
 
       // Only perform the DDR reads that are relevant (and don't access a
@@ -117,11 +117,11 @@ void MatrixReadFromDDRToPipe(TT * MatrixPtr, // Input matrix buffer
 }
 
 /*
-  Read "matrixCount" matrices of type TT from a pipe, numElemPerBank by 
+  Read "matrixCount" matrices of type TT from a pipe, numElemPerBank by
   numElemPerBank and  write them to DDR by bursts of numElemPerBank elements.
-  This implementation is used for matrices that have a number of rows that is 
+  This implementation is used for matrices that have a number of rows that is
   a multiple of the number of elements per DDR burst write (numElemPerBank).
-  Another version of this function is written below and will be selected at 
+  Another version of this function is written below and will be selected at
   compile time if the row count is not a multiple numElemPerBank.
 */
 template <typename TT,            // Datatype of the elements of the matrix
@@ -134,13 +134,13 @@ template <typename TT,            // Datatype of the elements of the matrix
 void MatrixReadPipeToDDR(TT * MatrixPtr,
             typename std::enable_if<(rows % numElemPerBank) == 0>::type* = 0) {
 
-  // Number of DDR burst of numElemPerBank required to write a full column 
-  constexpr int kLoopIterPerColumn = rows / numElemPerBank; 
+  // Number of DDR burst of numElemPerBank required to write a full column
+  constexpr int kLoopIterPerColumn = rows / numElemPerBank;
   // Number of DDR burst of numElemPerBank to write all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns * matrixCount;
   // Size in bits of the loop iterator over kLoopIter iterations
   constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
-  
+
   sycl::device_ptr<TT> MatrixPtrDevice(MatrixPtr);
 
   [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
@@ -149,7 +149,7 @@ void MatrixReadPipeToDDR(TT * MatrixPtr,
     pipeTable<numElemPerBank, TT> pipeRead = matrixPipe::read();
 
     // Write the banks[0] to DDR
-    #pragma unroll 
+    #pragma unroll
     for(int k = 0; k<numElemPerBank; k++){
       TT tmp = pipeRead.elem[k];
       *(MatrixPtrDevice + static_cast<int>(li*numElemPerBank + k)) = tmp;
@@ -159,11 +159,11 @@ void MatrixReadPipeToDDR(TT * MatrixPtr,
 }
 
 /*
-  Read "matrixCount" matrices of type TT from a pipe, numElemPerBank by 
+  Read "matrixCount" matrices of type TT from a pipe, numElemPerBank by
   numElemPerBank and write them to DDR by bursts of numElemPerBank elements.
-  This implementation is used for matrices that have a number of rows that is 
+  This implementation is used for matrices that have a number of rows that is
   not a multiple of the number of elements per DDR burst read (numElemPerBank).
-  Another version of this function is written above and will be selected at 
+  Another version of this function is written above and will be selected at
   compile time if the row count is a multiple numElemPerBank.
 */
 template <typename TT,            // Datatype of the elements of the matrix
@@ -176,30 +176,30 @@ template <typename TT,            // Datatype of the elements of the matrix
 void MatrixReadPipeToDDR(TT * MatrixPtr,
             typename std::enable_if<(rows % numElemPerBank) != 0>::type* = 0) {
 
-  // Number of DDR burst of numElemPerBank required to write a full column 
-  constexpr int kLoopIterPerColumn = rows / numElemPerBank + 1; 
+  // Number of DDR burst of numElemPerBank required to write a full column
+  constexpr int kLoopIterPerColumn = rows / numElemPerBank + 1;
   // Number of DDR burst of numElemPerBank to write all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns * matrixCount;
   // Size in bits of the loop iterator over kLoopIter iterations
   constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
-  
+
   sycl::device_ptr<TT> MatrixPtrDevice(MatrixPtr);
 
   // Keep track of the current element index in the write buffer
   int writeIdx = 0;
-  
+
   [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
   for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
     pipeTable<numElemPerBank, TT> pipeRead = matrixPipe::read();
 
-    // Check if we are writing the last DDR burst of the current column 
+    // Check if we are writing the last DDR burst of the current column
     bool lastBurstOfCol = li % kLoopIterPerColumn == kLoopIterPerColumn - 1;
 
-    #pragma unroll 
+    #pragma unroll
     for(int k = 0; k<numElemPerBank; k++){
       // Check if the current write index is beyond the end of the current
       // matrix column
-      bool outOfBounds =  lastBurstOfCol && 
+      bool outOfBounds =  lastBurstOfCol &&
                           (k > ((rows-1) % numElemPerBank));
 
       // Only perform the DDR writes that are relevant (and don't access a
@@ -212,54 +212,54 @@ void MatrixReadPipeToDDR(TT * MatrixPtr,
 
     // Update the current element index in the write buffer according
     // to the write size of the current iteration
-    writeIdx += lastBurstOfCol ?  rows % numElemPerBank : 
+    writeIdx += lastBurstOfCol ?  rows % numElemPerBank :
                                           numElemPerBank;
   } // end of li
 }
 
 /*
-  Read "vectorCount" vectors of type TT from a pipe, numElemPerBank by 
+  Read "vectorCount" vectors of type TT from a pipe, numElemPerBank by
   numElemPerBank and write them to DDR by bursts of numElemPerBank elements.
-  This implementation is used for vectors that have a size that is a multiple 
+  This implementation is used for vectors that have a size that is a multiple
   of the number of elements per DDR burst write (numElemPerBank).
-  Another version of this function is written below and will be selected 
+  Another version of this function is written below and will be selected
   automatically at compile time if the size is not a multiple of numElemPerBank.
 */
 template <typename TT,            // Datatype of the elements of the matrix
           int size,               // Number of elements in the vector
           int numElemPerBank,     // Number of TT elements per DDR burst access
-          int vectorCount,        // Number of vectors to read from the buffer 
+          int vectorCount,        // Number of vectors to read from the buffer
           typename vectorPipe     // Input vector pipe
           >
 void VectorReadPipeToDDR(TT * VectorPtr,  // Output vector buffer
             typename std::enable_if<(size % numElemPerBank) == 0>::type* = 0) {
 
-  // Number of DDR burst of numElemPerBank required to write all the vectors 
+  // Number of DDR burst of numElemPerBank required to write all the vectors
   constexpr int kLoopIter = (size / numElemPerBank) * vectorCount;
   // Size in bits of the loop iterator over kLoopIter iterations
   constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
-  
+
   sycl::device_ptr<TT> VectorPtrDevice(VectorPtr);
-  
+
   [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
   for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
     pipeTable<numElemPerBank, TT> pipeRead = vectorPipe::read();
 
     // Write a burst of numElemPerBank elements to DDR
-    #pragma unroll 
+    #pragma unroll
     for(int k = 0; k<numElemPerBank; k++){
-      *(VectorPtrDevice + static_cast<int>(li*numElemPerBank + k)) = 
+      *(VectorPtrDevice + static_cast<int>(li*numElemPerBank + k)) =
                                                           pipeRead.elem[k];
-    }              
+    }
   } // end of li
 }
 
 /*
-  Read "vectorCount" vectors of type TT from a pipe, numElemPerBank by 
+  Read "vectorCount" vectors of type TT from a pipe, numElemPerBank by
   numElemPerBank and write them to DDR by bursts of numElemPerBank elements.
-  This implementation is used for vectors that have a size that is a not a 
+  This implementation is used for vectors that have a size that is a not a
   multiple of the number of elements per DDR burst write (numElemPerBank).
-  Another version of this function is written above and will be selected 
+  Another version of this function is written above and will be selected
   automatically at compile time if the size is a multiple of numElemPerBank.
 */
 template <typename TT,            // Datatype of the elements of the matrix
@@ -271,11 +271,11 @@ template <typename TT,            // Datatype of the elements of the matrix
 void VectorReadPipeToDDR(TT * VectorPtr,  // Output vector buffer
             typename std::enable_if<(size % numElemPerBank) != 0>::type* = 0) {
 
-  // Number of DDR burst of numElemPerBank required to write all the vectors 
+  // Number of DDR burst of numElemPerBank required to write all the vectors
   constexpr int kLoopIter = (size / numElemPerBank + 1) * vectorCount;
   // Size in bits of the loop iterator over kLoopIter iterations
   constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
-  
+
   sycl::device_ptr<TT> VectorPtrDevice(VectorPtr);
 
   // Keep track of the current element index in the current vector
@@ -289,13 +289,13 @@ void VectorReadPipeToDDR(TT * VectorPtr,  // Output vector buffer
     pipeTable<numElemPerBank, TT> pipeRead = vectorPipe::read();
 
     // Write a burst of numElemPerBank elements to DDR
-    #pragma unroll 
+    #pragma unroll
     for(int k = 0; k<numElemPerBank; k++){
       if ((vectorIdx + k) < size){
-        *(VectorPtrDevice + vectorCountIdx * size + vectorIdx + k) = 
+        *(VectorPtrDevice + vectorCountIdx * size + vectorIdx + k) =
                                                           pipeRead.elem[k];
       }
-    }             
+    }
 
     // Update the indexes
     int vectorIdxPlusNumElemPerBank = vectorIdx + numElemPerBank;

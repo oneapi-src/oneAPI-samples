@@ -5,7 +5,7 @@
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <chrono>
 #include <list>
-#include <iomanip> 
+#include <iomanip>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -13,57 +13,57 @@
 #include "qri.hpp"
 
 /*
-  COMPLEX, COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS_QRD and 
+  COMPLEX, COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS_QRD and
   FIXED_ITERATIONS_QRI are defined by the build system.
-  Depending on the value of COMPLEX, the real or complex QR based matrix 
+  Depending on the value of COMPLEX, the real or complex QR based matrix
   inversion function (QRI) is defined.
 
-  Each matrix (input and output) are represented using vectors and are 
+  Each matrix (input and output) are represented using vectors and are
   interpreted in a column fashion (transposed).
 
   Function arguments:
-  - AMatrix:    The input matrix to be inverted. 
+  - AMatrix:    The input matrix to be inverted.
                 Interpreted as a transposed matrix.
   - invMatrix:  The output matrix. The function will overwrite this matrix.
                 Will contain the inverse of AMatrix.
   - q:          The device queue.
   - matrices:   The number of matrices to be processed.
-                The input matrices are read sequentially from the AMatrix 
+                The input matrices are read sequentially from the AMatrix
                 vector.
   - reps:       The number of repetitions of the computation to execute.
                 (for performance evaluation)
 */
 #if COMPLEX == 0
 // Real single precision floating-point QR based inversion
-void QRI( std::vector<float> &AMatrix, 
+void QRI( std::vector<float> &AMatrix,
           std::vector<float> &invMatrix,
-          sycl::queue &q, 
-          size_t matrices, 
+          sycl::queue &q,
+          size_t matrices,
           size_t reps) {
 
   constexpr bool isComplex = false;
-  QRI_impl< COLS_COMPONENT, 
-            ROWS_COMPONENT, 
-            FIXED_ITERATIONS_QRD, 
-            FIXED_ITERATIONS_QRI, 
-            isComplex, 
-            float>(AMatrix, invMatrix, q, matrices, reps); 
+  QRI_impl< COLS_COMPONENT,
+            ROWS_COMPONENT,
+            FIXED_ITERATIONS_QRD,
+            FIXED_ITERATIONS_QRI,
+            isComplex,
+            float>(AMatrix, invMatrix, q, matrices, reps);
 }
 #else
 // Complex single precision floating-point QR based inversion
-void QRI( std::vector<ac_complex<float>> &AMatrix, 
+void QRI( std::vector<ac_complex<float>> &AMatrix,
           std::vector<ac_complex<float>> &invMatrix,
-          sycl::queue &q, 
-          size_t matrices, 
+          sycl::queue &q,
+          size_t matrices,
           size_t reps) {
 
   constexpr bool isComplex = true;
-  QRI_impl< COLS_COMPONENT, 
-            ROWS_COMPONENT, 
-            FIXED_ITERATIONS_QRD, 
-            FIXED_ITERATIONS_QRI, 
-            isComplex, 
-            float>(AMatrix, invMatrix, q, matrices, reps); 
+  QRI_impl< COLS_COMPONENT,
+            ROWS_COMPONENT,
+            FIXED_ITERATIONS_QRD,
+            FIXED_ITERATIONS_QRI,
+            isComplex,
+            float>(AMatrix, invMatrix, q, matrices, reps);
 }
 #endif
 
@@ -72,7 +72,7 @@ void QRI( std::vector<ac_complex<float>> &AMatrix,
   Returns a random floating-point value between min and max
 */
 float randomValueInInterval(float min, float max){
-  return min + static_cast <float>(rand()) 
+  return min + static_cast <float>(rand())
                                       /(static_cast<float>(RAND_MAX)/(max-min));
 }
 
@@ -96,20 +96,20 @@ bool isFinite(float val){
   cond(M, inf) <= (1+epsilon)/(1-epsilon)
   This is helpful as having a condition number with infinite norm close to 1
   reduces the numerical instability of the matrix inversion.
-  Provided an epsilon value, this function populates the output vector with 
+  Provided an epsilon value, this function populates the output vector with
   a matrix in a row fashion.
 
   Algorithm courtesy of Carl Christian Kjelgaard Mikkelsen (spock@cs.umu.se)
-  
+
   Matlab code snipet this function reimplements in C++:
-  
+
     function [A, B]=myDiagonal(m,epsilon)
 
     % Returns a matrix that is diagonally dominant by rows
     %
     % CALL SEQUENCE:
     %    [A, B]=ccDiagonally(m, epsilon)
-    %   
+    %
     % INPUT:
     %    m        the dimension
     %    epsilon  the dominance factor epsilon in (0,1]
@@ -122,7 +122,7 @@ bool isFinite(float val){
     % for, say, Gaussian elimination with no pivoting.
     %
     % The matrix A is not necessarily well-conditioned, but the matrix B
-    % the infinity norm condition number of the matrix B is bounded by 
+    % the infinity norm condition number of the matrix B is bounded by
     %
     %                  (1+epsilon)/(1 - epsilon)
 
@@ -150,7 +150,7 @@ bool isFinite(float val){
 template <int size, typename T>
 void generateMatrixWithCondititionNumber(float epsilon, std::vector<T> &output){
 
-  // Random min and max values for the random floating-point value generation  
+  // Random min and max values for the random floating-point value generation
   constexpr float kRandomMin = 0;
   constexpr float kRandomMax = 1;
 
@@ -178,7 +178,7 @@ void generateMatrixWithCondititionNumber(float epsilon, std::vector<T> &output){
     }
 
     // Construct the new diagonal element
-    weights[row] /= epsilon; 
+    weights[row] /= epsilon;
     R[row*size + row] = weights[row];
   }
 
@@ -220,22 +220,22 @@ int main(int argc, char *argv[]) {
 #endif
     sycl::queue q = sycl::queue(device_selector, dpc_common::exception_handler);
     sycl::device device = q.get_device();
-    std::cout << "Device name: "               
+    std::cout << "Device name: "
               << device.get_info<sycl::info::device::name>().c_str()
               << std::endl;
 
     // Select a type for this compile depending on the value of COMPLEX
-    typedef typename std::conditional<kComplex, ac_complex<float>, 
+    typedef typename std::conditional<kComplex, ac_complex<float>,
                                                                 float>::type TF;
-    // Select a type for computing the inverse in the testbench using a more 
+    // Select a type for computing the inverse in the testbench using a more
     // precise format than the kernel
-    typedef typename std::conditional<kComplex, ac_complex<double>, 
+    typedef typename std::conditional<kComplex, ac_complex<double>,
                                                               double>::type TD;
 
     // Create vectors to hold all the input and output matrices
     std::vector<TF> A;
     std::vector<TF> invMatrix;
-    std::vector<TF> precomputedInvMatrix; 
+    std::vector<TF> precomputedInvMatrix;
 
     A.resize(matrices * kAMatrixSize);
     invMatrix.resize(matrices * kInverseMatrixSize);
@@ -248,7 +248,7 @@ int main(int argc, char *argv[]) {
     else{
       std::cout << "real ";
     }
-    std::cout << "matri"<< ((matrices == 1) ? "x " : "ces ") 
+    std::cout << "matri"<< ((matrices == 1) ? "x " : "ces ")
               << "of size " << kRows << "x" << kColumns << " "
               << std::endl;
 
@@ -266,16 +266,16 @@ int main(int argc, char *argv[]) {
       // Copy the generated matrix in the A vector
       for (size_t row = 0; row < kRows; row++) {
         for (size_t col = 0; col < kColumns; col++) {
-          A[i * kAMatrixSize + col * kRows + row] = 
+          A[i * kAMatrixSize + col * kRows + row] =
                                               randomMatrix[row*kColumns + col];
         }
       }
 
-      // Precompute the inverse of A using the Gaussian elimination 
+      // Precompute the inverse of A using the Gaussian elimination
       // A copy of A that will be modified
       TD ACopy[kColumns][kRows];
       // The inverse matrix that will be iteratively constructed starting from
-      // the identity matrix 
+      // the identity matrix
       TD inverse[kColumns][kRows];
 
       // Copy A in ACopy and set "inverse" to the identity matrix
@@ -291,23 +291,23 @@ int main(int argc, char *argv[]) {
         }
       }
 
-      // If we can't find a solution using the Gaussian elimination, 
+      // If we can't find a solution using the Gaussian elimination,
       // we may give up on this matrix and generate another one
       bool give_up = false;
-     
+
       // Perform the Gaussian elimination
       for (int row = 0; row < kRows; row++){
         // Find the next pivot
         auto pivot = ACopy[row][row];
 
-        // If the pivot is zero, we need to swap the current row with 
+        // If the pivot is zero, we need to swap the current row with
         // another row that would give a non-zero pivot.
         bool pivotIsZero = pivot == 0.0 || pivot == -0.0;
-        if(pivotIsZero){ 
+        if(pivotIsZero){
           // Find an alternate row to use for pivoting
           for(int nextRow=row+1; nextRow<kRows; nextRow++){
             TD potentialPivot = ACopy[nextRow][row];
-            bool potentialPivotIsZero = potentialPivot == 0.0 || 
+            bool potentialPivotIsZero = potentialPivot == 0.0 ||
                                         potentialPivot == -0.0;
             // row can be used to swap
             if(!potentialPivotIsZero){
@@ -330,7 +330,7 @@ int main(int argc, char *argv[]) {
           // Get the new pivot
           pivot = ACopy[row][row];
 
-          // If the swapping was unsuccessful are the new pivot is 0, 
+          // If the swapping was unsuccessful are the new pivot is 0,
           // give up on this matrix generate another one
           give_up = pivot == 0.0 || pivot == -0.0;
           if(give_up){
@@ -356,10 +356,10 @@ int main(int argc, char *argv[]) {
               ACopy[rowToEliminate][k] = ACopy[rowToEliminate][k] - factor;
             }
             else{
-              ACopy[rowToEliminate][k] = ACopy[rowToEliminate][k] 
+              ACopy[rowToEliminate][k] = ACopy[rowToEliminate][k]
                                           - (ACopy[row][k] * factor);
             }
-            inverse[rowToEliminate][k] = inverse[rowToEliminate][k] 
+            inverse[rowToEliminate][k] = inverse[rowToEliminate][k]
                                         - (inverse[row][k] * factor);
           }
         }
@@ -380,7 +380,7 @@ int main(int argc, char *argv[]) {
         }
 
         // Update the norm inf of both matrices if the norm inf of the current
-        // row is the new max 
+        // row is the new max
         if(normCurrentRowOfA > normInfA){
           normInfA = normCurrentRowOfA;
         }
@@ -421,7 +421,7 @@ int main(int argc, char *argv[]) {
             std::cout << A[i * kAMatrixSize + col * kColumns + row] << " ";
           }
           std::cout << std::endl;
-        }      
+        }
         std::cout << "normInfA " << normInfA << std::endl;
         std::cout << "normInfInverse " << normInfInverse << std::endl;
         std::cout << "condition_number " << condition_number << std::endl;
@@ -434,7 +434,7 @@ int main(int argc, char *argv[]) {
 #else
     size_t reps = 32;
     // Accelerator warmup
-    QRI(A, invMatrix, q, 2048, 1); 
+    QRI(A, invMatrix, q, 2048, 1);
 #endif
 
     std::cout << "Running QR inversion of " << matrices << " matri"
@@ -442,10 +442,10 @@ int main(int argc, char *argv[]) {
          << ((reps > 1) ? "repeatedly" : "") << "\n";
 
     // Launch the compute kernel and time the execution
-    std::chrono::high_resolution_clock::time_point start_time = 
+    std::chrono::high_resolution_clock::time_point start_time =
                                       std::chrono::high_resolution_clock::now();
     QRI(A, invMatrix, q, matrices, reps);
-    std::chrono::high_resolution_clock::time_point end_time = 
+    std::chrono::high_resolution_clock::time_point end_time =
                                       std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end_time - start_time;
     q.throw_asynchronous();
@@ -467,7 +467,7 @@ int main(int argc, char *argv[]) {
     // Count the number of errors found for this matrix
     int errorCount = 0;
     // Keep track of the max difference between the precomputed matrix using the
-    // Gaussian elimination on the double datatype and the kernel computed 
+    // Gaussian elimination on the double datatype and the kernel computed
     // inverse matrix using a QR based algorithm with the float datatype.
     double maxDiffBetweenSoftAndHard = 0.0;
 
@@ -477,7 +477,7 @@ int main(int argc, char *argv[]) {
     // Floating-point error threshold value at which we decide that the design
     // computed an incorrect value
     constexpr float kErrorThreshold = 1e-4;
-    
+
     std::cout << "Verifying results on matrix ";
     for (size_t matrix : to_check) {
       std::cout << matrix << std::endl;
@@ -503,7 +503,7 @@ int main(int argc, char *argv[]) {
       std::cout << "Precomputed inverse" << std::endl;
       for(int row=0; row<kRows; row++){
         for(int col=0; col<kColumns; col++){
-          std::cout << precomputedInvMatrix[matrix * kAMatrixSize + 
+          std::cout << precomputedInvMatrix[matrix * kAMatrixSize +
                                                     row*kColumns + col] << " ";
         }
         std::cout << std::endl;
@@ -518,10 +518,10 @@ int main(int argc, char *argv[]) {
       for (size_t row = 0; row < kRows; row++) {
         for (size_t col = 0; col < kColumns; col++) {
 
-          double diffR = abs(invMatrixOP[row][col].r() - 
+          double diffR = abs(invMatrixOP[row][col].r() -
           precomputedInvMatrix[matrix * kAMatrixSize + row*kColumns + col].r());
 
-          double diffI = abs(invMatrixOP[row][col].i() - 
+          double diffI = abs(invMatrixOP[row][col].i() -
           precomputedInvMatrix[matrix * kAMatrixSize + row*kColumns + col].i());
 
           if(!std::isfinite(diffR) || !std::isfinite(diffR)){
@@ -547,7 +547,7 @@ int main(int argc, char *argv[]) {
       for (size_t i = 0; i < kRows; i++) {
         for (size_t j = 0; j < kColumns; j++) {
 
-          double diff = abs(invMatrixOP[i][j] - 
+          double diff = abs(invMatrixOP[i][j] -
                   precomputedInvMatrix[matrix * kAMatrixSize + i*kColumns + j]);
 
           if(!std::isfinite(diff)){
@@ -565,7 +565,7 @@ int main(int argc, char *argv[]) {
       }
 #endif
 
-      // Update the max diff 
+      // Update the max diff
       if(maxDiff > maxDiffBetweenSoftAndHard){
         maxDiffBetweenSoftAndHard = maxDiff;
       }
@@ -578,7 +578,7 @@ int main(int argc, char *argv[]) {
 
     if (errorCount > 0) {
       std::cout << std::endl << "FAILED" << std::endl;
-      std::cout << std::endl << "!!!!!!!!!!!!!! " << errorCount << " errors" 
+      std::cout << std::endl << "!!!!!!!!!!!!!! " << errorCount << " errors"
                 << std::endl;
       std::cout << "Max difference between the precomputed inverse and the "
                 << "kernel value: " << maxDiffBetweenSoftAndHard << std::endl;
@@ -589,7 +589,7 @@ int main(int argc, char *argv[]) {
     return 0;
 
   } catch (sycl::exception const &e) {
-    std::cerr << "Caught a synchronous SYCL exception: " << e.what() 
+    std::cerr << "Caught a synchronous SYCL exception: " << e.what()
               << std::endl;
     std::cerr <<  "   If you are targeting an FPGA hardware, "
                   "ensure that your system is plugged to an FPGA board that is "
@@ -601,7 +601,7 @@ int main(int argc, char *argv[]) {
 
     std::terminate();
   } catch (std::bad_alloc const &e) {
-    std::cerr <<  "Caught a memory allocation exception on the host: " 
+    std::cerr <<  "Caught a memory allocation exception on the host: "
               << e.what() << std::endl;
     std::cerr <<  "   You can reduce the memory requirement by reducing the "
                   "number of matrices generated. Specify a smaller number when "

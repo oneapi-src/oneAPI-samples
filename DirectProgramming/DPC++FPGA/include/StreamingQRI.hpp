@@ -1,9 +1,9 @@
-#pragma once 
+#pragma once
 
 #include "Utils.hpp"
 
 /*
-  QRI (QR inversion) - Given two matrices Q and R from the QR decomposition 
+  QRI (QR inversion) - Given two matrices Q and R from the QR decomposition
   of a matrix A such that A=QR, this function computes the inverse of A.
   - Input matrix Q (unitary/orthogonal)
   - Input matrix R (upper triangular)
@@ -13,37 +13,37 @@
 */
 template <typename T,           // The datatype for the computation
           bool isComplex,       // True if T is ac_complex<T>
-          int rows,             // Number of rows in the input matrices 
+          int rows,             // Number of rows in the input matrices
           int columns,          // Number of columns in the input matrices
-          int RAWLatency,       // Read after write latency (in iterations) of 
+          int RAWLatency,       // Read after write latency (in iterations) of
                                 // the triangular loop of this function.
-                                // This value depends on the FPGA target, the 
+                                // This value depends on the FPGA target, the
                                 // datatype, the target frequency, etc.
                                 // This value will have to be tuned for optimal
-                                // performance. Refer to the Triangular Loop 
+                                // performance. Refer to the Triangular Loop
                                 // design pattern tutorial.
                                 // In general, find a high value for which the
-                                // compiler is able to achieve an II of 1 and 
+                                // compiler is able to achieve an II of 1 and
                                 // go down from there.
-          int matrixCount,      // Number of matrices to read from the input 
+          int matrixCount,      // Number of matrices to read from the input
                                 // pipes sequentially
-          int pipeElemSize,     // Number of elements read/write per pipe 
+          int pipeElemSize,     // Number of elements read/write per pipe
                                 // operation
           typename QIn,         // Q input pipe, receive a full column with each
                                 // read.
-          typename RIn,         // R input pipe. Receive one element per read.  
+          typename RIn,         // R input pipe. Receive one element per read.
                                 // Only upper-right elements of R are sent.
                                 // Sent in row order, starting with row 0.
           typename IOut         // Inverse matrix output pipe.
                                 // The output is written column by column
           >
-struct StreamingQRI { 
+struct StreamingQRI {
   void operator()() const {
 
     // Functional limitations
-    static_assert(rows==columns, 
+    static_assert(rows==columns,
                       "only square matrices with rows==columns are supported");
-    static_assert((columns <= 512) && (columns >= 4), 
+    static_assert((columns <= 512) && (columns >= 4),
                           "only matrices of size 4x4 to 512x512 are supported");
 
     // Set the computation type to T or ac_complex<T> depending on the value
@@ -75,7 +75,7 @@ struct StreamingQRI {
       pipeTable<pipeElemSize, TT> read;
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
       for(int i = 0; i < rows; i++){
-        // "Shift register" that will contain a full row of R after 
+        // "Shift register" that will contain a full row of R after
         // columns iterations.
         // Each pipe read writes to RRow[columns-1] and at each loop iteration
         // each RRow[x] will be assigned RRow[x+1]
@@ -91,7 +91,7 @@ struct StreamingQRI {
           int potentialNextReadCounter = readCounter + 2;
 
           // Perform the register shifting of the banks
-          #pragma unroll          
+          #pragma unroll
           for(int col = 0; col<columns-1; col++){
             RRow[col] = RRow[col+1];
           }
@@ -100,7 +100,7 @@ struct StreamingQRI {
             read = RIn::read();
           }
           // Read a new value from the pipe if the current row element
-          // belongs to the upper-right part of R. Otherwise write 0. 
+          // belongs to the upper-right part of R. Otherwise write 0.
           if(cond){
             RRow[columns-1] = read.elem[readCounter];
             readCounter = nextReadCounter % pipeElemSize;
@@ -123,10 +123,10 @@ struct StreamingQRI {
         ======================================================================
       */
 
-      // Number of DDR burst reads of pipeElemSize required to read a full 
-      // column 
+      // Number of DDR burst reads of pipeElemSize required to read a full
+      // column
       constexpr int kExtraIteration = (rows % pipeElemSize) != 0 ? 1 : 0;
-      constexpr int kLoopIterPerColumn = rows/pipeElemSize + kExtraIteration; 
+      constexpr int kLoopIterPerColumn = rows/pipeElemSize + kExtraIteration;
       // Number of DDR burst reads of pipeElemSize to read all the matrices
       constexpr int kLoopIter = kLoopIterPerColumn * columns;
       // Size in bits of the loop iterator over kLoopIter iterations
@@ -142,7 +142,7 @@ struct StreamingQRI {
           UnrolledLoop<pipeElemSize>([&](auto t) {
             if (writeIdx == k) {
               if constexpr(k * pipeElemSize + t < rows){
-                QMatrix[li / kLoopIterPerColumn][k * pipeElemSize + t] = 
+                QMatrix[li / kLoopIterPerColumn][k * pipeElemSize + t] =
                                                             pipeRead.elem[t];
               }
             }
@@ -182,9 +182,9 @@ struct StreamingQRI {
         ======================================================================
         Compute the inverse of R
         ======================================================================
-        
+
         The inverse of R is computed using the following algorithm:
-        
+
         RInverse = 0 // matrix initialized to 0
         for col=1:n
           for row=1:col-n
@@ -193,7 +193,7 @@ struct StreamingQRI {
                                                                   /R[col][col]
             for k=1:n
               dp = R[col][k] * RIMatrix[row][k]
-            
+
             RInverse[row][col] = (Id[row][col] - dp)/R[col][col]
       */
 
@@ -222,10 +222,10 @@ struct StreamingQRI {
       int ip2 = 2;
       int diagSize = columns;
       int diagSizem1 = columns - 1;
-      int cp1Limit = RAWLatency-columns-columns > 0 ? RAWLatency-columns : 
+      int cp1Limit = RAWLatency-columns-columns > 0 ? RAWLatency-columns :
                                                       columns;
-      int nextcp1Limit = RAWLatency-columns-1-columns > 0 ? 
-                                                    RAWLatency-columns-1 : 
+      int nextcp1Limit = RAWLatency-columns-1-columns > 0 ?
+                                                    RAWLatency-columns-1 :
                                                     columns;
 
       [[intel::initiation_interval(1)]]   // NO-FORMAT: Attribute
@@ -236,7 +236,7 @@ struct StreamingQRI {
           // Compute the dot product of R[row:] * RInverse[:col]
           TT dotProduct = {0};
 
-          // While reading R, keep the R[col][col] value for the follow up 
+          // While reading R, keep the R[col][col] value for the follow up
           // division
           TT div_val;
 
@@ -287,7 +287,7 @@ struct StreamingQRI {
           TT dotProduct = {0.0};
           UnrolledLoop<rows>([&](auto k) {
             if constexpr(isComplex){
-              dotProduct += RIMatrix[row][k] * QTMatrix[col][k].conj(); 
+              dotProduct += RIMatrix[row][k] * QTMatrix[col][k].conj();
             }
             else{
               dotProduct += RIMatrix[row][k] * QTMatrix[col][k];
@@ -316,7 +316,7 @@ struct StreamingQRI {
         UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
           UnrolledLoop<pipeElemSize>([&](auto k) {
             if constexpr(t * pipeElemSize + k < rows){
-            pipeWrite.elem[k] = get[t] ? 
+            pipeWrite.elem[k] = get[t] ?
               IMatrix[li/kLoopIterPerColumn][t * pipeElemSize + k] :
                                 sycl::ext::intel::fpga_reg(pipeWrite.elem[k]);
             }
