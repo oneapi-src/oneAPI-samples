@@ -104,7 +104,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 ### Application Parameters
 There are no editable parameters for this sample.
 
-### Example of Output
+## Example of Output
 
 ```
 	Target Device: Intel(R) Gen9
