@@ -1,10 +1,10 @@
 #include <math.h>
 
 #include <CL/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <chrono>
 #include <list>
+#include <sycl/ext/intel/ac_types/ac_complex.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -33,33 +33,24 @@
 */
 #if COMPLEX == 0
 // Real single precision floating-point QR Decomposition
-void QRDecomposition( std::vector<float> &AMatrix,
-                      std::vector<float> &QMatrix,
-                      std::vector<float> &RMatrix,
-                      sycl::queue &q,
-                      size_t matrices,
-                      size_t reps) {
+void QRDecomposition(std::vector<float> &AMatrix, std::vector<float> &QMatrix,
+                     std::vector<float> &RMatrix, sycl::queue &q,
+                     size_t matrices, size_t reps) {
   constexpr bool isComplex = false;
-  QRDecomposition_impl< COLS_COMPONENT,
-                        ROWS_COMPONENT,
-                        FIXED_ITERATIONS,
-                        isComplex,
-                        float>(AMatrix, QMatrix, RMatrix, q, matrices, reps);
+  QRDecomposition_impl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
+                       isComplex, float>(AMatrix, QMatrix, RMatrix, q, matrices,
+                                         reps);
 }
 #else
 // Complex single precision floating-point QR Decomposition
-void QRDecomposition( std::vector<ac_complex<float>> &AMatrix,
-                      std::vector<ac_complex<float>> &QMatrix,
-                      std::vector<ac_complex<float>> &RMatrix,
-                      sycl::queue &q,
-                      size_t matrices,
-                      size_t reps) {
+void QRDecomposition(std::vector<ac_complex<float> > &AMatrix,
+                     std::vector<ac_complex<float> > &QMatrix,
+                     std::vector<ac_complex<float> > &RMatrix, sycl::queue &q,
+                     size_t matrices, size_t reps) {
   constexpr bool isComplex = true;
-  QRDecomposition_impl< COLS_COMPONENT,
-                        ROWS_COMPONENT,
-                        FIXED_ITERATIONS,
-                        isComplex,
-                        float>(AMatrix, QMatrix, RMatrix, q, matrices, reps);
+  QRDecomposition_impl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
+                       isComplex, float>(AMatrix, QMatrix, RMatrix, q, matrices,
+                                         reps);
 }
 #endif
 
@@ -67,16 +58,14 @@ void QRDecomposition( std::vector<ac_complex<float>> &AMatrix,
   returns if both the real and complex parts of the given ac_complex
   value are finite
 */
-bool isFinite(ac_complex<float> val){
+bool isFinite(ac_complex<float> val) {
   return std::isfinite(val.r()) && std::isfinite(val.i());
 }
 
 /*
   returns if the given value is finite
 */
-bool isFinite(float val){
-  return std::isfinite(val);
-}
+bool isFinite(float val) { return std::isfinite(val); }
 
 int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
@@ -98,7 +87,7 @@ int main(int argc, char *argv[]) {
   size_t matrices = argc > 1 ? atoi(argv[1]) : 2048;
 #endif
   if (matrices < 1) {
-    std::cout << "Must run at least 1 matrix"  << std::endl;
+    std::cout << "Must run at least 1 matrix" << std::endl;
     return 1;
   }
 
@@ -116,8 +105,8 @@ int main(int argc, char *argv[]) {
               << std::endl;
 
     // Select a type for this compile depending on the value of COMPLEX
-    typedef typename std::conditional<kComplex, ac_complex<float>,
-                                                float>::type T;
+    typedef
+        typename std::conditional<kComplex, ac_complex<float>, float>::type T;
 
     // Create vectors to hold all the input and output matrices
     std::vector<T> AMatrix;
@@ -129,15 +118,13 @@ int main(int argc, char *argv[]) {
     RMatrix.resize(matrices * kRMatrixSize);
 
     std::cout << "Generating " << matrices << " random ";
-    if constexpr(kComplex){
+    if constexpr (kComplex) {
       std::cout << "complex ";
-    }
-    else{
+    } else {
       std::cout << "real ";
     }
-    std::cout << "matri"<< ((matrices == 1) ? "x " : "ces ")
-              << "of size " << kRows << "x" << kColumns << " "
-              << std::endl;
+    std::cout << "matri" << ((matrices == 1) ? "x " : "ces ") << "of size "
+              << kRows << "x" << kColumns << " " << std::endl;
 
     // Generate the random input matrices
     srand(kRandomSeed);
@@ -146,15 +133,15 @@ int main(int argc, char *argv[]) {
         for (size_t col = 0; col < kColumns; col++) {
           float random_real = rand() % (kRandomMax - kRandomMin) + kRandomMin;
 #if COMPLEX == 0
-            AMatrix[i * kAMatrixSize + col * kRows + row] = random_real;
+          AMatrix[i * kAMatrixSize + col * kRows + row] = random_real;
 #else
-            float random_imag = rand() % (kRandomMax - kRandomMin) + kRandomMin;
-            ac_complex<float> random_complex{random_real, random_imag};
-            AMatrix[i * kAMatrixSize + col * kRows + row] = random_complex;
+          float random_imag = rand() % (kRandomMax - kRandomMin) + kRandomMin;
+          ac_complex<float> random_complex{random_real, random_imag};
+          AMatrix[i * kAMatrixSize + col * kRows + row] = random_complex;
 #endif
-        } // end of col
-      } // end of row
-    } // end of i
+        }  // end of col
+      }    // end of row
+    }      // end of i
 
 #ifdef DEBUG
     for (size_t i = 0; i < matrices; i++) {
@@ -162,10 +149,10 @@ int main(int argc, char *argv[]) {
       for (size_t row = 0; row < kRows; row++) {
         for (size_t col = 0; col < kColumns; col++) {
           std::cout << AMatrix[i * kAMatrixSize + col * kRows + row] << " ";
-        } // end of col
+        }  // end of col
         std::cout << std::endl;
-      } // end of row
-    } // end of i
+      }  // end of row
+    }    // end of i
 #endif
 
 #if defined(FPGA_EMULATOR)
@@ -176,15 +163,15 @@ int main(int argc, char *argv[]) {
     size_t reps = 32;
 #endif
     std::cout << "Running QR decomposition of " << matrices << " matri"
-         << ((matrices == 1) ? "x " : "ces ")
-         << ((reps > 1) ? "repeatedly" : "") << std::endl;
+              << ((matrices == 1) ? "x " : "ces ")
+              << ((reps > 1) ? "repeatedly" : "") << std::endl;
 
     // Launch the compute kernel and time the execution
     std::chrono::high_resolution_clock::time_point start_time =
-                                      std::chrono::high_resolution_clock::now();
+        std::chrono::high_resolution_clock::now();
     QRDecomposition(AMatrix, QMatrix, RMatrix, q, matrices, reps);
     std::chrono::high_resolution_clock::time_point end_time =
-                                      std::chrono::high_resolution_clock::now();
+        std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end_time - start_time;
     q.throw_asynchronous();
 
@@ -276,7 +263,7 @@ int main(int argc, char *argv[]) {
 
           // Compute transpose(Q) * Q at index i,j
           T QtQij{0};
-          if(i<kColumns){
+          if (i < kColumns) {
             for (size_t k = 0; k < kRows; k++) {
 #if COMPLEX == 0
               QtQij += QMatrixOP[k][i] * QMatrixOP[k][j];
@@ -288,8 +275,8 @@ int main(int argc, char *argv[]) {
 
           // Compute Q * transpose(Q) at index i,j
           T QQtij{0};
-          if(squareMatrices){
-            if(i<kColumns){
+          if (squareMatrices) {
+            if (i < kColumns) {
               for (size_t k = 0; k < kRows; k++) {
 #if COMPLEX == 0
                 QQtij += QMatrixOP[i][k] * QMatrixOP[j][k];
@@ -313,123 +300,112 @@ int main(int argc, char *argv[]) {
           bool RIsFinite;
 
 #if COMPLEX == 0
-          QREqA = abs(AMatrix[matrix * kAMatrixSize + j * kRows + i] - QRij)
-                  < kErrorThreshold;
+          QREqA = abs(AMatrix[matrix * kAMatrixSize + j * kRows + i] - QRij) <
+                  kErrorThreshold;
 
           QtQEqId = ((i == j) && (abs(QtQij - 1) < QOrthoErrorThreshold)) ||
                     ((i != j) && (abs(QtQij) < QOrthoErrorThreshold));
 
           QQtEqId = !squareMatrices ||
                     (((i == j) && (abs(QQtij - 1) < QOrthoErrorThreshold)) ||
-                    ((i != j) && (abs(QQtij) < QOrthoErrorThreshold)));
+                     ((i != j) && (abs(QQtij) < QOrthoErrorThreshold)));
 
-          RIsUpperTriang =  (i >= kColumns) ||
-                    ((i > j) && ((abs(RMatrixOP[i][j]) < kErrorThreshold) )) ||
-                            ((i <= j));
+          RIsUpperTriang =
+              (i >= kColumns) ||
+              ((i > j) && ((abs(RMatrixOP[i][j]) < kErrorThreshold))) ||
+              ((i <= j));
 
 #else
-          QREqA = (abs(AMatrix[matrix * kAMatrixSize + j * kRows + i].r()
-                                              - QRij.r()) < kErrorThreshold)
-                  && (abs(AMatrix[matrix * kAMatrixSize + j * kRows + i].i()
-                                              - QRij.i()) < kErrorThreshold);
+          QREqA = (abs(AMatrix[matrix * kAMatrixSize + j * kRows + i].r() -
+                       QRij.r()) < kErrorThreshold) &&
+                  (abs(AMatrix[matrix * kAMatrixSize + j * kRows + i].i() -
+                       QRij.i()) < kErrorThreshold);
 
-          QtQEqId = (
-                    ((i == j) && (abs(QtQij.r() - 1) < QOrthoErrorThreshold)) ||
-          (((i != j) || (j>=kRows)) && (abs(QtQij.r()) < QOrthoErrorThreshold))
-                    ) && (abs(QtQij.i()) < QOrthoErrorThreshold);
+          QtQEqId =
+              (((i == j) && (abs(QtQij.r() - 1) < QOrthoErrorThreshold)) ||
+               (((i != j) || (j >= kRows)) &&
+                (abs(QtQij.r()) < QOrthoErrorThreshold))) &&
+              (abs(QtQij.i()) < QOrthoErrorThreshold);
 
-          QQtEqId = !squareMatrices ||
-                    (
-                      (
-                    ((i == j) && (abs(QQtij.r() - 1) < QOrthoErrorThreshold)) ||
-          (((i != j) || (j>=kRows)) && (abs(QQtij.r()) < QOrthoErrorThreshold))
-                      )
-                      && (abs(QQtij.i()) < QOrthoErrorThreshold)
-                    );
+          QQtEqId =
+              !squareMatrices ||
+              ((((i == j) && (abs(QQtij.r() - 1) < QOrthoErrorThreshold)) ||
+                (((i != j) || (j >= kRows)) &&
+                 (abs(QQtij.r()) < QOrthoErrorThreshold))) &&
+               (abs(QQtij.i()) < QOrthoErrorThreshold));
 
-          RIsUpperTriang =  (i >= kColumns) ||
-                            (
-                              (i > j) &&
-                              (
-                                (abs(RMatrixOP[i][j].r()) < kErrorThreshold) &&
-                                (abs(RMatrixOP[i][j].i()) < kErrorThreshold)
-                              )
-                            )
-                            || (i <= j);
+          RIsUpperTriang =
+              (i >= kColumns) ||
+              ((i > j) && ((abs(RMatrixOP[i][j].r()) < kErrorThreshold) &&
+                           (abs(RMatrixOP[i][j].i()) < kErrorThreshold))) ||
+              (i <= j);
 
 #endif
 
-          RIsFinite = ((i < kColumns) && isFinite(RMatrixOP[i][j])) ||
-                      (i >= kColumns);
+          RIsFinite =
+              ((i < kColumns) && isFinite(RMatrixOP[i][j])) || (i >= kColumns);
 
           // If any of the checks failed
-          if (!QREqA ||
-              !QtQEqId ||
-              !QQtEqId ||
-              !RIsUpperTriang||
-              !isFinite(QRij)||
-              !isFinite(QtQij)||
-              !isFinite(QQtij)||
-              !RIsFinite
-            ) {
-
+          if (!QREqA || !QtQEqId || !QQtEqId || !RIsUpperTriang ||
+              !isFinite(QRij) || !isFinite(QtQij) || !isFinite(QQtij) ||
+              !RIsFinite) {
             // Increase the error count for this matrix
             errorCount++;
 
             // Continue counting the errors even if we now we are going to
             // produce an error
-            if(error){
+            if (error) {
               continue;
             }
 
-            if(!QREqA){
-              std::cout << "Error: A[" << i << "][" << j << "] = " <<
-                        AMatrix[matrix * kAMatrixSize + j * kRows + i]
+            if (!QREqA) {
+              std::cout << "Error: A[" << i << "][" << j << "] = "
+                        << AMatrix[matrix * kAMatrixSize + j * kRows + i]
                         << " but QR[" << i << "][" << j << "] = " << QRij
                         << std::endl;
             }
-            if(!QREqA) {
+            if (!QREqA) {
               std::cout << "The difference is greater than tolerated ("
                         << kErrorThreshold << ")" << std::endl;
             }
-            if(!QtQEqId || !QQtEqId) {
-              std::cout << "Q is not orthogonal at i " << i << " j " << j
-                        << ":" << std::endl
+            if (!QtQEqId || !QQtEqId) {
+              std::cout << "Q is not orthogonal at i " << i << " j " << j << ":"
+                        << std::endl
                         << " transpose(Q) * Q = " << QtQij << std::endl
                         << " Q * transpose(Q) =" << QQtij << std::endl;
               std::cout << "kQOrthoErrorThreshold = " << QOrthoErrorThreshold
                         << std::endl;
             }
-            if(!RIsUpperTriang) {
+            if (!RIsUpperTriang) {
               std::cout << "R is not upper triangular at i " << i << " j " << j
                         << ":" << std::endl
                         << " R = " << RMatrixOP[i][j] << std::endl;
             }
-            if(!isFinite(QRij)) {
+            if (!isFinite(QRij)) {
               std::cout << "QR[" << i << "][" << j << "] = " << QRij
                         << " is not finite" << std::endl;
             }
-            if(!isFinite(QtQij)) {
-              std::cout << "transpose(Q) * Q at i " << i << " j " << j
-                        << " = " << QtQij << " is not finite" << std::endl;
+            if (!isFinite(QtQij)) {
+              std::cout << "transpose(Q) * Q at i " << i << " j " << j << " = "
+                        << QtQij << " is not finite" << std::endl;
             }
-            if(!isFinite(QQtij)) {
-              std::cout << "Q * transpose(Q) at i " << i << " j " << j
-                        << " = " << QQtij << " is not finite" << std::endl;
+            if (!isFinite(QQtij)) {
+              std::cout << "Q * transpose(Q) at i " << i << " j " << j << " = "
+                        << QQtij << " is not finite" << std::endl;
             }
-            if(!RIsFinite) {
+            if (!RIsFinite) {
               std::cout << "R[" << i << "][" << j << "] = " << RMatrixOP[i][j]
                         << " is not finite" << std::endl;
             }
             error = true;
           }
-        } // end of j
-      } // end of i
+        }  // end of j
+      }    // end of i
 
       if (errorCount > 0) {
         std::cout << std::endl << "FAILED" << std::endl;
-        std::cout << std::endl << "!!!!!!!!!!!!!! " << errorCount << " errors"
-                  << std::endl;
+        std::cout << std::endl
+                  << "!!!!!!!!!!!!!! " << errorCount << " errors" << std::endl;
         return 1;
       }
     }
@@ -440,28 +416,29 @@ int main(int argc, char *argv[]) {
   } catch (sycl::exception const &e) {
     std::cerr << "Caught a synchronous SYCL exception: " << e.what()
               << std::endl;
-    std::cerr <<  "   If you are targeting an FPGA hardware, "
-                  "ensure that your system is plugged to an FPGA board that is "
-                  "set up correctly"
+    std::cerr << "   If you are targeting an FPGA hardware, "
+                 "ensure that your system is plugged to an FPGA board that is "
+                 "set up correctly"
               << std::endl;
-    std::cerr <<  "   If you are targeting the FPGA emulator, compile with "
-                  "-DFPGA_EMULATOR"
+    std::cerr << "   If you are targeting the FPGA emulator, compile with "
+                 "-DFPGA_EMULATOR"
               << std::endl;
 
     std::terminate();
   } catch (std::bad_alloc const &e) {
     std::cerr << "Caught a memory allocation exception on the host: "
               << e.what() << std::endl;
-    std::cerr <<  "   You can reduce the memory requirement by reducing the "
-                  "number of matrices generated. Specify a smaller number when "
-                  "running the executable."
+    std::cerr << "   You can reduce the memory requirement by reducing the "
+                 "number of matrices generated. Specify a smaller number when "
+                 "running the executable."
               << std::endl;
     std::cerr << "   In this run, more than "
               << ((long long)matrices * (kAMatrixSize + kQRMatrixSize) *
-                  sizeof(float)) / pow(2, 30)
+                  sizeof(float)) /
+                     pow(2, 30)
               << " GBs of memory was requested for " << matrices
               << " matrices, each of size " << kRows << " x " << kColumns
               << std::endl;
     std::terminate();
   }
-} // end of main
+}  // end of main
