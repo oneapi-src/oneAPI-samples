@@ -130,8 +130,9 @@ You can modify the computation size by adjusting the size parameter
    N = m_size / 4;
    P = m_size / 2;
 
-### Example of Output
-#### DPC++
+## Example of Output
+
+### DPC++
 ```
  ./matrix_mul_dpc
 Running on device: Intel(R) Gen9 HD Graphics NEO
@@ -139,7 +140,7 @@ Problem size: c(150,600) = a(150,300) * b(300,600)
 Result of matrix multiplication using DPC++: Success - The results are correct!
 ```
 
-#### OpenMP
+### OpenMP
 ```
 ./matrix_mul_omp
 Problem size: c(150,600) = a(150,300) * b(300,600)
@@ -148,3 +149,6 @@ The default device id: 0
 Result of matrix multiplication using OpenMP: Success - The results are correct!
 Result of matrix multiplication using GPU offloading: Success - The results are correct!
 ```
+
+## Additional Samples
+-- Text --
