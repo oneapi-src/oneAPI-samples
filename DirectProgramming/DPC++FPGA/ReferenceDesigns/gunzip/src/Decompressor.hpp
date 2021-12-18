@@ -379,20 +379,10 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       HuffmanData out_data;
 
       // CONSIDERATION:
-      //  enum can go as low as 8-bits using an unsigned char
-      //  using custom ac_int for states uses less bits
-      //  tried both, not noticeable different in reports.
-      //  Maybe try seed sweep with both?
-      /*
-      #define S_SYMBOL 0
-      #define S_EXTRARUNLENGTHBITS 1
-      #define S_DISTANCESYMBOL 2
-      #define S_EXTRADISTANCEBITS 3
-      #define S_DONE 4
-      ac_int<3, false> state = S_SYMBOL;
-      */
+      //  enum lowest enum can go is 8 bits. Could use an ac_int<2, false> here
+      //  but is it really worth it? Quartus likely sweeps these away.
       enum BlockParsingState : unsigned char {
-        Symbol, ExtraRunLengthBits, DistanceSymbol, ExtraDistanceBits, Done
+        Symbol, ExtraRunLengthBits, DistanceSymbol, ExtraDistanceBits
       };
       BlockParsingState state = Symbol;
 
