@@ -397,7 +397,8 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       BlockParsingState state = Symbol;
 
       // main processing loop
-      ac_int<9, false> symbol;
+      ac_int<9, false> lit_symbol;
+      ac_int<5, false> dist_symbol;
       do {
         // TODO: make this if then if, rather than if-elseif
         if (bbs.HasSpaceForByte() && !done_reading) {
@@ -463,50 +464,41 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             }
 
             // lookup symbol using base_idx and offset
-            auto lit_symbol = lit_map[base_idx + offset];
-            auto dist_symbol =  dist_map[base_idx + offset];
-
-            // Cannot use ternary operator here:
-            //    https://hsdes.intel.com/appstore/article/#/14015701798
-            if (state == Symbol) {
-              symbol = lit_symbol;
-            } else {
-              symbol = dist_symbol;
-            }
-            //symbol = (state == Symbol) ? lit_symbol : dist_symbol;
+            lit_symbol = lit_map[base_idx + offset];
+            dist_symbol =  dist_map[base_idx + offset];
 
             // shift by however many bits we matched
             bbs.Shift(shortest_match_len);
 
             // TODO: can we precompute the compares on symbol?
-            if (symbol == 256) {
-              stop_code_hit = true;
-              out_ready = false;
-              state = ExtraDistanceBits;
-            } else if (state == Symbol) {
-              if (symbol < 256) {
-                out_data.len_or_sym = symbol;
+            if (state == Symbol) {
+              if (lit_symbol == 256) {
+                stop_code_hit = true;
+                out_ready = false;
+                state = ExtraDistanceBits;
+              } else if (lit_symbol < 256) {
+                out_data.len_or_sym = lit_symbol;
                 out_data.dist_or_flag = -1;
                 out_ready = true;
                 state = Symbol;
-              } else if (symbol <= 264) {
-                out_data.len_or_sym = symbol - 254;
+              } else if (lit_symbol <= 264) {
+                out_data.len_or_sym = lit_symbol - 254;
                 state = DistanceSymbol;
-              } else if (symbol <= 284) {
-                num_extra_bits = (symbol - 261) / 4;
+              } else if (lit_symbol <= 284) {
+                num_extra_bits = (lit_symbol - 261) / 4;
                 state = ExtraRunLengthBits;
-              } else if (symbol == 285) {
+              } else if (lit_symbol == 285) {
                 out_data.len_or_sym = 258;
                 state = DistanceSymbol;
               } // else error, ignored
             } else if (state == DistanceSymbol) {
-              if (symbol <= 3) {
-                out_data.dist_or_flag = symbol + 1;
+              if (dist_symbol <= 3) {
+                out_data.dist_or_flag = dist_symbol + 1;
                 state = Symbol;
                 out_ready = true;
               } else {
                 // NOTE: should be <= 29, but not doing error checking
-                num_extra_bits = (symbol / 2) - 1;
+                num_extra_bits = (dist_symbol / 2) - 1;
                 state = ExtraDistanceBits;
               }
             }
@@ -516,10 +508,10 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               bbs.Shift(num_extra_bits);
 
               if (state == ExtraRunLengthBits) {
-                out_data.len_or_sym = (((symbol - 265) % 4 + 4) << num_extra_bits) + 3 + extra_bits;
+                out_data.len_or_sym = (((lit_symbol - 265) % 4 + 4) << num_extra_bits) + 3 + extra_bits;
                 state = DistanceSymbol;
               } else if (state == ExtraDistanceBits) {
-                out_data.dist_or_flag = ((symbol % 2 + 2) << num_extra_bits) + 1 + extra_bits;
+                out_data.dist_or_flag = ((dist_symbol % 2 + 2) << num_extra_bits) + 1 + extra_bits;
                 out_ready = true;
                 state = Symbol;
               }
