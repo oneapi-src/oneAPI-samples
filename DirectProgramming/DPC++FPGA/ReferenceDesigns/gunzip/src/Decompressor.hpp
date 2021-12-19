@@ -408,7 +408,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             ac_int<15, false> next_bits = bbs.ReadUInt15();
 
             // find all possible code lengths and offsets
-            bool codelen_valid_bitmap[15];  // TODO: use ac_int here?
+            // TODO: get rid of selects here for literal vs distance symbol
+            // and just look stuff up in parallel
+            bool codelen_valid_bitmap[15];
             ac_int<9, false> codelen_offset[15];
             ac_int<9, false> codelen_base_idx[15];
             #pragma unroll

@@ -32,7 +32,7 @@ static_assert(fpga_tools::IsPow2(kBufferSizeBits));
 //
 class ByteBitStream {
 public:
-  ByteBitStream() : widx_(0), ridx_(0), size_(0) {}
+  ByteBitStream() : widx_(0), ridx_(0), size_(0), space_(kBufferSizeBits) {}
 
   unsigned short ReadUInt(unsigned char bits) {
     ac_int<kMaxReadBits, false> tmp = 0;
@@ -58,28 +58,28 @@ public:
     // TODO: percompute these calculations
     ridx_ = (ridx_ + bits) & kBufferSizeBitsMask;
     size_ -= bits;
+    space_ += bits;
   }
 
   unsigned short Size() {
     return size_;
   }
 
-  unsigned short Empty() {
-    // TODO: precompute this compare
-    return Size() == 0;
+  unsigned short Space() {
+    return space_;
+  }
+
+  bool Empty() {
+    // TODO: precompute
+    return size_ == 0;
   }
 
   bool HasEnoughBits(unsigned char bits) {
     return Size() >= bits;
   }
 
-  unsigned short Space() {
-    // TODO: precompute this calculation
-    return (kBufferSizeBits - Size());
-  }
-
   bool HasSpaceForByte() {
-    // TODO: precompute this compare
+    // TODO: precompute
     return Space() >= 8; 
   }
 
@@ -93,14 +93,16 @@ public:
     // move the write index
     widx_ = (widx_ + 8) & kBufferSizeBitsMask;
     size_ += 8;
+    space_ -= 8;
   }
 
 private:
-  // TODO: unsigned char here for indices and size?
-  // TODO: validate unsigned char is enough bits?
   ac_int<kBufferSizeBits, false> buf_;
-  unsigned short widx_, ridx_;
-  short size_;
+
+  // TODO: use ac_int here for exact number of bits needed?
+  unsigned char widx_, ridx_;
+  unsigned char size_, space_;
+  static_assert(std::numeric_limits<unsigned char>::max() > kBufferSizeBits);
 
   void PrintBuffer() {
     PRINTF("%hu: ", Size());
