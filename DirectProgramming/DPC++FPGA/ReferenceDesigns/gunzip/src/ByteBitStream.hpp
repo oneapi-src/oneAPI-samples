@@ -35,29 +35,23 @@ public:
   ByteBitStream() : widx_(0), ridx_(0), size_(0) {}
 
   unsigned short ReadUInt(unsigned char bits) {
-    unsigned short result = 0;
+    ac_int<kMaxReadBits, false> tmp = 0;
     #pragma unroll
     for (unsigned char i = 0; i < kMaxReadBits; i++) {
-      unsigned short the_bit =
-        (buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1);
-      unsigned short val = (i < bits) ? (the_bit << i) : 0;
-      result |= val;
+      tmp[i] = (i < bits) ? (buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1) : 0;
     }
 
-    return result;
+    return (unsigned short)tmp;
   }
 
   unsigned short ReadUInt15() {
-    // TODO: can we always have the next 15 bits ready to go??
-    unsigned short result = 0;
+    ac_int<15, false> tmp = 0;
     #pragma unroll
     for (unsigned char i = 0; i < 15; i++) {
-      unsigned short the_bit = (buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1);
-      unsigned short val = (the_bit << i);
-      result |= val;
+      tmp[i] = buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1;
     }
 
-    return result;
+    return (unsigned short)tmp;
   }
 
   void Shift(unsigned char bits) {
