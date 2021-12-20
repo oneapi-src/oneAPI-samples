@@ -1,4 +1,4 @@
-# Memory Channels 
+# Global Memory Channels 
 This FPGA tutorial demonstrates how to use the `mem_channel` buffer property in
 conjuction with the `-Xsno-interleaving` flag to reduce the area consumed by a
 DPC++ FPGA design.
@@ -244,10 +244,14 @@ to 12h.
      ``` 
 
 *Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005
-(with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware
-on Windows* requires a third-party or custom Board Support Package (BSP) with
-Windows* support.
- 
+(with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA
+hardware on Windows* requires a third-party or custom Board Support Package
+(BSP) with Windows* support.<br>
+*Note:* If you encounter any issues with long paths when compiling under
+Windows*, you may have to create your ‘build’ directory in a shorter path, for
+example c:\samples\build.  You can then run cmake from that directory, and
+provide cmake with the full path to your sample directory. 
+
 ### In Third-Party Integrated Development Environments (IDEs)
 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the
