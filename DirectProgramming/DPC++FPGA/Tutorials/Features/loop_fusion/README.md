@@ -18,10 +18,10 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 
 ## Purpose
-In order to understand and apply loop fusion to loops in your design, it is necessary to understand the motivation and consequences of loop fusion. Unlike many attributes that can improve a design's performance, loop fusion may have functional implications. Using it incorrectly may result in functionally-incorrect behavior for your design!
+In order to understand and apply loop fusion to loops in your design, it is necessary to understand the motivation and consequences of loop fusion. 
 
 ### Loop Fusion
-Loop fusion is a compiler transformation in which adjacent loops are merged into a single loop over the same index range. This transformation is typically applied to reduce loop overhead and improve runtime performance. Loop control structures represent a significant area overhead on designs produced by the Intel® oneAPI DPC++ compiler. Fusing two loops into one loop reduces the number of required loop-control structures, which reduces overhead.
+Loop fusion is a compiler transformation in which adjacent loops are merged into a single loop over the same index range. This transformation is typically applied to reduce loop overhead and improve runtime performance. Loop control structures can represent a significant area overhead on designs produced by the Intel® oneAPI DPC++ compiler. Fusing two loops into one loop reduces the number of required loop-control structures, which reduces overhead.
  
 In addition, fusing outer loops can introduce concurrency where there was previously none. Consider two adjacent loops L<sub>j</sub> and L<sub>k</sub>. Within each loop, independent operations can be run concurrently, but concurrency cannot be attained <i>across</i> the loops. Combining the bodies of L<sub>j</sub> and L<sub>k</sub> forms a single loop L<sub>f</sub> with a body that spans the bodies of L<sub>j</sub> and L<sub>k</sub>. In the combined loops, concurrency can be attained for independent instructions which were formerly in separate loops. In effect, the two loops now execute as one in L<sub>f</sub> in a lockstep fashion, providing possible latency improvements.
 
@@ -162,8 +162,9 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      nmake fpga
      ``` 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
- 
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
+*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+
  ### In Third-Party Integrated Development Environments (IDEs)
 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
@@ -233,9 +234,9 @@ In addition, fusing outer loops can introduce concurrency where there was previo
 
 #### Default Loop Fusion
 
-The Intel® oneAPI DPC++ compiler attempts to fuse adjacent loops by default when profitable and memory dependencies allow. For example, the compiler will not fuse loops by default when two adjacent loops have unequal trip counts, if only one of the two loops has stall-free logic, or if only one of the two loops is tagged with the `intel::ivdep` attribute. The `intel::nofusion` attribute should be applied to a loop to tell the compiler not to fuse that loop with others.
+The Intel® oneAPI DPC++ compiler attempts to fuse adjacent loops by default when profitable and memory dependencies allow.  The `intel::nofusion` attribute should be applied to a loop to tell the compiler not to fuse that loop with others.
 
-#### Manual Loop Fusion
+#### Explicit Loop Fusion
 Compiler loop fusion profitability heuristics can be overridden using the `fpga_loop_fuse<N>(f)` function. The `fpga_loop_fuse<N>(f)` function takes a function `f` containing loops, and an optional unsigned template parameter `N`, which specifies the number of nesting depths in which fusion should be performed. The default number of nesting depths is `N=1`.
 
 For example, consider a function `f` containing the following loops:
@@ -253,11 +254,9 @@ for (...) { // L_21
 ```
 When `N=1`, `fpga_loop_fuse<N>(f)` tells the compiler to fuse L<sub>11</sub> with L<sub>21</sub>, but not L<sub>12</sub> with L<sub>22</sub>. When `N=2`, `fpga_loop_fuse<N>(f)` tells the compiler to fuse L<sub>11</sub> with L<sub>21</sub>, and L<sub>12</sub> with L<sub>22</sub>. 
 
-#### Negative-Distance Dependencies
+#### Overriding Compiler Memory Checks
 
 The case when there are two adjacent loops L<sub>j</sub> and L<sub>k</sub>, and iteration *m* of L<sub>k</sub> depends on iteration *n* > *m* of L<sub>j</sub> is known as a *negative-distance dependency*.  A negative-distance dependency cannot be fulfilled when loop fusion is performed. The Intel® oneAPI DPC++ compiler will therefore not fuse loops that are believed to have a negative-distance dependency, even when the `fpga_loop_fuse<N>(f)` function is used. 
-
-#### Overriding Compiler Memory Checks
 
 The compiler may conservatively not fuse a pair of loops due to a suspected memory dependency when such a dependency may not exist. In this situation the compiler can be told to ignore memory safety checks by using the `fpga_loop_fuse_independent<N>(f)` function. This function requires the same parameters as the `fpga_loop_fuse<N>(f)` function. 
 
