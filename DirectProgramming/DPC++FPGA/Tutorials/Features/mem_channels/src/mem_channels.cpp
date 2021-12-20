@@ -25,16 +25,16 @@ class VecAdd;
 event runVecAdd(sycl::queue &q, const std::vector<int> &a_vec,
                 const std::vector<int> &b_vec, const std::vector<int> &c_vec,
                 std::vector<int> &sum_vec) {
-#if defined(NO_INTERLEAVING)
+#if defined(NO_INTERLEAVING) && defined(TWO_CHANNELS)
   buffer a_buf(a_vec, {property::buffer::mem_channel{1}});
   buffer b_buf(b_vec, {property::buffer::mem_channel{2}});
-#if defined(FOUR_CHANNELS)
-  buffer c_buf(c_vec, {property::buffer::mem_channel{3}});
-  buffer sum_buf(sum_vec, {property::buffer::mem_channel{4}}); 
-#else
   buffer c_buf(c_vec, {property::buffer::mem_channel{1}});
-  buffer sum_buf(sum_vec, {property::buffer::mem_channel{2}});
-#endif
+  buffer sum_buf(sum_vec, {property::buffer::mem_channel{2}}); 
+#elif defined(NO_INTERLEAVING) && defined(FOUR_CHANNELS)
+  buffer a_buf(a_vec, {property::buffer::mem_channel{1}});
+  buffer b_buf(b_vec, {property::buffer::mem_channel{2}});
+  buffer c_buf(c_vec, {property::buffer::mem_channel{3}});
+  buffer sum_buf(sum_vec, {property::buffer::mem_channel{4}});
 #else
   buffer a_buf(a_vec);
   buffer b_buf(b_vec);

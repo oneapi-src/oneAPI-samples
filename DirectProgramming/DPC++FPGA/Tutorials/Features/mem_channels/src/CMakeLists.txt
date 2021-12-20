@@ -32,6 +32,12 @@ set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
+if (FPGA_BOARD STREQUAL "intel_a10gx_pac:pac_a10")
+  set(NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS "-DNO_INTERLEAVING -DTWO_CHANNELS")
+elseif (FPGA_BOARD STREQUAL "intel_s10sx_pac:pac_s10")
+  set(NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS "-DNO_INTERLEAVING -DFOUR_CHANNELS")
+endif()
+
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
@@ -59,13 +65,9 @@ add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE_INTERLEAVING} ${FPGA_EARLY_I
 set_target_properties(${FPGA_EARLY_IMAGE_INTERLEAVING} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
 
-if (FPGA_BOARD STREQUAL "intel_a10gx_pac:pac_a10")
-  set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DNO_INTERLEAVING")
-else()
-  set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DNO_INTERLEAVING -DFOUR_CHANNELS")
-endif()
-set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -Xsno-interleaving=default -fsycl-link=early")
-# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
+set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} ${NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -Xsno-interleaving=DDR -fsycl-link=early")
+#fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
 ### FPGA Hardware
@@ -82,9 +84,5 @@ set_target_properties(${FPGA_TARGET_INTERLEAVING} PROPERTIES COMPILE_FLAGS "${HA
 set_target_properties(${FPGA_TARGET_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_INTERLEAVING}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
 # See DPC++FPGA/GettingStarted/fast_recompile for details.
-if (FPGA_BOARD STREQUAL "intel_a10gx_pac:pac_a10")
-  set_target_properties(${FPGA_TARGET_NO_INTERLEAVING} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DNO_INTERLEAVING")
-else()
-    set_target_properties(${FPGA_TARGET_NO_INTERLEAVING} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DNO_INTERLEAVING -DFOUR_CHANNELS")
-endif()
-set_target_properties(${FPGA_TARGET_NO_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -Xsno-interleaving=default -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_NO_INTERLEAVING}")
+set_target_properties(${FPGA_TARGET_NO_INTERLEAVING} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} ${NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_TARGET_NO_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -Xsno-interleaving=DDR -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_NO_INTERLEAVING}")
