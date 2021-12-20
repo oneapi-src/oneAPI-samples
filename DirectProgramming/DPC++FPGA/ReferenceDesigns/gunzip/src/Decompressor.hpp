@@ -462,43 +462,55 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             // shift by however many bits we matched
             bbs.Shift(shortest_match_len);
 
-            // TODO: can we precompute the compares on symbol?
             if (state == Symbol) {
+              // currently parsing a symbol or length (same table)
               if (lit_symbol == 256) {
+                // stop code hit, done this block
                 stop_code_hit = true;
                 out_ready = false;
                 state = ExtraDistanceBits;
               } else if (lit_symbol < 256) {
+                // decoded a regular character
                 out_data.len_or_sym = lit_symbol;
                 out_data.dist_or_flag = -1;
                 out_ready = true;
                 state = Symbol;
               } else if (lit_symbol <= 264) {
+                // decoded a length with a static value
                 out_data.len_or_sym = lit_symbol - 254;
                 state = DistanceSymbol;
               } else if (lit_symbol <= 284) {
+                // decoded a length with a dynamic value
                 num_extra_bits = (lit_symbol - 261) / 4;
                 state = ExtraRunLengthBits;
               } else if (lit_symbol == 285) {
+                // decoded a length with a static value
                 out_data.len_or_sym = 258;
                 state = DistanceSymbol;
               } // else error, ignored
             } else if (state == DistanceSymbol) {
+              // currently decoding a distance symbol
               if (dist_symbol <= 3) {
+                // decoded a distance with a static value
                 out_data.dist_or_flag = dist_symbol + 1;
                 state = Symbol;
                 out_ready = true;
               } else {
+                // decoded a distance with a dynamic value
                 // NOTE: should be <= 29, but not doing error checking
                 num_extra_bits = (dist_symbol / 2) - 1;
                 state = ExtraDistanceBits;
               }
             }
           } else {
+            // decoding "extra" bits for either a length ot distance
             if (bbs.Size() >= num_extra_bits) {
+              // read the extra bits and shift
               unsigned short extra_bits = bbs.ReadUInt(num_extra_bits);
               bbs.Shift(num_extra_bits);
 
+              // compute the length or distance based on the original symbol
+              // ('lit_symbol' or 'distance_symbol') and the bits we read.
               if (state == ExtraRunLengthBits) {
                 out_data.len_or_sym = (((lit_symbol - 265) % 4 + 4) << num_extra_bits) + 3 + extra_bits;
                 state = DistanceSymbol;
