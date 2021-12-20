@@ -1,8 +1,8 @@
 # To see a Makefile equivalent of this build system:
 # https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
 
-set(SOURCE_FILE mem_channels.cpp)
-set(TARGET_NAME mem_channels)
+set(SOURCE_FILE mem_channel.cpp)
+set(TARGET_NAME mem_channel)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET_INTERLEAVING ${TARGET_NAME}_interleaving.fpga)
 set(FPGA_TARGET_NO_INTERLEAVING ${TARGET_NAME}_no_interleaving.fpga)
@@ -42,10 +42,10 @@ endif()
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR mem_channels.cpp -o mem_channels.fpga_emu
+#    dpcpp -fintelfpga -DFPGA_EMULATOR mem_channel.cpp -o mem_channel.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o mem_channels.cpp.o -c mem_channels.cpp
-#    [link]    dpcpp -fintelfpga mem_channels.cpp.o -o mem_channels.fpga_emu
+#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o mem_channel.cpp.o -c mem_channel.cpp
+#    [link]    dpcpp -fintelfpga mem_channel.cpp.o -o mem_channel.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
@@ -55,7 +55,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early mem_channels.cpp -o mem_channels_report.a
+#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early mem_channel.cpp -o mem_channel_report.a
 set(FPGA_EARLY_IMAGE_INTERLEAVING ${TARGET_NAME}_interleaving_report.a)
 set(FPGA_EARLY_IMAGE_NO_INTERLEAVING ${TARGET_NAME}_no_interleaving_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
@@ -73,10 +73,10 @@ set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES LINK_FLAGS 
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> mem_channels.cpp -o mem_channels.fpga
+#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> mem_channel.cpp -o mem_channel.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o mem_channels.cpp.o -c mem_channels.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> mem_channels.cpp.o -o mem_channels.fpga
+#   [compile] dpcpp -fintelfpga -o mem_channel.cpp.o -c mem_channel.cpp
+#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> mem_channel.cpp.o -o mem_channel.fpga
 add_executable(${FPGA_TARGET_INTERLEAVING} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_executable(${FPGA_TARGET_NO_INTERLEAVING} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET_INTERLEAVING} ${FPGA_TARGET_NO_INTERLEAVING})

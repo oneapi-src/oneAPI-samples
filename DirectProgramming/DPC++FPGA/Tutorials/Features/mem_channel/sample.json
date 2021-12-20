@@ -17,9 +17,9 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/mem_channels",
+          "cmake ../Tutorials/Features/mem_channel",
           "make fpga_emu",
-          "./mem_channels.fpga_emu"
+          "./mem_channel.fpga_emu"
         ]
       },
       {
@@ -29,7 +29,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/mem_channels",
+          "cmake ../Tutorials/Features/mem_channel",
           "make report"
         ]
       }
@@ -42,9 +42,9 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channels",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channel",
           "nmake fpga_emu",
-          "mem_channels.fpga_emu.exe"
+          "mem_channel.fpga_emu.exe"
         ]
       },
       {
@@ -54,7 +54,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channels",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channel",
           "nmake report"
         ]
       }

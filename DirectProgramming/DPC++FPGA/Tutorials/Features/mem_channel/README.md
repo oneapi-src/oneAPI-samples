@@ -133,7 +133,7 @@ for details.
 Third party program Licenses can be found here:
 [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `mem_channels` Tutorial
+## Building the `mem_channel` Tutorial
 
 ### Include Files
 The included header `dpc_common.hpp` is located at
@@ -195,7 +195,7 @@ to 12h.
 3. (Optional) As the above hardware compile may take several hours to complete,
    FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be
    downloaded <a
-   href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/mem_channels.fpga.tar.gz"
+   href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/mem_channel.fpga.tar.gz"
    download>here</a>.
 
 ### On a Windows* System
@@ -257,8 +257,8 @@ IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow
 
 
 ## Examining the Reports
-Locate the pair of `report.html` files in the `mem_channels_interleaving.prj`
-and `mem_channels_no_interleaving.prj` directories. Open the reports in any of
+Locate the pair of `report.html` files in the `mem_channel_interleaving.prj`
+and `mem_channel_no_interleaving.prj` directories. Open the reports in any of
 Chrome*, Firefox*, Edge*, or Internet Explorer*. In the "Summary" tab, locate
 the "Quartus Fitter Resource Utilization Summary" entry and expand it to see
 the table showing the FPGA resources that were allocated for the design. Notice
@@ -270,21 +270,21 @@ significantly lower than the case where burst-interleaving is enabled.
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
-     ./mem_channels.fpga_emu     (Linux)
-     mem_channels.fpga_emu.exe   (Windows)
+     ./mem_channel.fpga_emu     (Linux)
+     mem_channel.fpga_emu.exe   (Windows)
      ```
     Note that the `mem_channel` property and the `-Xsno-interleaving` flag have
     no impact on the emulator which is why we only have a single executable for
     this flow.
 2. Run the sample on the FPGA device (two executables should be generated):
      ```
-     ./mem_channels_interleaving.fpga         (Linux)
-     ./mem_channels_no_interleaving.fpga         (Linux)
+     ./mem_channel_interleaving.fpga         (Linux)
+     ./mem_channel_no_interleaving.fpga         (Linux)
      ```
 
 ### Example of Output
 
-Running `./mem_channels_interleaving.fpga`:
+Running `./mem_channel_interleaving.fpga`:
 ```
 Vector size: 100000 
 Verification PASSED
@@ -293,7 +293,7 @@ Kernel execution time: 0.004004 seconds
 Kernel throughput 749.230914 MB/s
 ```
 
-Running `./mem_channels_no_interleaving.fpga`:
+Running `./mem_channel_no_interleaving.fpga`:
 ```
 Vector size: 100000 
 Verification PASSED
