@@ -82,10 +82,6 @@ The `mem_channel` property has no effect if used without the
 buffers that don't have the `mem_channel` property will all be allocated in
 channel `1`.
 
-For FPGA boards that have multiple memory types, it is possible to select which
-memory you want to disable burst-interleaving for by passing the memory type to
-the `-Xsno-interleaving` flag: `-Xsno-interleaving=<global_memory_type>`. 
-
 An important observation is that the `mem_channel` property is a runtime
 specification which means you can change the selected channel ID for each
 buffer without having to recompile the device code. In other words, when you
