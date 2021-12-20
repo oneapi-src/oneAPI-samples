@@ -13,9 +13,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../Tutorials/Features/read_only_cache",
           "make fpga_emu",
           "./read_only_cache.fpga_emu"
         ]
@@ -23,9 +25,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake ../Tutorials/Features/read_only_cache",
           "make report"
         ]
       }
@@ -34,9 +38,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/read_only_cache",
           "nmake fpga_emu",
           "read_only_cache.fpga_emu.exe"
         ]
@@ -44,9 +50,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/read_only_cache",
           "nmake report"
         ]
       }
