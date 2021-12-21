@@ -1,41 +1,38 @@
 #pragma once
-#include "Tuple.hpp"
-#include "Utils.hpp"
-#include "UnrolledLoop.hpp"
+#include "tuple.hpp"
+#include "utils.hpp"
+#include "unrolled_loop.hpp"
 
 
 /*
   Forward declarations for the StreamingQRD function
 */
 namespace qrd_internal {
-template <typename T, bool isComplex, int rows, int columns, int pipeElemSize,
-          typename AIn>
-inline void readPipeAndWriteA(
-    NTuple<typename std::conditional<isComplex, ac_complex<T>, T>::type, rows>
-        *ALoad);
+template <bool is_complex, int rows, int columns, int pipe_size, typename AIn, 
+          typename T,
+          typename TT = std::conditional_t<is_complex, ac_complex<T>, T>>
+inline void ReadPipeAndWriteA(NTuple<TT, rows> *a_load);
 
-template <typename T, bool isComplex, int rows, int columns, int pipeElemSize,
-          typename QOut>
-inline void readQAndWriteToPipe(
-    NTuple<typename std::conditional<isComplex, ac_complex<T>, T>::type, rows>
-        *QResult);
+template <bool is_complex, int rows, int columns, int pipe_size, typename QOut,
+          typename T, 
+          typename TT = std::conditional_t<is_complex, ac_complex<T>, T>>
+inline void ReadQAndWriteToPipe(NTuple<TT, rows> *q_result);
 
-template <typename T, bool isComplex, int columns, int pipeElemSize,
-          typename ROut>
-inline void readRAndWriteToPipe(
-    typename std::conditional<isComplex, ac_complex<T>, T>::type
-        RResult[(columns * (columns + 1) / 2) / pipeElemSize][pipeElemSize],
-    typename std::enable_if<((columns * (columns + 1) / 2) % pipeElemSize) ==
-                            0>::type * = 0);
+template <bool is_complex, int columns, int pipe_size, typename ROut, 
+          typename T, 
+          typename TT = std::conditional_t<is_complex, ac_complex<T>, T>>
+inline void ReadRAndWriteToPipe(
+    TT r_result[(columns * (columns + 1) / 2) / pipe_size][pipe_size],
+    typename std::enable_if_t<((columns * (columns + 1) / 2) % pipe_size) 
+                                                                  == 0> * = 0);
 
-template <typename T, bool isComplex, int columns, int pipeElemSize,
-          typename ROut>
-inline void readRAndWriteToPipe(
-    typename std::conditional<isComplex, ac_complex<T>, T>::type
-        RResult[((columns * (columns + 1) / 2) / pipeElemSize) + 1]
-               [pipeElemSize],
-    typename std::enable_if<((columns * (columns + 1) / 2) % pipeElemSize) !=
-                            0>::type * = 0);
+template <bool is_complex, int columns, int pipe_size, typename ROut, 
+          typename T, 
+          typename TT = std::conditional_t<is_complex, ac_complex<T>, T>>
+inline void ReadRAndWriteToPipe(
+  TT r_result[((columns * (columns + 1) / 2) / pipe_size) + 1][pipe_size],
+  typename std::enable_if_t<((columns * (columns + 1) / 2) % pipe_size) !=
+                            0> * = 0);
 }  // end of namespace qrd_internal
 
 /*
@@ -53,11 +50,11 @@ inline void readRAndWriteToPipe(
   Then input and output matrices are consumed/produced from/to pipes.
 */
 template <typename T,        // The datatype for the computation
-          bool isComplex,    // True if T is ac_complex<X>
+          bool is_complex,   // True if T is ac_complex<X>
           int rows,          // Number of rows in the incoming A matrices
           int columns,       // Number of columns in the incoming A
                              // matrices, must be <= rows
-          int RAWLatency,    // Read after write latency (in iterations) of
+          int raw_latency,    // Read after write latency (in iterations) of
                              // the triangular loop of this function.
                              // This value depends on the FPGA target, the
                              // datatype, the target frequency, etc.
@@ -67,15 +64,15 @@ template <typename T,        // The datatype for the computation
                              // In general, find a high value for which the
                              // compiler is able to achieve an II of 1 and
                              // go down from there.
-          int matrixCount,   // Number of matrices to read from the input
+          int matrix_count,  // Number of matrices to read from the input
                              // pipe sequentially
-          int pipeElemSize,  // Number of elements read/write per pipe
+          int pipe_size,     // Number of elements read/write per pipe
                              // operation
-          typename AIn,      // A matrix input pipe, receive pipeElemSize
+          typename AIn,      // A matrix input pipe, receive pipe_size
                              // elements from the pipe with each read
-          typename QOut,     // Q matrix output pipe, send pipeElemSize
+          typename QOut,     // Q matrix output pipe, send pipe_size
                              // elements to the pipe with each write
-          typename ROut      // R matrix output pipe, send pipeElemSize
+          typename ROut      // R matrix output pipe, send pipe_size
                              // elements to the pipe with each write.
                              // Only upper-right elements of R are
                              // sent in row order, starting with row 0.
@@ -117,11 +114,11 @@ struct StreamingQRD {
     */
 
     // Set the computation type to T or ac_complex<T> depending on the value
-    // of isComplex
-    typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
+    // of is_complex
+    using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
 
     // Type used to store the matrices in the compute loop
-    using ColumnTuple = NTuple<TT, rows>;
+    using column_tuple = NTuple<TT, rows>;
 
     // Number of upper-right elements in the R output matrix
     constexpr int kRMatrixSize = columns * (columns + 1) / 2;
@@ -130,17 +127,17 @@ struct StreamingQRD {
     // Number of signal replication required to cover all the rows compute cores
     // given a kFanoutReduction factor
     constexpr int kBanksForFanout = (rows % kFanoutReduction)
-                                        ? (rows / kFanoutReduction) + 1
-                                        : rows / kFanoutReduction;
+                                    ? (rows / kFanoutReduction) + 1
+                                    : rows / kFanoutReduction;
 
     // Number of iterations performed without any dummy work added for the
     // triangular loop optimization
-    constexpr int kVariableIterations = columns - RAWLatency;
+    constexpr int kVariableIterations = columns - raw_latency;
     // Total number of dummy iterations
     static constexpr int kDummyIterations =
-        RAWLatency > columns
-            ? (columns - 1) * columns / 2 + (RAWLatency - columns) * columns
-            : RAWLatency * (RAWLatency - 1) / 2;
+        raw_latency > columns
+            ? (columns - 1) * columns / 2 + (raw_latency - columns) * columns
+            : raw_latency * (raw_latency - 1) / 2;
     // Total number of iterations (including dummy iterations)
     static constexpr int kIterations =
         columns + columns * (columns + 1) / 2 + kDummyIterations;
@@ -167,16 +164,16 @@ struct StreamingQRD {
                                      BitsForMaxValue<kJNegativeIterations>();
 
     // Iterate over the number of matrices to decompose per function call
-    for (int matrixIter = 0; matrixIter < matrixCount; matrixIter++) {
+    for (int matrix_iter = 0; matrix_iter < matrix_count; matrix_iter++) {
       // Three copies of the full matrix, so that each matrix has a single
       // load and a single store.
-      // ALoad is the initial matrix received from the pipe
-      // ACompute is used and modified during calculations
-      // QResult is a copy of ACompute and is used to send the final output
+      // a_load is the initial matrix received from the pipe
+      // a_compute is used and modified during calculations
+      // q_result is a copy of a_compute and is used to send the final output
 
       // Break memories up to store 4 complex numbers (32 bytes) per bank
-      constexpr short kBankwidth = pipeElemSize * sizeof(TT);
-      constexpr short kNumBanks = rows / pipeElemSize;
+      constexpr short kBankwidth = pipe_size * sizeof(TT);
+      constexpr short kNumBanks = rows / pipe_size;
 
       // When specifying numbanks for a memory, it must be a power of 2.
       // Unused banks will be automatically optimized away.
@@ -186,24 +183,25 @@ struct StreamingQRD {
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      ColumnTuple ALoad[columns];
-      ColumnTuple ACompute[columns];
-      ColumnTuple QResult[columns];
+      column_tuple a_load[columns];
+      column_tuple a_compute[columns];
+      column_tuple q_result[columns];
 
       constexpr int kRMatrixSizeExtra =
-          (kRMatrixSize % pipeElemSize) != 0 ? 1 : 0;
+          (kRMatrixSize % pipe_size) != 0 ? 1 : 0;
       // Contains the values of the upper-right part of R in a row by row
       // fashion, starting by row 0
-      TT RResult[kRMatrixSize / pipeElemSize + kRMatrixSizeExtra][pipeElemSize];
+      TT r_result[kRMatrixSize / pipe_size + kRMatrixSizeExtra]
+                                                                [pipe_size];
 
       // Copy a matrix from the pipe to a local memory
-      qrd_internal::readPipeAndWriteA<T, isComplex, rows, columns, pipeElemSize,
-                                      AIn>(ALoad);
+      qrd_internal::ReadPipeAndWriteA<is_complex, rows, columns, pipe_size,
+                                      AIn, T>(a_load);
 
       // Compute the QR Decomposition
 
-      // RResult write index
-      int RElementIndex = 0;
+      // r_result write index
+      int r_element_index = 0;
 
       // a local copy of a_{i+1} that is used across multiple j iterations
       // for the computation of pip1 and p
@@ -214,7 +212,7 @@ struct StreamingQRD {
       // Depending on the context, will contain:
       // -> -s[j]: for all the iterations to compute a_j
       // -> ir: for one iteration per j iterations to compute Q_i
-      [[intel::fpga_memory]] TT sOrIr[columns];
+      [[intel::fpga_memory]] TT s_or_ir[columns];
 
       T pip1, ir;
 
@@ -223,45 +221,45 @@ struct StreamingQRD {
       ac_int<kJBitSize, true> j = 0;
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      [[intel::ivdep(RAWLatency)]]       // NO-FORMAT: Attribute
+      [[intel::ivdep(raw_latency)]]       // NO-FORMAT: Attribute
       for (int s = 0; s < kIterations; s++) {
         // Pre-compute the next values of i and j
-        ac_int<kIBitSize, true> nextI;
-        ac_int<kJBitSize, true> nextJ;
+        ac_int<kIBitSize, true> next_i;
+        ac_int<kJBitSize, true> next_j;
         if (j == columns - 1) {
           // If i reached an index at which the j inner loop don't have
           // enough time to write its result for the next i iteration,
           // some "dummy" iterations are introduced
-          nextJ = (kVariableIterations > i)
+          next_j = (kVariableIterations > i)
                       ? ac_int<kJBitSize, true>{i + 1}
                       : ac_int<kJBitSize, true>{kVariableIterations};
-          nextI = i + 1;
+          next_i = i + 1;
         } else {
-          nextJ = j + 1;
-          nextI = i;
+          next_j = j + 1;
+          next_i = i;
         }
 
         // Two matrix columns for partial results.
         TT col[rows];
         TT col1[rows];
 
-        // Current value of sOrIr depending on the value of j
+        // Current value of s_or_ir depending on the value of j
         // It is replicated kFanoutReduction times to reduce fanout
-        TT sOrIrJ[kBanksForFanout];
+        TT s_or_ir_j[kBanksForFanout];
 
         // All the control signals are precomputed and replicated
         // kFanoutReduction times to reduce fanout
-        bool jEqI[kBanksForFanout], iGt0[kBanksForFanout],
-            iGe0JGeI[kBanksForFanout], jEqI_plus_1[kBanksForFanout],
-            iLt0[kBanksForFanout];
+        bool j_eq_i[kBanksForFanout], i_gt_0[kBanksForFanout],
+            i_ge_0_j_ge_i[kBanksForFanout], j_eq_i_plus_1[kBanksForFanout],
+            i_lt_0[kBanksForFanout];
 
         UnrolledLoop<kBanksForFanout>([&](auto k) {
-          iGt0[k] = sycl::ext::intel::fpga_reg(i > 0);
-          iLt0[k] = sycl::ext::intel::fpga_reg(i < 0);
-          jEqI[k] = sycl::ext::intel::fpga_reg(j == i);
-          iGe0JGeI[k] = sycl::ext::intel::fpga_reg(i >= 0 && j >= i);
-          jEqI_plus_1[k] = sycl::ext::intel::fpga_reg(j == i + 1);
-          sOrIrJ[k] = sycl::ext::intel::fpga_reg(sOrIr[j]);
+          i_gt_0[k] = sycl::ext::intel::fpga_reg(i > 0);
+          i_lt_0[k] = sycl::ext::intel::fpga_reg(i < 0);
+          j_eq_i[k] = sycl::ext::intel::fpga_reg(j == i);
+          i_ge_0_j_ge_i[k] = sycl::ext::intel::fpga_reg(i >= 0 && j >= i);
+          j_eq_i_plus_1[k] = sycl::ext::intel::fpga_reg(j == i + 1);
+          s_or_ir_j[k] = sycl::ext::intel::fpga_reg(s_or_ir[j]);
         });
 
         // Preload col and a_i with the correct data for the current iteration
@@ -269,34 +267,34 @@ struct StreamingQRD {
         // different columns of the input matrix.
         UnrolledLoop<rows>([&](auto k) {
           // find which fanout bank this unrolled iteration is going to use
-          constexpr auto fanoutBankIdx = k / kFanoutReduction;
+          constexpr auto fanout_bank_idx = k / kFanoutReduction;
 
           // Load col with the current column of matrix A.
           // At least one iteration of the outer loop i is required
-          // for the "working copy" ACompute to contain data.
+          // for the "working copy" a_compute to contain data.
           // If no i iteration elapsed, we must read the column of
-          // matrix A directly from the ALoad; col then contains a_j
+          // matrix A directly from the a_load; col then contains a_j
 
-          if (iGt0[fanoutBankIdx]) {
-            col[k] = ACompute[j].template get<k>();
+          if (i_gt_0[fanout_bank_idx]) {
+            col[k] = a_compute[j].template get<k>();
           }
           // Using an else statement makes the compiler throw an
           // inexplicable warning when using non complex types:
           // "Compiler Warning: Memory instruction with unresolved
           // pointer may lead to bad QoR."
-          if (!iGt0[fanoutBankIdx]) {
-            col[k] = ALoad[j].template get<k>();
+          if (!i_gt_0[fanout_bank_idx]) {
+            col[k] = a_load[j].template get<k>();
           }
 
           // Load a_i for reuse across j iterations
-          if (jEqI[fanoutBankIdx]) {
+          if (j_eq_i[fanout_bank_idx]) {
             a_i[k] = col[k];
           }
         });
 
         UnrolledLoop<rows>([&](auto k) {
           // find which fanout bank this unrolled iteration is going to use
-          constexpr auto fanoutBankIdx = k / kFanoutReduction;
+          constexpr auto fanout_bank_idx = k / kFanoutReduction;
 
           // Depending on the iteration this code will compute either:
           // -> If i=j, a column of Q: Q_i = a_i*ir
@@ -305,33 +303,34 @@ struct StreamingQRD {
           //    There is a special case if i<0 where a_j is unmodified
           //    but the i iteration is still required to fill ir and s
           //    for subsequent iterations
-          auto prodLHS = a_i[k];
-          auto prodRHS = iLt0[fanoutBankIdx] ? TT{0.0} : sOrIrJ[fanoutBankIdx];
-          auto add = jEqI[fanoutBankIdx] ? TT{0.0} : col[k];
-          if constexpr (isComplex) {
-            col1[k] = prodLHS * prodRHS.conj() + add;
+          auto prod_lhs = a_i[k];
+          auto prod_rhs = i_lt_0[fanout_bank_idx] ? 
+                                          TT{0.0} : s_or_ir_j[fanout_bank_idx];
+          auto add = j_eq_i[fanout_bank_idx] ? TT{0.0} : col[k];
+          if constexpr (is_complex) {
+            col1[k] = prod_lhs * prod_rhs.conj() + add;
           } else {
-            col1[k] = prodLHS * prodRHS + add;
+            col1[k] = prod_lhs * prod_rhs + add;
           }
 
-          // Store Q_i in QResult and the modified a_j in ACompute
-          // To reduce the amount of control, QResult and ACompute
+          // Store Q_i in q_result and the modified a_j in a_compute
+          // To reduce the amount of control, q_result and a_compute
           // are both written to for each iteration of i>=0 && j>=i
           // In fact:
-          // -> QResult could only be written to at iterations i==j
-          // -> ACompute could only be written to at iterations
+          // -> q_result could only be written to at iterations i==j
+          // -> a_compute could only be written to at iterations
           //    j!=i && i>=0
           // The extra writes are harmless as the locations written to
           // are either going to be:
-          // -> overwritten for the matrix Q (QResult)
-          // -> unused for the ACompute
-          if (iGe0JGeI[fanoutBankIdx]) {
-            QResult[j].template get<k>() = col1[k];
-            ACompute[j].template get<k>() = col1[k];
+          // -> overwritten for the matrix Q (q_result)
+          // -> unused for the a_compute
+          if (i_ge_0_j_ge_i[fanout_bank_idx]) {
+            q_result[j].template get<k>() = col1[k];
+            a_compute[j].template get<k>() = col1[k];
           }
 
           // Store a_{i+1} for subsequent iterations of j
-          if (jEqI_plus_1[fanoutBankIdx]) {
+          if (j_eq_i_plus_1[fanout_bank_idx]) {
             a_ip1[k] = col1[k];
           }
         });
@@ -339,7 +338,7 @@ struct StreamingQRD {
         // Perform the dot product <a_{i+1},a_{i+1}> or <a_{i+1}, a_j>
         TT p_ij{0.0};
         UnrolledLoop<rows>([&](auto k) {
-          if constexpr (isComplex) {
+          if constexpr (is_complex) {
             p_ij = p_ij + col1[k] * a_ip1[k].conj();
           } else {
             p_ij = p_ij + col1[k] * a_ip1[k];
@@ -348,7 +347,7 @@ struct StreamingQRD {
 
         // Compute pip1 and ir based on the results of the dot product
         if (j == i + 1) {
-          if constexpr (isComplex) {
+          if constexpr (is_complex) {
             pip1 = p_ij.r();
             ir = sycl::rsqrt(p_ij.r());
           } else {
@@ -359,7 +358,7 @@ struct StreamingQRD {
 
         // Compute the value of -s[j]
         TT s_j;
-        if constexpr (isComplex) {
+        if constexpr (is_complex) {
           s_j = TT{0.0f - (p_ij.r()) / pip1, p_ij.i() / pip1};
         } else {
           s_j = -p_ij / pip1;
@@ -368,17 +367,17 @@ struct StreamingQRD {
         // j may be negative if the number of "dummy" iterations is
         // larger than the matrix size
         if (j >= 0) {
-          if constexpr (isComplex) {
-            sOrIr[j] =
+          if constexpr (is_complex) {
+            s_or_ir[j] =
                 TT{j == i + 1 ? ir : s_j.r(), j == i + 1 ? 0.0f : s_j.i()};
           } else {
-            sOrIr[j] = j == i + 1 ? ir : s_j;
+            s_or_ir[j] = j == i + 1 ? ir : s_j;
           }
         }
 
         // Compute the R_{i+1,i+1} or R_{i+1,j}
         TT r_ip1j;
-        if constexpr (isComplex) {
+        if constexpr (is_complex) {
           r_ip1j = j == i + 1 ? TT{sycl::sqrt(pip1), 0.0}
                               : TT{ir * p_ij.r(), ir * p_ij.i()};
         } else {
@@ -387,206 +386,196 @@ struct StreamingQRD {
 
         // Write the computed R value when j is not a "dummy" iteration
         if ((j >= i + 1) && (i + 1 < columns)) {
-          RResult[RElementIndex / pipeElemSize][RElementIndex % pipeElemSize] =
-              r_ip1j;
-          RElementIndex++;
+          r_result[r_element_index / pipe_size]
+                                      [r_element_index % pipe_size] = r_ip1j;
+          r_element_index++;
         }
 
         // Update loop indexes
-        j = nextJ;
-        i = nextI;
+        j = next_j;
+        i = next_i;
 
       }  // end of s
 
       // Copy the R matrix result to the ROut output pipe
-      qrd_internal::readRAndWriteToPipe<T, isComplex, columns, pipeElemSize,
-                                        ROut>(RResult);
+      qrd_internal::ReadRAndWriteToPipe<is_complex, columns, pipe_size,
+                                        ROut, T>(r_result);
 
       // Copy the Q matrix result to the QOut output pipe
-      qrd_internal::readQAndWriteToPipe<T, isComplex, rows, columns,
-                                        pipeElemSize, QOut>(QResult);
-    }  // end of matrixIter
+      qrd_internal::ReadQAndWriteToPipe<is_complex, rows, columns,
+                                        pipe_size, QOut, T>(q_result);
+    }  // end of matrix_iter
   }    // end of operator
 };     // end of struct
 
 namespace qrd_internal {
 /*
   Utility function for the StreamingQRD function
-  Reads a matrix, pipeElemSize by pipeElemSize elements from the AIn pipe.
-  Writes the matrix read in ALoad;
-  If the matrix row count is not a multiple of pipeElemSize; will read
-  rows/pipeElemSize + 1 times from the pipe to get a full column
+  Reads a matrix, pipe_size by pipe_size elements from the AIn pipe.
+  Writes the matrix read in a_load;
+  If the matrix row count is not a multiple of pipe_size; will read
+  rows/pipe_size + 1 times from the pipe to get a full column
 */
-template <typename T,        // The datatype for the computation
-          bool isComplex,    // True if T is ac_complex<X>
+template <bool is_complex,   // True if T is ac_complex<X>
           int rows,          // Number of rows in the matrix
           int columns,       // Number of columns in the matrix
-          int pipeElemSize,  // Number of elements read/write per pipe
+          int pipe_size,     // Number of elements read/write per pipe
                              // operation
-          typename AIn       // A matrix input pipe, receive pipeElemSize
+          typename AIn,      // A matrix input pipe, receive pipe_size
                              // elements from the pipe with each read
+          typename T,        // The datatype for the computation
+          typename TT        // Infered at compile time
           >
-inline void readPipeAndWriteA(
-    NTuple<typename std::conditional<isComplex, ac_complex<T>, T>::type, rows>
-        *ALoad) {
-  typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
-
-  // Number of DDR burst reads of pipeElemSize required to read a full column
-  constexpr int kExtraIteration = (rows % pipeElemSize) != 0 ? 1 : 0;
-  constexpr int kLoopIterPerColumn = rows / pipeElemSize + kExtraIteration;
-  // Number of DDR burst reads of pipeElemSize to read all the matrices
+inline void ReadPipeAndWriteA(NTuple<TT, rows> *a_load) {
+  // Number of DDR burst reads of pipe_size required to read a full column
+  constexpr int kExtraIteration = (rows % pipe_size) != 0 ? 1 : 0;
+  constexpr int kLoopIterPerColumn = rows / pipe_size + kExtraIteration;
+  // Number of DDR burst reads of pipe_size to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns;
   // Size in bits of the loop iterator over kLoopIter iterations
   constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
 
   [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
   for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-    pipeTable<pipeElemSize, TT> pipeRead = AIn::read();
+    PipeTable<pipe_size, TT> pipe_read = AIn::read();
 
-    int writeIdx = li % kLoopIterPerColumn;
+    int write_idx = li % kLoopIterPerColumn;
 
     UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-      UnrolledLoop<pipeElemSize>([&](auto t) {
-        if (writeIdx == k) {
-          if constexpr (k * pipeElemSize + t < rows) {
-            ALoad[li / kLoopIterPerColumn]
-                .template get<k * pipeElemSize + t>() = pipeRead.elem[t];
+      UnrolledLoop<pipe_size>([&](auto t) {
+        if (write_idx == k) {
+          if constexpr (k * pipe_size + t < rows) {
+            a_load[li / kLoopIterPerColumn]
+                .template get<k * pipe_size + t>() = pipe_read.elem[t];
           }
         }
 
         // Delay data signals to create a vine-based data distribution
         // to lower signal fanout.
-        pipeRead.elem[t] = sycl::ext::intel::fpga_reg(pipeRead.elem[t]);
+        pipe_read.elem[t] = sycl::ext::intel::fpga_reg(pipe_read.elem[t]);
       });
 
-      writeIdx = sycl::ext::intel::fpga_reg(writeIdx);
+      write_idx = sycl::ext::intel::fpga_reg(write_idx);
     });
   }
 }
 
 /*
   Utility function for the StreamingQRD function
-  Write a matrix, pipeElemSize by pipeElemSize elements to the QOut pipe.
-  Reads the matrix read from QResult;
-  If the matrix row count is not a multiple of pipeElemSize; will write
-  rows/pipeElemSize + 1 times to the pipe to write a full column
+  Write a matrix, pipe_size by pipe_size elements to the QOut pipe.
+  Reads the matrix read from q_result;
+  If the matrix row count is not a multiple of pipe_size; will write
+  rows/pipe_size + 1 times to the pipe to write a full column
 */
-template <typename T,        // The datatype for the computation
-          bool isComplex,    // True if T is ac_complex<X>
+template <bool is_complex,   // True if T is ac_complex<X>
           int rows,          // Number of rows in the matrix
           int columns,       // Number of columns in the matrix
-          int pipeElemSize,  // Number of elements read/write per pipe
+          int pipe_size,     // Number of elements read/write per pipe
                              // operation
-          typename QOut      // Q matrix output pipe, send pipeElemSize
+          typename QOut,     // Q matrix output pipe, send pipe_size
                              // elements to the pipe with each write
+          typename T,        // The datatype for the computation
+          typename TT        // Infered at compile time
           >
-inline void readQAndWriteToPipe(
-    NTuple<typename std::conditional<isComplex, ac_complex<T>, T>::type, rows>
-        *QResult) {
-  typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
-
-  // Number of DDR burst reads of pipeElemSize required to read a full column
-  constexpr int kExtraIteration = (rows % pipeElemSize) != 0 ? 1 : 0;
-  constexpr int kLoopIterPerColumn = rows / pipeElemSize + kExtraIteration;
-  // Number of DDR burst reads of pipeElemSize to read all the matrices
+inline void ReadQAndWriteToPipe(NTuple<TT, rows> *q_result) {
+  // Number of DDR burst reads of pipe_size required to read a full column
+  constexpr int kExtraIteration = (rows % pipe_size) != 0 ? 1 : 0;
+  constexpr int kLoopIterPerColumn = rows / pipe_size + kExtraIteration;
+  // Number of DDR burst reads of pipe_size to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns;
   // Size in bits of the loop iterator over kLoopIter iterations
   constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
 
   [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
   for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-    int columnIter = li % kLoopIterPerColumn;
+    int column_iter = li % kLoopIterPerColumn;
     bool get[kLoopIterPerColumn];
     UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-      get[k] = columnIter == k;
-      columnIter = sycl::ext::intel::fpga_reg(columnIter);
+      get[k] = column_iter == k;
+      column_iter = sycl::ext::intel::fpga_reg(column_iter);
     });
 
-    pipeTable<pipeElemSize, TT> pipeWrite;
+    PipeTable<pipe_size, TT> pipe_write;
     UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
-      UnrolledLoop<pipeElemSize>([&](auto k) {
-        if constexpr (t * pipeElemSize + k < rows) {
-          pipeWrite.elem[k] =
-              get[t] ? QResult[li / kLoopIterPerColumn]
-                           .template get<t * pipeElemSize + k>()
-                     : sycl::ext::intel::fpga_reg(pipeWrite.elem[k]);
+      UnrolledLoop<pipe_size>([&](auto k) {
+        if constexpr (t * pipe_size + k < rows) {
+          pipe_write.elem[k] =
+              get[t] ? q_result[li / kLoopIterPerColumn]
+                           .template get<t * pipe_size + k>()
+                     : sycl::ext::intel::fpga_reg(pipe_write.elem[k]);
         }
       });
     });
-    QOut::write(pipeWrite);
+    QOut::write(pipe_write);
   }
 }
 
 /*
   Utility function for the StreamingQRD function
-  Reads the R matrix from RResult and writes it to the ROut pipe by bursts
-  of pipeElemSize elements.
+  Reads the R matrix from r_result and writes it to the ROut pipe by bursts
+  of pipe_size elements.
   This version of the function is enabled if the number of elements in R is a
-  multiple of pipeElemSize
+  multiple of pipe_size
 */
-template <typename T,        // The datatype for the computation
-          bool isComplex,    // True if T is ac_complex<X>
+template <bool is_complex,   // True if T is ac_complex<X>
           int columns,       // Number of columns in the R matrix
-          int pipeElemSize,  // Number of elements read/write per pipe
+          int pipe_size,     // Number of elements read/write per pipe
                              // operation
-          typename ROut      // R matrix output pipe, send pipeElemSize
+          typename ROut,     // R matrix output pipe, send pipe_size
                              // elements to the pipe with each write.
                              // Only upper-right elements of R are
                              // sent in row order, starting with row 0.
+          typename T,        // The datatype for the computation
+          typename TT        // Infered at compile time
           >
-inline void readRAndWriteToPipe(
-    typename std::conditional<isComplex, ac_complex<T>, T>::type
-        RResult[(columns * (columns + 1) / 2) / pipeElemSize][pipeElemSize],
-    typename std::enable_if<((columns * (columns + 1) / 2) % pipeElemSize) ==
-                            0>::type *) {
-  typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
-
+inline void ReadRAndWriteToPipe(
+    TT r_result[(columns * (columns + 1) / 2) / pipe_size][pipe_size],
+    typename std::enable_if_t<((columns * (columns + 1) / 2) % pipe_size) ==
+                            0> *) {
   // Number of upper-right elements in the R output matrix
   constexpr int kRMatrixSize = columns * (columns + 1) / 2;
 
   [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-  for (int r_idx = 0; r_idx < kRMatrixSize / pipeElemSize; r_idx++) {
-    pipeTable<pipeElemSize, TT> pipeWrite;
-    UnrolledLoop<pipeElemSize>(
-        [&](auto k) { pipeWrite.elem[k] = RResult[r_idx][k]; });
-    ROut::write(pipeWrite);
+  for (int r_idx = 0; r_idx < kRMatrixSize / pipe_size; r_idx++) {
+    PipeTable<pipe_size, TT> pipe_write;
+    UnrolledLoop<pipe_size>(
+        [&](auto k) { pipe_write.elem[k] = r_result[r_idx][k]; });
+    ROut::write(pipe_write);
   }
 }
 
 /*
   Utility function for the StreamingQRD function
-  Reads the R matrix from RResult and writes it to the ROut pipe by bursts
-  of pipeElemSize elements.
+  Reads the R matrix from r_result and writes it to the ROut pipe by bursts
+  of pipe_size elements.
   This version of the function is enabled if the number of elements in R is not
-  a multiple of pipeElemSize
+  a multiple of pipe_size
 */
-template <typename T,        // The datatype for the computation
-          bool isComplex,    // True if T is ac_complex<X>
+template <bool is_complex,   // True if T is ac_complex<X>
           int columns,       // Number of columns in the R matrix
-          int pipeElemSize,  // Number of elements read/write per pipe
+          int pipe_size,     // Number of elements read/write per pipe
                              // operation
-          typename ROut      // R matrix output pipe, send pipeElemSize
+          typename ROut,     // R matrix output pipe, send pipe_size
                              // elements to the pipe with each write.
                              // Only upper-right elements of R are
                              // sent in row order, starting with row 0.
+          typename T,        // The datatype for the computation
+          typename TT        // Infered at compile time
           >
-inline void readRAndWriteToPipe(
-    typename std::conditional<isComplex, ac_complex<T>, T>::type
-        RResult[((columns * (columns + 1) / 2) / pipeElemSize) + 1]
-               [pipeElemSize],
-    typename std::enable_if<((columns * (columns + 1) / 2) % pipeElemSize) !=
-                            0>::type *) {
-  typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
-
+inline void ReadRAndWriteToPipe(
+    TT r_result[((columns * (columns + 1) / 2) / pipe_size) + 1]
+               [pipe_size],
+    typename std::enable_if_t<((columns * (columns + 1) / 2) % pipe_size) !=
+                            0> *) {
   // Number of upper-right elements in the R output matrix
   constexpr int kRMatrixSize = columns * (columns + 1) / 2;
 
   [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-  for (int r_idx = 0; r_idx < (kRMatrixSize / pipeElemSize) + 1; r_idx++) {
-    pipeTable<pipeElemSize, TT> pipeWrite;
-    UnrolledLoop<pipeElemSize>(
-        [&](auto k) { pipeWrite.elem[k] = RResult[r_idx][k]; });
-    ROut::write(pipeWrite);
+  for (int r_idx = 0; r_idx < (kRMatrixSize / pipe_size) + 1; r_idx++) {
+    PipeTable<pipe_size, TT> pipe_write;
+    UnrolledLoop<pipe_size>(
+        [&](auto k) { pipe_write.elem[k] = r_result[r_idx][k]; });
+    ROut::write(pipe_write);
   }
 }
 }  // end of namespace qrd_internal

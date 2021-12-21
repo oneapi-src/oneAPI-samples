@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Utils.hpp"
-#include "UnrolledLoop.hpp"
+#include "utils.hpp"
+#include "unrolled_loop.hpp"
 
 
 /*
@@ -14,10 +14,10 @@
   Then input and output matrices are consumed/produced from/to pipes.
 */
 template <typename T,        // The datatype for the computation
-          bool isComplex,    // True if T is ac_complex<T>
+          bool is_complex,   // True if T is ac_complex<T>
           int rows,          // Number of rows in the input matrices
           int columns,       // Number of columns in the input matrices
-          int RAWLatency,    // Read after write latency (in iterations) of
+          int raw_latency,   // Read after write latency (in iterations) of
                              // the triangular loop of this function.
                              // This value depends on the FPGA target, the
                              // datatype, the target frequency, etc.
@@ -27,9 +27,9 @@ template <typename T,        // The datatype for the computation
                              // In general, find a high value for which the
                              // compiler is able to achieve an II of 1 and
                              // go down from there.
-          int matrixCount,   // Number of matrices to read from the input
+          int matrix_count,  // Number of matrices to read from the input
                              // pipes sequentially
-          int pipeElemSize,  // Number of elements read/write per pipe
+          int pipe_size,     // Number of elements read/write per pipe
                              // operation
           typename QIn,      // Q input pipe, receive a full column with each
                              // read.
@@ -48,71 +48,71 @@ struct StreamingQRI {
                   "only matrices of size 4x4 to 512x512 are supported");
 
     // Set the computation type to T or ac_complex<T> depending on the value
-    // of isComplex
-    typedef typename std::conditional<isComplex, ac_complex<T>, T>::type TT;
+    // of is_complex
+    using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
 
     // Iterate over the number of matrices to decompose per function call
-    for (int matrixIter = 0; matrixIter < matrixCount; matrixIter++) {
+    for (int matrix_iter = 0; matrix_iter < matrix_count; matrix_iter++) {
       // Q matrix read from pipe
-      TT QMatrix[rows][columns];
+      TT q_matrix[rows][columns];
       // Transpose of Q matrix
-      TT QTMatrix[rows][columns];
+      TT qt_matrix[rows][columns];
       // R matrix read from pipe
-      TT RMatrix[rows][columns];
+      TT r_matrix[rows][columns];
       // Transpose of R matrix
-      TT RTMatrix[rows][columns];
+      TT rt_matrix[rows][columns];
       // Inverse of R matrix
-      TT RIMatrix[rows][columns];
+      TT ri_matrix[rows][columns];
       // Inverse matrix of A=QR
-      TT IMatrix[rows][columns];
+      TT i_matrix[rows][columns];
 
       /*
         ======================================================================
         Copy a R matrix from the pipe to a local memory
         ======================================================================
       */
-      int readCounter = 0;
-      int nextReadCounter = 1;
-      pipeTable<pipeElemSize, TT> read;
+      int read_counter = 0;
+      int next_read_counter = 1;
+      PipeTable<pipe_size, TT> read;
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (int i = 0; i < rows; i++) {
         // "Shift register" that will contain a full row of R after
         // columns iterations.
-        // Each pipe read writes to RRow[columns-1] and at each loop iteration
-        // each RRow[x] will be assigned RRow[x+1]
+        // Each pipe read writes to r_row[columns-1] and at each loop iteration
+        // each r_row[x] will be assigned r_row[x+1]
         // This ensures that the fanout is kept to a minimum
-        TT RRow[columns];
+        TT r_row[columns];
         bool cond;
-        bool nextCond = 0 >= i;
-        int tosum = -i + 2;
+        bool next_cond = 0 >= i;
+        int to_sum = -i + 2;
         for (int j = 0; j < columns; j++) {
-          cond = nextCond;
-          nextCond = j + tosum > 0;
+          cond = next_cond;
+          next_cond = j + to_sum > 0;
           // For shannonization
-          int potentialNextReadCounter = readCounter + 2;
+          int potential_next_read_counter = read_counter + 2;
 
 // Perform the register shifting of the banks
 #pragma unroll
           for (int col = 0; col < columns - 1; col++) {
-            RRow[col] = RRow[col + 1];
+            r_row[col] = r_row[col + 1];
           }
 
-          if (cond && (readCounter == 0)) {
+          if (cond && (read_counter == 0)) {
             read = RIn::read();
           }
           // Read a new value from the pipe if the current row element
           // belongs to the upper-right part of R. Otherwise write 0.
           if (cond) {
-            RRow[columns - 1] = read.elem[readCounter];
-            readCounter = nextReadCounter % pipeElemSize;
-            nextReadCounter = potentialNextReadCounter;
+            r_row[columns - 1] = read.elem[read_counter];
+            read_counter = next_read_counter % pipe_size;
+            next_read_counter = potential_next_read_counter;
           } else {
-            RRow[columns - 1] = TT{0.0};
+            r_row[columns - 1] = TT{0.0};
           }
         }
 
         // Copy the entire row to the R matrix
-        UnrolledLoop<columns>([&](auto k) { RMatrix[i][k] = RRow[k]; });
+        UnrolledLoop<columns>([&](auto k) { r_matrix[i][k] = r_row[k]; });
       }
 
       /*
@@ -121,36 +121,36 @@ struct StreamingQRI {
         ======================================================================
       */
 
-      // Number of DDR burst reads of pipeElemSize required to read a full
+      // Number of DDR burst reads of pipe_size required to read a full
       // column
-      constexpr int kExtraIteration = (rows % pipeElemSize) != 0 ? 1 : 0;
-      constexpr int kLoopIterPerColumn = rows / pipeElemSize + kExtraIteration;
-      // Number of DDR burst reads of pipeElemSize to read all the matrices
+      constexpr int kExtraIteration = (rows % pipe_size) != 0 ? 1 : 0;
+      constexpr int kLoopIterPerColumn = rows / pipe_size + kExtraIteration;
+      // Number of DDR burst reads of pipe_size to read all the matrices
       constexpr int kLoopIter = kLoopIterPerColumn * columns;
       // Size in bits of the loop iterator over kLoopIter iterations
       constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        pipeTable<pipeElemSize, TT> pipeRead = QIn::read();
+        PipeTable<pipe_size, TT> pipe_read = QIn::read();
 
-        int writeIdx = li % kLoopIterPerColumn;
+        int write_idx = li % kLoopIterPerColumn;
 
         UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-          UnrolledLoop<pipeElemSize>([&](auto t) {
-            if (writeIdx == k) {
-              if constexpr (k * pipeElemSize + t < rows) {
-                QMatrix[li / kLoopIterPerColumn][k * pipeElemSize + t] =
-                    pipeRead.elem[t];
+          UnrolledLoop<pipe_size>([&](auto t) {
+            if (write_idx == k) {
+              if constexpr (k * pipe_size + t < rows) {
+                q_matrix[li / kLoopIterPerColumn][k * pipe_size + t] =
+                    pipe_read.elem[t];
               }
             }
 
             // Delay data signals to create a vine-based data distribution
             // to lower signal fanout.
-            pipeRead.elem[t] = sycl::ext::intel::fpga_reg(pipeRead.elem[t]);
+            pipe_read.elem[t] = sycl::ext::intel::fpga_reg(pipe_read.elem[t]);
           });
 
-          writeIdx = sycl::ext::intel::fpga_reg(writeIdx);
+          write_idx = sycl::ext::intel::fpga_reg(write_idx);
         });
       }
 
@@ -161,7 +161,7 @@ struct StreamingQRI {
       */
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col < columns; col++) {
-          RTMatrix[row][col] = RMatrix[col][row];
+          rt_matrix[row][col] = r_matrix[col][row];
         }
       }
 
@@ -172,7 +172,7 @@ struct StreamingQRI {
       */
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col < columns; col++) {
-          QTMatrix[row][col] = QMatrix[col][row];
+          qt_matrix[row][col] = q_matrix[col][row];
         }
       }
 
@@ -190,24 +190,24 @@ struct StreamingQRI {
             // RInverse[row][col] = (Id[row][col] - R[row:] * RInverse[:col])
                                                                   /R[col][col]
             for k=1:n
-              dp = R[col][k] * RIMatrix[row][k]
+              dp = R[col][k] * ri_matrix[row][k]
 
             RInverse[row][col] = (Id[row][col] - dp)/R[col][col]
       */
 
-      // Initialise RIMatrix with 0
+      // Initialise ri_matrix with 0
       for (int i = 0; i < rows; i++) {
-        UnrolledLoop<columns>([&](auto k) { RIMatrix[i][k] = {0}; });
+        UnrolledLoop<columns>([&](auto k) { ri_matrix[i][k] = {0}; });
       }
 
       // Count the total number of loop iterations, using the triangular loop
       // optimization (refer to the triangular loop optimization tutorial)
       constexpr int kNormalIterations = rows * (rows + 1) / 2;
       constexpr int kExtraIterations =
-          RAWLatency > rows
-              ? (RAWLatency - 2) * (RAWLatency - 2 + 1) / 2 -
-                    (RAWLatency - rows - 1) * (RAWLatency - rows) / 2
-              : (RAWLatency - 2) * (RAWLatency - 2 + 1) / 2;
+          raw_latency > rows
+              ? (raw_latency - 2) * (raw_latency - 2 + 1) / 2 -
+                    (raw_latency - rows - 1) * (raw_latency - rows) / 2
+              : (raw_latency - 2) * (raw_latency - 2 + 1) / 2;
       constexpr int kTotalIterations = kNormalIterations + kExtraIterations;
 
       // All the loop control variables with all the requirements to apply
@@ -218,59 +218,59 @@ struct StreamingQRI {
       int iter = 0;
       int ip1 = 1;
       int ip2 = 2;
-      int diagSize = columns;
-      int diagSizem1 = columns - 1;
-      int cp1Limit =
-          RAWLatency - columns - columns > 0 ? RAWLatency - columns : columns;
-      int nextcp1Limit = RAWLatency - columns - 1 - columns > 0
-                             ? RAWLatency - columns - 1
+      int diag_size = columns;
+      int diag_size_m1 = columns - 1;
+      int cp1_limit =
+          raw_latency - columns - columns > 0 ? raw_latency - columns : columns;
+      int next_cp1_limit = raw_latency - columns - 1 - columns > 0
+                             ? raw_latency - columns - 1
                              : columns;
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      [[intel::ivdep(RAWLatency)]]       // NO-FORMAT: Attribute
+      [[intel::ivdep(raw_latency)]]       // NO-FORMAT: Attribute
       for (int it = 0; it < kTotalIterations; it++) {
         // Only compute during the non dummy iterations
         if ((row < rows) & (col < columns)) {
           // Compute the dot product of R[row:] * RInverse[:col]
-          TT dotProduct = {0};
+          TT dot_product = {0};
 
           // While reading R, keep the R[col][col] value for the follow up
           // division
           TT div_val;
 
           UnrolledLoop<columns>([&](auto k) {
-            auto lhs = RTMatrix[col][k];
-            auto rhs = RIMatrix[row][k];
+            auto lhs = rt_matrix[col][k];
+            auto rhs = ri_matrix[row][k];
 
             if (k == col) {
               div_val = lhs;
             }
 
-            dotProduct += lhs * rhs;
+            dot_product += lhs * rhs;
           });
 
           // Find the value of the identity matrix at these coordinates
           TT idMatrixValue = row == col ? TT{1} : TT{0};
           // Compute the value of the inverse of R
-          RIMatrix[row][col] = (idMatrixValue - dotProduct) / div_val;
+          ri_matrix[row][col] = (idMatrixValue - dot_product) / div_val;
         }
 
         // Update loop indexes
-        if (cp1 >= cp1Limit) {
+        if (cp1 >= cp1_limit) {
           col = ip1;
           cp1 = ip2;
           iter = ip1;
           row = 0;
-          diagSize = diagSizem1;
-          cp1Limit = nextcp1Limit;
+          diag_size = diag_size_m1;
+          cp1_limit = next_cp1_limit;
         } else {
           col = cp1;
           cp1 = col + 1;
           row = row + 1;
           ip1 = iter + 1;
           ip2 = iter + 2;
-          nextcp1Limit = sycl::max(RAWLatency - (diagSize - 1), columns);
-          diagSizem1 = diagSize - 1;
+          next_cp1_limit = sycl::max(raw_latency - (diag_size - 1), columns);
+          diag_size_m1 = diag_size - 1;
         }
       }
 
@@ -281,15 +281,15 @@ struct StreamingQRI {
       */
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col < columns; col++) {
-          TT dotProduct = {0.0};
+          TT dot_product = {0.0};
           UnrolledLoop<rows>([&](auto k) {
-            if constexpr (isComplex) {
-              dotProduct += RIMatrix[row][k] * QTMatrix[col][k].conj();
+            if constexpr (is_complex) {
+              dot_product += ri_matrix[row][k] * qt_matrix[col][k].conj();
             } else {
-              dotProduct += RIMatrix[row][k] * QTMatrix[col][k];
+              dot_product += ri_matrix[row][k] * qt_matrix[col][k];
             }
           });
-          IMatrix[row][col] = dotProduct;
+          i_matrix[row][col] = dot_product;
         }  // end of col
       }    // end of row
 
@@ -300,27 +300,27 @@ struct StreamingQRI {
       */
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        int columnIter = li % kLoopIterPerColumn;
+        int column_iter = li % kLoopIterPerColumn;
         bool get[kLoopIterPerColumn];
         UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-          get[k] = columnIter == k;
-          columnIter = sycl::ext::intel::fpga_reg(columnIter);
+          get[k] = column_iter == k;
+          column_iter = sycl::ext::intel::fpga_reg(column_iter);
         });
 
-        pipeTable<pipeElemSize, TT> pipeWrite;
+        PipeTable<pipe_size, TT> pipe_write;
         UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
-          UnrolledLoop<pipeElemSize>([&](auto k) {
-            if constexpr (t * pipeElemSize + k < rows) {
-              pipeWrite.elem[k] =
+          UnrolledLoop<pipe_size>([&](auto k) {
+            if constexpr (t * pipe_size + k < rows) {
+              pipe_write.elem[k] =
                   get[t]
-                      ? IMatrix[li / kLoopIterPerColumn][t * pipeElemSize + k]
-                      : sycl::ext::intel::fpga_reg(pipeWrite.elem[k]);
+                      ? i_matrix[li / kLoopIterPerColumn][t * pipe_size + k]
+                      : sycl::ext::intel::fpga_reg(pipe_write.elem[k]);
             }
           });
         });
 
-        IOut::write(pipeWrite);
+        IOut::write(pipe_write);
       }
-    }  // end of matrixIter
+    }  // end of matrix_iter
   }    // end of operator
 };     // end of struct
