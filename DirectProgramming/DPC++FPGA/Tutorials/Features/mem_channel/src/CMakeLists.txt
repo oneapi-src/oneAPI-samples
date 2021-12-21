@@ -66,7 +66,7 @@ set_target_properties(${FPGA_EARLY_IMAGE_INTERLEAVING} PROPERTIES COMPILE_FLAGS 
 set_target_properties(${FPGA_EARLY_IMAGE_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
 
 set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} ${NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS}")
-set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -Xsno-interleaving=DDR -fsycl-link=early")
+set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -Xsno-interleaving=default -fsycl-link=early")
 #fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
@@ -85,4 +85,4 @@ set_target_properties(${FPGA_TARGET_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDW
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
 # See DPC++FPGA/GettingStarted/fast_recompile for details.
 set_target_properties(${FPGA_TARGET_NO_INTERLEAVING} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} ${NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS}")
-set_target_properties(${FPGA_TARGET_NO_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -Xsno-interleaving=DDR -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_NO_INTERLEAVING}")
+set_target_properties(${FPGA_TARGET_NO_INTERLEAVING} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -Xsno-interleaving=default -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_NO_INTERLEAVING}")
