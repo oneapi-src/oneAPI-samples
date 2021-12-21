@@ -391,7 +391,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       ac_int<5, false> dist_symbol;
       do {
         // TODO: make this if then if, rather than if-elseif
-        if (bbs.HasSpaceForByte() && !done_reading) {
+        if ((bbs.Size() < 20) && !done_reading) {
           bool read_valid;
           auto pd = InPipe::read(read_valid);
 
@@ -400,12 +400,25 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             done_reading = pd.flag;
             bbs.NewByte(c);
           }
-        }
-        
-        if (bbs.Size() >= 15) {
+        } else if (bbs.Size() >= 20) {
           if (state == Symbol || state == DistanceSymbol) {
             // read the next 15 bits (we know we have them)
-            ac_int<15, false> next_bits = bbs.ReadUInt15();
+            ac_int<20, false> next_bits = bbs.ReadUInt20();
+
+            // find all possible dynamic lengths
+            [[intel::fpga_register]] ac_int<5, false> lit_extra_bit_vals[15][5];
+            #pragma unroll
+            for (unsigned char out_codelen = 1; out_codelen <= 15; out_codelen++) {
+              #pragma unroll
+              for (unsigned char in_codelen = 1; in_codelen <= 5; in_codelen++) {
+                ac_int<5, false> codebits_tmp(0);
+                #pragma unroll
+                for (unsigned char bit = 0; bit < in_codelen; bit++) {
+                  codebits_tmp[bit] = next_bits[out_codelen + bit] & 0x1;
+                }
+                lit_extra_bit_vals[out_codelen - 1][in_codelen - 1] = codebits_tmp;
+              }
+            }
 
             // find all possible code lengths and offsets
             // TODO: get rid of selects here for literal vs distance symbol
@@ -443,7 +456,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               codelen_offset[codelen - 1] = codebits - first_code;
             }
 
-            unsigned char shortest_match_len;
+            ac_int<4, false>  shortest_match_len;
             unsigned short base_idx;
             unsigned short offset;
             #pragma unroll
@@ -459,8 +472,11 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             lit_symbol = lit_map[base_idx + offset];
             dist_symbol =  dist_map[base_idx + offset];
 
-            // shift by however many bits we matched
-            bbs.Shift(shortest_match_len);
+            // we will either shift by shortest_match_len or by
+            // shortest_match_len + num_extra_bits_local based on if we
+            // read a length and its extra bits here
+            // maximum value for shift_amount = 15 + 5 = 20
+            ac_int<5, false> shift_amount = shortest_match_len;
 
             if (state == Symbol) {
               // currently parsing a symbol or length (same table)
@@ -481,8 +497,11 @@ event SubmitHuffmanDecoderKernel(queue& q) {
                 state = DistanceSymbol;
               } else if (lit_symbol <= 284) {
                 // decoded a length with a dynamic value
-                num_extra_bits = (lit_symbol - 261) / 4;
-                state = ExtraRunLengthBits;
+                ac_int<3, false> num_extra_bits_local = (lit_symbol - 261) / 4;
+                auto extra_bits_val = lit_extra_bit_vals[shortest_match_len - 1][num_extra_bits_local - 1];
+                out_data.len_or_sym = (((lit_symbol - 265) % 4 + 4) << num_extra_bits_local) + 3 + extra_bits_val;
+                shift_amount = shortest_match_len + num_extra_bits_local;
+                state = DistanceSymbol;
               } else if (lit_symbol == 285) {
                 // decoded a length with a static value
                 out_data.len_or_sym = 258;
@@ -502,6 +521,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
                 state = ExtraDistanceBits;
               }
             }
+
+            // shift based on how many bits we read
+            bbs.Shift(shift_amount);
           } else {
             // decoding "extra" bits for either a length ot distance
             if (bbs.Size() >= num_extra_bits) {

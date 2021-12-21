@@ -54,6 +54,15 @@ public:
     return (unsigned short)tmp;
   }
 
+  ac_int<20, false> ReadUInt20() {
+    ac_int<20, false> tmp = 0;
+    #pragma unroll
+    for (unsigned char i = 0; i < 20; i++) {
+      tmp[i] = buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1;
+    }
+    return tmp;
+  }
+
   void Shift(unsigned char bits) {
     // TODO: percompute these calculations
     ridx_ = (ridx_ + bits) & kBufferSizeBitsMask;
