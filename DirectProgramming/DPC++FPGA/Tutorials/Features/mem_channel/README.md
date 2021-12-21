@@ -112,7 +112,7 @@ passed to the `dpcpp` command. The macro controls whether the buffers are
 created with our without the `mem_channel` property.
 
 To decide what channel IDs to select in the source code, the macros
-`FOUR_CHANNELS` and `TWO_CHANNELS` are also used. The macro `TWO_CHANNELS` is
+`TWO_CHANNELS` and `FOUR_CHANNELS` are also used. The macro `TWO_CHANNELS` is
 defined when the design is compiled for the Intel® PAC with Arria® 10 GX FPGA
 because that board has an external memory with two available channels. In that
 case, the 4 buffers are evenly assigned to the available channels on that
@@ -282,7 +282,7 @@ significantly lower than the case where burst-interleaving is enabled.
 2. Run the sample on the FPGA device (two executables should be generated):
      ```
      ./mem_channel_interleaving.fpga         (Linux)
-     ./mem_channel_no_interleaving.fpga         (Linux)
+     ./mem_channel_no_interleaving.fpga      (Linux)
      ```
 
 ### Example of Output
@@ -308,9 +308,9 @@ Kernel throughput 796.379552 MB/s
 ### Discussion of Results
 
 A test compile of this tutorial design achieved the following results on the
-Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA. The tables
-shows the performance of the design as well as the resources consumed by the
-kernel system.
+Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA. The table
+below shows the performance of the design as well as the resources consumed by
+the kernel system.
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
 -|-|-|-|-|-|-|-
 Without `-Xsno-interleaving` | 4.004 | 749.23 | 23,815.4 | 26,727  | 1094 | 53 | 0 
