@@ -107,35 +107,49 @@ using HuffmanToLZ77Pipe =
 template<typename InPipe, typename OutPipe>
 event SubmitLZ77DecoderKernel(queue& q) {
   return q.single_task<LZ77DecoderKernelID>([=] {
+    // the maximum history is defined by the DEFLATE algorithm
+    // do not change this:
+    //    making it smaller will make the design not functionally correct
+    //    making it larger will waste space since the compressor follows
+    //    this rule too
     constexpr unsigned kMaxHistory = 32768;
     constexpr unsigned kMaxHistoryMask = kMaxHistory - 1;
-    static_assert(fpga_tools::IsPow2(kMaxHistory));
 
+    // use a ring buffer for the history
     unsigned short history_idx = 0;
     unsigned char history[kMaxHistory];
 
-    FlagBundle<HuffmanData> pipe_data;
+    // history buffer shift register cache
+    constexpr int kCacheDepth = 4;
+    unsigned char history_cache_val[kCacheDepth + 1];
+    unsigned short history_cache_idx[kCacheDepth + 1];
+
     bool done;
     bool reading_history = false;
     bool reading_history_next;
     unsigned short history_read_idx;
     unsigned short history_count;
 
-    constexpr int kCacheDepth = 4;
-    unsigned char history_cache_val[kCacheDepth + 1];
-    unsigned short history_cache_idx[kCacheDepth + 1];
-
-    //[[intel::initiation_interval(1)]]
     [[intel::ivdep(kCacheDepth)]]
     do {
       bool data_valid = true;
       unsigned char c;
+
+      // if we aren't currently reading from the history, read from input pipe
       if (!reading_history) {
-        pipe_data = InPipe::read(data_valid);
+        // read from pipe
+        auto pipe_data = InPipe::read(data_valid);
+
+        // check if we are done
         done = pipe_data.flag & data_valid;
+
+        // grab the symbol or the length and distance pair
         auto len_or_sym = pipe_data.data.len_or_sym;
         auto dist = pipe_data.data.dist_or_flag;
         c = len_or_sym & 0xFF;
+
+        // if we get a length distance pair we will read 'len_or_sym' bytes
+        // starting 'dist' 
         history_count = len_or_sym;
         reading_history = (dist != -1) & data_valid;
         reading_history_next = history_count != 1;
