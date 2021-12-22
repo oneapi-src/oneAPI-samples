@@ -107,43 +107,82 @@ using HuffmanToLZ77Pipe =
 template<typename InPipe, typename OutPipe>
 event SubmitLZ77DecoderKernel(queue& q) {
   return q.single_task<LZ77DecoderKernelID>([=] {
-    unsigned idx = 0;
     constexpr unsigned kMaxHistory = 32768;
     constexpr unsigned kMaxHistoryMask = kMaxHistory - 1;
-
     static_assert(fpga_tools::IsPow2(kMaxHistory));
+
+    unsigned short history_idx = 0;
     unsigned char history[kMaxHistory];
 
     FlagBundle<HuffmanData> pipe_data;
     bool done;
+    bool reading_history = false;
+    bool reading_history_next;
+    unsigned short history_read_idx;
+    unsigned short history_count;
 
+    constexpr int kCacheDepth = 4;
+    unsigned char history_cache_val[kCacheDepth + 1];
+    unsigned short history_cache_idx[kCacheDepth + 1];
+
+    //[[intel::initiation_interval(1)]]
+    [[intel::ivdep(kCacheDepth)]]
     do {
-      // TODO: Non-blocking pipe read?
-      // TODO: make this a single loop, rather than nested loop in else statement?
-      // TODO: history memory is bad :(
-      pipe_data = InPipe::read();
-      done = pipe_data.flag;
+      bool data_valid = true;
+      unsigned char c;
+      if (!reading_history) {
+        pipe_data = InPipe::read(data_valid);
+        done = pipe_data.flag & data_valid;
+        auto len_or_sym = pipe_data.data.len_or_sym;
+        auto dist = pipe_data.data.dist_or_flag;
+        c = len_or_sym & 0xFF;
+        history_count = len_or_sym;
+        reading_history = (dist != -1) & data_valid;
+        reading_history_next = history_count != 1;
+        history_read_idx = (history_idx - dist) & kMaxHistoryMask;
+      }
 
-      if (!done) {
-        if (pipe_data.data.dist_or_flag == -1) {
-          unsigned char c = (unsigned char)(pipe_data.data.len_or_sym & 0xFF);
-          history[idx] = c;
-          idx = (idx + 1) & kMaxHistoryMask;
-          OutPipe::write(FlagBundle<unsigned char>(c));
-        } else {
-          unsigned short len = pipe_data.data.len_or_sym;
-          unsigned short dist = pipe_data.data.dist_or_flag;
+      if (reading_history) {
+        // grab from the history buffer
+        c = history[history_read_idx];
 
-          unsigned int ridx = (idx - dist) & kMaxHistoryMask;
-          [[intel::ivdep(history)]]
-          for (int i = 0; i < len; i++) {
-            unsigned char c = history[ridx];
-            ridx = (ridx + 1) & kMaxHistoryMask;
-            history[idx] = c;
-            idx = (idx + 1) & kMaxHistoryMask;
-            OutPipe::write(FlagBundle<unsigned char>(c));
+        // also check the cache to see if it is there
+        #pragma unroll
+        for (int i = 0; i < kCacheDepth + 1; i++) {
+          if (history_cache_idx[i] == history_read_idx) {
+            c = history_cache_val[i];
           }
         }
+
+        // update the history read index
+        history_read_idx = (history_read_idx + 1) & kMaxHistoryMask;
+
+        // update whether we are still reading the history
+        reading_history = reading_history_next;
+        reading_history_next = history_count != 2;
+        history_count--;
+      }
+      
+
+      if (!done & data_valid) {
+        // write the new value to both the history buffer and the cache
+        history[history_idx] = c;
+        history_cache_val[kCacheDepth] = c;
+        history_cache_idx[kCacheDepth] = history_idx;
+
+        // Cache is just a shift register, so shift the shift reg. Pushing
+        // into the back of the shift reg is done above.
+        #pragma unroll
+        for (int i = 0; i < kCacheDepth; i++) {
+          history_cache_val[i] = history_cache_val[i + 1];
+          history_cache_idx[i] = history_cache_idx[i + 1];
+        }
+
+        // update the history index
+        history_idx = (history_idx + 1) & kMaxHistoryMask;
+
+        // write the output to the pipe
+        OutPipe::write(FlagBundle<unsigned char>(c));
       }
     } while (!done);
     
