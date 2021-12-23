@@ -47,13 +47,9 @@ class OutPipeID;
 using InPipe = ext::intel::pipe<InPipeID, char>;
 using OutPipe = ext::intel::pipe<OutPipeID, FlagBundle<unsigned char>>;
 
-// Max compression ratio. For example, 5 means the decompressed file is 5x
-// bigger than the compressed file.
-constexpr int kMaxInflateFactor = 5;
-
 ////////////////////////////////////////////////////////////////////////////////
 event SubmitProducer(queue&, unsigned char*, int);
-event SubmitConsumer(queue&, unsigned char*, int*, int);
+event SubmitConsumer(queue&, unsigned char*, int*);
 std::vector<unsigned char> ReadInputFile(std::string filename);
 void WriteOutputFile(std::string, std::vector<unsigned char>&);
 ////////////////////////////////////////////////////////////////////////////////
@@ -104,8 +100,13 @@ int main(int argc, char* argv[]) {
   // read input file
   std::vector<unsigned char> in_bytes = ReadInputFile(in_filename);
   int in_count = in_bytes.size();
-  int max_out_count = in_count * kMaxInflateFactor;
-  std::vector<unsigned char> out_bytes(max_out_count);
+
+  // read the expected output size from the last 4 bytes of the file
+  std::vector<unsigned char> last_4_bytes(in_bytes.end() - 4, in_bytes.end());
+  unsigned out_count = *(reinterpret_cast<unsigned*>(last_4_bytes.data()));
+  std::vector<unsigned char> out_bytes(out_count);
+
+  // host variables for output from device
   int inflated_count_host = 0;
   HeaderData hdr_data_host;
   unsigned int crc_host, size_host;
@@ -126,7 +127,7 @@ int main(int argc, char* argv[]) {
       std::cerr << "ERROR: could not allocate space for 'in'\n";
       std::terminate();
     }
-    if ((out = malloc_device<unsigned char>(max_out_count, q)) == nullptr) {
+    if ((out = malloc_device<unsigned char>(out_count, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'out'\n";
       std::terminate();
     }
@@ -155,7 +156,7 @@ int main(int argc, char* argv[]) {
       // run the producer and consumer kernels
       std::cout << "Launching Producer and Consumer kernels\n";
       auto producer_event = SubmitProducer(q, in, in_count);
-      auto consumer_event = SubmitConsumer(q, out, inflated_count, max_out_count);
+      auto consumer_event = SubmitConsumer(q, out, inflated_count);
 
       // run the decompression kernels
       std::cout << "Launching gzip kernels\n";
@@ -187,7 +188,7 @@ int main(int argc, char* argv[]) {
       time[i] = duration<double, std::milli>(end - start).count();
 
       // Copy the output back from the device
-      q.memcpy(out_bytes.data(), out, max_out_count * sizeof(unsigned char)).wait();
+      q.memcpy(out_bytes.data(), out, out_count * sizeof(unsigned char)).wait();
       q.memcpy(&inflated_count_host, inflated_count, sizeof(int)).wait();
       q.memcpy(&hdr_data_host, hdr_data, sizeof(HeaderData)).wait();
       q.memcpy(&crc_host, crc, sizeof(int)).wait();
@@ -260,16 +261,13 @@ event SubmitProducer(queue& q, unsigned char* in_ptr, int count) {
 //
 // TODO
 //
-event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr, int max_count) {
+event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr) {
   return q.submit([&](handler &h) {
     h.single_task<ConsumerID>([=]() [[intel::kernel_args_restrict]] {
       device_ptr<unsigned char> out(out_ptr);
       device_ptr<int> inflated_count(inflated_count_ptr);
 
-      // TODO: get II=1 here
       int i = 0;
-      bool i_in_range = 0 < max_count;
-      bool i_next_in_range = 1 < max_count;
       bool done;
 
       do {
@@ -280,11 +278,9 @@ event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr, 
 
         if (!done && valid_pipe_read) {
           out[i] = pipe_data.data;
-          i_in_range = i_next_in_range;
-          i_next_in_range = i < (max_count - 2);
           i++;
         }
-      } while (i_in_range && !done);
+      } while (!done);
 
       // write out the actual output count (inflated_count <= max_count)
       *inflated_count = i;

@@ -24,19 +24,37 @@ constexpr T Min(T a, T b) { return (a < b) ? a : b; }
 template <typename T>
 constexpr T Max(T a, T b) { return (a > b) ? a : b; }
 
+// rounds up to the nearest multiple of of 'multiple'
+// only works for positive numbers
+template <typename T>
+constexpr T RoundUpToMultiple(T num, T multiple) {
+  static_assert(std::is_integral_v<T>);
+  static_assert(std::is_unsigned_v<T>);
+  if (multiple == 0) {
+    return num;
+  }
+
+  int remainder = num % multiple;
+  if (remainder == 0) {
+    return num;
+  } else {
+    return num + multiple - remainder;
+  }
+}
+
 // returns n^2
 template <typename T>
 constexpr T Pow2(T n) {
-  static_assert(std::is_integral<T>::value);
-  static_assert(std::is_unsigned<T>::value);
+  static_assert(std::is_integral_v<T>);
+  static_assert(std::is_unsigned_v<T>);
   return T(1) << n;
 }
 
 // returns whether 'n' is a power of 2
 template <typename T>
 constexpr bool IsPow2(T n) {
-  static_assert(std::is_integral<T>::value);
-  static_assert(std::is_unsigned<T>::value);
+  static_assert(std::is_integral_v<T>);
+  static_assert(std::is_unsigned_v<T>);
   return (n != 0) && ((n & (n - 1)) == 0);
 }
 
@@ -65,8 +83,8 @@ static constexpr T CeilLog2(T n) {
 // return 'n' rounded up to the nearest power of 2
 template <typename T>
 constexpr T RoundUpPow2(T n) {
-  static_assert(std::is_integral<T>::value);
-  static_assert(std::is_unsigned<T>::value);
+  static_assert(std::is_integral_v<T>);
+  static_assert(std::is_unsigned_v<T>);
   if (n == 0) {
     return 2;
   } else if (IsPow2(n)) {
