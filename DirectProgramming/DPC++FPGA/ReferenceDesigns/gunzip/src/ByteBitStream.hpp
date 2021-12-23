@@ -21,7 +21,7 @@ using namespace sycl;
     ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
   }
 
-constexpr unsigned int kBufferSizeBits = 32;
+constexpr unsigned int kBufferSizeBits = 64;
 constexpr unsigned int kBufferSizeBitsMask = (kBufferSizeBits - 1);
 constexpr unsigned short kMaxReadBits = 15;
 
@@ -58,6 +58,15 @@ public:
     ac_int<20, false> tmp = 0;
     #pragma unroll
     for (unsigned char i = 0; i < 20; i++) {
+      tmp[i] = buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1;
+    }
+    return tmp;
+  }
+
+  ac_int<30, false> ReadUInt30() {
+    ac_int<30, false> tmp = 0;
+    #pragma unroll
+    for (unsigned char i = 0; i < 30; i++) {
       tmp[i] = buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1;
     }
     return tmp;

@@ -426,25 +426,18 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         dist_map_last_code[codelen - 1] = dist_map_next_code;
       }
 
+      bool reading_distance = false;
       bool stop_code_hit = false;
       bool out_ready = false;
-      unsigned int num_extra_bits = 0;
       HuffmanData out_data;
-
-      // CONSIDERATION:
-      //  enum lowest enum can go is 8 bits. Could use an ac_int<2, false> here
-      //  but is it really worth it? Quartus likely sweeps these away.
-      enum BlockParsingState : unsigned char {
-        Symbol, ExtraRunLengthBits, DistanceSymbol, ExtraDistanceBits
-      };
-      BlockParsingState state = Symbol;
 
       // main processing loop
       ac_int<9, false> lit_symbol;
       ac_int<5, false> dist_symbol;
+
+      //[[intel::initiation_interval(2)]]
       do {
-        // TODO: make this if then if, rather than if-elseif
-        if ((bbs.Size() < 20) && !done_reading) {
+        if ((bbs.Size() < 30) && !done_reading) {
           bool read_valid;
           auto pd = InPipe::read(read_valid);
 
@@ -453,149 +446,145 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             done_reading = pd.flag;
             bbs.NewByte(c);
           }
-        } else if (bbs.Size() >= 20) {
-          if (state == Symbol || state == DistanceSymbol) {
-            // read the next 15 bits (we know we have them)
-            ac_int<20, false> next_bits = bbs.ReadUInt20();
+        } else if (bbs.Size() >= 30) {
+          // read the next 15 bits (we know we have them)
+          //ac_int<20, false> next_bits = bbs.ReadUInt20();
+          ac_int<30, false> next_bits = bbs.ReadUInt30();
 
-            // find all possible dynamic lengths
-            [[intel::fpga_register]] ac_int<5, false> lit_extra_bit_vals[15][5];
+          // find all possible dynamic lengths
+          [[intel::fpga_register]] ac_int<5, false> lit_extra_bit_vals[15][5];
+          #pragma unroll
+          for (unsigned char out_codelen = 1; out_codelen <= 15; out_codelen++) {
             #pragma unroll
-            for (unsigned char out_codelen = 1; out_codelen <= 15; out_codelen++) {
+            for (unsigned char in_codelen = 1; in_codelen <= 5; in_codelen++) {
+              ac_int<5, false> codebits_tmp(0);
               #pragma unroll
-              for (unsigned char in_codelen = 1; in_codelen <= 5; in_codelen++) {
-                ac_int<5, false> codebits_tmp(0);
-                #pragma unroll
-                for (unsigned char bit = 0; bit < in_codelen; bit++) {
-                  codebits_tmp[bit] = next_bits[out_codelen + bit] & 0x1;
-                }
-                lit_extra_bit_vals[out_codelen - 1][in_codelen - 1] = codebits_tmp;
+              for (unsigned char bit = 0; bit < in_codelen; bit++) {
+                codebits_tmp[bit] = next_bits[out_codelen + bit] & 0x1;
               }
-            }
-
-            // find all possible code lengths and offsets
-            // TODO: get rid of selects here for literal vs distance symbol
-            // and just look stuff up in parallel
-            bool codelen_valid_bitmap[15];
-            ac_int<9, false> codelen_offset[15];
-            ac_int<9, false> codelen_base_idx[15];
-            #pragma unroll
-            for (unsigned char codelen = 1; codelen <= 15; codelen++) {
-              ac_int<15, false> codebits_tmp(0);
-              #pragma unroll
-              for (unsigned char bit = 0; bit < codelen; bit++) {
-                codebits_tmp[codelen - bit - 1] = next_bits[bit] & 0x1;
-              }
-              unsigned short codebits = codebits_tmp;
-
-              auto lit_base_idx = lit_map_base_idx[codelen - 1];
-              auto lit_first_code = lit_map_first_code[codelen - 1];
-              auto lit_last_code = lit_map_last_code[codelen - 1];
-              auto dist_base_idx = dist_map_base_idx[codelen - 1];
-              auto dist_first_code = dist_map_first_code[codelen - 1];
-              auto dist_last_code = dist_map_last_code[codelen - 1];
-
-              auto base_idx = (state == Symbol) ? (unsigned short)lit_base_idx
-                                                : (unsigned short)dist_base_idx;
-              auto first_code = (state == Symbol) ? lit_first_code
-                                                  : dist_first_code;
-              auto last_code = (state == Symbol) ? lit_last_code
-                                                 : dist_last_code;
-              
-              codelen_base_idx[codelen - 1] = base_idx;
-              codelen_valid_bitmap[codelen - 1] =
-                  (codebits >= first_code) & (codebits < last_code);;
-              
-              codelen_offset[codelen - 1] = codebits - first_code;
-            }
-
-            ac_int<4, false>  shortest_match_len;
-            unsigned short base_idx;
-            unsigned short offset;
-            #pragma unroll
-            for (unsigned char codelen = 15; codelen >= 1; codelen--) {
-              if (codelen_valid_bitmap[codelen - 1]) {
-                shortest_match_len = codelen;
-                base_idx = codelen_base_idx[codelen - 1];
-                offset = codelen_offset[codelen - 1];
-              }
-            }
-
-            // lookup symbol using base_idx and offset
-            lit_symbol = lit_map[base_idx + offset];
-            dist_symbol =  dist_map[base_idx + offset];
-
-            // we will either shift by shortest_match_len or by
-            // shortest_match_len + num_extra_bits_local based on if we
-            // read a length and its extra bits here
-            // maximum value for shift_amount = 15 + 5 = 20
-            ac_int<5, false> shift_amount = shortest_match_len;
-
-            if (state == Symbol) {
-              // currently parsing a symbol or length (same table)
-              if (lit_symbol == 256) {
-                // stop code hit, done this block
-                stop_code_hit = true;
-                out_ready = false;
-                state = ExtraDistanceBits;
-              } else if (lit_symbol < 256) {
-                // decoded a regular character
-                out_data.len_or_sym = lit_symbol;
-                out_data.dist_or_flag = -1;
-                out_ready = true;
-                state = Symbol;
-              } else if (lit_symbol <= 264) {
-                // decoded a length with a static value
-                out_data.len_or_sym = lit_symbol - 254;
-                state = DistanceSymbol;
-              } else if (lit_symbol <= 284) {
-                // decoded a length with a dynamic value
-                ac_int<3, false> num_extra_bits_local = (lit_symbol - 261) / 4;
-                auto extra_bits_val = lit_extra_bit_vals[shortest_match_len - 1][num_extra_bits_local - 1];
-                out_data.len_or_sym = (((lit_symbol - 265) % 4 + 4) << num_extra_bits_local) + 3 + extra_bits_val;
-                shift_amount = shortest_match_len + num_extra_bits_local;
-                state = DistanceSymbol;
-              } else if (lit_symbol == 285) {
-                // decoded a length with a static value
-                out_data.len_or_sym = 258;
-                state = DistanceSymbol;
-              } // else error, ignored
-            } else if (state == DistanceSymbol) {
-              // currently decoding a distance symbol
-              if (dist_symbol <= 3) {
-                // decoded a distance with a static value
-                out_data.dist_or_flag = dist_symbol + 1;
-                state = Symbol;
-                out_ready = true;
-              } else {
-                // decoded a distance with a dynamic value
-                // NOTE: should be <= 29, but not doing error checking
-                num_extra_bits = (dist_symbol / 2) - 1;
-                state = ExtraDistanceBits;
-              }
-            }
-
-            // shift based on how many bits we read
-            bbs.Shift(shift_amount);
-          } else {
-            // decoding "extra" bits for either a length ot distance
-            if (bbs.Size() >= num_extra_bits) {
-              // read the extra bits and shift
-              unsigned short extra_bits = bbs.ReadUInt(num_extra_bits);
-              bbs.Shift(num_extra_bits);
-
-              // compute the length or distance based on the original symbol
-              // ('lit_symbol' or 'distance_symbol') and the bits we read.
-              if (state == ExtraRunLengthBits) {
-                out_data.len_or_sym = (((lit_symbol - 265) % 4 + 4) << num_extra_bits) + 3 + extra_bits;
-                state = DistanceSymbol;
-              } else if (state == ExtraDistanceBits) {
-                out_data.dist_or_flag = ((dist_symbol % 2 + 2) << num_extra_bits) + 1 + extra_bits;
-                out_ready = true;
-                state = Symbol;
-              }
+              lit_extra_bit_vals[out_codelen - 1][in_codelen - 1] = codebits_tmp;
             }
           }
+
+          // find all possible dynamic distances
+          [[intel::fpga_register]] ac_int<15, false> dist_extra_bit_vals[15][15];
+          #pragma unroll
+          for (unsigned char out_codelen = 1; out_codelen <= 15; out_codelen++) {
+            #pragma unroll
+            for (unsigned char in_codelen = 1; in_codelen <= 15; in_codelen++) {
+              ac_int<15, false> codebits_tmp(0);
+              #pragma unroll
+              for (unsigned char bit = 0; bit < in_codelen; bit++) {
+                codebits_tmp[bit] = next_bits[out_codelen + bit] & 0x1;
+              }
+              dist_extra_bit_vals[out_codelen - 1][in_codelen - 1] = codebits_tmp;
+            }
+          }
+
+          // find all possible code lengths and offsets
+          // TODO: get rid of selects here for literal vs distance symbol
+          // and just look stuff up in parallel
+          bool codelen_valid_bitmap[15];
+          ac_int<9, false> codelen_offset[15];
+          ac_int<9, false> codelen_base_idx[15];
+          #pragma unroll
+          for (unsigned char codelen = 1; codelen <= 15; codelen++) {
+            ac_int<15, false> codebits_tmp(0);
+            #pragma unroll
+            for (unsigned char bit = 0; bit < codelen; bit++) {
+              codebits_tmp[codelen - bit - 1] = next_bits[bit] & 0x1;
+            }
+            unsigned short codebits = codebits_tmp;
+
+            auto lit_base_idx = lit_map_base_idx[codelen - 1];
+            auto lit_first_code = lit_map_first_code[codelen - 1];
+            auto lit_last_code = lit_map_last_code[codelen - 1];
+            auto dist_base_idx = dist_map_base_idx[codelen - 1];
+            auto dist_first_code = dist_map_first_code[codelen - 1];
+            auto dist_last_code = dist_map_last_code[codelen - 1];
+
+            auto base_idx = !reading_distance ? (unsigned short)lit_base_idx
+                                              : (unsigned short)dist_base_idx;
+            auto first_code = !reading_distance ? lit_first_code
+                                                : dist_first_code;
+            auto last_code = !reading_distance ? lit_last_code
+                                               : dist_last_code;
+            
+            codelen_base_idx[codelen - 1] = base_idx;
+            codelen_valid_bitmap[codelen - 1] =
+                (codebits >= first_code) & (codebits < last_code);;
+            
+            codelen_offset[codelen - 1] = codebits - first_code;
+          }
+
+          ac_int<4, false>  shortest_match_len;
+          unsigned short base_idx;
+          unsigned short offset;
+          #pragma unroll
+          for (unsigned char codelen = 15; codelen >= 1; codelen--) {
+            if (codelen_valid_bitmap[codelen - 1]) {
+              shortest_match_len = codelen;
+              base_idx = codelen_base_idx[codelen - 1];
+              offset = codelen_offset[codelen - 1];
+            }
+          }
+
+          // lookup symbol using base_idx and offset
+          lit_symbol = lit_map[base_idx + offset];
+          dist_symbol =  dist_map[base_idx + offset];
+
+          // we will either shift by shortest_match_len or by
+          // shortest_match_len + num_extra_bits_local based on if we
+          // read a length and its extra bits here
+          // maximum value for shift_amount = 15 + 5 = 20
+          ac_int<5, false> shift_amount = shortest_match_len;
+
+          if (!reading_distance) {
+            // currently parsing a symbol or length (same table)
+            if (lit_symbol == 256) {
+              // stop code hit, done this block
+              stop_code_hit = true;
+              out_ready = false;
+            } else if (lit_symbol < 256) {
+              // decoded a regular character
+              out_data.len_or_sym = lit_symbol;
+              out_data.dist_or_flag = -1;
+              out_ready = true;
+            } else if (lit_symbol <= 264) {
+              // decoded a length with a static value
+              out_data.len_or_sym = lit_symbol - 254;
+              reading_distance = true;
+            } else if (lit_symbol <= 284) {
+              // decoded a length with a dynamic value
+              ac_int<3, false> num_extra_bits = (lit_symbol - 261) / 4;
+              auto extra_bits_val = lit_extra_bit_vals[shortest_match_len - 1][num_extra_bits - 1];
+              out_data.len_or_sym = (((lit_symbol - 265) % 4 + 4) << num_extra_bits) + 3 + extra_bits_val;
+              shift_amount = shortest_match_len + num_extra_bits;
+              reading_distance = true;
+            } else if (lit_symbol == 285) {
+              // decoded a length with a static value
+              out_data.len_or_sym = 258;
+              reading_distance = true;
+            } // else error, ignored
+          } else {
+            // currently decoding a distance symbol
+            if (dist_symbol <= 3) {
+              // decoded a distance with a static value
+              out_data.dist_or_flag = dist_symbol + 1;
+            } else {
+              // decoded a distance with a dynamic value
+              // NOTE: should be <= 29, but not doing error checking
+              auto num_extra_bits = (dist_symbol / 2) - 1;
+              auto extra_bits_val = dist_extra_bit_vals[shortest_match_len - 1][num_extra_bits - 1];
+              out_data.dist_or_flag = ((dist_symbol % 2 + 2) << num_extra_bits) + 1 + extra_bits_val;
+              shift_amount = shortest_match_len + num_extra_bits;
+            }
+            out_ready = true;
+            reading_distance = false;
+          }
+
+          // shift based on how many bits we read
+          bbs.Shift(shift_amount);
         }
 
         // output data to downstream kernel if ready
