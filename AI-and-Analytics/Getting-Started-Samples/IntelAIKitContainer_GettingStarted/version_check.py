@@ -7,6 +7,7 @@ tensorflow_ext_found = util.find_spec("intel_extension_for_tensorflow") is not N
 xgboost_found = util.find_spec("xgboost") is not None
 sklearn_found = util.find_spec("sklearn") is not None
 sklearnex_found = util.find_spec("sklearnex") is not None
+inc_found = util.find_spec("neural_compressor") is not None
 
 if tensorflow_found == True:
 
@@ -59,4 +60,7 @@ if sklearn_found == True:
     if sklearnex_found == True:
         import sklearnex
         print("have scikit learn ext 2021.4 : ", sklearnex._utils.get_sklearnex_version((2021, 'P', 400)))
-   
+
+if inc_found == True:
+    import neural_compressor as inc
+    print("neural_compressor version {}".format(inc.__version__))

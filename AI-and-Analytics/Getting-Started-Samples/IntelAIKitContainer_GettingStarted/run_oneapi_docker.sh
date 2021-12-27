@@ -31,6 +31,6 @@ docker run --privileged $DOCKER_RUN_ENVS -dit  --name "$name" $gpu_arg \
     -p 6543:6543 \
     -p 12345:12345 \
     "$image_id"
-docker exec -it "$name" /bin/bash -c "pip install matplotlib"
+docker exec -it "$name" /bin/bash -c "pip install -r requirements.txt"
 docker exec -it "$name" /bin/bash -c "apt-get update -yq;apt-get install -yq vim numactl"
 docker exec -it "$name" /bin/bash
