@@ -179,4 +179,4 @@ In a web browser, open link: **http://yyy:8888/?token=146761d9317552c43e0d6b8b6b
 Next, all of practice of the sample is running in Jupyter Notebook.
 
 ### Build and run additional samples
-Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to INC Tensorflow. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
+Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to iso3dfd_omp_offload. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
