@@ -149,6 +149,3 @@ The default device id: 0
 Result of matrix multiplication using OpenMP: Success - The results are correct!
 Result of matrix multiplication using GPU offloading: Success - The results are correct!
 ```
-
-## Additional Samples
--- Text --
