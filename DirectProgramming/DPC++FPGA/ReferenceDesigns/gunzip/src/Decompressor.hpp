@@ -102,7 +102,7 @@ class HuffmanToLZ77PipeID;
 using HeaderToHuffmanPipe =
   ext::intel::pipe<HeaderToHuffmanPipeID, FlagBundle<unsigned char>>;
 using HuffmanToLZ77Pipe =
-  ext::intel::pipe<HuffmanToLZ77PipeID, FlagBundle<HuffmanData>>;
+  ext::intel::pipe<HuffmanToLZ77PipeID, FlagBundle<HuffmanData>, 16>;
 
 template<typename InPipe, typename OutPipe>
 event SubmitLZ77DecoderKernel(queue& q) {
@@ -437,7 +437,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 
       //[[intel::initiation_interval(2)]]
       do {
-        if ((bbs.Size() < 30) && !done_reading) {
+        if (bbs.HasSpaceForByte() && !done_reading) {
           bool read_valid;
           auto pd = InPipe::read(read_valid);
 
@@ -446,7 +446,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             done_reading = pd.flag;
             bbs.NewByte(c);
           }
-        } else if (bbs.Size() >= 30) {
+        }
+        
+        if (bbs.Size() >= 30) {
           // read the next 15 bits (we know we have them)
           //ac_int<20, false> next_bits = bbs.ReadUInt20();
           ac_int<30, false> next_bits = bbs.ReadUInt30();
