@@ -121,5 +121,5 @@ There are no editable parameters for this sample.
 	
 ```
     
-## Additional Samples
---Add Text--
+### Build and run additional samples
+Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to this sample. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
