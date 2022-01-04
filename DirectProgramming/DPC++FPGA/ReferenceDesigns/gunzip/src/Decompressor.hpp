@@ -213,10 +213,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 
     [[intel::disable_loop_pipelining]]  // ya?
     do {
-      unsigned short type = 0xFF;
-      unsigned short last_block_num = 0xFF;
-      unsigned short numlitlencodes = 0, numdistcodes = 0, numcodelencodes = 0;
-      bool parsing_first_table = true, parsing_second_table = true;
+      unsigned char last_block_num = 0xFF, type = 0xFF;
+      ac_int<9, false> numlitlencodes = 0, numdistcodes = 0, numcodelencodes = 0;
+      bool parsing_first_table = true;
       unsigned short codelencodelen_count = 0;
 
       constexpr unsigned short codelencodelen_idxs[] =
@@ -240,7 +239,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             last_block_num = bbs.ReadUInt(1);
             //PRINTF("last_block_num: %u\n", last_block_num);
             bbs.Shift(1);
-            last_block = (last_block_num == 1);
+            last_block = (last_block_num & 0x1);
           } else if (type == 0xFF) {
             type = bbs.ReadUInt(2);
             //PRINTF("type: %u\n", type);
@@ -288,6 +287,8 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       // = MAX((2^5 + 257) + (2^5 + 1)) = 322
       int codelens[322];
       for (int i = 0; i < 322; i++) { codelens[i] = -1; }
+      auto total_codes_second_table = numlitlencodes + numdistcodes;
+      decltype(total_codes_second_table) codelens_idx = 0;
       int tmp_symbol;
       unsigned short early_symbol;
       unsigned int codebits = 1;
@@ -296,7 +297,6 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       bool reading_next_symbol = true;
       bool runlen_extend;
       unsigned short runlen;
-      unsigned int codelens_idx = 0;
       int onecount = 0, otherpositivecount = 0;
       do {
         if (bbs.HasSpaceForByte()) {
@@ -324,7 +324,8 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         if (reading_next_symbol && tmp_symbol != -1) {
           if (early_symbol <= 15) {
             // ADD SYMBOL
-            codelens[codelens_idx++] = early_symbol;
+            codelens[codelens_idx] = early_symbol;
+            codelens_idx++;
             reading_next_symbol = true;
             if (codelens_idx >= numlitlencodes) {
               if (early_symbol == 1) {
@@ -357,8 +358,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         } else {
           unsigned short extend_val = runlen_extend ? codelens[codelens_idx-1] : 0;
           for (int i = 0; i < runlen; i++) {
-            codelens[codelens_idx++] = extend_val;
-            if (codelens_idx >= numlitlencodes) {
+            auto codelens_idx_internal = codelens_idx + i;
+            codelens[codelens_idx_internal] = extend_val;
+            if (codelens_idx_internal >= numlitlencodes) {
               if (extend_val == 1) {
                 onecount++;
               } else if (extend_val > 0) {
@@ -366,11 +368,10 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               }
             }
           }
+          codelens_idx += runlen;
           reading_next_symbol = true;
         }
-
-        parsing_second_table = (codelens_idx < (numlitlencodes + numdistcodes));
-      } while (parsing_second_table);
+      } while (codelens_idx < total_codes_second_table);
 
       if (onecount == 1 && otherpositivecount == 0) {
         int extend_amount = 32 - numdistcodes;
@@ -597,13 +598,15 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       } while (!stop_code_hit);
     } while (!last_block);
 
+    // notify downstream that we are done
+    OutPipe::write(FlagBundle<HuffmanData>(HuffmanData(), true));
+
+    // read out the remaining data from the pipe
     // NOTE: don't really care about performance here
     while (!done_reading) {
       auto pd = InPipe::read();
       done_reading = pd.flag;
     }
-
-    OutPipe::write(FlagBundle<HuffmanData>(HuffmanData(), true));
   });
 }
 
