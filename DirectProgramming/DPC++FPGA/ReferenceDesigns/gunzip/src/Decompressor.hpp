@@ -218,14 +218,18 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 
     [[intel::disable_loop_pipelining]]  // ya?
     do {
-      unsigned char last_block_num = 0xFF, type = 0xFF;
-      ac_uint<9> numlitlencodes = 0, numdistcodes = 0, numcodelencodes = 0;
+      ac_uint<3> first_table_state = 0;
+      ac_uint<1> last_block_num;
+      ac_uint<2> type;
+      ac_uint<9> numlitlencodes;
+      ac_uint<6> numdistcodes;
+      ac_uint<5> numcodelencodes;
       bool parsing_first_table = true;
       unsigned short codelencodelen_count = 0;
 
       constexpr unsigned short codelencodelen_idxs[] =
         {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
-      unsigned char codelencodelen[19] = {0};
+      ac_uint<3> codelencodelen[19] = {0};
 
       // NOTE: this loop is not the main processing loop and therefore is
       // not critical (low trip count). However, the compiler doesn't know that
@@ -240,29 +244,34 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         }
 
         if (bbs.Size() >= 5) {
-          if (last_block_num == 0xFF) {
+          if (first_table_state == 0) {
             last_block_num = bbs.ReadUInt(1);
             //PRINTF("last_block_num: %u\n", last_block_num);
             bbs.Shift(1);
             last_block = (last_block_num & 0x1);
-          } else if (type == 0xFF) {
+            first_table_state = 1;
+          } else if (first_table_state == 1) {
             type = bbs.ReadUInt(2);
             //PRINTF("type: %u\n", type);
             bbs.Shift(2);
-          } else if (numlitlencodes == 0) {
+            first_table_state = 2;
+          } else if (first_table_state == 2) {
             numlitlencodes = bbs.ReadUInt(5) + (unsigned short)257;
             //PRINTF("numlitlencodes: %u\n", numlitlencodes);
             bbs.Shift(5);
-          } else if (numdistcodes == 0) {
+            first_table_state = 3;
+          } else if (first_table_state == 3) {
             numdistcodes = bbs.ReadUInt(5) + (unsigned short)1;
             //PRINTF("numdistcodes: %u\n", numdistcodes);
             bbs.Shift(5);
-          } else if (numcodelencodes == 0) {
+            first_table_state = 4;
+          } else if (first_table_state == 4) {
             numcodelencodes = bbs.ReadUInt(4) + (unsigned short)4;
             //PRINTF("numcodelencodes: %u\n", numcodelencodes);
             bbs.Shift(4);
+            first_table_state = 5;
           } else if (codelencodelen_count < numcodelencodes) {
-            unsigned short tmp = bbs.ReadUInt(3);
+            auto tmp = bbs.ReadUInt(3);
             bbs.Shift(3);
             codelencodelen[codelencodelen_idxs[codelencodelen_count]] = tmp;
             //PRINTF("codelencodelen[%u] = %u\n", codelencodelen_idxs[codelencodelen_count], tmp);
@@ -301,7 +310,6 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       ac_uint<15> codelens[322];
       ac_uint<9> total_codes_second_table = numlitlencodes + numdistcodes;
       decltype(total_codes_second_table) codelens_idx = 0;
-      ac_uint<5> early_symbol; // std::remove_extent_t<decltype(codelencode_map)>
       bool decoding_next_symbol = true;
       ac_uint<8> runlen; // MAX = (2^7 + 11)
       int onecount = 0, otherpositivecount = 0;
@@ -330,7 +338,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           // do so 15 bits is the maximum bits to read both a symbol and the
           // extra run length bits (max 8 bits for the symbol, max 7 bits for
           // extra run length)
-          if ( bbs.Size() >= 15) {
+          if (bbs.Size() >= 15) {
             // read 15 bits
             ac_uint<15> next_bits = bbs.ReadUInt15();
 

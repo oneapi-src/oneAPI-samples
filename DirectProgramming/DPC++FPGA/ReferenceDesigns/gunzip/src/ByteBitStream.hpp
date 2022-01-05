@@ -22,12 +22,12 @@ using namespace sycl;
   }
 
 constexpr unsigned int kBufferSizeBits = 64;
+constexpr unsigned int kBufferSizeBitsMask = (kBufferSizeBits - 1);
+static_assert(fpga_tools::IsPow2(kBufferSizeBits));
+
 constexpr unsigned int kBufferSizeCountBits =
     fpga_tools::CeilLog2(kBufferSizeBits);
-constexpr unsigned int kBufferSizeBitsMask = (kBufferSizeBits - 1);
-constexpr unsigned short kMaxReadBits = 15;
-
-static_assert(fpga_tools::IsPow2(kBufferSizeBits));
+constexpr unsigned short kMaxDynamicReadBits = 5;  // see Decompressor.hpp
 
 //
 // TODO
@@ -37,14 +37,14 @@ public:
   ByteBitStream() : widx_(0), ridx_(0), size_(0), space_(kBufferSizeBits),
                     has_space_for_byte_(true) {}
 
-  unsigned short ReadUInt(unsigned char bits) {
-    ac_int<kMaxReadBits, false> tmp = 0;
+  auto ReadUInt(unsigned char bits) {
+    ac_int<kMaxDynamicReadBits, false> tmp = 0;
     #pragma unroll
-    for (unsigned char i = 0; i < kMaxReadBits; i++) {
+    for (unsigned char i = 0; i < kMaxDynamicReadBits; i++) {
       tmp[i] = (i < bits) ? (buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1) : 0;
     }
 
-    return (unsigned short)tmp;
+    return tmp;
   }
 
   template<int bits>
