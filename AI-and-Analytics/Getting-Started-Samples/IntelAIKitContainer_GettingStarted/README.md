@@ -35,6 +35,11 @@ To run the program on Linux*, type the following command in the terminal with [D
     ```
     docker pull intel/oneapi-aikit
     ```
+    > Please apply the below command and login again if a permisson denied error occurs.
+    ```
+    sudo usermod -aG docker $USER
+    ```
+    
 2. Run the docker image via a bash script:  
         
 
