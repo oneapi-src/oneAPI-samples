@@ -22,6 +22,8 @@ using namespace sycl;
   }
 
 constexpr unsigned int kBufferSizeBits = 64;
+constexpr unsigned int kBufferSizeCountBits =
+    fpga_tools::CeilLog2(kBufferSizeBits);
 constexpr unsigned int kBufferSizeBitsMask = (kBufferSizeBits - 1);
 constexpr unsigned short kMaxReadBits = 15;
 
@@ -32,7 +34,8 @@ static_assert(fpga_tools::IsPow2(kBufferSizeBits));
 //
 class ByteBitStream {
 public:
-  ByteBitStream() : widx_(0), ridx_(0), size_(0), space_(kBufferSizeBits) {}
+  ByteBitStream() : widx_(0), ridx_(0), size_(0), space_(kBufferSizeBits),
+                    has_space_for_byte_(true) {}
 
   unsigned short ReadUInt(unsigned char bits) {
     ac_int<kMaxReadBits, false> tmp = 0;
@@ -44,46 +47,36 @@ public:
     return (unsigned short)tmp;
   }
 
-  unsigned short ReadUInt15() {
-    ac_int<15, false> tmp = 0;
+  template<int bits>
+  auto ReadUIntFixed() {
+    static_assert(bits <= kBufferSizeBits);
+    ac_int<bits, false> tmp = 0;
     #pragma unroll
-    for (unsigned char i = 0; i < 15; i++) {
+    for (unsigned char i = 0; i < bits; i++) {
       tmp[i] = buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1;
     }
 
-    return (unsigned short)tmp;
-  }
-
-  ac_int<20, false> ReadUInt20() {
-    ac_int<20, false> tmp = 0;
-    #pragma unroll
-    for (unsigned char i = 0; i < 20; i++) {
-      tmp[i] = buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1;
-    }
     return tmp;
   }
 
-  ac_int<30, false> ReadUInt30() {
-    ac_int<30, false> tmp = 0;
-    #pragma unroll
-    for (unsigned char i = 0; i < 30; i++) {
-      tmp[i] = buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1;
-    }
-    return tmp;
-  }
+  auto ReadUInt8() { return ReadUIntFixed<8>(); }
+  auto ReadUInt15() { return ReadUIntFixed<15>(); }
+  auto ReadUInt20() { return ReadUIntFixed<20>(); }
+  auto ReadUInt30() { return ReadUIntFixed<30>(); }
 
   void Shift(unsigned char bits) {
     // TODO: percompute these calculations
     ridx_ = (ridx_ + bits) & kBufferSizeBitsMask;
     size_ -= bits;
     space_ += bits;
+    has_space_for_byte_ = space_ >= 8;
   }
 
-  unsigned short Size() {
+  auto Size() {
     return size_;
   }
 
-  unsigned short Space() {
+  auto Space() {
     return space_;
   }
 
@@ -97,8 +90,7 @@ public:
   }
 
   bool HasSpaceForByte() {
-    // TODO: precompute
-    return Space() >= 8; 
+    return has_space_for_byte_; 
   }
 
   void NewByte(unsigned char b) {
@@ -112,15 +104,14 @@ public:
     widx_ = (widx_ + 8) & kBufferSizeBitsMask;
     size_ += 8;
     space_ -= 8;
+    has_space_for_byte_ = space_ >= 8;
   }
 
 private:
   ac_int<kBufferSizeBits, false> buf_;
-
-  // TODO: use ac_int here for exact number of bits needed?
-  unsigned char widx_, ridx_;
-  unsigned char size_, space_;
-  static_assert(std::numeric_limits<unsigned char>::max() > kBufferSizeBits);
+  ac_int<kBufferSizeCountBits, false> widx_, ridx_;
+  ac_int<kBufferSizeCountBits + 1, false> size_, space_;
+  bool has_space_for_byte_;
 
   void PrintBuffer() {
     PRINTF("%hu: ", Size());
