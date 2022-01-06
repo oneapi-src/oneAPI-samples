@@ -74,7 +74,7 @@ else()
     set(NUM_REORDER "")
 endif()
 
-if(DEFAULT_SEED_OVERRIDE)
+if(IGNORE_DEFAULT_SEED)
     set(SEED "")
 endif()
 
