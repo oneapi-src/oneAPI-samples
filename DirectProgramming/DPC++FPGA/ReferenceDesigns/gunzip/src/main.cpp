@@ -62,8 +62,7 @@ int main(int argc, char* argv[]) {
   std::string out_filename = "../data/out";
   
 #ifdef FPGA_EMULATOR
-  //int runs = 2;
-  int runs = 1;
+  int runs = 2;
 #else
   int runs = 8;
 #endif
@@ -80,12 +79,10 @@ int main(int argc, char* argv[]) {
   }
 
   // enforce at least two runs
-  /*
   if (runs < 2) {
     std::cerr << "ERROR: 'runs' must be 2 or more\n";
     std::terminate();
   }
-  */
 
   // the device selector
 #ifdef FPGA_EMULATOR

@@ -229,7 +229,12 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 
       constexpr unsigned short codelencodelen_idxs[] =
         {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
-      ac_uint<3> codelencodelen[19] = {0};
+
+      // TODO: file bug for what is below
+      //ac_uint<3> codelencodelen[19] = {0};
+      ac_uint<3> codelencodelen[19];
+      #pragma unroll
+      for (int i = 0; i < 19; i++) { codelencodelen[i] = 0; }
 
       // NOTE: this loop is not the main processing loop and therefore is
       // not critical (low trip count). However, the compiler doesn't know that
