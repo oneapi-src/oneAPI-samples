@@ -21,9 +21,9 @@ using namespace sycl;
     ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
   }
 
-constexpr unsigned int kBufferSizeBits = 64;
+constexpr unsigned int kBufferSizeBits = 60;
 constexpr unsigned int kBufferSizeBitsMask = (kBufferSizeBits - 1);
-static_assert(fpga_tools::IsPow2(kBufferSizeBits));
+//static_assert(fpga_tools::IsPow2(kBufferSizeBits));
 
 constexpr unsigned int kBufferSizeCountBits =
     fpga_tools::CeilLog2(kBufferSizeBits);
@@ -34,14 +34,14 @@ constexpr unsigned short kMaxDynamicReadBits = 5;  // see Decompressor.hpp
 //
 class ByteBitStream {
 public:
-  ByteBitStream() : widx_(0), ridx_(0), size_(0), space_(kBufferSizeBits),
+  ByteBitStream() : size_(0), space_(kBufferSizeBits),
                     has_space_for_byte_(true) {}
 
   auto ReadUInt(unsigned char bits) {
     ac_int<kMaxDynamicReadBits, false> tmp = 0;
     #pragma unroll
     for (unsigned char i = 0; i < kMaxDynamicReadBits; i++) {
-      tmp[i] = (i < bits) ? (buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1) : 0;
+      tmp[i] = (i < bits) ? (buf_[i] & 0x1) : 0;
     }
 
     return tmp;
@@ -53,7 +53,7 @@ public:
     ac_int<bits, false> tmp = 0;
     #pragma unroll
     for (unsigned char i = 0; i < bits; i++) {
-      tmp[i] = buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1;
+      tmp[i] = buf_[i] & 0x1;
     }
 
     return tmp;
@@ -65,43 +65,29 @@ public:
   auto ReadUInt30() { return ReadUIntFixed<30>(); }
 
   void Shift(unsigned char bits) {
-    // TODO: percompute these calculations
-    ridx_ = (ridx_ + bits) & kBufferSizeBitsMask;
-    size_ -= bits;
-    space_ += bits;
+    buf_ >>= bits & 0x1F;
+    size_ -= bits & 0x1F;
+    space_ += bits & 0x1F;
     has_space_for_byte_ = space_ >= 8;
   }
 
-  auto Size() {
-    return size_;
-  }
+  auto Size() { return size_; }
+  auto Space() { return space_; }
+  bool Empty() { return size_ == 0; }
+  bool HasSpaceForByte() { return has_space_for_byte_; }
 
-  auto Space() {
-    return space_;
-  }
-
-  bool Empty() {
-    // TODO: precompute
-    return size_ == 0;
-  }
-
-  bool HasEnoughBits(unsigned char bits) {
+  bool HasEnoughBits(ac_int<kBufferSizeCountBits + 1, false> bits) {
     return Size() >= bits;
-  }
-
-  bool HasSpaceForByte() {
-    return has_space_for_byte_; 
   }
 
   void NewByte(unsigned char b) {
     // put data into the buffer
     #pragma unroll
     for (unsigned short i = 0; i < 8; i++) {
-      buf_[(widx_ + i) & kBufferSizeBitsMask] = ((b >> i) & 0x1);
+      buf_[size_ + i] = ((b >> i) & 0x1);
     }
 
     // move the write index
-    widx_ = (widx_ + 8) & kBufferSizeBitsMask;
     size_ += 8;
     space_ -= 8;
     has_space_for_byte_ = space_ >= 8;
@@ -109,14 +95,13 @@ public:
 
 private:
   ac_int<kBufferSizeBits, false> buf_;
-  ac_int<kBufferSizeCountBits, false> widx_, ridx_;
   ac_int<kBufferSizeCountBits + 1, false> size_, space_;
   bool has_space_for_byte_;
 
   void PrintBuffer() {
     PRINTF("%hu: ", Size());
     for (int i = Size()-1; i >= 0; i--) {
-      PRINTF("%u", buf_[(ridx_ + i) & kBufferSizeBitsMask] & 0x1);
+      PRINTF("%u", buf_[i] & 0x1);
     }
     PRINTF("\n");
   }
