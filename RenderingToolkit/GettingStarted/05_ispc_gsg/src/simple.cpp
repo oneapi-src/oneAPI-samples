@@ -39,18 +39,17 @@
 using namespace ispc;
 
 int main() {
-    float vin[16], vout[16];
+  float vin[16], vout[16];
 
-    // Initialize input buffer
-    for (int i = 0; i < 16; ++i)
-        vin[i] = (float)i;
+  // Initialize input buffer
+  for (int i = 0; i < 16; ++i) vin[i] = (float)i;
 
-    // Call simple() function from simple.ispc file
-    simple(vin, vout, 16);
+  // Call simple() function from simple.ispc file
+  simple(vin, vout, 16);
 
-    // Print results
-    for (int i = 0; i < 16; ++i)
-        printf("%d: simple(%f) = %f\n", i, vin[i], vout[i]);
+  // Print results
+  for (int i = 0; i < 16; ++i)
+    printf("%d: simple(%f) = %f\n", i, vin[i], vout[i]);
 
-    return 0;
+  return 0;
 }

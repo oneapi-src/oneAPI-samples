@@ -1162,6 +1162,6 @@
     "BDC6B80E-E764-409D-966B-662CF7EFB072": {
         "guid": "BDC6B80E-E764-409D-966B-662CF7EFB072",
 	"ver": "2022.1.0",
-	"name": "Intel oneAPI Rendering Toolkit ISPC Getting Started"
+	"name": "Intel oneAPI Rendering Toolkit ISPC Getting Started: 05_ispc_gsg"
     }
 }
