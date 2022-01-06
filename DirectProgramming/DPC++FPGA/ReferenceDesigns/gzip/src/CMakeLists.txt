@@ -74,6 +74,11 @@ else()
     set(NUM_REORDER "")
 endif()
 
+if(DEFAULT_SEED_OVERRIDE)
+    set(SEED "")
+endif()
+
+
 # Presence of USM host allocations (and whether to turn on enable the low-latency target) is detected automatically by
 # looking at the name of the BSP, or manually by the user when running CMake.
 # E.g., cmake .. -DUSER_ENABLE_USM=1
