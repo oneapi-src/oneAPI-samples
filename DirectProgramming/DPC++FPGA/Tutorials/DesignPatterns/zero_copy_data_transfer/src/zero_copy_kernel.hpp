@@ -1,5 +1,5 @@
-#ifndef __RESTRICTED_USM_KERNEL_HPP__
-#define __RESTRICTED_USM_KERNEL_HPP__
+#ifndef __ZERO_COPY_KERNEL_HPP__
+#define __ZERO_COPY_KERNEL_HPP__
 #pragma once
 
 #include <vector>
@@ -13,28 +13,28 @@ using namespace std::chrono;
 //
 // The structure of the kernels in this design is shown in the diagram below.
 // The Producer kernel reads the data from CPU memory (via PCIe), producing it
-// for the RestrictedUSM via a pipe. The Worker does the computation on the
+// for the ZeroCopyKernel via a pipe. The Worker does the computation on the
 // input data and writes it to the ConsumePipe. The consumer reads the data
 // from this pipe and writes the output back to the CPU memory (via PCIe).
 //
-//                                |----------------------------------|
-//                                |              FPGA                |
-//               |-------------|  |                                  |
-//               |             |  | |- --------|   |---------------| |
-//  |-------|    |             |--->| Producer |==>|               | |
-//  |       |    |             |  | |----------|   |               | |
-//  |  CPU  |<-->| Host Memory |  |                | RestrictedUSM | |
-//  |       |    |             |  | |----------|   |               | |
-//  |-------|    |             |<---| Consumer |<==|               | |
-//               |             |  | |----------|   |---------------| |
-//               |-------------|  |                                  |
-//                                |----------------------------------|
+//                                |-----------------------------------|
+//                                |              FPGA                 |
+//               |-------------|  |                                   |
+//               |             |  | |- --------|   |----------------| |
+//  |-------|    |             |--->| Producer |==>|                | |
+//  |       |    |             |  | |----------|   |                | |
+//  |  CPU  |<-->| Host Memory |  |                | ZeroCopyKernel | |
+//  |       |    |             |  | |----------|   |                | |
+//  |-------|    |             |<---| Consumer |<==|                | |
+//               |             |  | |----------|   |----------------| |
+//               |-------------|  |                                   |
+//                                |-----------------------------------|
 //
 //
 // As shown in the image above and the code below, we have split this design
 // into three kernels:
 //    1) Producer
-//    2) RestrictedUSM
+//    2) ZeroCopyKernel
 //    3) Consumer
 // We do this to decouple the reads/writes from/to the Host Memory over PCIe.
 // Decoupling the memory accesses and using SYCL pipes with a substantial
@@ -44,7 +44,7 @@ using namespace std::chrono;
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-class RestrictedUSM;
+class ZeroCopyKernel;
 class Producer;
 class Consumer;
 
@@ -80,7 +80,7 @@ event SubmitProducer(queue& q, T* in_data, size_t size) {
 //
 template <typename T>
 event SubmitWorker(queue& q, size_t size) {
-  return q.single_task<RestrictedUSM>([=]() [[intel::kernel_args_restrict]] {
+  return q.single_task<ZeroCopyKernel>([=]() [[intel::kernel_args_restrict]] {
     for (size_t i = 0; i < size; i++) {
       T data = ProducePipe<T>::read();
       T value = data * i; // perform computation
@@ -108,7 +108,7 @@ event SubmitConsumer(queue& q, T* out_data, size_t size) {
 }
 
 template <typename T>
-double RestrictedUSMKernel(queue& q, T* in, T* out, size_t size) {
+double SubmitZeroCopyKernel(queue& q, T* in, T* out, size_t size) {
   // start the timer
   auto start = high_resolution_clock::now();
 
@@ -127,4 +127,4 @@ double RestrictedUSMKernel(queue& q, T* in, T* out, size_t size) {
   return diff.count();
 }
 
-#endif /* __RESTRICTED_USM_KERNEL_HPP__ */
+#endif /* __ZERO_COPY_KERNEL_HPP__ */
