@@ -231,7 +231,6 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
 
       // TODO: file bug for what is below
-      //ac_uint<3> codelencodelen[19] = {0};
       ac_uint<3> codelencodelen[19];
       #pragma unroll
       for (int i = 0; i < 19; i++) { codelencodelen[i] = 0; }

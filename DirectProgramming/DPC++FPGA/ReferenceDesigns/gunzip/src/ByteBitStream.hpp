@@ -21,7 +21,7 @@ using namespace sycl;
     ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
   }
 
-constexpr unsigned int kBufferSizeBits = 40;
+constexpr unsigned int kBufferSizeBits = 48;
 constexpr unsigned int kBufferSizeBitsMask = (kBufferSizeBits - 1);
 //static_assert(fpga_tools::IsPow2(kBufferSizeBits));
 
