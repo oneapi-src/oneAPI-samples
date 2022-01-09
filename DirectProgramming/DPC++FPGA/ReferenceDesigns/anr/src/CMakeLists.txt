@@ -54,6 +54,12 @@ else()
     message(STATUS "Seed explicitly set to ${SEED}")
 endif()
 
+if(IGNORE_DEFAULT_SEED)
+    set(SEED_FLAG "")
+else()
+    set(SEED_FLAG "-Xsseed=${SEED}")
+endif()
+
 # Allow the user to change the filter size
 # e.g. cmake .. -DFILTER_SIZE=9
 if(FILTER_SIZE)
@@ -100,7 +106,7 @@ endif()
 set(CONSTEXPR_STEPS "-fconstexpr-steps=5084968")
 
 # Print out configured variables
-message(STATUS "  SEED=${SEED}")
+message(STATUS "  SEED=${SEED_FLAG}")
 message(STATUS "  PIXELS_PER_CYCLE=${PIXELS_PER_CYCLE}")
 if(FILTER_SIZE)
   message(STATUS "  FILTER_SIZE=${FILTER_SIZE}")
@@ -116,7 +122,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG}")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG}")
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${FPGA_BOARD} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} ${IP_MODE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 ${SEED_FLAG} -Xsboard=${FPGA_BOARD} ${FILTER_SIZE_FLAG} ${PIXELS_PER_CYCLE_FLAG} ${MAX_COLS_FLAG} ${PIXEL_BITS_FLAG} ${IP_MODE_FLAG} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
