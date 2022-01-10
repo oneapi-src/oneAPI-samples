@@ -30,6 +30,16 @@ using namespace sycl;
 template<int bits>
 using ac_uint = ac_int<bits, false>;
 
+#ifdef BIT_BUFFER_BITS
+constexpr int kBitBufferBits = BIT_BUFFER_BITS;
+#else
+constexpr int kBitBufferBits = 48;
+#endif
+constexpr int kBitBufferMaxReadBits = 5;
+constexpr int kBitBufferMaxShiftBits = 30;
+using BitStreamT =
+  ByteBitStream<kBitBufferBits, kBitBufferMaxReadBits, kBitBufferMaxShiftBits>;
+
 template<int bits> 
 void PrintUACInt(ac_uint<bits>& x) {
   for (int i = bits-1; i >= 0; i--) {
@@ -126,8 +136,8 @@ event SubmitLZ77DecoderKernel(queue& q) {
 
     // history buffer shift register cache
     constexpr int kCacheDepth = 4;
-    unsigned char history_cache_val[kCacheDepth + 1];
-    unsigned short history_cache_idx[kCacheDepth + 1];
+    [[intel::fpga_register]] unsigned char history_cache_val[kCacheDepth + 1];
+    [[intel::fpga_register]] unsigned short history_cache_idx[kCacheDepth + 1];
 
     bool done;
     bool reading_history = false;
@@ -211,8 +221,8 @@ event SubmitLZ77DecoderKernel(queue& q) {
 
 template<typename InPipe, typename OutPipe>
 event SubmitHuffmanDecoderKernel(queue& q) {
-  return q.single_task<HuffmanDecoderKernelID>([=]() [[intel::kernel_args_restrict]] {
-    ByteBitStream bbs;
+  return q.single_task<HuffmanDecoderKernelID>([=] {
+    BitStreamT bbs;
     bool last_block;
     bool done_reading = false;
 
@@ -231,7 +241,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
 
       // TODO: file bug for what is below
-      ac_uint<3> codelencodelen[19];
+      [[intel::fpga_register]] ac_uint<3> codelencodelen[19];
       #pragma unroll
       for (int i = 0; i < 19; i++) { codelencodelen[i] = 0; }
 
@@ -242,9 +252,13 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       [[intel::initiation_interval(4)]]
       do {
         if (bbs.HasSpaceForByte()) {
-          auto pd = InPipe::read();
-          unsigned char c = pd.data;
-          bbs.NewByte(c);
+          bool read_valid;
+          auto pd = InPipe::read(read_valid);
+
+          if (read_valid) {
+            unsigned char c = pd.data;
+            bbs.NewByte(c);
+          }
         }
 
         if (bbs.Size() >= 5) {
@@ -344,7 +358,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           // extra run length)
           if (bbs.Size() >= 15) {
             // read 15 bits
-            ac_uint<15> next_bits = bbs.ReadUInt15();
+            ac_uint<15> next_bits = bbs.ReadUInt<15>();
 
             // find all possible dynamic run lengths
             // the symbol could be from 1 to 8 bits long and the number of extra
@@ -558,7 +572,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         
         if (bbs.Size() >= 30) {
           // read the next 30 bits (we know we have them)
-          ac_uint<30> next_bits = bbs.ReadUInt30();
+          ac_uint<30> next_bits = bbs.ReadUInt<30>();
 
           // find all possible dynamic lengths
           [[intel::fpga_register]] ac_uint<5> lit_extra_bit_vals[15][5];
@@ -626,6 +640,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           }
 
           // find the shortest matching length, which is the next decoded symbol
+          /*
           ac_uint<4> shortest_match_len;
           ac_uint<9> base_idx;
           ac_uint<9> offset;
@@ -637,6 +652,34 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               offset = codelen_offset[codelen - 1];
             }
           }
+          */
+          ac_uint<4> shortest_match_len_split[2];
+          ac_uint<9> base_idx_splt[2];
+          ac_uint<9> offset_split[2];
+          bool found_in_split[2] = {false, false};
+          #pragma unroll
+          for (unsigned char codelen = 8; codelen >= 1; codelen--) {
+            if (codelen_valid_bitmap[codelen - 1]) {
+              shortest_match_len_split[0] = codelen;
+              base_idx_splt[0] = codelen_base_idx[codelen - 1];
+              offset_split[0] = codelen_offset[codelen - 1];
+              found_in_split[0] = true;
+            }
+          }
+
+          #pragma unroll
+          for (unsigned char codelen = 15; codelen >= 8; codelen--) {
+            if (codelen_valid_bitmap[codelen - 1]) {
+              shortest_match_len_split[1] = codelen;
+              base_idx_splt[1] = codelen_base_idx[codelen - 1];
+              offset_split[1] = codelen_offset[codelen - 1];
+              found_in_split[1] = true;
+            }
+          }
+
+          auto shortest_match_len = found_in_split[0] ? shortest_match_len_split[0] : shortest_match_len_split[1];
+          auto base_idx = found_in_split[0] ? base_idx_splt[0] : base_idx_splt[1];
+          auto offset = found_in_split[0] ? offset_split[0] : offset_split[1];
 
           // lookup the symbol using base_idx and offset
           lit_symbol = lit_map[base_idx + offset];
@@ -710,8 +753,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
     // read out the remaining data from the pipe
     // NOTE: don't really care about performance here
     while (!done_reading) {
-      auto pd = InPipe::read();
-      done_reading = pd.flag;
+      bool read_valid;
+      auto pd = InPipe::read(read_valid);
+      done_reading = pd.flag && read_valid;
     }
   });
 }

@@ -37,21 +37,25 @@ if(FLAT_COMPILE)
     set(FLAT_COMPILE_FLAG "-Xsbsp-flow=flat")
 endif()
 
-# Choose the random seed for the hardware compile
-# e.g. cmake .. -DSEED=7
-if(NOT DEFINED SEED)
-    # the default seed
-  if(FPGA_BOARD MATCHES ".*a10.*")
-    set(SEED 1)
-  elseif(FPGA_BOARD MATCHES ".*s10.*")
-    set(SEED 2)
-  elseif(FPGA_BOARD MATCHES ".*agilex.*")
-    set(SEED 3)
-  else()
-    set(SEED 4)
-  endif()
+if(IGNORE_DEFAULT_SEED)
+  set(SEED_FLAG "")
 else()
-    message(STATUS "Seed explicitly set to ${SEED}")
+  if (NOT DEFINED SEED)
+    # the default seed for each FPGA type
+    if(FPGA_BOARD MATCHES ".*a10.*")
+      set(SEED 1)
+    elseif(FPGA_BOARD MATCHES ".*s10.*")
+      set(SEED 2)
+    elseif(FPGA_BOARD MATCHES ".*agilex.*")
+      set(SEED 3)
+    else()
+      set(SEED 4)
+    endif()
+  else()
+    set(SEED 1)
+  endif()
+  
+  set(SEED_FLAG "-Xsseed=${SEED}")
 endif()
 
 # Increase the allowable constexpr steps for the front end. This allows the
@@ -65,7 +69,7 @@ set(CONSTEXPR_STEPS "-fconstexpr-steps=5084968")
 set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG}")
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 ${SEED_FLAG} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 

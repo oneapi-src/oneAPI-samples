@@ -21,53 +21,55 @@ using namespace sycl;
     ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
   }
 
-constexpr unsigned int kBufferSizeBits = 48;
-constexpr unsigned int kBufferSizeBitsMask = (kBufferSizeBits - 1);
-//static_assert(fpga_tools::IsPow2(kBufferSizeBits));
-
-constexpr unsigned int kBufferSizeCountBits =
-    fpga_tools::CeilLog2(kBufferSizeBits);
-constexpr unsigned short kMaxDynamicReadBits = 5;  // see Decompressor.hpp
-
 //
 // TODO
 //
+template<int bits, int max_dynamic_read_bits, int max_shift_bits>
 class ByteBitStream {
-public:
-  ByteBitStream() : size_(0), space_(kBufferSizeBits),
-                    has_space_for_byte_(true) {}
+  static_assert(bits > 0);
+  static_assert(max_dynamic_read_bits > 0);
+  static_assert(max_dynamic_read_bits <= bits);
+  static_assert(max_shift_bits > 0);
+  static_assert(max_shift_bits <= bits);
 
-  auto ReadUInt(unsigned char bits) {
-    ac_int<kMaxDynamicReadBits, false> tmp = 0;
+  using BufferT = ac_int<bits, false>;
+  static constexpr int count_bits = fpga_tools::CeilLog2(bits);
+  using CountT = ac_int<count_bits + 1, false>;
+  static constexpr int dynamic_read_count_bits =
+      fpga_tools::CeilLog2(max_dynamic_read_bits);
+  using ReadCountT = ac_int<dynamic_read_count_bits + 1, false>;
+  static constexpr int shift_count_bits = fpga_tools::CeilLog2(max_shift_bits);
+  using ShiftCountT = ac_int<shift_count_bits + 1, false>;
+
+public:
+  ByteBitStream() : size_(0), space_(bits), has_space_for_byte_(true) {}
+
+  auto ReadUInt(ReadCountT read_bits) {
+    ac_int<max_dynamic_read_bits, false> tmp;
     #pragma unroll
-    for (unsigned char i = 0; i < kMaxDynamicReadBits; i++) {
-      tmp[i] = (i < bits) ? (buf_[i] & 0x1) : 0;
+    for (int i = 0; i < max_dynamic_read_bits; i++) {
+      tmp[i] = (i < read_bits) ? (buf_[i] & 0x1) : 0;
     }
 
     return tmp;
   }
 
-  template<int bits>
-  auto ReadUIntFixed() {
-    static_assert(bits <= kBufferSizeBits);
-    ac_int<bits, false> tmp = 0;
+  template<int read_bits>
+  auto ReadUInt() {
+    static_assert(read_bits <= bits);
+    ac_int<read_bits, false> tmp;
     #pragma unroll
-    for (unsigned char i = 0; i < bits; i++) {
+    for (int i = 0; i < read_bits; i++) {
       tmp[i] = buf_[i] & 0x1;
     }
 
     return tmp;
   }
 
-  auto ReadUInt8() { return ReadUIntFixed<8>(); }
-  auto ReadUInt15() { return ReadUIntFixed<15>(); }
-  auto ReadUInt20() { return ReadUIntFixed<20>(); }
-  auto ReadUInt30() { return ReadUIntFixed<30>(); }
-
-  void Shift(unsigned char bits) {
-    buf_ >>= bits & 0x1F;
-    size_ -= bits & 0x1F;
-    space_ += bits & 0x1F;
+  void Shift(ShiftCountT shift_bits) {
+    buf_ >>= shift_bits;
+    size_ -= shift_bits;
+    space_ += shift_bits;
     has_space_for_byte_ = space_ >= 8;
   }
 
@@ -76,26 +78,22 @@ public:
   bool Empty() { return size_ == 0; }
   bool HasSpaceForByte() { return has_space_for_byte_; }
 
-  bool HasEnoughBits(ac_int<kBufferSizeCountBits + 1, false> bits) {
-    return Size() >= bits;
-  }
-
   void NewByte(unsigned char b) {
     // put data into the buffer
+    ac_int<8, false> b_ac_int(b);
     #pragma unroll
-    for (unsigned short i = 0; i < 8; i++) {
-      buf_[size_ + i] = ((b >> i) & 0x1);
+    for (unsigned char i = 0; i < 8; i++) {
+      buf_[size_ + i] = b_ac_int[i] & 0x1;
     }
 
-    // move the write index
     size_ += 8;
+    has_space_for_byte_ = space_ >= 16;
     space_ -= 8;
-    has_space_for_byte_ = space_ >= 8;
   }
 
 private:
-  ac_int<kBufferSizeBits, false> buf_;
-  ac_int<kBufferSizeCountBits + 1, false> size_, space_;
+  BufferT buf_;
+  CountT size_, space_;
   bool has_space_for_byte_;
 
   void PrintBuffer() {
