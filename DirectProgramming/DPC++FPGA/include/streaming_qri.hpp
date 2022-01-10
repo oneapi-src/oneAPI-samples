@@ -66,11 +66,7 @@ struct StreamingQRI {
       // Inverse matrix of A=QR
       TT i_matrix[rows][columns];
 
-      /*
-        ======================================================================
-        Copy a R matrix from the pipe to a local memory
-        ======================================================================
-      */
+      // Copy a R matrix from the pipe to a local memory
       int read_counter = 0;
       int next_read_counter = 1;
       PipeTable<pipe_size, TT> read;
@@ -115,12 +111,8 @@ struct StreamingQRI {
         UnrolledLoop<columns>([&](auto k) { r_matrix[i][k] = r_row[k]; });
       }
 
-      /*
-        ======================================================================
-        Copy a Q matrix from the pipe to a local memory
-        ======================================================================
-      */
-
+      
+      // Copy a Q matrix from the pipe to a local memory
       // Number of DDR burst reads of pipe_size required to read a full
       // column
       constexpr int kExtraIteration = (rows % pipe_size) != 0 ? 1 : 0;
@@ -154,22 +146,16 @@ struct StreamingQRI {
         });
       }
 
-      /*
-        ======================================================================
-        Transpose the R matrix
-        ======================================================================
-      */
+      
+      // Transpose the R matrix
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col < columns; col++) {
           rt_matrix[row][col] = r_matrix[col][row];
         }
       }
 
-      /*
-        ======================================================================
-        Transpose the Q matrix (to get Q as non transposed)
-        ======================================================================
-      */
+      
+      // Transpose the Q matrix (to get Q as non transposed)
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col < columns; col++) {
           qt_matrix[row][col] = q_matrix[col][row];
@@ -177,9 +163,7 @@ struct StreamingQRI {
       }
 
       /*
-        ======================================================================
         Compute the inverse of R
-        ======================================================================
 
         The inverse of R is computed using the following algorithm:
 
@@ -194,7 +178,6 @@ struct StreamingQRI {
 
             RInverse[row][col] = (Id[row][col] - dp)/R[col][col]
       */
-
       // Initialise ri_matrix with 0
       for (int i = 0; i < rows; i++) {
         UnrolledLoop<columns>([&](auto k) { ri_matrix[i][k] = {0}; });
@@ -274,11 +257,8 @@ struct StreamingQRI {
         }
       }
 
-      /*
-        ======================================================================
-        Multiply the inverse of R by the transposition of Q
-        ======================================================================
-      */
+      
+      // Multiply the inverse of R by the transposition of Q
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col < columns; col++) {
           TT dot_product = {0.0};
@@ -293,11 +273,8 @@ struct StreamingQRI {
         }  // end of col
       }    // end of row
 
-      /*
-        ======================================================================
-        Copy the inverse matrix result to the output pipe
-        ======================================================================
-      */
+      
+      // Copy the inverse matrix result to the output pipe
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
         int column_iter = li % kLoopIterPerColumn;

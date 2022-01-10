@@ -71,11 +71,10 @@ void QRIImpl(
   // kernel
 #if defined(FPGA_EMULATOR)
   constexpr int kMatricesPerIter = 1;
-  assert(matrices % kMatricesPerIter == 0);
 #else
   constexpr int kMatricesPerIter = 2048;
-  assert(matrices % kMatricesPerIter == 0);
 #endif
+  assert(matrices % kMatricesPerIter == 0);
 
   // Create buffers and allocate space for them.
   TT *a_device[kNumBuffers];
