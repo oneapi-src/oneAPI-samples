@@ -51,6 +51,11 @@ else()
     message(FATAL_ERROR "Unknown board!")
 endif()
 
+if(IGNORE_DEFAULT_SEED)
+    set(SEED_FLAG "")
+else()
+    set(SEED_FLAG "-Xsseed=${SEED}")
+endif()
 
 if(DEFINED ENV{ROWS_COMPONENT} AND DEFINED ENV{COLS_COMPONENT})
     set(ROWS_COMPONENT $ENV{ROWS_COMPONENT})
@@ -69,7 +74,7 @@ message(STATUS "ROWS_COMPONENT=${ROWS_COMPONENT}")
 message(STATUS "COLS_COMPONENT=${COLS_COMPONENT}")
 message(STATUS "COMPLEX=${COMPLEX}")
 message(STATUS "FIXED_ITERATIONS=${FIXED_ITERATIONS}")
-message(STATUS "SEED=${SEED}")
+message(STATUS "SEED_FLAG=${SEED_FLAG}")
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
@@ -78,7 +83,7 @@ message(STATUS "SEED=${SEED}")
 set(EMULATOR_COMPILE_FLAGS "${PLATFORM_SPECIFIC_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "${PLATFORM_SPECIFIC_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fno-fast-math -Xsfp-relaxed")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 -Xsseed=${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fno-fast-math -Xsfp-relaxed")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED_FLAG} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fno-fast-math -Xsfp-relaxed")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
