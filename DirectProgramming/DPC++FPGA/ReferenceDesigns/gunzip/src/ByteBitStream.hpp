@@ -45,25 +45,14 @@ public:
   ByteBitStream() : size_(0), space_(bits), has_space_for_byte_(true) {}
 
   auto ReadUInt(ReadCountT read_bits) {
-    ac_int<max_dynamic_read_bits, false> tmp;
-    #pragma unroll
-    for (int i = 0; i < max_dynamic_read_bits; i++) {
-      tmp[i] = (i < read_bits) ? (buf_[i] & 0x1) : 0;
-    }
-
-    return tmp;
+    ac_int<max_dynamic_read_bits, false> mask = (1 << read_bits) - 1;
+    return buf_.template slc<max_dynamic_read_bits>(0) & mask;
   }
 
   template<int read_bits>
   auto ReadUInt() {
     static_assert(read_bits <= bits);
-    ac_int<read_bits, false> tmp;
-    #pragma unroll
-    for (int i = 0; i < read_bits; i++) {
-      tmp[i] = buf_[i] & 0x1;
-    }
-
-    return tmp;
+    return buf_.template slc<read_bits>(0);
   }
 
   void Shift(ShiftCountT shift_bits) {

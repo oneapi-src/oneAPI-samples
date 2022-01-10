@@ -640,46 +640,19 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           }
 
           // find the shortest matching length, which is the next decoded symbol
-          /*
           ac_uint<4> shortest_match_len;
-          ac_uint<9> base_idx;
-          ac_uint<9> offset;
+          ac_uint<4> shortest_match_len_idx;
           #pragma unroll
           for (unsigned char codelen = 15; codelen >= 1; codelen--) {
             if (codelen_valid_bitmap[codelen - 1]) {
               shortest_match_len = codelen;
-              base_idx = codelen_base_idx[codelen - 1];
-              offset = codelen_offset[codelen - 1];
-            }
-          }
-          */
-          ac_uint<4> shortest_match_len_split[2];
-          ac_uint<9> base_idx_splt[2];
-          ac_uint<9> offset_split[2];
-          bool found_in_split[2] = {false, false};
-          #pragma unroll
-          for (unsigned char codelen = 8; codelen >= 1; codelen--) {
-            if (codelen_valid_bitmap[codelen - 1]) {
-              shortest_match_len_split[0] = codelen;
-              base_idx_splt[0] = codelen_base_idx[codelen - 1];
-              offset_split[0] = codelen_offset[codelen - 1];
-              found_in_split[0] = true;
+              shortest_match_len_idx = codelen - 1;
             }
           }
 
-          #pragma unroll
-          for (unsigned char codelen = 15; codelen >= 8; codelen--) {
-            if (codelen_valid_bitmap[codelen - 1]) {
-              shortest_match_len_split[1] = codelen;
-              base_idx_splt[1] = codelen_base_idx[codelen - 1];
-              offset_split[1] = codelen_offset[codelen - 1];
-              found_in_split[1] = true;
-            }
-          }
-
-          auto shortest_match_len = found_in_split[0] ? shortest_match_len_split[0] : shortest_match_len_split[1];
-          auto base_idx = found_in_split[0] ? base_idx_splt[0] : base_idx_splt[1];
-          auto offset = found_in_split[0] ? offset_split[0] : offset_split[1];
+          // get the base index and offset based on the shortest match length
+          ac_uint<9> base_idx = codelen_base_idx[shortest_match_len_idx];
+          ac_uint<9> offset = codelen_offset[shortest_match_len_idx];
 
           // lookup the symbol using base_idx and offset
           lit_symbol = lit_map[base_idx + offset];
