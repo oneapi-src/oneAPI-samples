@@ -559,7 +559,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       do {
         // read in new data if the ByteBitStream has space for it and we aren't
         // done reading from the input pipe
-        if (bbs.HasSpaceForByte() && !done_reading) {
+        if (bbs.Size() < 30 && !done_reading) {
           bool read_valid;
           auto pd = InPipe::read(read_valid);
 
@@ -568,9 +568,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             done_reading = pd.flag;
             bbs.NewByte(c);
           }
-        }
-        
-        if (bbs.Size() >= 30) {
+        } else if (bbs.Size() >= 30) {
           // read the next 30 bits (we know we have them)
           ac_uint<30> next_bits = bbs.ReadUInt<30>();
 
