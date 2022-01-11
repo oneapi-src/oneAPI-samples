@@ -89,8 +89,8 @@ message(STATUS "SEED_FLAG=${SEED_FLAG}")
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "${PLATFORM_SPECIFIC_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS_QRD=${FIXED_ITERATIONS_QRD} -DFIXED_ITERATIONS_QRI=${FIXED_ITERATIONS_QRI} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "${PLATFORM_SPECIFIC_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -qactypes -fbracket-depth=512 -DFIXED_ITERATIONS_QRD=${FIXED_ITERATIONS_QRD} -DFIXED_ITERATIONS_QRI=${FIXED_ITERATIONS_QRI} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fno-fast-math -Xsfp-relaxed")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED_FLAG} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fno-fast-math -Xsfp-relaxed")
+set(HARDWARE_COMPILE_FLAGS "${PLATFORM_SPECIFIC_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -qactypes -fbracket-depth=512 -DFIXED_ITERATIONS_QRD=${FIXED_ITERATIONS_QRD} -DFIXED_ITERATIONS_QRI=${FIXED_ITERATIONS_QRI} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fp-model=precise -Xsfp-relaxed")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED_FLAG} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
