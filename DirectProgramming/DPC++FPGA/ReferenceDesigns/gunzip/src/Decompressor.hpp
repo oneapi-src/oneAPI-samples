@@ -111,30 +111,11 @@ private:
 // https://stackoverflow.com/questions/757059/position-of-least-significant-bit-that-is-set
 // Another Option: https://electronics.stackexchange.com/questions/196914/verilog-synthesize-high-speed-leading-zero-count
 template<int bits>
-auto IndexOfLeading1(const ac_uint<bits>& in) {
+auto ctz(const ac_uint<bits>& in) {
   static_assert(bits <= 32);
   constexpr int out_bits = fpga_tools::Log2(bits) + 1;
-  /*
-  constexpr int lsb_set_map[32] = {
-    0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 
-    31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
-  };
-  int vp = i.to_int(); 
-  ac_uint<out_bits> ret = lsb_set_map[(vp * 0x077CB531U) >> 27] + 1;
-  return ret;
-  */
-
-  /*
-  ac_uint<16> tmp(0);
-  #pragma unroll
-  for (int i = 0; i < bits; i++) {
-    tmp[16 - i - 1] = in[i];
-  }
-  unsigned short v = tmp;
-  ac_uint<out_bits> ret = sycl::clz(v) + 1;
-  return ret;
-  */
-
+  
+  //ac_uint<out_bits> ret(bits);  // this is safer, but adds a select
   ac_uint<out_bits> ret;
   #pragma unroll
   for (int i = bits - 1; i >= 0; i--) {
@@ -442,7 +423,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             }
 
             // find the shortest matching code symbol
-            ac_uint<3> shortest_match_len = IndexOfLeading1(codelencode_valid_bitmap);
+            ac_uint<3> shortest_match_len = ctz(codelencode_valid_bitmap);
             ac_uint<5> base_idx = codelencode_base_idx[shortest_match_len - 1];
             ac_uint<5> offset = codelencode_offset[shortest_match_len - 1];;
 
@@ -587,7 +568,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       do {
         // read in new data if the ByteBitStream has space for it and we aren't
         // done reading from the input pipe
-        if (bbs.Size() < 30 && !done_reading) {
+        if (bbs.HasSpaceForByte() && !done_reading) {
           bool read_valid;
           auto pd = InPipe::read(read_valid);
 
@@ -596,7 +577,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             done_reading = pd.flag;
             bbs.NewByte(c);
           }
-        } else if (bbs.Size() >= 30) {
+        }
+        
+        if (bbs.Size() >= 30) {
           // read the next 30 bits (we know we have them)
           ac_uint<30> next_bits = bbs.ReadUInt<30>();
 
@@ -669,7 +652,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           }
 
           // find the shortest matching length, which is the next decoded symbol
-          ac_uint<4> shortest_match_len = IndexOfLeading1(codelen_valid_bitmap);
+          ac_uint<4> shortest_match_len = ctz(codelen_valid_bitmap);
 
           // get the base index and offset based on the shortest match length
           ac_uint<9> base_idx = codelen_base_idx[shortest_match_len - 1];
