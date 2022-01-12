@@ -108,22 +108,136 @@ private:
   int count_;
 };
 
+ac_int<2, false> clz_encoder(ac_int<2, false>& in) {
+  if (in == 0) {
+    return ac_int<2, false>(2);
+  } else if (in == 1) {
+    return ac_int<2, false>(1); 
+  } else {
+    return ac_int<2, false>(0);
+  }
+}
+
 // https://stackoverflow.com/questions/757059/position-of-least-significant-bit-that-is-set
 // Another Option: https://electronics.stackexchange.com/questions/196914/verilog-synthesize-high-speed-leading-zero-count
 template<int bits>
 auto ctz(const ac_uint<bits>& in) {
   static_assert(bits <= 32);
-  constexpr int out_bits = fpga_tools::Log2(bits) + 1;
-  
-  //ac_uint<out_bits> ret(bits);  // this is safer, but adds a select
-  ac_uint<out_bits> ret;
-  #pragma unroll
-  for (int i = bits - 1; i >= 0; i--) {
-    if (in[i]) {
-      ret = i + 1;
+
+  if constexpr (bits != 15) {
+    constexpr int out_bits = fpga_tools::Log2(bits) + 1;
+    
+    ac_uint<out_bits> ret(bits);
+    #pragma unroll
+    for (int i = bits - 1; i >= 0; i--) {
+      if (in[i]) {
+        ret = i;
+      }
     }
+    return ret;
+  } else {
+    ac_int<16, false> in_pad(0);
+    in_pad[15] = 0;
+    #pragma unroll
+    for (int i = 0; i < 15; i++) { in_pad[i] = in[i]; }
+
+    ac_int<16, false> in_pad_reverse(0);
+    #pragma unroll
+    for (int i = 0; i < 16; i++) { in_pad_reverse[16 - i - 1] = in_pad[i]; }
+
+    ac_int<2, false> in_pad_reverse_encoded[8];
+    #pragma unroll
+    for (int i = 0; i < 8; i++) {
+      ac_int<2, false> two_bits(0);
+      two_bits[0] = in_pad_reverse[2 * i];
+      two_bits[1] = in_pad_reverse[2 * i + 1];
+      in_pad_reverse_encoded[i] = clz_encoder(two_bits);
+    }
+
+    ac_int<3, false> tree_l1[4];
+    ac_int<4, false> tree_l2[2];
+    ac_int<5, false> tree_l3[1];
+
+    #pragma unroll
+    for (int i = 0; i < 4; i++) {
+      auto rhs = in_pad_reverse_encoded[2 * i];
+      auto lhs = in_pad_reverse_encoded[2 * i + 1];
+
+      ac_int<3, false> out(0);
+      if (lhs[1] && rhs[1]) {
+        out[2] = 1;
+        out[1] = 0;
+        out[0] = 0;
+      } else if (!lhs[1]) {
+        out[2] = 0;
+        out[1] = lhs[1];
+        out[0] = lhs[0];
+      } else {  // lhs[1] == 1
+        out[2] = 0;
+        out[1] = 1;
+        out[0] = rhs[0];
+      }
+
+      tree_l1[i] = out;
+    }
+
+    #pragma unroll
+    for (int i = 0; i < 2; i++) {
+      auto rhs = tree_l1[2 * i];
+      auto lhs = tree_l1[2 * i + 1];
+
+      ac_int<4, false> out(0);
+      if (lhs[2] && rhs[2]) {
+        out[3] = 1;
+        out[2] = 0;
+        out[1] = 0;
+        out[0] = 0;
+      } else if (!lhs[2]) {
+        out[3] = 0;
+        out[2] = lhs[2];
+        out[1] = lhs[1];
+        out[0] = lhs[0];
+      } else {  // lhs[1] == 1
+        out[3] = 0;
+        out[2] = 1;
+        out[1] = rhs[1];
+        out[0] = rhs[0];
+      }
+
+      tree_l2[i] = out;
+    }
+
+    #pragma unroll
+    for (int i = 0; i < 1; i++) {
+      auto rhs = tree_l2[2 * i];
+      auto lhs = tree_l2[2 * i + 1];
+
+      ac_int<5, false> out(0);
+      if (lhs[3] && rhs[3]) {
+        out[4] = 1;
+        out[3] = 0;
+        out[2] = 0;
+        out[1] = 0;
+        out[0] = 0;
+      } else if (!lhs[3]) {
+        out[4] = 0;
+        out[3] = lhs[3];
+        out[2] = lhs[2];
+        out[1] = lhs[1];
+        out[0] = lhs[0];
+      } else {  // lhs[1] == 1
+        out[4] = 0;
+        out[3] = 1;
+        out[2] = rhs[2];
+        out[1] = rhs[1];
+        out[0] = rhs[0];
+      }
+
+      tree_l3[i] = out;
+    }
+
+    return tree_l3[0];
   }
-  return ret;
 }
 
 class HeaderKernelID;
@@ -423,9 +537,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             }
 
             // find the shortest matching code symbol
-            ac_uint<3> shortest_match_len = ctz(codelencode_valid_bitmap);
+            ac_uint<3> shortest_match_len = ctz(codelencode_valid_bitmap) + 1;
             ac_uint<5> base_idx = codelencode_base_idx[shortest_match_len - 1];
-            ac_uint<5> offset = codelencode_offset[shortest_match_len - 1];;
+            ac_uint<5> offset = codelencode_offset[shortest_match_len - 1];
 
             // get the decoded symbol
             auto symbol = codelencode_map[base_idx + offset];
@@ -564,7 +678,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       ac_uint<5> dist_symbol;
 
       // main processing loop
-      //[[intel::initiation_interval(2)]]
+      [[intel::initiation_interval(4)]]
       do {
         // read in new data if the ByteBitStream has space for it and we aren't
         // done reading from the input pipe
@@ -652,7 +766,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           }
 
           // find the shortest matching length, which is the next decoded symbol
-          ac_uint<4> shortest_match_len = ctz(codelen_valid_bitmap);
+          ac_uint<4> shortest_match_len = ctz(codelen_valid_bitmap) + 1;
 
           // get the base index and offset based on the shortest match length
           ac_uint<9> base_idx = codelen_base_idx[shortest_match_len - 1];
