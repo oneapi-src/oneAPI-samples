@@ -33,13 +33,13 @@ class ByteBitStream {
   static_assert(max_shift_bits <= bits);
 
   using BufferT = ac_int<bits, false>;
-  static constexpr int count_bits = fpga_tools::CeilLog2(bits);
-  using CountT = ac_int<count_bits + 1, false>;
+  static constexpr int count_bits = fpga_tools::Log2(bits) + 1;
+  using CountT = ac_int<count_bits, false>;
   static constexpr int dynamic_read_count_bits =
-      fpga_tools::CeilLog2(max_dynamic_read_bits);
-  using ReadCountT = ac_int<dynamic_read_count_bits + 1, false>;
-  static constexpr int shift_count_bits = fpga_tools::CeilLog2(max_shift_bits);
-  using ShiftCountT = ac_int<shift_count_bits + 1, false>;
+      fpga_tools::Log2(max_dynamic_read_bits) + 1;
+  using ReadCountT = ac_int<dynamic_read_count_bits, false>;
+  static constexpr int shift_count_bits = fpga_tools::Log2(max_shift_bits) + 1;
+  using ShiftCountT = ac_int<shift_count_bits, false>;
 
 public:
   ByteBitStream() : size_(0), space_(bits), has_space_for_byte_(true) {}
