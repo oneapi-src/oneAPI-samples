@@ -374,7 +374,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       // not critical (low trip count). However, the compiler doesn't know that
       // and tries to optimize for throughput (~Fmax/II). However, we don't want
       // this loop to be our Fmax bottleneck, so increase the II.
-      //[[intel::initiation_interval(5)]]
+      [[intel::initiation_interval(5)]]
       do {
         // read in another byte if we have space for it
         if (bbs.HasSpaceForByte()) {
