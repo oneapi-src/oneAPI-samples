@@ -17,9 +17,10 @@
           "cd ../..",
           "mkdir build-q1",
           "cd build-q1",
+          "xcopy /E ..\\ReferenceDesigns\\db\\data data\\",
           "cmake ../ReferenceDesigns/db -DQUERY=1",
           "make fpga_emu",
-          "./db.fpga_emu --dbroot=../ReferenceDesigns/db/data/sf0.01 --test"
+          "./db.fpga_emu --dbroot=./data/sf0.01 --test"
         ]
       },
       {
@@ -29,9 +30,10 @@
           "cd ../..",
           "mkdir build-q9",
           "cd build-q9",
+          "xcopy /E ..\\ReferenceDesigns\\db\\data data\\",
           "cmake ../ReferenceDesigns/db -DQUERY=9",
           "make fpga_emu",
-          "./db.fpga_emu --dbroot=../ReferenceDesigns/db/data/sf0.01 --test"
+          "./db.fpga_emu --dbroot=./data/sf0.01 --test"
         ]
       },
       {
@@ -41,9 +43,10 @@
           "cd ../..",
           "mkdir build-q11",
           "cd build-q11",
+          "xcopy /E ..\\ReferenceDesigns\\db\\data data\\",
           "cmake ../ReferenceDesigns/db -DQUERY=11",
           "make fpga_emu",
-          "./db.fpga_emu --dbroot=../ReferenceDesigns/db/data/sf0.01 --test"
+          "./db.fpga_emu --dbroot=./data/sf0.01 --test"
         ]
       },
       {
@@ -53,9 +56,10 @@
           "cd ../..",
           "mkdir build-q12",
           "cd build-q12",
+          "xcopy /E ..\\ReferenceDesigns\\db\\data data\\",
           "cmake ../ReferenceDesigns/db -DQUERY=12",
           "make fpga_emu",
-          "./db.fpga_emu --dbroot=../ReferenceDesigns/db/data/sf0.01 --test"
+          "./db.fpga_emu --dbroot=./data/sf0.01 --test"
         ]
       },
       {
@@ -100,9 +104,10 @@
           "cd ../..",
           "mkdir build-q1",
           "cd build-q1",
+          "xcopy /E ..\\ReferenceDesigns\\db\\data data\\",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=1",
           "nmake fpga_emu",
-          "db.fpga_emu.exe --dbroot=../ReferenceDesigns/db/data/sf0.01 --test"
+          "db.fpga_emu.exe --dbroot=./data/sf0.01 --test"
         ]
       },
       {
@@ -112,9 +117,10 @@
           "cd ../..",
           "mkdir build-q9",
           "cd build-q9",
+          "xcopy /E ..\\ReferenceDesigns\\db\\data data\\",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=9",
           "nmake fpga_emu",
-          "db.fpga_emu.exe --dbroot=../ReferenceDesigns/db/data/sf0.01 --test"
+          "db.fpga_emu.exe --dbroot=./data/sf0.01 --test"
         ]
       },
       {
@@ -124,9 +130,10 @@
           "cd ../..",
           "mkdir build-q11",
           "cd build-q11",
+          "xcopy /E ..\\ReferenceDesigns\\db\\data data\\",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=11",
           "nmake fpga_emu",
-          "db.fpga_emu.exe --dbroot=../ReferenceDesigns/db/data/sf0.01 --test"
+          "db.fpga_emu.exe --dbroot=./data/sf0.01 --test"
         ]
       },
       {
@@ -136,9 +143,10 @@
           "cd ../..",
           "mkdir build-q12",
           "cd build-q12",
+          "xcopy /E ..\\ReferenceDesigns\\db\\data data\\",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=12",
           "nmake fpga_emu",
-          "db.fpga_emu.exe --dbroot=../ReferenceDesigns/db/data/sf0.01 --test"
+          "db.fpga_emu.exe --dbroot=./data/sf0.01 --test"
         ]
       },
       {

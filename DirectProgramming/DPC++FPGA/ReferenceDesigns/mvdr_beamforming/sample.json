@@ -18,9 +18,10 @@
           "cd ../..",
           "mkdir build",
           "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\mvdr_beamforming\\data data\\",
           "cmake ../ReferenceDesigns/mvdr_beamforming",
           "make fpga_emu",
-          "./mvdr_beamforming.fpga_emu --in=../ReferenceDesigns/mvdr_beamforming/data"
+          "./mvdr_beamforming.fpga_emu --in=./data"
         ]
       },
       {
@@ -43,9 +44,10 @@
           "cd ../..",
           "mkdir build",
           "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\mvdr_beamforming\\data data\\",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/mvdr_beamforming",
           "nmake fpga_emu",
-          "mvdr_beamforming.fpga_emu.exe --in=../ReferenceDesigns/mvdr_beamforming/data"
+          "mvdr_beamforming.fpga_emu.exe --in=./data"
         ]
       },
       {

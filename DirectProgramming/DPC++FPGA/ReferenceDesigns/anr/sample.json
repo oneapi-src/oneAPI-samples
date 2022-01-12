@@ -17,6 +17,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\anr\\test_data test_data\\",
           "cmake ../ReferenceDesigns/anr",
           "make fpga_emu",
           "./anr.fpga_emu"
@@ -29,6 +30,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\anr\\test_data test_data\\",
           "cmake ../ReferenceDesigns/anr",
           "make report"
         ]
@@ -42,6 +44,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\anr\\test_data test_data\\",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/anr",
           "nmake fpga_emu",
           "anr.fpga_emu.exe"
@@ -54,6 +57,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\anr\\test_data test_data\\",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/anr",
           "nmake report"
         ]
