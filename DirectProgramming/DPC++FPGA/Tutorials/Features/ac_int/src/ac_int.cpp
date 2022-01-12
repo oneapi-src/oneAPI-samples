@@ -27,6 +27,9 @@ using ac_int15 = ac_intN::int15;
 using ac_int28 = ac_intN::int28;
 using ac_uint4 = ac_intN::uint4;
 
+constexpr int thirteen_bits_mask = (1 << 13) - 1;
+constexpr int fourteen_bits_mask = (1 << 14) - 1;
+
 void TestAdd(queue &q, const ac_int14 &a, const ac_int14 &b, ac_int15 &c) {
   buffer<ac_int14, 1> inp1(&a, 1);
   buffer<ac_int14, 1> inp2(&b, 1);
@@ -162,8 +165,8 @@ int main() {
     // Truncate each of the two ints to 13 bits. The 14th bit is the sign bit.
     // In this testbench, even though the datatypes are signed, we will be
     // storing unsigned values to make the testing process simpler.
-    t1 &= (1 << 13) - 1;
-    t2 &= (1 << 13) - 1;
+    t1 &= thirteen_bits_mask;
+    t2 &= thirteen_bits_mask;
 
     std::cout << "Arithmetic Operations:\n";
     // Test adder
@@ -186,7 +189,7 @@ int main() {
 
     // Test multiplier
     {
-      t1 = rand() & ((1 << 13) - 1);
+      t1 = rand() & thirteen_bits_mask;
       ac_int14 a = t1;
       ac_int14 b = t2;
       ac_int28 c;
@@ -204,7 +207,7 @@ int main() {
 
     // Test divider
     {
-      t1 = rand() & ((1 << 13) - 1);
+      t1 = rand() & thirteen_bits_mask;
       t2 = rand() % 50;  // Use a small value for the divisor so that the result
                          // is not 0 or 1
       ac_int14 a = t1;
@@ -225,7 +228,7 @@ int main() {
     std::cout << "\nBitwise Operations:\n";
     // Shift operator
     {
-      t1 = rand() & ((1 << 13) - 1);
+      t1 = rand() & thirteen_bits_mask;
       t2 = rand() % 8;  // Use a small value for the shift
       ac_int14 a = t1;
       ac_int14 b = t2;
@@ -236,8 +239,8 @@ int main() {
 
       // Note that the left shift in ac_int is logical so to check the result,
       // we need to do a little bit manipulation to get the correct signed value
-      int c_golden = (t1 << t2) & ((1 << 14) - 1);
-      if ((t1 << t2) & (1 << 13)) c_golden |= (~((1 << 14) - 1));
+      int c_golden = (t1 << t2) & fourteen_bits_mask;
+      if ((t1 << t2) & (1 << 13)) c_golden |= (~fourteen_bits_mask);
       if (c != c_golden) {
         passed = false;
         std::cerr << "left_shift failed\n";
@@ -249,7 +252,7 @@ int main() {
 
     // Efficient left shift operator
     {
-      t1 = rand() & ((1 << 13) - 1);
+      t1 = rand() & thirteen_bits_mask;
       t2 = rand() % 14;  // Use a small value for the shift
       ac_int14 a = t1;
       ac_uint4 b = t2;
@@ -264,8 +267,8 @@ int main() {
 
       // Note that the left shift in ac_int is logical so to check the result,
       // we need to do a little bit manipulation to get the correct signed value
-      int c_golden = (t1 << t2) & ((1 << 14) - 1);
-      if ((t1 << t2) & (1 << 13)) c_golden |= (~((1 << 14) - 1));
+      int c_golden = (t1 << t2) & fourteen_bits_mask;
+      if ((t1 << t2) & (1 << 13)) c_golden |= (~fourteen_bits_mask);
       if (c != c_golden) {
         passed = false;
         std::cerr << "efficient_left_shift failed\n";
@@ -277,7 +280,7 @@ int main() {
 
     // Slice operations
     {
-      t1 = rand() & ((1 << 13) - 1);
+      t1 = rand() & thirteen_bits_mask;
       ac_int14 a = t1;
       ac_uint4 b;
       TestGetBitSlice(q, a, b, 5);
