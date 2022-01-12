@@ -108,6 +108,43 @@ private:
   int count_;
 };
 
+// https://stackoverflow.com/questions/757059/position-of-least-significant-bit-that-is-set
+// Another Option: https://electronics.stackexchange.com/questions/196914/verilog-synthesize-high-speed-leading-zero-count
+template<int bits>
+auto IndexOfLeading1(const ac_uint<bits>& in) {
+  static_assert(bits <= 32);
+  constexpr int out_bits = fpga_tools::Log2(bits) + 1;
+  /*
+  constexpr int lsb_set_map[32] = {
+    0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 
+    31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
+  };
+  int vp = i.to_int(); 
+  ac_uint<out_bits> ret = lsb_set_map[(vp * 0x077CB531U) >> 27] + 1;
+  return ret;
+  */
+
+  /*
+  ac_uint<16> tmp(0);
+  #pragma unroll
+  for (int i = 0; i < bits; i++) {
+    tmp[16 - i - 1] = in[i];
+  }
+  unsigned short v = tmp;
+  ac_uint<out_bits> ret = sycl::clz(v) + 1;
+  return ret;
+  */
+
+  ac_uint<out_bits> ret;
+  #pragma unroll
+  for (int i = bits - 1; i >= 0; i--) {
+    if (in[i]) {
+      ret = i + 1;
+    }
+  }
+  return ret;
+}
+
 class HeaderKernelID;
 class HuffmanDecoderKernelID;
 class LZ77DecoderKernelID;
@@ -337,7 +374,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       // not critical (low trip count). However, the compiler doesn't know that
       // and tries to optimize for throughput (~Fmax/II). However, we don't want
       // this loop to be our Fmax bottleneck, so increase the II.
-      [[intel::initiation_interval(5)]]
+      //[[intel::initiation_interval(5)]]
       do {
         // read in another byte if we have space for it
         if (bbs.HasSpaceForByte()) {
@@ -365,15 +402,14 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             // bits to read for the run length could be either 2, 3, or 7 bits
             // (3 possibilities in 'runlen_bits').
             [[intel::fpga_register]] ac_uint<7> extra_bit_vals[8][3];
-            constexpr unsigned short runlen_bits[] = {2, 3, 7};
+            constexpr int runlen_bits[] = {2, 3, 7};
             #pragma unroll
-            for (unsigned char out_codelen = 1; out_codelen <= 8; out_codelen++) {
+            for (int out_codelen = 1; out_codelen <= 8; out_codelen++) {
               #pragma unroll
-              for (unsigned char j = 0; j < 3; j++) {
-                unsigned char in_codelen = runlen_bits[j];
+              for (int j = 0; j < 3; j++) {
                 ac_uint<7> codebits_tmp(0);
                 #pragma unroll
-                for (unsigned char bit = 0; bit < in_codelen; bit++) {
+                for (int bit = 0; bit < runlen_bits[j]; bit++) {
                   codebits_tmp[bit] = next_bits[out_codelen + bit] & 0x1;
                 }
                 extra_bit_vals[out_codelen - 1][j] = codebits_tmp;
@@ -381,15 +417,15 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             }
 
             // decode all possible code symbols from 1 to 8 bits
-            bool codelencode_valid_bitmap[8];
+            ac_uint<8> codelencode_valid_bitmap(0);
             ac_uint<5> codelencode_offset[8];
             ac_uint<5> codelencode_base_idx[8];
 
             #pragma unroll
-            for (unsigned char codelen = 1; codelen <= 8; codelen++) {
+            for (int codelen = 1; codelen <= 8; codelen++) {
               ac_uint<8> codebits_tmp(0);
               #pragma unroll
-              for (unsigned char bit = 0; bit < codelen; bit++) {
+              for (int bit = 0; bit < codelen; bit++) {
                 codebits_tmp[codelen - bit - 1] = next_bits[bit] & 0x1;
               }
               unsigned char codebits = codebits_tmp;
@@ -400,23 +436,15 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               
               codelencode_base_idx[codelen - 1] = base_idx;
               codelencode_valid_bitmap[codelen - 1] =
-                  (codebits >= first_code) && (codebits < last_code);;
+                  ((codebits >= first_code) && (codebits < last_code)) ? 1 : 0;
               
               codelencode_offset[codelen - 1] = codebits - first_code;
             }
 
             // find the shortest matching code symbol
-            ac_uint<3> shortest_match_len;
-            ac_uint<5> base_idx;
-            ac_uint<5> offset;
-            #pragma unroll
-            for (unsigned char codelen = 8; codelen >= 1; codelen--) {
-              if (codelencode_valid_bitmap[codelen - 1]) {
-                shortest_match_len = codelen;
-                base_idx = codelencode_base_idx[codelen - 1];
-                offset = codelencode_offset[codelen - 1];
-              }
-            }
+            ac_uint<3> shortest_match_len = IndexOfLeading1(codelencode_valid_bitmap);
+            ac_uint<5> base_idx = codelencode_base_idx[shortest_match_len - 1];
+            ac_uint<5> offset = codelencode_offset[shortest_match_len - 1];;
 
             // get the decoded symbol
             auto symbol = codelencode_map[base_idx + offset];
@@ -575,12 +603,12 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           // find all possible dynamic lengths
           [[intel::fpga_register]] ac_uint<5> lit_extra_bit_vals[15][5];
           #pragma unroll
-          for (unsigned char out_codelen = 1; out_codelen <= 15; out_codelen++) {
+          for (int out_codelen = 1; out_codelen <= 15; out_codelen++) {
             #pragma unroll
-            for (unsigned char in_codelen = 1; in_codelen <= 5; in_codelen++) {
+            for (int in_codelen = 1; in_codelen <= 5; in_codelen++) {
               ac_uint<5> codebits_tmp(0);
               #pragma unroll
-              for (unsigned char bit = 0; bit < in_codelen; bit++) {
+              for (int bit = 0; bit < in_codelen; bit++) {
                 codebits_tmp[bit] = next_bits[out_codelen + bit] & 0x1;
               }
               lit_extra_bit_vals[out_codelen - 1][in_codelen - 1] = codebits_tmp;
@@ -590,12 +618,12 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           // find all possible dynamic distances
           [[intel::fpga_register]] ac_uint<15> dist_extra_bit_vals[15][15];
           #pragma unroll
-          for (unsigned char out_codelen = 1; out_codelen <= 15; out_codelen++) {
+          for (int out_codelen = 1; out_codelen <= 15; out_codelen++) {
             #pragma unroll
-            for (unsigned char in_codelen = 1; in_codelen <= 15; in_codelen++) {
+            for (int in_codelen = 1; in_codelen <= 15; in_codelen++) {
               ac_uint<15> codebits_tmp(0);
               #pragma unroll
-              for (unsigned char bit = 0; bit < in_codelen; bit++) {
+              for (int bit = 0; bit < in_codelen; bit++) {
                 codebits_tmp[bit] = next_bits[out_codelen + bit] & 0x1;
               }
               dist_extra_bit_vals[out_codelen - 1][in_codelen - 1] = codebits_tmp;
@@ -604,7 +632,10 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 
           // find all possible code lengths and offsets
           // TODO: get rid of selects here for literal vs distance symbol and just look stuff up in parallel
-          bool codelen_valid_bitmap[15];
+          // even though we write to every bit, we must initialize to 0
+          // https://hsdes.intel.com/appstore/article/#/14015829976
+          ac_uint<15> codelen_valid_bitmap(0);
+
           ac_uint<9> codelen_offset[15];
           ac_uint<9> codelen_base_idx[15];
           #pragma unroll
@@ -632,25 +663,17 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             
             codelen_base_idx[codelen - 1] = base_idx;
             codelen_valid_bitmap[codelen - 1] =
-                (codebits >= first_code) && (codebits < last_code);;
+                ((codebits >= first_code) && (codebits < last_code)) ? 1 : 0;
             
             codelen_offset[codelen - 1] = codebits - first_code;
           }
 
           // find the shortest matching length, which is the next decoded symbol
-          ac_uint<4> shortest_match_len;
-          ac_uint<4> shortest_match_len_idx;
-          #pragma unroll
-          for (unsigned char codelen = 15; codelen >= 1; codelen--) {
-            if (codelen_valid_bitmap[codelen - 1]) {
-              shortest_match_len = codelen;
-              shortest_match_len_idx = codelen - 1;
-            }
-          }
+          ac_uint<4> shortest_match_len = IndexOfLeading1(codelen_valid_bitmap);
 
           // get the base index and offset based on the shortest match length
-          ac_uint<9> base_idx = codelen_base_idx[shortest_match_len_idx];
-          ac_uint<9> offset = codelen_offset[shortest_match_len_idx];
+          ac_uint<9> base_idx = codelen_base_idx[shortest_match_len - 1];
+          ac_uint<9> offset = codelen_offset[shortest_match_len - 1];
 
           // lookup the symbol using base_idx and offset
           lit_symbol = lit_map[base_idx + offset];

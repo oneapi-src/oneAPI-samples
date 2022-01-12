@@ -71,7 +71,7 @@ public:
     // put data into the buffer
     ac_int<8, false> b_ac_int(b);
     #pragma unroll
-    for (unsigned char i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
       buf_[size_ + i] = b_ac_int[i] & 0x1;
     }
 
