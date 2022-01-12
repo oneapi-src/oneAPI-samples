@@ -20,7 +20,7 @@
           "cd build",
           "cmake ../ReferenceDesigns/mvdr_beamforming",
           "make fpga_emu",
-          "./mvdr_beamforming.fpga_emu --in=../data"
+          "./mvdr_beamforming.fpga_emu --in=../ReferenceDesigns/mvdr_beamforming/data"
         ]
       },
       {
@@ -45,7 +45,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/mvdr_beamforming",
           "nmake fpga_emu",
-          "mvdr_beamforming.fpga_emu.exe --in=../data"
+          "mvdr_beamforming.fpga_emu.exe --in=../ReferenceDesigns/mvdr_beamforming/data"
         ]
       },
       {

@@ -43,7 +43,7 @@ bool Validate(PixelT* val, PixelT* ref, int rows, int cols,
 int main(int argc, char* argv[]) {
   /////////////////////////////////////////////////////////////
   // reading and validating the command line arguments
-  std::string data_dir = "../test_data";
+  std::string data_dir = "../ReferenceDesigns/anr/test_data";
   bool passed = true;
 #ifdef FPGA_EMULATOR
   int runs = 2;
