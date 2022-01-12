@@ -189,7 +189,8 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      nmake fpga
      ``` 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
+*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
  
 ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -198,10 +199,7 @@ For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workfl
 
 ## Examining the Reports
 
-Locate the pair of `report.html` files in either:
-
-* **Report-only compile**:  `ac_int_report.prj`
-* **FPGA hardware compile**: `ac_int.prj`
+Locate `report.html` in the `ac_int_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
 Navigate to the *System Viewer* report (*Views* > *System Viewer*) and step through the clusters generated for `ShiftLeft` by clicking on the cluster entires on the left hand side pane under `ShiftLeft` until you find the one that contains the left shift node (`<<`). Similarly locate the cluster containing the left shift node for `EfficientShiftLeft`. Observe that the compiler needs to generate extra logic to deal with the signedness of the b operand for the `ShiftLeft` kernel and hence generates more hardware than for the `EfficientShiftLeft` kernel.
 
