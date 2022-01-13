@@ -22,10 +22,10 @@ These Jupyter notebooks help users analyze the performance benefit from using In
 
 | Analysis Type | Notebook | Notes|
 | ------ | ------ | ------ |
-|stock vs. Intel Tensorflow | 1. [benchmark_perf_comparison](benchmark_perf_comparison.ipynb)  | Compare performance between Stock and Intel Tensorflow among different models  |
-|^| 2. [benchmark_perf_timeline_analysis](benchmark_perf_timeline_analysis.ipynb) | Analyze the performance benefit from oneDNN among different layers by using Tensorflow Timeline |  
-|fp32 vs. bf16 vs. int8 | 1. [benchmark_data_types_perf_comparison](benchmark_data_types_perf_comparison.ipynb) | Compare Model Zoo benchmark performance among different data types on Intel Optimizations for  Tensorflow  |
-|^| 2.[benchmark_data_types_perf_timeline_analysis](benchmark_data_types_perf_timeline_analysis.ipynb) | Analyze the bf16/int8 data type performance benefit from oneDNN among different layers by using Tensorflow Timeline |  
+|stock vs. Intel Tensorflow | 1. benchmark_perf_comparison | Compare performance between Stock and Intel Tensorflow among different models  |
+|^| 2. benchmark_perf_timeline_analysis | Analyze the performance benefit from oneDNN among different layers by using Tensorflow Timeline |  
+|fp32 vs. bf16 vs. int8 | 1. benchmark_data_types_perf_comparison | Compare Model Zoo benchmark performance among different data types on Intel Optimizations for  Tensorflow  |
+|^| 2.benchmark_data_types_perf_timeline_analysis | Analyze the bf16/int8 data type performance benefit from oneDNN among different layers by using Tensorflow Timeline |  
 
     
 ## License  
@@ -55,7 +55,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 1. Create conda env: `$conda create -n stock-tensorflow python matplotlib ipykernel psutil pandas gitpython`
 2. Activate the created conda env: `$source activate stock-tensorflow.`
-3. Install stock Tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.5.0`
+3. Install stock Tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.6.0`
 4. Install extra needed package: `(stock-tensorflow) $pip install cxxfilt`
 5. Deactivate conda env: `(stock-tensorflow)$conda deactivate`
 6. Register the kernel to Jupyter NB: `$~/.conda/envs/stock-tensorflow/bin/python -m ipykernel install --user --name=stock-tensorflow`
@@ -85,7 +85,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 1. Create conda env: `$conda create -n stock-tensorflow python matplotlib ipykernel psutil pandas gitpython`
 
 2. Activate the created conda env: `$conda activate stock-tensorflow`
-3. Install stock tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.5.0`
+3. Install stock tensorflow with a specific version: `(stock-tensorflow) $pip install tensorflow==2.6.0`
 4. Install extra needed package: `(stock-tensorflow) $pip install cxxfilt`
 5. Deactivate conda env: `(stock-tensorflow)$conda deactivate`
 6. Register the kernel to Jupyter NB: `$~/anaconda3/envs/stock-tensorflow/bin/python  -m ipykernel install --user --name=stock-tensorflow`
