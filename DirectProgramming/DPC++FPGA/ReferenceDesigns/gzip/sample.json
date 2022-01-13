@@ -40,6 +40,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\gzip\\data ..\\data\\",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip",
           "nmake fpga_emu",
           "gzip.fpga_emu.exe ../src/gzip.cpp -o=test.gz"
