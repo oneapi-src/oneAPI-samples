@@ -18,7 +18,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./crr.fpga_emu ./src/data/ordered_inputs.csv"
+          "./crr.fpga_emu"
         ]
       },
       {
@@ -42,7 +42,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/crr",
           "nmake fpga_emu",
-          "crr.fpga_emu.exe ../src/data/ordered_inputs.csv"
+          "crr.fpga_emu.exe"
         ]
       },
       {
