@@ -14,10 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/mem_channel",
+          "cmake ..",
           "make fpga_emu",
           "./mem_channel.fpga_emu"
         ]
@@ -26,10 +25,9 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/mem_channel",
+          "cmake ..",
           "make report"
         ]
       }
