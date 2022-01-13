@@ -14,10 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/GettingStarted/fpga_compile",
+          "cmake ..",
           "make fpga_emu",
           "./fpga_compile.fpga_emu"
         ]
@@ -26,10 +25,9 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/GettingStarted/fpga_compile",
+          "cmake ..",
           "make report"
         ]
       }

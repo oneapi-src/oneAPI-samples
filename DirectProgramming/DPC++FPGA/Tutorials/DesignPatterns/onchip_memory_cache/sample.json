@@ -14,10 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/DesignPatterns/onchip_memory_cache",
+          "cmake ..",
           "make fpga_emu",
           "./onchip_memory_cache.fpga_emu"
         ]
@@ -26,10 +25,9 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/DesignPatterns/onchip_memory_cache",
+          "cmake ..",
           "make report"
         ]
       }

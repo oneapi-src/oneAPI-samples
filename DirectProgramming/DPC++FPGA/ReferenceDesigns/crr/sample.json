@@ -14,10 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ../ReferenceDesigns/crr",
+          "cmake ..",
           "make fpga_emu",
           "./crr.fpga_emu ./src/data/ordered_inputs.csv -o=./src/data/ordered_outputs.csv"
         ]
@@ -26,10 +25,9 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ../ReferenceDesigns/crr",
+          "cmake ..",
           "make report"
         ]
       }

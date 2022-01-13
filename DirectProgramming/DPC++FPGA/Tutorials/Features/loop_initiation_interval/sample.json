@@ -14,10 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/loop_initiation_interval",
+          "cmake ..",
           "make fpga_emu",
           "./loop_ii.fpga_emu"
         ]
@@ -26,10 +25,9 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/loop_initiation_interval",
+          "cmake ..",
           "make report"
         ]
       }

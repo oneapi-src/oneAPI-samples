@@ -15,11 +15,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../..",
           "mkdir build",
           "cd build",
-          "xcopy /E ..\\ReferenceDesigns\\mvdr_beamforming\\data ..\\data\\",
-          "cmake ../ReferenceDesigns/mvdr_beamforming",
+          "cmake ..",
           "make fpga_emu",
           "./mvdr_beamforming.fpga_emu --in=../data"
         ]
@@ -28,10 +26,9 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ../ReferenceDesigns/mvdr_beamforming",
+          "cmake ..",
           "make report"
         ]
       }

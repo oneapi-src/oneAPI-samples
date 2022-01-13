@@ -14,10 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Tools/system_profiling",
+          "cmake ..",
           "make fpga_emu",
           "./double_buffering.fpga_emu"
         ]

@@ -14,10 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Tools/dynamic_profiler",
+          "cmake ..",
           "make fpga_emu",
           "./dynamic_profiler.fpga_emu"
         ]

@@ -14,11 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../..",
           "mkdir build",
           "cd build",
-          "xcopy /E ..\\ReferenceDesigns\\anr\\test_data ..\\test_data\\",
-          "cmake ../ReferenceDesigns/anr",
+          "cmake ..",
           "make fpga_emu",
           "./anr.fpga_emu"
         ]
@@ -27,11 +25,9 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ../..",
           "mkdir build",
           "cd build",
-          "xcopy /E ..\\ReferenceDesigns\\anr\\test_data ..\\test_data\\",
-          "cmake ../ReferenceDesigns/anr",
+          "cmake ..",
           "make report"
         ]
       }

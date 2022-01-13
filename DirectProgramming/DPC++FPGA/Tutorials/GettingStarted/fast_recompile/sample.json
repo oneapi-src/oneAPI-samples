@@ -14,10 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/GettingStarted/fast_recompile",
+          "cmake ..",
           "make fpga_emu",
           "./fast_recompile.fpga_emu"
         ]

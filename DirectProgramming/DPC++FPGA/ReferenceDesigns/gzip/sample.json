@@ -14,10 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ../ReferenceDesigns/gzip",
+          "cmake ..",
           "make fpga_emu",
           "./gzip.fpga_emu ../src/gzip.cpp -o=test.gz"
         ]
@@ -26,10 +25,9 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ../ReferenceDesigns/gzip",
+          "cmake ..",
           "make report"
         ]
       }
