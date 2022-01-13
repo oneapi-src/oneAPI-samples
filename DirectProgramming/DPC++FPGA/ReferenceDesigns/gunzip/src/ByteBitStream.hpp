@@ -70,10 +70,7 @@ public:
   void NewByte(unsigned char b) {
     // put data into the buffer
     ac_int<8, false> b_ac_int(b);
-    #pragma unroll
-    for (int i = 0; i < 8; i++) {
-      buf_[size_ + i] = b_ac_int[i] & 0x1;
-    }
+    buf_.template set_slc(size_, b_ac_int);
 
     size_ += 8;
     has_space_for_byte_ = space_ >= 16;

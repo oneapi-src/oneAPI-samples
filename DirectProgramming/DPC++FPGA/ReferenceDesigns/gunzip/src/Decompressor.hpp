@@ -108,26 +108,11 @@ private:
   int count_;
 };
 
-ac_int<2, false> clz_encoder(ac_int<2, false>& in) {
-  if (in == 0) {
-    return ac_int<2, false>(2);
-  } else if (in == 1) {
-    return ac_int<2, false>(1); 
-  } else {
-    return ac_int<2, false>(0);
-  }
-}
-
-// https://stackoverflow.com/questions/757059/position-of-least-significant-bit-that-is-set
-// Another Option: https://electronics.stackexchange.com/questions/196914/verilog-synthesize-high-speed-leading-zero-count
 template<int bits>
 auto ctz(const ac_uint<bits>& in) {
-  static_assert(bits <= 32);
-
-  if constexpr (bits != 15) {
     constexpr int out_bits = fpga_tools::Log2(bits) + 1;
-    
-    ac_uint<out_bits> ret(bits);
+    //ac_uint<out_bits> ret(bits);
+    ac_uint<out_bits> ret;
     #pragma unroll
     for (int i = bits - 1; i >= 0; i--) {
       if (in[i]) {
@@ -135,109 +120,6 @@ auto ctz(const ac_uint<bits>& in) {
       }
     }
     return ret;
-  } else {
-    ac_int<16, false> in_pad(0);
-    in_pad[15] = 0;
-    #pragma unroll
-    for (int i = 0; i < 15; i++) { in_pad[i] = in[i]; }
-
-    ac_int<16, false> in_pad_reverse(0);
-    #pragma unroll
-    for (int i = 0; i < 16; i++) { in_pad_reverse[16 - i - 1] = in_pad[i]; }
-
-    ac_int<2, false> in_pad_reverse_encoded[8];
-    #pragma unroll
-    for (int i = 0; i < 8; i++) {
-      ac_int<2, false> two_bits(0);
-      two_bits[0] = in_pad_reverse[2 * i];
-      two_bits[1] = in_pad_reverse[2 * i + 1];
-      in_pad_reverse_encoded[i] = clz_encoder(two_bits);
-    }
-
-    ac_int<3, false> tree_l1[4];
-    ac_int<4, false> tree_l2[2];
-    ac_int<5, false> tree_l3[1];
-
-    #pragma unroll
-    for (int i = 0; i < 4; i++) {
-      auto rhs = in_pad_reverse_encoded[2 * i];
-      auto lhs = in_pad_reverse_encoded[2 * i + 1];
-
-      ac_int<3, false> out(0);
-      if (lhs[1] && rhs[1]) {
-        out[2] = 1;
-        out[1] = 0;
-        out[0] = 0;
-      } else if (!lhs[1]) {
-        out[2] = 0;
-        out[1] = lhs[1];
-        out[0] = lhs[0];
-      } else {  // lhs[1] == 1
-        out[2] = 0;
-        out[1] = 1;
-        out[0] = rhs[0];
-      }
-
-      tree_l1[i] = out;
-    }
-
-    #pragma unroll
-    for (int i = 0; i < 2; i++) {
-      auto rhs = tree_l1[2 * i];
-      auto lhs = tree_l1[2 * i + 1];
-
-      ac_int<4, false> out(0);
-      if (lhs[2] && rhs[2]) {
-        out[3] = 1;
-        out[2] = 0;
-        out[1] = 0;
-        out[0] = 0;
-      } else if (!lhs[2]) {
-        out[3] = 0;
-        out[2] = lhs[2];
-        out[1] = lhs[1];
-        out[0] = lhs[0];
-      } else {  // lhs[1] == 1
-        out[3] = 0;
-        out[2] = 1;
-        out[1] = rhs[1];
-        out[0] = rhs[0];
-      }
-
-      tree_l2[i] = out;
-    }
-
-    #pragma unroll
-    for (int i = 0; i < 1; i++) {
-      auto rhs = tree_l2[2 * i];
-      auto lhs = tree_l2[2 * i + 1];
-
-      ac_int<5, false> out(0);
-      if (lhs[3] && rhs[3]) {
-        out[4] = 1;
-        out[3] = 0;
-        out[2] = 0;
-        out[1] = 0;
-        out[0] = 0;
-      } else if (!lhs[3]) {
-        out[4] = 0;
-        out[3] = lhs[3];
-        out[2] = lhs[2];
-        out[1] = lhs[1];
-        out[0] = lhs[0];
-      } else {  // lhs[1] == 1
-        out[4] = 0;
-        out[3] = 1;
-        out[2] = rhs[2];
-        out[1] = rhs[1];
-        out[0] = rhs[0];
-      }
-
-      tree_l3[i] = out;
-    }
-
-    return tree_l3[0];
-  }
 }
 
 class HeaderKernelID;
@@ -406,17 +288,17 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             bbs.Shift(2);
             first_table_state = 2;
           } else if (first_table_state == 2) {
-            numlitlencodes = bbs.ReadUInt(5) + (unsigned short)257;
+            numlitlencodes = bbs.ReadUInt(5) + ac_uint<9>(257);
             //PRINTF("numlitlencodes: %u\n", numlitlencodes);
             bbs.Shift(5);
             first_table_state = 3;
           } else if (first_table_state == 3) {
-            numdistcodes = bbs.ReadUInt(5) + (unsigned short)1;
+            numdistcodes = bbs.ReadUInt(5) + ac_uint<1>(1);
             //PRINTF("numdistcodes: %u\n", numdistcodes);
             bbs.Shift(5);
             first_table_state = 4;
           } else if (first_table_state == 4) {
-            numcodelencodes = bbs.ReadUInt(4) + (unsigned short)4;
+            numcodelencodes = bbs.ReadUInt(4) + ac_uint<3>(4);
             //PRINTF("numcodelencodes: %u\n", numcodelencodes);
             bbs.Shift(4);
             first_table_state = 5;
@@ -678,7 +560,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       ac_uint<5> dist_symbol;
 
       // main processing loop
-      [[intel::initiation_interval(4)]]
+      //[[intel::initiation_interval(1)]]
       do {
         // read in new data if the ByteBitStream has space for it and we aren't
         // done reading from the input pipe
@@ -731,10 +613,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           // TODO: get rid of selects here for literal vs distance symbol and just look stuff up in parallel
           // even though we write to every bit, we must initialize to 0
           // https://hsdes.intel.com/appstore/article/#/14015829976
-          ac_uint<15> codelen_valid_bitmap(0);
-
-          ac_uint<9> codelen_offset[15];
-          ac_uint<9> codelen_base_idx[15];
+          ac_uint<15> lit_codelen_valid_bitmap(0), dist_codelen_valid_bitmap(0);
+          ac_uint<9> lit_codelen_offset[15], lit_codelen_base_idx[15];
+          ac_uint<5> dist_codelen_offset[15], dist_codelen_base_idx[15];
           #pragma unroll
           for (unsigned char codelen = 1; codelen <= 15; codelen++) {
             ac_uint<15> codebits_tmp(0);
@@ -750,39 +631,40 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             auto dist_base_idx = dist_map_base_idx[codelen - 1];
             auto dist_first_code = dist_map_first_code[codelen - 1];
             auto dist_last_code = dist_map_last_code[codelen - 1];
+            
+            lit_codelen_valid_bitmap[codelen - 1] = ((codebits >= lit_first_code) && (codebits < lit_last_code)) ? 1 : 0;
+            lit_codelen_base_idx[codelen - 1] = lit_base_idx;
+            lit_codelen_offset[codelen - 1] = codebits - lit_first_code;
 
-            auto base_idx = !reading_distance ? (ac_uint<9>)lit_base_idx
-                                              : (ac_uint<9>)dist_base_idx;
-            auto first_code = !reading_distance ? lit_first_code
-                                                : dist_first_code;
-            auto last_code = !reading_distance ? lit_last_code
-                                               : dist_last_code;
-            
-            codelen_base_idx[codelen - 1] = base_idx;
-            codelen_valid_bitmap[codelen - 1] =
-                ((codebits >= first_code) && (codebits < last_code)) ? 1 : 0;
-            
-            codelen_offset[codelen - 1] = codebits - first_code;
+            dist_codelen_valid_bitmap[codelen - 1] = ((codebits >= dist_first_code) && (codebits < dist_last_code)) ? 1 : 0;
+            dist_codelen_base_idx[codelen - 1] = dist_base_idx;
+            dist_codelen_offset[codelen - 1] = codebits - dist_first_code;
           }
 
           // find the shortest matching length, which is the next decoded symbol
-          ac_uint<4> shortest_match_len = ctz(codelen_valid_bitmap) + 1;
+          auto lit_shortest_match_len = ctz(lit_codelen_valid_bitmap) + 1;
+          auto dist_shortest_match_len = ctz(dist_codelen_valid_bitmap) + 1;
 
           // get the base index and offset based on the shortest match length
-          ac_uint<9> base_idx = codelen_base_idx[shortest_match_len - 1];
-          ac_uint<9> offset = codelen_offset[shortest_match_len - 1];
+          auto lit_base_idx = lit_codelen_base_idx[lit_shortest_match_len - 1];
+          auto lit_offset = lit_codelen_offset[lit_shortest_match_len - 1];
+          auto dist_base_idx = dist_codelen_base_idx[dist_shortest_match_len - 1];
+          auto dist_offset = dist_codelen_offset[dist_shortest_match_len - 1];
+          ac_uint<9> lit_idx = lit_base_idx + lit_offset;
+          ac_uint<9> dist_idx = dist_base_idx + dist_offset;
 
           // lookup the symbol using base_idx and offset
-          lit_symbol = lit_map[base_idx + offset];
-          dist_symbol =  dist_map[base_idx + offset];
+          lit_symbol = lit_map[lit_idx];
+          dist_symbol =  dist_map[dist_idx];
 
           // we will either shift by shortest_match_len or by
           // shortest_match_len + num_extra_bits based on whether we read a
           // length, distance and/or its extra bits.
           // maximum value for shift_amount = 15 + 15 = 30
-          ac_uint<5> shift_amount = shortest_match_len;
+          ac_uint<5> shift_amount;
 
           if (!reading_distance) {
+            shift_amount = lit_shortest_match_len;
             // currently parsing a symbol or length (same table)
             if (lit_symbol == 256) {
               // stop code hit, done this block
@@ -795,14 +677,14 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               out_ready = true;
             } else if (lit_symbol <= 264) {
               // decoded a length with a static value
-              out_data.len_or_sym = lit_symbol - 254;
+              out_data.len_or_sym = lit_symbol - ac_uint<9>(254);
               reading_distance = true;
             } else if (lit_symbol <= 284) {
               // decoded a length with a dynamic value
-              ac_uint<3> num_extra_bits = (lit_symbol - 261) / 4;
-              auto extra_bits_val = lit_extra_bit_vals[shortest_match_len - 1][num_extra_bits - 1];
-              out_data.len_or_sym = (((lit_symbol - 265) % 4 + 4) << num_extra_bits) + 3 + extra_bits_val;
-              shift_amount = shortest_match_len + num_extra_bits;
+              ac_uint<3> num_extra_bits = (lit_symbol - ac_uint<9>(261)) / 4;
+              auto extra_bits_val = lit_extra_bit_vals[lit_shortest_match_len - 1][num_extra_bits - 1];
+              out_data.len_or_sym = (((lit_symbol - ac_uint<9>(265)) % 4 + ac_uint<3>(4)) << num_extra_bits) + 3 + extra_bits_val;
+              shift_amount = lit_shortest_match_len + num_extra_bits;
               reading_distance = true;
             } else if (lit_symbol == 285) {
               // decoded a length with a static value
@@ -810,6 +692,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               reading_distance = true;
             } // else error, ignored
           } else {
+            shift_amount = dist_shortest_match_len;
             // currently decoding a distance symbol
             if (dist_symbol <= 3) {
               // decoded a distance with a static value
@@ -818,9 +701,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               // decoded a distance with a dynamic value
               // NOTE: should be <= 29, but not doing error checking
               auto num_extra_bits = (dist_symbol / 2) - 1;
-              auto extra_bits_val = dist_extra_bit_vals[shortest_match_len - 1][num_extra_bits - 1];
+              auto extra_bits_val = dist_extra_bit_vals[dist_shortest_match_len - 1][num_extra_bits - 1];
               out_data.dist_or_flag = ((dist_symbol % 2 + 2) << num_extra_bits) + 1 + extra_bits_val;
-              shift_amount = shortest_match_len + num_extra_bits;
+              shift_amount = dist_shortest_match_len + num_extra_bits;
             }
             out_ready = true;
             reading_distance = false;
