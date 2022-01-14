@@ -340,61 +340,57 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows,
   auto horizontal_func = HorizontalFunctor<filter_size>();
 
   // submit the vertical kernel using a column stencil
-  auto vertical_kernel = q.submit([&](handler& h) {
-    h.single_task<VerticalKernelID>([=] {
+  auto vertical_kernel = q.single_task<VerticalKernelID>([=] {
     // copy host side intensity sigma LUT to the device
     // For testing the kernel system as an IP and checking the area and Fmax,
     // we allow the user to turn off connections to device memory. In this case
     // (the DISABLE_DEVICE_MEM macro IS defined), the results will be incorrect
     // since there is no way to get the data to/from the device.
 #if defined(IP_MODE)
-      IntensitySigmaLUT sig_i_lut;
+    IntensitySigmaLUT sig_i_lut;
 #else
-      IntensitySigmaLUT sig_i_lut(sig_i_lut_data_ptr);
+    IntensitySigmaLUT sig_i_lut(sig_i_lut_data_ptr);
 #endif
 
-      // build the constexpr exp() and inverse LUT ROMs
-      constexpr ExpLUT exp_lut;
-      constexpr InvLUT inv_lut;
+    // build the constexpr exp() and inverse LUT ROMs
+    constexpr ExpLUT exp_lut;
+    constexpr InvLUT inv_lut;
 
-      // Start the column stencil.
-      // It will callback to 'vertical_func' with all of the additional
-      // arguments listed after 'vertical_func' (i.e., spatial_power,
-      // params, ...)
-      ColumnStencil<PixelT, DataForwardStruct, IndexT, InPipe,
-                    IntraPipe, filter_size, max_cols, pixels_per_cycle>(rows_k,
-                    cols_k, PixelT(0), vertical_func, spatial_power, params,
-                    std::cref(exp_lut), std::cref(inv_lut),
-                    std::ref(sig_i_lut));
-    });
+    // Start the column stencil.
+    // It will callback to 'vertical_func' with all of the additional
+    // arguments listed after 'vertical_func' (i.e., spatial_power,
+    // params, ...)
+    ColumnStencil<PixelT, DataForwardStruct, IndexT, InPipe,
+                  IntraPipe, filter_size, max_cols, pixels_per_cycle>(rows_k,
+                  cols_k, PixelT(0), vertical_func, spatial_power, params,
+                  std::cref(exp_lut), std::cref(inv_lut),
+                  std::ref(sig_i_lut));
   });
 
   // submit the horizontal kernel using a row stencil
-  auto horizontal_kernel = q.submit([&](handler& h) {
-    h.single_task<HorizontalKernelID>([=] {
-      // build the constexpr exp() and inverse LUT ROMs
-      constexpr ExpLUT exp_lut;
-      constexpr InvLUT inv_lut;
+  auto horizontal_kernel = q.single_task<HorizontalKernelID>([=] {
+    // build the constexpr exp() and inverse LUT ROMs
+    constexpr ExpLUT exp_lut;
+    constexpr InvLUT inv_lut;
 
 #ifdef IP_MODE
-      ANRParams::AlphaFixedT alpha_fixed(0.75);
-      ANRParams::AlphaFixedT one_minus_alpha_fixed(0.25);
+    ANRParams::AlphaFixedT alpha_fixed(0.75);
+    ANRParams::AlphaFixedT one_minus_alpha_fixed(0.25);
 #else
-      // convert the alpha and (1-alpha) values to fixed-point
-      ANRParams::AlphaFixedT alpha_fixed(params.alpha);
-      ANRParams::AlphaFixedT one_minus_alpha_fixed(params.one_minus_alpha);
+    // convert the alpha and (1-alpha) values to fixed-point
+    ANRParams::AlphaFixedT alpha_fixed(params.alpha);
+    ANRParams::AlphaFixedT one_minus_alpha_fixed(params.one_minus_alpha);
 #endif
-      
-      // Start the row stencil.
-      // It will callback to 'horizontal_func' with the additional all of the
-      // additional arguments listed after 'horizontal_func' (i.e.,
-      // spatial_power, params, alpha_fixed, ...)
-      RowStencil<DataForwardStruct, PixelT, IndexT, IntraPipe, OutPipe,
-                 filter_size, pixels_per_cycle>(rows_k, cols_k,
-                 DataForwardStruct(0), horizontal_func, spatial_power,
-                 params, alpha_fixed, one_minus_alpha_fixed, std::cref(exp_lut),
-                 std::cref(inv_lut));
-    });
+    
+    // Start the row stencil.
+    // It will callback to 'horizontal_func' with the additional all of the
+    // additional arguments listed after 'horizontal_func' (i.e.,
+    // spatial_power, params, alpha_fixed, ...)
+    RowStencil<DataForwardStruct, PixelT, IndexT, IntraPipe, OutPipe,
+                filter_size, pixels_per_cycle>(rows_k, cols_k,
+                DataForwardStruct(0), horizontal_func, spatial_power,
+                params, alpha_fixed, one_minus_alpha_fixed, std::cref(exp_lut),
+                std::cref(inv_lut));
   });
 
   return {vertical_kernel, horizontal_kernel};
