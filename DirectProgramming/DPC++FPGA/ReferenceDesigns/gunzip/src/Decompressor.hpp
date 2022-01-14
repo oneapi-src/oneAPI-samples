@@ -560,7 +560,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       ac_uint<5> dist_symbol;
 
       // main processing loop
-      //[[intel::initiation_interval(1)]]
+      [[intel::initiation_interval(2)]]
       do {
         // read in new data if the ByteBitStream has space for it and we aren't
         // done reading from the input pipe
