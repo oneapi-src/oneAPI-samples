@@ -72,9 +72,9 @@ public:
     ac_int<8, false> b_ac_int(b);
     buf_.template set_slc(size_, b_ac_int);
 
-    size_ += 8;
+    size_ += decltype(size_)(8);
     has_space_for_byte_ = space_ >= 16;
-    space_ -= 8;
+    space_ -= decltype(space_)(8);
   }
 
 private:

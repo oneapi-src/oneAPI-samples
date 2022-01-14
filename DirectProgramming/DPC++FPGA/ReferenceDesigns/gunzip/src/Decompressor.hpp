@@ -681,9 +681,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               reading_distance = true;
             } else if (lit_symbol <= 284) {
               // decoded a length with a dynamic value
-              ac_uint<3> num_extra_bits = (lit_symbol - ac_uint<9>(261)) / 4;
+              ac_uint<3> num_extra_bits = (lit_symbol - ac_uint<9>(261)) >> 2;
               auto extra_bits_val = lit_extra_bit_vals[lit_shortest_match_len - 1][num_extra_bits - 1];
-              out_data.len_or_sym = (((lit_symbol - ac_uint<9>(265)) % 4 + ac_uint<3>(4)) << num_extra_bits) + 3 + extra_bits_val;
+              out_data.len_or_sym = ((((lit_symbol - ac_uint<9>(265)) & 0x3) + ac_uint<3>(4)) << num_extra_bits) + ac_uint<2>(3) + extra_bits_val;
               shift_amount = lit_shortest_match_len + num_extra_bits;
               reading_distance = true;
             } else if (lit_symbol == 285) {
@@ -700,9 +700,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             } else {
               // decoded a distance with a dynamic value
               // NOTE: should be <= 29, but not doing error checking
-              auto num_extra_bits = (dist_symbol / 2) - 1;
+              ac_uint<4> num_extra_bits = (dist_symbol >> 1) - ac_uint<1>(1);
               auto extra_bits_val = dist_extra_bit_vals[dist_shortest_match_len - 1][num_extra_bits - 1];
-              out_data.dist_or_flag = ((dist_symbol % 2 + 2) << num_extra_bits) + 1 + extra_bits_val;
+              out_data.dist_or_flag = (((dist_symbol & 0x1) + ac_uint<2>(2)) << num_extra_bits) + ac_uint<1>(1) + extra_bits_val;
               shift_amount = dist_shortest_match_len + num_extra_bits;
             }
             out_ready = true;
