@@ -657,9 +657,6 @@ int main(int argc, char** argv) {
   if (id == master) {
     printf("Number of steps is %d\n", num_steps);
 
-    // Since we are using JIT compiler for samples,
-    // we need to run each step once to allow for compile
-    // to occur before we time execution of function.
     pi = calc_pi_onedpl_native(num_steps, policy);
     pi = calc_pi_onedpl_native2(num_steps, policy, groups);
     pi = calc_pi_onedpl_native3(num_steps, groups, policy);
