@@ -18,9 +18,9 @@ This sample helps demonstrate AI workloads and deep learning models optimized by
 ## Key implementation details
 ### Jupyter Notebooks 
  
-These Jupyter notebooks help users analyze the performance benefit from using Intel Optimizations for Tensorflow with the oneDNN library.  
+Jupyter notebooks help users analyze the performance benefit from using Intel Optimizations for Tensorflow with the oneDNN library.  
 
->Those notebooks are released with oneAPI AI Analytics Toolkit, and they are under the /opt/intel/oneapi/modelzoo/latest/models/docs/notebooks/perf_analysis folder.  
+>The notebooks are released with oneAPI AI Analytics Toolkit, and they are under the /opt/intel/oneapi/modelzoo/latest/models/docs/notebooks/perf_analysis folder.  
 Users could also find the notebooks in Model Zoo Github by following the links in the below table.  
 
 | Analysis Type | Notebook | Notes|
