@@ -52,9 +52,10 @@ void PrintUACInt(ac_uint<bits>& x) {
 //
 template<typename T>
 struct FlagBundle {
-  FlagBundle() : data(T(0)), flag(false) {}
+  FlagBundle() : data(T()), flag(false) {}
   FlagBundle(T d_in) : data(d_in), flag(false) {}
   FlagBundle(T d_in, bool f_in) : data(d_in), flag(f_in) {}
+  FlagBundle(bool f_in) : data(T()), flag(f_in) {}
 
   T data;
   bool flag;
@@ -72,42 +73,19 @@ struct HuffmanData {
   short dist_or_flag; 
 };
 
-class USMDebugger {
-public:
-  void Init(queue& q, int count = 64) {
-    count_ = count;
-    if ((data_ = malloc_host<long long>(count, q)) == nullptr) {
-      std::cerr << "ERROR: could not allocate space for 'data_'\n";
-      std::terminate();
-    }
-    for (int i = 0; i < count; i++) {
-      data_[i] = -1;
-    }
-  }
-
-  void Destroy(queue& q) {
-    sycl::free(data_, q);
-    data_ = nullptr;
-  }
-
-  void Write(int idx, long long val) const {
-    host_ptr<long long> data_host_ptr(data_);
-    data_host_ptr[idx] = val;
-  }
-  
-  void Print(int max_count=0) {
-    std::cout << "===== USMDebugger dump =====\n";
-    for (int i = 0; i < count_ && (max_count == 0 || i < max_count); i++) {
-      std::cout << i << ": " << data_[i] << "\n";
-    }
-    std::cout << "============================\n";
-  }
-
-private:
-  long long *data_;
-  int count_;
+//
+// TODO
+//
+template<int n>
+struct LiteralPack {
+  static constexpr int count_bits = fpga_tools::Log2(n) + 1;
+  unsigned char byte[n];
+  ac_uint<count_bits> valid_count;
 };
 
+//
+// TODO
+//
 template<int bits>
 auto ctz(const ac_uint<bits>& in) {
     constexpr int out_bits = fpga_tools::Log2(bits) + 1;
@@ -125,14 +103,76 @@ auto ctz(const ac_uint<bits>& in) {
 class HeaderKernelID;
 class HuffmanDecoderKernelID;
 class LZ77DecoderKernelID;
+class LiteralStackerKernelID;
 
 class HeaderToHuffmanPipeID;
 class HuffmanToLZ77PipeID;
-using HeaderToHuffmanPipe =
-  ext::intel::pipe<HeaderToHuffmanPipeID, FlagBundle<unsigned char>>;
-using HuffmanToLZ77Pipe =
-  ext::intel::pipe<HuffmanToLZ77PipeID, FlagBundle<HuffmanData>, 16>;
+class LZ77ToLiteralStackerPipeID;
 
+template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
+event SubmitLiteralStackerKernel(queue& q) {
+  return q.single_task<LiteralStackerKernelID>([=] {
+    using OutPipeBundleT = FlagBundle<LiteralPack<literals_per_cycle>>;
+    constexpr int cache_idx_bits = fpga_tools::Log2(literals_per_cycle*2) + 1;
+
+    bool done;
+
+    // NOTE: cache_idx is fmax bottleneck of this kernel
+    // could shannonize to improve, but not worth it yet
+    ac_uint<cache_idx_bits> cache_idx = 0;
+    [[intel::fpga_register]] unsigned char cache_buf[literals_per_cycle * 2];
+
+    do {
+      bool data_valid;
+      auto pipe_data = InPipe::read(data_valid);
+      done = pipe_data.flag && data_valid;
+
+      if (data_valid && !done) {
+        #pragma unroll
+        for (int i = 0; i < literals_per_cycle; i++) {
+          if (i < pipe_data.data.valid_count) {
+            cache_buf[cache_idx + i] = pipe_data.data.byte[i];
+          }
+        }
+        cache_idx += pipe_data.data.valid_count;
+      }
+
+      if (cache_idx >= literals_per_cycle || done) {
+        // create the output pack of characters from the current cache
+        LiteralPack<literals_per_cycle> out_pack;
+        #pragma unroll
+        for (int i = 0; i < literals_per_cycle; i++) {
+          // copy the character
+          out_pack.byte[i] = cache_buf[i];
+
+          // shift the extra characters to the front of the cache
+          cache_buf[i] = cache_buf[i + literals_per_cycle];
+        }
+
+        // mark output with number of valid bytes
+        if (cache_idx <= literals_per_cycle) {
+          out_pack.valid_count = cache_idx;
+        } else {
+          out_pack.valid_count = literals_per_cycle;
+        }
+
+        // decrement cache_idx by number of elements we read
+        // it is safe to always subtract literals_per_cycle since that will only
+        // happen on the last iteration of the outer while loop (when 'done'
+        // is true) 
+        cache_idx -= literals_per_cycle;
+
+        // write output
+        OutPipe::write(OutPipeBundleT(out_pack));
+      }
+    } while (!done);
+    
+    // notify downstream kernel that we are done
+    OutPipe::write(OutPipeBundleT(true));
+  });
+}
+
+/*
 template<typename InPipe, typename OutPipe>
 event SubmitLZ77DecoderKernel(queue& q) {
   return q.single_task<LZ77DecoderKernelID>([=] {
@@ -170,7 +210,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
         auto pipe_data = InPipe::read(data_valid);
 
         // check if we are done
-        done = pipe_data.flag & data_valid;
+        done = pipe_data.flag && data_valid;
 
         // grab the symbol or the length and distance pair
         auto len_or_sym = pipe_data.data.len_or_sym;
@@ -180,7 +220,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
         // if we get a length distance pair we will read 'len_or_sym' bytes
         // starting 'dist' 
         history_count = len_or_sym;
-        reading_history = (dist != -1) & data_valid;
+        reading_history = (dist != -1) && data_valid;
         reading_history_next = history_count != 1;
         history_read_idx = (history_idx - dist) & kMaxHistoryMask;
       }
@@ -207,7 +247,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
       }
       
 
-      if (!done & data_valid) {
+      if (!done && data_valid) {
         // write the new value to both the history buffer and the cache
         history[history_idx] = c;
         history_cache_val[kCacheDepth] = c;
@@ -232,15 +272,80 @@ event SubmitLZ77DecoderKernel(queue& q) {
     OutPipe::write(FlagBundle<unsigned char>(0, true));
   });
 }
+*/
+
+template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
+event SubmitLZ77DecoderKernel(queue& q) {
+  return q.single_task<LZ77DecoderKernelID>([=] {
+    static_assert(fpga_tools::IsPow2(literals_per_cycle));
+    using OutPipeBundleT = FlagBundle<LiteralPack<literals_per_cycle>>;
+    bool done;
+    bool reading_history = false;
+    bool reading_history_next;
+    short history_counter;
+
+    do {
+      bool data_valid = true;
+      LiteralPack<literals_per_cycle> out_data;
+
+      // if we aren't currently reading from the history, read from input pipe
+      if (!reading_history) {
+        // read from pipe
+        auto pipe_data = InPipe::read(data_valid);
+
+        // check if we are done
+        done = pipe_data.flag && data_valid;
+
+        // grab the symbol or the length and distance pair
+        auto len_or_sym = pipe_data.data.len_or_sym;
+        auto dist = pipe_data.data.dist_or_flag;
+
+        out_data.byte[0] = len_or_sym & 0xFF;
+        out_data.valid_count = 1;
+
+        // if we get a length distance pair we will read 'len_or_sym' bytes
+        // starting 'dist'
+        history_counter = len_or_sym;
+        reading_history = (dist > 0) && data_valid;
+        reading_history_next = history_counter > literals_per_cycle;
+      }
+
+      if (reading_history) {
+        // grab from the history buffer
+        #pragma unroll
+        for (int i = 0; i < literals_per_cycle; i++) {
+          out_data.byte[i] = 'T';
+        }
+        out_data.valid_count =
+          (history_counter < literals_per_cycle) ? history_counter : literals_per_cycle;
+
+        // update whether we are still reading the history
+        reading_history = reading_history_next;
+        reading_history_next = history_counter > literals_per_cycle * 2;
+        history_counter -= literals_per_cycle;
+      }
+      
+
+      if (!done && data_valid) {
+        // write the output to the pipe
+        OutPipe::write(OutPipeBundleT(out_data));
+      }
+    } while (!done);
+    
+    OutPipe::write(OutPipeBundleT(true));
+  });
+}
 
 template<typename InPipe, typename OutPipe>
 event SubmitHuffmanDecoderKernel(queue& q) {
   return q.single_task<HuffmanDecoderKernelID>([=] {
+    using OutPipeBundleT = FlagBundle<HuffmanData>;
+
     BitStreamT bbs;
     bool last_block;
     bool done_reading = false;
 
-    [[intel::disable_loop_pipelining]]  // ya?
+    [[intel::disable_loop_pipelining]]
     do {
       ac_uint<3> first_table_state = 0;
       ac_uint<1> last_block_num;
@@ -254,7 +359,6 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       constexpr unsigned short codelencodelen_idxs[] =
         {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
 
-      // TODO: file bug for what is below
       [[intel::fpga_register]] ac_uint<3> codelencodelen[19];
       #pragma unroll
       for (int i = 0; i < 19; i++) { codelencodelen[i] = 0; }
@@ -560,7 +664,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       ac_uint<5> dist_symbol;
 
       // main processing loop
-      //[[intel::initiation_interval(2)]]
+#ifdef HUFFMAN_MAIN_LOOP_II
+      [[intel::initiation_interval(HUFFMAN_MAIN_LOOP_II)]]
+#endif
       do {
         // read in new data if the ByteBitStream has space for it and we aren't
         // done reading from the input pipe
@@ -715,14 +821,14 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 
         // output data to downstream kernel if ready
         if (out_ready) {
-          OutPipe::write(FlagBundle<HuffmanData>(out_data));
+          OutPipe::write(OutPipeBundleT(out_data));
           out_ready = false;
         }
       } while (!stop_code_hit);
     } while (!last_block);
 
     // notify downstream that we are done
-    OutPipe::write(FlagBundle<HuffmanData>(HuffmanData(), true));
+    OutPipe::write(OutPipeBundleT(true));
 
     // read out the remaining data from the pipe
     // NOTE: don't really care about performance here
@@ -735,8 +841,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 }
 
 template<typename InPipe, typename OutPipe>
-event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc_ptr, int* size_ptr) {
+event SubmitHeaderKernel(queue& q, int count, HeaderData* hdr_data_ptr, int* crc_ptr, int* size_ptr) {
   return q.single_task<HeaderKernelID>([=]() [[intel::kernel_args_restrict]] {
+    using OutPipeBundleT = FlagBundle<unsigned char>;
     // read magic number (2 bytes)
     // read compression method (1 byte)
     // read 'flags' (1 byte)
@@ -919,7 +1026,7 @@ event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc
             crc_bytes[7 - tmp] = curr_byte;
           }
         }
-        OutPipe::write(FlagBundle<unsigned char>(curr_byte, (i == (count-1))));
+        OutPipe::write(OutPipeBundleT(curr_byte, (i == (count-1))));
 
         i_in_range = i_next_in_range;
         i_next_in_range = i < (count - 2);
@@ -952,4 +1059,23 @@ event SubmitHeaderKernel(queue& q, HeaderData* hdr_data_ptr, int count, int* crc
   });
 }
 
-#endif // __DECOMPRESSOR_HPP__
+template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
+std::vector<event> SubmitDecompressKernels(queue& q, int in_count,
+                                           HeaderData *hdr_data_out,
+                                           int *crc_out, int *size_out) {
+  using HeaderToHuffmanPipe =
+    ext::intel::pipe<HeaderToHuffmanPipeID, FlagBundle<unsigned char>>;
+  using HuffmanToLZ77Pipe =
+    ext::intel::pipe<HuffmanToLZ77PipeID, FlagBundle<HuffmanData>, 16>;  // TODO: experiment with depth
+  using LZ77ToLiteralStackerPipe =
+    ext::intel::pipe<LZ77ToLiteralStackerPipeID, FlagBundle<LiteralPack<literals_per_cycle>>>;
+
+  auto header_event = SubmitHeaderKernel<InPipe, HeaderToHuffmanPipe>(q, in_count, hdr_data_out, crc_out, size_out);
+  auto huffman_event = SubmitHuffmanDecoderKernel<HeaderToHuffmanPipe, HuffmanToLZ77Pipe>(q);
+  auto lz77_event = SubmitLZ77DecoderKernel<HuffmanToLZ77Pipe, LZ77ToLiteralStackerPipe, literals_per_cycle>(q);
+  auto lit_stacker_event = SubmitLiteralStackerKernel<LZ77ToLiteralStackerPipe, OutPipe, literals_per_cycle>(q);
+
+  return {header_event, huffman_event, lz77_event, lit_stacker_event};
+}
+
+#endif /* __DECOMPRESSOR_HPP__ */

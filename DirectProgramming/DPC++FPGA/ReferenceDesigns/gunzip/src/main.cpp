@@ -18,9 +18,10 @@
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
+#include "ByteHistory.hpp"
 #include "Decompressor.hpp"
 #include "HeaderData.hpp"
-#include "ByteHistory.hpp"
+#include "mp_math.hpp"
 
 using namespace sycl;
 using namespace std::chrono;
@@ -44,8 +45,14 @@ class ConsumerID;
 class InPipeID;
 class OutPipeID;
 
+#ifndef LITERALS_PER_CYCLE
+#define LITERALS_PER_CYCLE 4
+#endif
+constexpr unsigned LiteralsPerCycle = LITERALS_PER_CYCLE;
+static_assert(fpga_tools::IsPow2(LiteralsPerCycle));
+
 using InPipe = ext::intel::pipe<InPipeID, char>;
-using OutPipe = ext::intel::pipe<OutPipeID, FlagBundle<unsigned char>>;
+using OutPipe = ext::intel::pipe<OutPipeID, FlagBundle<LiteralPack<LiteralsPerCycle>>>;
 
 ////////////////////////////////////////////////////////////////////////////////
 event SubmitProducer(queue&, unsigned char*, int);
@@ -126,6 +133,11 @@ int main(int argc, char* argv[]) {
   unsigned out_count = *(reinterpret_cast<unsigned*>(last_4_bytes.data()));
   std::vector<unsigned char> out_bytes(out_count);
 
+  // round up the output count to the nearest multiple of LiteralsPerCycle
+  // this allows to ignore predicating the last writes to the output
+  int out_count_padded =
+      fpga_tools::RoundUpToMultiple(out_count, LiteralsPerCycle);
+
   // host variables for output from device
   int inflated_count_host = 0;
   HeaderData hdr_data_host;
@@ -147,7 +159,7 @@ int main(int argc, char* argv[]) {
       std::cerr << "ERROR: could not allocate space for 'in'\n";
       std::terminate();
     }
-    if ((out = malloc_device<unsigned char>(out_count, q)) == nullptr) {
+    if ((out = malloc_device<unsigned char>(out_count_padded, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'out'\n";
       std::terminate();
     }
@@ -174,35 +186,28 @@ int main(int argc, char* argv[]) {
     // run the design multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       // run the producer and consumer kernels
-      std::cout << "Launching Producer and Consumer kernels\n";
+      std::cout << "Launching Producer and Consumer kernels" << std::endl;
       auto producer_event = SubmitProducer(q, in, in_count);
       auto consumer_event = SubmitConsumer(q, out, inflated_count);
 
       // run the decompression kernels
       std::cout << "Launching gzip kernels\n";
-      auto header_event = SubmitHeaderKernel<InPipe, HeaderToHuffmanPipe>(q, hdr_data, in_count, crc, size);
-      auto huffman_event = SubmitHuffmanDecoderKernel<HeaderToHuffmanPipe, HuffmanToLZ77Pipe>(q);
-      auto lz77_event = SubmitLZ77DecoderKernel<HuffmanToLZ77Pipe, OutPipe>(q);
+      auto decompress_events = SubmitDecompressKernels<InPipe, OutPipe, LiteralsPerCycle>(q, in_count, hdr_data, crc, size);
 
       // wait for the producer and consumer to finish
-      std::cout << "Waiting on producer and consumer kernels\n";
+      std::cout << "Waiting on producer and consumer kernels" << std::endl;
       auto start = high_resolution_clock::now();
       producer_event.wait();
-      //std::cout << "producer_event done\n";
       consumer_event.wait();
-      //std::cout << "consumer_event done\n";
       auto end = high_resolution_clock::now();
 
       // wait for the decompression kernels to finish
-      std::cout << "Waiting on decompress kernels\n";
-      header_event.wait();
-      //std::cout << "header_event done\n";
-      huffman_event.wait();
-      //std::cout << "huffman_event done\n";
-      lz77_event.wait();
-      //std::cout << "lz77_event done\n";
+      std::cout << "Waiting on decompress kernels" << std::endl;
+      for (auto& e : decompress_events) {
+        e.wait();
+      }
 
-      std::cout << "Done waiting\n";
+      std::cout << "Done waiting" << std::endl;
 
       // calculate the time the kernels ran for, in milliseconds
       time[i] = duration<double, std::milli>(end - start).count();
@@ -220,6 +225,7 @@ int main(int argc, char* argv[]) {
       if (inflated_count_host != size_host) {
         std::cerr << "ERROR: inflated_count_host != size_host ("
                   << inflated_count_host << " != " << size_host << ")\n";
+        passed = false;
       }
 
       // TODO
@@ -288,6 +294,7 @@ event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr) 
       device_ptr<int> inflated_count(inflated_count_ptr);
 
       int i = 0;
+      int valid_byte_count = 0;
       bool done;
 
       do {
@@ -297,13 +304,16 @@ event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr) 
         done = pipe_data.flag && valid_pipe_read;
 
         if (!done && valid_pipe_read) {
-          out[i] = pipe_data.data;
+          #pragma unroll
+          for (int j = 0; j < LiteralsPerCycle; j++) {
+            out[i * LiteralsPerCycle + j] = pipe_data.data.byte[j];
+          }
+          valid_byte_count += pipe_data.data.valid_count;
           i++;
         }
       } while (!done);
 
-      // write out the actual output count (inflated_count <= max_count)
-      *inflated_count = i;
+      *inflated_count = valid_byte_count;
     });
   });
 }
