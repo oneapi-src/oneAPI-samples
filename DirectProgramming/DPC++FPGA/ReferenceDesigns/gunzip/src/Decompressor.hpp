@@ -79,7 +79,7 @@ struct HuffmanData {
 template<int n>
 struct LiteralPack {
   static constexpr int count_bits = fpga_tools::Log2(n) + 1;
-  unsigned char byte[n];
+  unsigned char byte[n];  // TODO: rename?
   ac_uint<count_bits> valid_count;
 };
 
@@ -277,12 +277,31 @@ event SubmitLZ77DecoderKernel(queue& q) {
 template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 event SubmitLZ77DecoderKernel(queue& q) {
   return q.single_task<LZ77DecoderKernelID>([=] {
+    static_assert(literals_per_cycle > 0);
     static_assert(fpga_tools::IsPow2(literals_per_cycle));
     using OutPipeBundleT = FlagBundle<LiteralPack<literals_per_cycle>>;
+
     bool done;
     bool reading_history = false;
     bool reading_history_next;
     short history_counter;
+
+    constexpr unsigned kMaxHistory = 32768;
+    constexpr unsigned history_buffer_count = kMaxHistory / literals_per_cycle;
+    constexpr unsigned history_buffer_mask = history_buffer_count - 1;
+    constexpr unsigned history_buffer_idx_bits = fpga_tools::Log2(literals_per_cycle);
+    constexpr unsigned history_buffer_idx_mask = literals_per_cycle - 1;
+
+    unsigned history_buffer_buffer_idx = 0;
+    [[intel::fpga_register]] unsigned history_buffer_idx[literals_per_cycle];
+    unsigned char history_buffer[literals_per_cycle][history_buffer_count];
+
+    unsigned read_history_buffer_buffer_idx = 0;
+    [[intel::fpga_register]] unsigned read_history_buffer_idx[literals_per_cycle];
+    [[intel::fpga_register]] int read_history_buffer_feedback_idx[literals_per_cycle];
+
+    #pragma unroll
+    for (int i = 0; i < literals_per_cycle; i++) { history_buffer_idx[i] = 0; }
 
     do {
       bool data_valid = true;
@@ -297,8 +316,8 @@ event SubmitLZ77DecoderKernel(queue& q) {
         done = pipe_data.flag && data_valid;
 
         // grab the symbol or the length and distance pair
-        auto len_or_sym = pipe_data.data.len_or_sym;
-        auto dist = pipe_data.data.dist_or_flag;
+        short len_or_sym = pipe_data.data.len_or_sym;
+        short dist = pipe_data.data.dist_or_flag;
 
         out_data.byte[0] = len_or_sym & 0xFF;
         out_data.valid_count = 1;
@@ -308,16 +327,50 @@ event SubmitLZ77DecoderKernel(queue& q) {
         history_counter = len_or_sym;
         reading_history = (dist > 0) && data_valid;
         reading_history_next = history_counter > literals_per_cycle;
+
+        // set history_read_idx for each buffer
+        unsigned udist = dist;
+        //short low_dist_bits = dist & history_buffer_idx_mask;
+        read_history_buffer_buffer_idx = (history_buffer_buffer_idx - udist) & history_buffer_idx_mask;
+        #pragma unroll
+        for (int i = 0; i < literals_per_cycle; i++) {
+          unsigned buf_idx = (read_history_buffer_buffer_idx + i) & history_buffer_idx_mask;
+          if (dist - i > 0) {
+            unsigned starting_read_idx_for_this_buf = (history_buffer_idx[buf_idx] - ((dist - i) / literals_per_cycle)) - 1;
+            if (buf_idx == history_buffer_buffer_idx) {
+              starting_read_idx_for_this_buf += 1;
+            }
+            read_history_buffer_idx[buf_idx] = starting_read_idx_for_this_buf & history_buffer_mask;
+            read_history_buffer_feedback_idx[buf_idx] = -1;
+          } else {
+            read_history_buffer_idx[buf_idx] = 0;
+            read_history_buffer_feedback_idx[buf_idx] = (i - dist);
+          }
+        }
       }
 
       if (reading_history) {
         // grab from the history buffer
+        // TODO: read at {0, 1, 2, 3} and shuffle
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
-          out_data.byte[i] = 'T';
+          unsigned buf_idx = (read_history_buffer_buffer_idx + i) & history_buffer_idx_mask;
+          unsigned idx_in_buf = read_history_buffer_idx[buf_idx];
+          int idx_in_prev = read_history_buffer_feedback_idx[buf_idx];
+          if (idx_in_prev < 0) {
+            out_data.byte[i] = history_buffer[buf_idx][idx_in_buf];
+          } else {
+            out_data.byte[i] = out_data.byte[idx_in_prev];
+          }
         }
         out_data.valid_count =
           (history_counter < literals_per_cycle) ? history_counter : literals_per_cycle;
+
+        // update the history read index
+        #pragma unroll
+        for (int i = 0; i < literals_per_cycle; i++) {
+          read_history_buffer_idx[i] = (read_history_buffer_idx[i] + 1) & history_buffer_mask;
+        }
 
         // update whether we are still reading the history
         reading_history = reading_history_next;
@@ -325,8 +378,21 @@ event SubmitLZ77DecoderKernel(queue& q) {
         history_counter -= literals_per_cycle;
       }
       
-
       if (!done && data_valid) {
+        // write to the history buffers what we are sending out
+        #pragma unroll
+        for (int i = 0; i < literals_per_cycle; i++) {
+          if (i < out_data.valid_count) {
+            unsigned buf_idx = (history_buffer_buffer_idx + i) & history_buffer_idx_mask;
+            unsigned idx_in_buf = history_buffer_idx[buf_idx];
+            history_buffer[buf_idx][idx_in_buf] = out_data.byte[i];
+            history_buffer_idx[buf_idx] = (history_buffer_idx[buf_idx] + 1) & history_buffer_mask;
+          }
+        }
+
+        // update the most recent buffer
+        history_buffer_buffer_idx = (history_buffer_buffer_idx + out_data.valid_count) & history_buffer_idx_mask;
+
         // write the output to the pipe
         OutPipe::write(OutPipeBundleT(out_data));
       }
@@ -841,7 +907,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 }
 
 template<typename InPipe, typename OutPipe>
-event SubmitHeaderKernel(queue& q, int count, HeaderData* hdr_data_ptr, int* crc_ptr, int* size_ptr) {
+event SubmitHeaderKernel(queue& q, int in_count, HeaderData* hdr_data_ptr, int* crc_ptr, int* out_count_ptr) {
   return q.single_task<HeaderKernelID>([=]() [[intel::kernel_args_restrict]] {
     using OutPipeBundleT = FlagBundle<unsigned char>;
     // read magic number (2 bytes)
@@ -857,8 +923,8 @@ event SubmitHeaderKernel(queue& q, int count, HeaderData* hdr_data_ptr, int* crc
     //    if flags & 0x02 != 0: CRC-16, read 2 bytes
     //    if flags & 0x10 != 0: Comment, read nullterminated string
     int i = 0;
-    bool i_in_range = 0 < count;
-    bool i_next_in_range = 1 < count;
+    bool i_in_range = 0 < in_count;
+    bool i_next_in_range = 1 < in_count;
     short state_counter = 0;
     short errata_len = 0;
     unsigned char curr_byte;
@@ -875,7 +941,7 @@ event SubmitHeaderKernel(queue& q, int count, HeaderData* hdr_data_ptr, int* crc
     header_filename[0] = '\0';
 
     device_ptr<int> crc(crc_ptr);
-    device_ptr<int> size(size_ptr);
+    device_ptr<int> out_count(out_count_ptr);
 
     // NOTE: this loop is not the main processing loop and therefore is
     // not critical (low trip count). However, the compiler doesn't know that
@@ -1006,7 +1072,7 @@ event SubmitHeaderKernel(queue& q, int count, HeaderData* hdr_data_ptr, int* crc
       }
 
       i_in_range = i_next_in_range;
-      i_next_in_range = i < (count - 2);
+      i_next_in_range = i < (in_count - 2);
       i++;
     }
 
@@ -1018,7 +1084,7 @@ event SubmitHeaderKernel(queue& q, int count, HeaderData* hdr_data_ptr, int* crc
       curr_byte = InPipe::read(valid_pipe_read);
 
       if (valid_pipe_read) {
-        int tmp = (count - i - 1);
+        int tmp = (in_count - i - 1);
         if (tmp < 8) {
           if (tmp < 4) {
             size_bytes[3 - tmp] = curr_byte;
@@ -1026,10 +1092,10 @@ event SubmitHeaderKernel(queue& q, int count, HeaderData* hdr_data_ptr, int* crc
             crc_bytes[7 - tmp] = curr_byte;
           }
         }
-        OutPipe::write(OutPipeBundleT(curr_byte, (i == (count-1))));
+        OutPipe::write(OutPipeBundleT(curr_byte, (i == (in_count-1))));
 
         i_in_range = i_next_in_range;
-        i_next_in_range = i < (count - 2);
+        i_next_in_range = i < (in_count - 2);
         i++;
       }
     }
@@ -1055,7 +1121,7 @@ event SubmitHeaderKernel(queue& q, int count, HeaderData* hdr_data_ptr, int* crc
     // write back header data, crc, and size
     *hdr_data = hdr_data_loc;
     *crc = crc_local;
-    *size = size_local;
+    *out_count = size_local;
   });
 }
 

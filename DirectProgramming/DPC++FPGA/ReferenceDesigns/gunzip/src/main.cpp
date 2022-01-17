@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
   // host variables for output from device
   int inflated_count_host = 0;
   HeaderData hdr_data_host;
-  unsigned int crc_host, size_host;
+  unsigned int crc_host, count_host;
 
   // track timing information in ms
   std::vector<double> time(runs);
@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
   int *inflated_count ;
   HeaderData *hdr_data;
   int *crc;
-  int *size;
+  int *count;
 
   try {
     // allocate memory on the device for the input and output
@@ -175,8 +175,8 @@ int main(int argc, char* argv[]) {
       std::cerr << "ERROR: could not allocate space for 'crc'\n";
       std::terminate();
     }
-    if ((size = malloc_device<int>(1, q)) == nullptr) {
-      std::cerr << "ERROR: could not allocate space for 'size'\n";
+    if ((count = malloc_device<int>(1, q)) == nullptr) {
+      std::cerr << "ERROR: could not allocate space for 'count'\n";
       std::terminate();
     }
 
@@ -192,7 +192,7 @@ int main(int argc, char* argv[]) {
 
       // run the decompression kernels
       std::cout << "Launching gzip kernels\n";
-      auto decompress_events = SubmitDecompressKernels<InPipe, OutPipe, LiteralsPerCycle>(q, in_count, hdr_data, crc, size);
+      auto decompress_events = SubmitDecompressKernels<InPipe, OutPipe, LiteralsPerCycle>(q, in_count, hdr_data, crc, count);
 
       // wait for the producer and consumer to finish
       std::cout << "Waiting on producer and consumer kernels" << std::endl;
@@ -217,14 +217,14 @@ int main(int argc, char* argv[]) {
       q.memcpy(&inflated_count_host, inflated_count, sizeof(int)).wait();
       q.memcpy(&hdr_data_host, hdr_data, sizeof(HeaderData)).wait();
       q.memcpy(&crc_host, crc, sizeof(int)).wait();
-      q.memcpy(&size_host, size, sizeof(int)).wait();
+      q.memcpy(&count_host, count, sizeof(int)).wait();
 
       // validate the results
       // keep the first inflated_count_host bytes
       out_bytes.resize(inflated_count_host);
-      if (inflated_count_host != size_host) {
-        std::cerr << "ERROR: inflated_count_host != size_host ("
-                  << inflated_count_host << " != " << size_host << ")\n";
+      if (inflated_count_host != count_host) {
+        std::cerr << "ERROR: inflated_count_host != count_host ("
+                  << inflated_count_host << " != " << count_host << ")\n";
         passed = false;
       }
 
@@ -232,7 +232,7 @@ int main(int argc, char* argv[]) {
       std::cout << "inflated_count_host = " << inflated_count_host << " bytes\n";
       std::cout << hdr_data_host;
       std::cout << "crc = " << crc_host << "\n";
-      std::cout << "size = " << size_host << "\n";
+      std::cout << "count = " << count_host << "\n";
       std::cout << "\n";
     }
   } catch (exception const& e) {
