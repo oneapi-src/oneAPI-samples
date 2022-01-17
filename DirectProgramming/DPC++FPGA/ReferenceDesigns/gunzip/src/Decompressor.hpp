@@ -288,18 +288,47 @@ event SubmitLZ77DecoderKernel(queue& q) {
 
     constexpr unsigned kMaxHistory = 32768;
     constexpr unsigned history_buffer_count = kMaxHistory / literals_per_cycle;
-    constexpr unsigned history_buffer_mask = history_buffer_count - 1;
-    constexpr unsigned history_buffer_idx_bits = fpga_tools::Log2(literals_per_cycle);
-    constexpr unsigned history_buffer_idx_mask = literals_per_cycle - 1;
-
-    unsigned history_buffer_buffer_idx = 0;
-    [[intel::fpga_register]] unsigned history_buffer_idx[literals_per_cycle];
+    constexpr unsigned history_buffer_buffer_idx_bits = fpga_tools::Log2(literals_per_cycle);
+    constexpr unsigned history_buffer_buffer_idx_mask = literals_per_cycle - 1;
+    constexpr unsigned history_buffer_idx_bits = fpga_tools::Log2(history_buffer_count);
+    constexpr unsigned history_buffer_idx_mask = history_buffer_count - 1;
+    
+    using HistBufBufIdxT = ac_uint<history_buffer_buffer_idx_bits>;
+    using HistBufIdxT = ac_uint<history_buffer_idx_bits>;
+    
+    HistBufBufIdxT history_buffer_buffer_idx = 0;
+    [[intel::fpga_register]] HistBufIdxT history_buffer_idx[literals_per_cycle];
     unsigned char history_buffer[literals_per_cycle][history_buffer_count];
 
-    unsigned read_history_buffer_buffer_idx = 0;
-    [[intel::fpga_register]] unsigned read_history_buffer_idx[literals_per_cycle];
-    [[intel::fpga_register]] unsigned read_history_shuffle_idx[literals_per_cycle];
+    HistBufBufIdxT read_history_buffer_buffer_idx = 0;
+    [[intel::fpga_register]] HistBufIdxT read_history_buffer_idx[literals_per_cycle];
+    [[intel::fpga_register]] HistBufBufIdxT read_history_shuffle_idx[literals_per_cycle];
 
+    // precompute the function
+    //   dist_small + ((i - dist_small) % dist_small)
+    constexpr auto mod_lut_init = [&] {
+      constexpr int dim = literals_per_cycle - 1;
+      std::array<unsigned char, dim * dim> ret{};
+      for (int y = 0; y < dim; y++) {
+        for (int x = y; x < dim; x++) {
+          unsigned char dist = y + 1;
+          unsigned char i = x + 1;
+          ret[y * dim + x] = dist + ((i - dist) % dist);
+        }
+      }
+      return ret;
+    }();
+    
+    // ac_ints cannot be constexpr, so initialize an array of ac_int with
+    // the mod_lut_init
+    [[intel::fpga_register]] HistBufBufIdxT mod_lut[literals_per_cycle - 1][literals_per_cycle - 1];
+    for (int y = 0; y < (literals_per_cycle - 1); y++) {
+      for (int x = y; x < (literals_per_cycle - 1); x++) {
+        mod_lut[y][x] = mod_lut_init[y * (literals_per_cycle - 1) + x];
+      }
+    }
+
+    // initialize index pointers for each history buffer
     #pragma unroll
     for (int i = 0; i < literals_per_cycle; i++) { history_buffer_idx[i] = 0; }
 
@@ -328,24 +357,35 @@ event SubmitLZ77DecoderKernel(queue& q) {
         reading_history = (dist > 0) && data_valid;
         reading_history_next = history_counter > literals_per_cycle;
 
-        // set history_read_idx for each buffer
-        unsigned udist = dist;
-        //short low_dist_bits = dist & history_buffer_idx_mask;
-        read_history_buffer_buffer_idx = (history_buffer_buffer_idx - udist) & history_buffer_idx_mask;
+        // grab the low Log2(literals_per_cycle) bits of the distance
+        HistBufBufIdxT dist_small = dist & history_buffer_buffer_idx_mask;
+        
+        // find the first buffer we will read from given the distance
+        read_history_buffer_buffer_idx = (history_buffer_buffer_idx - dist_small) & history_buffer_buffer_idx_mask;
+
+        // find the starting read index for each buffer, as well as compute
+        // the shuffle vector for shuffling the data to the output
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
-          unsigned buf_idx = (read_history_buffer_buffer_idx + i) & history_buffer_idx_mask;
-          if (dist - i > 0) {
-            unsigned starting_read_idx_for_this_buf = (history_buffer_idx[buf_idx] - ((dist - i) / literals_per_cycle)) - 1;
-            if (buf_idx == history_buffer_buffer_idx) {
-              starting_read_idx_for_this_buf += 1;
-            }
-            read_history_buffer_idx[buf_idx] = starting_read_idx_for_this_buf & history_buffer_mask;1;
+          // the buffer index
+          HistBufBufIdxT buf_idx = (read_history_buffer_buffer_idx + i) & history_buffer_buffer_idx_mask;
+
+          // compute the starting index for buffer 'buf_idx' (in range
+          // [0, literals_per_cycle))
+          HistBufIdxT starting_read_idx_for_this_buf = (history_buffer_idx[buf_idx] - ((dist - i) / literals_per_cycle)) - 1;
+          if (buf_idx == history_buffer_buffer_idx) {
+            starting_read_idx_for_this_buf += 1;
+          }
+          read_history_buffer_idx[buf_idx] = starting_read_idx_for_this_buf & history_buffer_idx_mask;
+
+          if (dist > i) {
             read_history_shuffle_idx[i] = buf_idx;
           } else {
-            read_history_buffer_idx[buf_idx] = 0;
-            unsigned idx_back = udist + ((i - udist) % dist);
-            read_history_shuffle_idx[i] = (history_buffer_buffer_idx - idx_back) & history_buffer_idx_mask;
+            // this special case happens whenever dist < literals_per_cycle
+            // and we need to repeat one of the earlier elements
+            // idx_back = dist_small + ((i - dist_small) % dist_small);
+            HistBufBufIdxT idx_back = mod_lut[dist_small - 1][i - 1];
+            read_history_shuffle_idx[i] = (history_buffer_buffer_idx - idx_back) & history_buffer_buffer_idx_mask;
           }
         }
       }
@@ -359,14 +399,14 @@ event SubmitLZ77DecoderKernel(queue& q) {
           historical_bytes[i] = history_buffer[i][idx_in_buf];
         }
 
-        // shuffle the 
+        // shuffle the elements read from the history to the output
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
           out_data.literal[i] = historical_bytes[read_history_shuffle_idx[i]];
         }
 
         if (history_counter < literals_per_cycle) {
-          out_data.valid_count = decltype(out_data.valid_count)(history_counter);
+          out_data.valid_count = history_counter;
         } else {
           out_data.valid_count = literals_per_cycle;
         }
@@ -374,7 +414,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
         // update the history read index
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
-          read_history_buffer_idx[i] = (read_history_buffer_idx[i] + 1) & history_buffer_mask;
+          read_history_buffer_idx[i] = (read_history_buffer_idx[i] + 1) & history_buffer_idx_mask;
         }
 
         // update whether we are still reading the history
@@ -388,15 +428,15 @@ event SubmitLZ77DecoderKernel(queue& q) {
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
           if (i < out_data.valid_count) {
-            unsigned buf_idx = (history_buffer_buffer_idx + i) & history_buffer_idx_mask;
-            unsigned idx_in_buf = history_buffer_idx[buf_idx];
+            HistBufBufIdxT buf_idx = (history_buffer_buffer_idx + i) & history_buffer_buffer_idx_mask;
+            HistBufIdxT idx_in_buf = history_buffer_idx[buf_idx];
             history_buffer[buf_idx][idx_in_buf] = out_data.literal[i];
-            history_buffer_idx[buf_idx] = (history_buffer_idx[buf_idx] + 1) & history_buffer_mask;
+            history_buffer_idx[buf_idx] = (history_buffer_idx[buf_idx] + 1) & history_buffer_idx_mask;
           }
         }
 
         // update the most recent buffer
-        history_buffer_buffer_idx = (history_buffer_buffer_idx + out_data.valid_count) & history_buffer_idx_mask;
+        history_buffer_buffer_idx = (history_buffer_buffer_idx + out_data.valid_count) & history_buffer_buffer_idx_mask;
 
         // write the output to the pipe
         OutPipe::write(OutPipeBundleT(out_data));
