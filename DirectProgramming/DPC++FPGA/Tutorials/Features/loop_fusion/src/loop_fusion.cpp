@@ -12,8 +12,8 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-constexpr size_t kN = 2048;
-constexpr size_t kM = 5;
+constexpr size_t kN{2048};
+constexpr size_t kM{5};
 
 using namespace sycl;
 
@@ -24,9 +24,41 @@ class NoFusionKernel;
 class DefaultNoFusionKernel;
 class FusionFunctionKernel;
 
-void DefaultFusion(const device_selector &selector,
-                   std::array<int, kM> &m_array_1, std::array<int, kM> &m_array_2,
-                   const size_t kInnerIters) {
+#if defined(FPGA_EMULATOR)
+ext::intel::fpga_emulator_selector selector;
+#else
+ext::intel::fpga_selector selector;
+#endif
+
+// Handles error reporting
+void ErrorReport(sycl::exception const &e) {
+  // Catches exceptions in the host code
+  std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
+
+  // Most likely the runtime couldn't find FPGA hardware!
+  if (e.code().value() == CL_DEVICE_NOT_FOUND) {
+    std::cerr << "If you are targeting an FPGA, please ensure that your "
+                 "system has a correctly configured FPGA board.\n";
+    std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
+    std::cerr << "If you are targeting the FPGA emulator, compile with "
+                 "-DFPGA_EMULATOR.\n";
+  }
+  std::terminate();
+}
+
+// Returns kernel runtime in ms
+auto KernelRuntime(event e) {
+  auto start{e.get_profiling_info<info::event_profiling::command_start>()};
+  auto end{e.get_profiling_info<info::event_profiling::command_end>()};
+
+  // unit is nano second, convert to ms
+  return (end - start) * 1e-6;
+}
+
+// Fuses inner loops by default, since the trip counts are equal, and there are
+// no dependencies between loops
+void DefaultFusion(std::array<int, kM> &m_array_1,
+                   std::array<int, kM> &m_array_2) {
   try {
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
@@ -41,47 +73,32 @@ void DefaultFusion(const device_selector &selector,
       h.single_task<DefaultFusionKernel>([=
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         for (size_t j = 0; j < kN; j++) {
-          for (size_t i = 0; i < kInnerIters; i++) {
+          for (size_t i = 0; i < kM; i++) {
             accessor_array_1[i] = i;
           }
-          for (size_t i = 0; i < kInnerIters; i++) {
+          for (size_t i = 0; i < kM; i++) {
             accessor_array_2[i] = i;
           }
         }
       });
     });
 
-    double start = e.get_profiling_info<info::event_profiling::command_start>();
-    double end = e.get_profiling_info<info::event_profiling::command_end>();
-
-    // unit is nano second, convert to ms
-    double kernel_time = (end - start) * 1e-6;
+    auto kernel_time = KernelRuntime(e);
 
     // kernel consists of two loops with one array assignment in each.
-    int num_ops_per_kernel = 2 * kN * kInnerIters;
+    int num_ops_per_kernel = 2 * kN * kM;
     std::cout << "Throughput for kernel with default loop fusion and with "
                  "arrays of size "
               << kM << ": " << ((double)num_ops_per_kernel / kernel_time)
               << " Ops/ms\n";
 
   } catch (sycl::exception const &e) {
-    // Catches exceptions in the host code
-    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
-
-    // Most likely the runtime couldn't find FPGA hardware!
-    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
-      std::cerr << "If you are targeting an FPGA, please ensure that your "
-                   "system has a correctly configured FPGA board.\n";
-      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
-      std::cerr << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR.\n";
-    }
-    std::terminate();
+    ErrorReport(e);
   }
 }
 
-void NoFusion(const device_selector &selector, std::array<int, kM> &m_array_1,
-              std::array<int, kM> &m_array_2, const size_t kInnerIters) {
+// Avoids fusing inner loops by default, since the trip counts are unequal
+void NoFusion(std::array<int, kM> &m_array_1, std::array<int, kM> &m_array_2) {
   try {
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
@@ -97,10 +114,10 @@ void NoFusion(const device_selector &selector, std::array<int, kM> &m_array_1,
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         for (size_t j = 0; j < kN; j++) {
           [[intel::nofusion]]  // NO-FORMAT: Attribute
-          for (size_t i = 0; i < kInnerIters; i++) {
+          for (size_t i = 0; i < kM; i++) {
             accessor_array_1[i] = i;
           }
-          for (size_t i = 0; i < kInnerIters; i++) {
+          for (size_t i = 0; i < kM; i++) {
             accessor_array_2[i] = i;
           }
         }
@@ -108,39 +125,22 @@ void NoFusion(const device_selector &selector, std::array<int, kM> &m_array_1,
       });
     });
 
-    double start = e.get_profiling_info<info::event_profiling::command_start>();
-    double end = e.get_profiling_info<info::event_profiling::command_end>();
-
-    // unit is nano second, convert to ms
-    double kernel_time = (end - start) * 1e-6;
+    auto kernel_time = KernelRuntime(e);
 
     // kernel consists of two loops with one array assignment in each.
-    int num_ops_per_kernel = 2 * kN * kInnerIters;
+    int num_ops_per_kernel = 2 * kN * kM;
     std::cout << "Throughput for kernel with the nofusion attribute and with "
                  "arrays of size "
               << kM << ": " << ((double)num_ops_per_kernel / kernel_time)
               << " Ops/ms\n";
 
   } catch (sycl::exception const &e) {
-    // Catches exceptions in the host code
-    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
-
-    // Most likely the runtime couldn't find FPGA hardware!
-    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
-      std::cerr << "If you are targeting an FPGA, please ensure that your "
-                   "system has a correctly configured FPGA board.\n";
-      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
-      std::cerr << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR.\n";
-    }
-    std::terminate();
+    ErrorReport(e);
   }
 }
 
-void DefaultNoFusion(const device_selector &selector,
-                     std::array<int, kM> &m_array_1,
-                     std::array<int, kM + 1> &m_array_2,
-                     const size_t kInnerIters) {
+void DefaultNoFusion(std::array<int, kM> &m_array_1,
+                     std::array<int, kM + 1> &m_array_2) {
   try {
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
@@ -156,10 +156,10 @@ void DefaultNoFusion(const device_selector &selector,
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         for (size_t j = 0; j < kN; j++) {
           // Different tripcounts, does not fuse by default
-          for (size_t i = 0; i < kInnerIters; i++) {
+          for (size_t i = 0; i < kM; i++) {
             accessor_array_1[i] = i;
           }
-          for (size_t i = 0; i < kInnerIters + 1; i++) {
+          for (size_t i = 0; i < kM + 1; i++) {
             accessor_array_2[i] = i;
           }
         }
@@ -167,39 +167,22 @@ void DefaultNoFusion(const device_selector &selector,
       });
     });
 
-    double start = e.get_profiling_info<info::event_profiling::command_start>();
-    double end = e.get_profiling_info<info::event_profiling::command_end>();
-
-    // unit is nano second, convert to ms
-    double kernel_time = (end - start) * 1e-6;
+    auto kernel_time = KernelRuntime(e);
 
     // kernel consists of two loops with one array assignment in each.
-    int num_ops_per_kernel = kN * (2 * kInnerIters + 1);
+    int num_ops_per_kernel = kN * (2 * kM + 1);
     std::cout << "Throughput for kernel without fusion by default and with "
                  "arrays of sizes "
               << kM << " and " << kM + 1 << ": "
               << ((double)num_ops_per_kernel / kernel_time) << " Ops/ms\n";
 
   } catch (sycl::exception const &e) {
-    // Catches exceptions in the host code
-    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
-
-    // Most likely the runtime couldn't find FPGA hardware!
-    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
-      std::cerr << "If you are targeting an FPGA, please ensure that your "
-                   "system has a correctly configured FPGA board.\n";
-      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
-      std::cerr << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR.\n";
-    }
-    std::terminate();
+    ErrorReport(e);
   }
 }
 
-void FusionFunction(const device_selector &selector,
-                    std::array<int, kM> &m_array_1,
-                    std::array<int, kM + 1> &m_array_2,
-                    const size_t kInnerIters) {
+void FusionFunction(std::array<int, kM> &m_array_1,
+                    std::array<int, kM + 1> &m_array_2) {
   try {
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
@@ -212,46 +195,31 @@ void FusionFunction(const device_selector &selector,
       accessor accessor_array_2(buffer_array_2, h, write_only, no_init);
 
       h.single_task<FusionFunctionKernel>([=
-      ]() [[intel::kernel_args_restrict,  // NO-FORMAT: Attribute
-            intel::loop_fuse(2)]] {       // NO-FORMAT: Attribute
-        for (size_t j = 0; j < kN; j++) {
-          // Different tripcounts, does not fuse by default
-          for (size_t i = 0; i < kInnerIters; i++) {
-            accessor_array_1[i] = i;
+      ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
+        sycl::ext::intel::fpga_loop_fuse<2>([&] {
+          for (size_t j = 0; j < kN; j++) {
+            // Different tripcounts, does not fuse by default
+            for (size_t i = 0; i < kM; i++) {
+              accessor_array_1[i] = i;
+            }
+            for (size_t i = 0; i < kM + 1; i++) {
+              accessor_array_2[i] = i;
+            }
           }
-          for (size_t i = 0; i < kInnerIters + 1; i++) {
-            accessor_array_2[i] = i;
-          }
-        }
+        });
       });
     });
 
-    double start = e.get_profiling_info<info::event_profiling::command_start>();
-    double end = e.get_profiling_info<info::event_profiling::command_end>();
-
-    // unit is nano second, convert to ms
-    double kernel_time = (end - start) * 1e-6;
-
+    auto kernel_time = KernelRuntime(e);
     // kernel consists of two loops with one array assignment in each.
-    int num_ops_per_kernel = kN * (2 * kInnerIters + 1);
+    int num_ops_per_kernel = kN * (2 * kM + 1);
     std::cout << "Throughput for kernel with the loop fusion function wrapper "
                  "and with arrays of sizes "
               << kM << " and " << kM + 1 << ": "
               << ((double)num_ops_per_kernel / kernel_time) << " Ops/ms\n";
 
   } catch (sycl::exception const &e) {
-    // Catches exceptions in the host code
-    std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
-
-    // Most likely the runtime couldn't find FPGA hardware!
-    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
-      std::cerr << "If you are targeting an FPGA, please ensure that your "
-                   "system has a correctly configured FPGA board.\n";
-      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
-      std::cerr << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR.\n";
-    }
-    std::terminate();
+    ErrorReport(e);
   }
 }
 int main() {
@@ -259,18 +227,12 @@ int main() {
       no_fusion_2, fusion_function_1, default_nofusion_1;
   std::array<int, kM + 1> fusion_function_2, default_nofusion_2;
 
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
-
   // Instantiate kernel logic with and without loop fusion to compare
   // performance
-  DefaultFusion(selector, default_fusion_1, default_fusion_2, kM);
-  NoFusion(selector, no_fusion_1, no_fusion_2, kM);
-  DefaultNoFusion(selector, default_nofusion_1, fusion_function_2, kM);
-  FusionFunction(selector, fusion_function_1, fusion_function_2, kM);
+  DefaultFusion(default_fusion_1, default_fusion_2);
+  NoFusion(no_fusion_1, no_fusion_2);
+  DefaultNoFusion(default_nofusion_1, default_nofusion_2);
+  FusionFunction(fusion_function_1, fusion_function_2);
 
   // Verify results: first kN elements of arrays should be equal, and equal to i
   for (size_t i = 0; i < kM; i++) {
@@ -287,18 +249,21 @@ int main() {
       return 1;
     }
   }
-  for (size_t i = 0; i < kM; i++) {
-    if (default_nofusion_1[i] != fusion_function_2[i] ||
-        fusion_function_1[i] != i) {
+
+  // Since these have arrays have nonequal sizes, only check that they are equal
+  // when i < kM
+  for (size_t i = 0; i < kM + 1; i++) {
+    if ((default_nofusion_1[i] != default_nofusion_2[i] && i < kM) ||
+        default_nofusion_2[i] != i) {
       std::cout << "FAILED: The DefaultNoFusionKernel results are incorrect"
                 << '\n';
       return 1;
     }
   }
 
-  for (size_t i = 0; i < kM; i++) {
-    if (fusion_function_1[i] != fusion_function_2[i] ||
-        fusion_function_1[i] != i) {
+  for (size_t i = 0; i < kM + 1; i++) {
+    if ((fusion_function_1[i] != fusion_function_2[i] && i < kM) ||
+        fusion_function_2[i] != i) {
       std::cout << "FAILED: The FusionFunctionKernel results are incorrect"
                 << '\n';
       return 1;
