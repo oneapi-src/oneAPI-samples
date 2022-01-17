@@ -306,7 +306,7 @@ event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr) 
         if (!done && valid_pipe_read) {
           #pragma unroll
           for (int j = 0; j < LiteralsPerCycle; j++) {
-            out[i * LiteralsPerCycle + j] = pipe_data.data.byte[j];
+            out[i * LiteralsPerCycle + j] = pipe_data.data.literal[j];
           }
           valid_byte_count += pipe_data.data.valid_count;
           i++;

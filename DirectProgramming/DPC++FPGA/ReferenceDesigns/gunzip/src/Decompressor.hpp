@@ -79,8 +79,8 @@ struct HuffmanData {
 template<int n>
 struct LiteralPack {
   static constexpr int count_bits = fpga_tools::Log2(n) + 1;
-  unsigned char byte[n];  // TODO: rename?
-  ac_uint<count_bits> valid_count;
+  unsigned char literal[n];
+  ac_uint<count_bits> valid_count;  // TODO: drop 1 bit here
 };
 
 //
@@ -131,7 +131,7 @@ event SubmitLiteralStackerKernel(queue& q) {
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
           if (i < pipe_data.data.valid_count) {
-            cache_buf[cache_idx + i] = pipe_data.data.byte[i];
+            cache_buf[cache_idx + i] = pipe_data.data.literal[i];
           }
         }
         cache_idx += pipe_data.data.valid_count;
@@ -143,7 +143,7 @@ event SubmitLiteralStackerKernel(queue& q) {
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
           // copy the character
-          out_pack.byte[i] = cache_buf[i];
+          out_pack.literal[i] = cache_buf[i];
 
           // shift the extra characters to the front of the cache
           cache_buf[i] = cache_buf[i + literals_per_cycle];
@@ -298,7 +298,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
 
     unsigned read_history_buffer_buffer_idx = 0;
     [[intel::fpga_register]] unsigned read_history_buffer_idx[literals_per_cycle];
-    [[intel::fpga_register]] int read_history_buffer_feedback_idx[literals_per_cycle];
+    [[intel::fpga_register]] unsigned read_history_shuffle_idx[literals_per_cycle];
 
     #pragma unroll
     for (int i = 0; i < literals_per_cycle; i++) { history_buffer_idx[i] = 0; }
@@ -319,7 +319,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
         short len_or_sym = pipe_data.data.len_or_sym;
         short dist = pipe_data.data.dist_or_flag;
 
-        out_data.byte[0] = len_or_sym & 0xFF;
+        out_data.literal[0] = len_or_sym & 0xFF;
         out_data.valid_count = 1;
 
         // if we get a length distance pair we will read 'len_or_sym' bytes
@@ -340,31 +340,36 @@ event SubmitLZ77DecoderKernel(queue& q) {
             if (buf_idx == history_buffer_buffer_idx) {
               starting_read_idx_for_this_buf += 1;
             }
-            read_history_buffer_idx[buf_idx] = starting_read_idx_for_this_buf & history_buffer_mask;
-            read_history_buffer_feedback_idx[buf_idx] = -1;
+            read_history_buffer_idx[buf_idx] = starting_read_idx_for_this_buf & history_buffer_mask;1;
+            read_history_shuffle_idx[i] = buf_idx;
           } else {
             read_history_buffer_idx[buf_idx] = 0;
-            read_history_buffer_feedback_idx[buf_idx] = (i - dist);
+            unsigned idx_back = udist + ((i - udist) % dist);
+            read_history_shuffle_idx[i] = (history_buffer_buffer_idx - idx_back) & history_buffer_idx_mask;
           }
         }
       }
 
       if (reading_history) {
-        // grab from the history buffer
-        // TODO: read at {0, 1, 2, 3} and shuffle
+        // grab from each of the history buffers
+        unsigned char historical_bytes[literals_per_cycle];
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
-          unsigned buf_idx = (read_history_buffer_buffer_idx + i) & history_buffer_idx_mask;
-          unsigned idx_in_buf = read_history_buffer_idx[buf_idx];
-          int idx_in_prev = read_history_buffer_feedback_idx[buf_idx];
-          if (idx_in_prev < 0) {
-            out_data.byte[i] = history_buffer[buf_idx][idx_in_buf];
-          } else {
-            out_data.byte[i] = out_data.byte[idx_in_prev];
-          }
+          auto idx_in_buf = read_history_buffer_idx[i];
+          historical_bytes[i] = history_buffer[i][idx_in_buf];
         }
-        out_data.valid_count =
-          (history_counter < literals_per_cycle) ? history_counter : literals_per_cycle;
+
+        // shuffle the 
+        #pragma unroll
+        for (int i = 0; i < literals_per_cycle; i++) {
+          out_data.literal[i] = historical_bytes[read_history_shuffle_idx[i]];
+        }
+
+        if (history_counter < literals_per_cycle) {
+          out_data.valid_count = decltype(out_data.valid_count)(history_counter);
+        } else {
+          out_data.valid_count = literals_per_cycle;
+        }
 
         // update the history read index
         #pragma unroll
@@ -385,7 +390,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
           if (i < out_data.valid_count) {
             unsigned buf_idx = (history_buffer_buffer_idx + i) & history_buffer_idx_mask;
             unsigned idx_in_buf = history_buffer_idx[buf_idx];
-            history_buffer[buf_idx][idx_in_buf] = out_data.byte[i];
+            history_buffer[buf_idx][idx_in_buf] = out_data.literal[i];
             history_buffer_idx[buf_idx] = (history_buffer_idx[buf_idx] + 1) & history_buffer_mask;
           }
         }
