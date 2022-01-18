@@ -172,108 +172,6 @@ event SubmitLiteralStackerKernel(queue& q) {
   });
 }
 
-/*
-template<typename InPipe, typename OutPipe>
-event SubmitLZ77DecoderKernel(queue& q) {
-  return q.single_task<LZ77DecoderKernelID>([=] {
-    // the maximum history is defined by the DEFLATE algorithm
-    // do not change this:
-    //    making it smaller will make the design not functionally correct
-    //    making it larger will waste space since the compressor follows
-    //    this rule too
-    constexpr unsigned kMaxHistory = 32768;
-    constexpr unsigned kMaxHistoryMask = kMaxHistory - 1;
-
-    // use a ring buffer for the history
-    unsigned short history_idx = 0;
-    unsigned char history[kMaxHistory];
-
-    // history buffer shift register cache
-    constexpr int kCacheDepth = 4;
-    [[intel::fpga_register]] unsigned char history_cache_val[kCacheDepth + 1];
-    [[intel::fpga_register]] unsigned short history_cache_idx[kCacheDepth + 1];
-
-    bool done;
-    bool reading_history = false;
-    bool reading_history_next;
-    unsigned short history_read_idx;
-    unsigned short history_count;
-
-    [[intel::ivdep(kCacheDepth)]]
-    do {
-      bool data_valid = true;
-      unsigned char c;
-
-      // if we aren't currently reading from the history, read from input pipe
-      if (!reading_history) {
-        // read from pipe
-        auto pipe_data = InPipe::read(data_valid);
-
-        // check if we are done
-        done = pipe_data.flag && data_valid;
-
-        // grab the symbol or the length and distance pair
-        auto len_or_sym = pipe_data.data.len_or_sym;
-        auto dist = pipe_data.data.dist_or_flag;
-        c = len_or_sym & 0xFF;
-
-        // if we get a length distance pair we will read 'len_or_sym' bytes
-        // starting 'dist' 
-        history_count = len_or_sym;
-        reading_history = (dist != -1) && data_valid;
-        reading_history_next = history_count != 1;
-        history_read_idx = (history_idx - dist) & kMaxHistoryMask;
-      }
-
-      if (reading_history) {
-        // grab from the history buffer
-        c = history[history_read_idx];
-
-        // also check the cache to see if it is there
-        #pragma unroll
-        for (int i = 0; i < kCacheDepth + 1; i++) {
-          if (history_cache_idx[i] == history_read_idx) {
-            c = history_cache_val[i];
-          }
-        }
-
-        // update the history read index
-        history_read_idx = (history_read_idx + 1) & kMaxHistoryMask;
-
-        // update whether we are still reading the history
-        reading_history = reading_history_next;
-        reading_history_next = history_count != 2;
-        history_count--;
-      }
-      
-
-      if (!done && data_valid) {
-        // write the new value to both the history buffer and the cache
-        history[history_idx] = c;
-        history_cache_val[kCacheDepth] = c;
-        history_cache_idx[kCacheDepth] = history_idx;
-
-        // Cache is just a shift register, so shift the shift reg. Pushing
-        // into the back of the shift reg is done above.
-        #pragma unroll
-        for (int i = 0; i < kCacheDepth; i++) {
-          history_cache_val[i] = history_cache_val[i + 1];
-          history_cache_idx[i] = history_cache_idx[i + 1];
-        }
-
-        // update the history index
-        history_idx = (history_idx + 1) & kMaxHistoryMask;
-
-        // write the output to the pipe
-        OutPipe::write(FlagBundle<unsigned char>(c));
-      }
-    } while (!done);
-    
-    OutPipe::write(FlagBundle<unsigned char>(0, true));
-  });
-}
-*/
-
 template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 event SubmitLZ77DecoderKernel(queue& q) {
   return q.single_task<LZ77DecoderKernelID>([=] {
@@ -300,6 +198,10 @@ event SubmitLZ77DecoderKernel(queue& q) {
     [[intel::fpga_register]] HistBufIdxT history_buffer_idx[literals_per_cycle];
     unsigned char history_buffer[literals_per_cycle][history_buffer_count];
 
+    constexpr int kCacheDepth = 45;
+    [[intel::fpga_register]] unsigned char history_buffer_cache_val[literals_per_cycle][kCacheDepth + 1];
+    [[intel::fpga_register]] HistBufIdxT history_buffer_cache_idx[literals_per_cycle][kCacheDepth + 1];
+
     HistBufBufIdxT read_history_buffer_buffer_idx = 0;
     [[intel::fpga_register]] HistBufIdxT read_history_buffer_idx[literals_per_cycle];
     [[intel::fpga_register]] HistBufBufIdxT read_history_shuffle_idx[literals_per_cycle];
@@ -320,7 +222,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
     }();
     
     // ac_ints cannot be constexpr, so initialize an array of ac_int with
-    // the mod_lut_init
+    // the mod_lut_init ROM that was computed above
     [[intel::fpga_register]] HistBufBufIdxT mod_lut[literals_per_cycle - 1][literals_per_cycle - 1];
     for (int y = 0; y < (literals_per_cycle - 1); y++) {
       for (int x = y; x < (literals_per_cycle - 1); x++) {
@@ -332,6 +234,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
     #pragma unroll
     for (int i = 0; i < literals_per_cycle; i++) { history_buffer_idx[i] = 0; }
 
+    [[intel::ivdep(kCacheDepth)]]
     do {
       bool data_valid = true;
       LiteralPack<literals_per_cycle> out_data;
@@ -368,7 +271,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
           // the buffer index
-          HistBufBufIdxT buf_idx = (read_history_buffer_buffer_idx + i) & history_buffer_buffer_idx_mask;
+          HistBufBufIdxT buf_idx = (read_history_buffer_buffer_idx + HistBufBufIdxT(i)) & history_buffer_buffer_idx_mask;
 
           // compute the starting index for buffer 'buf_idx' (in range
           // [0, literals_per_cycle))
@@ -397,6 +300,14 @@ event SubmitLZ77DecoderKernel(queue& q) {
         for (int i = 0; i < literals_per_cycle; i++) {
           auto idx_in_buf = read_history_buffer_idx[i];
           historical_bytes[i] = history_buffer[i][idx_in_buf];
+
+          // also check the cache to see if it is there
+          #pragma unroll
+          for (int j = 0; j < kCacheDepth + 1; j++) {
+            if (history_buffer_cache_idx[i][j] == idx_in_buf) {
+              historical_bytes[i] = history_buffer_cache_val[i][j];
+            }
+          }
         }
 
         // shuffle the elements read from the history to the output
@@ -414,7 +325,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
         // update the history read index
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
-          read_history_buffer_idx[i] = (read_history_buffer_idx[i] + 1) & history_buffer_idx_mask;
+          read_history_buffer_idx[i] = (read_history_buffer_idx[i] + ac_uint<1>(1)) & history_buffer_idx_mask;
         }
 
         // update whether we are still reading the history
@@ -424,14 +335,39 @@ event SubmitLZ77DecoderKernel(queue& q) {
       }
       
       if (!done && data_valid) {
+        // compute the valid bitmap for the writes
+        bool write_bitmap[literals_per_cycle];
+        [[intel::fpga_register]] HistBufBufIdxT shuffle_vec[literals_per_cycle];
+        
+        #pragma unroll
+        for (int i = 0; i < literals_per_cycle; i++) {
+          HistBufBufIdxT buf_idx = (history_buffer_buffer_idx + i) & history_buffer_buffer_idx_mask;
+          write_bitmap[buf_idx] = i < out_data.valid_count;
+          shuffle_vec[buf_idx] = i;
+        }
+
         // write to the history buffers what we are sending out
         #pragma unroll
         for (int i = 0; i < literals_per_cycle; i++) {
-          if (i < out_data.valid_count) {
-            HistBufBufIdxT buf_idx = (history_buffer_buffer_idx + i) & history_buffer_buffer_idx_mask;
-            HistBufIdxT idx_in_buf = history_buffer_idx[buf_idx];
-            history_buffer[buf_idx][idx_in_buf] = out_data.literal[i];
-            history_buffer_idx[buf_idx] = (history_buffer_idx[buf_idx] + 1) & history_buffer_idx_mask;
+          if (write_bitmap[i]) {
+            HistBufIdxT idx_in_buf = history_buffer_idx[i];
+
+            // write the new value to both the history buffer and the cache
+            auto literal_out = out_data.literal[shuffle_vec[i]];
+            history_buffer[i][idx_in_buf] = literal_out;
+            history_buffer_cache_val[i][kCacheDepth] = literal_out;
+            history_buffer_cache_idx[i][kCacheDepth] = idx_in_buf;
+
+            // Cache is just a shift register, so shift the shift reg. Pushing
+            // into the back of the shift reg is done above.
+            #pragma unroll
+            for (int j = 0; j < kCacheDepth; j++) {
+              history_buffer_cache_val[i][j] = history_buffer_cache_val[i][j + 1];
+              history_buffer_cache_idx[i][j] = history_buffer_cache_idx[i][j + 1];
+            }
+
+            // update the history buffer index
+            history_buffer_idx[i] = (history_buffer_idx[i] + ac_uint<1>(1)) & history_buffer_idx_mask;
           }
         }
 
