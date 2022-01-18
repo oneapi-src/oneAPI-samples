@@ -87,7 +87,7 @@ For detailed documentation on the `set_slc` and `slc` APIs please see the file `
 
 ## Key Concepts
 * The `ac_int` data-type can be used to generate hardware for only as many bits as is needed by the operation as compared to native integer types which generate hardware for the entire type width.
-* The left shift operation on `ac_int` can be implemented more efficiently when the amount to shift with is stored in a minimally sized ac_int``.
+* The left shift operation on `ac_int` can be implemented more efficiently when the amount to shift with is stored in a minimally sized `ac_int`.
 * The `ac_int` data-type offers functions for several useful operations including reading and writing of certain bits of an `ac_int` number. This can be very useful in creating bit masks.
 
 ## License
@@ -208,14 +208,14 @@ Navigate to the *System Viewer* report (*Views* > *System Viewer*) and step thro
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./ac_int.fpga_emu    # Linux
-   ac_int.fpga_emu.exe  # Windows
+   ./ac_int.fpga_emu     (Linux)
+   ac_int.fpga_emu.exe   (Windows)
    ```
 
 2. Run the sample on the FPGA device
 
    ```bash
-   ./ac_int.fpga             # Linux
+   ./ac_int.fpga         (Linux)
    ```
 
 ### Example of Output
