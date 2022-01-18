@@ -14,10 +14,9 @@
         "id": "fpga_emu",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/dsp_control",
+          "cmake ..",
           "make fpga_emu",
           "./dsp_control.fpga_emu"
         ]
@@ -26,10 +25,9 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/dsp_control",
+          "cmake ..",
           "make report"
         ]
       }

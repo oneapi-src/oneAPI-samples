@@ -1,5 +1,5 @@
 # DSP Control
-This FPGA tutorial demonstrates how to set implementation preference for math operations, which affects hardware resource utilization on FPGA device.
+This FPGA tutorial demonstrates how to set the implementation preference for certain math operations (addition, subtraction, and multiplication by a constant) between hardened DSP blocks and soft logic.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -14,18 +14,16 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Time to complete                  | 15 minutes
 
 ## Purpose
-This tutorial shows how to apply global and local controls to set the implementation preference between DSPs and soft-logic for math operations. The global control is applied using a command-line flag and affects applicable math operations in all kernels. The local control is applied as a library function and affects math operations in a block scope in a single kernel. Both global and local controls only affect math operations that support DSP control.
+This tutorial shows how to apply global and local controls to set the implementation preference between DSPs and soft-logic for certain math operations. The global control is applied using a command-line flag and affects applicable math operations in all kernels. The local control is applied as a library function and affects math operations in a block scope in a single kernel. Both global and local controls only affect math operations that support DSP control (see table below).
 
 ### Scope of Datatypes and math operations
-| Datatypes              | math operations
+| Datatype               | Controllable Math Operations
 ---                      |---
-| `float`                | Add, sub, constant mul
-| `hls_float<8, 23>`     | Add, sub, constant mul
-| `int`                  | Constant mul
-| `ac_int`               | Constant mul
-| `ac_fixed`             | Constant mul
-
-**NOTE:** _constant mul_ means one operand of the multiplication is a constant.
+| `float`                | addition, subtraction, multiplication by a constant
+| `ap_float<8, 23>`      | addition, subtraction, multiplication by a constant
+| `int`                  | multiplication by a constant
+| `ac_int`               | multiplication by a constant
+| `ac_fixed`             | multiplication by a constant
 
 ### Global Control
 The `-Xsdsp-mode=<option>` command-line flag sets implementation preference of math operations that support DSP control in all kernels. It has three valid options:
@@ -45,24 +43,18 @@ The first template argument `Preference::<option>` is an enum with three valid o
 | `Softlogic`          | Prefer math operations to be implemented in **soft-logic**. Its behavior on a math operation is equivalent to global control `-Xsdsp-mode=prefer-softlogic`.
 | `Compiler_default`   | Compiler determines the implementation based on datatype and math operation. Its behavior on a math operation is equivalent to global control `-Xsdsp-mode=default`.
 
-The second template argument `Propagate::<option>` is an enum that determines propagation of the first argument `Preference` to functions called in the lambda expression:
+The second template argument `Propagate::<option>` is an enum that determines whether the DSP control applies to controllable math operations in function calls inside the lambda expression:
 | Option  | Explanation
 ---       |---
-| `On`    | `Preference` is propagated to all functions called in the lambda expression, and affects all math operations on the call graph in the lambda expression until a nested `math_dsp_control<>()` call stops the propagation. <br> **NOTE:** This option will be automatically applied if the template argument `Propagate` is not specified manually.
-| `Off`   | `Preference` is not propagated to functions called in the lambda expression. So `Preference` only applies to math operations directly used in the lambda expression.
+| `On`    | DSP control recursively applies to controllable math operations in all function calls inside the lambda expression. <br> **NOTE:** This option will be automatically applied if the template argument `Propagate` is not specified manually.
+| `Off`   | DSP control only applies to controllable math operations directly inside the lambda expression. Math operations in function calls inside the lambda expression are not affected by this DSP control.
 
 **NOTE:**
-1. `Preference` never applies to nested `math_dsp_control<>()` calls. Each nested `math_dsp_control<>()` has its own `Preference`.
+1. A nested `math_dsp_control<>()` call is only controlled by its own `Preference`. The `Preference` of the parent `math_dsp_control<>()` does not affect the nested `math_dsp_control<>()`, even if the parent has `Propagate::On`.
 2. Local control overrides global control on a controlled math operation.
 
-You may omit both template arguments if you want to get the DSP option with propagate. For example:
-```cpp
-ext::intel::math_dsp_control<>([&] { ... });
-// This equals to ext::intel::math_dsp_control<ext::intel::Preference::DSP, ext::intel::Propagate::On>([&] { ... });
-```
-
 ## Key Concepts
-* How to apply global DSP control in command-line interface
+* How to apply global DSP control from the command-line
 * How to apply local DSP control in source code
 * Scope of data types and math operations that support DSP control
 
