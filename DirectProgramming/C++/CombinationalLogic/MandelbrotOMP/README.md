@@ -50,11 +50,14 @@ The basic steps to build and run a sample using VS Code include:
  - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel®
+oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions and how to configure the oneAPI environment, see
+To learn more about the extensions, see
 [Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 
 ## Building the `Mandelbrot` Program
 
