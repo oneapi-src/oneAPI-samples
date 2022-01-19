@@ -207,8 +207,8 @@ Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 327
 Device name: pac_a10 : Intel PAC Platform (pac_f000000)
 Generating 32768 random matrices
 Running QR decomposition of 32768 matrices repeatedly
-   Total duration:   42.8803 s
-Throughput: 24.4536k matrices/s
+   Total duration:   42.3408 s
+Throughput: 24.7652k matrices/s
 Verifying results on matrix 0 16384 32767
 PASSED
 ```
