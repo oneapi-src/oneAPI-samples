@@ -200,7 +200,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
     [[intel::fpga_register]] HistBufIdxT history_buffer_idx[literals_per_cycle];
     fpga_tools::NTuple<unsigned char[history_buffer_count], literals_per_cycle> history_buffer;
 
-    constexpr int kCacheDepth = 45;
+    constexpr int kCacheDepth = 7;
     [[intel::fpga_register]] unsigned char history_buffer_cache_val[literals_per_cycle][kCacheDepth + 1];
     [[intel::fpga_register]] HistBufIdxT history_buffer_cache_idx[literals_per_cycle][kCacheDepth + 1];
 
