@@ -14,6 +14,10 @@
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
+#ifndef LITERALS_PER_CYCLE
+#define LITERALS_PER_CYCLE 2
+#endif
+
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
@@ -25,6 +29,9 @@
 
 using namespace sycl;
 using namespace std::chrono;
+
+constexpr unsigned kLiteralsPerCycle = LITERALS_PER_CYCLE;
+static_assert(fpga_tools::IsPow2(kLiteralsPerCycle));
 
 #ifdef __SYCL_DEVICE_ONLY__
 #define CL_CONSTANT __attribute__((opencl_constant))
@@ -45,14 +52,8 @@ class ConsumerID;
 class InPipeID;
 class OutPipeID;
 
-#ifndef LITERALS_PER_CYCLE
-#define LITERALS_PER_CYCLE 4
-#endif
-constexpr unsigned LiteralsPerCycle = LITERALS_PER_CYCLE;
-static_assert(fpga_tools::IsPow2(LiteralsPerCycle));
-
 using InPipe = ext::intel::pipe<InPipeID, char>;
-using OutPipe = ext::intel::pipe<OutPipeID, FlagBundle<LiteralPack<LiteralsPerCycle>>>;
+using OutPipe = ext::intel::pipe<OutPipeID, FlagBundle<LiteralPack<kLiteralsPerCycle>>>;
 
 ////////////////////////////////////////////////////////////////////////////////
 event SubmitProducer(queue&, unsigned char*, int);
@@ -133,10 +134,10 @@ int main(int argc, char* argv[]) {
   unsigned out_count = *(reinterpret_cast<unsigned*>(last_4_bytes.data()));
   std::vector<unsigned char> out_bytes(out_count);
 
-  // round up the output count to the nearest multiple of LiteralsPerCycle
+  // round up the output count to the nearest multiple of kLiteralsPerCycle
   // this allows to ignore predicating the last writes to the output
   int out_count_padded =
-      fpga_tools::RoundUpToMultiple(out_count, LiteralsPerCycle);
+      fpga_tools::RoundUpToMultiple(out_count, kLiteralsPerCycle);
 
   // host variables for output from device
   int inflated_count_host = 0;
@@ -192,7 +193,7 @@ int main(int argc, char* argv[]) {
 
       // run the decompression kernels
       std::cout << "Launching gzip kernels\n";
-      auto decompress_events = SubmitDecompressKernels<InPipe, OutPipe, LiteralsPerCycle>(q, in_count, hdr_data, crc, count);
+      auto decompress_events = SubmitDecompressKernels<InPipe, OutPipe, kLiteralsPerCycle>(q, in_count, hdr_data, crc, count);
 
       // wait for the producer and consumer to finish
       std::cout << "Waiting on producer and consumer kernels" << std::endl;
@@ -305,8 +306,8 @@ event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr) 
 
         if (!done && valid_pipe_read) {
           #pragma unroll
-          for (int j = 0; j < LiteralsPerCycle; j++) {
-            out[i * LiteralsPerCycle + j] = pipe_data.data.literal[j];
+          for (int j = 0; j < kLiteralsPerCycle; j++) {
+            out[i * kLiteralsPerCycle + j] = pipe_data.data.literal[j];
           }
           valid_byte_count += pipe_data.data.valid_count;
           i++;

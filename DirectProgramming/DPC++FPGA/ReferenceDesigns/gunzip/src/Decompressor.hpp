@@ -8,6 +8,7 @@
 #include "ByteBitStream.hpp"
 #include "HeaderData.hpp"
 #include "unrolled_loop.hpp"
+#include "tuple.hpp"
 
 using namespace sycl;
 
@@ -172,6 +173,7 @@ event SubmitLiteralStackerKernel(queue& q) {
   });
 }
 
+// TODO: support literals_per_cycle = 1
 template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 event SubmitLZ77DecoderKernel(queue& q) {
   return q.single_task<LZ77DecoderKernelID>([=] {
@@ -193,10 +195,10 @@ event SubmitLZ77DecoderKernel(queue& q) {
     
     using HistBufBufIdxT = ac_uint<history_buffer_buffer_idx_bits>;
     using HistBufIdxT = ac_uint<history_buffer_idx_bits>;
-    
+
     HistBufBufIdxT history_buffer_buffer_idx = 0;
     [[intel::fpga_register]] HistBufIdxT history_buffer_idx[literals_per_cycle];
-    unsigned char history_buffer[literals_per_cycle][history_buffer_count];
+    fpga_tools::NTuple<unsigned char[history_buffer_count], literals_per_cycle> history_buffer;
 
     constexpr int kCacheDepth = 45;
     [[intel::fpga_register]] unsigned char history_buffer_cache_val[literals_per_cycle][kCacheDepth + 1];
@@ -296,10 +298,13 @@ event SubmitLZ77DecoderKernel(queue& q) {
       if (reading_history) {
         // grab from each of the history buffers
         unsigned char historical_bytes[literals_per_cycle];
-        #pragma unroll
-        for (int i = 0; i < literals_per_cycle; i++) {
+
+        // using a tuple and static unroller because of these cases:
+        //    https://hsdes.intel.com/appstore/article/#/14015868135
+        //    https://hsdes.intel.com/appstore/article/#/14015867379
+        fpga_tools::UnrolledLoop<literals_per_cycle>([&](auto i) {
           auto idx_in_buf = read_history_buffer_idx[i];
-          historical_bytes[i] = history_buffer[i][idx_in_buf];
+          historical_bytes[i] = history_buffer.template get<i>()[idx_in_buf];
 
           // also check the cache to see if it is there
           #pragma unroll
@@ -308,7 +313,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
               historical_bytes[i] = history_buffer_cache_val[i][j];
             }
           }
-        }
+        });
 
         // shuffle the elements read from the history to the output
         #pragma unroll
@@ -347,14 +352,19 @@ event SubmitLZ77DecoderKernel(queue& q) {
         }
 
         // write to the history buffers what we are sending out
-        #pragma unroll
-        for (int i = 0; i < literals_per_cycle; i++) {
+        // using a tuple and static unroller because of these cases:
+        //    https://hsdes.intel.com/appstore/article/#/14015868135
+        //    https://hsdes.intel.com/appstore/article/#/14015867379
+        fpga_tools::UnrolledLoop<literals_per_cycle>([&](auto i) {
           if (write_bitmap[i]) {
-            HistBufIdxT idx_in_buf = history_buffer_idx[i];
-
-            // write the new value to both the history buffer and the cache
+            // grab the literal to write out
             auto literal_out = out_data.literal[shuffle_vec[i]];
-            history_buffer[i][idx_in_buf] = literal_out;
+
+            // the index into the buffer
+            HistBufIdxT idx_in_buf = history_buffer_idx[i];
+            history_buffer.template get<i>()[idx_in_buf] = literal_out;
+
+            // write new value into cache as well
             history_buffer_cache_val[i][kCacheDepth] = literal_out;
             history_buffer_cache_idx[i][kCacheDepth] = idx_in_buf;
 
@@ -369,7 +379,7 @@ event SubmitLZ77DecoderKernel(queue& q) {
             // update the history buffer index
             history_buffer_idx[i] = (history_buffer_idx[i] + ac_uint<1>(1)) & history_buffer_idx_mask;
           }
-        }
+        });
 
         // update the most recent buffer
         history_buffer_buffer_idx = (history_buffer_buffer_idx + out_data.valid_count) & history_buffer_buffer_idx_mask;
