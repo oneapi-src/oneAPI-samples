@@ -16,7 +16,7 @@ using namespace sycl;
 namespace ext_oneapi = sycl::ext::oneapi;
 
 constexpr int kLUTSize = 512;       // Size of the LUT.
-constexpr int kNumOutputs = 524288; // Number of outputs.
+constexpr int kNumOutputs = 131072; // Number of outputs.
 constexpr double kNs = 1e9;         // number of nanoseconds in a second
 
 // Forward declare the kernel name in the global scope.
