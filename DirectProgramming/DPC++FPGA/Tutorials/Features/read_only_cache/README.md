@@ -234,22 +234,22 @@ Running `./read_only_cache_disabled.fpga`:
 ```
 
 SQRT LUT size: 512
-Number of outputs: 524288
+Number of outputs: 131072 
 Verification PASSED
 
-Kernel execution time: 0.011597 seconds
-Kernel throughput: 172.457160 MB/s
+Kernel execution time: 0.003377 seconds
+Kernel throughput: 148.06 MB/s
 ```
 
 Running `./read_only_cache_disabled.fpga`:
 ```
 
 SQRT LUT size: 512
-Number of outputs: 524288
+Number of outputs: 131072
 Verification PASSED
 
-Kernel execution time: 0.006537 seconds
-Kernel throughput with the read-only cache: 305.933426 MB/s
+Kernel execution time: 0.001675 seconds
+Kernel throughput with the read-only cache: 298.51 MB/s
 ```
 
 ### Discussion of Results
@@ -259,8 +259,8 @@ Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA:
 
 Configuration | Execution Time (ms) | Throughput (MB/s)
 -|-|-
-Without caching | 11.597 | 172.457160
-With caching | 6.537 | 305.933426
+Without caching | 3.377 | 148.06
+With caching | 1.675 | 298.51
 
 When the read-only cache is enabled, performance notably increases. As
 previously mentioned, when the global memory accesses are random (i.e.
