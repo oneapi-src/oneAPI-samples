@@ -313,7 +313,7 @@ Vector size: 100000
 Verification PASSED
 
 Kernel execution time: 0.004004 seconds
-Kernel throughput 749.230914 MB/s
+Kernel throughput: 749.230914 MB/s
 ```
 
 Running `./mem_channel_no_interleaving.fpga`:
@@ -322,7 +322,7 @@ Vector size: 100000
 Verification PASSED
 
 Kernel execution time: 0.003767 seconds
-Kernel throughput 796.379552 MB/s
+Kernel throughput without burst-interleaving: 796.379552 MB/s
 ```
 
 ### Discussion of Results

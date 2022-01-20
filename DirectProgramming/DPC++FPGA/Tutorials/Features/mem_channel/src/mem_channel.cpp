@@ -29,7 +29,7 @@ event runVecAdd(sycl::queue &q, const std::vector<int> &a_vec,
   buffer a_buf(a_vec, {property::buffer::mem_channel{1}});
   buffer b_buf(b_vec, {property::buffer::mem_channel{2}});
   buffer c_buf(c_vec, {property::buffer::mem_channel{1}});
-  buffer sum_buf(sum_vec, {property::buffer::mem_channel{2}}); 
+  buffer sum_buf(sum_vec, {property::buffer::mem_channel{2}});
 #elif defined(NO_INTERLEAVING) && defined(FOUR_CHANNELS)
   buffer a_buf(a_vec, {property::buffer::mem_channel{1}});
   buffer b_buf(b_vec, {property::buffer::mem_channel{2}});
@@ -138,7 +138,12 @@ int main() {
 
     // Report kernel execution time and throughput
     std::cout << "Kernel execution time: " << time_kernel << " seconds\n";
-    std::cout << "Kernel throughput " << (num_mb / time_kernel) << " MB/s\n\n";
+#if !defined(NO_INTERLEAVING)
+    std::cout << "Kernel throughput: " << (num_mb / time_kernel) << " MB/s\n\n";
+#else
+    std::cout << "Kernel throughput without burst-interleaving: "
+              << (num_mb / time_kernel) << " MB/s\n\n";
+#endif
   } else {
     std::cerr << "Verification FAILED\n";
     return 1;
