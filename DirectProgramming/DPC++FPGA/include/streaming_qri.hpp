@@ -54,16 +54,22 @@ struct StreamingQRI {
     // Iterate over the number of matrices to decompose per function call
     for (int matrix_iter = 0; matrix_iter < matrix_count; matrix_iter++) {
       // Q matrix read from pipe
+      [[intel::private_copies(6)]]
       TT q_matrix[rows][columns];
       // Transpose of Q matrix
+      [[intel::private_copies(6)]]
       TT qt_matrix[rows][columns];
       // R matrix read from pipe
+      [[intel::private_copies(6)]]
       TT r_matrix[rows][columns];
       // Transpose of R matrix
+      [[intel::private_copies(6)]]
       TT rt_matrix[rows][columns];
       // Inverse of R matrix
+      [[intel::private_copies(6)]]
       TT ri_matrix[rows][columns];
       // Inverse matrix of A=QR
+      [[intel::private_copies(6)]]
       TT i_matrix[rows][columns];
 
       // Copy a R matrix from the pipe to a local memory
