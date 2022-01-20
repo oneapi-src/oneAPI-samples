@@ -141,7 +141,7 @@ int main() {
 #if !defined(NO_INTERLEAVING)
     std::cout << "Kernel throughput: " << (num_mb / time_kernel) << " MB/s\n\n";
 #else
-    std::cout << "Kernel throughput without burst-interleaving "
+    std::cout << "Kernel throughput without burst-interleaving: "
               << (num_mb / time_kernel) << " MB/s\n\n";
 #endif
   } else {

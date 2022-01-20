@@ -32,10 +32,11 @@ set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
+set(NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS "-DNO_INTERLEAVING")
 if (FPGA_BOARD STREQUAL "intel_a10gx_pac:pac_a10")
-  set(NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS "-DNO_INTERLEAVING -DTWO_CHANNELS")
+  string(APPEND NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS " -DTWO_CHANNELS")
 elseif (FPGA_BOARD STREQUAL "intel_s10sx_pac:pac_s10")
-  set(NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS "-DNO_INTERLEAVING -DFOUR_CHANNELS")
+  string(APPEND NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS " -DFOUR_CHANNELS")
 endif()
 
 ###############################################################################
