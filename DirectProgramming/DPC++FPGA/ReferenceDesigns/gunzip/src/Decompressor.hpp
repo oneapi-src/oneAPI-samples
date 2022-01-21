@@ -429,14 +429,44 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 
     [[intel::disable_loop_pipelining]]
     do {
-      ac_uint<3> first_table_state = 0;
+      ac_uint<2> first_table_state = 0;
       ac_uint<1> last_block_num;
       ac_uint<2> type;
       ac_uint<9> numlitlencodes;
       ac_uint<6> numdistcodes;
       ac_uint<5> numcodelencodes;
-      bool parsing_first_table = true;
+      bool parsing_first_table;
       unsigned short codelencodelen_count = 0;
+
+      // read in the first byte and add it to the byte bit stream
+      auto first_pipe_data = InPipe::read();
+      bbs.NewByte(first_pipe_data.data);
+
+      // read the first three bits
+      ac_uint<3> first_three_bits = bbs.ReadUInt<3>();
+      bbs.Shift<3>();
+
+      // first bit indicates whether this is the last block
+      last_block = (first_three_bits.slc<1>(0) == 1);
+
+      // next 2 bits indicate the block type
+      //    0: uncompressed
+      //    1: static huffman
+      //    2: dynamic huffman
+      //    3: reserved
+      type = first_three_bits.slc<2>(1);
+      bool is_uncompressed_block = (type == 0);
+      bool is_static_huffman_block = (type == 1);
+      bool is_dynamic_huffman_block = (type == 2);
+
+      // if this is an uncompressed block, skip the remaining bits in the first
+      // byte to get back to byte aligned (we read 3, so skip 5)
+      if (is_uncompressed_block) {
+        bbs.Shift<5>();
+      }
+
+      // only parse the first table for dynamically compressed blocks
+      parsing_first_table = is_dynamic_huffman_block;
 
       constexpr unsigned short codelencodelen_idxs[] =
         {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
@@ -450,7 +480,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       // and tries to optimize for throughput (~Fmax/II). However, we don't want
       // this loop to be our Fmax bottleneck, so increase the II.
       [[intel::initiation_interval(4)]]
-      do {
+      while (parsing_first_table) {
         if (bbs.HasSpaceForByte()) {
           bool read_valid;
           auto pd = InPipe::read(read_valid);
@@ -463,64 +493,49 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 
         if (bbs.Size() >= 5) {
           if (first_table_state == 0) {
-            last_block_num = bbs.ReadUInt(1);
-            //PRINTF("last_block_num: %u\n", last_block_num);
-            bbs.Shift<1>();
-            last_block = (last_block_num & 0x1);
+            numlitlencodes = bbs.ReadUInt(5) + ac_uint<9>(257);
+            bbs.Shift<5>();
             first_table_state = 1;
           } else if (first_table_state == 1) {
-            type = bbs.ReadUInt(2);
-            //PRINTF("type: %u\n", type);
-            bbs.Shift<2>();
+            numdistcodes = bbs.ReadUInt(5) + ac_uint<1>(1);
+            bbs.Shift<5>();
             first_table_state = 2;
           } else if (first_table_state == 2) {
-            numlitlencodes = bbs.ReadUInt(5) + ac_uint<9>(257);
-            //PRINTF("numlitlencodes: %u\n", numlitlencodes);
-            bbs.Shift<5>();
-            first_table_state = 3;
-          } else if (first_table_state == 3) {
-            numdistcodes = bbs.ReadUInt(5) + ac_uint<1>(1);
-            //PRINTF("numdistcodes: %u\n", numdistcodes);
-            bbs.Shift<5>();
-            first_table_state = 4;
-          } else if (first_table_state == 4) {
             numcodelencodes = bbs.ReadUInt(4) + ac_uint<3>(4);
-            //PRINTF("numcodelencodes: %u\n", numcodelencodes);
             bbs.Shift<4>();
-            first_table_state = 5;
+            first_table_state = 3;
           } else if (codelencodelen_count < numcodelencodes) {
             auto tmp = bbs.ReadUInt(3);
             bbs.Shift<3>();
             codelencodelen[codelencodelen_idxs[codelencodelen_count]] = tmp;
-            //PRINTF("codelencodelen[%u] = %u\n", codelencodelen_idxs[codelencodelen_count], tmp);
             codelencodelen_count++;
             parsing_first_table = (codelencodelen_count != numcodelencodes);
           }
         }
-      } while (parsing_first_table);
+      }
 
       [[intel::fpga_register]] ac_uint<8> codelencode_map_first_code[8];
       [[intel::fpga_register]] ac_uint<8> codelencode_map_last_code[8];
       [[intel::fpga_register]] ac_uint<5> codelencode_map_base_idx[8];
       [[intel::fpga_register]] ac_uint<5> codelencode_map[19];
 
-      // std::remove_extent_t<decltype(codelencode_map_first_code)>
-      // std::remove_extent_t<decltype(codelencode_map_base_idx)>
-      ac_uint<8> codelencode_map_next_code = 0;
-      ac_uint<5> codelencode_map_counter = 0;
-      for (unsigned char codelen = 1; codelen <= 8; codelen++) {
-        codelencode_map_next_code <<= 1;
-        codelencode_map_first_code[codelen - 1] = codelencode_map_next_code;
-        codelencode_map_base_idx[codelen - 1] = codelencode_map_counter;
-        for (unsigned short symbol = 0; symbol < 19; symbol++) {
-          auto inner_codelen = codelencodelen[symbol];
-          if (inner_codelen == codelen) {
-            codelencode_map[codelencode_map_counter] = symbol;
-            codelencode_map_counter++;
-            codelencode_map_next_code++; 
+      if (is_dynamic_huffman_block) {
+        ac_uint<8> codelencode_map_next_code = 0;
+        ac_uint<5> codelencode_map_counter = 0;
+        for (unsigned char codelen = 1; codelen <= 8; codelen++) {
+          codelencode_map_next_code <<= 1;
+          codelencode_map_first_code[codelen - 1] = codelencode_map_next_code;
+          codelencode_map_base_idx[codelen - 1] = codelencode_map_counter;
+          for (unsigned short symbol = 0; symbol < 19; symbol++) {
+            auto inner_codelen = codelencodelen[symbol];
+            if (inner_codelen == codelen) {
+              codelencode_map[codelencode_map_counter] = symbol;
+              codelencode_map_counter++;
+              codelencode_map_next_code++; 
+            }
           }
+          codelencode_map_last_code[codelen - 1] = codelencode_map_next_code;
         }
-        codelencode_map_last_code[codelen - 1] = codelencode_map_next_code;
       }
 
       // length of codelens is MAX(numlitlencodes + numdistcodes)
@@ -533,12 +548,53 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       int onecount = 0, otherpositivecount = 0;
       ac_uint<15> extend_symbol;
 
+      // static codelens ROM (for static huffman encoding)
+      constexpr int static_numlitlencodes = 288;
+      constexpr int static_numdistcodes = 32;
+      constexpr int static_totalcodes =
+          static_numlitlencodes + static_numdistcodes;
+      constexpr auto static_codelens = [] {
+        std::array<unsigned short, 320> a{};
+        // literal codes
+        for (int i = 0; i < static_numlitlencodes; i++) {
+          if (i < 144) {
+            a[i] = 8;
+          } else if (i < 144 + 112) {
+            a[i] = 9;
+          } else if (i < 144 + 112 + 24) {
+            a[i] = 7;
+          } else {
+            a[i] = 8;
+          }
+        }
+        // distance codes
+        for (int i = 0; i < static_numdistcodes; i++) {
+          a[static_numlitlencodes + 1] = 5;
+        }
+        return a;
+      }();
+
+      // for a static huffman block, the number of literal and distance codes
+      // is constant
+      if (is_static_huffman_block) {
+        numlitlencodes = static_numlitlencodes;
+        numdistcodes = static_numdistcodes;
+      }
+
+      // for static huffman block, initialize codelens with static codelens ROM
+      if (is_static_huffman_block) {
+        for (int i = 0; i < static_totalcodes; i++) {
+          codelens[i] = static_codelens[i];
+        }
+      }
+
       // NOTE: this loop is not the main processing loop and therefore is
       // not critical (low trip count). However, the compiler doesn't know that
       // and tries to optimize for throughput (~Fmax/II). However, we don't want
       // this loop to be our Fmax bottleneck, so increase the II.
       [[intel::initiation_interval(5)]]
-      do {
+      while ((codelens_idx < total_codes_second_table)
+             && is_dynamic_huffman_block) {
         // read in another byte if we have space for it
         if (bbs.HasSpaceForByte()) {
           bool read_valid;
@@ -668,11 +724,11 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           // start reading decoding symbols again when runlen == 0
           decoding_next_symbol = (runlen == 0);
         }
-      } while (codelens_idx < total_codes_second_table);
+      }
 
       // handle the case where only one distance code is defined add a dummy
       // invalid code to make the Huffman tree complete
-      if (onecount == 1 && otherpositivecount == 0) {
+      if (onecount == 1 && otherpositivecount == 0 && is_dynamic_huffman_block) {
         int extend_amount = 32 - numdistcodes;
         for (int i = 0; i < extend_amount; i++) {
           codelens[numlitlencodes + numdistcodes + i] = 0;
@@ -763,7 +819,14 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           }
         }
         
-        if (bbs.Size() >= 30) {
+        if (is_uncompressed_block) {
+          if (bbs.Size() >= 8) {
+            ac_uint<8> byte = bbs.ReadUInt<8>();
+            out_data.len_or_sym = byte;
+            out_data.dist_or_flag = -1;
+            out_ready = true;
+          }
+        } else if (bbs.Size() >= 30) {
           // read the next 30 bits (we know we have them)
           ac_uint<30> next_bits = bbs.ReadUInt<30>();
 
