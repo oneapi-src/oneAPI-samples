@@ -1,5 +1,7 @@
 #include <math.h>
 
+// #define DEBUG
+
 #include <CL/sycl.hpp>
 #include <chrono>
 #include <iomanip>
@@ -396,7 +398,7 @@ int main(int argc, char *argv[]) {
         std::cout << "A matrix" << std::endl;
         for (size_t row = 0; row < kRows; row++) {
           for (size_t col = 0; col < kColumns; col++) {
-            std::cout << A[i * kAMatrixSize + col * kColumns + row] << " ";
+            std::cout << a[i * kAMatrixSize + col * kColumns + row] << " ";
           }
           std::cout << std::endl;
         }

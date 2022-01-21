@@ -64,7 +64,7 @@ void QRIImpl(
 
   using a_matrix_pipe = sycl::ext::intel::pipe<class APipe, PipeType, 3>;
   using q_matrix_pipe = sycl::ext::intel::pipe<class QPipe, PipeType, 3>;
-  using r_matrix_pipe = sycl::ext::intel::pipe<class RPipe, PipeType, 3>;
+  using r_matrix_pipe = sycl::ext::intel::pipe<class RPipe, TT, 3>;
   using inverse_matrix_pipe = sycl::ext::intel::pipe<class IPipe, PipeType, 3>;
 
   // We will process 'kMatricesPerIter' number of matrices in each run of the

@@ -183,16 +183,12 @@ struct StreamingQRD {
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      column_tuple a_load[columns];
-      column_tuple a_compute[columns];
-      column_tuple q_result[columns];
+      column_tuple a_load[columns], a_compute[columns], q_result[columns];
 
-      constexpr int kRMatrixSizeExtra =
-          (kRMatrixSize % pipe_size) != 0 ? 1 : 0;
       // Contains the values of the upper-right part of R in a row by row
       // fashion, starting by row 0
-      TT r_result[kRMatrixSize / pipe_size + kRMatrixSizeExtra]
-                                                                [pipe_size];
+      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      TT r_result[kRMatrixSize];
 
       // Copy a matrix from the pipe to a local memory
       qrd_internal::ReadPipeAndWriteA<is_complex, rows, columns, pipe_size,
@@ -212,7 +208,9 @@ struct StreamingQRD {
       // Depending on the context, will contain:
       // -> -s[j]: for all the iterations to compute a_j
       // -> ir: for one iteration per j iterations to compute Q_i
-      [[intel::fpga_memory]] TT s_or_ir[columns];
+      [[intel::fpga_memory]] 
+      [[intel::private_copies(2)]] // NO-FORMAT: Attribute
+      TT s_or_ir[columns];
 
       T pip1, ir;
 
@@ -386,8 +384,7 @@ struct StreamingQRD {
 
         // Write the computed R value when j is not a "dummy" iteration
         if ((j >= i + 1) && (i + 1 < columns)) {
-          r_result[r_element_index / pipe_size]
-                                      [r_element_index % pipe_size] = r_ip1j;
+          r_result[r_element_index] = r_ip1j;
           r_element_index++;
         }
 
@@ -397,9 +394,17 @@ struct StreamingQRD {
 
       }  // end of s
 
-      // Copy the R matrix result to the ROut output pipe
-      qrd_internal::ReadRAndWriteToPipe<is_complex, columns, pipe_size,
-                                        ROut, T>(r_result);
+      // // Copy the R matrix result to the ROut output pipe
+      // qrd_internal::ReadRAndWriteToPipe<is_complex, columns, pipe_size,
+      //                                   ROut, T>(r_result);
+
+      // Number of upper-right elements in the R output matrix
+      constexpr int kRMatrixSize = columns * (columns + 1) / 2;
+
+      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+      for (int r_idx = 0; r_idx < kRMatrixSize; r_idx++) {
+        ROut::write(r_result[r_idx]);
+      }
 
       // Copy the Q matrix result to the QOut output pipe
       qrd_internal::ReadQAndWriteToPipe<is_complex, rows, columns,
