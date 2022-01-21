@@ -163,10 +163,10 @@ struct StreamingQRD {
       TT r_result[kRMatrixSize];
 
       // Copy a matrix from the pipe to a local memory
-      // Number of DDR burst reads of pipe_size required to read a full column
+      // Number of pipe reads of pipe_size required to read a full column
       constexpr int kExtraIteration = (rows % pipe_size) != 0 ? 1 : 0;
       constexpr int kLoopIterPerColumn = rows / pipe_size + kExtraIteration;
-      // Number of DDR burst reads of pipe_size to read all the matrices
+      // Number of pipe reads of pipe_size to read all the matrices
       constexpr int kLoopIter = kLoopIterPerColumn * columns;
       // Size in bits of the loop iterator over kLoopIter iterations
       constexpr int kLoopIterBitSize = 
