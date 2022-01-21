@@ -89,7 +89,8 @@ struct LiteralPack {
 //
 template<int bits>
 auto ctz(const ac_uint<bits>& in) {
-    constexpr int out_bits = fpga_tools::Log2(bits) + 1;
+  constexpr int out_bits = fpga_tools::Log2(bits) + 1;
+  if constexpr (bits != 15) {
     //ac_uint<out_bits> ret(bits);
     ac_uint<out_bits> ret;
     #pragma unroll
@@ -99,6 +100,30 @@ auto ctz(const ac_uint<bits>& in) {
       }
     }
     return ret;
+  } else {
+    ac_uint<bits + 1> in_padded(0);
+    in_padded.template set_slc(0, in);
+
+    ac_uint<8> low_8 = in_padded.template slc<8>(0);
+    ac_uint<1> res3 = (low_8 == 0) ? 1 : 0;
+    ac_uint<8> val8 = (res3 == 1) ? in_padded.template slc<8>(8) : in_padded.template slc<8>(0);
+    ac_uint<4> low_4 = val8.template slc<4>(0);
+    ac_uint<1> res2 = (low_4 == 0) ? 1 : 0;
+    ac_uint<4> val4 = (res2 == 1) ? val8.template slc<4>(4) : val8.template slc<4>(0);
+    ac_uint<2> low_2 = val4.template slc<2>(0);
+    ac_uint<1> res1 = (low_2 == 0) ? 1 : 0;
+    ac_uint<2> val2 = (res1 == 1) ? val4.template slc<2>(2) : val4.template slc<2>(0);
+    ac_uint<1> low_1 = val2.template slc<1>(0);
+    ac_uint<1> res0 = (low_1 == 0) ? 1 : 0;
+
+    ac_uint<5> res(0);
+    res[4] = 0;
+    res[3] = res3;
+    res[2] = res2;
+    res[1] = res1;
+    res[0] = res0;
+    return res;
+  }
 }
 
 class HeaderKernelID;
@@ -440,32 +465,32 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           if (first_table_state == 0) {
             last_block_num = bbs.ReadUInt(1);
             //PRINTF("last_block_num: %u\n", last_block_num);
-            bbs.Shift(1);
+            bbs.Shift<1>();
             last_block = (last_block_num & 0x1);
             first_table_state = 1;
           } else if (first_table_state == 1) {
             type = bbs.ReadUInt(2);
             //PRINTF("type: %u\n", type);
-            bbs.Shift(2);
+            bbs.Shift<2>();
             first_table_state = 2;
           } else if (first_table_state == 2) {
             numlitlencodes = bbs.ReadUInt(5) + ac_uint<9>(257);
             //PRINTF("numlitlencodes: %u\n", numlitlencodes);
-            bbs.Shift(5);
+            bbs.Shift<5>();
             first_table_state = 3;
           } else if (first_table_state == 3) {
             numdistcodes = bbs.ReadUInt(5) + ac_uint<1>(1);
             //PRINTF("numdistcodes: %u\n", numdistcodes);
-            bbs.Shift(5);
+            bbs.Shift<5>();
             first_table_state = 4;
           } else if (first_table_state == 4) {
             numcodelencodes = bbs.ReadUInt(4) + ac_uint<3>(4);
             //PRINTF("numcodelencodes: %u\n", numcodelencodes);
-            bbs.Shift(4);
+            bbs.Shift<4>();
             first_table_state = 5;
           } else if (codelencodelen_count < numcodelencodes) {
             auto tmp = bbs.ReadUInt(3);
-            bbs.Shift(3);
+            bbs.Shift<3>();
             codelencodelen[codelencodelen_idxs[codelencodelen_count]] = tmp;
             //PRINTF("codelencodelen[%u] = %u\n", codelencodelen_idxs[codelencodelen_count], tmp);
             codelencodelen_count++;
@@ -844,6 +869,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               reading_distance = true;
             } else if (lit_symbol <= 284) {
               // decoded a length with a dynamic value
+              // TODO: just keep bottom 5 bits of lit_symbol and subtract by 5 (not 261)
               ac_uint<3> num_extra_bits = (lit_symbol - ac_uint<9>(261)) >> 2;
               auto extra_bits_val = lit_extra_bit_vals[lit_shortest_match_len - 1][num_extra_bits - 1];
               out_data.len_or_sym = ((((lit_symbol - ac_uint<9>(265)) & 0x3) + ac_uint<3>(4)) << num_extra_bits) + ac_uint<2>(3) + extra_bits_val;

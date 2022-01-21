@@ -42,7 +42,7 @@ class ByteBitStream {
   using ShiftCountT = ac_int<shift_count_bits, false>;
 
 public:
-  ByteBitStream() : size_(0), space_(bits), has_space_for_byte_(true) {}
+  ByteBitStream() : buf_(0), size_(0), space_(bits), has_space_for_byte_(true) {}
 
   auto ReadUInt(ReadCountT read_bits) {
     ac_int<max_dynamic_read_bits, false> mask = (1 << read_bits) - 1;
@@ -59,6 +59,14 @@ public:
     buf_ >>= shift_bits;
     size_ -= shift_bits;
     space_ += shift_bits;
+    has_space_for_byte_ = space_ >= 8;
+  }
+
+  template<unsigned shift_bits>
+  void Shift() {
+    buf_ >>= shift_bits;
+    size_ -= decltype(size_)(shift_bits);
+    space_ += decltype(space_)(shift_bits);;
     has_space_for_byte_ = space_ >= 8;
   }
 
@@ -81,20 +89,6 @@ private:
   BufferT buf_;
   CountT size_, space_;
   bool has_space_for_byte_;
-
-  void PrintBuffer() {
-    PRINTF("%hu: ", Size());
-    for (int i = Size()-1; i >= 0; i--) {
-      PRINTF("%u", buf_[i] & 0x1);
-    }
-    PRINTF("\n");
-  }
-
-  void PrintBinaryChar(unsigned char x) {
-    for (int i = 0; i < 8; i++) {
-      PRINTF("%u", (x >> (7-i)) & 0x1);
-    }
-  }
 };
 
 #endif // __BYTEBITSTREAM_HPP__
