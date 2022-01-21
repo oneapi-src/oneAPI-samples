@@ -798,9 +798,6 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           }
 
           // find all possible code lengths and offsets
-          // TODO: get rid of selects here for literal vs distance symbol and just look stuff up in parallel
-          // even though we write to every bit, we must initialize to 0
-          // https://hsdes.intel.com/appstore/article/#/14015829976
           ac_uint<15> lit_codelen_valid_bitmap(0), dist_codelen_valid_bitmap(0);
           ac_uint<9> lit_codelen_offset[15], lit_codelen_base_idx[15];
           ac_uint<5> dist_codelen_offset[15], dist_codelen_base_idx[15];
@@ -869,10 +866,12 @@ event SubmitHuffmanDecoderKernel(queue& q) {
               reading_distance = true;
             } else if (lit_symbol <= 284) {
               // decoded a length with a dynamic value
-              // TODO: just keep bottom 5 bits of lit_symbol and subtract by 5 (not 261)
-              ac_uint<3> num_extra_bits = (lit_symbol - ac_uint<9>(261)) >> 2;
+              ac_int<5> lit_symbol_small = lit_symbol.template slc<5>(0);
+              // (lit_symbol - 261) / 4
+              ac_uint<3> num_extra_bits = (lit_symbol_small - ac_uint<5>(5)) >> 2;  
               auto extra_bits_val = lit_extra_bit_vals[lit_shortest_match_len - 1][num_extra_bits - 1];
-              out_data.len_or_sym = ((((lit_symbol - ac_uint<9>(265)) & 0x3) + ac_uint<3>(4)) << num_extra_bits) + ac_uint<2>(3) + extra_bits_val;
+              // ((((lit_symbol - 265) % 4) + 4) << num_extra_bits) + ac_uint<2>(3) + extra_bits_val
+              out_data.len_or_sym = ((((lit_symbol_small - ac_uint<5>(9)) & 0x3) + ac_uint<3>(4)) << num_extra_bits) + ac_uint<2>(3) + extra_bits_val;
               shift_amount = lit_shortest_match_len + num_extra_bits;
               reading_distance = true;
             } else if (lit_symbol == 285) {
