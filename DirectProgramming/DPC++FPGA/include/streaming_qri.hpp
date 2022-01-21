@@ -1,7 +1,9 @@
-#pragma once
+#ifndef __STREAMING_QRI_HPP__
+#define __STREAMING_QRI_HPP__
 
 #include "utils.hpp"
 #include "unrolled_loop.hpp"
+#include "metaprogramming_math.hpp"
 
 
 /*
@@ -44,8 +46,8 @@ struct StreamingQRI {
     // Functional limitations
     static_assert(rows == columns,
                   "only square matrices with rows==columns are supported");
-    static_assert((columns <= 512) && (columns >= 4),
-                  "only matrices of size 4x4 to 512x512 are supported");
+    static_assert(columns >= 4, 
+                  "only matrices of size 4x4 and upper are supported");
 
     // Set the computation type to T or ac_complex<T> depending on the value
     // of is_complex
@@ -120,7 +122,8 @@ struct StreamingQRI {
       // Number of DDR burst reads of pipe_size to read all the matrices
       constexpr int kLoopIter = kLoopIterPerColumn * columns;
       // Size in bits of the loop iterator over kLoopIter iterations
-      constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+      constexpr int kLoopIterBitSize = 
+                                  fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
@@ -301,3 +304,5 @@ struct StreamingQRI {
     }  // end of matrix_iter
   }    // end of operator
 };     // end of struct
+
+#endif /* __STREAMING_QRI_HPP__ */

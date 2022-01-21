@@ -8,6 +8,14 @@
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": [
+      "ReferenceDesigns/qri",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
@@ -17,10 +25,9 @@
         ],
         "steps": [
           "dpcpp --version",
-          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ../ReferenceDesigns/qrd",
+          "cmake ..",
           "make fpga_emu",
           "./qrd.fpga_emu"
         ]
@@ -29,10 +36,9 @@
         "id": "report",
         "steps": [
           "dpcpp --version",
-          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake ../ReferenceDesigns/qrd",
+          "cmake ..",
           "make report"
         ]
       }

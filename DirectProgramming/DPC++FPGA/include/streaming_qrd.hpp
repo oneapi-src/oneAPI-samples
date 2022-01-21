@@ -1,8 +1,10 @@
-#pragma once
+#ifndef __STREAMING_QRD_HPP__
+#define __STREAMING_QRD_HPP__
+
 #include "tuple.hpp"
 #include "utils.hpp"
 #include "unrolled_loop.hpp"
-
+#include "metaprogramming_math.hpp"
 
 /*
   Forward declarations for the StreamingQRD function
@@ -145,7 +147,7 @@ struct StreamingQRD {
     // Size in bits of the "i" loop variable in the triangular loop
     // i starts from -1 as we are doing a full copy of the matrix read from the
     // pipe to a "compute" matrix before starting the decomposition
-    constexpr int kIBitSize = BitsForMaxValue<rows + 1>() + 1;
+    constexpr int kIBitSize = fpga_tools::BitsForMaxValue<rows + 1>() + 1;
 
     // j starts from i, so from -1 and goes up to columns
     // So we need:
@@ -160,8 +162,8 @@ struct StreamingQRD {
     // -> enough bits to encode the maximum number of negative iterations
     static constexpr int kJNegativeIterations =
         kVariableIterations < 0 ? -kVariableIterations : 1;
-    static constexpr int kJBitSize = BitsForMaxValue<columns + 1>() +
-                                     BitsForMaxValue<kJNegativeIterations>();
+    static constexpr int kJBitSize = fpga_tools::BitsForMaxValue<columns + 1>()
+                          + fpga_tools::BitsForMaxValue<kJNegativeIterations>();
 
     // Iterate over the number of matrices to decompose per function call
     for (int matrix_iter = 0; matrix_iter < matrix_count; matrix_iter++) {
@@ -173,11 +175,12 @@ struct StreamingQRD {
 
       // Break memories up to store 4 complex numbers (32 bytes) per bank
       constexpr short kBankwidth = pipe_size * sizeof(TT);
-      constexpr short kNumBanks = rows / pipe_size;
+      constexpr unsigned short kNumBanks = rows / pipe_size;
 
       // When specifying numbanks for a memory, it must be a power of 2.
       // Unused banks will be automatically optimized away.
-      constexpr short kNumBanksNextPow2 = Pow2(CeilLog2<kNumBanks>());
+      constexpr short kNumBanksNextPow2 = 
+                              fpga_tools::Pow2(fpga_tools::CeilLog2(kNumBanks));
 
       [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
@@ -433,7 +436,7 @@ inline void ReadPipeAndWriteA(NTuple<TT, rows> *a_load) {
   // Number of DDR burst reads of pipe_size to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns;
   // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
   [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
   for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
@@ -484,7 +487,7 @@ inline void ReadQAndWriteToPipe(NTuple<TT, rows> *q_result) {
   // Number of DDR burst reads of pipe_size to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns;
   // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
   [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
   for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
@@ -579,3 +582,5 @@ inline void ReadRAndWriteToPipe(
   }
 }
 }  // end of namespace qrd_internal
+
+#endif /* __STREAMING_QRD_HPP__ */

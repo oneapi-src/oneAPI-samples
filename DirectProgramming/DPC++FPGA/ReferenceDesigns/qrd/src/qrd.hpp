@@ -98,7 +98,7 @@ void QRDecompositionImpl(
 
       auto read_event = q.submit([&](sycl::handler &h) {
         h.depends_on(copy_a_event);
-        h.single_task<class QRDDDRToLocalMem>([=
+        h.single_task<QRDDDRToLocalMem>([=
         ]() [[intel::kernel_args_restrict]] {
           MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
                             matrices_per_iter, a_matrix_pipe>(current_a_buffer);
@@ -108,12 +108,12 @@ void QRDecompositionImpl(
       // Read the A matrix from the a_matrix_pipe pipe and compute the QR
       // decomposition. Write the Q and R output matrices to the q_matrix_pipe
       // and r_matrix_pipe pipes.
-      q.single_task<class QRD>(
+      q.single_task<QRD>(
           StreamingQRD<T, is_complex, rows, columns, raw_latency, 
                        matrices_per_iter, kNumElementsPerDDRBurst, 
                        a_matrix_pipe, q_matrix_pipe, r_matrix_pipe>());
 
-      auto q_event = q.single_task<class QRDLocalMemToDDRQ>([=
+      auto q_event = q.single_task<QRDLocalMemToDDRQ>([=
                                           ]() [[intel::kernel_args_restrict]] {
           // Read the Q matrix from the q_matrix_pipe pipe and copy it to the
           // FPGA DDR
@@ -121,7 +121,7 @@ void QRDecompositionImpl(
                             matrices_per_iter, q_matrix_pipe>(current_q_buffer);
       });
 
-      auto r_event = q.single_task<class QRDLocalMemToDDRR>([=
+      auto r_event = q.single_task<QRDLocalMemToDDRR>([=
                                           ]() [[intel::kernel_args_restrict]] {
           // Read the R matrix from the r_matrix_pipe pipe and copy it to the
           // FPGA DDR

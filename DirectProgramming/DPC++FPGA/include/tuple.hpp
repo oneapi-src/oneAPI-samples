@@ -1,6 +1,5 @@
 #ifndef __TUPLE_HPP__
 #define __TUPLE_HPP__
-#pragma once
 
 #include <type_traits>
 

@@ -1,6 +1,8 @@
-#pragma once
+#ifndef __MEMORY_TRANSFERS_HPP__
+#define __MEMORY_TRANSFERS_HPP__
 
 #include "utils.hpp"
+#include "metaprogramming_math.hpp"
 #include "unrolled_loop.hpp"
 
 /*
@@ -28,7 +30,7 @@ void MatrixReadFromDDRToPipe(
   // Number of DDR burst reads of num_elem_per_bank to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns * matrix_count;
   // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
   sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
 
@@ -70,7 +72,7 @@ void MatrixReadFromDDRToPipe(
   // Number of DDR burst reads of num_elem_per_bank to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns * matrix_count;
   // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
   sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
 
@@ -134,7 +136,7 @@ void MatrixReadPipeToDDR(
   // Number of DDR burst of num_elem_per_bank to write all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns * matrix_count;
   // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
   sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
 
@@ -177,7 +179,7 @@ void MatrixReadPipeToDDR(
   // Number of DDR burst of num_elem_per_bank to write all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns * matrix_count;
   // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
   sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
 
@@ -234,7 +236,7 @@ void VectorReadPipeToDDR(
   // Number of DDR burst of num_elem_per_bank required to write all the vectors
   constexpr int kLoopIter = (size / num_elem_per_bank) * vector_count;
   // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
   sycl::device_ptr<TT> vector_ptr_device(vector_ptr);
 
@@ -272,7 +274,7 @@ void VectorReadPipeToDDR(
   // Number of DDR burst of num_elem_per_bank required to write all the vectors
   constexpr int kLoopIter = (size / num_elem_per_bank + 1) * vector_count;
   // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = BitsForMaxValue<kLoopIter + 1>();
+  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
   sycl::device_ptr<TT> vector_ptr_device(vector_ptr);
 
@@ -305,3 +307,5 @@ void VectorReadPipeToDDR(
     }
   }  // end of li
 }
+
+#endif /* __MEMORY_TRANSFERS_HPP__ */

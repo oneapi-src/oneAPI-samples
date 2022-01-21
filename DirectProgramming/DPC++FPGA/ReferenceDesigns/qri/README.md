@@ -10,7 +10,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm.
+| What you will learn               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition to compute a matrix inversion.
 | Time to complete                  | 1 hr (not including compile time)
 
 ## Purpose
@@ -22,13 +22,13 @@ The inverse of the input matrix A: inv(A) is then computed as inv(R) * transpose
 
 ### Matrix dimensions and FPGA resources
 
-The QR-based matrix inversion algorithm factors a complex _n_×_n_ matrix. The algorithm computes the QR decomposition of the input matrix. To do so, it computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. The computation of the inverse of R also requires a dot product in a loop over _n_ elements. Finally, the final matrix multiplication requires _n_ multiplications.
+The QR-based matrix inversion algorithm factors a complex _n_ × _n_ matrix. The algorithm computes the QR decomposition of the input matrix. To do so, it computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. The computation of the inverse of R also requires a dot product in a loop over _n_ elements. Finally, the final matrix multiplication requires _n_ multiplications.
 
 We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
 
-Note: the compiler flag '-fp-relaxed' will be deprecated in the next release and replaced by a new implementation.
+Note: the compiler flag '-fp-relaxed' is planned to be deprecated.
 
-With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. Thus, the matrix size is constrained by the total FPGA DSP resources available. Note that this upper bound is a consequence of this particular implementation.
+With this optimization, our FPGA implementation requires 4*_n_ DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. Thus, the matrix size is constrained by the total FPGA DSP resources available.
 
 By default, the design is parameterized to process 32 × 32 matrices.
  
@@ -47,7 +47,7 @@ To optimize the performance-critical loop in its algorithm, the design leverages
 * **Shannonization** (shannonization)
 
  The key optimization techniques used are as follows:
-   1. Refactoring the algorithm to merge two dot products of the QR decomposition into one, reducing the total number of dot products needed to three from two. This helps us reduce the DSPs required for the implementation.
+   1. Refactoring the original Gram-Schmidt algorithm to merge two dot products of the QR decomposition into one, reducing the total number of dot products needed to three from two. This helps us reduce the DSPs required for the implementation.
    2. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
    3. Fully vectorizing the dot products using loop unrolling.
    4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialised dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
@@ -147,9 +147,9 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Running the Reference Design
-You can apply QR decomposition to a number of matrices, as shown below. This step performs the following:
-* Generates the number of random matrices specified as the command line argument (defaults to 1).
-* Computes QR decomposition on all matrices.
+You can apply QR matrix inversion to a number of matrices, as shown below. This step performs the following:
+* Generates the number of random matrices specified as the command line argument (defaults to 128).
+* Computes QR matrix inversion on all matrices.
 * Evaluates performance.
 NOTE: The design is optimized to perform best when run on a large number of matrices, where the total number of matrices is a power of 2.
 
@@ -164,7 +164,7 @@ NOTE: The design is optimized to perform best when run on a large number of matr
      qri.fpga_emu.exe         (Windows)
      ```
 
-2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative.
+2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative of the design's throughput. Indeed, the throughput is measured as the total kernel execution time divided by the number of matrices inverted. However, the transfer of the matrices from the host/device to the device/host also takes some time. This memory transfer is performed by chunks of matrices in parallel to the compute kernel. The first/last chunk of matrices transferred will therefore occur with the computation kernel doing nothing. Then, the higher the number of matrices to be inverted, the more accurate the throughput result will be.   
      ```
      ./qri.fpga 40960         (Linux)
      ```
@@ -172,7 +172,7 @@ NOTE: The design is optimized to perform best when run on a large number of matr
 
 | Argument | Description
 ---        |---
-| `<num>`  | Optional argument that specifies the number of matrices to decompose. Its default value is `1`.
+| `<num>`  | Optional argument that specifies the number of matrices to invert. Its default value is `1`.
 
 ### Example of Output
 
@@ -206,7 +206,7 @@ PASSED
 `-DCOLS_COMPONENT` | Specifies the number of columns of the matrix
 `-DFIXED_ITERATIONS_QRD` | Used to set the ivdep safelen attribute for the performance critical triangular loop in the QR decomposition kernel
 `-DFIXED_ITERATIONS_QRI` | Used to set the ivdep safelen attribute for the performance critical triangular loop in the QR inversion kernel
-`-DCOMPLEX` | Used to select between the complex and real QR decomposition
+`-DCOMPLEX` | Used to select between the complex and real QR decomposition/inversion
 
 NOTE: The values for `seed`, `FIXED_ITERATIONS_QRD`, `FIXED_ITERATIONS_QRI`, `ROWS_COMPONENT`, `COLS_COMPONENT` are set according to the board being targeted.
 

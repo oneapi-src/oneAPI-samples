@@ -105,7 +105,7 @@ bool IsFinite(float val) { return std::isfinite(val); }
     % The main purpose of this function is to construct test matrices
     % for, say, Gaussian elimination with no pivoting.
     %
-    % The matrix A is not necessarily well-conditioned, but the matrix B
+    % The matrix A is not necessarily well-conditioned, but
     % the infinity norm condition number of the matrix B is bounded by
     %
     %                  (1+epsilon)/(1 - epsilon)
@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
   // Get the number of random matrices to decompose from the command line
   // If no value is given, will only decompose 1 random matrix
 #if defined(FPGA_EMULATOR)
-  size_t matrices = argc > 1 ? atoi(argv[1]) : 1;
+  size_t matrices = argc > 1 ? atoi(argv[1]) : 128;
 #else
   size_t matrices = argc > 1 ? atoi(argv[1]) : 2048;
 #endif
@@ -396,7 +396,7 @@ int main(int argc, char *argv[]) {
         std::cout << "A matrix" << std::endl;
         for (size_t row = 0; row < kRows; row++) {
           for (size_t col = 0; col < kColumns; col++) {
-            std::cout << A[i * kAMatrixSize + col * kColumns + row] << " ";
+            std::cout << a[i * kAMatrixSize + col * kColumns + row] << " ";
           }
           std::cout << std::endl;
         }
