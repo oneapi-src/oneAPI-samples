@@ -13,7 +13,8 @@
   		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n aikit-modin-test -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
   		"id": "Intel_Modin_GS_py",
   		"steps": [
-        "conda create -y -n modin-conda-forge -c conda-forge --strict-channel-priority modin-all matplotlib runipy",
+        "conda create -y -n modin-conda-forge -c conda-forge modin-all",
+        "conda install -y -n modin-conda-forge -c conda-forge matplotlib runipy",
         "conda activate modin-conda-forge",
         "runipy IntelModin_GettingStarted.ipynb" 
   		 ]
