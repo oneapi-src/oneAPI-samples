@@ -25,7 +25,7 @@ Loop fusion is a compiler transformation in which adjacent loops are merged into
  
 In addition, fusing outer loops can introduce concurrency where there was previously none. Consider two adjacent loops L<sub>j</sub> and L<sub>k</sub>. Within each loop, independent operations can be run concurrently, but concurrency cannot be attained <i>across</i> the loops. Combining the bodies of L<sub>j</sub> and L<sub>k</sub> forms a single loop L<sub>f</sub> with a body that spans the bodies of L<sub>j</sub> and L<sub>k</sub>. In the combined loops, concurrency can be attained for independent instructions which were formerly in separate loops. In effect, the two loops now execute as one in L<sub>f</sub> in a lockstep fashion, providing possible latency improvements.
 
-Loop fusion joins loops at the same nesting level. The merging of nested loops is known as *loop coalescing*, and tools to achieve this are described in the documentation.
+Loop fusion joins loops at the same nesting level. The merging of nested loops is known as *loop coalescing*, and tools to achieve this are described in the documentation and in the [`loop_coalesce` code sample](https://github.com/oneapi-src/oneAPI-samples/tree/da084668be646bfe9f788da7530a3efb3494e8c7/DirectProgramming/DPC++FPGA/Tutorials/Features/loop_coalesce).
 
 #### Default Loop Fusion
 
@@ -125,7 +125,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
      make fpga
      ``` 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_ivdep.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_fusion.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
@@ -175,7 +175,7 @@ Locate `report.html` in the `loop_fusion_report.prj/reports/` directory. Open th
 
 Navigate to the Loops Analysis section of the optimization report under Throughput Analysis and notice that two loops were fused to one in both `DefaultFusionKernel` and in `FusionFunctionKernel`, but not in `NoFusionKernel` or in `DefaultNoFusionKernel`.
 
-In both cases where fusion has occurred, the number of loop cycles has decreased, since the total number of loop iterations decreased due to loop fusion, while the II, speculated iterations and latency have are the same in the fused and non-fused loops. 
+In both cases where fusion has occurred, the number of loop cycles has decreased, since the total number of loop iterations decreased due to loop fusion, while the II, speculated iterations and latency are the same in the fused and non-fused loops. 
 
 Navigate to the Area Analysis of the system under Area Analysis. The Kernel System section displays the area consumption of each kernel. Notice the area savings when loop fusion is performed in`DefaultFusionKernel`, against when it is off in `NoFusionKernel`.  As well, notice the area savings when loop fusion is manually turned on in`FusionFunctionKernel`, against when it is off by default in `DefaultNoFusionKernel`.
 
