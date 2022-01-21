@@ -57,7 +57,7 @@ void QRDecompositionImpl(
   // Pipes to communicate the A, Q and R matrices between kernels
   using a_matrix_pipe = sycl::ext::intel::pipe<class APipe, pipe_type, 3>;
   using q_matrix_pipe = sycl::ext::intel::pipe<class QPipe, pipe_type, 3>;
-  using r_matrix_pipe = sycl::ext::intel::pipe<class RPipe, pipe_type, 3>;
+  using r_matrix_pipe = sycl::ext::intel::pipe<class RPipe, TT, 3>;
 
   // We will process 'matrices_per_iter' number of matrices in each run of the
   // kernel

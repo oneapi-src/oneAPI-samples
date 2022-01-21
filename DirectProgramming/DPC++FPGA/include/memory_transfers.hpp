@@ -215,9 +215,8 @@ void MatrixReadPipeToDDR(
 }
 
 /*
-  Read "vector_count" vectors of type TT from a pipe, num_elem_per_bank by
-  num_elem_per_bank and write them to DDR by bursts of num_elem_per_bank 
-  elements.
+  Read "vector_count" vectors of type TT from a pipe, one element at the time
+  and write them to DDR by bursts of num_elem_per_bank elements.
   This implementation is used for vectors that have a size that is a multiple
   of the number of elements per DDR burst write (num_elem_per_bank).
   Another version of this function is written below and will be selected
@@ -242,21 +241,23 @@ void VectorReadPipeToDDR(
 
   [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
   for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-    PipeTable<num_elem_per_bank, TT> pipe_read = vectorPipe::read();
+    TT pipe_read[num_elem_per_bank];
+    for(int i=0; i<num_elem_per_bank; i++){
+      pipe_read[i] = vectorPipe::read();
+    }
 
 // Write a burst of num_elem_per_bank elements to DDR
 #pragma unroll
     for (int k = 0; k < num_elem_per_bank; k++) {
       *(vector_ptr_device + static_cast<int>(li * num_elem_per_bank + k)) =
-          pipe_read.elem[k];
+          pipe_read[k];
     }
   }  // end of li
 }
 
 /*
-  Read "vector_count" vectors of type TT from a pipe, num_elem_per_bank by
-  num_elem_per_bank and write them to DDR by bursts of num_elem_per_bank 
-  elements.
+  Read "vector_count" vectors of type TT from a pipe, one element at the time
+  and write them to DDR by bursts of num_elem_per_bank elements.
   This implementation is used for vectors that have a size that is a not a
   multiple of the number of elements per DDR burst write (num_elem_per_bank).
   Another version of this function is written above and will be selected
@@ -286,7 +287,10 @@ void VectorReadPipeToDDR(
   [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
   [[intel::ivdep]]                   // NO-FORMAT: Attribute
   for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-    PipeTable<num_elem_per_bank, TT> pipe_read = vectorPipe::read();
+    TT pipe_read[num_elem_per_bank];
+    for(int i=0; i<num_elem_per_bank; i++){
+      pipe_read[i] = vectorPipe::read();
+    }
 
 // Write a burst of num_elem_per_bank elements to DDR
 #pragma unroll
