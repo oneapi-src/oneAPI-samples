@@ -1,5 +1,7 @@
 #include <math.h>
 
+// #define DEBUG
+
 #include <CL/sycl.hpp>
 #include <chrono>
 #include <iomanip>

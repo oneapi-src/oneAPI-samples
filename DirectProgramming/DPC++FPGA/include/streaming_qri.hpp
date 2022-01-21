@@ -56,63 +56,41 @@ struct StreamingQRI {
     // Iterate over the number of matrices to decompose per function call
     for (int matrix_iter = 0; matrix_iter < matrix_count; matrix_iter++) {
       // Q matrix read from pipe
+      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT q_matrix[rows][columns];
+
       // Transpose of Q matrix
+      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT qt_matrix[rows][columns];
-      // R matrix read from pipe
-      TT r_matrix[rows][columns];
+
       // Transpose of R matrix
+      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT rt_matrix[rows][columns];
+
       // Inverse of R matrix
+      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT ri_matrix[rows][columns];
+
+      [[intel::private_copies(2)]]            // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+      TT ri_matrix_compute[rows][columns];
+
       // Inverse matrix of A=QR
+      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
       TT i_matrix[rows][columns];
 
-      // Copy a R matrix from the pipe to a local memory
-      int read_counter = 0;
-      int next_read_counter = 1;
-      PipeTable<pipe_size, TT> read;
-      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (int i = 0; i < rows; i++) {
-        // "Shift register" that will contain a full row of R after
-        // columns iterations.
-        // Each pipe read writes to r_row[columns-1] and at each loop iteration
-        // each r_row[x] will be assigned r_row[x+1]
-        // This ensures that the fanout is kept to a minimum
-        TT r_row[columns];
-        bool cond;
-        bool next_cond = 0 >= i;
-        int to_sum = -i + 2;
-        for (int j = 0; j < columns; j++) {
-          cond = next_cond;
-          next_cond = j + to_sum > 0;
-          // For shannonization
-          int potential_next_read_counter = read_counter + 2;
-
-// Perform the register shifting of the banks
-#pragma unroll
-          for (int col = 0; col < columns - 1; col++) {
-            r_row[col] = r_row[col + 1];
-          }
-
-          if (cond && (read_counter == 0)) {
-            read = RIn::read();
-          }
-          // Read a new value from the pipe if the current row element
-          // belongs to the upper-right part of R. Otherwise write 0.
-          if (cond) {
-            r_row[columns - 1] = read.elem[read_counter];
-            read_counter = next_read_counter % pipe_size;
-            next_read_counter = potential_next_read_counter;
-          } else {
-            r_row[columns - 1] = TT{0.0};
-          }
+      // Transpose the R matrix
+      [[intel::loop_coalesce(2)]]
+      for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < columns; col++) {
+          rt_matrix[col][row] = col < row ? TT{0} : RIn::read();
         }
-
-        // Copy the entire row to the R matrix
-        UnrolledLoop<columns>([&](auto k) { r_matrix[i][k] = r_row[k]; });
       }
-
       
       // Copy a Q matrix from the pipe to a local memory
       // Number of DDR burst reads of pipe_size required to read a full
@@ -148,23 +126,7 @@ struct StreamingQRI {
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
         });
       }
-
       
-      // Transpose the R matrix
-      for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < columns; col++) {
-          rt_matrix[row][col] = r_matrix[col][row];
-        }
-      }
-
-      
-      // Transpose the Q matrix (to get Q as non transposed)
-      for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < columns; col++) {
-          qt_matrix[row][col] = q_matrix[col][row];
-        }
-      }
-
       /*
         Compute the inverse of R
 
@@ -181,87 +143,104 @@ struct StreamingQRI {
 
             RInverse[row][col] = (Id[row][col] - dp)/R[col][col]
       */
-      // Initialise ri_matrix with 0
-      for (int i = 0; i < rows; i++) {
-        UnrolledLoop<columns>([&](auto k) { ri_matrix[i][k] = {0}; });
-      }
 
       // Count the total number of loop iterations, using the triangular loop
       // optimization (refer to the triangular loop optimization tutorial)
-      constexpr int kNormalIterations = rows * (rows + 1) / 2;
-      constexpr int kExtraIterations =
-          raw_latency > rows
-              ? (raw_latency - 2) * (raw_latency - 2 + 1) / 2 -
-                    (raw_latency - rows - 1) * (raw_latency - rows) / 2
-              : (raw_latency - 2) * (raw_latency - 2 + 1) / 2;
+      constexpr int kNormalIterations = columns * (columns+1) / 2;
+      constexpr int kExtraIterations = raw_latency > rows ?
+                        (rows-1)*(raw_latency-rows) + (rows-2)*(rows-1)/2 :
+                        (raw_latency-2)*(raw_latency-2+1)/2;
       constexpr int kTotalIterations = kNormalIterations + kExtraIterations;
+      constexpr bool kThereAreExtraInitIterations = rows-1 < raw_latency-1;
+      constexpr int kInitExtraIterations = kThereAreExtraInitIterations ? 
+                                                    raw_latency-1 : rows-1;
+      constexpr int kInitIterations = (rows-2) * (rows-1) / 2 
+                                      + kInitExtraIterations;
+      
 
       // All the loop control variables with all the requirements to apply
       // some shannonization (refer to the shannonization tutorial)
-      int row = 0;
+      int row = rows-1;
+      int row_plus_1 = rows;
       int col = 0;
-      int cp1 = 1;
-      int iter = 0;
-      int ip1 = 1;
-      int ip2 = 2;
-      int diag_size = columns;
-      int diag_size_m1 = columns - 1;
-      int cp1_limit =
-          raw_latency - columns - columns > 0 ? raw_latency - columns : columns;
-      int next_cp1_limit = raw_latency - columns - 1 - columns > 0
-                             ? raw_latency - columns - 1
-                             : columns;
+      int col_plus_1 = 1;
+      int row_limit = rows-1;
+      int diag_size = 1;
+      int next_diag_size = 2;
+      int diag_iteration = 0;
+      int diag_iteration_plus_1 = 1;
+      int start_row = rows-2;
+      int start_row_plus_1 = rows-1;
+      int start_col = 0;
+      int start_col_plus_1 = 1;
+      int next_row_limit = rows-1;
 
-      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      [[intel::ivdep(raw_latency)]]       // NO-FORMAT: Attribute
-      for (int it = 0; it < kTotalIterations; it++) {
-        // Only compute during the non dummy iterations
-        if ((row < rows) & (col < columns)) {
-          // Compute the dot product of R[row:] * RInverse[:col]
-          TT dot_product = {0};
+      [[intel::ivdep(raw_latency)]]  // NO-FORMAT: Attribute
+      for(int it = 0; it < kTotalIterations + kInitIterations; it++){
+        // Only perform work when in not dummy iterations
+        if(row<rows & col<columns){
+          qt_matrix[row][col] = q_matrix[col][row];
 
-          // While reading R, keep the R[col][col] value for the follow up
-          // division
+          TT current_sum = row == col ? TT{1} : TT{0};
           TT div_val;
 
           UnrolledLoop<columns>([&](auto k) {
             auto lhs = rt_matrix[col][k];
-            auto rhs = ri_matrix[row][k];
-
-            if (k == col) {
+            auto rhs = (k == col) || (col < row) ? TT{0} : ri_matrix_compute[row][k];
+            if(k==col){
               div_val = lhs;
             }
 
-            dot_product += lhs * rhs;
+            current_sum -= lhs * rhs;
           });
 
-          // Find the value of the identity matrix at these coordinates
-          TT idMatrixValue = row == col ? TT{1} : TT{0};
-          // Compute the value of the inverse of R
-          ri_matrix[row][col] = (idMatrixValue - dot_product) / div_val;
+          TT result = current_sum/div_val;
+          
+          // Write the result to both the working copy and the final matrix
+          // This is done to only have matrices with a single read and a 
+          // single write.
+          ri_matrix_compute[row][col] = result;
+          ri_matrix[row][col] = result;
         }
 
         // Update loop indexes
-        if (cp1 >= cp1_limit) {
-          col = ip1;
-          cp1 = ip2;
-          iter = ip1;
-          row = 0;
-          diag_size = diag_size_m1;
-          cp1_limit = next_cp1_limit;
-        } else {
-          col = cp1;
-          cp1 = col + 1;
-          row = row + 1;
-          ip1 = iter + 1;
-          ip2 = iter + 2;
-          next_cp1_limit = sycl::max(raw_latency - (diag_size - 1), columns);
-          diag_size_m1 = diag_size - 1;
+        if(row == row_limit){
+          row_limit = next_row_limit;
+          if constexpr(kThereAreExtraInitIterations){
+            next_row_limit = diag_iteration+2 >= rows-2 ? sycl::max(next_diag_size, raw_latency-1) : rows-1;
+          }
+          else{
+            next_row_limit = diag_iteration+2 >= rows ? sycl::max(next_diag_size-2, raw_latency-1) : rows-1;
+          }
+
+          diag_size = next_diag_size;
+          int to_sum = diag_iteration >= rows-2 ? -1 : 1;
+          next_diag_size = diag_size + to_sum;
+
+          row = start_row;
+          row_plus_1 = start_row_plus_1;
+          col = start_col;
+          col_plus_1 = start_col_plus_1;
+          int start = diag_iteration + 1 - rows + 2;
+          start_col = start < 0 ? 0 : start;
+          start_col_plus_1 = start_col + 1;
+          start_row = start >= 0 ? 0 : - start;
+          start_row_plus_1 = start_row + 1;
+
+          diag_iteration = diag_iteration_plus_1;
+          diag_iteration_plus_1 = diag_iteration_plus_1 + 1;
+        }
+        else{
+          row = row_plus_1;
+          row_plus_1++;
+          col = col_plus_1;
+          col_plus_1++;
         }
       }
 
       
       // Multiply the inverse of R by the transposition of Q
+      [[intel::loop_coalesce(2)]]
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col < columns; col++) {
           TT dot_product = {0.0};
