@@ -12,20 +12,6 @@
 
 using namespace sycl;
 
-#ifdef __SYCL_DEVICE_ONLY__
-#define CL_CONSTANT __attribute__((opencl_constant))
-#else
-#define CL_CONSTANT
-#endif
-
-using namespace sycl;
-
-#define PRINTF(format, ...)                                    \
-  {                                                            \
-    static const CL_CONSTANT char _format[] = format;          \
-    ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
-  }
-
 // we only use unsigned ac_ints, so use this alias to avoid having to type
 // 'false' all the time
 template<int bits>
@@ -41,15 +27,8 @@ constexpr int kBitBufferMaxShiftBits = 30;
 using BitStreamT =
   ByteBitStream<kBitBufferBits, kBitBufferMaxReadBits, kBitBufferMaxShiftBits>;
 
-template<int bits> 
-void PrintUACInt(ac_uint<bits>& x) {
-  for (int i = bits-1; i >= 0; i--) {
-    PRINTF("%d", x[i] & 0x1);
-  }
-}
-
 //
-// TODO
+// Append a flag to a type 'T'
 //
 template<typename T>
 struct FlagBundle {
@@ -63,7 +42,7 @@ struct FlagBundle {
 };
 
 //
-// TODO
+// The data that comes out of the huffman decoder
 //
 struct HuffmanData {
   HuffmanData() : len_or_sym(0), dist_or_flag(0) {}
@@ -75,55 +54,30 @@ struct HuffmanData {
 };
 
 //
-// TODO
+// Holds a set (pack) of literals
 //
 template<int n>
 struct LiteralPack {
   static constexpr int count_bits = fpga_tools::Log2(n) + 1;
   unsigned char literal[n];
-  ac_uint<count_bits> valid_count;  // TODO: drop 1 bit here
+  ac_uint<count_bits> valid_count;
 };
 
 //
-// TODO
+// Returns the number of trailing zero bits of the input
 //
 template<int bits>
 auto ctz(const ac_uint<bits>& in) {
   constexpr int out_bits = fpga_tools::Log2(bits) + 1;
-  if constexpr (bits != 15) {
-    //ac_uint<out_bits> ret(bits);
-    ac_uint<out_bits> ret;
-    #pragma unroll
-    for (int i = bits - 1; i >= 0; i--) {
-      if (in[i]) {
-        ret = i;
-      }
+  //ac_uint<out_bits> ret(bits);
+  ac_uint<out_bits> ret;
+  #pragma unroll
+  for (int i = bits - 1; i >= 0; i--) {
+    if (in[i]) {
+      ret = i;
     }
-    return ret;
-  } else {
-    ac_uint<bits + 1> in_padded(0);
-    in_padded.template set_slc(0, in);
-
-    ac_uint<8> low_8 = in_padded.template slc<8>(0);
-    ac_uint<1> res3 = (low_8 == 0) ? 1 : 0;
-    ac_uint<8> val8 = (res3 == 1) ? in_padded.template slc<8>(8) : in_padded.template slc<8>(0);
-    ac_uint<4> low_4 = val8.template slc<4>(0);
-    ac_uint<1> res2 = (low_4 == 0) ? 1 : 0;
-    ac_uint<4> val4 = (res2 == 1) ? val8.template slc<4>(4) : val8.template slc<4>(0);
-    ac_uint<2> low_2 = val4.template slc<2>(0);
-    ac_uint<1> res1 = (low_2 == 0) ? 1 : 0;
-    ac_uint<2> val2 = (res1 == 1) ? val4.template slc<2>(2) : val4.template slc<2>(0);
-    ac_uint<1> low_1 = val2.template slc<1>(0);
-    ac_uint<1> res0 = (low_1 == 0) ? 1 : 0;
-
-    ac_uint<5> res(0);
-    res[4] = 0;
-    res[3] = res3;
-    res[2] = res2;
-    res[1] = res1;
-    res[0] = res0;
-    return res;
   }
+  return ret;
 }
 
 class HeaderKernelID;
@@ -444,7 +398,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
 
       // read the first three bits
       ac_uint<3> first_three_bits = bbs.ReadUInt<3>();
-      bbs.Shift<3>();
+      bbs.Shift(3);
 
       // first bit indicates whether this is the last block
       last_block = (first_three_bits.slc<1>(0) == 1);
@@ -459,10 +413,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       bool is_static_huffman_block = (type == 1);
       bool is_dynamic_huffman_block = (type == 2);
 
-      // if this is an uncompressed block, skip the remaining bits in the first
-      // byte to get back to byte aligned (we read 3, so skip 5)
+      // if this is an uncompressed block, we must realign to a byte boundary
       if (is_uncompressed_block) {
-        bbs.Shift<5>();
+        bbs.AlignToByteBoundary();
       }
 
       // only parse the first table for dynamically compressed blocks
@@ -494,19 +447,19 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         if (bbs.Size() >= 5) {
           if (first_table_state == 0) {
             numlitlencodes = bbs.ReadUInt(5) + ac_uint<9>(257);
-            bbs.Shift<5>();
+            bbs.Shift(5);
             first_table_state = 1;
           } else if (first_table_state == 1) {
             numdistcodes = bbs.ReadUInt(5) + ac_uint<1>(1);
-            bbs.Shift<5>();
+            bbs.Shift(5);
             first_table_state = 2;
           } else if (first_table_state == 2) {
             numcodelencodes = bbs.ReadUInt(4) + ac_uint<3>(4);
-            bbs.Shift<4>();
+            bbs.Shift(4);
             first_table_state = 3;
           } else if (codelencodelen_count < numcodelencodes) {
             auto tmp = bbs.ReadUInt(3);
-            bbs.Shift<3>();
+            bbs.Shift(3);
             codelencodelen[codelencodelen_idxs[codelencodelen_count]] = tmp;
             codelencodelen_count++;
             parsing_first_table = (codelencodelen_count != numcodelencodes);
@@ -802,6 +755,9 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       ac_uint<5> dist_symbol;
 
       // main processing loop
+      // the II of this main loop can be controlled from the command line using
+      // the -DHUFFMAN_MAIN_LOOP_II=<desired II>. By default, we let the
+      // the compiler choose the Fmax/II to maximize throughput
 #ifdef HUFFMAN_MAIN_LOOP_II
       [[intel::initiation_interval(HUFFMAN_MAIN_LOOP_II)]]
 #endif
@@ -820,6 +776,8 @@ event SubmitHuffmanDecoderKernel(queue& q) {
         }
         
         if (is_uncompressed_block) {
+          // for uncompressed blocks, simply read an 8-bit character from the
+          // stream and write it to the output
           if (bbs.Size() >= 8) {
             ac_uint<8> byte = bbs.ReadUInt<8>();
             out_data.len_or_sym = byte;
@@ -864,14 +822,19 @@ event SubmitHuffmanDecoderKernel(queue& q) {
           ac_uint<15> lit_codelen_valid_bitmap(0), dist_codelen_valid_bitmap(0);
           ac_uint<9> lit_codelen_offset[15], lit_codelen_base_idx[15];
           ac_uint<5> dist_codelen_offset[15], dist_codelen_base_idx[15];
+
           #pragma unroll
           for (unsigned char codelen = 1; codelen <= 15; codelen++) {
-            ac_uint<15> codebits_tmp(0);
+            // NOTE: could use fpga_tools::UnrolledLoop so that we don't need to
+            // use the maximum codelen.
+            // Blocking cases:
+            //    https://hsdes.intel.com/appstore/article/#/14015701865
+            //    https://hsdes.intel.com/appstore/article/#/14015701865
+            ac_uint<15> codebits(0);
             #pragma unroll
             for (unsigned char bit = 0; bit < codelen; bit++) {
-              codebits_tmp[codelen - bit - 1] = next_bits[bit] & 0x1;
+              codebits[codelen - bit - 1] = next_bits[bit];
             }
-            unsigned short codebits = codebits_tmp;
 
             auto lit_base_idx = lit_map_base_idx[codelen - 1];
             auto lit_first_code = lit_map_first_code[codelen - 1];
@@ -879,12 +842,16 @@ event SubmitHuffmanDecoderKernel(queue& q) {
             auto dist_base_idx = dist_map_base_idx[codelen - 1];
             auto dist_first_code = dist_map_first_code[codelen - 1];
             auto dist_last_code = dist_map_last_code[codelen - 1];
-            
-            lit_codelen_valid_bitmap[codelen - 1] = ((codebits >= lit_first_code) && (codebits < lit_last_code)) ? 1 : 0;
+
+            lit_codelen_valid_bitmap[codelen - 1]
+                = ((codebits >= lit_first_code) &&
+                   (codebits < lit_last_code)) ? 1 : 0; 
             lit_codelen_base_idx[codelen - 1] = lit_base_idx;
             lit_codelen_offset[codelen - 1] = codebits - lit_first_code;
 
-            dist_codelen_valid_bitmap[codelen - 1] = ((codebits >= dist_first_code) && (codebits < dist_last_code)) ? 1 : 0;
+            dist_codelen_valid_bitmap[codelen - 1] =
+                ((codebits >= dist_first_code) &&
+                 (codebits < dist_last_code)) ? 1 : 0;
             dist_codelen_base_idx[codelen - 1] = dist_base_idx;
             dist_codelen_offset[codelen - 1] = codebits - dist_first_code;
           }
@@ -972,7 +939,7 @@ event SubmitHuffmanDecoderKernel(queue& q) {
       } while (!stop_code_hit);
     } while (!last_block);
 
-    // notify downstream that we are done
+    // notify the downstream kernel that we are done
     OutPipe::write(OutPipeBundleT(true));
 
     // read out the remaining data from the pipe

@@ -7,22 +7,8 @@
 
 #include "mp_math.hpp"
 
-#ifdef __SYCL_DEVICE_ONLY__
-#define CL_CONSTANT __attribute__((opencl_constant))
-#else
-#define CL_CONSTANT
-#endif
-
-using namespace sycl;
-
-#define PRINTF(format, ...)                                    \
-  {                                                            \
-    static const CL_CONSTANT char _format[] = format;          \
-    ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
-  }
-
 //
-// TODO
+// A stream of bits that is filled with a byte at a time
 //
 template<int bits, int max_dynamic_read_bits, int max_shift_bits>
 class ByteBitStream {
@@ -42,7 +28,8 @@ class ByteBitStream {
   using ShiftCountT = ac_int<shift_count_bits, false>;
 
 public:
-  ByteBitStream() : buf_(0), size_(0), space_(bits), has_space_for_byte_(true) {}
+  ByteBitStream() : buf_(0), size_(0), space_(bits),
+                    has_space_for_byte_(true) {}
 
   auto ReadUInt(ReadCountT read_bits) {
     ac_int<max_dynamic_read_bits, false> mask = (1 << read_bits) - 1;
@@ -62,12 +49,12 @@ public:
     has_space_for_byte_ = space_ >= 8;
   }
 
-  template<unsigned shift_bits>
-  void Shift() {
-    buf_ >>= shift_bits;
-    size_ -= decltype(size_)(shift_bits);
-    space_ += decltype(space_)(shift_bits);;
-    has_space_for_byte_ = space_ >= 8;
+  void AlignToByteBoundary() {
+    ac_int<3, false> pos_in_byte = size_.template slc<3>(0);
+    if (pos_in_byte != 0) {
+      ac_int<3, false> bits_to_drop = ac_int<3, false>(7) - pos_in_byte;
+      Shift(bits_to_drop);
+    }
   }
 
   auto Size() { return size_; }
