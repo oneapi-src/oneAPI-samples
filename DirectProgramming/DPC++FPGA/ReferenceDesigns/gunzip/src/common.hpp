@@ -49,21 +49,31 @@ struct LiteralPack {
 };
 
 //
-// Returns the number of trailing zero bits of the input
+// returns the number of trailing zeros
 //
-template<int bits>
-auto ctz(const ac_uint<bits>& in) {
+template<int bits, bool add_one = false>
+auto CTZ(const ac_uint<bits>& in) {
   constexpr int out_bits = fpga_tools::Log2(bits) + 1;
   //ac_uint<out_bits> ret(bits);
   ac_uint<out_bits> ret;
   #pragma unroll
   for (int i = bits - 1; i >= 0; i--) {
     if (in[i]) {
-      ret = i;
+      if constexpr (!add_one) {
+        ret = i;
+      } else {
+        ret = i + 1;
+      }
     }
   }
   return ret;
 }
+
+//
+// returns the number of trailing zeros plus 1
+//
+template<int bits>
+auto CTZPlus1(const ac_uint<bits>& in) { return CTZ<bits, true>(in); }
 
 //
 // Selects a SYCL device using a string. This is typically used to select

@@ -268,9 +268,10 @@ void HuffmanDecoder() {
           }
 
           // find the shortest matching code symbol
-          ac_uint<3> shortest_match_len = ctz(codelencode_valid_bitmap) + 1;
-          ac_uint<5> base_idx = codelencode_base_idx[shortest_match_len - 1];
-          ac_uint<5> offset = codelencode_offset[shortest_match_len - 1];
+          ac_uint<3> shortest_match_len = CTZPlus1(codelencode_valid_bitmap);
+          ac_uint<3> shortest_match_len_idx = CTZ(codelencode_valid_bitmap);
+          ac_uint<5> base_idx = codelencode_base_idx[shortest_match_len_idx];
+          ac_uint<5> offset = codelencode_offset[shortest_match_len_idx];
 
           // get the decoded symbol
           auto symbol = codelencode_map[base_idx + offset];
@@ -293,19 +294,19 @@ void HuffmanDecoder() {
             shift_amount = shortest_match_len;
           } else if (symbol == 16) {
             // READ 2-BIT RUN LENGTH, ADD 3, AND EXTEND LAST ELEMENT
-            runlen = extra_bit_vals[shortest_match_len - 1][0] + 3;
+            runlen = extra_bit_vals[shortest_match_len_idx][0] + 3;
             decoding_next_symbol = false;
             extend_symbol = codelens[codelens_idx-1];
             shift_amount = shortest_match_len + 2;
           } else if (symbol == 17) {
             // READ 3-BIT RUN LENGTH, ADD 3, AND EXTEND WITH 0's
-            runlen = extra_bit_vals[shortest_match_len - 1][1] + 3;
+            runlen = extra_bit_vals[shortest_match_len_idx][1] + 3;
             decoding_next_symbol = false;
             extend_symbol = 0;
             shift_amount = shortest_match_len + 3;
           } else if (symbol == 18) {
             // READ 7-BIT RUN LENGTH, ADD 11, AND EXTEND WITH 0's
-            runlen = extra_bit_vals[shortest_match_len - 1][2] + 11;
+            runlen = extra_bit_vals[shortest_match_len_idx][2] + 11;
             decoding_next_symbol = false;
             extend_symbol = 0;
             shift_amount = shortest_match_len + 7;
@@ -487,6 +488,8 @@ void HuffmanDecoder() {
             codebits[codelen - bit - 1] = next_bits[bit];
           }
 
+          // for this code length, get the base index, first valid code, and
+          // last valid code for both the literal and distance table
           auto lit_base_idx = lit_map_base_idx[codelen - 1];
           auto lit_first_code = lit_map_first_code[codelen - 1];
           auto lit_last_code = lit_map_last_code[codelen - 1];
@@ -494,28 +497,32 @@ void HuffmanDecoder() {
           auto dist_first_code = dist_map_first_code[codelen - 1];
           auto dist_last_code = dist_map_last_code[codelen - 1];
 
+          // checking a literal match
           lit_codelen_valid_bitmap[codelen - 1]
               = ((codebits >= lit_first_code) &&
-                  (codebits < lit_last_code)) ? 1 : 0; 
+                 (codebits < lit_last_code)) ? 1 : 0; 
           lit_codelen_base_idx[codelen - 1] = lit_base_idx;
           lit_codelen_offset[codelen - 1] = codebits - lit_first_code;
 
+          // checking a distance match
           dist_codelen_valid_bitmap[codelen - 1] =
               ((codebits >= dist_first_code) &&
-                (codebits < dist_last_code)) ? 1 : 0;
+               (codebits < dist_last_code)) ? 1 : 0;
           dist_codelen_base_idx[codelen - 1] = dist_base_idx;
           dist_codelen_offset[codelen - 1] = codebits - dist_first_code;
         }
 
         // find the shortest matching length, which is the next decoded symbol
-        auto lit_shortest_match_len = ctz(lit_codelen_valid_bitmap) + 1;
-        auto dist_shortest_match_len = ctz(dist_codelen_valid_bitmap) + 1;
+        ac_uint<4> lit_shortest_match_len = CTZPlus1(lit_codelen_valid_bitmap);
+        ac_uint<4> lit_shortest_match_len_idx = CTZ(lit_codelen_valid_bitmap);
+        ac_uint<4> dist_shortest_match_len = CTZPlus1(dist_codelen_valid_bitmap);
+        ac_uint<4> dist_shortest_match_len_idx = CTZ(dist_codelen_valid_bitmap);
 
         // get the base index and offset based on the shortest match length
-        auto lit_base_idx = lit_codelen_base_idx[lit_shortest_match_len - 1];
-        auto lit_offset = lit_codelen_offset[lit_shortest_match_len - 1];
-        auto dist_base_idx = dist_codelen_base_idx[dist_shortest_match_len - 1];
-        auto dist_offset = dist_codelen_offset[dist_shortest_match_len - 1];
+        auto lit_base_idx = lit_codelen_base_idx[lit_shortest_match_len_idx];
+        auto lit_offset = lit_codelen_offset[lit_shortest_match_len_idx];
+        auto dist_base_idx = dist_codelen_base_idx[dist_shortest_match_len_idx];
+        auto dist_offset = dist_codelen_offset[dist_shortest_match_len_idx];
         ac_uint<9> lit_idx = lit_base_idx + lit_offset;
         ac_uint<9> dist_idx = dist_base_idx + dist_offset;
 
@@ -525,7 +532,7 @@ void HuffmanDecoder() {
 
         // we will either shift by shortest_match_len or by
         // shortest_match_len + num_extra_bits based on whether we read a
-        // length, distance and/or its extra bits.
+        // length, distance and/or extra bits.
         // maximum value for shift_amount = 15 + 15 = 30
         ac_uint<5> shift_amount;
 
@@ -550,7 +557,7 @@ void HuffmanDecoder() {
             ac_int<5> lit_symbol_small = lit_symbol.template slc<5>(0);
             // (lit_symbol - 261) / 4
             ac_uint<3> num_extra_bits = (lit_symbol_small - ac_uint<5>(5)) >> 2;  
-            auto extra_bits_val = lit_extra_bit_vals[lit_shortest_match_len - 1][num_extra_bits - 1];
+            auto extra_bits_val = lit_extra_bit_vals[lit_shortest_match_len_idx][num_extra_bits - 1];
             // ((((lit_symbol - 265) % 4) + 4) << num_extra_bits) + ac_uint<2>(3) + extra_bits_val
             out_data.len_or_sym = ((((lit_symbol_small - ac_uint<5>(9)) & 0x3) + ac_uint<3>(4)) << num_extra_bits) + ac_uint<2>(3) + extra_bits_val;
             shift_amount = lit_shortest_match_len + num_extra_bits;
@@ -570,7 +577,7 @@ void HuffmanDecoder() {
             // decoded a distance with a dynamic value
             // NOTE: should be <= 29, but not doing error checking
             ac_uint<4> num_extra_bits = (dist_symbol >> 1) - ac_uint<1>(1);
-            auto extra_bits_val = dist_extra_bit_vals[dist_shortest_match_len - 1][num_extra_bits - 1];
+            auto extra_bits_val = dist_extra_bit_vals[dist_shortest_match_len_idx][num_extra_bits - 1];
             out_data.dist_or_flag = (((dist_symbol & 0x1) + ac_uint<2>(2)) << num_extra_bits) + ac_uint<1>(1) + extra_bits_val;
             shift_amount = dist_shortest_match_len + num_extra_bits;
           }

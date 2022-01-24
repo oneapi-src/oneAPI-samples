@@ -5,11 +5,17 @@
 #include <iostream>
 #include <string>
 
+//
+// States for parsing the GZIP header
+//
 enum GzipHeaderState {
   MagicNumber, CompressionMethod, Flags, Time, ExtraFlags, OS, Errata, Filename,
   CRC, Comment, SteadyState
 };
 
+//
+// Stores the GZIP header data
+//
 struct GzipHeaderData {
   GzipHeaderData() {
     magic[0] = 0;
@@ -26,12 +32,50 @@ struct GzipHeaderData {
     crc[1] = 0;
   }
 
-  unsigned short GetMagicHeader() {
+  unsigned short MagicNumber() const {
     return ((unsigned short)(magic[0]) << 8) | (unsigned short)(magic[1]);
   }
 
-  unsigned short GetCRC() {
+  unsigned short CRC() const {
     return ((unsigned short)(crc[0]) << 8) | (unsigned short)(crc[1]);
+  }
+
+  unsigned int Time() const {
+    unsigned int time_u = 0;
+    for (int i = 0; i < 4; i++) {
+      time_u |= ((unsigned int)(time[i]) << (8 * i));
+    }
+    return time_u;
+  }
+
+  std::string Filename() const {
+    std::string ret;
+    int i = 0;
+    while (i < 256 && filename[i] != '\0') {
+      ret.push_back(filename[i]);
+      i++;
+    }
+    return ret;
+  }
+
+  std::string OS() const {
+    switch (os) {
+      case 0:   return "FAT";
+      case 1:   return "Amiga";
+      case 2:   return "VMS";
+      case 3:   return "Unix";
+      case 4:   return "VM/CMS";
+      case 5:   return "Atari TOS";
+      case 6:   return "HPFS";
+      case 7:   return "Macintosh";
+      case 8:   return "Z-System";
+      case 9:   return "CP/M";
+      case 10:  return "TOPS-20";
+      case 11:  return "NTFS";
+      case 12:  return "Acorn RISCOS";
+      case 13:  return "FAT";
+      default:  return "Unknown";
+    }
   }
 
   unsigned char magic[2];
@@ -49,8 +93,7 @@ std::ostream& operator<<(std::ostream& os, const GzipHeaderData& hdr_data) {
   // magic number
   save_flags = os.flags();
   os << std::hex << std::setw(4) << std::setfill('0') << "Magic Number: 0x"
-     << (unsigned int)hdr_data.magic[0] << (unsigned int)hdr_data.magic[1]
-     << "\n";
+     << hdr_data.MagicNumber() << "\n";
   os.flags(save_flags);
   // compression method
   os << "Compression method: "
@@ -60,47 +103,20 @@ std::ostream& operator<<(std::ostream& os, const GzipHeaderData& hdr_data) {
   os << std::hex << std::setw(4) << std::setfill('0') << "Flags: 0x"
      << (unsigned short)(hdr_data.flags) << "\n";
   os.flags(save_flags);
+
   // time
-  // TODO: print better
-  unsigned int time = 0;
-  for (int i = 0; i < 4; i++) {
-    time |= ((unsigned int)(hdr_data.time[i]) << (8 * i));
-  }
-  os << "Time: " << time << "\n";
+  os << "Time: " << hdr_data.Time() << "\n";
+
   // OS
-  std::string os_str;
-  switch (hdr_data.os) {
-    case 0:   os_str = "FAT"; break;
-    case 1:   os_str = "Amiga"; break;
-    case 2:   os_str = "VMS"; break;
-    case 3:   os_str = "Unix"; break;
-    case 4:   os_str = "VM/CMS"; break;
-    case 5:   os_str = "Atari TOS"; break;
-    case 6:   os_str = "HPFS"; break;
-    case 7:   os_str = "Macintosh"; break;
-    case 8:   os_str = "Z-System"; break;
-    case 9:   os_str = "CP/M"; break;
-    case 10:  os_str = "TOPS-20"; break;
-    case 11:  os_str = "NTFS"; break;
-    case 12:  os_str = "Acorn RISCOS"; break;
-    case 13:  os_str = "FAT"; break;
-    default:  os_str = "Unknown"; break;
-  }
-  os << "OS: " << os_str << "\n";
+  os << "OS: " << hdr_data.OS() << "\n";
+
   // filename
-  os << "Filename: ";
-  char c = hdr_data.filename[0];
-  int i = 1;
-  while (c != '\0') {
-    os << c;
-    c = hdr_data.filename[i++];
-  }
-  os << "\n";
+  os << "Filename: " << hdr_data.Filename() << "\n";
+
   // CRC
-  unsigned short crc = ((unsigned short)(hdr_data.crc[0]) << 8) |
-                       (unsigned short)(hdr_data.crc[1]);
   os << std::hex << std::setw(4) << std::setfill('0') << "CRC: 0x"
-     << crc << "\n";
+     << hdr_data.CRC() << "\n";
+
   os.flags(save_flags);
   
   // ensure we restore flags

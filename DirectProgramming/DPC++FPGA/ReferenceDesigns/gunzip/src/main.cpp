@@ -172,7 +172,8 @@ int main(int argc, char* argv[]) {
 
       // run the producer and consumer kernels
       auto producer_event = SubmitProducer(q, in_count, in);
-      auto consumer_event = SubmitConsumer(q, out_count_padded, out, inflated_count);
+      auto consumer_event =
+          SubmitConsumer(q, out_count_padded, out, inflated_count);
 
       // run the decompression kernels
       auto gzip_decompress_events = SubmitGzipDecompressKernels<InPipe, OutPipe, kLiteralsPerCycle>(q, in_count, hdr_data, crc, count);
@@ -200,11 +201,11 @@ int main(int argc, char* argv[]) {
 
       // validating the output
       // check the magic header we read
-      if (hdr_data_host.GetMagicHeader() != 0x1f8b) {
+      if (hdr_data_host.MagicNumber() != 0x1f8b) {
         auto save_flags = std::cerr.flags();
         std::cerr << "ERROR: Incorrect magic header value of 0x"
                   << std::hex << std::setw(4) << std::setfill('0')
-                  << hdr_data_host.GetMagicHeader() << " (should be 0x1f8b)\n";
+                  << hdr_data_host.MagicNumber() << " (should be 0x1f8b)\n";
         std::cerr.flags(save_flags);
         passed = false;
       }
@@ -232,7 +233,7 @@ int main(int argc, char* argv[]) {
         auto save_flags = std::cout.flags();
         std::cerr << std::hex << std::setw(4) << std::setfill('0');
         std::cerr << "ERROR: output data CRC does not match the expected CRC "
-                  << "0x" << count_host << " != 0x" << out_count
+                  << "0x" << crc_host << " != 0x" << crc32_exp
                   << " (result != expected)\n";
         std::cout.flags(save_flags);
         passed = false;
@@ -246,6 +247,10 @@ int main(int argc, char* argv[]) {
   // free the allocated device memory
   sycl::free(in, q);
   sycl::free(out, q);
+  sycl::free(inflated_count, q);
+  sycl::free(hdr_data, q);
+  sycl::free(crc, q);
+  sycl::free(count, q);
 
   // write output file
   std::cout << std::endl;
@@ -352,6 +357,8 @@ std::vector<unsigned char> ReadInputFile(std::string filename) {
   while (fin.get(tmp)) {
     result.push_back(tmp);
   }
+  fin.close();
+  
   return result;
 }
 

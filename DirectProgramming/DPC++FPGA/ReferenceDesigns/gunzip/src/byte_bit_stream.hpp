@@ -17,8 +17,7 @@ class ByteBitStream {
   static_assert(max_dynamic_read_bits <= bits);
   static_assert(max_shift_bits > 0);
   static_assert(max_shift_bits <= bits);
-
-  using BufferT = ac_int<bits, false>;
+  
   static constexpr int count_bits = fpga_tools::Log2(bits) + 1;
   using CountT = ac_int<count_bits, false>;
   static constexpr int dynamic_read_count_bits =
@@ -73,7 +72,8 @@ public:
   }
 
 private:
-  BufferT buf_;
+
+  ac_int<bits, false> buf_;
   CountT size_, space_;
   bool has_space_for_byte_;
 };
