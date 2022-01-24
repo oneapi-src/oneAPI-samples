@@ -57,7 +57,7 @@ void QRDecompositionImpl(
   // Pipes to communicate the A, Q and R matrices between kernels
   using a_matrix_pipe = sycl::ext::intel::pipe<class APipe, pipe_type, 3>;
   using q_matrix_pipe = sycl::ext::intel::pipe<class QPipe, pipe_type, 3>;
-  using r_matrix_pipe = sycl::ext::intel::pipe<class RPipe, TT, 3>;
+  using r_matrix_pipe = sycl::ext::intel::pipe<class RPipe, pipe_type, 3>;
 
   // We will process 'matrices_per_iter' number of matrices in each run of the
   // kernel
@@ -125,33 +125,8 @@ void QRDecompositionImpl(
                                           ]() [[intel::kernel_args_restrict]] {
           // Read the R matrix from the r_matrix_pipe pipe and copy it to the
           // FPGA DDR
-          // Number of DDR burst of kNumElementsPerDDRBurst required to write
-          // one vector
-          constexpr int kLoopIter = (kRMatrixSize / kNumElementsPerDDRBurst);
-
-          sycl::device_ptr<TT> vector_ptr_device(current_r_buffer);
-
-          for(int vector_number = 0; vector_number < matrices_per_iter; 
-              vector_number++){
-            [[intel::private_copies(4)]] // NO-FORMAT: Attribute
-            TT r_result[kRMatrixSize];
-
-            for(int vector_elem = 0; vector_elem < kRMatrixSize; vector_elem++){
-              r_result[vector_elem] = r_matrix_pipe::read();
-            }
-
-            [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-            for (int li = 0; li < kLoopIter; li++) {
-
-// Write a burst of kNumElementsPerDDRBurst elements to DDR
-#pragma unroll
-              for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-                *(vector_ptr_device + li * kNumElementsPerDDRBurst + k + 
-                  vector_number * kRMatrixSize) =
-                    r_result[li * kNumElementsPerDDRBurst + k];
-              }
-            }  // end of li
-          }
+          VectorReadPipeToDDR<TT, kRMatrixSize, kNumElementsPerDDRBurst,
+                            matrices_per_iter, r_matrix_pipe>(current_r_buffer);
       });
 
       r_event.wait();

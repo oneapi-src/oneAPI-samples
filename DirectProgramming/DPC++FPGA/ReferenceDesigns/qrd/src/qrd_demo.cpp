@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
   size_t matrices = argc > 1 ? atoi(argv[1]) : 3;
 #else
-  size_t matrices = argc > 1 ? atoi(argv[1]) : 2048;
+  size_t matrices = argc > 1 ? atoi(argv[1]) : 6144;
 #endif
   if (matrices < 1) {
     std::cout << "Must run at least 1 matrix" << std::endl;
