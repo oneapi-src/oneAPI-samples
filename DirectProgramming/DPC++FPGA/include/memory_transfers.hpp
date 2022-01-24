@@ -214,43 +214,4 @@ void MatrixReadPipeToDDR(
   }  // end of li
 }
 
-/*
-  Read "vector_count" vectors of type TT from a pipe, one element at the time
-  and write them to DDR by bursts of num_elem_per_bank elements.
-*/
-template <typename TT,           // Datatype of the elements of the matrix
-          int size,              // Number of elements in the vector
-          int num_elem_per_bank, // Number of TT elements per DDR burst access
-          int vector_count,      // Number of vectors to read from the buffer
-          typename vectorPipe    // Input vector pipe
-          >
-void VectorReadPipeToDDR(TT* vector_ptr  // Output vector buffer
-                        ) {
-  // Number of DDR burst of num_elem_per_bank required to write one vector
-  constexpr int kLoopIter = (size / num_elem_per_bank);
-
-  sycl::device_ptr<TT> vector_ptr_device(vector_ptr);
-
-  for(int vector_number = 0; vector_number < vector_count; vector_number++){
-    [[intel::private_copies(4)]] // NO-FORMAT: Attribute
-    TT r_result[size];
-
-    for(int vector_elem = 0; vector_elem < size; vector_elem++){
-      r_result[vector_elem] = vectorPipe::read();
-    }
-
-    [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-    for (int li = 0; li < kLoopIter; li++) {
-
-// Write a burst of num_elem_per_bank elements to DDR
-#pragma unroll
-      for (int k = 0; k < num_elem_per_bank; k++) {
-        *(vector_ptr_device + li * num_elem_per_bank + k + vector_number * size) =
-            r_result[li * num_elem_per_bank + k];
-      }
-    }  // end of li
-  }
-
-}
-
 #endif /* __MEMORY_TRANSFERS_HPP__ */
