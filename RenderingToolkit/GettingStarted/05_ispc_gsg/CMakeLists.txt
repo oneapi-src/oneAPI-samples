@@ -42,8 +42,9 @@ set (OUTPUT_TARGET "${ISPC_IA_TARGETS}")
 list(APPEND ISPC_BUILD_OUTPUT ${ISPC_HEADER_NAME} ${ISPC_OBJ_NAME} )
 # ISPC command
 add_custom_command(OUTPUT ${ISPC_BUILD_OUTPUT}
+    COMMAND ${CMAKE_COMMAND} -E make_directory "include-single"
     COMMAND ${ISPC_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/src/simple.ispc ${ISPC_FLAGS} --target=${ISPC_IA_TARGETS} --arch=x86_64
-                                   -h ${ISPC_HEADER_NAME} -o ${ISPC_OBJ_NAME}
+                                   -h ${ISPC_HEADER_NAME} -o ${ISPC_OBJ_NAME} 
     VERBATIM
     DEPENDS ${ISPC_EXECUTABLE}
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/${ISPC_SRC_NAME}.ispc")
@@ -70,8 +71,9 @@ foreach(TARGET_TOKEN IN LISTS ISPC_IA_TARGETS)
 endforeach()
 
 add_custom_command(OUTPUT ${ISPC_MULTI_BUILD_OUTPUT}
+    COMMAND ${CMAKE_COMMAND} -E make_directory "include-multi"
     COMMAND ${ISPC_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/src/${ISPC_SRC_NAME}.ispc ${ISPC_FLAGS} --target=${ISPC_IA_TARGETS_MG} --arch=x86_64
-                                   -h ${ISPC_HEADER_NAME} -o ${ISPC_OBJ_NAME}
+                                   -h ${ISPC_HEADER_NAME} -o ${ISPC_OBJ_NAME} 
     VERBATIM
     DEPENDS ${ISPC_EXECUTABLE}
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/${ISPC_SRC_NAME}.ispc")
