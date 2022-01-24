@@ -80,11 +80,11 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
     Please find more information about the mkldnn log [here](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html).
 
-## Example of Output
-With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.
 
+### Example of Output
+With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.  
 
-## Running The Sample In DevCloud (Optional)
+### Running The Sample In DevCloud (Optional)
 
 Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/README.md#using-samples-in-intel-oneapi-devcloud) for general usage instructions.
 
@@ -99,3 +99,6 @@ cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelPyTorch_Gettin
 ./q ./run.sh
 ```
 > the run.sh contains all the instructions needed to run this "TensorFlow_HelloWorld" workload
+
+### Build and run additional samples
+Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.

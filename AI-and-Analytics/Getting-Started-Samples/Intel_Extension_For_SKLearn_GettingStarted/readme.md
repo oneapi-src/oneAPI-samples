@@ -130,4 +130,5 @@ Model accuracy on test data: 0.9833333333333333
 
 [CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 
-
+### Build and run additional samples
+Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
