@@ -1,17 +1,17 @@
-#ifndef __HEADERDATA_HPP__
-#define __HEADERDATA_HPP__
+#ifndef __GZIP_HEADER_DATA_HPP__
+#define __GZIP_HEADER_DATA_HPP__
 
 #include <iomanip>
 #include <iostream>
 #include <string>
 
-enum HeaderState {
+enum GzipHeaderState {
   MagicNumber, CompressionMethod, Flags, Time, ExtraFlags, OS, Errata, Filename,
   CRC, Comment, SteadyState
 };
 
-struct HeaderData {
-  HeaderData() {
+struct GzipHeaderData {
+  GzipHeaderData() {
     magic[0] = 0;
     magic[1] = 0;
     compression_method = 0;
@@ -25,6 +25,15 @@ struct HeaderData {
     crc[0] = 0;
     crc[1] = 0;
   }
+
+  unsigned short GetMagicHeader() {
+    return ((unsigned short)(magic[0]) << 8) | (unsigned short)(magic[1]);
+  }
+
+  unsigned short GetCRC() {
+    return ((unsigned short)(crc[0]) << 8) | (unsigned short)(crc[1]);
+  }
+
   unsigned char magic[2];
   unsigned char compression_method;
   unsigned char flags;
@@ -34,7 +43,7 @@ struct HeaderData {
   unsigned char crc[2];
 };
 
-std::ostream& operator<<(std::ostream& os, const HeaderData& hdr_data) {
+std::ostream& operator<<(std::ostream& os, const GzipHeaderData& hdr_data) {
   std::ios_base::fmtflags save_flags;
   os << "Header Data\n";
   // magic number
@@ -99,4 +108,4 @@ std::ostream& operator<<(std::ostream& os, const HeaderData& hdr_data) {
   return os;
 }
 
-#endif // __HEADERDATA_HPP__
+#endif // __GZIP_HEADER_DATA_HPP__

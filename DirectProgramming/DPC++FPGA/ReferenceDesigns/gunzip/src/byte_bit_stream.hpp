@@ -1,5 +1,5 @@
-#ifndef __BYTEBITSTREAM_HPP__
-#define __BYTEBITSTREAM_HPP__
+#ifndef __BYTE_BIT_STREAM_HPP__
+#define __BYTE_BIT_STREAM_HPP__
 
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
@@ -78,4 +78,4 @@ private:
   bool has_space_for_byte_;
 };
 
-#endif // __BYTEBITSTREAM_HPP__
+#endif // __BYTE_BIT_STREAM_HPP__

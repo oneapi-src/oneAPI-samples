@@ -14,77 +14,57 @@
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-#ifndef LITERALS_PER_CYCLE
-#define LITERALS_PER_CYCLE 2
-#endif
-
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-#include "ByteHistory.hpp"
-#include "Decompressor.hpp"
-#include "HeaderData.hpp"
+#include "common.hpp"
+#include "gzip_decompressor.hpp"
+#include "gzip_header_data.hpp"
 #include "mp_math.hpp"
+#include "simple_crc32.hpp"
 
 using namespace sycl;
 using namespace std::chrono;
 
+// the number of literals to process per cycle can be set from the command line
+// use the macro -DLITERALS_PER_CYCLE=<literals_per_cycle>
+#ifndef LITERALS_PER_CYCLE
+#define LITERALS_PER_CYCLE 2
+#endif
 constexpr unsigned kLiteralsPerCycle = LITERALS_PER_CYCLE;
 static_assert(fpga_tools::IsPow2(kLiteralsPerCycle));
 
-#ifdef __SYCL_DEVICE_ONLY__
-#define CL_CONSTANT __attribute__((opencl_constant))
-#else
-#define CL_CONSTANT
-#endif
-
-using namespace sycl;
-
-#define PRINTF(format, ...)                                    \
-  {                                                            \
-    static const CL_CONSTANT char _format[] = format;          \
-    ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
-  }
-
+// declare the kernel and pipe names globally to reduce name mangling
 class ProducerID;
 class ConsumerID;
 class InPipeID;
 class OutPipeID;
 
 using InPipe = ext::intel::pipe<InPipeID, char>;
-using OutPipe = ext::intel::pipe<OutPipeID, FlagBundle<LiteralPack<kLiteralsPerCycle>>>;
+using OutPipe =
+    ext::intel::pipe<OutPipeID, FlagBundle<LiteralPack<kLiteralsPerCycle>>>;
 
 ////////////////////////////////////////////////////////////////////////////////
-event SubmitProducer(queue&, unsigned char*, int);
-event SubmitConsumer(queue&, unsigned char*, int*);
+void PrintUsage(std::string);
+event SubmitProducer(queue&, int, unsigned char*);
+event SubmitConsumer(queue&, int, unsigned char*, int*);
 std::vector<unsigned char> ReadInputFile(std::string filename);
 void WriteOutputFile(std::string, std::vector<unsigned char>&);
 ////////////////////////////////////////////////////////////////////////////////
 
-class select_by_string : public sycl::default_selector {
-public:
-  select_by_string(std::string s) : target_name(s) {}
-  virtual int operator()(const sycl::device &device) const {
-    std::string name = device.get_info<sycl::info::device::name>();
-    if (name.find(target_name) != std::string::npos) {
-      // The returned value represents a priority, this number is chosen to be
-      // large to ensure high priority
-      return 10000;
-    }
-    return -1;
-  }
- 
-private:
-  std::string target_name;
-};
-
 int main(int argc, char* argv[]) {
+  // make sure we have an acceptable number of arguments
+  if (argc < 3) {
+    PrintUsage(argv[0]);
+    return 1;
+  }
+
   bool passed = true;
 
   // reading and validating the command line arguments
-  std::string in_filename = "../data/in.gz";
-  std::string out_filename = "../data/out";
+  std::string in_filename;
+  std::string out_filename;
   
 #ifdef FPGA_EMULATOR
   int runs = 2;
@@ -141,7 +121,7 @@ int main(int argc, char* argv[]) {
 
   // host variables for output from device
   int inflated_count_host = 0;
-  HeaderData hdr_data_host;
+  GzipHeaderData hdr_data_host;
   unsigned int crc_host, count_host;
 
   // track timing information in ms
@@ -150,7 +130,7 @@ int main(int argc, char* argv[]) {
   // input and output data pointers on the device using USM device allocations
   unsigned char *in, *out;
   int *inflated_count ;
-  HeaderData *hdr_data;
+  GzipHeaderData *hdr_data;
   int *crc;
   int *count;
 
@@ -168,7 +148,7 @@ int main(int argc, char* argv[]) {
       std::cerr << "ERROR: could not allocate space for 'inflated_count'\n";
       std::terminate();
     }
-    if ((hdr_data = malloc_device<HeaderData>(1, q)) == nullptr) {
+    if ((hdr_data = malloc_device<GzipHeaderData>(1, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'hdr_data'\n";
       std::terminate();
     }
@@ -184,31 +164,29 @@ int main(int argc, char* argv[]) {
     // copy the input data to the device memory and wait for the copy to finish
     q.memcpy(in, in_bytes.data(), in_count * sizeof(unsigned char)).wait();
 
+    std::cout << "Decompressing '" << in_filename << "' " << runs << " times"
+              << std::endl;
     // run the design multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
+      std::cout << "Launching kernels for run " << i << std::endl;
+
       // run the producer and consumer kernels
-      std::cout << "Launching Producer and Consumer kernels" << std::endl;
-      auto producer_event = SubmitProducer(q, in, in_count);
-      auto consumer_event = SubmitConsumer(q, out, inflated_count);
+      auto producer_event = SubmitProducer(q, in_count, in);
+      auto consumer_event = SubmitConsumer(q, out_count_padded, out, inflated_count);
 
       // run the decompression kernels
-      std::cout << "Launching gzip kernels\n";
-      auto decompress_events = SubmitDecompressKernels<InPipe, OutPipe, kLiteralsPerCycle>(q, in_count, hdr_data, crc, count);
+      auto gzip_decompress_events = SubmitGzipDecompressKernels<InPipe, OutPipe, kLiteralsPerCycle>(q, in_count, hdr_data, crc, count);
 
       // wait for the producer and consumer to finish
-      std::cout << "Waiting on producer and consumer kernels" << std::endl;
       auto start = high_resolution_clock::now();
       producer_event.wait();
       consumer_event.wait();
       auto end = high_resolution_clock::now();
 
       // wait for the decompression kernels to finish
-      std::cout << "Waiting on decompress kernels" << std::endl;
-      for (auto& e : decompress_events) {
-        e.wait();
-      }
+      for (auto& e : gzip_decompress_events) { e.wait(); }
 
-      std::cout << "Done waiting" << std::endl;
+      std::cout << "All kernels finished for run " << i << std::endl;
 
       // calculate the time the kernels ran for, in milliseconds
       time[i] = duration<double, std::milli>(end - start).count();
@@ -216,11 +194,30 @@ int main(int argc, char* argv[]) {
       // Copy the output back from the device
       q.memcpy(out_bytes.data(), out, out_count * sizeof(unsigned char)).wait();
       q.memcpy(&inflated_count_host, inflated_count, sizeof(int)).wait();
-      q.memcpy(&hdr_data_host, hdr_data, sizeof(HeaderData)).wait();
+      q.memcpy(&hdr_data_host, hdr_data, sizeof(GzipHeaderData)).wait();
       q.memcpy(&crc_host, crc, sizeof(int)).wait();
       q.memcpy(&count_host, count, sizeof(int)).wait();
 
-      // validate the results
+      // validating the output
+      // check the magic header we read
+      if (hdr_data_host.GetMagicHeader() != 0x1f8b) {
+        auto save_flags = std::cerr.flags();
+        std::cerr << "ERROR: Incorrect magic header value of 0x"
+                  << std::hex << std::setw(4) << std::setfill('0')
+                  << hdr_data_host.GetMagicHeader() << " (should be 0x1f8b)\n";
+        std::cerr.flags(save_flags);
+        passed = false;
+      }
+
+      // check the number of bytes we read
+      if (count_host != out_count) {
+        std::cerr << "ERROR: Out counts do not match: "
+                  << count_host << " != " << out_count
+                  << "(count_host != out_count)\n";
+        passed = false;
+      }
+
+      // validate the inflated number of bytes based on the expectation
       // keep the first inflated_count_host bytes
       out_bytes.resize(inflated_count_host);
       if (inflated_count_host != count_host) {
@@ -229,12 +226,17 @@ int main(int argc, char* argv[]) {
         passed = false;
       }
 
-      // TODO
-      std::cout << "inflated_count_host = " << inflated_count_host << " bytes\n";
-      std::cout << hdr_data_host;
-      std::cout << "crc = " << crc_host << "\n";
-      std::cout << "count = " << count_host << "\n";
-      std::cout << "\n";
+      // compute and check the CRC of the output data
+      auto crc32_exp = SimpleCRC32(0, out_bytes.data(), out_count);
+      if (crc_host != crc32_exp) {
+        auto save_flags = std::cout.flags();
+        std::cerr << std::hex << std::setw(4) << std::setfill('0');
+        std::cerr << "ERROR: output data CRC does not match the expected CRC "
+                  << "0x" << count_host << " != 0x" << out_count
+                  << " (result != expected)\n";
+        std::cout.flags(save_flags);
+        passed = false;
+      }
     }
   } catch (exception const& e) {
     std::cout << "Caught a synchronous SYCL exception: " << e.what() << "\n";
@@ -246,36 +248,45 @@ int main(int argc, char* argv[]) {
   sycl::free(out, q);
 
   // write output file
-  std::cout << "Writing output file\n";
+  std::cout << std::endl;
+  std::cout << "Writing output data to '" << out_filename << "'" << std::endl;
+  std::cout << std::endl;
   WriteOutputFile(out_filename, out_bytes);
 
   // print the performance results
   if (passed) {
     // NOTE: when run in emulation, these results do not accurately represent
-    // the performance of the kernels in actual FPGA hardware
+    // the performance of the kernels on real FPGA hardware
     double avg_time_ms =
         std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
 
-    // TODO: what should the count be here? Input size? Output size?
-    //size_t megabytes = in_count * sizeof(unsigned char) * 1e-6;
-    size_t megabytes = inflated_count_host * sizeof(unsigned char) * 1e-6;
+    double compression_ratio
+        = (double)(inflated_count_host) / (double)(in_count);
+
+    // the number of input and output megabytes, respectively
+    size_t in_mb = in_count * sizeof(unsigned char) * 1e-6;
+    size_t out_mb = inflated_count_host * sizeof(unsigned char) * 1e-6;
 
     std::cout << "Execution time: " << avg_time_ms << " ms\n";
-    std::cout << "Throughput: " << (megabytes / (avg_time_ms * 1e-3))
+    std::cout << "Output Throughput: " << (out_mb / (avg_time_ms * 1e-3))
               << " MB/s\n";
+    std::cout << "Compression Ratio: " << compression_ratio << "\n";
+    std::cout << "Input Throughput: " << (in_mb / (avg_time_ms * 1e-3))
+              << " MB/s\n";
+    std::cout << std::endl;
 
-    std::cout << "PASSED\n";
+    std::cout << "PASSED" << std::endl;
     return 0;
   } else {
-    std::cout << "FAILED\n";
+    std::cout << "FAILED" << std::endl;
     return 1;
   }
 }
 
 //
-// TODO
+// Produce bytes from in_ptr to InPipe
 //
-event SubmitProducer(queue& q, unsigned char* in_ptr, int count) {
+event SubmitProducer(queue& q, int count, unsigned char* in_ptr) {
   return q.single_task<ProducerID>([=] {
     device_ptr<unsigned char> in(in_ptr);
     for (int i = 0; i < count; i++) {
@@ -286,15 +297,18 @@ event SubmitProducer(queue& q, unsigned char* in_ptr, int count) {
 }
 
 //
-// TODO
+// Consume bytes from OutPipe and write them to in_ptr
 //
-event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr) {
+event SubmitConsumer(queue& q, int out_count_padded, unsigned char* out_ptr, int* inflated_count_ptr) {
+  const int out_iterations = (out_count_padded / kLiteralsPerCycle);
   return q.submit([&](handler &h) {
     h.single_task<ConsumerID>([=]() [[intel::kernel_args_restrict]] {
       device_ptr<unsigned char> out(out_ptr);
       device_ptr<int> inflated_count(inflated_count_ptr);
 
       int i = 0;
+      bool i_in_range = 0 < out_iterations;
+      bool i_next_in_range = 1 < out_iterations;
       int valid_byte_count = 0;
       bool done;
 
@@ -305,11 +319,16 @@ event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr) 
         done = pipe_data.flag && valid_pipe_read;
 
         if (!done && valid_pipe_read) {
-          #pragma unroll
-          for (int j = 0; j < kLiteralsPerCycle; j++) {
-            out[i * kLiteralsPerCycle + j] = pipe_data.data.literal[j];
+          // guard against overrunning the output array.
+          if (i_in_range) {
+            #pragma unroll
+            for (int j = 0; j < kLiteralsPerCycle; j++) {
+              out[i * kLiteralsPerCycle + j] = pipe_data.data.literal[j];
+            }
           }
           valid_byte_count += pipe_data.data.valid_count;
+          i_in_range = i_next_in_range;
+          i_next_in_range = i < out_iterations - 2;
           i++;
         }
       } while (!done);
@@ -320,7 +339,7 @@ event SubmitConsumer(queue& q, unsigned char* out_ptr, int* inflated_count_ptr) 
 }
 
 //
-// TODO
+// Reads 'filename' and returns an array of chars that are the bytes of the file
 //
 std::vector<unsigned char> ReadInputFile(std::string filename) {
   std::ifstream fin(filename);
@@ -337,7 +356,7 @@ std::vector<unsigned char> ReadInputFile(std::string filename) {
 }
 
 //
-// TODO
+// Writes the chars (bytes) from 'data' to 'filename'
 //
 void WriteOutputFile(std::string filename, std::vector<unsigned char>& data) {
   std::ofstream fout(filename.c_str());
@@ -350,4 +369,12 @@ void WriteOutputFile(std::string filename, std::vector<unsigned char>& data) {
     fout << c;
   }
   fout.close();
+}
+
+//
+// Prints the usage for main
+//
+void PrintUsage(std::string exe_name) {
+  std::cerr << "USAGE: " << exe_name
+            << " <input filename> <output filename> [runs]\n";
 }
