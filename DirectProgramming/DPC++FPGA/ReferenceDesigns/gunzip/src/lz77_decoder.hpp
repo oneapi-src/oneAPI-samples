@@ -58,7 +58,7 @@ void LZ77Decoder() {
       for (int x = y; x < dim; x++) {
         unsigned char dist = y + 1;
         unsigned char i = x + 1;
-        ret[y * dim + x] = dist + ((i - dist) % dist);
+        ret[y * dim + x] = dist - ((i - dist) % dist);
       }
     }
     return ret;
@@ -129,7 +129,7 @@ void LZ77Decoder() {
         } else {
           // this special case happens whenever dist < literals_per_cycle
           // and we need to repeat one of the earlier elements
-          // idx_back = dist_small + ((i - dist_small) % dist_small);
+          // idx_back = dist_small - ((i - dist_small) % dist_small));
           HistBufBufIdxT idx_back = mod_lut[dist_small - 1][i - 1];
           read_history_shuffle_idx[i] = (history_buffer_buffer_idx - idx_back) & history_buffer_buffer_idx_mask;
         }
