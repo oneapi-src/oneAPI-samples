@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 #ifdef FPGA_EMULATOR
   int runs = 2;
 #elif FPGA_SIMULATOR
-  int runs = 2;
+  int runs = 1;
 #else
   int runs = 8;
 #endif
@@ -85,9 +85,8 @@ int main(int argc, char* argv[]) {
     runs = atoi(argv[3]);
   }
 
-  // enforce at least two runs
-  if (runs < 2) {
-    std::cerr << "ERROR: 'runs' must be 2 or more\n";
+  if (runs < 1) {
+    std::cerr << "ERROR: 'runs' must be greater than 0\n";
     std::terminate();
   }
 
@@ -261,8 +260,13 @@ int main(int argc, char* argv[]) {
   if (passed) {
     // NOTE: when run in emulation, these results do not accurately represent
     // the performance of the kernels on real FPGA hardware
-    double avg_time_ms =
-        std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
+    double avg_time_ms;
+    if (runs > 1) {
+      avg_time_ms =
+          std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
+    } else {
+      avg_time_ms = time[0];
+    }
 
     double compression_ratio
         = (double)(decompressed_count_h) / (double)(in_count);
