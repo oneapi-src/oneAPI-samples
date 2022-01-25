@@ -41,7 +41,7 @@ class ConsumerID;
 class InPipeID;
 class OutPipeID;
 
-using InPipe = ext::intel::pipe<InPipeID, char>;
+using InPipe = ext::intel::pipe<InPipeID, unsigned char>;
 using OutPipe =
     ext::intel::pipe<OutPipeID, FlagBundle<LiteralPack<kLiteralsPerCycle>>>;
 
@@ -120,16 +120,16 @@ int main(int argc, char* argv[]) {
       fpga_tools::RoundUpToMultiple(out_count, kLiteralsPerCycle);
 
   // host variables for output from device
-  int inflated_count_host = 0;
-  GzipHeaderData hdr_data_host;
-  unsigned int crc_host, count_host;
+  int decompressed_count_h = 0;
+  GzipHeaderData hdr_data_h;
+  unsigned int crc_h, count_h;
 
   // track timing information in ms
   std::vector<double> time(runs);
 
   // input and output data pointers on the device using USM device allocations
   unsigned char *in, *out;
-  int *inflated_count ;
+  int *decompressed_count;
   GzipHeaderData *hdr_data;
   int *crc;
   int *count;
@@ -144,8 +144,8 @@ int main(int argc, char* argv[]) {
       std::cerr << "ERROR: could not allocate space for 'out'\n";
       std::terminate();
     }
-    if ((inflated_count = malloc_device<int>(1, q)) == nullptr) {
-      std::cerr << "ERROR: could not allocate space for 'inflated_count'\n";
+    if ((decompressed_count = malloc_device<int>(1, q)) == nullptr) {
+      std::cerr << "ERROR: could not allocate space for 'decompressed_count'\n";
       std::terminate();
     }
     if ((hdr_data = malloc_device<GzipHeaderData>(1, q)) == nullptr) {
@@ -173,7 +173,7 @@ int main(int argc, char* argv[]) {
       // run the producer and consumer kernels
       auto producer_event = SubmitProducer(q, in_count, in);
       auto consumer_event =
-          SubmitConsumer(q, out_count_padded, out, inflated_count);
+          SubmitConsumer(q, out_count_padded, out, decompressed_count);
 
       // run the decompression kernels
       auto gzip_decompress_events = SubmitGzipDecompressKernels<InPipe, OutPipe, kLiteralsPerCycle>(q, in_count, hdr_data, crc, count);
@@ -194,46 +194,45 @@ int main(int argc, char* argv[]) {
 
       // Copy the output back from the device
       q.memcpy(out_bytes.data(), out, out_count * sizeof(unsigned char)).wait();
-      q.memcpy(&inflated_count_host, inflated_count, sizeof(int)).wait();
-      q.memcpy(&hdr_data_host, hdr_data, sizeof(GzipHeaderData)).wait();
-      q.memcpy(&crc_host, crc, sizeof(int)).wait();
-      q.memcpy(&count_host, count, sizeof(int)).wait();
+      q.memcpy(&decompressed_count_h, decompressed_count, sizeof(int)).wait();
+      q.memcpy(&hdr_data_h, hdr_data, sizeof(GzipHeaderData)).wait();
+      q.memcpy(&crc_h, crc, sizeof(int)).wait();
+      q.memcpy(&count_h, count, sizeof(int)).wait();
 
       // validating the output
       // check the magic header we read
-      if (hdr_data_host.MagicNumber() != 0x1f8b) {
+      if (hdr_data_h.MagicNumber() != 0x1f8b) {
         auto save_flags = std::cerr.flags();
         std::cerr << "ERROR: Incorrect magic header value of 0x"
                   << std::hex << std::setw(4) << std::setfill('0')
-                  << hdr_data_host.MagicNumber() << " (should be 0x1f8b)\n";
+                  << hdr_data_h.MagicNumber() << " (should be 0x1f8b)\n";
         std::cerr.flags(save_flags);
         passed = false;
       }
 
       // check the number of bytes we read
-      if (count_host != out_count) {
+      if (count_h != out_count) {
         std::cerr << "ERROR: Out counts do not match: "
-                  << count_host << " != " << out_count
-                  << "(count_host != out_count)\n";
+                  << count_h << " != " << out_count
+                  << "(count_h != out_count)\n";
         passed = false;
       }
 
-      // validate the inflated number of bytes based on the expectation
-      // keep the first inflated_count_host bytes
-      out_bytes.resize(inflated_count_host);
-      if (inflated_count_host != count_host) {
-        std::cerr << "ERROR: inflated_count_host != count_host ("
-                  << inflated_count_host << " != " << count_host << ")\n";
+      // validate the decompressed number of bytes based on the expectation
+      // keep the first decompressed_count_h bytes
+      if (decompressed_count_h != count_h) {
+        std::cerr << "ERROR: decompressed_count_h != count_h ("
+                  << decompressed_count_h << " != " << count_h << ")\n";
         passed = false;
       }
 
       // compute and check the CRC of the output data
       auto crc32_exp = SimpleCRC32(0, out_bytes.data(), out_count);
-      if (crc_host != crc32_exp) {
+      if (crc_h != crc32_exp) {
         auto save_flags = std::cout.flags();
         std::cerr << std::hex << std::setw(4) << std::setfill('0');
         std::cerr << "ERROR: output data CRC does not match the expected CRC "
-                  << "0x" << crc_host << " != 0x" << crc32_exp
+                  << "0x" << crc_h << " != 0x" << crc32_exp
                   << " (result != expected)\n";
         std::cout.flags(save_flags);
         passed = false;
@@ -247,7 +246,7 @@ int main(int argc, char* argv[]) {
   // free the allocated device memory
   sycl::free(in, q);
   sycl::free(out, q);
-  sycl::free(inflated_count, q);
+  sycl::free(decompressed_count, q);
   sycl::free(hdr_data, q);
   sycl::free(crc, q);
   sycl::free(count, q);
@@ -266,11 +265,11 @@ int main(int argc, char* argv[]) {
         std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
 
     double compression_ratio
-        = (double)(inflated_count_host) / (double)(in_count);
+        = (double)(decompressed_count_h) / (double)(in_count);
 
     // the number of input and output megabytes, respectively
     size_t in_mb = in_count * sizeof(unsigned char) * 1e-6;
-    size_t out_mb = inflated_count_host * sizeof(unsigned char) * 1e-6;
+    size_t out_mb = decompressed_count_h * sizeof(unsigned char) * 1e-6;
 
     std::cout << "Execution time: " << avg_time_ms << " ms\n";
     std::cout << "Output Throughput: " << (out_mb / (avg_time_ms * 1e-3))
@@ -309,7 +308,7 @@ event SubmitConsumer(queue& q, int out_count_padded, unsigned char* out_ptr, int
   return q.submit([&](handler &h) {
     h.single_task<ConsumerID>([=]() [[intel::kernel_args_restrict]] {
       device_ptr<unsigned char> out(out_ptr);
-      device_ptr<int> inflated_count(inflated_count_ptr);
+      device_ptr<int> decompressed_count(inflated_count_ptr);
 
       int i = 0;
       bool i_in_range = 0 < out_iterations;
@@ -338,7 +337,7 @@ event SubmitConsumer(queue& q, int out_count_padded, unsigned char* out_ptr, int
         }
       } while (!done);
 
-      *inflated_count = valid_byte_count;
+      *decompressed_count = valid_byte_count;
     });
   });
 }

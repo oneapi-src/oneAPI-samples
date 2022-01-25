@@ -268,8 +268,8 @@ void HuffmanDecoder() {
           }
 
           // find the shortest matching code symbol
-          ac_uint<3> shortest_match_len = CTZPlus1(codelencode_valid_bitmap);
           ac_uint<3> shortest_match_len_idx = CTZ(codelencode_valid_bitmap);
+          ac_uint<3> shortest_match_len = shortest_match_len_idx + ac_uint<1>(1);
           ac_uint<5> base_idx = codelencode_base_idx[shortest_match_len_idx];
           ac_uint<5> offset = codelencode_offset[shortest_match_len_idx];
 
@@ -294,22 +294,22 @@ void HuffmanDecoder() {
             shift_amount = shortest_match_len;
           } else if (symbol == 16) {
             // READ 2-BIT RUN LENGTH, ADD 3, AND EXTEND LAST ELEMENT
-            runlen = extra_bit_vals[shortest_match_len_idx][0] + 3;
+            runlen = extra_bit_vals[shortest_match_len_idx][0] + ac_uint<2>(3);
             decoding_next_symbol = false;
-            extend_symbol = codelens[codelens_idx-1];
-            shift_amount = shortest_match_len + 2;
+            extend_symbol = codelens[codelens_idx - 1];
+            shift_amount = shortest_match_len + ac_uint<2>(2);
           } else if (symbol == 17) {
             // READ 3-BIT RUN LENGTH, ADD 3, AND EXTEND WITH 0's
-            runlen = extra_bit_vals[shortest_match_len_idx][1] + 3;
+            runlen = extra_bit_vals[shortest_match_len_idx][1] + ac_uint<2>(3);
             decoding_next_symbol = false;
             extend_symbol = 0;
-            shift_amount = shortest_match_len + 3;
+            shift_amount = shortest_match_len + ac_uint<2>(3);
           } else if (symbol == 18) {
             // READ 7-BIT RUN LENGTH, ADD 11, AND EXTEND WITH 0's
-            runlen = extra_bit_vals[shortest_match_len_idx][2] + 11;
+            runlen = extra_bit_vals[shortest_match_len_idx][2] + ac_uint<4>(11);
             decoding_next_symbol = false;
             extend_symbol = 0;
-            shift_amount = shortest_match_len + 7;
+            shift_amount = shortest_match_len + ac_uint<3>(7);
           }
 
           // shift the bit stream
@@ -513,10 +513,10 @@ void HuffmanDecoder() {
         }
 
         // find the shortest matching length, which is the next decoded symbol
-        ac_uint<4> lit_shortest_match_len = CTZPlus1(lit_codelen_valid_bitmap);
         ac_uint<4> lit_shortest_match_len_idx = CTZ(lit_codelen_valid_bitmap);
-        ac_uint<4> dist_shortest_match_len = CTZPlus1(dist_codelen_valid_bitmap);
+        ac_uint<4> lit_shortest_match_len = lit_shortest_match_len_idx + ac_uint<1>(1);
         ac_uint<4> dist_shortest_match_len_idx = CTZ(dist_codelen_valid_bitmap);
+        ac_uint<4> dist_shortest_match_len = dist_shortest_match_len_idx + ac_uint<1>(1);
 
         // get the base index and offset based on the shortest match length
         auto lit_base_idx = lit_codelen_base_idx[lit_shortest_match_len_idx];

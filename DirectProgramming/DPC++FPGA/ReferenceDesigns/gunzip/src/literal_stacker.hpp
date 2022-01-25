@@ -5,6 +5,8 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
+#include "mp_math.hpp"
+
 using namespace sycl;
 
 template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>

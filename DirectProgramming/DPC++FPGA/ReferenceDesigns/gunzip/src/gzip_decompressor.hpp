@@ -32,7 +32,7 @@ constexpr int kHuffmanToLZ77PipeDepth = 64;
 template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 std::vector<event> SubmitGzipDecompressKernels(queue& q, int in_count,
                                                GzipHeaderData *hdr_data_out,
-                                               int *crc_out, int *size_out) {
+                                               int *crc_out, int *count_out) {
   // the inter-kernel pipes for the GZIP decompression engine
   using GzipHeaderToHuffmanPipe =
     ext::intel::pipe<GzipHeaderToHuffmanPipeID, FlagBundle<unsigned char>>;
@@ -42,7 +42,7 @@ std::vector<event> SubmitGzipDecompressKernels(queue& q, int in_count,
     ext::intel::pipe<LZ77ToLiteralStackerPipeID, FlagBundle<LiteralPack<literals_per_cycle>>>;
 
   // submit the GZIP decompression kernels
-  auto header_event = SubmitGzipHeaderReader<GzipHeaderReaderKernelID, InPipe, GzipHeaderToHuffmanPipe>(q, in_count, hdr_data_out, crc_out, size_out);
+  auto header_event = SubmitGzipHeaderReader<GzipHeaderReaderKernelID, InPipe, GzipHeaderToHuffmanPipe>(q, in_count, hdr_data_out, crc_out, count_out);
   auto huffman_event = SubmitHuffmanDecoder<HuffmanDecoderKernelID, GzipHeaderToHuffmanPipe, HuffmanToLZ77Pipe>(q);
   auto lz77_event = SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe, LZ77ToLiteralStackerPipe, literals_per_cycle>(q);
   auto lit_stacker_event = SubmitLiteralStacker<LiteralStackerKernelID, LZ77ToLiteralStackerPipe, OutPipe, literals_per_cycle>(q);
