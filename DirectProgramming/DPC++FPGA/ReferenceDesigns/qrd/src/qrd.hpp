@@ -164,8 +164,8 @@ void QRDecompositionImpl(
       auto copy_r_event = q.memcpy(ptr_r, r_device[buffer_idx],
                                  kRMatrixSize * matrices_per_iter * sizeof(TT));
 
-      copy_r_event.wait();
-      copy_q_event.wait();
+      // copy_r_event.wait();
+      // copy_q_event.wait();
       read_event.wait();
     }  // end of it
   }    // end of r
