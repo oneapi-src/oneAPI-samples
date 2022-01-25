@@ -15,7 +15,7 @@ template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 void LZ77Decoder() {
   static_assert(literals_per_cycle > 0);
   static_assert(fpga_tools::IsPow2(literals_per_cycle));
-  using OutPipeBundleT = FlagBundle<LiteralPack<literals_per_cycle>>;
+  using OutPipeBundleT = FlagBundle<BytePack<literals_per_cycle>>;
 
   bool done;
   bool reading_history = false;
@@ -80,7 +80,7 @@ void LZ77Decoder() {
   [[intel::ivdep(kCacheDepth)]]
   do {
     bool data_valid = true;
-    LiteralPack<literals_per_cycle> out_data;
+    BytePack<literals_per_cycle> out_data;
 
     // if we aren't currently reading from the history, read from input pipe
     if (!reading_history) {
@@ -94,7 +94,7 @@ void LZ77Decoder() {
       short len_or_sym = pipe_data.data.len_or_sym;
       short dist = pipe_data.data.dist_or_flag;
 
-      out_data.literal[0] = len_or_sym & 0xFF;
+      out_data.byte[0] = len_or_sym & 0xFF;
       out_data.valid_count = 1;
 
       // if we get a length distance pair we will read 'len_or_sym' bytes
@@ -156,7 +156,7 @@ void LZ77Decoder() {
       // shuffle the elements read from the history to the output
       #pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
-        out_data.literal[i] = historical_bytes[read_history_shuffle_idx[i]];
+        out_data.byte[i] = historical_bytes[read_history_shuffle_idx[i]];
       }
 
       if (history_counter < literals_per_cycle) {
@@ -193,7 +193,7 @@ void LZ77Decoder() {
       fpga_tools::UnrolledLoop<literals_per_cycle>([&](auto i) {
         if (write_bitmap[i]) {
           // grab the literal to write out
-          auto literal_out = out_data.literal[shuffle_vec[i]];
+          auto literal_out = out_data.byte[shuffle_vec[i]];
 
           // the index into the buffer
           HistBufIdxT idx_in_buf = history_buffer_idx[i];
@@ -230,7 +230,7 @@ void LZ77Decoder() {
 // special case of LZ77 decoder for 1 element per cycle
 template<typename InPipe, typename OutPipe>
 void LZ77Decoder() {
-  using OutPipeBundleT = FlagBundle<LiteralPack<1>>;
+  using OutPipeBundleT = FlagBundle<BytePack<1>>;
 
   bool done;
   bool reading_history = false;
@@ -257,7 +257,7 @@ void LZ77Decoder() {
   [[intel::ivdep(kCacheDepth)]]
   do {
     bool data_valid = true;
-    LiteralPack<1> out_data;
+    BytePack<1> out_data;
 
     // if we aren't currently reading from the history, read from input pipe
     if (!reading_history) {
@@ -271,7 +271,7 @@ void LZ77Decoder() {
       short len_or_sym = pipe_data.data.len_or_sym;
       short dist = pipe_data.data.dist_or_flag;
 
-      out_data.literal[0] = len_or_sym & 0xFF;
+      out_data.byte[0] = len_or_sym & 0xFF;
       out_data.valid_count = 1;
 
       // if we get a length distance pair we will read 'len_or_sym' bytes
@@ -286,13 +286,13 @@ void LZ77Decoder() {
 
     if (reading_history) {
       // read from the history buffer
-      out_data.literal[0] = history_buffer[read_history_buffer_idx];
+      out_data.byte[0] = history_buffer[read_history_buffer_idx];
 
       // also check the cache to see if it is there
       #pragma unroll
       for (int j = 0; j < kCacheDepth + 1; j++) {
         if (history_buffer_cache_idx[j] == read_history_buffer_idx) {
-          out_data.literal[0] = history_buffer_cache_val[j];
+          out_data.byte[0] = history_buffer_cache_val[j];
         }
       }
       out_data.valid_count = 1;
@@ -309,10 +309,10 @@ void LZ77Decoder() {
     
     if (!done && data_valid) {
       // write to the most history buffer
-      history_buffer[history_buffer_idx] = out_data.literal[0];
+      history_buffer[history_buffer_idx] = out_data.byte[0];
 
       // also add the most recent written value to the cache
-      history_buffer_cache_val[kCacheDepth] = out_data.literal[0];
+      history_buffer_cache_val[kCacheDepth] = out_data.byte[0];
       history_buffer_cache_idx[kCacheDepth] = history_buffer_idx;
       #pragma unroll
       for (int j = 0; j < kCacheDepth; j++) {

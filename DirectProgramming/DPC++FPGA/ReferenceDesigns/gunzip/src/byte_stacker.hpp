@@ -1,5 +1,5 @@
-#ifndef __LITERAL_STACKER_HPP__
-#define __LITERAL_STACKER_HPP__
+#ifndef __BYTE_STACKER_HPP__
+#define __BYTE_STACKER_HPP__
 
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
@@ -10,8 +10,8 @@
 using namespace sycl;
 
 template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
-void LiteralStacker() {
-  using OutPipeBundleT = FlagBundle<LiteralPack<literals_per_cycle>>;
+void ByteStacker() {
+  using OutPipeBundleT = FlagBundle<BytePack<literals_per_cycle>>;
   constexpr int cache_idx_bits = fpga_tools::Log2(literals_per_cycle*2) + 1;
 
   bool done;
@@ -33,7 +33,7 @@ void LiteralStacker() {
       #pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
         if (i < pipe_data.data.valid_count) {
-          cache_buf[cache_idx + i] = pipe_data.data.literal[i];
+          cache_buf[cache_idx + i] = pipe_data.data.byte[i];
         }
       }
       cache_idx += pipe_data.data.valid_count;
@@ -44,11 +44,11 @@ void LiteralStacker() {
     // that it is done producing data, then write to the output pipe
     if (cache_idx >= literals_per_cycle || done) {
       // create the output pack of characters from the current cache
-      LiteralPack<literals_per_cycle> out_pack;
+      BytePack<literals_per_cycle> out_pack;
       #pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
         // copy the character
-        out_pack.literal[i] = cache_buf[i];
+        out_pack.byte[i] = cache_buf[i];
 
         // shift the extra characters to the front of the cache
         cache_buf[i] = cache_buf[i + literals_per_cycle];
@@ -78,10 +78,10 @@ void LiteralStacker() {
 
 template<typename Id, typename InPipe, typename OutPipe,
          unsigned literals_per_cycle>
-event SubmitLiteralStacker(queue& q) {
+event SubmitByteStacker(queue& q) {
   return q.single_task<Id>([=] {
-    LiteralStacker<InPipe, OutPipe, literals_per_cycle>();
+    ByteStacker<InPipe, OutPipe, literals_per_cycle>();
   });
 }
 
-#endif /* __LITERAL_STACKER_HPP__ */
+#endif /* __BYTE_STACKER_HPP__ */

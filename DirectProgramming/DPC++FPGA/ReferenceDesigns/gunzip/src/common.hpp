@@ -39,12 +39,15 @@ struct HuffmanData {
 };
 
 //
-// Holds a set (pack) of literals
+// Holds a pack of bytes. valid_count indicates how many of the 'n' bytes are
+// valid. The valid bytes must be sequential. E.g., if valid_count = 2, then
+// byte[0] and byte[1] are valid, while byte[2], byte[3], ..., byte[n-1] are
+// not
 //
 template<int n>
-struct LiteralPack {
+struct BytePack {
   static constexpr int count_bits = fpga_tools::Log2(n) + 1;
-  unsigned char literal[n];
+  unsigned char byte[n];
   ac_uint<count_bits> valid_count;
 };
 

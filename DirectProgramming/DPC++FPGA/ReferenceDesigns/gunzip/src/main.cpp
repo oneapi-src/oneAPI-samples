@@ -43,7 +43,7 @@ class OutPipeID;
 
 using InPipe = ext::intel::pipe<InPipeID, unsigned char>;
 using OutPipe =
-    ext::intel::pipe<OutPipeID, FlagBundle<LiteralPack<kLiteralsPerCycle>>>;
+    ext::intel::pipe<OutPipeID, FlagBundle<BytePack<kLiteralsPerCycle>>>;
 
 ////////////////////////////////////////////////////////////////////////////////
 void PrintUsage(std::string);
@@ -327,7 +327,7 @@ event SubmitConsumer(queue& q, int out_count_padded, unsigned char* out_ptr, int
           if (i_in_range) {
             #pragma unroll
             for (int j = 0; j < kLiteralsPerCycle; j++) {
-              out[i * kLiteralsPerCycle + j] = pipe_data.data.literal[j];
+              out[i * kLiteralsPerCycle + j] = pipe_data.data.byte[j];
             }
           }
           valid_byte_count += pipe_data.data.valid_count;
