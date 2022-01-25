@@ -163,8 +163,8 @@ int main(int argc, char* argv[]) {
     // copy the input data to the device memory and wait for the copy to finish
     q.memcpy(in, in_bytes.data(), in_count * sizeof(unsigned char)).wait();
 
-    std::cout << "Decompressing '" << in_filename << "' " << runs << " times"
-              << std::endl;
+    std::cout << "Decompressing '" << in_filename << "' " << runs
+              << ((runs == 1) ? " time" : " times") << std::endl;
     // run the design multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       std::cout << "Launching kernels for run " << i << std::endl;
