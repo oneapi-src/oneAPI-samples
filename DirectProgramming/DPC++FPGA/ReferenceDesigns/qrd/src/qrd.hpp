@@ -80,29 +80,49 @@ void QRDecompositionImpl(
     r_device[i] = sycl::malloc_device<TT>(kRMatrixSize * matrices_per_iter, q);
   }
 
+  // Forward declarations
+  sycl::event copy_q_event, copy_r_event;
+
   // Repeat the computation multiple times (for performance analysis)
   for (size_t r = 0; r < reps; r++) {
+
+    // Pointers to current input/output matrices in host memory
+    const TT *kPtrA = a_matrix.data();
+    TT *current_a_buffer = a_device[0];
+
+    sycl::event copy_a_event[2];
+    sycl::event compute_event[2];
+    sycl::event q_event[2];
+    sycl::event r_event[2];
+
+    copy_a_event[0] = q.memcpy(current_a_buffer, kPtrA,
+                               kAMatrixSize * matrices_per_iter * sizeof(TT));
+
     // Go over all the matrices, rotating buffers every time
-    for (size_t buffer_idx = 0, it = 0; it < matrices;
-         it += matrices_per_iter, buffer_idx = (buffer_idx + 1) % kNumBuffers) {
+    for (size_t it = 1; it < (matrices/matrices_per_iter + 1); it ++) {
+
       // Pointers to current input/output matrices in host memory
-      const TT *kPtrA = a_matrix.data() + kAMatrixSize * it;
-      TT *ptr_q = q_matrix.data() + kQMatrixSize * it;
-      TT *ptr_r = r_matrix.data() + kRMatrixSize * it;
+      const TT *kPtrA = a_matrix.data() + kAMatrixSize * it * matrices_per_iter;
+      TT *ptr_q = q_matrix.data() + kQMatrixSize * (it-2) * matrices_per_iter;
+      TT *ptr_r = r_matrix.data() + kRMatrixSize * (it-2) * matrices_per_iter;
 
-      auto copy_a_event = q.memcpy(a_device[buffer_idx], kPtrA,
-                                 kAMatrixSize * matrices_per_iter * sizeof(TT));
+      TT *current_a_buffer_0 = a_device[(it-1)%2];
+      TT *current_a_buffer_1 = a_device[it%2];
+      TT *current_q_buffer = q_device[(it-1)%2];
+      TT *current_r_buffer = r_device[(it-1)%2];
 
-      TT *current_a_buffer = a_device[buffer_idx];
-      TT *current_q_buffer = q_device[buffer_idx];
-      TT *current_r_buffer = r_device[buffer_idx];
+      if(it < matrices/matrices_per_iter){
+        compute_event[it%2].wait();
+        copy_a_event[it%2] = q.memcpy(current_a_buffer_1, kPtrA,
+                                   kAMatrixSize * matrices_per_iter * sizeof(TT));
+      }
 
-      auto read_event = q.submit([&](sycl::handler &h) {
-        h.depends_on(copy_a_event);
+      compute_event[(it-1)%2] = q.submit([&](sycl::handler &h) {
+        h.depends_on(copy_a_event[(it-1)%2]);
         h.single_task<QRDDDRToLocalMem>([=
         ]() [[intel::kernel_args_restrict]] {
           MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
-                            matrices_per_iter, a_matrix_pipe>(current_a_buffer);
+                            matrices_per_iter, a_matrix_pipe>(current_a_buffer_0);
         });
       });
 
@@ -114,7 +134,7 @@ void QRDecompositionImpl(
                        matrices_per_iter, kNumElementsPerDDRBurst, 
                        a_matrix_pipe, q_matrix_pipe, r_matrix_pipe>());
 
-      auto q_event = q.single_task<QRDLocalMemToDDRQ>([=
+      q_event[(it-1)%2] = q.single_task<QRDLocalMemToDDRQ>([=
                                           ]() [[intel::kernel_args_restrict]] {
           // Read the Q matrix from the q_matrix_pipe pipe and copy it to the
           // FPGA DDR
@@ -122,7 +142,7 @@ void QRDecompositionImpl(
                             matrices_per_iter, q_matrix_pipe>(current_q_buffer);
       });
 
-      auto r_event = q.single_task<QRDLocalMemToDDRR>([=
+      r_event[(it-1)%2] = q.single_task<QRDLocalMemToDDRR>([=
                                           ]() [[intel::kernel_args_restrict]] {
           // Read the R matrix from the r_matrix_pipe pipe and copy it to the
           // FPGA DDR
@@ -155,20 +175,38 @@ void QRDecompositionImpl(
           }
       });
 
-      r_event.wait();
-      q_event.wait();
+      if(it>1){
+        r_event[it%2].wait();
+        q_event[it%2].wait();
 
-      // Copy the Q and R matrices result from the FPGA DDR to the host memory
-      auto copy_q_event = q.memcpy(ptr_q, q_device[buffer_idx],
-                                 kAMatrixSize * matrices_per_iter * sizeof(TT));
-      auto copy_r_event = q.memcpy(ptr_r, r_device[buffer_idx],
-                                 kRMatrixSize * matrices_per_iter * sizeof(TT));
+        TT *current_q_buffer = q_device[it%2];
+        TT *current_r_buffer = r_device[it%2];
 
-      // copy_r_event.wait();
-      // copy_q_event.wait();
-      read_event.wait();
+        // Copy the Q and R matrices result from the FPGA DDR to the host memory
+        q.memcpy(ptr_q, current_q_buffer,
+                                   kAMatrixSize * matrices_per_iter * sizeof(TT));
+        q.memcpy(ptr_r, current_r_buffer,
+                                   kRMatrixSize * matrices_per_iter * sizeof(TT));
+      }
+
     }  // end of it
+    
+    r_event[(matrices/matrices_per_iter + 1)%2].wait();
+    q_event[(matrices/matrices_per_iter + 1)%2].wait();
+    TT *current_q_buffer = q_device[(matrices/matrices_per_iter + 1)%2];
+    TT *current_r_buffer = r_device[(matrices/matrices_per_iter + 1)%2];
+    TT *ptr_q = q_matrix.data() + kQMatrixSize * (matrices/matrices_per_iter - 1) * matrices_per_iter;
+    TT *ptr_r = r_matrix.data() + kRMatrixSize * (matrices/matrices_per_iter - 1) * matrices_per_iter;
+    // Copy the Q and R matrices result from the FPGA DDR to the host memory
+    copy_q_event = q.memcpy(ptr_q, current_q_buffer,
+                               kAMatrixSize * matrices_per_iter * sizeof(TT));
+    copy_r_event = q.memcpy(ptr_r, current_r_buffer,
+                               kRMatrixSize * matrices_per_iter * sizeof(TT));
+
+    copy_r_event.wait();
+    copy_q_event.wait();
   }    // end of r
+
 
   // Clean allocated buffers
   for (short b = 0; b < kNumBuffers; b++) {
