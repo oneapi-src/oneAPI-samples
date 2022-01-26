@@ -13,9 +13,10 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/ac_int",
+          "cmake ..",
           "make fpga_emu",
           "./ac_int.fpga_emu"
         ]
@@ -23,9 +24,10 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
-          "cmake ../Tutorials/Features/ac_int",
+          "cmake ..",
           "make report"
         ]
       }
@@ -34,6 +36,8 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ac_int",
@@ -44,6 +48,8 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ac_int",

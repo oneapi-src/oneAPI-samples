@@ -1,323 +1,213 @@
-// clang-format off
+//==============================================================
+// Copyright Intel Corporation
+//
+// SPDX-License-Identifier: MIT
+// =============================================================
 #include <CL/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <bitset>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
-// clang-format on
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
+// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
 using namespace sycl;
 
-// Forward declare the kernel name in the global scope.
-// This is a FPGA best practice that reduces name mangling in the optimization
-// reports.
-class Add;
-class Div;
-class Mult;
-class ShiftLeft;
-class EfficientShiftLeft;
-class GetBitSlice;
-class SetBitSlice;
+// Forward declare the kernel names in the global scope.
+// This FPGA best practice reduces name mangling in the optimization reports.
+class BasicOpsInt;
+class BasicOpsAcInt;
+class ShiftOp;
+class EfficientShiftOp;
+class BitOps;
 
-using ac_int4 = ac_intN::int4;
-using ac_int14 = ac_intN::int14;
-using ac_int15 = ac_intN::int15;
-using ac_int28 = ac_intN::int28;
-using ac_uint4 = ac_intN::uint4;
+using my_int2 = ac_int<2, true>;
+using my_uint2 = ac_int<2, false>;
+using my_int14 = ac_int<14, true>;
+using my_int15 = ac_int<15, true>;
+using my_int28 = ac_int<28, true>;
 
-constexpr int thirteen_bits_mask = (1 << 13) - 1;
-constexpr int fourteen_bits_mask = (1 << 14) - 1;
-
-void TestAdd(queue &q, const ac_int14 &a, const ac_int14 &b, ac_int15 &c) {
-  buffer<ac_int14, 1> inp1(&a, 1);
-  buffer<ac_int14, 1> inp2(&b, 1);
-  buffer<ac_int15, 1> result(&c, 1);
+void TestBasicOpsInt(queue &q, const int &a, const int &b, int &c, int &d,
+                     int &e) {
+  buffer<int, 1> a_buf(&a, 1);
+  buffer<int, 1> b_buf(&b, 1);
+  buffer<int, 1> c_buf(&c, 1);
+  buffer<int, 1> d_buf(&d, 1);
+  buffer<int, 1> e_buf(&e, 1);
 
   q.submit([&](handler &h) {
-    accessor x{inp1, h, read_only};
-    accessor y{inp2, h, read_only};
-    accessor res{result, h, write_only, no_init};
-    h.single_task<Add>([=] { res[0] = x[0] + y[0]; });
+    accessor a_acc(a_buf, h, read_only);
+    accessor b_acc(b_buf, h, read_only);
+    accessor c_acc(c_buf, h, write_only, no_init);
+    accessor d_acc(d_buf, h, write_only, no_init);
+    accessor e_acc(e_buf, h, write_only, no_init);
+    h.single_task<BasicOpsInt>([=]() [[intel::kernel_args_restrict]] {
+      c_acc[0] = a_acc[0] + b_acc[0];
+      d_acc[0] = a_acc[0] * b_acc[0];
+      e_acc[0] = a_acc[0] / b_acc[0];
+    });
   });
 }
 
-void TestDiv(queue &q, const ac_int14 &a, const ac_int14 &b, ac_int15 &c) {
-  buffer<ac_int14, 1> inp1(&a, 1);
-  buffer<ac_int14, 1> inp2(&b, 1);
-  buffer<ac_int15, 1> result(&c, 1);
+void TestBasicOpsAcInt(queue &q, const my_int14 &a, const my_int14 &b,
+                       my_int15 &c, my_int28 &d, my_int15 &e) {
+  buffer<my_int14, 1> a_buf(&a, 1);
+  buffer<my_int14, 1> b_buf(&b, 1);
+  buffer<my_int15, 1> c_buf(&c, 1);
+  buffer<my_int28, 1> d_buf(&d, 1);
+  buffer<my_int15, 1> e_buf(&e, 1);
 
   q.submit([&](handler &h) {
-    accessor x{inp1, h, read_only};
-    accessor y{inp2, h, read_only};
-    accessor res{result, h, write_only, no_init};
-    h.single_task<Div>([=] { res[0] = x[0] / y[0]; });
+    accessor a_acc(a_buf, h, read_only);
+    accessor b_acc(b_buf, h, read_only);
+    accessor c_acc(c_buf, h, write_only, no_init);
+    accessor d_acc(d_buf, h, write_only, no_init);
+    accessor e_acc(e_buf, h, write_only, no_init);
+    h.single_task<BasicOpsAcInt>([=]() [[intel::kernel_args_restrict]] {
+      c_acc[0] = a_acc[0] + b_acc[0];
+      d_acc[0] = a_acc[0] * b_acc[0];
+      e_acc[0] = a_acc[0] / b_acc[0];
+    });
   });
 }
 
-void TestMult(queue &q, const ac_int14 &a, const ac_int14 &b, ac_int28 &c) {
-  buffer<ac_int14, 1> inp1(&a, 1);
-  buffer<ac_int14, 1> inp2(&b, 1);
-  buffer<ac_int28, 1> result(&c, 1);
+void TestShiftOp(queue &q, const my_int14 &a, const my_int14 &b, my_int14 &c) {
+  buffer<my_int14, 1> a_buf(&a, 1);
+  buffer<my_int14, 1> b_buf(&b, 1);
+  buffer<my_int14, 1> c_buf(&c, 1);
 
   q.submit([&](handler &h) {
-    accessor x{inp1, h, read_only};
-    accessor y{inp2, h, read_only};
-    accessor res{result, h, write_only, no_init};
-    h.single_task<Mult>([=] { res[0] = x[0] * y[0]; });
+    accessor a_acc(a_buf, h, read_only);
+    accessor b_acc(b_buf, h, read_only);
+    accessor c_acc(c_buf, h, write_only, no_init);
+    h.single_task<ShiftOp>([=]() [[intel::kernel_args_restrict]] {
+      c_acc[0] = a_acc[0] << b_acc[0];
+    });
   });
 }
 
-void TestShiftLeft(queue &q, const ac_int14 &a, const ac_int14 &b,
-                   ac_int14 &c) {
-  buffer<ac_int14, 1> inp1(&a, 1);
-  buffer<ac_int14, 1> inp2(&b, 1);
-  buffer<ac_int14, 1> result(&c, 1);
+void TestEfficientShiftOp(queue &q, const my_int14 &a, const my_uint2 &b,
+                          my_int14 &c) {
+  buffer<my_int14, 1> a_buf(&a, 1);
+  buffer<my_uint2, 1> b_buf(&b, 1);
+  buffer<my_int14, 1> c_buf(&c, 1);
 
   q.submit([&](handler &h) {
-    accessor x{inp1, h, read_only};
-    accessor y{inp2, h, read_only};
-    accessor res{result, h, write_only, no_init};
-    h.single_task<ShiftLeft>([=] { res[0] = x[0] << y[0]; });
+    accessor a_acc(a_buf, h, read_only);
+    accessor b_acc(b_buf, h, read_only);
+    accessor c_acc(c_buf, h, write_only, no_init);
+    h.single_task<EfficientShiftOp>([=]() [[intel::kernel_args_restrict]] {
+      c_acc[0] = a_acc[0] << b_acc[0];
+    });
   });
 }
 
-// Note how the shift amount is specified with a smaller ac_int than in
-// TestShiftLeft above
-void TestEfficientShiftLeft(queue &q, const ac_int14 &a, const ac_uint4 &b,
-                            ac_int14 &c) {
-  buffer<ac_int14, 1> inp1(&a, 1);
-  buffer<ac_uint4, 1> inp2(&b, 1);
-  buffer<ac_int14, 1> result(&c, 1);
+void TestBitOps(queue &q, my_int14 &a, const my_int2 &b, const int lsb) {
+  buffer<my_int14, 1> a_buf(&a, 1);
+  buffer<my_int2, 1> b_buf(&b, 1);
+  buffer<int, 1> lsb_buf(&lsb, 1);
 
   q.submit([&](handler &h) {
-    accessor x{inp1, h, read_only};
-    accessor y{inp2, h, read_only};
-    accessor res{result, h, write_only, no_init};
-    h.single_task<EfficientShiftLeft>([=] { res[0] = x[0] << y[0]; });
-  });
-}
+    accessor a_acc(a_buf, h, write_only, no_init);
+    accessor b_acc(b_buf, h, read_only);
+    accessor lsb_acc(lsb_buf, h, read_only);
+    h.single_task<BitOps>([=]() [[intel::kernel_args_restrict]] {
+      a_acc[0].set_slc(lsb_acc[0], b_acc[0]);
 
-// The method
-//      x = y.slc<M>(n)
-// is equivalent to the VHDL behavior of
-//      x := y((M+n-1) downto n);
-// Note that only static bit widths are supported
-void TestGetBitSlice(queue &q, const ac_int14 &a, ac_uint4 &b, const int lsb) {
-  buffer<ac_int14, 1> inp1(&a, 1);
-  buffer<int, 1> inp2(&lsb, 1);
-  buffer<ac_uint4, 1> result(&b, 1);
-
-  q.submit([&](handler &h) {
-    accessor x{inp1, h, read_only};
-    accessor y{inp2, h, read_only};
-    accessor res{result, h, write_only, no_init};
-    h.single_task<GetBitSlice>([=] { res[0] = x[0].slc<4>(y[0]); });
-  });
-}
-
-// There is a set_slc(int lsb, const ac_int<W, S> &slc) which allows the user to
-// set a bit slice as shown in the example below.
-void TestSetBitSlice(queue &q, ac_int14 &a, const ac_int4 &b, const int lsb) {
-  buffer<ac_int14, 1> buff_a(&a, 1);
-  buffer<ac_int4, 1> buff_b(&b, 1);
-  buffer<int, 1> buff_lsb(&lsb, 1);
-
-  q.submit([&](handler &h) {
-    accessor x{buff_a, h, write_only, no_init};
-    accessor y{buff_b, h, read_only};
-    accessor lsb_accessor{buff_lsb, h, read_only};
-
-    h.single_task<SetBitSlice>([=] {
-      // The set_slc method does not need to have a width specified as a
-      // template argument since the width is inferred from the width of the
-      // argument x
-      x[0].set_slc(lsb_accessor[0], y[0]);
-
-      // Bits can also be individually set as follows:
-      x[0][3] = 0;
-      x[0][2] = 0;
-      x[0][1] = 0;
-      x[0][0] = 0;
+      a_acc[0][2] = 1;
+      a_acc[0][1] = 1;
+      a_acc[0][0] = 1;
     });
   });
 }
 
 int main() {
 #if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  ext::intel::fpga_selector selector;
+  ext::intel::fpga_selector device_selector;
 #endif
+
   bool passed = true;
 
   try {
-    // create the SYCL device queue
-    queue q(selector, dpc_common::exception_handler);
+    queue q(device_selector, dpc_common::exception_handler,
+            property::queue::enable_profiling{});
 
-    // Use a fixed initial seed
-    srand(123);
+    int t1 = 1000, t2 = 2;
 
-    // Initialize two random ints
-    int t1 = rand();
-    int t2 = rand();
-    // Truncate each of the two ints to 13 bits. The 14th bit is the sign bit.
-    // In this testbench, even though the datatypes are signed, we will be
-    // storing unsigned values to make the testing process simpler.
-    t1 &= thirteen_bits_mask;
-    t2 &= thirteen_bits_mask;
-
-    std::cout << "Arithmetic Operations:\n";
-    // Test adder
+    // Kernel `BasicOpsInt` contains native `int` type addition, multiplication,
+    // and division operations, while kernel `BasicOpsAcInt` contains `ac_int`
+    // type addition, multiplication, and division operations. By comparing
+    // these two kernels, you will find reduced width `ac_int` generates more
+    // efficient hardware than native `int`.
     {
-      // ac_int offers type casting from and to native datatypes
-      ac_int14 a = t1;
-      ac_int14 b = t2;
-      ac_int15 c;
-      TestAdd(q, a, b, c);
-      int c_golden = t1 + t2;
-      // We can check the result of the ac_int addition with the native C int
-      // addition
-      if (c != c_golden) {
+      my_int14 a = t1, b = t2;
+      my_int15 c;
+      my_int28 d;
+      my_int15 e;
+      TestBasicOpsAcInt(q, a, b, c, d, e);
+
+      int _c, _d, _e;
+      TestBasicOpsInt(q, a, b, _c, _d, _e);
+
+      if (c != _c || d != _d || e != _e) {
+        std::cout << "Result mismatch!\n"
+                  << "Kernel BasicOpsInt:   addition = " << _c
+                  << ", multiplication = " << _d << ", division = " << _e
+                  << "\n"
+                  << "Kernel BasicOpsAcInt: addition = " << c
+                  << ", multiplication = " << d << ", division = " << e
+                  << "\n\n";
         passed = false;
-        std::cerr << "Addition failed\n";
       }
-      std::cout << "ac_int: " << a << " + " << b << " = " << c << "\n";
-      std::cout << "int:    " << t1 << " + " << t2 << " = " << c_golden << "\n";
     }
 
-    // Test multiplier
+    // Kernel `ShiftOp` contains an `ac_int` left shifter and the data type of
+    // the shift amount is a large width signed `ac_int`. On contrast, kernel
+    // `EfficientShiftOp` also contains an `ac_int` left shifter but the data
+    // type of the shift amount is a reduced width unsigned `ac_int`. By
+    // comparing these two kernels, you will find shift operations of `ac_int`
+    // can generate more efficient hardware if the amount to shift by is stored
+    // in a minimally sized unsigned `ac_int`.
     {
-      t1 = rand() & thirteen_bits_mask;
-      ac_int14 a = t1;
-      ac_int14 b = t2;
-      ac_int28 c;
-      TestMult(q, a, b, c);
-      int c_golden = t1 * t2;
-      // We can check the result of the ac_int multiplication with the native C
-      // int multiplication
-      if (c != c_golden) {
+      my_int14 a = t1, b = t2;
+      my_uint2 _b = t2;
+      my_int14 c, _c;
+      TestShiftOp(q, a, b, c);
+      TestEfficientShiftOp(q, a, _b, _c);
+
+      if (c != _c) {
+        std::cout << "Result mismatch!\n"
+                  << "Kernel ShiftOp: result = " << c << "\n"
+                  << "Kernel EfficientShiftOp: result = " << _c << "\n\n";
         passed = false;
-        std::cerr << "Multiplier failed\n";
       }
-      std::cout << "ac_int: " << a << " * " << b << " = " << c << "\n";
-      std::cout << "int:    " << t1 << " * " << t2 << " = " << c_golden << "\n";
     }
 
-    // Test divider
+    // Kernel `BitOps` demonstrates bit operations with bit select operator `[]`
+    // and bit slice write operation `set_slc`. Note: An `ac_int` must be
+    // initialized before being access by bit select operator `[]` and bit slice
+    // operations `slc` and `set_slc`, otherwise it is undefined behavior and
+    // will give you unexpected results.
     {
-      t1 = rand() & thirteen_bits_mask;
-      t2 = rand() % 50;  // Use a small value for the divisor so that the result
-                         // is not 0 or 1
-      ac_int14 a = t1;
-      ac_int14 b = t2;
-      ac_int15 c;
-      TestDiv(q, a, b, c);
-      int c_golden = t1 / t2;
-      // We can check the result of the ac_int division with the native C
-      // int division
-      if (c != c_golden) {
+      my_int14 a = t1;
+      my_int2 b = t2;
+      // Write bit 11,10 of `a` with slice `b`; write bit 2,1,0 of `a` to 1.
+      TestBitOps(q, a, b, 10);
+
+      int golden = 0b101111101111;
+
+      if (a != golden) {
+        std::cout << "Kernel BitOps result mismatch!\n"
+                  << "result = 0b" << std::bitset<14>(a) << "\n"
+                  << "golden = 0b" << std::bitset<14>(golden) << "\n\n";
         passed = false;
-        std::cerr << "divider failed\n";
       }
-      std::cout << "ac_int: " << a << " / " << b << " = " << c << "\n";
-      std::cout << "int:    " << t1 << " / " << t2 << " = " << c_golden << "\n";
     }
-
-    std::cout << "\nBitwise Operations:\n";
-    // Shift operator
-    {
-      t1 = rand() & thirteen_bits_mask;
-      t2 = rand() % 8;  // Use a small value for the shift
-      ac_int14 a = t1;
-      ac_int14 b = t2;
-      ac_int14 c;
-      // b can be positive or negative. If (b > 0), a will be shifted to the
-      // left. Else, a will be shifted to the right
-      TestShiftLeft(q, a, b, c);
-
-      // Note that the left shift in ac_int is logical so to check the result,
-      // we need to do a little bit manipulation to get the correct signed value
-      int c_golden = (t1 << t2) & fourteen_bits_mask;
-      if ((t1 << t2) & (1 << 13)) c_golden |= (~fourteen_bits_mask);
-      if (c != c_golden) {
-        passed = false;
-        std::cerr << "left_shift failed\n";
-      }
-      std::cout << "ac_int: " << a << " << " << b << " = " << c << "\n";
-      std::cout << "int:    " << t1 << " << " << t2 << " = " << c_golden
-                << "\n";
-    }
-
-    // Efficient left shift operator
-    {
-      t1 = rand() & thirteen_bits_mask;
-      t2 = rand() % 14;  // Use a small value for the shift
-      ac_int14 a = t1;
-      ac_uint4 b = t2;
-      ac_int14 c;
-      // b is always positive in this case. This shift is more efficient in HW
-      // than the one above. If the direction of the shift is known at compile
-      // time, this is recommended. Note that the two datatypes need not be the
-      // same. Note that the datatype of b here is just 4 bits since 4 bits can
-      // completely contain the value of the full width of a. This will generate
-      // a more efficient datapath.
-      TestEfficientShiftLeft(q, a, b, c);
-
-      // Note that the left shift in ac_int is logical so to check the result,
-      // we need to do a little bit manipulation to get the correct signed value
-      int c_golden = (t1 << t2) & fourteen_bits_mask;
-      if ((t1 << t2) & (1 << 13)) c_golden |= (~fourteen_bits_mask);
-      if (c != c_golden) {
-        passed = false;
-        std::cerr << "efficient_left_shift failed\n";
-      }
-      std::cout << "ac_int: " << a << " << " << b << " = " << c << "\n";
-      std::cout << "int:    " << t1 << " << " << t2 << " = " << c_golden
-                << "\n";
-    }
-
-    // Slice operations
-    {
-      t1 = rand() & thirteen_bits_mask;
-      ac_int14 a = t1;
-      ac_uint4 b;
-      TestGetBitSlice(q, a, b, 5);
-
-      // Replicate the same operation using bitwise operation
-      t2 = (t1 >> 5) & 0xF;
-      // Compare the CPU result with the FPGA result
-      if (b != t2) {
-        passed = false;
-        std::cerr << "GetBitSlice failed\n";
-      }
-      std::cout << "(" << a << ").slc<4>(5) = " << b << "\n";
-
-      int t2 = 10;
-      ac_uint4 d = t2;
-      ac_int14 c = a;
-      // Sets the bits (3, 2, 1, 0) as 0 and sets bits (9, 8, 7, 6) with d
-      TestSetBitSlice(q, c, d, 6);
-
-      // Replicate the same operation using bitwise operation
-      int mask = -1;
-      mask ^= (0xF << 6) | (0xF);
-      int mask2 = (t2 << 6);
-      int t3 = (t1 & mask) | mask2;
-      // Compare the CPU result with the FPGA result
-      if (c != t3) {
-        passed = false;
-        std::cerr << "SetBitSlice failed\n";
-      }
-      std::cout << "Running these two ops on " << a << "\n";
-      std::cout << "\t(" << a << ").set_slc(6, " << d << ") = " << c << "\n";
-      std::cout << "\ta[3] = 0; a[2] = 0; a[1] = 0; a[0] = 0;\n";
-      std::cout << "\tResult = " << c << "\n";
-    }
-
-  } catch (sycl::exception const &e) {
-    // Catches exceptions in the host code
+  } catch (exception const &e) {
+    // Catches exceptions in the host code.
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
@@ -332,11 +222,9 @@ int main() {
   }
 
   if (passed) {
-    std::cout << "PASSED\n";
+    std::cout << "PASSED: all kernel results are correct.\n";
   } else {
     std::cout << "FAILED\n";
-    return 1;
   }
-
-  return 0;
+  return passed ? 0 : 1;
 }

@@ -1,6 +1,6 @@
-# Using the Algorithmic C Integer Data-type 'ac_int'
+# Using the Algorithmic C Integer Data Type `ac_int`
 
-This FPGA tutorial demonstrates how to use the Algorithmic C (AC) Data-type `ac_int` and some best practices.
+This FPGA tutorial demonstrates how to use the Algorithmic C (AC) data type `ac_int` and some best practices.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -11,17 +11,18 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | Using the `ac_int` data-type for basic operations <br> Efficiently using the left shift operation <br> Setting and reading certain bits of an `ac_int` number
+| What you will learn               | Using the `ac_int` data type for basic operations <br> Efficiently using the left shift operation <br> Setting and reading certain bits of an `ac_int` number
 | Time to complete                  | 20 minutes
 
 
 
 ## Purpose
 
-This FPGA tutorial shows how to use the `ac_int` type with some simple examples.
+This FPGA tutorial shows how to use the `ac_int` data type with some simple examples.
 
-This data-type can be used in place of native integer types to generate area efficient and optimized designs for the FPGA. For example, operations which do not utilize all of the bits the native integer types are good candidates for replacement with `ac_int` type.
+This data type can be used in place of native integer types to generate area efficient and optimized designs for the FPGA. When you have a computation that does not require the full dynamic range of a 32-bit integer, you should replace your `int` variables with `ac_int` variables of the correct, reduced width. For example, if you know that a loop will iterate from 0 to 12, only 4 bits are required.
 
+Please refer to the [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/optimize-your-design/resource-use/data-types-and-operations/var-prec-fp-sup/adv-disadv-ac-dt.html) to see advantages and limitations of `ac_int` data types.
 
 ### Simple Code Example
 
@@ -29,66 +30,70 @@ An `ac_int` number can be defined as follows:
 ```cpp
 ac_int<W, S> a;
 ```
-Here W is the width and S is the sign of the number. Signed numbers use one of the W bits to store the sign information.
+Here `W` is the width in bits and `S` is a bool indicating if the number is signed. Signed numbers use one of the `W` bits to store the sign information.
 
 To use this type in your code, you must include the following header:
 
 ```cpp
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 ```
-Additionally, you must use the flag `-qactypes` in order to ensure that the headers are correctly included.
+Additionally, you must pass the flag `-qactypes` on Linux or `/Qactypes` on Windows to the `dpcpp` command when compiling your SYCL program in order to ensure that the headers are correctly included.
 
-For convenience, the following are predefined under the `ac_intN` namespace:
-```
-ac_int<N, true>  are type defined as intN up to 63.
-ac_int<N, false> are type defined as uintN up to 63.
-```
+### Basic Operations and Promotion Rules
 
-For example, a 14 bit signed `ac_int` can be defined by using
-```cpp
-ac_intN::int14 a;
-```
+When using `ac_int`, we can write addition, multiplication, and division operations to use precisely as many bits as are needed to store the results.
+
+`ac_int` automatically promotes the result of all operations to the number of bits needed to represent all possible results without overflowing.
+
+For example, the addition of two 8-bit integers results in a 9-bit result to support overflow. Internally, the result will be 9-bit. However, if the user attempts to store the result in an 8-bit container, `ac_int` will let the user do this, which leads to the most significant bit being discarded. The responsibility lies on the user to use the correct data type.
+
+These promotion rules are consistent across all architectures, so the behavior will be equivalent on x86 or on FPGA.
+
+### Shift Operations
+
+The behavior of shift operations in `ac_int` are slightly different from its behavior with native integer types. For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/. Some key points to remember are as follows:
+  - If the data type of the shift amount is not explicitly `unsigned` (either using `ac_int<N, *false*>` or using the `unsigned` keyword), then the compiler will generate a more complex shifter that allows negative shifts and positive shifts. A shift by a negative amount is equivalent to a positive shift in the opposite direction. Normally, you will not want to use negative shifting, so you should use an `unsigned` data type for the shift value to obtain a more resource efficient shifter.
+  - Shift values greater than the width of the data types are treated as a shift equal to the width of the data type.
+  - The shift operation can be done more efficiently by specifying the amount to shift with the smallest possible `ac_int`.
+
+### Bit Select Operator
+
+The bit select operator `[]` allows reading and modifying bits in an `ac_int`.
+
+*Note:* An `ac_int` must be initialized before being access by bit select operator `[]`, otherwise, it is undefined behavior and will give you unexpected results.
+
+For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/.
+
+### Bit Slice Operations
+
+The slice read operation `slc` and the slice write operation `set_slc` allows reading and modifying a slice in an `ac_int`.
+
+Slice read is provided with the template function `slc<int W>(int lsb)`. The two arguments are defined as:
+- `W` is the bit length of slice. It is constrained to be static so that the length of the slice is known at compile time.
+- `lsb` is the index of the LSB of the slice being read.
+
+Slice write is provided with the function `set_slc(int lsb, const ac_int<W, S> &slc)`. The two arguments are defined as:
+- `lsb` is the index of the LSB of the slice being written.
+- `slc` is an `ac_int` slice. The bit length of slice is inferred from the width `W` of `slc`.
+
+*Note:* An `ac_int` must be initialized before being access by bit slice operations `slc` and `set_slc`, otherwise, it is undefined behavior and will give you unexpected results.
+
+For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/.
 
 ### Understanding the Tutorial Design
 
-The tutorial consists of several functions, each of which contains a SYCL kernel that demonstrates a specific operation. The operations we will see are:
-* Addition
-* Division
-* Multiplication
-* Left shift
-* Setting a bit of an `ac_int` number
-* Reading a bit of an `ac_int` number
+This tutorial consists of five kernels as following:
 
-#### Basic Operations and Promotion Rules
+Kernel `BasicOpsInt` contains native `int` type addition, multiplication, and division operations, while kernel `BasicOpsAcInt` contains `ac_int` type addition, multiplication, and division operations. By comparing these two kernels, you will find reduced width `ac_int` generates more efficient hardware than native `int`.
 
-When using `ac_int`, we can write Addition, Division, Multiplication operations to use precisely as many bits as are needed to store the results. This is demonstrated by the kernels `Add`, `Div` and `Mult`.
+Kernel `ShiftOp` contains an `ac_int` left shifter and the data type of the shift amount is a large width signed `ac_int`. On contrast, kernel `EfficientShiftOp` also contains an `ac_int` left shifter, but the data type of the shift amount is a reduced width unsigned `ac_int`. By comparing these two kernels, you will find shift operations of `ac_int` can generate more efficient hardware if the amount to shift by is stored in a minimally sized unsigned `ac_int`.
 
-`ac_int` automatically promotes the result of all operations to the number of bits needed to represent all possible results without overflowing. For example, the addition of two 8-bit integers results in a 9-bit result to support overflow.
-
-However, if the user attempts to store the result in an 8-bit container, `ac_int` will let the user do this, but this leads to the discard of the extra carry bit. The responsibility lies on the user to use the correct datatype.
-
-These promotions rules are consistent across all architectures so the behavior should be equivalent on x86 or on FPGA.
-
-#### Shift Operation
-
-The behavior of a shift operation with an `ac_int` is slightly different from its behavior with native integer types. For full details, see the `ac_int` documentation in the file `ac_data_types_ref.pdf`. Some key points to remember are as follows:
-  - If the datatype of the shift amount is not explicitly `unsigned` (either using `ac_int<N, *false*>` or using the `unsigned` keyword), then the compiler will generate a more complex shifter that allows negative shifts and positive shifts. A right-shift by a negative amount is equivalent to a positive left-shift.
-  - Normally, you will not want to enable negative shifting, so you should use an `unsigned` datatype for the shift value to obtain a more resource efficient design.
-  - Shift values greater than the width of the data types are treated as a shift equal to the width of the datatype.
-  - The shift operation can be done more efficiently by specifying the amount to shift with the smallest possible `ac_int`.
-
-For example, in the tutorial, two kernels perform the left shift operation: `ShiftLeft` and `EfficientShiftLeft`. Both operate on an 14 bits wide `ac_int`. The former stores the shift amount in an `ac_int` which is 14 bits wide and the latter stores it in an `ac_int` which is 4 bits wide. The latter will generate simpler hardware.
-
-#### Bit Slice Operations
-
-The kernels `GetBitSlice` and `SetBitSlice` show how to read from and write to specific bits of an `ac_int` number. Note that only static bit widths are supported with such "slice" operations.
-
-For detailed documentation on the `set_slc` and `slc` APIs please see the file `ac_data_types_ref.pdf`
+Kernel `BitOps` demonstrates bit operations with bit select operator `[]` and bit slice operations `slc` and `set_slc`.
 
 ## Key Concepts
-* The `ac_int` data-type can be used to generate hardware for only as many bits as is needed by the operation as compared to native integer types which generate hardware for the entire type width.
-* The left shift operation on `ac_int` can be implemented more efficiently when the amount to shift with is stored in a minimally sized `ac_int`.
-* The `ac_int` data-type offers functions for several useful operations including reading and writing of certain bits of an `ac_int` number. This can be very useful in creating bit masks.
+* The `ac_int` data type can be used to generate hardware for only as many bits as are needed by your application. Native integer types must generate hardware for only 8, 16, 32, or 64 bits.
+* Shift operations in `ac_int` can be implemented more efficiently when the amount to shift by is stored in a minimally sized unsigned `ac_int`.
+* The `ac_int` data type provides several useful operations, including reading and modifying certain bits in an `ac_int`.
 
 ## License
 
@@ -105,6 +110,22 @@ The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\
 If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 
@@ -201,7 +222,9 @@ For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workfl
 
 Locate `report.html` in the `ac_int_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Navigate to the *System Viewer* report (*Views* > *System Viewer*) and step through the clusters generated for `ShiftLeft` by clicking on the cluster entires on the left hand side pane under `ShiftLeft` until you find the one that contains the left shift node (`<<`). Similarly locate the cluster containing the left shift node for `EfficientShiftLeft`. Observe that the compiler needs to generate extra logic to deal with the signedness of the b operand for the `ShiftLeft` kernel and hence generates more hardware than for the `EfficientShiftLeft` kernel.
+On the main report page, scroll down to the section titled *Compile Estimated Kernel Resource Utilization Summary*. You can see the overall resource usage of kernel `BasicOpsAcInt` is less than kernel `BasicOpsInt`. Navigate to *Area Analysis of System* (*Area Analysis* > *Area Analysis of System*), you can find resource usage of individual addition, multiplication, and division operations, and you can verify each individual operation consumes less resource in kernel `BasicOpsAcInt` than in kernel `BasicOpsInt`.
+
+Navigate to *System Viewer* (*Views* > *System Viewer*) and find the cluster in kernel `ShiftOp` that contains the left-shifter node (`<<`). Similarly, locate the cluster that contains the left-shifter node in kernel `EfficientShiftOp`. Observe that the compiler generates extra logic in kernel `ShiftOp` to deal with the signedness of shift amount. You can verify that kernel `ShiftOp` consumes more resource than kernel `EfficientShiftOp` in *Compile Estimated Kernel Resource Utilization Summary* on the main report page and *Area Analysis of System*.
 
 ## Running the Sample
 
@@ -221,27 +244,9 @@ Navigate to the *System Viewer* report (*Views* > *System Viewer*) and step thro
 ### Example of Output
 
 ```txt
-Arithmetic Operations:
-ac_int: +1383 + +966 = +2349
-int:    1383 + 966 = 2349
-ac_int: +6249 * +966 = +6036534
-int:    6249 * 966 = 6036534
-ac_int: +2163 / +43 = +50
-int:    2163 / 43 = 50
-
-Bitwise Operations:
-ac_int: +7423 << +2 = -3076
-int:    7423 << 2 = -3076
-ac_int: +6380 << 1 = -3624
-int:    6380 << 1 = -3624
-(+7373).slc<4>(5) = 6
-Running these two ops on +7373
-        (+7373).set_slc(6, 10) = +7808
-        a[3] = 0; a[2] = 0; a[1] = 0; a[0] = 0;
-        Result = +7808
-PASSED
+PASSED: all kernel results are correct.
 ```
 
-### Discussion of Results
+### Discussion
 
-`ac_int` can help minimize the generated hardware and achieve the same numerical result as standard integer types. This can be very useful when the logic does not need to utilize all of the bits provided by the standard integer type.
+`ac_int` can help minimize the generated hardware and achieve the same numerical result as native integer types. This can be very useful when the logic does not need to utilize all the bits provided by the native integer type.
