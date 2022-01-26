@@ -22,7 +22,6 @@ class ShiftOp;
 class EfficientShiftOp;
 class BitOps;
 
-using my_int2 = ac_int<2, true>;
 using my_uint2 = ac_int<2, false>;
 using my_int14 = ac_int<14, true>;
 using my_int15 = ac_int<15, true>;
@@ -103,23 +102,30 @@ void TestEfficientShiftOp(queue &q, const my_int14 &a, const my_uint2 &b,
   });
 }
 
-void TestBitOps(queue &q, my_int14 &a, const my_int2 &b, const int lsb) {
+my_int14 TestBitOps(queue &q, const my_int14 &a) {
+  my_int14 res;
   buffer<my_int14, 1> a_buf(&a, 1);
-  buffer<my_int2, 1> b_buf(&b, 1);
-  buffer<int, 1> lsb_buf(&lsb, 1);
+  buffer<my_int14, 1> res_buf(&res, 1);
 
   q.submit([&](handler &h) {
-    accessor a_acc(a_buf, h, write_only, no_init);
-    accessor b_acc(b_buf, h, read_only);
-    accessor lsb_acc(lsb_buf, h, read_only);
+    accessor a_acc(a_buf, h, read_only);
+    accessor res_acc(res_buf, h, write_only, no_init);
     h.single_task<BitOps>([=]() [[intel::kernel_args_restrict]] {
-      a_acc[0].set_slc(lsb_acc[0], b_acc[0]);
+      my_int14 temp = a_acc[0].slc<14>(0);
 
-      a_acc[0][2] = 1;
-      a_acc[0][1] = 1;
-      a_acc[0][0] = 1;
+      res_acc[0] = 0;  // Must be initialized before bit operations, otherwise,
+                       // it will be undefined behavior
+
+      // 0b0 -> 0b1111101000 (decimal:1000)
+      res_acc[0].set_slc(0, temp);
+
+      // 0b1111101000 -> 0b1111101111
+      res_acc[0][2] = 1;
+      res_acc[0][1] = 1;
+      res_acc[0][0] = 1;
     });
   });
+  return res;
 }
 
 int main() {
@@ -135,7 +141,7 @@ int main() {
     queue q(device_selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
 
-    int t1 = 1000, t2 = 2;
+    const int t1 = 1000, t2 = 2;
 
     // Kernel `BasicOpsInt` contains native `int` type addition, multiplication,
     // and division operations, while kernel `BasicOpsAcInt` contains `ac_int`
@@ -193,15 +199,13 @@ int main() {
     // will give you unexpected results.
     {
       my_int14 a = t1;
-      my_int2 b = t2;
-      // Write bit 11,10 of `a` with slice `b`; write bit 2,1,0 of `a` to 1.
-      TestBitOps(q, a, b, 10);
+      my_int14 result = TestBitOps(q, a);
 
-      int golden = 0b101111101111;
+      int golden = 0b001111101111;
 
-      if (a != golden) {
+      if (result != golden) {
         std::cout << "Kernel BitOps result mismatch!\n"
-                  << "result = 0b" << std::bitset<14>(a) << "\n"
+                  << "result = 0b" << std::bitset<14>(result) << "\n"
                   << "golden = 0b" << std::bitset<14>(golden) << "\n\n";
         passed = false;
       }
