@@ -35,8 +35,6 @@ template <typename T,        // The datatype for the computation
                              // In general, find a high value for which the
                              // compiler is able to achieve an II of 1 and
                              // go down from there.
-          int matrix_count,  // Number of matrices to read from the input
-                             // pipe sequentially
           int pipe_size,     // Number of elements read/write per pipe
                              // operation
           typename AIn,      // A matrix input pipe, receive pipe_size
@@ -134,8 +132,8 @@ struct StreamingQRD {
     static constexpr int kJBitSize = fpga_tools::BitsForMaxValue<columns + 1>()
                           + fpga_tools::BitsForMaxValue<kJNegativeIterations>();
 
-    // Iterate over the number of matrices to decompose per function call
-    for (int matrix_iter = 0; matrix_iter < matrix_count; matrix_iter++) {
+    // Compute QRDs as long as matrices are given as inputs
+    while(1) {
       // Three copies of the full matrix, so that each matrix has a single
       // load and a single store.
       // a_load is the initial matrix received from the pipe
@@ -427,7 +425,7 @@ struct StreamingQRD {
         QOut::write(pipe_write);
       }
 
-    }  // end of matrix_iter
+    }  // end of while(1)
   }    // end of operator
 };     // end of struct
 
