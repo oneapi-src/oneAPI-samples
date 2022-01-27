@@ -102,38 +102,37 @@ void QRDecompositionImpl(
 
     sycl::device_ptr<TT> vector_ptr_device(r_device);
 
-    for(int vector_number = 0; vector_number < repetitions; 
-        vector_number++){
-      [[intel::private_copies(4)]] // NO-FORMAT: Attribute
-      TT r_result[kRMatrixSize];
+    TT r_result[kRMatrixSize/kNumElementsPerDDRBurst + kExtraIteration]
+                                                      [kNumElementsPerDDRBurst];
 
+    // Repeat a complete R matrix pipe read for as many repetitions as needed
+    for(int vector_number = 0; vector_number < repetitions; vector_number++){
       for(int vector_elem = 0; vector_elem < kRMatrixSize; vector_elem++){
-        r_result[vector_elem] = r_matrix_pipe::read();
+        r_result[vector_elem/kNumElementsPerDDRBurst]
+                  [vector_elem%kNumElementsPerDDRBurst] = r_matrix_pipe::read();
+      } // end of vector_elem
+    } // end of vector_number
+
+    // Copy the R matrix result once to DDR
+    for (int li = 0; li < kLoopIter; li++) {
+      if constexpr (kIncompleteBurst){
+        // Write a burst of kNumElementsPerDDRBurst elements to DDR
+        #pragma unroll
+        for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
+          if(li * kNumElementsPerDDRBurst + k < kRMatrixSize){
+            vector_ptr_device[li * kNumElementsPerDDRBurst + k] = 
+                                                                r_result[li][k];
+          }
+        }
       }
-
-      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (int li = 0; li < kLoopIter; li++) {
-
-        if constexpr (kIncompleteBurst){
-          // Write a burst of kNumElementsPerDDRBurst elements to DDR
-          #pragma unroll
-          for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-            if(li * kNumElementsPerDDRBurst + k < kRMatrixSize){
-              vector_ptr_device[li * kNumElementsPerDDRBurst + k] =
-                  r_result[li * kNumElementsPerDDRBurst + k];
-            }
-          }
+      else{
+        // Write a burst of kNumElementsPerDDRBurst elements to DDR
+        #pragma unroll
+        for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
+          vector_ptr_device[li * kNumElementsPerDDRBurst + k] = r_result[li][k];
         }
-        else{
-          // Write a burst of kNumElementsPerDDRBurst elements to DDR
-          #pragma unroll
-          for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-            vector_ptr_device[li * kNumElementsPerDDRBurst + k] =
-                                    r_result[li * kNumElementsPerDDRBurst + k];
-          }
-        }
-      }  // end of li
-    }
+      }
+    }  // end of li
   });
 
   q_event.wait();
