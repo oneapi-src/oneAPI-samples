@@ -30,18 +30,18 @@ An `ac_int` number can be defined as follows:
 ```cpp
 ac_int<W, S> a;
 ```
-Here `W` is the width in bits and `S` is a bool indicating if the number is signed. Signed numbers use one of the `W` bits to store the sign information.
+Here `W` is the width in bits and `S` is a bool indicating if the number is signed. Signed numbers use the MSB to store the sign bit.
 
-To use this type in your code, you must include the following header:
+To use the `ac_int` type in your code, you must include the following header:
 
 ```cpp
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 ```
-Additionally, you must pass the flag `-qactypes` on Linux or `/Qactypes` on Windows to the `dpcpp` command when compiling your SYCL program in order to ensure that the headers are correctly included.
+Additionally, you must pass the flag `-qactypes` on Linux or `/Qactypes` on Windows to the `dpcpp` command when compiling your SYCL program in order to ensure that the headers are correctly included. In this tutorial, this is done in `src/CMakeLists.txt`.
 
 ### Basic Operations and Promotion Rules
 
-When using `ac_int`, we can write addition, multiplication, and division operations to use precisely as many bits as are needed to store the results.
+When using `ac_int`, you can write addition, multiplication, and division operations to use precisely as many bits as are needed to store the results.
 
 `ac_int` automatically promotes the result of all operations to the number of bits needed to represent all possible results without overflowing.
 
@@ -58,9 +58,9 @@ The behavior of shift operations in `ac_int` are slightly different from its beh
 
 ### Bit Select Operator
 
-The bit select operator `[]` allows reading and modifying bits in an `ac_int`.
+The bit select operator `[]` allows reading and modifying an individual bit in an `ac_int`.
 
-*Note:* An `ac_int` must be initialized before being access by bit select operator `[]`, otherwise, it is undefined behavior and will give you unexpected results.
+*Note:* An `ac_int` must be initialized before being accessed by bit select operator `[]`, otherwise, it is undefined behavior and can give you unexpected results.
 
 For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/.
 
@@ -76,7 +76,7 @@ Slice write is provided with the function `set_slc(int lsb, const ac_int<W, S> &
 - `lsb` is the index of the LSB of the slice being written.
 - `slc` is an `ac_int` slice. The bit length of slice is inferred from the width `W` of `slc`.
 
-*Note:* An `ac_int` must be initialized before being access by bit slice operations `slc` and `set_slc`, otherwise, it is undefined behavior and will give you unexpected results.
+*Note:* An `ac_int` must be initialized before being accessed by bit slice operations `slc` and `set_slc`, otherwise, it is undefined behavior and can give you unexpected results.
 
 For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/.
 
@@ -84,7 +84,7 @@ For full details, see the Algorithmic C (AC) Datatypes documentation available a
 
 This tutorial consists of five kernels as following:
 
-Kernel `BasicOpsInt` contains native `int` type addition, multiplication, and division operations, while kernel `BasicOpsAcInt` contains `ac_int` type addition, multiplication, and division operations. By comparing these two kernels, you will find reduced width `ac_int` generates more efficient hardware than native `int`.
+Kernel `BasicOpsInt` contains native `int` type addition, multiplication, and division operations, while kernel `BasicOpsAcInt` contains `ac_int` type addition, multiplication, and division operations. By comparing these two kernels, you will find reduced width `ac_int` generates area efficient hardware than native `int`.
 
 Kernel `ShiftOp` contains an `ac_int` left shifter and the data type of the shift amount is a large width signed `ac_int`. On contrast, kernel `EfficientShiftOp` also contains an `ac_int` left shifter, but the data type of the shift amount is a reduced width unsigned `ac_int`. By comparing these two kernels, you will find shift operations of `ac_int` can generate more efficient hardware if the amount to shift by is stored in a minimally sized unsigned `ac_int`.
 

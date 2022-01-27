@@ -4,9 +4,10 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <bitset>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+
+#include <bitset>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
@@ -22,10 +23,10 @@ class ShiftOp;
 class EfficientShiftOp;
 class BitOps;
 
-using my_uint2 = ac_int<2, false>;
-using my_int14 = ac_int<14, true>;
-using my_int15 = ac_int<15, true>;
-using my_int28 = ac_int<28, true>;
+using MyUInt2 = ac_int<2, false>;
+using MyInt14 = ac_int<14, true>;
+using MyInt15 = ac_int<15, true>;
+using MyInt28 = ac_int<28, true>;
 
 void TestBasicOpsInt(queue &q, const int &a, const int &b, int &c, int &d,
                      int &e) {
@@ -49,13 +50,13 @@ void TestBasicOpsInt(queue &q, const int &a, const int &b, int &c, int &d,
   });
 }
 
-void TestBasicOpsAcInt(queue &q, const my_int14 &a, const my_int14 &b,
-                       my_int15 &c, my_int28 &d, my_int15 &e) {
-  buffer<my_int14, 1> a_buf(&a, 1);
-  buffer<my_int14, 1> b_buf(&b, 1);
-  buffer<my_int15, 1> c_buf(&c, 1);
-  buffer<my_int28, 1> d_buf(&d, 1);
-  buffer<my_int15, 1> e_buf(&e, 1);
+void TestBasicOpsAcInt(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt15 &c,
+                       MyInt28 &d, MyInt15 &e) {
+  buffer<MyInt14, 1> a_buf(&a, 1);
+  buffer<MyInt14, 1> b_buf(&b, 1);
+  buffer<MyInt15, 1> c_buf(&c, 1);
+  buffer<MyInt28, 1> d_buf(&d, 1);
+  buffer<MyInt15, 1> e_buf(&e, 1);
 
   q.submit([&](handler &h) {
     accessor a_acc(a_buf, h, read_only);
@@ -71,10 +72,10 @@ void TestBasicOpsAcInt(queue &q, const my_int14 &a, const my_int14 &b,
   });
 }
 
-void TestShiftOp(queue &q, const my_int14 &a, const my_int14 &b, my_int14 &c) {
-  buffer<my_int14, 1> a_buf(&a, 1);
-  buffer<my_int14, 1> b_buf(&b, 1);
-  buffer<my_int14, 1> c_buf(&c, 1);
+void TestShiftOp(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt14 &c) {
+  buffer<MyInt14, 1> a_buf(&a, 1);
+  buffer<MyInt14, 1> b_buf(&b, 1);
+  buffer<MyInt14, 1> c_buf(&c, 1);
 
   q.submit([&](handler &h) {
     accessor a_acc(a_buf, h, read_only);
@@ -86,11 +87,11 @@ void TestShiftOp(queue &q, const my_int14 &a, const my_int14 &b, my_int14 &c) {
   });
 }
 
-void TestEfficientShiftOp(queue &q, const my_int14 &a, const my_uint2 &b,
-                          my_int14 &c) {
-  buffer<my_int14, 1> a_buf(&a, 1);
-  buffer<my_uint2, 1> b_buf(&b, 1);
-  buffer<my_int14, 1> c_buf(&c, 1);
+void TestEfficientShiftOp(queue &q, const MyInt14 &a, const MyUInt2 &b,
+                          MyInt14 &c) {
+  buffer<MyInt14, 1> a_buf(&a, 1);
+  buffer<MyUInt2, 1> b_buf(&b, 1);
+  buffer<MyInt14, 1> c_buf(&c, 1);
 
   q.submit([&](handler &h) {
     accessor a_acc(a_buf, h, read_only);
@@ -102,19 +103,19 @@ void TestEfficientShiftOp(queue &q, const my_int14 &a, const my_uint2 &b,
   });
 }
 
-my_int14 TestBitOps(queue &q, const my_int14 &a) {
-  my_int14 res;
-  buffer<my_int14, 1> a_buf(&a, 1);
-  buffer<my_int14, 1> res_buf(&res, 1);
+MyInt14 TestBitOps(queue &q, const MyInt14 &a) {
+  MyInt14 res;
+  buffer<MyInt14, 1> a_buf(&a, 1);
+  buffer<MyInt14, 1> res_buf(&res, 1);
 
   q.submit([&](handler &h) {
     accessor a_acc(a_buf, h, read_only);
     accessor res_acc(res_buf, h, write_only, no_init);
     h.single_task<BitOps>([=]() [[intel::kernel_args_restrict]] {
-      my_int14 temp = a_acc[0].slc<14>(0);
+      MyInt14 temp = a_acc[0].slc<14>(0);
 
-      res_acc[0] = 0;  // Must be initialized before bit operations, otherwise,
-                       // it will be undefined behavior
+      res_acc[0] = 0; // Must be initialized before bit operations, otherwise,
+                      // it will be undefined behavior
 
       // 0b0 -> 0b1111101000 (decimal:1000)
       res_acc[0].set_slc(0, temp);
@@ -138,10 +139,9 @@ int main() {
   bool passed = true;
 
   try {
-    queue q(device_selector, dpc_common::exception_handler,
-            property::queue::enable_profiling{});
+    queue q(device_selector, dpc_common::exception_handler);
 
-    const int t1 = 1000, t2 = 2;
+    constexpr int kVal1 = 1000, kVal2 = 2;
 
     // Kernel `BasicOpsInt` contains native `int` type addition, multiplication,
     // and division operations, while kernel `BasicOpsAcInt` contains `ac_int`
@@ -149,23 +149,24 @@ int main() {
     // these two kernels, you will find reduced width `ac_int` generates more
     // efficient hardware than native `int`.
     {
-      my_int14 a = t1, b = t2;
-      my_int15 c;
-      my_int28 d;
-      my_int15 e;
-      TestBasicOpsAcInt(q, a, b, c, d, e);
+      MyInt14 input_a = kVal1, input_b = kVal2;
+      MyInt15 output_c;
+      MyInt28 output_d;
+      MyInt15 output_e;
+      TestBasicOpsAcInt(q, input_a, input_b, output_c, output_d, output_e);
 
-      int _c, _d, _e;
-      TestBasicOpsInt(q, a, b, _c, _d, _e);
+      int golden_c, golden_d, golden_e;
+      TestBasicOpsInt(q, input_a, input_b, golden_c, golden_d, golden_e);
 
-      if (c != _c || d != _d || e != _e) {
+      if (output_c != golden_c || output_d != golden_d ||
+          output_e != golden_e) {
         std::cout << "Result mismatch!\n"
-                  << "Kernel BasicOpsInt:   addition = " << _c
-                  << ", multiplication = " << _d << ", division = " << _e
-                  << "\n"
-                  << "Kernel BasicOpsAcInt: addition = " << c
-                  << ", multiplication = " << d << ", division = " << e
-                  << "\n\n";
+                  << "Kernel BasicOpsInt:   addition = " << golden_c
+                  << ", multiplication = " << golden_d
+                  << ", division = " << golden_e << "\n"
+                  << "Kernel BasicOpsAcInt: addition = " << output_c
+                  << ", multiplication = " << output_d
+                  << ", division = " << output_e << "\n\n";
         passed = false;
       }
     }
@@ -178,16 +179,17 @@ int main() {
     // can generate more efficient hardware if the amount to shift by is stored
     // in a minimally sized unsigned `ac_int`.
     {
-      my_int14 a = t1, b = t2;
-      my_uint2 _b = t2;
-      my_int14 c, _c;
-      TestShiftOp(q, a, b, c);
-      TestEfficientShiftOp(q, a, _b, _c);
+      MyInt14 input_a = kVal1, input_b = kVal2;
+      MyUInt2 input_efficient_b = kVal2;
+      MyInt14 output_c, output_efficient_c;
+      TestShiftOp(q, input_a, input_b, output_c);
+      TestEfficientShiftOp(q, input_a, input_efficient_b, output_efficient_c);
 
-      if (c != _c) {
+      if (output_c != output_efficient_c) {
         std::cout << "Result mismatch!\n"
-                  << "Kernel ShiftOp: result = " << c << "\n"
-                  << "Kernel EfficientShiftOp: result = " << _c << "\n\n";
+                  << "Kernel ShiftOp: result = " << output_c << "\n"
+                  << "Kernel EfficientShiftOp: result = " << output_efficient_c
+                  << "\n\n";
         passed = false;
       }
     }
@@ -198,14 +200,14 @@ int main() {
     // operations `slc` and `set_slc`, otherwise it is undefined behavior and
     // will give you unexpected results.
     {
-      my_int14 a = t1;
-      my_int14 result = TestBitOps(q, a);
+      MyInt14 input = kVal1;
+      MyInt14 output = TestBitOps(q, input);
 
-      int golden = 0b001111101111;
+      constexpr int golden = 0b001111101111;
 
-      if (result != golden) {
+      if (output != golden) {
         std::cout << "Kernel BitOps result mismatch!\n"
-                  << "result = 0b" << std::bitset<14>(result) << "\n"
+                  << "result = 0b" << std::bitset<14>(output) << "\n"
                   << "golden = 0b" << std::bitset<14>(golden) << "\n\n";
         passed = false;
       }
