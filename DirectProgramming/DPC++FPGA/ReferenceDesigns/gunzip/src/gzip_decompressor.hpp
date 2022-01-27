@@ -6,7 +6,7 @@
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
 #include "common.hpp"
-#include "header_reader.hpp"
+#include "gzip_header_reader.hpp"
 #include "huffman_decoder.hpp"
 #include "byte_stacker.hpp"
 #include "lz77_decoder.hpp"
@@ -23,6 +23,9 @@ class GzipHeaderToHuffmanPipeID;
 class HuffmanToLZ77PipeID;
 class LZ77ToByteStackerPipeID;
 
+// the depth of the pipe between the Huffman decoder and the LZ77 decoder.
+// adding some extra depth here helps add some elasticity so that the Huffman
+// decoder can computing while the LZ77 kernel reads from the history buffer
 constexpr int kHuffmanToLZ77PipeDepth = 64;
 
 //
@@ -33,6 +36,9 @@ template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 std::vector<event> SubmitGzipDecompressKernels(queue& q, int in_count,
                                                GzipHeaderData *hdr_data_out,
                                                int *crc_out, int *count_out) {
+  static_assert(literals_per_cycle > 0);
+  static_assert(fpga_tools::IsPow2(literals_per_cycle));
+  
   // the inter-kernel pipes for the GZIP decompression engine
   using GzipHeaderToHuffmanPipe =
     ext::intel::pipe<GzipHeaderToHuffmanPipeID, FlagBundle<unsigned char>>;

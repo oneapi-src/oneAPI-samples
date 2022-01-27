@@ -22,35 +22,62 @@ void LZ77Decoder() {
   bool reading_history_next;
   short history_counter;
 
+  // maximum history size is set based on the DEFLATE compression description
   constexpr unsigned kMaxHistory = 32768;
+
+  // we will cyclically partition the history to 'literals_per_cycle' buffers,
+  // so each buffer gets this many elements
   constexpr unsigned history_buffer_count = kMaxHistory / literals_per_cycle;
+
+  // number of bits to count from 0 to literals_per_cycle-1
   constexpr unsigned history_buffer_buffer_idx_bits = fpga_tools::Log2(literals_per_cycle);
+
+  // bit mask for counting from 0 to literals_per_cycle-1
   constexpr unsigned history_buffer_buffer_idx_mask = literals_per_cycle - 1;
+
+  // number of bits to count from 0 to history_buffer_count-1
   constexpr unsigned history_buffer_idx_bits = fpga_tools::Log2(history_buffer_count);
+
+  // bit mask for counting from 0 to history_buffer_count-1
   constexpr unsigned history_buffer_idx_mask = history_buffer_count - 1;
   
+  // the data type used to index from 0 to literals_per_cycle-1 (i.e., pick
+  // which buffer to use)
   using HistBufBufIdxT = ac_uint<history_buffer_buffer_idx_bits>;
+
+  // the data type used to index from 0 to history_buffer_count-1 (i.e., after
+  // picking which buffer, index into that buffer)
   using HistBufIdxT = ac_uint<history_buffer_idx_bits>;
 
-  // the history buffers
+  // which of the 'literals_per_cycle' buffers is the one to write to next
   HistBufBufIdxT history_buffer_buffer_idx = 0;
-  [[intel::fpga_register]] HistBufIdxT history_buffer_idx[literals_per_cycle];
+
+  // for each of the 'literals_per_cycle' buffers, where do we write next
+  [[intel::fpga_register]]
+  HistBufIdxT history_buffer_idx[literals_per_cycle];
+
+  // the history buffers
   fpga_tools::NTuple<unsigned char[history_buffer_count], literals_per_cycle> history_buffer;
 
-  // the history buffer caches to cache in-flight writes and break loop carried
-  // dependencies
+  // these shift-register caches cache in-flight writes to the history buffer
+  // and break loop carried dependencies
   constexpr int kCacheDepth = 7;
-  [[intel::fpga_register]] unsigned char history_buffer_cache_val[literals_per_cycle][kCacheDepth + 1];
-  [[intel::fpga_register]] HistBufIdxT history_buffer_cache_idx[literals_per_cycle][kCacheDepth + 1];
+  [[intel::fpga_register]]
+  unsigned char history_buffer_cache_val[literals_per_cycle][kCacheDepth + 1];
+  [[intel::fpga_register]]
+  HistBufIdxT history_buffer_cache_idx[literals_per_cycle][kCacheDepth + 1];
 
-  // the variables used to read from the history buffer upon request from the
-  // Huffman decoder kernel 
+  // these variables are used to read from the history buffer upon request from
+  // the Huffman decoder kernel 
   HistBufBufIdxT read_history_buffer_buffer_idx = 0;
-  [[intel::fpga_register]] HistBufIdxT read_history_buffer_idx[literals_per_cycle];
-  [[intel::fpga_register]] HistBufBufIdxT read_history_shuffle_idx[literals_per_cycle];
+  [[intel::fpga_register]]
+  HistBufIdxT read_history_buffer_idx[literals_per_cycle];
+  [[intel::fpga_register]]
+  HistBufBufIdxT read_history_shuffle_idx[literals_per_cycle];
 
-  // precompute the function
-  //   dist_small + ((i - dist_small) % dist_small)
+  // precompute the function: dist + ((i - dist) % dist)
+  // which is used for the special when the copy distance is less than
+  // 'literals_per_cycle'
   constexpr auto mod_lut_init = [&] {
     constexpr int dim = literals_per_cycle - 1;
     std::array<unsigned char, dim * dim> ret{};
@@ -66,7 +93,8 @@ void LZ77Decoder() {
   
   // ac_ints cannot be constexpr, so initialize an array of ac_int with
   // the mod_lut_init ROM that was computed above
-  [[intel::fpga_register]] HistBufBufIdxT mod_lut[literals_per_cycle - 1][literals_per_cycle - 1];
+  [[intel::fpga_register]]
+  HistBufBufIdxT mod_lut[literals_per_cycle - 1][literals_per_cycle - 1];
   for (int y = 0; y < (literals_per_cycle - 1); y++) {
     for (int x = y; x < (literals_per_cycle - 1); x++) {
       mod_lut[y][x] = mod_lut_init[y * (literals_per_cycle - 1) + x];
@@ -77,28 +105,32 @@ void LZ77Decoder() {
   #pragma unroll
   for (int i = 0; i < literals_per_cycle; i++) { history_buffer_idx[i] = 0; }
 
+  // the main processing loop.
+  // Using the shift-register cache, we are able to break all loop carried
+  // dependencies with a distance of 'kCacheDepth' and less
   [[intel::ivdep(kCacheDepth)]]
   do {
     bool data_valid = true;
     BytePack<literals_per_cycle> out_data;
 
-    // if we aren't currently reading from the history, read from input pipe
     if (!reading_history) {
-      // read from pipe
+      // if we aren't currently reading from the history buffers,
+      // then read from input pipe
       auto pipe_data = InPipe::read(data_valid);
 
-      // check if we are done
+      // check if the upstream kernel is done sending us data
       done = pipe_data.flag && data_valid;
 
-      // grab the symbol or the length and distance pair
+      // grab the literal or the length and distance pair
       short len_or_sym = pipe_data.data.len_or_sym;
       short dist = pipe_data.data.dist_or_flag;
 
+      // for the case of a literal, we will simply write it to the output
       out_data.byte[0] = len_or_sym & 0xFF;
       out_data.valid_count = 1;
 
       // if we get a length distance pair we will read 'len_or_sym' bytes
-      // starting 'dist'
+      // starting at and offset of 'dist'
       history_counter = len_or_sym;
       reading_history = (dist > 0) && data_valid;
       reading_history_next = history_counter > literals_per_cycle;
@@ -106,11 +138,11 @@ void LZ77Decoder() {
       // grab the low Log2(literals_per_cycle) bits of the distance
       HistBufBufIdxT dist_small = dist & history_buffer_buffer_idx_mask;
       
-      // find the first buffer we will read from given the distance
+      // find which of the history buffers we will read from first
       read_history_buffer_buffer_idx = (history_buffer_buffer_idx - dist_small) & history_buffer_buffer_idx_mask;
 
-      // find the starting read index for each buffer, as well as compute
-      // the shuffle vector for shuffling the data to the output
+      // find the starting read index for each history buffer, and compute the
+      // shuffle vector for shuffling the data to the output
       #pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
         // the buffer index
@@ -125,6 +157,7 @@ void LZ77Decoder() {
         read_history_buffer_idx[buf_idx] = starting_read_idx_for_this_buf & history_buffer_idx_mask;
 
         if (dist > i) {
+          // normal case for ths shuffle vector
           read_history_shuffle_idx[i] = buf_idx;
         } else {
           // this special case happens whenever dist < literals_per_cycle
@@ -139,8 +172,8 @@ void LZ77Decoder() {
     if (reading_history) {
       // grab from each of the history buffers
       unsigned char historical_bytes[literals_per_cycle];
-
       fpga_tools::UnrolledLoop<literals_per_cycle>([&](auto i) {
+        // get the index into this buffer and read from it
         auto idx_in_buf = read_history_buffer_idx[i];
         historical_bytes[i] = history_buffer.template get<i>()[idx_in_buf];
 
@@ -153,34 +186,43 @@ void LZ77Decoder() {
         }
       });
 
-      // shuffle the elements read from the history to the output
+      // shuffle the elements read from the history buffers to the output
+      // using the shuffle vector computed earlier. Note, the numbers in the
+      // shuffle vector need not be unique, which happens in the special case
+      // of dist < literals_per_cycle, described above.
       #pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
         out_data.byte[i] = historical_bytes[read_history_shuffle_idx[i]];
       }
 
+      // we will write out min(history_counter, literals_per_cycle)
+      // this can happen when the length of the copy is not a multiple of
+      // 'literals_per_cycle'
       if (history_counter < literals_per_cycle) {
         out_data.valid_count = history_counter;
       } else {
         out_data.valid_count = literals_per_cycle;
       }
 
-      // update the history read index
+      // update the history read indices for the next iteration (if we are still
+      // reading from the history buffers)
       #pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
         read_history_buffer_idx[i] = (read_history_buffer_idx[i] + ac_uint<1>(1)) & history_buffer_idx_mask;
       }
 
-      // update whether we are still reading the history
+      // update whether we will still be reading from the history buffers on
+      // the next iteration of the loop
       reading_history = reading_history_next;
       reading_history_next = history_counter > literals_per_cycle * 2;
       history_counter -= literals_per_cycle;
     }
     
     if (!done && data_valid) {
-      // compute the valid bitmap for the writes
+      // compute the valid bitmap and shuffle vector for the writes
       bool write_bitmap[literals_per_cycle];
-      [[intel::fpga_register]] HistBufBufIdxT shuffle_vec[literals_per_cycle];
+      [[intel::fpga_register]]
+      HistBufBufIdxT shuffle_vec[literals_per_cycle];
       
       #pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
@@ -195,15 +237,15 @@ void LZ77Decoder() {
           // grab the literal to write out
           auto literal_out = out_data.byte[shuffle_vec[i]];
 
-          // the index into the buffer
+          // the index into this history buffer
           HistBufIdxT idx_in_buf = history_buffer_idx[i];
           history_buffer.template get<i>()[idx_in_buf] = literal_out;
 
-          // write new value into cache as well
+          // write the new value into cache as well
           history_buffer_cache_val[i][kCacheDepth] = literal_out;
           history_buffer_cache_idx[i][kCacheDepth] = idx_in_buf;
 
-          // Cache is just a shift register, so shift the shift reg. Pushing
+          // the cache is just a shift register, so shift the shift reg. Pushing
           // into the back of the shift reg is done above.
           #pragma unroll
           for (int j = 0; j < kCacheDepth; j++) {
@@ -251,8 +293,10 @@ void LZ77Decoder() {
   // the history buffer caches to cache in-flight writes and break loop carried
   // dependencies
   constexpr int kCacheDepth = 7;
-  [[intel::fpga_register]] unsigned char history_buffer_cache_val[kCacheDepth + 1];
-  [[intel::fpga_register]] HistBufIdxT history_buffer_cache_idx[kCacheDepth + 1];
+  [[intel::fpga_register]]
+  unsigned char history_buffer_cache_val[kCacheDepth + 1];
+  [[intel::fpga_register]]
+  HistBufIdxT history_buffer_cache_idx[kCacheDepth + 1];
 
   [[intel::ivdep(kCacheDepth)]]
   do {

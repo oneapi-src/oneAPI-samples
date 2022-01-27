@@ -1,5 +1,5 @@
-#ifndef __HEADER_READER_HPP__
-#define __HEADER_READER_HPP__
+#ifndef __GZIP_HEADER_READER_HPP__
+#define __GZIP_HEADER_READER_HPP__
 
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
@@ -11,8 +11,8 @@
 using namespace sycl;
 
 template<typename InPipe, typename OutPipe>
-void GzipHeaderReader(int in_count, GzipHeaderData* hdr_data_ptr, int* crc_ptr,
-                      int* out_count_ptr) {
+void GzipHeaderReader(int in_count, GzipHeaderData& hdr_data, int& crc,
+                      int& out_count) {
   // the data type streamed out
   using OutPipeBundleT = FlagBundle<unsigned char>;
 
@@ -23,7 +23,7 @@ void GzipHeaderReader(int in_count, GzipHeaderData* hdr_data_ptr, int* crc_ptr,
   // 4 bytes: time
   // 1 byte: extra flags
   // 1 byte: OS
-  // read mroe bytes based on flags:
+  // read more bytes based on flags:
   //    if flags & 0x01 != 0: Flag = Text
   //    if flags & 0x04 != 0: Flag = Errata, read 2 bytes for 'length',
   //                          read 'length' more bytes
@@ -37,7 +37,6 @@ void GzipHeaderReader(int in_count, GzipHeaderData* hdr_data_ptr, int* crc_ptr,
   short errata_len = 0;
   unsigned char curr_byte;
   GzipHeaderState state = MagicNumber;
-  device_ptr<GzipHeaderData> hdr_data(hdr_data_ptr);
 
   unsigned char header_magic[2];
   unsigned char header_compression_method;
@@ -48,9 +47,6 @@ void GzipHeaderReader(int in_count, GzipHeaderData* hdr_data_ptr, int* crc_ptr,
   unsigned char header_crc[2];
   header_filename[0] = '\0';
 
-  device_ptr<int> crc(crc_ptr);
-  device_ptr<int> out_count(out_count_ptr);
-
   // NOTE: this loop is not the main processing loop and therefore is
   // not critical (low trip count). However, the compiler doesn't know that
   // and tries to optimize for throughput (~Fmax/II). However, we don't want
@@ -59,6 +55,7 @@ void GzipHeaderReader(int in_count, GzipHeaderData* hdr_data_ptr, int* crc_ptr,
   while (state != SteadyState) {
     curr_byte = InPipe::read();
 
+    // FSM for parsing the GZIP header. We will process 1 byte per cycle here.
     switch (state) {
       case MagicNumber: {
         header_magic[state_counter] = curr_byte;
@@ -184,6 +181,8 @@ void GzipHeaderReader(int in_count, GzipHeaderData* hdr_data_ptr, int* crc_ptr,
     i++;
   }
 
+  // the last 8 bytes of the stream are the CRC and size (in bytes) of the file
+  // this data will be sent back to the host to help validate the output
   unsigned char crc_bytes[4];
   unsigned char size_bytes[4];
 
@@ -196,6 +195,7 @@ void GzipHeaderReader(int in_count, GzipHeaderData* hdr_data_ptr, int* crc_ptr,
     curr_byte = InPipe::read(valid_pipe_read);
 
     if (valid_pipe_read) {
+      // keep track of the last 8 bytes
       int remaining_bytes = (in_count - i - 1);
       if (remaining_bytes < 8) {
         if (remaining_bytes < 4) {
@@ -212,29 +212,24 @@ void GzipHeaderReader(int in_count, GzipHeaderData* hdr_data_ptr, int* crc_ptr,
     }
   }
 
-  // construct the 32-bit CRC and size from the last 8 bytes read
-  unsigned int crc_local = 0, size_local = 0;
+  // construct the 32-bit CRC and size (out_count) from the last 8 bytes read
+  crc = 0;
+  out_count = 0;
   for (int i = 0; i < 4; i++) {
-    crc_local |= (unsigned int)(crc_bytes[i]) << (i*8);
-    size_local |= (unsigned int)(size_bytes[i]) << (i*8);
+    crc |= (unsigned int)(crc_bytes[i]) << (i*8);
+    out_count |= (unsigned int)(size_bytes[i]) << (i*8);
   }
 
   // construct the header data
-  GzipHeaderData hdr_data_loc;
-  hdr_data_loc.magic[0] = header_magic[0];
-  hdr_data_loc.magic[1] = header_magic[1];
-  hdr_data_loc.compression_method = header_compression_method;
-  hdr_data_loc.flags = header_flags;
-  for(int i = 0; i < 4; i++) hdr_data_loc.time[i] = header_time[i];
-  hdr_data_loc.os = header_os;
-  for(int i = 0; i < 256; i++) hdr_data_loc.filename[i] = header_filename[i];
-  hdr_data_loc.crc[0] = header_crc[0];
-  hdr_data_loc.crc[1] = header_crc[1];
-
-  // write back header data, crc, and size
-  *hdr_data = hdr_data_loc;
-  *crc = crc_local;
-  *out_count = size_local;
+  hdr_data.magic[0] = header_magic[0];
+  hdr_data.magic[1] = header_magic[1];
+  hdr_data.compression_method = header_compression_method;
+  hdr_data.flags = header_flags;
+  for(int i = 0; i < 4; i++) hdr_data.time[i] = header_time[i];
+  hdr_data.os = header_os;
+  for(int i = 0; i < 256; i++) hdr_data.filename[i] = header_filename[i];
+  hdr_data.crc[0] = header_crc[0];
+  hdr_data.crc[1] = header_crc[1];
 }
 
 template<typename Id, typename InPipe, typename OutPipe>
@@ -242,9 +237,23 @@ event SubmitGzipHeaderReader(queue& q, int in_count,
                              GzipHeaderData* hdr_data_ptr, int* crc_ptr,
                              int* out_count_ptr) {
   return q.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
-    GzipHeaderReader<InPipe, OutPipe>(in_count, hdr_data_ptr, crc_ptr,
-                                      out_count_ptr);
+    device_ptr<GzipHeaderData> hdr_data(hdr_data_ptr);
+    device_ptr<int> crc(crc_ptr);
+    device_ptr<int> out_count(out_count_ptr);
+
+    // local copies of the output data
+    GzipHeaderData hdr_data_loc;
+    int crc_loc;
+    int out_count_loc;
+    
+    GzipHeaderReader<InPipe, OutPipe>(in_count, hdr_data_loc, crc_loc,
+                                      out_count_loc);
+
+    // write back the local copies of the output data
+    *hdr_data = hdr_data_loc;
+    *crc = crc_loc;
+    *out_count = out_count_loc;
   });
 }
 
-#endif /* __HEADER_READER_HPP__ */
+#endif /* __GZIP_HEADER_READER_HPP__ */
