@@ -161,10 +161,10 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   auto compute_event = q.submit([&](handler& h) {
     // kernel to produce the PARTSUPPLIER table
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
-      constexpr int ACCUM_CACHE_SIZE = 5;
+      constexpr int kAccumeCacheSize = 5;
       BRAMAccumulator<DBDecimal,
                       kPartTableSize,
-                      ACCUM_CACHE_SIZE,
+                      kAccumeCacheSize,
                       DBIdentifier> partkey_values;
 
       // initialize accumulator
@@ -172,7 +172,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
       bool done = false;
 
-      [[intel::initiation_interval(1), intel::ivdep]]
+      [[intel::initiation_interval(1), intel::ivdep(kAccumeCacheSize)]]
       while (!done) {
         SupplierPartSupplierJoinedPipeData pipe_data = 
             PartSupplierPartsPipe::read();
