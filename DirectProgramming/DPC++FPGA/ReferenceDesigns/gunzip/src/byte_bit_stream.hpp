@@ -62,7 +62,6 @@ public:
   bool HasSpaceForByte() { return has_space_for_byte_; }
 
   void NewByte(unsigned char b) {
-    // put data into the buffer
     ac_int<8, false> b_ac_int(b);
     buf_.template set_slc(size_, b_ac_int);
 
@@ -72,7 +71,6 @@ public:
   }
 
 private:
-
   ac_int<bits, false> buf_;
   CountT size_, space_;
   bool has_space_for_byte_;

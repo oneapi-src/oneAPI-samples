@@ -76,6 +76,7 @@ void ByteStacker() {
   OutPipe::write(OutPipeBundleT(true));
 }
 
+// Creates a kernel from the byte stacker kernel
 template<typename Id, typename InPipe, typename OutPipe,
          unsigned literals_per_cycle>
 event SubmitByteStacker(queue& q) {

@@ -232,6 +232,7 @@ void GzipHeaderReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   hdr_data.crc[1] = header_crc[1];
 }
 
+// Creates a kernel from the GZIP header reader function
 template<typename Id, typename InPipe, typename OutPipe>
 event SubmitGzipHeaderReader(queue& q, int in_count,
                              GzipHeaderData* hdr_data_ptr, int* crc_ptr,

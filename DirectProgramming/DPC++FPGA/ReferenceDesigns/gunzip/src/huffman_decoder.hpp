@@ -16,7 +16,7 @@ constexpr int kBitBufferBits = BIT_BUFFER_BITS;
 constexpr int kBitBufferMaxReadBits = 5;
 constexpr int kBitBufferMaxShiftBits = 30;
 
-static_assert(kBitBufferBits > 0);
+static_assert(kBitBufferBits > 8);  // need to store at least a byte
 static_assert(kBitBufferBits >= kBitBufferMaxReadBits);
 static_assert(kBitBufferBits >= kBitBufferMaxShiftBits);
 
@@ -30,7 +30,7 @@ template<typename InPipe, typename OutPipe>
 void HuffmanDecoder() {
   using OutPipeBundleT = FlagBundle<HuffmanData>;
 
-  BitStreamT bbs;
+  BitStreamT bit_stream;
   bool last_block;
   bool done_reading = false;
 
@@ -46,13 +46,15 @@ void HuffmanDecoder() {
     bool parsing_first_table;
     unsigned short codelencodelen_count = 0;
 
+    ////////////////////////////////////////////////////////////////////////////
+    // BEGIN: parsing first three bits
     // read in the first byte and add it to the byte bit stream
     auto first_pipe_data = InPipe::read();
-    bbs.NewByte(first_pipe_data.data);
+    bit_stream.NewByte(first_pipe_data.data);
 
     // read the first three bits
-    ac_uint<3> first_three_bits = bbs.ReadUInt<3>();
-    bbs.Shift(3);
+    ac_uint<3> first_three_bits = bit_stream.ReadUInt<3>();
+    bit_stream.Shift(3);
 
     // first bit indicates whether this is the last block
     last_block = (first_three_bits.slc<1>(0) == 1);
@@ -69,12 +71,17 @@ void HuffmanDecoder() {
 
     // if this is an uncompressed block, we must realign to a byte boundary
     if (is_uncompressed_block) {
-      bbs.AlignToByteBoundary();
+      bit_stream.AlignToByteBoundary();
     }
 
     // only parse the first table for dynamically compressed blocks
     parsing_first_table = is_dynamic_huffman_block;
+    // END: parsing first three bits
+    ////////////////////////////////////////////////////////////////////////////
 
+    ////////////////////////////////////////////////////////////////////////////
+    // BEGIN: parsing code length table
+    // shuffle vector for the first table
     constexpr unsigned short codelencodelen_idxs[] =
       {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
 
@@ -88,32 +95,38 @@ void HuffmanDecoder() {
     // this loop to be our Fmax bottleneck, so increase the II.
     [[intel::initiation_interval(4)]]
     while (parsing_first_table) {
-      if (bbs.HasSpaceForByte()) {
+      // grab a byte if we have space for it
+      if (bit_stream.HasSpaceForByte()) {
         bool read_valid;
         auto pd = InPipe::read(read_valid);
 
         if (read_valid) {
           unsigned char c = pd.data;
-          bbs.NewByte(c);
+          bit_stream.NewByte(c);
         }
       }
 
-      if (bbs.Size() >= 5) {
+      // make sure we have enough bits (in the maximum case)
+      if (bit_stream.Size() >= 5) {
         if (first_table_state == 0) {
-          numlitlencodes = bbs.ReadUInt(5) + ac_uint<9>(257);
-          bbs.Shift(5);
+          // read the number of literal length codes
+          numlitlencodes = bit_stream.ReadUInt(5) + ac_uint<9>(257);
+          bit_stream.Shift(5);
           first_table_state = 1;
         } else if (first_table_state == 1) {
-          numdistcodes = bbs.ReadUInt(5) + ac_uint<1>(1);
-          bbs.Shift(5);
+          // read the number of distance length codes
+          numdistcodes = bit_stream.ReadUInt(5) + ac_uint<1>(1);
+          bit_stream.Shift(5);
           first_table_state = 2;
         } else if (first_table_state == 2) {
-          numcodelencodes = bbs.ReadUInt(4) + ac_uint<3>(4);
-          bbs.Shift(4);
+          // read the number of code length codes (for encoding code lengths)
+          numcodelencodes = bit_stream.ReadUInt(4) + ac_uint<3>(4);
+          bit_stream.Shift(4);
           first_table_state = 3;
         } else if (codelencodelen_count < numcodelencodes) {
-          auto tmp = bbs.ReadUInt(3);
-          bbs.Shift(3);
+          // read the code lengths themselves
+          auto tmp = bit_stream.ReadUInt(3);
+          bit_stream.Shift(3);
           codelencodelen[codelencodelen_idxs[codelencodelen_count]] = tmp;
           codelencodelen_count++;
           parsing_first_table = (codelencodelen_count != numcodelencodes);
@@ -144,7 +157,11 @@ void HuffmanDecoder() {
         codelencode_map_last_code[codelen - 1] = codelencode_map_next_code;
       }
     }
+    // END: parsing code length table 
+    ////////////////////////////////////////////////////////////////////////////
 
+    ////////////////////////////////////////////////////////////////////////////
+    // BEGIN: parsing literal and code length tables
     // length of codelens is MAX(numlitlencodes + numdistcodes)
     // = MAX((2^5 + 257) + (2^5 + 1)) = 322
     ac_uint<15> codelens[322];
@@ -203,14 +220,14 @@ void HuffmanDecoder() {
     while ((codelens_idx < total_codes_second_table)
             && is_dynamic_huffman_block) {
       // read in another byte if we have space for it
-      if (bbs.HasSpaceForByte()) {
+      if (bit_stream.HasSpaceForByte()) {
         bool read_valid;
         auto pd = InPipe::read(read_valid);
 
         if (read_valid) {
           unsigned char c = pd.data;
           done_reading = pd.flag;
-          bbs.NewByte(c);
+          bit_stream.NewByte(c);
         }
       }
 
@@ -219,9 +236,9 @@ void HuffmanDecoder() {
         // do so 15 bits is the maximum bits to read both a symbol and the
         // extra run length bits (max 8 bits for the symbol, max 7 bits for
         // extra run length)
-        if (bbs.Size() >= 15) {
+        if (bit_stream.Size() >= 15) {
           // read 15 bits
-          ac_uint<15> next_bits = bbs.ReadUInt<15>();
+          ac_uint<15> next_bits = bit_stream.ReadUInt<15>();
 
           // find all possible dynamic run lengths
           // the symbol could be from 1 to 8 bits long and the number of extra
@@ -313,7 +330,7 @@ void HuffmanDecoder() {
           }
 
           // shift the bit stream
-          bbs.Shift(shift_amount);
+          bit_stream.Shift(shift_amount);
         }
       } else {
         // extending codelens
@@ -392,7 +409,11 @@ void HuffmanDecoder() {
       }
       dist_map_last_code[codelen - 1] = dist_map_next_code;
     }
+    // END: parsing literal and code length tables
+    ////////////////////////////////////////////////////////////////////////////
 
+    ////////////////////////////////////////////////////////////////////////////
+    // BEGIN: decoding the bit stream
     // indicates whether we are reading a distance (or literal) currently
     bool reading_distance = false;
 
@@ -419,29 +440,29 @@ void HuffmanDecoder() {
     do {
       // read in new data if the ByteBitStream has space for it and we aren't
       // done reading from the input pipe
-      if (bbs.HasSpaceForByte()) {
+      if (bit_stream.HasSpaceForByte()) {
         bool read_valid;
         auto pd = InPipe::read(read_valid);
 
         if (read_valid) {
           unsigned char c = pd.data;
           done_reading = pd.flag;
-          bbs.NewByte(c);
+          bit_stream.NewByte(c);
         }
       }
       
       if (is_uncompressed_block) {
         // for uncompressed blocks, simply read an 8-bit character from the
         // stream and write it to the output
-        if (bbs.Size() >= 8) {
-          ac_uint<8> byte = bbs.ReadUInt<8>();
+        if (bit_stream.Size() >= 8) {
+          ac_uint<8> byte = bit_stream.ReadUInt<8>();
           out_data.len_or_sym = byte;
           out_data.dist_or_flag = -1;
           out_ready = true;
         }
-      } else if (bbs.Size() >= 30) {
+      } else if (bit_stream.Size() >= 30) {
         // read the next 30 bits (we know we have them)
-        ac_uint<30> next_bits = bbs.ReadUInt<30>();
+        ac_uint<30> next_bits = bit_stream.ReadUInt<30>();
 
         // find all possible dynamic lengths
         [[intel::fpga_register]] ac_uint<5> lit_extra_bit_vals[15][5];
@@ -586,7 +607,7 @@ void HuffmanDecoder() {
         }
 
         // shift based on how many bits we read
-        bbs.Shift(shift_amount);
+        bit_stream.Shift(shift_amount);
       }
 
       // output data to downstream kernel if ready
@@ -596,6 +617,8 @@ void HuffmanDecoder() {
       }
     } while (!stop_code_hit);
   } while (!last_block);
+  // END: decoding the bit stream
+  ////////////////////////////////////////////////////////////////////////////
 
   // notify the downstream kernel that we are done
   OutPipe::write(OutPipeBundleT(true));
@@ -609,6 +632,7 @@ void HuffmanDecoder() {
   }
 }
 
+// Creates a kernel from the Huffman decoder function
 template<typename Id, typename InPipe, typename OutPipe>
 event SubmitHuffmanDecoder(queue& q) {
   return q.single_task<Id>([=] {

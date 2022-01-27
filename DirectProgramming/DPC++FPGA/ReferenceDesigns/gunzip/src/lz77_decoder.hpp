@@ -376,6 +376,7 @@ void LZ77Decoder() {
   OutPipe::write(OutPipeBundleT(true));
 }
 
+// Creates a kernel from the LZ77 decoder function
 template<typename Id, typename InPipe, typename OutPipe,
          unsigned literals_per_cycle>
 event SubmitLZ77Decoder(queue& q) {

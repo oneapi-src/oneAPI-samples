@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
   // create the device queue
   queue q(selector, dpc_common::exception_handler);
 
-  // read input file
+  // read bytes from the input file
   std::vector<unsigned char> in_bytes = ReadInputFile(in_filename);
   int in_count = in_bytes.size();
 
@@ -165,6 +165,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Decompressing '" << in_filename << "' " << runs
               << ((runs == 1) ? " time" : " times") << std::endl;
+
     // run the design multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {
       std::cout << "Launching kernels for run " << i << std::endl;
@@ -186,7 +187,7 @@ int main(int argc, char* argv[]) {
       // wait for the decompression kernels to finish
       for (auto& e : gzip_decompress_events) { e.wait(); }
 
-      std::cout << "All kernels finished for run " << i << std::endl;
+      std::cout << "All kernels have finished for run " << i << std::endl;
 
       // calculate the time the kernels ran for, in milliseconds
       time[i] = duration<double, std::milli>(end - start).count();
@@ -298,8 +299,7 @@ event SubmitProducer(queue& q, int count, unsigned char* in_ptr) {
   return q.single_task<ProducerID>([=] {
     device_ptr<unsigned char> in(in_ptr);
     for (int i = 0; i < count; i++) {
-      unsigned char d = in[i];
-      InPipe::write(d);
+      InPipe::write(in[i]);
     }
   });
 }
@@ -355,11 +355,10 @@ std::vector<unsigned char> ReadInputFile(std::string filename) {
     std::cerr << "ERROR: could not open " << filename << " for reading\n";
     std::terminate();
   }
+
   std::vector<unsigned char> result;
   char tmp;
-  while (fin.get(tmp)) {
-    result.push_back(tmp);
-  }
+  while (fin.get(tmp)) { result.push_back(tmp); }
   fin.close();
   
   return result;
@@ -375,9 +374,7 @@ void WriteOutputFile(std::string filename, std::vector<unsigned char>& data) {
     std::terminate();
   }
 
-  for (auto& c : data) {
-    fout << c;
-  }
+  for (auto& c : data) { fout << c; }
   fout.close();
 }
 

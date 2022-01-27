@@ -89,16 +89,19 @@ struct GzipHeaderData {
 
 std::ostream& operator<<(std::ostream& os, const GzipHeaderData& hdr_data) {
   std::ios_base::fmtflags save_flags;
-  os << "Header Data\n";
+  os << "GZIP Header Data\n";
+
   // magic number
   save_flags = os.flags();
   os << std::hex << std::setw(4) << std::setfill('0') << "Magic Number: 0x"
      << hdr_data.MagicNumber() << "\n";
   os.flags(save_flags);
+
   // compression method
   os << "Compression method: "
      << ((hdr_data.compression_method == 8) ? "Supported" : "Not Supported")
      << "\n";
+
   // flags
   os << std::hex << std::setw(4) << std::setfill('0') << "Flags: 0x"
      << (unsigned short)(hdr_data.flags) << "\n";
