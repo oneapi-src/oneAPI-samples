@@ -1,5 +1,5 @@
 ﻿# `PyTorch HelloWorld` Sample
-PyTorch* is a very popular framework for deep learning. Intel and Facebook* collaborate to boost PyTorch* CPU Performance for years. The official PyTorch has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives by default. This sample demonstrates how to train a PyTorch model and shows how Intel-optimized PyTorch* enables Intel® Deep Neural Network Library (Intel® DNNL) calls by default. 
+PyTorch* is a very popular framework for deep learning. Intel and Facebook* collaborate to boost PyTorch* CPU Performance for years. The official PyTorch has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives by default. This sample demonstrates how to train a PyTorch model and shows how Intel-optimized PyTorch* enables Intel® Deep Neural Network Library (Intel® DNNL) calls by default.
 
 | Optimized for                       | Description
 |:---                               |:---
@@ -15,7 +15,7 @@ This sample code shows how to get started with Intel Optimization for PyTorch. I
 Intel-optimized PyTorch* is available as part of Intel® AI Analytics Toolkit. For more information on the optimizations as well as performance data, see this blog post http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance.
 
 ## Key implementation details
-This Hello World sample code is implemented for CPU using the Python language. 
+This Hello World sample code is implemented for CPU using the Python language.
 
 *Please* **export the environment variable `DNNL_VERBOSE=1`** *to display the deep learning primitives trace during execution.*
 
@@ -59,10 +59,10 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
     ```
     conda activate user_pytorch
     ```
-  
+
 4.	Navigate to the directory with the TensorFlow sample:
     ```
-    cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelPyTorch_GettingStarted
+    cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelPyTorch_GettingStarted
     ```
 
 5. Run the Python script
@@ -80,11 +80,11 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
     Please find more information about the mkldnn log [here](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html).
 
-## Example of Output
+
+### Example of Output
 With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.  
 
-
-## Running The Sample In DevCloud (Optional)
+### Running The Sample In DevCloud (Optional)
 
 Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/README.md#using-samples-in-intel-oneapi-devcloud) for general usage instructions.
 
@@ -92,10 +92,13 @@ Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneA
 
 1.	Navigate to the directory with the TensorFlow sample:
 ```
-cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started Samples/IntelPyTorch_GettingStarted
+cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelPyTorch_GettingStarted
 ```
 2. submit this "IntelPyTorch_GettingStarted" workload on the selected node with the run script.
 ```
 ./q ./run.sh
 ```
 > the run.sh contains all the instructions needed to run this "TensorFlow_HelloWorld" workload
+
+### Build and run additional samples
+Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.

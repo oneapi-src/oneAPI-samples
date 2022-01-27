@@ -16,6 +16,7 @@
           "export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
         ],
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -26,6 +27,7 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -40,9 +42,11 @@
           "set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
         ],
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/qrd",
           "nmake fpga_emu",
           "qrd.fpga_emu.exe"
         ]
@@ -50,9 +54,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/qrd",
           "nmake report"
         ]
       }
