@@ -14,6 +14,7 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -24,6 +25,7 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -35,9 +37,12 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "xcopy /E ..\\ReferenceDesigns\\mvdr_beamforming\\data ..\\data\\",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/mvdr_beamforming",
           "nmake fpga_emu",
           "mvdr_beamforming.fpga_emu.exe --in=../data"
         ]
@@ -45,9 +50,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/mvdr_beamforming",
           "nmake report"
         ]
       }

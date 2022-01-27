@@ -104,7 +104,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 ### Application Parameters
 There are no editable parameters for this sample.
 
-### Example of Output
+## Example of Output
 
 ```
 	Target Device: Intel(R) Gen9
@@ -118,5 +118,8 @@ There are no editable parameters for this sample.
 	...
 	[9999] (10001 : 10003i) * (10003 : 10005i) = (-40012 : 200120014i)
 	Complex multiplication successfully run on the device
-
-    ```
+	
+```
+    
+### Build and run additional samples
+Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to this sample. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.

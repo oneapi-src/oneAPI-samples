@@ -97,7 +97,7 @@ if(NOT DEFINED QUARTUS_CORES)
 endif()
 
 # check if they want to use the small database
-if(DEFINED SF_SMALL)
+if(SF_SMALL)
     message(STATUS "\tManual override for database size - building for small database (SF=0.01)")
     set(SF_SMALL_ARG -DSF_SMALL)
 else()

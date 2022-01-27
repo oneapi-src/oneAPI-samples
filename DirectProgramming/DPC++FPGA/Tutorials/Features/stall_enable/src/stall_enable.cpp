@@ -36,9 +36,9 @@ static WorkType RealWork(WorkType a, WorkType b) {
 }
 
 using ReadAccessor =
-  accessor<WorkType, 1, access::mode::read, access::target::global_buffer>;
+  accessor<WorkType, 1, access::mode::read, access::target::device>;
 using WriteAccessor =
-  accessor<WorkType, 1, access::mode::write, access::target::global_buffer>;
+  accessor<WorkType, 1, access::mode::write, access::target::device>;
 
 static void Work(const ReadAccessor &vec_a, const ReadAccessor &vec_b,
                  const WriteAccessor &vec_res) {
