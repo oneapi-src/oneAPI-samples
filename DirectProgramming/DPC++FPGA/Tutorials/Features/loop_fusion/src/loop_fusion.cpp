@@ -12,8 +12,8 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-constexpr size_t kN{2048};
-constexpr size_t kM{5};
+constexpr size_t kN{1024};
+constexpr size_t kM{50};
 
 using namespace sycl;
 
@@ -77,7 +77,7 @@ void DefaultFusion(std::array<int, kM> &m_array_1,
             accessor_array_1[i] = i;
           }
           for (size_t i = 0; i < kM; i++) {
-            accessor_array_2[i] = i;
+            accessor_array_2[i] = accessor_array_1[i];
           }
         }
       });
@@ -118,7 +118,7 @@ void NoFusion(std::array<int, kM> &m_array_1, std::array<int, kM> &m_array_2) {
             accessor_array_1[i] = i;
           }
           for (size_t i = 0; i < kM; i++) {
-            accessor_array_2[i] = i;
+            accessor_array_2[i] = accessor_array_1[i];
           }
         }
 
@@ -140,8 +140,8 @@ void NoFusion(std::array<int, kM> &m_array_1, std::array<int, kM> &m_array_2) {
 }
 
 // Does not fuse inner loops by default, since the trip counts are different.
-void DefaultNoFusion(std::array<int, kM> &m_array_1,
-                     std::array<int, kM + 1> &m_array_2) {
+void DefaultNoFusion(std::array<int, kM + 1> &m_array_1,
+                     std::array<int, kM> &m_array_2) {
   try {
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
@@ -157,11 +157,11 @@ void DefaultNoFusion(std::array<int, kM> &m_array_1,
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         for (size_t j = 0; j < kN; j++) {
           // Different tripcounts, does not fuse by default
-          for (size_t i = 0; i < kM; i++) {
+          for (size_t i = 0; i < kM + 1; i++) {
             accessor_array_1[i] = i;
           }
-          for (size_t i = 0; i < kM + 1; i++) {
-            accessor_array_2[i] = i;
+          for (size_t i = 0; i < kM; i++) {
+            accessor_array_2[i] = accessor_array_1[i];
           }
         }
 
@@ -174,7 +174,7 @@ void DefaultNoFusion(std::array<int, kM> &m_array_1,
     int num_ops_per_kernel = kN * (2 * kM + 1);
     std::cout << "Throughput for kernel without fusion by default and with "
                  "arrays of sizes "
-              << kM << " and " << kM + 1 << ": "
+              << kM + 1 << " and " << kM << ": "
               << ((double)num_ops_per_kernel / kernel_time) << " Ops/ms\n";
 
   } catch (sycl::exception const &e) {
@@ -183,8 +183,8 @@ void DefaultNoFusion(std::array<int, kM> &m_array_1,
 }
 
 // The compiler is explicitly told to fuse the inner loops using the fpga_loop_fuse<>() function. Were this function not used, the loops would not fuse by default, since the trip counts of the loops are different.
-void FusionFunction(std::array<int, kM> &m_array_1,
-                    std::array<int, kM + 1> &m_array_2) {
+void FusionFunction(std::array<int, kM + 1> &m_array_1,
+                    std::array<int, kM> &m_array_2) {
   try {
     queue q(selector, dpc_common::exception_handler,
             property::queue::enable_profiling{});
@@ -201,11 +201,11 @@ void FusionFunction(std::array<int, kM> &m_array_1,
         sycl::ext::intel::fpga_loop_fuse<2>([&] {
           for (size_t j = 0; j < kN; j++) {
             // Different tripcounts, does not fuse by default
-            for (size_t i = 0; i < kM; i++) {
+            for (size_t i = 0; i < kM + 1; i++) {
               accessor_array_1[i] = i;
             }
-            for (size_t i = 0; i < kM + 1; i++) {
-              accessor_array_2[i] = i;
+            for (size_t i = 0; i < kM; i++) {
+              accessor_array_2[i] = accessor_array_1[i];
             }
           }
         });
@@ -217,7 +217,7 @@ void FusionFunction(std::array<int, kM> &m_array_1,
     int num_ops_per_kernel = kN * (2 * kM + 1);
     std::cout << "Throughput for kernel with the loop fusion function wrapper "
                  "and with arrays of sizes "
-              << kM << " and " << kM + 1 << ": "
+              << kM + 1 << " and " << kM << ": "
               << ((double)num_ops_per_kernel / kernel_time) << " Ops/ms\n";
 
   } catch (sycl::exception const &e) {
@@ -229,8 +229,8 @@ void FusionFunction(std::array<int, kM> &m_array_1,
 int main() {
   // Arrays will be populated in kernel loops 
   std::array<int, kM> default_fusion_1, default_fusion_2, no_fusion_1,
-      no_fusion_2, fusion_function_1, default_nofusion_1;
-  std::array<int, kM + 1> fusion_function_2, default_nofusion_2;
+      no_fusion_2, default_nofusion_2, fusion_function_2;
+  std::array<int, kM + 1> default_nofusion_1, fusion_function_1;
 
   // Instantiate kernel logic with and without loop fusion to compare
   // performance
@@ -259,7 +259,7 @@ int main() {
   // when i < kM
   for (size_t i = 0; i < kM + 1; i++) {
     if ((default_nofusion_1[i] != default_nofusion_2[i] && i < kM) ||
-        default_nofusion_2[i] != i) {
+        default_nofusion_1[i] != i) {
       std::cout << "FAILED: The DefaultNoFusionKernel results are incorrect"
                 << '\n';
       return 1;
@@ -268,7 +268,7 @@ int main() {
 
   for (size_t i = 0; i < kM + 1; i++) {
     if ((fusion_function_1[i] != fusion_function_2[i] && i < kM) ||
-        fusion_function_2[i] != i) {
+        fusion_function_1[i] != i) {
       std::cout << "FAILED: The FusionFunctionKernel results are incorrect"
                 << '\n';
       return 1;
