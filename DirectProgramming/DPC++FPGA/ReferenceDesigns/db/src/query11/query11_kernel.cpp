@@ -161,7 +161,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   auto compute_event = q.submit([&](handler& h) {
     // kernel to produce the PARTSUPPLIER table
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
-      constexpr int kAccumeCacheSize = 5;
+      constexpr int kAccumeCacheSize = 15;
       BRAMAccumulator<DBDecimal,
                       kPartTableSize,
                       kAccumeCacheSize,
