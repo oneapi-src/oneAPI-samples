@@ -89,13 +89,13 @@ class BRAMAccumulator {
   // initialize the memory entries
   void Init() {
     // initialize the memory entries
-    for (IndexType i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
       mem[i] = 0;
     }
 
 // initialize the cache
 #pragma unroll
-    for (IndexType i = 0; i < cache_size + 1; i++) {
+    for (int i = 0; i < cache_size + 1; i++) {
       cache_value[i] = 0;
       cache_tag[i] = 0;
     }
@@ -104,34 +104,33 @@ class BRAMAccumulator {
   // accumulate 'value' into register 'index' (i.e. registers[index] += value)
   void Accumulate(IndexType index, StorageType value) {
     // get value from memory
-    StorageType currVal = mem[index];
+    StorageType curr_val = mem[index];
 
 // check if value is in cache
 #pragma unroll
-    for (IndexType i = 0; i < cache_size + 1; i++) {
+    for (int i = 0; i < cache_size + 1; i++) {
       if (cache_tag[i] == index) {
-        currVal = cache_value[i];
+        curr_val = cache_value[i];
       }
     }
 
     // write the new value to both the shift register cache and the local mem
-    const StorageType newVal = currVal + value;
-    mem[index] = cache_value[cache_size] = newVal;
+    StorageType new_val = curr_val + value;
+    mem[index] = new_val;
+    cache_value[cache_size] = new_val;
     cache_tag[cache_size] = index;
 
 // Cache is just a shift register, so shift it
 // pushing into back of the shift register done above
 #pragma unroll
-    for (IndexType i = 0; i < cache_size; i++) {
+    for (int i = 0; i < cache_size; i++) {
       cache_value[i] = cache_value[i + 1];
       cache_tag[i] = cache_tag[i + 1];
     }
   }
 
   // get the value of memory at 'index'
-  StorageType Get(IndexType index) {
-    return mem[index];
-  }
+  StorageType Get(IndexType index) { return mem[index]; }
 
   // internal storage
   StorageType mem[size];

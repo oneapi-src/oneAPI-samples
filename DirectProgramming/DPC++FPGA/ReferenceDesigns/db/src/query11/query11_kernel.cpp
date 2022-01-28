@@ -141,7 +141,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
         DBIdentifier s_suppkey = s_suppkey_accessor[i];
         unsigned char s_nationkey = s_nationkey_accessor[i];
 
-        array_map.Set(s_suppkey, SupplierRow(true,s_suppkey,s_nationkey));
+        array_map.Set(s_suppkey, SupplierRow(true, s_suppkey, s_nationkey));
       }
 
       // MAPJOIN PARTSUPPLIER and SUPPLIER tables by suppkey
@@ -170,16 +170,16 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
       // initialize accumulator
       partkey_values.Init();
 
-      bool done = false;
+      bool done;
 
       [[intel::initiation_interval(1), intel::ivdep(kAccumCacheSize)]]
-      while (!done) {
+      do {
         SupplierPartSupplierJoinedPipeData pipe_data = 
             PartSupplierPartsPipe::read();
 
         done = pipe_data.done;
 
-        if (pipe_data.valid) {
+        if (pipe_data.valid && !done) {
           UnrolledLoop<0, kJoinWinSize>([&](auto j) {
             SupplierPartSupplierJoined data = pipe_data.data.template get<j>();
 
@@ -191,7 +191,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
             }
           });
         }
-      }
+      } while (!done);
 
       // sort the {partkey, partvalue} pairs based on partvalue.
       // send in first kPartTableSize valid pairs
