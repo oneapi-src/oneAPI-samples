@@ -17,7 +17,7 @@ void GzipHeaderReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   using OutPipeBundleT = FlagBundle<unsigned char>;
 
   // Format of the GZIP file header
-  // 2 bytes: magic number (0x
+  // 2 bytes: magic number (0x1f8b)
   // 1 byte: compression method
   // 1 byte: 'flags'
   // 4 bytes: time

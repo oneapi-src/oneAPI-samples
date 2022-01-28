@@ -49,10 +49,9 @@ public:
   }
 
   void AlignToByteBoundary() {
-    ac_int<3, false> pos_in_byte = size_.template slc<3>(0);
-    if (pos_in_byte != 0) {
-      ac_int<3, false> bits_to_drop = ac_int<3, false>(7) - pos_in_byte;
-      Shift(bits_to_drop);
+    auto bits_remaining_in_byte = size_.template slc<3>(0);
+    if (bits_remaining_in_byte != 0) {
+      Shift(bits_remaining_in_byte);
     }
   }
 

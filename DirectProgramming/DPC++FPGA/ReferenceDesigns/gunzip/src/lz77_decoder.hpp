@@ -30,13 +30,15 @@ void LZ77Decoder() {
   constexpr unsigned history_buffer_count = kMaxHistory / literals_per_cycle;
 
   // number of bits to count from 0 to literals_per_cycle-1
-  constexpr unsigned history_buffer_buffer_idx_bits = fpga_tools::Log2(literals_per_cycle);
+  constexpr unsigned history_buffer_buffer_idx_bits =
+      fpga_tools::Log2(literals_per_cycle);
 
   // bit mask for counting from 0 to literals_per_cycle-1
   constexpr unsigned history_buffer_buffer_idx_mask = literals_per_cycle - 1;
 
   // number of bits to count from 0 to history_buffer_count-1
-  constexpr unsigned history_buffer_idx_bits = fpga_tools::Log2(history_buffer_count);
+  constexpr unsigned history_buffer_idx_bits =
+      fpga_tools::Log2(history_buffer_count);
 
   // bit mask for counting from 0 to history_buffer_count-1
   constexpr unsigned history_buffer_idx_mask = history_buffer_count - 1;

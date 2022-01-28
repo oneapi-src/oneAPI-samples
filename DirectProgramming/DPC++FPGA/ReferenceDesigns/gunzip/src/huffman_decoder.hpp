@@ -69,6 +69,14 @@ void HuffmanDecoder() {
     bool is_static_huffman_block = (type == 1);
     bool is_dynamic_huffman_block = (type == 2);
 
+    // for uncompressed blocks, the first 16 bits (after aligning to a byte)
+    // is the length (in bytes) of uncompressed data, followed by 16-bits
+    // which is ~length (for error checking; we will ignore this).
+    bool parsing_uncompressed_len = true;
+    ac_uint<2> uncompressed_len_bytes_read = 0;
+    unsigned short uncompressed_bytes_remaining;
+    unsigned char first_four_bytes[4];
+
     // if this is an uncompressed block, we must realign to a byte boundary
     if (is_uncompressed_block) {
       bit_stream.AlignToByteBoundary();
@@ -418,7 +426,10 @@ void HuffmanDecoder() {
     bool reading_distance = false;
 
     // true is the stop code (256) has been decoded and the block is done
-    bool stop_code_hit = false;
+    // track when a block is done:
+    //    for compressed blocks (static and dynamic), when stop code is hit
+    //    for uncompressed blocks, when all uncompressed bytes are read
+    bool block_done = false;
 
     // true when output is ready. the output will be either a character or
     // a length distance pair (see HuffmanData struct)
@@ -452,13 +463,35 @@ void HuffmanDecoder() {
       }
       
       if (is_uncompressed_block) {
-        // for uncompressed blocks, simply read an 8-bit character from the
-        // stream and write it to the output
         if (bit_stream.Size() >= 8) {
+          // grab a byte
           ac_uint<8> byte = bit_stream.ReadUInt<8>();
-          out_data.len_or_sym = byte;
-          out_data.dist_or_flag = -1;
-          out_ready = true;
+
+          if (parsing_uncompressed_len) {
+            // first 16-bits are length, next 16-bits are ~length
+            first_four_bytes[uncompressed_len_bytes_read] = byte.to_uint();
+            if (uncompressed_len_bytes_read == 3) {
+              // uncompressed_bytes_remaining = uncompressed_len
+              // we will ignore uncompressed_len_n
+              uncompressed_bytes_remaining =
+                  (unsigned short)(first_four_bytes[1] << 8) |
+                  (unsigned short)(first_four_bytes[0]);
+
+              // done parsing uncompressed length
+              parsing_uncompressed_len = false;
+            }
+            uncompressed_len_bytes_read += 1;
+          } else {
+            // for uncompressed blocks, simply read an 8-bit character from the
+            // stream and write it to the output
+            out_data.len_or_sym = byte;
+            out_data.dist_or_flag = -1;
+            out_ready = true;
+            uncompressed_bytes_remaining--;
+            block_done = (uncompressed_bytes_remaining == 0);
+          }
+
+          bit_stream.Shift(ac_uint<4>(8));
         }
       } else if (bit_stream.Size() >= 30) {
         // read the next 30 bits (we know we have them)
@@ -562,7 +595,7 @@ void HuffmanDecoder() {
           // currently parsing a symbol or length (same table)
           if (lit_symbol == 256) {
             // stop code hit, done this block
-            stop_code_hit = true;
+            block_done = true;
             out_ready = false;
           } else if (lit_symbol < 256) {
             // decoded a regular character
@@ -575,7 +608,7 @@ void HuffmanDecoder() {
             reading_distance = true;
           } else if (lit_symbol <= 284) {
             // decoded a length with a dynamic value
-            ac_int<5> lit_symbol_small = lit_symbol.template slc<5>(0);
+            ac_uint<5> lit_symbol_small = lit_symbol.template slc<5>(0);
             // (lit_symbol - 261) / 4
             ac_uint<3> num_extra_bits = (lit_symbol_small - ac_uint<5>(5)) >> 2;  
             auto extra_bits_val = lit_extra_bit_vals[lit_shortest_match_len_idx][num_extra_bits - 1];
@@ -615,7 +648,7 @@ void HuffmanDecoder() {
         OutPipe::write(OutPipeBundleT(out_data));
         out_ready = false;
       }
-    } while (!stop_code_hit);
+    } while (!block_done);
   } while (!last_block);
   // END: decoding the bit stream
   ////////////////////////////////////////////////////////////////////////////
