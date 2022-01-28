@@ -31,9 +31,8 @@ class ArrayMap {
     }
   }
 
-  std::pair<bool, Type> Get(unsigned int key) {
-    return {valid[key], map[key]};
-  }
+  Type Get(unsigned int key) { return map[key]; }
+  bool HasKey(unsigned int key) { return valid[key]; }
 
   void Set(unsigned int key, Type data) {
     map[key] = data;
@@ -89,10 +88,9 @@ void MapJoin(MapType& map) {
         const unsigned int t2_key =
             in_data.data.template get<j>().PrimaryKey();
 
-        auto [data_valid, map_data] = map.Get(t2_key);
-
-        if (t2_win_valid && data_valid) {
+        if (t2_win_valid && map.HasKey(t2_key)) {
           // NOTE: order below important if Join() overrides valid
+          auto map_data = map.Get(t2_key);
           join_data.data.template get<j>().valid = true;
           join_data.data.template get<j>().Join(map_data,
                                                 in_data.data.template get<j>());
