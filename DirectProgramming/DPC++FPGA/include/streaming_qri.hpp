@@ -29,8 +29,6 @@ template <typename T,        // The datatype for the computation
                              // In general, find a high value for which the
                              // compiler is able to achieve an II of 1 and
                              // go down from there.
-          int matrix_count,  // Number of matrices to read from the input
-                             // pipes sequentially
           int pipe_size,     // Number of elements read/write per pipe
                              // operation
           typename QIn,      // Q input pipe, receive a full column with each
@@ -46,15 +44,15 @@ struct StreamingQRI {
     // Functional limitations
     static_assert(rows == columns,
                   "only square matrices with rows==columns are supported");
-    static_assert(columns >= 4, 
+    static_assert(columns >= 4,
                   "only matrices of size 4x4 and upper are supported");
 
     // Set the computation type to T or ac_complex<T> depending on the value
     // of is_complex
     using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
 
-    // Iterate over the number of matrices to decompose per function call
-    for (int matrix_iter = 0; matrix_iter < matrix_count; matrix_iter++) {
+    // Continue to compute as long as matrices are given as inputs
+    while(1) {
       // Q matrix read from pipe
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
@@ -91,7 +89,7 @@ struct StreamingQRI {
           rt_matrix[col][row] = col < row ? TT{0} : RIn::read();
         }
       }
-      
+
       // Copy a Q matrix from the pipe to a local memory
       // Number of pipe reads of pipe_size required to read a full
       // column
@@ -100,7 +98,7 @@ struct StreamingQRI {
       // Number of pipe reads of pipe_size to read all the matrices
       constexpr int kLoopIter = kLoopIterPerColumn * columns;
       // Size in bits of the loop iterator over kLoopIter iterations
-      constexpr int kLoopIterBitSize = 
+      constexpr int kLoopIterBitSize =
                                   fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
@@ -126,7 +124,7 @@ struct StreamingQRI {
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
         });
       }
-      
+
       /*
         Compute the inverse of R
 
@@ -152,11 +150,11 @@ struct StreamingQRI {
                         (raw_latency-2)*(raw_latency-2+1)/2;
       constexpr int kTotalIterations = kNormalIterations + kExtraIterations;
       constexpr bool kThereAreExtraInitIterations = rows-1 < raw_latency-1;
-      constexpr int kInitExtraIterations = kThereAreExtraInitIterations ? 
+      constexpr int kInitExtraIterations = kThereAreExtraInitIterations ?
                                                     raw_latency-1 : rows-1;
-      constexpr int kInitIterations = (rows-2) * (rows-1) / 2 
+      constexpr int kInitIterations = (rows-2) * (rows-1) / 2
                                       + kInitExtraIterations;
-      
+
 
       // All the loop control variables with all the requirements to apply
       // some shannonization (refer to the shannonization tutorial)
@@ -186,7 +184,8 @@ struct StreamingQRI {
 
           UnrolledLoop<columns>([&](auto k) {
             auto lhs = rt_matrix[col][k];
-            auto rhs = (k == col) || (col < row) ? TT{0} : ri_matrix_compute[row][k];
+            auto rhs = (k == col) || (col < row) ? TT{0} :
+                                                      ri_matrix_compute[row][k];
             if(k==col){
               div_val = lhs;
             }
@@ -195,9 +194,9 @@ struct StreamingQRI {
           });
 
           TT result = current_sum/div_val;
-          
+
           // Write the result to both the working copy and the final matrix
-          // This is done to only have matrices with a single read and a 
+          // This is done to only have matrices with a single read and a
           // single write.
           ri_matrix_compute[row][col] = result;
           ri_matrix[row][col] = result;
@@ -207,10 +206,12 @@ struct StreamingQRI {
         if(row == row_limit){
           row_limit = next_row_limit;
           if constexpr(kThereAreExtraInitIterations){
-            next_row_limit = diag_iteration+2 >= rows-2 ? sycl::max(next_diag_size, raw_latency-1) : rows-1;
+            next_row_limit = diag_iteration+2 >= rows-2 ?
+                              sycl::max(next_diag_size, raw_latency-1) : rows-1;
           }
           else{
-            next_row_limit = diag_iteration+2 >= rows ? sycl::max(next_diag_size-2, raw_latency-1) : rows-1;
+            next_row_limit = diag_iteration+2 >= rows ?
+                            sycl::max(next_diag_size-2, raw_latency-1) : rows-1;
           }
 
           diag_size = next_diag_size;
@@ -238,7 +239,7 @@ struct StreamingQRI {
         }
       }
 
-      
+
       // Multiply the inverse of R by the transposition of Q
       [[intel::loop_coalesce(2)]]
       for (int row = 0; row < rows; row++) {
@@ -255,7 +256,7 @@ struct StreamingQRI {
         }  // end of col
       }    // end of row
 
-      
+
       // Copy the inverse matrix result to the output pipe
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
@@ -280,7 +281,7 @@ struct StreamingQRI {
 
         IOut::write(pipe_write);
       }
-    }  // end of matrix_iter
+    }  // end of while (1)
   }    // end of operator
 };     // end of struct
 

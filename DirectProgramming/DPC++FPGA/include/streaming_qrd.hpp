@@ -193,7 +193,7 @@ struct StreamingQRD {
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
         });
       }
-
+      
       // Compute the QR Decomposition
 
       // r_result write index
