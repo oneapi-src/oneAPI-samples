@@ -32,27 +32,27 @@
   - matrices:   The number of matrices to be processed.
                 The input matrices are read sequentially from the a_matrix
                 vector.
-  - reps:       The number of repetitions of the computation to execute.
+  - repetitions: The number of repetitions of the computation to execute.
                 (for performance evaluation)
 */
 #if COMPLEX == 0
 // Real single precision floating-point QR based inversion
 void QRI(std::vector<float> &a_matrix, std::vector<float> &inv_matrix,
-         sycl::queue &q, size_t matrices, size_t reps) {
+         sycl::queue &q, size_t matrices, size_t repetitions) {
   constexpr bool is_complex = false;
   QRIImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS_QRD,
            FIXED_ITERATIONS_QRI, is_complex, float>(a_matrix, inv_matrix, q,
-                                                   matrices, reps);
+                                                   matrices, repetitions);
 }
 #else
 // Complex single precision floating-point QR based inversion
 void QRI(std::vector<ac_complex<float> > &a_matrix,
          std::vector<ac_complex<float> > &inv_matrix, sycl::queue &q,
-         size_t matrices, size_t reps) {
+         size_t matrices, size_t repetitions) {
   constexpr bool is_complex = true;
   QRIImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS_QRD,
            FIXED_ITERATIONS_QRI, is_complex, float>(a_matrix, inv_matrix, q,
-                                                   matrices, reps);
+                                                   matrices, repetitions);
 }
 #endif
 
@@ -184,16 +184,19 @@ int main(int argc, char *argv[]) {
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kInverseMatrixSize = kRows * kColumns;
   constexpr bool kComplex = COMPLEX != 0;
+  constexpr size_t kMatricesToInvert = 8;
 
-  // Get the number of random matrices to decompose from the command line
-  // If no value is given, will only decompose 1 random matrix
+  // Get the number of times we want to repeat the inversion
+  // from the command line.
 #if defined(FPGA_EMULATOR)
-  size_t matrices = argc > 1 ? atoi(argv[1]) : 3;
+  int repetitions = argc > 1 ? atoi(argv[1]) : 16;
 #else
-  size_t matrices = argc > 1 ? atoi(argv[1]) : 6144;
+  int repetitions = argc > 1 ? atoi(argv[1]) : 819200;
 #endif
-  if (matrices < 1) {
-    std::cout << "Must run at least 1 matrix\n";
+  if (repetitions < 1) {
+    std::cout << "Number of repetitions given is lower that 1." << std::endl;
+    std::cout << "The decomposition must occur at least 1 time." << std::endl;
+    std::cout << "Increase the number of repetitions (e.g. 16)." << std::endl;
     return 1;
   }
 
@@ -221,22 +224,23 @@ int main(int argc, char *argv[]) {
     std::vector<TF> inv_matrix;
     std::vector<TF> precomputed_inv_matrix;
 
-    a.resize(matrices * kAMatrixSize);
-    inv_matrix.resize(matrices * kInverseMatrixSize);
-    precomputed_inv_matrix.resize(matrices * kInverseMatrixSize);
+    a.resize(kMatricesToInvert * kAMatrixSize);
+    inv_matrix.resize(kMatricesToInvert * kInverseMatrixSize);
+    precomputed_inv_matrix.resize(kMatricesToInvert * kInverseMatrixSize);
 
-    std::cout << "Generating " << matrices << " random ";
+    std::cout << "Generating " << kMatricesToInvert << " random ";
     if constexpr (kComplex) {
       std::cout << "complex ";
     } else {
       std::cout << "real ";
     }
-    std::cout << "matri" << ((matrices == 1) ? "x " : "ces ") << "of size "
+    std::cout << "matri" << ((kMatricesToInvert == 1) ? "x " : "ces ")
+              << "of size "
               << kRows << "x" << kColumns << " " << std::endl;
 
     // Generate the random input matrices and precompute their inverse
     srand(kRandomSeed);
-    for (size_t i = 0; i < matrices; i++) {
+    for (size_t i = 0; i < kMatricesToInvert; i++) {
       std::vector<TF> random_matrix;
       random_matrix.resize(kAMatrixSize);
       // Setting an epsilon of 0.5 ensures that the inverse matrix will have
@@ -409,37 +413,14 @@ int main(int argc, char *argv[]) {
 #endif
     }
 
-#if defined(FPGA_EMULATOR)
-    size_t reps = 1;
-#else
-    size_t reps = 32;
-    // Accelerator warmup
-    QRI(a, inv_matrix, q, 2048, 1);
-#endif
+    std::cout << "Running QR inversion of " << kMatricesToInvert << " matri"
+              << ((kMatricesToInvert == 1) ? "x " : "ces ")
+              << repetitions << " time"
+              << ((repetitions > 1) ? "s" : "") 
+              << std::endl;
 
-    std::cout << "Running QR inversion of " << matrices << " matri"
-              << ((matrices == 1) ? "x " : "ces ")
-              << ((reps > 1) ? "repeatedly" : "") << "\n";
-
-    // Launch the compute kernel and time the execution
-    auto start_time = std::chrono::high_resolution_clock::now();
-    QRI(a, inv_matrix, q, matrices, reps);
-    auto end_time = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> diff = end_time - start_time;
-    q.throw_asynchronous();
-
-    std::cout << "   Total duration:   " << diff.count() << " s"
-              << "\n";
-    std::cout << "Throughput: " << reps * matrices / diff.count() * 1e-3
-              << "k matrices/s"
-              << "\n";
-
-    std::list<size_t> to_check;
-    // We will check at least matrix 0
-    to_check.push_back(0);
-    // Spot check the last and the middle one
-    if (matrices > 2) to_check.push_back(matrices / 2);
-    if (matrices > 1) to_check.push_back(matrices - 1);
+    // Launch the compute kernel
+    QRI(a, inv_matrix, q, kMatricesToInvert, repetitions);
 
     // Count the number of errors found for this matrix
     int error_count = 0;
@@ -456,7 +437,7 @@ int main(int argc, char *argv[]) {
     constexpr float kErrorThreshold = 1e-4;
 
     std::cout << "Verifying results on matrix ";
-    for (size_t matrix : to_check) {
+    for (int matrix = 0; matrix < kMatricesToInvert; matrix++) {
       std::cout << matrix << std::endl;
 
       // Read the inverse matrix from the output vector to inv_matrix_op
@@ -588,12 +569,12 @@ int main(int argc, char *argv[]) {
                  "running the executable."
               << std::endl;
     std::cerr << "   In this run, more than "
-              << (((long long)matrices * (kAMatrixSize + kInverseMatrixSize) *
-                   sizeof(float)) /
-                  pow(2, 30))
-              << " GBs of memory was requested for " << matrices
+              << (((long long)kMatricesToInvert 
+                * (kAMatrixSize + kInverseMatrixSize) 
+                * sizeof(float)) / pow(2, 30))
+              << " GBs of memory was requested for " << kMatricesToInvert
               << " matrices, each of size " << kRows << " x " << kColumns
-              << "\n";
+              << std::endl;
     std::terminate();
   }
 }

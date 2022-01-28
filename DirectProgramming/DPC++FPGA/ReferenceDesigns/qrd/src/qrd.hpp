@@ -69,7 +69,6 @@ void QRDecompositionImpl(
   auto start_time = std::chrono::high_resolution_clock::now();
 
   q.submit([&](sycl::handler &h) {
-    // h.depends_on(copy_a_event[(it-1)%2]);
     h.single_task<QRDDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
       MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
                             a_matrix_pipe>(a_device, matrix_count, repetitions);
