@@ -6,7 +6,7 @@
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
 #include "common.hpp"
-#include "gzip_header_reader.hpp"
+#include "gzip_metadata_reader.hpp"
 #include "huffman_decoder.hpp"
 #include "byte_stacker.hpp"
 #include "lz77_decoder.hpp"
@@ -14,12 +14,12 @@
 using namespace sycl;
 
 // declare the kernel and pipe names globally to reduce name mangling
-class GzipHeaderReaderKernelID;
+class GzipMetadataReaderKernelID;
 class HuffmanDecoderKernelID;
 class LZ77DecoderKernelID;
 class LiteralStackerKernelID;
 
-class GzipHeaderToHuffmanPipeID;
+class GzipMetadataToHuffmanPipeID;
 class HuffmanToLZ77PipeID;
 class LZ77ToByteStackerPipeID;
 
@@ -40,16 +40,16 @@ std::vector<event> SubmitGzipDecompressKernels(queue& q, int in_count,
   static_assert(fpga_tools::IsPow2(literals_per_cycle));
   
   // the inter-kernel pipes for the GZIP decompression engine
-  using GzipHeaderToHuffmanPipe =
-    ext::intel::pipe<GzipHeaderToHuffmanPipeID, FlagBundle<unsigned char>>;
+  using GzipMetadataToHuffmanPipe =
+    ext::intel::pipe<GzipMetadataToHuffmanPipeID, FlagBundle<unsigned char>>;
   using HuffmanToLZ77Pipe =
     ext::intel::pipe<HuffmanToLZ77PipeID, FlagBundle<HuffmanData>, kHuffmanToLZ77PipeDepth>;
   using LZ77ToByteStackerPipe =
     ext::intel::pipe<LZ77ToByteStackerPipeID, FlagBundle<BytePack<literals_per_cycle>>>;
 
   // submit the GZIP decompression kernels
-  auto header_event = SubmitGzipHeaderReader<GzipHeaderReaderKernelID, InPipe, GzipHeaderToHuffmanPipe>(q, in_count, hdr_data_out, crc_out, count_out);
-  auto huffman_event = SubmitHuffmanDecoder<HuffmanDecoderKernelID, GzipHeaderToHuffmanPipe, HuffmanToLZ77Pipe>(q);
+  auto header_event = SubmitGzipMetadataReader<GzipMetadataReaderKernelID, InPipe, GzipMetadataToHuffmanPipe>(q, in_count, hdr_data_out, crc_out, count_out);
+  auto huffman_event = SubmitHuffmanDecoder<HuffmanDecoderKernelID, GzipMetadataToHuffmanPipe, HuffmanToLZ77Pipe>(q);
   auto lz77_event = SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe, LZ77ToByteStackerPipe, literals_per_cycle>(q);
   auto byte_stacker_event = SubmitByteStacker<LiteralStackerKernelID, LZ77ToByteStackerPipe, OutPipe, literals_per_cycle>(q);
 

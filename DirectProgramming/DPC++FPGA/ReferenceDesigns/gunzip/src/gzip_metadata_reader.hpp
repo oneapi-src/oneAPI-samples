@@ -1,5 +1,5 @@
-#ifndef __GZIP_HEADER_READER_HPP__
-#define __GZIP_HEADER_READER_HPP__
+#ifndef __GZIP_METADATA_READER_HPP__
+#define __GZIP_METADATA_READER_HPP__
 
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
@@ -11,8 +11,8 @@
 using namespace sycl;
 
 template<typename InPipe, typename OutPipe>
-void GzipHeaderReader(int in_count, GzipHeaderData& hdr_data, int& crc,
-                      int& out_count) {
+void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
+                        int& out_count) {
   // the data type streamed out
   using OutPipeBundleT = FlagBundle<unsigned char>;
 
@@ -212,6 +212,7 @@ void GzipHeaderReader(int in_count, GzipHeaderData& hdr_data, int& crc,
     }
   }
 
+  // parsing the GZIP footer
   // construct the 32-bit CRC and size (out_count) from the last 8 bytes read
   crc = 0;
   out_count = 0;
@@ -232,9 +233,9 @@ void GzipHeaderReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   hdr_data.crc[1] = header_crc[1];
 }
 
-// Creates a kernel from the GZIP header reader function
+// Creates a kernel from the GZIP metadata reader function
 template<typename Id, typename InPipe, typename OutPipe>
-event SubmitGzipHeaderReader(queue& q, int in_count,
+event SubmitGzipMetadataReader(queue& q, int in_count,
                              GzipHeaderData* hdr_data_ptr, int* crc_ptr,
                              int* out_count_ptr) {
   return q.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
@@ -247,8 +248,8 @@ event SubmitGzipHeaderReader(queue& q, int in_count,
     int crc_loc;
     int out_count_loc;
     
-    GzipHeaderReader<InPipe, OutPipe>(in_count, hdr_data_loc, crc_loc,
-                                      out_count_loc);
+    GzipMetadataReader<InPipe, OutPipe>(in_count, hdr_data_loc, crc_loc,
+                                        out_count_loc);
 
     // write back the local copies of the output data
     *hdr_data = hdr_data_loc;
@@ -257,4 +258,4 @@ event SubmitGzipHeaderReader(queue& q, int in_count,
   });
 }
 
-#endif /* __GZIP_HEADER_READER_HPP__ */
+#endif /* __GZIP_METADATA_READER_HPP__ */
