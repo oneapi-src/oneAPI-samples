@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 #elif FPGA_SIMULATOR
   int runs = 1;
 #else
-  int runs = 8;
+  int runs = 9;
 #endif
 
   // get input and output filenames
