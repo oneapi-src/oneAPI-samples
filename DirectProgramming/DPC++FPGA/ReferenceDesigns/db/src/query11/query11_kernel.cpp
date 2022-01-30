@@ -170,16 +170,16 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
       // initialize accumulator
       partkey_values.Init();
 
-      bool done;
+      bool done = false;
 
       [[intel::initiation_interval(1), intel::ivdep(kAccumCacheSize)]]
-      do {
+      while (!done) {
         SupplierPartSupplierJoinedPipeData pipe_data = 
             PartSupplierPartsPipe::read();
 
         done = pipe_data.done;
 
-        if (pipe_data.valid && !done) {
+        if (pipe_data.valid) {
           UnrolledLoop<0, kJoinWinSize>([&](auto j) {
             SupplierPartSupplierJoined data = pipe_data.data.template get<j>();
 
@@ -191,7 +191,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
             }
           });
         }
-      } while (!done);
+      }
 
       // sort the {partkey, partvalue} pairs based on partvalue.
       // send in first kPartTableSize valid pairs
