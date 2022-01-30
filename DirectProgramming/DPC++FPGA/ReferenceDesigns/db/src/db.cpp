@@ -268,8 +268,13 @@ int main(int argc, char* argv[]) {
           std::accumulate(total_latency.begin() + 1, total_latency.end(), 0.0) /
           (double)(runs - 1);
 
+      double kernel_latency_avg =
+        std::accumulate(kernel_latency.begin() + 1, kernel_latency.end(), 0.0) /
+        (double)(runs - 1);
+
       // print the performance results
       std::cout << "Processing time: " << total_latency_avg << " ms\n";
+      std::cout << "Kernel time" << kernel_latency_avg << "ms\n";
 #endif
 
       std::cout << "PASSED\n";
