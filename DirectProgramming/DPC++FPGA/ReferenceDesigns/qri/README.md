@@ -22,24 +22,24 @@ The inverse of the input matrix A: inv(A) is then computed as inv(R) * transpose
 
 ### Matrix dimensions and FPGA resources
 
-The QR-based matrix inversion algorithm factors a complex _n_ × _n_ matrix. The algorithm computes the QR decomposition of the input matrix. To do so, it computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. The computation of the inverse of R also requires a dot product in a loop over _n_ elements. Finally, the final matrix multiplication requires _n_ multiplications.
+The QR-based matrix inversion algorithm factors a complex _n_ × _n_ matrix. The algorithm computes the QR decomposition of the input matrix. To do so, it computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *n* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. The computation of the inverse of R also requires a dot product in a loop over _n_ elements. Finally, the final matrix multiplication also requires a dot product in a loop over _n_ elements.
 
 We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
 
 Note: the compiler flag '-fp-relaxed' is planned to be deprecated.
 
-With this optimization, our FPGA implementation requires 4*_n_ DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. Thus, the matrix size is constrained by the total FPGA DSP resources available.
+With this optimization, our FPGA implementation requires 4*_n_ DSPs to compute each of the complex floating point dot products or 2*_n_ DSPs in the real case. Thus, the matrix size is constrained by the total FPGA DSP resources available.
 
-By default, the design is parameterized to process 32 × 32 matrices.
- 
+By default, the design is parameterized to process real floating-point matrices of size 32 × 32.
+
 
 ## Key Implementation Details
 | Kernel            | Description
 ---                 |---
-| QRD_compute       | Implements a modified Gram-Schmidt QR decomposition algorithm. 
-| QRI_compute       | Implements an inversion based of the provided Q and R matrices.
+| StreamingQRD       | Implements a modified Gram-Schmidt QR decomposition algorithm.
+| StreamingQRI       | Implements an inversion based on the provided Q and R matrices.
 
-To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials: 
+To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 * **Triangular Loop Optimization** (triangular_loop)
 * **Explicit Pipelining with `fpga_reg`** (fpga_register)
 * **Loop `ivdep` Attribute** (loop_ivdep)
@@ -55,7 +55,7 @@ To optimize the performance-critical loop in its algorithm, the design leverages
    6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
    7. Using the triangular loop optimization technique to maintain high throughput in triangular loops
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -70,7 +70,7 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
- 
+
 ### On a Linux* System
 1. Install the design into a directory `build` from the design directory by running `cmake`:
 
@@ -119,7 +119,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
@@ -129,15 +129,15 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
      ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      nmake report
-     ``` 
-   * An FPGA hardware target is not provided on Windows*. 
+     ```
+   * An FPGA hardware target is not provided on Windows*.
 
 *Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 *Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
@@ -159,12 +159,12 @@ NOTE: The design is optimized to perform best when run on a large number of matr
      ```
      export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      ./qri.fpga_emu           (Linux)
- 
+
      set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      qri.fpga_emu.exe         (Windows)
      ```
 
-2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative of the design's throughput. Indeed, the throughput is measured as the total kernel execution time divided by the number of matrices inverted. However, the transfer of the matrices from the host/device to the device/host also takes some time. This memory transfer is performed by chunks of matrices in parallel to the compute kernel. The first/last chunk of matrices transferred will therefore occur with the computation kernel doing nothing. Then, the higher the number of matrices to be inverted, the more accurate the throughput result will be.   
+2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative of the design's throughput. Indeed, the throughput is measured as the total kernel execution time divided by the number of matrices inverted. However, the transfer of the matrices from the host/device to the device/host also takes some time. This memory transfer is performed by chunks of matrices in parallel to the compute kernel. The first/last chunk of matrices transferred will therefore occur with the computation kernel doing nothing. Then, the higher the number of matrices to be inverted, the more accurate the throughput result will be.
      ```
      ./qri.fpga 40960         (Linux)
      ```
@@ -172,7 +172,7 @@ NOTE: The design is optimized to perform best when run on a large number of matr
 
 | Argument | Description
 ---        |---
-| `<num>`  | Optional argument that specifies the number of matrices to invert. Its default value is `1`.
+| `<num>`  | Optional argument that specifies the number of times to repeat the inversion of a set of 8 matrices. Its default value is `16` for emulation, '6553600' for FPGA.
 
 ### Example of Output
 
@@ -180,14 +180,38 @@ Example output when running the emulator on 2048 matrices (each consisting of 32
 
 ```
 Device name: Intel(R) FPGA Emulation Device
-Generating 2048 random real matrices of size 32x32 
-Running QR inversion of 2048 matrices 
-   Total duration:   1.3809 s
-Throughput: 1.4831k matrices/s
+Generating 8 random real matrices of size 32x32
+Running QR inversion of 8 matrices 16 times
+   Total duration:   0.50876 s
+Throughput: 0.251592k matrices/s
 Verifying results on matrix 0
-1024
-2047
+1
+2
+3
+4
+5
+6
+7
 
+PASSED
+```
+
+Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 32768 matrices (each consisting of 32*32 real numbers):
+
+```
+Device name: pac_a10 : Intel PAC Platform (pac_f100000)
+Generating 8 random real matrices of size 32x32
+Running QR inversion of 8 matrices 6553600 times
+   Total duration:   267.352 s
+Throughput: 196.104k matrices/s
+Verifying results on matrix 0
+1
+2
+3
+4
+5
+6
+7
 PASSED
 ```
 
@@ -199,7 +223,7 @@ PASSED
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsclock=330MHz` | The FPGA backend attempts to achieve 330 MHz
-`-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) ) 
+`-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) )
 `-Xsparallel=2` | Use 2 cores when compiling the bitstream through Quartus
 `-Xsseed` | Specifies the Quartus compile seed, to yield slightly higher fmax
 `-DROWS_COMPONENT` | Specifies the number of rows of the matrix
@@ -210,21 +234,16 @@ PASSED
 
 NOTE: The values for `seed`, `FIXED_ITERATIONS_QRD`, `FIXED_ITERATIONS_QRI`, `ROWS_COMPONENT`, `COLS_COMPONENT` are set according to the board being targeted.
 
-### Host Limitations
-The QRI demo host is not optimized for a very large number of matrices. Running the QRI executable with a number of matrices that occupy more memory than what is physically available on the host machine will result in system performance degradation due to virtual memory thrashing by the operating system.
-
 ### Performance disclaimers
 
 Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
 
-Performance results are based on testing as of July 29, 2020 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
+Performance results are based on testing as of Jan 31, 2022 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
 
 Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](www.intel.com).
 
-The performance was measured by Intel on July 29, 2020.
+The performance was measured by Intel on Jan 31, 2022.
 
 Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
 
 (C) Intel Corporation.
-      
-
