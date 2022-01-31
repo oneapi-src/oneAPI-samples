@@ -87,7 +87,7 @@ Notice that the FPGA emulator and the FPGA are are different target devices. It 
 
 
 ### Compiler Flags
-Here is a cheat sheet of the oneAPI DPC++ Compiler commands to compile for the FPGA emulator, generate the FPGA early image optimization reports, and compile for FPGA hardware.
+Here is a cheat sheet of the oneAPI DPC++ Compiler commands to compile this design for the FPGA emulator, generate the FPGA early image optimization reports, and compile for FPGA hardware.
 ```
 # FPGA emulator
 dpcpp -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu
@@ -107,7 +107,7 @@ The compiler flags used to achieve this are explained below.
 | Flag               | Explanation
 ---                  |---
 | `-fintelfpga`      | Perform ahead-of-time compilation for FPGA.
-| `-DFPGA_EMULATOR`  | Adds a preprocessor define (see code snippet above).
+| `-DFPGA_EMULATOR`  | Adds a preprocessor define that invokes the emulator device selector in this sample (see code snippet above).
 | `-Xshardware`      | `-Xs` is used to pass arguments to the FPGA backend. <br> Since the emulator is the default FPGA target, you must pass `Xshardware` to instruct the compiler to target FPGA hardware.
 | `-Xsboard`         | Optional argument to specify the FPGA board target. <br> If omitted, a default FPGA board is chosen.
 | `-fsycl-link=early`| Instructs the compiler to stop after creating the FPGA early image (and associated optimization report).
