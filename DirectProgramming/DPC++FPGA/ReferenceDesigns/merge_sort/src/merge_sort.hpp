@@ -15,7 +15,7 @@
 #include "produce.hpp"
 #include "sorting_networks.hpp"
 #include "unrolled_loop.hpp"
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
 #include "impu_math.hpp"
 
 using namespace sycl;
@@ -98,13 +98,13 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // the pipes connecting the different kernels of each merge unit
   // one set of pipes for each 'units' merge units
   using APipes =
-    impu::pipe::PipeArray<APipeID, PipeType, kDefaultPipeDepth, units>;
+    PipeArray<APipeID, PipeType, kDefaultPipeDepth, units>;
   using BPipes =
-    impu::pipe::PipeArray<BPipeID, PipeType, kDefaultPipeDepth, units>;
+    PipeArray<BPipeID, PipeType, kDefaultPipeDepth, units>;
   using MergePipes =
-    impu::pipe::PipeArray<MergePipeID, PipeType, kDefaultPipeDepth, units>;
+    PipeArray<MergePipeID, PipeType, kDefaultPipeDepth, units>;
   using InternalOutPipes =
-      impu::pipe::PipeArray<InternalOutPipeID, PipeType, kDefaultPipeDepth, units>;
+      PipeArray<InternalOutPipeID, PipeType, kDefaultPipeDepth, units>;
 
   //////////////////////////////////////////////////////////////////////////////
   // These defines make the latter code cleaner
@@ -287,7 +287,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // front-end compiler will not use the extra pipes and therefore they
   // will NOT be instantiated in hardware
   using InternalMTPipes =
-    impu::pipe::PipeArray<InternalMergeTreePipeID, PipeType, kDefaultPipeDepth,
+    PipeArray<InternalMergeTreePipeID, PipeType, kDefaultPipeDepth,
                            kReductionLevels, units>;
 
   // create the merge tree connected by pipes to merge the sorted output

@@ -15,8 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\compute_units.h" />
-    <ClInclude Include="src\pipe_array.h" />
-    <ClInclude Include="src\pipe_array_internal.h" />
+    <ClInclude Include="src\unroller.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
