@@ -87,7 +87,7 @@ Notice that the FPGA emulator and the FPGA are are different target devices. It 
 
 
 ### Compiler Flags
-Here is a cheat sheet of the oneAPI DPC++ Compiler commands to compile for the FPGA emulator, generate the FPGA early image optimization reports, and compile for FPGA hardware.
+Here is a cheat sheet of the oneAPI DPC++ Compiler commands to compile this design for the FPGA emulator, generate the FPGA early image optimization reports, and compile for FPGA hardware.
 ```
 # FPGA emulator
 dpcpp -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu
