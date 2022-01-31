@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
   int repetitions = argc > 1 ? atoi(argv[1]) : 16;
 #else
-  int repetitions = argc > 1 ? atoi(argv[1]) : 409600;
+  int repetitions = argc > 1 ? atoi(argv[1]) : 819200;
 #endif
   if (repetitions < 1) {
     std::cout << "Number of repetitions given is lower that 1." << std::endl;
