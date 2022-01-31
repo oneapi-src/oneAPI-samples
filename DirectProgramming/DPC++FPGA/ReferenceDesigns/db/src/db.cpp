@@ -274,7 +274,9 @@ int main(int argc, char* argv[]) {
 
       // print the performance results
       std::cout << "Processing time: " << total_latency_avg << " ms\n";
-      std::cout << "Kernel time" << kernel_latency_avg << "ms\n";
+      std::cout << "Kernel time: " << kernel_latency_avg << " ms\n";
+      std::cout << "Throughput: " << ((1 / kernel_latency_avg) * 1e3)
+                << " queries/s\n";
 #endif
 
       std::cout << "PASSED\n";

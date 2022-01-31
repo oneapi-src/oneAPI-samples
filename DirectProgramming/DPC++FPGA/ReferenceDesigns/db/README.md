@@ -16,16 +16,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 _Notice: This example design is only officially supported for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)_
 
 **Performance**
-In this design, we accelerate four database queries as *offload accelerators*. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the latency (i.e., the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). As shown in the table below, most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency.
-
-The performance data below was gathered using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) with a database scale factor (SF) of 1. Please see the [Database files](#database-files) section for more information on generating data for a scale factor of 1.
-
-| Query | Approximate Data Transfer Time (ms) | Measured Total Query Processing Time (ms)
-|:---   |:---                                 |:---
-| 1     | 35                                  | 39
-| 9     | 37                                  | 43
-| 11    | 5                                   | 11
-| 12    | 16                                  | 26
+In this design, we accelerate four database queries as *offload accelerators*. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the processing time (i.e., the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). As shown in the table below, most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency.
 
 ## Purpose
 The database in this tutorial has 8-tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four queries can be accelerated using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) and oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are are combined in different ways to build the four queries.
@@ -231,7 +222,9 @@ You should see the following output in the console:
     Validating query 1 test results
     Running Q1 within 90 days of 1998-12-1
     Validating query 1 test results
-    Processing time: 40.2986 ms
+    Total processing time: 40.2986 ms
+    Kernel processing time: XX ms
+    Throughput: XX queries/s
     PASSED
     ```
     NOTE: the scale factor 1 (SF=1) database files (`../data/sf1`) are **not** shipped with this reference design. Please refer to the [Database files](#database-files) section for information on how to generate these files yourself.
