@@ -21,8 +21,8 @@ Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 24.5k matrices/s for matrices of size 128 * 128
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for matrices of size 256 * 256
+| Intel® PAC with Intel Arria® 10 GX FPGA        | 24.5k matrices/s for complex matrices of size 128 * 128
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for complex matrices of size 256 * 256
 
 
 ## Purpose
@@ -189,7 +189,7 @@ NOTE: The design is optimized to perform best when run on a large number of matr
      qrd.fpga_emu.exe         (Windows)
      ```
 
-2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative of the design's throughput. Indeed, the throughput is measured as the total kernel execution time divided by the number of matrices decomposed. However, the transfer of the matrices from the host/device to the device/host also takes some time. This memory transfer is performed by chunks of matrices in parallel to the compute kernel. The first/last chunk of matrices transferred will therefore occur with the computation kernel doing nothing. Then, the higher the number of matrices to be inverted, the more accurate the throughput result will be.  
+2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative of the design's throughput. Indeed, the throughput is measured as the total kernel execution time divided by the number of matrices decomposed. However, the transfer of the matrices from the host/device to the device/host also takes some time. This memory transfer is performed by chunks of matrices in parallel to the compute kernel. The first/last chunk of matrices transferred will therefore occur with the computation kernel doing nothing. Then, the higher the number of matrices to be inverted, the more accurate the throughput result will be.
      ```
      ./qrd.fpga 40960         (Linux)
      ```
@@ -197,31 +197,45 @@ NOTE: The design is optimized to perform best when run on a large number of matr
 
 | Argument | Description
 ---        |---
-| `<num>`  | Optional argument that specifies the number of matrices to decompose. Its default value is `1`.
+| `<num>`  | Optional argument that specifies the number of times to repeat the decomposition of 8 matrices. Its default value is `16` for the emulation flow and '819200' for the FPGA flow.
 
 ### Example of Output
 
-Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 32768 matrices (each consisting of 128*128 complex numbers):
+Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 8 matrices 819200 times (each matrix consisting of 128*128 complex numbers):
 
 ```
-Device name: pac_a10 : Intel PAC Platform (pac_f000000)
-Generating 32768 random matrices
-Running QR decomposition of 32768 matrices repeatedly
-   Total duration:   42.3408 s
-Throughput: 24.7652k matrices/s
-Verifying results on matrix 0 16384 32767
+Device name: pac_a10 : Intel PAC Platform (pac_f100000)
+Generating 8 random complex matrices of size 128x128
+Running QR decomposition of 8 matrices 819200 times
+   Total duration:   309.707 s
+Throughput: 21.1848k matrices/s
+Verifying results on matrix 0
+1
+2
+3
+4
+5
+6
+7
 PASSED
 ```
 
-Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for 40960 matrices (each consisting of 256*256 complex numbers):
+Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for the decomposition of 8 matrices 409600 times (each matrix consisting of 256*256 complex numbers):
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 4096 random matrices
-Running QR decomposition of 4096 matrices repeatedly
-   Total duration:   17.3197 s
-Throughput: 7.36231k matrices/s
-Verifying results on matrix 0 20480 40959
+Generating 8 random complex matrices of size 256x256
+Running QR decomposition of 8 matrices 409600 times
+   Total duration:   555.02 s
+Throughput: 5.90393k matrices/s
+Verifying results on matrix 0
+1
+2
+3
+4
+5
+6
+7
 PASSED
 ```
 
@@ -243,9 +257,6 @@ PASSED
 
 NOTE: The values for `seed`, `FIXED_ITERATIONS`, `ROWS_COMPONENT`, `COLS_COMPONENT` are set according to the board being targeted.
 
-### Host Limitations
-The QRD demo host is not optimized for a very large number of matrices. Running the QRD executable with number of matrices that occupy more memory than what is physically available on the host machine will result in system performance degradation due to virtual memory thrashing by the operating system.
-
 ### Performance disclaimers
 
 Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
@@ -259,5 +270,3 @@ The performance was measured by Intel on July 29, 2020.
 Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
 
 (C) Intel Corporation.
-
-
