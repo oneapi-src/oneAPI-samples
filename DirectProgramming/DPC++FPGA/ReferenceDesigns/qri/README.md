@@ -36,8 +36,8 @@ By default, the design is parameterized to process real floating-point matrices 
 ## Key Implementation Details
 | Kernel            | Description
 ---                 |---
-| StreamingQRD       | Implements a modified Gram-Schmidt QR decomposition algorithm.
-| StreamingQRI       | Implements an inversion based on the provided Q and R matrices.
+| QRD       | Implements a modified Gram-Schmidt QR decomposition algorithm.
+| QRI       | Implements an inversion based on the provided Q and R matrices.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 * **Triangular Loop Optimization** (triangular_loop)
@@ -172,7 +172,7 @@ NOTE: The design is optimized to perform best when run on a large number of matr
 
 | Argument | Description
 ---        |---
-| `<num>`  | Optional argument that specifies the number of times to repeat the inversion of a set of 8 matrices. Its default value is `16` for emulation, '6553600' for FPGA.
+| `<num>`  | Optional argument that specifies the number of times to repeat the inversion of a set of 8 matrices. Its default value is `16` for the emulation flow and '6553600' for the FPGA flow.
 
 ### Example of Output
 
