@@ -107,7 +107,7 @@ The compiler flags used to achieve this are explained below.
 | Flag               | Explanation
 ---                  |---
 | `-fintelfpga`      | Perform ahead-of-time compilation for FPGA.
-| `-DFPGA_EMULATOR`  | Adds a preprocessor define (see code snippet above).
+| `-DFPGA_EMULATOR`  | Adds a preprocessor define that invokes the emulator device selector in this sample (see code snippet above).
 | `-Xshardware`      | `-Xs` is used to pass arguments to the FPGA backend. <br> Since the emulator is the default FPGA target, you must pass `Xshardware` to instruct the compiler to target FPGA hardware.
 | `-Xsboard`         | Optional argument to specify the FPGA board target. <br> If omitted, a default FPGA board is chosen.
 | `-fsycl-link=early`| Instructs the compiler to stop after creating the FPGA early image (and associated optimization report).
