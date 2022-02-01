@@ -8,6 +8,7 @@ xgboost_found = util.find_spec("xgboost") is not None
 sklearn_found = util.find_spec("sklearn") is not None
 sklearnex_found = util.find_spec("sklearnex") is not None
 inc_found = util.find_spec("neural_compressor") is not None
+modin_found = util.find_spec("modin") is not None
 
 if tensorflow_found == True:
 
@@ -53,6 +54,10 @@ if pytorch_found == True:
 if xgboost_found == True:
     import xgboost as xgb
     print("XGBoost Version: ", xgb.__version__)
+
+if modin_found == True:
+    import modin
+    print("Modin Version: ", modin.__version__)
 
 if sklearn_found == True:
     import sklearn
