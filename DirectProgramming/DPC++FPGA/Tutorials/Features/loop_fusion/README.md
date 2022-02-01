@@ -195,10 +195,10 @@ Navigate to the Area Analysis of the system under Area Analysis. The Kernel Syst
 ### Example of Output
 
 ```
-Throughput for kernel with default loop fusion and with arrays of size 5: 507.418 Ops/ns
-Throughput for kernel with the nofusion attribute and with arrays of size 5: 97.064 Ops/ns
-Throughput for kernel without fusion by default and with arrays of sizes 5 and 6: 510.152 Ops/ns
-Throughput for kernel with the loop fusion function wrapper and with arrays of sizes 5 and 6: 98.011 Ops/ns
+Throughput for kernel with default loop fusion and with arrays of size 50: 507.418 Ops/ns
+Throughput for kernel with the nofusion attribute and with arrays of size 50: 97.064 Ops/ns
+Throughput for kernel without fusion by default and with arrays of sizes 50 and 51: 510.152 Ops/ns
+Throughput for kernel with the loop fusion function wrapper and with arrays of sizes 50 and 51: 98.011 Ops/ns
 PASSED: The results are correct
 ```
 

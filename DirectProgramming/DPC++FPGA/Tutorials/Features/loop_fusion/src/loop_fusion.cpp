@@ -96,7 +96,8 @@ void DefaultFusion(std::array<int, kM> &m_array_1,
   }
 }
 
-// Does not fuse inner loops because of the [[intel::nofusion]] attribute. Were this attribute not present, the loops would fuse by default.
+// Does not fuse inner loops because of the [[intel::nofusion]] attribute. Were
+// this attribute not present, the loops would fuse by default.
 void NoFusion(std::array<int, kM> &m_array_1, std::array<int, kM> &m_array_2) {
   try {
     queue q(selector, dpc_common::exception_handler,
@@ -181,7 +182,9 @@ void DefaultNoFusion(std::array<int, kM + 1> &m_array_1,
   }
 }
 
-// The compiler is explicitly told to fuse the inner loops using the fpga_loop_fuse<>() function. Were this function not used, the loops would not fuse by default, since the trip counts of the loops are different.
+// The compiler is explicitly told to fuse the inner loops using the
+// fpga_loop_fuse<>() function. Were this function not used, the loops would not
+// fuse by default, since the trip counts of the loops are different.
 void FusionFunction(std::array<int, kM + 1> &m_array_1,
                     std::array<int, kM> &m_array_2) {
   try {
@@ -224,9 +227,8 @@ void FusionFunction(std::array<int, kM + 1> &m_array_1,
   }
 }
 
-
 int main() {
-  // Arrays will be populated in kernel loops 
+  // Arrays will be populated in kernel loops
   std::array<int, kM> default_fusion_1, default_fusion_2, no_fusion_1,
       no_fusion_2, default_nofusion_2, fusion_function_2;
   std::array<int, kM + 1> default_nofusion_1, fusion_function_1;
