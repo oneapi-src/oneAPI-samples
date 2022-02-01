@@ -332,7 +332,7 @@ bool DoQuery1(queue& q, Database& dbinfo, std::string& db_root_dir,
   unsigned int low_date_compact = low_date.ToCompact();
 
   std::cout << "Running Q1 within " << DELTA << " days of " << date.year << "-"
-            << date.month << "-" << date.day << "\n";
+            << date.month << "-" << date.day << std::endl;
 
   // the query output data
   std::array<DBDecimal, kQuery1OutSize> sum_qty = {0}, sum_base_price = {0},
@@ -385,7 +385,7 @@ bool DoQuery9(queue& q, Database& dbinfo, std::string& db_root_dir,
   // convert the colour regex to uppercase characters (convention)
   transform(colour.begin(), colour.end(), colour.begin(), ::toupper);
 
-  std::cout << "Running Q9 with colour regex: " << colour << "\n";
+  std::cout << "Running Q9 with colour regex: " << colour << std::endl;
 
   // the output of the query
   std::array<DBDecimal, 25 * 2020> sum_profit;
@@ -431,7 +431,8 @@ bool DoQuery11(queue& q, Database& dbinfo, std::string& db_root_dir,
   transform(nation.begin(), nation.end(), nation.begin(), ::toupper);
 
   std::cout << "Running Q11 for nation " << nation.c_str()
-            << " (key=" << (int)(dbinfo.n.name_key_map[nation]) << ")\n";
+            << " (key=" << (int)(dbinfo.n.name_key_map[nation]) << ")"
+            << std::endl;
 
   // the query output
   std::vector<DBIdentifier> partkeys(kPartTableSize);
@@ -499,7 +500,7 @@ bool DoQuery12(queue& q, Database& dbinfo, std::string& db_root_dir,
 
   std::cout << "Running Q12 between years " << low_date.year << " and "
             << high_date.year << " for SHIPMODES " << shipmode1 << " and "
-            << shipmode2 << "\n";
+            << shipmode2 << std::endl;;
 
   // the output of the query
   std::array<DBDecimal, 2> high_line_count, low_line_count;

@@ -9,7 +9,6 @@
 #include "../db_utils/Misc.hpp"
 #include "../db_utils/Tuple.hpp"
 #include "../db_utils/Unroller.hpp"
-#include "../db_utils/ShannonIterator.hpp"
 #include "../db_utils/fifo_sort.hpp"
 
 using namespace std::chrono;
@@ -194,22 +193,14 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
       }
 
       // sort the {partkey, partvalue} pairs based on partvalue.
-      // send in first kPartTableSize valid pairs
+      // we will send in kSortSize - kPartTableSize dummy values with a
+      // minimum value so that they are last (sorting from highest to lowest)
       [[intel::initiation_interval(1)]]
-      for (size_t i = 0; i < kPartTableSize; i++) {
-        SortInPipe::write(OutputData(i + 1, partkey_values.Get(i)));
-      }
-
-      // The sort kernel is expecting kSortSize elements, but we only have
-      // kPartTableSize (kPartTableSize <= kSortSize) elements.
-      // So, send it kSortSize-kPartTableSize pieces of invalid data.
-      // We are sorting elements by partvalue in descending order,
-      // so use 'min' for partvalue and 0 for partkey (valid partkeys are in
-      // [1,PARTSIZE]). Using min ensures these elements come out of the
-      // sorter LAST.
-      for (size_t i = 0; i < kSortSize - kPartTableSize; i++) {
-        SortInPipe::write(
-            OutputData(0, std::numeric_limits<DBDecimal>::min()));
+      for (size_t i = 0; i < kSortSize; i++) {
+        size_t key = (i < kPartTableSize) ? (i + 1) : 0;
+        auto val = (i < kPartTableSize) ? partkey_values.Get(i)
+                                        : std::numeric_limits<DBDecimal>::min();
+        SortInPipe::write(OutputData(key, val));
       }
     });
   });
@@ -223,28 +214,29 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
     accessor values_accessor(values_buf, h, write_only, no_init);
 
     h.single_task<ConsumeSort>([=]() [[intel::kernel_args_restrict]] {
-      // use a ShannonIterator to track how many items
-      // we have seen from the sorter
-      // Using a ShannonIterator sacrifices a (marginal)
-      // amount of area to improve Fmax/II
-      ShannonIterator<int, 3> i(0, kSortSize);
+      int i = 0;
+      bool i_in_range = 0 < kSortSize;
+      bool i_next_in_range = 1 < kSortSize;
+      bool i_in_parttable_range = 0 < kPartTableSize;
+      bool i_next_in_parttable_range = 1 < kPartTableSize;
 
       // grab all kSortSize elements from the sorter
       [[intel::initiation_interval(1)]]
-      while (i.InRange()) {
-        bool valid;
-        OutputData D = SortOutPipe::read(valid);
+      while (i_in_range) {
+        bool pipe_read_valid;
+        OutputData D = SortOutPipe::read(pipe_read_valid);
 
-        if (valid) {
-          // first kPartTableSize elements are valid
-          // i.Index() is the index of the iterator
-          if (i.Index() < kPartTableSize) {
-            partkeys_accessor[i.Index()] = D.partkey;
-            values_accessor[i.Index()] = D.partvalue;
+        if (pipe_read_valid) {
+          if (i_in_parttable_range) {
+            partkeys_accessor[i] = D.partkey;
+            values_accessor[i] = D.partvalue;
           }
 
-          // increment the ShannonIterator
-          i.Step();
+          i_in_range = i_next_in_range;
+          i_next_in_range = i < kSortSize - 2;
+          i_in_parttable_range = i_next_in_parttable_range;
+          i_next_in_parttable_range = i < kPartTableSize - 2;
+          i++;
         }
       }
     });
@@ -253,10 +245,8 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
   ///////////////////////////////////////////////////////////////////////////
   //// FifoSort Kernel
-  auto sort_event = q.submit([&](handler& h) {
-    h.single_task<FifoSort>([=]() [[intel::kernel_args_restrict]] {
-      ihc::sort<SortType, kSortSize, SortInPipe, SortOutPipe>(GreaterThan());
-    });
+  auto sort_event = q.single_task<FifoSort>([=] {
+    ihc::sort<SortType, kSortSize, SortInPipe, SortOutPipe>(GreaterThan());
   });
   ///////////////////////////////////////////////////////////////////////////
 
