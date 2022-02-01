@@ -22,10 +22,10 @@
 */
 template <typename T,        // The datatype for the computation
           bool is_complex,   // True if T is ac_complex<X>
-          int rows,          // Number of rows in the incoming A matrices
-          int columns,       // Number of columns in the incoming A
-                             // matrices, must be <= rows
-          int raw_latency,    // Read after write latency (in iterations) of
+          int rows,          // Number of rows in the A matrices
+          int columns,       // Number of columns in the A matrices
+                             // , must be <= rows
+          int raw_latency,   // Read after write latency (in iterations) of
                              // the triangular loop of this function.
                              // This value depends on the FPGA target, the
                              // datatype, the target frequency, etc.
@@ -51,8 +51,8 @@ struct StreamingQRD {
     // Functional limitations
     static_assert(rows >= columns,
                   "only rectangular matrices with rows>=columns are supported");
-    static_assert((columns <= 512) && (columns >= 4),
-                  "only matrices of size 4x4 to 512x512 are supported");
+    static_assert(columns >= 4,
+                  "only matrices of size 4x4 and over are supported");
 
     /*
       This code implements a OneAPI optimized variation of the following
@@ -146,7 +146,7 @@ struct StreamingQRD {
 
       // When specifying numbanks for a memory, it must be a power of 2.
       // Unused banks will be automatically optimized away.
-      constexpr short kNumBanksNextPow2 = 
+      constexpr short kNumBanksNextPow2 =
                               fpga_tools::Pow2(fpga_tools::CeilLog2(kNumBanks));
 
       [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
@@ -167,7 +167,7 @@ struct StreamingQRD {
       // Number of pipe reads of pipe_size to read all the matrices
       constexpr int kLoopIter = kLoopIterPerColumn * columns;
       // Size in bits of the loop iterator over kLoopIter iterations
-      constexpr int kLoopIterBitSize = 
+      constexpr int kLoopIterBitSize =
                                   fpga_tools::BitsForMaxValue<kLoopIter + 1>();
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
@@ -193,7 +193,7 @@ struct StreamingQRD {
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
         });
       }
-      
+
       // Compute the QR Decomposition
 
       // r_result write index
@@ -208,7 +208,7 @@ struct StreamingQRD {
       // Depending on the context, will contain:
       // -> -s[j]: for all the iterations to compute a_j
       // -> ir: for one iteration per j iterations to compute Q_i
-      [[intel::fpga_memory]] 
+      [[intel::fpga_memory]]
       [[intel::private_copies(2)]] // NO-FORMAT: Attribute
       TT s_or_ir[columns];
 
@@ -302,7 +302,7 @@ struct StreamingQRD {
           //    but the i iteration is still required to fill ir and s
           //    for subsequent iterations
           auto prod_lhs = a_i[k];
-          auto prod_rhs = i_lt_0[fanout_bank_idx] ? 
+          auto prod_rhs = i_lt_0[fanout_bank_idx] ?
                                           TT{0.0} : s_or_ir_j[fanout_bank_idx];
           auto add = j_eq_i[fanout_bank_idx] ? TT{0.0} : col[k];
           if constexpr (is_complex) {

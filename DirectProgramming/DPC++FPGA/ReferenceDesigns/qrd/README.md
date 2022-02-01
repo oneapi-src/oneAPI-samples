@@ -21,7 +21,7 @@ Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 24.5k matrices/s for complex matrices of size 128 * 128
+| Intel® PAC with Intel Arria® 10 GX FPGA        | 24k matrices/s for complex matrices of size 128 * 128
 | Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for complex matrices of size 256 * 256
 
 
@@ -204,11 +204,11 @@ NOTE: The design is optimized to perform best when run on a large number of matr
 Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 8 matrices 819200 times (each matrix consisting of 128*128 complex numbers):
 
 ```
-Device name: pac_a10 : Intel PAC Platform (pac_f100000)
-Generating 8 random complex matrices of size 128x128
+Device name: pac_a10 : Intel PAC Platform (pac_f000000)
+Generating 8 random complex matrices of size 128x128 
 Running QR decomposition of 8 matrices 819200 times
-   Total duration:   309.707 s
-Throughput: 21.1848k matrices/s
+ Total duration:   268.733 s
+Throughput: 24.387k matrices/s
 Verifying results on matrix 0
 1
 2
@@ -217,6 +217,7 @@ Verifying results on matrix 0
 5
 6
 7
+
 PASSED
 ```
 
@@ -224,10 +225,10 @@ Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 S
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 8 random complex matrices of size 256x256
-Running QR decomposition of 8 matrices 409600 times
-   Total duration:   555.02 s
-Throughput: 5.90393k matrices/s
+Generating 8 random complex matrices of size 256x256 
+Running QR decomposition of 8 matrices 819200 times
+ Total duration:   888.077 s
+Throughput: 7.37954k matrices/s
 Verifying results on matrix 0
 1
 2
@@ -236,6 +237,7 @@ Verifying results on matrix 0
 5
 6
 7
+
 PASSED
 ```
 

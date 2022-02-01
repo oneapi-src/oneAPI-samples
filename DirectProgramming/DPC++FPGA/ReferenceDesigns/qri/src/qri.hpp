@@ -45,12 +45,11 @@ void QRIImpl(
 ) {
 
   // Functional limitations
-  static_assert(std::is_same_v<T, float>, "only float datatype is supported");
   static_assert(
       rows >= columns,
       "only rectangular matrices with rows>=columns are matrices supported");
-  static_assert((columns <= 512) && (columns >= 4),
-                "only matrices of size 4x4 to 512x512 are supported");
+  static_assert(columns >= 4,
+                "only matrices of size 4x4 or over are supported");
 
   constexpr int kAMatrixSize = rows * columns;
   constexpr int kInverseMatrixSize = rows * columns;

@@ -425,8 +425,8 @@ int main(int argc, char *argv[]) {
                  "running the executable."
               << std::endl;
     std::cerr << "   In this run, more than "
-              << ((kAMatrixSize + kQRMatrixSize) * 2 * sizeof(float)) /
-                     pow(2, 30)
+              << ((kAMatrixSize + kQRMatrixSize) * 2 * kMatricesToDecompose
+                 * sizeof(float)) / pow(2, 30)
               << " GBs of memory was requested for the decomposition of a "
               << "matrix of size " << kRows << " x " << kColumns
               << std::endl;
