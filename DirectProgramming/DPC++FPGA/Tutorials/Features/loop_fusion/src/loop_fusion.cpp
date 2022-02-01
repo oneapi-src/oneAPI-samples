@@ -46,13 +46,12 @@ void ErrorReport(sycl::exception const &e) {
   std::terminate();
 }
 
-// Returns kernel runtime in ms
+// Returns kernel runtime in ns
 auto KernelRuntime(event e) {
   auto start{e.get_profiling_info<info::event_profiling::command_start>()};
   auto end{e.get_profiling_info<info::event_profiling::command_end>()};
 
-  // unit is nano second, convert to ms
-  return (end - start) * 1e-6;
+  return (end - start);
 }
 
 // Fuses inner loops by default, since the trip counts are equal, and there are
@@ -90,7 +89,7 @@ void DefaultFusion(std::array<int, kM> &m_array_1,
     std::cout << "Throughput for kernel with default loop fusion and with "
                  "arrays of size "
               << kM << ": " << ((double)num_ops_per_kernel / kernel_time)
-              << " Ops/ms\n";
+              << " Ops/ns\n";
 
   } catch (sycl::exception const &e) {
     ErrorReport(e);
@@ -132,7 +131,7 @@ void NoFusion(std::array<int, kM> &m_array_1, std::array<int, kM> &m_array_2) {
     std::cout << "Throughput for kernel with the nofusion attribute and with "
                  "arrays of size "
               << kM << ": " << ((double)num_ops_per_kernel / kernel_time)
-              << " Ops/ms\n";
+              << " Ops/ns\n";
 
   } catch (sycl::exception const &e) {
     ErrorReport(e);
@@ -175,7 +174,7 @@ void DefaultNoFusion(std::array<int, kM + 1> &m_array_1,
     std::cout << "Throughput for kernel without fusion by default and with "
                  "arrays of sizes "
               << kM + 1 << " and " << kM << ": "
-              << ((double)num_ops_per_kernel / kernel_time) << " Ops/ms\n";
+              << ((double)num_ops_per_kernel / kernel_time) << " Ops/ns\n";
 
   } catch (sycl::exception const &e) {
     ErrorReport(e);
@@ -218,7 +217,7 @@ void FusionFunction(std::array<int, kM + 1> &m_array_1,
     std::cout << "Throughput for kernel with the loop fusion function wrapper "
                  "and with arrays of sizes "
               << kM + 1 << " and " << kM << ": "
-              << ((double)num_ops_per_kernel / kernel_time) << " Ops/ms\n";
+              << ((double)num_ops_per_kernel / kernel_time) << " Ops/ns\n";
 
   } catch (sycl::exception const &e) {
     ErrorReport(e);
@@ -239,7 +238,7 @@ int main() {
   DefaultNoFusion(default_nofusion_1, default_nofusion_2);
   FusionFunction(fusion_function_1, fusion_function_2);
 
-  // Verify results: first kN elements of arrays should be equal, and equal to i
+  // Verify results: first kM elements of arrays should be equal, and equal to i
   for (size_t i = 0; i < kM; i++) {
     if (default_fusion_1[i] != default_fusion_2[i] ||
         default_fusion_1[i] != i) {
