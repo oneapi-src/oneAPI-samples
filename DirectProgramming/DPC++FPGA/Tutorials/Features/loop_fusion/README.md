@@ -195,15 +195,15 @@ Navigate to the Area Analysis of the system under Area Analysis. The Kernel Syst
 ### Example of Output
 
 ```
-Throughput for kernel with default loop fusion and with arrays of size 50: 507.418 Ops/ns
-Throughput for kernel with the nofusion attribute and with arrays of size 50: 97.064 Ops/ns
-Throughput for kernel without fusion by default and with arrays of sizes 50 and 51: 510.152 Ops/ns
-Throughput for kernel with the loop fusion function wrapper and with arrays of sizes 50 and 51: 98.011 Ops/ns
+Throughput for kernel with default loop fusion and with arrays of size 50: 487.466 Ops/ns
+Throughput for kernel with the nofusion attribute and with arrays of size 50: 94.656 Ops/ns
+Throughput for kernel without fusion by default and with arrays of sizes 51 and 50: 96.733 Ops/ns
+Throughput for kernel with the loop fusion function wrapper and with arrays of sizes 51 and 50: 121.139 Ops/ns
 PASSED: The results are correct
 ```
 
 ### Discussion of Results
 
-In both the cases where the inner loops have equal trip counts and in the cases where the inner loops have unequal trip counts, loop fusion increases the throughput by ~500%. 
+Loop fusion increases the throughput by ~400% when the loops have equal trip counts, and by ~25% when the loops have unequal trip counts. 
 
 Note that this performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
