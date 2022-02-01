@@ -30,7 +30,7 @@ if(FPGA_BOARD MATCHES ".*a10.*")
     set(FIXED_ITERATIONS_QRD 45)
     set(FIXED_ITERATIONS_QRI 36)
     set(CLOCK_TARGET 360MHz)
-    set(SEED 10)
+    set(SEED "-Xsseed=10")
 elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(ROWS_COMPONENT 32)
@@ -39,7 +39,7 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
     set(FIXED_ITERATIONS_QRD 57)
     set(FIXED_ITERATIONS_QRI 34)
     set(CLOCK_TARGET 450MHz)
-    set(SEED 5)
+    set(SEED "-Xsseed=5")
 elseif(FPGA_BOARD MATCHES ".*agilex.*")
     # Agilex™ parameters
     set(ROWS_COMPONENT 32)
@@ -48,15 +48,13 @@ elseif(FPGA_BOARD MATCHES ".*agilex.*")
     set(FIXED_ITERATIONS_QRI 34)
     set(COMPLEX 0)
     set(CLOCK_TARGET 520MHz)
-    set(SEED 5)
+    set(SEED "-Xsseed=5")
 else()
     message(FATAL_ERROR "Unknown board!")
 endif()
 
 if(IGNORE_DEFAULT_SEED)
-    set(SEED_FLAG "")
-else()
-    set(SEED_FLAG "-Xsseed=${SEED}")
+    set(SEED "")
 endif()
 
 
@@ -81,7 +79,7 @@ message(STATUS "COLS_COMPONENT=${COLS_COMPONENT}")
 message(STATUS "COMPLEX=${COMPLEX}")
 message(STATUS "FIXED_ITERATIONS_QRD=${FIXED_ITERATIONS_QRD}")
 message(STATUS "FIXED_ITERATIONS_QRI=${FIXED_ITERATIONS_QRI}")
-message(STATUS "SEED_FLAG=${SEED_FLAG}")
+message(STATUS "SEED=${SEED}")
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
@@ -90,7 +88,7 @@ message(STATUS "SEED_FLAG=${SEED_FLAG}")
 set(EMULATOR_COMPILE_FLAGS "${PLATFORM_SPECIFIC_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS_QRD=${FIXED_ITERATIONS_QRD} -DFIXED_ITERATIONS_QRI=${FIXED_ITERATIONS_QRI} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "${PLATFORM_SPECIFIC_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -qactypes -fbracket-depth=512 -DFIXED_ITERATIONS_QRD=${FIXED_ITERATIONS_QRD} -DFIXED_ITERATIONS_QRI=${FIXED_ITERATIONS_QRI} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fp-model=precise -Xsfp-relaxed")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED_FLAG} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

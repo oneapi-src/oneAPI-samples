@@ -100,25 +100,27 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
    ```
+   To compile for the Low Latency version of the design use the command
+
+   ```
+   cmake .. -DLOW_LATENCY=1 -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
+   ```
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
       ```
       make fpga_emu
       ```
-    > Note: for the Low Latency variant, use `make fpga_emu_ll`. Only supported on Stratix® 10 SX.
 
    * Generate the optimization report:
      ```
      make report
      ```
-    > Note: for the Low Latency variant, use `make report_ll`. Only supported on Stratix® 10 SX.
 
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
      ```
-    > Note: for the Low Latency variant, use `make fpga_ll`. Only supported on Stratix® 10 SX.
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/gzip.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
@@ -137,6 +139,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
    ```
+   To compile for the Low Latency version of the design use the command:
+
+   ```
+   cmake -G "Nmake Makefiles" .. -DLOW_LATENCY=1 -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
+   ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -144,15 +151,14 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
      nmake fpga_emu
      ```
-    > Note: for the Low Latency variant, use `nmake fpga_emu_ll`. Only supported on Stratix® 10 SX.
    * Generate the optimization report:
      ```
      nmake report
      ```
-    > Note: for the Low Latency variant, use `nmake report_ll`. Only supported on Stratix® 10 SX.
    * An FPGA hardware target is not provided on Windows*.
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
+*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -166,13 +172,11 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
      ./gzip.fpga_emu <input_file> [-o=<output_file>]     (Linux)
      gzip.fpga_emu.exe <input_file> [-o=<output_file>]   (Windows)
      ```
-    > Note: for the Low Latency variant use `gzip_ll.fpga_emu`. Only supported on Stratix® 10 SX.
 2. Run the sample on the FPGA device:
      ```
      aocl initialize acl0 pac_s10_usm
      ./gzip.fpga <input_file> [-o=<output_file>]         (Linux)
      ```
-     > Note: for the Low Latency variant use `gzip_ll.fpga`. Only supported on Stratix® 10 SX.
  ### Application Parameters
 
 | Argument | Description
@@ -205,8 +209,7 @@ PASSED
 | `gzipkernel.hpp`              | Header file for `gzipkernels.cpp`.
 | `gzipkernel)ll.hpp`              | Header file for `gzipkernels_ll.cpp`.
 | `CompareGzip.hpp`              | Header file for `CompareGzip.cpp`.
-| `pipe_array.hpp`                | Header file containing the definition of an array of pipes.
-| `pipe_array_internal.hpp`       | Helper for pipe_array.hpp.
+| `pipe_utils.hpp`             | Header file containing the definition of an array of pipes. This header can be found in the DirectProgramming/DPC++FPGA/include/ directory of this repository.
 | `WriteGzip.hpp`                | Header file for `WriteGzip.cpp`.
 
 ### Compiler Flags Used
@@ -215,7 +218,7 @@ PASSED
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsparallel=2` | Uses two cores when compiling the bitstream through Quartus®
-`-Xsseed=8` | Uses seed 8 (seed 33 for Low latency Variant) during Quartus®, yields slightly higher fmax
+`-Xsseed=<seed_num>` | Uses a particular seed while running Quartus®, selected to yield the best Fmax for this desgin
 `-Xsnum-reorder=6` | On Intel Stratix® 10 SX only, specify a wider data path for read data from global memory
 `-Xsopt-arg="-nocaching"` | Specifies that cached LSUs should not be used.
 `-DNUM_ENGINES=<1|2>` | Specifies that 1 GZIP engine should be compiled when targeting Intel Arria® 10 GX and two engines when targeting Intel Stratix® 10 SX

@@ -6,9 +6,8 @@
 #include <array>
 
 // utility classes
-#include "PipeDuplicator.hpp"
 #include "mvdr_complex.hpp"
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
 
 // MVDR processing kernels
 #include "BackwardSubstitution.hpp"
