@@ -30,7 +30,7 @@ An `ac_int` number can be defined as follows:
 ```cpp
 ac_int<W, S> a;
 ```
-Here `W` is the width in bits and `S` is a bool indicating if the number is signed. Signed numbers use the MSB to store the sign bit.
+Here `W` is the width in bits and `S` is a bool indicating if the number is signed. Signed numbers use the most significant bit (MSB) to store the sign bit.
 
 To use the `ac_int` type in your code, you must include the following header:
 
@@ -41,9 +41,7 @@ Additionally, you must pass the flag `-qactypes` on Linux or `/Qactypes` on Wind
 
 ### Basic Operations and Promotion Rules
 
-When using `ac_int`, you can write addition, multiplication, and division operations to use precisely as many bits as are needed to store the results.
-
-`ac_int` automatically promotes the result of all operations to the number of bits needed to represent all possible results without overflowing.
+When using `ac_int`, the results of addition, subtraction, multiplication, and division operations are automatically promoted to the number of bits needed to represent all possible results without overflowing. However, the data type you use to store the result may result in truncation.
 
 For example, the addition of two 8-bit integers results in a 9-bit result to support overflow. Internally, the result will be 9-bit. However, if the user attempts to store the result in an 8-bit container, `ac_int` will let the user do this, which leads to the most significant bit being discarded. The responsibility lies on the user to use the correct data type.
 
@@ -51,7 +49,7 @@ These promotion rules are consistent across all architectures, so the behavior w
 
 ### Shift Operations
 
-The behavior of shift operations in `ac_int` are slightly different from its behavior with native integer types. For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/. Some key points to remember are as follows:
+The behavior of shift operations of `ac_int` data types is slightly different from shift operations of native integer types. For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/. Some key points to remember are as follows:
   - If the data type of the shift amount is not explicitly `unsigned` (either using `ac_int<N, *false*>` or using the `unsigned` keyword), then the compiler will generate a more complex shifter that allows negative shifts and positive shifts. A shift by a negative amount is equivalent to a positive shift in the opposite direction. Normally, you will not want to use negative shifting, so you should use an `unsigned` data type for the shift value to obtain a more resource efficient shifter.
   - Shift values greater than the width of the data types are treated as a shift equal to the width of the data type.
   - The shift operation can be done more efficiently by specifying the amount to shift with the smallest possible `ac_int`.
@@ -60,7 +58,7 @@ The behavior of shift operations in `ac_int` are slightly different from its beh
 
 The bit select operator `[]` allows reading and modifying an individual bit in an `ac_int`.
 
-*Note:* An `ac_int` must be initialized before being accessed by bit select operator `[]`, otherwise, it is undefined behavior and can give you unexpected results.
+*Note:* You must initialize an `ac_int` variable before accessing it using the bit select operator `[]`. Using the `[]` operator on an uninitialized `ac_int` variable is undefined behavior and can give you unexpected results. Assigning each bit explicitly using the `[]` operator does not count as initializing the `ac_int` variable.
 
 For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/.
 
@@ -69,20 +67,20 @@ For full details, see the Algorithmic C (AC) Datatypes documentation available a
 The slice read operation `slc` and the slice write operation `set_slc` allows reading and modifying a slice in an `ac_int`.
 
 Slice read is provided with the template function `slc<int W>(int lsb)`. The two arguments are defined as:
-- `W` is the bit length of slice. It is constrained to be static so that the length of the slice is known at compile time.
+- `W` is the bit length of the slice. It must be known at compile time.
 - `lsb` is the index of the LSB of the slice being read.
 
 Slice write is provided with the function `set_slc(int lsb, const ac_int<W, S> &slc)`. The two arguments are defined as:
-- `lsb` is the index of the LSB of the slice being written.
-- `slc` is an `ac_int` slice. The bit length of slice is inferred from the width `W` of `slc`.
+- `lsb` is the index of the least significant bit (LSB) of the slice being written.
+- `slc` is an `ac_int` slice that is to be written into the target `ac_int` starting at bit `lsb`. The bit length of slice is inferred from the width `W` of `slc`.
 
-*Note:* An `ac_int` must be initialized before being accessed by bit slice operations `slc` and `set_slc`, otherwise, it is undefined behavior and can give you unexpected results.
+*Note:* An `ac_int` must be initialized before being accessed by bit slice operations `slc` and `set_slc`. Using the `slc` and `set_slc` functions on an uninitialized `ac_int` variable is undefined behavior and can give you unexpected results.
 
 For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/.
 
 ### Understanding the Tutorial Design
 
-This tutorial consists of five kernels as following:
+This tutorial consists of five kernels:
 
 Kernel `BasicOpsInt` contains native `int` type addition, multiplication, and division operations, while kernel `BasicOpsAcInt` contains `ac_int` type addition, multiplication, and division operations. By comparing these two kernels, you will find reduced width `ac_int` generates area efficient hardware than native `int`.
 
@@ -222,9 +220,9 @@ For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workfl
 
 Locate `report.html` in the `ac_int_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-On the main report page, scroll down to the section titled *Compile Estimated Kernel Resource Utilization Summary*. You can see the overall resource usage of kernel `BasicOpsAcInt` is less than kernel `BasicOpsInt`. Navigate to *Area Analysis of System* (*Area Analysis* > *Area Analysis of System*), you can find resource usage of individual addition, multiplication, and division operations, and you can verify each individual operation consumes less resource in kernel `BasicOpsAcInt` than in kernel `BasicOpsInt`.
+On the main report page, scroll down to the section titled *Compile Estimated Kernel Resource Utilization Summary*. You can see the overall resource usage of kernel `BasicOpsAcInt` is less than kernel `BasicOpsInt`. Navigate to *Area Analysis of System* (*Area Analysis* > *Area Analysis of System*), you can find resource usage information of the individual addition, multiplication, and division operations, and you can verify each individual operation consumes fewer resources in kernel `BasicOpsAcInt` than in kernel `BasicOpsInt`.
 
-Navigate to *System Viewer* (*Views* > *System Viewer*) and find the cluster in kernel `ShiftOp` that contains the left-shifter node (`<<`). Similarly, locate the cluster that contains the left-shifter node in kernel `EfficientShiftOp`. Observe that the compiler generates extra logic in kernel `ShiftOp` to deal with the signedness of shift amount. You can verify that kernel `ShiftOp` consumes more resource than kernel `EfficientShiftOp` in *Compile Estimated Kernel Resource Utilization Summary* on the main report page and *Area Analysis of System*.
+Navigate to *System Viewer* (*Views* > *System Viewer*) and find the cluster in kernel `ShiftOp` that contains the left-shifter node (`<<`). Similarly, locate the cluster that contains the left-shifter node in kernel `EfficientShiftOp`. Observe that the compiler generates an additional shifter in kernel `ShiftOp` to deal with the signedness of the shift amount `b`. You can verify that kernel `EfficientShiftOp` consumes fewer resources than kernel `ShiftOp` in *Compile Estimated Kernel Resource Utilization Summary* on the main report page and *Area Analysis of System*.
 
 ## Running the Sample
 

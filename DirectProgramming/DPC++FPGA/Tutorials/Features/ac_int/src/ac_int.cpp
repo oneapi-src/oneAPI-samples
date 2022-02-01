@@ -24,6 +24,7 @@ class EfficientShiftOp;
 class BitOps;
 
 using MyUInt2 = ac_int<2, false>;
+using MyInt7 = ac_int<7, true>;
 using MyInt14 = ac_int<14, true>;
 using MyInt15 = ac_int<15, true>;
 using MyInt28 = ac_int<28, true>;
@@ -82,7 +83,8 @@ void TestShiftOp(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt14 &c) {
     accessor b_acc(b_buf, h, read_only);
     accessor c_acc(c_buf, h, write_only, no_init);
     h.single_task<ShiftOp>([=]() [[intel::kernel_args_restrict]] {
-      c_acc[0] = a_acc[0] << b_acc[0];
+      MyInt14 temp = a_acc[0] << b_acc[0];
+      c_acc[0] = temp >> b_acc[0];
     });
   });
 }
@@ -98,7 +100,8 @@ void TestEfficientShiftOp(queue &q, const MyInt14 &a, const MyUInt2 &b,
     accessor b_acc(b_buf, h, read_only);
     accessor c_acc(c_buf, h, write_only, no_init);
     h.single_task<EfficientShiftOp>([=]() [[intel::kernel_args_restrict]] {
-      c_acc[0] = a_acc[0] << b_acc[0];
+      MyInt14 temp = a_acc[0] << b_acc[0];
+      c_acc[0] = temp >> b_acc[0];
     });
   });
 }
@@ -112,13 +115,14 @@ MyInt14 TestBitOps(queue &q, const MyInt14 &a) {
     accessor a_acc(a_buf, h, read_only);
     accessor res_acc(res_buf, h, write_only, no_init);
     h.single_task<BitOps>([=]() [[intel::kernel_args_restrict]] {
-      MyInt14 temp = a_acc[0].slc<14>(0);
+      // 0b1111101
+      MyInt7 temp = a_acc[0].slc<7>(3);
 
       res_acc[0] = 0; // Must be initialized before bit operations, otherwise,
                       // it will be undefined behavior
 
-      // 0b0 -> 0b1111101000 (decimal:1000)
-      res_acc[0].set_slc(0, temp);
+      // 0 -> 0b1111101000
+      res_acc[0].set_slc(3, temp);
 
       // 0b1111101000 -> 0b1111101111
       res_acc[0][2] = 1;
