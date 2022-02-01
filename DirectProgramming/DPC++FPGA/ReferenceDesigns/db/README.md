@@ -223,9 +223,9 @@ You should see the following output in the console:
     Validating query 1 test results
     Running Q1 within 90 days of 1998-12-1
     Validating query 1 test results
-    Total processing time: 40.2986 ms
-    Kernel processing time: XX ms
-    Throughput: XX queries/s
+    Total processing time: 34.389 ms
+    Kernel processing time: 3.16621 ms
+    Throughput: 315.835 queries/s
     PASSED
     ```
     NOTE: the scale factor 1 (SF=1) database files (`../data/sf1`) are **not** shipped with this reference design. Please refer to the [Database files](#database-files) section for information on how to generate these files yourself.
