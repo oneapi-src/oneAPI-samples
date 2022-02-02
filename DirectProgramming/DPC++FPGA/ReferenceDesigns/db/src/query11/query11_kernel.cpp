@@ -4,7 +4,7 @@
 
 #include "query11_kernel.hpp"
 #include "pipe_types.hpp"
-#include "../db_utils/Accumulator.hpp"
+#include "../db_utils/CachedMemory.hpp"
 #include "../db_utils/MapJoin.hpp"
 #include "../db_utils/Misc.hpp"
 #include "../db_utils/Tuple.hpp"
@@ -87,10 +87,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
     // kernel to produce the PARTSUPPLIER table
     h.single_task<ProducePartSupplier>([=]() [[intel::kernel_args_restrict]] {
       [[intel::initiation_interval(1)]]
-      for (size_t i = 0; i < ps_iters + 1; i++) {
-        bool done = (i == ps_iters);
-        bool valid = (i != ps_iters);
-
+      for (size_t i = 0; i < ps_iters; i++) {
         // bulk read of data from global memory
         NTuple<kJoinWinSize, PartSupplierRow> data;
 
@@ -109,8 +106,11 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
         // write to pipe
         ProducePartSupplierPipe::write(
-            PartSupplierRowPipeData(done, valid, data));
+            PartSupplierRowPipeData(false, true, data));
       }
+
+      // tell the downstream kernel we are done producing data
+      ProducePartSupplierPipe::write(PartSupplierRowPipeData(true, false));
     });
   });
   ///////////////////////////////////////////////////////////////////////////
@@ -124,7 +124,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
     accessor s_nationkey_accessor(s_nationkey_buf, h, read_only);
 
     h.single_task<JoinPartSupplierParts>([=]() [[intel::kernel_args_restrict]] {
-      // initialize the mapper
+      // initialize the array map
       // +1 is to account for fact that SUPPKEY is [1,kSF*10000]
       using ArrayMapType = ArrayMap<SupplierRow, kSupplierTableSize + 1>;
       ArrayMapType array_map;
@@ -132,7 +132,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
       // populate MapJoiner map
       // why a map? keys may not be sequential
-      [[intel::initiation_interval(1), intel::ivdep]]
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < s_rows; i++) {
         // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed to be unique
@@ -161,10 +161,10 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
     // kernel to produce the PARTSUPPLIER table
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       constexpr int kAccumCacheSize = 15;
-      BRAMAccumulator<DBDecimal,
-                      kPartTableSize,
-                      kAccumCacheSize,
-                      DBIdentifier> partkey_values;
+      CachedMemory<DBDecimal,
+                   kPartTableSize,
+                   kAccumCacheSize,
+                   DBIdentifier> partkey_values;
 
       // initialize accumulator
       partkey_values.Init();
@@ -173,12 +173,13 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
       [[intel::initiation_interval(1), intel::ivdep(kAccumCacheSize)]]
       while (!done) {
+        bool valid_pipe_read;
         SupplierPartSupplierJoinedPipeData pipe_data = 
-            PartSupplierPartsPipe::read();
+            PartSupplierPartsPipe::read(valid_pipe_read);
 
-        done = pipe_data.done;
+        done = pipe_data.done && valid_pipe_read;
 
-        if (pipe_data.valid) {
+        if (valid_pipe_read && !done) {
           UnrolledLoop<0, kJoinWinSize>([&](auto j) {
             SupplierPartSupplierJoined data = pipe_data.data.template get<j>();
 
@@ -186,7 +187,8 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
               // partkeys start at 1
               DBIdentifier index = data.partkey - 1;
               DBDecimal val = data.supplycost * (DBDecimal)(data.availqty);
-              partkey_values.Accumulate(index, val);
+              auto curr_val = partkey_values.Get(index);
+              partkey_values.Set(index, curr_val + val);
             }
           });
         }
@@ -252,10 +254,15 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
   // wait for kernels to finish
   produce_ps_event.wait();
+  std::cout << "produce_ps_event done" << std::endl;
   join_event.wait();
+  std::cout << "join_event done" << std::endl;
   compute_event.wait();
+  std::cout << "compute_event done" << std::endl;
   sort_event.wait();
+  std::cout << "sort_event done" << std::endl;
   consume_sort_event.wait();
+  std::cout << "consume_sort_event done" << std::endl;
 
   high_resolution_clock::time_point host_end = high_resolution_clock::now();
   duration<double, std::milli> diff = host_end - host_start;
