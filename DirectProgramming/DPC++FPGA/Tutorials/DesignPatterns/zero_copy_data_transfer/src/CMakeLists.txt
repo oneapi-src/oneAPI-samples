@@ -25,7 +25,7 @@ if(NOT FPGA_BOARD MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED
 endif()
 
 if (USM_HOST_ALLOCATIONS_ENABLED)
-  message(STATUS "USM_HOST_ALLOCATIONS_ENABLED set enabled  manually!")
+    message(STATUS "USM_HOST_ALLOCATIONS_ENABLED set manually!")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
