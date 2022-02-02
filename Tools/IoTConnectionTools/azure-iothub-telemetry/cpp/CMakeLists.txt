@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.4)
 project(azure-iothub-telemetry)
 
-# Use the Intel C++ Compiler when available
+# Use the Intel® C++ Compiler when available
 find_program(ICPC NAMES icpc icl)
 if(ICPC)
     set(CMAKE_CXX_COMPILER ${ICPC})

@@ -27,7 +27,7 @@
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
 #if FPGA || FPGA_EMULATOR
-  #include <CL/sycl/INTEL/fpga_extensions.hpp>
+  #include <sycl/ext/intel/fpga_extensions.hpp>
 #endif
 
 using namespace sycl;
@@ -53,7 +53,7 @@ void IotaParallel(queue &q, IntArray &a_array, int value) {
   // data access permission and device computation (kernel).
   q.submit([&](auto &h) {
     // Create an accessor with write permission.
-    accessor a(a_buf, h, write_only, noinit);
+    accessor a(a_buf, h, write_only, no_init);
 
     // Use parallel_for to populate consecutive numbers starting with a
     // specified value in parallel on device. This executes the kernel.
@@ -72,10 +72,10 @@ int main() {
   // Create device selector for the device of your interest.
 #if FPGA_EMULATOR
   // DPC++ extension: FPGA emulator selector on systems without FPGA card.
-  INTEL::fpga_emulator_selector d_selector;
+  ext::intel::fpga_emulator_selector d_selector;
 #elif FPGA
   // DPC++ extension: FPGA selector on systems with FPGA card.
-  INTEL::fpga_selector d_selector;
+  ext::intel::fpga_selector d_selector;
 #else
   // The default device selector will select the most performant device.
   default_selector d_selector;

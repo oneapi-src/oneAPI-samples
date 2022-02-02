@@ -1,11 +1,7 @@
-set(HOST_SOURCE db.cpp dbdata.cpp)
-file(GLOB DB_UTILITY_HEADERS "db_util/*.hpp")
-set(HOST_HEADER_FILES ${DB_UTILITY_HEADERS} dbdata.hpp)
-
 set(TARGET_NAME db)
+set(SOURCE_FILE db.cpp dbdata.cpp)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
-set(REPORTS_TARGET ${TARGET_NAME}_report)
 
 # which query are we doing?
 if(NOT DEFINED QUERY)
@@ -15,29 +11,93 @@ else()
     message(STATUS "\tQUERY=${QUERY}")
 endif()
 
+# select default board based on query
+if(${QUERY} EQUAL 1)
+    set(DEFAULT_BOARD "intel_a10gx_pac:pac_a10")
+    set(DEFAULT_BOARD_STR "Intel Arria(R) 10 GX")
+elseif(${QUERY} EQUAL 9)
+    set(DEFAULT_BOARD "intel_s10sx_pac:pac_s10")
+    set(DEFAULT_BOARD_STR "Intel Stratix(R) 10 SX")
+elseif(${QUERY} EQUAL 11)
+    set(DEFAULT_BOARD "intel_s10sx_pac:pac_s10")
+    set(DEFAULT_BOARD_STR "Intel Stratix(R) 10 SX")
+elseif(${QUERY} EQUAL 12)
+    set(DEFAULT_BOARD "intel_a10gx_pac:pac_a10")
+    set(DEFAULT_BOARD_STR "Intel Arria(R) 10 GX")
+endif()
+
+# FPGA board selection
+if(NOT DEFINED FPGA_BOARD)
+    set(FPGA_BOARD ${DEFAULT_BOARD})
+    message(STATUS "FPGA_BOARD was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with ${DEFAULT_BOARD_STR} FPGA). \
+                    \nPlease refer to the README for information on board selection.")
+else()
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+endif()
+
+# This is a Windows-specific flag that enables error handling in host code
+if(WIN32)
+    set(WIN_FLAG "/EHsc")
+endif()
+
+# ensure a supported query was requested
+if(NOT ${QUERY} EQUAL 1 AND NOT ${QUERY} EQUAL 9 AND NOT ${QUERY} EQUAL 11 AND NOT ${QUERY} EQUAL 12)
+  message(FATAL_ERROR "\tQUERY ${QUERY} not supported (supported queries are 1, 9, 11 and 12)")
+endif()
+
 # Pick the default seed if the user did not specify one to CMake.
 # We do a seed sweep to find a good seed by default
 if(NOT DEFINED SEED)
-    if(${QUERY} EQUAL 1)
-        set(SEED 2)
-    elseif(${QUERY} EQUAL 9)
-        set(SEED 2)
-    elseif(${QUERY} EQUAL 11)
-        set(SEED 4)
-    elseif(${QUERY} EQUAL 12)
-        set(SEED 3)
+    if(${FPGA_BOARD} MATCHES ".*a10.*")
+        if(${QUERY} EQUAL 1)
+            set(SEED 2)
+        elseif(${QUERY} EQUAL 9)
+            set(SEED 2)
+        elseif(${QUERY} EQUAL 11)
+            set(SEED 4)
+        elseif(${QUERY} EQUAL 12)
+            set(SEED 2)
+        endif()
+    elseif(${FPGA_BOARD} MATCHES ".*s10.*")
+        if(${QUERY} EQUAL 1)
+            set(SEED 3)
+        elseif(${QUERY} EQUAL 9)
+            set(SEED 2)
+        elseif(${QUERY} EQUAL 11)
+            set(SEED 3)
+        elseif(${QUERY} EQUAL 12)
+            set(SEED 2)
+        endif()
+    elseif(${FPGA_BOARD} MATCHES ".*agilex.*")
+        if(${QUERY} EQUAL 1)
+            set(SEED 2)
+        elseif(${QUERY} EQUAL 9)
+            set(SEED 2)
+        elseif(${QUERY} EQUAL 11)
+            set(SEED 4)
+        elseif(${QUERY} EQUAL 12)
+            set(SEED 3)
+        endif()
     else()
-        message(FATAL_ERROR "\tQUERY ${QUERY} not supported (supported queries are 1, 9, 11 and 12)")
+        set(SEED 1)
     endif()
 endif()
 
-# set number of CPU cores to use for quartus compile
+# Error out if trying to run Q9 or Q11 on Arria 10
+if (${FPGA_BOARD} MATCHES ".*a10.*")
+    if(${QUERY} EQUAL 9 OR ${QUERY} EQUAL 11)
+      message(FATAL_ERROR "Queries 9 and 11 are not supported on Arria 10 devices")
+    endif()
+endif()
+
+# set number of CPU cores to use for quartus® compile, default=2
 if(NOT DEFINED QUARTUS_CORES)
     set(QUARTUS_CORES 2)
 endif()
 
 # check if they want to use the small database
-if(DEFINED SF_SMALL)
+if(SF_SMALL)
     message(STATUS "\tManual override for database size - building for small database (SF=0.01)")
     set(SF_SMALL_ARG -DSF_SMALL)
 else()
@@ -61,104 +121,41 @@ else()
     message(FATAL_ERROR "\tQUERY ${QUERY} not supported (supported queries are 1, 9, 11 and 12)")
 endif()
 
-# Intel supported FPGA Boards and their names
-set(A10_PAC_BOARD_NAME "intel_a10gx_pac:pac_a10")
-set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10")
-
-# Assume target is the Intel(R) PAC D5005 (with Intel Stratix(R) 10 SX FPGA) 
-set(SELECTED_BOARD ${S10_PAC_BOARD_NAME})
-
-# Check if target is the Intel(R) PAC D5005 (with Intel Stratix(R) 10 SX FPGA)
-if(NOT DEFINED FPGA_BOARD)
-    message(STATUS "\tConfiguring the design to run on the Intel(R) Programmable Acceleration Card (PAC) D5005 (with Intel Stratix(R) 10 SX FPGA).")
-elseif(FPGA_BOARD STREQUAL ${A10_PAC_BOARD_NAME})
-    message(FATAL_ERROR "\tThis example design ONLY supports the Intel(R) Programmable Acceleration Card (PAC) D5005 (with Intel Stratix(R) 10 SX FPGA).")
-elseif(FPGA_BOARD STREQUAL ${S10_PAC_BOARD_NAME})
-    message(STATUS "\tConfiguring the design to run on the Intel(R) Programmable Acceleration Card (PAC) D5005 (with Intel Stratix(R) 10 SX FPGA).")
-else()
-    message(FATAL_ERROR "\tAn invalid board name was passed in using the FPGA_BOARD flag. Please refer to the README for the list of valid board names.")
-endif()
-
-set(HARDWARE_COMPILE_FLAGS "-fintelfpga -c -DQUERY=${QUERY} ${SF_SMALL_ARG}")
-
+# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
+# 2. The "link" stage invokes the compiler's FPGA backend before linking.
+#    For this reason, FPGA backend flags must be passed as link flags in CMake.
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xsboard=${FPGA_BOARD} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Wall -Xshardware -Xsboard=${SELECTED_BOARD} -Xsopt-arg=\"-nocaching\" -Xsforce-single-store-ring -Xsparallel=${QUARTUS_CORES} -Xsseed=${SEED} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
 
-set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall -DFPGA_EMULATOR -DQUERY=${QUERY} ${SF_SMALL_ARG}")
-set(EMULATOR_LINK_FLAGS "-fintelfpga")
+###############################################################################
+### FPGA Emulator
+###############################################################################
+add_executable(${EMULATOR_TARGET} ${SOURCE_FILE} ${DEVICE_SOURCE})
+set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
+set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 
-# FPGA emulator
-if(WIN32)
-    set(WIN_EMULATOR_TARGET ${EMULATOR_TARGET}.exe)
-    add_custom_target(fpga_emu DEPENDS ${WIN_EMULATOR_TARGET})
-    separate_arguments(WIN_EMULATOR_COMPILE_FLAGS WINDOWS_COMMAND "${EMULATOR_COMPILE_FLAGS}")
-    add_custom_command(OUTPUT ${WIN_EMULATOR_TARGET} 
-                    COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_EMULATOR_COMPILE_FLAGS}
-                    ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE}
-                    ${CMAKE_CURRENT_SOURCE_DIR}/db.cpp
-                    ${CMAKE_CURRENT_SOURCE_DIR}/dbdata.cpp
-                    -o ${CMAKE_BINARY_DIR}/${WIN_EMULATOR_TARGET}
-                    DEPENDS ${DEVICE_SOURCE} ${DEVICE_HEADER} ${HOST_HEADER_FILES})
-else()
-    add_executable(${EMULATOR_TARGET} ${DEVICE_SOURCE} ${HOST_SOURCE} ${HOST_HEADERS} ${DB_UTILITY_HEADERS})
-    set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS ${EMULATOR_COMPILE_FLAGS})
-    set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS ${EMULATOR_LINK_FLAGS})
-    add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
-endif()
+###############################################################################
+### Generate Report
+###############################################################################
+set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
+# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE} ${DEVICE_SOURCE})
+add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 
-# FPGA hardware
-if(WIN32)
-    add_custom_target(fpga COMMAND echo "An FPGA hardware target is not provided on Windows. See README for details.")
-else()
-    add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${HOST_SOURCE} ${DEVICE_SOURCE})
-    set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS ${HARDWARE_COMPILE_FLAGS})
-    set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS ${HARDWARE_LINK_FLAGS})
-    add_custom_target(fpga DEPENDS ${FPGA_TARGET})
-endif()
-
-# FPGA hardware report
-if(WIN32)
-    add_custom_target(report DEPENDS ${REPORTS_TARGET})
-    separate_arguments(WIN_FLAGS WINDOWS_COMMAND)
-    add_custom_command(OUTPUT ${REPORTS_TARGET}
-                    COMMAND ${CMAKE_CXX_COMPILER} /EHsc ${WIN_FLAGS} ${HARDWARE_LINK_FLAGS} -fsycl-link 
-                    ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
-                    DEPENDS ${DEVICE_SOURCE} ${DEVICE_HEADER} ${DB_UTILITY_HEADERS})
-else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db.cpp db.cpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dbdata.cpp dbdata.cpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dbdata.hpp dbdata.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE} ${DEVICE_SOURCE} COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_HEADER} ${DEVICE_HEADER} COPYONLY)
-
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/Accumulator.hpp db_utils/Accumulator.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/Date.hpp db_utils/Date.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/fifo_sort.hpp db_utils/fifo_sort.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/LikeRegex.hpp db_utils/LikeRegex.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/MapJoin.hpp db_utils/MapJoin.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/MergeJoin.hpp db_utils/MergeJoin.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/Misc.hpp db_utils/Misc.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/ShannonIterator.hpp db_utils/ShannonIterator.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/StreamingData.hpp db_utils/StreamingData.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/Tuple.hpp db_utils/Tuple.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/db_utils/Unroller.hpp db_utils/Unroller.hpp COPYONLY)
-
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/query1/query1_kernel.hpp query1/query1_kernel.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/query9/query9_kernel.hpp query9/query9_kernel.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/query9/pipe_types.hpp query9/pipe_types.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/query11/query11_kernel.hpp query11/query11_kernel.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/query11/pipe_types.hpp query11/pipe_types.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/query12/query12_kernel.hpp query12/query12_kernel.hpp COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/query12/pipe_types.hpp query12/pipe_types.hpp COPYONLY)
-
-    separate_arguments(HARDWARE_LINK_FLAGS_LIST UNIX_COMMAND "${HARDWARE_LINK_FLAGS}")
-    separate_arguments(CMAKE_CXX_FLAGS_LIST UNIX_COMMAND "${CMAKE_CXX_FLAGS}")
-    
-    add_custom_command(OUTPUT ${REPORTS_TARGET}
-                 COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link
-                 ${DEVICE_SOURCE} ${HOST_SOURCE} -o ${CMAKE_BINARY_DIR}/${REPORTS_TARGET}
-                 DEPENDS ${DEVICE_SOURCE} ${DEVICE_HEADER} ${DB_UTILITY_HEADERS})
-
-    add_custom_target(report DEPENDS ${REPORTS_TARGET})
-endif()
-
+###############################################################################
+### FPGA Hardware
+###############################################################################
+add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE} ${DEVICE_SOURCE})
+add_custom_target(fpga DEPENDS ${FPGA_TARGET})
+set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+# The -reuse-exe flag enables rapid recompilation of host-only code changes.
+# See DPC++FPGA/GettingStarted/fast_recompile for details.

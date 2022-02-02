@@ -1,4 +1,5 @@
 {
+  "guid": "5c6ee310-cb61-4f9f-80da-0c94a3cb53e7",
   "name": "Optimize Integral",
   "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"],
   "description": "Fortran Sample - Simple Compiler Optimizations",

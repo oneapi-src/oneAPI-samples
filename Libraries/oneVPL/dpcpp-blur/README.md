@@ -3,27 +3,27 @@
 This sample shows how to use a DPC++ kernel together with
 oneAPI Video Processing Library to perform a simple video content blur.
 
-| Optimized for   | Description
-|---------------- | ----------------------------------------
-| OS              | Ubuntu* 18.04; Windows* 10
-| Hardware        | Intel® Processor Graphics GEN9 or newer
-| Software        | Intel® oneAPI Video Processing Library (oneVPL)
-| What You Will Learn | How to use oneVPL and DPC++ to convert I420 raw video files into BGRA and blur each frame.
+| Optimized for    | Description
+|----------------- | ----------------------------------------
+| OS               | Ubuntu* 20.04
+| Hardware         | CPU: See [System Requirements](https://software.intel.com/content/www/us/en/develop/articles/oneapi-video-processing-library-system-requirements.html)
+|                  | GPU: Compatible with Intel® oneAPI Video Processing Library(oneVPL) GPU implementation, which can be found at https://github.com/oneapi-src/oneVPL-intel-gpu 
+| Software         | oneAPI Video Processing Library (oneVPL)
+| What You Will Learn | How to use oneVPL and DPC++ to convert raw video files into BGRA and blur each frame.
 | Time to Complete | 5 minutes
 
-* I420: YUV color planes
-* BGRA: BGRA color planes
+Expected input/output formats:
+* In: CPU=I420 (yuv420p color planes), GPU=NV12 color planes
+* Out: BGRA color planes
 
 ## Purpose
 
 This sample is a command line application that takes a file containing a raw
-I420 format video elementary stream as an argument, converts it to BGRA with
-oneVPL and blurs each frame with DPC++ by using SYCL kernel, and writes the
-decoded output to `out.bgra` in BGRA format.
+format video file as an argument, converts it to BGRA with oneVPL, blurs each frame with DPC++ by using SYCL kernel,
+and writes the processed output to `out.bgra` in BGRA format.
 
-If the oneAPI DPC++ Compiler is not found, the blur operation will be disabled.
-
-
+GPU optimization is available in Linux, including oneAPI Level Zero optimizations allowing the kernel to run
+directly on VPL output without copies to/from CPU memory.
 
 ## Key Implementation details
 
@@ -32,7 +32,7 @@ If the oneAPI DPC++ Compiler is not found, the blur operation will be disabled.
 | Target device     | CPU
 | Input format      | I420
 | Output format     | BGRA raw video elementary stream
-| Output resolution | same as input
+| Output resolution | 256 x 192
 
 
 ## License
@@ -40,7 +40,6 @@ If the oneAPI DPC++ Compiler is not found, the blur operation will be disabled.
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `dpcpp-blur` Program
 
@@ -63,87 +62,55 @@ Perform the following steps:
    `~/intel/oneapi/` when installed as a normal user.  If you customized the
    installation folder, it is in your custom location.
 
+   Additional setup steps to enable GPU execution can be found here:
+   https://dgpu-docs.intel.com/installation-guides/ubuntu/ubuntu-focal.html
+
 3. Build the program using the following commands:
    ```
+   cp $ONEAPI_ROOT/vpl/latest/examples .
+   cd examples/interop/dpcpp-blur
    mkdir build
    cd build
    cmake ..
    cmake --build .
    ```
 
-4. Run the program using the following command:
+4. Run the program with default arguments using the following command:
    ```
    cmake --build . --target run
    ```
-
-
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
-
-#### Building the program using CMake
-
-1. Install the prerequisite software. To build and run the sample, you need to
-   install prerequisite software and set up your environment:
-
-   - Intel® oneAPI Base Toolkit for Windows*
-   - [CMake](https://cmake.org)
-
-2. Set up your environment using the following command.
-   ```
-   <oneapi_install_dir>\setvars.bat
-   ```
-   Here `<oneapi_install_dir>` represents the root folder of your oneAPI
-   installation, which is `C:\Program Files (x86)\Intel\oneAPI\`
-   when installed using default options. If you customized the installation
-   folder, the `setvars.bat` is in your custom location.  Note that if a
-   compiler is not part of your oneAPI installation, you should run in a Visual
-   Studio 64-bit command prompt.
-
-3. Build the program using the following commands:
-   ```
-   mkdir build
-   cd build
-   cmake .. -T "Intel(R) oneAPI DPC++ Compiler"
-   cmake --build . --config Release
-   ```
-
-4. Run the program using the following command:
-   ```
-   cmake --build . --target run --config Release
-   ```
-
-
-#### Building the program using VS2017 or VS2019 IDE
-
-1. Install the Intel® oneAPI Base Toolkit for Windows*
-2. Right-click on the solution file and open using either VS2017 or VS2019 IDE.
-3. Right-click on the project in Solution Explorer and select Rebuild.
-4. From the top menu, select Debug -> Start without Debugging.
-
-***
-Note: You need Base Toolkit 2021.2 or later to build this sample with the IDE.
-***
-
 
 ## Running the Sample
 
 ### Application Parameters
 
-The instructions given above run the sample executable with the argument
-`<sample_dir>/content/cars_128x96.i420 128 96`.
+The instructions given above run the sample executable with these arguments
+`-i ${CONTENTPATH}/cars_128x96.i420 -w 128 -h 96`.
 
+In Linux, an additional '-hw' parameter will run on GPU if GPU stack components
+are found in your environment.
 
-### Example of Output
+### Example Output
 
 ```
-Processing dpcpp-blur/content/cars_128x96.i420 -> out.bgra
+Queue initialized on 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz
+Implementation details:
+
+  ApiVersion:           2.5  
+  Implementation type:  SW
+  AccelerationMode via: NA 
+  DeviceID:             0000 
+  Path: /opt/intel/oneapi/vpl/2021.6.0/lib/libvplswref64.so.1
+
+Processing /home/test/intel_innersource/frameworks.media.onevpl.dispatcher/examples/interop/dpcpp-blur/content/cars_128x96.i420 -> out.raw
 Processed 60 frames
 ```
 
-You can find the output file ``out.bgra`` in the build directory.
+You can find the 256x192 BGRA output file ``out.raw`` in the build directory.
 
 You can display the output with a video player that supports raw streams such as
 FFplay. You can use the following command to display the output with FFplay:
 
 ```
-ffplay -video_size [128]x[96] -pixel_format bgra -f raw video out.bgra
+ffplay -video_size 256x192 -pixel_format bgra -f raw video out.bgra
 ```

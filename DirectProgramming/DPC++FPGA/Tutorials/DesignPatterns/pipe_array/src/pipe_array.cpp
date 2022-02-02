@@ -4,12 +4,13 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <vector>
-#include "pipe_array.hpp"
-#include "unroller.hpp"
+#include "pipe_utils.hpp"
+#include "unrolled_loop.hpp"
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -22,7 +23,7 @@ constexpr size_t kNumCols = 2;
 constexpr size_t kNumberOfConsumers = kNumRows * kNumCols;
 constexpr size_t kDepth = 2;
 
-using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_array.h".
+using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_utils.hpp".
     class ProducerConsumerPipe,                  // An identifier for the pipe.
     uint64_t,  // The type of data in the pipe.
     kDepth,    // The capacity of each pipe.
@@ -40,7 +41,7 @@ void Producer(queue &q, buffer<uint64_t, 1> &input_buffer) {
 
   auto e = q.submit([&](handler &h) {
     accessor input_accessor(input_buffer, h, read_only);
-    auto num_elements = input_buffer.get_count();
+    auto num_elements = input_buffer.size();
     auto num_passes = num_elements / kNumberOfConsumers;
 
     // The producer kernel writes to every pipe in the 2D pipe array
@@ -48,9 +49,9 @@ void Producer(queue &q, buffer<uint64_t, 1> &input_buffer) {
       size_t input_idx = 0;
       for (size_t pass = 0; pass < num_passes; pass++) {
         // Template-based unroll (outer "i" loop)
-        Unroller<0, kNumRows>::Step([&input_idx, input_accessor](auto i) {
+        impu::UnrolledLoop<kNumRows>([&input_idx, input_accessor](auto i) {
           // Template-based unroll (inner "j" loop)
-          Unroller<0, kNumCols>::Step([&input_idx, &i, input_accessor](auto j) {
+          impu::UnrolledLoop<kNumCols>([&input_idx, &i, input_accessor](auto j) {
             // Write a value to the <i,j> pipe of the pipe array
             ProducerToConsumerPipeMatrix::PipeAt<i, j>::write(
                 input_accessor[input_idx++]);
@@ -69,8 +70,8 @@ void Consumer(queue &q, buffer<uint64_t, 1> &out_buf) {
   std::cout << "Enqueuing consumer " << consumer_id << "...\n";
 
   auto e = q.submit([&](handler &h) {
-    accessor output_accessor(out_buf, h, write_only, noinit);
-    auto num_elements = out_buf.get_count();
+    accessor output_accessor(out_buf, h, write_only, no_init);
+    auto num_elements = out_buf.size();
 
     // The consumer kernel reads from a single pipe, determined by consumer_id
     h.single_task<ConsumerTutorial<consumer_id>>([=]() {
@@ -123,9 +124,9 @@ int main(int argc, char *argv[]) {
     producer_input[i] = i;
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
@@ -138,7 +139,7 @@ int main(int argc, char *argv[]) {
     std::vector<buffer<uint64_t,1>> consumer_buffers;
 
     // Use template-based unroll to enqueue multiple consumers
-    Unroller<0, kNumberOfConsumers>::Step([&](auto consumer_id) {
+    impu::UnrolledLoop<kNumberOfConsumers>([&](auto consumer_id) {
       consumer_buffers.emplace_back(consumer_output[consumer_id].data(),
                                     items_per_consumer);
       Consumer<consumer_id>(q, consumer_buffers.back());
@@ -149,7 +150,7 @@ int main(int argc, char *argv[]) {
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

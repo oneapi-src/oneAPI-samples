@@ -22,7 +22,7 @@ int main() {
 
     //Create queue with default selector  
     queue q;
-    std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
+    std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
     //Initialize the input vector for search
     std::vector<int> input_seq{0, 2, 2, 2, 3, 3, 3, 3, 6, 6};
@@ -46,7 +46,7 @@ int main() {
     // use policy for algorithms execution
     auto policy = make_device_policy(q);  
 
-    //Calling the dpstd upper_bound algorithm. We pass in the policy, the buffer iterators for the input vectors and the output. 
+    //Calling the oneDPL upper_bound algorithm. We pass in the policy, the buffer iterators for the input vectors and the output. 
     // Default comparator is the operator < used here.
     
     oneapi::dpl::upper_bound(make_device_policy(q),keys_begin,keys_end,vals_begin,vals_end,result_begin);    

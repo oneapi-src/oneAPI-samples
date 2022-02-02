@@ -2,7 +2,7 @@
   "guid": "C3B945F8-D3CC-47E8-A094-D8A0B0DBA22C",
   "name": "LSU Control",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
-  "description": "An Intel® FPGA tutorial demonstrating how to configure the load-store units (LSU) in your Intel® oneAPI Data Parallel C++ (DPC++) program using the LSU controls extension",
+  "description": "An Intel® FPGA tutorial demonstrating how to configure the load-store units (LSU) in Data Parallel C++ (DPC++) program using the LSU controls extension",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -13,6 +13,7 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -23,6 +24,7 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -34,9 +36,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/lsu_control",
           "nmake fpga_emu",
           "lsu_control.fpga_emu.exe"
         ]
@@ -44,9 +48,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/lsu_control",
           "nmake report"
         ]
       }

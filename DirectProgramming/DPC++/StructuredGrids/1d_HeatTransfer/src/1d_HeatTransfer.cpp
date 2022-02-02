@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 //
-// 1D HEAT TRANSFER: Using Intel® oneAPI DPC++ Language to simulate 1D Heat
+// 1D HEAT TRANSFER: Using Data Parallel C++ Language to simulate 1D Heat
 // Transfer.
 //
 // The code sample simulates the heat propagation according to the following
@@ -38,7 +38,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <algorithm>
+#include <string>
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"

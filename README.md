@@ -1,103 +1,85 @@
-# Intel oneAPI Toolkit Samples
+## Introduction
 
-The oneAPI-samples repository provides code samples for Intel oneAPI toolkits.
+The oneAPI samples repository provides code samples for Intel oneAPI toolkits.<br><br>We recommend checking out a specific stable release version of the repository. The version of the repository you fetch should match the version of the oneAPI compiler you are using. [View available stable releases](https://github.com/oneapi-src/oneAPI-samples/tags). 
+The latest versions (2022.1.0) of code samples on the master branch are not guaranteed to be stable.
+ ### Sample Details
 
-We recommend checking out a specific release version of the repository.
-[View available releases](https://github.com/oneapi-src/oneAPI-samples/tags).
+The oneAPI sample repository is organized as follows:
 
-The latest versions of code samples on the master branch are not guaranteed to
-be stable.
-
-## Code Samples
-
-|Code Sample    |Supported Intel(r)   Architecture(s)    	|Description 	|
-|-----------------------|-------------------------------------------|---------------|
-|DirectPrograming/ |
-|../DPC++/CombinationalLogic/mandelbrot 	|GPU, CPU  	|Example of a fractal in   mathematics 	|
-|../DPC++/CombinationalLogic/sepia-filter    	|GPU, CPU  	|Color image conversion using 1D   range    	|
-|../DPC++/DenseLinearAlgebra/complex_mult    	|GPU, CPU  	|Complex number Multiplication    	|
-|../DPC++/DenseLinearAlgebra/matrix_mul 	|GPU, CPU  	|Simple program that multiplies   two large matrices in parallel using DPC++, OpenMP and MKL  	|
-|../DPC++/DenseLinearAlgebra/simple-add 	|FPGA, GPU, CPU 	|Simple Add program	|
-|../DPC++/DenseLinearAlgebra/vector-add 	|FPGA, GPU, CPU 	|Simple Vector add program   	|
-|../DPC++/GraphTraversal/bitonic-sort   	|GPU, CPU  	|Implementation of bitonic sort   using DPC++.   	|
-|../DPC++/ParallelPatterns/Dpc_reduce   	|GPU, CPU  	|A simple program that calculates   pi,  implemented using C++ and DPC++. 	|
-|../DPC++/SpectralMethods/Discrete-cosine-transform    	|GPU, CPU  	|Image processing algorithm used   in JPEG compression	|
-|../DPC++/StructuredGrids/1d_HeatTransfer    	|GPU, CPU  	|A simulation of one dimensional   heat transfer process using DPC++.	|
-|../DPC++/StructuredGrids/ISO2DFD_DPCPP 	|GPU, CPU  	|A simple finite difference   stencil kernel for solving 2D acoustic isotropic wave equation using DPC++	|
-|../DPC++/StructuredGrids/ISO3DFD_DPCPP 	|GPU, CPU  	|A finite difference stencil   kernel for solving 3D acoustic isotropic wave equation using DPC++  	|
-|../DPC++/StructuredGrids/Particle-diffusion 	|GPU, CPU  	|A simple implementation of a   Monte Carlo simulation of the diffusion of water molecules in tissue    	|
-|../DPC++FPGA/ReferenceDesigns/crr                  |FPGA |High-performance CRR binomial tree option pricing model using DPC++ on FPGA |
-|../DPC++FPGA/ReferenceDesigns/db                   |FPGA |High-performance database query acceleration for FPGA-attached memory using DPC++ |
-|../DPC++FPGA/ReferenceDesigns/gzip                 |FPGA |High-performance GZIP compression using DPC++ on FPGA |
-|../DPC++FPGA/ReferenceDesigns/mvdr_beamforming     |FPGA |High-performance radar beamforming for streaming data using DPC++ on FPGA |
-|../DPC++FPGA/ReferenceDesigns/qrd                  |FPGA |High-performance QR decomposition of matrices using DPC++ on FPGA |
-|../DPC++FPGA/Tutorials/                            |
-|...../GettingStarted/fast_recompile                |FPGA |Tutorial introducing host-only recompile to save DPC++ development time on FPGA |
-|...../GettingStarted/fpga_compile                  |FPGA |Tutorial introducing how to compile DPC++ for FPGA |
-|...../Tools/dynamic_profiler                       |FPGA |Tutorial showing how to use the Intel® FPGA Dynamic Profiler for DPC++ for detailed FPGA kernel profiling|
-|...../Tools/system_profiling                       |FPGA |Tutorial showing how to use the OpenCL Intercept Layer to profile DPC++ designs running on FPGA at the system level |
-|...../Tools/use_library                            |FPGA |Tutorial showing how to use cross-language libraries in DPC++ on FPGA |
-|...../DesignPatterns/buffered_host_streaming       |FPGA |Tutorial demonstrating how to create a high-performance full system CPU-FPGA design using SYCL USM. |
-|...../DesignPatterns/compute_units                 |FPGA |Tutorial showing how to efficiently make multiple copies of a kernel, called compute units |
-|...../DesignPatterns/double_buffering              |FPGA |Tutorial demonstrating how to overlap kernel execution with buffer transfers and host processing |
-|...../DesignPatterns/explicit_data_movement        |FPGA |Tutorial showing an alternative coding (explicit USM) in which data movement between host and device is controlled explicitly in code |
-|...../DesignPatterns/io_streaming                  |FPGA |Tutorial describing how to use DPC++ IO pipes to stream data through the FPGA's IO |
-|...../DesignPatterns/loop_carried_dependency       |FPGA |Tutorial demonstrating how to remove a loop-carried dependency to improve the performance of the FPGA device code |
-|...../DesignPatterns/n_way_buffering               |FPGA |Tutorial demonstrating how to extend double buffering to n-way buffering |
-|...../DesignPatterns/onchip_memory_cache           |FPGA |Tutorial explaining the caching of on-chip memory to reduce loop initiation interval on FPGA |
-|...../DesignPatterns/optimize_inner_loop           |FPGA |Tutorial explaining how to optimize the throughput of an inner loop with a low trip count |
-|...../DesignPatterns/pipe_array                    |FPGA |Tutorial showing how to create an array of pipes  |
-|...../DesignPatterns/shannonization                |FPGA |Tutorial explaining an optimization for removing computation from the critical path |
-|...../DesignPatterns/simple_host_streaming         |FPGA |Tutorial showing how to use SYCL Universal Shared Memory (USM) to stream data between the host and FPGA device and achieve low latency while maintaining throughput. |
-|...../DesignPatterns/triangular_loop               |FPGA |Tutorial explaining an advanced FPGA optimization technique for triangular loops |
-|...../DesignPatterns/zero_copy_data_transfer       |FPGA |Tutorial demonstrating how to use zero-copy host-device memory transfer for FPGA kernels with no temporal data reuse  |
-|...../Features/fpga_reg                            |FPGA |Tutorial demonstrating the use of the DPC++ FPGA power user extension intel::fpga_reg |
-|...../Features/kernel_args_restrict                |FPGA |Tutorial demonstrating how to avoid performance penalties due to kernel argument aliasing |
-|...../Features/loop_coalesce                       |FPGA |Tutorial demonstrating the DPC++ FPGA loop_coalesce attribute |
-|...../Features/loop_initiation_interval            |FPGA |Tutorial demonstrating the use of the intel::initiation_interval attribute to improve performance |
-|...../Features/loop_ivdep                          |FPGA |Tutorial demonstrating the use of the loop ivdep attribute |
-|...../Features/loop_unroll                         |FPGA |Tutorial demonstrating the DPC++ unroll pragma and its performance trade-offs on FPGA |
-|...../Features/lsu_control                         |FPGA |Tutorial demonstrating how to configure the load-store units (LSUs) in your DPC++ program for FPGA |
-|...../Features/max_concurrency                     |FPGA |Tutorial demonstrating the DPC++ FPGA max_concurrency attribute |
-|...../Features/max_interleaving                    |FPGA |Tutorial demonstrating the DPC++ FPGA max_interleaving attribute |
-|...../Features/memory_attributes                   |FPGA |Tutorial demonstrating how to use DPC++ FPGA memory attributes |
-|...../Features/pipes                               |FPGA |Tutorial demonstrating the DPC++ FPGA pipes extension to transfer data between kernels |
-|...../Features/speculated_iterations               |FPGA |Tutorial demonstrating the DPC++ FPGA speculated_iterations attribute |
-|../C++/CombinationalLogic/Mandelbrot   	|CPU  	|Demonstrates how to accelerate   Mandelbrot performance with SIMD and parallelization using OpenMP*.   	|
-|../C++/CompilerInfrastructure/Intrinsics    	|CPU  	|Shows how to utilize the   intrinsics supported by C++ compiler in a variety of applications.	|
-|../C++/GraphTraversal/Mergesort   	|CPU  	|Shows how to accelerate scalar   merge sort program using OpenMP tasks   	|
-|Libraries |
-|../oneDPL/Gamma-correction 	|GPU, CPU  	|gamma correction using Parallel   STL 	|
-|../oneDPL/Stable_sort_by_key    	|GPU, CPU  	|stable sort by key using   counting_iterator and zip_iterator  	|
-|../oneVPL/hello-decode	|CPU  	|shows how to use oneVPL to   perform a simple video decode	|
-|../oneVPL/hello-encode	|CPU  	|shows how to use oneVPL to   perform a simple video encode	|
-|Tools |
-|../ApplicationDebugger/Debugger/array-transform    	|GPU, CPU  	|Array transform   	|
-|../IoTConnectionTools/Analog-in	|CPU  	|Analog   pin input example using Eclipse* MRAA  	|
-|../IoTConnectionTools/Digital   In  	|CPU  	|GPIO   pin input example using Eclipse* MRAA    	|
-|../IoTConnectionTools/Digital   Out 	|CPU  	|GPIO   pin output example using Eclipse* MRAA   	|
-|../IoTConnectionTools/Hello   IoT World  	|CPU  	|Basic   example that prints the compiler used during build	|
-|../IoTConnectionTools/Interrupt	|CPU  	|Interrupt   Service Routine example using Eclipse* MRAA   	|
-|../IoTConnectionTools/Onboard   Blink    	|CPU  	|Built-in   LED blink for common IoT boards using Eclipse* MRAA 	|
-|../IoTConnectionTools/PWM 	|CPU  	|Pulse   Width Modulation pin output using Eclipse* MRAA   	|
-|../IoTConnectionTools/Up2   LEDs    	|CPU  	|Built-in   LED example for UP* Squared using Eclipse* MRAA	|
-
-## License
-
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+* [AI-and-Analytics:](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics)
+  * [End-to-End-Workloads](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/End-to-end-Workloads)
+  * [Features-and-Functionality](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality)
+  * [Getting-Started-Samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples)
+* [DirectProgramming](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming)
+  * [C++](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2B)
+  * [DPC++](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2B)
+  * [DPC++FPGA](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA)
+    * [Reference Designs](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/ReferenceDesigns)
+    * [Tutorials](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials)
+  * [Fortran](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA)
+* [Libraries](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries)
+  * [oneCCl](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneCCL)
+  * [oneDAL](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneDAL)
+  * [oneDNN](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneDNN)
+  * [oneDPL](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneDPL)
+  * [oneMKL](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneMKL)
+  * [oneTBB](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneTBB)
+  * [oneVPL](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries/oneVPL)
+* [Publications](https://github.com/oneapi-src/oneAPI-samples/Publications/)
+  * [Data Parallel C++](https://github.com/oneapi-src/oneAPI-samples/Publications/Data_Parallel_C%2B%2B)
+* [Tools](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/)
+  * [Advisor](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Advisor)
+  * [Application Debugger](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/ApplicationDebugger)
+  * [Benchmark](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Benchmark)
+  * [IoT Connections Tools](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/IoTConnectionsTools)
+  * [Migration](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Migration)
+  * [Socwatch](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Socwatch)
+  * [Trace](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Trace)
+  * [UEFI debug](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/UEFI%20debug)
+  * [VTune Profiler](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/VTuneProfiler)
+)
 
 ## Known Issues or Limitations
 
 ### On Windows Platform
+
 - If you are using Visual Studio 2019, Visual Studio 2019 version 16.4.0 or newer is required.
 - Windows support for the FPGA code samples is limited to the FPGA emulator and optimization reports. Compile targets for FPGA hardware are provided on Linux only. See any FPGA code sample for more details.
-- If you encounter a compilation error when building a sample program, such as the example error below, the directory path of the sample may be too long. The work around is to move the sample to a directory such as "c:\temp\sample_name".
-    - Example error: *Error MSB6003 The specified task executable "dpcpp.exe" could not be run .......*
+- If you encounter a compilation error when building a sample program, such as the example error below, the directory path of the sample may be too long. The workaround is to move the sample to a temp directory.
+    - Example error: *Error MSB6003 The specified task executable dpcpp.exe could not be run .......
 
-## Contribute
+## Additional Resources
+- Samples in [Alphabetical order w/ device target](https://github.com/oneapi-src/CODESAMPLESLIST.md/)
+- Samples by [Change History](https://github.com/oneapi-src/oneAPI-samples/CHANGELOGS.md)
 
-See [CONTRIBUTING](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md)
-for more information.
+## Contributing
+
+See [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master/CONTRIBUTING.md) for more information.
+
+
+
+## New Code Samples
+
+|Version Introduced   |Sample Name|Description|
+ |-----------------------|-------------------------------------------|---------------|
+|2022.1.0|[Adaptive Noise Reduction](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/anr)|A highly optimized adaptive noise reduction (ANR) algorithm on an FPGA.|
+|2022.1.0|[Printf](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/printf)|This FPGA tutorial explains how to use the printf() to print in a DPC++ FPGA program|
+|2022.1.0|[Scheduler Target FMAX](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/scheduler_target_fmax)|Explain the scheduler_target_fmax_mhz attribute and its effect on the performance of Intel® FPGA kernels|
+
+Total Samples: 161
+
+
+## Deleted Code Samples
+
+|Version Introduced|Version Deleted|Sample Name|Description|Path|
+ |---|---|------|---------------|------|
+| 2021.1.Gold | 2021.3.0 | Use Library | Removed for 2021.4 - Remove the tutorial use_library due to HLS/OCL library support being removed in oneAPI 2021.4. Also note that RTL libraries has an issue (with a known workaround) so that part of the flow is also removed, but we will likely have a KDB to showcase the workaround. The fix for this is expected in 2022.1. Please use 2021.3 if you either need HLS/OCL library support in SYCL, or if you need continued access to RTL libraries. | [2021.3.0](https://github.com/oneapi-src/oneAPI-samples/releases/tag/2021.3.0) Path: DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library|
+
+
+## License
+
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
+Report Generated on:  October 20, 2021

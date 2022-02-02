@@ -11,13 +11,13 @@ You can find library source code and code used by these samples at the oneDNN Gi
 This sample is implemented in C++ and executes on CPU or GPU. The sample also
 also includes [a Jupyer Notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_getting_started.ipynb) that
 demonstrates how to compile the code with various oneDNN configurations
-in Intel oneAPI DevCloud environment.
+in Intel® DevCloud for oneAPI environment.
 
 | Optimized for                      | Description
 | :---                               | :---
 | OS                                 | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                           | Skylake with GEN9 or newer
-| Software                           | Intel oneAPI Deep Neural Network Library (oneDNN), Intel oneAPI DPC++/C++ Compiler, Intel oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel C++ Compiler
+| Software                           | oneAPI Deep Neural Network Library (oneDNN), oneAPI DPC++/C++ Compiler, oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel® C++ Compiler
 | What you will learn                | Running a simple convolutional model on Intel CPU or Intel GPU
 | Time to complete                   | 15 minutes
 
@@ -65,6 +65,8 @@ cd build
 cmake ..
 make
 ```
+> NOTE: The source file "getting_started.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/dnnl/latest/cpu_dpcpp_gpu_dpcpp/examples/ to build/src folder. Users can rebuild the getting_started.cpp by typing "make" under build folder.
+
 3. Run the program
 ```
 ./bin/getting-started-cpp
@@ -78,12 +80,12 @@ and threading runtimes:
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_gomp
 CC=GCC CXX=g++ cmake ..
 ```
-* Intel C++ Compiler and Intel OpenMP runtime
+* Intel® C++ Compiler and Intel OpenMP runtime
 ```
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_iomp
 CC=icc CXX=icpc cmake ..
 ```
-* Intel C++ Compiler and TBB runtime
+* Intel® C++ Compiler and TBB runtime
 ```
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_tbb
 CC=icc CXX=icpc cmake ..
@@ -95,19 +97,22 @@ Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or
 "Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
 1. Setup oneAPI development environment
 ```
-C:\Program Files (x86)\intel\oneapi\setvars.bat
+C:\Program Files (x86)\Intel\oneAPI\setvars.bat
 ```
 2. Build the program using `cmake`
 ```
+cd C:\Program Files (x86)\Intel\oneAPI\dnnl\latest\cpu_dpcpp_gpu_dpcpp\examples\
 mkdir build
 cd build
-cmake -G Ninja ..
+set CC=clang
+set CXX=clang++
+cmake -G Ninja .. -DDNNL_CPU_RUNTIME=DPCPP -DDNNL_GPU_RUNTIME=DPCPP
 cmake --build .
 ```
 
 3. Run the program
 ```
-bin\getting-started-cpp.exe
+getting-started-cpp.exe
 ```
 
 ### Include Files
@@ -149,7 +154,6 @@ Example passed on CPU.
 
 When executed with `DNNL_VERBOSE=1`:
 ```
-dnnl_verbose,info,oneDNN v1.95.0 (commit ae08a30fff7f76759fd4c5093c01707d0ee12c4c)
 dnnl_verbose,info,cpu,runtime:DPC++
 dnnl_verbose,info,cpu,isa:Intel AVX2
 dnnl_verbose,info,gpu,runtime:DPC++

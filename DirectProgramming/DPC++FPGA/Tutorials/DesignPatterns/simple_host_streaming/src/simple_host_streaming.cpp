@@ -11,7 +11,7 @@
 #include <utility>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -139,9 +139,9 @@ int main(int argc, char* argv[]) {
   try {
     // device selector
 #if defined(FPGA_EMULATOR)
-    INTEL::fpga_emulator_selector selector;
+    ext::intel::fpga_emulator_selector selector;
 #else
-    INTEL::fpga_selector selector;
+    ext::intel::fpga_selector selector;
 #endif
 
     // queue properties to enable profiling
@@ -181,7 +181,7 @@ int main(int argc, char* argv[]) {
     auto validate_results = [&] {
       for (size_t i = 0; i < total_count; i++) {
         auto comp = (in[i] == out[i]);
-        for (auto j = 0; j < comp.get_count(); j++) {
+        for (auto j = 0; j < comp.size(); j++) {
           if (!comp[j]) {
             std::cerr << "ERROR: Values do not match, "
                       << "in[" << i << "][" << j << "]:" << in[i][j]
@@ -241,7 +241,7 @@ int main(int argc, char* argv[]) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

@@ -13,6 +13,7 @@
 #include <mkl.h>
 #include <CL/sycl.hpp>
 #include <iostream>
+#include <string>
 #include <oneapi/mkl/dfti.hpp>
 #include <oneapi/mkl/rng.hpp>
 #include <oneapi/mkl/vm.hpp>
@@ -27,7 +28,7 @@ struct pair {
 };
 
 template <typename T, typename I>
-using maxloc = sycl::ONEAPI::maximum<pair<T, I>>;
+using maxloc = sycl::ext::oneapi::maximum<pair<T, I>>;
 
 int main(int argc, char** argv) {
   unsigned int N = (argc == 1) ? 32 : std::stoi(argv[1]);

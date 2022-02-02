@@ -52,12 +52,12 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building and Running the `array-transform` Program
 
-> Note: if you have not already done so, set up your CLI 
-> environment by sourcing  the setvars script located in 
-> the root of your oneAPI installation. 
+> Note: if you have not already done so, set up your CLI
+> environment by sourcing  the setvars script located in
+> the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
-> Linux User: . ~/intel/oneapi/setvars.sh  
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux User: . ~/intel/oneapi/setvars.sh
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Setup
@@ -90,6 +90,22 @@ $ qsub -I -l nodes=1:gpu:ppn=2
 For more information, see the Intel® oneAPI
 Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the Extension Pack for Intel® oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 
 ### Auto-Attach
@@ -187,16 +203,11 @@ see the
 1. Right-click on the solution files and open via either Visual Studio 2017
    or in 2019.
 
-2. Open in Visual Studio "Tools > Options > Debugging > General" and
-   ensure that "Require source files to exactly match the original
-   version" Debugging option is **not** checked.  
-   ![](vs-debugger-option.png)
+2. Select Menu "Build > Build Solution" to build the selected configuration.
 
-3. Select Menu "Build > Build Solution" to build the selected configuration.
+3. Select Menu "Debug > Start Debugging" to run the program.
 
-4. Select Menu "Debug > Start Debugging" to run the program.
-
-5. The solution file is configured to pass `cpu` as the argument to the
+4. The solution file is configured to pass `cpu` as the argument to the
    program.  To select a different device, go to the project's "Configuration
    Properties > Debugging" and set the "Command Arguments" field.
    Use `gpu` or `accelerator` to target the GPU or the FPGA emulator device,
@@ -216,7 +227,7 @@ Reading symbols from ./array-transform...
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) Core(TM) i9-7900X CPU @ 3.30GHz] from [Intel(R) OpenCL]
+[SYCL] Using device: [Intel(R) Core(TM) i9-7900X processor] from [Intel(R) OpenCL]
 [Switching to Thread 0x7fffe3bfe700 (LWP 925)]
 
 Thread 16 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
@@ -233,7 +244,7 @@ Reading symbols from ./array-transform...
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM)]
+[SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 [Switching to Thread 0x7fffe1ffb700 (LWP 2387)]
 
 Thread 9 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
@@ -250,7 +261,7 @@ Reading symbols from ./array-transform...
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) Gen9] from [Intel(R) Level-Zero]
+[SYCL] Using device: [Intel(R) Iris(R) Plus Graphics 650 [0x5927]] from [Intel(R) Level-Zero]
 ...<snip>...
 [Switching to Thread 1073741824 lane 0]
 

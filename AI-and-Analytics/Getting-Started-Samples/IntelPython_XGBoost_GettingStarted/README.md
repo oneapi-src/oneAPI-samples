@@ -4,7 +4,7 @@ XGBoost* is a widely used gradient boosting library in the classical ML area. De
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
-| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
+| Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable processor family
 | Software                          | XGBoost, Intel® oneAPI AI Analytics Toolkit
 | What you will learn               | basic XGBoost programming model for Intel CPU
 | Time to complete                  | 5 minutes
@@ -14,7 +14,7 @@ In this code sample, you will learn how to use Intel optimized XGBoost published
 It also demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
   
 ## Key Implementation Details 
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). 
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). 
 
 ## License  
 Code samples are licensed under the MIT license. See
@@ -102,5 +102,7 @@ The output files of the script will be saved in the included models and result d
 ```
 RMSE: 11.113036205909719
 [CODE_SAMPLE_COMPLETED_SUCCESFULLY]
-```
+
+### Build and run additional samples
+Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
 

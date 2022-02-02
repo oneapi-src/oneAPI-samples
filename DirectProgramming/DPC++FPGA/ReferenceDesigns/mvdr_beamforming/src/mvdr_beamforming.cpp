@@ -8,7 +8,7 @@
 #include <vector>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "Tuple.hpp"
 #include "mvdr_complex.hpp"
@@ -107,10 +107,10 @@ struct WriteIOPipeID {
 };
 
 using DataInPipe =
-    INTEL::kernel_readable_io_pipe<ReadIOPipeID, XrxPipeType, 512>;
+    ext::intel::kernel_readable_io_pipe<ReadIOPipeID, XrxPipeType, 512>;
 
 using DataOutPipe =
-    INTEL::kernel_writeable_io_pipe<WriteIOPipeID, XrxPipeType, 512>;
+    ext::intel::kernel_writeable_io_pipe<WriteIOPipeID, XrxPipeType, 512>;
 #else
 // FAKE IO PIPES
 using DataProducer =
@@ -223,9 +223,9 @@ int main(int argc, char *argv[]) {
   try {
     // device selector
 #if defined(FPGA_EMULATOR)
-    INTEL::fpga_emulator_selector selector;
+    ext::intel::fpga_emulator_selector selector;
 #else
-    INTEL::fpga_selector selector;
+    ext::intel::fpga_selector selector;
 #endif
 
     // create the device queue
@@ -245,6 +245,9 @@ int main(int argc, char *argv[]) {
     // read the input data
     passed &=
         ReadInputData(in_dir, (ComplexType *)in_data.data(), num_matrix_copies);
+    if (!passed) {
+      std::terminate();
+    }
 
 #if defined(REAL_IO_PIPES)
     // convert the input data into UDP packets for the real IO pipes
@@ -388,9 +391,11 @@ int main(int argc, char *argv[]) {
 
     auto end_time = high_resolution_clock::now();
 
+#if not defined(REAL_IO_PIPES)
     // Stop the timer before performing the DMA from the consumer. Again,
     // if USM host allocations are used then this is a noop.
     consume_dma_event.wait();
+#endif
 
     // compute latency and throughput
     duration<double, std::milli> process_time(end_time - start_time);
@@ -440,7 +445,7 @@ int main(int argc, char *argv[]) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

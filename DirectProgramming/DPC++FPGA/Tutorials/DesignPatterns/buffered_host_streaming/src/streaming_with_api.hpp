@@ -8,7 +8,7 @@
 #include <vector>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "common.hpp"
 #include "HostStreamer.hpp"
@@ -115,19 +115,17 @@ void DoOneIterationAPI(queue& q, size_t buffers, size_t buffer_count,
   // therefore we can easily bound the computation of this kernel. In other
   // cases, this may not be possible and an infinite loop may be required (i.e.
   // read from the Producer pipe and produce to the Consumer pipe, forever).
-  auto kernel_event = q.submit([&](handler& h) {
-    h.single_task<APIKernel>([=] {
-      // process ALL of the possible data
-      for (size_t i = 0; i < total_count; i++) {
-        // read from the producer pipe
-        auto data = MyStreamer::ProducerPipe::read();
+  auto kernel_event = q.single_task<APIKernel>([=] {
+    // process ALL of the possible data
+    for (size_t i = 0; i < total_count; i++) {
+      // read from the producer pipe
+      auto data = MyStreamer::ProducerPipe::read();
 
-        // <<<<< your computation goes here! >>>>>
+      // <<<<< your computation goes here! >>>>>
 
-        // write to the consumer pipe
-        MyStreamer::ConsumerPipe::write(data);
-      }
-    });
+      // write to the consumer pipe
+      MyStreamer::ConsumerPipe::write(data);
+    }
   });
   
   start = high_resolution_clock::now();

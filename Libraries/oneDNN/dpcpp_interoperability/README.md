@@ -1,6 +1,6 @@
 # `oneDNN DPC++ Interoperability`Sample
 
-This C++ API example demonstrates programming for Intel(R) Processor Graphics with SYCL extensions API in oneDNN. 
+This C++ API example demonstrates programming for Intel&reg; Processor Graphics with SYCL extensions API in oneDNN. 
 Users will know how to access SYCL buffer and queue via oneDNN SYCL interoperability interfaces,  
 and this interface also helps users to execute a custom SYCL kernel with an oneDNN library.
 
@@ -8,7 +8,7 @@ and this interface also helps users to execute a custom SYCL kernel with an oneD
 | :---                               | :---
 | OS                                 | Linux Ubuntu 18.04;
 | Hardware                           | Kaby Lake with GEN9 or newer
-| Software                           | Intel oneAPI Deep Neural Network Library (oneDNN), Intel oneAPI DPC++/C++ Compiler, Intel oneAPI Threading Building Blocks (oneTBB)
+| Software                           | oneAPI Deep Neural Network Library (oneDNN), oneAPI DPC++/C++ Compiler, oneAPI Threading Building Blocks (oneTBB)
 | What you will learn                | Using oneDNN in DPC++ application targeting Intel CPU or Intel GPU
 | Time to complete                   | 15 minutes
 
@@ -60,6 +60,7 @@ cd build
 cmake ..
 make
 ```
+>NOTE: The source file "sycl_interop_buffer.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/dnnl/latest/cpu_dpcpp_gpu_dpcpp/examples/ to build/src folder. Users can rebuild the sycl_interop_buffer.cpp by typing "make" under build folder.
 3. Run the program
 ```
 ./bin/sycl-interop-buffer-cpp
@@ -71,10 +72,11 @@ Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or
 "Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
 1. Setup oneAPI development environment
 ```
-C:\Program Files (x86)\intel\oneapi\setvars.bat
+C:\Program Files (x86)\Intel\oneAPI\setvars.bat
 ```
 2. Build the program using `cmake`
 ```
+C:\Program Files (x86)\Intel\oneAPI\dnnl\latest\cpu_dpcpp_gpu_dpcpp\examples\
 mkdir build
 cd build
 cmake -G Ninja ..
@@ -83,7 +85,7 @@ cmake --build .
 
 3. Run the program
 ```
-bin\sycl-interop-buffer-cpp.exe
+sycl-interop-buffer-cpp.exe
 ```
 
 ### Include Files

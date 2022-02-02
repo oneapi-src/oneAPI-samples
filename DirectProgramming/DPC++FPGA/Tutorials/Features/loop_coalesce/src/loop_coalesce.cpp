@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 
@@ -48,7 +48,7 @@ void MatrixMultiply(const device_selector &selector,
     event e = q.submit([&](handler &h) {
       accessor accessor_matrix_a(buffer_in_a, h, read_only);
       accessor accessor_matrix_b(buffer_in_b, h, read_only);
-      accessor accessor_res(buffer_out, h, write_only, noinit);
+      accessor accessor_res(buffer_out, h, write_only, no_init);
 
       // The kernel_args_restrict promises the compiler that this kernel's
       // accessor arguments won't alias (i.e. non-overlapping memory regions).
@@ -107,7 +107,7 @@ void MatrixMultiply(const device_selector &selector,
 
   } catch (exception const &exc) {
     std::cerr << "Caught synchronous SYCL exception:\n" << exc.what() << '\n';
-    if (exc.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (exc.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
@@ -143,9 +143,9 @@ int main() {
   }
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   // Two versions of the simple matrix multiply kernel will be enqueued:

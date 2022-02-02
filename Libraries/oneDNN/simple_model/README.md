@@ -3,13 +3,13 @@
 This sample is implemented in C++ and DPC++ and runs on CPU or GPU. The sample
 also includes [Jupyer notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_simple_model.ipynb) that
 demonstrates how to port an oneDNN code sample from CPU-only version to CPU & GPU
-in Intel oneAPI DevCloud environment.
+in Intel® DevCloud for oneAPI environment.
 
 | Optimized for                      | Description
 | :---                               | :---
 | OS                                 | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                           | Skylake with GEN9 or newer
-| Software                           | Intel oneAPI Deep Neural Network Library (oneDNN), Intel oneAPI DPC++/C++ Compiler, Intel oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel C++ Compiler
+| Software                           | oneAPI Deep Neural Network Library (oneDNN), oneAPI DPC++/C++ Compiler, oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel® C++ Compiler
 | What you will learn                | Running a simple convolutional model on Intel CPU or Intel GPU
 | Time to complete                   | 15 minutes
 
@@ -22,7 +22,7 @@ unit (ReLU), linear response normalization (LRN), and inner product.
 
 With this sample, you will learn:
 * How to run a simple convolutional network on Intel CPU or Intel GPU
-* How to compile examples with Intel oneAPI DPC++/C++ Compiler, Intel C++ Compiler,
+* How to compile examples with oneAPI DPC++/C++ Compiler, Intel® C++ Compiler,
 and GNU C++ Compiler
 * How to switch between OpenMP and TBB for CPU parallelization
 * How to describe tensors with oneDNN memory objects
@@ -62,6 +62,7 @@ cd build
 cmake ..
 make
 ```
+>NOTE: The source file "cnn_inference_f32.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/dnnl/latest/cpu_dpcpp_gpu_dpcpp/examples/ to build/src folder. Users can rebuild the cnn_inference_f32.cpp by typing "make" under build folder.
 3. Run the program
 ```
 ./bin/cnn-inference-f32-cpp
@@ -75,12 +76,12 @@ and threading runtimes:
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_gomp
 CC=GCC CXX=g++ cmake ..
 ```
-* Intel C++ Compiler and Intel OpenMP runtime
+* Intel® C++ Compiler and Intel OpenMP runtime
 ```
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_iomp
 CC=icc CXX=icpc cmake ..
 ```
-* Intel C++ Compiler and TBB runtime
+* Intel® C++ Compiler and TBB runtime
 ```
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_tbb
 CC=icc CXX=icpc cmake ..
@@ -88,17 +89,20 @@ CC=icc CXX=icpc cmake ..
 
 ### On a Windows* System
 
-Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or 
+Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or
 "Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
 1. Setup oneAPI development environment
 ```
-C:\Program Files (x86)\intel\oneapi\setvars.bat
+C:\Program Files (x86)\Intel\oneAPI\setvars.bat
 ```
 2. Build the program using `cmake`
 ```
+cd C:\Program Files (x86)\Intel\oneAPI\dnnl\latest\cpu_dpcpp_gpu_dpcpp\examples\
 mkdir build
 cd build
-cmake -G Ninja ..
+set CC=clang
+set CXX=clang++
+cmake -G Ninja .. -DDNNL_CPU_RUNTIME=DPCPP -DDNNL_GPU_RUNTIME=DPCPP
 cmake --build .
 ```
 
@@ -107,7 +111,7 @@ The include folder is located at ${DNNLROOT}\include on your development system"
 
 3. Run the program
 ```
-bin\cnn-inference-f32-cpp.exe
+cnn-inference-f32-cpp.exe
 ```
 
 ### Include Files
@@ -119,13 +123,29 @@ The include folder is located at ${DNNLROOT}\include on your development system"
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### Application Parameters
 
 You can specify the target device for this sample using command-line arguments:
 * `cpu` (default) directs the application to run on the system's CPU
 * `gpu` directs the sample to run on Intel GPU
 
-> Note: When executed with `gpu` parameter the 
+> Note: When executed with `gpu` parameter the
 > sample will return an error if there are no Intel GPUs are found in the system.
 
 You can get additional information during the execution of this sample by setting
@@ -149,7 +169,6 @@ Example passed on CPU.
 
 When executed with `DNNL_VERBOSE=1`:
 ```
-dnnl_verbose,info,oneDNN v1.95.0 (commit ae08a30fff7f76759fd4c5093c01707d0ee12c4c)
 dnnl_verbose,info,cpu,runtime:DPC++
 dnnl_verbose,info,cpu,isa:Intel AVX2
 dnnl_verbose,info,gpu,runtime:DPC++

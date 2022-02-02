@@ -2,7 +2,7 @@
 #define __INPUT_DEMUX_HPP__
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cmath>
 
 // utility classes
@@ -149,7 +149,7 @@ event SubmitInputDemuxKernel(
         // Real part of 0th word set to NaN indicates a header
         // Imaginary part of 0th word set to 0 indicates training header, non
         // zero value indicates xrx data header
-        bool is_header = std::isnan(data_in.template get<0>().real());
+        bool is_header = sycl::isnan(data_in.template get<0>().real());
         bool header_is_training = (data_in.template get<0>().imag() == 0.0);
 
         // only process valid data if we are not almost full, otherwise data

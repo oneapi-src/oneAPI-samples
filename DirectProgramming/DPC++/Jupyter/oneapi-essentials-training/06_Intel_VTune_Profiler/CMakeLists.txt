@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.5)
 
 OPTION(SHARED_KERNEL "Use SLM Kernel Version - Only for GPU" OFF)
 
-set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_CXX_COMPILER "dpcpp")
 
 if(SHARED_KERNEL)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DUSE_SHARED -fsycl -std=c++11")

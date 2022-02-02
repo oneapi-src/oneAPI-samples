@@ -23,7 +23,7 @@
 class MyDeviceSelector : public cl::sycl::device_selector {
  public:
   MyDeviceSelector(const std::string &p) : pattern(p) {
-    // std::cout << "Looking for \"" << p << "\" devices" << std::endl;
+    // std::cout << "Looking for \"" << p << "\" devices" << "\n";
   }
 
   // This is the function which gives a "rating" to devices.
@@ -32,9 +32,9 @@ class MyDeviceSelector : public cl::sycl::device_selector {
     // defined by the SYCL spec's cl::sycl::info:: enum. Properties may have
     // different types. Here we query name which is a string.
     const std::string name = device.get_info<cl::sycl::info::device::name>();
-    // std::cout << "Trying device: " << name << "..." << std::endl;
+    // std::cout << "Trying device: " << name << "..." << "\n";
     // std::cout << "  Vendor: " <<
-    // device.get_info<cl::sycl::info::device::vendor>() << std::endl;
+    // device.get_info<cl::sycl::info::device::vendor>() << "\n";
 
     // Device with pattern in the name is prioritized:
     return (name.find(pattern) != std::string::npos) ? 100 : 1;
@@ -45,3 +45,4 @@ class MyDeviceSelector : public cl::sycl::device_selector {
 };
 
 #endif
+

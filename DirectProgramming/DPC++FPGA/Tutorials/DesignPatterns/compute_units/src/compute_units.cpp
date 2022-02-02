@@ -1,17 +1,12 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iostream>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 #include "compute_units.hpp"
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
 
 
 using namespace sycl;
@@ -29,10 +24,7 @@ template <std::size_t ID> class ChainComputeUnit;
 
 // Write the data into the chain
 void SourceKernel(queue &q, float data) {
-
-  q.submit([&](handler &h) {
-    h.single_task<Source>([=] { Pipes::PipeAt<0>::write(data); });
-  });
+  q.single_task<Source>([=] { Pipes::PipeAt<0>::write(data); });
 }
 
 // Get the data out of the chain and return it to the host
@@ -44,18 +36,19 @@ void SinkKernel(queue &q, float &out_data) {
   buffer<float, 1> out_buf(&out_data, 1);
 
   q.submit([&](handler &h) {
-    accessor out_accessor(out_buf, h, write_only, noinit);
-    h.single_task<Sink>(
-        [=] { out_accessor[0] = Pipes::PipeAt<kEngines>::read(); });
+    accessor out_accessor(out_buf, h, write_only, no_init);
+    h.single_task<Sink>([=] {
+      out_accessor[0] = Pipes::PipeAt<kEngines>::read();
+    });
   });
 }
 
 int main() {
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   float out_data = 0;
@@ -84,7 +77,7 @@ int main() {
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

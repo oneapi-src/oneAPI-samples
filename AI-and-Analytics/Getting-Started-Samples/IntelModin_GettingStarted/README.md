@@ -1,35 +1,39 @@
 ﻿# `Intel Modin Getting Started` Sample
-This Getting Started sample code show how to use distributed Pandas using the Modin package. It demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
+This Getting Started sample code shows how to use distributed Pandas using the Intel® Distribution of Modin* package. It demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable Performance Processor Family
-| Software                          | Modin, Intel® oneAPI AI Analytics Toolkit
-| What you will learn               | basic Intel Distribution of Modin programming model for Intel CPU
+| Software                          | Intel Distribution of Modin*, Intel® oneAPI AI Analytics Toolkit
+| What you will learn               | Basic Intel Distribution of Modin* programming model for Intel CPU
 | Time to complete                  | 5-8 minutes
 
 ## Purpose
-Modin uses Ray or Dask to provide an effortless way to speed up your Pandas notebooks, scripts, and libraries. Unlike other distributed DataFrame libraries, Modin provides seamless integration and compatibility with existing Pandas code. 
+Intel Distribution of Modin* uses Ray or Dask to provide an effortless way to speed up your Pandas notebooks, scripts, and libraries. Unlike other distributed DataFrame libraries, Intel Distribution of Modin* provides seamless integration and compatibility with existing Pandas code.
 
-In this sample, you will run Modin-accelerated Pandas functions and note the performance gain when compared to "stock" (aka standard) Pandas functions.
+In this sample, you will run Intel Distribution of Modin*-accelerated Pandas functions and note the performance gain when compared to "stock" (aka standard) Pandas functions.
 
 ## Key Implementation Details
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Pandas and Modin installed inside a conda environment, similar to what is directed by the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html).
+
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Pandas and Modin installed inside a conda environment, similar to what is directed by the [Intel® oneAPI AI Analytics Toolkit](https://www.intel.com/content/www/us/en/develop/documentation/installation-guide-for-intel-oneapi-toolkits-linux/top/installation/install-using-package-managers/conda/install-intel-ai-analytics-toolkit-via-conda.html).
+
 
 ## License
 
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+
 
 ## Running Samples on the Intel&reg; DevCloud
 If you are running this sample on the DevCloud, see [Running Samples on the Intel&reg; DevCloud](#run-samples-on-devcloud)
 
 ## Building Modin for CPU
 
-Modin is ready for use once you finish the Intel Distribution of Modin installation and have run the post installation script.
+
+Intel Distribution of Modin* is ready for use once you finish the Intel Distribution of Modin installation and have run the post installation script.
 
 For this sample, you will also have to install the matplotlib module.
 
@@ -44,7 +48,7 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 
 ### Activate conda environment With Root Access
 
-Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the `setvars.sh` script and [Intel Distribution of Modin environment installation] (https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html). Then navigate in Linux shell to your oneapi installation path, typically `/opt/intel/oneapi/` when installed as root or sudo, and `~/intel/oneapi/` when not installed as a superuser. If you customized the installation folder, the `setvars.sh` file is in your custom folder.
+Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the `setvars.sh` script and [Intel Distribution of Modin environment installation](https://www.intel.com/content/www/us/en/develop/documentation/installation-guide-for-intel-oneapi-toolkits-linux/top/installation/install-using-package-managers/conda/install-intel-ai-analytics-toolkit-via-conda.html). Then navigate in Linux shell to your oneapi installation path, typically `/opt/intel/oneapi/` when installed as root or sudo, and `~/intel/oneapi/` when not installed as a superuser. If you customized the installation folder, the `setvars.sh` file is in your custom folder.
 
 Activate the conda environment with the following command:
 
@@ -71,7 +75,7 @@ source activate user-intel-aikit-modin
 
 ### Install Jupyter Notebook
 
-Launch Jupyter Notebook in the directory housing the code example
+Launch Jupyter Notebook in the directory housing the code example:
 
 ```
 conda install jupyter nb_conda_kernels
@@ -80,7 +84,7 @@ conda install jupyter nb_conda_kernels
 #### View in Jupyter Notebook
 
 
-Launch Jupyter Notebook in the directory housing the code example
+Launch Jupyter Notebook in the directory housing the code example:
 
 ```
 jupyter notebook
@@ -90,13 +94,17 @@ jupyter notebook
 
 ### Run as Jupyter Notebook<a name="run-as-jupyter-notebook"></a>
 
-Open .ipynb file and run cells in Jupyter Notebook using the "Run" button (see the image using "daal4py Hello World" sample)
+Open .ipynb file and run cells in Jupyter Notebook using the "Run" button (see the image using "daal4py Hello World" sample):
 
 ![Click the Run Button in the Jupyter Notebook](Jupyter_Run.jpg "Run Button on Jupyter Notebook")
 
+#### Intel® DevCloud for oneAPI JupyterLab
+
+Please note that as of right now, this sample cannot be run on Intel® DevCloud for oneAPI JupyterLab due to conflicts between the Intel® DevCloud for oneAPI JupyterLab platform and Modin dependencies. This is a known issue that Intel is currently working on resolving. Thank you for your patience.
+
 ### Run as Python File
 
-Open notebook in Jupyter and download as python file (see the image using "daal4py Hello World" sample)
+Open notebook in Jupyter and download as python file (see the image using "daal4py Hello World" sample):
 
 ![Download as python file in the Jupyter Notebook](Jupyter_Save_Py.jpg "Download as python file in the Jupyter Notebook")
 
@@ -128,3 +136,4 @@ In order to run on the DevCloud, you need to request a compute node using node p
 | CPU               | qsub -l nodes=1:xeon:ppn=2 -d . hello-world.sh          |
 | FPGA Compile Time | qsub -l nodes=1:fpga\_compile:ppn=2 -d . hello-world.sh |
 | FPGA Runtime      | qsub -l nodes=1:fpga\_runtime:ppn=2 -d . hello-world.sh |
+

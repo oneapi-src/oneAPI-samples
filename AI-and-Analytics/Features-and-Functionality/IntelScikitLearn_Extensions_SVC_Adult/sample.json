@@ -1,0 +1,21 @@
+{
+  "guid": "C8C8694A-5567-495B-8399-6EAB42AFFB44",
+  "name": "Intel(R) Extension for Scikit-learn: SVC for Adult dataset",
+  "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+  "description": "Use Intel(R) Extension for Scikit-learn to accelerate the training and prediction with SVC algorithm on Adult dataset. Compare the performance of SVC algorithm optimized through Intel(R) Extension for Scikit-learn against original Scikit-learn.",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+    "linux": [
+      {
+        "env": ["source /opt/intel/oneapi/setvars.sh --force", "source activate base"],
+        "id": "skelarnex_svc",
+        "steps": [
+           "python IntelScikitLearn_Extensions_SVC_Adult.py"
+         ]
+      }
+    ]
+}
+}

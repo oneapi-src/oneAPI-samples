@@ -1,9 +1,9 @@
-# Intel DPC++ Compatibility Tool: `Vector Add` Sample
+# Intel® DPC++ Compatibility Tool: `Vector Add` Sample
 
-This sample demonstrates how to migrate a simple program from CUDA to 
+This sample demonstrates how to migrate a simple program from CUDA to
 Data Parallel C++. Vector Add provides an easy way to verify that
 your development environment is set up correctly to use the Intel® DPC++
-Compatibility Tool (dpct).
+Compatibility Tool (DPCT).
 
 
 | Optimized for         | Description
@@ -31,7 +31,7 @@ code handle errors.
 
 ## Key Implementation Details
 
-In addition to verifying that the necessary tools and files are installed, please ensure that they are 
+In addition to verifying that the necessary tools and files are installed, please ensure that they are
 configured correctly on your system. This sample shows the basic invocation and workflow for using dpct.
 
 
@@ -43,13 +43,13 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
-## Migrating the CUDA Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
+## Migrating the CUDA* Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
 
 Building and running the CUDA sample is not required to migrate this project
 to a Data Parallel C++ project.
 
-> **NOTE:** Certain CUDA header files, referenced by the CUDA application 
-> source files to be migrated need to be accessible for the migration step.  
+> **NOTE:** Certain CUDA header files, referenced by the CUDA application
+> source files to be migrated need to be accessible for the migration step.
 > See the [Getting Started Guide][cuda-headers] for more details.
 
 [cuda-headers]: <https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.html#top_BEFORE_YOU_BEGIN>
@@ -63,15 +63,15 @@ to a Data Parallel C++ project.
 $ source /opt/intel/oneapi/setvars.sh
 ```
 
-2. Use dpct to migrate the CUDA code. The  migrated source code will be 
-   created in a new directory, by default named `dpct_output`. 
+2. Use dpct to migrate the CUDA code. The  migrated source code will be
+   created in a new directory, by default named `dpct_output`.
 
 ```sh
 # From the repo root directory:
 $ dpct --in-root=. src/vector_add.cu
 ```
 
-3. Inspect the migrated source code, address any `DPCT` warnings generated 
+3. Inspect the migrated source code, address any `DPCT` warnings generated
    by the Intel DPC++ Compatibility Tool, and verify the new program correctness.
 
 Warnings are printed to the console and added as comments in the migrated
@@ -110,6 +110,21 @@ SRCS = src/vector_add.dp.cpp
 
 8. Clean up the build with the `make clean` command.
 
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ## Microsoft Visual Studio on Windows
 

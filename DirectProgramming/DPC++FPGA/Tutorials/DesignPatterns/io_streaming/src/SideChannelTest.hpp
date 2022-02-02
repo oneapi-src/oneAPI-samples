@@ -2,7 +2,7 @@
 #define __SIDECHANNELTEST_HPP__
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "FakeIOPipes.hpp"
 #include "HostSideChannel.hpp"
@@ -12,15 +12,11 @@ using namespace std::chrono_literals;
 
 // declare the kernel and pipe ID stucts globally to reduce name mangling
 struct SideChannelMainKernel;
-struct SideChannelIOPipes {
-  struct ReadIOPipeID { static constexpr unsigned id = 0; };
-  struct WriteIOPipeID { static constexpr unsigned id = 1; };
-};
-struct SideChannelPipes {
-  struct HostToDeviceSideChannelID;
-  struct DeviceToHostSideChannelID;
-  struct HostToDeviceTermSideChannelID;
-};
+struct SideChannelReadIOPipeID { static constexpr unsigned id = 0; };
+struct SideChannelWriteIOPipeID { static constexpr unsigned id = 1; };
+struct HostToDeviceSideChannelID;
+struct DeviceToHostSideChannelID;
+struct HostToDeviceTermSideChannelID;
 
 //
 // Submit the main processing kernel (or kernels, in general).
@@ -48,61 +44,59 @@ event SubmitSideChannelKernels(queue& q, int initial_match_num,
   constexpr size_t kTimeoutCounterMax = 1024;
 
   // submit the main processing kernel
-  return q.submit([&](handler& h) {
-    h.single_task<SideChannelMainKernel>([=] {
-      int match_num = initial_match_num;
-      size_t timeout_counter;
-      size_t samples_processed = 0;
-      bool terminate = false;
+  return q.single_task<SideChannelMainKernel>([=] {
+    int match_num = initial_match_num;
+    size_t timeout_counter;
+    size_t samples_processed = 0;
+    bool terminate = false;
 
-      while (!terminate) {
-        // check for an update to the sum_threshold from the host
-        bool valid_update;
-        int tmp = HostToDeviceSideChannel::read(valid_update);
-        if (valid_update) match_num = tmp;
+    while (!terminate) {
+      // check for an update to the sum_threshold from the host
+      bool valid_update;
+      int tmp = HostToDeviceSideChannel::read(valid_update);
+      if (valid_update) match_num = tmp;
 
-        // reset the timeout counter
-        timeout_counter = 0;
+      // reset the timeout counter
+      timeout_counter = 0;
 
-        // if we processed a full frame, reset the counter
-        // this places a maximum on the number of elements we process before
-        // checking for an update from the host
-        if (samples_processed == frame_size) samples_processed = 0;
+      // if we processed a full frame, reset the counter
+      // this places a maximum on the number of elements we process before
+      // checking for an update from the host
+      if (samples_processed == frame_size) samples_processed = 0;
 
-        // do the main processing
-        while ((samples_processed != frame_size) && 
-               (timeout_counter != kTimeoutCounterMax)) {
-          // read from the input IO pipe
-          bool valid_read;
-          auto val = IOPipeIn::read(valid_read);
+      // do the main processing
+      while ((samples_processed != frame_size) && 
+              (timeout_counter != kTimeoutCounterMax)) {
+        // read from the input IO pipe
+        bool valid_read;
+        auto val = IOPipeIn::read(valid_read);
 
-          if (valid_read) {
-            // reset the timeout counter since we read a valid piece of data
-            timeout_counter = 0;
+        if (valid_read) {
+          // reset the timeout counter since we read a valid piece of data
+          timeout_counter = 0;
 
-            // processed another sample in this frame
-            samples_processed++;
+          // processed another sample in this frame
+          samples_processed++;
 
-            // check if the value matches
-            if (val == match_num) {
-              // value matches, so tell the host about it
-              DeviceToHostSideChannel::write(val);
-            }
-            
-            // propagate the input value to the output
-            IOPipeOut::write(val);
-          } else {
-            // increment the timeout counter since the read was invalid
-            timeout_counter++;
+          // check if the value matches
+          if (val == match_num) {
+            // value matches, so tell the host about it
+            DeviceToHostSideChannel::write(val);
           }
+          
+          // propagate the input value to the output
+          IOPipeOut::write(val);
+        } else {
+          // increment the timeout counter since the read was invalid
+          timeout_counter++;
         }
-
-        // the host uses this side channel to tell the kernel to exit
-        // Any successful read from this channel means the host wants this
-        // kernel to end; the actual value read doesn't matter
-        (void)HostToDeviceTermSideChannel::read(terminate);
       }
-    });
+
+      // the host uses this side channel to tell the kernel to exit
+      // Any successful read from this channel means the host wants this
+      // kernel to end; the actual value read doesn't matter
+      (void)HostToDeviceTermSideChannel::read(terminate);
+    }
   });
 }
 
@@ -115,9 +109,9 @@ bool RunSideChannelsSystem(queue& q, size_t count) {
   //////////////////////////////////////////////////////////////////////////////
   // IO pipes
   // these are the FAKE IO pipes
-  using FakeIOPipeInProducer = Producer<SideChannelIOPipes::ReadIOPipeID,
+  using FakeIOPipeInProducer = Producer<SideChannelReadIOPipeID,
                                 T, use_usm_host_alloc>;
-  using FakeIOPipeOutConsumer = Consumer<SideChannelIOPipes::WriteIOPipeID,
+  using FakeIOPipeOutConsumer = Consumer<SideChannelWriteIOPipeID,
                                  T, use_usm_host_alloc>;
   using ReadIOPipe = typename FakeIOPipeInProducer::Pipe;
   using WriteIOPipe = typename FakeIOPipeOutConsumer::Pipe;
@@ -130,10 +124,10 @@ bool RunSideChannelsSystem(queue& q, size_t count) {
   //////////////////////////////////////////////////////////////////////////////
   // the side channels
   using MyHostToDeviceSideChannel = 
-    HostToDeviceSideChannel<SideChannelPipes::HostToDeviceSideChannelID,
+    HostToDeviceSideChannel<HostToDeviceSideChannelID,
                             int, use_usm_host_alloc, 1>;
   using MyHostToDeviceTermSideChannel = 
-    HostToDeviceSideChannel<SideChannelPipes::HostToDeviceTermSideChannelID,
+    HostToDeviceSideChannel<HostToDeviceTermSideChannelID,
                             char, use_usm_host_alloc, 1>;
   
   // This side channel is used to sent updates from the device to the host.
@@ -144,7 +138,7 @@ bool RunSideChannelsSystem(queue& q, size_t count) {
   // frequency of updates from the device is so low that this channel can be
   // shallow.
   using MyDeviceToHostSideChannel = 
-    DeviceToHostSideChannel<SideChannelPipes::DeviceToHostSideChannelID,
+    DeviceToHostSideChannel<DeviceToHostSideChannelID,
                             int, use_usm_host_alloc, 8>;
 
 

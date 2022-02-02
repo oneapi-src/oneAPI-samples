@@ -1,0 +1,120 @@
+{
+  "guid": "CFAC8EF8-E362-4054-ABE3-A04EEBEBCB46",
+  "name": "Jacobi",
+  "categories": ["Toolkit/oneAPI Tools/Application Debugger"],
+  "description": "A small Data Parallel C++ (DPC++) example which solves a harcoded linear system with Jacobi iteration. The sample includes two versions of the same program: with and without bugs.",
+  "toolchain": ["dpcpp"],
+  "dependencies": ["debugger"],
+  "languages": [{"cpp":{}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "cpu-bugged",
+        "steps": [
+          "mkdir -p build_cpu_bugged; cd build_cpu_bugged; cmake ..",
+          "make",
+          "./jacobi-bugged cpu",
+          "make clean"
+        ]
+      },
+      {
+        "id": "gpu-bugged",
+        "steps": [
+          "mkdir -p build_gpu_bugged; cd build_gpu_bugged; cmake ..",
+          "make",
+          "./jacobi-bugged gpu",
+          "make clean"
+        ]
+      },
+      {
+        "id": "fpga-emu-bugged",
+        "steps": [
+          "mkdir -p build_acc_bugged; cd build_acc_bugged; cmake ..",
+          "make",
+          "./jacobi-bugged accelerator",
+          "make clean"
+        ]
+      },
+      {
+        "id": "cpu-fixed",
+        "steps": [
+          "mkdir -p build_cpu_fixed; cd build_cpu_fixed; cmake ..",
+          "make",
+          "./jacobi-fixed cpu",
+          "make clean"
+        ]
+      },
+      {
+        "id": "gpu-fixed",
+        "steps": [
+          "mkdir -p build_gpu_fixed; cd build_gpu_fixed; cmake ..",
+          "make",
+          "./jacobi-fixed gpu",
+          "make clean"
+        ]
+      },
+      {
+        "id": "fpga-emu-fixed",
+        "steps": [
+          "mkdir -p build_acc_fixed; cd build_acc_fixed; cmake ..",
+          "make",
+          "./jacobi-fixed accelerator",
+          "make clean"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "cpu-bugged",
+        "steps": [
+          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "cd x64\\Debug",
+          "jacobi-bugged.exe cpu"
+        ]
+      },
+      {
+        "id": "gpu-bugged",
+        "steps": [
+          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "cd x64\\Debug",
+          "jacobi-bugged.exe gpu"
+        ]
+      },
+      {
+        "id": "fpga-emu-bugged",
+        "steps": [
+          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "cd x64\\Debug",
+          "jacobi-bugged.exe accelerator"
+        ]
+      },
+      {
+        "id": "cpu-fixed",
+        "steps": [
+          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "cd x64\\Debug",
+          "jacobi-fixed.exe cpu"
+        ]
+      },
+      {
+        "id": "gpu-fixed",
+        "steps": [
+          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "cd x64\\Debug",
+          "jacobi-fixed.exe gpu"
+        ]
+      },
+      {
+        "id": "fpga-emu-fixed",
+        "steps": [
+          "MSBuild jacobi.sln /t:Rebuild /p:Configuration=\"debug\"",
+          "cd x64\\Debug",
+          "jacobi-fixed.exe accelerator"
+        ]
+      }
+    ]
+  }
+}

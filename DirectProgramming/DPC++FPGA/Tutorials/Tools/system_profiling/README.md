@@ -1,8 +1,8 @@
 
-# Using the Intercept Layer for OpenCL* Applications to Identify Optimization Opportunities
-This FPGA tutorial demonstrates how to use the Intercept Layer for OpenCL* Applications to perform system-level profiling on a design and reveal areas for improvement.
+# Using the Intercept Layer for OpenCL™ Applications to Identify Optimization Opportunities
+This FPGA tutorial demonstrates how to use the Intercept Layer for OpenCL™ Applications to perform system-level profiling on a design and reveal areas for improvement.
 
-***Documentation***:  The [Intercept Layer for OpenCL* Applications](https://github.com/intel/opencl-intercept-layer) GitHub provides complete documentation for the use of this tool. <br>
+***Documentation***:  The [Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl-intercept-layer) GitHub provides complete documentation for the use of this tool. <br>
 The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
 The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
@@ -12,15 +12,15 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | Summary of profiling tools available for performance optimization <br> About the Intercept Layer for OpenCL* Applications <br> How to set up and use this tool <br> A case study of using this tool to identify when the double buffering system-level optimization is beneficial
+| What you will learn               | Summary of profiling tools available for performance optimization <br> About the Intercept Layer for OpenCL™ Applications <br> How to set up and use this tool <br> A case study of using this tool to identify when the double buffering system-level optimization is beneficial
 | Time to complete                  | 30 minutes
 
 _Notice: Tutorial is not supported  on  Windows* as compiling  to FPGA hardware  is  not  yet supported  in  Windows*_
 
 ## Purpose
-This FPGA tutorial demonstrates how to use the Intercept Layer for OpenCL* Applications, an open-source tool, to perform system-level profiling on a design and reveal areas for improvement.
+This FPGA tutorial demonstrates how to use the Intercept Layer for OpenCL™ Applications, an open-source tool, to perform system-level profiling on a design and reveal areas for improvement.
 
 ### Profiling Techniques
 The following code snippet uses standard SYCL* and C++ language features to extract profiling information from DPC++ code.
@@ -36,7 +36,7 @@ void profiling_example(const std::vector<float>& vec_in,
   std::vector<float> vec_pp = PreProcess(vec_in);
 
   // FPGA device performs additional processing
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
   queue q(selector, dpc_common::exception_handler,
           property::queue::enable_profiling{});
 
@@ -45,7 +45,7 @@ void profiling_example(const std::vector<float>& vec_in,
 
   event e = q.submit([&](handler &h) {
     accessor acc_in(buf_in, h, read_only);
-    accessor acc_out(buf_out, h, write_only, noinit);
+    accessor acc_out(buf_out, h, write_only, no_init);
 
     h.single_task<class Kernel>([=]() [[intel::kernel_args_restrict]] {
       DeviceProcessing(acc_in, acc_out);
@@ -67,26 +67,26 @@ void profiling_example(const std::vector<float>& vec_in,
 }
 ```
 
-This tutorial introduces the Intercept Layer for OpenCL* Applications, a profiling tool that extracts and visualizes system-level profiling information for DPC++ programs.  This tool can extract the same profiling data (and more) as the code snippet above, without requiring any code-level profiling directives.
+This tutorial introduces the Intercept Layer for OpenCL™ Applications, a profiling tool that extracts and visualizes system-level profiling information for DPC++ programs.  This tool can extract the same profiling data (and more) as the code snippet above, without requiring any code-level profiling directives.
 
-The Intercept Layer for OpenCL* provides coarse-grained, system-level profiling information. A complementary tool, the Intel® FPGA Dynamic Profiler for DPC++, provides fine-grained profiling information for the kernels executing on the device. Together, these two tools can be used to optimize both host and device side execution. However, these tools should not be used simultaneously, as the Intercept Layer for OpenCL* may slow down the runtime execution, rendering the Dynamic Profiler data less accurate. 
+The Intercept Layer for OpenCL™ provides coarse-grained, system-level profiling information. A complementary tool, the Intel® FPGA Dynamic Profiler for DPC++, provides fine-grained profiling information for the kernels executing on the device. Together, these two tools can be used to optimize both host and device side execution. However, these tools should not be used simultaneously, as the Intercept Layer for OpenCL™ may slow down the runtime execution, rendering the Dynamic Profiler data less accurate.
 
-### The Intercept Layer for OpenCL* Applications
+### The Intercept Layer for OpenCL™ Applications
 
-The Intercept Layer for OpenCL* Applications is an open-source tool that you can use to profile DPC++ designs at a system-level. Although it is not part of the oneAPI Base Toolkit installation, it is freely available on GitHub.
+The Intercept Layer for OpenCL™ Applications is an open-source tool that you can use to profile DPC++ designs at a system-level. Although it is not part of the oneAPI Base Toolkit installation, it is freely available on GitHub.
 
 This tool serves the following purposes:
 - Intercept host calls before they reach the device to gather performance data and log host calls.
 - Provide data to visualize the calls through time, separating them into *queued*, *submitted*, and *execution* sections to help you better understand the execution.
 - Identify gaps (using visualization) in the runtime. Gaps often indicate inefficient execution and throughput loss.
 
-The Intercept Layer for OpenCL* Applications has several different options for capturing different aspects of the host run. These options are described in its [documentation](https://github.com/intel/opencl-intercept-layer). This tutorial uses the call-logging and device timeline features that print information about the host's calls during execution.
+The Intercept Layer for OpenCL™ Applications has several different options for capturing different aspects of the host run. These options are described in its [documentation](https://github.com/intel/opencl-intercept-layer). This tutorial uses the call-logging and device timeline features that print information about the host's calls during execution.
 
 ### Data Visualization
 
-You can visualize the data generated by the Intercept Layer for OpenCL* Applications in the following ways:
-* __Google* Chrome* trace event profiling tool__: JSON files generated by the Intercept Layer for OpenCL Applications contain device timeline information. You can open these JSON files in the [Google* Chrome* trace event profiling tool](chrome://tracing/) to generate a visual representation of the profiling data.
-* __Microsoft* Excel*__: The Intercept Layer for OpenCL* Applications contains a Python script that parses the timeline information into a Microsoft* Excel* file, where it is presented both in a table format and in a bar graph.
+You can visualize the data generated by the Intercept Layer for OpenCL™ Applications in the following ways:
+* __Google* Chrome* trace event profiling tool__: JSON files generated by the Intercept Layer for OpenCL™ Applications contain device timeline information. You can open these JSON files in the [Google* Chrome* trace event profiling tool](chrome://tracing/) to generate a visual representation of the profiling data.
+* __Microsoft* Excel*__: The Intercept Layer for OpenCL™ Applications contains a Python script that parses the timeline information into a Microsoft* Excel* file, where it is presented both in a table format and in a bar graph.
 
 This tutorial will use the Google* Chrome trace event profiling tool for visualization.
 
@@ -101,25 +101,25 @@ This tutorial is based on the *double-buffering* optimization. Double-buffering 
 
 By running host and device actions in parallel, execution gaps between kernels are removed as they no longer have to wait for the host to finish its operation. It's easy to see the benefits of double-buffering with the visualizations provided by the Intercept Layer output.
 
-### Setting up the Intercept Layer for OpenCL* Applications
-The Intercept Layer for OpenCL* Applications is available on GitHub at the following URL: <https://github.com/intel/opencl-intercept-layer>
+### Setting up the Intercept Layer for OpenCL™ Applications
+The Intercept Layer for OpenCL™ Applications is available on GitHub at the following URL: <https://github.com/intel/opencl-intercept-layer>
 
-To set up the Intercept Layer for OpenCL* Applications, perform the following steps:
+To set up the Intercept Layer for OpenCL™ Applications, perform the following steps:
 
-1) [Download](https://github.com/intel/opencl-intercept-layer) the Intercept Layer for OpenCL* Applications version 2.2.1 or later from GitHub.
+1) [Download](https://github.com/intel/opencl-intercept-layer) the Intercept Layer for OpenCL™ Applications version 2.2.1 or later from GitHub.
 
 
-2) Build the Intercept Layer according to the instructions provided in [How to Build the Intercept Layer for OpenCL* Applications](https://github.com/intel/opencl-intercept-layer/blob/master/docs/build.md).
+2) Build the Intercept Layer according to the instructions provided in [How to Build the Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl-intercept-layer/blob/master/docs/build.md).
      *  __Run `cmake`__: Ensure that you set `ENABLE_CLILOADER=1` when running cmake.
       (i.e. `cmake -DENABLE_CLILOADER=1 ..` )
     * __Run `make`__: After the cmake step, `make` must be run in the build directory. This step builds the `cliloader` loader utility.
     * __Add to your `PATH`__:    The `cliloader` executable should now exist in `<path to opencl-intercept-layer-master download>/<build dir>/cliloader/` directory. Add this directory to your `PATH` environment variable if you wish to run multiple designs using `cliloader`.
 
-    You can now pass your executables to `cliloader` to run them with the intercept layer. For details about the `cliloader` loader utility, see [cliloader: A Intercept Layer for OpenCL* Applications Loader](https://github.com/intel/opencl-intercept-layer/blob/master/docs/cliloader.md).
+    You can now pass your executables to `cliloader` to run them with the intercept layer. For details about the `cliloader` loader utility, see [cliloader: A Intercept Layer for OpenCL™ Applications Loader](https://github.com/intel/opencl-intercept-layer/blob/master/docs/cliloader.md).
 
 3) Set `cliloader` and other Intercept Layer options.
 
-    If you run multiple designs with the same options, set up a `clintercept.conf` file in your home directory. You can also set the options as environment variables by prefixing the option name with `CLI_`. For example, the `DllName` option can be set through the `CLI_DllName` environment variable. For a list of options, see *Controls* in [How to Use the Intercept Layer for OpenCL Applications](https://github.com/intel/opencl-intercept-layer/blob/master/docs/controls.md).
+    If you run multiple designs with the same options, set up a `clintercept.conf` file in your home directory. You can also set the options as environment variables by prefixing the option name with `CLI_`. For example, the `DllName` option can be set through the `CLI_DllName` environment variable. For a list of options, see *Controls* in [How to Use the Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl-intercept-layer/blob/master/docs/controls.md).
 
     For this tutorial, set the following options:
 
@@ -130,11 +130,11 @@ To set up the Intercept Layer for OpenCL* Applications, perform the following st
 | `ChromePerformanceTiming=1`, `ChromeCallLogging=1`, `ChromePerformanceTimingInStages=1` | These variables set up the chrome tracer output, and ensure the output has Queued, Submitted, and Execution stages. |
 
 
-These instructions set up the `cliloader` executable, which provides some flexibility by allowing for more control over when the layer is used or not used. If you prefer a local installation (for a single design) or a global installation (always ON for all designs), follow the instructions at [How to Install the Intercept Layer for OpenCL Applications](https://github.com/intel/opencl-intercept-layer/blob/master/docs/install.md).
+These instructions set up the `cliloader` executable, which provides some flexibility by allowing for more control over when the layer is used or not used. If you prefer a local installation (for a single design) or a global installation (always ON for all designs), follow the instructions at [How to Install the Intercept Layer for OpenCL™ Applications](https://github.com/intel/opencl-intercept-layer/blob/master/docs/install.md).
 
-### Running the Intercept Layer for OpenCL* Applications
+### Running the Intercept Layer for OpenCL™ Applications
 
-To run a compiled DPC++ program using the Intercept Layer for OpenCL* Applications, use the command:
+To run a compiled DPC++ program using the Intercept Layer for OpenCL™ Applications, use the command:
 `cliloader <executable> [executable args]`
 
 To run the tutorial example, refer to the "[Running the Sample](#running-the-sample)" section.
@@ -170,25 +170,25 @@ The colors in the trace represent different stages of execution:
 Look for gaps between consecutive execution stages and kernel runs to identify possible areas for optimization.
 
 
-### Applying Double-Buffering Using the Intercept Layer for OpenCL* Applications
+### Applying Double-Buffering Using the Intercept Layer for OpenCL™ Applications
 
 The double-buffering optimization can help minimize or remove gaps between consecutive kernels as they wait for host processing to finish. These gaps are minimized or removed by having the host perform processing operations on a second set of buffers while the kernel executes. With this execution order, the host processing is done by the time the next kernel can run, so kernel execution is not held up waiting for the host.
 
 For a more detailed explanation of the optimization, refer to the FPGA tutorial "Double Buffering to Overlap Kernel Execution with Buffer Transfers and Host Processing".
 
-In this tutorial, the first three kernels are run without the double-buffer optimization, and the next three are run with it. The kernels were run on an Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA when the intercept layer data was collected. The result of this optimization can be clearly seen in the Intercept Layer for OpenCL* Applications trace:
+In this tutorial, the first three kernels are run without the double-buffer optimization, and the next three are run with it. The kernels were run on an Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA when the intercept layer data was collected. The result of this optimization can be clearly seen in the Intercept Layer for OpenCL™ Applications trace:
 
 ![](with_and_without_double_buffering.PNG)
 
 Here, the kernel runs named `_ZTS10SimpleVpow` can be recognized as the bars with the largest execution time (the large orange bars). Double buffering removes the gaps between the kernel executions that can be seen in the top trace image. This optimization improves the throughput of the design, as explained in the `double_buffering` tutorial.
 
-The Intercept Layer for OpenCL* Applications makes it clear why the double buffering optimization will benefit this design and shows the performance improvement it achieves. Use the Intercept Layer tool on your designs to identify scenarios where you can apply double buffering and other system-level optimizations.
+The Intercept Layer for OpenCL™ Applications makes it clear why the double buffering optimization will benefit this design and shows the performance improvement it achieves. Use the Intercept Layer tool on your designs to identify scenarios where you can apply double buffering and other system-level optimizations.
 
 
 ## Key Concepts
 * A summary of the key profiling tools available for DPC++ performance optimization
-* Understanding the Intercept Layer for OpenCL* Applications tool
-* How to set up and use the Intercept Layer for OpenCL* Applications tool
+* Understanding the Intercept Layer for OpenCL™ Applications tool
+* How to set up and use the Intercept Layer for OpenCL™ Applications tool
 * How to use the resulting information to identify opportunities for system-level optimizations such as double buffering
 
 ## License
@@ -206,6 +206,22 @@ The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\
 If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 
@@ -255,16 +271,16 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
      ```
      ./double_buffering.fpga         (Linux)
      ```
-3. Follow the instructions in the "[Setting up the Intercept Layer for OpenCL* Applications](#setting-up-the-intercept-layer-for-opencl-applications)" section to install and configure the `cliloader` tool.
-4. Run the sample using the Intercept Layer for OpenCL* Applications to obtain system-level profiling information:
+3. Follow the instructions in the "[Setting up the Intercept Layer for OpenCL™ Applications](#setting-up-the-intercept-layer-for-opencl-applications)" section to install and configure the `cliloader` tool.
+4. Run the sample using the Intercept Layer for OpenCL™ Applications to obtain system-level profiling information:
      ```
      cliloader ./double_buffering.fpga   (Linux)
      ```
 5. Follow the instructions in the "[Viewing the Performance Data](#viewing-the-performance-data)" section to visualize the results.
 
 ### Example of Output
-__Intercept Layer for OpenCL* Applications results:__
-Your visualization results should resemble the screenshots in sections "[Viewing the Performance Data](#viewing-the-performance-data)" and "[Applying Double-Buffering Using the Intercept Layer for OpenCL* Applications](#applying-double-buffering-using-the-intercept-layer-for-opencl-applications)".
+__Intercept Layer for OpenCL™ Applications results:__
+Your visualization results should resemble the screenshots in sections "[Viewing the Performance Data](#viewing-the-performance-data)" and "[Applying Double-Buffering Using the Intercept Layer for OpenCL™ Applications](#applying-double-buffering-using-the-intercept-layer-for-opencl-applications)".
 
 __Command line `stdout`:__
 When run without `cliloader`, the tutorial output should resemble the result below.

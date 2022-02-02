@@ -18,7 +18,7 @@ int main() {
   queue q(selector);
 
   //# Print the device name
-  std::cout << "Device: " << q.get_device().get_info<info::device::name>() << std::endl;
+  std::cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
 
   return 0;
 }

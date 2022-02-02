@@ -1,4 +1,4 @@
-# Intel DPC++ Compatibility Tool: `Needleman-Wunsch` Sample
+# Intel® DPC++ Compatibility Tool: `Needleman-Wunsch` Sample
 
 This project demonstrates how to migrate a Make/CMake project from CUDA to
 Data Parallel C++ using the Intel DPC++ Compatibility Tool.
@@ -6,14 +6,14 @@ Data Parallel C++ using the Intel DPC++ Compatibility Tool.
 | Optimized for         | Description
 |:---                   |:---
 | OS                    | Linux* Ubuntu* 18.04; Windows 10
-| Software              | Intel&reg; DPC++ Compatibility Tool;
+| Software              | Intel® DPC++ Compatibility Tool;
 | What you will learn   | Simple invocation of dpct to migrate CUDA code
 | Time to complete      | 10 minutes
 
 The program, `needleman-Wunsch`, naively implements the [Needleman-Wunsch
 algorithm][nw-algorithm], which is used in bioinformatics to align protein and
 nucleotide sequences. The code is based on [Rodinia][rodinia], a set of
-benchmarks for heterogeneous computing. As compared to the `Intel DPC++
+benchmarks for heterogeneous computing. As compared to the `Intel® DPC++
 Compatibility Tool: Vector Add` sample, this sample represents a more typical
 example of migrating a working project.
 
@@ -30,7 +30,7 @@ a compilation database by running the intercept-build script described below.
 ## Key Implementation Details
 
 Use the `intercept-build` tool to automatically generate a compilation
-database in a JSON file that contains the build commands for the Intel DPC++
+database in a JSON file that contains the build commands for the Intel® DPC++
 Compatibility Tool to use. Migrate the project and prepare the project to
 build and run using the Intel&reg; oneAPI DPC++ Compiler
 
@@ -134,6 +134,21 @@ error: assigning to 'int' from incompatible type 'typename info::param_traits<in
 
 9. Clean up the build: `make clean`.
 
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ## Windows
 

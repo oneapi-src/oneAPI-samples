@@ -6,8 +6,8 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux Ubuntu LTS 18.04
-| Hardware                          | Intel Programmable Acceleration Card with Intel Arria10 GX FPGA or Stratix(R) 10 SX FPGA
-| Software                          | Intel(R) oneAPI DPC++ Compiler, Intel(R) FPGA Add-on for oneAPI Base Toolkit
+| Hardware                          | Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA or Intel&reg; Stratix&reg; 10 FPGA
+| Software                          | Intel&reg; oneAPI DPC++ Compiler, Intel&reg; FPGA Add-on for oneAPI Base Toolkit
 | What you will learn               | Get started with a basic setup for FPGA projects
 | Time to complete                  | n/a
 
@@ -34,8 +34,25 @@ The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on y
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
-The following instructions assume you are in the project's root folder. 
+The following instructions assume you are in the project's root folder.
 
 1. Create a `build` directory for `cmake` build artifacts:
 

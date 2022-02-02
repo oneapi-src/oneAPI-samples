@@ -1,33 +1,5 @@
-// ==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-// OTHER DEALINGS IN THE SOFTWARE.
-//
-// This agreement shall be governed in all respects by the laws of the State of
-// California and by the laws of the United States of America.
-
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 #include <fstream>
 #include <string>
@@ -151,9 +123,9 @@ int main(int argc, char *argv[]) {
 
   try {
 #ifdef FPGA_EMULATOR
-    INTEL::fpga_emulator_selector device_selector;
+    ext::intel::fpga_emulator_selector device_selector;
 #else
-    INTEL::fpga_selector device_selector;
+    ext::intel::fpga_selector device_selector;
 #endif
     auto prop_list = property_list{property::queue::enable_profiling()};
     queue q(device_selector, dpc_common::exception_handler, prop_list);
@@ -198,7 +170,7 @@ int main(int argc, char *argv[]) {
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
@@ -251,15 +223,19 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
     std::cout << "Warning: Host allocations are not supported on this platform, which means that pre-pinning is not supported. DMA transfers may be slower than expected which may reduce application throughput.\n\n";
   }
 
+  // padding for the input and output buffers to deal with granularity of
+  // kernel reads and writes
+  constexpr size_t kInOutPadding = 16 * kVec;
+  
   std::ifstream file(input_file,
                      std::ios::in | std::ios::binary | std::ios::ate);
   if (file.is_open()) {
     isz = file.tellg();
     if (prepin) {
       pinbuf = (char *)malloc_host(
-          isz, q.get_context());  // Pre-pin the buffer, for faster DMA
+          isz + kInOutPadding, q.get_context());  // Pre-pin the buffer, for faster DMA
     } else {                      // throughput, using malloc_host().
-      pinbuf = new char[isz];
+      pinbuf = new char[isz + kInOutPadding];
     }
     file.seekg(0, std::ios::beg);
     file.read(pinbuf, isz);
@@ -292,9 +268,10 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
       kinfo[eng][i].file_size = isz;
       // Allocating slightly larger buffers (+ 16 * kVec) to account for
       // granularity of kernel writes
-      int outputSize = kinfo[eng][i].file_size + 16 * kVec < kMinBufferSize
-                           ? kMinBufferSize
-                           : kinfo[eng][i].file_size + 16 * kVec;
+      int outputSize =
+          ((isz + kInOutPadding) < kMinBufferSize) ? kMinBufferSize
+                                                   : (isz + kInOutPadding);
+      const size_t input_alloc_size = isz + kInOutPadding;
 
       // Pre-pin buffer using malloc_host() to improve DMA bandwidth.
       if (i >= 3) {
@@ -327,7 +304,7 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
                                       : new buffer<unsigned, 1>(kMinBufferSize);
       kinfo[eng][i].pibuf = i >= 3
                                 ? kinfo[eng][i - 3].pibuf
-                                : new buffer<char, 1>(kinfo[eng][i].file_size);
+                                : new buffer<char, 1>(input_alloc_size);
       kinfo[eng][i].pobuf =
           i >= 3 ? kinfo[eng][i - 3].pobuf : new buffer<char, 1>(outputSize);
       kinfo[eng][i].pobuf_decompress = (char *)malloc(kinfo[eng][i].file_size);

@@ -17,8 +17,8 @@ The device selected for offloading the kernel is displayed in the output and the
 
 ## Key implementation details
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.  This sample also demonstrates a custom device selector's implementation by overwriting the SYCL device selector class, offloading computation using both lambda and functor kernels, and using event objects to time command group execution, enabling profiling.
- 
-## License  
+
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -26,12 +26,12 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the Program for CPU and GPU
 
-> Note: if you have not already done so, set up your CLI 
-> environment by sourcing the setvars script located in 
-> the root of your oneAPI installation. 
+> Note: if you have not already done so, set up your CLI
+> environment by sourcing the setvars script located in
+> the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
-> Linux User: . ~/intel/oneapi/setvars.sh  
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux User: . ~/intel/oneapi/setvars.sh
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Include Files
@@ -40,6 +40,23 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 ### Running Samples in DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
 
 Perform the following steps:
@@ -47,10 +64,10 @@ Perform the following steps:
 
 1.  Build the program using the following <code> cmake </code> commands.
 ```
-    $ cd sepia-filter  
-    $ mkdir build  
-    $ cd build  
-    $ cmake ../.  
+    $ cd sepia-filter
+    $ mkdir build
+    $ cd build
+    $ cmake ../.
     $ make
 ```
 

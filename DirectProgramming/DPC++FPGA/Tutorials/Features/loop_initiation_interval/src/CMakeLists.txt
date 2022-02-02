@@ -16,10 +16,12 @@ if(NOT DEFINED FPGA_BOARD)
                     \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    if(FPGA_BOARD STREQUAL "intel_a10gx_pac:pac_a10")
-        set(DEVICE_FLAG "-DA10")
-    elseif(FPGA_BOARD STREQUAL "intel_s10sx_pac:pac_s10" OR FPGA_BOARD STREQUAL "intel_s10sx_pac:pac_s10_usm")
-        set(DEVICE_FLAG "-DS10")
+    if(FPGA_BOARD MATCHES ".*a10.*")
+      set(DEVICE_FLAG "-DA10")
+    elseif(FPGA_BOARD MATCHES ".*s10.*")
+      set(DEVICE_FLAG "-DS10")
+    elseif(FPGA_BOARD MATCHES ".*agilex.*")
+      set(DEVICE_FLAG "-DAgilex")
     endif()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
 endif()
@@ -39,9 +41,9 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga ${DEVICE_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${DEVICE_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -73,7 +75,7 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_C
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
 set_target_properties(${FPGA_EARLY_IMAGE_ENABLE_II} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DENABLE_II")
 set_target_properties(${FPGA_EARLY_IMAGE_ENABLE_II} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
-# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
 ### FPGA Hardware

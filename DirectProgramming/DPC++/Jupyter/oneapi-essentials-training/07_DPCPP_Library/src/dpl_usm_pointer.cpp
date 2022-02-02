@@ -11,7 +11,7 @@ const int N = 4;
 
 int main() {
   queue q;
-  std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
+  std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
     
   //# USM allocation on device
   int* data = malloc_shared<int>(N, q);
@@ -20,7 +20,7 @@ int main() {
   std::fill(make_device_policy(q), data, data + N, 20);
   q.wait();
     
-  for (int i = 0; i < N; i++) std::cout << data[i] << std::endl;
+  for (int i = 0; i < N; i++) std::cout << data[i] << "\n";
   free(data, q);
   return 0;
 }

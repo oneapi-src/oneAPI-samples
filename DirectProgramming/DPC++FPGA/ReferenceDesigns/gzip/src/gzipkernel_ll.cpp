@@ -1,31 +1,3 @@
-// ==============================================================
-// Copyright (C) 2019 Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-// OTHER DEALINGS IN THE SOFTWARE.
-//
-// This agreement shall be governed in all respects by the laws of the State of
-// California and by the laws of the United States of America.
-
 /*
   ** Batching **
   This is the "low-latency" variant of the GZIP reference design. It differs
@@ -70,18 +42,18 @@
 */
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <vector>
 
 #include "gzipkernel_ll.hpp"
 #include "kernels.hpp"
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
 
 
 using namespace sycl;
 
 // Pipes, for inter-kernel data transfer..
-using acc_dist_channel_array = PipeArray<  // Defined in "pipe_array.h".
+using acc_dist_channel_array = PipeArray<  // Defined in "pipe_utils.hpp".
     class dist_channel_pipe_id,            // An identifier for the pipe.
     struct DistLen,                        // The type of data in the pipe.
     32,                                     // The capacity of each pipe.
@@ -210,9 +182,11 @@ int GetHuffRunLen(int _len, int _dist) {
   unsigned code;
   int extra;
   int dist;
-  int local_lbits, local_llen;
-  int local_dbits, local_dlen;
-  local_lbits = 0;
+  //int local_lbits;
+  int local_llen;
+  //int local_dbits;
+  int local_dlen;
+  //local_lbits = 0;
   local_llen = 0;
 
   int base_length[kLengthCodes] = {
@@ -342,28 +316,28 @@ int GetHuffRunLen(int _len, int _dist) {
   lc = _len - kMinMatch;
   code = length_code[lc];
 
-  local_lbits = static_ltree[code + kLiterals + 1].code;
+  //local_lbits = static_ltree[code + kLiterals + 1].code;
   local_llen = static_ltree[code + kLiterals + 1].len;
   extra = extra_lbits[code];
   if (extra) {
     lc -= base_length[code];
-    local_lbits |= lc << local_llen;
+    //local_lbits |= lc << local_llen;
     local_llen += extra;
   }
 
   dist = _dist;
   dist--;
   code = d_code(dist);
-  local_dbits = static_dtree[code].code;
+  //local_dbits = static_dtree[code].code;
   local_dlen = static_dtree[code].len;
   extra = extra_dbits[code];
   if (extra) {
     dist -= base_dist[code];
-    local_dbits |= dist << local_dlen;
+    //local_dbits |= dist << local_dlen;
     local_dlen += extra;
   }
 
-  local_lbits |= local_dbits << local_llen;
+  //local_lbits |= local_dbits << local_llen;
   local_llen += local_dlen;
 
   return local_llen;
@@ -2157,13 +2131,12 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
         // what we compare to
         unsigned int insize_compare = (accessor_isz) / kVec;
 
-        int ctr = insize_compare = insize_compare - 1;
+        int ctr = insize_compare - 1;
 
         char first_valid_pos = 0;
 
         struct DistLen dist_offs_data;
 
-        int distchan_ndx = 0;
         size_t inpos = 0;
 
         char_arr_32 input_data; // Assumes kVec = 16 because CRC expects 2 x 16 bytes.
@@ -2420,7 +2393,6 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
 
           // increment input position
           inpos_minus_vec_div_16++;
-          distchan_ndx += 1;
           ctr--;
 
         } while (ctr >= 0);

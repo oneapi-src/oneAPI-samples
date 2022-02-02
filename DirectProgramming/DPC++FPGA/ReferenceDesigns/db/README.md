@@ -4,24 +4,24 @@ This reference design demonstrates how to use an FPGA to accelerate database que
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
 The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
- 
+
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
-| Software                          | Intel&reg; oneAPI DPC++ Compiler 
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | How to accelerate database queries using an Intel FPGA
 | Time to complete                  | 1 hour
 
 _Notice: This example design is only officially supported for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)_
 
 **Performance**
-In this design, we accelerate four database queries as *offload accelerators*. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the latency (i.e., the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). As shown in the table below, most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency. 
+In this design, we accelerate four database queries as *offload accelerators*. In an offload accelerator scheme, the queries are performed by transferring the relevant data from the CPU host to the FPGA, starting the query kernel on the FPGA, and copying the results back. This means that the relevant performance number is the latency (i.e., the wall clock time) from when the query is requested to the time the output data is accessible by the host. This includes the time to transfer data between the CPU and FPGA over PCIe (with an approximate read and write bandwidth of 6877 and 6582 MB/s, respectively). As shown in the table below, most of the total query time is spent transferring the data between the CPU and FPGA, and the query kernels themselves are a small portion of the total latency.
 
 The performance data below was gathered using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) with a database scale factor (SF) of 1. Please see the [Database files](#database-files) section for more information on generating data for a scale factor of 1.
 
 | Query | Approximate Data Transfer Time (ms) | Measured Total Query Processing Time (ms)
-|:---   |:---                                 |:--- 
+|:---   |:---                                 |:---
 | 1     | 35                                  | 39
 | 9     | 37                                  | 43
 | 11    | 5                                   | 11
@@ -31,7 +31,7 @@ The performance data below was gathered using the Intel® FPGA PAC D5005 (with I
 The database in this tutorial has 8-tables and a set of 21 business-oriented queries with broad industry-wide relevance. This reference design shows how four queries can be accelerated using the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) and oneAPI. To do so, we create a set of common database operators (found in the `src/db_utils/` directory) that are are combined in different ways to build the four queries.
 
 ## Key Implementation Details
-To optimize the different database queries, the design leverages concepts discussed in the following FPGA tutorials: 
+To optimize the different database queries, the design leverages concepts discussed in the following FPGA tutorials:
 * **Shannonization to improve Fmax/II** (shannonization)
 * **Optimizing Inner Loop Throughput** (optimize_inner_loop)
 * **Caching On-Chip Memory to Improve Loop Performance** (onchip_memory_cache)
@@ -43,7 +43,7 @@ To optimize the different database queries, the design leverages concepts discus
    2. Improving code reuse, readability and extendability using C++ templates for FPGA device code
    3. Showcase the usage of advanced FPGA optimizations listed above to improve the performance of a large design
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -58,6 +58,23 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 
@@ -130,11 +147,12 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
        ```
        nmake report
        ```
-       _Note:_ If you are compiling Query 9 (`-DQUERY=9`), the report generation time is unusually long. 
+       _Note:_ If you are compiling Query 9 (`-DQUERY=9`), the report generation time is unusually long.
 
     * An FPGA hardware target is not provided on Windows*.
-  
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
+*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -145,7 +163,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
      ```
      ./db.fpga_emu --dbroot=../data/sf0.01 --test       (Linux)
-     db.q1.fpga_emu.exe --dbroot=../data/sf0.01 --test  (Windows)
+     db.fpga_emu.exe --dbroot=../data/sf0.01 --test  (Windows)
      <likewise for queries 9, 11 and 12>
      ```
 
@@ -222,12 +240,12 @@ You should see the following output in the console:
 ## Additional Design Information
 
 ### Source Code Breakdown
-| File                                  | Description 
+| File                                  | Description
 |:---                                   |:---
 |`db.cpp`                               | Contains the `main()` function and the top-level interfaces to the database functions.
 |`dbdata.cpp`                           | Contains code to parse the database input files and validate the query output
 |`dbdata.hpp`                           | Definitions of database related datastructures and parsing functions
-|`query1/query1_kernel.cpp`             | Contains the kernel for Query 1 
+|`query1/query1_kernel.cpp`             | Contains the kernel for Query 1
 |`query9/query9_kernel.cpp`             | Contains the kernel for Query 9
 |`query9/pipe_types.cpp`                | All data types and instantiations for pipes used in query 9
 |`query11/query11_kernel.cpp`           | Contains the kernel for Query 11
@@ -244,7 +262,7 @@ You should see the following output in the console:
 |`db_utils/ShannonIterator.hpp`         | A template based iterator to improve Fmax/II for designs
 |`db_utils/StreamingData.hpp`           | A generic datastructure for streaming data between kernels
 |`db_utils/Tuple.hpp`                   | A templated tuple that behaves better on the FPGA than the std::tuple
-|`db_utils/Unroller.hpp`                | A templated-based loop unroller that unrolls loops in the front end 
+|`db_utils/Unroller.hpp`                | A templated-based loop unroller that unrolls loops in the front end
 
 ### Database files
 In the `data/` directory, you will find database files for a scale factor of 0.01. These files were generated manually and can be used to verify the queries in emulation. However, **these files are too small to showcase the true performance of the FPGA hardware**.

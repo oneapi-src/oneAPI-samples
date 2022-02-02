@@ -21,7 +21,7 @@ Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 25k matrices/s for matrices of size 128 * 128
+| Intel® PAC with Intel Arria® 10 GX FPGA        | 24.5k matrices/s for matrices of size 128 * 128
 | Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for matrices of size 256 * 256
 
 
@@ -36,23 +36,21 @@ QR decomposition is used extensively in signal processing applications such as b
 
 ### Matrix dimensions and FPGA resources
 
-The QR decomposition algorithm factors a complex _m_×_n_ matrix, where _m_ ≥ _n_. The algorithm computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _m_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result. 
+The QR decomposition algorithm factors a complex _m_×_n_ matrix, where _m_ ≥ _n_. The algorithm computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _m_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result.
 
 We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
-
-Note: the compiler flag '-fp-relaxed' will be deprecated in the next release and replaced by a new implementation.
 
 With this optimization, our FPGA implementation requires 4*m* DSPs to compute the complex floating point dot product. Thus, the matrix size is constrained by the total FPGA DSP resources available. Note that this upper bound is a consequence of this particular implementation.
 
 By default, the design is parameterized to process 128 × 128 matrices when compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), a larger device.
- 
+
 
 ## Key Implementation Details
 | Kernel            | Description
 ---                 |---
-| QRD               | Implements a modified Gram-Schmidt QR decomposition algorithm. 
+| QRD               | Implements a modified Gram-Schmidt QR decomposition algorithm.
 
-To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials: 
+To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 * **Triangular Loop Optimization** (triangular_loop)
 * **Explicit Pipelining with `fpga_reg`** (fpga_register)
 * **Loop `ivdep` Attribute** (loop_ivdep)
@@ -66,7 +64,7 @@ To optimize the performance-critical loop in its algorithm, the design leverages
    5. Using an efficient memory banking scheme to generate high performance hardware.
    6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -81,7 +79,24 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
- 
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
 1. Install the design into a directory `build` from the design directory by running `cmake`:
 
@@ -130,7 +145,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
@@ -140,17 +155,18 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
      ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      nmake report
-     ``` 
-   * An FPGA hardware target is not provided on Windows*. 
+     ```
+   * An FPGA hardware target is not provided on Windows*.
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
+*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -169,7 +185,7 @@ NOTE: The design is optimized to perform best when run on a large number of matr
      ```
      export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      ./qrd.fpga_emu           (Linux)
- 
+
      set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      qrd.fpga_emu.exe         (Windows)
      ```
@@ -192,8 +208,8 @@ Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 327
 Device name: pac_a10 : Intel PAC Platform (pac_f000000)
 Generating 32768 random matrices
 Running QR decomposition of 32768 matrices repeatedly
-   Total duration:   41.3763 s
-Throughput: 25.3425k matrices/s
+   Total duration:   42.3408 s
+Throughput: 24.7652k matrices/s
 Verifying results on matrix 0 16384 32767
 PASSED
 ```
@@ -205,8 +221,8 @@ Device name: pac_s10 : Intel PAC Platform (pac_f100000)
 Generating 4096 random matrices
 Running QR decomposition of 4096 matrices repeatedly
    Total duration:   17.3197 s
-Throughput: 7.5678k matrices/s
-Verifying results on matrix 0 2048 4095
+Throughput: 7.36231k matrices/s
+Verifying results on matrix 0 20480 40959
 PASSED
 ```
 
@@ -217,8 +233,8 @@ PASSED
 | Flag | Description
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
-`-Xsclock=330MHz` | The FPGA backend attempts to achieve 330 MHz
-`-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) ) 
+`-Xsclock=360MHz` | The FPGA backend attempts to achieve 360 MHz
+`-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) )
 `-Xsparallel=2` | Use 2 cores when compiling the bitstream through Quartus
 `-Xsseed` | Specifies the Quartus compile seed, to yield slightly higher fmax
 `-DROWS_COMPONENT` | Specifies the number of rows of the matrix
@@ -243,5 +259,5 @@ The performance was measured by Intel on July 29, 2020.
 Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
 
 (C) Intel Corporation.
-      
+
 

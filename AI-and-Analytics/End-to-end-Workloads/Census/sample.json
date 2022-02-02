@@ -1,8 +1,8 @@
 {
   "guid": "AA055D7B-290C-4FCA-990B-B9FC88AF18D4",
-  "name": "Census end-to-end workload",
-  "categories": ["Toolkit/oneAPI AI And Analytics/End-to-end-Workloads/Census"],
-  "description": "This sample illustrates using Modin and daal optimized scikit-learn to build and run an end-to-end machine learning workload",
+  "name": "Census",
+  "categories": ["Toolkit/oneAPI AI And Analytics/End-to-End Workloads"],
+  "description": "This sample illustrates the use of Intel® Distribution of Modin* and Intel Extension for Scikit-learn to build and run an end-to-end machine learning workload",
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "dependencies": ["intelpython"],
@@ -11,8 +11,12 @@
   "ciTests": {
   	"linux": [
     {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -y -n aikit-modin-test -c intel/label/oneapibeta -c intel -c conda-forge runipy intel-aikit-modin", "conda activate aikit-modin-test"],
+  		"env": ["source activate base"],
   		"steps": [
+         "conda create -y -n intel-aikit-modin intel-aikit-modin -c intel",
+         "conda activate intel-aikit-modin",
+         "conda install -y runipy",
+         "pip install opencensus",
          "runipy census_modin.ipynb" 
   		 ]
   	}

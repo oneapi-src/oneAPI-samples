@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -77,7 +77,7 @@ event submitKernel(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
                       buffer<unsigned, 1>& r_buf) {
   auto e = q.submit([&](handler &h) {
     accessor d_accessor(d_buf, h, read_only);
-    accessor r_accessor(r_buf, h, write_only, noinit);
+    accessor r_accessor(r_buf, h, write_only, no_init);
 
     h.single_task<Kernel<AttrType>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType
@@ -106,7 +106,7 @@ event submitKernel<1>(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
                       buffer<unsigned, 1>& r_buf) {
   auto e = q.submit([&](handler &h) {
     accessor d_accessor(d_buf, h, read_only);
-    accessor r_accessor(r_buf, h, write_only, noinit);
+    accessor r_accessor(r_buf, h, write_only, no_init);
 
     h.single_task<Kernel<1>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType
@@ -139,7 +139,7 @@ event submitKernel<2>(queue& q, unsigned init, buffer<unsigned, 1>& d_buf,
                       buffer<unsigned, 1>& r_buf) {
   auto e = q.submit([&](handler &h) {
     accessor d_accessor(d_buf, h, read_only);
-    accessor r_accessor(r_buf, h, write_only, noinit);
+    accessor r_accessor(r_buf, h, write_only, no_init);
 
     h.single_task<Kernel<2>>([=]() [[intel::kernel_args_restrict]] {
       // Declare 'dict_offset' whose attributes are applied based on AttrType
@@ -171,9 +171,9 @@ unsigned RunKernel(unsigned init, const unsigned dict_offset_init[]) {
   unsigned result = 0;
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
@@ -193,7 +193,7 @@ unsigned RunKernel(unsigned init, const unsigned dict_offset_init[]) {
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

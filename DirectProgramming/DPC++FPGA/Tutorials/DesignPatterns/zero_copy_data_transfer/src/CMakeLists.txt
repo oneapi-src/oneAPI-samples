@@ -7,8 +7,22 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(REPORTS_TARGET ${TARGET_NAME}_report)
 
-# USM is only supported on the PAC S10 board
-set(FPGA_BOARD "intel_s10sx_pac:pac_s10_usm")
+# FPGA board selection
+if(NOT DEFINED FPGA_BOARD)
+    set(FPGA_BOARD "intel_s10sx_pac:pac_s10_usm")
+    message(STATUS "FPGA_BOARD was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Stratix(R) 10 SX FPGA with USM support). \
+                    \nPlease refer to the README for information on board selection.")
+else()
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+endif()
+
+# this tutorial requires USM host allocations. Check the BSP name (which should contain the text 'usm')
+# to ensure the BSP has the required support. Allow the user to define USM_HOST_ALLOCATIONS_ENABLED
+# to override this check (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
+if(NOT FPGA_BOARD MATCHES ".usm.*" AND NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED)
+    message(FATAL_ERROR "This tutorial requires a BSP that has USM host allocations enabled")
+endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
 if(WIN32)
@@ -19,9 +33,9 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga -Wall -DFPGA_EMULATOR ${DEVICE_FLAG}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -Wall -DFPGA_EMULATOR ${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga -Wall ${DEVICE_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -Wall ${DEVICE_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xsboard=${FPGA_BOARD} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -49,7 +63,7 @@ add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
-# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
 ### FPGA Hardware

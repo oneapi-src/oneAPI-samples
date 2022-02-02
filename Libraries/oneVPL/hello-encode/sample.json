@@ -1,35 +1,20 @@
 {
   "guid": "6AFD0BE4-A4D2-42C2-A169-174862D91A35",
   "name": "Hello Encode",
-  "categories": ["Toolkit/oneAPI Libraries/oneVPL"],
-  "description": "Sample that shows how to use the Intel® oneAPI Video Processing Library (VPL) to perform a simple video encode",
-  "dependencies": ["vpl"],
-  "os": ["linux", "windows"],
-  "languages": [{"cpp":{}}],
-  "builder": [ "ide", "cmake"],
-  "targetDevice": ["CPU", "GPU"],
+  "categories": [ "Toolkit/oneAPI Libraries/oneVPL" ],
+  "description": "Shows how to use the Intel® oneAPI Video Processing Library (VPL) to perform a simple video encode",
+  "dependencies": [ "vpl" ],
+  "os": [ "linux" ],
+  "languages": [ { "cpp": {} } ],
+  "builder": [ "cmake" ],
+  "targetDevice": [ "CPU", "GPU" ],
   "ciTests": {
     "linux": [
-      { "id": "builds and runs successfully with CMake",
-        "env": [ ],
-        "steps": [
-          "mkdir build",
-          "cd build",
-          "cmake ..",
-          "cmake --build .",
-          "cmake --build . --target run"
-        ] }
-    ],
-    "windows": [
-      { "id": "builds and runs successfully with CMake",
-        "env": [ ],
-        "steps": [
-          "mkdir build",
-          "cd build",
-          "cmake ..",
-          "cmake --build .",
-          "cmake --build . --target run"
-        ] }
+      {
+        "id": "No build required, readmes only",
+        "env": [],
+        "steps": []
+      }
     ]
   }
 }

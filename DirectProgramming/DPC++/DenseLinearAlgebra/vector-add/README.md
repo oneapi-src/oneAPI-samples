@@ -7,12 +7,12 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04, Windows 10 
-| Hardware                          | Skylake with GEN9 or newer, Intel(R) Programmable Acceleration Card with Intel(R) Arria(R) 10 GX FPGA
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler  
-  
+| OS                                | Linux* Ubuntu* 18.04, Windows 10
+| Hardware                          | Skylake with GEN9 or newer, Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+
 ## Purpose
-The `vector-add` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel(R) CPU and accelerators.
+The `vector-add` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel&reg; CPU and accelerators.
 
 In this sample, you can learn how to use the most basic code in C++ language that offloads computations to a GPU using the DPC++ language. This includes using Unified Shared Memory (USM) and buffers. USM requires an explicit wait for the asynchronous kernel's computation to complete.  Buffers, at the time they go out of scope, bring main memory in sync with device memory implicitly; the explicit wait on the event is not required as a result. This sample provides examples of both implementations for simple side-by-side reviews (the Windows sample only supports USM).
 
@@ -20,31 +20,56 @@ The code will attempt to execute on an available GPU and fallback to the system'
 
 In addition, you can target an FPGA device using the build scripts described below.  If you do not have FPGA hardware, the sample will run in emulation mode, which includes static optimization reports for design analysis.
 
-A detailed code walkthrough can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP1_VECTOR_ADD. 
+A detailed code walkthrough can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP1_VECTOR_ADD.
 
-## Key Implementation Details 
+## Key Implementation Details
 The basic DPC++ implementation explained in the code includes device selector, USM, buffer, accessor, kernel, and command groups.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `vector-add` Program for CPU and GPU 
+## Known Issues
+With oneAPI 2021.4 the argument for accessors was changed from 'noinit' to 'no_init'. The change was derived from a change between the SYCL 2020 provisional spec and that of the 2020Rev3 spec
 
-> Note: if you have not already done so, set up your CLI 
-> environment by sourcing  the setvars script located in 
-> the root of your oneAPI installation. 
+If running this sample and it fails, do one of the following
+- Update the Intel® oneAPI Base Toolkit to 2021.4
+- Change the 'no_init' argument  to 'noinit'
+
+## Building the `vector-add` Program for CPU and GPU
+
+> Note: if you have not already done so, set up your CLI
+> environment by sourcing  the setvars script located in
+> the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
-> Linux User: . ~/intel/oneapi/setvars.sh  
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux User: . ~/intel/oneapi/setvars.sh
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 
 ### Running Samples in DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
 
-### On a Linux* System
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
+
+### On a Linux* System using the Command Line
 Perform the following steps:
 
 1. Build the program using the following `make` commands (default uses buffers):
@@ -59,10 +84,11 @@ Perform the following steps:
     ```
 > Note: for USM use `make run_usm`
 
-3. Clean the program using:  
+3. Clean the program using:
     ```
-    make clean 
+    make clean
     ```
+
 
 ### On a Windows* System Using a Command Line Interface
 
@@ -88,14 +114,14 @@ Perform the following steps:
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 Perform the following steps:
 1. Launch the Visual Studio* 2017.
-2. Select the menu sequence **File** > **Open** > **Project/Solution**. 
+2. Select the menu sequence **File** > **Open** > **Project/Solution**.
 3. Locate the `vector-add` folder.
 4. Select the `vector-add.sln` file.
-5. Select the configuration 'Debug' or 'Release'  
+5. Select the configuration 'Debug' or 'Release'
 6. Select **Project** > **Build** menu option to build the selected configuration.
 7. Select **Debug** > **Start Without Debugging** menu option to run the program.
 
-## Building the `vector-add` Program for Intel(R) FPGA
+## Building the `vector-add` Program for Intel&reg; FPGA
 
 ### On a Linux* System
 
@@ -143,14 +169,14 @@ Perform the following steps:
 3. Locate the `vector-add` folder.
 4. Select the `vector-add.sln` file.
 5. Select the configuration 'Debug-fpga' that have the necessary project settings already below:
- 
+
             Under the 'Project Property' dialog:
- 
+
      a. Select the **DPC++** tab.
      b. In the **General** subtab, the **Perform ahead of time compilation for the FPGA** setting is set to **Yes**.
      c. In the **Preprocessor** subtab, the **Preprocessor Definitions" setting has **FPGA_EMULATOR=1** added.
      d. Close the dialog.
- 
+
 6. Select **Project** > **Build** menu option to build the selected configuration.
 7. Select **Debug** > **Start Without Debugging** menu option to run the program.
 

@@ -1,0 +1,1162 @@
+{
+    "028AE3ED-2896-4C56-9066-42AA5D5FA973": {
+        "guid": "028AE3ED-2896-4C56-9066-42AA5D5FA973",
+        "name": "Getting Started",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "035E3DCB-98D1-4F81-944D-5B1A5039DF1B": {
+        "guid": "035E3DCB-98D1-4F81-944D-5B1A5039DF1B",
+        "name": "TBB Task SYCL",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "08F78756-4F3C-470C-9AE1-54DE09040799": {
+        "guid": "08F78756-4F3C-470C-9AE1-54DE09040799",
+        "name": "TBB ASYNC SYCL",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "111213A0-C930-45B4-820F-02472BABBF34": {
+        "guid": "111213A0-C930-45B4-820F-02472BABBF34",
+        "name": "Intel Tensorflow Getting Started",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "11A61AF6-727E-4241-B5A0-CCCD0EF160B9": {
+        "guid": "11A61AF6-727E-4241-B5A0-CCCD0EF160B9",
+        "name": "Pipe Array",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "1457B49A-2CD3-48E5-B3A9-753EAD2D18F7": {
+        "guid": "1457B49A-2CD3-48E5-B3A9-753EAD2D18F7",
+        "name": "Fast Recompile",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "17B9CB18-EAC1-4D08-8BBE-96F5D777C303": {
+        "guid": "17B9CB18-EAC1-4D08-8BBE-96F5D777C303",
+        "name": "TBB Resumable Tasks SYCL",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "1ADD31DD-8D83-45E8-8AC4-6972C80354EB": {
+        "guid": "1ADD31DD-8D83-45E8-8AC4-6972C80354EB",
+        "name": "Scheduler Target FMAX",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
+    },
+    "1C2AD9C2-D977-4586-9584-BF65A1AED0A2": {
+        "guid": "1C2AD9C2-D977-4586-9584-BF65A1AED0A2",
+        "name": "Computed Tomography",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "1D1E56E0-9ED1-4948-B7D7-169E54B8283F": {
+        "guid": "1D1E56E0-9ED1-4948-B7D7-169E54B8283F",
+        "name": "Stall Enable",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "1e00e2dd-ffe3-408f-a9ec-77e81532d75a": {
+        "guid": "1e00e2dd-ffe3-408f-a9ec-77e81532d75a",
+        "name": "Chapter 06 - Unified Shared Memory",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "2013EC16-5BB7-4EBF-9F55-E224A1C8CB73": {
+        "guid": "2013EC16-5BB7-4EBF-9F55-E224A1C8CB73",
+        "name": "Max Interleaving",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "207061A0-CBDD-449C-A3AF-0BACB4A63D57": {
+        "guid": "207061A0-CBDD-449C-A3AF-0BACB4A63D57",
+        "name": "Optimize Inner Loop",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "2100C9BD-331C-475B-9878-4D14AAF0981D": {
+        "guid": "2100C9BD-331C-475B-9878-4D14AAF0981D",
+        "name": "N-Way Buffering",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "25b534cd-4dc7-43dc-b3d0-05795b0b0f64": {
+        "guid": "25b534cd-4dc7-43dc-b3d0-05795b0b0f64",
+        "name": "Chapter 07 - Buffers",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "2760C1B6-25E5-4280-9F8F-34CA8DDEDA7C": {
+        "guid": "2760C1B6-25E5-4280-9F8F-34CA8DDEDA7C",
+        "name": "Loop Unroll",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "2D2AAD9B-29BF-4380-B5E7-575CDECCF686": {
+        "guid": "2D2AAD9B-29BF-4380-B5E7-575CDECCF686",
+        "name": "OpenMP Offload C++ Tutorials",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "2E6A2E22-035F-493B-B471-DFD8CF8F8256": {
+        "guid": "2E6A2E22-035F-493B-B471-DFD8CF8F8256",
+        "name": "Intel Python Daal4py Getting Started",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "314B4C1D-07A0-4527-A9FA-9F87ED9622D7": {
+        "guid": "314B4C1D-07A0-4527-A9FA-9F87ED9622D7",
+        "name": "Lidar Object Detection using PointPillars",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.2.1"
+    },
+    "31BCA673-F514-4E2E-A8B3-A0B42D63884C": {
+        "guid": "31BCA673-F514-4E2E-A8B3-A0B42D63884C",
+        "name": "Memory Attributes",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "3228581F-9DF8-4696-9B1C-0B31286B97C3": {
+        "guid": "3228581F-9DF8-4696-9B1C-0B31286B97C3",
+        "name": "QRD",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "36C96B55-4DE0-4764-8A41-0F67D2300389": {
+        "guid": "36C96B55-4DE0-4764-8A41-0F67D2300389",
+        "name": "Hello VPP",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "370A5B2B-EBB3-4E7F-89F3-73D333522215": {
+        "guid": "370A5B2B-EBB3-4E7F-89F3-73D333522215",
+        "name": "Loop Coalesce",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "3814C3C8-6CD1-40C9-A94B-CB4D4F58E2B9": {
+        "guid": "3814C3C8-6CD1-40C9-A94B-CB4D4F58E2B9",
+        "name": "Sparse Conjugate Gradient",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "389BBED3-456D-4092-B6D8-DDF782865D66": {
+        "guid": "389BBED3-456D-4092-B6D8-DDF782865D66",
+        "name": "Simple Model",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "393622C0-7D69-4ECC-B9B1-4077316A135B": {
+        "guid": "393622C0-7D69-4ECC-B9B1-4077316A135B",
+        "name": "Monte Carlo Pi",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "39AA03BC-09ED-4DDF-A115-FD31F6F46450": {
+        "guid": "39AA03BC-09ED-4DDF-A115-FD31F6F46450",
+        "name": "STREAM",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.2.1"
+    },
+    "3A777FCA-2FFA-4A15-965F-A1125FE8051E": {
+        "guid": "3A777FCA-2FFA-4A15-965F-A1125FE8051E",
+        "name": "Explicit Data Movement",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "3A7DA713-6083-4CA3-B66E-A3DF21744EB4": {
+        "guid": "3A7DA713-6083-4CA3-B66E-A3DF21744EB4",
+        "name": "ISO3DFD DPCPP",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "3B164041-12CD-4429-A1AB-0F35EFE521FF": {
+        "guid": "3B164041-12CD-4429-A1AB-0F35EFE521FF",
+        "name": "Intel Python XGBoost Getting Started",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "3E6FD81F-76A0-430C-AD82-0F94A45F93DC": {
+        "guid": "3E6FD81F-76A0-430C-AD82-0F94A45F93DC",
+        "name": "Intel PyTorch Getting Started",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "3EC851D1-056A-4973-A2F7-9FC7EFEDA785": {
+        "guid": "3EC851D1-056A-4973-A2F7-9FC7EFEDA785",
+        "name": "Block LU Decomposition",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "3FF02594-2431-4C39-A71B-FA54D34D6A97": {
+        "guid": "3FF02594-2431-4C39-A71B-FA54D34D6A97",
+        "name": "Matrix Multiply MKL",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "42601abe-219f-425a-9170-073553c93979": {
+        "guid": "42601abe-219f-425a-9170-073553c93979",
+        "name": "Chapter 15 - Programming for GPUs",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "479AD17C-27E9-42F0-8CB1-14B48D098829": {
+        "guid": "479AD17C-27E9-42F0-8CB1-14B48D098829",
+        "name": "WS Pub Sub",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "48b5dba6-3e96-4b3c-b7ab-beceed16c38d": {
+        "guid": "48b5dba6-3e96-4b3c-b7ab-beceed16c38d",
+        "name": "Chapter 09 - Communication and Synchronization",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "49C65CB6-F9FA-4E3C-B8BE-4A141E4E0F07": {
+        "guid": "49C65CB6-F9FA-4E3C-B8BE-4A141E4E0F07",
+        "name": "Simple Add",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "4A088588-F4D3-4634-B864-FC0DE5BEE93B": {
+        "guid": "4A088588-F4D3-4634-B864-FC0DE5BEE93B",
+        "name": "Histogram",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "4B3FDDD8-64CF-4CF3-9387-26E34F021E24": {
+        "guid": "4B3FDDD8-64CF-4CF3-9387-26E34F021E24",
+        "name": "Debugger: Array Transform",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "4D5B57B8-6F34-4A11-89F5-3F07E766DB39": {
+        "guid": "4D5B57B8-6F34-4A11-89F5-3F07E766DB39",
+        "name": "Bitonic Sort",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "4F0F5FBD-C237-4A9F-B259-2C56ABFB40D9": {
+        "guid": "4F0F5FBD-C237-4A9F-B259-2C56ABFB40D9",
+        "name": "All Pairs Shortest Paths",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "4c16d8f3-0662-4203-9d1f-b2ab2336eedb": {
+        "guid": "4c16d8f3-0662-4203-9d1f-b2ab2336eedb",
+        "name": "Chapter 04 - Expresssing Parallelism",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "500e074f-96d8-4c3c-b482-564faad83696": {
+        "guid": "500e074f-96d8-4c3c-b482-564faad83696",
+        "name": "Chapter 12 - Device Information",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "51713811-2E33-43D8-A064-4D711160EA05": {
+        "guid": "51713811-2E33-43D8-A064-4D711160EA05",
+        "name": "Dynamic Profiler",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "54D189B9-2011-48ED-BFFC-E390D128EED5": {
+        "guid": "54D189B9-2011-48ED-BFFC-E390D128EED5",
+        "name": "Discrete Cosine Transform",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "54F991CC-F04C-443A-9C3E-0AAF98A8FD65": {
+        "guid": "54F991CC-F04C-443A-9C3E-0AAF98A8FD65",
+        "name": "Block Cholesky Decomposition",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "58CF1ABA-5D08-40B7-ACC2-5CB904261413": {
+        "guid": "58CF1ABA-5D08-40B7-ACC2-5CB904261413",
+        "name": "Pipes",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "5945066a-c0a2-4ac1-8ca7-4aa7e87da1f0": {
+        "guid": "5945066a-c0a2-4ac1-8ca7-4aa7e87da1f0",
+        "name": "Chapter 08 - Scheduling Kernals and Data Movement",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "5AFED65F-F725-411D-B21C-B59008D1166D": {
+        "guid": "5AFED65F-F725-411D-B21C-B59008D1166D",
+        "name": "MergeSort OMP",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "5C68CD75-C11E-47A4-B6AA-B5B42CD0941C": {
+        "guid": "5C68CD75-C11E-47A4-B6AA-B5B42CD0941C",
+        "name": "IO streaming with DPC++ IO pipes",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "5D274319-02EE-44B0-B055-71E4C50D05E0": {
+        "guid": "5D274319-02EE-44B0-B055-71E4C50D05E0",
+        "name": "Prefix Sum",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "5E7932C9-B208-4A50-8700-D4970927D39D": {
+        "guid": "5E7932C9-B208-4A50-8700-D4970927D39D",
+        "name": "Compute Units",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "5c6ee310-cb61-4f9f-80da-0c94a3cb53e7": {
+        "guid": "5c6ee310-cb61-4f9f-80da-0c94a3cb53e7",
+        "name": "Optimize Integral",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "6060B7B5-E8F6-4AB8-A43D-75693A9FA158": {
+        "guid": "6060B7B5-E8F6-4AB8-A43D-75693A9FA158",
+        "name": "CMake FPGA",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "60a71766-b0d6-4d8e-9223-8d5628c1bec0": {
+        "guid": "60a71766-b0d6-4d8e-9223-8d5628c1bec0",
+        "name": "Chapter 05 - Error Handling",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "61290EED-2CEF-4F59-AA62-DB6DC74F6421": {
+        "guid": "61290EED-2CEF-4F59-AA62-DB6DC74F6421",
+        "name": "Intel Python XGBoost Performance",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "6464a02a-c783-457e-92af-915616ae98ea": {
+        "guid": "6464a02a-c783-457e-92af-915616ae98ea",
+        "name": "Chapter 19 - Memory Model and Atomics",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "64700df0-8679-495e-9086-d6bb7502820f": {
+        "guid": "64700df0-8679-495e-9086-d6bb7502820f",
+        "name": "Chapter 17 - Programming for FPGA",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "662c9ce1-c87c-4d70-9432-67b0df0931b0": {
+        "guid": "662c9ce1-c87c-4d70-9432-67b0df0931b0",
+        "name": "Chapter 03 - Data Management",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "66A044D6-BBAE-45A5-B6C0-433E91FF29FC": {
+        "guid": "66A044D6-BBAE-45A5-B6C0-433E91FF29FC",
+        "name": "Makefile GPU",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "66A57127-1F8D-4769-8CCB-16ECC56A446F": {
+        "guid": "66A57127-1F8D-4769-8CCB-16ECC56A446F",
+        "name": "Speculated Iterations",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "69F6B0A1-3046-467F-B4A7-E61F636BC5BF": {
+        "guid": "69F6B0A1-3046-467F-B4A7-E61F636BC5BF",
+        "name": "Fourier Correlation",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.2.1"
+    },
+    "6AFD0BE4-A4D2-42C2-A169-174862D91A35": {
+        "guid": "6AFD0BE4-A4D2-42C2-A169-174862D91A35",
+        "name": "Hello Encode",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "6D067BD9-28EE-4ABE-A59A-4F91ADA9ED75": {
+        "guid": "6D067BD9-28EE-4ABE-A59A-4F91ADA9ED75",
+        "name": "Hello World GPU",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "6F00053A-11DC-40D1-90C7-1CFF822B874B": {
+        "guid": "6F00053A-11DC-40D1-90C7-1CFF822B874B",
+        "name": "Matrix Multiply Advisor",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "6e0828c5-bed5-447a-bab6-7fa251626d54": {
+        "guid": "6e0828c5-bed5-447a-bab6-7fa251626d54",
+        "name": "OpenMP* Primes",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "7095DF22-8CBC-44FE-8E13-DDEFC49A7B18": {
+        "guid": "7095DF22-8CBC-44FE-8E13-DDEFC49A7B18",
+        "name": "Black Scholes",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "70FAEF03-6509-4B6C-B995-D42A65CE36EE": {
+        "guid": "70FAEF03-6509-4B6C-B995-D42A65CE36EE",
+        "name": "Tutorials",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "748eb906-309f-469b-95c9-5258006c7587": {
+        "guid": "748eb906-309f-469b-95c9-5258006c7587",
+        "name": "CRR Binomial Tree",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "7AC408C8-DF59-46AE-B970-178CF257F364": {
+        "guid": "7AC408C8-DF59-46AE-B970-178CF257F364",
+        "name": "Random Sampling Without Replacement",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "7D431C27-AC4C-4AFF-9566-5B978C3D1F5D": {
+        "guid": "7D431C27-AC4C-4AFF-9566-5B978C3D1F5D",
+        "name": "Printf",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
+    },
+    "7F805BC5-F9A9-43B3-BBCB-580063CD59F8": {
+        "guid": "7F805BC5-F9A9-43B3-BBCB-580063CD59F8",
+        "name": "Monte Carlo Pi",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "7f013625-544b-4b54-8302-f88cec8bc8e4": {
+        "guid": "7f013625-544b-4b54-8302-f88cec8bc8e4",
+        "name": "Chapter 01 - Introduction",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "81B93386-B5EB-4998-B91B-3453263EC03E": {
+        "guid": "81B93386-B5EB-4998-B91B-3453263EC03E",
+        "name": "Intel\u00c2\u00ae Python Scikit-learn Extension Getting Started",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "82e7612f-2810-4d12-9c75-c17fcbb946fa": {
+        "guid": "82e7612f-2810-4d12-9c75-c17fcbb946fa",
+        "name": "Intel Low Precision Optimization Tool Tensorflow Getting Started",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "83A48E69-C1FC-4D9E-8123-2E79D7385DEF": {
+        "guid": "83A48E69-C1FC-4D9E-8123-2E79D7385DEF",
+        "name": "Vector Add DPCT",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "8401B5F5-6F09-4727-A080-684C57104CAF": {
+        "guid": "8401B5F5-6F09-4727-A080-684C57104CAF",
+        "name": "Buffered Host-Device Streaming",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.2.1"
+    },
+    "846806E2-4601-4081-87CC-93C84954A4F1": {
+        "guid": "846806E2-4601-4081-87CC-93C84954A4F1",
+        "name": "MVDR Beamforming",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "8572B85D-0B32-40B1-8112-538F480C8660": {
+        "guid": "8572B85D-0B32-40B1-8112-538F480C8660",
+        "name": "Mandelbrot",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "86066897-498B-41C5-BFA3-A03D3CAE2503": {
+        "guid": "86066897-498B-41C5-BFA3-A03D3CAE2503",
+        "name": "Kernel Args Restrict",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "884439A5-0286-447B-9E6D-A7C22B61CED8": {
+        "guid": "884439A5-0286-447B-9E6D-A7C22B61CED8",
+        "name": "Triangular Loop",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "892964F4-89DC-4E48-8511-8FCF6AE1A8D6": {
+        "guid": "892964F4-89DC-4E48-8511-8FCF6AE1A8D6",
+        "name": "On-Board Blink",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "8BBEBD41-DD09-4EFE-9156-694DC5D2DE6A": {
+        "guid": "8BBEBD41-DD09-4EFE-9156-694DC5D2DE6A",
+        "name": "Digital In",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "8E31124E-3F21-4A8F-A14A-950B7F008480": {
+        "guid": "8E31124E-3F21-4A8F-A14A-950B7F008480",
+        "name": "DPCPP Blur",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "8EBFB820-A80C-4CC5-97DB-09B6161DDE1F": {
+        "guid": "8EBFB820-A80C-4CC5-97DB-09B6161DDE1F",
+        "name": "Hello IoT World",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "8cc4f36c-31e5-4964-b43f-cfb1221c4cb1": {
+        "guid": "8cc4f36c-31e5-4964-b43f-cfb1221c4cb1",
+        "name": "Chapter 11 - Vectors",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "93DA332C-5490-4E4B-8038-BDEC1662A2D0": {
+        "guid": "93DA332C-5490-4E4B-8038-BDEC1662A2D0",
+        "name": "On-Chip Memory Cache",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "9483C0F0-7D63-4E99-86C5-37C40F77B2AE": {
+        "guid": "9483C0F0-7D63-4E99-86C5-37C40F77B2AE",
+        "name": "ISO2DFD DPCPP",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "9605DCBF-6DDB-4FD2-812F-1ECF252AE334": {
+        "guid": "9605DCBF-6DDB-4FD2-812F-1ECF252AE334",
+        "name": "Use Library",
+        "notes": "Removed for 2021.4 - Remove the tutorial use_library due to HLS/OCL library support being removed in oneAPI 2021.4. Also note that RTL libraries has an issue (with a known workaround) so that part of the flow is also removed, but we will likely have a KDB to showcase the workaround. The fix for this is expected in 2022.1. Please use 2021.3 if you either need HLS/OCL library support in SYCL, or if you need continued access to RTL libraries.",
+        "path": "DirectProgramming/DPC++FPGA/Tutorials/Tools/use_library",
+        "removed": "2021.3.0",
+        "ver": "2021.1.Gold"
+    },
+    "9814F6BC-586C-43EE-AE5D-C4F079333FE8": {
+        "guid": "9814F6BC-586C-43EE-AE5D-C4F079333FE8",
+        "name": "Host-Device Streaming using USM",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.2.1"
+    },
+    "99b2d923-326e-4d0d-8924-a96fca8ada2c": {
+        "guid": "99b2d923-326e-4d0d-8924-a96fca8ada2c",
+        "name": "Chapter 14 - Common Parallel Patterns",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "9D7E5A6D-A39B-4FF8-B553-4B85116FCD69": {
+        "guid": "9D7E5A6D-A39B-4FF8-B553-4B85116FCD69",
+        "name": "System Profiling",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "9d32f194-8667-41d3-865d-d43e9983c471": {
+        "guid": "9d32f194-8667-41d3-865d-d43e9983c471",
+        "name": "Optimize TensorFlow pre-trained model for inference",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "9d73b58e-73d6-46e1-8c21-66274f6ee170": {
+        "guid": "9d73b58e-73d6-46e1-8c21-66274f6ee170",
+        "name": "Chapter 18 - Libraries",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "A211FDE2-B037-4069-BD84-C45E354798B7": {
+        "guid": "A211FDE2-B037-4069-BD84-C45E354798B7",
+        "name": "FPGA Compile",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "A377C93A-6D81-4030-B2AD-BE85B6CE8450": {
+        "guid": "A377C93A-6D81-4030-B2AD-BE85B6CE8450",
+        "name": "PWM",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "A544224A-B5C0-462C-95F6-7C266A1DB2EB": {
+        "guid": "A544224A-B5C0-462C-95F6-7C266A1DB2EB",
+        "name": "Digital Out",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "A63E408B-75ED-4379-A6B5-AF013C0EBA58": {
+        "guid": "A63E408B-75ED-4379-A6B5-AF013C0EBA58",
+        "name": "Hidden Markov Models",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "A8C505CF-06F7-4869-9129-EA31038B0394": {
+        "guid": "A8C505CF-06F7-4869-9129-EA31038B0394",
+        "name": "CMake GPU",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "A962BCAA-7AA4-403A-9A5B-08964743FCBF": {
+        "guid": "A962BCAA-7AA4-403A-9A5B-08964743FCBF",
+        "name": "Makefile FPGA",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "AA055D7B-290C-4FCA-990B-B9FC88AF18D4": {
+        "guid": "AA055D7B-290C-4FCA-990B-B9FC88AF18D4",
+        "name": "Census end-to-end workload",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "AA458E3A-932C-460E-97A7-5962AF0C41FA": {
+        "guid": "AA458E3A-932C-460E-97A7-5962AF0C41FA",
+        "name": "Intel TensorFlow Horovod Multinode Training",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "ACD0E89E-67CC-4CB4-87AB-B12B84962EAF": {
+        "guid": "ACD0E89E-67CC-4CB4-87AB-B12B84962EAF",
+        "name": "Intrinsics",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "ADD7BA78-BBFD-4390-A814-886CCC7971C1": {
+        "guid": "ADD7BA78-BBFD-4390-A814-886CCC7971C1",
+        "name": "Student's T-test",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "AE280EFE-9EB1-406D-B32D-5991F707E195": {
+        "guid": "AE280EFE-9EB1-406D-B32D-5991F707E195",
+        "name": "Intel Modin Getting Started",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "AEDAA6EC-B6E0-4D5F-A97C-0B8312C4D86D": {
+        "guid": "AEDAA6EC-B6E0-4D5F-A97C-0B8312C4D86D",
+        "name": "Hello Decode",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "AF215180-ECB8-4414-8049-D89E4882576D": {
+        "guid": "AF215180-ECB8-4414-8049-D89E4882576D",
+        "name": "Merge Sort",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "B210B44F-FB86-4F42-BA4A-9980805350FF": {
+        "guid": "B210B44F-FB86-4F42-BA4A-9980805350FF",
+        "name": "Double Buffering",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "B213F6A5-E0C3-4267-8D0B-DDA5073A3F23": {
+        "guid": "B213F6A5-E0C3-4267-8D0B-DDA5073A3F23",
+        "name": "Intel TensorFlow Model Zoo Inference With FP32 Int8",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "B2974A99-4BC6-4F3E-AD3E-C17FE86AC2A4": {
+        "guid": "B2974A99-4BC6-4F3E-AD3E-C17FE86AC2A4",
+        "name": "Adaptive Noise Reduction",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
+    },
+    "B69FAC86-88BF-41BD-B4E0-ACDF753ED3CE": {
+        "guid": "B69FAC86-88BF-41BD-B4E0-ACDF753ED3CE",
+        "name": "Intel Python Daal4py Distributed K-Means",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "B9C425DB-A3AD-4FCB-9CA0-1909E5189FB7": {
+        "guid": "B9C425DB-A3AD-4FCB-9CA0-1909E5189FB7",
+        "name": "Sepia Filter",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "C3B945F8-D3CC-47E8-A094-D8A0B0DBA22C": {
+        "guid": "C3B945F8-D3CC-47E8-A094-D8A0B0DBA22C",
+        "name": "LSU Control",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "C56209D9-5CF1-4EEC-AE95-596D81640AEB": {
+        "guid": "C56209D9-5CF1-4EEC-AE95-596D81640AEB",
+        "name": "oneCCL Getting Started",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "C573751F-C04C-4EE0-A868-941EF460F944": {
+        "guid": "C573751F-C04C-4EE0-A868-941EF460F944",
+        "name": "Merge SPMV",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "C78EEBD2-BF19-4DBC-9629-F2C8446CE47E": {
+        "guid": "C78EEBD2-BF19-4DBC-9629-F2C8446CE47E",
+        "name": "Stable Sort By Key",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "C7FEBFF7-9067-456E-BE79-98CE22AE3B6B": {
+        "guid": "C7FEBFF7-9067-456E-BE79-98CE22AE3B6B",
+        "name": "Monte Carlo European Opt",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "C8C8694A-5567-495B-8399-6EAB42AFFB44": {
+        "guid": "C8C8694A-5567-495B-8399-6EAB42AFFB44",
+        "name": "Intel(R) Extension for Scikit-learn: SVC for Adult dataset",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "CA62DCB6-3815-413B-9B3D-2F31912B45E1": {
+        "guid": "CA62DCB6-3815-413B-9B3D-2F31912B45E1",
+        "name": "Loop Initiation Interval",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "CD8FE0A5-B31A-4906-8386-27416361FE24": {
+        "guid": "CD8FE0A5-B31A-4906-8386-27416361FE24",
+        "name": "Loop IVDEP",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "CDC9540F-B89F-499E-BC27-E8EC9EA3B2D7": {
+        "guid": "CDC9540F-B89F-499E-BC27-E8EC9EA3B2D7",
+        "name": "Private Copies",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "CDF82E46-91D4-46F6-B1E2-5C21443F41BC": {
+        "guid": "CDF82E46-91D4-46F6-B1E2-5C21443F41BC",
+        "name": "1D Heat Transfer",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "CF755377-7B46-47D3-89A3-AB624692B2E8": {
+        "guid": "CF755377-7B46-47D3-89A3-AB624692B2E8",
+        "name": "IBM Device",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "CFAC8EF8-E362-4054-ABE3-A04EEBEBCB46": {
+        "guid": "CFAC8EF8-E362-4054-ABE3-A04EEBEBCB46",
+        "name": "Jacobi",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "D55081EB-669D-4832-BCE6-23EE2ACA9F0F": {
+        "guid": "D55081EB-669D-4832-BCE6-23EE2ACA9F0F",
+        "name": "GZIP",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "D5BFD7D5-737E-4CC9-84EE-FE94339B3DCA": {
+        "guid": "D5BFD7D5-737E-4CC9-84EE-FE94339B3DCA",
+        "name": "N-Body",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "D5D48B97-C29C-4386-A6D2-DB84D006D6A9": {
+        "guid": "D5D48B97-C29C-4386-A6D2-DB84D006D6A9",
+        "name": "Matrix Multiply VTune Profiler",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "D60DAB68-B9CC-4ECE-B10D-03F7B556171E": {
+        "guid": "D60DAB68-B9CC-4ECE-B10D-03F7B556171E",
+        "name": "OpenMP Offload Fortran Tutorials",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "D61397C9-59F0-4701-A55E-6EF9397C4E16": {
+        "guid": "D61397C9-59F0-4701-A55E-6EF9397C4E16",
+        "name": "Rodinia NW DPCT",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "D661A5C2-5FE0-40F2-BFE7-70E3BA60F088": {
+        "guid": "D661A5C2-5FE0-40F2-BFE7-70E3BA60F088",
+        "name": "FPGA Reg",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "D725E06E-0ECE-44F8-910D-AD1A8C89ED89": {
+        "guid": "D725E06E-0ECE-44F8-910D-AD1A8C89ED89",
+        "name": "Complex Mult",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "DBE51810-C64F-45F0-87EF-38898BE1D826": {
+        "guid": "DBE51810-C64F-45F0-87EF-38898BE1D826",
+        "name": "OpenMP Offload Feature Samples",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "DD113F58-4D91-41BB-B46E-6CF2C0D9F6F9": {
+        "guid": "DD113F58-4D91-41BB-B46E-6CF2C0D9F6F9",
+        "name": "Mandelbrot OMP",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "E0894F44-8350-4775-9192-A192E794A546": {
+        "guid": "E0894F44-8350-4775-9192-A192E794A546",
+        "name": "Folder Options DPCT",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "E249AFB8-6580-4CC3-8EF8-5D33C9A41A2C": {
+        "guid": "E249AFB8-6580-4CC3-8EF8-5D33C9A41A2C",
+        "name": "Gamma Correction",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "E2BDAFFF-FF3F-4C83-B31A-D79DB6F091D9": {
+        "guid": "E2BDAFFF-FF3F-4C83-B31A-D79DB6F091D9",
+        "name": "Interrupt",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "E3407632-7F3D-4B5B-A956-5155408D7468": {
+        "guid": "E3407632-7F3D-4B5B-A956-5155408D7468",
+        "name": "ISO3DFD OMP Offload",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "E3DE34BF-E5B6-44AF-8722-B2A5A6BE8D57": {
+        "guid": "E3DE34BF-E5B6-44AF-8722-B2A5A6BE8D57",
+        "name": "DPC++ OpenCL Interoperability Samples",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "E5C1C1FA-7FDB-4C09-8096-1812080FD6D5": {
+        "guid": "E5C1C1FA-7FDB-4C09-8096-1812080FD6D5",
+        "name": "Remove Loop Carried Dependency",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "E6115777-E2CE-4839-8900-24DC3D1AD572": {
+        "guid": "E6115777-E2CE-4839-8900-24DC3D1AD572",
+        "name": "Matrix Multiply",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "EB08D6D9-84ED-4C64-BA0F-69D3B9C5A136": {
+        "guid": "EB08D6D9-84ED-4C64-BA0F-69D3B9C5A136",
+        "name": "Loop Unroll",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "EC4A8B82-A2A4-4B03-9F26-1D1E7170D492": {
+        "guid": "EC4A8B82-A2A4-4B03-9F26-1D1E7170D492",
+        "name": "DB",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "ECF6C8EB-753B-4107-AF64-60662CE41726": {
+        "guid": "ECF6C8EB-753B-4107-AF64-60662CE41726",
+        "name": "DPC Reduce",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "ED2952EA-04CB-4353-9FE6-80E0F7DCA098": {
+        "guid": "ED2952EA-04CB-4353-9FE6-80E0F7DCA098",
+        "name": "Intel Python Daal4py Distributed Linear Regression",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "EEED3DAC-8D4E-4F4B-9C15-2B73CF0AC718": {
+        "guid": "EEED3DAC-8D4E-4F4B-9C15-2B73CF0AC718",
+        "name": "Analog In",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "EEF0B7DA-BB7A-482D-AACB-0F5E45CDCB0D": {
+        "guid": "EEF0B7DA-BB7A-482D-AACB-0F5E45CDCB0D",
+        "name": "Zero Copy Data Transfer",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "EF50CE31-C467-4374-8BCC-4E5F93B4D1C1": {
+        "guid": "EF50CE31-C467-4374-8BCC-4E5F93B4D1C1",
+        "name": "DPCPP Interoperability",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "F8E69741-0BE3-4CB7-BC17-2F63563D80C5": {
+        "guid": "F8E69741-0BE3-4CB7-BC17-2F63563D80C5",
+        "name": "UP2 LEDS",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "F8F830DE-3660-4478-B2FA-22EE492D7120": {
+        "guid": "F8F830DE-3660-4478-B2FA-22EE492D7120",
+        "name": "Azure IoTHub Telemetry",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "FB70D9EC-F355-4A50-8819-4AC6E507692C": {
+        "guid": "FB70D9EC-F355-4A50-8819-4AC6E507692C",
+        "name": "Intel Python XGBoost Daal4py Prediction",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "FBEC48E6-F5C5-478F-9DB2-E7FA5E158429": {
+        "guid": "FBEC48E6-F5C5-478F-9DB2-E7FA5E158429",
+        "name": "Shannonization",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.3.0"
+    },
+    "FC7A16DE-9594-4F40-AFA2-71ACABF366B3": {
+        "guid": "FC7A16DE-9594-4F40-AFA2-71ACABF366B3",
+        "name": "Tutorials",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "FF17715B-10DD-43E2-A408-67146A93702B": {
+        "guid": "FF17715B-10DD-43E2-A408-67146A93702B",
+        "name": "Particle Diffusion",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "b1b58be7-e22e-4ca2-ba59-6887b2f1be6c": {
+        "guid": "b1b58be7-e22e-4ca2-ba59-6887b2f1be6c",
+        "name": "Base: Vector Add",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "b50d9507-afad-46d2-8961-b69f58afc636": {
+        "guid": "b50d9507-afad-46d2-8961-b69f58afc636",
+        "name": "Chapter 20 - Epilogue",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "b93d6b84-9812-47e6-ad2a-7a221d5b32fb": {
+        "guid": "b93d6b84-9812-47e6-ad2a-7a221d5b32fb",
+        "name": "Chapter 02 - Where Code Executes",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "b9a18214-3bbb-4487-89c5-34fa7db239bd": {
+        "guid": "b9a18214-3bbb-4487-89c5-34fa7db239bd",
+        "name": "Chapter 10 - Defining Kernels",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "c52eb5b5-5260-47d3-aded-15c5b27779d5": {
+        "guid": "c52eb5b5-5260-47d3-aded-15c5b27779d5",
+        "name": "OpenMP* Reduction",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "df1ff4bd-e4b7-4b56-a23c-32c1abb06dfb": {
+        "guid": "df1ff4bd-e4b7-4b56-a23c-32c1abb06dfb",
+        "name": "Chapter 13 - Practical Tips",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "f3a518bb-ddc1-414a-a796-aa41073c9c81": {
+        "guid": "f3a518bb-ddc1-414a-a796-aa41073c9c81",
+        "name": "Chapter 16 - Programming for CPUs",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "f51eea84-5732-4425-a530-113448519667": {
+        "guid": "f51eea84-5732-4425-a530-113448519667",
+        "name": "DPC++ Essentials Tutorials",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    },
+    "81B93386-B5EB-4998-B91B-3453263EC03E": {
+        "guid": "81B93386-B5EB-4998-B91B-3453263EC03E",
+        "ver": "2021.4.0",
+        "name": "Intel® Python Scikit-learn Extension Getting Started"
+    },
+    "87FA013D-0B19-45AE-BCD5-43412BE0A99F" : {
+        "guid": "87FA013D-0B19-45AE-BCD5-43412BE0A99F",
+        "ver": "2021.4.0",
+        "name": "Intel oneAPI Rendering Toolkit Embree Getting Started"
+    },
+    "41F82C06-A9FA-4521-B87A-8F7304CB6631" : {
+        "guid": "41F82C06-A9FA-4521-B87A-8F7304CB6631",
+        "ver": "2021.4.0",
+        "name": "Intel oneAPI Rendering Toolkit Open Image Denoise Getting Started"
+    },
+    "80BB7E55-6FCA-491F-8541-E271324CF169" : {
+        "guid": "80BB7E55-6FCA-491F-8541-E271324CF169",
+        "ver": "2021.4.0",
+        "name": "Intel oneAPI Rendering Toolkit Open VKL Getting Started"
+    },
+    "40C26D31-D553-4BD9-9E1D-63DDF352CB85" : {
+        "guid": "40C26D31-D553-4BD9-9E1D-63DDF352CB85",
+        "ver": "2021.4.0",
+        "name": "Intel oneAPI Rendering Toolkit OSPRay Getting Started"
+    },
+    "f92e64c7-7a7c-4749-b421-9f7a9e120099": {
+        "guid": "f92e64c7-7a7c-4749-b421-9f7a9e120099",
+        "name": "Vectorize VecMatMult",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
+    }
+}

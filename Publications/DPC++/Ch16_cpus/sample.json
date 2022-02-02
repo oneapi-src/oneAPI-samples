@@ -1,0 +1,52 @@
+{
+  "guid": "f3a518bb-ddc1-414a-a796-aa41073c9c81",
+  "name": "Chapter 16 - Programming for CPUs",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_16_6_stream_triad.cpp - DPC++ STREAM Triad parallel_for kernel code * fig_16_12_forward_dep.cpp - Using a sub-group to vectorize a loop with a forward dependence * fig_16_18_vector_swizzle.cpp - Using vector types and swizzle operations in the single_task kernel",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch16_cpus",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_16_18_vector_swizzle",
+          "make fig_16_12_forward_dep",
+          "make fig_16_6_stream_triad"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_16_18_vector_swizzle",
+          "nmake fig_16_12_forward_dep",
+          "nmake fig_16_6_stream_triad"
+        ]
+      }
+    ]
+  }
+}

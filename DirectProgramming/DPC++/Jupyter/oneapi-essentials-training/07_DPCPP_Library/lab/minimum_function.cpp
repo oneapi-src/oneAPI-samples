@@ -3,11 +3,10 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <oneapi/dpl/numeric>
 #include <oneapi/dpl/algorithm>
-#include <oneapi/dpl/functional>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
+#include <oneapi/dpl/numeric>
 
 using namespace sycl;
 using namespace oneapi::dpl::execution;
@@ -36,6 +35,6 @@ int main() {
         std::exclusive_scan(oneapi::dpl::execution::dpcpp_default, start_v, end_v, start_res, int(0), oneapi::dpl::minimum<int>() );        
     }    
     
-    for(int i = 0; i < result.size(); i++) std::cout << result[i] << std::endl;
+    for(int i = 0; i < result.size(); i++) std::cout << result[i] << "\n";
     return 0;
 }
