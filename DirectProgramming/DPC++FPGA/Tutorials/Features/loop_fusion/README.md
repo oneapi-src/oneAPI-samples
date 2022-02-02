@@ -211,8 +211,8 @@ Navigate to the Area Analysis of the system under Area Analysis. The Kernel Syst
 ### Example of Output
 
 ```
-Throughput for kernel with default loop fusion and with equal-sizes loops: 1.48999 Ops/ns
-Throughput for kernel with the nofusion attribute and with equal-sized loops: 0.745144 Ops/ns
+Throughput for kernel with default loop fusion and with equally-sized loops: 1.48999 Ops/ns
+Throughput for kernel with the nofusion attribute and with equally-sized loops: 0.745144 Ops/ns
 Throughput for kernel without fusion by default with unequally-sized loops: 0.745192 Ops/ns
 Throughput for kernel with a loop fusion function with unequally-sized loops: 1.49017 Ops/ns
 PASSED: The results are correct

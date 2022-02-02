@@ -88,7 +88,7 @@ void DefaultFusion(FixedArray &m_array_1, FixedArray &m_array_2) {
     // each.
     int num_ops_per_kernel = 6 * kTripCount;
     std::cout << "Throughput for kernel with default loop fusion and with "
-                 "equal-sizes loops: "
+                 "equally-sized loops: "
               << ((double)num_ops_per_kernel / kernel_time) << " Ops/ns\n";
 
   } catch (sycl::exception const &e) {
@@ -129,7 +129,7 @@ void NoFusion(FixedArray &m_array_1, FixedArray &m_array_2) {
     // each.
     int num_ops_per_kernel = 6 * kTripCount;
     std::cout << "Throughput for kernel with the nofusion attribute and with "
-                 "equal-sized loops: "
+                 "equally-sized loops: "
               << ((double)num_ops_per_kernel / kernel_time) << " Ops/ns\n";
 
   } catch (sycl::exception const &e) {
