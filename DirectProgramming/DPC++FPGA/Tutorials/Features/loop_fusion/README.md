@@ -220,6 +220,6 @@ PASSED: The results are correct
 
 ### Discussion of Results
 
-Loop fusion increases the throughput by ~400% when the loops have equal trip counts, and by ~25% when the loops have unequal trip counts. 
+Loop fusion increases the throughput by ~100% in both the cases with equally-sized and unequally-sized loops. 
 
 Note that this performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
