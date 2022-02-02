@@ -90,6 +90,22 @@ If running a sample in the Intel DevCloud, remember that you must specify the ty
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
@@ -195,10 +211,10 @@ Navigate to the Area Analysis of the system under Area Analysis. The Kernel Syst
 ### Example of Output
 
 ```
-Throughput for kernel with default loop fusion and with arrays of size 50: 487.466 Ops/ns
-Throughput for kernel with the nofusion attribute and with arrays of size 50: 94.656 Ops/ns
-Throughput for kernel without fusion by default and with arrays of sizes 51 and 50: 96.733 Ops/ns
-Throughput for kernel with the loop fusion function wrapper and with arrays of sizes 51 and 50: 121.139 Ops/ns
+Throughput for kernel with default loop fusion and with equal-sizes loops: 1.48999 Ops/ns
+Throughput for kernel with the nofusion attribute and with equal-sized loops: 0.745144 Ops/ns
+Throughput for kernel without fusion by default with unequally-sized loops: 0.745192 Ops/ns
+Throughput for kernel with a loop fusion function with unequally-sized loops: 1.49017 Ops/ns
 PASSED: The results are correct
 ```
 
