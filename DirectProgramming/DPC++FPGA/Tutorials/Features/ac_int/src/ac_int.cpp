@@ -1,8 +1,3 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
@@ -21,7 +16,7 @@ class BasicOpsInt;
 class BasicOpsAcInt;
 class ShiftOp;
 class EfficientShiftOp;
-class BitOps;
+class BitAccess;
 
 using MyUInt2 = ac_int<2, false>;
 using MyInt7 = ac_int<7, true>;
@@ -106,7 +101,7 @@ void TestEfficientShiftOp(queue &q, const MyInt14 &a, const MyUInt2 &b,
   });
 }
 
-MyInt14 TestBitOps(queue &q, const MyInt14 &a) {
+MyInt14 TestBitAccess(queue &q, const MyInt14 &a) {
   MyInt14 res;
   buffer<MyInt14, 1> a_buf(&a, 1);
   buffer<MyInt14, 1> res_buf(&res, 1);
@@ -114,12 +109,14 @@ MyInt14 TestBitOps(queue &q, const MyInt14 &a) {
   q.submit([&](handler &h) {
     accessor a_acc(a_buf, h, read_only);
     accessor res_acc(res_buf, h, write_only, no_init);
-    h.single_task<BitOps>([=]() [[intel::kernel_args_restrict]] {
+    h.single_task<BitAccess>([=]() [[intel::kernel_args_restrict]] {
       // 0b1111101
       MyInt7 temp = a_acc[0].slc<7>(3);
 
-      res_acc[0] = 0; // Must be initialized before bit operations, otherwise,
-                      // it will be undefined behavior
+      res_acc[0] = 0; // Must be initialized before being accessed by the bit
+                      // select operator `[]`. Using the `[]` operator on an
+                      // uninitialized `ac_int` variable is undefined behavior
+                      // and can give you unexpected results.
 
       // 0 -> 0b1111101000
       res_acc[0].set_slc(3, temp);
@@ -198,19 +195,19 @@ int main() {
       }
     }
 
-    // Kernel `BitOps` demonstrates bit operations with bit select operator `[]`
+    // Kernel `BitAccess` demonstrates bit access with bit select operator `[]`
     // and bit slice write operation `set_slc`. Note: An `ac_int` must be
     // initialized before being access by bit select operator `[]` and bit slice
     // operations `slc` and `set_slc`, otherwise it is undefined behavior and
     // will give you unexpected results.
     {
       MyInt14 input = kVal1;
-      MyInt14 output = TestBitOps(q, input);
+      MyInt14 output = TestBitAccess(q, input);
 
       constexpr int golden = 0b001111101111;
 
       if (output != golden) {
-        std::cout << "Kernel BitOps result mismatch!\n"
+        std::cout << "Kernel BitAccess result mismatch!\n"
                   << "result = 0b" << std::bitset<14>(output) << "\n"
                   << "golden = 0b" << std::bitset<14>(golden) << "\n\n";
         passed = false;

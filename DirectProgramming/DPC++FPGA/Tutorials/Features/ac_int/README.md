@@ -49,8 +49,8 @@ These promotion rules are consistent across all architectures, so the behavior w
 
 ### Shift Operations
 
-The behavior of shift operations of `ac_int` data types is slightly different from shift operations of native integer types. For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/. Some key points to remember are as follows:
-  - If the data type of the shift amount is not explicitly `unsigned` (either using `ac_int<N, *false*>` or using the `unsigned` keyword), then the compiler will generate a more complex shifter that allows negative shifts and positive shifts. A shift by a negative amount is equivalent to a positive shift in the opposite direction. Normally, you will not want to use negative shifting, so you should use an `unsigned` data type for the shift value to obtain a more resource efficient shifter.
+The behavior of shift operations of `ac_int` data types is slightly different from shift operations of native integer types. Some key points to remember are as follows:
+  - If the data type of the shift amount is not explicitly `unsigned` (either using `ac_int<N, false>` or using the `unsigned` keyword), then the compiler will generate a more complex shifter that allows negative shifts and positive shifts. A shift by a negative amount is equivalent to a positive shift in the opposite direction. Normally, you will not want to use negative shifting, so you should use an `unsigned` data type for the shift value to obtain a more resource efficient shifter.
   - Shift values greater than the width of the data types are treated as a shift equal to the width of the data type.
   - The shift operation can be done more efficiently by specifying the amount to shift with the smallest possible `ac_int`.
 
@@ -59,8 +59,6 @@ The behavior of shift operations of `ac_int` data types is slightly different fr
 The bit select operator `[]` allows reading and modifying an individual bit in an `ac_int`.
 
 *Note:* You must initialize an `ac_int` variable before accessing it using the bit select operator `[]`. Using the `[]` operator on an uninitialized `ac_int` variable is undefined behavior and can give you unexpected results. Assigning each bit explicitly using the `[]` operator does not count as initializing the `ac_int` variable.
-
-For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/.
 
 ### Bit Slice Operations
 
@@ -76,15 +74,13 @@ Slice write is provided with the function `set_slc(int lsb, const ac_int<W, S> &
 
 *Note:* An `ac_int` must be initialized before being accessed by bit slice operations `slc` and `set_slc`. Using the `slc` and `set_slc` functions on an uninitialized `ac_int` variable is undefined behavior and can give you unexpected results.
 
-For full details, see the Algorithmic C (AC) Datatypes documentation available at https://hlslibs.org/.
-
 ### Understanding the Tutorial Design
 
 This tutorial consists of five kernels:
 
-Kernel `BasicOpsInt` contains native `int` type addition, multiplication, and division operations, while kernel `BasicOpsAcInt` contains `ac_int` type addition, multiplication, and division operations. By comparing these two kernels, you will find reduced width `ac_int` generates area efficient hardware than native `int`.
+Kernel `BasicOpsInt` contains native `int` type addition, multiplication, and division operations, while kernel `BasicOpsAcInt` contains `ac_int` type addition, multiplication, and division operations. By comparing these two kernels, you will find reduced width `ac_int` generates hardware that is more area efficient than native `int`.
 
-Kernel `ShiftOp` contains an `ac_int` left shifter and the data type of the shift amount is a large width signed `ac_int`. On contrast, kernel `EfficientShiftOp` also contains an `ac_int` left shifter, but the data type of the shift amount is a reduced width unsigned `ac_int`. By comparing these two kernels, you will find shift operations of `ac_int` can generate more efficient hardware if the amount to shift by is stored in a minimally sized unsigned `ac_int`.
+Kernel `ShiftOp` contains an `ac_int` left shifter and the data type of the shift amount is a large width signed `ac_int`. In contrast, kernel `EfficientShiftOp` also contains an `ac_int` left shifter, but the data type of the shift amount is a reduced width unsigned `ac_int`. By comparing these two kernels, you will find shift operations of `ac_int` can generate more efficient hardware if the amount to shift by is stored in a minimally sized unsigned `ac_int`.
 
 Kernel `BitOps` demonstrates bit operations with bit select operator `[]` and bit slice operations `slc` and `set_slc`.
 
