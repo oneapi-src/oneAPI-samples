@@ -14,8 +14,8 @@ using namespace sycl;
 // This FPGA best practice reduces name mangling in the optimization reports.
 class BasicOpsInt;
 class BasicOpsAcInt;
-class ShiftOp;
-class EfficientShiftOp;
+class ShiftOps;
+class EfficientShiftOps;
 class BitAccess;
 
 using MyUInt2 = ac_int<2, false>;
@@ -68,7 +68,7 @@ void TestBasicOpsAcInt(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt15 &c,
   });
 }
 
-void TestShiftOp(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt14 &c) {
+void TestShiftOps(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt14 &c) {
   buffer<MyInt14, 1> a_buf(&a, 1);
   buffer<MyInt14, 1> b_buf(&b, 1);
   buffer<MyInt14, 1> c_buf(&c, 1);
@@ -77,15 +77,15 @@ void TestShiftOp(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt14 &c) {
     accessor a_acc(a_buf, h, read_only);
     accessor b_acc(b_buf, h, read_only);
     accessor c_acc(c_buf, h, write_only, no_init);
-    h.single_task<ShiftOp>([=]() [[intel::kernel_args_restrict]] {
+    h.single_task<ShiftOps>([=]() [[intel::kernel_args_restrict]] {
       MyInt14 temp = a_acc[0] << b_acc[0];
       c_acc[0] = temp >> b_acc[0];
     });
   });
 }
 
-void TestEfficientShiftOp(queue &q, const MyInt14 &a, const MyUInt2 &b,
-                          MyInt14 &c) {
+void TestEfficientShiftOps(queue &q, const MyInt14 &a, const MyUInt2 &b,
+                           MyInt14 &c) {
   buffer<MyInt14, 1> a_buf(&a, 1);
   buffer<MyUInt2, 1> b_buf(&b, 1);
   buffer<MyInt14, 1> c_buf(&c, 1);
@@ -94,7 +94,7 @@ void TestEfficientShiftOp(queue &q, const MyInt14 &a, const MyUInt2 &b,
     accessor a_acc(a_buf, h, read_only);
     accessor b_acc(b_buf, h, read_only);
     accessor c_acc(c_buf, h, write_only, no_init);
-    h.single_task<EfficientShiftOp>([=]() [[intel::kernel_args_restrict]] {
+    h.single_task<EfficientShiftOps>([=]() [[intel::kernel_args_restrict]] {
       MyInt14 temp = a_acc[0] << b_acc[0];
       c_acc[0] = temp >> b_acc[0];
     });
@@ -172,9 +172,9 @@ int main() {
       }
     }
 
-    // Kernel `ShiftOp` contains an `ac_int` left shifter and the data type of
+    // Kernel `ShiftOps` contains an `ac_int` left shifter and the data type of
     // the shift amount is a large width signed `ac_int`. On contrast, kernel
-    // `EfficientShiftOp` also contains an `ac_int` left shifter but the data
+    // `EfficientShiftOps` also contains an `ac_int` left shifter but the data
     // type of the shift amount is a reduced width unsigned `ac_int`. By
     // comparing these two kernels, you will find shift operations of `ac_int`
     // can generate more efficient hardware if the amount to shift by is stored
@@ -183,13 +183,13 @@ int main() {
       MyInt14 input_a = kVal1, input_b = kVal2;
       MyUInt2 input_efficient_b = kVal2;
       MyInt14 output_c, output_efficient_c;
-      TestShiftOp(q, input_a, input_b, output_c);
-      TestEfficientShiftOp(q, input_a, input_efficient_b, output_efficient_c);
+      TestShiftOps(q, input_a, input_b, output_c);
+      TestEfficientShiftOps(q, input_a, input_efficient_b, output_efficient_c);
 
       if (output_c != output_efficient_c) {
         std::cout << "Result mismatch!\n"
-                  << "Kernel ShiftOp: result = " << output_c << "\n"
-                  << "Kernel EfficientShiftOp: result = " << output_efficient_c
+                  << "Kernel ShiftOps: result = " << output_c << "\n"
+                  << "Kernel EfficientShiftOps: result = " << output_efficient_c
                   << "\n\n";
         passed = false;
       }
