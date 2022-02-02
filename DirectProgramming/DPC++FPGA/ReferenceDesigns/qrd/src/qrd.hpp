@@ -13,14 +13,17 @@
 
 #include "memory_transfers.hpp"
 #include "streaming_qrd.hpp"
-#include "utils.hpp"
+#include "tuple.hpp"
 
-// Forward declare the kernel names
+// Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
 class QRDDDRToLocalMem;
 class QRD;
 class QRDLocalMemToDDRQ;
 class QRDLocalMemToDDRR;
+class APipe;
+class QPipe;
+class RPipe;
 
 /*
   Implementation of the QR decomposition using multiple streaming kernels
@@ -49,12 +52,12 @@ void QRDecompositionImpl(
   constexpr int kRMatrixSize = columns * (columns + 1) / 2;
   constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
 
-  using pipe_type = PipeTable<kNumElementsPerDDRBurst, TT>;
+  using PipeType = NTuple<TT, kNumElementsPerDDRBurst>;
 
   // Pipes to communicate the A, Q and R matrices between kernels
-  using a_matrix_pipe = sycl::ext::intel::pipe<class APipe, pipe_type, 3>;
-  using q_matrix_pipe = sycl::ext::intel::pipe<class QPipe, pipe_type, 3>;
-  using r_matrix_pipe = sycl::ext::intel::pipe<class RPipe, TT,
+  using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
+  using QMatrixPipe = sycl::ext::intel::pipe<QPipe, PipeType, 3>;
+  using RMatrixPipe = sycl::ext::intel::pipe<RPipe, TT,
                                                   kNumElementsPerDDRBurst * 4>;
 
   // Allocate FPGA DDR memory.
@@ -71,29 +74,29 @@ void QRDecompositionImpl(
   q.submit([&](sycl::handler &h) {
     h.single_task<QRDDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
       MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
-                            a_matrix_pipe>(a_device, matrix_count, repetitions);
+                            AMatrixPipe>(a_device, matrix_count, repetitions);
     });
   });
 
-  // Read the A matrix from the a_matrix_pipe pipe and compute the QR
-  // decomposition. Write the Q and R output matrices to the q_matrix_pipe
-  // and r_matrix_pipe pipes.
+  // Read the A matrix from the AMatrixPipe pipe and compute the QR
+  // decomposition. Write the Q and R output matrices to the QMatrixPipe
+  // and RMatrixPipe pipes.
   q.single_task<QRD>(
       StreamingQRD<T, is_complex, rows, columns, raw_latency,
                    kNumElementsPerDDRBurst,
-                   a_matrix_pipe, q_matrix_pipe, r_matrix_pipe>());
+                   AMatrixPipe, QMatrixPipe, RMatrixPipe>());
 
   auto q_event = q.single_task<QRDLocalMemToDDRQ>([=
                                     ]() [[intel::kernel_args_restrict]] {
-    // Read the Q matrix from the q_matrix_pipe pipe and copy it to the
+    // Read the Q matrix from the QMatrixPipe pipe and copy it to the
     // FPGA DDR
     MatrixReadPipeToDDR<TT, rows, columns, kNumElementsPerDDRBurst,
-                        q_matrix_pipe>(q_device, matrix_count, repetitions);
+                        QMatrixPipe>(q_device, matrix_count, repetitions);
   });
 
   auto r_event = q.single_task<QRDLocalMemToDDRR>([=
                                     ]() [[intel::kernel_args_restrict]] {
-    // Read the R matrix from the r_matrix_pipe pipe and copy it to the
+    // Read the R matrix from the RMatrixPipe pipe and copy it to the
     // FPGA DDR
     // Number of DDR burst of kNumElementsPerDDRBurst required to write
     // one vector
@@ -118,7 +121,7 @@ void QRDecompositionImpl(
         // Read a full R matrix
         for(int vector_elem = 0; vector_elem < kRMatrixSize; vector_elem++){
           r_result[vector_elem/kNumElementsPerDDRBurst]
-                  [vector_elem%kNumElementsPerDDRBurst] = r_matrix_pipe::read();
+                  [vector_elem%kNumElementsPerDDRBurst] = RMatrixPipe::read();
 
         } // end of vector_elem
 

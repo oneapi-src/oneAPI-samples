@@ -13,14 +13,18 @@
 #include "memory_transfers.hpp"
 #include "streaming_qrd.hpp"
 #include "streaming_qri.hpp"
-#include "utils.hpp"
+#include "tuple.hpp"
 
-// Forward declare the kernel names
+// Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
 class QRIDDRToLocalMem;
 class QRD;
 class QRI;
 class QRILocalMemToDDRQ;
+class APipe;
+class QPipe;
+class RPipe;
+class IPipe;
 
 template <unsigned columns,         // Number of columns in the input matrix
           unsigned rows,            // Number of rows in the input matrix
@@ -55,12 +59,12 @@ void QRIImpl(
   constexpr int kInverseMatrixSize = rows * columns;
   constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
 
-  using PipeType = PipeTable<kNumElementsPerDDRBurst, TT>;
+  using PipeType = NTuple<TT, kNumElementsPerDDRBurst>;
 
-  using a_matrix_pipe = sycl::ext::intel::pipe<class APipe, PipeType, 3>;
-  using q_matrix_pipe = sycl::ext::intel::pipe<class QPipe, PipeType, 3>;
-  using r_matrix_pipe = sycl::ext::intel::pipe<class RPipe, TT, 3>;
-  using inverse_matrix_pipe = sycl::ext::intel::pipe<class IPipe, PipeType, 3>;
+  using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
+  using QMatrixPipe = sycl::ext::intel::pipe<QPipe, PipeType, 3>;
+  using RMatrixPipe = sycl::ext::intel::pipe<RPipe, TT, 3>;
+  using InverseMatrixPipe = sycl::ext::intel::pipe<IPipe, PipeType, 3>;
 
 
   // Create buffers and allocate space for them.
@@ -76,32 +80,32 @@ void QRIImpl(
   q.submit([&](sycl::handler &h) {
     h.single_task<QRIDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
       MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
-                            a_matrix_pipe>(a_device, matrix_count, repetitions);
+                            AMatrixPipe>(a_device, matrix_count, repetitions);
     });
   });
 
-  // Read the A matrix from the a_matrix_pipe pipe and compute the QR
-  // decomposition. Write the Q and R output matrices to the q_matrix_pipe
-  // and r_matrix_pipe pipes.
+  // Read the A matrix from the AMatrixPipe pipe and compute the QR
+  // decomposition. Write the Q and R output matrices to the QMatrixPipe
+  // and RMatrixPipe pipes.
   q.single_task<QRD>(
       StreamingQRD<T, is_complex, rows, columns, raw_latency_qrd,
                    kNumElementsPerDDRBurst,
-                   a_matrix_pipe, q_matrix_pipe, r_matrix_pipe>());
+                   AMatrixPipe, QMatrixPipe, RMatrixPipe>());
 
   q.single_task<QRI>(
       // Read the Q and R matrices from pipes and compute the inverse of A.
-      // Write the result to the inverse_matrix_pipe pipe.
+      // Write the result to the InverseMatrixPipe pipe.
       StreamingQRI<T, is_complex, rows, columns, raw_latency_qri,
                    kNumElementsPerDDRBurst,
-                   q_matrix_pipe, r_matrix_pipe, inverse_matrix_pipe>());
+                   QMatrixPipe, RMatrixPipe, InverseMatrixPipe>());
 
 
   auto i_event = q.single_task<QRILocalMemToDDRQ>([=
                                       ]() [[intel::kernel_args_restrict]] {
-      // Read the inverse matrix from the inverse_matrix_pipe pipe and copy it
+      // Read the inverse matrix from the InverseMatrixPipe pipe and copy it
       // to the FPGA DDR
       MatrixReadPipeToDDR<TT, rows, columns, kNumElementsPerDDRBurst,
-              inverse_matrix_pipe>(i_device, matrix_count, repetitions);
+              InverseMatrixPipe>(i_device, matrix_count, repetitions);
   });
 
   i_event.wait();

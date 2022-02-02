@@ -47,7 +47,7 @@ To optimize the performance-critical loop in its algorithm, the design leverages
 * **Shannonization** (shannonization)
 
  The key optimization techniques used are as follows:
-   1. Refactoring the original Gram-Schmidt algorithm to merge two dot products of the QR decomposition into one, reducing the total number of dot products needed to three from two. This helps us reduce the DSPs required for the implementation.
+   1. Refactoring the original Gram-Schmidt algorithm to merge two dot products of the QR decomposition into one, thus reducing the total number of dot products needed from three to two. This helps us reduce the DSPs required for the implementation.
    2. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
    3. Fully vectorizing the dot products using loop unrolling.
    4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialised dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.

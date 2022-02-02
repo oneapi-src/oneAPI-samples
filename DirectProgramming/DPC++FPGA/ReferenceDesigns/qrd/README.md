@@ -191,9 +191,9 @@ NOTE: The design is optimized to perform best when run on a large number of matr
      qrd.fpga_emu.exe         (Windows)
      ```
 
-2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative of the design's throughput. Indeed, the throughput is measured as the total kernel execution time divided by the number of matrices decomposed. However, the transfer of the matrices from the host/device to the device/host also takes some time. This memory transfer is performed by chunks of matrices in parallel to the compute kernel. The first/last chunk of matrices transferred will therefore occur with the computation kernel doing nothing. Then, the higher the number of matrices to be inverted, the more accurate the throughput result will be.
+2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative of the design's throughput. Indeed, the throughput is measured as the total kernel execution time divided by the number of matrices decomposed. However, the transfer of the matrices from the host/device to the device/host also takes some time. This memory transfer is performed by chunks of matrices in parallel to the compute kernel. The first/last chunk of matrices transferred will therefore occur with the computation kernel doing nothing. Thus, the higher the number of matrices to be decomposed, the more accurate the throughput result will be.
      ```
-     ./qrd.fpga 40960         (Linux)
+     ./qrd.fpga         (Linux)
      ```
 ### Application Parameters
 

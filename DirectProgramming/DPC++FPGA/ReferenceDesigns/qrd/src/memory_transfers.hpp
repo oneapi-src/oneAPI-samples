@@ -1,7 +1,7 @@
 #ifndef __MEMORY_TRANSFERS_HPP__
 #define __MEMORY_TRANSFERS_HPP__
 
-#include "utils.hpp"
+#include "tuple.hpp"
 #include "metaprogramming_math.hpp"
 #include "unrolled_loop.hpp"
 
@@ -58,7 +58,7 @@ void MatrixReadFromDDRToPipe(
                               == kLoopIterPerColumn - 1;
         }
 
-        PipeTable<num_elem_per_bank, TT> ddr_read;
+        NTuple<TT, num_elem_per_bank> ddr_read;
 
         // Perform the DDR burst read of num_elem_per_bank elements
         UnrolledLoop<num_elem_per_bank>([&](auto k) {
@@ -72,13 +72,13 @@ void MatrixReadFromDDRToPipe(
             // Only perform the DDR reads that are relevant (and don't access a
             // memory address that may be beyond the matrix last address)
             if (!out_of_bounds) {
-              ddr_read.elem[k] = matrix_ptr_device[matrix_index * kMatrixSize
-                                                 + load_index + k];
+              ddr_read.template get<k>() = matrix_ptr_device
+                                  [matrix_index * kMatrixSize + load_index + k];
             }
           }
           else{
-            ddr_read.elem[k] = matrix_ptr_device[matrix_index * kMatrixSize
-                                             + (int)(li)*num_elem_per_bank + k];
+            ddr_read.template get<k>() = matrix_ptr_device
+                [matrix_index * kMatrixSize + (int)(li)*num_elem_per_bank + k];
 
           }
         });
@@ -139,18 +139,18 @@ void MatrixReadPipeToDDR(
       int write_idx = 0;
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+      [[intel::ivdep]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        PipeTable<num_elem_per_bank, TT> pipe_read = matrixPipe::read();
+        NTuple<TT, num_elem_per_bank> pipe_read = matrixPipe::read();
 
         bool last_burst_of_col;
         if constexpr (kIncompleteBurst){
           // Check if we are writing the last DDR burst of the current column
-          last_burst_of_col = (li % kLoopIterPerColumn) == kLoopIterPerColumn - 1;
+          last_burst_of_col = 
+                            (li % kLoopIterPerColumn) == kLoopIterPerColumn - 1;
         }
 
-        #pragma unroll
-        for (int k = 0; k < num_elem_per_bank; k++) {
-
+        UnrolledLoop<num_elem_per_bank>([&](auto k) {
           if constexpr (kIncompleteBurst){
             // Check if the current write index is beyond the end of the current
             // matrix column
@@ -161,15 +161,15 @@ void MatrixReadPipeToDDR(
             // memory address that may be beyond the buffer last address)
             if (!out_of_bounds) {
               matrix_ptr_device[matrix_index * kMatrixSize + write_idx + k] =
-                                                              pipe_read.elem[k];
+                                                    pipe_read.template get<k>();
             }
           }
           else{
             matrix_ptr_device[matrix_index * kMatrixSize
-                        + int(li) * num_elem_per_bank + k] = pipe_read.elem[k];
+              + int(li) * num_elem_per_bank + k] = pipe_read.template get<k>();
           }
 
-        }
+        });
 
         if constexpr (kIncompleteBurst){
           // Update the current element index in the write buffer according

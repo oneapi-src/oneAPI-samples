@@ -2,7 +2,6 @@
 #define __STREAMING_QRD_HPP__
 
 #include "tuple.hpp"
-#include "utils.hpp"
 #include "unrolled_loop.hpp"
 #include "metaprogramming_math.hpp"
 
@@ -172,7 +171,7 @@ struct StreamingQRD {
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        PipeTable<pipe_size, TT> pipe_read = AIn::read();
+        NTuple<TT, pipe_size> pipe_read = AIn::read();
 
         int write_idx = li % kLoopIterPerColumn;
 
@@ -180,14 +179,15 @@ struct StreamingQRD {
           UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
               if constexpr (k * pipe_size + t < rows) {
-                a_load[li / kLoopIterPerColumn]
-                    .template get<k * pipe_size + t>() = pipe_read.elem[t];
+                a_load[li / kLoopIterPerColumn].template get<k * pipe_size 
+                                          + t>() = pipe_read.template get<t>();
               }
             }
 
             // Delay data signals to create a vine-based data distribution
             // to lower signal fanout.
-            pipe_read.elem[t] = sycl::ext::intel::fpga_reg(pipe_read.elem[t]);
+            pipe_read. template get<t>() =
+                      sycl::ext::intel::fpga_reg(pipe_read. template get<t>());
           });
 
           write_idx = sycl::ext::intel::fpga_reg(write_idx);
@@ -411,14 +411,14 @@ struct StreamingQRD {
           column_iter = sycl::ext::intel::fpga_reg(column_iter);
         });
 
-        PipeTable<pipe_size, TT> pipe_write;
+        NTuple<TT, pipe_size> pipe_write;
         UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
           UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < rows) {
-              pipe_write.elem[k] =
+              pipe_write.template get<k>() =
                   get[t] ? q_result[li / kLoopIterPerColumn]
                                .template get<t * pipe_size + k>()
-                         : sycl::ext::intel::fpga_reg(pipe_write.elem[k]);
+                    : sycl::ext::intel::fpga_reg(pipe_write.template get<k>());
             }
           });
         });
