@@ -121,11 +121,13 @@ struct write_currying<WriteFunc, BaseTy, std::index_sequence<I...>> {
   }
 };
 
-}  // namespace
+}  // namespace detail
 
 // =============================================================
 // PipeArray
 // =============================================================
+
+namespace fpga_tools {
 
 template <class Id,          // identifier for the pipe array
           typename BaseTy,   // type to write/read for each pipe
@@ -264,5 +266,7 @@ struct PipeDuplicator<Id, T> {
     // do nothing
   }
 };
+
+} // namespace fpga_tools
 
 #endif /* __PIPE_UTILS_HPP__ */
