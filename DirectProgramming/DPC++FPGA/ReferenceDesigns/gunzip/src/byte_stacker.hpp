@@ -5,13 +5,13 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
-#include "mp_math.hpp"
+#include "constexpr_math.hpp"
 
 using namespace sycl;
 
 template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 void ByteStacker() {
-  using OutPipeBundleT = FlagBundle<BytePack<literals_per_cycle>>;
+  using OutPipeBundleT = decltype(OutPipe::read());
   constexpr int cache_idx_bits = fpga_tools::Log2(literals_per_cycle*2) + 1;
 
   bool done;

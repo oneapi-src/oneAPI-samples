@@ -6,6 +6,7 @@
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
 #include "common.hpp"
+#include "constexpr_math.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 
@@ -124,17 +125,19 @@ void LZ77Decoder() {
       done = pipe_data.flag && data_valid;
 
       // grab the literal or the length and distance pair
-      short len_or_sym = pipe_data.data.len_or_sym;
-      short dist = pipe_data.data.dist_or_flag;
+      unsigned short dist = pipe_data.data.distance;
 
-      // for the case of a literal, we will simply write it to the output
-      out_data.byte[0] = len_or_sym & 0xFF;
-      out_data.valid_count = 1;
+      // for the case of literal(s), we will simply write it to the output
+      #pragma unroll
+      for (int i = 0; i < decltype(pipe_data.data)::max_symbols; i++) {
+        out_data.byte[i] = pipe_data.data.symbol[i];
+      }
+      out_data.valid_count = pipe_data.data.valid_count;
 
-      // if we get a length distance pair we will read 'len_or_sym' bytes
-      // starting at and offset of 'dist'
-      history_counter = len_or_sym;
-      reading_history = (dist > 0) && data_valid;
+      // if we get a length distance pair we will read 'pipe_data.data.length'
+      // bytes starting at and offset of 'dist'
+      history_counter = pipe_data.data.length;
+      reading_history = pipe_data.data.is_copy && data_valid;
       reading_history_next = history_counter > literals_per_cycle;
 
       // grab the low Log2(literals_per_cycle) bits of the distance
@@ -274,7 +277,7 @@ void LZ77Decoder() {
 // special case of LZ77 decoder for 1 element per cycle
 template<typename InPipe, typename OutPipe>
 void LZ77Decoder() {
-  using OutPipeBundleT = FlagBundle<BytePack<1>>;
+  using OutPipeBundleT = decltype(OutPipe::read());
 
   bool done;
   bool reading_history = false;
@@ -307,23 +310,24 @@ void LZ77Decoder() {
 
     // if we aren't currently reading from the history, read from input pipe
     if (!reading_history) {
-      // read from pipe
+      // if we aren't currently reading from the history buffers,
+      // then read from input pipe
       auto pipe_data = InPipe::read(data_valid);
 
-      // check if we are done
+      // check if the upstream kernel is done sending us data
       done = pipe_data.flag && data_valid;
 
-      // grab the symbol or the length and distance pair
-      short len_or_sym = pipe_data.data.len_or_sym;
-      short dist = pipe_data.data.dist_or_flag;
+      // grab the literal or the length and distance pair
+      unsigned short dist = pipe_data.data.distance;
 
-      out_data.byte[0] = len_or_sym & 0xFF;
+      // for the case of a literal, we will simply write it to the output
+      out_data.byte[0] = pipe_data.data.symbol[0];
       out_data.valid_count = 1;
 
-      // if we get a length distance pair we will read 'len_or_sym' bytes
-      // starting 'dist'
-      history_counter = len_or_sym;
-      reading_history = (dist > 0) && data_valid;
+      // if we get a length distance pair we will read 'pipe_data.data.length'
+      // bytes starting at and offset of 'dist'
+      history_counter = pipe_data.data.length;
+      reading_history = pipe_data.data.is_copy && data_valid;
       reading_history_next = history_counter > 1;
 
       // initialize the read index

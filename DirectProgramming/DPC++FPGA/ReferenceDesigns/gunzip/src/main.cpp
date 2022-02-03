@@ -19,9 +19,9 @@
 #include "dpc_common.hpp"
 
 #include "common.hpp"
+#include "constexpr_math.hpp"
 #include "gzip_decompressor.hpp"
 #include "gzip_header_data.hpp"
-#include "mp_math.hpp"
 #include "simple_crc32.hpp"
 
 using namespace sycl;

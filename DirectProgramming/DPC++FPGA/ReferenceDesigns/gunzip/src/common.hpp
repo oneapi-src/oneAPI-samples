@@ -5,7 +5,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
-#include "mp_math.hpp"
+#include "constexpr_math.hpp"
 
 // we only use unsigned ac_ints, so use this alias to avoid having to type
 // 'false' all the time
@@ -17,6 +17,7 @@ using ac_uint = ac_int<bits, false>;
 //
 template<typename T>
 struct FlagBundle {
+  using value_type = T;
   FlagBundle() : data(T()), flag(false) {}
   FlagBundle(T d_in) : data(d_in), flag(false) {}
   FlagBundle(T d_in, bool f_in) : data(d_in), flag(f_in) {}
@@ -29,13 +30,32 @@ struct FlagBundle {
 //
 // The data that comes out of the huffman decoder
 //
-struct HuffmanData {
-  HuffmanData() : len_or_sym(0), dist_or_flag(0) {}
-  HuffmanData(short symbol) : len_or_sym(symbol), dist_or_flag(-1) {}
-  HuffmanData(short len_in, short dist_in) :
-    len_or_sym(len_in), dist_or_flag(dist_in) {}
-  short len_or_sym;
-  short dist_or_flag; 
+template<unsigned n, unsigned max_length, unsigned max_distance>
+struct LZ77InputData {
+  static_assert(n > 0);
+  static_assert(max_length > 0);
+  static_assert(max_distance > 0);
+
+  static constexpr unsigned max_symbols = n;
+  // TODO: store value - 1 of valid_count, length, and offset to save 1 bit each
+  static constexpr unsigned valid_count_bits =
+    fpga_tools::Log2(max_symbols) + 1;
+  static constexpr unsigned length_bits =
+    fpga_tools::Log2(max_length) + 1;
+  static constexpr unsigned distance_bits =
+    fpga_tools::Log2(max_distance) + 1;
+
+  LZ77InputData() {}
+  
+  bool is_copy;
+  union {
+    ac_uint<length_bits> length;
+    unsigned char symbol[n];
+  };
+  union {
+    ac_uint<distance_bits> distance;
+    ac_uint<valid_count_bits> valid_count;
+  };
 };
 
 //
@@ -49,6 +69,14 @@ struct BytePack {
   static constexpr int count_bits = fpga_tools::Log2(n) + 1;
   unsigned char byte[n];
   ac_uint<count_bits> valid_count;
+};
+
+//
+// Similar to a BytePack, but all of the bytes are valid.
+//
+template<int n>
+struct ByteSet {
+  unsigned char byte[n];
 };
 
 //
@@ -88,5 +116,10 @@ public:
 private:
   std::string target_name;
 };
+
+constexpr unsigned kMaxLZ77Length = 32768;
+constexpr unsigned kMaxLZ77Distance = 32768;
+template<unsigned n>
+using GzipLZ77InputData = LZ77InputData<n, kMaxLZ77Length, kMaxLZ77Distance>;
 
 #endif /* __COMMON_HPP__ */

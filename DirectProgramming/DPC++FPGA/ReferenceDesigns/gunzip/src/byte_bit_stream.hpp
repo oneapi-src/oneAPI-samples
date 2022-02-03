@@ -5,7 +5,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
-#include "mp_math.hpp"
+#include "constexpr_math.hpp"
 
 //
 // A stream of bits that is filled with a byte at a time

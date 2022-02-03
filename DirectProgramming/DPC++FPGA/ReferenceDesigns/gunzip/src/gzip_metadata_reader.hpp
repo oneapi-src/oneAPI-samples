@@ -6,6 +6,7 @@
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
 #include "common.hpp"
+#include "constexpr_math.hpp"
 #include "gzip_header_data.hpp"
 
 using namespace sycl;
@@ -14,7 +15,7 @@ template<typename InPipe, typename OutPipe>
 void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
                         int& out_count) {
   // the data type streamed out
-  using OutPipeBundleT = FlagBundle<unsigned char>;
+  using OutPipeBundleT = decltype(OutPipe::read());
 
   // Format of the GZIP file header
   // 2 bytes: magic number (0x1f8b)

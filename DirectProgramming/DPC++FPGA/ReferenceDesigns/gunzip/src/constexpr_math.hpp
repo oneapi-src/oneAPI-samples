@@ -1,5 +1,5 @@
-#ifndef __MP_MATH__
-#define __MP_MATH__
+#ifndef __CONSTEXPR_MATH__
+#define __CONSTEXPR_MATH__
 
 //
 // This file contains various helper C++ metaprogramming math functions that
@@ -176,4 +176,4 @@ constexpr int FP32ExtractMantissa(float x) {
 
 }  // namespace fpga_tools
 
-#endif /* __MP_MATH__ */
+#endif /* __CONSTEXPR_MATH__ */

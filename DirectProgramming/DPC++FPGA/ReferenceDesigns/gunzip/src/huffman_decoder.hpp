@@ -7,6 +7,7 @@
 
 #include "byte_bit_stream.hpp"
 #include "common.hpp"
+#include "constexpr_math.hpp"
 
 // the size of the ByteBitStream buffer can be set from the compile comand.
 #ifndef BIT_BUFFER_BITS
@@ -28,7 +29,7 @@ using namespace sycl;
 
 template<typename InPipe, typename OutPipe>
 void HuffmanDecoder() {
-  using OutPipeBundleT = FlagBundle<HuffmanData>;
+  using OutPipeBundleT = decltype(OutPipe::read());
 
   BitStreamT bit_stream;
   bool last_block;
@@ -258,28 +259,27 @@ void HuffmanDecoder() {
           for (int out_codelen = 1; out_codelen <= 8; out_codelen++) {
             #pragma unroll
             for (int j = 0; j < 3; j++) {
-              ac_uint<7> codebits_tmp(0);
+              ac_uint<7> codebits(0);
               #pragma unroll
               for (int bit = 0; bit < runlen_bits[j]; bit++) {
-                codebits_tmp[bit] = next_bits[out_codelen + bit] & 0x1;
+                codebits[bit] = next_bits[out_codelen + bit] & 0x1;
               }
-              extra_bit_vals[out_codelen - 1][j] = codebits_tmp;
+              extra_bit_vals[out_codelen - 1][j] = codebits;
             }
           }
 
           // decode all possible code symbols from 1 to 8 bits
           ac_uint<8> codelencode_valid_bitmap(0);
-          ac_uint<5> codelencode_offset[8];
-          ac_uint<5> codelencode_base_idx[8];
+          [[intel::fpga_register]] ac_uint<5> codelencode_offset[8];
+          [[intel::fpga_register]] ac_uint<5> codelencode_base_idx[8];
 
           #pragma unroll
           for (int codelen = 1; codelen <= 8; codelen++) {
-            ac_uint<8> codebits_tmp(0);
+            ac_uint<8> codebits(0);
             #pragma unroll
             for (int bit = 0; bit < codelen; bit++) {
-              codebits_tmp[codelen - bit - 1] = next_bits[bit] & 0x1;
+              codebits[codelen - bit - 1] = next_bits[bit] & 0x1;
             }
-            unsigned char codebits = codebits_tmp;
 
             auto base_idx = codelencode_map_base_idx[codelen - 1];
             auto first_code = codelencode_map_first_code[codelen - 1];
@@ -435,8 +435,8 @@ void HuffmanDecoder() {
     // a length distance pair (see HuffmanData struct)
     bool out_ready = false;
 
-    // the output data which is either a character or a length distance pair
-    HuffmanData out_data;
+    // the output of this kernel goes to the LZ77 decoder
+    GzipLZ77InputData<2> out_data;
 
     ac_uint<9> lit_symbol;
     ac_uint<5> dist_symbol;
@@ -484,8 +484,9 @@ void HuffmanDecoder() {
           } else {
             // for uncompressed blocks, simply read an 8-bit character from the
             // stream and write it to the output
-            out_data.len_or_sym = byte;
-            out_data.dist_or_flag = -1;
+            out_data.is_copy = false;
+            out_data.symbol[0] = byte;
+            out_data.valid_count = 1;
             out_ready = true;
             uncompressed_bytes_remaining--;
             block_done = (uncompressed_bytes_remaining == 0);
@@ -503,12 +504,12 @@ void HuffmanDecoder() {
         for (int out_codelen = 1; out_codelen <= 15; out_codelen++) {
           #pragma unroll
           for (int in_codelen = 1; in_codelen <= 5; in_codelen++) {
-            ac_uint<5> codebits_tmp(0);
+            ac_uint<5> codebits(0);
             #pragma unroll
             for (int bit = 0; bit < in_codelen; bit++) {
-              codebits_tmp[bit] = next_bits[out_codelen + bit] & 0x1;
+              codebits[bit] = next_bits[out_codelen + bit] & 0x1;
             }
-            lit_extra_bit_vals[out_codelen - 1][in_codelen - 1] = codebits_tmp;
+            lit_extra_bit_vals[out_codelen - 1][in_codelen - 1] = codebits;
           }
         }
 
@@ -518,19 +519,67 @@ void HuffmanDecoder() {
         for (int out_codelen = 1; out_codelen <= 15; out_codelen++) {
           #pragma unroll
           for (int in_codelen = 1; in_codelen <= 15; in_codelen++) {
-            ac_uint<15> codebits_tmp(0);
+            ac_uint<15> codebits(0);
             #pragma unroll
             for (int bit = 0; bit < in_codelen; bit++) {
-              codebits_tmp[bit] = next_bits[out_codelen + bit] & 0x1;
+              codebits[bit] = next_bits[out_codelen + bit] & 0x1;
             }
-            dist_extra_bit_vals[out_codelen - 1][in_codelen - 1] = codebits_tmp;
+            dist_extra_bit_vals[out_codelen - 1][in_codelen - 1] = codebits;
           }
         }
 
+        ////////////////////////////////////////////////////////////////////////
+        // find all possible "second" symbols
+        // these will only be used if the first decoded symbol is a literal
+        [[intel::fpga_register]] ac_uint<15> lit2_codelen_valid_bitmap[15];
+        [[intel::fpga_register]] ac_uint<9> lit2_codelen_offset[15][15];
+        [[intel::fpga_register]] ac_uint<9> lit2_codelen_base_idx[15][15];
+        #pragma unroll
+        for(int i = 0; i < 15; i++) { lit2_codelen_valid_bitmap[i] = 0; }
+
+        #pragma unroll
+        for (int out_codelen = 1; out_codelen <= 15; out_codelen++) {
+          #pragma unroll
+          for (int in_codelen = 1; in_codelen <= 15; in_codelen++) {
+            ac_uint<15> codebits(0);
+            #pragma unroll
+            for (int bit = 0; bit < in_codelen; bit++) {
+              codebits[in_codelen - bit - 1] = next_bits[out_codelen + bit] & 0x1;
+            }
+
+            auto lit_base_idx = lit_map_base_idx[in_codelen - 1];
+            auto lit_first_code = lit_map_first_code[in_codelen - 1];
+            auto lit_last_code = lit_map_last_code[in_codelen - 1];
+            lit2_codelen_valid_bitmap[out_codelen - 1][in_codelen - 1]
+              = ((codebits >= lit_first_code) &&
+                 (codebits < lit_last_code)) ? 1 : 0;
+            lit2_codelen_base_idx[out_codelen - 1][in_codelen - 1] = lit_base_idx;
+            lit2_codelen_offset[out_codelen - 1][in_codelen - 1] = codebits - lit_first_code;
+          }
+        }
+
+        //ac_uint<4> lit_shortest_match_len_idx = CTZ(lit_codelen_valid_bitmap);
+        //ac_uint<4> lit_shortest_match_len = lit_shortest_match_len_idx + ac_uint<1>(1);
+        [[intel::fpga_register]] ac_uint<4> lit2_shortest_match_len[15];
+        [[intel::fpga_register]] ac_uint<15> lit2_sym[15];
+        #pragma unroll
+        for (int i = 0; i < 15; i++) {
+          auto shortest_match_idx_local = CTZ(lit2_codelen_valid_bitmap[i]);
+          lit2_shortest_match_len[i] = shortest_match_idx_local + ac_uint<1>(1);
+          auto base_idx = lit2_codelen_base_idx[i][shortest_match_idx_local];
+          auto offset = lit2_codelen_offset[i][shortest_match_idx_local];
+          ac_uint<9> lit_idx = base_idx + offset;
+          lit2_sym[i] = lit_map[lit_idx];
+        }
+        ////////////////////////////////////////////////////////////////////////
+
         // find all possible code lengths and offsets
-        ac_uint<15> lit_codelen_valid_bitmap(0), dist_codelen_valid_bitmap(0);
-        ac_uint<9> lit_codelen_offset[15], lit_codelen_base_idx[15];
-        ac_uint<5> dist_codelen_offset[15], dist_codelen_base_idx[15];
+        ac_uint<15> lit_codelen_valid_bitmap(0);
+        ac_uint<15> dist_codelen_valid_bitmap(0);
+        [[intel::fpga_register]] ac_uint<9> lit_codelen_offset[15];
+        [[intel::fpga_register]] ac_uint<9> lit_codelen_base_idx[15];
+        [[intel::fpga_register]] ac_uint<5> dist_codelen_offset[15];
+        [[intel::fpga_register]] ac_uint<5> dist_codelen_base_idx[15];
 
         #pragma unroll
         for (unsigned char codelen = 1; codelen <= 15; codelen++) {
@@ -568,9 +617,11 @@ void HuffmanDecoder() {
 
         // find the shortest matching length, which is the next decoded symbol
         ac_uint<4> lit_shortest_match_len_idx = CTZ(lit_codelen_valid_bitmap);
-        ac_uint<4> lit_shortest_match_len = lit_shortest_match_len_idx + ac_uint<1>(1);
+        ac_uint<4> lit_shortest_match_len =
+            lit_shortest_match_len_idx + ac_uint<1>(1);
         ac_uint<4> dist_shortest_match_len_idx = CTZ(dist_codelen_valid_bitmap);
-        ac_uint<4> dist_shortest_match_len = dist_shortest_match_len_idx + ac_uint<1>(1);
+        ac_uint<4> dist_shortest_match_len =
+            dist_shortest_match_len_idx + ac_uint<1>(1);
 
         // get the base index and offset based on the shortest match length
         auto lit_base_idx = lit_codelen_base_idx[lit_shortest_match_len_idx];
@@ -599,12 +650,34 @@ void HuffmanDecoder() {
             out_ready = false;
           } else if (lit_symbol < 256) {
             // decoded a regular character
-            out_data.len_or_sym = lit_symbol;
-            out_data.dist_or_flag = -1;
+            out_data.is_copy = false;
+            out_data.symbol[0] = lit_symbol;
+
+            auto lit2_symbol = lit2_sym[lit_shortest_match_len_idx];
+            auto lit2_shortest_match_len_chosen =
+                lit2_shortest_match_len[lit_shortest_match_len_idx];
+            out_data.symbol[1] = lit2_symbol;
+            
+            bool lit2_sym_is_stop = (lit2_symbol == 256);
+            bool lit2_sym_is_sym = (lit2_symbol < 256);
+
+            if (lit2_sym_is_stop) {
+              shift_amount = lit_shortest_match_len + lit2_shortest_match_len_chosen;
+              out_data.valid_count = 1;
+            } else if (lit2_sym_is_sym) {
+              shift_amount = lit_shortest_match_len + lit2_shortest_match_len_chosen;
+              out_data.valid_count = 2;
+            } else {
+              shift_amount = lit_shortest_match_len;
+              out_data.valid_count = 1;
+            }
+
             out_ready = true;
+            block_done = lit2_sym_is_stop;
           } else if (lit_symbol <= 264) {
             // decoded a length with a static value
-            out_data.len_or_sym = lit_symbol - ac_uint<9>(254);
+            out_data.is_copy = true;
+            out_data.length = lit_symbol - ac_uint<9>(254);
             reading_distance = true;
           } else if (lit_symbol <= 284) {
             // decoded a length with a dynamic value
@@ -613,12 +686,14 @@ void HuffmanDecoder() {
             ac_uint<3> num_extra_bits = (lit_symbol_small - ac_uint<5>(5)) >> 2;  
             auto extra_bits_val = lit_extra_bit_vals[lit_shortest_match_len_idx][num_extra_bits - 1];
             // ((((lit_symbol - 265) % 4) + 4) << num_extra_bits) + ac_uint<2>(3) + extra_bits_val
-            out_data.len_or_sym = ((((lit_symbol_small - ac_uint<5>(9)) & 0x3) + ac_uint<3>(4)) << num_extra_bits) + ac_uint<2>(3) + extra_bits_val;
+            out_data.is_copy = true;
+            out_data.length = ((((lit_symbol_small - ac_uint<5>(9)) & 0x3) + ac_uint<3>(4)) << num_extra_bits) + ac_uint<2>(3) + extra_bits_val;
             shift_amount = lit_shortest_match_len + num_extra_bits;
             reading_distance = true;
           } else if (lit_symbol == 285) {
             // decoded a length with a static value
-            out_data.len_or_sym = 258;
+            out_data.is_copy = true;
+            out_data.length = 258;
             reading_distance = true;
           } // else error, ignored
         } else {
@@ -626,13 +701,13 @@ void HuffmanDecoder() {
           // currently decoding a distance symbol
           if (dist_symbol <= 3) {
             // decoded a distance with a static value
-            out_data.dist_or_flag = dist_symbol + ac_uint<1>(1);
+            out_data.distance = dist_symbol + ac_uint<1>(1);
           } else {
             // decoded a distance with a dynamic value
             // NOTE: should be <= 29, but not doing error checking
             ac_uint<4> num_extra_bits = (dist_symbol >> 1) - ac_uint<1>(1);
             auto extra_bits_val = dist_extra_bit_vals[dist_shortest_match_len_idx][num_extra_bits - 1];
-            out_data.dist_or_flag = (((dist_symbol & 0x1) + ac_uint<2>(2)) << num_extra_bits) + ac_uint<1>(1) + extra_bits_val;
+            out_data.distance = (((dist_symbol & 0x1) + ac_uint<2>(2)) << num_extra_bits) + ac_uint<1>(1) + extra_bits_val;
             shift_amount = dist_shortest_match_len + num_extra_bits;
           }
           out_ready = true;
