@@ -46,6 +46,7 @@ void TestBasicOpsInt(queue &q, const int &a, const int &b, int &c, int &d,
   });
 }
 
+// Kernel `BasicOpsAcInt` consumes fewer resources than kernel `BasicOpsInt`.
 void TestBasicOpsAcInt(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt15 &c,
                        MyInt28 &d, MyInt15 &e) {
   buffer<MyInt14, 1> a_buf(&a, 1);
@@ -84,6 +85,7 @@ void TestShiftOps(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt14 &c) {
   });
 }
 
+// Kernel `EfficientShiftOps` consumes fewer resources than kernel `ShiftOps`.
 void TestEfficientShiftOps(queue &q, const MyInt14 &a, const MyUInt2 &b,
                            MyInt14 &c) {
   buffer<MyInt14, 1> a_buf(&a, 1);
@@ -144,11 +146,6 @@ int main() {
 
     constexpr int kVal1 = 1000, kVal2 = 2;
 
-    // Kernel `BasicOpsInt` contains native `int` type addition, multiplication,
-    // and division operations, while kernel `BasicOpsAcInt` contains `ac_int`
-    // type addition, multiplication, and division operations. By comparing
-    // these two kernels, you will find reduced width `ac_int` generates more
-    // efficient hardware than native `int`.
     {
       MyInt14 input_a = kVal1, input_b = kVal2;
       MyInt15 output_c;
@@ -172,13 +169,6 @@ int main() {
       }
     }
 
-    // Kernel `ShiftOps` contains an `ac_int` left shifter and the data type of
-    // the shift amount is a large width signed `ac_int`. On contrast, kernel
-    // `EfficientShiftOps` also contains an `ac_int` left shifter but the data
-    // type of the shift amount is a reduced width unsigned `ac_int`. By
-    // comparing these two kernels, you will find shift operations of `ac_int`
-    // can generate more efficient hardware if the amount to shift by is stored
-    // in a minimally sized unsigned `ac_int`.
     {
       MyInt14 input_a = kVal1, input_b = kVal2;
       MyUInt2 input_efficient_b = kVal2;
@@ -195,21 +185,16 @@ int main() {
       }
     }
 
-    // Kernel `BitAccess` demonstrates bit access with bit select operator `[]`
-    // and bit slice write operation `set_slc`. Note: An `ac_int` must be
-    // initialized before being access by bit select operator `[]` and bit slice
-    // operations `slc` and `set_slc`, otherwise it is undefined behavior and
-    // will give you unexpected results.
     {
       MyInt14 input = kVal1;
       MyInt14 output = TestBitAccess(q, input);
 
-      constexpr int golden = 0b001111101111;
+      constexpr int kGolden = 0b001111101111;
 
-      if (output != golden) {
+      if (output != kGolden) {
         std::cout << "Kernel BitAccess result mismatch!\n"
                   << "result = 0b" << std::bitset<14>(output) << "\n"
-                  << "golden = 0b" << std::bitset<14>(golden) << "\n\n";
+                  << "golden = 0b" << std::bitset<14>(kGolden) << "\n\n";
         passed = false;
       }
     }

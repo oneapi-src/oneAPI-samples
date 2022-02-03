@@ -80,7 +80,7 @@ This tutorial consists of five kernels:
 
 Kernel `BasicOpsInt` contains native `int` type addition, multiplication, and division operations, while kernel `BasicOpsAcInt` contains `ac_int` type addition, multiplication, and division operations. By comparing these two kernels, you will find reduced width `ac_int` generates hardware that is more area efficient than native `int`.
 
-Kernel `ShiftOp` contains an `ac_int` left shifter and the data type of the shift amount is a large width signed `ac_int`. In contrast, kernel `EfficientShiftOp` also contains an `ac_int` left shifter, but the data type of the shift amount is a reduced width unsigned `ac_int`. By comparing these two kernels, you will find shift operations of `ac_int` can generate more efficient hardware if the amount to shift by is stored in a minimally sized unsigned `ac_int`.
+Kernel `ShiftOps` contains an `ac_int` left-shifter and an `ac_int` right-shifter, and the data type of the shift amount is a large width signed `ac_int`. In contrast, kernel `EfficientShiftOps` also contains an `ac_int` left-shifter and an `ac_int` right-shifter, but the data type of the shift amount is a reduced width unsigned `ac_int`. By comparing these two kernels, you will find shift operations of `ac_int` can generate more efficient hardware if the amount to shift by is stored in a minimally sized unsigned `ac_int`.
 
 Kernel `BitOps` demonstrates bit operations with bit select operator `[]` and bit slice operations `slc` and `set_slc`.
 
@@ -218,7 +218,7 @@ Locate `report.html` in the `ac_int_report.prj/reports/` directory. Open the rep
 
 On the main report page, scroll down to the section titled *Compile Estimated Kernel Resource Utilization Summary*. You can see the overall resource usage of kernel `BasicOpsAcInt` is less than kernel `BasicOpsInt`. Navigate to *Area Analysis of System* (*Area Analysis* > *Area Analysis of System*), you can find resource usage information of the individual addition, multiplication, and division operations, and you can verify each individual operation consumes fewer resources in kernel `BasicOpsAcInt` than in kernel `BasicOpsInt`.
 
-Navigate to *System Viewer* (*Views* > *System Viewer*) and find the cluster in kernel `ShiftOp` that contains the left-shifter node (`<<`) and the right-shifter node (`>>`). Similarly, locate the cluster that contains the left-shifter node in kernel `EfficientShiftOp`. Observe that the compiler generates an additional shifter in kernel `ShiftOp` to deal with the signedness of the shift amount `b`. You can verify that kernel `EfficientShiftOp` consumes fewer resources than kernel `ShiftOp` in *Compile Estimated Kernel Resource Utilization Summary* on the main report page and *Area Analysis of System*.
+Navigate to *System Viewer* (*Views* > *System Viewer*) and find the cluster in kernel `ShiftOps` that contains the left-shifter node (`<<`) and the right-shifter node (`>>`). Similarly, locate the cluster that contains the left-shifter node and the right-shifter node in kernel `EfficientShiftOps`. Observe that the compiler generates an additional shifter in kernel `ShiftOps` to deal with the signedness of the shift amount `b`. You can verify that kernel `EfficientShiftOps` consumes fewer resources than kernel `ShiftOps` in *Compile Estimated Kernel Resource Utilization Summary* on the main report page and *Area Analysis of System*.
 
 ## Running the Sample
 
