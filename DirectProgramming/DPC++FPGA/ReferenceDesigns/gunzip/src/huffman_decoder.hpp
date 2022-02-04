@@ -445,6 +445,7 @@ void HuffmanDecoder() {
     // the II of this main loop can be controlled from the command line using
     // the -DHUFFMAN_MAIN_LOOP_II=<desired II>. By default, we let the
     // the compiler choose the Fmax/II to maximize throughput
+#define HUFFMAN_MAIN_LOOP_II 2
 #ifdef HUFFMAN_MAIN_LOOP_II
     [[intel::initiation_interval(HUFFMAN_MAIN_LOOP_II)]]
 #endif
