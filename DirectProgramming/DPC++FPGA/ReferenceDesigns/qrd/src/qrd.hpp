@@ -52,7 +52,7 @@ void QRDecompositionImpl(
   constexpr int kRMatrixSize = columns * (columns + 1) / 2;
   constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
 
-  using PipeType = NTuple<TT, kNumElementsPerDDRBurst>;
+  using PipeType = fpga_tools::NTuple<TT, kNumElementsPerDDRBurst>;
 
   // Pipes to communicate the A, Q and R matrices between kernels
   using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
@@ -82,7 +82,7 @@ void QRDecompositionImpl(
   // decomposition. Write the Q and R output matrices to the QMatrixPipe
   // and RMatrixPipe pipes.
   q.single_task<QRD>(
-      StreamingQRD<T, is_complex, rows, columns, raw_latency,
+      fpga_linalg::StreamingQRD<T, is_complex, rows, columns, raw_latency,
                    kNumElementsPerDDRBurst,
                    AMatrixPipe, QMatrixPipe, RMatrixPipe>());
 

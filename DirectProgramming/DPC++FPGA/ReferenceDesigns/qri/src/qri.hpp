@@ -59,7 +59,7 @@ void QRIImpl(
   constexpr int kInverseMatrixSize = rows * columns;
   constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
 
-  using PipeType = NTuple<TT, kNumElementsPerDDRBurst>;
+  using PipeType = fpga_tools::NTuple<TT, kNumElementsPerDDRBurst>;
 
   using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
   using QMatrixPipe = sycl::ext::intel::pipe<QPipe, PipeType, 3>;
@@ -88,14 +88,14 @@ void QRIImpl(
   // decomposition. Write the Q and R output matrices to the QMatrixPipe
   // and RMatrixPipe pipes.
   q.single_task<QRD>(
-      StreamingQRD<T, is_complex, rows, columns, raw_latency_qrd,
+      fpga_linalg::StreamingQRD<T, is_complex, rows, columns, raw_latency_qrd,
                    kNumElementsPerDDRBurst,
                    AMatrixPipe, QMatrixPipe, RMatrixPipe>());
 
   q.single_task<QRI>(
       // Read the Q and R matrices from pipes and compute the inverse of A.
       // Write the result to the InverseMatrixPipe pipe.
-      StreamingQRI<T, is_complex, rows, columns, raw_latency_qri,
+      fpga_linalg::StreamingQRI<T, is_complex, rows, columns, raw_latency_qri,
                    kNumElementsPerDDRBurst,
                    QMatrixPipe, RMatrixPipe, InverseMatrixPipe>());
 

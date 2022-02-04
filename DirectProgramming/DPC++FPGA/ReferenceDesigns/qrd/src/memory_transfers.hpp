@@ -2,7 +2,7 @@
 #define __MEMORY_TRANSFERS_HPP__
 
 #include "tuple.hpp"
-#include "metaprogramming_math.hpp"
+#include "constexpr_math.hpp"
 #include "unrolled_loop.hpp"
 
 /*
@@ -58,10 +58,10 @@ void MatrixReadFromDDRToPipe(
                               == kLoopIterPerColumn - 1;
         }
 
-        NTuple<TT, num_elem_per_bank> ddr_read;
+        fpga_tools::NTuple<TT, num_elem_per_bank> ddr_read;
 
         // Perform the DDR burst read of num_elem_per_bank elements
-        UnrolledLoop<num_elem_per_bank>([&](auto k) {
+        fpga_tools::UnrolledLoop<num_elem_per_bank>([&](auto k) {
 
           if constexpr (kIncompleteBurst){
             // Check if the current read index is beyond the end of the current
@@ -141,16 +141,17 @@ void MatrixReadPipeToDDR(
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       [[intel::ivdep]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        NTuple<TT, num_elem_per_bank> pipe_read = matrixPipe::read();
+        fpga_tools::NTuple<TT, num_elem_per_bank> pipe_read =
+                                                            matrixPipe::read();
 
         bool last_burst_of_col;
         if constexpr (kIncompleteBurst){
           // Check if we are writing the last DDR burst of the current column
-          last_burst_of_col = 
+          last_burst_of_col =
                             (li % kLoopIterPerColumn) == kLoopIterPerColumn - 1;
         }
 
-        UnrolledLoop<num_elem_per_bank>([&](auto k) {
+        fpga_tools::UnrolledLoop<num_elem_per_bank>([&](auto k) {
           if constexpr (kIncompleteBurst){
             // Check if the current write index is beyond the end of the current
             // matrix column

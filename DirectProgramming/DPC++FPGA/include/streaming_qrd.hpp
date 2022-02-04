@@ -3,7 +3,9 @@
 
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
-#include "metaprogramming_math.hpp"
+#include "constexpr_math.hpp"
+
+namespace fpga_linalg {
 
 /*
   QRD (QR decomposition) - Computes Q and R matrices such that A=QR where:
@@ -86,7 +88,7 @@ struct StreamingQRD {
     using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
 
     // Type used to store the matrices in the compute loop
-    using column_tuple = NTuple<TT, rows>;
+    using column_tuple = fpga_tools::NTuple<TT, rows>;
 
     // Number of upper-right elements in the R output matrix
     constexpr int kRMatrixSize = columns * (columns + 1) / 2;
@@ -171,15 +173,15 @@ struct StreamingQRD {
 
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        NTuple<TT, pipe_size> pipe_read = AIn::read();
+        fpga_tools::NTuple<TT, pipe_size> pipe_read = AIn::read();
 
         int write_idx = li % kLoopIterPerColumn;
 
-        UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-          UnrolledLoop<pipe_size>([&](auto t) {
+        fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+          fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
               if constexpr (k * pipe_size + t < rows) {
-                a_load[li / kLoopIterPerColumn].template get<k * pipe_size 
+                a_load[li / kLoopIterPerColumn].template get<k * pipe_size
                                           + t>() = pipe_read.template get<t>();
               }
             }
@@ -251,7 +253,7 @@ struct StreamingQRD {
             i_ge_0_j_ge_i[kBanksForFanout], j_eq_i_plus_1[kBanksForFanout],
             i_lt_0[kBanksForFanout];
 
-        UnrolledLoop<kBanksForFanout>([&](auto k) {
+        fpga_tools::UnrolledLoop<kBanksForFanout>([&](auto k) {
           i_gt_0[k] = sycl::ext::intel::fpga_reg(i > 0);
           i_lt_0[k] = sycl::ext::intel::fpga_reg(i < 0);
           j_eq_i[k] = sycl::ext::intel::fpga_reg(j == i);
@@ -263,7 +265,7 @@ struct StreamingQRD {
         // Preload col and a_i with the correct data for the current iteration
         // These are going to be use to compute the dot product of two
         // different columns of the input matrix.
-        UnrolledLoop<rows>([&](auto k) {
+        fpga_tools::UnrolledLoop<rows>([&](auto k) {
           // find which fanout bank this unrolled iteration is going to use
           constexpr auto fanout_bank_idx = k / kFanoutReduction;
 
@@ -290,7 +292,7 @@ struct StreamingQRD {
           }
         });
 
-        UnrolledLoop<rows>([&](auto k) {
+        fpga_tools::UnrolledLoop<rows>([&](auto k) {
           // find which fanout bank this unrolled iteration is going to use
           constexpr auto fanout_bank_idx = k / kFanoutReduction;
 
@@ -335,7 +337,7 @@ struct StreamingQRD {
 
         // Perform the dot product <a_{i+1},a_{i+1}> or <a_{i+1}, a_j>
         TT p_ij{0.0};
-        UnrolledLoop<rows>([&](auto k) {
+        fpga_tools::UnrolledLoop<rows>([&](auto k) {
           if constexpr (is_complex) {
             p_ij = p_ij + col1[k] * a_ip1[k].conj();
           } else {
@@ -406,14 +408,14 @@ struct StreamingQRD {
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
         int column_iter = li % kLoopIterPerColumn;
         bool get[kLoopIterPerColumn];
-        UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+        fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
           get[k] = column_iter == k;
           column_iter = sycl::ext::intel::fpga_reg(column_iter);
         });
 
-        NTuple<TT, pipe_size> pipe_write;
-        UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
-          UnrolledLoop<pipe_size>([&](auto k) {
+        fpga_tools::NTuple<TT, pipe_size> pipe_write;
+        fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
+          fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < rows) {
               pipe_write.template get<k>() =
                   get[t] ? q_result[li / kLoopIterPerColumn]
@@ -428,5 +430,7 @@ struct StreamingQRD {
     }  // end of while(1)
   }    // end of operator
 };     // end of struct
+
+}  // namespace fpga_linalg
 
 #endif /* __STREAMING_QRD_HPP__ */

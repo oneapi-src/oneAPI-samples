@@ -3,6 +3,8 @@
 
 #include <type_traits>
 
+namespace fpga_tools {
+
 //
 // Generic tuple
 //
@@ -111,5 +113,7 @@ using make_NTuple =
 //
 template <typename Type, int N>
 using NTuple = make_NTuple<N, Type>;
+
+}  // namespace fpga_tools
 
 #endif /* __TUPLE_HPP__ */
