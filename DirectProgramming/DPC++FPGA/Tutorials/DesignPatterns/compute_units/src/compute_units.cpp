@@ -14,7 +14,7 @@ using namespace sycl;
 constexpr float kTestData = 555;
 constexpr size_t kEngines = 5;
 
-using Pipes = PipeArray<class MyPipe, float, 1, kEngines + 1>;
+using Pipes = fpga_tools::PipeArray<class MyPipe, float, 1, kEngines + 1>;
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
