@@ -30,25 +30,96 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+
+### Setting Environment Variables
+
+
+For working at a Command-Line Interface (CLI), the tools in the oneAPI toolkits
+are configured using environment variables. Set up your CLI environment by
+sourcing the ``setvars`` script every time you open a new terminal window. This
+will ensure that your compiler, libraries, and tools are ready for development.
+
+
+#### Linux
+Source the script from the installation location, which is typically in one of
+these folders:
+
+
+For root or sudo installations:
+
+
+  ``. /opt/intel/oneapi/setvars.sh``
+
+
+For normal user installations:
+
+  ``. ~/intel/oneapi/setvars.sh``
+
+**Note:** If you are using a non-POSIX shell, such as csh, use the following command:
+
+     ``$ bash -c 'source <install-dir>/setvars.sh ; exec csh'``
+
+If environment variables are set correctly, you will see a confirmation
+message.
+
+If you receive an error message, troubleshoot the problem using the
+Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
+checks to find missing dependencies and permissions errors.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+
+**Note:** [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html)
+    can also be used to set up your development environment.
+    The modulefiles scripts work with all Linux shells.
+
+
+**Note:** If you wish to fine
+    tune the list of components and the version of those components, use
+    a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html)
+    to set up your development environment.
+
+#### Windows
+
+Execute the  ``setvars.bat``  script from the root folder of your
+oneAPI installation, which is typically:
+
+
+  ``"C:\Program Files (x86)\Intel\oneAPI\setvars.bat"``
+
+
+For Windows PowerShell* users, execute this command:
+
+  ``cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'``
+
+
+If environment variables are set correctly, you will see a confirmation
+message.
+
+If you receive an error message, troubleshoot the problem using the
+Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
+checks to find missing dependencies and permissions errors.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+
 ## How to Build and Run
 
-1. Pre-requirement
+1. Activate conda environment With Root Access
 
-    PyTorch is ready for use once you finish the Intel&reg; AI Analytics Toolkit installation and have run the post installation script. These steps apply to DevCloud as well.
-
-    You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
-
-2. Activate conda environment With Root Access
-
-    Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the setvars.sh script. Then navigate in Linux shell to your oneapi installation path, typically `~/intel/inteloneapi`. Activate the conda environment with the following command:
+Please follow the steps above to set up your oneAPI environment with the
+`setvars.sh` script. Then navigate in Linux shell to your oneapi installation
+path, typically `~/intel/inteloneapi`. Activate the conda environment with the
+following command:
 
     ```
     conda activate pytorch
     ```
 
-3. Activate conda environment Without Root Access (Optional)
+2. Activate conda environment Without Root Access (Optional)
 
-    By default, the Intel AI Analytics toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel AI Analytics toolkit is installed in the inteloneapi
+folder, which requires root privileges to manage it. If you would like to
+bypass using root access to manage your conda environment, then you can clone
+your desired conda environment using the following command:
 
     ```
     conda create --name user_pytorch --clone pytorch
@@ -82,7 +153,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 
 ### Example of Output
-With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.  
+With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.
 
 ### Running The Sample In DevCloud (Optional)
 
@@ -102,3 +173,24 @@ cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelPyTorch_Gettin
 
 ### Build and run additional samples
 Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
+
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the Generate Launch Configurations extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
