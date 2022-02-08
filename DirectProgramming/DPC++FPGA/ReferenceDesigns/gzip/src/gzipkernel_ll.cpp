@@ -62,10 +62,20 @@ using acc_dist_channel_array =
   >;
 
 using acc_dist_channel_last_array =
-    PipeArray<class dist_channel_last_pipe_id, struct DistLen, 32, NUM_ENGINES>;
+    fpga_tools::PipeArray<
+      class dist_channel_last_pipe_id,
+      struct DistLen,
+      32,
+      NUM_ENGINES
+    >;
 
 using acc_lz_to_crc_channel_array =
-    PipeArray<class crc_channel_pipe_id, char_arr_32, 32, NUM_ENGINES>;
+    fpga_tools::PipeArray<
+      class crc_channel_pipe_id,
+      char_arr_32,
+      32,
+      NUM_ENGINES
+    >;
 
 template <int Begin, int End>
 struct Unroller {
