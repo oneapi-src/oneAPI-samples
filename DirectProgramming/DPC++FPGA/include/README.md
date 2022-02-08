@@ -19,7 +19,7 @@ This directory contains utility header libraries optimized for FPGA DPC++ design
 | streaming_qrd.hpp | QR decomposition of matrices with pipe interfaces.
 | streaming_qri.hpp | QR-based inversion of matrices with pipe interfaces.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
