@@ -1,0 +1,61 @@
+{
+  "guid": "566433FF-0C04-4C99-A76E-B927F81872F8",
+  "name": "AC Int",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "description": "An Intel® FPGA tutorial demonstrating how to use the Algorithmic C Integer (AC Int) ",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./ac_int.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ac_int",
+          "nmake fpga_emu",
+          "ac_int.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/ac_int",
+          "nmake report"
+        ]
+      }
+    ]
+  }
+}
