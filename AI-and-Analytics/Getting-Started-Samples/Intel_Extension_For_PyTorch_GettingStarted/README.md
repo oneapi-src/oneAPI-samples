@@ -1,18 +1,20 @@
-﻿# `PyTorch HelloWorld` Sample
-PyTorch* is a very popular framework for deep learning. Intel and Facebook* collaborate to boost PyTorch* CPU Performance for years. The official PyTorch has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives by default. This sample demonstrates how to train a PyTorch model and shows how Intel-optimized PyTorch* enables Intel® Deep Neural Network Library (Intel® DNNL) calls by default.
+﻿# `Intel Extension For PyTorch Hello World` Sample
+Intel® Extension for PyTorch\* extends PyTorch with optimizations for extra performance boost on Intel hardware. Most of the optimizations will be included in stock PyTorch releases eventually, and the intention of the extension is to deliver up-to-date features and optimizations for PyTorch on Intel hardware, examples include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
 
 | Optimized for                       | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04
+| OS                                | Linux\* Ubuntu\* 18.04
 | Hardware                          | Intel® Xeon® Scalable Processor family
 | Software                          | Intel® oneAPI AI Analytics Toolkit
 | What you will learn               | How to get started with Intel® Optimization for PyTorch
 | Time to complete                  | 15 minutes
 
 ## Purpose
-This sample code shows how to get started with Intel Optimization for PyTorch. It implements an example neural network with one convolution layer, one normalization layer and one ReLU layer. Developers can quickly build and train a PyTorch* neural network using a simple python code. Also, by controlling the build-in environment variable, the sample attempts to show how Intel® DNNL Primitives are called explicitly and their performance during PyTorch* model training and inference.
+This sample code shows how to get started with Intel Optimization for PyTorch. It implements an example neural network with one convolution layer, one normalization layer and one ReLU layer. Developers can quickly build and train a PyTorch\* neural network using a simple python code. Also, by controlling the build-in environment variable, the sample attempts to show how Intel® DNNL Primitives are called explicitly and their performance during PyTorch\* model training and inference with Intel® Extension for PyTorch\*.
 
-Intel-optimized PyTorch* is available as part of Intel® AI Analytics Toolkit. For more information on the optimizations as well as performance data, see this blog post http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance.
+Intel® Extension for PyTorch\* is available as part of Intel® AI Analytics Toolkit. For more information on the optimizations as well as performance data, see [this blog](http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance).
+
+More examples can be found at [Examples](https://intel.github.io/intel-extension-for-pytorch/tutorials/examples.html)
 
 ## Key implementation details
 This Hello World sample code is implemented for CPU using the Python language.
@@ -22,7 +24,6 @@ This Hello World sample code is implemented for CPU using the Python language.
 ### Notes
  - The test dataset is inherited from `torch.utils.data.Dataset`.
  - The model is inherited from `torch.nn.Module`.
- - For the inference portion, `to_mkldnn()` function in `torch.utils.mkldnn` can accelerate performance by eliminating data reorders between operations, which are supported by Intel&reg; DNNL.
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -70,14 +71,14 @@ your desired conda environment using the following command:
 
 4.	Navigate to the directory with the TensorFlow sample:
     ```
-    cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelPyTorch_GettingStarted
+    cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted
     ```
 
 5. Run the Python script
-    To run the program on Linux*, Windows* and MacOS*, type the following command in the terminal with Python installed:
+    To run the program on Linux\*, Windows\* and MacOS\*, type the following command in the terminal with Python installed:
 
     ```
-    python PyTorch_Hello_World.py
+    python Intel_Extension_For_PyTorch_Hello_World.py
     ```
 
     You will see the DNNL verbose trace after exporting the `DNNL_VERBOSE`:
@@ -100,13 +101,13 @@ Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneA
 
 1.	Navigate to the directory with the TensorFlow sample:
 ```
-cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/IntelPyTorch_GettingStarted
+cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted
 ```
-2. submit this "IntelPyTorch_GettingStarted" workload on the selected node with the run script.
+2. submit this "Intel_Extension_For_PyTorch_GettingStarted" workload on the selected node with the run script.
 ```
 ./q ./run.sh
 ```
-> the run.sh contains all the instructions needed to run this "TensorFlow_HelloWorld" workload
+> the run.sh contains all the instructions needed to run this "Intel_Extension_For_PyTorch_Hello_World" workload
 
 ### Build and run additional samples
 Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
