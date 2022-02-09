@@ -84,6 +84,19 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 Perform the following steps:
 1. Build the program using the following `cmake` commands.
 ```
@@ -290,7 +303,11 @@ rm build.sh.*; rm run.sh.*; make clean
 exit
 ```
 ### Build and run additional samples
-Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to iso3dfd_omp_offload. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
+
+Several sample programs are available for you to try, many of which can be
+compiled and run in a similar fashion to iso3dfd_omp_offload. Experiment with
+running the various samples on different kinds of compute nodes or adjust their
+source code to experiment with different workloads.
 
 
 
