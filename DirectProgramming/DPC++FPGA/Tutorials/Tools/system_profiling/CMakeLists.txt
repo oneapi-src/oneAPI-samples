@@ -12,6 +12,6 @@ if(UNIX)
     add_subdirectory (src)
 else() # Windows
     # This code sample does not currently support windows
-    message(STATUS "This code sample is cannot be configured to run on Windows!\
+    message(FATAL_ERROR "Error: This code sample cannot be configured to run on Windows!\
                     \nPlease look over the README for information on using this feature on windows.")
 endif()
