@@ -218,7 +218,7 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    cout << "\nPASSED\n";
+    cout << "\nPASSED all results are correct\n";
     return 0;
 
   } catch (sycl::exception const &e) {
