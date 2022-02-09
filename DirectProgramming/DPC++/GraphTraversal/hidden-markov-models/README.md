@@ -104,6 +104,19 @@ Perform the following steps:
 
 ## Running the Sample
 
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
+
 ### Application Parameters
 There are no editable parameters for this sample.
 
@@ -132,8 +145,14 @@ git clone https://github.com/oneapi-src/oneAPI-samples.git
 cd ~/oneAPI-samples/DirectProgramming/DPC++/GraphTraversal/hidden-markov-models
 ```
 #### Build and run the sample in batch mode
-The following describes the process of submitting build and run jobs to PBS.
-A job is a script that is submitted to PBS through the qsub utility. By default, the qsub utility does not inherit the current environment variables or your current working directory. For this reason, it is necessary to submit jobs as scripts that handle the setup of the environment variables. In order to address the working directory issue, you can either use absolute paths or pass the -d \<dir\> option to qsub to set the working directory.
+
+The following describes the process of submitting build and run jobs to PBS. A
+job is a script that is submitted to PBS through the qsub utility. By default,
+the qsub utility does not inherit the current environment variables or your
+current working directory. For this reason, it is necessary to submit jobs as
+scripts that handle the setup of the environment variables. In order to address
+the working directory issue, you can either use absolute paths or pass the -d
+\<dir\> option to qsub to set the working directory.
 
 #### Create the Job Scripts
 1.	Create a build.sh script with your preferred text editor:
@@ -163,6 +182,14 @@ cd build
 make run
 ```
 6.	Save and close the run.sh file.
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 #### Build and run
 Jobs submitted in batch mode are placed in a queue waiting for the necessary resources (compute nodes) to become available. The jobs will be executed on a first come basis on the first available node(s) having the requested property or label.

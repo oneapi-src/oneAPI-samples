@@ -40,13 +40,17 @@ If running this sample and it fails, do one of the following
 
 ## Building the `vector-add` Program for CPU and GPU
 
-> Note: if you have not already done so, set up your CLI
-> environment by sourcing  the setvars script located in
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
 > Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
 > Linux User: . ~/intel/oneapi/setvars.sh
+>
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Running Samples in DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
@@ -152,7 +156,9 @@ Perform the following steps:
 ### On a Windows* System Using a Command Line Interface
 Perform the following steps:
 
-**NOTE:** On a Windows* system, you can only compile and run on the FPGA emulator. Generating an HTML optimization report and compiling and running on the FPGA hardware is not currently supported.
+**NOTE:** On a Windows* system, you can only compile and run on the FPGA
+emulator. Generating an HTML optimization report and compiling and running on
+the FPGA hardware is not currently supported.
 
 1. Select **Programs** > **Intel oneAPI 2021** > **Intel oneAPI Command Prompt** to launch a command window.
 2. Build the program using the following `nmake` commands:
@@ -195,3 +201,7 @@ Vector size: 10000
 [9999]: 9999 + 9999 = 19998
 Vector add successfully completed on device.
 </pre>
+
+## Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)

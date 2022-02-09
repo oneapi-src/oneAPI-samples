@@ -79,6 +79,21 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
+### Set Environment Variables
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
+
 ### On a Linux* System
    * Build the program using Make
     make all
@@ -118,8 +133,16 @@ There are no editable parameters for this sample.
 	...
 	[9999] (10001 : 10003i) * (10003 : 10005i) = (-40012 : 200120014i)
 	Complex multiplication successfully run on the device
-	
+
 ```
-    
+
 ### Build and run additional samples
-Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to this sample. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
+
+Several sample programs are available for you to try, many of which can be
+compiled and run in a similar fashion to this sample. Experiment with running
+the various samples on different kinds of compute nodes or adjust their source
+code to experiment with different workloads.
+
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
