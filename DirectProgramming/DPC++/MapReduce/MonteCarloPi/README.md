@@ -1,8 +1,18 @@
 ﻿# `Monte Carlo Pi` Sample
 
-Monte Carlo Simulation is a broad category of computation that utilizes statistical analysis to reach a result. This sample uses the Monte Carlo Procedure to estimate the value of pi. By inscribing a circle of radius 1 inside a 2x2 square and then sampling a large number of random coordinates falling uniformly within the square, the value of pi can be estimated using the ratio of samples that fall inside the circle divided by the total number of samples.
+Monte Carlo Simulation is a broad category of computation that utilizes
+statistical analysis to reach a result. This sample uses the Monte Carlo
+Procedure to estimate the value of pi. By inscribing a circle of radius 1
+inside a 2x2 square and then sampling a large number of random coordinates
+falling uniformly within the square, the value of pi can be estimated using the
+ratio of samples that fall inside the circle divided by the total number of
+samples.
 
-This method of estimation works for calculating pi because the expected value of the sample ratio is equal to the ratio of a circle's area divided by the square's: a circle of radius 1 has an area of pi units squared, while a 2x2 square has an area of 4 units squared, yielding a ratio of pi/4. Therefore, to estimate the value of pi, our solution will be four times the sample ratio.
+This method of estimation works for calculating pi because the expected value
+of the sample ratio is equal to the ratio of a circle's area divided by the
+square's: a circle of radius 1 has an area of pi units squared, while a 2x2
+square has an area of 4 units squared, yielding a ratio of pi/4. Therefore, to
+estimate the value of pi, our solution will be four times the sample ratio.
 
 For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
@@ -17,14 +27,24 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 
 ## Purpose
 
-The Monte Carlo procedure for estimating pi is easily parallelized, as each calculation of a random coordinate point can be considered a discrete work item. The computations involved with each work item are entirely independent of one another except for in summing the total number of points inscribed within the circle. This code sample demonstrates how to utilize the DPC++ reduction extension for this purpose.
+The Monte Carlo procedure for estimating pi is easily parallelized, as each
+calculation of a random coordinate point can be considered a discrete work
+item. The computations involved with each work item are entirely independent of
+one another except for in summing the total number of points inscribed within
+the circle. This code sample demonstrates how to utilize the DPC++ reduction
+extension for this purpose.
 
-The code will attempt to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected.  The device used for the compilation is displayed in the output, along with the elapsed time to complete the computation. A rendered image plot of the computation is also written to a file.
+The code will attempt to execute on an available GPU and fallback to the
+system's CPU if a compatible GPU is not detected. The device used for the
+compilation is displayed in the output, along with the elapsed time to complete
+the computation. A rendered image plot of the computation is also written to a
+file.
 
 
 ## Key Implementation Details
 
-The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and reduction.
+The basic DPC++ implementation explained in the code includes device selector,
+buffer, accessor, kernel, and reduction.
 
 ## License
 

@@ -1,8 +1,13 @@
 ﻿# `vector-add` Sample
 
-Vector Add is the equivalent of a ‘Hello, World!’ sample for data parallel programs. Building and running the code sample verifies that your development environment is set up correctly and demonstrates the use of the core features of DPC++.
+Vector Add is the equivalent of a ‘Hello, World!’ sample for data parallel
+programs. Building and running the code sample verifies that your development
+environment is set up correctly and demonstrates the use of the core features
+of DPC++.
 
-For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+For comprehensive instructions see the
+[DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide)
+and search based on relevant terms noted in the comments.
 
 
 | Optimized for                     | Description
@@ -12,18 +17,35 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 
 ## Purpose
-The `vector-add` is a simple program that adds two large vectors of integers and verifies the results. This program is implemented using C++ and Data Parallel C++ (DPC++) for Intel&reg; CPU and accelerators.
 
-In this sample, you can learn how to use the most basic code in C++ language that offloads computations to a GPU using the DPC++ language. This includes using Unified Shared Memory (USM) and buffers. USM requires an explicit wait for the asynchronous kernel's computation to complete.  Buffers, at the time they go out of scope, bring main memory in sync with device memory implicitly; the explicit wait on the event is not required as a result. This sample provides examples of both implementations for simple side-by-side reviews (the Windows sample only supports USM).
+The `vector-add` is a simple program that adds two large vectors of integers
+and verifies the results. This program is implemented using C++ and Data
+Parallel C++ (DPC++) for Intel&reg; CPU and accelerators.
 
-The code will attempt to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected. If successful, the name of the offload device and a success message is displayed. And your development environment is set up correctly!
+In this sample, you can learn how to use the most basic code in C++ language
+that offloads computations to a GPU using the DPC++ language. This includes
+using Unified Shared Memory (USM) and buffers. USM requires an explicit wait
+for the asynchronous kernel's computation to complete. Buffers, at the time
+they go out of scope, bring main memory in sync with device memory implicitly;
+the explicit wait on the event is not required as a result. This sample
+provides examples of both implementations for simple side-by-side reviews (the
+Windows sample only supports USM).
 
-In addition, you can target an FPGA device using the build scripts described below.  If you do not have FPGA hardware, the sample will run in emulation mode, which includes static optimization reports for design analysis.
+The code will attempt to execute on an available GPU and fallback to the
+system's CPU if a compatible GPU is not detected. If successful, the name of
+the offload device and a success message is displayed. And your development
+environment is set up correctly!
+
+In addition, you can target an FPGA device using the build scripts described
+below. If you do not have FPGA hardware, the sample will run in emulation mode,
+which includes static optimization reports for design analysis.
 
 A detailed code walkthrough can be found at https://software.intel.com/content/www/us/en/develop/documentation/explore-dpcpp-samples-from-intel/top.html#top_STEP1_VECTOR_ADD.
 
 ## Key Implementation Details
-The basic DPC++ implementation explained in the code includes device selector, USM, buffer, accessor, kernel, and command groups.
+
+The basic DPC++ implementation explained in the code includes device selector,
+USM, buffer, accessor, kernel, and command groups.
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -38,7 +60,6 @@ If running this sample and it fails, do one of the following
 - Update the Intel® oneAPI Base Toolkit to 2021.4
 - Change the 'no_init' argument  to 'noinit'
 
-## Building the `vector-add` Program for CPU and GPU
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
@@ -52,8 +73,11 @@ If running this sample and it fails, do one of the following
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+### Running Samples in DevCloud If running a sample in the Intel DevCloud,
+remember that you must specify the compute node (cpu, gpu, fpga_compile, or
+fpga_runtime) and whether to run in batch or interactive mode. For more
+information see the
+[Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
 
 ### Using Visual Studio Code*  (Optional)
