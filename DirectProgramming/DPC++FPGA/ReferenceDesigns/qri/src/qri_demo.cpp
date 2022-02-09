@@ -1,7 +1,4 @@
 #include <math.h>
-
-// #define DEBUG
-
 #include <CL/sycl.hpp>
 #include <chrono>
 #include <iomanip>
@@ -12,6 +9,7 @@
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
+
 #include "qri.hpp"
 
 /*

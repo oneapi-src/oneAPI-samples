@@ -7,7 +7,7 @@
 
 /*
   Read matrix_count matrices of type TT from DDR by bursts of num_elem_per_bank
-  elements, and write the matrices to the "matrixPipe" pipe num_elem_per_bank by
+  elements, and write the matrices to the "MatrixPipe" pipe num_elem_per_bank by
   num_elem_per_bank elements.
   Repeat this operations "repetitions" times.
 */
@@ -15,7 +15,7 @@ template <typename TT,           // Datatype of the elements of the matrix
           int rows,              // Number of rows of the matrix
           int columns,           // Number of columns of the matrix
           int num_elem_per_bank, // Number of TT elements per DDR burst access
-          typename matrixPipe    // Output matrix pipe
+          typename MatrixPipe    // Output matrix pipe
           >
 void MatrixReadFromDDRToPipe(
     TT* matrix_ptr,  // Input matrix pointer
@@ -90,7 +90,7 @@ void MatrixReadFromDDRToPipe(
                                             num_elem_per_bank;
         }
 
-        matrixPipe::write(ddr_read);
+        MatrixPipe::write(ddr_read);
       }  // end of li
 
     } // end of matrix_index
@@ -107,7 +107,7 @@ template <typename TT,           // Datatype of the elements of the matrix
           int rows,              // Number of rows of the matrix
           int columns,           // Number of columns of the matrix
           int num_elem_per_bank, // Number of TT elements per DDR burst access
-          typename matrixPipe    // Input matrix
+          typename MatrixPipe    // Input matrix
           >
 void MatrixReadPipeToDDR(
     TT* matrix_ptr,  // Output matrix pointer
@@ -142,7 +142,7 @@ void MatrixReadPipeToDDR(
       [[intel::ivdep]]  // NO-FORMAT: Attribute
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
         fpga_tools::NTuple<TT, num_elem_per_bank> pipe_read =
-                                                            matrixPipe::read();
+                                                            MatrixPipe::read();
 
         bool last_burst_of_col;
         if constexpr (kIncompleteBurst){
