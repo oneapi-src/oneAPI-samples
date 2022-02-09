@@ -2,11 +2,9 @@ if(UNIX)
     # Direct CMake to use dpcpp rather than the default C++ compiler/linker
     set(CMAKE_CXX_COMPILER dpcpp)
 else() # Windows
-    # Force CMake to use dpcpp rather than the default C++ compiler/linker 
-    # (needed on Windows only)
-    include (CMakeForceCompiler)
-    CMAKE_FORCE_CXX_COMPILER (dpcpp IntelDPCPP)
-    include (Platform/Windows-Clang)
+    # This code sample does not currently support windows
+    message(STATUS "This code sample is cannot be configured to run on Windows!\
+                    \nPlease look over the README for information on using this feature on windows.")
 endif()
 
 cmake_minimum_required (VERSION 3.4)
