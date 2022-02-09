@@ -14,14 +14,21 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 | Time to complete      | 10 min
 
 ## Purpose
-This example demonstrates how to do reduction by using the CPU in serial mode, the CPU in parallel mode (using OpenMP), the GPU using OpenMP offloading.
+This example demonstrates how to do reduction by using the CPU in
+serial mode, the CPU in parallel mode (using OpenMP), the GPU using OpenMP
+offloading.
 
-All the different modes use a simple calculation for Pi. It is a well known mathematical formula that if you integrate from 0 to 1 over the function, (4.0 / (1+x*x) )dx, the answer is pi. One can approximate this integral by summing up the area of a large number of rectangles over this same range.
+All the different modes use a simple calculation for Pi. It is a well known
+mathematical formula that if you integrate from 0 to 1 over the function, (4.0
+/ (1+x*x) )dx, the answer is pi. One can approximate this integral by summing
+up the area of a large number of rectangles over this same range.
 
-Each of the different functions calculates pi by breaking the range into many tiny rectangles and then summing up the results.
+Each of the different functions calculates pi by breaking the range into many
+tiny rectangles and then summing up the results.
 
 ## Key Implementation Details
-This code shows how to use OpenMP on the CPU host as well as using target offload capabilities.
+This code shows how to use OpenMP on the CPU host
+as well as using target offload capabilities.
 
 ## License
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
@@ -31,10 +38,14 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 ## Building the dpc_reduce program for CPU and GPU
 
 ### Include Files
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system".
+The include folder is located at
+`%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system".
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud,
+remember that you must specify the compute node (CPU, GPU, FPGA) and whether to
+run in batch or interactive mode. For more information, see the
+[Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
 
 ### Using Visual Studio Code*  (Optional)
@@ -49,9 +60,10 @@ The basic steps to build and run a sample using VS Code include:
  - Run the sample in the VS Code terminal using the instructions below.
 
 To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+After learning how to use the extensions for Intel oneAPI Toolkits, return to
+this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 Perform the following steps:
@@ -76,6 +88,13 @@ Clean the program using:
 ```
 make clean
 ```
+
+If an error occurs, you can get more details by running `make` with the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
 
 ## Running the Sample
 

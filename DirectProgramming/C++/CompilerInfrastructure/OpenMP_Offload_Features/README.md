@@ -105,6 +105,9 @@ Perform the following steps:
     make clean
     ```
 
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+
 ### Example of Output
 
 ```
