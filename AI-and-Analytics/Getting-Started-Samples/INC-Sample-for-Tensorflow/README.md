@@ -95,6 +95,18 @@ git checkout 2021.1-beta10
 You can run this sample in a Jupyter notebook on your local computer
 or in the Intel&reg; DevCloud.
 
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 1. Install Intel® oneAPI AI Analytics Toolkit.
 
    If you use the Intel&reg; DevCloud, skip this step. The toolkit is
@@ -108,17 +120,7 @@ https://software.intel.com/content/www/us/en/develop/articles/installation-guide
 
    This sample depends on **TensorFlow* 2.2** or newer.
 
-2. Set up your Intel&reg; oneAPI AI Analytics Toolkit environment.
-
-   Change the oneAPI installed path in the following command, according to your installation.
-
-   In this case, we use `/opt/intel/oneapi`.
-
-   ```bash
-   source /opt/intel/oneapi/setvars.sh
-   ```
-
-3. Activate the conda environment with Intel&reg; Optimizations for TensorFlow*.
+2. Activate the conda environment with Intel&reg; Optimizations for TensorFlow*.
 
    You can list the available conda environments with the following command:
 
@@ -159,13 +161,13 @@ https://software.intel.com/content/www/us/en/develop/articles/installation-guide
      source activate usr_tensorflow
      ```
 
-4. Install Intel&reg; Neural Compressor from the local channel.
+3. Install Intel&reg; Neural Compressor from the local channel.
 
    ```bash
    conda install -c ${ONEAPI_ROOT}/conda_channel neural-compressor -y --offline
    ```
 
-5. Install Jupyter Notebook.
+4. Install Jupyter Notebook.
 
    Skip this step if you are working in the DevCloud.
 
@@ -173,7 +175,7 @@ https://software.intel.com/content/www/us/en/develop/articles/installation-guide
    python -m pip install notebook
    ```
 
-6. Create a new kernel for the Jupyter notebook based on your activated conda environment.
+5. Create a new kernel for the Jupyter notebook based on your activated conda environment.
 
    ```bash
    conda install ipykernel

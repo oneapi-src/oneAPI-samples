@@ -35,75 +35,17 @@ oneAPI Data Analytics Library is ready for use once you finish the Intel® oneAP
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
 
-
-### Setting Environment Variables
-
-
-For working at a Command-Line Interface (CLI), the tools in the oneAPI toolkits
-are configured using environment variables. Set up your CLI environment by
-sourcing the ``setvars`` script every time you open a new terminal window. This
-will ensure that your compiler, libraries, and tools are ready for development.
-
-
-#### Linux
-Source the script from the installation location, which is typically in one of
-these folders:
-
-
-For root or sudo installations:
-
-
-  ``. /opt/intel/oneapi/setvars.sh``
-
-
-For normal user installations:
-
-  ``. ~/intel/oneapi/setvars.sh``
-
-**Note:** If you are using a non-POSIX shell, such as csh, use the following command:
-
-     ``$ bash -c 'source <install-dir>/setvars.sh ; exec csh'``
-
-If environment variables are set correctly, you will see a confirmation
-message.
-
-If you receive an error message, troubleshoot the problem using the
-Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
-checks to find missing dependencies and permissions errors.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
-
-
-**Note:** [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html)
-    can also be used to set up your development environment.
-    The modulefiles scripts work with all Linux shells.
-
-
-**Note:** If you wish to fine
-    tune the list of components and the version of those components, use
-    a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html)
-    to set up your development environment.
-
-#### Windows
-
-Execute the  ``setvars.bat``  script from the root folder of your
-oneAPI installation, which is typically:
-
-
-  ``"C:\Program Files (x86)\Intel\oneAPI\setvars.bat"``
-
-
-For Windows PowerShell* users, execute this command:
-
-  ``cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'``
-
-
-If environment variables are set correctly, you will see a confirmation
-message.
-
-If you receive an error message, troubleshoot the problem using the
-Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
-checks to find missing dependencies and permissions errors.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Activate conda environment With Root Access
 
