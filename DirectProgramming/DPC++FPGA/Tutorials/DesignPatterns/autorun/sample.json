@@ -44,6 +44,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/autorun",
           "nmake fpga_emu",
+          "set SYCL_ENABLE_DEFAULT_CONTEXTS=1",
           "autorun.fpga_emu.exe"
         ]
       },
