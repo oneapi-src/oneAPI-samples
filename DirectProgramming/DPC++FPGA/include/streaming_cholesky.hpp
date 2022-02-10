@@ -173,15 +173,15 @@ struct StreamingCholesky {
           TT to_store;
           if (row == column) {
             if constexpr (is_complex) {
-              to_store = {sqrt(diff.r()), 0};
+              div_term = {sycl::rsqrt(diff.r()), 0};
             }
             else{
-              to_store = sqrt(diff);
+              div_term = sycl::rsqrt(diff);
             }
-            div_term = to_store;
+            to_store = div_term;
           }
           else {
-            to_store = diff / div_term;
+            to_store = diff * div_term;
           }
 
           l_result_compute[row][column] = to_store;
@@ -199,23 +199,29 @@ struct StreamingCholesky {
 
       } // end of iteration
 
-      // for (int row = 0; row < rows; row++) {
-      //   for (int column = 0; column <= columns; column++) {
-      //     if(column <= row){
-      //       if constexpr (is_complex) {
-      //         LOut::write(l_result[row][column].conj());
-      //       }
-      //       else{
-      //         LOut::write(l_result[row][column]);
-      //       }
-      //     }
-      //   }
-      // }
 
-      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (int l_idx = 0; l_idx < kLMatrixSize; l_idx++) {
-        LOut::write(l_result[l_idx]);
+      int l_idx = 0;
+      [[intel::loop_coalesce(2)]]
+      for(int row = 0; row < rows; row++){
+        for(int column = 0; column <= row; column++){
+          TT to_write;
+          TT current_l_value = l_result[l_idx];
+          if(row == column){
+            to_write = 1 / current_l_value;
+          }
+          else{
+            to_write = current_l_value;
+          }
+          LOut::write(to_write);
+
+          l_idx++;
+        }
       }
+
+      // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+      // for (int l_idx = 0; l_idx < kLMatrixSize; l_idx++) {
+      //   LOut::write(l_result[l_idx]);
+      // }
 
     }  // end of while(1)
   }    // end of operator
