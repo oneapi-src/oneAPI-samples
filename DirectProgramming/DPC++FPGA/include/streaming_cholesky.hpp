@@ -63,8 +63,7 @@ template <typename T,        // The datatype for the computation
 struct StreamingCholesky {
   void operator()() const {
     // Functional limitations
-    static_assert(rows >= columns,
-                  "only rectangular matrices with rows>=columns are supported");
+    static_assert(rows == columns, "only square matrices are supported");
 
     // Set the computation type to T or ac_complex<T> depending on the value
     // of is_complex
@@ -123,9 +122,7 @@ struct StreamingCholesky {
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
-              if constexpr (k * pipe_size + t < rows) {
-                // a_load[li / kLoopIterPerColumn].template get<k * pipe_size
-                //                           + t>() = pipe_read.template get<t>();
+              if constexpr (k * pipe_size + t < columns) {
                 a_load[li / kLoopIterPerColumn][k * pipe_size + t] =
                                                     pipe_read.template get<t>();
               }
