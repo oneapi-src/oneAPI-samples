@@ -19,7 +19,7 @@
 // (This prevents unwanted name mangling in the optimization report.)
 class QRIDDRToLocalMem;
 class QRD;
-class QRI;
+class QRIKernel;
 class QRILocalMemToDDRQ;
 class APipe;
 class QPipe;
@@ -92,7 +92,7 @@ void QRIImpl(
                    kNumElementsPerDDRBurst,
                    AMatrixPipe, QMatrixPipe, RMatrixPipe>());
 
-  q.single_task<QRI>(
+  q.single_task<QRIKernel>(
       // Read the Q and R matrices from pipes and compute the inverse of A.
       // Write the result to the InverseMatrixPipe pipe.
       fpga_linalg::StreamingQRI<T, is_complex, rows, columns, raw_latency_qri,
