@@ -144,8 +144,9 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
      ./autorun.fpga_emu     (Linux)
-     autorun.fpga_emu.exe   (Windows)
+     set SYCL_ENABLE_DEFAULT_CONTEXTS=1 && autorun.fpga_emu.exe   (Windows)
      ```
+Note that when running this particular sample in emulation on Windows, an environment variable must be set as shown or the execution will hang.
 2. Run the sample on the FPGA device:
      ```
      ./autorun.fpga         (Linux)
