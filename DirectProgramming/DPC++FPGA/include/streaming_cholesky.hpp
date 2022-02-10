@@ -1,6 +1,15 @@
 #ifndef __STREAMING_CHOLESKY_HPP__
 #define __STREAMING_CHOLESKY_HPP__
 
+#ifdef __SYCL_DEVICE_ONLY__
+  #define CL_CONSTANT __attribute__((opencl_constant))
+#else
+  #define CL_CONSTANT
+#endif
+#define PRINTF(format, ...) { \
+            static const CL_CONSTANT char _format[] = format; \
+            sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
+
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 #include "constexpr_math.hpp"
@@ -56,15 +65,10 @@ struct StreamingCholesky {
     // Functional limitations
     static_assert(rows >= columns,
                   "only rectangular matrices with rows>=columns are supported");
-    // static_assert(columns >= 4,
-    //               "only matrices of size 4x4 and over are supported");
 
     // Set the computation type to T or ac_complex<T> depending on the value
     // of is_complex
     using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
-
-    // Type used to store the matrices in the compute loop
-    using column_tuple = fpga_tools::NTuple<TT, rows>;
 
     // Number of upper-right elements in the R output matrix
     constexpr int kLMatrixSize = columns * (columns + 1) / 2;
@@ -89,14 +93,16 @@ struct StreamingCholesky {
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      TT a_load[rows][columns], a_compute[rows][columns];
-      // column_tuple a_load[columns], a_compute[columns];
+      TT a_load[rows][columns];
 
-      // Contains the values of the upper-right part of R in a row by row
-      // fashion, starting by row 0
+
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-      // TT l_result[kLMatrixSize];
-      TT l_result[rows][columns];
+      TT l_result_compute[rows][columns];
+      [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+      TT l_result_compute_copy[rows][columns];
+
+      [[intel::private_copies(2)]]            // NO-FORMAT: Attribute
+      TT l_result[kLMatrixSize];
 
       // Copy a matrix from the pipe to a local memory
       // Number of pipe reads of pipe_size required to read a full column
@@ -118,9 +124,9 @@ struct StreamingCholesky {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
               if constexpr (k * pipe_size + t < rows) {
-                // a_load[li / kLoopIterPerColumn].template get<k * pipe_size 
+                // a_load[li / kLoopIterPerColumn].template get<k * pipe_size
                 //                           + t>() = pipe_read.template get<t>();
-                a_load[li / kLoopIterPerColumn][k * pipe_size + t] = 
+                a_load[li / kLoopIterPerColumn][k * pipe_size + t] =
                                                     pipe_read.template get<t>();
               }
             }
@@ -135,54 +141,84 @@ struct StreamingCholesky {
         });
       }
 
-      for (int row = 0; row < rows; row++) {
-        for (int column = 0; column <= columns; column++) {
-          l_result[row][column] = {0};
-        }
-      }
 
-      for (int row = 0; row < rows; row++) {
-        for (int column = 0; column <= row; column++) {
+      constexpr int kRegularIterations = columns * (columns + 1) / 2;
+      constexpr int kExtraIterations = (raw_latency - 1) * raw_latency / 2;
+      constexpr int kExtraIterationsToRemove = columns >= raw_latency ? 0 :
+                       (raw_latency - columns) * (raw_latency - columns + 1) /2;
+      constexpr int kTotalIterations = kRegularIterations + kExtraIterations
+                                       - kExtraIterationsToRemove;
+
+      int column = 0;
+      int row = 0;
+      TT div_term{0};
+      [[intel::ivdep(raw_latency)]]
+      for(int iteration = 0; iteration < kTotalIterations; iteration++){
+
+        if(column <= row){
           TT sum = 0;
-          for (int k = 0; k < column; k++)
+          fpga_tools::UnrolledLoop<columns>([&](auto k) {
+            TT to_add;
+            TT mul_lhs = k < column ? l_result_compute[row][k] : TT{0};
+            TT mul_rhs = l_result_compute_copy[column][k];
+
             if constexpr (is_complex) {
-              sum += l_result[row][k] * l_result[column][k].conj();
+              to_add = mul_lhs * mul_rhs.conj();
             }
             else {
-              sum += l_result[row][k] * l_result[column][k];
+              to_add = mul_lhs * mul_rhs;
             }
+            sum += to_add;
+          });
 
+          TT diff = a_load[row][column] - sum;
+
+          TT to_store;
           if (row == column) {
             if constexpr (is_complex) {
-              l_result[row][column] = {sqrt(a_load[row][row].r() - sum.r()), 0};
+              to_store = {sqrt(diff.r()), 0};
             }
             else{
-              l_result[row][column] = sqrt(a_load[row][row] - sum);
+              to_store = sqrt(diff);
             }
+            div_term = to_store;
           }
           else {
-            l_result[row][column] = (1.0 / l_result[column][column] * (a_load[row][column] - sum));
+            to_store = diff / div_term;
           }
+
+          l_result_compute[row][column] = to_store;
+          l_result_compute_copy[row][column] = to_store;
+          l_result[row*(row+1)/2+column] = to_store;
         }
-      }
 
-
-      for (int row = 0; row < rows; row++) {
-        for (int column = 0; column <= columns; column++) {
-          if(column <= row){
-            if constexpr (is_complex) {
-              LOut::write(l_result[row][column].conj());
-            }
-            else{
-              LOut::write(l_result[row][column]);
-            }
-          }
+        if(row == (rows - 1)) {
+          column = column + 1;
+          row = sycl::min(column, rows-raw_latency);
         }
-      }
+        else{
+          row = row + 1;
+        }
 
-      // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      // for (int r_idx = 0; r_idx < kLMatrixSize; r_idx++) {
+      } // end of iteration
+
+      // for (int row = 0; row < rows; row++) {
+      //   for (int column = 0; column <= columns; column++) {
+      //     if(column <= row){
+      //       if constexpr (is_complex) {
+      //         LOut::write(l_result[row][column].conj());
+      //       }
+      //       else{
+      //         LOut::write(l_result[row][column]);
+      //       }
+      //     }
+      //   }
       // }
+
+      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+      for (int l_idx = 0; l_idx < kLMatrixSize; l_idx++) {
+        LOut::write(l_result[l_idx]);
+      }
 
     }  // end of while(1)
   }    // end of operator
