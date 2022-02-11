@@ -75,6 +75,8 @@ installed:
    ```
 
    The script opens a Bash shell inside the Docker container.
+   > Note : Users could install additional packages by adding them into requirements.txt.   
+   > Please copy the modified requirements.txt into /tmp folder, so the bash script will install those packages for you.
     
    To create a new Bash session in the running container from outside
    the Docker container, use the following:
@@ -105,7 +107,19 @@ the IntelAIKitContainer sample and run the `version_check.py` script:
 ```bash
 python version_check.py
 ```
-        
+## Example of Output        
+
+Output from TensorFlow Environment
+```
+TensorFlow version:  2.6.0
+MKL enabled : True
+```
+
+Output from PyTorch Environment
+```
+PyTorch Version:  1.8.0a0+37c1f4a
+mkldnn : True,  mkl : True, openmp : True
+```
 
 ## Manage Docker* Images
 
