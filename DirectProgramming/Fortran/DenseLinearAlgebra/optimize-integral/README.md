@@ -1,21 +1,21 @@
 ﻿# `Optimization Integral` Sample
- 
+
 This sample is designed to illustrate compiler optimization features and programming concepts.
 
-This program computes the integral (area under the curve) of a user-supplied function 
-over an interval in a stepwise fashion. 
-The interval is split into segments and at each segment position the area of a rectangle 
-is computed with the height of sine's value at that point, and the width is the segment width. 
+This program computes the integral (area under the curve) of a user-supplied function
+over an interval in a stepwise fashion.
+The interval is split into segments and at each segment position the area of a rectangle
+is computed with the height of sine's value at that point, and the width is the segment width.
 The areas of the rectangles are then summed.
 
-The process is repeated with smaller and smaller width rectangles, 
+The process is repeated with smaller and smaller width rectangles,
 more closely approximating the true value.
 
 The source for this program also demonstrates recommended Fortran coding practices.
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | macOS* with Xcode* installed 
+| OS                                | macOS* with Xcode* installed
 | Software                          | Intel&reg; oneAPI Intel® Fortran Compiler
 | What you will learn               | Optimization using the Intel® Fortran compiler
 | Time to complete                  | 15 minutes
@@ -31,47 +31,76 @@ The Intel® Fortran Compiler can optimize applications for performance.  The pri
 
 Read the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html) for more information about these options.
 
-Some of these compiler optimizations use features and options that can 
-restrict program execution to specific architectures.  
+Some of these compiler optimizations use features and options that can
+restrict program execution to specific architectures.
 
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ## Building the `Fortran Optimization` sample
-  
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
+
 Use one of the following compiler options:
 
 
-### macOS* : -O0 -O1, -O2, -O3 
+### macOS* : -O0 -O1, -O2, -O3
 
 ### STEP 1: Build and run with -O0
-cd optimize_samples 
+cd optimize_samples
 
 Edit 'Makefile' using your favorite editor
 
-To set optimization level uncomment FC = ifort -O0 like this 
-    
-     FC = ifort -O0 
-     #FC = ifort -O1 
-     #FC = ifort -O2 
-     #FC = ifort -O3  
-   * Build the executable with 'make'     
-     
-     make 
+To set optimization level uncomment FC = ifort -O0 like this
+
+     FC = ifort -O0
+     #FC = ifort -O1
+     #FC = ifort -O2
+     #FC = ifort -O3
+   * Build the executable with 'make'
+
+     make
 
    * Run the program
-  
+
      make run
 
    * Note the final run time (example)
     CPU Time = 3.776983 seconds
 
    * Clean the files we built
-   
+
     make clean
 
 
@@ -79,49 +108,49 @@ To set optimization level uncomment FC = ifort -O0 like this
 Edit 'Makefile' using your favorite editor
 
 To set optimization level uncomment FC = ifort -O1 like this
-    
+
      #FC = ifort -O0
      FC = ifort -O1
      #FC = ifort -O2
      #FC = ifort -O3
    * Build the executable with 'make'
-  
+
     make
 
    * Run the program
-  
+
     make run
 
    * Note the final run time (example)
     CPU Time = 1.444569 seconds
 
    * Clean the files we built
-    
+
     make clean
-    
+
 
 ### STEP 3: Build and run with -O2
 Edit 'Makefile' using your favorite editor
 
 To set optimization level uncomment FC = ifort -O2 like this
-    
+
      #FC = ifort -O0
      #FC = ifort -O1
      FC = ifort -O2
      #FC = ifort -O3
    * Build the executable with 'make'
-   
+
     make
 
    * Run the program
-    
+
     make run
 
    * Note the final run time (example)
      CPU Time = 0.5143980 seconds
 
    * Clean the files we built
-  
+
     make clean
 
 ### STEP 4: Build and run with -O3
@@ -134,43 +163,43 @@ To set optimization level uncomment FC = ifort -O3 like this
      #FC = ifort -O2
      FC = ifort -O3
    * Build the executable with 'make'
-    
+
     make
 
    * Run the program
-    
+
     make run
 
    * Note the final run time (example)
      CPU Time = 0.5133380 seconds
 
    * Clean the files we built
-   
+
     make clean
 
 ## What did we learn?
-There are big jumps going from O0 to O1, and from O1 to O2. 
+There are big jumps going from O0 to O1, and from O1 to O2.
 But we see minimal performance gain going from O2 to O3.
-This does vary by application but generally with Intel® Compilers 
+This does vary by application but generally with Intel® Compilers
 O2 has the most optimizations.  Sometimes O3 can help, of course,
-but generally, O2 is sufficient for most applications. 
+but generally, O2 is sufficient for most applications.
 
 ### Further Exploration
-The Intel® Fortran Compiler has many options for optimization. 
+The Intel® Fortran Compiler has many options for optimization.
 If you have a genuine Intel® processor, try these additional options
 
    edit 'Makefile' using your favorite editor. To set additional optimizations uncomment FC = ifort -O3 and add additional options shown:
-   
+
      #FC = ifort -O0
      #FC = ifort -O1
      #FC = ifort -O2
      FC = ifort -O3 -xhost -align array64byte
    * Build the executable with the new options -xhost -align array64byte
-  
+
     make
 
    * Run the program
-   
+
     make run
 
    * Note the final run time (example)
@@ -179,15 +208,18 @@ If you have a genuine Intel® processor, try these additional options
    * Clean the program
 
     make clean
-    
-There are two additional compiler options here that are worth mentioning: Read the online 
+
+There are two additional compiler options here that are worth mentioning: Read the online
 [Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html)for more information about
 these options.
- 
+
  1. -xhost (sub option of -X option):  [X](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top/compiler-reference/compiler-options/compiler-option-details/code-generation-options/x-qx.html "-x option)
  2. -align array64byte: [-align](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top/compiler-reference/compiler-options/compiler-option-details/data-options/align.html)
 
-### Clean up 
-   * Clean the program  
+### Clean up
+   * Clean the program
     make clean
 
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
