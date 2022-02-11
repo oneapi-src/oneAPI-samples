@@ -3,7 +3,7 @@ This directory contains utility header libraries optimized for FPGA DPC++ design
 
 ## Available Header Libraries
 
-# Utilities
+### Utilities
 
 | Filename       | Description
 ---              |---
@@ -12,7 +12,7 @@ This directory contains utility header libraries optimized for FPGA DPC++ design
 | tuple.hpp | Defines a template to implement tuples.
 | unrolled_loop.hpp | Defines a templated implementation of unrolled loops.
 
-# Linear algebra
+### Linear algebra
 
 | Filename       | Description
 ---              |---
