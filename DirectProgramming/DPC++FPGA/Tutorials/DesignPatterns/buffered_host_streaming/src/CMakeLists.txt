@@ -21,7 +21,7 @@ endif()
 # to ensure the BSP has the required support. Allow the user to define USM_HOST_ALLOCATIONS_ENABLED
 # to override this check (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
 if(NOT FPGA_BOARD MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
-    message(FATAL_ERROR "This tutorial requires a BSP that has USM host allocations enabled.")
+    message(FATAL_ERROR "ERROR: This tutorial requires a BSP that has USM host allocations enabled.")
 endif()
 
 if (USM_HOST_ALLOCATIONS_ENABLED)
