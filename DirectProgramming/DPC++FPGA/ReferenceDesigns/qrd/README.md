@@ -174,11 +174,10 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Running the Reference Design
-You can apply QR decomposition to a number of matrices, as shown below. This step performs the following:
-* Generates the number of random matrices specified as the command line argument (defaults to 128).
-* Computes QR decomposition on all matrices.
-* Evaluates performance.
-NOTE: The design is optimized to perform best when run on a large number of matrices, where the total number of matrices is a power of 2.
+You can perform the QR decomposition of 8 matrices repeatedly, as shown below. This step performs the following:
+* Generates 8 random matrices.
+* Computes the QR decomposition of the 8 matrices.
+* Repeats the decomposition multiple times (specified as a command line argument) to evaluate performance.
 
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
@@ -191,7 +190,7 @@ NOTE: The design is optimized to perform best when run on a large number of matr
      qrd.fpga_emu.exe         (Windows)
      ```
 
-2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative of the design's throughput. Indeed, the throughput is measured as the total kernel execution time divided by the number of matrices decomposed. However, the transfer of the matrices from the host/device to the device/host also takes some time. This memory transfer is performed by chunks of matrices in parallel to the compute kernel. The first/last chunk of matrices transferred will therefore occur with the computation kernel doing nothing. Thus, the higher the number of matrices to be decomposed, the more accurate the throughput result will be.
+2. Run the sample on the FPGA device.
      ```
      ./qrd.fpga         (Linux)
      ```
@@ -223,7 +222,7 @@ Verifying results on matrix 0
 PASSED
 ```
 
-Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for the decomposition of 8 matrices 409600 times (each matrix consisting of 256*256 complex numbers):
+Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for the decomposition of 8 matrices 819200 times (each matrix consisting of 256*256 complex numbers):
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)
