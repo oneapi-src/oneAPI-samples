@@ -14,18 +14,20 @@
   This function implements a modified version of the Cholesky–Banachiewicz
   algorithm.
   Pseudo code:
-  for (i = 0; i < dimensionSize; i++) {
-    for (j = 0; j <= i; j++) {
-        float sum = 0;
-        for (k = 0; k < j; k++)
-            sum += L[i][k] * L[j][k];
 
-        if (i == j)
-            L[i][j] = sqrt(A[i][i] - sum);
-        else
-            L[i][j] = (1.0 / L[j][j] * (A[i][j] - sum));
+  int row_size = 0;
+  for (column = 0; column <= row_size; column++) {
+    for (row = column; row < rows; row++) {
+      float sum = 0;
+      for (k = 0; k < column; k++)
+        sum += L[row][k] * L[column][k];
+
+      if (row == column)
+        L[row][column] = sqrt(A[row][row] - sum);
+      else
+        L[row][column] = (A[row][column] - sum) / L[column][column];
     }
-  }
+  }  
 
   The input and output matrices are consumed/produced from/to pipes.
 */
@@ -145,7 +147,10 @@ struct StreamingCholesky {
       [[intel::ivdep(raw_latency)]]
       for(int iteration = 0; iteration < kTotalIterations; iteration++){
 
+        // Only do usefull work for meaningfull iterations
         if(column <= row){
+          // Perform the dot product of the elementsof the two rows indexed by 
+          // row and column from element 0 to column
           TT sum = 0;
           fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
             TT to_add;
@@ -165,6 +170,15 @@ struct StreamingCholesky {
 
           TT to_store;
           if (row == column) {
+            // Perform the reciprocal sqrt rather than the sqrt because:
+            // - it has a shorter latency and will reduce the RAW latency
+            //   of the loop
+            // - the result of the sqrt is used as a divisor which is also 
+            //   a long operation, so replacing x/sqrt by x*rsqrt will save
+            //   latency
+            // - the diagonal elements will need to be inverted later, but we 
+            //   can do that while outside this loop when we transfer the L 
+            //   matrix to the pipe
             if constexpr (is_complex) {
               div_term = {sycl::rsqrt(diff.r()), 0};
             }
@@ -177,11 +191,15 @@ struct StreamingCholesky {
             to_store = diff * div_term;
           }
 
+          // Store the results to two working copies of L to be able to read 
+          // two complete rows at each iteration
           l_result_compute[row][column] = to_store;
           l_result_compute_copy[row][column] = to_store;
+          // Store the result to the output matrix
           l_result[row*(row+1)/2+column] = to_store;
         }
 
+        // Update loop indexes
         if(row == (rows - 1)) {
           column = column + 1;
           row = sycl::min(column, rows-raw_latency);
@@ -193,12 +211,16 @@ struct StreamingCholesky {
       } // end of iteration
 
 
+      // Go over the L matrix and write each element to the pipe
       int l_idx = 0;
       [[intel::loop_coalesce(2)]]
       for(int row = 0; row < rows; row++){
         for(int column = 0; column <= row; column++){
           TT to_write;
           TT current_l_value = l_result[l_idx];
+          // The diagonal elements need to be inverted as the
+          // inversion was removed from the above compute loop
+          // to reduce the RAW latency
           if(row == column){
             to_write = 1 / current_l_value;
           }
@@ -210,11 +232,6 @@ struct StreamingCholesky {
           l_idx++;
         }
       }
-
-      // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      // for (int l_idx = 0; l_idx < kLMatrixSize; l_idx++) {
-      //   LOut::write(l_result[l_idx]);
-      // }
 
     }  // end of while(1)
   }    // end of operator
