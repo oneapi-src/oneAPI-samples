@@ -1,15 +1,6 @@
 #ifndef __STREAMING_CHOLESKY_HPP__
 #define __STREAMING_CHOLESKY_HPP__
 
-#ifdef __SYCL_DEVICE_ONLY__
-  #define CL_CONSTANT __attribute__((opencl_constant))
-#else
-  #define CL_CONSTANT
-#endif
-#define PRINTF(format, ...) { \
-            static const CL_CONSTANT char _format[] = format; \
-            sycl::ext::oneapi::experimental::printf(_format, ## __VA_ARGS__); }
-
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 #include "constexpr_math.hpp"
@@ -20,7 +11,8 @@
   - L is a lower triangular matrix
   - L* is the conjugate transpose of L
 
-  This function implements the Cholesky–Banachiewicz algorithm.
+  This function implements a modified version of the Cholesky–Banachiewicz
+  algorithm.
   Pseudo code:
   for (i = 0; i < dimensionSize; i++) {
     for (j = 0; j <= i; j++) {
@@ -39,9 +31,7 @@
 */
 template <typename T,        // The datatype for the computation
           bool is_complex,   // True if T is ac_complex<X>
-          int rows,          // Number of rows in the A matrices
-          int columns,       // Number of columns in the A matrices
-                             // , must be <= rows
+          int rows,          // Number of rows==columns in the A matrices
           int raw_latency,   // Read after write latency (in iterations) of
                              // the triangular loop of this function.
                              // This value depends on the FPGA target, the
@@ -53,33 +43,30 @@ template <typename T,        // The datatype for the computation
                              // compiler is able to achieve an II of 1 and
                              // go down from there.
           int pipe_size,     // Number of elements read/write per pipe operation
+                             // to read the input matrix
           typename AIn,      // A matrix input pipe, receive pipe_size
                              // elements from the pipe with each read
-          typename LOut      // L matrix output pipe, send pipe_size
-                             // elements to the pipe with each write.
+          typename LOut      // L matrix output pipe, send one elements to the
+                             // pipe with each write.
                              // Only lower-left elements of L are
                              // sent in row order, starting with row 0.
           >
 struct StreamingCholesky {
   void operator()() const {
-    // Functional limitations
-    static_assert(rows == columns, "only square matrices are supported");
 
     // Set the computation type to T or ac_complex<T> depending on the value
     // of is_complex
     using TT = std::conditional_t<is_complex, ac_complex<T>, T>;
 
-    // Number of upper-right elements in the R output matrix
-    constexpr int kLMatrixSize = columns * (columns + 1) / 2;
+    constexpr int kColumns = rows;
 
-    // Compute QRDs as long as matrices are given as inputs
+    // Number of lower-left elements in the L output matrix
+    constexpr int kLMatrixSize = kColumns * (kColumns + 1) / 2;
+
+    // Compute Cholesky decompositions as long as matrices are given as inputs
     while(1) {
-      // Three copies of the full matrix, so that each matrix has a single
-      // load and a single store.
-      // a_load is the initial matrix received from the pipe
-      // a_compute is used and modified during calculations
 
-      // Break memories up to store 4 complex numbers (32 bytes) per bank
+      // Break memories up to store pipe_size elements per bank
       constexpr short kBankwidth = pipe_size * sizeof(TT);
       constexpr unsigned short kNumBanks = rows / pipe_size;
 
@@ -92,13 +79,15 @@ struct StreamingCholesky {
       [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      TT a_load[rows][columns];
+      TT a_load[rows][kColumns];
 
-
+      // Two copies of L to be able to load two complete rows per iteration
+      // Multiple private copies to be able to overlap multiple loop
+      // iterations
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-      TT l_result_compute[rows][columns];
+      TT l_result_compute[rows][kColumns];
       [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-      TT l_result_compute_copy[rows][columns];
+      TT l_result_compute_copy[rows][kColumns];
 
       [[intel::private_copies(2)]]            // NO-FORMAT: Attribute
       TT l_result[kLMatrixSize];
@@ -108,7 +97,7 @@ struct StreamingCholesky {
       constexpr int kExtraIteration = (rows % pipe_size) != 0 ? 1 : 0;
       constexpr int kLoopIterPerColumn = rows / pipe_size + kExtraIteration;
       // Number of pipe reads of pipe_size to read all the matrices
-      constexpr int kLoopIter = kLoopIterPerColumn * columns;
+      constexpr int kLoopIter = kLoopIterPerColumn * kColumns;
       // Size in bits of the loop iterator over kLoopIter iterations
       constexpr int kLoopIterBitSize =
                                   fpga_tools::BitsForMaxValue<kLoopIter + 1>();
@@ -122,7 +111,7 @@ struct StreamingCholesky {
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
-              if constexpr (k * pipe_size + t < columns) {
+              if constexpr (k * pipe_size + t < kColumns) {
                 a_load[li / kLoopIterPerColumn][k * pipe_size + t] =
                                                     pipe_read.template get<t>();
               }
@@ -139,13 +128,17 @@ struct StreamingCholesky {
       }
 
 
-      constexpr int kRegularIterations = columns * (columns + 1) / 2;
+      // Computation of the number of iterations required for the triangular
+      // loop. Refer to the triangular_loop tutorial for details on how
+      // to compute these.
+      constexpr int kRegularIterations = kColumns * (kColumns + 1) / 2;
       constexpr int kExtraIterations = (raw_latency - 1) * raw_latency / 2;
-      constexpr int kExtraIterationsToRemove = columns >= raw_latency ? 0 :
-                       (raw_latency - columns) * (raw_latency - columns + 1) /2;
+      constexpr int kExtraIterationsToRemove = kColumns >= raw_latency ? 0 :
+                    (raw_latency - kColumns) * (raw_latency - kColumns + 1) /2;
       constexpr int kTotalIterations = kRegularIterations + kExtraIterations
                                        - kExtraIterationsToRemove;
 
+      // Compute the L matrix
       int column = 0;
       int row = 0;
       TT div_term{0};
@@ -154,7 +147,7 @@ struct StreamingCholesky {
 
         if(column <= row){
           TT sum = 0;
-          fpga_tools::UnrolledLoop<columns>([&](auto k) {
+          fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
             TT to_add;
             TT mul_lhs = k < column ? l_result_compute[row][k] : TT{0};
             TT mul_rhs = l_result_compute_copy[column][k];
