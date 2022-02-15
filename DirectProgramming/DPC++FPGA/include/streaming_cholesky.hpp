@@ -151,6 +151,7 @@ struct StreamingCholesky {
         if(column <= row){
           // Perform the dot product of the elementsof the two rows indexed by 
           // row and column from element 0 to column
+
           TT sum = 0;
           fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
             TT to_add;
