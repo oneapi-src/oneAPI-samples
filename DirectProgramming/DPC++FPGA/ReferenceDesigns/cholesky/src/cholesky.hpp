@@ -79,9 +79,8 @@ void CholeskyDecompositionImpl(
   // Read the A matrix from the AMatrixPipe pipe and compute the Cholesky
   // decomposition. Write the L output matrix to the LMatrixPipe pipe.
   q.single_task<Cholesky>(
-      StreamingCholesky<T, is_complex, rows, columns, raw_latency,
-                   kNumElementsPerDDRBurst,
-                   AMatrixPipe, LMatrixPipe>());
+      StreamingCholesky<T, is_complex, rows, raw_latency, 
+                        kNumElementsPerDDRBurst, AMatrixPipe, LMatrixPipe>());
 
   q.single_task<CholeskyLocalMemToDDRL>([=
                                     ]() [[intel::kernel_args_restrict]] {
