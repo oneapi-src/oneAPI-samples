@@ -149,7 +149,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 ## Running the Reference Design
 You can perform the QR-based inversion of 8 matrices repeatedly, as shown below. This step performs the following:
 * Generates 8 random matrices.
-* Computes QR-based inversion on all 8 matrices.
+* Computes the QR-based inversion of the 8 matrices.
 * Repeats the decomposition multiple times (specified as a command line argument) to evaluate performance.
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).

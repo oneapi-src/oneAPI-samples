@@ -176,7 +176,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 ## Running the Reference Design
 You can perform the QR decomposition of 8 matrices repeatedly, as shown below. This step performs the following:
 * Generates 8 random matrices.
-* Computes QR decomposition on all 8 matrices.
+* Computes the QR decomposition of the 8 matrices.
 * Repeats the decomposition multiple times (specified as a command line argument) to evaluate performance.
 
 
