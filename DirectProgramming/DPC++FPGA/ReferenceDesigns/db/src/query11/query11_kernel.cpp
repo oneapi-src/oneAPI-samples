@@ -55,7 +55,6 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
   // create space for the input buffers
   // SUPPLIER
-  buffer s_suppkey_buf(dbinfo.s.suppkey);
   buffer s_nationkey_buf(dbinfo.s.nationkey);
   
   // PARTSUPPLIER
@@ -120,33 +119,36 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   auto join_event = q.submit([&](handler& h) {
     // SUPPLIER table accessors
     size_t s_rows = dbinfo.s.rows;
-    accessor s_suppkey_accessor(s_suppkey_buf, h, read_only);
     accessor s_nationkey_accessor(s_nationkey_buf, h, read_only);
 
     h.single_task<JoinPartSupplierParts>([=]() [[intel::kernel_args_restrict]] {
       // initialize the array map
       // +1 is to account for fact that SUPPKEY is [1,kSF*10000]
-      using ArrayMapType = ArrayMap<SupplierRow, kSupplierTableSize + 1>;
-      ArrayMapType array_map;
-      array_map.Init();
+      unsigned char nation_key_map_data[kSupplierTableSize + 1];
+      bool nation_key_map_valid[kSupplierTableSize + 1];
+      for (int i = 0; i < kSupplierTableSize + 1; i++) {
+        nation_key_map_valid[i] = false;
+      }
 
       // populate MapJoiner map
       // why a map? keys may not be sequential
-      [[intel::initiation_interval(1)]]
+      [[intel::initiation_interval(1), intel::ivdep]]
       for (size_t i = 0; i < s_rows; i++) {
         // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed to be unique
         // in the range [1:kSF*10000]
-        DBIdentifier s_suppkey = s_suppkey_accessor[i];
+        DBIdentifier s_suppkey = i + 1;
         unsigned char s_nationkey = s_nationkey_accessor[i];
-
-        array_map.Set(s_suppkey, SupplierRow(true, s_suppkey, s_nationkey));
+        
+        nation_key_map_data[s_suppkey] = s_nationkey;
+        nation_key_map_valid[s_suppkey] = true;
       }
 
       // MAPJOIN PARTSUPPLIER and SUPPLIER tables by suppkey
-      MapJoin<ArrayMapType, ProducePartSupplierPipe, PartSupplierRow,
+      MapJoin<unsigned char, ProducePartSupplierPipe, PartSupplierRow,
               kJoinWinSize, PartSupplierPartsPipe,
-              SupplierPartSupplierJoined>(array_map);
+              SupplierPartSupplierJoined>(nation_key_map_data,
+                                          nation_key_map_valid);
       
       // tell downstream we are done
       PartSupplierPartsPipe::write(
