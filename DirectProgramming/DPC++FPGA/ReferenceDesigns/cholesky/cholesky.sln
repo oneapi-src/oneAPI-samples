@@ -2,7 +2,7 @@
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qrd", "qrd.vcxproj", "{ACDE6B7A-6F9A-428E-B040-CEDC5B1E2C79}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cholesky", "cholesky.vcxproj", "{ACDE6B7A-6F9A-428E-B040-CEDC5B1E2C79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

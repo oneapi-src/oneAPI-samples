@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\qrd_demo.cpp" />
+    <ClCompile Include="src\cholesky_demo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -20,7 +20,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{acde6b7a-6f9a-428e-b040-cedc5b1e2c79}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>qrd</RootNamespace>
+    <RootNamespace>cholesky</RootNamespace>
     <WindowsTargetPlatformVersion>$(WindowsSDKVersion.Replace("\",""))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

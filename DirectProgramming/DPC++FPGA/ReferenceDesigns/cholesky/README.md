@@ -1,5 +1,8 @@
-# QR Decomposition of Matrices
-This DPC++ reference design demonstrates high performance QR decomposition of complex/real matrices on FPGA.
+# Cholesky Decomposition of Matrices
+The streaming_cholesky.hpp linear algebra header library implements the Cholesky decomposition of matrices with pipe interfaces.
+Its template parameters can be set to decompose custom sized real or complex square matrices.
+This DPC++ reference design demonstrates the use of this Cholesky decomposition header library on 32 * 32 real matrices.
+
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -10,7 +13,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm.
+| What you will learn               | Implementing high performance Cholesky matrix decomposition on FPGAs.
 | Time to complete                  | 1 hr (not including compile time)
 
 
@@ -21,33 +24,34 @@ Please refer to the performance disclaimer at the end of this README.
 
 | Device                                         | Throughput
 |:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 24k matrices/s for complex matrices of size 128 * 128
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 7k matrices/s for complex matrices of size 256 * 256
+| Intel® PAC with Intel Arria® 10 GX FPGA        | 221k matrices/s for real matrices of size 32 * 32
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 214k matrices/s for real matrices of size 32 * 32
 
 
 ## Purpose
 
-This FPGA reference design demonstrates QR decomposition of matrices of complex/real numbers, a common operation employed in linear algebra. Matrix _A_ (input) is decomposed into a product of an orthogonal matrix _Q_ and an upper triangular matrix _R_.
+This FPGA reference design demonstrates the use of the Cholesky decomposition header library, a common operation employed in linear algebra.
+The Cholesky decomposition takes a hermitian, positive-definite matrix _A_ (input) and computes the lower triangular matrix _L_ such that: _L_ * _L*_ = A, where _L*_ in the conjugate transpose of _L_.
+The algorithms employed by the header library is an FPGA throughput optimized version of the Cholesky–Banachiewicz algorithm. Background information on the Cholesky decomposition and this algorithm can be found in Wikipedia's [Cholesky decomposition](https://https://en.wikipedia.org/wiki/Cholesky_decomposition) article. 
 
-The algorithms employed by the reference design are the Gram-Schmidt QR decomposition algorithm and the thin QR factorization method. Background information on these algorithms can be found in Wikipedia's [QR decomposition](https://en.wikipedia.org/wiki/QR_decomposition) article. The original algorithm has been modified and optimized for performance on FPGAs in this implementation.
-
-QR decomposition is used extensively in signal processing applications such as beamforming, multiple-input multiple-output (MIMO) processing, and Space Time Adaptive Processing (STAP).
+The Cholesky decomposition is used extensively in machine learning applications such as least-squares regressions and Monte-Carlo simulations.
 
 
 ### Matrix dimensions and FPGA resources
 
-The QR decomposition algorithm factors a complex _m_ × _n_ matrix, where _m_ ≥ _n_. The algorithm computes the vector dot product of two columns of the matrix. In our FPGA implementation, the dot product is computed in a loop over the column's _m_ elements. The loop is fully unrolled to maximize throughput. As a result, *m* complex multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result.
+The Cholesky decomposition algorithm factors a real _n_ × _n_ matrix. The algorithm computes the vector dot product of two rows of the matrix. In our FPGA implementation, the dot product is computed in a loop over the row's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *n* real multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result.
 
 We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
 
-With this optimization, our FPGA implementation requires 4*_m_ DSPs to compute the complex floating point dot product or 2*m* DSPs for the real case. Thus, the matrix size is constrained by the total FPGA DSP resources available.
+With this optimization, our FPGA implementation requires _n_ DSPs to compute the real floating point dot product.
+The input matrix is also replicated two times in order to be able to read two full rows per cycle.
+Thus, the matrix size is constrained by the total FPGA DSP and RAM resources available.
 
-By default, the design is parameterized to process 128 × 128 matrices when compiled targeting Intel® PAC with Intel Arria® 10 GX FPGA. It is parameterized to process 256 × 256 matrices when compiled targeting Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), a larger device. However, the design can process matrices from 4 x 4 to 512 x 512.
 
 ## Key Implementation Details
 | Kernel            | Description
 ---                 |---
-| QRD               | Implements a modified Gram-Schmidt QR decomposition algorithm.
+| Cholesky          | Implements a modified Cholesky–Banachiewicz Cholesky decomposition algorithm.
 
 To optimize the performance-critical loop in its algorithm, the design leverages concepts discussed in the following FPGA tutorials:
 * **Triangular Loop Optimization** (triangular_loop)
@@ -56,8 +60,9 @@ To optimize the performance-critical loop in its algorithm, the design leverages
 * **Unrolling Loops** (loop_unroll)
 
  The key optimization techniques used are as follows:
-   1. Refactoring the original Gram-Schmidt algorithm to merge two dot products into one, reducing the total number of dot products needed to three from two. This helps us reduce the DSPs required for the implementation.
-   2. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
+   1. Traversing the matrix in a column fashion to increase the read-after-write loop iteration distance 
+   2. Using two copies of the compute matrix in order to be able to read two full rows per cycle
+   3. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
    3. Fully vectorizing the dot products using loop unrolling.
    4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialised dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
    5. Using an efficient memory banking scheme to generate high performance hardware.
@@ -124,7 +129,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
        make fpga_emu
        ```
 
-    * Generate HTML performance report. Find the report in `qrd_report.prj/reports/report.html`directory.
+    * Generate HTML performance report. Find the report in `cholesky_report.prj/reports/report.html`directory.
 
        ```
        make report
@@ -136,7 +141,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
        make fpga
        ```
 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/qrd.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/cholesky.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 1. Generate the `Makefile` by running `cmake`.
@@ -174,26 +179,24 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Running the Reference Design
-You can apply QR decomposition to a number of matrices, as shown below. This step performs the following:
-* Generates the number of random matrices specified as the command line argument (defaults to 128).
-* Computes QR decomposition on all matrices.
-* Evaluates performance.
-NOTE: The design is optimized to perform best when run on a large number of matrices, where the total number of matrices is a power of 2.
-
+You can apply the Cholesky decomposition to a number of matrices, as shown below. This step performs the following:
+* Generates 8 random matrices.
+* Computes the Cholesky decomposition on all matrices.
+* Repeats the operation multiple times (specified as the command line argument) to evaluate performance.
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
  Increase the amount of memory that the emulator runtime is permitted to allocate by setting the CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE environment variable before running the executable.
      ```
      export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
-     ./qrd.fpga_emu           (Linux)
+     ./cholesky.fpga_emu           (Linux)
 
      set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
-     qrd.fpga_emu.exe         (Windows)
+     cholesky.fpga_emu.exe         (Windows)
      ```
 
-2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative of the design's throughput. Indeed, the throughput is measured as the total kernel execution time divided by the number of matrices decomposed. However, the transfer of the matrices from the host/device to the device/host also takes some time. This memory transfer is performed by chunks of matrices in parallel to the compute kernel. The first/last chunk of matrices transferred will therefore occur with the computation kernel doing nothing. Thus, the higher the number of matrices to be decomposed, the more accurate the throughput result will be.
+2. Run the sample on the FPGA device.
      ```
-     ./qrd.fpga         (Linux)
+     ./cholesky.fpga         (Linux)
      ```
 ### Application Parameters
 
@@ -203,14 +206,14 @@ NOTE: The design is optimized to perform best when run on a large number of matr
 
 ### Example of Output
 
-Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 8 matrices 819200 times (each matrix consisting of 128*128 complex numbers):
+Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 8 matrices 819200 times (each matrix consisting of 32*32 real numbers):
 
 ```
-Device name: pac_a10 : Intel PAC Platform (pac_f000000)
-Generating 8 random complex matrices of size 128x128 
-Running QR decomposition of 8 matrices 819200 times
- Total duration:   268.733 s
-Throughput: 24.387k matrices/s
+Device name: pac_a10 : Intel PAC Platform (pac_f100000)
+Generating 8 random real matrices of size 32x32 
+Compution the Cholesky decomposition of 8 matrices 819200 times
+   Total duration:   29.6193 s
+Throughput: 221.261k matrices/s
 Verifying results on matrix 0
 1
 2
@@ -223,14 +226,14 @@ Verifying results on matrix 0
 PASSED
 ```
 
-Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for the decomposition of 8 matrices 409600 times (each matrix consisting of 256*256 complex numbers):
+Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for the decomposition of 8 matrices 409600 times (each matrix consisting of 32*32 real numbers):
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)
-Generating 8 random complex matrices of size 256x256 
-Running QR decomposition of 8 matrices 819200 times
- Total duration:   888.077 s
-Throughput: 7.37954k matrices/s
+Generating 8 random real matrices of size 32x32 
+Compution the Cholesky decomposition of 8 matrices 819200 times
+   Total duration:   30.58 s
+Throughput: 214.31k matrices/s
 Verifying results on matrix 0
 1
 2
@@ -257,7 +260,7 @@ PASSED
 `-DROWS_COMPONENT` | Specifies the number of rows of the matrix
 `-DCOLS_COMPONENT` | Specifies the number of columns of the matrix
 `-DFIXED_ITERATIONS` | Used to set the ivdep safelen attribute for the performance critical triangular loop
-`-DCOMPLEX` | Used to select between the complex and real QR decomposition (complex is the default)
+`-DCOMPLEX` | Used to select between the complex and real QR decomposition (real is the default)
 
 NOTE: The values for `seed`, `FIXED_ITERATIONS`, `ROWS_COMPONENT`, `COLS_COMPONENT` are set according to the board being targeted.
 
