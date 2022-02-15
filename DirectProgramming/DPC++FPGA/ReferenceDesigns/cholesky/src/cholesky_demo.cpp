@@ -21,7 +21,7 @@
   is defined (A = LL*)
 
   Function arguments:
-  - a_matrix:    The input matrix. Interpreted as a transposed matrix.
+  - a_matrix:    The input matrix.
   - l_matrix     The L matrix. The function will overwrite this matrix.
                  The vector will only contain the lower triangular elements
                  of the matrix, in a row by row fashion.
@@ -31,7 +31,7 @@
                  (for performance evaluation)
 */
 #if COMPLEX == 0
-// Real single precision floating-point QR Decomposition
+// Real single precision floating-point Cholesky decomposition
 void CholeskyDecomposition(std::vector<float> &a_matrix, 
                            std::vector<float> &l_matrix, 
                            sycl::queue &q,
@@ -43,7 +43,7 @@ void CholeskyDecomposition(std::vector<float> &a_matrix,
                                           matrix_count, repetitions);
 }
 #else
-// Complex single precision floating-point QR Decomposition
+// Complex single precision floating-point Cholesky Decomposition
 void CholeskyDecomposition(std::vector<ac_complex<float> > &a_matrix,
                            std::vector<ac_complex<float> > &l_matrix, 
                            sycl::queue &q,
@@ -146,12 +146,13 @@ int main(int argc, char *argv[]) {
       // is between 0 and 1.
       // Since A(i,j) < 1 by construction and, a symmetric diagonally dominant 
       // matrix is symmetric positive definite; 
-      // We can be ensured of having a symmetric diagonally dominant
-      // by adding nI to A
+      // We can be sure to have a symmetric diagonally dominant by adding nI 
+      // to A
       // A = A + n*eye(n);
       // For complex matrices, the diagonal elements must be real.
 
-      // Random min and max values for the random floating-point value generation
+      // Random min and max values for the random floating-point value 
+      // generation
       constexpr float kRandomMin = 0;
       constexpr float kRandomMax = 1;
 

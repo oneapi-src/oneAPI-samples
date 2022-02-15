@@ -25,9 +25,9 @@ class QPipe;
 class RPipe;
 
 /*
-  Implementation of the QR decomposition using multiple streaming kernels
-  Can be configured by datatype, matrix size and works with square or
-  rectangular matrices, real and complex.
+  Implementation of the Cholesky decomposition using multiple streaming kernels
+  Can be configured by datatype, matrix size (must use square matrices), real 
+  and complex.
 */
 template <unsigned columns,     // Number of columns in the input matrix
           unsigned rows,        // Number of rows in the input matrix
@@ -51,7 +51,7 @@ void CholeskyDecompositionImpl(
 
   using PipeType = fpga_tools::NTuple<TT, kNumElementsPerDDRBurst>;
 
-  // Pipes to communicate the A, Q and R matrices between kernels
+  // Pipes to communicate the A and L matrices between kernels
   using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
   using LMatrixPipe = sycl::ext::intel::pipe<RPipe, TT,
                                                   kNumElementsPerDDRBurst * 4>;
@@ -60,12 +60,15 @@ void CholeskyDecompositionImpl(
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
   TT *l_device = sycl::malloc_device<TT>(kLMatrixSize * matrix_count, q);
 
+  // Copy the matrices to decompose on the FPGA DDR
   q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count
                                                           * sizeof(TT)).wait();
 
   // Launch the compute kernel and time the execution
   auto start_time = std::chrono::high_resolution_clock::now();
 
+  // Launch a kernel that will repeatedly read the matrices on the FPGA DDR
+  // and write their content to the AMatrixPipe pipe.
   q.submit([&](sycl::handler &h) {
     h.single_task<CholeskyDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
       MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
@@ -73,9 +76,8 @@ void CholeskyDecompositionImpl(
     });
   });
 
-  // Read the A matrix from the AMatrixPipe pipe and compute the QR
-  // decomposition. Write the Q and R output matrices to the QMatrixPipe
-  // and RMatrixPipe pipes.
+  // Read the A matrix from the AMatrixPipe pipe and compute the Cholesky
+  // decomposition. Write the L output matrix to the LMatrixPipe pipe.
   q.single_task<Cholesky>(
       StreamingCholesky<T, is_complex, rows, columns, raw_latency,
                    kNumElementsPerDDRBurst,
@@ -83,7 +85,7 @@ void CholeskyDecompositionImpl(
 
   q.single_task<CholeskyLocalMemToDDRL>([=
                                     ]() [[intel::kernel_args_restrict]] {
-    // Read the R matrix from the RMatrixPipe pipe and copy it to the
+    // Read the L matrix from the LMatrixPipe pipe and copy it to the
     // FPGA DDR
     // Number of DDR burst of kNumElementsPerDDRBurst required to write
     // one vector
@@ -94,8 +96,7 @@ void CholeskyDecompositionImpl(
 
     sycl::device_ptr<TT> vector_ptr_device(l_device);
 
-
-    // Repeat matrix_count complete R matrix pipe reads
+    // Repeat matrix_count complete L matrix pipe reads
     // for as many repetitions as needed
     for(int repetition_index = 0; repetition_index < repetitions;
                                                             repetition_index++){
@@ -105,14 +106,14 @@ void CholeskyDecompositionImpl(
         [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
         TT l_result[kLMatrixSize/kNumElementsPerDDRBurst + kExtraIteration]
                                                       [kNumElementsPerDDRBurst];
-        // Read a full R matrix
+        // Read a full L matrix
         for(int vector_elem = 0; vector_elem < kLMatrixSize; vector_elem++){
           l_result[vector_elem/kNumElementsPerDDRBurst]
                   [vector_elem%kNumElementsPerDDRBurst] = LMatrixPipe::read();
 
         } // end of vector_elem
 
-        // Copy the R matrix result to DDR
+        // Copy the L matrix result to DDR
         for (int li = 0; li < kLoopIter; li++) {
           if constexpr (kIncompleteBurst){
             // Write a burst of kNumElementsPerDDRBurst elements to DDR
@@ -137,7 +138,7 @@ void CholeskyDecompositionImpl(
     }  // end of li
   }).wait();
 
-
+  // End the timer as all the matrices have been processed.
   auto end_time = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> diff = end_time - start_time;
   q.throw_asynchronous();
@@ -148,7 +149,7 @@ void CholeskyDecompositionImpl(
             << "k matrices/s" << std::endl;
 
 
-  // Copy the Q and R matrices result from the FPGA DDR to the host memory
+  // Copy the L matrices result from the FPGA DDR to the host memory
   q.memcpy(l_matrix.data(), l_device, kLMatrixSize * matrix_count
                                                           * sizeof(TT)).wait();
 
