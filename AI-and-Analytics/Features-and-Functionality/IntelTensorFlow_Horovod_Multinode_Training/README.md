@@ -90,6 +90,9 @@ Example:
     horovodrun -n 2 -H host1,host2 `pwd`/TensorFlow_Multinode_Training_with_Horovod.py
 ```
 
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+
 ### Using Visual Studio Code*  (VS Code)
 
 You can use VS Code extensions to set your environment, create launch configurations,

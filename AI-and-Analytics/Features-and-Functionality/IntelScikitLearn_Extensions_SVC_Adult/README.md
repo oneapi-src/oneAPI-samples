@@ -78,6 +78,12 @@ Classification report for SVC trained with the original scikit-learn:
    macro avg       0.76      0.74      0.75      9769
 weighted avg       0.82      0.82      0.82      9769
 ```
+
+
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+
+
 ### Using Visual Studio Code*  (VS Code)
 
 You can use VS Code extensions to set your environment, create launch configurations,
