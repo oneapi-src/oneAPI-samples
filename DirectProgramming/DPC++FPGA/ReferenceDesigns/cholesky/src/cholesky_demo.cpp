@@ -1,16 +1,14 @@
 #include <math.h>
 
 #include <CL/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/ac_types/ac_complex.hpp>
-
 #include <list>
+#include <sycl/ext/intel/ac_types/ac_complex.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
-
 #include "cholesky.hpp"
+#include "dpc_common.hpp"
 
 // #define DEBUG
 
@@ -32,27 +30,23 @@
 */
 #if COMPLEX == 0
 // Real single precision floating-point Cholesky decomposition
-void CholeskyDecomposition(std::vector<float> &a_matrix, 
-                           std::vector<float> &l_matrix, 
-                           sycl::queue &q,
-                           int matrix_count,
-                           int repetitions) {
+void CholeskyDecomposition(std::vector<float> &a_matrix,
+                           std::vector<float> &l_matrix, sycl::queue &q,
+                           int matrix_count, int repetitions) {
   constexpr bool is_complex = false;
   CholeskyDecompositionImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
-                       is_complex, float>(a_matrix, l_matrix, q,
-                                          matrix_count, repetitions);
+                            is_complex, float>(a_matrix, l_matrix, q,
+                                               matrix_count, repetitions);
 }
 #else
 // Complex single precision floating-point Cholesky Decomposition
 void CholeskyDecomposition(std::vector<ac_complex<float> > &a_matrix,
-                           std::vector<ac_complex<float> > &l_matrix, 
-                           sycl::queue &q,
-                           int matrix_count,
-                           int repetitions) {
+                           std::vector<ac_complex<float> > &l_matrix,
+                           sycl::queue &q, int matrix_count, int repetitions) {
   constexpr bool is_complex = true;
   CholeskyDecompositionImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
-                       is_complex, float>(a_matrix, l_matrix, q,
-                                          matrix_count, repetitions);
+                            is_complex, float>(a_matrix, l_matrix, q,
+                                               matrix_count, repetitions);
 }
 #endif
 
@@ -132,26 +126,24 @@ int main(int argc, char *argv[]) {
       std::cout << "real ";
     }
     std::cout << "matri" << (kMatricesToDecompose > 1 ? "ces" : "x")
-              << " of size "
-              << kRows << "x" << kColumns << " " << std::endl;
+              << " of size " << kRows << "x" << kColumns << " " << std::endl;
 
     // Generate the random (hermitian and positive-definite) input matrices
     srand(kRandomSeed);
 
-    for(int matrix_index = 0; matrix_index < kMatricesToDecompose;
-                                                                matrix_index++){
-
+    for (int matrix_index = 0; matrix_index < kMatricesToDecompose;
+         matrix_index++) {
       // Construct a single random hermitian and positive-definite matrix
       // To do so we, we generate a hermitian matrix A where each element
       // is between 0 and 1.
-      // Since A(i,j) < 1 by construction and, a symmetric diagonally dominant 
-      // matrix is symmetric positive definite; 
-      // We can be sure to have a symmetric diagonally dominant by adding nI 
+      // Since A(i,j) < 1 by construction and, a symmetric diagonally dominant
+      // matrix is symmetric positive definite;
+      // We can be sure to have a symmetric diagonally dominant by adding nI
       // to A
       // A = A + n*eye(n);
       // For complex matrices, the diagonal elements must be real.
 
-      // Random min and max values for the random floating-point value 
+      // Random min and max values for the random floating-point value
       // generation
       constexpr float kRandomMin = 0;
       constexpr float kRandomMax = 1;
@@ -159,30 +151,31 @@ int main(int argc, char *argv[]) {
       for (size_t row = 0; row < kRows; row++) {
         for (size_t col = 0; col < kColumns; col++) {
           float diag_scaling = row == col ? float{kRows} : 0;
-          
-          if(col>=row){
+
+          if (col >= row) {
             float random_real = RandomValueInInterval(kRandomMin, kRandomMax);
 
 #if COMPLEX == 0
-            a_matrix[matrix_index * kAMatrixSize + col * kRows + row] = 
-                                                    random_real + diag_scaling;
+            a_matrix[matrix_index * kAMatrixSize + col * kRows + row] =
+                random_real + diag_scaling;
 #else
-            float random_imag = row == col ? float{0} : 
-                                RandomValueInInterval(kRandomMin, kRandomMax);
-            ac_complex<float> random_complex{random_real + diag_scaling, 
-                                              random_imag};
-            a_matrix[matrix_index * kAMatrixSize + col * kRows + row] = 
-                                                                 random_complex;
+            float random_imag =
+                row == col ? float{0}
+                           : RandomValueInInterval(kRandomMin, kRandomMax);
+            ac_complex<float> random_complex{random_real + diag_scaling,
+                                             random_imag};
+            a_matrix[matrix_index * kAMatrixSize + col * kRows + row] =
+                random_complex;
 #endif
-          }
-          else{
+          } else {
             // conjugate transpose
 #if COMPLEX == 0
-            a_matrix[matrix_index * kAMatrixSize + col * kRows + row] = 
-                      a_matrix[matrix_index * kAMatrixSize + row * kRows + col];
+            a_matrix[matrix_index * kAMatrixSize + col * kRows + row] =
+                a_matrix[matrix_index * kAMatrixSize + row * kRows + col];
 #else
-            a_matrix[matrix_index * kAMatrixSize + col * kRows + row] = 
-              a_matrix[matrix_index * kAMatrixSize + row * kRows + col].conj();
+            a_matrix[matrix_index * kAMatrixSize + col * kRows + row] =
+                a_matrix[matrix_index * kAMatrixSize + row * kRows + col]
+                    .conj();
 #endif
           }
         }  // end of col
@@ -192,22 +185,22 @@ int main(int argc, char *argv[]) {
       std::cout << "A MATRIX " << matrix_index << std::endl;
       for (size_t row = 0; row < kRows; row++) {
         for (size_t col = 0; col < kColumns; col++) {
-          std::cout << a_matrix[matrix_index * kAMatrixSize
-                              + col * kRows + row] << " ";
+          std::cout << a_matrix[matrix_index * kAMatrixSize + col * kRows + row]
+                    << " ";
         }  // end of col
         std::cout << std::endl;
       }  // end of row
 #endif
 
-    } // end of matrix_index
+    }  // end of matrix_index
 
-    std::cout << "Compution the Cholesky decomposition of " 
-              << kMatricesToDecompose
-              << " matri" << (kMatricesToDecompose > 1 ? "ces " : "x ")
-              << repetitions << " times" << std::endl;
+    std::cout << "Compution the Cholesky decomposition of "
+              << kMatricesToDecompose << " matri"
+              << (kMatricesToDecompose > 1 ? "ces " : "x ") << repetitions
+              << " times" << std::endl;
 
     CholeskyDecomposition(a_matrix, l_matrix, q, kMatricesToDecompose,
-                                                                  repetitions);
+                          repetitions);
 
     // For output post-processing (op)
     T l_matrix_op[kRows][kColumns];
@@ -218,8 +211,8 @@ int main(int argc, char *argv[]) {
 
     // Check L matrices
     std::cout << "Verifying results on matrix ";
-    for(int matrix_index = 0; matrix_index < kMatricesToDecompose;
-                                                                matrix_index++){
+    for (int matrix_index = 0; matrix_index < kMatricesToDecompose;
+         matrix_index++) {
       std::cout << matrix_index << std::endl;
 
       // keep track of L element index
@@ -231,8 +224,7 @@ int main(int argc, char *argv[]) {
           if (j > i)
             l_matrix_op[i][j] = 0;
           else {
-            l_matrix_op[i][j] = l_matrix[matrix_index*kLMatrixSize
-                                       + l_idx];
+            l_matrix_op[i][j] = l_matrix[matrix_index * kLMatrixSize + l_idx];
             l_idx++;
           }
         }
@@ -271,21 +263,20 @@ int main(int argc, char *argv[]) {
           bool l_is_finite;
 
 #if COMPLEX == 0
-          ll_start_eq_a = abs(a_matrix[matrix_index * kAMatrixSize
-                                + j * kRows + i]
-                       - l_l_star_ij) < kErrorThreshold;
+          ll_start_eq_a =
+              abs(a_matrix[matrix_index * kAMatrixSize + j * kRows + i] -
+                  l_l_star_ij) < kErrorThreshold;
 
 #else
-          ll_start_eq_a = (abs(a_matrix[matrix_index * kAMatrixSize
-                                 + j * kRows + i].r() -
-                       l_l_star_ij.r()) < kErrorThreshold) &&
-                  (abs(a_matrix[matrix_index * kAMatrixSize
-                              + j * kRows + i].i() -
-                       l_l_star_ij.i()) < kErrorThreshold);
+          ll_start_eq_a =
+              (abs(a_matrix[matrix_index * kAMatrixSize + j * kRows + i].r() -
+                   l_l_star_ij.r()) < kErrorThreshold) &&
+              (abs(a_matrix[matrix_index * kAMatrixSize + j * kRows + i].i() -
+                   l_l_star_ij.i()) < kErrorThreshold);
 #endif
 
-          l_is_finite =
-            ((i < kColumns) && IsFinite(l_matrix_op[i][j])) || (i >= kColumns);
+          l_is_finite = ((i < kColumns) && IsFinite(l_matrix_op[i][j])) ||
+                        (i >= kColumns);
 
           // If any of the checks failed
           if (!ll_start_eq_a || !l_is_finite) {
@@ -300,11 +291,9 @@ int main(int argc, char *argv[]) {
 
             if (!ll_start_eq_a) {
               std::cout << "Error: A[" << i << "][" << j << "] = "
-                        << a_matrix[matrix_index * kAMatrixSize
-                                  + j * kRows + i]
-                        << " but LL*[" << i << "][" << j << "] = " 
-                        << l_l_star_ij
-                        << std::endl;
+                        << a_matrix[matrix_index * kAMatrixSize + j * kRows + i]
+                        << " but LL*[" << i << "][" << j
+                        << "] = " << l_l_star_ij << std::endl;
             }
             if (!l_is_finite) {
               std::cout << "L[" << i << "][" << j << "] = " << l_matrix_op[i][j]
@@ -321,8 +310,7 @@ int main(int argc, char *argv[]) {
                   << "!!!!!!!!!!!!!! " << error_count << " errors" << std::endl;
         return 1;
       }
-    } // end of matrix_index
-
+    }  // end of matrix_index
 
     std::cout << std::endl << "PASSED" << std::endl;
     return 0;
@@ -347,11 +335,11 @@ int main(int argc, char *argv[]) {
                  "running the executable."
               << std::endl;
     std::cerr << "   In this run, more than "
-              << ((kAMatrixSize + kLMatrixSize) * 2 * kMatricesToDecompose
-                 * sizeof(float)) / pow(2, 30)
+              << ((kAMatrixSize + kLMatrixSize) * 2 * kMatricesToDecompose *
+                  sizeof(float)) /
+                     pow(2, 30)
               << " GBs of memory was requested for the decomposition of a "
-              << "matrix of size " << kRows << " x " << kColumns
-              << std::endl;
+              << "matrix of size " << kRows << " x " << kColumns << std::endl;
     std::terminate();
   }
 }  // end of main
