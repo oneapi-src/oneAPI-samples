@@ -226,7 +226,7 @@ Verifying results on matrix 0
 PASSED
 ```
 
-Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for the decomposition of 8 matrices 409600 times (each matrix consisting of 32*32 real numbers):
+Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for the decomposition of 8 matrices 819200 times (each matrix consisting of 32*32 real numbers):
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)
