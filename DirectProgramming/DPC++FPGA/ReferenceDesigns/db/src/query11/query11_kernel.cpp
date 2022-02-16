@@ -132,9 +132,8 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
       // populate MapJoiner map
       // why a map? keys may not be sequential
-      [[intel::initiation_interval(1), intel::ivdep]]
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < s_rows; i++) {
-        // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed to be unique
         // in the range [1:kSF*10000]
         DBIdentifier s_suppkey = i + 1;
