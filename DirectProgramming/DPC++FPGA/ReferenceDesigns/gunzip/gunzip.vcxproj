@@ -17,15 +17,12 @@
     <ClInclude Include="src\byte_bit_stream.hpp" />
     <ClInclude Include="src\byte_stacker.hpp" />
     <ClInclude Include="src\common.hpp" />
-    <ClInclude Include="src\constexpr_math.hpp" />
     <ClInclude Include="src\gzip_decompressor.hpp" />
     <ClInclude Include="src\gzip_header_data.hpp" />
     <ClInclude Include="src\gzip_metadata_reader.hpp" />
     <ClInclude Include="src\huffman_decoder.hpp" />
     <ClInclude Include="src\lz77_decoder.hpp" />
     <ClInclude Include="src\simple_crc32.hpp" />
-    <ClInclude Include="src\tuple.hpp" />
-    <ClInclude Include="src\unrolled_loop.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

@@ -36,7 +36,7 @@
         "steps": [
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gunzip",
           "nmake fpga_emu",
           "gunzip.fpga_emu.exe"
         ]
@@ -46,7 +46,7 @@
         "steps": [
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gunzip",
           "nmake report"
         ]
       }
