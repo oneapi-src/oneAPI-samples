@@ -445,7 +445,6 @@ void HuffmanDecoder() {
     // the II of this main loop can be controlled from the command line using
     // the -DHUFFMAN_MAIN_LOOP_II=<desired II>. By default, we let the
     // the compiler choose the Fmax/II to maximize throughput
-#define HUFFMAN_MAIN_LOOP_II 2
 #ifdef HUFFMAN_MAIN_LOOP_II
     [[intel::initiation_interval(HUFFMAN_MAIN_LOOP_II)]]
 #endif
@@ -653,28 +652,8 @@ void HuffmanDecoder() {
             // decoded a regular character
             out_data.is_copy = false;
             out_data.symbol[0] = lit_symbol;
-
-            auto lit2_symbol = lit2_sym[lit_shortest_match_len_idx];
-            auto lit2_shortest_match_len_chosen =
-                lit2_shortest_match_len[lit_shortest_match_len_idx];
-            out_data.symbol[1] = lit2_symbol;
-            
-            bool lit2_sym_is_stop = (lit2_symbol == 256);
-            bool lit2_sym_is_sym = (lit2_symbol < 256);
-
-            if (lit2_sym_is_stop) {
-              shift_amount = lit_shortest_match_len + lit2_shortest_match_len_chosen;
-              out_data.valid_count = 1;
-            } else if (lit2_sym_is_sym) {
-              shift_amount = lit_shortest_match_len + lit2_shortest_match_len_chosen;
-              out_data.valid_count = 2;
-            } else {
-              shift_amount = lit_shortest_match_len;
-              out_data.valid_count = 1;
-            }
-
+            out_data.valid_count = 1;
             out_ready = true;
-            block_done = lit2_sym_is_stop;
           } else if (lit_symbol <= 264) {
             // decoded a length with a static value
             out_data.is_copy = true;
