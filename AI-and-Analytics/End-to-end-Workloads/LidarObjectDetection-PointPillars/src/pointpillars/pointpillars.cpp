@@ -312,8 +312,7 @@ void PointPillars::PreProcessing(const float *in_points_array, const int in_num_
     // wait until all memory operations were completed
     queue.wait();
   } else {
-    auto e = queue.submit([&](auto &h){
-      auto dev_pillar_x_auto = dev_pillar_x_;
+    auto dev_pillar_x_auto = dev_pillar_x_;
       auto dev_pillar_y_auto = dev_pillar_y_;
       auto dev_pillar_z_auto = dev_pillar_z_;
       auto dev_pillar_i_auto = dev_pillar_i_;
@@ -324,13 +323,8 @@ void PointPillars::PreProcessing(const float *in_points_array, const int in_num_
       auto x = max_num_pillars_;
       auto y = max_num_points_per_pillar_;
 
-      h.parallel_for(sycl::range<2>(y, x),[=](sycl::nd_item<2> item_ct1) {
-        int index_0 = item_ct1.get_global_id(0);
-        int index_1 = item_ct1.get_global_id(1);
-
-        int length_1 = item_ct1.get_global_range(1);
-
-        int index = index_0 * length_1 + index_1;
+    queue.submit([&](auto &h){
+      h.parallel_for(sycl::range<1>(y*x),[=](auto index) {
         dev_pillar_x_auto[index] = 0;
         dev_pillar_y_auto[index] = 0;
         dev_pillar_z_auto[index] = 0;
@@ -339,8 +333,7 @@ void PointPillars::PreProcessing(const float *in_points_array, const int in_num_
         dev_y_coors_for_sub_shaped_auto[index] = 0;
         dev_pillar_feature_mask_auto[index] = 0;
       });
-    });
-    e.wait();
+    }).wait();
   }
   queue.memset(dev_sparse_pillar_map_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
   queue.memset(dev_x_coors_, 0, max_num_pillars_ * sizeof(int));
@@ -432,15 +425,13 @@ void PointPillars::Detect(const float *in_points_array, const int in_num_points,
     queue.memset(dev_scattered_feature_, 0, rpn_input_size_ * sizeof(float));
     queue.wait();
   } else {
-    auto e = queue.submit([&](auto &h){
+    queue.submit([&](auto &h){
       auto x = rpn_input_size_;
       auto dev_scattered_feature_auto = dev_scattered_feature_;
-      h.parallel_for(sycl::range<1>(x),[=](sycl::nd_item<1> item_ct1) {
-        int index = item_ct1.get_global_id(0);
+      h.parallel_for(sycl::range<1>(x),[=](auto index) {
         dev_scattered_feature_auto[index] = 0;
       });
-    });
-    e.wait();
+    }).wait();
   }
   scatter_ptr_->DoScatter(host_pillar_count_[0], dev_x_coors_, dev_y_coors_, pfe_output_, dev_scattered_feature_);
 

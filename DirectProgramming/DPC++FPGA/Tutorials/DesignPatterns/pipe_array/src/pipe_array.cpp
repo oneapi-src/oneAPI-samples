@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp"
 #include "unrolled_loop.hpp"
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -23,12 +23,13 @@ constexpr size_t kNumCols = 2;
 constexpr size_t kNumberOfConsumers = kNumRows * kNumCols;
 constexpr size_t kDepth = 2;
 
-using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_array.h".
-    class ProducerConsumerPipe,                  // An identifier for the pipe.
-    uint64_t,  // The type of data in the pipe.
-    kDepth,    // The capacity of each pipe.
-    kNumRows,  // array dimension.
-    kNumCols   // array dimension.
+using ProducerToConsumerPipeMatrix =
+    fpga_tools::PipeArray<          // Defined in "pipe_utils.hpp".
+      class ProducerConsumerPipe,   // An identifier for the pipe.
+      uint64_t,                     // The type of data in the pipe.
+      kDepth,                       // The capacity of each pipe.
+      kNumRows,                     // array dimension.
+      kNumCols                      // array dimension.
     >;
 
 // Forward declare the kernel names in the global scope.
