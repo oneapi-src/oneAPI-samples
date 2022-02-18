@@ -11,19 +11,27 @@
 
 using namespace sycl;
 
+//
+// Streams in bytes of the GZIP file from the 'InPipe', strips away (and parses)
+// the GZIP header and footer, and streams out the actual GZIP data.
+//
 template<typename InPipe, typename OutPipe>
 void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
                         int& out_count) {
   // the data type streamed out
   using OutPipeBundleT = decltype(OutPipe::read());
 
-  // Format of the GZIP file header
+  // Format of the GZIP file format
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  //// HEADER
   // 2 bytes: magic number (0x1f8b)
   // 1 byte: compression method
   // 1 byte: 'flags'
   // 4 bytes: time
   // 1 byte: extra flags
   // 1 byte: OS
+  //
   // read more bytes based on flags:
   //    if flags & 0x01 != 0: Flag = Text
   //    if flags & 0x04 != 0: Flag = Errata, read 2 bytes for 'length',
@@ -31,6 +39,15 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   //    if flags & 0x08 != 0: Filename, read nullterminated string
   //    if flags & 0x02 != 0: CRC-16, read 2 bytes
   //    if flags & 0x10 != 0: Comment, read nullterminated string
+  //////////////////////////////////////////////////////////////////////////////
+  //// DATA
+  // ...
+  //////////////////////////////////////////////////////////////////////////////
+  //// FOOTER
+  // 4 bytes: CRC-32 Checksum
+  // 4 bytes: Uncompressed data size in bytes
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   int i = 0;
   bool i_in_range = 0 < in_count;
   bool i_next_in_range = 1 < in_count;
@@ -234,7 +251,9 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   hdr_data.crc[1] = header_crc[1];
 }
 
+//
 // Creates a kernel from the GZIP metadata reader function
+//
 template<typename Id, typename InPipe, typename OutPipe>
 event SubmitGzipMetadataReader(queue& q, int in_count,
                              GzipHeaderData* hdr_data_ptr, int* crc_ptr,

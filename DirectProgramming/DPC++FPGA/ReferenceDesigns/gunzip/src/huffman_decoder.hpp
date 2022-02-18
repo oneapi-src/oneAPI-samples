@@ -27,6 +27,13 @@ using BitStreamT =
 
 using namespace sycl;
 
+//
+// Performs Huffman Decoding.
+// Streams in multiple DEFLATE blocks, 1 byte at a time, and performs huffman
+// decoding. Supports uncompressed, statically compressed, and dynamically
+// compressed blocks. For dynamically compressed blocks, the huffman tables are
+// also built from the input byte stream.
+//
 template<typename InPipe, typename OutPipe>
 void HuffmanDecoder() {
   using OutPipeBundleT = decltype(OutPipe::read());
@@ -48,7 +55,7 @@ void HuffmanDecoder() {
     unsigned short codelencodelen_count = 0;
 
     ////////////////////////////////////////////////////////////////////////////
-    // BEGIN: parsing first three bits
+    // BEGIN: parse the first three bits of the block
     // read in the first byte and add it to the byte bit stream
     auto first_pipe_data = InPipe::read();
     bit_stream.NewByte(first_pipe_data.data);
@@ -71,7 +78,7 @@ void HuffmanDecoder() {
     bool is_dynamic_huffman_block = (type == 2);
 
     // for uncompressed blocks, the first 16 bits (after aligning to a byte)
-    // is the length (in bytes) of uncompressed data, followed by 16-bits
+    // is the length (in bytes) of the uncompressed data, followed by 16-bits
     // which is ~length (for error checking; we will ignore this).
     bool parsing_uncompressed_len = true;
     ac_uint<2> uncompressed_len_bytes_read = 0;
@@ -85,11 +92,11 @@ void HuffmanDecoder() {
 
     // only parse the first table for dynamically compressed blocks
     parsing_first_table = is_dynamic_huffman_block;
-    // END: parsing first three bits
+    // END: parsing the first three bits
     ////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////
-    // BEGIN: parsing code length table
+    // BEGIN: parsing the code length table
     // shuffle vector for the first table
     constexpr unsigned short codelencodelen_idxs[] =
       {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
@@ -166,11 +173,11 @@ void HuffmanDecoder() {
         codelencode_map_last_code[codelen - 1] = codelencode_map_next_code;
       }
     }
-    // END: parsing code length table 
+    // END: parsing the code length table 
     ////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////
-    // BEGIN: parsing literal and code length tables
+    // BEGIN: parsing the literal and distance tables
     // length of codelens is MAX(numlitlencodes + numdistcodes)
     // = MAX((2^5 + 257) + (2^5 + 1)) = 322
     ac_uint<15> codelens[322];
@@ -374,15 +381,32 @@ void HuffmanDecoder() {
     // table, which is actually two tables:
     //  literal table (symbols and lengths for the {length, distance} pair)
     //  distance table (the distances for the {length, distance} pair) 
+    //
+    // NOTE ON OPTIMIZATION: The DEFLATE algorithm defines the Huffman table
+    // by just storing the number of bits for each symbol. This method to
+    // convert from a list of code lengths to the Huffman table is such that
+    // codes of the same length (in bits) are sequential.
+    // Since the range of code length bits is [1, 15] bits, we can
+    // efficiently store the huffman table as follows:
+    // - Store the first and last code for each code length.
+    // - Store a map from the index to symbol in a map (lit_map and dist_map)
+    // - Store the base index for each code length into the map
+    // Then, given N bits, with a value of V, you can check for a match like so:
+    //    bool match = (V >= first_code[N]) && (V < last_code[N]);
+    // And, if we get a match for this code, we can get the symbol like so:
+    //    int offset = V - first_code[N];
+    //    symbol = map[base_idx[N] + offset];
+    //
+    // This structure is the same for both the 'lit_map' and 'dist_map' below,
+    // the only difference being there are 286 possibilities for literals
+    // and 32 for distances. When decoding, the presence of a 'length' literal
+    // implies the next thing we decode is a distance.
+
+    // parse the Huffman table for the literal codes
     [[intel::fpga_register]] ac_uint<15> lit_map_first_code[15];
     [[intel::fpga_register]] ac_uint<15> lit_map_last_code[15];
     [[intel::fpga_register]] ac_uint<9> lit_map_base_idx[15];
     [[intel::fpga_register]] ac_uint<9> lit_map[286];
-
-    [[intel::fpga_register]] ac_uint<15> dist_map_first_code[15];
-    [[intel::fpga_register]] ac_uint<15> dist_map_last_code[15];
-    [[intel::fpga_register]] ac_uint<5> dist_map_base_idx[15];
-    [[intel::fpga_register]] ac_uint<5> dist_map[32];
 
     ac_uint<15> lit_map_next_code = 0;
     ac_uint<9> lit_map_counter = 0;
@@ -401,6 +425,12 @@ void HuffmanDecoder() {
       lit_map_last_code[codelen - 1] = lit_map_next_code;
     }
 
+    // parse the Huffman table for the distance codes
+    [[intel::fpga_register]] ac_uint<15> dist_map_first_code[15];
+    [[intel::fpga_register]] ac_uint<15> dist_map_last_code[15];
+    [[intel::fpga_register]] ac_uint<5> dist_map_base_idx[15];
+    [[intel::fpga_register]] ac_uint<5> dist_map[32];
+
     ac_uint<15> dist_map_next_code = 0;
     ac_uint<5> dist_map_counter = 0;
     for (unsigned char codelen = 1; codelen <= 15; codelen++) {
@@ -417,11 +447,11 @@ void HuffmanDecoder() {
       }
       dist_map_last_code[codelen - 1] = dist_map_next_code;
     }
-    // END: parsing literal and code length tables
+    // END: parsing the literal and distance tables
     ////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////
-    // BEGIN: decoding the bit stream
+    // BEGIN: decoding the bit stream (main block computation)
     // indicates whether we are reading a distance (or literal) currently
     bool reading_distance = false;
 
@@ -449,8 +479,7 @@ void HuffmanDecoder() {
     [[intel::initiation_interval(HUFFMAN_MAIN_LOOP_II)]]
 #endif
     do {
-      // read in new data if the ByteBitStream has space for it and we aren't
-      // done reading from the input pipe
+      // read in new data if the ByteBitStream has space for it
       if (bit_stream.HasSpaceForByte()) {
         bool read_valid;
         auto pd = InPipe::read(read_valid);
@@ -463,8 +492,9 @@ void HuffmanDecoder() {
       }
       
       if (is_uncompressed_block) {
+        // uncompressed block case
         if (bit_stream.Size() >= 8) {
-          // grab a byte
+          // grab a byte from the bit stream
           ac_uint<8> byte = bit_stream.ReadUInt<8>();
 
           if (parsing_uncompressed_len) {
@@ -528,52 +558,9 @@ void HuffmanDecoder() {
           }
         }
 
-        ////////////////////////////////////////////////////////////////////////
-        // find all possible "second" symbols
-        // these will only be used if the first decoded symbol is a literal
-        [[intel::fpga_register]] ac_uint<15> lit2_codelen_valid_bitmap[15];
-        [[intel::fpga_register]] ac_uint<9> lit2_codelen_offset[15][15];
-        [[intel::fpga_register]] ac_uint<9> lit2_codelen_base_idx[15][15];
-        #pragma unroll
-        for(int i = 0; i < 15; i++) { lit2_codelen_valid_bitmap[i] = 0; }
-
-        #pragma unroll
-        for (int out_codelen = 1; out_codelen <= 15; out_codelen++) {
-          #pragma unroll
-          for (int in_codelen = 1; in_codelen <= 15; in_codelen++) {
-            ac_uint<15> codebits(0);
-            #pragma unroll
-            for (int bit = 0; bit < in_codelen; bit++) {
-              codebits[in_codelen - bit - 1] = next_bits[out_codelen + bit] & 0x1;
-            }
-
-            auto lit_base_idx = lit_map_base_idx[in_codelen - 1];
-            auto lit_first_code = lit_map_first_code[in_codelen - 1];
-            auto lit_last_code = lit_map_last_code[in_codelen - 1];
-            lit2_codelen_valid_bitmap[out_codelen - 1][in_codelen - 1]
-              = ((codebits >= lit_first_code) &&
-                 (codebits < lit_last_code)) ? 1 : 0;
-            lit2_codelen_base_idx[out_codelen - 1][in_codelen - 1] = lit_base_idx;
-            lit2_codelen_offset[out_codelen - 1][in_codelen - 1] = codebits - lit_first_code;
-          }
-        }
-
-        //ac_uint<4> lit_shortest_match_len_idx = CTZ(lit_codelen_valid_bitmap);
-        //ac_uint<4> lit_shortest_match_len = lit_shortest_match_len_idx + ac_uint<1>(1);
-        [[intel::fpga_register]] ac_uint<4> lit2_shortest_match_len[15];
-        [[intel::fpga_register]] ac_uint<15> lit2_sym[15];
-        #pragma unroll
-        for (int i = 0; i < 15; i++) {
-          auto shortest_match_idx_local = CTZ(lit2_codelen_valid_bitmap[i]);
-          lit2_shortest_match_len[i] = shortest_match_idx_local + ac_uint<1>(1);
-          auto base_idx = lit2_codelen_base_idx[i][shortest_match_idx_local];
-          auto offset = lit2_codelen_offset[i][shortest_match_idx_local];
-          ac_uint<9> lit_idx = base_idx + offset;
-          lit2_sym[i] = lit_map[lit_idx];
-        }
-        ////////////////////////////////////////////////////////////////////////
-
         // find all possible code lengths and offsets
+        // codes are 1 to 15 bits long, so we will do 15 of these computations
+        // in parallel
         ac_uint<15> lit_codelen_valid_bitmap(0);
         ac_uint<15> dist_codelen_valid_bitmap(0);
         [[intel::fpga_register]] ac_uint<9> lit_codelen_offset[15];
@@ -581,10 +568,11 @@ void HuffmanDecoder() {
         [[intel::fpga_register]] ac_uint<5> dist_codelen_offset[15];
         [[intel::fpga_register]] ac_uint<5> dist_codelen_base_idx[15];
 
+        // NOTE: could use fpga_tools::UnrolledLoop so that we don't need to
+        // use the maximum codelen for 'codebits'
         #pragma unroll
         for (unsigned char codelen = 1; codelen <= 15; codelen++) {
-          // NOTE: could use fpga_tools::UnrolledLoop so that we don't need to
-          // use the maximum codelen.
+          // Grab the 'codelen' bits we want and reverse them (little endian)
           ac_uint<15> codebits(0);
           #pragma unroll
           for (unsigned char bit = 0; bit < codelen; bit++) {
@@ -631,14 +619,15 @@ void HuffmanDecoder() {
         ac_uint<9> lit_idx = lit_base_idx + lit_offset;
         ac_uint<9> dist_idx = dist_base_idx + dist_offset;
 
-        // lookup the symbol using base_idx and offset
+        // lookup the literal (symbol or length) and distance using base_idx
+        // and offset
         lit_symbol = lit_map[lit_idx];
         dist_symbol =  dist_map[dist_idx];
 
         // we will either shift by shortest_match_len or by
         // shortest_match_len + num_extra_bits based on whether we read a
         // length, distance and/or extra bits.
-        // maximum value for shift_amount = 15 + 15 = 30
+        // maximum value for shift_amount = 15 + 15 = 30, ceil(log2(30)) = 5
         ac_uint<5> shift_amount;
 
         if (!reading_distance) {
@@ -649,18 +638,18 @@ void HuffmanDecoder() {
             block_done = true;
             out_ready = false;
           } else if (lit_symbol < 256) {
-            // decoded a regular character
+            // decoded a regular symbol (i.e. not a length)
             out_data.is_copy = false;
             out_data.symbol[0] = lit_symbol;
             out_data.valid_count = 1;
             out_ready = true;
           } else if (lit_symbol <= 264) {
-            // decoded a length with a static value
+            // decoded a length that doesn't require us to read more bits
             out_data.is_copy = true;
             out_data.length = lit_symbol - ac_uint<9>(254);
             reading_distance = true;
           } else if (lit_symbol <= 284) {
-            // decoded a length with a dynamic value
+            // decoded a length that requires us to read more bits
             ac_uint<5> lit_symbol_small = lit_symbol.template slc<5>(0);
             // (lit_symbol - 261) / 4
             ac_uint<3> num_extra_bits = (lit_symbol_small - ac_uint<5>(5)) >> 2;  
@@ -671,7 +660,7 @@ void HuffmanDecoder() {
             shift_amount = lit_shortest_match_len + num_extra_bits;
             reading_distance = true;
           } else if (lit_symbol == 285) {
-            // decoded a length with a static value
+            // decoded a length that doesn't require us to read more bits
             out_data.is_copy = true;
             out_data.length = 258;
             reading_distance = true;
@@ -680,11 +669,10 @@ void HuffmanDecoder() {
           shift_amount = dist_shortest_match_len;
           // currently decoding a distance symbol
           if (dist_symbol <= 3) {
-            // decoded a distance with a static value
+            // decoded a distance that doesn't require us to read more bits
             out_data.distance = dist_symbol + ac_uint<1>(1);
           } else {
-            // decoded a distance with a dynamic value
-            // NOTE: should be <= 29, but not doing error checking
+            // decoded a distance that requires us to read more bits
             ac_uint<4> num_extra_bits = (dist_symbol >> 1) - ac_uint<1>(1);
             auto extra_bits_val = dist_extra_bit_vals[dist_shortest_match_len_idx][num_extra_bits - 1];
             out_data.distance = (((dist_symbol & 0x1) + ac_uint<2>(2)) << num_extra_bits) + ac_uint<1>(1) + extra_bits_val;
@@ -698,21 +686,22 @@ void HuffmanDecoder() {
         bit_stream.Shift(shift_amount);
       }
 
-      // output data to downstream kernel if ready
+      // output data to downstream kernel when ready
       if (out_ready) {
         OutPipe::write(OutPipeBundleT(out_data));
         out_ready = false;
       }
     } while (!block_done);
   } while (!last_block);
-  // END: decoding the bit stream
+  // END: decoding the bit stream (main block computation)
   ////////////////////////////////////////////////////////////////////////////
 
   // notify the downstream kernel that we are done
   OutPipe::write(OutPipeBundleT(true));
 
   // read out the remaining data from the pipe
-  // NOTE: don't really care about performance here
+  // NOTE: don't really care about performance here since it reads out 8 bytes
+  // for CRC-32 and uncompressed size and maybe one more byte for padding.
   while (!done_reading) {
     bool read_valid;
     auto pd = InPipe::read(read_valid);
@@ -720,7 +709,9 @@ void HuffmanDecoder() {
   }
 }
 
+//
 // Creates a kernel from the Huffman decoder function
+//
 template<typename Id, typename InPipe, typename OutPipe>
 event SubmitHuffmanDecoder(queue& q) {
   return q.single_task<Id>([=] {

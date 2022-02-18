@@ -29,6 +29,8 @@ using namespace std::chrono;
 
 // the number of literals to process per cycle can be set from the command line
 // use the macro -DLITERALS_PER_CYCLE=<literals_per_cycle>
+// This is sent to the LZ77 decoder to read multiple elements per cycle from
+// the history buffer.
 #ifndef LITERALS_PER_CYCLE
 #define LITERALS_PER_CYCLE 2
 #endif
@@ -54,15 +56,13 @@ void WriteOutputFile(std::string, std::vector<unsigned char>&);
 ////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char* argv[]) {
+  // reading and validating the command line arguments
   // make sure we have an acceptable number of arguments
   if (argc < 3) {
     PrintUsage(argv[0]);
     return 1;
   }
 
-  bool passed = true;
-
-  // reading and validating the command line arguments
   std::string in_filename;
   std::string out_filename;
   
@@ -90,6 +90,8 @@ int main(int argc, char* argv[]) {
     std::terminate();
   }
 
+  bool passed = true;
+
   // the device selector
 #ifdef FPGA_EMULATOR
   sycl::ext::intel::fpga_emulator_selector selector;
@@ -109,32 +111,52 @@ int main(int argc, char* argv[]) {
   int in_count = in_bytes.size();
 
   // read the expected output size from the last 4 bytes of the file
+  // this will let us intelligently size the output buffer
   std::vector<unsigned char> last_4_bytes(in_bytes.end() - 4, in_bytes.end());
   unsigned out_count = *(reinterpret_cast<unsigned*>(last_4_bytes.data()));
   std::vector<unsigned char> out_bytes(out_count);
 
-  // round up the output count to the nearest multiple of kLiteralsPerCycle
-  // this allows to ignore predicating the last writes to the output
+  // round up the output count to the nearest multiple of kLiteralsPerCycle,
+  // which allows us to not predicate the last writes to the output buffer from
+  // the device.
   int out_count_padded =
       fpga_tools::RoundUpToMultiple(out_count, kLiteralsPerCycle);
 
-  // host variables for output from device
-  int decompressed_count_h = 0;
+  // host variables for output from the device
+  // the number of bytes read in the Consumer kernel, which should match
+  // the uncompressed size read in the footer of the GZIP file (count_h below)
+  int decompressed_count_h = 0; 
+  
+  // the GZIP header data. This is parsed by the GZIPMetadataReader kernel
   GzipHeaderData hdr_data_h;
+
+  // the GZIP footer data. This is parsed by the GZIPMetadataReader kernel.
+  // count_h should match decompressed_count_h (we check that later).
   unsigned int crc_h, count_h;
 
   // track timing information in ms
-  std::vector<double> time(runs);
+  std::vector<double> time_ms(runs);
 
   // input and output data pointers on the device using USM device allocations
-  unsigned char *in, *out;
+  // the input bytes (the bytes of the GZIP file)
+  unsigned char *in;
+
+  // the output bytes (the result of the decompression)
+  unsigned char *out;
+
+  // the number of decompressed bytes (the number of bytes in 'out')
+  // returned by Consumer kernel
   int *decompressed_count;
+
+  // the GZIP header data (see gzip_header_data.hpp)
   GzipHeaderData *hdr_data;
-  int *crc;
-  int *count;
+
+  // the GZIP footer data, where 'count' is the expected number of bytes
+  // in the uncompressed file ('out')
+  int *crc, *count;
 
   try {
-    // allocate memory on the device for the input and output
+    // allocate memory on the device
     if ((in = malloc_device<unsigned char>(in_count, q)) == nullptr) {
       std::cerr << "ERROR: could not allocate space for 'in'\n";
       std::terminate();
@@ -170,12 +192,12 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < runs; i++) {
       std::cout << "Launching kernels for run " << i << std::endl;
 
-      // run the producer and consumer kernels
+      // start the producer and consumer kernels
       auto producer_event = SubmitProducer(q, in_count, in);
       auto consumer_event =
           SubmitConsumer(q, out_count_padded, out, decompressed_count);
 
-      // run the decompression kernels
+      // start the decompression kernels
       auto gzip_decompress_events = SubmitGzipDecompressKernels<InPipe, OutPipe, kLiteralsPerCycle>(q, in_count, hdr_data, crc, count);
 
       // wait for the producer and consumer to finish
@@ -190,7 +212,7 @@ int main(int argc, char* argv[]) {
       std::cout << "All kernels have finished for run " << i << std::endl;
 
       // calculate the time the kernels ran for, in milliseconds
-      time[i] = duration<double, std::milli>(end - start).count();
+      time_ms[i] = duration<double, std::milli>(end - start).count();
 
       // Copy the output back from the device
       q.memcpy(out_bytes.data(), out, out_count * sizeof(unsigned char)).wait();
@@ -219,20 +241,22 @@ int main(int argc, char* argv[]) {
       }
 
       // validate the decompressed number of bytes based on the expectation
-      // keep the first decompressed_count_h bytes
       if (decompressed_count_h != count_h) {
         std::cerr << "ERROR: decompressed_count_h != count_h ("
                   << decompressed_count_h << " != " << count_h << ")\n";
         passed = false;
       }
 
-      // compute and check the CRC of the output data
-      auto crc32_exp = SimpleCRC32(0, out_bytes.data(), out_count);
-      if (crc_h != crc32_exp) {
+      // compute the CRC of the output data
+      auto crc32_out = SimpleCRC32(0, out_bytes.data(), out_count);
+
+      // check that the computed CRC matches the expectation (crc_h is the 
+      // CRC-32 that is in the GZIP footer).
+      if (crc32_out != crc_h) {
         auto save_flags = std::cout.flags();
         std::cerr << std::hex << std::setw(4) << std::setfill('0');
         std::cerr << "ERROR: output data CRC does not match the expected CRC "
-                  << "0x" << crc_h << " != 0x" << crc32_exp
+                  << "0x" << crc32_out << " != 0x" << crc_h
                   << " (result != expected)\n";
         std::cout.flags(save_flags);
         passed = false;
@@ -251,7 +275,7 @@ int main(int argc, char* argv[]) {
   sycl::free(crc, q);
   sycl::free(count, q);
 
-  // write output file
+  // write the output file
   std::cout << std::endl;
   std::cout << "Writing output data to '" << out_filename << "'" << std::endl;
   std::cout << std::endl;
@@ -264,9 +288,9 @@ int main(int argc, char* argv[]) {
     double avg_time_ms;
     if (runs > 1) {
       avg_time_ms =
-          std::accumulate(time.begin() + 1, time.end(), 0.0) / (runs - 1);
+          std::accumulate(time_ms.begin() + 1, time_ms.end(), 0.0) / (runs - 1);
     } else {
-      avg_time_ms = time[0];
+      avg_time_ms = time_ms[0];
     }
 
     double compression_ratio

@@ -2,7 +2,7 @@
 #define __SIMPLE_CRC32_HPP__
 
 //
-// A simple non-performant CRC-32 implementation.
+// A simple, non-performant CRC-32 implementation.
 // Compute CRC-32 on 'len' elements in 'buf', starting with a CRC of 'init'.
 //
 unsigned int SimpleCRC32(unsigned init, const void* buf, size_t len) {

@@ -9,6 +9,12 @@
 
 using namespace sycl;
 
+//
+// Data streams in the 'InPipe' pipe and can have between 0 to
+// 'literals_per_cycle' valid elements per cycle. This function takes the input
+// and "stacks" it, such that the output is always 'literals_per_cycle' valid
+// elements (except for maybe the last write).
+//
 template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 void ByteStacker() {
   using OutPipeBundleT = decltype(OutPipe::read());

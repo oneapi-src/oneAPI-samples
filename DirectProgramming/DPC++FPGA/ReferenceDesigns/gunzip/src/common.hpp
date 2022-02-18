@@ -37,7 +37,6 @@ struct LZ77InputData {
   static_assert(max_distance > 0);
 
   static constexpr unsigned max_symbols = n;
-  // TODO: store value - 1 of valid_count, length, and offset to save 1 bit each
   static constexpr unsigned valid_count_bits =
     fpga_tools::Log2(max_symbols) + 1;
   static constexpr unsigned length_bits =
@@ -47,11 +46,17 @@ struct LZ77InputData {
 
   LZ77InputData() {}
   
+  // indicates whether this is a symbol or {length, distance} pair
   bool is_copy;
+
+  // either the symbols, or the length from the {length, distance} pair
   union {
     ac_uint<length_bits> length;
     unsigned char symbol[n];
   };
+
+  // either the number of valid symbols, or the distance from the
+  // {length, distance} pair
   union {
     ac_uint<distance_bits> distance;
     ac_uint<valid_count_bits> valid_count;

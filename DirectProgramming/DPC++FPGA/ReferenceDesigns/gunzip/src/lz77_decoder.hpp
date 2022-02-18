@@ -12,8 +12,17 @@
 
 using namespace sycl;
 
+//
+// Performs LZ77 decoding for more than 1 element per cycle.
+// Streams in a 'FlagBundle' containing a 'LZ77InputData' (see common.hpp)
+// which contains either a symbol from upstream, or a {length, distance} pair.
+// Given a symbol input, this function simply tracks that symbol in a history
+// buffer and writes it to the output. For a {length, distance} pair, this
+// this function reads 'literals_per_cycle' elements from the history buffer
+// per cycle and writes them to the output.
+//
 template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
-void LZ77Decoder() {
+void LZ77DecoderMultiElement() {
   static_assert(literals_per_cycle > 0);
   static_assert(fpga_tools::IsPow2(literals_per_cycle));
   using OutPipeBundleT = FlagBundle<BytePack<literals_per_cycle>>;
@@ -274,9 +283,11 @@ void LZ77Decoder() {
   OutPipe::write(OutPipeBundleT(true));
 }
 
-// special case of LZ77 decoder for 1 element per cycle
+//
+// Same as above but for 1 element per cycle
+//
 template<typename InPipe, typename OutPipe>
-void LZ77Decoder() {
+void LZ77DecoderSingleElement() {
   using OutPipeBundleT = decltype(OutPipe::read());
 
   bool done;
@@ -382,16 +393,27 @@ void LZ77Decoder() {
   OutPipe::write(OutPipeBundleT(true));
 }
 
+//
+// Top-level LZ77 decoder to switch between the single- and multi-element per
+// cycle variants above.
+//
+template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
+void LZ77Decoder() {
+  if constexpr (literals_per_cycle == 1) {
+    return LZ77DecoderSingleElement<InPipe, OutPipe>();
+  } else {
+    return LZ77DecoderMultiElement<InPipe, OutPipe, literals_per_cycle>();
+  }
+}
+
+//
 // Creates a kernel from the LZ77 decoder function
+//
 template<typename Id, typename InPipe, typename OutPipe,
          unsigned literals_per_cycle>
 event SubmitLZ77Decoder(queue& q) {
   return q.single_task<Id>([=] {
-    if constexpr (literals_per_cycle == 1) {
-      return LZ77Decoder<InPipe, OutPipe>();
-    } else {
-      return LZ77Decoder<InPipe, OutPipe, literals_per_cycle>();
-    }
+    return LZ77Decoder<InPipe, OutPipe, literals_per_cycle>();
   });
 }
 
