@@ -2,18 +2,14 @@
 
 Containers allow you to set up and configure environments for
 building, running, and profiling oneAPI AI applications and distribute
-them using images.
+them using images. You can also use Kubernetes* to automate the
+deployment and management of containers in the cloud.
 
-
-## Purpose
-
-This sample code shows how to get started with Intel® oneAPI AI
-Analytics Toolkit container. It provides a Bash script to help users
-configure their aikit container environment. Developers can quickly
-build and train a neural network using this Docker* environment.
-
-For more information on the one API AIKit container, see [oneAPI AIKit
-Container Repository](https://hub.docker.com/r/intel/oneapi-aikit).
+This get started sample shows the easiest way to start using any of
+the [Intel® oneAPI AI Analytics
+Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html)
+components without the hassle of installing the toolkit, configuring
+networking and file sharing.
 
 
 | Optimized for                     | Description
@@ -23,6 +19,16 @@ Container Repository](https://hub.docker.com/r/intel/oneapi-aikit).
 | Software                          | Intel® AI Analytics Toolkit
 | What you will learn               | How to start using the Intel® oneapi-aikit container
 | Time to complete                  | 10 minutes
+
+## Purpose
+
+This sample provides a Bash script to help users configure their Intel
+oneAPI AI Analytics Toolkit container environment. Developers can
+quickly build and train deep learning models using this Docker*
+environment.
+
+For more information on the one API AIKit container, see [oneAPI AIKit
+Container Repository](https://hub.docker.com/r/intel/oneapi-aikit).
 
 
 ## Key Implementation Details
@@ -107,7 +113,8 @@ the IntelAIKitContainer sample and run the `version_check.py` script:
 ```bash
 python version_check.py
 ```
-## Example of Output        
+
+## Example of Output
 
 Output from TensorFlow Environment
 ```
@@ -121,7 +128,17 @@ PyTorch Version:  1.8.0a0+37c1f4a
 mkldnn : True,  mkl : True, openmp : True
 ```
 
-## Manage Docker* Images
+
+
+## Next Steps
+
+Explore the [Get Started
+Guide](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top.html).
+to find out how you can achieve performance gains for popular
+deep-learning and machine-learning frameworks through Intel
+optimizations.
+
+### Manage Docker* Images
 
 You can install additional packages, upload the workloads via the
 `/tmp` folder, and then commit your changes into a new Docker image,
@@ -152,12 +169,6 @@ To load the tar file on other machines:
 ```bash
 docker load -i oneapi-aikit-v1.tar
 ```
-
-
-## Next Steps
-
-Explore the [Get Started
-Guide](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top.html).
 
 
 ## License
