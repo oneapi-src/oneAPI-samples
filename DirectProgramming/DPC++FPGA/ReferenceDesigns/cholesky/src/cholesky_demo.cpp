@@ -258,17 +258,17 @@ int main(int argc, char *argv[]) {
 
           // Verify that all the results are OK:
           // LL* = A at index i,j
-          bool ll_start_eq_a;
+          bool ll_star_eq_a;
           // L is finite at index i,j
           bool l_is_finite;
 
 #if COMPLEX == 0
-          ll_start_eq_a =
+          ll_star_eq_a =
               abs(a_matrix[matrix_index * kAMatrixSize + j * kRows + i] -
                   l_l_star_ij) < kErrorThreshold;
 
 #else
-          ll_start_eq_a =
+          ll_star_eq_a =
               (abs(a_matrix[matrix_index * kAMatrixSize + j * kRows + i].r() -
                    l_l_star_ij.r()) < kErrorThreshold) &&
               (abs(a_matrix[matrix_index * kAMatrixSize + j * kRows + i].i() -
@@ -279,7 +279,7 @@ int main(int argc, char *argv[]) {
                         (i >= kColumns);
 
           // If any of the checks failed
-          if (!ll_start_eq_a || !l_is_finite) {
+          if (!ll_star_eq_a || !l_is_finite) {
             // Increase the error count for this matrix
             error_count++;
 
@@ -289,7 +289,7 @@ int main(int argc, char *argv[]) {
               continue;
             }
 
-            if (!ll_start_eq_a) {
+            if (!ll_star_eq_a) {
               std::cout << "Error: A[" << i << "][" << j << "] = "
                         << a_matrix[matrix_index * kAMatrixSize + j * kRows + i]
                         << " but LL*[" << i << "][" << j

@@ -155,7 +155,7 @@ struct StreamingCholesky {
           fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
             TT to_add;
             TT mul_lhs = k < column ? l_result_compute[row][k] : TT{0};
-            TT mul_rhs = l_result_compute_copy[column][k];
+            TT mul_rhs = k < column ? l_result_compute_copy[column][k] : TT{0};
 
             if constexpr (is_complex) {
               to_add = mul_lhs * mul_rhs.conj();
@@ -166,7 +166,6 @@ struct StreamingCholesky {
           });
 
           TT diff = a_load[row][column] - sum;
-
           TT to_store;
           if (row == column) {
             // Perform the reciprocal sqrt rather than the sqrt because:
@@ -193,7 +192,11 @@ struct StreamingCholesky {
           l_result_compute[row][column] = to_store;
           l_result_compute_copy[row][column] = to_store;
           // Store the result to the output matrix
-          l_result[row * (row + 1) / 2 + column] = to_store;
+          if constexpr (is_complex) {
+            l_result[row * (row + 1) / 2 + column] = to_store.conj();
+          } else {
+            l_result[row * (row + 1) / 2 + column] = to_store;
+          }
         }
 
         // Update loop indexes
@@ -216,7 +219,13 @@ struct StreamingCholesky {
           // inversion was removed from the above compute loop
           // to reduce the RAW latency
           if (row == column) {
-            to_write = 1 / current_l_value;
+            if constexpr (is_complex) {
+              to_write = {1 / current_l_value.r(), 0};
+            }
+            else{
+              to_write = 1 / current_l_value;
+            }
+
           } else {
             to_write = current_l_value;
           }
