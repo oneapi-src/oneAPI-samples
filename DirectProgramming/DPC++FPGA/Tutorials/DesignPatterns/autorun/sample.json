@@ -1,0 +1,64 @@
+{
+  "guid": "00BBDEF2-F34E-46EA-9D41-DF871CC7272F",
+  "name": "Autorun kernels",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
+  "description": "Intel® FPGA tutorial demonstrating autorun kernels",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake ../Tutorials/DesignPatterns/autorun",
+          "make fpga_emu",
+          "./autorun.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake ../Tutorials/DesignPatterns/autorun",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/autorun",
+          "nmake fpga_emu",
+          "set SYCL_ENABLE_DEFAULT_CONTEXTS=1",
+          "autorun.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/autorun",
+          "nmake report"
+        ]
+      }
+    ]
+  }
+}

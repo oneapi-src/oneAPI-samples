@@ -1,62 +1,91 @@
 # `OpenMP Primes` Samples
-This sample is designed to illustrate how to use 
+This sample is designed to illustrate how to use
 the OpenMP* API with the Intel® Fortran Compiler.
 
-This program finds all primes in the first 40,000,000 integers, 
-the number of 4n+1 primes, and the number of 4n-1 primes in the same range. 
+This program finds all primes in the first 40,000,000 integers,
+the number of 4n+1 primes, and the number of 4n-1 primes in the same range.
 It illustrates two OpenMP* directives to help speed up the code.
 
-  
+
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | macOS* with Xcode* installed 
+| OS                                | macOS* with Xcode* installed
 | Software                          | Intel&reg; Fortran Compiler
 | What you will learn               | How to build and run a Fortran OpenMP application using Intel Fortran Compiler
 | Time to complete                  | 10 minutes
 
 ## Purpose
 
-This program finds all primes in the first 40,000,000 integers, the number of 4n+1 primes, 
-and the number of 4n-1 primes in the same range. It illustrates two OpenMP* directives 
+This program finds all primes in the first 40,000,000 integers, the number of 4n+1 primes,
+and the number of 4n-1 primes in the same range. It illustrates two OpenMP* directives
 to help speed up the code.
 
-First, a dynamic schedule clause is used with the OpenMP* for a directive. 
-Because the DO loop's workload increases as its index get bigger, 
-the default static scheduling does not work well. Instead, dynamic scheduling 
-is used to account for the increased workload. 
-But dynamic scheduling itself has more overhead than static scheduling, 
+First, a dynamic schedule clause is used with the OpenMP* for a directive.
+Because the DO loop's workload increases as its index get bigger,
+the default static scheduling does not work well. Instead, dynamic scheduling
+is used to account for the increased workload.
+But dynamic scheduling itself has more overhead than static scheduling,
 so a chunk size of 10 is used to reduce the overhead for dynamic scheduling.
 
-Second, a reduction clause is used instead of an OpenMP* critical directive 
-to eliminate lock overhead. A critical directive would cause excessive lock overhead 
-due to the one-thread-at-time update of the shared variables each time through the DO loop. 
+Second, a reduction clause is used instead of an OpenMP* critical directive
+to eliminate lock overhead. A critical directive would cause excessive lock overhead
+due to the one-thread-at-time update of the shared variables each time through the DO loop.
 Instead, the reduction clause causes only one update of the shared variables once at the end of the loop.
 
-The sample can be compiled unoptimized (-O0 ), or at any level of 
+The sample can be compiled unoptimized (-O0 ), or at any level of
 optimization (-O1 through -O3 ). Also, the following compiler options are needed.
 
-The option -qopenmp enables compiler recognition of OpenMP* directives. 
+The option -qopenmp enables compiler recognition of OpenMP* directives.
 This option can also be omitted, in which case the generated executable will be a serial program.
 
 The option -fpp enables the Fortran preprocessor.
 Read the Intel® Fortran Compiler Documentation for more information about these options.
 
 ## Key Implementation Details
-The Intel&reg; oneAPI Intel Fortran Compiler includes all libraries and headers necessary to compile and run OpenMP* enabled Fortran applications. Users simply use the -qopenmp compiler option to compile and link their OpenMP enabled applications. 
+The Intel&reg; oneAPI Intel Fortran Compiler includes all libraries and headers necessary to compile and run OpenMP* enabled Fortran applications. Users simply use the -qopenmp compiler option to compile and link their OpenMP enabled applications.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `Fortran OpenMP*` sample  
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
+## Building the `Fortran OpenMP*` sample
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Experiment 1: Unoptimized build and run
 * Build openmp_samples
 
-        cd openmp_samples 
-        make clean 
+        cd openmp_samples
+        make clean
         make debug
 
    * Run the program
@@ -65,16 +94,16 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
    * What did you see?
 
-     Did the debug, unoptimized code run slower? 
-     
-### Experiment 2: Default Optimized build and run 
+     Did the debug, unoptimized code run slower?
+
+### Experiment 2: Default Optimized build and run
 
    * Build openmp_samples
 
-    make 
+    make
    * Run the program
 
-    make run  
+    make run
 
 ### Experiment 3: Controlling the number of threads
 By default, an OpenMP application creates and uses as many threads as the number of  "processors" in a system.  A "processor" is defined as the number of logical processors, which are twice the number of physical cores on hyperthreaded cores.
@@ -89,13 +118,18 @@ note the number of threads reported by the application.  Now try two threads:
     make run
 Did the make the application run faster?  Experiment with the number of threads and see how it affects performance.
 
-### Clean up 
-   * Clean the program  
+### Clean up
+   * Clean the program
     make clean
 
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+
+
 ## Further Reading
-Interested in learning more?  We have a wealth of information 
-on using OpenMP with the Intel Fortran Compiler in our 
+Interested in learning more?  We have a wealth of information
+on using OpenMP with the Intel Fortran Compiler in our
 [OpenMP section of Developer Guide and Reference][1]
 
 [1]: https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top/optimization-and-programming-guide/openmp-support.html "Developer Guide and Reference"

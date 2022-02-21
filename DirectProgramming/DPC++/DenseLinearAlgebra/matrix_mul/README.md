@@ -33,7 +33,9 @@ relatively simple sample. The default will build the DPC++ application.
 Separate OpenMP build instructions are provided below. Note: matrix_mul does not
 support OpenMP on Windows.
 
-The code will attempt to execute on an available GPU first and fallback to the system's CPU if a compatible GPU is not detected.  The device used for the compilation is displayed in the output.
+The code will attempt to execute on an available GPU first and fallback to the
+system's CPU if a compatible GPU is not detected. The device used for the
+compilation is displayed in the output.
 
 ## Key implementation details
 SYCL implementation explained.
@@ -45,21 +47,26 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `matrrix_mul` Program for DPC++ and OpenMP
 
-> Note: if you have not already done so, set up your CLI
-> environment by sourcing  the setvars script located in
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
 > Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
 > Linux User: . ~/intel/oneapi/setvars.sh
+>
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ## Include Files
 The include folder is located at "%ONEAPI_ROOT%\dev-utilities\latest\include" on your development system.
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify
+the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive
+mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
 
 
 ### Using Visual Studio Code*  (Optional)
@@ -149,3 +156,5 @@ The default device id: 0
 Result of matrix multiplication using OpenMP: Success - The results are correct!
 Result of matrix multiplication using GPU offloading: Success - The results are correct!
 ```
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)

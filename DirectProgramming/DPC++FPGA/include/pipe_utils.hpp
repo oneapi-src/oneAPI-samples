@@ -73,6 +73,7 @@ designs.
 // Internal Helper Functions/Structs
 // =============================================================
 
+namespace fpga_tools {
 namespace detail {
 
 // Templated classes for verifying dimensions when accessing elements in the
@@ -121,7 +122,7 @@ struct write_currying<WriteFunc, BaseTy, std::index_sequence<I...>> {
   }
 };
 
-}  // namespace
+}  // namespace detail
 
 // =============================================================
 // PipeArray
@@ -145,8 +146,8 @@ struct PipeArray {
     static_assert(sizeof...(idxs) == sizeof...(dims),
                   "Indexing into a PipeArray requires as many indices as "
                   "dimensions of the PipeArray.");
-    static_assert(::detail::VerifierDimLayer<dims...>::template VerifierIdxLayer<
-                      idxs...>::IsValid(),
+    static_assert(fpga_tools::detail::VerifierDimLayer<dims...>::template
+                  VerifierIdxLayer<idxs...>::IsValid(),
                   "Index out of bounds");
     using VerifiedPipe =
         cl::sycl::ext::intel::pipe<StructId<idxs...>, BaseTy, min_depth>;
@@ -185,8 +186,8 @@ struct PipeArray {
             typename... IndexSequences>
   static void write_currying_helper(const BaseTy &data, bool &success,
                                     IndexSequences...) {
-    ::detail::write_currying<WriteFunc, BaseTy, std::index_sequence<>,
-                   IndexSequences...>()(data, success);
+    fpga_tools::detail::write_currying<WriteFunc, BaseTy,
+                   std::index_sequence<>, IndexSequences...>()(data, success);
   }
 
   // blocking write
@@ -264,5 +265,7 @@ struct PipeDuplicator<Id, T> {
     // do nothing
   }
 };
+
+} // namespace fpga_tools
 
 #endif /* __PIPE_UTILS_HPP__ */

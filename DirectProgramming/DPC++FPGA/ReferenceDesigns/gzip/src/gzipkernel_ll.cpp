@@ -53,18 +53,29 @@
 using namespace sycl;
 
 // Pipes, for inter-kernel data transfer..
-using acc_dist_channel_array = PipeArray<  // Defined in "pipe_utils.hpp".
-    class dist_channel_pipe_id,            // An identifier for the pipe.
-    struct DistLen,                        // The type of data in the pipe.
-    32,                                     // The capacity of each pipe.
-    NUM_ENGINES                            // array dimension.
-    >;
+using acc_dist_channel_array =
+  fpga_tools::PipeArray<          // Defined in "pipe_utils.hpp".
+    class dist_channel_pipe_id,   // An identifier for the pipe.
+    struct DistLen,               // The type of data in the pipe.
+    32,                           // The capacity of each pipe.
+    NUM_ENGINES                   // array dimension.
+  >;
 
 using acc_dist_channel_last_array =
-    PipeArray<class dist_channel_last_pipe_id, struct DistLen, 32, NUM_ENGINES>;
+    fpga_tools::PipeArray<
+      class dist_channel_last_pipe_id,
+      struct DistLen,
+      32,
+      NUM_ENGINES
+    >;
 
 using acc_lz_to_crc_channel_array =
-    PipeArray<class crc_channel_pipe_id, char_arr_32, 32, NUM_ENGINES>;
+    fpga_tools::PipeArray<
+      class crc_channel_pipe_id,
+      char_arr_32,
+      32,
+      NUM_ENGINES
+    >;
 
 template <int Begin, int End>
 struct Unroller {
