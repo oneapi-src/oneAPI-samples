@@ -19,8 +19,8 @@
 			"conda activate intel-aikit-modin",
 			"pip install -r requirements.txt # Installing notebook's dependencies",
 			"pip install runipy # Installing 'runipy' for extended abilities to execute the notebook",
-			"runipy IntelModin_GettingStarted.ipynb # Test 'Modin is faster than Pandas' case",
-			"MODIN_CPUS=1 runipy IntelModin_GettingStarted.ipynb # Test 'Modin is slower than Pandas' case"
+			"runipy IntelModin_GettingStarted.ipynb # Test 'Modin is faster than pandas' case",
+			"MODIN_CPUS=1 runipy IntelModin_GettingStarted.ipynb # Test 'Modin is slower than pandas' case"
   		]
   	}
     ]
