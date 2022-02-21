@@ -22,18 +22,46 @@ Intel® C++ Compiler Classic
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to
+this readme for instructions on how to build and run a sample.
 
 ## Build and Run
 
-### Linux CLI
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+> For more information on environment variables, see Use the setvars Script for
+> [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html),
+> or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-Source the `setvars.sh` environment setup script distributed with oneAPI to
-configure the oneAPI development environment. By default, this script can be
-found in the `/opt/intel/oneapi` directory.
 
-After sourcing `setvars.sh`, type `oneapi-cli` at the command line to download
-and create the sample at a location of your choice.
+
+### Linux* CLI
 
 Use the following commands to build and run the sample:
 
@@ -45,7 +73,15 @@ make
 make run
 ```
 
-### Eclipse on Linux
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+### Eclipse* on Linux
 
 Use the Intel Samples Plugin in Eclipse to create and run the sample.
 
@@ -57,8 +93,8 @@ Classic.
 
 Access the Getting Started Guides with the following links:
 
- * [Linux\*](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-oneapi-iot-toolkit)
- * [Windows\*](https://software.intel.com/en-us/get-started-with-intel-oneapi-windows-get-started-with-the-intel-oneapi-iot-toolkit)
+ * [Linux\*](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-oneapi-iot-linux/top.html)
+ * [Windows\*](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-oneapi-iot-windows/top.html)
 
 ## Disclaimer
 

@@ -4,7 +4,8 @@
 This is a simple sample you could use for a quick test of digital input.
 
 ## What it is
-This project demonstrates how to read a digital value from an input pin using the MRAA library.
+This project demonstrates how to read a digital value from an input pin using
+the MRAA library.
 
 ## Hardware requirements
 A board with an accessible GPIO input pin.
@@ -15,14 +16,19 @@ This sample has been tested on
 - [UP Squared\* AI Vision Kit](https://software.intel.com/en-us/iot/hardware/up-squared-ai-vision-dev-kit)
 - [IEI\* Tank AIoT Developer Kit](https://software.intel.com/en-us/iot/hardware/iei-tank-dev-kit-core)
 
-The sample might need minor modifications depending on the board and shield you are using.
+The sample might need minor modifications depending on the board and shield
+you are using.
 
 ## Software requirements
 This sample is supported on Linux systems only.
 
-This version of the sample has been tested on Ubuntu Linux. It requires the [Eclipse* MRAA library](https://github.com/intel-iot-devkit/mraa).
+This version of the sample has been tested on Ubuntu Linux. It requires the
+[Eclipse* MRAA library](https://github.com/intel-iot-devkit/mraa).
 
-This sample requires additional system configuration when using Ubuntu OS with the UP series boards. Instructions on installing the custom provided Linux kernel with the required drivers can be [found here](https://wiki.up-community.org/Ubuntu#Ubuntu_18.04_installation_and_configuration).
+This sample requires additional system configuration when using Ubuntu OS with
+the UP series boards. Instructions on installing the custom provided Linux
+kernel with the required drivers can be
+[found here](https://wiki.up-community.org/Ubuntu#Ubuntu_18.04_installation_and_configuration).
 
 ## License
 
