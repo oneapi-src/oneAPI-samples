@@ -64,7 +64,7 @@ double run_sycl(
               // variable k describes which work-item in the sub-group to
               // broadcast data from.
               for (int k = 0; k < tileSize; k++) {
-                sum += ONEAPI::broadcast(sg, tileA, k) * matrixB[kk + k][n];
+                sum += group_broadcast(sg, tileA, k) * matrixB[kk + k][n];
               }
             }
 

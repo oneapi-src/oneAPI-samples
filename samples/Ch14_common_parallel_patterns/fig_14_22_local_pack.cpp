@@ -11,7 +11,6 @@
 #include <random>
 
 using namespace sycl;
-using namespace sycl::ONEAPI;
 
 template <typename T, int dimensions>
 using local_accessor =

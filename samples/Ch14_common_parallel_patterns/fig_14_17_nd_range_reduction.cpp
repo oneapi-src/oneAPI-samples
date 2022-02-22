@@ -7,12 +7,11 @@
 #include <numeric>
 
 using namespace sycl;
-using namespace sycl::ONEAPI;
 
 int main() {
 
-  using memory_order = sycl::ONEAPI::memory_order;
-  using memory_scope = sycl::ONEAPI::memory_scope;
+  using memory_order = sycl::memory_order;
+  using memory_scope = sycl::memory_scope;
 
   constexpr size_t N = 16;
   constexpr size_t B = 4;
@@ -25,7 +24,7 @@ int main() {
 
   Q.parallel_for(nd_range<1>{N, B}, [=](nd_item<1> it) {
      int i = it.get_global_id(0);
-     int group_sum = reduce(it.get_group(), data[i], plus<>());
+     int group_sum = reduce_over_group(it.get_group(), data[i], plus<>());
      if (it.get_local_id(0) == 0) {
        atomic_ref<
            int,

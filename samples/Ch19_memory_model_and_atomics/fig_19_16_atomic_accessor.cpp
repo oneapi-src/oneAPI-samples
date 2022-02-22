@@ -2,49 +2,9 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
-#include <algorithm>
-#include <iostream>
 
-using namespace sycl;
-using namespace sycl::ONEAPI;
-
+// Empty pending decision on how to represent this example, or whether to remove
 int main() {
-  queue Q;
-
-  const size_t N = 32;
-  const size_t M = 4;
-  std::vector<int> data(N);
-  std::fill(data.begin(), data.end(), 0);
-  {
-    buffer buf(data);
-
-    Q.submit([&](handler& h) {
-      atomic_accessor acc(buf, h, relaxed_order, system_scope);
-      h.parallel_for(N, [=](id<1> i) {
-        int j = i % M;
-        acc[j] += 1;
-      });
-    });
-  }
-
-  for (int i = 0; i < N; ++i) {
-    std::cout << "data [" << i << "] = " << data[i] << "\n";
-  }
-
-  bool passed = true;
-  int* gold = (int*) malloc(N * sizeof(int));
-  std::fill(gold, gold + N, 0);
-  for (int i = 0; i < N; ++i) {
-    int j = i % M;
-    gold[j] += 1;
-  }
-  for (int i = 0; i < N; ++i) {
-    if (data[i] != gold[i]) {
-      passed = false;
-    }
-  }
-  std::cout << ((passed) ? "SUCCESS\n" : "FAILURE\n");
-  free(gold);
-  return (passed) ? 0 : 1;
+	return 0;
 }
+
