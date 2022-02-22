@@ -2,13 +2,14 @@
 
 // SPDX-License-Identifier: MIT
 
+// TODO: Following example is already CPU selector.  Decide what to do with this one
 #include <CL/sycl.hpp>
 #include <iostream>
 using namespace sycl;
 
 int main() {
   // Create queue to use the host device explicitly
-  queue Q{ host_selector{} };
+  queue Q{ cpu_selector{} };
 
   std::cout << "Selected device: " <<
     Q.get_device().get_info<info::device::name>() << "\n";
