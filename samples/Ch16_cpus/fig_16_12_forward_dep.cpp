@@ -21,7 +21,7 @@ int main()
     for (int j = 0; j < n+1; j++) a[i*n + j] = i + j;
 
   Q.parallel_for(nd_range<2>{G, L}, [=](nd_item<2> it)
-    [[intel::reqd_sub_group_size(w)]] {
+    [[sycl::reqd_sub_group_size(w)]] {
 
     // distribute uniform "i" over the sub-group with 8-way
     // redundant computation
