@@ -154,15 +154,15 @@ struct StreamingCholesky {
           TT sum = 0;
           fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
             TT to_add;
-            TT mul_lhs = k < column ? l_result_compute[row][k] : TT{0};
-            TT mul_rhs = k < column ? l_result_compute_copy[column][k] : TT{0};
+            TT mul_lhs = l_result_compute[row][k];
+            TT mul_rhs = l_result_compute_copy[column][k];
 
             if constexpr (is_complex) {
               to_add = mul_lhs * mul_rhs.conj();
             } else {
               to_add = mul_lhs * mul_rhs;
             }
-            sum += to_add;
+            sum += (k < column ? to_add : TT{0});
           });
 
           TT diff = a_load[row][column] - sum;
