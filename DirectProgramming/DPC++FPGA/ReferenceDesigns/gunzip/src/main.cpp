@@ -66,15 +66,14 @@ int main(int argc, char* argv[]) {
   std::string in_filename;
   std::string out_filename;
   
-#ifdef FPGA_EMULATOR
+#if defined(FPGA_EMULATOR)
   int runs = 2;
-#elif FPGA_SIMULATOR
+#elif defined(FPGA_SIMULATOR)
   int runs = 1;
 #else
   int runs = 9;
 #endif
 
-  // get input and output filenames
   if (argc > 1) {
     in_filename = argv[1];
   }
@@ -90,12 +89,10 @@ int main(int argc, char* argv[]) {
     std::terminate();
   }
 
-  bool passed = true;
-
   // the device selector
-#ifdef FPGA_EMULATOR
+#if defined(FPGA_EMULATOR)
   sycl::ext::intel::fpga_emulator_selector selector;
-#elif FPGA_SIMULATOR
+#elif defined(FPGA_SIMULATOR)
   std::string simulator_device_string =
       "SimulatorDevice : Multi-process Simulator (aclmsim0)";
   select_by_string selector = select_by_string{simulator_device_string};
@@ -154,6 +151,8 @@ int main(int argc, char* argv[]) {
   // the GZIP footer data, where 'count' is the expected number of bytes
   // in the uncompressed file ('out')
   int *crc, *count;
+
+  bool passed = true;
 
   try {
     // allocate memory on the device
@@ -374,12 +373,16 @@ event SubmitConsumer(queue& q, int out_count_padded, unsigned char* out_ptr, int
 // Reads 'filename' and returns an array of chars that are the bytes of the file
 //
 std::vector<unsigned char> ReadInputFile(std::string filename) {
+  // open file stream
   std::ifstream fin(filename);
+
+  // make sure it opened
   if (!fin.good() || !fin.is_open()) {
     std::cerr << "ERROR: could not open " << filename << " for reading\n";
     std::terminate();
   }
 
+  // read in bytes
   std::vector<unsigned char> result;
   char tmp;
   while (fin.get(tmp)) { result.push_back(tmp); }
@@ -392,12 +395,16 @@ std::vector<unsigned char> ReadInputFile(std::string filename) {
 // Writes the chars (bytes) from 'data' to 'filename'
 //
 void WriteOutputFile(std::string filename, std::vector<unsigned char>& data) {
+  // open file stream
   std::ofstream fout(filename.c_str());
+
+  // make sure it opened
   if (!fout.good() || !fout.is_open()) {
     std::cerr << "ERROR: could not open " << filename << " for writing\n";
     std::terminate();
   }
 
+  // write out bytes
   for (auto& c : data) { fout << c; }
   fout.close();
 }
