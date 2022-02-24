@@ -2,7 +2,7 @@
   "guid": "61290EED-2CEF-4F59-AA62-DB6DC74F6421",
   "name": "Intel® Python XGBoost Performance",
   "categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
-  "description": "This sample code illustrates how to analyze the performance benefit from using Intel optimizations upstreamed by Intel to latest XGBoost compared to un-optimized XGBoost 0.81 ",
+  "description": "This sample code illustrates how to analyze the performance benefit from using Intel training optimizations upstreamed by Intel to latest XGBoost compared to un-optimized XGBoost 0.81 ",
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "dependencies": ["intelpython"], 
@@ -11,7 +11,6 @@
   "ciTests": {
   	"linux": [
     {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force"],
   		"id": "idp_xgb_performance",
   		"steps": [
          	 "source activate base",

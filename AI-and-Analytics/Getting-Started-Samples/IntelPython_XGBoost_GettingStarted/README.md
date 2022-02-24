@@ -1,5 +1,5 @@
 # `Intel Python XGBoost Getting Started` Sample
-XGBoost* is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost* includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath.
+XGBoost* is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost* includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath. Starting with 0.9 version of XGBoost, Intel has been upstreaming optimizations to the through the `hist` histogram tree-building method. Starting with 1.3.3 version of XGBoost and beyond, Intel has also begun upstreaming inference optimziations to XGBoost as well.
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -10,7 +10,7 @@ XGBoost* is a widely used gradient boosting library in the classical ML area. De
 | Time to complete                  | 5 minutes
 
 ## Purpose
-In this code sample, you will learn how to use Intel optimized XGBoost published as part of Intel® oneAPI AI Analytics Toolkit. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction.
+In this code sample, you will learn how to use Intel optimizations for XGBoost published as part of Intel® oneAPI AI Analytics Toolkit. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction.
 It also demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 ## Key Implementation Details
