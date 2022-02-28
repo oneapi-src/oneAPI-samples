@@ -209,7 +209,7 @@ void HuffmanDecoder() {
       }
       // distance codes
       for (int i = 0; i < static_numdistcodes; i++) {
-        a[static_numlitlencodes + 1] = 5;
+        a[static_numlitlencodes + i] = 5;
       }
       return a;
     }();
