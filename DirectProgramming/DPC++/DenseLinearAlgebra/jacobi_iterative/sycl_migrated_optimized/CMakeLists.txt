@@ -1,0 +1,9 @@
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+
+add_executable (jacobi_sycl_migrated_optimized src/main.cpp src/jacobi.cpp)
+target_link_libraries(jacobi_sycl_migrated_optimized sycl)
+
+add_custom_target (run_smo_cpu ./jacobi_sycl_migrated_optimized)
+add_custom_target (run_smo_gpu env SYCL_DEVICE_FILTER=gpu ./jacobi_sycl_migrated_optimized)
+
