@@ -121,10 +121,38 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 ### Example of Output
 You should see output similar to the following in the console:
 ```
-TODO
+Decompressing 'lineitem.tbl.gz' 9 times
+Launching kernels for run 0
+All kernels have finished for run 0
+Launching kernels for run 1
+All kernels have finished for run 1
+Launching kernels for run 2
+All kernels have finished for run 2
+Launching kernels for run 3
+All kernels have finished for run 3
+Launching kernels for run 4
+All kernels have finished for run 4
+Launching kernels for run 5
+All kernels have finished for run 5
+Launching kernels for run 6
+All kernels have finished for run 6
+Launching kernels for run 7
+All kernels have finished for run 7
+Launching kernels for run 8
+All kernels have finished for run 8
+
+Writing output data to 'out'
+
+Execution time: 3442.03 ms
+Output Throughput: 220.509 MB/s
+Compression Ratio: 3.422
+Input Throughput: 64.4968 MB/s
+                                                                                                                                                                                                                 
+PASSED
 ```
-NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance.
-    
+NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance. <br>
+NOTE: The throughput of the decompression engine is highly dependant on the compression ratio of the input file, more specifically on the amount of LZ77 compression. The throughput test reports the *maximum* throughput, since it is decompressing a highly compressed file. When decompressing other files, it is expected that the throughput will be lower.
+
 
 ## Additional Design Information
 ### Source Code Breakdown
@@ -184,11 +212,13 @@ The GZIP metadata reader streams in in the GZIP file, a byte at a time, parses a
 #### Huffman Decoder
 The Huffman decoder streams in DEFLATE compressed blocks, a byte at a time, and streams out either literals (8-bit characters) or {length, distance} pairs. The Huffman decoder is not byte-aligned; it decodes the input stream bits at a time. To do this efficiently, the decoder uses the `ByteBitStream` class, which streams in bytes at a time but gives the decoder access to a configurable number of bits in parallel. This design takes advantage of the fact that the DEFLATE format limits code lengths to at most 15 bits.
 
-The structure of the Huffman decoder is shown in the image below. The decoder examines the next 15 bits in the bit stream and checks for matches of length 1-15 in parallel to create a 15-bit *valid bitmap*, where a 1 at bit `i` indicates that the code of length `i+1` matches one of the codes in the Huffman table. To decode the next symbol, the decoder finds the *shortest* of the 15 matches that were computed in parallel. To do so, it performs a `CTZ` (**c**ount **t**railing **z**eros) operation on the valid bitmap and adds one to it, which is equivalent to finding the *first index with a value of 1*, which, in our case, is equivalent to the shortest match length. Once the shortest match length is found, the bit stream is shifted by that many bits, the symbol for that match is looked up and written to the output, and the process repeats. Since the codes are guaranteed to be at most 15 bits, the decoder will decode a symbol every time this operation is performed.
+The structure of the Huffman decoder is shown in the image below. The decoder examines the next 15 bits in the bit stream and checks for matches of length 1-15 in parallel to create a 15-bit *valid bitmap*, where a 1 at bit `i` indicates that the code of length `i` matches a code in the Huffman table. For example, a value of `0b000000000000101` would indicate that there is a match of length 1 and 3.
+
+To decode the next symbol, the decoder finds the *shortest* of the 15 matches that were computed in parallel. To do so, it performs a `CTZ` (**c**ount **t**railing **z**eros) operation on the valid bitmap and adds one to it, which is equivalent to finding the shortest match length. Once the shortest match length is found, the bit stream is shifted by that many bits, the symbol for that match is looked up, and the process repeats. If the decoded symbol is a literal, then the literal is written to the output. If the decoded symbol is a length, then no output is generated in this iteration; the length is saved and the next iteration of the loop decodes the distance and generates the {length, distance} pair output.
 
 <img src="huffman_decoder.png" alt="huffman_decoder" width="700"/>
 
-The Huffman decoder uses two Huffman tables: a 289-element table for literals and lengths, and a 32-element table for distances. The decoder knows that if it decodes a length from the first table, as opposed to a literal, that the next symbol must be a distance. The Huffman decoder in this design uses an intelligent method for storing the Huffman tables that significantly reduces area and improves performance. The decoder takes advantage of the fact that *codes of the same bit lengths are sequential*. For the literal and length table, it stores 4 tables: a 289-element table that holds the symbols in increasing order of code length (`lit_map`), with no gaps. That is, it stores all symbols of length 1, followed directly by all symbols of length 2, and so on. Two 15-element tables store the first and last code for each code length (`first_code` and `last_code`), and another 15-element table stores the base index index of the first element in the `lit_map` table for each code length (`base_idx`). Then, for a code length `L` and the code value `C`, the pseudocode snippet below describes how these tables are used to check for a match and retrieve the symbol. As described earlier, this pseudocode is done in parallel 15 times for code lengths (`L`) of 1-15 bits.
+The Huffman decoder uses two Huffman tables: a 289-element table for literals and lengths, and a 32-element table for distances. The decoder knows that if it decodes a length from the first table, as opposed to a literal, that the next symbol must be a distance. The Huffman decoder in this design uses an intelligent method for storing the Huffman tables that significantly reduces area and improves performance. The decoder takes advantage of the fact that *codes of the same bit lengths are sequential*. For the literal and length table, it stores 4 tables: a 289-element table that holds the symbols in increasing order of code length (`lit_map`), with no gaps. That is, it stores all symbols of length 1, followed directly by all symbols of length 2, and so on. Two 15-element tables store the first and last code for each code length (`first_code` and `last_code`), and another 15-element table stores the base index index of the first element in the `lit_map` table for each code length (`base_idx`). Then, for a code length `L` and the code value `C`, the pseudocode snippet below describes how these tables are used to check for a match and decode the symbol. As described earlier, this pseudocode is done in parallel 15 times for code lengths (`L`) of 1-15 bits.
 
 ```
 match = (C >= first_code[L]) && (C < last_code[L]);
@@ -196,16 +226,16 @@ offset = C - first_code[L];
 symbol = lit_map[base_idx[L] + offset]
 ```
 
-The Huffman decoder decodes a literal in 1 iteration of the main loop, and a {length, distance} pair in 2 iterations. When decoding a {length, distance} pair, the length code can be 1-15 bits and, based on the decoded length, 0-5 extra bits. Similarly, the distance code can be 1-15 bits and 0-15 extra bits. To decode a {length, distance} in 2 iterations, the Huffman decoder looks at 30 bits in parallel. The first 15 are examined as described earlier. The decoder also examines the 15x5 and 15x15 different possibilities for the extra length and distance bits, respectively. For the extra length bits, the shortest matching code can be 1-15 bits, giving 15 possibilities for where the extra bits *start*. There can be 1-5 extra bits, giving 5 possibilities, which yields 15x5 possibilities for the extra length bits. Decoding the extra distance bits uses the same approach but with 0-15 extra bits, yielding 15x15 possibilities.
+The Huffman decoder decodes a literal in 1 iteration of the main loop, and a {length, distance} pair in 2 iterations. When decoding a {length, distance} pair, the length code can be 1-15 bits and, based on the decoded length, 0-5 extra bits. Similarly, the distance code can be 1-15 bits and 0-15 extra bits. To decode a {length, distance} in 2 iterations, the Huffman decoder looks at 30 bits in parallel. The first 15 are examined as described earlier. The decoder also examines the 15x5 and 15x15 different possibilities for the extra length and distance bits, respectively. For the extra length bits, the shortest matching code can be 1-15 bits, giving 15 possibilities for where the extra bits could *start*. There can be 1-5 extra bits, giving 5 possibilities, which yields 15x5 possibilities for the extra length bits. Decoding the extra distance bits uses the same approach but with 0-15 extra bits, yielding 15x15 possibilities.
 
 #### LZ77 Decoder
-The input to the LZ77 decoder is a stream of commands that are either an 8-bit literal or a {length, distance} pair - the output of the Huffman decoder. The output is a stream of literals (8-bit characters). The LZ77 decoder keeps a 32K *history buffer*; a history of the last 32K literals it has streamed to the output. 
+The input to the LZ77 decoder is a stream of commands that are either an 8-bit literal or a {length, distance} pair; the output of the Huffman decoder. The output is a stream of literals (8-bit characters). The LZ77 decoder keeps a 32K *history buffer*; a history of the last 32K literals it has streamed to the output. 
 
-If the incoming command is an 8-bit literal, the LZ77 decoder simply forwards the literal to the output stream and tracks it in the history buffer. For a {length, distance} pair, the LZ77 kernel goes back `distance` literals in the history buffer and streams `length` of them to the output (and back into the history buffer).
+If the incoming command is an 8-bit literal, the LZ77 decoder simply forwards the literal to the output stream and tracks it in the history buffer. For a {length, distance} pair, the decoder goes back `distance` literals in the history buffer and streams `length` of them to the output and back into the history buffer.
 
-The LZ77 decoder can be configured to read `N` elements from the history buffer per cycle, where `N` is a compile time constant (NOTE: in the source code `N` is called `literals_per_cycle`). Therefore, the output of the LZ77 decoder kernels is actually an array of literals where the number of valid literals is in the range `[1, N]`, which is indicated by the `valid_count` variable.
+The LZ77 decoder can be configured to read `N` elements from the history buffer per cycle, where `N` is a compile time constant (NOTE: in the source code `N` is `literals_per_cycle`). Therefore, the output of the LZ77 decoder is actually an array of literals where the number of valid literals is in the range `[1, N]`, which is indicated by the `valid_count` variable.
 
-The image below illustrates the multi-element LZ77 decoder. To read multiple elements from the history buffer at once, the history buffer is cyclically partitioned across `N` buffers. For example, if `N=4`, then the order in which you write to the history buffers is `0, 1, 2, 3, 0, 1, 2, 3, ...` and so on. The *Current History Buffer Index* indicates which of the `N` history buffers is the *next* to be written to. When `N` (or less) elements come in the input, the elements are shuffled to the `N` buffers in the correct order. For example if *Current History Buffer Index* is 2, then the `N=4` incoming elements should be written to history buffers `{2, 3, 0, 1}`, respectively. In general, the order is `{Current History Buffer Index, (Current History Buffer Index + 1) % N, ..., (Current History Buffer Index + N - 1) % N}`.
+The image below illustrates the multi-element LZ77 decoder. To read multiple elements from the history buffer at once, the history buffer is cyclically partitioned across `N` buffers. For example, if `N=4`, then the order in which literals are written to the history buffers is `0, 1, 2, 3, 0, 1, 2, 3, ...`. The *Current History Buffer Index* indicates which of the `N` history buffers is the *next* to be written to. When `N` (or less) elements come in the input, the elements are shuffled to the `N` buffers in the correct order. For example if *Current History Buffer Index* is 2, then the `N=4` incoming elements should be written to history buffers `{2, 3, 0, 1}`, respectively. In general, the order is `{Current History Buffer Index, (Current History Buffer Index + 1) % N, ..., (Current History Buffer Index + N - 1) % N}`.
 
 <img src="lz77_decoder.png" alt="lz77_decoder" width="700"/>
 
@@ -218,7 +248,7 @@ Characters:    E T H O M E P H O N E
 Buffer index:  0 1 2 3 0 1 2 3 0 1 2 3
 ```
 
-The *Current History Buffer Index* is 3, that is the next history buffer to write into is 3. Now the LZ77 decoder receives a {length, distance} pair of `{4, 9}`, which means copy "H O M E". To read the `N=4` elements, the LZ77 decoder unconditionally reads from each history buffer in parallel and computes a shuffle vector to reorder the output. To compute the shuffle vector, the LZ77 decoder determines which buffer should be read from first: `first_buf_idx = ('Current History Buffer Index' - distance) % N`. In this case `first_buf_idx = (3 - 9) % 4 = 2`. Then, the shuffle vector is computed as: `shuffle_vector = {first_buf_idx, (first_buf_idx + 1) % N, ..., (first_buf_idx + N - 1) % N} = {2, 3, 0, 1}`. The output from the `N=4` history buffers in this case would be "M E H O", since "M" is in buffer 0, "E" is in buffer 1, and so on. Finally, the shuffling happens as follows:
+The *Current History Buffer Index* is 3. That is, the next history buffer to write into is 3. Now, the LZ77 decoder receives a {length, distance} pair of `{4, 9}`, which means copy "H O M E". To read the `N=4` elements, the LZ77 decoder unconditionally reads from each history buffer in parallel and computes a shuffle vector to reorder the output. To compute the shuffle vector, the LZ77 decoder determines which buffer should be read from first: `first_buf_idx = ('Current History Buffer Index' - distance) % N`. In this case `first_buf_idx = (3 - 9) % 4 = 2`. Then, the shuffle vector is computed as: `shuffle_vector = {first_buf_idx, (first_buf_idx + 1) % N, ..., (first_buf_idx + N - 1) % N} = {2, 3, 0, 1}`. The output from the `N=4` history buffers in this case would be "M E H O", since "M" is in buffer 0, "E" is in buffer 1, and so on. Finally, the shuffling happens as follows:
 ```
 input = {'M', 'E', 'H', 'O'}
 shuffle_vector = {2, 3, 0, 1}

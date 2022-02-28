@@ -32,7 +32,7 @@ using namespace std::chrono;
 // This is sent to the LZ77 decoder to read multiple elements per cycle from
 // the history buffer.
 #ifndef LITERALS_PER_CYCLE
-#define LITERALS_PER_CYCLE 2
+#define LITERALS_PER_CYCLE 4
 #endif
 constexpr unsigned kLiteralsPerCycle = LITERALS_PER_CYCLE;
 static_assert(fpga_tools::IsPow2(kLiteralsPerCycle));
@@ -48,6 +48,9 @@ using OutPipe =
     ext::intel::pipe<OutPipeID, FlagBundle<BytePack<kLiteralsPerCycle>>>;
 
 ////////////////////////////////////////////////////////////////////////////////
+bool DecompressFile(queue&, std::string, std::string, int, bool, bool);
+bool DecompressTest(queue&, std::string);
+unsigned GetGZIPUncompressedSize(std::vector<unsigned char>);
 void PrintUsage(std::string);
 event SubmitProducer(queue&, int, unsigned char*);
 event SubmitConsumer(queue&, int, unsigned char*, int*);
@@ -57,36 +60,41 @@ void WriteOutputFile(std::string, std::vector<unsigned char>&);
 
 int main(int argc, char* argv[]) {
   // reading and validating the command line arguments
-  // make sure we have an acceptable number of arguments
-  if (argc < 3) {
+  // if no arguments are given, we will run the default tests for uncompressed,
+  // statically compressed, and dynamically compressed blocks
+  // if arguments are given, we will assume the user wants to decompress a 
+  // specific file
+  std::string test_dir;
+  std::string in_filename;
+  std::string out_filename;
+  int runs;
+  bool default_test_mode = false;
+  if (argc == 2) {
+    default_test_mode = true;
+  } else if (argc < 3) {
     PrintUsage(argv[0]);
     return 1;
   }
 
-  std::string in_filename;
-  std::string out_filename;
-  
+  if (default_test_mode) {
+    test_dir = argv[1];
+  } else {
+    // default the number of runs based on emulation, simulation, or hardware
 #if defined(FPGA_EMULATOR)
-  int runs = 2;
+    runs = 2;
 #elif defined(FPGA_SIMULATOR)
-  int runs = 1;
+    runs = 1;
 #else
-  int runs = 9;
+    runs = 9;
 #endif
 
-  if (argc > 1) {
     in_filename = argv[1];
-  }
-  if (argc > 2) {
     out_filename = argv[2];
-  }
-  if (argc > 3) {
-    runs = atoi(argv[3]);
-  }
-
-  if (runs < 1) {
-    std::cerr << "ERROR: 'runs' must be greater than 0\n";
-    std::terminate();
+    if (argc > 3) runs = atoi(argv[3]);
+    if (runs < 1) {
+      std::cerr << "ERROR: 'runs' must be greater than 0\n";
+      std::terminate();
+    }
   }
 
   // the device selector
@@ -103,14 +111,66 @@ int main(int argc, char* argv[]) {
   // create the device queue
   queue q(selector, dpc_common::exception_handler);
 
+  bool passed;
+  if (default_test_mode) {
+    passed = DecompressTest(q, test_dir);
+  } else {
+    passed = DecompressFile(q, in_filename, out_filename, runs, true, true);
+  }
+
+  if (passed) {
+    std::cout << "PASSED" << std::endl;
+    return 0;
+  } else {
+    std::cout << "FAILED" << std::endl;
+    return 1;
+  }
+}
+
+//
+// The default decompression test. This is called if the user did not provide
+// any command line arguments and tests decompressing uncompressed, statically-,
+// and dynamically-compressed blocks
+//
+bool DecompressTest(queue& q, std::string test_dir) {
+  std::string uncompressed_filename = test_dir + "/uncompressed.gz";
+  std::string static_compress_filename = test_dir + "/static_compressed.gz";
+  std::string dynamic_compress_filename = test_dir + "/dynamic_compressed.gz";
+  std::string tp_test_filename = test_dir + "/tp_test.gz";
+
+  constexpr int kTPTestRuns = 9;
+  bool ret = true;
+  std::cout << ">>>>> Testing Uncompressed File <<<<<" << std::endl;
+  ret &= DecompressFile(q, uncompressed_filename, "", 1, false, false);
+  std::cout << std::endl;
+
+  std::cout << ">>>>> Testing Statically Compressed File <<<<<" << std::endl;
+  ret &= DecompressFile(q, static_compress_filename, "", 1, false, false);
+  std::cout << std::endl;
+
+  std::cout << ">>>>> Testing Dynamically Compressed File <<<<<" << std::endl;
+  ret &= DecompressFile(q, dynamic_compress_filename, "", 1, false, false);
+  std::cout << std::endl;
+
+  std::cout << ">>>>> Testing Throughput <<<<<" << std::endl;
+  ret &= DecompressFile(q, tp_test_filename, "", kTPTestRuns, true, false);
+  std::cout << std::endl;
+
+  return ret;
+}
+
+//
+// Decompress a specific file (f_in) and store the contents in f_out
+//
+bool DecompressFile(queue& q, std::string f_in, std::string f_out, int runs,
+                    bool print_stats, bool write_output) {
   // read bytes from the input file
-  std::vector<unsigned char> in_bytes = ReadInputFile(in_filename);
+  std::vector<unsigned char> in_bytes = ReadInputFile(f_in);
   int in_count = in_bytes.size();
 
   // read the expected output size from the last 4 bytes of the file
   // this will let us intelligently size the output buffer
-  std::vector<unsigned char> last_4_bytes(in_bytes.end() - 4, in_bytes.end());
-  unsigned out_count = *(reinterpret_cast<unsigned*>(last_4_bytes.data()));
+  unsigned out_count = GetGZIPUncompressedSize(in_bytes);
   std::vector<unsigned char> out_bytes(out_count);
 
   // round up the output count to the nearest multiple of kLiteralsPerCycle,
@@ -184,7 +244,7 @@ int main(int argc, char* argv[]) {
     // copy the input data to the device memory and wait for the copy to finish
     q.memcpy(in, in_bytes.data(), in_count * sizeof(unsigned char)).wait();
 
-    std::cout << "Decompressing '" << in_filename << "' " << runs
+    std::cout << "Decompressing '" << f_in << "' " << runs
               << ((runs == 1) ? " time" : " times") << std::endl;
 
     // run the design multiple times to increase the accuracy of the timing
@@ -275,13 +335,15 @@ int main(int argc, char* argv[]) {
   sycl::free(count, q);
 
   // write the output file
-  std::cout << std::endl;
-  std::cout << "Writing output data to '" << out_filename << "'" << std::endl;
-  std::cout << std::endl;
-  WriteOutputFile(out_filename, out_bytes);
+  if (write_output) {
+    std::cout << std::endl;
+    std::cout << "Writing output data to '" << f_out << "'" << std::endl;
+    std::cout << std::endl;
+    WriteOutputFile(f_out, out_bytes);
+  }
 
   // print the performance results
-  if (passed) {
+  if (passed && print_stats) {
     // NOTE: when run in emulation, these results do not accurately represent
     // the performance of the kernels on real FPGA hardware
     double avg_time_ms;
@@ -306,13 +368,9 @@ int main(int argc, char* argv[]) {
     std::cout << "Input Throughput: " << (in_mb / (avg_time_ms * 1e-3))
               << " MB/s\n";
     std::cout << std::endl;
-
-    std::cout << "PASSED" << std::endl;
-    return 0;
-  } else {
-    std::cout << "FAILED" << std::endl;
-    return 1;
   }
+
+  return passed;
 }
 
 //
@@ -407,6 +465,14 @@ void WriteOutputFile(std::string filename, std::vector<unsigned char>& data) {
   // write out bytes
   for (auto& c : data) { fout << c; }
   fout.close();
+}
+
+//
+// Gets the uncompressed size from the bytes of a GZIP file
+//
+unsigned GetGZIPUncompressedSize(std::vector<unsigned char> bytes) {
+  std::vector<unsigned char> last_4_bytes(bytes.end() - 4, bytes.end());
+  return *(reinterpret_cast<unsigned*>(last_4_bytes.data()));
 }
 
 //
