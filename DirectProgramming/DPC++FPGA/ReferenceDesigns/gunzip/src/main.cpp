@@ -479,6 +479,7 @@ unsigned GetGZIPUncompressedSize(std::vector<unsigned char> bytes) {
 // Prints the usage for main
 //
 void PrintUsage(std::string exe_name) {
-  std::cerr << "USAGE: " << exe_name
-            << " <input filename> <output filename> [runs]\n";
+  std::cerr << "USAGE: \n"
+            << exe_name << " <input filename> <output filename> [runs]\n"
+            << exe_name << " <test directory>" << std::endl;
 }
