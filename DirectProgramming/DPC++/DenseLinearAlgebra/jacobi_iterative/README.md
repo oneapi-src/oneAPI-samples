@@ -24,8 +24,11 @@ DPC++ and SYCL Implementation is explained in the code using key concepts such a
 
 
 ## License
-Code samples are licensed under the MIT license. See License.txt for details.
-Third party program Licenses can be found here: third-party-programs.txt
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
 ## Building the Jacobi-Iterative Program for CPU and GPU
