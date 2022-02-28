@@ -49,6 +49,22 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ## Migrating the CUDA Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
 
@@ -61,16 +77,21 @@ to a Data Parallel C++ project.
 
 [cuda-headers]: <https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.html#top_BEFORE_YOU_BEGIN>
 
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Command-Line on a Linux* System
 
-1. Ensure your environment is configured to use the OneAPI tools.
-
-```shell
-$ source /opt/intel/oneapi/setvars.sh
-```
-
-2. This sample project contains a simple CUDA program with three files
+1. This sample project contains a simple CUDA program with three files
    (main.cu, util.cu and util.h) located in two folders (foo and bar):
 
 ```
@@ -81,7 +102,7 @@ $ source /opt/intel/oneapi/setvars.sh
  └── main.cu
 ```
 
-3. Use the tool's `--in-root` option and provide input files to specify where
+2. Use the tool's `--in-root` option and provide input files to specify where
    to locate the CUDA files that need migration; use the tool’s `--out-root`
    option to designate where to generate the resulting files:
 
@@ -105,7 +126,7 @@ by the `--out-root` option:
         └── main.dp.cpp
 ```
 
-4. Inspect the migrated source code, address any `DPCT` warnings generated
+3. Inspect the migrated source code, address any `DPCT` warnings generated
    by the Intel DPC++ Compatibility Tool, and verify the new program correctness.
 
 Warnings are printed to the console and added as comments in the migrated
@@ -124,7 +145,7 @@ See below **Addressing Warnings in the Migrated Code** to understand how to
 resolve the warning.
 
 
-5. Copy the original `Makefile` into the `result` folder and update the
+4. Copy the original `Makefile` into the `result` folder and update the
    copy to build the migrated project using DPC++. Replace the CUDA
    configurations in that new `Makefile` with the following for use with DPC++:
 
@@ -138,24 +159,18 @@ CXX = dpcpp
 > modifications needed to update the build files in your own projects will vary
 > greatly depending on the nature and complexity of your migrated projects.
 
-6. Switch to the migration directory with `cd result`.
+5. Switch to the migration directory with `cd result`.
 
-7. Build the migrated sample with `make`.
+6. Build the migrated sample with `make`.
 
-8. Run the migrated sample with `make run`.
+7. Run the migrated sample with `make run`.
 
-9. Clean up the build with `make clean`.
+8. Clean up the build with `make clean`.
 
 
 ## Windows
 
-1. Ensure your environment is configured to use the OneAPI tools.
-
-```bat
-> "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
-```
-
-2. This sample project contains a simple CUDA program with three files
+1. This sample project contains a simple CUDA program with three files
    (main.cu, util.cu and util.h) located in two folders (foo and bar):
 
 ```
@@ -166,7 +181,7 @@ CXX = dpcpp
  └── main.cu
 ```
 
-3. Use the dpct's `--in-root` and `--out-root` options to specify where to
+2. Use the dpct's `--in-root` and `--out-root` options to specify where to
    locate the migrated CUDA files:
 
 ```bat
@@ -259,3 +274,6 @@ kernel_util,2
 ```
 TBB Warning: The number of workers is currently limited to 11. The request for 31 workers is ignored. Further requests for more workers will be silently ignored until the limit changes.
 ```
+
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
