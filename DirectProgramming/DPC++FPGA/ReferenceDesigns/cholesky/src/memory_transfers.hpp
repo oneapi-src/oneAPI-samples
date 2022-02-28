@@ -20,11 +20,11 @@ template <typename TT,            // Datatype of the elements of the matrix
 void MatrixReadFromDDRToPipe(
     TT* matrix_ptr,    // Input matrix pointer
     int matrix_count,  // Number of matrix to read from DDR
-    int repetitions    // Number of time to write the same matrix to the pipe
+    int repetitions    // Number of times to write the same matrix to the pipe
 ) {
   // We may perform an incomplete memory read if the number of elements per row
   // is not a multiple of the DDR burst size
-  constexpr bool kIncompleteBurst = rows % num_elem_per_bank != 0;
+  constexpr bool kIncompleteBurst = (rows % num_elem_per_bank) != 0;
   constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
   // Number of DDR burst reads of num_elem_per_bank elements required to read a
   // full column
@@ -38,7 +38,7 @@ void MatrixReadFromDDRToPipe(
 
   sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
 
-  // Repeatedly read matrix_count matrices from DDR and sends them to the pipe
+  // Repeatedly read matrix_count matrices from DDR and send them to the pipe
   for (int repetition = 0; repetition < repetitions; repetition++) {
     for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
       // Keep track of the current element index in the matrix

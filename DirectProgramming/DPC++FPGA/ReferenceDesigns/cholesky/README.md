@@ -60,13 +60,13 @@ To optimize the performance-critical loop in its algorithm, the design leverages
 * **Unrolling Loops** (loop_unroll)
 
  The key optimization techniques used are as follows:
-   1. Traversing the matrix in a column fashion to increase the read-after-write loop iteration distance 
+   1. Traversing the matrix in a column fashion to increase the read-after-write (RAW) loop iteration distance 
    2. Using two copies of the compute matrix in order to be able to read two full rows per cycle
    3. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
-   3. Fully vectorizing the dot products using loop unrolling.
-   4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialised dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
-   5. Using an efficient memory banking scheme to generate high performance hardware.
-   6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
+   4. Fully vectorizing the dot products using loop unrolling.
+   5. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialised dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
+   6. Using an efficient memory banking scheme to generate high performance hardware.
+   7. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -211,7 +211,7 @@ Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 8 m
 ```
 Device name: pac_a10 : Intel PAC Platform (pac_f100000)
 Generating 8 random real matrices of size 32x32 
-Compution the Cholesky decomposition of 8 matrices 819200 times
+Computing the Cholesky decomposition of 8 matrices 819200 times
    Total duration:   29.6193 s
 Throughput: 221.261k matrices/s
 Verifying results on matrix 0
@@ -231,7 +231,7 @@ Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 S
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)
 Generating 8 random real matrices of size 32x32 
-Compution the Cholesky decomposition of 8 matrices 819200 times
+Computing the Cholesky decomposition of 8 matrices 819200 times
    Total duration:   30.58 s
 Throughput: 214.31k matrices/s
 Verifying results on matrix 0
@@ -256,7 +256,7 @@ PASSED
 `-Xsclock=360MHz` | The FPGA backend attempts to achieve 360 MHz
 `-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) )
 `-Xsparallel=2` | Use 2 cores when compiling the bitstream through Quartus
-`-Xsseed` | Specifies the Quartus compile seed, to yield slightly higher fmax
+`-Xsseed` | Specifies the Quartus compile seed, to potentially yield slightly higher fmax
 `-DROWS_COMPONENT` | Specifies the number of rows of the matrix
 `-DCOLS_COMPONENT` | Specifies the number of columns of the matrix
 `-DFIXED_ITERATIONS` | Used to set the ivdep safelen attribute for the performance critical triangular loop
@@ -268,11 +268,9 @@ NOTE: The values for `seed`, `FIXED_ITERATIONS`, `ROWS_COMPONENT`, `COLS_COMPONE
 
 Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
 
-Performance results are based on testing as of July 29, 2020 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
+Performance results are based on testing as of February 25, 2022 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
 
 Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](www.intel.com).
-
-The performance was measured by Intel on July 29, 2020.
 
 Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
 

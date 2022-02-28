@@ -94,8 +94,8 @@ struct StreamingCholesky {
 
       // Copy a matrix from the pipe to a local memory
       // Number of pipe reads of pipe_size required to read a full column
-      constexpr int kExtraIteration = (rows % pipe_size) != 0 ? 1 : 0;
-      constexpr int kLoopIterPerColumn = rows / pipe_size + kExtraIteration;
+      constexpr int kExtraIteration = ((rows % pipe_size) != 0) ? 1 : 0;
+      constexpr int kLoopIterPerColumn = (rows / pipe_size) + kExtraIteration;
       // Number of pipe reads of pipe_size to read all the matrices
       constexpr int kLoopIter = kLoopIterPerColumn * kColumns;
       // Size in bits of the loop iterator over kLoopIter iterations
@@ -146,9 +146,9 @@ struct StreamingCholesky {
       [[intel::ivdep(raw_latency)]] for (int iteration = 0;
                                          iteration < kTotalIterations;
                                          iteration++) {
-        // Only do usefull work for meaningfull iterations
+        // Only do useful work for meaningful iterations
         if (column <= row) {
-          // Perform the dot product of the elementsof the two rows indexed by
+          // Perform the dot product of the elements of the two rows indexed by
           // row and column from element 0 to column
 
           TT sum = 0;
