@@ -64,20 +64,20 @@ int main(int argc, char* argv[]) {
   // statically compressed, and dynamically compressed blocks
   // if arguments are given, we will assume the user wants to decompress a 
   // specific file
-  std::string test_dir;
+  std::string test_dir = "../data";
   std::string in_filename;
   std::string out_filename;
   int runs;
   bool default_test_mode = false;
-  if (argc == 2) {
+  if (argc == 1 || argc == 2) {
     default_test_mode = true;
-  } else if (argc < 3) {
+  } else if (argc <= 3) {
     PrintUsage(argv[0]);
     return 1;
   }
 
   if (default_test_mode) {
-    test_dir = argv[1];
+    if (argc > 1) test_dir = argv[1];
   } else {
     // default the number of runs based on emulation, simulation, or hardware
 #if defined(FPGA_EMULATOR)
@@ -138,25 +138,39 @@ bool DecompressTest(queue& q, std::string test_dir) {
   std::string dynamic_compress_filename = test_dir + "/dynamic_compressed.gz";
   std::string tp_test_filename = test_dir + "/tp_test.gz";
 
-  constexpr int kTPTestRuns = 9;
-  bool ret = true;
-  std::cout << ">>>>> Testing Uncompressed File <<<<<" << std::endl;
-  ret &= DecompressFile(q, uncompressed_filename, "", 1, false, false);
+  auto print_test_result = [](std::string test_name, bool passed) {
+    if (passed)
+      std::cout << ">>>>> " << test_name << ": PASSED <<<<<\n";
+    else
+      std::cerr << ">>>>> " << test_name << ": FAILED <<<<<\n";
+  };
+  
+  std::cout << ">>>>> Uncompressed File Test <<<<<" << std::endl;
+  bool uncompressed_test_pass =
+      DecompressFile(q, uncompressed_filename, "", 1, false, false);
+  print_test_result("Uncompressed File Test", uncompressed_test_pass);
   std::cout << std::endl;
 
-  std::cout << ">>>>> Testing Statically Compressed File <<<<<" << std::endl;
-  ret &= DecompressFile(q, static_compress_filename, "", 1, false, false);
+  std::cout << ">>>>> Statically Compressed File Test <<<<<" << std::endl;
+  bool static_test_pass =
+      DecompressFile(q, static_compress_filename, "", 1, false, false);
+  print_test_result("Statically Compressed File Test", static_test_pass);
   std::cout << std::endl;
 
-  std::cout << ">>>>> Testing Dynamically Compressed File <<<<<" << std::endl;
-  ret &= DecompressFile(q, dynamic_compress_filename, "", 1, false, false);
+  std::cout << ">>>>> Dynamically Compressed File Test <<<<<" << std::endl;
+  bool dynamic_test_pass =
+      DecompressFile(q, dynamic_compress_filename, "", 1, false, false);
+  print_test_result("Dynamically Compressed File Test", dynamic_test_pass);
   std::cout << std::endl;
 
-  std::cout << ">>>>> Testing Throughput <<<<<" << std::endl;
-  ret &= DecompressFile(q, tp_test_filename, "", kTPTestRuns, true, false);
+  std::cout << ">>>>> Throughput Test <<<<<" << std::endl;
+  constexpr int kTPTestRuns = 5;
+  bool tp_test_pass =
+      DecompressFile(q, tp_test_filename, "", kTPTestRuns, true, false);
+  print_test_result("Throughput Test", tp_test_pass);
   std::cout << std::endl;
 
-  return ret;
+  return uncompressed_test_pass && static_test_pass && dynamic_test_pass && tp_test_pass;
 }
 
 //
@@ -367,7 +381,6 @@ bool DecompressFile(queue& q, std::string f_in, std::string f_out, int runs,
     std::cout << "Compression Ratio: " << compression_ratio << "\n";
     std::cout << "Input Throughput: " << (in_mb / (avg_time_ms * 1e-3))
               << " MB/s\n";
-    std::cout << std::endl;
   }
 
   return passed;

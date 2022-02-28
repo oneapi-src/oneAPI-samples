@@ -121,7 +121,26 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 ### Example of Output
 You should see output similar to the following in the console:
 ```
-Decompressing 'lineitem.tbl.gz' 9 times
+>>>>> Uncompressed File Test <<<<<
+Decompressing '../data/uncompressed.gz' 1 time
+Launching kernels for run 0
+All kernels have finished for run 0
+>>>>> Uncompressed File Test: PASSED <<<<<
+
+>>>>> Statically Compressed File Test <<<<<
+Decompressing '../data/static_compressed.gz' 1 time
+Launching kernels for run 0
+All kernels have finished for run 0
+>>>>> Statically Compressed File Test: PASSED <<<<<
+
+>>>>> Dynamically Compressed File Test <<<<<
+Decompressing '../data/dynamic_compressed.gz' 1 time
+Launching kernels for run 0
+All kernels have finished for run 0
+>>>>> Dynamically Compressed File Test: PASSED <<<<<
+
+>>>>> Throughput Test <<<<<
+Decompressing '../data/tp_test.gz' 5 times
 Launching kernels for run 0
 All kernels have finished for run 0
 Launching kernels for run 1
@@ -132,24 +151,15 @@ Launching kernels for run 3
 All kernels have finished for run 3
 Launching kernels for run 4
 All kernels have finished for run 4
-Launching kernels for run 5
-All kernels have finished for run 5
-Launching kernels for run 6
-All kernels have finished for run 6
-Launching kernels for run 7
-All kernels have finished for run 7
-Launching kernels for run 8
-All kernels have finished for run 8
-
-Writing output data to 'out'
-
 Execution time: 3442.03 ms
 Output Throughput: 220.509 MB/s
 Compression Ratio: 3.422
 Input Throughput: 64.4968 MB/s
-                                                                                                                                                                                                                 
+>>>>> Throughput Test: PASSED <<<<<
+
 PASSED
 ```
+
 NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance. <br>
 NOTE: The throughput of the decompression engine is highly dependant on the compression ratio of the input file, more specifically on the amount of LZ77 compression. The throughput test reports the *maximum* throughput, since it is decompressing a highly compressed file. When decompressing other files, it is expected that the throughput will be lower.
 

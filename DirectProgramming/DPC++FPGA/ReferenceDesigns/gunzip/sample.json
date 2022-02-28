@@ -1,8 +1,8 @@
 {
-  "guid": "TODO",
+  "guid": "65CF2E6F-E245-4077-9A1B-768737302AE4",
   "name": "GZIP Decompression",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
-  "description": "TODO",
+  "description": "A GZIP decompression engine optimized for an FPGA",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
