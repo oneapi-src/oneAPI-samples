@@ -14,14 +14,12 @@
   		"id": "idp_xgb_performance",
   		"steps": [
          	 "source activate base",
-		 "python -m ipykernel install --user --name=xgboost",
-		 "python ci_test.py",
-		 "conda create --name xgb0.81 --clone base",
+		 "python IntelPython_XGBoost_Performance.py",
+		 "conda create --name xgb0.81 --clone base --y",
 		 "source activate xgb0.81",
-		 "conda remove xgboost",
+		 "conda remove xgboost --y",
 		 "pip install xgboost==0.81",
-		 "python -m ipykernel install --user --name=xgboost",
-		 "python ci_test.py"
+		 "python IntelPython_XGBoost_Performance.py"
 		 
   		 ]
   	}
