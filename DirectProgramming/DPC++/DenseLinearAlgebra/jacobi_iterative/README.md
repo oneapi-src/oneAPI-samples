@@ -42,13 +42,12 @@ For more information on environment variables, see Use the setvars Script for Li
 Perform the following steps:
 1.	Build the program with cmake using the following shell commands. From the root directory of the jacobi project:
 
+	```
 	$ mkdir build
-	
 	$ cd build
-	
 	$ cmake ..
-	
 	$ make
+	```
 	
 2.	Run the program:
 
@@ -66,7 +65,10 @@ Perform the following steps:
 
 3.	Clean the program using:
 
+	```
 	$ make clean
+	```
+	
 
 If an error occurs, you can get more details by running make with the VERBOSE=1 argument: make VERBOSE=1 For more comprehensive troubleshooting, use the Diagnostics Utility for Intel® oneAPI Toolkits, which provides system checks to find missing dependencies and permissions errors. Learn more.
 
@@ -76,6 +78,7 @@ Example of Output
 	Iterations : 6263
 	Error : 4.987e-03
 	Processing time : 1596.404175 (ms)
+	
 	Running on Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 	Parallel Implementation : 
 	Iterations : 6263
@@ -87,33 +90,39 @@ Example of Output
 ### Running Samples In DevCloud
 
 If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
-	1.Open a terminal on your Linux system.
-	
-	2.Log in to DevCloud.
-	
-	       ssh devcloud
-	       
-	3.Download the samples.
-	
-	       git clone https://github.com/oneapi-src/oneAPI-samples.git
-	       
-	4.Change directories to the Jacobi sample directory.
-	
-	       cd ~/oneAPI-samples/DirectProgramming/DPC++/DenseLinearAlgebra/jacobi-iterative
-	       
-	5.Build the sample on GPU node using
-	
-	      qsub  -I  -l nodes=1:gpu:ppn=2 -d . 
 
-	Note:    -I (Upper case I) is used for Interactive mode, -l nodes=1:gpu:ppn=2 (lower case L) is used to assign one full GPU node to the job. Note: The -d . is used to 		configure the current folder as the working directory for the task.
-    
-	6. Perform the same steps similar to Linux system.
+1. Open a terminal on your Linux system.
+
+2. Log in to DevCloud.
+	```
+	ssh devcloud
+	```
+
+3. Download the samples.
+	```
+	git clone https://github.com/oneapi-src/oneAPI-samples.git
+	```
+
+4. Change directories to the Jacobi-Iterative sample directory.
+	```
+	cd ~/oneAPI-samples/DirectProgramming/DPC++/DenseLinearAlgebra/jacobi-iterative
+	```
 	
-	7.Clean-up the project files
+5. Build the sample on GPU node using
+	```	
+	qsub  -I  -l nodes=1:gpu:ppn=2 -d . 
+	```
+Note: -I (Upper case I) is used for Interactive mode, -l nodes=1:gpu:ppn=2 (lower case L) is used to assign one full GPU node to the job. Note: The -d . is used to 	       configure the current folder as the working directory for the task.
+
+6. Perform the same steps similar to Linux system.
 	
-	    make clean
+7. Clean-up the project files
+	```	
+	make clean
+	```
 	    
-	8. Disconnect from the Intel DevCloud.
+8. Disconnect from the Intel DevCloud.
+	```
+	exit
+	```
 	
-	     exit
-
