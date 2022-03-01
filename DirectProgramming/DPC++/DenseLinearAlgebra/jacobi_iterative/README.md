@@ -33,9 +33,16 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the Jacobi-Iterative Program for CPU and GPU
 
-Note: If you have not already done so, set up your CLI environment by sourcing the setvars script located in the root of your oneAPI installation.
-Linux Sudo: . /opt/intel/oneapi/setvars.sh	
-For more information on environment variables, see Use the setvars Script for Linux or macOS, or Windows
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 
 ### On a Linux System
 
