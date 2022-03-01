@@ -152,34 +152,33 @@ int main(int argc, char *argv[]) {
       constexpr float kRandomMin = 0;
       constexpr float kRandomMax = 1;
 
+      int current_matrix = matrix_index * kAMatrixSize;
+
       for (size_t row = 0; row < kRows; row++) {
         for (size_t col = 0; col < kColumns; col++) {
           float diag_scaling = (row == col) ? float{kRows} : 0;
 
+          int index = current_matrix + (col * kRows) + row;
+          int transpose_index = current_matrix + (row * kRows) + col;
+
           if (col >= row) {
             float random_real = RandomValueInInterval(kRandomMin, kRandomMax);
-
 #if COMPLEX == 0
-            a_matrix[(matrix_index * kAMatrixSize) + (col * kRows) + row] =
-                random_real + diag_scaling;
+            a_matrix[index] = random_real + diag_scaling;
 #else
             float random_imag =
                 row == col ? float{0}
                            : RandomValueInInterval(kRandomMin, kRandomMax);
             ac_complex<float> random_complex{random_real + diag_scaling,
                                              random_imag};
-            a_matrix[(matrix_index * kAMatrixSize) + (col * kRows) + row] =
-                random_complex;
+            a_matrix[index] = random_complex;
 #endif
           } else {
             // conjugate transpose
 #if COMPLEX == 0
-            a_matrix[(matrix_index * kAMatrixSize) + (col * kRows) + row] =
-                a_matrix[matrix_index * kAMatrixSize + row * kRows + col];
+            a_matrix[index] = a_matrix[transpose_index];
 #else
-            a_matrix[(matrix_index * kAMatrixSize) + (col * kRows) + row] =
-                a_matrix[(matrix_index * kAMatrixSize) + (row * kRows) + col]
-                    .conj();
+            a_matrix[index] = a_matrix[transpose_index].conj();
 #endif
           }
         }  // end of col
@@ -189,8 +188,7 @@ int main(int argc, char *argv[]) {
       std::cout << "A MATRIX " << matrix_index << std::endl;
       for (size_t row = 0; row < kRows; row++) {
         for (size_t col = 0; col < kColumns; col++) {
-          std::cout << a_matrix[(matrix_index * kAMatrixSize) 
-                                + (col * kRows) + row]
+          std::cout << a_matrix[current_matrix + (col * kRows) + row]
                     << " ";
         }  // end of col
         std::cout << std::endl;
@@ -267,16 +265,19 @@ int main(int argc, char *argv[]) {
           // L is finite at index i,j
           bool l_is_finite;
 
+          int current_matrix = matrix_index * kAMatrixSize;
+          int current_element = (j * kRows) + i;
+
 #if COMPLEX == 0
           ll_star_eq_a =
-              abs(a_matrix[(matrix_index * kAMatrixSize) + (j * kRows) + i] -
-                  l_l_star_ij) < kErrorThreshold;
+              abs(a_matrix[current_matrix + current_element] - l_l_star_ij) < 
+              kErrorThreshold;
 
 #else
           ll_star_eq_a =
-              (abs(a_matrix[(matrix_index * kAMatrixSize) + (j * kRows) + i].r()
+              (abs(a_matrix[current_matrix + current_element].r()
                 - l_l_star_ij.r()) < kErrorThreshold) &&
-              (abs(a_matrix[(matrix_index * kAMatrixSize) + (j * kRows) + i].i()
+              (abs(a_matrix[current_matrix + current_element].i()
                 - l_l_star_ij.i()) < kErrorThreshold);
 #endif
 
@@ -296,7 +297,7 @@ int main(int argc, char *argv[]) {
 
             if (!ll_star_eq_a) {
               std::cout << "Error: A[" << i << "][" << j << "] = "
-                        << a_matrix[(matrix_index * kAMatrixSize) 
+                        << a_matrix[(current_matrix * kAMatrixSize) 
                                     + (j * kRows) + i]
                         << " but LL*[" << i << "][" << j
                         << "] = " << l_l_star_ij << std::endl;
@@ -342,8 +343,7 @@ int main(int argc, char *argv[]) {
               << std::endl;
     std::cerr << "   In this run, more than "
               << ((kAMatrixSize + kLMatrixSize) * 2 * kMatricesToDecompose *
-                  sizeof(float)) /
-                     pow(2, 30)
+                  sizeof(float)) / pow(2, 30)
               << " GBs of memory was requested for the decomposition of a "
               << "matrix of size " << kRows << " x " << kColumns << std::endl;
     std::terminate();

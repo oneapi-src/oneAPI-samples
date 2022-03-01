@@ -75,7 +75,7 @@ void CholeskyDecompositionImpl(
   // Read the A matrix from the AMatrixPipe pipe and compute the Cholesky
   // decomposition. Write the L output matrix to the LMatrixPipe pipe.
   q.single_task<Cholesky>(
-      StreamingCholesky<T, is_complex, rows, raw_latency,
+      fpga_linalg::StreamingCholesky<T, is_complex, rows, raw_latency,
                         kNumElementsPerDDRBurst, AMatrixPipe, LMatrixPipe>());
 
   auto ddr_write_event =
@@ -145,7 +145,7 @@ void CholeskyDecompositionImpl(
 
   std::cout << "   Total duration:   " << diff << " s" << std::endl;
   std::cout << "Throughput: "
-            << repetitions * matrix_count / diff * 1e-3
+            << ((repetitions * matrix_count) / diff) * 1e-3
             << "k matrices/s" << std::endl;
 
   // Copy the L matrices result from the FPGA DDR to the host memory

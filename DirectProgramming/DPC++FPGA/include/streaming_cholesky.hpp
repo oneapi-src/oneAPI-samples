@@ -5,6 +5,37 @@
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 
+template <unsigned int num, unsigned int denom>
+constexpr int ceil_div(){
+  return (num % denom) ? (num / denom) + 1 : num / denom;
+}
+
+template<typename T, int max_fanout, int output_size>
+fpga_tools::NTuple<T, output_size> fanout_tree(T value){
+
+  fpga_tools::NTuple<T, output_size> output;
+
+  if constexpr (output_size > max_fanout){
+    constexpr int kNextLevelSize = ceil_div<output_size, max_fanout>();
+    auto next_level = sycl::ext::intel::fpga_reg(fanout_tree<T, max_fanout, kNextLevelSize>(value));
+    
+    fpga_tools::UnrolledLoop<output_size>([&](auto k) {
+      output.template get<k>() = next_level.template get<k/max_fanout>();
+    });
+
+  }
+  else{
+    fpga_tools::UnrolledLoop<output_size>([&](auto k) {
+      output.template get<k>() = value;
+    });
+  }
+  
+  return output;
+}
+
+
+namespace fpga_linalg {
+
 /*
   Cholesky decomposition - Computes L such that A=LL* where:
   - A is the input matrix (hermitian, positive definite)
@@ -143,50 +174,59 @@ struct StreamingCholesky {
       int column = 0;
       int row = 0;
       TT div_term{0};
-      [[intel::ivdep(raw_latency)]] for (int iteration = 0;
-                                         iteration < kTotalIterations;
-                                         iteration++) {
-        // Only do useful work for meaningful iterations
-        if (column <= row) {
-          // Perform the dot product of the elements of the two rows indexed by
-          // row and column from element 0 to column
+      [[intel::ivdep(raw_latency)]] // NO-FORMAT: Attribute
+      for (int iteration = 0; iteration < kTotalIterations; iteration++) {
+        // Perform the dot product of the elements of the two rows indexed by
+        // row and column from element 0 to column
 
-          TT sum = 0;
-          fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
-            TT to_add;
-            TT mul_lhs = l_result_compute[row][k];
-            TT mul_rhs = l_result_compute_copy[column][k];
+        auto column_tree = fanout_tree<int, 8, kColumns>(column);
+        auto row_tree = fanout_tree<int, 8, kColumns>(row);
 
-            if constexpr (is_complex) {
-              to_add = mul_lhs * mul_rhs.conj();
-            } else {
-              to_add = mul_lhs * mul_rhs;
-            }
-            sum += (k < column ? to_add : TT{0});
-          });
+        TT sum = 0;
+        fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
+          TT to_add;
+          bool should_compute =  k < column_tree.template get<k>();
+          TT mul_lhs = should_compute ? l_result_compute[row_tree.template get<k>()][k] : T{0};
+          TT mul_rhs = should_compute ? l_result_compute_copy[column_tree.template get<k>()][k] : T{0};
 
-          TT diff = a_load[row][column] - sum;
-          TT to_store;
-          if (row == column) {
-            // Perform the reciprocal sqrt rather than the sqrt because:
-            // - it has a shorter latency and will reduce the RAW latency
-            //   of the loop
-            // - the result of the sqrt is used as a divisor which is also
-            //   a long operation, so replacing x/sqrt by x*rsqrt will save
-            //   latency
-            // - the diagonal elements will need to be inverted later, but we
-            //   can do that while outside this loop when we transfer the L
-            //   matrix to the pipe
-            if constexpr (is_complex) {
-              div_term = {sycl::rsqrt(diff.r()), 0};
-            } else {
-              div_term = sycl::rsqrt(diff);
-            }
-            to_store = div_term;
+          // Adding pipeline stage before the multadd to help routing larger
+          // designs and achieve higher fmax
+          mul_lhs = sycl::ext::intel::fpga_reg(mul_lhs);
+          mul_rhs = sycl::ext::intel::fpga_reg(mul_rhs);
+
+          if constexpr (is_complex) {
+            to_add = mul_lhs * mul_rhs.conj();
           } else {
-            to_store = diff * div_term;
+            to_add = mul_lhs * mul_rhs;
           }
+          sum += to_add;
+        });
 
+        TT diff = a_load[row][column] - sum;
+
+        // Only do useful work for meaningful iterations
+        TT to_store;
+        if (row == column) {
+          // Perform the reciprocal sqrt rather than the sqrt because:
+          // - it has a shorter latency and will reduce the RAW latency
+          //   of the loop
+          // - the result of the sqrt is used as a divisor which is also
+          //   a long operation, so replacing x/sqrt by x*rsqrt will save
+          //   latency
+          // - the diagonal elements will need to be inverted later, but we
+          //   can do that while outside this loop when we transfer the L
+          //   matrix to the pipe
+          if constexpr (is_complex) {
+            div_term = {sycl::rsqrt(diff.r()), 0};
+          } else {
+            div_term = sycl::rsqrt(diff);
+          }
+          to_store = div_term;
+        } else {
+          to_store = diff * div_term;
+        }
+
+        if (column <= row) {
           // Store the results to two working copies of L to be able to read
           // two complete rows at each iteration
           l_result_compute[row][column] = to_store;
@@ -211,7 +251,8 @@ struct StreamingCholesky {
 
       // Go over the L matrix and write each element to the pipe
       int l_idx = 0;
-      [[intel::loop_coalesce(2)]] for (int row = 0; row < rows; row++) {
+      [[intel::loop_coalesce(2)]] // NO-FORMAT: Attribute
+      for (int row = 0; row < rows; row++) {
         for (int column = 0; column <= row; column++) {
           TT to_write;
           TT current_l_value = l_result[l_idx];
@@ -238,5 +279,7 @@ struct StreamingCholesky {
     }  // end of while(1)
   }    // end of operator
 };     // end of struct
+
+}  // namespace fpga_linalg
 
 #endif /* __STREAMING_CHOLESKY_HPP__ */
