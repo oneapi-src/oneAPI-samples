@@ -15,8 +15,8 @@ using namespace sycl;
 //
 // Performs LZ77 decoding for more than 1 element per cycle.
 // Streams in a 'FlagBundle' containing a 'LZ77InputData' (see common.hpp)
-// which contains either a symbol from upstream, or a {length, distance} pair.
-// Given a symbol input, this function simply tracks that symbol in a history
+// which contains either a literal from upstream, or a {length, distance} pair.
+// Given a literal input, this function simply tracks that literal in a history
 // buffer and writes it to the output. For a {length, distance} pair, this
 // this function reads 'literals_per_cycle' elements from the history buffer
 // per cycle and writes them to the output.
@@ -139,7 +139,7 @@ void LZ77DecoderMultiElement() {
       // for the case of literal(s), we will simply write it to the output
       #pragma unroll
       for (int i = 0; i < decltype(pipe_data.data)::max_symbols; i++) {
-        out_data.byte[i] = pipe_data.data.symbol[i];
+        out_data.byte[i] = pipe_data.data.literal[i];
       }
       out_data.valid_count = pipe_data.data.valid_count;
 
@@ -332,8 +332,8 @@ void LZ77DecoderSingleElement() {
       unsigned short dist = pipe_data.data.distance;
 
       // for the case of a literal, we will simply write it to the output
-      out_data.byte[0] = pipe_data.data.symbol[0];
-      out_data.valid_count = 1;
+      out_data.byte[0] = pipe_data.data.literal[0];
+      out_data.valid_count = ac_uint<1>(1);
 
       // if we get a length distance pair we will read 'pipe_data.data.length'
       // bytes starting at and offset of 'dist'
@@ -356,7 +356,7 @@ void LZ77DecoderSingleElement() {
           out_data.byte[0] = history_buffer_cache_val[j];
         }
       }
-      out_data.valid_count = 1;
+      out_data.valid_count = ac_uint<1>(1);
 
       // update the history read index
       read_history_buffer_idx =

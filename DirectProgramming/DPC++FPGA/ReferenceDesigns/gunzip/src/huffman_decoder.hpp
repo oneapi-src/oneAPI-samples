@@ -515,7 +515,7 @@ void HuffmanDecoder() {
             // for uncompressed blocks, simply read an 8-bit character from the
             // stream and write it to the output
             out_data.is_copy = false;
-            out_data.symbol[0] = byte;
+            out_data.literal[0] = byte;
             out_data.valid_count = 1;
             out_ready = true;
             uncompressed_bytes_remaining--;
@@ -619,7 +619,7 @@ void HuffmanDecoder() {
         ac_uint<9> lit_idx = lit_base_idx + lit_offset;
         ac_uint<9> dist_idx = dist_base_idx + dist_offset;
 
-        // lookup the literal (symbol or length) and distance using base_idx
+        // lookup the literal (literal or length) and distance using base_idx
         // and offset
         lit_symbol = lit_map[lit_idx];
         dist_symbol =  dist_map[dist_idx];
@@ -636,11 +636,10 @@ void HuffmanDecoder() {
           if (lit_symbol == 256) {
             // stop code hit, done this block
             block_done = true;
-            out_ready = false;
           } else if (lit_symbol < 256) {
-            // decoded a regular symbol (i.e. not a length)
+            // decoded a literal (i.e. not a length)
             out_data.is_copy = false;
-            out_data.symbol[0] = lit_symbol;
+            out_data.literal[0] = lit_symbol;
             out_data.valid_count = 1;
             out_ready = true;
           } else if (lit_symbol <= 264) {

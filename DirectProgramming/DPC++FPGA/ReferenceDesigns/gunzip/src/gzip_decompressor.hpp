@@ -39,22 +39,30 @@ std::vector<event> SubmitGzipDecompressKernels(queue& q, int in_count,
                                                int *crc_out, int *count_out) {
   static_assert(literals_per_cycle > 0);
   static_assert(fpga_tools::IsPow2(literals_per_cycle));
-  
+
   // the inter-kernel pipes for the GZIP decompression engine
   using GzipMetadataToHuffmanPipe =
     ext::intel::pipe<GzipMetadataToHuffmanPipeID, FlagBundle<unsigned char>>;
   using HuffmanToLZ77Pipe =
     ext::intel::pipe<HuffmanToLZ77PipeID, FlagBundle<GzipLZ77InputData<2>>, kHuffmanToLZ77PipeDepth>;
-  using LZ77ToByteStackerPipe =
-    ext::intel::pipe<LZ77ToByteStackerPipeID, FlagBundle<BytePack<literals_per_cycle>>>;
 
   // submit the GZIP decompression kernels
   auto header_event = SubmitGzipMetadataReader<GzipMetadataReaderKernelID, InPipe, GzipMetadataToHuffmanPipe>(q, in_count, hdr_data_out, crc_out, count_out);
   auto huffman_event = SubmitHuffmanDecoder<HuffmanDecoderKernelID, GzipMetadataToHuffmanPipe, HuffmanToLZ77Pipe>(q);
-  auto lz77_event = SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe, LZ77ToByteStackerPipe, literals_per_cycle>(q);
-  auto byte_stacker_event = SubmitByteStacker<ByteStackerKernelID, LZ77ToByteStackerPipe, OutPipe, literals_per_cycle>(q);
 
-  return {header_event, huffman_event, lz77_event, byte_stacker_event};
+  // only need a ByteStacker kernel when literals_per_cycle > 1
+  if constexpr(literals_per_cycle > 1) {
+    using LZ77ToByteStackerPipe =
+    ext::intel::pipe<LZ77ToByteStackerPipeID, FlagBundle<BytePack<literals_per_cycle>>>;
+
+    auto lz77_event = SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe, LZ77ToByteStackerPipe, literals_per_cycle>(q);
+    auto byte_stacker_event = SubmitByteStacker<ByteStackerKernelID, LZ77ToByteStackerPipe, OutPipe, literals_per_cycle>(q);
+
+    return {header_event, huffman_event, lz77_event, byte_stacker_event};
+  } else {
+    auto lz77_event = SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe, OutPipe, literals_per_cycle>(q);
+    return {header_event, huffman_event, lz77_event};
+  }
 }
 
 #endif /* __GZIP_DECOMPRESSOR_HPP__ */

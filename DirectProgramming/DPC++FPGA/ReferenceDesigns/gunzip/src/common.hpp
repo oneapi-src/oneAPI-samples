@@ -44,6 +44,13 @@ struct LZ77InputData {
   static constexpr unsigned distance_bits =
     fpga_tools::Log2(max_distance) + 1;
 
+  static_assert(valid_count_bits > 0);
+  static_assert(n < fpga_tools::Pow2(valid_count_bits));
+  static_assert(length_bits > 0);
+  static_assert(max_length < fpga_tools::Pow2(length_bits));
+  static_assert(distance_bits > 0);
+  static_assert(max_distance < fpga_tools::Pow2(distance_bits));
+
   LZ77InputData() {}
   
   // indicates whether this is a symbol or {length, distance} pair
@@ -52,7 +59,7 @@ struct LZ77InputData {
   // either the symbols, or the length from the {length, distance} pair
   union {
     ac_uint<length_bits> length;
-    unsigned char symbol[n];
+    unsigned char literal[n];
   };
 
   // either the number of valid symbols, or the distance from the
@@ -69,9 +76,12 @@ struct LZ77InputData {
 // byte[0] and byte[1] are valid, while byte[2], byte[3], ..., byte[n-1] are
 // not
 //
-template<int n>
+template<unsigned n>
 struct BytePack {
-  static constexpr int count_bits = fpga_tools::Log2(n) + 1;
+  static constexpr unsigned count_bits = fpga_tools::Log2(n) + 1;
+  static_assert(count_bits > 0);
+  static_assert(n < fpga_tools::Pow2(count_bits));
+
   unsigned char byte[n];
   ac_uint<count_bits> valid_count;
 };
@@ -87,8 +97,9 @@ struct ByteSet {
 //
 // returns the number of trailing zeros
 //
-template<int bits>
-auto CTZ(const ac_uint<bits>& in) {
+template<int bits, bool is_signed>
+auto CTZ(const ac_int<bits, is_signed>& in) {
+  static_assert(bits > 0);
   constexpr int out_bits = fpga_tools::Log2(bits) + 1;
   //ac_uint<out_bits> ret(bits);
   ac_uint<out_bits> ret;

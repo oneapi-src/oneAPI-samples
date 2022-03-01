@@ -32,7 +32,7 @@ using namespace std::chrono;
 // This is sent to the LZ77 decoder to read multiple elements per cycle from
 // the history buffer.
 #ifndef LITERALS_PER_CYCLE
-#define LITERALS_PER_CYCLE 4
+#define LITERALS_PER_CYCLE 2
 #endif
 constexpr unsigned kLiteralsPerCycle = LITERALS_PER_CYCLE;
 static_assert(fpga_tools::IsPow2(kLiteralsPerCycle));
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
   bool default_test_mode = false;
   if (argc == 1 || argc == 2) {
     default_test_mode = true;
-  } else if (argc <= 3) {
+  } else if (argc > 4) {
     PrintUsage(argv[0]);
     return 1;
   }
