@@ -372,15 +372,12 @@ bool DecompressFile(queue& q, std::string f_in, std::string f_out, int runs,
         = (double)(decompressed_count_h) / (double)(in_count);
 
     // the number of input and output megabytes, respectively
-    size_t in_mb = in_count * sizeof(unsigned char) * 1e-6;
     size_t out_mb = decompressed_count_h * sizeof(unsigned char) * 1e-6;
 
     std::cout << "Execution time: " << avg_time_ms << " ms\n";
     std::cout << "Output Throughput: " << (out_mb / (avg_time_ms * 1e-3))
               << " MB/s\n";
     std::cout << "Compression Ratio: " << compression_ratio << "\n";
-    std::cout << "Input Throughput: " << (in_mb / (avg_time_ms * 1e-3))
-              << " MB/s\n";
   }
 
   return passed;

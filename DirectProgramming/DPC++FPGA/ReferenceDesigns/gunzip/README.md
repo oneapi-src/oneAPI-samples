@@ -151,10 +151,9 @@ Launching kernels for run 3
 All kernels have finished for run 3
 Launching kernels for run 4
 All kernels have finished for run 4
-Execution time: 3442.03 ms
-Output Throughput: 220.509 MB/s
-Compression Ratio: 3.422
-Input Throughput: 64.4968 MB/s
+Execution time: 7.12956 ms
+Output Throughput: 561.045 MB/s
+Compression Ratio: 1021.26
 >>>>> Throughput Test: PASSED <<<<<
 
 PASSED
