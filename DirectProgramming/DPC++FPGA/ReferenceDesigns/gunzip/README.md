@@ -11,7 +11,7 @@ This DPC++ reference design demonstrates an GZIP decompression design on an FPGA
 | OS                                | Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | Creating an efficient GZIP decompressor on an FPGA.
+| What you will learn               | Creating an efficient GZIP decompression engine on an FPGA.
 | Time to complete                  | 1 hour
 
 ## Purpose
@@ -171,7 +171,7 @@ The following source files can be found in the `src/` sub-directory.
 |:---                             |:---
 |`main.cpp`                       | Contains the `main()` function and the top-level launching, validation, and performance measurements.
 |`byte_bit_stream.hpp`            | A bitstream class that has 8-bits (a byte) written in and a dynamic number of bits read.
-|`byte_stacker.hpp`               | A kernel that accepts between 0 and N elements per cycle, collects up N elements, and writes out N elements.
+|`byte_stacker.hpp`               | A kernel that accepts between 0 and N elements per cycle, buffers N elements locally, and writes out N elements when possible.
 |`common.hpp`                     | Functions common across the design.
 |`gzip_decompressor.hpp`          | The top-level file for the GZIP decompressor. This file launches all of the GZIP kernels.
 |`gzip_header_data.hpp`           | A class to store the GZIP header data.
@@ -196,10 +196,10 @@ A DEFLATE block is is structured as follows:
   - 0x3 = reserved (N/A)
 - The remainder of the block depends on the block type:
   - **Uncompressed blocks** contain some additional bits to realign the block to a byte boundary, followed by a 2-byte `length`, 2-byte `nlength` (where `length = ~nlength`), and finally the uncompressed data. The number of bytes to read is indicated by the 2-byte `length` that was read.
-  - **Statically compressed** have a *static* Huffman table; a table defined in the DEFLATE format. Therefore the remainder of the data in the block is the payload to be decoded using this table.
-  - **Dynamically compressed** is illustrated in the figure below. The second table is a list of code lengths for the literal and distance symbols. It is used to create the Huffman table for decoding the payload data. The first table is used to encode the second table. So, to decode a dynamically compressed block, the reader must read the first table, then decode the second table using the first table, create the Huffman table from the code lengths of the second table, and finally decode the payload using the Huffman table.
+  - **Statically compressed blocks** have a *static* Huffman table; a table defined in the DEFLATE format. Therefore the remainder of the data in the block is the payload to be decoded using this table.
+  - **Dynamically compressed blocks** are illustrated in the figure below. The second table is a list of code lengths for the literal and distance symbols. It is used to create the Huffman table for decoding the payload data. The first table is used to encode the second table. So, to decode a dynamically compressed block, the reader must read the first table, then decode the second table using the first table, create the Huffman table from the code lengths of the second table, and finally decode the payload using the Huffman table.
 
-The GZIP decompression engine in this reference design fully supports all of the block types listed above.
+The GZIP decompression engine in this reference design supports all three block types.
 
 <img src="deflate_dynamic_block_format.png" alt="deflate_dynamic_block_format" width="600"/>
 
@@ -219,7 +219,7 @@ The following subsections will briefly discuss the high-level details of each of
 The GZIP metadata reader streams in in the GZIP file, a byte at a time, parses and strips away the GZIP header and footer, and forwards the remaining data to the DEFLATE portion of the decompression engine. The output of the GZIP Metadata Reader is a stream of DEFLATE format compressed blocks.
 
 #### Huffman Decoder
-The Huffman decoder streams in DEFLATE compressed blocks, a byte at a time, and streams out either literals (8-bit characters) or {length, distance} pairs. The Huffman decoder is not byte-aligned; it decodes the input stream bits at a time. To do this efficiently, the decoder uses the `ByteBitStream` class, which streams in bytes at a time but gives the decoder access to a configurable number of bits in parallel. This design takes advantage of the fact that the DEFLATE format limits code lengths to at most 15 bits.
+The Huffman decoder streams in DEFLATE compressed blocks, a byte at a time, and streams out either literals (8-bit characters) or {length, distance} pairs. The Huffman decoder is not byte-aligned; it decodes the input stream bits at a time. To do this efficiently, the decoder uses the `ByteBitStream` class, which streams in bytes at a time but gives the decoder access to all of the bits in parallel. This design takes advantage of the fact that the DEFLATE format limits code lengths to at most 15 bits.
 
 The structure of the Huffman decoder is shown in the image below. The decoder examines the next 15 bits in the bit stream and checks for matches of length 1-15 in parallel to create a 15-bit *valid bitmap*, where a 1 at bit `i` indicates that the code of length `i` matches a code in the Huffman table. For example, a value of `0b000000000000101` would indicate that there is a match of length 1 and 3.
 
@@ -227,7 +227,7 @@ To decode the next symbol, the decoder finds the *shortest* of the 15 matches th
 
 <img src="huffman_decoder.png" alt="huffman_decoder" width="700"/>
 
-The Huffman decoder uses two Huffman tables: a 289-element table for literals and lengths, and a 32-element table for distances. The decoder knows that if it decodes a length from the first table, as opposed to a literal, that the next symbol must be a distance. The Huffman decoder in this design uses an intelligent method for storing the Huffman tables that significantly reduces area and improves performance. The decoder takes advantage of the fact that *codes of the same bit lengths are sequential*. For the literal and length table, it stores 4 tables: a 289-element table that holds the symbols in increasing order of code length (`lit_map`), with no gaps. That is, it stores all symbols of length 1, followed directly by all symbols of length 2, and so on. Two 15-element tables store the first and last code for each code length (`first_code` and `last_code`), and another 15-element table stores the base index index of the first element in the `lit_map` table for each code length (`base_idx`). Then, for a code length `L` and the code value `C`, the pseudocode snippet below describes how these tables are used to check for a match and decode the symbol. As described earlier, this pseudocode is done in parallel 15 times for code lengths (`L`) of 1-15 bits.
+The Huffman decoder uses two Huffman tables: a 289-element table for literals and lengths, and a 32-element table for distances. The decoder knows that if it decodes a length from the first table that the next symbol must be a distance. The Huffman decoder in this design uses an intelligent method for storing the Huffman tables that significantly reduces area and improves performance. The decoder takes advantage of the fact that *codes of the same bit lengths are sequential*. For the literal and length table, it stores 4 tables: a 289-element table that holds the symbols in increasing order of code length (`lit_map`), with no gaps. That is, it stores all symbols of length 1, followed directly by all symbols of length 2, and so on. Two 15-element tables store the first and last code for each code length (`first_code` and `last_code`), and another 15-element table stores the base index of the first element in the `lit_map` table for each code length (`base_idx`). Then, for a code length `L` and the code value `C`, the pseudocode snippet below describes how these tables are used to check for a match and decode the symbol. As described earlier, this pseudocode is done in parallel 15 times for code lengths (`L`) of 1-15 bits.
 
 ```
 match = (C >= first_code[L]) && (C < last_code[L]);
