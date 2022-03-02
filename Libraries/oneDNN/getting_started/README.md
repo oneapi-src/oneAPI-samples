@@ -23,7 +23,7 @@ in Intel® DevCloud for oneAPI environment.
 
 ## Purpose
 
-This sample demonstrates the basics of the oneDNN programming model. With this code 
+This sample demonstrates the basics of the oneDNN programming model. With this code
 sample, you will learn:
 * How to create oneDNN memory objects.
 * How to get data from application buffer into an oneDNN memory object.
@@ -49,7 +49,35 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ## Building the sample for CPU and GPU
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### On a Linux System
 
@@ -91,9 +119,9 @@ source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_tbb
 CC=icc CXX=icpc cmake ..
 ```
 
-### On a Windows* System 
+### On a Windows* System
 
-Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or 
+Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or
 "Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
 1. Setup oneAPI development environment
 ```
@@ -130,7 +158,7 @@ You can specify the target device for this sample using command-line arguments:
 * `cpu` (default) directs the application to run on the system's CPU
 * `gpu` directs the sample to run on Intel GPU
 
-> Note: When executed with `gpu` parameter the 
+> Note: When executed with `gpu` parameter the
 > sample will return an error if the sample is compiled with oneDNN configuration
 > that does not support GPU, or no Intel GPUs are found in the system.
 
@@ -162,3 +190,7 @@ dnnl_verbose,info,gpu,engine,0,backend:Level Zero,name:Intel(R) Gen12LP,driver_v
 dnnl_verbose,exec,cpu,eltwise,jit:avx2,forward_inference,data_f32::blocked:acdb:f0 diff_undef::undef::f0,,alg:eltwise_relu alpha:0 beta:0,1x3x13x13,0.125
 Example passed on CPU.
 ```
+
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)

@@ -1,7 +1,7 @@
 # `oneDNN DPC++ Interoperability`Sample
 
-This C++ API example demonstrates programming for Intel&reg; Processor Graphics with SYCL extensions API in oneDNN. 
-Users will know how to access SYCL buffer and queue via oneDNN SYCL interoperability interfaces,  
+This C++ API example demonstrates programming for Intel&reg; Processor Graphics with SYCL extensions API in oneDNN.
+Users will know how to access SYCL buffer and queue via oneDNN SYCL interoperability interfaces,
 and this interface also helps users to execute a custom SYCL kernel with an oneDNN library.
 
 | Optimized for                      | Description
@@ -44,6 +44,24 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ## Building the sample for CPU and GPU
 
 ### On a Linux System
@@ -66,9 +84,9 @@ make
 ./bin/sycl-interop-buffer-cpp
 ```
 
-### On a Windows* System 
+### On a Windows* System
 
-Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or 
+Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or
 "Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
 1. Setup oneAPI development environment
 ```
@@ -103,7 +121,7 @@ You can specify the target device for this sample using command-line arguments:
 * `cpu` (default) directs the application to run on the system's CPU
 * `gpu` directs the sample to run on Intel GPU
 
-> Note: When executed with `gpu` parameter the 
+> Note: When executed with `gpu` parameter the
 > sample will return an error if there are no Intel GPUs are found in the system.
 
 You can get additional information during the execution of this sample by setting
@@ -136,3 +154,6 @@ dnnl_verbose,exec,cpu,eltwise,jit:avx2,forward_training,data_f32::blocked:abcd:f
 Example passed on CPU.
 ```
 
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)

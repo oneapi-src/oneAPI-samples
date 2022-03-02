@@ -17,13 +17,13 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 
 ## Purpose
-The `loop_coalesce` attribute enables you to direct the compiler to combine nested loops into a single loop. The attribute `[[intelfpga::loop_coalesce(N)]]` takes an integer argument `N`, that specifies how many nested loop levels that you want the compiler to attempt to coalesce.
+The `loop_coalesce` attribute enables you to direct the compiler to combine nested loops into a single loop. The attribute `[[intel::loop_coalesce(N)]]` takes an integer argument `N`, that specifies how many nested loop levels that you want the compiler to attempt to coalesce.
 
-**NOTE**: If you specify `[[intelfpga::loop_coalesce(1)]]` on nested loops, the compiler does not attempt to coalesce any of the nested loops.
+**NOTE**: If you specify `[[intel::loop_coalesce(1)]]` on nested loops, the compiler does not attempt to coalesce any of the nested loops.
 ### Example: Coalescing Two Loops
 
 ```
-[[intelfpga::loop_coalesce(2)]]
+[[intel::loop_coalesce(2)]]
 for (int i = 0; i < N; i++)
   for (int j = 0; j < M; j++)
     sum[i][j] += i+j;

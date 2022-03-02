@@ -297,32 +297,34 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     h.single_task<JoinPartSupplierSupplier>(
           [=]() [[intel::kernel_args_restrict]] {
       // +1 is to account for fact that SUPPKEY is [1,kSF*10000]
-      using ArrayMapType = ArrayMap<SupplierRow, kSupplierTableSize + 1>;
-      ArrayMapType array_map;
-      array_map.Init();
+      unsigned char nation_key_map_data[kSupplierTableSize + 1];
+      bool nation_key_map_valid[kSupplierTableSize + 1];
+      for (int i = 0; i < kSupplierTableSize + 1; i++) {
+        nation_key_map_valid[i] = false;
+      }
 
       ///////////////////////////////////////////////
       //// Stage 1
       // populate the array map
-      // why a map? keys may not be sequential.
-      [[intel::initiation_interval(1), intel::ivdep]]
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < s_rows; i++) {
-        // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed
         // to be unique in range [1:kSF*10000]
         DBIdentifier s_suppkey = i + 1;
         unsigned char s_nationkey = s_nationkey_accessor[i];
-
-        array_map.Set(s_suppkey, SupplierRow(true, s_suppkey, s_nationkey));
+        
+        nation_key_map_data[s_suppkey] = s_nationkey;
+        nation_key_map_valid[s_suppkey] = true;
       }
       ///////////////////////////////////////////////
 
       ///////////////////////////////////////////////
       //// Stage 2
       // MAPJOIN PARTSUPPLIER and SUPPLIER tables by suppkey
-      MapJoin<ArrayMapType, PartSupplierPipe, PartSupplierRow,
+      MapJoin<unsigned char, PartSupplierPipe, PartSupplierRow,
               kPartSupplierDuplicatePartkeys, PartSupplierPartsPipe,
-              SupplierPartSupplierJoined>(array_map);
+              SupplierPartSupplierJoined>(nation_key_map_data,
+                                          nation_key_map_valid);
 
       // tell downstream we are done
       PartSupplierPartsPipe::write(
@@ -381,8 +383,8 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       // the accumulators
-      constexpr int ACCUM_CACHE_SIZE = 7;
-      BRAMAccumulator<DBDecimal, (25 * 7), ACCUM_CACHE_SIZE, unsigned char>
+      constexpr int kAccumCacheSize = 7;
+      BRAMAccumulator<DBDecimal, (25 * 7), kAccumCacheSize, unsigned char>
           sum_profit_local[kFinalDataMaxSize];
 
       // initialize the accumulators
@@ -392,7 +394,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
       bool done = false;
 
-      [[intel::initiation_interval(1), intel::ivdep(ACCUM_CACHE_SIZE)]]
+      [[intel::initiation_interval(1), intel::ivdep(kAccumCacheSize)]]
       do {
         FinalPipeData pipe_data = FinalPipe::read();
         done = pipe_data.done;

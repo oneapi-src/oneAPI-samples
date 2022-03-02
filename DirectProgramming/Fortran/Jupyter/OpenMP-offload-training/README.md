@@ -63,3 +63,8 @@ Third party program Licenses can be found here:
 * OpenMP Constructs and Teams
 * Host Device Concurrency
 * _Lab Exercise_: OpenMP Device Parallelism
+
+[Unified Shared Memory](USM) 
+* Allocating Unified Shared Memory
+* USM Explicit Data Movement
+* _Lab Exercise_: Unified Shared Memory

@@ -6,9 +6,8 @@
 #include <array>
 
 // utility classes
-#include "PipeDuplicator.hpp"
 #include "mvdr_complex.hpp"
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
 
 // MVDR processing kernels
 #include "BackwardSubstitution.hpp"
@@ -148,22 +147,29 @@ template <
 
     // copies of internal pipes, useful for debugging or other processing
     // all default to 'null' pipes that go nowhere
-    typename TrainingDataPipeOut = PipeDuplicator<
-        MVDRNullPipeID, NTuple<ComplexType, k_num_complex_per_xrx_read>>,
-    typename XrxDataPipeOut = PipeDuplicator<
-        MVDRNullPipeID, NTuple<ComplexType, k_num_complex_per_xrx_read>>,
+    typename TrainingDataPipeOut =
+        fpga_tools::PipeDuplicator<MVDRNullPipeID,
+          NTuple<ComplexType, k_num_complex_per_xrx_read>>,
+    typename XrxDataPipeOut =
+        fpga_tools::PipeDuplicator<MVDRNullPipeID,
+          NTuple<ComplexType, k_num_complex_per_xrx_read>>,
     typename SteeringVectorsPipeOut =
-        PipeDuplicator<MVDRNullPipeID, ComplexType>,
+        fpga_tools::PipeDuplicator<MVDRNullPipeID, ComplexType>,
     typename ForwardSteeringVectorsPipeOut =
-        PipeDuplicator<MVDRNullPipeID, ComplexType>,
-    typename RMatrixPipeOut = PipeDuplicator<MVDRNullPipeID, ComplexType>,
-    typename RDiagRecipVectorPipeOut = PipeDuplicator<MVDRNullPipeID, float>,
+        fpga_tools::PipeDuplicator<MVDRNullPipeID, ComplexType>,
+    typename RMatrixPipeOut =
+        fpga_tools::PipeDuplicator<MVDRNullPipeID, ComplexType>,
+    typename RDiagRecipVectorPipeOut =
+        fpga_tools::PipeDuplicator<MVDRNullPipeID, float>,
     typename ForwardSubstitutionResultPipeOut =
-        PipeDuplicator<MVDRNullPipeID, ComplexType>,
-    typename YVectorsPipeOut = PipeDuplicator<MVDRNullPipeID, ComplexType>,
-    typename WeightVectorsPipeOut = PipeDuplicator<MVDRNullPipeID, ComplexType>,
-    typename TransposedTrainingDataPipeOut = PipeDuplicator<
-        MVDRNullPipeID, NTuple<ComplexType, k_num_complex_per_xrx_read>>>
+        fpga_tools::PipeDuplicator<MVDRNullPipeID, ComplexType>,
+    typename YVectorsPipeOut =
+        fpga_tools::PipeDuplicator<MVDRNullPipeID, ComplexType>,
+    typename WeightVectorsPipeOut =
+        fpga_tools::PipeDuplicator<MVDRNullPipeID, ComplexType>,
+    typename TransposedTrainingDataPipeOut =
+        fpga_tools::PipeDuplicator<MVDRNullPipeID,
+          NTuple<ComplexType, k_num_complex_per_xrx_read>>>
 MVDREventArray SubmitMVDRKernels(
     queue& q,
     short num_xrx_per_weights  // Number of xrx vectors to process with
@@ -190,8 +196,9 @@ MVDREventArray SubmitMVDRKernels(
       sycl::ext::intel::pipe<TrainingDataPipeID<k_instance_num>, XrxPipeType,
                         kTrainingDataPipeMinDepth>;
   using TrainingDataDupPipe =
-      PipeDuplicator<TrainingDataDupPipeID<k_instance_num>, XrxPipeType,
-                     TrainingDataPipe, TrainingDataPipeOut>;
+      fpga_tools::PipeDuplicator<TrainingDataDupPipeID<k_instance_num>,
+                                 XrxPipeType, TrainingDataPipe,
+                                 TrainingDataPipeOut>;
 
   // Xrx processing data pipe and duplicator (after demux from input data)
   // Must provide sufficient depth to not produce backpressure while training
@@ -209,8 +216,9 @@ MVDREventArray SubmitMVDRKernels(
       sycl::ext::intel::pipe<SteeringVectorsPipeID<k_instance_num>, ComplexType,
                         kSteeringVectorsPipeMinDepth>;
   using SteeringVectorsDupPipe =
-      PipeDuplicator<SteeringVectorsDupPipeID<k_instance_num>, ComplexType,
-                     SteeringVectorsPipe, SteeringVectorsPipeOut>;
+      fpga_tools::PipeDuplicator<SteeringVectorsDupPipeID<k_instance_num>,
+                                 ComplexType, SteeringVectorsPipe,
+                                 SteeringVectorsPipeOut>;
   using UpdateSteeringVectorsPipe =
       sycl::ext::intel::pipe<UpdateSteeringVectorsPipeID<k_instance_num>, bool, 1>;
 
@@ -220,9 +228,9 @@ MVDREventArray SubmitMVDRKernels(
       sycl::ext::intel::pipe<ForwardSteeringVectorsPipeID<k_instance_num>,
                         ComplexType, kSteeringVectorsPipeMinDepth>;
   using ForwardSteeringVectorsDupPipe =
-      PipeDuplicator<ForwardSteeringVectorsDupPipeID<k_instance_num>,
-                     ComplexType, ForwardSteeringVectorsPipe,
-                     ForwardSteeringVectorsPipeOut>;
+      fpga_tools::PipeDuplicator<
+          ForwardSteeringVectorsDupPipeID<k_instance_num>, ComplexType,
+          ForwardSteeringVectorsPipe, ForwardSteeringVectorsPipeOut>;
 
   // R matrix and R matrix reciprocal diagonal entries pipes and duplicator
   // Connect StreamingQRD to ForwardSubstitution and BackwardSubstitution
@@ -232,25 +240,27 @@ MVDREventArray SubmitMVDRKernels(
   // from ForwardSubstitution.
   constexpr int kRMatrixPipeMinDepth =
       ((k_num_sensor_inputs * (k_num_sensor_inputs + 1)) / 2) * 2;
-  using RMatrixPipes = PipeArray<RMatrixPipesID<k_instance_num>, ComplexType,
-                                 kRMatrixPipeMinDepth, 2>;
+  using RMatrixPipes =
+      fpga_tools::PipeArray<RMatrixPipesID<k_instance_num>, ComplexType,
+                            kRMatrixPipeMinDepth, 2>;
   using RMatrixFSPipe = typename RMatrixPipes::template PipeAt<0>;
   using RMatrixBSPipe = typename RMatrixPipes::template PipeAt<1>;
   using RMatrixDupPipe =
-      PipeDuplicator<RMatrixDupPipeID<k_instance_num>, ComplexType,
-                     RMatrixFSPipe, RMatrixBSPipe, RMatrixPipeOut>;
+      fpga_tools::PipeDuplicator<RMatrixDupPipeID<k_instance_num>, ComplexType,
+                                 RMatrixFSPipe, RMatrixBSPipe, RMatrixPipeOut>;
   constexpr int kRDiagRecipVectorPipeMinDepth = k_num_sensor_inputs * 2;
   using RDiagRecipVectorPipes =
-      PipeArray<RDiagRecipVectorPipesID<k_instance_num>, float,
-                kRDiagRecipVectorPipeMinDepth, 2>;
+      fpga_tools::PipeArray<RDiagRecipVectorPipesID<k_instance_num>, float,
+                            kRDiagRecipVectorPipeMinDepth, 2>;
   using RDiagRecipVectorFSPipe =
       typename RDiagRecipVectorPipes::template PipeAt<0>;
   using RDiagRecipVectorBSPipe =
       typename RDiagRecipVectorPipes::template PipeAt<1>;
   using RDiagRecipVectorDupPipe =
-      PipeDuplicator<RDiagRecipVectorDupPipeID<k_instance_num>, float,
-                     RDiagRecipVectorFSPipe, RDiagRecipVectorBSPipe,
-                     RDiagRecipVectorPipeOut>;
+      fpga_tools::PipeDuplicator<RDiagRecipVectorDupPipeID<k_instance_num>,
+                                 float, RDiagRecipVectorFSPipe,
+                                 RDiagRecipVectorBSPipe,
+                                 RDiagRecipVectorPipeOut>;
 
   // Forward substitution result pipe and duplicator
   // Connect ForwardSubstitution to BackwardSubstitution
@@ -258,9 +268,9 @@ MVDREventArray SubmitMVDRKernels(
       sycl::ext::intel::pipe<ForwardSubstitutionResultPipeID<k_instance_num>,
                         ComplexType, k_num_sensor_inputs>;
   using ForwardSubstitutionResultDupPipe =
-      PipeDuplicator<ForwardSubstitutionResultDupPipeID<k_instance_num>,
-                     ComplexType, ForwardSubstitutionResultPipe,
-                     ForwardSubstitutionResultPipeOut>;
+      fpga_tools::PipeDuplicator<
+          ForwardSubstitutionResultDupPipeID<k_instance_num>, ComplexType,
+          ForwardSubstitutionResultPipe, ForwardSubstitutionResultPipeOut>;
 
   // Y vectors pipe
   // Y = (inverse(R x Rtranspose) ) * (complex_conjugate(C)) , where
@@ -269,8 +279,8 @@ MVDREventArray SubmitMVDRKernels(
   using YVectorsPipe = sycl::ext::intel::pipe<YVectorsPipeID<k_instance_num>,
                                          ComplexType, k_num_sensor_inputs>;
   using YVectorsDupPipe =
-      PipeDuplicator<YVectorsDupPipeID<k_instance_num>, ComplexType,
-                     YVectorsPipe, YVectorsPipeOut>;
+      fpga_tools::PipeDuplicator<YVectorsDupPipeID<k_instance_num>,
+                                 ComplexType, YVectorsPipe, YVectorsPipeOut>;
 
   // Weight vectors pipe
   // Connect CalcWeights to Beamformer
@@ -280,15 +290,16 @@ MVDREventArray SubmitMVDRKernels(
       sycl::ext::intel::pipe<WeightVectorsPipeID<k_instance_num>, ComplexType,
                         kWeightVectorsPipeMinDepth>;
   using WeightVectorsDupPipe =
-      PipeDuplicator<WeightVectorsDupPipeID<k_instance_num>, ComplexType,
-                     WeightVectorsPipe, WeightVectorsPipeOut>;
+      fpga_tools::PipeDuplicator<WeightVectorsDupPipeID<k_instance_num>,
+                                 ComplexType, WeightVectorsPipe,
+                                 WeightVectorsPipeOut>;
 
   // Q matrix pipe
   // Q matrix not used in MVDR design, so this is a 'null' pipe (a
   // PipeDuplicator with no output pipes connected)
   using QMatrixColumn = NTuple<ComplexType, k_num_sensor_inputs>;
   using QMatrixPipe =
-      PipeDuplicator<QMatrixPipeID<k_instance_num>, QMatrixColumn>;
+      fpga_tools::PipeDuplicator<QMatrixPipeID<k_instance_num>, QMatrixColumn>;
 
   // transposed training data pipe
   constexpr int kTransposedTrainingDataPipeMinDepth = kTrainingDataPipeMinDepth;
@@ -296,9 +307,9 @@ MVDREventArray SubmitMVDRKernels(
       sycl::ext::intel::pipe<TransposedTrainingDataPipeID<k_instance_num>,
                         XrxPipeType, kTransposedTrainingDataPipeMinDepth>;
   using TransposedTrainingDataDupPipe =
-      PipeDuplicator<TransposedTrainingDataDupPipeID<k_instance_num>,
-                     XrxPipeType, TransposedTrainingDataPipe,
-                     TransposedTrainingDataPipeOut>;
+     fpga_tools:: PipeDuplicator<
+        TransposedTrainingDataDupPipeID<k_instance_num>, XrxPipeType,
+        TransposedTrainingDataPipe, TransposedTrainingDataPipeOut>;
 
   // array of events to return
   // use MVDRKernelNames enum as indicies into the array
