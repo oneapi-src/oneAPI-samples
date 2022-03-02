@@ -93,45 +93,43 @@ void CholeskyDecompositionImpl(
 
     // Repeat matrix_count complete L matrix pipe reads
     // for as many repetitions as needed
+    [[intel::loop_coalesce(2)]]
     for (int repetition_index = 0; repetition_index < repetitions;
-      repetition_index++) {
+                                                          repetition_index++) {
       for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
-        [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
-        [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-        TT l_result[kLMatrixSize / kNumElementsPerDDRBurst + kExtraIteration]
-                                                      [kNumElementsPerDDRBurst];
-        // Read a full L matrix
-        for (int vector_elem = 0; vector_elem < kLMatrixSize; vector_elem++) {
-          l_result[vector_elem / kNumElementsPerDDRBurst]
-                                      [vector_elem % kNumElementsPerDDRBurst] =
-                                                            LMatrixPipe::read();
-        }  // end of vector_elem
 
-        // Copy the L matrix result to DDR
         for (int li = 0; li < kLoopIter; li++) {
-          if constexpr (kIncompleteBurst) {
-            // Write a burst of kNumElementsPerDDRBurst elements to DDR
-            #pragma unroll
-            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              if (li * kNumElementsPerDDRBurst + k < kLMatrixSize) {
-                vector_ptr_device[matrix_index * kLMatrixSize +
-                                            li * kNumElementsPerDDRBurst + k] =
-                                                                l_result[li][k];
-              }
-            }
-          } else {
-            // Write a burst of kNumElementsPerDDRBurst elements to DDR
-            #pragma unroll
-            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              vector_ptr_device[matrix_index * kLMatrixSize +
-                       li * kNumElementsPerDDRBurst + k] =
-              l_result[li][k];
+          TT bank[kNumElementsPerDDRBurst];
+
+          for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
+            if(li * kNumElementsPerDDRBurst + k < kLMatrixSize){
+              bank[k] = LMatrixPipe::read();
             }
           }
-        }  // end of matrix_index
-      }    // end of repetition_index
-    }      // end of li
-   });
+
+          // Copy the L matrix result to DDR
+          if constexpr (kIncompleteBurst){
+            // Write a burst of kNumElementsPerDDRBurst elements to DDR
+            #pragma unroll
+            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
+              if(li * kNumElementsPerDDRBurst + k < kLMatrixSize){
+                vector_ptr_device[matrix_index * kLMatrixSize
+                          + li * kNumElementsPerDDRBurst + k] = bank[k];
+              }
+            }
+          }
+          else{
+            // Write a burst of kNumElementsPerDDRBurst elements to DDR
+            #pragma unroll
+            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
+              vector_ptr_device[matrix_index * kLMatrixSize
+                          + li * kNumElementsPerDDRBurst + k] = bank[k];
+            }
+          }
+        }  // end of li
+      }  // end of matrix_index
+    }    // end of repetition_index
+  });
 
   ddr_write_event.wait();
 
