@@ -284,6 +284,7 @@ Output of sample with the `intel::initiation_interval` attribute:
 ```txt
 Kernel_ENABLE_II Throughput: 0.117578MB/s
 Exec Time: 32.4439s , InputMB: 3.8147MB
+PASSED
 ```
 ### Discussion of Results
 

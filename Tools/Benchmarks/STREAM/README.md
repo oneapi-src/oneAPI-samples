@@ -1,12 +1,12 @@
 # STREAM Sample
 
-This package contains a modified version of the [Stream Benchmark](http://www.cs.virginia.edu/stream/) implementation using DPC++ for CPU and GPU. 
+This package contains a modified version of the [Stream Benchmark](http://www.cs.virginia.edu/stream/) implementation using DPC++ for CPU and GPU.
 
 
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 20.04
-| Hardware                          | GEN9, Iris-Xe Max 
+| Hardware                          | GEN9, Iris-Xe Max
 | Software                          | Intel&reg; oneAPI DPC++ Compiler
 | What you will learn               | How to benchmark the memory bandwidth using STREAM.
 | Time to complete                  | 5 minutes
@@ -15,7 +15,7 @@ This package contains a modified version of the [Stream Benchmark](http://www.cs
 ## Purpose
 The STREAM sample performs the memory bandwidth benchmark.
 
-## Key Implementation Details 
+## Key Implementation Details
 This sample contains a STREAM implementation using DPC++ for CPU and GPU and is a variant of the [STREAM](http://www.cs.virginia.edu/stream/) benchmark code. Please review the license terms regarding publishing benchmarks.”
 
 ## License
@@ -35,7 +35,7 @@ For the original [Stream License]( http://www.cs.virginia.edu/stream/FTP/Code/LI
   3. You are free to publish results obtained from running this
      program, or from works that you derive from this program,
      with the following limitations:
-     
+
      3a. In order to be referred to as "STREAM benchmark results",
          published results must be in conformance to the STREAM
          Run Rules, (briefly reviewed below) published at
@@ -43,16 +43,16 @@ For the original [Stream License]( http://www.cs.virginia.edu/stream/FTP/Code/LI
          and incorporated herein by reference.
          As the copyright holder, John McCalpin retains the
          right to determine conformity with the Run Rules.
-     
+
      3b. Results based on modified source code or on runs not in
          accordance with the STREAM Run Rules must be clearly
          labelled whenever they are published.  Examples of
          proper labelling include:
-         "tuned STREAM benchmark results" 
+         "tuned STREAM benchmark results"
          "based on a variant of the STREAM benchmark code"
          Other comparable, clear and reasonable labelling is
          acceptable.
-     
+
      3c. Submission of results to the STREAM benchmark web site
          is encouraged, but not required.
   4. Use of this program or creation of derived works based on this
@@ -60,20 +60,41 @@ For the original [Stream License]( http://www.cs.virginia.edu/stream/FTP/Code/LI
   5. Absolutely no warranty is expressed or implied.
 ***
 
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to
+this readme for instructions on how to build and run a sample.
+
 ## Building the `STREAM` Program for CPU and GPU
 
-### On a Linux* System 
+### On a Linux* System
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-Perform the following steps:
-
-> Note: If you have not already done so, set up your CLI environment by sourcing 
->    the setvars script located in the root of your oneAPI installation.  
->     
->   Linux (sudo): `source /opt/intel/oneapi/setvars.sh`  
->   Linux (user): `~/intel/oneapi/ setvars.sh`  
-
-1. Build the program using the following `cmake` commands. 
-``` 
+1. Build the program using the following `cmake` commands.
+```
 $ mkdir build
 $ cd build
 $ cmake ..
@@ -87,6 +108,15 @@ $ make
     ```
     make clean
     ```
+
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ## Running the Sample
 ```
