@@ -56,8 +56,7 @@ configuration steps:
 This sample uses a configuration script to automatically configure the
 environment. This provides fast and less error prone setup. For
 complete instructions for using the oneAPI AI Analytics containers see
-the [Getting Started Guide]
-(https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top/using-containers.html.)
+the [Getting Started Guide](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top/using-containers.html.)
 
 To run the configuration script on Linux*, type the following command
 in the terminal with [Docker](https://docs.docker.com/engine/install/)
