@@ -3,7 +3,18 @@
 This Sample Demonstrates the number of iterations needed to solve system of Linear Equations using Jacobi Iterative Method. 
 This Jacobi-iterative sample is implemented using DPC++ and SYCL for Intel CPU and GPU.
 
-This sample contains four versions of the same program: 
+
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | Linux Ubuntu 20.04
+| Hardware                          | Skylake with GEN9 or newer
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | How to migrate CUDA to SYCL
+| Time to complete                  | 15 minutes
+
+This Sample is migrated from NVIDIA CUDA sample, Refer [NVIDIA Sample](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/3_CUDA_Features/jacobiCudaGraphs).
+
+This sample contains four SYCL versions of the same program: 
 
 `sycl_dpct_migrated`         -> It contains DPCT tool migrated code from CUDA code with manual changes for it to work functionally. 
 
@@ -33,18 +44,6 @@ This sample contains four versions of the same program: 
 | src 			| Manually migrated files(.cpp and .h)
 | CMakeLists.txt 	| Build file
 
-This Sample is migrated from NVIDIA CUDA sample, Refer [NVIDIA Sample](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/3_CUDA_Features/jacobiCudaGraphs).
-
-	
-
-| Optimized for                     | Description
-|:---                               |:---
-| OS                                | Linux Ubuntu 20.04
-| Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
-| What you will learn               | How to migrate CUDA to SYCL
-| Time to complete                  | 15 minutes
-
 	
 ## Purpose
 
@@ -53,7 +52,38 @@ The Jacobi method is used to find approximate numerical solutions for systems of
 
 ## Key implementation details
 
-DPC++ and SYCL Implementation is explained in the code using key concepts such as Stream Capture, Atomics and Cooperative Groups.
+DPC++ and SYCL Implementation is explained in the code using key concepts such as Cooperative Groups, Shared Memory, Reduction Stream Capture and Atomics.
+
+In our case, the matrix is initiated with inputs by generating it randomly with NROWS in createLinearSystem function.
+All computations happen inside a for-loop. There are two exit criteria from the loop, first is when we reach maximum number of iteration and second is when the final error falls below the desired tolerance.
+
+Each iteration has two parts: Jacobi Method computation and Final Error computation. 
+
+Here we compute the resulting vector of the iteration x_new. Each iteration of the Jacobi method performs the following update for the resulting vector:
+
+```
+x_new = D^{-1}(b - (A - D) x)
+```
+
+where n x n matrix D is a diagonal component of the matrix A. Vector x is the result of the previous iteration (or an initial guess at the first iteration).  Vector x_new is the result of the current iteration. 
+
+In the sample, this computation is offloaded to the `Jacobi Method` device. In both Jacobi method and final error computations we use shared memory, cooperative groups and reduction. x and b vectors are loaded into shared memory for the faster and frequent memory access to the block. 
+
+Cooperative groups are used in further dividing the work group into subgroups. Since the computation shown above happens inside subgroups which eliminates the need of block barriers and also are apt for the low granularity of reduction algorithm having each thread run much more efficiently or distributing the work effectively.
+
+The reduction is performed using sync() to synchronize over different thread blocks rather than over entire grid so the implementation is lot more faster avoiding synchronization block.
+
+Shift group left is a SYCL primitive used to do the computation within the subgroup to add all the thread values and are passed on to the first thread. And all the subgroup sums are added through atomic add.
+
+
+ 
+                                 
+To calculate the `Final error`, we added the absolute value of x substracted with 1 to the warpsum(each thread values are added) and then all the warpsum values are added to the blocksum. And the final error is stored in the g_sum.
+
+At each iteration we compute the final error as:
+```
+g_sum =  Σ (x - 1)
+```
 
 
 ## License
@@ -74,7 +104,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 >
 > Linux User: . ~/intel/oneapi/setvars.sh
 >
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
+>For more information on environment variables, see Use the setvars Script for [Linux](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
 
 ### On a Linux System
@@ -194,7 +224,7 @@ sycl_migrated_optimized for GPU
 
 ### Running Samples In DevCloud
 
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
 1. Open a terminal on your Linux system.
 
