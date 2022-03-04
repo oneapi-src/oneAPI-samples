@@ -2,6 +2,39 @@
 
 This Sample Demonstrates the number of iterations needed to solve system of Linear Equations using Jacobi Iterative Method. 
 This Jacobi-iterative sample is implemented using DPC++ and SYCL for Intel CPU and GPU.
+
+This sample contains four versions of the same program: 
+
+`sycl_dpct_migrated`         -> It contains DPCT tool migrated code from CUDA code with manual changes for it to work functionally. 
+
+| Component 		| Description
+|:---			|:---
+| Common 		| Helper utility headerfiles
+| src 			| DPCT migrated files(.cpp and .h)
+| CMakeLists.txt 	| Build file
+
+`sycl_dpct_output`           -> It contains DPCT tool migrated code(with few API's unmigrated) from CUDA code without manual change, hence not functionally working and no 				   build enabled.
+| Component 		| Description
+|:---			|:---
+| Common 		| Helper utility headerfiles
+| src 			| DPCT migrated files(.cpp and .h)
+				
+`sycl_migrated`              -> It contains Manually migrated SYCL code from CUDA code.
+
+| Component 		| Description
+|:---			|:---
+| src 			| Manually migrated files(.cpp and .h)
+| CMakeLists.txt 	| Build file
+				
+`sycl_migrated_optimized`    -> It contains Manually migrated SYCL code from CUDA code with atomic operations optimization.
+
+| Component 		| Description
+|:---			|:---
+| src 			| Manually migrated files(.cpp and .h)
+| CMakeLists.txt 	| Build file
+
+This Sample is migrated from NVIDIA CUDA sample, Refer [NVIDIA Sample](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/3_CUDA_Features/jacobiCudaGraphs).
+
 	
 
 | Optimized for                     | Description
@@ -55,20 +88,21 @@ Perform the following steps:
 	$ cmake ..
 	$ make
 	```
+	 This builds  `sycl_dpct_migrated`, `sycl_migrated` and `sycl_migrated_optimized` versions of the program.
 	
 2.	Run the program:
 
-		For sycl_migrated, run using following steps
-			$make run_cpu  (for CPU device)
-			$make run_gpu  (for GPU device)
+		Run sycl_dpct_migrated using following commands,
+			$ make run_sdm_cpu  (for CPU device)
+			$ make run_sdm_gpu  (for GPU device)
 
-		For sycl_migrated_optimized
-			$make run_smo_cpu
-			$make run_smo_gpu
+		Run sycl_migrated using following commands,
+			$ make run_cpu
+			$ make run_gpu
 			
-		For dpct_sycl_migrated
-			$make run_dsm_cpu
-			$make run_dsm_gpu
+		Run sycl_migrated_optimized using following commands,
+			$ make run_smo_cpu
+			$ make run_smo_gpu
 
 3.	Clean the program using:
 
@@ -79,18 +113,82 @@ Perform the following steps:
 
 If an error occurs, you can get more details by running make with the VERBOSE=1 argument: make VERBOSE=1 For more comprehensive troubleshooting, use the Diagnostics Utility for Intel® oneAPI Toolkits, which provides system checks to find missing dependencies and permissions errors. Learn more.
 
-Example of Output
+## Example of Output for NROWS = 1024
 
-	Serial Implementation : 
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 1596.404175 (ms)
+sycl_dpct_migrated for CPU
+
+	CPU iterations : 6263
+	CPU error : 4.987e-03
+	CPU Processing time: 1598.485962 (ms)
+	GPU iterations : 6263
+	GPU error : 4.987e-03
+	GPU Processing time: 9653.565430 (ms)
+	jacobiSYCL PASSED
 	
-	Running on Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
-	Parallel Implementation : 
+sycl_dpct_migrated for GPU
+
+	CPU iterations : 6263
+	CPU error : 4.987e-03
+	CPU Processing time: 1306.244019 (ms)
+	GPU iterations : 6263
+	GPU error : 4.987e-03
+	GPU Processing time: 4290.418945 (ms)
+	jacobiSYCL PASSED
+	
+sycl_migrated for CPU
+
+	Serial Implementation :
 	Iterations : 6263
 	Error : 4.987e-03
-	Processing time : 8463.482422 (ms)
+	Processing time : 1560.310547 (ms)
+
+	Running on Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+	Parallel Implementation :
+	Iterations : 6263
+	Error : 4.987e-03
+	Processing time : 8629.206055 (ms)
+	JacobiSYCL PASSED
+
+sycl_migrated for GPU
+
+	Serial Implementation :
+	Iterations : 6263
+	Error : 4.987e-03
+	Processing time : 1288.634888 (ms)
+
+	Running on Intel(R) UHD Graphics P630 [0x3e96]
+	Parallel Implementation :
+	Iterations : 6263
+	Error : 4.987e-03
+	Processing time : 4202.227051 (ms)
+	JacobiSYCL PASSED
+	
+sycl_migrated_optimized for CPU
+
+	Serial Implementation :
+	Iterations : 6263
+	Error : 4.987e-03
+	Processing time : 1595.077881 (ms)
+
+	Running on Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+	Parallel Implementation :
+	Iterations : 6263
+	Error : 4.987e-03
+	Processing time : 9081.323242 (ms)
+	JacobiSYCL PASSED
+
+sycl_migrated_optimized for GPU
+
+	Serial Implementation :
+	Iterations : 6263
+	Error : 4.987e-03
+	Processing time : 1315.337280 (ms)
+
+	Running on Intel(R) UHD Graphics P630 [0x3e96]
+	Parallel Implementation :
+	Iterations : 6263
+	Error : 4.987e-03
+	Processing time : 5225.020996 (ms)
 	JacobiSYCL PASSED
 
 
@@ -119,7 +217,7 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 	```	
 	qsub  -I  -l nodes=1:gpu:ppn=2 -d . 
 	```
-Note: -I (Upper case I) is used for Interactive mode, -l nodes=1:gpu:ppn=2 (lower case L) is used to assign one full GPU node to the job. Note: The -d . is used to 	       configure the current folder as the working directory for the task.
+   Note: -I (Upper case I) is used for Interactive mode, -l nodes=1:gpu:ppn=2 (lower case L) is used to assign one full GPU node to the job. Note: The -d . is used to 	          configure the current folder as the working directory for the task.
 
 6. Perform the same steps similar to Linux system.
 	
