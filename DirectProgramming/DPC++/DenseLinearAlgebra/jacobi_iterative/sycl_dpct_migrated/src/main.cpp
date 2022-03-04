@@ -113,7 +113,7 @@ int main(int argc, char **argv) {
   free(A, dpct::get_default_queue());
   free(b, dpct::get_default_queue());
 
-  printf("&&&& jacobiCuda %s\n",
+  printf("jacobiSYCL %s\n",
          (fabs(sum - sumGPU) < conv_threshold) ? "PASSED" : "FAILED");
 
   return (fabs(sum - sumGPU) < conv_threshold) ? EXIT_SUCCESS : EXIT_FAILURE;
