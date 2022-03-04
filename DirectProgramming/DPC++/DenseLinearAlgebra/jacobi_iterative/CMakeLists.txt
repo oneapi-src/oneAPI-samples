@@ -13,7 +13,7 @@ endif ()
 
 option (BUILD_SYCL_MIGRATED_SUBPROJECT "Build targets from subproject sycl_migrated" ON)
 option (BUILD_SYCL_MIGRATED_OPTIMIZED_SUBPROJECT "Build targets from subproject sycl_migrated_optimized" ON)
-option (BUILD_DPCT_SYCL_MIGRATED_SUBPROJECT "Build targets from subproject dpct_sycl_migrated" ON)
+option (BUILD_SYCL_DPCT_MIGRATED_SUBPROJECT "Build targets from subproject dpct_sycl_migrated" ON)
 
 if (BUILD_SYCL_MIGRATED_SUBPROJECT)
 	add_subdirectory (sycl_migrated)
@@ -21,7 +21,7 @@ endif ()
 if (BUILD_SYCL_MIGRATED_OPTIMIZED_SUBPROJECT)
 	add_subdirectory (sycl_migrated_optimized)
 endif ()
-if (BUILD_DPCT_SYCL_MIGRATED_SUBPROJECT)
-	add_subdirectory (dpct_sycl_migrated)
+if (BUILD_SYCL_DPCT_MIGRATED_SUBPROJECT)
+	add_subdirectory (sycl_dpct_migrated)
 endif ()
 
