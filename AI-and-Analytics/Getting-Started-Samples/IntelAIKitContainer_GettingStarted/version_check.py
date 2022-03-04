@@ -22,6 +22,7 @@ if tensorflow_found == True:
         major_version = int(tf.__version__.split(".")[0])
         minor_version = int(tf.__version__.split(".")[1])
         if major_version >= 2:
+            onednn_enabled = 0
             if minor_version < 5:
                 from tensorflow.python import _pywrap_util_port
             else:
@@ -57,7 +58,17 @@ if xgboost_found == True:
 
 if modin_found == True:
     import modin
+    import modin.config as cfg
+    major_version = int(modin.__version__.split(".")[0])
+    minor_version = int(modin.__version__.split(".")[1])
     print("Modin Version: ", modin.__version__)
+    cfg_engine = ''
+    if minor_version > 12 and major_version == 0:
+        cfg_engine = cfg.StorageFormat.get()
+    
+    else:
+        cfg_engine = cfg.Engine.get()
+    print("Modin Engine: ", cfg_engine)
 
 if sklearn_found == True:
     import sklearn
