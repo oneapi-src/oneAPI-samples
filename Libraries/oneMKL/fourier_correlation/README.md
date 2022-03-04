@@ -1,4 +1,4 @@
-# 1D Fourier Correlation Sample
+# Fourier Correlation Sample
 Fourier correlation has many applications, e.g.: measuring the similarity of two 1D signals, finding the best translation to overlay similar images, volumetric medical image segmentation, etc. This sample shows how to implement a 1D Fourier correlation using oneMKL kernel functions.
 
 For more information on oneMKL, and complete documentation of all oneMKL routines, see https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onemkl.html.
@@ -7,23 +7,23 @@ For more information on oneMKL, and complete documentation of all oneMKL routine
 |:---                 |:---
 | OS                  | Linux* Ubuntu* 18.04; Windows 10*
 | Hardware            | Intel&reg; Skylake with Gen9 or newer
-| Software            | Intel&reg; oneMKL
-| What you will learn | How to implement a 1D Fourier correlation using oneMKL kernel functions
+| Software            | Intel&reg; oneMKL, Intel&reg; oneDPL
+| What you will learn | How to implement the Fourier correlation algorithm using SYCL, oneMKL, and oneDPL functions
 | Time to complete    | 15 minutes
 
 ## Purpose
 This sample shows how to implement the Fourier correlation algorithm:
 
-    corr = IDFT(DFT(signal1) * CONJG(DFT(signal1)))
+    corr = MAXLOC(IDFT(DFT(signal1) * CONJG(DFT(signal1))))
 
-Where ``DFT`` is the discrete Fourier transform, ``IDFT`` is the inverse DFT, and ``CONJG`` is the complex conjugate.
+Where ``DFT`` is the discrete Fourier transform, ``IDFT`` is the inverse DFT, ``CONJG`` is the complex conjugate, and ``MAXLOC`` is the location of the maximum value.
 
-The algorithm can be composed using oneMKL, which contains optimized forward and backward transforms and complex conjugate multiplication functions. Therefore, the entire computation can be performed on the accelerator device.
+The algorithm can be composed using SYCL, oneMKL, and/or oneDPL. SYCL provides the device offload and host-device memory transfer mechanisms. oneMKL provides optimized forward and backward transforms and complex conjugate multiplication functions. oneDPL provides the MAXLOC function. Therefore, the entire computation can be performed on the accelerator device.
 
 ## Key Implementation Details
-In many applications, only the final correlation result matters, so this is all that has to be transferred from the device back to the host. In this example, two artificial signals will be created on the device, transformed in-place, then correlated. The host will retrieve the final result and report the optimal translation and correlation score.
+In many applications, only the final correlation result matters, so this is all that has to be transferred from the device back to the host. In this example, two artificial signals will be created on the device, transformed in-place, then correlated. The host will retrieve the final result (i.e., the location of the maximum value) and report the optimal translation and correlation score.
 
-Two implementations of the Fourier correlation algorithm are provided: one that uses explicit buffering and one that uses Unified Shared Memory (USM). Both implementations perform the correlation on the selected device, but as an added bonus, the USM implementation performs the final maxloc reduction on the device rather than the host.
+Two implementations of the 1D Fourier correlation algorithm are provided: one that uses explicit buffering and one that uses Unified Shared Memory (USM). Both implementations perform the correlation on the selected device, but the buffered implementation uses the oneDPL max_element function to perform the final MAXLOC reduction while the USM implementation uses the SYCL reduction operator.
 
 ## License
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
