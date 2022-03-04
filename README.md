@@ -49,8 +49,8 @@ The oneAPI sample repository is organized as follows:
     - Example error: *Error MSB6003 The specified task executable dpcpp.exe could not be run .......
 
 ## Additional Resources
-- Samples in [Alphabetical order w/ device target](https://github.com/oneapi-src/CODESAMPLESLIST.md/)
-- Samples by [Change History](https://github.com/oneapi-src/oneAPI-samples/CHANGELOGS.md)
+- Samples in [Alphabetical order w/ device target](https://github.com/oneapi-src/oneAPI-samples/blob/master/CODESAMPLESLIST.md)
+- Samples by [Change History](https://github.com/oneapi-src/oneAPI-samples/blob/master/CHANGELOGS.md)
 
 ## Contributing
 
