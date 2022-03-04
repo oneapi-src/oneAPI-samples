@@ -5,35 +5,6 @@
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 
-template <unsigned int num, unsigned int denom>
-constexpr int ceil_div(){
-  return (num % denom) ? (num / denom) + 1 : num / denom;
-}
-
-template<typename T, int max_fanout, int output_size>
-fpga_tools::NTuple<T, output_size> fanout_tree(T value){
-
-  fpga_tools::NTuple<T, output_size> output;
-
-  if constexpr (output_size > max_fanout){
-    constexpr int kNextLevelSize = ceil_div<output_size, max_fanout>();
-    auto next_level = sycl::ext::intel::fpga_reg(fanout_tree<T, max_fanout, kNextLevelSize>(value));
-    
-    fpga_tools::UnrolledLoop<output_size>([&](auto k) {
-      output.template get<k>() = next_level.template get<k/max_fanout>();
-    });
-
-  }
-  else{
-    fpga_tools::UnrolledLoop<output_size>([&](auto k) {
-      output.template get<k>() = value;
-    });
-  }
-  
-  return output;
-}
-
-
 namespace fpga_linalg {
 
 /*
@@ -179,21 +150,13 @@ struct StreamingCholesky {
         // Perform the dot product of the elements of the two rows indexed by
         // row and column from element 0 to column
 
-        auto column_tree = fanout_tree<int, 8, kColumns>(column);
-        auto row_tree = fanout_tree<int, 8, kColumns>(row);
-
         TT sum = 0;
         fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
           TT to_add;
-          bool should_compute =  k < column_tree.template get<k>();
-          TT mul_lhs = should_compute ? l_result_compute[row_tree.template get<k>()][k] : T{0};
-          TT mul_rhs = should_compute ? l_result_compute_copy[column_tree.template get<k>()][k] : T{0};
-
-          // Adding pipeline stage before the multadd to help routing larger
-          // designs and achieve higher fmax
-          mul_lhs = sycl::ext::intel::fpga_reg(mul_lhs);
-          mul_rhs = sycl::ext::intel::fpga_reg(mul_rhs);
-
+          bool should_compute =  k < column;
+          TT mul_lhs = should_compute ? l_result_compute[row][k] : T{0};
+          TT mul_rhs = should_compute ? l_result_compute_copy[column][k] : T{0};
+          
           if constexpr (is_complex) {
             to_add = mul_lhs * mul_rhs.conj();
           } else {
