@@ -4,13 +4,12 @@
 # In[1]:
 
 
-'''
-=============================================================
-Copyright © 2020 Intel Corporation
+# =============================================================
+# Copyright © 2020 Intel Corporation
+# 
+# SPDX-License-Identifier: MIT
+# =============================================================
 
-SPDX-License-Identifier: MIT
-=============================================================
-'''
 
 # # Daal4py K-Means Clustering Example for Distributed Memory Systems [SPMD mode]
 
@@ -32,7 +31,7 @@ SPDX-License-Identifier: MIT
 
 ##### daal4py K-Means Clustering example for Distributed Memory Systems [SPMD Mode] #####
 import daal4py as d4p
-import pickle
+import joblib
 import pandas as pd
 import numpy as np
 
@@ -72,12 +71,12 @@ init_result = d4p.kmeans_init(nClusters = 3, method = "plusPlusDense", distribut
 
 # retrieving and printing inital centroids
 centroids = init_result.centroids
-print("Here our centroids:\n\n\n", centroids, "\n")
+print("Here's our centroids:\n\n\n", centroids, "\n")
 
 centroids_filename = './models/kmeans_clustering_initcentroids_'+  str(d4p.my_procid()+1) + '.csv'
 
 # saving centroids to a file
-pickle.dump(centroids, open(centroids_filename, "wb"))
+joblib.dump(centroids, centroids_filename)
 
 
 # Now let's **load up the centroids** and look at them.
@@ -86,7 +85,7 @@ pickle.dump(centroids, open(centroids_filename, "wb"))
 
 
 # loading the initial centroids from a file
-loaded_centroids = pickle.load(open(centroids_filename, "rb"))
+loaded_centroids = joblib.load(open(centroids_filename, "rb"))
 print("Here is our centroids loaded from file:\n\n",loaded_centroids)
 
 
@@ -103,23 +102,10 @@ kmeans_result = d4p.kmeans(nClusters = 3, maxIterations = 5, assignFlag = True).
 
 # To **get Kmeans result objects** (assignments, centroids, goalFunction [deprecated], nIterations, and objectiveFunction):
 
-# In[8]:
+# In[ ]:
 
 
 # retrieving and printing cluster assignments
 assignments = kmeans_result.assignments
 print("Here is our cluster assignments for first 5 datapoints: \n\n", assignments[:5])
-
-
-# Now let's **export the cluster assignments** to a **CSV file**. We will also **stop the distribution engine.**
-
-# In[9]:
-
-
-# now export the results to a CSV file
-results_filename = "./results/daal4py_Distributed_Kmeans_results_" + str(d4p.my_procid()+1) + ".csv"
-np.savetxt(results_filename, assignments, delimiter=",")
-
-d4p.daalfini() # stops the distribution engine
-print('[CODE_SAMPLE_COMPLETED_SUCCESFULLY]')
 
