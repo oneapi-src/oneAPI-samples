@@ -247,15 +247,14 @@
     "40C26D31-D553-4BD9-9E1D-63DDF352CB85": {
         "guid": "40C26D31-D553-4BD9-9E1D-63DDF352CB85",
         "name": "Intel oneAPI Rendering Toolkit OSPRay Getting Started",
-        "ver": "2021.4.0",
-        "removed": "False"
-
+        "removed": "False",
+        "ver": "2021.4.0"
     },
     "41F82C06-A9FA-4521-B87A-8F7304CB6631": {
         "guid": "41F82C06-A9FA-4521-B87A-8F7304CB6631",
         "name": "Intel oneAPI Rendering Toolkit Open Image Denoise Getting Started",
-        "ver": "2021.4.0",
-        "removed": "False"
+        "removed": "False",
+        "ver": "2021.4.0"
     },
     "42601abe-219f-425a-9170-073553c93979": {
         "guid": "42601abe-219f-425a-9170-073553c93979",
@@ -568,14 +567,14 @@
     "80BB7E55-6FCA-491F-8541-E271324CF169": {
         "guid": "80BB7E55-6FCA-491F-8541-E271324CF169",
         "name": "Intel oneAPI Rendering Toolkit Open VKL Getting Started",
-        "ver": "2021.4.0",
-        "removed": "False"
+        "removed": "False",
+        "ver": "2021.4.0"
     },
     "81B93386-B5EB-4998-B91B-3453263EC03E": {
         "guid": "81B93386-B5EB-4998-B91B-3453263EC03E",
         "name": "Intel\u00c2\u00ae Python Scikit-learn Extension Getting Started",
-        "ver": "2021.4.0",
-        "removed": "False"
+        "removed": "False",
+        "ver": "2021.4.0"
     },
     "82e7612f-2810-4d12-9c75-c17fcbb946fa": {
         "guid": "82e7612f-2810-4d12-9c75-c17fcbb946fa",
@@ -622,8 +621,8 @@
     "87FA013D-0B19-45AE-BCD5-43412BE0A99F": {
         "guid": "87FA013D-0B19-45AE-BCD5-43412BE0A99F",
         "name": "Intel oneAPI Rendering Toolkit Embree Getting Started",
-        "ver": "2021.4.0",
-        "removed": "False"
+        "removed": "False",
+        "ver": "2021.4.0"
     },
     "884439A5-0286-447B-9E6D-A7C22B61CED8": {
         "guid": "884439A5-0286-447B-9E6D-A7C22B61CED8",
