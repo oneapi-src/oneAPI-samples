@@ -62,11 +62,19 @@ See [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master
 
 |Version Introduced   |Sample Name|Description|
  |-----------------------|-------------------------------------------|---------------|
+|2022.1.0|[AC Int](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/ac_int)|An Intel® FPGA tutorial demonstrating how to use the Algorithmic C Integer (AC Int) |
 |2022.1.0|[Adaptive Noise Reduction](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/anr)|A highly optimized adaptive noise reduction (ANR) algorithm on an FPGA.|
+|2022.1.0|[Autorun kernels](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/DesignPatterns/autorun)|Intel® FPGA tutorial demonstrating autorun kernels|
+|2022.1.0|[DSP Control](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/dsp_control)|An Intel® FPGA tutorial demonstrating the DSP control feature|
+|2022.1.0|[Loop Fusion](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/loop_fusion)|An Intel® FPGA tutorial demonstrating the usage of the loop_fusion attribute|
+|2022.1.0|[Mem Channels](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/mem_channel)|An Intel® FPGA tutorial demonstrating how to use the mem_channel buffer property and the -Xsno-interleaving flag|
+|2022.1.0|[Numba DPPY Essentials training](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Jupyter/Numba_DPPY_Essentials_training)|Numba DPPY Essentials Tutorials using Jupyter Notebooks|
 |2022.1.0|[Printf](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/printf)|This FPGA tutorial explains how to use the printf() to print in a DPC++ FPGA program|
+|2022.1.0|[QRI](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/qri)|Reference design demonstrating high-performance QR-based matrix inversion (QRI) of real and complex matrices on a Intel® FPGA|
+|2022.1.0|[Read-Only Cache](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/read_only_cache)|An Intel® FPGA tutorial demonstrating how to use the read-only cache feature to boost the throughput of a DPC++ FPGA program|
 |2022.1.0|[Scheduler Target FMAX](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/scheduler_target_fmax)|Explain the scheduler_target_fmax_mhz attribute and its effect on the performance of Intel® FPGA kernels|
 
-Total Samples: 161
+Total Samples: 165
 
 
 ## Deleted Code Samples
@@ -82,4 +90,4 @@ Code samples are licensed under the MIT license. See [License.txt](https://githu
 
 Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-Report Generated on:  October 20, 2021
+Report Generated on:  March 04, 2022
