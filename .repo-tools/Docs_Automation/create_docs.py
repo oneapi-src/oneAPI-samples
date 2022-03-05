@@ -72,7 +72,7 @@ def generateChangeLogLines(currentData, guidsVersions):
             url = currentData[key]['url']
             name = currentData[key]['name']
             cat = str(currentData[key]['categories'])
-        except KeyError as e: # currently this is throwing a poor error message, for example IoT samples was left in GID.json, but removed from repo... the message below is inaccurate and should be GUID missing from current Data... so improvements are needed. 
+        except KeyError as e: # currently this is throwing a poor error message, for example IoT samples was left in GUID.json, but removed from repo... the message below is inaccurate and should be GUID missing from current Data... so improvements are needed. 
             print("\tWarning with: " + key + " Missing from guids.json\n\t\t" + guidsVersions[key]['notes'][:50] + "...")
             continue
         ver = guidsVersions[key]['ver']
