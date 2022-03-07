@@ -86,14 +86,6 @@ g_sum =  Σ (x - 1)
 ```
 
 
-## License
-
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
-
 ## Building the Jacobi-Iterative Program for CPU and GPU
 
 > **Note**: If you have not already done so, set up your CLI
@@ -261,3 +253,10 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 	exit
 	```
 	
+
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
