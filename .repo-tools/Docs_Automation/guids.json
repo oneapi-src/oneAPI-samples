@@ -1158,5 +1158,12 @@
         "notes": "-",
         "removed": "False",
         "ver": "2021.1.Gold"
+    },
+    "1F8590F3-FA2E-4246-92E4-C1848E9A768E": {
+        "guid": "1F8590F3-FA2E-4246-92E4-C1848E9A768E",
+        "name": "Jacobi Iterative",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2021.1.Gold"
     }
 }
