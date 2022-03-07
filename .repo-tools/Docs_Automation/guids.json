@@ -1,4 +1,11 @@
 {
+    "00BBDEF2-F34E-46EA-9D41-DF871CC7272F": {
+        "guid": "00BBDEF2-F34E-46EA-9D41-DF871CC7272F",
+        "name": "Autorun kernels",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
+    },
     "028AE3ED-2896-4C56-9066-42AA5D5FA973": {
         "guid": "028AE3ED-2896-4C56-9066-42AA5D5FA973",
         "name": "Getting Started",
@@ -68,6 +75,13 @@
         "notes": "-",
         "removed": "False",
         "ver": "2021.4.0"
+    },
+    "1de1f2df-f068-4d46-b280-4f2f8150c24e": {
+        "guid": "1de1f2df-f068-4d46-b280-4f2f8150c24e",
+        "name": "Numba DPPY Essentials training",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
     },
     "1e00e2dd-ffe3-408f-a9ec-77e81532d75a": {
         "guid": "1e00e2dd-ffe3-408f-a9ec-77e81532d75a",
@@ -230,6 +244,18 @@
         "removed": "False",
         "ver": "2021.1.Gold"
     },
+    "40C26D31-D553-4BD9-9E1D-63DDF352CB85": {
+        "guid": "40C26D31-D553-4BD9-9E1D-63DDF352CB85",
+        "name": "Intel oneAPI Rendering Toolkit OSPRay Getting Started",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
+    "41F82C06-A9FA-4521-B87A-8F7304CB6631": {
+        "guid": "41F82C06-A9FA-4521-B87A-8F7304CB6631",
+        "name": "Intel oneAPI Rendering Toolkit Open Image Denoise Getting Started",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
     "42601abe-219f-425a-9170-073553c93979": {
         "guid": "42601abe-219f-425a-9170-073553c93979",
         "name": "Chapter 15 - Programming for GPUs",
@@ -264,6 +290,13 @@
         "notes": "-",
         "removed": "False",
         "ver": "2021.1.Gold"
+    },
+    "4A9A5E59-D877-4FFF-A44C-0B96491840C0": {
+        "guid": "4A9A5E59-D877-4FFF-A44C-0B96491840C0",
+        "name": "Read-Only Cache",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
     },
     "4B3FDDD8-64CF-4CF3-9387-26E34F021E24": {
         "guid": "4B3FDDD8-64CF-4CF3-9387-26E34F021E24",
@@ -320,6 +353,13 @@
         "notes": "-",
         "removed": "False",
         "ver": "2021.1.Gold"
+    },
+    "566433FF-0C04-4C99-A76E-B927F81872F8": {
+        "guid": "566433FF-0C04-4C99-A76E-B927F81872F8",
+        "name": "AC Int",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
     },
     "58CF1ABA-5D08-40B7-ACC2-5CB904261413": {
         "guid": "58CF1ABA-5D08-40B7-ACC2-5CB904261413",
@@ -482,6 +522,20 @@
         "removed": "False",
         "ver": "2021.1.Gold"
     },
+    "77006CE8-2935-41C7-BA30-DF6EA07CD73A": {
+        "guid": "77006CE8-2935-41C7-BA30-DF6EA07CD73A",
+        "name": "DSP Control",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
+    },
+    "79A181D7-D5AD-4D28-8508-3A04465265FB": {
+        "guid": "79A181D7-D5AD-4D28-8508-3A04465265FB",
+        "name": "Loop Fusion",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
+    },
     "7AC408C8-DF59-46AE-B970-178CF257F364": {
         "guid": "7AC408C8-DF59-46AE-B970-178CF257F364",
         "name": "Random Sampling Without Replacement",
@@ -510,10 +564,15 @@
         "removed": "False",
         "ver": "2021.4.0"
     },
+    "80BB7E55-6FCA-491F-8541-E271324CF169": {
+        "guid": "80BB7E55-6FCA-491F-8541-E271324CF169",
+        "name": "Intel oneAPI Rendering Toolkit Open VKL Getting Started",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
     "81B93386-B5EB-4998-B91B-3453263EC03E": {
         "guid": "81B93386-B5EB-4998-B91B-3453263EC03E",
         "name": "Intel\u00c2\u00ae Python Scikit-learn Extension Getting Started",
-        "notes": "-",
         "removed": "False",
         "ver": "2021.4.0"
     },
@@ -559,6 +618,12 @@
         "removed": "False",
         "ver": "2021.1.Gold"
     },
+    "87FA013D-0B19-45AE-BCD5-43412BE0A99F": {
+        "guid": "87FA013D-0B19-45AE-BCD5-43412BE0A99F",
+        "name": "Intel oneAPI Rendering Toolkit Embree Getting Started",
+        "removed": "False",
+        "ver": "2021.4.0"
+    },
     "884439A5-0286-447B-9E6D-A7C22B61CED8": {
         "guid": "884439A5-0286-447B-9E6D-A7C22B61CED8",
         "name": "Triangular Loop",
@@ -593,6 +658,13 @@
         "notes": "-",
         "removed": "False",
         "ver": "2021.1.Gold"
+    },
+    "8EC73D58-B010-4080-9785-B5D9DB13EF3F": {
+        "guid": "8EC73D58-B010-4080-9785-B5D9DB13EF3F",
+        "name": "Mem Channels",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
     },
     "8cc4f36c-31e5-4964-b43f-cfb1221c4cb1": {
         "guid": "8cc4f36c-31e5-4964-b43f-cfb1221c4cb1",
@@ -671,6 +743,13 @@
         "notes": "-",
         "removed": "False",
         "ver": "2021.1.Gold"
+    },
+    "A42A1772-2448-4f67-AB28-4080FE47F9C1": {
+        "guid": "A42A1772-2448-4f67-AB28-4080FE47F9C1",
+        "name": "QRI",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.1.0"
     },
     "A544224A-B5C0-462C-95F6-7C266A1DB2EB": {
         "guid": "A544224A-B5C0-462C-95F6-7C266A1DB2EB",
@@ -1126,31 +1205,6 @@
         "notes": "-",
         "removed": "False",
         "ver": "2021.1.Gold"
-    },
-    "81B93386-B5EB-4998-B91B-3453263EC03E": {
-        "guid": "81B93386-B5EB-4998-B91B-3453263EC03E",
-        "ver": "2021.4.0",
-        "name": "Intel® Python Scikit-learn Extension Getting Started"
-    },
-    "87FA013D-0B19-45AE-BCD5-43412BE0A99F" : {
-        "guid": "87FA013D-0B19-45AE-BCD5-43412BE0A99F",
-        "ver": "2021.4.0",
-        "name": "Intel oneAPI Rendering Toolkit Embree Getting Started"
-    },
-    "41F82C06-A9FA-4521-B87A-8F7304CB6631" : {
-        "guid": "41F82C06-A9FA-4521-B87A-8F7304CB6631",
-        "ver": "2021.4.0",
-        "name": "Intel oneAPI Rendering Toolkit Open Image Denoise Getting Started"
-    },
-    "80BB7E55-6FCA-491F-8541-E271324CF169" : {
-        "guid": "80BB7E55-6FCA-491F-8541-E271324CF169",
-        "ver": "2021.4.0",
-        "name": "Intel oneAPI Rendering Toolkit Open VKL Getting Started"
-    },
-    "40C26D31-D553-4BD9-9E1D-63DDF352CB85" : {
-        "guid": "40C26D31-D553-4BD9-9E1D-63DDF352CB85",
-        "ver": "2021.4.0",
-        "name": "Intel oneAPI Rendering Toolkit OSPRay Getting Started"
     },
     "f92e64c7-7a7c-4749-b421-9f7a9e120099": {
         "guid": "f92e64c7-7a7c-4749-b421-9f7a9e120099",
