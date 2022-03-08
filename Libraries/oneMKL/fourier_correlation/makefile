@@ -8,7 +8,7 @@ run_all: fcorr_1d_buff.exe fcorr_1d_usm.exe
 	.\fcorr_1d_buff 1024
 	.\fcorr_1d_usm 1024
 
-DPCPP_OPTS=-DMKL_ILP64  -I"%MKLROOT%\include" /Qmkl sycl.lib OpenCL.lib
+DPCPP_OPTS=-DMKL_ILP64 -I"%MKLROOT%\include" /Qmkl sycl.lib OpenCL.lib /EHsc
 
 fcorr_1d_buff.exe: fcorr_1d_buffers.cpp
 	dpcpp fcorr_1d_buffers.cpp /Fefcorr_1d_buff.exe $(DPCPP_OPTS)
