@@ -1,7 +1,7 @@
 ## Introduction
 
 The oneAPI samples repository provides code samples for Intel oneAPI toolkits.<br><br>We recommend checking out a specific stable release version of the repository. The version of the repository you fetch should match the version of the oneAPI compiler you are using. [View available stable releases](https://github.com/oneapi-src/oneAPI-samples/tags). 
-The latest versions (2022.1.0) of code samples on the master branch are not guaranteed to be stable.
+The latest versions (2022.2.0) of code samples on the master branch are not guaranteed to be stable.
  ### Sample Details
 
 The oneAPI sample repository is organized as follows:
@@ -62,19 +62,10 @@ See [CONTRIBUTING wiki](https://github.com/oneapi-src/oneAPI-samples/blob/master
 
 |Version Introduced   |Sample Name|Description|
  |-----------------------|-------------------------------------------|---------------|
-|2022.1.0|[AC Int](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/ac_int)|An Intel® FPGA tutorial demonstrating how to use the Algorithmic C Integer (AC Int) |
-|2022.1.0|[Adaptive Noise Reduction](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/anr)|A highly optimized adaptive noise reduction (ANR) algorithm on an FPGA.|
-|2022.1.0|[Autorun kernels](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/DesignPatterns/autorun)|Intel® FPGA tutorial demonstrating autorun kernels|
-|2022.1.0|[DSP Control](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/dsp_control)|An Intel® FPGA tutorial demonstrating the DSP control feature|
-|2022.1.0|[Loop Fusion](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/loop_fusion)|An Intel® FPGA tutorial demonstrating the usage of the loop_fusion attribute|
-|2022.1.0|[Mem Channels](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/mem_channel)|An Intel® FPGA tutorial demonstrating how to use the mem_channel buffer property and the -Xsno-interleaving flag|
-|2022.1.0|[Numba DPPY Essentials training](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Jupyter/Numba_DPPY_Essentials_training)|Numba DPPY Essentials Tutorials using Jupyter Notebooks|
-|2022.1.0|[Printf](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/printf)|This FPGA tutorial explains how to use the printf() to print in a DPC++ FPGA program|
-|2022.1.0|[QRI](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/ReferenceDesigns/qri)|Reference design demonstrating high-performance QR-based matrix inversion (QRI) of real and complex matrices on a Intel® FPGA|
-|2022.1.0|[Read-Only Cache](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/read_only_cache)|An Intel® FPGA tutorial demonstrating how to use the read-only cache feature to boost the throughput of a DPC++ FPGA program|
-|2022.1.0|[Scheduler Target FMAX](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++FPGA/Tutorials/Features/scheduler_target_fmax)|Explain the scheduler_target_fmax_mhz attribute and its effect on the performance of Intel® FPGA kernels|
+|2022.2.0|[Intel Implicit SPMD Program Compiler (Intel ISPC) Getting Started: 05_ispc_gsg](https://github.com/oneapi-src/oneAPI-samples/tree/master/RenderingToolkit/GettingStarted/05_ispc_gsg)|This introductory rendering toolkit sample demonstrates how to compile basic programs with Intel ISPC and the system C++ compiler. Use this sample to further explore developing accelerated applications with Intel Embree and Intel Open VKL.|
+|2022.2.0|[Jacobi Iterative](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC++/DenseLinearAlgebra/jacobi_iterative)|Calculates the number of iterations needed to solve system of linear equations using Jacobi Iterative method|
 
-Total Samples: 165
+Total Samples: 167
 
 
 ## Deleted Code Samples
@@ -90,4 +81,4 @@ Code samples are licensed under the MIT license. See [License.txt](https://githu
 
 Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-Report Generated on:  March 04, 2022
+Report Generated on:  March 08, 2022
