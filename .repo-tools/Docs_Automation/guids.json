@@ -1213,6 +1213,11 @@
         "removed": "False",
         "ver": "2021.1.Gold"
     },
+    "BDC6B80E-E764-409D-966B-662CF7EFB072": {
+        "guid": "BDC6B80E-E764-409D-966B-662CF7EFB072",
+	       "ver": "2022.1.0",
+	       "name": "Intel oneAPI Rendering Toolkit ISPC Getting Started: 05_ispc_gsg"
+    },
     "1F8590F3-FA2E-4246-92E4-C1848E9A768E": {
         "guid": "1F8590F3-FA2E-4246-92E4-C1848E9A768E",
         "name": "Jacobi Iterative",
