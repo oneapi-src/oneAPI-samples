@@ -13,6 +13,7 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -24,6 +25,7 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -35,9 +37,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/stall_enable",
           "nmake fpga_emu",
           "stall_enable.fpga_emu.exe",
           "stall_free.fpga_emu.exe"
@@ -46,9 +50,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/stall_enable",
           "nmake report"
         ]
       }

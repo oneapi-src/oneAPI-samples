@@ -25,16 +25,16 @@ This tutorial provides a convenient pair of header files defining an abstraction
 
 ### Example 1: A simple array of pipes
 
-To create an array of pipes, include the top-level header (from this code sample) in your design:
+To create an array of pipes, include the pipe_utils.hpp header from the DirectProgramming/DPC++FPGA/include/ directory in your design:
 
 ```c++
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp"
 ```
 
 As with regular pipes, an array of pipes needs template parameters for an ID, for the `min_capacity` of each pipe, and each pipe's data type. An array of pipes additionally requires one or more template parameters to specify the array size. The following code declares a one dimensional array of 10 pipes, each with `capacity=32`, that operate on `int` values.
 
 ```c++
-using MyPipeArray = PipeArray<     // Defined in "pipe_array.h".
+using MyPipeArray = PipeArray<     // Defined in "pipe_utils.hpp".
     class MyPipe,                  // An identifier for the pipe.
     int,                           // The type of data in the pipe.
     32,                            // The capacity of each pipe.
@@ -60,7 +60,7 @@ Unroller<0, 10>::Step([](auto i) {
   MyPipeArray::PipeAt<i>::write(17);
 });
 ```
-While this may initially feel foreign to those unaccustomed to C++ template metaprogramming, this is a simple and powerful pattern common to many C++ libraries. It is easy to reuse. In addition to `pipe_array.hpp`, this code sample includes a simple header file `unroller.hpp`, which implements the  `Unroller` functionality.
+While this may initially feel foreign to those unaccustomed to C++ template metaprogramming, this is a simple and powerful pattern common to many C++ libraries. It is easy to reuse. This code sample includes a simple header file `unroller.hpp`, which implements the  `Unroller` functionality.
 
 ### Example 2: A 2D array of pipes
 
@@ -72,7 +72,7 @@ constexpr size_t kNumRows = 2;
 constexpr size_t kNumCols = 2;
 constexpr size_t kDepth = 2;
 
-using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_array.h".
+using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_utils.hpp".
     class ProducerConsumerPipe,                  // An identifier for the pipe.
     uint64_t,                                    // The type of data in the pipe.
     kDepth,                                      // The capacity of each pipe.
@@ -143,6 +143,18 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `pipe_array` Tutorial
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -244,6 +256,17 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 *Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 *Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+
+### Troubleshooting
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
 
  ### In Third-Party Integrated Development Environments (IDEs)
 

@@ -1,8 +1,18 @@
 ﻿# `Monte Carlo Pi` Sample
 
-Monte Carlo Simulation is a broad category of computation that utilizes statistical analysis to reach a result. This sample uses the Monte Carlo Procedure to estimate the value of pi. By inscribing a circle of radius 1 inside a 2x2 square and then sampling a large number of random coordinates falling uniformly within the square, the value of pi can be estimated using the ratio of samples that fall inside the circle divided by the total number of samples.
+Monte Carlo Simulation is a broad category of computation that utilizes
+statistical analysis to reach a result. This sample uses the Monte Carlo
+Procedure to estimate the value of pi. By inscribing a circle of radius 1
+inside a 2x2 square and then sampling a large number of random coordinates
+falling uniformly within the square, the value of pi can be estimated using the
+ratio of samples that fall inside the circle divided by the total number of
+samples.
 
-This method of estimation works for calculating pi because the expected value of the sample ratio is equal to the ratio of a circle's area divided by the square's: a circle of radius 1 has an area of pi units squared, while a 2x2 square has an area of 4 units squared, yielding a ratio of pi/4. Therefore, to estimate the value of pi, our solution will be four times the sample ratio.
+This method of estimation works for calculating pi because the expected value
+of the sample ratio is equal to the ratio of a circle's area divided by the
+square's: a circle of radius 1 has an area of pi units squared, while a 2x2
+square has an area of 4 units squared, yielding a ratio of pi/4. Therefore, to
+estimate the value of pi, our solution will be four times the sample ratio.
 
 For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
@@ -17,14 +27,24 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 
 ## Purpose
 
-The Monte Carlo procedure for estimating pi is easily parallelized, as each calculation of a random coordinate point can be considered a discrete work item. The computations involved with each work item are entirely independent of one another except for in summing the total number of points inscribed within the circle. This code sample demonstrates how to utilize the DPC++ reduction extension for this purpose.
+The Monte Carlo procedure for estimating pi is easily parallelized, as each
+calculation of a random coordinate point can be considered a discrete work
+item. The computations involved with each work item are entirely independent of
+one another except for in summing the total number of points inscribed within
+the circle. This code sample demonstrates how to utilize the DPC++ reduction
+extension for this purpose.
 
-The code will attempt to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected.  The device used for the compilation is displayed in the output, along with the elapsed time to complete the computation. A rendered image plot of the computation is also written to a file.
+The code will attempt to execute on an available GPU and fallback to the
+system's CPU if a compatible GPU is not detected. The device used for the
+compilation is displayed in the output, along with the elapsed time to complete
+the computation. A rendered image plot of the computation is also written to a
+file.
 
 
 ## Key Implementation Details
 
-The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and reduction.
+The basic DPC++ implementation explained in the code includes device selector,
+buffer, accessor, kernel, and reduction.
 
 ## License
 
@@ -35,13 +55,17 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the `Monte Carlo Pi` Program for CPU and GPU
 
-> Note: if you have not already done so, set up your CLI
-> environment by sourcing  the setvars script located in
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
 > Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
 > Linux User: . ~/intel/oneapi/setvars.sh
+>
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 
 ### Running Samples In DevCloud
@@ -83,6 +107,14 @@ $ make
     ```
     make clean
     ```
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 - Build the program using VS2017 or VS2019

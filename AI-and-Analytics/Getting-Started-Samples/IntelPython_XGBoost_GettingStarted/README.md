@@ -1,5 +1,5 @@
 # `Intel Python XGBoost Getting Started` Sample
-XGBoost* is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost* includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath.
+XGBoost* is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost* includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath. Starting with 0.9 version of XGBoost, Intel has been upstreaming optimizations to the through the `hist` histogram tree-building method. Starting with 1.3.3 version of XGBoost and beyond, Intel has also begun upstreaming inference optimziations to XGBoost as well.
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -10,13 +10,13 @@ XGBoost* is a widely used gradient boosting library in the classical ML area. De
 | Time to complete                  | 5 minutes
 
 ## Purpose
-In this code sample, you will learn how to use Intel optimized XGBoost published as part of Intel® oneAPI AI Analytics Toolkit. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction. 
-It also demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). 
-  
-## Key Implementation Details 
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). 
+In this code sample, you will learn how to use Intel optimizations for XGBoost published as part of Intel® oneAPI AI Analytics Toolkit. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction.
+It also demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
-## License  
+## Key Implementation Details
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).
+
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -28,9 +28,20 @@ XGBoost* is ready for use once you finish the Intel® oneAPI AI Analytics Toolki
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
-### Activate conda environment With Root Access
 
-Please follow the Getting Started Guide steps (above) to set up your oneAPI environment with the `setvars.sh script`. Then navigate in Linux shell to your oneapi installation path, typically `/opt/intel/oneapi/` when installed as root or sudo, and `~/intel/oneapi/` when not installed as a superuser. If you customized the installation folder, the `setvars.sh` file is in your custom folder. 
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
+### Activate conda environment With Root Access
 
 However, if you activated another environment, you can return with the following command:
 
@@ -96,7 +107,7 @@ Run the Program
 
 `python IntelPython_XGBoost_GettingStarted.py`
 
-The output files of the script will be saved in the included models and result directories. 
+The output files of the script will be saved in the included models and result directories.
 
 ##### Expected Printed Output (with similar numbers):
 ```
@@ -104,3 +115,26 @@ RMSE: 11.113036205909719
 [CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 ```
 
+### Build and run additional samples
+Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
+
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the Generate Launch Configurations extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.

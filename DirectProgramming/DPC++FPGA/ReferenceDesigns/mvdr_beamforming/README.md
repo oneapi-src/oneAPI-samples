@@ -36,6 +36,18 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the Reference Design
 
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
@@ -47,8 +59,8 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 ### Using Visual Studio Code*  (Optional)
 
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
+You can use Visual Studio Code (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
  - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
@@ -59,7 +71,8 @@ The basic steps to build and run a sample using VS Code include:
 To learn more about the extensions and how to configure the oneAPI environment, see
 [Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+After learning how to use the extensions for Intel oneAPI Toolkits, return to
+this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 1. Install the design into a directory `build` from the design directory by running `cmake`:
@@ -132,6 +145,15 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 *Note:* The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 *Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
+### Troubleshooting
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
 ### In Third-Party Integrated Development Environments (IDEs)
 
 You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
@@ -198,9 +220,7 @@ PASSED
 |`mvdr_complex.hpp`              | Definition of ComplexType, used throughout this design
 |`MVDR.hpp`                      | Function to launch all MVDR kernels and define the pipes that connect them together
 |`ParallelCopyArray.hpp`         | Defines the ParallelCopyArray class, an array that supports unrolled copy / assign operations
-|`pipe_array.hpp`                | Header file containing the definition of an array of pipes
-|`pipe_array_internal.hpp`       | Helper for pipe_array.hpp
-|`PipeDuplicator.hpp`            | Defines the PipeDuplicator class, creates multiple copies of a pipe for fan-out
+|`pipe_utils.hpp`                | Header file containing the definition of an array of pipes and a pipe duplicator. This header can be found in the DirectProgramming/DPC++FPGA/include/ directory of this repository.
 |`SteeringVectorGenerator.hpp`   | SteeringVectorGenerator kernel, generates steering vectors based on data from the host
 |`StreamingQRD.hpp`              | StreamingQRD kernel, performs Q-R Decompostion on a matrix
 |`Transpose.hpp`                 | Transpose kernel, reorders data for the StreamingQRD kernel

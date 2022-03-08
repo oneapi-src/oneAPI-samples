@@ -72,7 +72,7 @@ def generateChangeLogLines(currentData, guidsVersions):
             url = currentData[key]['url']
             name = currentData[key]['name']
             cat = str(currentData[key]['categories'])
-        except KeyError as e:
+        except KeyError as e: # currently this is throwing a poor error message, for example IoT samples was left in GUID.json, but removed from repo... the message below is inaccurate and should be GUID missing from current Data... so improvements are needed. 
             print("\tWarning with: " + key + " Missing from guids.json\n\t\t" + guidsVersions[key]['notes'][:50] + "...")
             continue
         ver = guidsVersions[key]['ver']
@@ -111,7 +111,7 @@ def generateReadmeLines(currentData, guidsVersions):
 
 def generateReadmeDeleted(guidsVersions):
     for item in guidsVersions.values():
-        if item['removed'] != "False":
+        if item['removed'] != "False":# need to add logic so that if removed is not found, it displays the message and moves on
             yield (f"| {item['ver']} | {item['removed']} | {item['name']} | {item['notes']} |"
                 + f" [{item['removed']}](https://github.com/oneapi-src/oneAPI-samples/releases/tag/{item['removed']})" 
                 + (f" Path: {item['path']}" if 'path' in item else '')

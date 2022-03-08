@@ -17,13 +17,13 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 
 
 ## Purpose
-The `loop_coalesce` attribute enables you to direct the compiler to combine nested loops into a single loop. The attribute `[[intelfpga::loop_coalesce(N)]]` takes an integer argument `N`, that specifies how many nested loop levels that you want the compiler to attempt to coalesce.
+The `loop_coalesce` attribute enables you to direct the compiler to combine nested loops into a single loop. The attribute `[[intel::loop_coalesce(N)]]` takes an integer argument `N`, that specifies how many nested loop levels that you want the compiler to attempt to coalesce.
 
-**NOTE**: If you specify `[[intelfpga::loop_coalesce(1)]]` on nested loops, the compiler does not attempt to coalesce any of the nested loops.
+**NOTE**: If you specify `[[intel::loop_coalesce(1)]]` on nested loops, the compiler does not attempt to coalesce any of the nested loops.
 ### Example: Coalescing Two Loops
 
 ```
-[[intelfpga::loop_coalesce(2)]]
+[[intel::loop_coalesce(2)]]
 for (int i = 0; i < N; i++)
   for (int j = 0; j < M; j++)
     sum[i][j] += i+j;
@@ -66,6 +66,18 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 
 ## Building the `loop_coalesce` Tutorial
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -167,6 +179,15 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 *Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 *Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+
+### Troubleshooting
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
