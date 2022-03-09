@@ -102,7 +102,7 @@ void CholeskyDecompositionImpl(
           TT bank[kNumElementsPerDDRBurst];
 
           for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-            if(li * kNumElementsPerDDRBurst + k < kLMatrixSize){
+            if((li * kNumElementsPerDDRBurst) + k < kLMatrixSize){
               bank[k] = LMatrixPipe::read();
             }
           }
@@ -112,9 +112,9 @@ void CholeskyDecompositionImpl(
             // Write a burst of kNumElementsPerDDRBurst elements to DDR
             #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              if(li * kNumElementsPerDDRBurst + k < kLMatrixSize){
-                vector_ptr_device[matrix_index * kLMatrixSize
-                          + li * kNumElementsPerDDRBurst + k] = bank[k];
+              if((li * kNumElementsPerDDRBurst) + k < kLMatrixSize){
+                vector_ptr_device[(matrix_index * kLMatrixSize)
+                          + (li * kNumElementsPerDDRBurst) + k] = bank[k];
               }
             }
           }
@@ -122,8 +122,8 @@ void CholeskyDecompositionImpl(
             // Write a burst of kNumElementsPerDDRBurst elements to DDR
             #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              vector_ptr_device[matrix_index * kLMatrixSize
-                          + li * kNumElementsPerDDRBurst + k] = bank[k];
+              vector_ptr_device[(matrix_index * kLMatrixSize)
+                          + (li * kNumElementsPerDDRBurst) + k] = bank[k];
             }
           }
         }  // end of li
