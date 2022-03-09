@@ -90,28 +90,19 @@ void LZ77DecoderMultiElement() {
   // precompute the function: dist + ((i - dist) % dist)
   // which is used for the special when the copy distance is less than
   // 'literals_per_cycle'
-  constexpr auto mod_lut_init = [&] {
+  [[intel::fpga_register]]
+  constexpr auto mod_lut = [&] {
     constexpr int dim = literals_per_cycle - 1;
-    std::array<unsigned char, dim * dim> ret{};
+    std::array<std::array<unsigned char, dim>, dim> ret{};
     for (int y = 0; y < dim; y++) {
       for (int x = y; x < dim; x++) {
         unsigned char dist = y + 1;
         unsigned char i = x + 1;
-        ret[y * dim + x] = dist - ((i - dist) % dist);
+        ret[y][x] = dist - ((i - dist) % dist);
       }
     }
     return ret;
   }();
-  
-  // ac_ints cannot be constexpr, so initialize an array of ac_int with
-  // the mod_lut_init ROM that was computed above
-  [[intel::fpga_register]]
-  HistBufBufIdxT mod_lut[literals_per_cycle - 1][literals_per_cycle - 1];
-  for (int y = 0; y < (literals_per_cycle - 1); y++) {
-    for (int x = y; x < (literals_per_cycle - 1); x++) {
-      mod_lut[y][x] = mod_lut_init[y * (literals_per_cycle - 1) + x];
-    }
-  }
 
   // initialize the index pointers for each history buffer
   #pragma unroll

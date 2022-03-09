@@ -101,8 +101,7 @@ template<int bits, bool is_signed>
 auto CTZ(const ac_int<bits, is_signed>& in) {
   static_assert(bits > 0);
   constexpr int out_bits = fpga_tools::Log2(bits) + 1;
-  //ac_uint<out_bits> ret(bits);
-  ac_uint<out_bits> ret;
+  ac_uint<out_bits> ret(bits);
   #pragma unroll
   for (int i = bits - 1; i >= 0; i--) {
     if (in[i]) {

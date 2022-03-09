@@ -76,11 +76,7 @@ public:
   auto Size() { return size_; }
   auto Space() { return space_; }
   bool Empty() { return size_ == 0; }
-  bool HasSpaceForByte() {
-    // space_ >= 8
-    auto top_space_bits = space_.template slc<count_bits - 3>(3);
-    return top_space_bits != 0;
-  }
+  bool HasSpaceForByte() { return space_ >= 8; }
 
   //
   // push in a new byte (8 bits) into the stream
