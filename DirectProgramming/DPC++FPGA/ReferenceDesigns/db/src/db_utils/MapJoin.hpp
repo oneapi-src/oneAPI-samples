@@ -11,45 +11,13 @@
 #include "Unroller.hpp"
 #include "Tuple.hpp"
 #include "StreamingData.hpp"
-#include "ShannonIterator.hpp"
-
-//
-// ArrayMap class
-//
-template <typename Type, int size>
-class ArrayMap {
-  // static asserts
-  static_assert(size > 0,
-    "size must be positive and non-zero");
-  static_assert(std::is_same<bool, decltype(Type().valid)>::value,
-    "Type must have a 'valid' boolean member");
-
- public:
-  void Init() {
-    for (unsigned int i = 0; i < size; i++) {
-      valid[i] = false;
-    }
-  }
-
-  std::pair<bool, Type> Get(unsigned int key) {
-    return {valid[key], map[key]};
-  }
-
-  void Set(unsigned int key, Type data) {
-    map[key] = data;
-    valid[key] = true;
-  }
-
-  Type map[size];
-  bool valid[size];
-};
 
 //
 // MapJoin implementation
 //
 template<typename MapType, typename T2Pipe, typename T2Data, int t2_win_size,
          typename JoinPipe, typename JoinType>
-void MapJoin(MapType& map) {
+void MapJoin(MapType map_data[], bool map_valid[]) {
   //////////////////////////////////////////////////////////////////////////////
   // static asserts
   static_assert(t2_win_size > 0,
@@ -89,12 +57,10 @@ void MapJoin(MapType& map) {
         const unsigned int t2_key =
             in_data.data.template get<j>().PrimaryKey();
 
-        auto [data_valid, map_data] = map.Get(t2_key);
-
-        if (t2_win_valid && data_valid) {
+        if (t2_win_valid && map_valid[t2_key]) {
           // NOTE: order below important if Join() overrides valid
           join_data.data.template get<j>().valid = true;
-          join_data.data.template get<j>().Join(map_data,
+          join_data.data.template get<j>().Join(map_data[t2_key],
                                                 in_data.data.template get<j>());
         }
       });

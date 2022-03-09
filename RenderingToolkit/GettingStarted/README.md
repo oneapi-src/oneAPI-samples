@@ -48,3 +48,4 @@ Please try the getting started sample programs in order. Output of a sample may 
 | 2 | Intel Embree | [02_embree_gsg](02_embree_gsg)| Get started with Intel Embree, a collection of high-performance ray tracing kernels. |
 | 3 | Intel Open Volume Kernel Library | [03_openvkl_gsg](03_openvkl_gsg)| Get started with Intel Open VKL, a collection of high-performance volume computation kernels. |
 | 4 | Intel Open Image Denoise | [04_oidn_gsg](04_oidn_gsg) | Get started with Intel Open Image Denoise, an open source library of high-performance, high-quality, denoising filters for images rendered with ray tracing. |
+| 5 | Intel ISPC | [05_ispc_gsg](05_ispc_gsg) | Get started with Intel Implicit SPMD Program Compiler (Intel ISPC), the C variant optimizing compiler used in conjunction with the Render Kit libraries. |

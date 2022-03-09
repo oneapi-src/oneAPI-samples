@@ -145,7 +145,7 @@
           "cd ../..",
           "mkdir build-q1",
           "cd build-q1",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=1",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=1 -DSF_SMALL=1",
           "nmake report"
         ]
       },
@@ -156,7 +156,7 @@
           "cd ../..",
           "mkdir build-q11",
           "cd build-q11",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=11",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=11 -DSF_SMALL=1",
           "nmake report"
         ]
       },
@@ -167,7 +167,7 @@
           "cd ../..",
           "mkdir build-q12",
           "cd build-q12",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=12",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/db -DQUERY=12 -DSF_SMALL=1",
           "nmake report"
         ]
       }

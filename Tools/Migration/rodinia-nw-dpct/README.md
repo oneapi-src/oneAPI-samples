@@ -43,6 +43,24 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
+
 ## Migrating the CUDA Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
 
 Building and running the CUDA sample is not required to migrate this project
@@ -54,16 +72,22 @@ to a Data Parallel C++ project.
 
 [cuda-headers]: <https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.html#top_BEFORE_YOU_BEGIN>
 
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 
 ### On a Linux* System
 
-1. Ensure your environment is configured to use the oneAPI tools.
-
-```sh
-$ source /opt/intel/oneapi/setvars.sh
-```
-
-2. Generate a [compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
+1. Generate a [compilation database](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
    for the project using `intercept-build`. The compilation database is a
    listing of all compilation commands invoked during the build process. The
    `dpct` utility uses this information to determine the files to process.
@@ -74,14 +98,14 @@ $ intercept-build make
 ```
    This creates the file `compile_commands.json` in the working directory.
 
-3. Use the Intel DPC++ Compatibility Tool and compilation database to migrate
+2. Use the Intel DPC++ Compatibility Tool and compilation database to migrate
    the CUDA code. The new project will be created in the `migration` directory.
 
 ```sh
 $ dpct -p compile_commands.json --in-root=. --out-root=migration
 ```
 
-4. Inspect the migrated source code, address any `DPCT` warnings generated
+3. Inspect the migrated source code, address any `DPCT` warnings generated
    by the Intel DPC++ Compatibility Tool, and verify the new program correctness.
 
 Warnings are printed to the console and added as comments inside the migrated
@@ -103,7 +127,7 @@ warning: DPCT1049:5: The workgroup size passed to the SYCL kernel may exceed the
 See the section titled **Addressing Warnings in Migrated Code** below to
 understand how to resolve the warnings.
 
-5. Copy the original `Makefile` into the `migration` folder and update the
+4. Copy the original `Makefile` into the `migration` folder and update the
    copy to build the migrated project using DPC++. Replace the CUDA
    configurations in that new `Makefile` with the following for use with DPC++:
 
@@ -116,9 +140,9 @@ DEPS = src/needle_kernel.dp.cpp src/needle.h
 # The remainder of the makefile should work without changes.
 ```
 
-6. Switch to the migration directory: `cd migration`.
+5. Switch to the migration directory: `cd migration`.
 
-7. Build the migrated sample: `make`.
+6. Build the migrated sample: `make`.
 
 If you have not addressed all of the warnings, the compilation step will fail
 for this sample due to some code that could not be migrated by the `dpct`
@@ -128,27 +152,12 @@ error: assigning to 'int' from incompatible type 'typename info::param_traits<in
 
 ```
 
-8. After you have fixed the migrated source files, build and run the migrated
+7. After you have fixed the migrated source files, build and run the migrated
    sample using: `make run`. You should see logs indicating that the matrix is
    being processed.
 
-9. Clean up the build: `make clean`.
+8. Clean up the build: `make clean`.
 
-### Using Visual Studio Code*  (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
-
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ## Windows
 
@@ -157,13 +166,6 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 2. Configure and run the migration. Use the default settings to create a new
    project, which will be added to the open solution.
-
-Note the generated command-line invocation. You can run this from the command
-line as long as you first initialize your environment with:
-
-```sh
-"C:\Program Files (x86)\intel\oneapi\setvars.bat"
-```
 
 3. Inspect the generated source code and address any `DPCT` warnings generated
    by the Intel DPC++ Compatibility Tool. Warnings appear in a tool window and
@@ -304,3 +306,6 @@ Start Needleman-Wunsch
 Processing top-left matrix
 Processing bottom-right matrix
 ```
+
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)

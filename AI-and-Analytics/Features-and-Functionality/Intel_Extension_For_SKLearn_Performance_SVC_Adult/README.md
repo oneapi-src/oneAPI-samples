@@ -1,5 +1,5 @@
 # `Intel® Extension for Scikit-learn: SVC for Adult dataset` Sample
-This sample code uses [Adult dataset](https://archive.ics.uci.edu/ml/datasets/adult) to show how to train and predict with a SVC algorithm using Intel® Extension for Scikit-learn. It demonstrates how to use software products that can be found in the [Intel® oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html), [Intel(R) Extension for Scikit-learn](https://intel.github.io/scikit-learn-intelex/), or [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+This sample code uses the [Adult dataset](https://archive.ics.uci.edu/ml/datasets/adult) to show how to train and predict with a SVC algorithm using Intel® Extension for Scikit-learn. It demonstrates how to use software products that can be found in the [Intel® oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html), [Intel(R) Extension for Scikit-learn](https://intel.github.io/scikit-learn-intelex/), and [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -44,12 +44,12 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 1. Launch Jupyter notebook: `jupyter notebook --ip=0.0.0.0`
 2. Follow the instructions to open the URL with the token in your browser.
-3. Click the `IntelScikitLearn_Extensions_SVC_Adult.ipynb` file.
+3. Click the `Intel_Extension_for_SKLearn_Performance_SVC_Adult.ipynb` file.
 4. Run each cell of the notebook one by one.
 
 ### Running the Sample as a Python File
 
-1. `IntelScikitLearn_Extensions_SVC_Adult.py`
+1. `python Intel_Extension_for_SKLearn_Performance_SVC_Adult.py`
 
 ### Example of Output
 
@@ -78,6 +78,12 @@ Classification report for SVC trained with the original scikit-learn:
    macro avg       0.76      0.74      0.75      9769
 weighted avg       0.82      0.82      0.82      9769
 ```
+
+
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+
+
 ### Using Visual Studio Code*  (VS Code)
 
 You can use VS Code extensions to set your environment, create launch configurations,

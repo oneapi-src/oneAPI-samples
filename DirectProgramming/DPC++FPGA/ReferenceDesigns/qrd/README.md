@@ -71,6 +71,19 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the Reference Design
 
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
+
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
@@ -169,16 +182,24 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 *Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 
+### Troubleshooting
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
 ### In Third-Party Integrated Development Environments (IDEs)
 
 You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 ## Running the Reference Design
-You can apply QR decomposition to a number of matrices, as shown below. This step performs the following:
-* Generates the number of random matrices specified as the command line argument (defaults to 128).
-* Computes QR decomposition on all matrices.
-* Evaluates performance.
-NOTE: The design is optimized to perform best when run on a large number of matrices, where the total number of matrices is a power of 2.
+You can perform the QR decomposition of 8 matrices repeatedly, as shown below. This step performs the following:
+* Generates 8 random matrices.
+* Computes the QR decomposition of the 8 matrices.
+* Repeats the decomposition multiple times (specified as a command line argument) to evaluate performance.
 
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
@@ -191,7 +212,7 @@ NOTE: The design is optimized to perform best when run on a large number of matr
      qrd.fpga_emu.exe         (Windows)
      ```
 
-2. Run the sample on the FPGA device. It is recommended to pass in an optional argument (as shown) when invoking the sample on hardware. Otherwise, the performance will not be representative of the design's throughput. Indeed, the throughput is measured as the total kernel execution time divided by the number of matrices decomposed. However, the transfer of the matrices from the host/device to the device/host also takes some time. This memory transfer is performed by chunks of matrices in parallel to the compute kernel. The first/last chunk of matrices transferred will therefore occur with the computation kernel doing nothing. Thus, the higher the number of matrices to be decomposed, the more accurate the throughput result will be.
+2. Run the sample on the FPGA device.
      ```
      ./qrd.fpga         (Linux)
      ```
@@ -223,7 +244,7 @@ Verifying results on matrix 0
 PASSED
 ```
 
-Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for the decomposition of 8 matrices 409600 times (each matrix consisting of 256*256 complex numbers):
+Example output when running on Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) for the decomposition of 8 matrices 819200 times (each matrix consisting of 256*256 complex numbers):
 
 ```
 Device name: pac_s10 : Intel PAC Platform (pac_f100000)

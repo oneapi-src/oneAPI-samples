@@ -4,7 +4,7 @@
   "categories": ["Toolkit/oneAPI Libraries/oneMKL"],
   "description": "Compute 1D Fourier correlation with Intel® oneMKL",
   "toolchain": [ "dpcpp" ],
-  "dependencies": [ "mkl" ],
+  "dependencies": [ "oneMKL", "oneDPL" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
   "targetDevice": [ "CPU", "GPU" ],
   "os": [ "linux", "windows" ],
