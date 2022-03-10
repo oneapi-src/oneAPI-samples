@@ -16,7 +16,7 @@ int main() {
   std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
   //# initialize data array using usm
-  int *data = malloc_shared<int>(N, q);
+  auto data = malloc_shared<int>(N, q);
   for (int i = 0; i < N; i++) data[i] = i;
 
   //# implicit USM for writing sum value
@@ -24,7 +24,7 @@ int main() {
   *sum = 0;
 
   //# nd-range kernel parallel_for with reduction parameter
-  q.parallel_for(nd_range<1>{N, B}, ext::oneapi::reduction(sum, 0, plus<>()), [=](nd_item<1> it, auto& temp) {
+  q.parallel_for(nd_range<1>{N, B}, reduction(sum, plus<>()), [=](nd_item<1> it, auto& temp) {
     auto i = it.get_global_id(0);
     temp.combine(data[i]);
   }).wait();
