@@ -98,8 +98,6 @@ static void JacobiMethod(const float *A, const double *b,
   */
   cg::thread_block_tile<32> tile32 = cg::tiled_partition<32>(cta);
 
-   // auto subwarp = cooperative_groups::tiled_partition<16>(cooperative_groups::this_thread_block());
-
   for (int k = 0, i = item_ct1.get_group(2) * ROWS_PER_CTA;
        (k < ROWS_PER_CTA) && (i < N_ROWS); k++, i++) {
     double rowThreadSum = 0.0;
