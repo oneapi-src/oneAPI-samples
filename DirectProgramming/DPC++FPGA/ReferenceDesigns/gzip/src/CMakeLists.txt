@@ -51,7 +51,7 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
         set(SEED "-Xsseed=19")
         set(NUM_REORDER "")
     else()
-        set(SEED "-Xsseed=18")
+        set(SEED "-Xsseed=4")
         # For the High Bandwidth variant, specify 6 reordering units to improve global memory read bandwidth across 4 channels of DDR.
         # For Low Latency variant this is not necessary since only one channel of global memory is used (host memory).
         set(NUM_REORDER "-Xsnum-reorder=6")
