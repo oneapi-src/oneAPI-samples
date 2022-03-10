@@ -1,5 +1,5 @@
 {
-  "guid": "4674c946-45f7-4bca-9da6-faa1797691cb",
+  "guid": "4674C946-45F7-4bCA-9DA6-FAA1797691CB",
   "name": "Cholesky decomposition",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "Reference design demonstrating high-performance Cholesky decomposition of real and complex matrices on an Intel® FPGA",

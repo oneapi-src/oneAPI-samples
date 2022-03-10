@@ -28,27 +28,14 @@
   - repetitions: The number of repetitions of the computation to execute.
                  (for performance evaluation)
 */
-#if COMPLEX == 0
-// Real single precision floating-point Cholesky decomposition
-void CholeskyDecomposition(std::vector<float> &a_matrix,
-                           std::vector<float> &l_matrix, sycl::queue &q,
+template<typename T, bool is_complex>
+void CholeskyDecomposition(std::vector<T> &a_matrix,
+                           std::vector<T> &l_matrix, sycl::queue &q,
                            int matrix_count, int repetitions) {
-  constexpr bool is_complex = false;
   CholeskyDecompositionImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
                             is_complex, float>(a_matrix, l_matrix, q,
                                                matrix_count, repetitions);
 }
-#else
-// Complex single precision floating-point Cholesky Decomposition
-void CholeskyDecomposition(std::vector<ac_complex<float> > &a_matrix,
-                           std::vector<ac_complex<float> > &l_matrix,
-                           sycl::queue &q, int matrix_count, int repetitions) {
-  constexpr bool is_complex = true;
-  CholeskyDecompositionImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
-                            is_complex, float>(a_matrix, l_matrix, q,
-                                               matrix_count, repetitions);
-}
-#endif
 
 /*
   Returns true if both the real and complex parts of the given ac_complex
@@ -202,8 +189,13 @@ int main(int argc, char *argv[]) {
               << (kMatricesToDecompose > 1 ? "ces " : "x ") << repetitions
               << " times" << std::endl;
 
-    CholeskyDecomposition(a_matrix, l_matrix, q, kMatricesToDecompose,
-                          repetitions);
+    // Switch between ac_complex<float> and float depending on the value
+    // of COMPLEX that is set by the build system
+    constexpr bool is_complex = COMPLEX != 0;
+    using TT = std::conditional_t<is_complex, ac_complex<float>, float>;
+
+    CholeskyDecomposition<TT, is_complex>(a_matrix, l_matrix, q,
+                                          kMatricesToDecompose, repetitions);
 
     // For output post-processing (op)
     T l_matrix_op[kRows][kColumns];
@@ -213,10 +205,9 @@ int main(int argc, char *argv[]) {
     constexpr float kErrorThreshold = 1e-4;
 
     // Check L matrices
-    std::cout << "Verifying results on matrix ";
+    std::cout << "Verifying results..." << std::endl;
     for (int matrix_index = 0; matrix_index < kMatricesToDecompose;
          matrix_index++) {
-      std::cout << matrix_index << std::endl;
 
       // Keep track of L element index
       size_t l_idx = 0;
@@ -270,7 +261,7 @@ int main(int argc, char *argv[]) {
 
 #if COMPLEX == 0
           ll_star_eq_a =
-              abs(a_matrix[current_matrix + current_element] - l_l_star_ij) < 
+              abs(a_matrix[current_matrix + current_element] - l_l_star_ij) <
               kErrorThreshold;
 
 #else
@@ -295,15 +286,17 @@ int main(int argc, char *argv[]) {
               continue;
             }
 
+            std::cerr << "Error in matrix " << matrix_index << std::endl;
+
             if (!ll_star_eq_a) {
-              std::cout << "Error: A[" << i << "][" << j << "] = "
-                        << a_matrix[(current_matrix * kAMatrixSize) 
+              std::cerr << "Error: A[" << i << "][" << j << "] = "
+                        << a_matrix[(current_matrix * kAMatrixSize)
                                     + (j * kRows) + i]
                         << " but LL*[" << i << "][" << j
                         << "] = " << l_l_star_ij << std::endl;
             }
             if (!l_is_finite) {
-              std::cout << "L[" << i << "][" << j << "] = " << l_matrix_op[i][j]
+              std::cerr << "L[" << i << "][" << j << "] = " << l_matrix_op[i][j]
                         << " is not finite" << std::endl;
             }
             error = true;
@@ -312,8 +305,8 @@ int main(int argc, char *argv[]) {
       }    // end of i
 
       if (error_count > 0) {
-        std::cout << std::endl << "FAILED" << std::endl;
-        std::cout << std::endl
+        std::cerr << std::endl << "FAILED" << std::endl;
+        std::cerr << std::endl
                   << "!!!!!!!!!!!!!! " << error_count << " errors" << std::endl;
         return 1;
       }

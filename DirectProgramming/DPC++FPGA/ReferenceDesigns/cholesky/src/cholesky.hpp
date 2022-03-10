@@ -59,17 +59,21 @@ void CholeskyDecompositionImpl(
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
   TT *l_device = sycl::malloc_device<TT>(kLMatrixSize * matrix_count, q);
 
+  if((a_device == nullptr) || (l_device == nullptr)){
+    std::cerr << "Error when allocating FPGA DDR" << std::endl;
+    std::cerr << "The FPGA DDR may be full" << std::endl;
+    std::cerr << "Try reducing the matrix sizes/count" << std::endl;
+  }
+
   // Copy the matrices to decompose on the FPGA DDR
   q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count * sizeof(TT))
       .wait();
 
   // Launch a kernel that will repeatedly read the matrices on the FPGA DDR
   // and write their content to the AMatrixPipe pipe.
-  auto ddr_read_event = q.submit([&](sycl::handler &h) {
-    h.single_task<CholeskyDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
-      MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
-                              AMatrixPipe>(a_device, matrix_count, repetitions);
-    });
+  auto ddr_read_event = q.single_task<CholeskyDDRToLocalMem>([=] {
+    MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
+                            AMatrixPipe>(a_device, matrix_count, repetitions);
   });
 
   // Read the A matrix from the AMatrixPipe pipe and compute the Cholesky
@@ -94,9 +98,8 @@ void CholeskyDecompositionImpl(
     // Repeat matrix_count complete L matrix pipe reads
     // for as many repetitions as needed
     [[intel::loop_coalesce(2)]]
-    for (int repetition_index = 0; repetition_index < repetitions;
-                                                          repetition_index++) {
-      for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
+    for (int rep_idx = 0; rep_idx < repetitions; rep_idx++) {
+      for (int matrix_idx = 0; matrix_idx < matrix_count; matrix_idx++) {
 
         for (int li = 0; li < kLoopIter; li++) {
           TT bank[kNumElementsPerDDRBurst];
@@ -113,7 +116,7 @@ void CholeskyDecompositionImpl(
             #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
               if(((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize){
-                vector_ptr_device[(matrix_index * kLMatrixSize)
+                vector_ptr_device[(matrix_idx * kLMatrixSize)
                           + (li * kNumElementsPerDDRBurst) + k] = bank[k];
               }
             }
@@ -122,13 +125,13 @@ void CholeskyDecompositionImpl(
             // Write a burst of kNumElementsPerDDRBurst elements to DDR
             #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              vector_ptr_device[(matrix_index * kLMatrixSize)
+              vector_ptr_device[(matrix_idx * kLMatrixSize)
                           + (li * kNumElementsPerDDRBurst) + k] = bank[k];
             }
           }
         }  // end of li
-      }  // end of matrix_index
-    }    // end of repetition_index
+      }  // end of matrix_idx
+    }    // end of rep_idx
   });
 
   ddr_write_event.wait();
