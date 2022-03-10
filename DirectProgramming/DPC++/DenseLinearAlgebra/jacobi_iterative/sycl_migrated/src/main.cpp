@@ -1,4 +1,4 @@
-//========================================================= 
+//=========================================================
 // Modifications Copyright © 2022 Intel Corporation
 //
 // SPDX-License-Identifier: BSD-3-Clause
@@ -31,6 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 
 #include <CL/sycl.hpp>
 #include <chrono>
