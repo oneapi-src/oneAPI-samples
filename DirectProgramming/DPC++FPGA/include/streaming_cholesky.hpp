@@ -57,11 +57,11 @@ template <typename T,       // The datatype for the computation
           >
 struct StreamingCholesky {
   void operator()() const {
-    // Functionnal assertions 
+    // Functional assertions 
     static_assert(rows >= 4,
                   "Only matrices of size 4x4 and over are supported");
     static_assert(pipe_size >= 1,
-                  "The pipe must at least be able to contain one element");
+                  "The pipe must be able to contain at least one element");
 
     // Set the computation type to T or ac_complex<T> depending on the value
     // of is_complex
