@@ -1,27 +1,40 @@
 # GZIP Decompression
-This DPC++ reference design demonstrates an GZIP decompression design on an FPGA.
+This DPC++ reference design implements GZIP decompression on an FPGA.  This includes LZ77 decoding and Huffman decoding with static or dynamic huffman tables. 
 
-***Documentation***:  
+***Documentation***:
 * [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 * [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-* [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. 
+* [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
  
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | Creating an efficient GZIP decompression engine on an FPGA.
+| What you will learn               | How to implement an efficient GZIP decompression engine on an FPGA.
 | Time to complete                  | 1 hour
 
 ## Purpose
-This FPGA reference design demonstrates an efficient GZIP decompression engine. See the [Additional Design Information Section](#additional-design-information) for more information on GZIP and DEFLATE de/compression for the FPGA.
+This FPGA reference design demonstrates an efficient GZIP decompression engine. See the [Additional Design Information Section](#additional-design-information) for more information on GZIP and DEFLATE compression and decompression.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 ## Building the Reference Design
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -30,7 +43,24 @@ The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
- 
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the Generate Launch Configurations extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
 1. Install the design into a directory `build` from the design directory by running `cmake`:
 
@@ -79,7 +109,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
@@ -89,17 +119,28 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
      ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      nmake report
      ``` 
    * An FPGA hardware target is not provided on Windows*. 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
+*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+
+## Troubleshooting
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -153,26 +194,26 @@ Launching kernels for run 4
 All kernels have finished for run 4
 Execution time: 7.12956 ms
 Output Throughput: 561.045 MB/s
-Compression Ratio: 1021.26
+Compression Ratio: 1021.26:1
 >>>>> Throughput Test: PASSED <<<<<
 
 PASSED
 ```
 
 NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance. <br>
-NOTE: The throughput of the decompression engine is highly dependant on the compression ratio of the input file, more specifically on the amount of LZ77 compression. The throughput test reports the *maximum* throughput, since it is decompressing a highly compressed file. When decompressing other files, it is expected that the throughput will be lower.
+NOTE: The throughput of the decompression engine is highly dependant on the compression ratio of the input file, more specifically on the amount of LZ77 compression. The file chosen for this test has a very high amount of LZ77 compression, and was chosen to demonstrate the *maximum* throughput achievable with this implementation. When decompressing other files, the throughput may be somewhat lower.
 
 
 ## Additional Design Information
 ### Source Code Breakdown
 The following source files can be found in the `src/` sub-directory.
 
-| File                            | Description 
+| File                            | Description
 |:---                             |:---
-|`main.cpp`                       | Contains the `main()` function and the top-level launching, validation, and performance measurements.
-|`byte_bit_stream.hpp`            | A bitstream class that has 8-bits (a byte) written in and a dynamic number of bits read.
-|`byte_stacker.hpp`               | A kernel that accepts between 0 and N elements per cycle, buffers N elements locally, and writes out N elements when possible.
-|`common.hpp`                     | Functions common across the design.
+|`main.cpp`                       | Contains the `main()` function which launches the kernels, validates the results, and measures performance.
+|`byte_bit_stream.hpp`            | A bitstream class that accepts one byte (8 bits) at a time and allows a variable number of bits to be read out on each transaction.
+|`byte_stacker.hpp`               | A kernel that accepts between 0 and N elements per cycle and combines them to output N elements at a time.
+|`common.hpp`                     | Contains functions and data structures that are common across the design.
 |`gzip_decompressor.hpp`          | The top-level file for the GZIP decompressor. This file launches all of the GZIP kernels.
 |`gzip_header_data.hpp`           | A class to store the GZIP header data.
 |`gzip_metadata_reader.hpp`       | A kernel that streams in a GZIP file, parses and strips the GZIP header and footer metadata, and streams the payload into the DEFLATE decompressor engine.
@@ -181,11 +222,11 @@ The following source files can be found in the `src/` sub-directory.
 |`simple_crc32.hpp`               | A simple implementation of CRC-32 calculation. This is used to validate the output of the GZIP engine.
 
 ### GZIP and DEFLATE
-GZIP is specific implementation of the DEFLATE protocol. The structure of a GZIP file is illustrated in the figure below. It starts with a variable length, byte-aligned header of 10 or more bytes. Then follows the data payload, which is 1 or more DEFLATE compressed blocks. After the DEFLATE blocks, there may be some small amount of padding to realign to a byte boundary, and finally an 8-byte GZIP footer, which contains the CRC-32 and size (in bytes) of the uncompressed data. For more details on the GZIP file format, [see here](https://en.wikipedia.org/wiki/Gzip)
+GZIP is a specific implementation of the DEFLATE protocol. The structure of a GZIP file is illustrated in the figure below. It starts with a variable length, byte-aligned header of 10 or more bytes. Then follows the data payload, which is 1 or more DEFLATE compressed blocks. After the DEFLATE blocks, there may be some small amount of padding to realign to a byte boundary, and finally an 8-byte GZIP footer, which contains the CRC-32 and size (in bytes) of the uncompressed data. For more details on the GZIP file format, [see here](https://en.wikipedia.org/wiki/Gzip)
 
 <img src="gzip_file_format.png" alt="gzip_file_format" width="400"/>
 
-The DEFLATE compression algorithm performs LZ77 Encoding followed by Huffman encoding (decompression decodes in the opposite order). For more information on the DEFLATE format and LZ77 and Huffman encoding/decoding, [start here](https://en.wikipedia.org/wiki/Deflate).
+The DEFLATE compression algorithm performs LZ77 Encoding followed by Huffman encoding. Therefore, decompression decodes in the opposite order. For more information on the DEFLATE format and LZ77 and Huffman encoding/decoding, [start here](https://en.wikipedia.org/wiki/Deflate).
 
 A DEFLATE block is is structured as follows:
 - The first bit indicates whether this is the last block in a stream of blocks
@@ -205,7 +246,7 @@ The GZIP decompression engine in this reference design supports all three block 
 
 
 ### GZIP Decompression FPGA Design
-The image below summarizes the full streaming GZIP decompression design. The orange kernels on the FPGA in the dashed box are the *actual* streaming GZIP decompression engine. The *Producer* and *Consumer* kernels are only used to stream data into and out of the GZIP decompression engine from device memory, respectively.
+The image below summarizes the full streaming GZIP decompression design. The orange kernels on the FPGA in the dashed box make up the streaming GZIP decompression engine. The *Producer* and *Consumer* kernels are only used to stream data into and out of the GZIP decompression engine from and to device memory, respectively.
 
 <img src="gzip_decompression_engine_full.png" alt="gzip_decompression_engine_full" width="700"/>
 
@@ -221,9 +262,9 @@ The GZIP metadata reader streams in in the GZIP file, a byte at a time, parses a
 #### Huffman Decoder
 The Huffman decoder streams in DEFLATE compressed blocks, a byte at a time, and streams out either literals (8-bit characters) or {length, distance} pairs. The Huffman decoder is not byte-aligned; it decodes the input stream bits at a time. To do this efficiently, the decoder uses the `ByteBitStream` class, which streams in bytes at a time but gives the decoder access to all of the bits in parallel. This design takes advantage of the fact that the DEFLATE format limits code lengths to at most 15 bits.
 
-The structure of the Huffman decoder is shown in the image below. The decoder examines the next 15 bits in the bit stream and checks for matches of length 1-15 in parallel to create a 15-bit *valid bitmap*, where a 1 at bit `i` indicates that the code of length `i` matches a code in the Huffman table. For example, a value of `0b000000000000101` would indicate that there is a match of length 1 and 3.
+The structure of the Huffman decoder is shown in the image below. The decoder examines the next 15 bits in the bit stream and checks for matches in the Huffman table of lengths 1-15 in parallel to create a 15-bit *valid bitmap*, where a 1 at bit `i` indicates that the code of length `i` matches a code in the Huffman table. For example, a value of `0b000000000000101` would indicate that there is a match of length 1 and 3.
 
-To decode the next symbol, the decoder finds the *shortest* of the 15 matches that were computed in parallel. To do so, it performs a `CTZ` (**c**ount **t**railing **z**eros) operation on the valid bitmap and adds one to it, which is equivalent to finding the shortest match length. Once the shortest match length is found, the bit stream is shifted by that many bits, the symbol for that match is looked up, and the process repeats. If the decoded symbol is a literal, then the literal is written to the output. If the decoded symbol is a length, then no output is generated in this iteration; the length is saved and the next iteration of the loop decodes the distance and generates the {length, distance} pair output.
+To decode the next symbol, the decoder finds the *shortest* of the 15 matches that were computed in parallel. To do so, it performs a `CTZ` (**c**ount **t**railing **z**eros) operation on the valid bitmap and adds one to it, which is equivalent to finding the shortest match length. Once the shortest match length is found, the bit stream is shifted by that many bits, the symbol for that match is determined from the Huffman table, and the process repeats. If the decoded symbol is a literal, then the literal is written to the output. If the decoded symbol is a length, then no output is generated in this iteration; the length is saved and the next iteration of the loop decodes the distance and generates the {length, distance} pair output.
 
 <img src="huffman_decoder.png" alt="huffman_decoder" width="700"/>
 
@@ -238,7 +279,7 @@ symbol = lit_map[base_idx[L] + offset]
 The Huffman decoder decodes a literal in 1 iteration of the main loop, and a {length, distance} pair in 2 iterations. When decoding a {length, distance} pair, the length code can be 1-15 bits and, based on the decoded length, 0-5 extra bits. Similarly, the distance code can be 1-15 bits and 0-15 extra bits. To decode a {length, distance} in 2 iterations, the Huffman decoder looks at 30 bits in parallel. The first 15 are examined as described earlier. The decoder also examines the 15x5 and 15x15 different possibilities for the extra length and distance bits, respectively. For the extra length bits, the shortest matching code can be 1-15 bits, giving 15 possibilities for where the extra bits could *start*. There can be 1-5 extra bits, giving 5 possibilities, which yields 15x5 possibilities for the extra length bits. Decoding the extra distance bits uses the same approach but with 0-15 extra bits, yielding 15x15 possibilities.
 
 #### LZ77 Decoder
-The input to the LZ77 decoder is a stream of commands that are either an 8-bit literal or a {length, distance} pair; the output of the Huffman decoder. The output is a stream of literals (8-bit characters). The LZ77 decoder keeps a 32K *history buffer*; a history of the last 32K literals it has streamed to the output. 
+The input to the LZ77 decoder is a stream of symbols that are either an 8-bit literal or a {length, distance} pair. The output is a stream of literals (8-bit characters). The LZ77 decoder keeps a 32KB *history buffer* which stores the last 32K literals it has streamed to the output. 
 
 If the incoming command is an 8-bit literal, the LZ77 decoder simply forwards the literal to the output stream and tracks it in the history buffer. For a {length, distance} pair, the decoder goes back `distance` literals in the history buffer and streams `length` of them to the output and back into the history buffer.
 

@@ -377,7 +377,7 @@ bool DecompressFile(queue& q, std::string f_in, std::string f_out, int runs,
     std::cout << "Execution time: " << avg_time_ms << " ms\n";
     std::cout << "Output Throughput: " << (out_mb / (avg_time_ms * 1e-3))
               << " MB/s\n";
-    std::cout << "Compression Ratio: " << compression_ratio << "\n";
+    std::cout << "Compression Ratio: " << compression_ratio << ":1" << "\n";
   }
 
   return passed;
