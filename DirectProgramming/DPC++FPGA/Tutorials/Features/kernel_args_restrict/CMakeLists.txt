@@ -16,5 +16,6 @@ project(KernelArgsRestrict CXX)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+unset(CMAKE_DEPFILE_FLAGS_CXX) # depfiles may break the generated HTML-file for optimization report
 
 add_subdirectory (src)
