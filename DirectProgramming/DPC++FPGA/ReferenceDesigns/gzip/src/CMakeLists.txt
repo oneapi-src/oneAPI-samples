@@ -48,7 +48,7 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(NUM_ENGINES 2)
     if(DEFINED LOW_LATENCY)
-        set(SEED "-Xsseed=19")
+        set(SEED "-Xsseed=16")
         set(NUM_REORDER "")
     else()
         set(SEED "-Xsseed=4")
