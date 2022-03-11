@@ -214,14 +214,7 @@ Generating 8 random real matrices of size 32x32
 Computing the Cholesky decomposition of 8 matrices 819200 times
    Total duration:   29.6193 s
 Throughput: 221.261k matrices/s
-Verifying results on matrix 0
-1
-2
-3
-4
-5
-6
-7
+Verifying results...
 
 PASSED
 ```
@@ -234,14 +227,7 @@ Generating 8 random real matrices of size 32x32
 Computing the Cholesky decomposition of 8 matrices 819200 times
    Total duration:   30.58 s
 Throughput: 214.31k matrices/s
-Verifying results on matrix 0
-1
-2
-3
-4
-5
-6
-7
+Verifying results...
 
 PASSED
 ```
