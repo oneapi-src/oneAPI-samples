@@ -21,32 +21,28 @@ using namespace sycl;
 // this function reads 'literals_per_cycle' elements from the history buffer
 // per cycle and writes them to the output.
 //
-template <typename InPipe, typename OutPipe, unsigned literals_per_cycle>
+template <typename InPipe, typename OutPipe, size_t max_history,
+          unsigned literals_per_cycle>
 void LZ77DecoderMultiElement() {
-  static_assert(literals_per_cycle > 0);
-  static_assert(fpga_tools::IsPow2(literals_per_cycle));
   using OutPipeBundleT = FlagBundle<BytePack<literals_per_cycle>>;
-
-  // maximum history size is set based on the DEFLATE compression description
-  constexpr unsigned kMaxHistory = 32768;
 
   // we will cyclically partition the history to 'literals_per_cycle' buffers,
   // so each buffer gets this many elements
-  constexpr unsigned history_buffer_count = kMaxHistory / literals_per_cycle;
+  constexpr size_t history_buffer_count = max_history / literals_per_cycle;
 
   // number of bits to count from 0 to literals_per_cycle-1
-  constexpr unsigned history_buffer_buffer_idx_bits =
+  constexpr size_t history_buffer_buffer_idx_bits =
       fpga_tools::Log2(literals_per_cycle);
 
   // bit mask for counting from 0 to literals_per_cycle-1
-  constexpr unsigned history_buffer_buffer_idx_mask = literals_per_cycle - 1;
+  constexpr size_t history_buffer_buffer_idx_mask = literals_per_cycle - 1;
 
   // number of bits to count from 0 to history_buffer_count-1
-  constexpr unsigned history_buffer_idx_bits =
+  constexpr size_t history_buffer_idx_bits =
       fpga_tools::Log2(history_buffer_count);
 
   // bit mask for counting from 0 to history_buffer_count-1
-  constexpr unsigned history_buffer_idx_mask = history_buffer_count - 1;
+  constexpr size_t history_buffer_idx_mask = history_buffer_count - 1;
 
   // the data type used to index from 0 to literals_per_cycle-1 (i.e., pick
   // which buffer to use)
@@ -195,7 +191,7 @@ void LZ77DecoderMultiElement() {
         auto idx_in_buf = read_history_buffer_idx[i];
         historical_bytes[i] = history_buffer.template get<i>()[idx_in_buf];
 
-      // also check the cache to see if it is there
+        // also check the cache to see if it is there
 #pragma unroll
         for (int j = 0; j < kCacheDepth + 1; j++) {
           if (history_buffer_cache_idx[i][j] == idx_in_buf) {
@@ -295,15 +291,14 @@ void LZ77DecoderMultiElement() {
 //
 // Same as above but for 1 element per cycle
 //
-template <typename InPipe, typename OutPipe>
+template <typename InPipe, typename OutPipe, size_t max_history>
 void LZ77DecoderSingleElement() {
   using OutPipeBundleT = decltype(OutPipe::read());
 
-  constexpr unsigned kMaxHistory = 32768;
-  constexpr unsigned history_buffer_count = kMaxHistory;
-  constexpr unsigned history_buffer_idx_bits =
+  constexpr size_t history_buffer_count = max_history;
+  constexpr size_t history_buffer_idx_bits =
       fpga_tools::Log2(history_buffer_count);
-  constexpr unsigned history_buffer_idx_mask = history_buffer_count - 1;
+  constexpr size_t history_buffer_idx_mask = history_buffer_count - 1;
 
   using HistBufIdxT = ac_uint<history_buffer_idx_bits>;
 
@@ -411,23 +406,30 @@ void LZ77DecoderSingleElement() {
 // Top-level LZ77 decoder to switch between the single- and multi-element per
 // cycle variants above.
 //
-template <typename InPipe, typename OutPipe, unsigned literals_per_cycle>
+template <typename InPipe, typename OutPipe, size_t max_history,
+          unsigned literals_per_cycle>
 void LZ77Decoder() {
+  static_assert(literals_per_cycle > 0);
+  static_assert(max_history > 0);
+  static_assert(fpga_tools::IsPow2(literals_per_cycle));
+  static_assert(fpga_tools::IsPow2(max_history));
+
   if constexpr (literals_per_cycle == 1) {
-    return LZ77DecoderSingleElement<InPipe, OutPipe>();
+    return LZ77DecoderSingleElement<InPipe, OutPipe, max_history>();
   } else {
-    return LZ77DecoderMultiElement<InPipe, OutPipe, literals_per_cycle>();
+    return LZ77DecoderMultiElement<InPipe, OutPipe, max_history,
+                                   literals_per_cycle>();
   }
 }
 
 //
 // Creates a kernel from the LZ77 decoder function
 //
-template <typename Id, typename InPipe, typename OutPipe,
+template <typename Id, typename InPipe, typename OutPipe, size_t max_history,
           unsigned literals_per_cycle>
 event SubmitLZ77Decoder(queue& q) {
   return q.single_task<Id>([=] {
-    return LZ77Decoder<InPipe, OutPipe, literals_per_cycle>();
+    return LZ77Decoder<InPipe, OutPipe, max_history, literals_per_cycle>();
   });
 }
 

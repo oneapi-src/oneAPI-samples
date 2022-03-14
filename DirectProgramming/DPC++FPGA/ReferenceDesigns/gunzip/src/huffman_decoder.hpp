@@ -464,6 +464,7 @@ void HuffmanDecoder() {
           }
         }
       }
+      
       lit_map_last_code[codelen - 1] = lit_map_next_code;
       dist_map_last_code[codelen - 1] = dist_map_next_code;
     }
