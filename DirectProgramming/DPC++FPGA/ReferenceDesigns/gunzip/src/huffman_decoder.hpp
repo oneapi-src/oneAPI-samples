@@ -408,49 +408,63 @@ void HuffmanDecoder() {
     // and 32 for distances. When decoding, the presence of a 'length' literal
     // implies the next thing we decode is a distance.
 
-    // parse the Huffman table for the literal codes
+    // parse the Huffman table for the literal and distance codes
+    // we fuse these loops to try and reduce the overhead of parsing a block
     [[intel::fpga_register]] ac_uint<15> lit_map_first_code[15];
     [[intel::fpga_register]] ac_uint<15> lit_map_last_code[15];
     [[intel::fpga_register]] ac_uint<9> lit_map_base_idx[15];
     [[intel::fpga_register]] ac_uint<9> lit_map[286];
 
-    ac_uint<15> lit_map_next_code = 0;
-    ac_uint<9> lit_map_counter = 0;
-    for (unsigned char codelen = 1; codelen <= 15; codelen++) {
-      lit_map_next_code <<= 1;
-      lit_map_first_code[codelen - 1] = lit_map_next_code;
-      lit_map_base_idx[codelen - 1] = lit_map_counter;
-      for (unsigned short symbol = 0; symbol < numlitlencodes; symbol++) {
-        auto inner_codelen = codelens[symbol];
-        if (inner_codelen == codelen) {
-          lit_map[lit_map_counter] = symbol;
-          lit_map_counter++;
-          lit_map_next_code++;
-        }
-      }
-      lit_map_last_code[codelen - 1] = lit_map_next_code;
-    }
-
-    // parse the Huffman table for the distance codes
     [[intel::fpga_register]] ac_uint<15> dist_map_first_code[15];
     [[intel::fpga_register]] ac_uint<15> dist_map_last_code[15];
     [[intel::fpga_register]] ac_uint<5> dist_map_base_idx[15];
     [[intel::fpga_register]] ac_uint<5> dist_map[32];
 
+    // the maximum of numdistcodes and numlitlencodes
+    ac_uint<9> max_codes;
+    if (numdistcodes < numlitlencodes)
+      max_codes = numlitlencodes;
+    else
+      max_codes = numdistcodes;
+
+    ac_uint<15> lit_map_next_code = 0;
+    ac_uint<9> lit_map_counter = 0;
     ac_uint<15> dist_map_next_code = 0;
     ac_uint<5> dist_map_counter = 0;
     for (unsigned char codelen = 1; codelen <= 15; codelen++) {
+      lit_map_next_code <<= 1;
+      lit_map_first_code[codelen - 1] = lit_map_next_code;
+      lit_map_base_idx[codelen - 1] = lit_map_counter;
+
       dist_map_next_code <<= 1;
       dist_map_first_code[codelen - 1] = dist_map_next_code;
       dist_map_base_idx[codelen - 1] = dist_map_counter;
-      for (unsigned short symbol = 0; symbol < numdistcodes; symbol++) {
-        auto inner_codelen = codelens[numlitlencodes + symbol];
-        if (inner_codelen == codelen) {
-          dist_map[dist_map_counter] = symbol;
-          dist_map_counter++;
-          dist_map_next_code++;
+
+      // this loop has been manually fused for the literal and distance codes
+      // we will iterate max(numdistcodes, numlitlencodes) times and predicate
+      // the decoding based on numdistcodes and numlitlencodes
+      for (unsigned short symbol = 0; symbol < max_codes; symbol++) {
+        // literal
+        if (symbol < numlitlencodes) {
+          auto inner_codelen = codelens[symbol];
+          if (inner_codelen == codelen) {
+            lit_map[lit_map_counter] = symbol;
+            lit_map_counter++;
+            lit_map_next_code++;
+          }
+        }
+
+        // distance
+        if (symbol < numdistcodes) {
+          auto inner_codelen = codelens[numlitlencodes + symbol];
+          if (inner_codelen == codelen) {
+            dist_map[dist_map_counter] = symbol;
+            dist_map_counter++;
+            dist_map_next_code++;
+          }
         }
       }
+      lit_map_last_code[codelen - 1] = lit_map_next_code;
       dist_map_last_code[codelen - 1] = dist_map_next_code;
     }
     // END: parsing the literal and distance tables
