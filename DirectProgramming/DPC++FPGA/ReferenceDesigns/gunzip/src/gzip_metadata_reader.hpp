@@ -2,8 +2,8 @@
 #define __GZIP_METADATA_READER_HPP__
 
 #include <CL/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "common.hpp"
 #include "constexpr_math.hpp"
@@ -15,39 +15,38 @@ using namespace sycl;
 // Streams in bytes of the GZIP file from the 'InPipe', strips away (and parses)
 // the GZIP header and footer, and streams out the actual GZIP data.
 //
-template<typename InPipe, typename OutPipe>
+template <typename InPipe, typename OutPipe>
 void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
                         int& out_count) {
   // the data type streamed out
   using OutPipeBundleT = decltype(OutPipe::read());
 
-  // Format of the GZIP file format
-  //////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////
-  //// HEADER
-  // 2 bytes: magic number (0x1f8b)
-  // 1 byte: compression method
-  // 1 byte: 'flags'
-  // 4 bytes: time
-  // 1 byte: extra flags
-  // 1 byte: OS
-  //
-  // read more bytes based on flags:
-  //    if flags & 0x01 != 0: Flag = Text
-  //    if flags & 0x04 != 0: Flag = Errata, read 2 bytes for 'length',
-  //                          read 'length' more bytes
-  //    if flags & 0x08 != 0: Filename, read nullterminated string
-  //    if flags & 0x02 != 0: CRC-16, read 2 bytes
-  //    if flags & 0x10 != 0: Comment, read nullterminated string
-  //////////////////////////////////////////////////////////////////////////////
-  //// DATA
-  // ...
-  //////////////////////////////////////////////////////////////////////////////
-  //// FOOTER
-  // 4 bytes: CRC-32 Checksum
-  // 4 bytes: Uncompressed data size in bytes
-  //////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////
+  /*
+  GZIP FILE FORMAT:
+
+  HEADER
+      2 bytes: magic number (0x1f8b)
+      1 byte: compression method
+      1 byte: 'flags'
+      4 bytes: time
+      1 byte: extra flags
+      1 byte: OS
+    Read more bytes based on flags:
+      if flags & 0x01 != 0: Flag = Text
+      if flags & 0x04 != 0: Flag = Errata, read 2 bytes for 'length',
+                                   read 'length' more bytes
+      if flags & 0x08 != 0: Filename, read nullterminated string
+      if flags & 0x02 != 0: CRC-16, read 2 bytes
+      if flags & 0x10 != 0: Comment, read nullterminated string
+
+  DATA
+    1 or more consecutive DEFLATE compressed blocks
+
+  FOOTER
+    4 bytes: CRC-32 Checksum
+    4 bytes: Uncompressed data size in bytes
+  */
+
   int i = 0;
   bool i_in_range = 0 < in_count;
   bool i_next_in_range = 1 < in_count;
@@ -69,7 +68,7 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   // not critical (low trip count). However, the compiler doesn't know that
   // and tries to optimize for throughput (~Fmax/II). However, we don't want
   // this loop to be our Fmax bottleneck, so increase the II.
-  [[intel::initiation_interval(4)]]
+  [[intel::initiation_interval(4)]]  //
   while (state != SteadyState) {
     curr_byte = InPipe::read();
 
@@ -111,11 +110,11 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
         header_os = curr_byte;
         if (header_flags & 0x04) {
           state = Errata;
-        } else if(header_flags & 0x08) {
+        } else if (header_flags & 0x08) {
           state = Filename;
-        } else if(header_flags & 0x02) {
+        } else if (header_flags & 0x02) {
           state = CRC;
-        } else if(header_flags & 0x10) {
+        } else if (header_flags & 0x10) {
           state = Comment;
         } else {
           state = SteadyState;
@@ -131,11 +130,11 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
           state_counter++;
         } else {
           if ((state_counter - 2) == errata_len) {
-            if(header_flags & 0x08) {
+            if (header_flags & 0x08) {
               state = Filename;
-            } else if(header_flags & 0x02) {
+            } else if (header_flags & 0x02) {
               state = CRC;
-            } else if(header_flags & 0x10) {
+            } else if (header_flags & 0x10) {
               state = Comment;
             } else {
               state = SteadyState;
@@ -150,9 +149,9 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
       case Filename: {
         header_filename[state_counter] = curr_byte;
         if (curr_byte == '\0') {
-          if(header_flags & 0x02) {
+          if (header_flags & 0x02) {
             state = CRC;
-          } else if(header_flags & 0x10) {
+          } else if (header_flags & 0x10) {
             state = Comment;
           } else {
             state = SteadyState;
@@ -171,7 +170,7 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
           header_crc[1] = curr_byte;
           state_counter++;
         } else {
-          if(header_flags & 0x10) {
+          if (header_flags & 0x10) {
             state = Comment;
           } else {
             state = SteadyState;
@@ -205,7 +204,7 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   unsigned char size_bytes[4];
 
   // finished reading the header, so now stream the bytes into the decompressor.
-  // keep track of the last 8 bytes, which are the crc and output size. 
+  // keep track of the last 8 bytes, which are the crc and output size.
   // NOTE: we DO care about the performance of this loop, because it will feed
   // the rest of the decompressor.
   while (i_in_range) {
@@ -222,7 +221,7 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
           crc_bytes[7 - remaining_bytes] = curr_byte;
         }
       }
-      OutPipe::write(OutPipeBundleT(curr_byte, (i == (in_count-1))));
+      OutPipe::write(OutPipeBundleT(curr_byte, (i == (in_count - 1))));
 
       i_in_range = i_next_in_range;
       i_next_in_range = i < (in_count - 2);
@@ -235,8 +234,8 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   crc = 0;
   out_count = 0;
   for (int i = 0; i < 4; i++) {
-    crc |= (unsigned int)(crc_bytes[i]) << (i*8);
-    out_count |= (unsigned int)(size_bytes[i]) << (i*8);
+    crc |= (unsigned int)(crc_bytes[i]) << (i * 8);
+    out_count |= (unsigned int)(size_bytes[i]) << (i * 8);
   }
 
   // construct the header data
@@ -244,9 +243,9 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   hdr_data.magic[1] = header_magic[1];
   hdr_data.compression_method = header_compression_method;
   hdr_data.flags = header_flags;
-  for(int i = 0; i < 4; i++) hdr_data.time[i] = header_time[i];
+  for (int i = 0; i < 4; i++) hdr_data.time[i] = header_time[i];
   hdr_data.os = header_os;
-  for(int i = 0; i < 256; i++) hdr_data.filename[i] = header_filename[i];
+  for (int i = 0; i < 256; i++) hdr_data.filename[i] = header_filename[i];
   hdr_data.crc[0] = header_crc[0];
   hdr_data.crc[1] = header_crc[1];
 }
@@ -254,10 +253,10 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
 //
 // Creates a kernel from the GZIP metadata reader function
 //
-template<typename Id, typename InPipe, typename OutPipe>
+template <typename Id, typename InPipe, typename OutPipe>
 event SubmitGzipMetadataReader(queue& q, int in_count,
-                             GzipHeaderData* hdr_data_ptr, int* crc_ptr,
-                             int* out_count_ptr) {
+                               GzipHeaderData* hdr_data_ptr, int* crc_ptr,
+                               int* out_count_ptr) {
   return q.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
     device_ptr<GzipHeaderData> hdr_data(hdr_data_ptr);
     device_ptr<int> crc(crc_ptr);
@@ -267,7 +266,7 @@ event SubmitGzipMetadataReader(queue& q, int in_count,
     GzipHeaderData hdr_data_loc;
     int crc_loc;
     int out_count_loc;
-    
+
     GzipMetadataReader<InPipe, OutPipe>(in_count, hdr_data_loc, crc_loc,
                                         out_count_loc);
 

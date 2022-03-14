@@ -2,15 +2,15 @@
 #define __BYTE_BIT_STREAM_HPP__
 
 #include <CL/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "constexpr_math.hpp"
 
 //
 // A stream of bits that is filled with a byte at a time
 //
-template<int bits, int max_dynamic_read_bits, int max_shift_bits>
+template <int bits, int max_dynamic_read_bits, int max_shift_bits>
 class ByteBitStream {
   // static asserts to make sure the template parameters make sense
   static_assert(bits > 0);
@@ -18,7 +18,7 @@ class ByteBitStream {
   static_assert(max_dynamic_read_bits <= bits);
   static_assert(max_shift_bits > 0);
   static_assert(max_shift_bits <= bits);
-  
+
   // an acint to count from 0 to 'bits', inclusive
   static constexpr int count_bits = fpga_tools::Log2(bits) + 1;
   using CountT = ac_int<count_bits, false>;
@@ -32,12 +32,12 @@ class ByteBitStream {
   static constexpr int shift_count_bits = fpga_tools::Log2(max_shift_bits) + 1;
   using ShiftCountT = ac_int<shift_count_bits, false>;
 
-public:
+ public:
   ByteBitStream() : buf_(0), size_(0), space_(bits) {}
 
   //
   // read 'read_bits' bits from the bitstream and interpret them as an
-  // unsigned int, where 'read_bits' is a runtime variable 
+  // unsigned int, where 'read_bits' is a runtime variable
   //
   auto ReadUInt(ReadCountT read_bits) {
     ac_int<max_dynamic_read_bits, false> mask = (1 << read_bits) - 1;
@@ -48,7 +48,7 @@ public:
   // read 'read_bits' bits from the bitstream and interpret them as an
   // unsigned int, where 'read_bits' is constexpr
   //
-  template<int read_bits>
+  template <int read_bits>
   auto ReadUInt() {
     static_assert(read_bits <= bits);
     return buf_.template slc<read_bits>(0);
@@ -90,9 +90,9 @@ public:
     space_ -= decltype(space_)(8);
   }
 
-private:
+ private:
   ac_int<bits, false> buf_;
   CountT size_, space_;
 };
 
-#endif // __BYTE_BIT_STREAM_HPP__
+#endif  // __BYTE_BIT_STREAM_HPP__

@@ -2,8 +2,8 @@
 #define __BYTE_STACKER_HPP__
 
 #include <CL/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "constexpr_math.hpp"
 
@@ -15,10 +15,10 @@ using namespace sycl;
 // and "stacks" it, such that the output is always 'literals_per_cycle' valid
 // elements (except for maybe the last write).
 //
-template<typename InPipe, typename OutPipe, unsigned literals_per_cycle>
+template <typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 void ByteStacker() {
   using OutPipeBundleT = decltype(OutPipe::read());
-  constexpr int cache_idx_bits = fpga_tools::Log2(literals_per_cycle*2) + 1;
+  constexpr int cache_idx_bits = fpga_tools::Log2(literals_per_cycle * 2) + 1;
 
   bool done;
 
@@ -34,9 +34,9 @@ void ByteStacker() {
     auto pipe_data = InPipe::read(data_valid);
     done = pipe_data.flag && data_valid;
 
+    // add the valid data we read in to the cache
     if (data_valid && !done) {
-      // add the valid data we read in to the cache
-      #pragma unroll
+#pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
         if (i < pipe_data.data.valid_count) {
           cache_buf[cache_idx + i] = pipe_data.data.byte[i];
@@ -51,7 +51,8 @@ void ByteStacker() {
     if (cache_idx >= literals_per_cycle || done) {
       // create the output pack of characters from the current cache
       BytePack<literals_per_cycle> out_pack;
-      #pragma unroll
+
+#pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
         // copy the character
         out_pack.byte[i] = cache_buf[i];
@@ -77,14 +78,14 @@ void ByteStacker() {
       OutPipe::write(OutPipeBundleT(out_pack));
     }
   } while (!done);
-  
+
   // notify downstream kernel that we are done
   OutPipe::write(OutPipeBundleT(true));
 }
 
 // Creates a kernel from the byte stacker kernel
-template<typename Id, typename InPipe, typename OutPipe,
-         unsigned literals_per_cycle>
+template <typename Id, typename InPipe, typename OutPipe,
+          unsigned literals_per_cycle>
 event SubmitByteStacker(queue& q) {
   return q.single_task<Id>([=] {
     ByteStacker<InPipe, OutPipe, literals_per_cycle>();

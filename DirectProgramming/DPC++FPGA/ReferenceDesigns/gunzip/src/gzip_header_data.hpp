@@ -9,8 +9,17 @@
 // States for parsing the GZIP header
 //
 enum GzipHeaderState {
-  MagicNumber, CompressionMethod, Flags, Time, ExtraFlags, OS, Errata, Filename,
-  CRC, Comment, SteadyState
+  MagicNumber,
+  CompressionMethod,
+  Flags,
+  Time,
+  ExtraFlags,
+  OS,
+  Errata,
+  Filename,
+  CRC,
+  Comment,
+  SteadyState
 };
 
 //
@@ -60,21 +69,36 @@ struct GzipHeaderData {
 
   std::string OS() const {
     switch (os) {
-      case 0:   return "FAT";
-      case 1:   return "Amiga";
-      case 2:   return "VMS";
-      case 3:   return "Unix";
-      case 4:   return "VM/CMS";
-      case 5:   return "Atari TOS";
-      case 6:   return "HPFS";
-      case 7:   return "Macintosh";
-      case 8:   return "Z-System";
-      case 9:   return "CP/M";
-      case 10:  return "TOPS-20";
-      case 11:  return "NTFS";
-      case 12:  return "Acorn RISCOS";
-      case 13:  return "FAT";
-      default:  return "Unknown";
+      case 0:
+        return "FAT";
+      case 1:
+        return "Amiga";
+      case 2:
+        return "VMS";
+      case 3:
+        return "Unix";
+      case 4:
+        return "VM/CMS";
+      case 5:
+        return "Atari TOS";
+      case 6:
+        return "HPFS";
+      case 7:
+        return "Macintosh";
+      case 8:
+        return "Z-System";
+      case 9:
+        return "CP/M";
+      case 10:
+        return "TOPS-20";
+      case 11:
+        return "NTFS";
+      case 12:
+        return "Acorn RISCOS";
+      case 13:
+        return "FAT";
+      default:
+        return "Unknown";
     }
   }
 
@@ -121,10 +145,10 @@ std::ostream& operator<<(std::ostream& os, const GzipHeaderData& hdr_data) {
      << hdr_data.CRC() << "\n";
 
   os.flags(save_flags);
-  
+
   // ensure we restore flags
   os.flags(save_flags);
   return os;
 }
 
-#endif // __GZIP_HEADER_DATA_HPP__
+#endif  // __GZIP_HEADER_DATA_HPP__

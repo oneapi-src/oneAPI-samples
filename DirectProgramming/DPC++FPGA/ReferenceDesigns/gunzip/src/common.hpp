@@ -2,20 +2,20 @@
 #define __COMMON_HPP__
 
 #include <CL/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "constexpr_math.hpp"
 
-// we only use unsigned ac_ints, so use this alias to avoid having to type
-// 'false' all the time
-template<int bits>
+// we only use unsigned ac_ints, so this alias lets us not write the 'false'
+// template argument everytime
+template <int bits>
 using ac_uint = ac_int<bits, false>;
 
 //
-// Append a flag to a type 'T'
+// Extend a type 'T' with a boolean flag
 //
-template<typename T>
+template <typename T>
 struct FlagBundle {
   using value_type = T;
   FlagBundle() : data(T()), flag(false) {}
@@ -28,9 +28,9 @@ struct FlagBundle {
 };
 
 //
-// The data that comes out of the huffman decoder
+// The data that goes into the LZ77 decoder from the Huffman decoder
 //
-template<unsigned n, unsigned max_length, unsigned max_distance>
+template <unsigned n, unsigned max_length, unsigned max_distance>
 struct LZ77InputData {
   static_assert(n > 0);
   static_assert(max_length > 0);
@@ -38,11 +38,9 @@ struct LZ77InputData {
 
   static constexpr unsigned max_symbols = n;
   static constexpr unsigned valid_count_bits =
-    fpga_tools::Log2(max_symbols) + 1;
-  static constexpr unsigned length_bits =
-    fpga_tools::Log2(max_length) + 1;
-  static constexpr unsigned distance_bits =
-    fpga_tools::Log2(max_distance) + 1;
+      fpga_tools::Log2(max_symbols) + 1;
+  static constexpr unsigned length_bits = fpga_tools::Log2(max_length) + 1;
+  static constexpr unsigned distance_bits = fpga_tools::Log2(max_distance) + 1;
 
   static_assert(valid_count_bits > 0);
   static_assert(n < fpga_tools::Pow2(valid_count_bits));
@@ -52,7 +50,7 @@ struct LZ77InputData {
   static_assert(max_distance < fpga_tools::Pow2(distance_bits));
 
   LZ77InputData() {}
-  
+
   // indicates whether this is a symbol or {length, distance} pair
   bool is_copy;
 
@@ -71,12 +69,12 @@ struct LZ77InputData {
 };
 
 //
-// Holds a pack of bytes. valid_count indicates how many of the 'n' bytes are
-// valid. The valid bytes must be sequential. E.g., if valid_count = 2, then
-// byte[0] and byte[1] are valid, while byte[2], byte[3], ..., byte[n-1] are
-// not
+// Holds an array of bytes, where valid_count indicates how many of the 'n'
+// bytes are valid. The valid bytes must be sequential.
+// E.g., if valid_count = 2, then byte[0] and byte[1] are valid, while byte[2],
+// byte[3], ..., byte[n-1] are not.
 //
-template<unsigned n>
+template <unsigned n>
 struct BytePack {
   static constexpr unsigned count_bits = fpga_tools::Log2(n) + 1;
   static_assert(count_bits > 0);
@@ -89,20 +87,21 @@ struct BytePack {
 //
 // Similar to a BytePack, but all of the bytes are valid.
 //
-template<int n>
+template <int n>
 struct ByteSet {
   unsigned char byte[n];
 };
 
 //
-// returns the number of trailing zeros
+// returns the number of trailing zeros in an ac_int
+// E.g. 0b011101000 has 3 trailing zeros
 //
-template<int bits, bool is_signed>
+template <int bits, bool is_signed>
 auto CTZ(const ac_int<bits, is_signed>& in) {
   static_assert(bits > 0);
   constexpr int out_bits = fpga_tools::Log2(bits) + 1;
   ac_uint<out_bits> ret(bits);
-  #pragma unroll
+#pragma unroll
   for (int i = bits - 1; i >= 0; i--) {
     if (in[i]) {
       ret = i;
@@ -116,9 +115,9 @@ auto CTZ(const ac_int<bits, is_signed>& in) {
 // the FPGA simulator device
 //
 class select_by_string : public sycl::default_selector {
-public:
+ public:
   select_by_string(std::string s) : target_name(s) {}
-  virtual int operator()(const sycl::device &device) const {
+  virtual int operator()(const sycl::device& device) const {
     std::string name = device.get_info<sycl::info::device::name>();
     if (name.find(target_name) != std::string::npos) {
       // The returned value represents a priority, this number is chosen to be
@@ -127,14 +126,15 @@ public:
     }
     return -1;
   }
- 
-private:
+
+ private:
   std::string target_name;
 };
 
+// The LZ77 datastructure specific for the GZIP decompressor
 constexpr unsigned kMaxLZ77Length = 32768;
 constexpr unsigned kMaxLZ77Distance = 32768;
-template<unsigned n>
+template <unsigned n>
 using GzipLZ77InputData = LZ77InputData<n, kMaxLZ77Length, kMaxLZ77Distance>;
 
 #endif /* __COMMON_HPP__ */
