@@ -51,7 +51,7 @@ requirements:
     - intel-openmp
     - tensorflow 2.4.*
     - cloudpickle
-    - pyyaml
+    - pyyaml >=6.0
     - psutil
     - oneccl-devel
     - pip
@@ -61,7 +61,7 @@ requirements:
     - intel-openmp
     - tensorflow 2.4.*
     - cloudpickle
-    - pyyaml
+    - pyyaml >=6.0
     - psutil
     - oneccl-devel
     - impi_rt
