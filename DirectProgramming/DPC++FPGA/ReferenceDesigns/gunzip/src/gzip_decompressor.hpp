@@ -59,7 +59,7 @@ std::vector<event> SubmitGzipDecompressKernels(queue &q, int in_count,
       SubmitHuffmanDecoder<HuffmanDecoderKernelID, GzipMetadataToHuffmanPipe,
                            HuffmanToLZ77Pipe>(q);
 
-  // the design only need a ByteStacker kernel when literals_per_cycle > 1
+  // the design only needs a ByteStacker kernel when literals_per_cycle > 1
   if constexpr (literals_per_cycle > 1) {
     using LZ77ToByteStackerPipe =
         ext::intel::pipe<LZ77ToByteStackerPipeID,

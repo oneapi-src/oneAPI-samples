@@ -1,5 +1,5 @@
 # GZIP Decompression
-This DPC++ reference design implements GZIP decompression on an FPGA.  This includes LZ77 decoding and Huffman decoding with static or dynamic huffman tables. 
+This DPC++ reference design implements GZIP decompression on an FPGA. This includes LZ77 decoding and Huffman decoding with static or dynamic huffman tables. 
 
 ***Documentation***:
 * [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>

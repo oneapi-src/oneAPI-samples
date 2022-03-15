@@ -111,7 +111,7 @@ void HuffmanDecoder() {
 
     // NOTE: this loop is not the main processing loop and therefore is
     // not critical (low trip count). However, the compiler doesn't know that
-    // and tries to optimize for throughput (~Fmax/II). However, we don't want
+    // and tries to optimize for throughput (~Fmax/II). We don't want
     // this loop to be our Fmax bottleneck, so increase the II.
     [[intel::initiation_interval(3)]]  // NO-FORMAT: Attribute
     while (parsing_first_table) {
@@ -235,7 +235,7 @@ void HuffmanDecoder() {
 
     // NOTE: this loop is not the main processing loop and therefore is
     // not critical (low trip count). However, the compiler doesn't know that
-    // and tries to optimize for throughput (~Fmax/II). However, we don't want
+    // and tries to optimize for throughput (~Fmax/II). We don't want
     // this loop to be our Fmax bottleneck, so increase the II.
     [[intel::initiation_interval(3)]]  // NO-FORMAT: Attribute
     while ((codelens_idx < total_codes_second_table) &&
