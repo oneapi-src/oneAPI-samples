@@ -41,7 +41,7 @@ void Producer(queue &q, buffer<uint64_t, 1> &input_buffer) {
   std::cout << "Enqueuing producer...\n";
 
   auto e = q.submit([&](handler &h) {
-    accessor input_accessor(input_buffer, h, read_only);
+    accessor in(input_buffer, h, read_only);
     auto num_elements = input_buffer.size();
     auto num_passes = num_elements / kNumberOfConsumers;
 
@@ -50,12 +50,11 @@ void Producer(queue &q, buffer<uint64_t, 1> &input_buffer) {
       size_t input_idx = 0;
       for (size_t pass = 0; pass < num_passes; pass++) {
         // Template-based unroll (outer "i" loop)
-        impu::UnrolledLoop<kNumRows>([&input_idx, input_accessor](auto i) {
+        fpga_tools::UnrolledLoop<kNumRows>([&input_idx, in](auto i) {
           // Template-based unroll (inner "j" loop)
-          impu::UnrolledLoop<kNumCols>([&input_idx, &i, input_accessor](auto j) {
+          fpga_tools::UnrolledLoop<kNumCols>([&input_idx, &i, in](auto j) {
             // Write a value to the <i,j> pipe of the pipe array
-            ProducerToConsumerPipeMatrix::PipeAt<i, j>::write(
-                input_accessor[input_idx++]);
+            ProducerToConsumerPipeMatrix::PipeAt<i, j>::write(in[input_idx++]);
           });
         });
       }
@@ -71,18 +70,16 @@ void Consumer(queue &q, buffer<uint64_t, 1> &out_buf) {
   std::cout << "Enqueuing consumer " << consumer_id << "...\n";
 
   auto e = q.submit([&](handler &h) {
-    accessor output_accessor(out_buf, h, write_only, no_init);
+    accessor out(out_buf, h, write_only, no_init);
     auto num_elements = out_buf.size();
 
     // The consumer kernel reads from a single pipe, determined by consumer_id
     h.single_task<ConsumerTutorial<consumer_id>>([=]() {
-      constexpr size_t consumer_x = consumer_id / kNumCols;
-      constexpr size_t consumer_y = consumer_id % kNumCols;
+      constexpr size_t x = consumer_id / kNumCols;
+      constexpr size_t y = consumer_id % kNumCols;
       for (size_t i = 0; i < num_elements; ++i) {
-        auto input = ProducerToConsumerPipeMatrix::PipeAt<consumer_x,
-                                                          consumer_y>::read();
-        uint64_t answer = ConsumerWork(input);
-        output_accessor[i] = answer;
+        auto input = ProducerToConsumerPipeMatrix::PipeAt<x, y>::read();
+        out[i] = ConsumerWork(input);
       }
     });
   });
@@ -140,7 +137,7 @@ int main(int argc, char *argv[]) {
     std::vector<buffer<uint64_t,1>> consumer_buffers;
 
     // Use template-based unroll to enqueue multiple consumers
-    impu::UnrolledLoop<kNumberOfConsumers>([&](auto consumer_id) {
+    fpga_tools::UnrolledLoop<kNumberOfConsumers>([&](auto consumer_id) {
       consumer_buffers.emplace_back(consumer_output[consumer_id].data(),
                                     items_per_consumer);
       Consumer<consumer_id>(q, consumer_buffers.back());
