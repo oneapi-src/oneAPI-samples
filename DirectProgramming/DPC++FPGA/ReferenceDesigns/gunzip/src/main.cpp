@@ -141,7 +141,7 @@ bool DecompressTest(queue& q, std::string test_dir) {
   std::string dynamic_compress_filename = test_dir + "/dynamic_compressed.gz";
   std::string tp_test_filename = test_dir + "/tp_test.gz";
 
-  // lamda to print the result of the test
+  // lambda to print the result of the test
   auto print_test_result = [](std::string test_name, bool passed) {
     if (passed)
       std::cout << ">>>>> " << test_name << ": PASSED <<<<<\n";
