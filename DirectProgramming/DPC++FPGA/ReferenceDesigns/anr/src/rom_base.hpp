@@ -27,7 +27,7 @@
 //      constexpr SquareLUT() : ROMBase<int, lut_depth>(SquareFunctor()) {}
 //    };
 //
-//  USING A LAMBDA
+//  USING A LAMDA
 //    constexpr int lut_depth = 1024;
 //    struct SquareLUT : ROMBase<int, lut_depth> {
 //      constexpr SquareLUT() : ROMBase<int, lut_depth>(
@@ -47,7 +47,7 @@ struct ROMBase {
 
   // constexpr constructor that initializes the contents of the ROM
   // using a user specified Functor. NOTE: the functor must be constexpr,
-  // which can be achieved with a lambda or by marking the operator() function
+  // which can be achieved with a lamda or by marking the operator() function
   // as constexpr.
   template<typename InitFunctor>
   constexpr ROMBase(const InitFunctor& func) : data_() {
