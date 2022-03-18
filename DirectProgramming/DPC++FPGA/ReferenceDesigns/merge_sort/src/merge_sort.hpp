@@ -14,9 +14,11 @@
 #include "merge.hpp"
 #include "produce.hpp"
 #include "sorting_networks.hpp"
+
+// Included from DirectProgramming/DPC++FPGA/include/
+#include "pipe_utils.hpp" 
+#include "constexpr_math.hpp"
 #include "unrolled_loop.hpp"
-#include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
-#include "impu_math.hpp"
 
 using namespace sycl;
 
@@ -75,9 +77,9 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
                                    ValueT* buf_1, Compare comp) {
   // sanity check the number of merge units and the width of the sorter
   static_assert(units >= 1);
-  static_assert(impu::math::IsPow2(units));
+  static_assert(fpga_tools::IsPow2(units));
   static_assert(k_width >= 1);
-  static_assert(impu::math::IsPow2(k_width));
+  static_assert(fpga_tools::IsPow2(k_width));
 
   // sanity check on IndexT
   static_assert(std::is_integral_v<IndexT>);
@@ -125,13 +127,13 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   //////////////////////////////////////////////////////////////////////////////
 
   // depth of the merge tree to reduce the sorted partitions of each merge unit
-  constexpr size_t kReductionLevels = impu::math::Log2(units);
+  constexpr size_t kReductionLevels = fpga_tools::Log2(units);
 
   // validate 'count'
   if (count == 0) {
     std::cerr << "ERROR: 'count' must be greater than 0\n";
     std::terminate();
-  } else if (!impu::math::IsPow2(count)) {
+  } else if (!fpga_tools::IsPow2(count)) {
     std::cerr << "ERROR: 'count' must be a power of 2\n";
     std::terminate();
   } else if (count < 4 * units) {
@@ -178,7 +180,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // performs the first log2(k_width) iterations of the sort while streaming
   // the input data from the input pipe into device memory.
   const IndexT iterations =
-    impu::math::Log2(count_per_unit) - impu::math::Log2(k_width);
+    fpga_tools::Log2(count_per_unit) - fpga_tools::Log2(k_width);
 
   // store the various merge unit and merge tree kernel events
   std::array<std::vector<event>, units> produce_a_events, produce_b_events,
@@ -212,7 +214,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
 
     // launch the merge unit kernels for this iteration of the sort using
     // a front-end meta-programming unroller
-    impu::UnrolledLoop<units>([&](auto u) {
+    fpga_tools::UnrolledLoop<units>([&](auto u) {
       // the intra merge unit pipes
       using APipe = typename APipes::template PipeAt<u>;
       using BPipe = typename BPipes::template PipeAt<u>;
@@ -294,14 +296,14 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // of each merge unit into a single sorted output. The output of the last
   // level of the merge tree will stream out of 'OutPipe'.
   // NOTE: if units==1, then there is no merge tree!
-  impu::UnrolledLoop<kReductionLevels>([&](auto level) {
+  fpga_tools::UnrolledLoop<kReductionLevels>([&](auto level) {
     // each level of the merge tree reduces the number of sorted partitions
     // by a factor of 2.
     // level 0 has 'units' merge kernels, level 1 has 'units/2', and so on...
     // See README.md for a good illustration.
     constexpr size_t kLevelMergeUnits = units / ((1 << level) * 2);
 
-    impu::UnrolledLoop<kLevelMergeUnits>([&](auto merge_unit) {
+    fpga_tools::UnrolledLoop<kLevelMergeUnits>([&](auto merge_unit) {
       // When level == 0, we know we will use 'MTAPipeFromMergeUnit' and
       // 'MTBPipeFromMergeUnit' below. However, we cannot access
       // PipeAt<-1, ...> without a compiler error. So, we will set the previous
