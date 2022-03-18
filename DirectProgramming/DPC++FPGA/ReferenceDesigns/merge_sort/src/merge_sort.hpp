@@ -163,7 +163,7 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   ValueT* buf[2] = {buf_0, buf_1};
 
   // using double buffering, so track the current buffer and have a simple
-  // lamda to compute the next buffer index
+  // lambda to compute the next buffer index
   unsigned buf_idx = 0;
   auto next_buf_idx = [](unsigned buf_idx) { return buf_idx ^ 0x1; };
 
