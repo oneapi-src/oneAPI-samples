@@ -133,7 +133,7 @@ using make_index_pow2_sequence = integer_pow2_sequence<std::size_t, N>;
 // Templated on:
 //    ItType    - the type of the iterator (size_t, int, char, ...)
 //    ItType... - the indices to iterate on
-//    F         - the function to run for each index (i.e. the lamda)
+//    F         - the function to run for each index (i.e. the lambda)
 //
 template <class ItType, ItType... inds, class F>
 constexpr void UnrolledLoop(std::integer_sequence<ItType, inds...>, F&& f) {
