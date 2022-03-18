@@ -18,9 +18,9 @@
 #include "anr_params.hpp"
 #include "column_stencil.hpp"
 #include "constants.hpp"
+#include "constexpr_math.hpp"
 #include "data_bundle.hpp"
 #include "intensity_sigma_lut.hpp"
-#include "mp_math.hpp"
 #include "qfp.hpp"
 #include "qfp_exp_lut.hpp"
 #include "qfp_inv_lut.hpp"
@@ -335,7 +335,7 @@ std::vector<event> SubmitANRKernels(queue& q, int cols, int rows,
   constexpr int filter_size_eff = (filter_size + 1) / 2;  // ceil(filter_size/2)
   auto spatial_power = BuildGaussianPowers1D<filter_size_eff>(params.sig_s);
 
-  // Functors or lamdas can be used for the vertical and horizontal kernels.
+  // Functors or lambdas can be used for the vertical and horizontal kernels.
   auto vertical_func = VerticalFunctor<filter_size>();
   auto horizontal_func = HorizontalFunctor<filter_size>();
 

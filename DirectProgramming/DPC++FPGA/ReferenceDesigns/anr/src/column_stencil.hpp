@@ -4,13 +4,13 @@
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
+#include "constexpr_math.hpp"
 #include "data_bundle.hpp"
-#include "mp_math.hpp"
 #include "shift_reg.hpp"
 #include "unrolled_loop.hpp"
 
 using namespace sycl;
-using namespace hldutils;
+using namespace fpga_tools;
 
 //
 // Generic 1D column (i.e. vertical) stencil.

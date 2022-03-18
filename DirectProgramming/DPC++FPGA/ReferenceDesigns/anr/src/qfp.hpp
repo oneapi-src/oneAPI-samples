@@ -6,7 +6,7 @@
 
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
-#include "mp_math.hpp"
+#include "constexpr_math.hpp"
 
 //
 // A static class that is used to convert to/from 32-bit floating point

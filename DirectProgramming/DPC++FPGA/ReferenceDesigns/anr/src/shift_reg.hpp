@@ -4,7 +4,7 @@
 #include "data_bundle.hpp"
 #include "unrolled_loop.hpp"
 
-namespace hldutils {
+namespace fpga_tools {
 
 //
 // A class to represent a shift register of depth 'depth' holding elements
@@ -136,6 +136,6 @@ class ShiftReg2d {
   const ShiftReg<T, depth> &operator[](int i) const { return registers_[i]; }
 };
 
-}  // namespace hldutils
+}  // namespace fpga_tools
 
 #endif /* __SHIFT_REG_HPP__ */

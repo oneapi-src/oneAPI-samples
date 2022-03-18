@@ -2,7 +2,7 @@
 #define __CONSTANTS_HPP__
 
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
-#include "mp_math.hpp"
+#include "constexpr_math.hpp"
 
 // The size of the filter can be changed at the command line
 #ifndef FILTER_SIZE

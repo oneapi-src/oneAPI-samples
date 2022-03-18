@@ -1,6 +1,7 @@
 #ifndef __QFP_EXP_LUT_HPP__
 #define __QFP_EXP_LUT_HPP__
 
+#include "constexpr_math.hpp"
 #include "qfp.hpp"
 #include "rom_base.hpp"
 
@@ -31,7 +32,7 @@ struct ExpLUT : ROMBase<unsigned short, kExpLUTDepth> {
       // the float to compute exp(-f) (== 1/exp(f)) and initialize that entry
       // of the ROM
       float f = QFP::ToFP32CE(x);
-      float val = 1.0f / hldutils::Exp(f, kExpTaylorSeriesTerms);
+      float val = 1.0f / fpga_tools::Exp(f, kExpTaylorSeriesTerms);
       return QFP::FromFP32CE(val);
     }
     constexpr InitFunctor() = default;

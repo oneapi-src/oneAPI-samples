@@ -7,6 +7,7 @@ This directory contains utility header libraries optimized for FPGA DPC++ design
 
 | Filename       | Description
 ---              |---
+| rom_base.hpp | A generic base class to create ROMs in the FPGA using and initializer lambda or functor.
 | constexpr_math.hpp | Defines utilities for statically computing math functions such as Log2.
 | pipe_utils.hpp | Utility classes for working with pipes, such as PipeArray.
 | tuple.hpp | Defines a template to implement tuples.
