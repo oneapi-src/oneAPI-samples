@@ -14,8 +14,10 @@
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-#include "constexpr_math.hpp"
 #include "merge_sort.hpp"
+
+// Included from DirectProgramming/DPC++FPGA/include/
+#include "constexpr_math.hpp"
 
 using namespace sycl;
 using namespace std::chrono;

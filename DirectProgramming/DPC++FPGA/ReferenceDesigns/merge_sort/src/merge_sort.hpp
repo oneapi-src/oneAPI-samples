@@ -16,8 +16,8 @@
 #include "sorting_networks.hpp"
 
 // Included from DirectProgramming/DPC++FPGA/include/
-#include "pipe_utils.hpp" 
 #include "constexpr_math.hpp"
+#include "pipe_utils.hpp" 
 #include "unrolled_loop.hpp"
 
 using namespace sycl;
