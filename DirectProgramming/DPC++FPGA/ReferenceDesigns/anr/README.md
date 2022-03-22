@@ -197,6 +197,8 @@ The following source files can be found in the `src/` sub-directory.
 |`row_stencil.hpp`                | A generic library for computing a row stencil (a 1D horizontal convolution).
 |`shift_reg.hpp`                  | A generic library for a shift register.
 
+For `constexpr_math.hpp`, `unrolled_loop.hpp`, and `rom_base.hpp` see the README in the `DirectProgramming/DPC++FPGA/include/` directory.
+
 ### ANR Algorithm
 The ANR algorithm works on an input image that is in [Bayer format](https://en.wikipedia.org/wiki/Bayer_filter). Unlike image formats you may be used to (e.g., PNG or JPG), where each pixel has a red, green, **and** blue value (RGB), each pixel in a Bayer format image is either red, green, **or** blue, as shown in the image below. To convert to an RGB image, you take a 4x4 square and generate the RGB pixel by averaging the two green pixels. One purpose of this format is to dedicate more pixels to green, since the human eye is more sensitive to green.
 
