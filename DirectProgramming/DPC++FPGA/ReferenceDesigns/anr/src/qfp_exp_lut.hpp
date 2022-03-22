@@ -1,8 +1,10 @@
 #ifndef __QFP_EXP_LUT_HPP__
 #define __QFP_EXP_LUT_HPP__
 
-#include "constexpr_math.hpp"
 #include "qfp.hpp"
+
+// Included from DirectProgramming/DPC++FPGA/include/
+#include "constexpr_math.hpp"
 #include "rom_base.hpp"
 
 // the QFP bits for the ExpLUT
@@ -19,7 +21,7 @@ static_assert(kExpTaylorSeriesTerms > 3);
 // Uses ROMBase to create a ROM initialized with the values of exp(-x)
 // using quantized floating point (QFP) numbers for indices.
 //
-struct ExpLUT : ROMBase<unsigned short, kExpLUTDepth> {
+struct ExpLUT : fpga_tools::ROMBase<unsigned short, kExpLUTDepth> {
   // the QFP format
   using QFP = QFP<kExpQFPTotalBits, kExpQFPExponentBits, false>;
 

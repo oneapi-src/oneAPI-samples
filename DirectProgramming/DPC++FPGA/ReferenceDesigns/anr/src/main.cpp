@@ -14,7 +14,6 @@
 #include "anr.hpp"
 #include "anr_params.hpp"
 #include "constants.hpp"
-#include "constexpr_math.hpp"
 #include "data_bundle.hpp"
 #include "dma_kernels.hpp"
 // dpc_common.hpp can be found in the dev-utilities include folder.
