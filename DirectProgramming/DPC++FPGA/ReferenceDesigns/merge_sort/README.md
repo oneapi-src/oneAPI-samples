@@ -191,6 +191,8 @@ The following source files can be found in the `src/` sub-directory.
 |`produce.hpp`                   | The `Produce` kernel for the merge unit. This kernel reads from input pipes or performs strided reads from device memory and writes the data to an output pipe.
 |`sorting_networks.hpp`          | Contains all of the code relevant to sorting networks, including the `SortingNetwork` kernel, as well as the `BitonicSortingNetwork` and `MergeSortNetwork` helper functions.
 
+For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the README in the `DirectProgramming/DPC++FPGA/include/` directory.
+
 ### Merge Sort Details
 This section will describe how the merge sort design is structured and how it takes advantage of the spatial compute of the FPGA. <br/>
 
