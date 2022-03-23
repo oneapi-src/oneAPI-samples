@@ -170,7 +170,7 @@ int main() {
     }
 
     if (pass) {
-      std::cout << "PASSED\n";
+      std::cout << "PASSED: all kernel results are correct.\n";
     } else {
       std::cout << "ERROR\n";
     }

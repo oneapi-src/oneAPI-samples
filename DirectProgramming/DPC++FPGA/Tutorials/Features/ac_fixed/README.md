@@ -32,7 +32,7 @@ ac_fixed<W, I, S> a;
 ```
 Here `W` specifies the width and `S` specifies the sign of the number. One of the `W` bits is used to store the sign information. The second parameter `I` is an integer that specifies the location of the fixed point relative to the most significant bit.
 
-The type also provides two more optional parameters for controlling the overflow and rounding modes. For more details on the type, rounding and overflow modes and the range of values supported with different width parameterization please refer to the file `ac_data_types_ref.pdf`.
+The type also provides two more optional parameters for controlling the overflow and rounding modes. For more details on the type, please refer to the section titled `Variable-Precision Integer and Floating-Point Support` in the IntelÂ® oneAPI DPC++ FPGA Optimization Guide.
 
 To use an `ac_fixed` type in your code, you must include the following header:
 
@@ -40,15 +40,15 @@ To use an `ac_fixed` type in your code, you must include the following header:
 #include <sycl/ext/intel/ac_types/ac_fixed.hpp>
 ```
 
-Additionally, you must use the flag `-qactypes` in order to ensure that the headers are correctly included.
+Additionally, you must use the flag `-qactypes` on Linux or `/Qactypes` on Windows in order to ensure that the headers are correctly included.
 
-### Recommended method for constructing ac_fixed numbers
+### Recommended Method for Constructing `ac_fixed` Numbers
 
 The compiler uses significant FPGA resources to convert double precision (and single precision) floating-point values to `ac_fixed` values. The kernel `ConstructFromFloat` constructs an `ac_fixed` object from an accessor to a native `float` type.
 
 In contrast, the kernel `ConstructFromACFixed` constructs an `ac_fixed` object from an accessor to another `ac_fixed` object. This consumes far less area than the previous kernel. See the section on examining the reports below to understand where to look for this difference within the optimization reports.
 
-### Using the ac_fixed math functions
+### Using the `ac_fixed` Math Functions
 
 To use this type in your code, you must include the following header:
 
@@ -56,7 +56,7 @@ To use this type in your code, you must include the following header:
 #include <sycl/ext/intel/ac_types/ac_fixed_math.hpp>
 ```
 
-The flag `-qactypes` will ensure that the compiler includes the header and links against the necessary libraries for emulation of the math library functions.
+The flag `-qactypes` on Linux or `/Qactypes` on Windows  will ensure that the compiler includes the header and links against the necessary libraries for emulation of the math library functions.
 
 This tutorial design contains two kernels `CalculateWithFloat` and `CalculateWithACFixed`. Both calculate the simple expression:
 ```cpp
@@ -197,7 +197,8 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      nmake fpga
      ``` 
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+Note: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+Note: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
  
 ### In Third-Party Integrated Development Environments (IDEs)
 
