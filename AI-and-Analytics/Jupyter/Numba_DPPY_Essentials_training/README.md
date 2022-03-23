@@ -16,16 +16,35 @@ are the steps to access these Jupyter notebooks on the Intel Devcloud:
    Jupyter notebooks into your devcloud account
    `/data/oneapi_workshop/get_jupyter_notebooks.sh`
    
-Running the Jupyter Notebooks locally:
-
-1. git clone https://github.com/oneapi-src/oneAPI-samples.git
-2. Install Intel® oneAPI Base Toolkit and Intel® oneAPI AI Analytics Toolkit.
-    https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html
-3. conda install -c conda-forge jupyterlab
-4. Navigate to where you cloned the oneAPI samples repo.  For example: ~/oneAPI-samples/AI-and-Analytics/Jupyter/Numba_DPPY_Essentials_training
-5. Launch JupyterLab by typing in "jupyterlab" in the terminal. 
-6. Make a note of the address printed on the terminal and paste it in the browser window.
-7. JupyterLab opens up and navigate to "Numba_DPPY_Essentials" and double click on "Welcome.ipynb" to get started.
+### Running the Jupyter Notebooks locally on a Linux machine OR WSL:
+1. Update your system:
+   sudo apt update && sudo apt upgrade -y
+2. After the update a reboot will be required, enter:
+   sudo reboot
+3. Download and Install Intel® oneAPI Base Toolkit and Intel® oneAPI AI Analytics Toolkit.
+   https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html
+4. You can close the terminal and launch a new one and enter:
+   source .bashrc
+   which will result in the base conda environment being activated.
+5. Enter:
+   conda env list
+   Note: if Conda not recognized enter
+   source /opt/intel/oneapi/setvars.sh   
+6. Launch a terminal and enter:
+    conda create –-clone base –-name <pick something> for example:
+    conda create --clone base --name jupyter
+7. Conda env list:
+    You should see two environments now.  The * denotes the active environment.  
+    Activate the new environment:
+    Conda activate jupyter    
+8. Install Jupyterlab:
+   conda install -c conda-forge jupyterlab    
+9. Clone the Intel oneAPI Samples Repository, Git will likely not be installed so to install it enter:
+    sudo apt install git
+    git clone https://github.com/oneapi-src/oneAPI-samples.git    
+10. Launch JupyterLab by typing in "jupyter lab" in the terminal. 
+11. Make a note of the address printed on the terminal and paste it in the browser window.
+12. JupyterLab opens up and navigate to ~/oneAPI-samples/AI-and-Analytics/Jupyter/Numba_DPPY_Essentials_training and double click on "Welcome.ipynb" to get started.
 
 ## License
 
