@@ -39,8 +39,7 @@ To use an `ac_fixed` type in your code, you must include the following header:
 ```cpp
 #include <sycl/ext/intel/ac_types/ac_fixed.hpp>
 ```
-
-Additionally, you must use the flag `-qactypes` on Linux or `/Qactypes` on Windows in order to ensure that the headers are correctly included.
+Additionally, you must pass the flag `-qactypes` on Linux or `/Qactypes` on Windows to the `dpcpp` command when compiling your SYCL program in order to ensure that the headers are correctly included. In this tutorial, this is done in `src/CMakeLists.txt`.
 
 ### Recommended Method for Constructing `ac_fixed` Numbers
 
