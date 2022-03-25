@@ -1,6 +1,6 @@
 # Data Parallel C++ Book Source Samples
 
-THIS BRANCH (sycl2020_updates) is a WORK IN PROGRESS to align with SYCL 2020 (compilers are in various stages of supporting) for the Second Edition of the book which we plan to publish by the end of 2022.
+THIS BRANCH (sycl2020_updates) is a WORK IN PROGRESS to align with SYCL 2020 (compilers for SYCL, including DPC++, are in various stages of supporting) for the Second Edition of the book which we plan to publish by the end of 2022.
 
 This repository accompanies [*Data Parallel C++: Mastering DPC++ for Programming of Heterogeneous Systems using C++ and SYCL*](https://www.apress.com/9781484255735) by James Reinders, Ben Ashbaugh, James Brodman, Michael Kinsner, John Pennycook, Xinmin Tian (Apress, 2020).
 
