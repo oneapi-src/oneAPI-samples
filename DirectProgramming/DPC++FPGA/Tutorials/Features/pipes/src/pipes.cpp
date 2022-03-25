@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
   std::vector<int> consumer_output(array_size, -1);
 
   // Initialize the input data with numbers from 0, 1, 2, ..., array_size-1
-  std::iota(producer_input.begin(), producer_input.begin(), 0);
+  std::iota(producer_input.begin(), producer_input.end(), 0);
 
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
