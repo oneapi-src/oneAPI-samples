@@ -21,15 +21,14 @@ void ByteStacker() {
   using OutPipeBundleT = decltype(OutPipe::read());
   constexpr int cache_idx_bits = fpga_tools::Log2(literals_per_cycle * 2) + 1;
 
-  bool done;
-
   // cache up to literals_per_cycle * 2 elements so that we can always
   // write out literals_per_cycle valid elements in a row (except on the last
   // iteration)
   ac_uint<cache_idx_bits> cache_idx = 0;
   [[intel::fpga_register]] unsigned char cache_buf[literals_per_cycle * 2];
 
-  do {
+  bool done = false;
+  while (!done) {
     // try to read in some data
     bool data_valid;
     auto pipe_data = InPipe::read(data_valid);
@@ -78,7 +77,7 @@ void ByteStacker() {
       // write output
       OutPipe::write(OutPipeBundleT(out_pack));
     }
-  } while (!done);
+  }
 
   // notify downstream kernel that we are done
   OutPipe::write(OutPipeBundleT(true));

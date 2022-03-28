@@ -54,8 +54,6 @@ void LZ77DecoderMultiElement() {
   // picking which buffer, index into that buffer)
   using HistBufIdxT = ac_uint<history_buffer_idx_bits>;
 
-  bool done;
-
   // track whether we are reading from the history, and how many more elements
   // to read from the history
   bool reading_history = false;
@@ -111,11 +109,13 @@ void LZ77DecoderMultiElement() {
     history_buffer_idx[i] = 0;
   }
 
+  bool done = false;
+
   // the main processing loop.
   // Using the shift-register cache, we are able to break all loop carried
   // dependencies with a distance of 'kCacheDepth' and less
   [[intel::ivdep(kCacheDepth)]]  // NO-FORMAT: Attribute
-  do {
+  while (!done) {
     bool data_valid = true;
     BytePack<literals_per_cycle> out_data;
 
@@ -286,8 +286,6 @@ void LZ77DecoderMultiElement() {
       OutPipe::write(OutPipeBundleT(out_data));
     }
   }
-  while (!done)
-    ;
 
   OutPipe::write(OutPipeBundleT(true));
 }
@@ -305,8 +303,6 @@ void LZ77DecoderSingleElement() {
   constexpr size_t history_buffer_idx_mask = history_buffer_count - 1;
 
   using HistBufIdxT = ac_uint<history_buffer_idx_bits>;
-
-  bool done;
 
   // track whether we are reading from the history, and how many more elements
   // to read from the history
@@ -326,8 +322,10 @@ void LZ77DecoderSingleElement() {
   [[intel::fpga_register]]  // NO-FORMAT: Attribute
   HistBufIdxT history_buffer_cache_idx[kCacheDepth + 1];
 
+  bool done = false;
+
   [[intel::ivdep(kCacheDepth)]]  // NO-FORMAT: Attribute
-  do {
+  while (!done) {
     bool data_valid = true;
     BytePack<1> out_data;
 
@@ -402,8 +400,6 @@ void LZ77DecoderSingleElement() {
       OutPipe::write(OutPipeBundleT(out_data));
     }
   }
-  while (!done)
-    ;
 
   OutPipe::write(OutPipeBundleT(true));
 }
