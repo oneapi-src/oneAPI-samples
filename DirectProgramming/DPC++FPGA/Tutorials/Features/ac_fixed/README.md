@@ -30,9 +30,11 @@ An `ac_fixed` number can be defined as follows:
 ```cpp
 ac_fixed<W, I, S> a;
 ```
-Here `W` specifies the width and `S` specifies the sign of the number. One of the `W` bits is used to store the sign information. The second parameter `I` is an integer that specifies the location of the fixed point relative to the most significant bit.
+Here `W` specifies the width in bits and `S` is a bool indicating if the number is signed. Signed numbers use the most significant bit (MSB) of the `W` bits to store the sign bit. The second parameter `I` is an integer that specifies the location of the fixed point relative to the MSB.
 
-The `ac_fixed` class also provides two more optional parameters for controlling the overflow and rounding modes. For more details on the `ac_int` class, refer to the section *Variable-Precision Integer and Floating-Point Support* in the Intel® oneAPI DPC++ FPGA Optimization Guide.
+The `ac_fixed` class also provides two more optional parameters for controlling the overflow and rounding modes. 
+
+For more details on the `ac_fixed` class, refer to the documentation provided with the installation at `%INSTALL_DIR%/include/sycl/ext/intel/ac_types/ac_datatypes_ref.pdf`.
 
 To use an `ac_fixed` type in your code, you must include the following header:
 
@@ -84,9 +86,9 @@ When you use the `ac_fixed` library, keep the following points in mind:
 
     The host program for this tutorial shows the accuracy differences between the correct result and the result provided by the math library functions. The floating point version generates a more accurate result than the fixed point version.
  
- - Emulation vs Simulation for fixed point math operations
+ - Emulation vs FPGA Hardware for fixed point math operations
 
-    Due to the differences in the internal math implementations, the results from `ac_fixed` math functions in simulation and emulation might not always be bit-accurate. In this example you can observe the difference between emulation and simulation.
+    Due to the differences in the internal math implementations, the results from `ac_fixed` math functions in emulation and FPGA hardware might not always be bit-accurate. This tutorial shows how to build and run the sample for emulation and FPGA hardware so you can observe the difference.
 
 ## Key Concepts
  * Constructing an `ac_fixed` from a `float` or `double` value will be much more area intensive than constructing one from another `ac_fixed`.

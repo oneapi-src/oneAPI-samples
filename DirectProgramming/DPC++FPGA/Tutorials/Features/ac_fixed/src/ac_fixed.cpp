@@ -115,6 +115,8 @@ int main() {
     // Create the SYCL device queue
     queue q(selector, dpc_common::exception_handler);
 
+    // Rounding mode: use `AC_RND` to round towards plus infinity
+    // Overflow mode: use `AC_SAT` to saturate to max and min
     ac_fixed<20, 10, true, AC_RND, AC_SAT> a;
     ac_fixed<20, 10, true, AC_RND, AC_SAT> b = 3.1415f;
 
