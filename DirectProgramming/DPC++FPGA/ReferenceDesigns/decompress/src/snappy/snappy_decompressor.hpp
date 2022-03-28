@@ -25,11 +25,6 @@ class ByteStackerKernelID;
 class SnappyReaderToLZ77PipeID;
 class LZ77ToByteStackerPipeID;
 
-// Snappy V1.1 format sets the maximum history to 65K
-// At the time of writing this, the maximum history distance will be 32K, but
-// the specification claims support for 65K, so we will be safe.
-constexpr size_t kLZ77MaxHistory = 65536;
-
 //
 // Submits the kernels for the Snappy decompression engine and returns the
 // SYCL events for each kernel
@@ -59,7 +54,7 @@ std::vector<sycl::event> SubmitSnappyDecompressKernels(
 
     auto lz77_event =
         SubmitLZ77Decoder<LZ77DecoderKernelID, SnappyReaderToLZ77Pipe,
-                          LZ77ToByteStackerPipe, kLZ77MaxHistory,
+                          LZ77ToByteStackerPipe, kSnappyMaxLZ77Distance,
                           literals_per_cycle>(q);
     auto byte_stacker_event =
         SubmitByteStacker<ByteStackerKernelID, LZ77ToByteStackerPipe, OutPipe,
@@ -69,7 +64,7 @@ std::vector<sycl::event> SubmitSnappyDecompressKernels(
   } else {
     auto lz77_event =
         SubmitLZ77Decoder<LZ77DecoderKernelID, SnappyReaderToLZ77Pipe, OutPipe,
-                          kLZ77MaxHistory, literals_per_cycle>(q);
+                          kSnappyMaxLZ77Distance, literals_per_cycle>(q);
     return {snappy_reader_event, lz77_event};
   }
 }

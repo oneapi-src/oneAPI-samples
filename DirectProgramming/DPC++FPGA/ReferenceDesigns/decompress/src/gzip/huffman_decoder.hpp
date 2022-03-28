@@ -36,6 +36,52 @@ static_assert(kBitBufferBits > 8);  // need to store at least a byte
 static_assert(kBitBufferBits > kBitBufferMaxReadBits);
 static_assert(kBitBufferBits > kBitBufferMaxShiftBits);
 
+// the ByteBitStream alias
+using BitStreamT = ByteBitStream<kBitBufferBits, kBitBufferMaxReadBits,
+                                 kBitBufferMaxShiftBits>;
+
+// constants for the static Huffman table
+constexpr int kDeflateStaticNumLitLenCodes = 288;
+constexpr int kDeflateStaticNumDistCodes = 32;
+constexpr int kDeflateStaticTotalCodes =
+    kDeflateStaticNumLitLenCodes + kDeflateStaticNumDistCodes;
+
+// forward declare the helper functions that are defined at the end of the file
+namespace detail {
+template <typename InPipe>
+std::pair<bool, ac_uint<2>> ParseLastBlockAndBlockType(BitStreamT& bit_stream);
+
+template <typename InPipe>
+void ParseFirstTable(BitStreamT& bit_stream,
+                     ac_uint<9>& numlitlencodes,
+                     ac_uint<6>& numdistcodes,
+                     ac_uint<5>& numcodelencodes,
+                     ac_uint<8> codelencode_map_first_code[8],
+                     ac_uint<8> codelencode_map_last_code[8],
+                     ac_uint<5> codelencode_map_base_idx[8],
+                     ac_uint<5> codelencode_map[19]);
+                    
+template <typename InPipe>
+void ParseSecondTable(BitStreamT& bit_stream,
+                      bool is_static_huffman_block,
+                      ac_uint<9> numlitlencodes,
+                      ac_uint<6> numdistcodes,
+                      ac_uint<5> numcodelencodes,
+                      ac_uint<8> codelencode_map_first_code[8],
+                      ac_uint<8> codelencode_map_last_code[8],
+                      ac_uint<5> codelencode_map_base_idx[8],
+                      ac_uint<5> codelencode_map[19],
+                      ac_uint<15> lit_map_first_code[15],
+                      ac_uint<15> lit_map_last_code[15],
+                      ac_uint<9> lit_map_base_idx[15],
+                      ac_uint<9> lit_map[286],
+                      ac_uint<15> dist_map_first_code[15],
+                      ac_uint<15> dist_map_last_code[15],
+                      ac_uint<5> dist_map_base_idx[15],
+                      ac_uint<5> dist_map[32]);
+
+}  // namespace detail
+
 //
 // Performs Huffman Decoding.
 // Streams in multiple DEFLATE blocks, 1 byte at a time, and performs huffman
@@ -46,10 +92,6 @@ static_assert(kBitBufferBits > kBitBufferMaxShiftBits);
 template <typename InPipe, typename OutPipe>
 void HuffmanDecoder() {
   using OutPipeBundleT = decltype(OutPipe::read());
-
-  // the ByteBitStream alias
-  using BitStreamT = ByteBitStream<kBitBufferBits, kBitBufferMaxReadBits,
-                                   kBitBufferMaxShiftBits>;
 
   BitStreamT bit_stream;
   bool last_block = false;
@@ -65,426 +107,89 @@ void HuffmanDecoder() {
   while (!last_block) {
     ////////////////////////////////////////////////////////////////////////////
     // BEGIN: parse the first three bits of the block
-    // read in the first byte and add it to the byte bit stream
-    auto first_pipe_data = InPipe::read();
-    bit_stream.NewByte(first_pipe_data.data[0]);
+    auto [last_block_tmp, block_type] =
+        detail::ParseLastBlockAndBlockType<InPipe>(bit_stream);
 
-    // read the first three bits
-    ac_uint<3> first_three_bits = bit_stream.ReadUInt<3>();
-    bit_stream.Shift(3);
-
-    // first bit indicates whether this is the last block
-    last_block = (first_three_bits.slc<1>(0) == 1);
-
-    // next 2 bits indicate the block type
-    //    0: uncompressed
-    //    1: static huffman
-    //    2: dynamic huffman
-    //    3: reserved
-    ac_uint<2> block_type = first_three_bits.slc<2>(1);
+    last_block = last_block_tmp;
     bool is_uncompressed_block = (block_type == 0);
     bool is_static_huffman_block = (block_type == 1);
     bool is_dynamic_huffman_block = (block_type == 2);
-
-    // only parse the first table for dynamically compressed blocks
-    bool parsing_first_table = is_dynamic_huffman_block;
-
-    // for uncompressed blocks, the first 16 bits (after aligning to a byte)
-    // is the length (in bytes) of the uncompressed data, followed by 16-bits
-    // which is ~length (for error checking; we will ignore this).
-    bool parsing_uncompressed_len = true;
-    ac_uint<2> uncompressed_len_bytes_read = 0;
-    unsigned short uncompressed_bytes_remaining;
-    unsigned char first_four_bytes[4];
-
-    // if this is an uncompressed block, we must realign to a byte boundary
-    if (is_uncompressed_block) {
-      bit_stream.AlignToByteBoundary();
-    }
     // END: parsing the first three bits
     ////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////
-    // BEGIN: parsing the code length table
-    ac_uint<2> first_table_state = 0;
+    // BEGIN: parsing the code length table (first table)
     ac_uint<9> numlitlencodes;
     ac_uint<6> numdistcodes;
     ac_uint<5> numcodelencodes;
-    unsigned short codelencodelen_count = 0;
 
-    // shuffle vector for the first table
-    constexpr unsigned short codelencodelen_idxs[] = {
-        16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
-
-    [[intel::fpga_register]] ac_uint<3> codelencodelen[19];
-#pragma unroll
-    for (int i = 0; i < 19; i++) {
-      codelencodelen[i] = 0;
-    }
-
-    // NOTE: this loop is not the main processing loop and therefore is
-    // not critical (low trip count). However, the compiler doesn't know that
-    // and tries to optimize for throughput (~Fmax/II). We don't want
-    // this loop to be our Fmax bottleneck, so increase the II.
-    [[intel::initiation_interval(3)]]  // NO-FORMAT: Attribute
-    while (parsing_first_table) {
-      // grab a byte if we have space for it
-      if (bit_stream.HasSpaceForByte()) {
-        bool read_valid;
-        auto pd = InPipe::read(read_valid);
-
-        if (read_valid) {
-          unsigned char c = pd.data[0];
-          bit_stream.NewByte(c);
-        }
-      }
-
-      // make sure we have enough bits (in the maximum case)
-      if (bit_stream.Size() >= 5) {
-        if (first_table_state == 0) {
-          // read the number of literal length codes
-          numlitlencodes = bit_stream.ReadUInt(5) + ac_uint<9>(257);
-          bit_stream.Shift(5);
-          first_table_state = 1;
-        } else if (first_table_state == 1) {
-          // read the number of distance length codes
-          numdistcodes = bit_stream.ReadUInt(5) + ac_uint<1>(1);
-          bit_stream.Shift(5);
-          first_table_state = 2;
-        } else if (first_table_state == 2) {
-          // read the number of code length codes (for encoding code lengths)
-          numcodelencodes = bit_stream.ReadUInt(4) + ac_uint<3>(4);
-          bit_stream.Shift(4);
-          first_table_state = 3;
-        } else if (codelencodelen_count < numcodelencodes) {
-          // read the code lengths themselves
-          auto tmp = bit_stream.ReadUInt(3);
-          bit_stream.Shift(3);
-          codelencodelen[codelencodelen_idxs[codelencodelen_count]] = tmp;
-          codelencodelen_count++;
-          parsing_first_table = (codelencodelen_count != numcodelencodes);
-        }
-      }
-    }
-
+    // These four tables are the first huffman table in optimized form, which
+    // are used to decode the second Huffman table.
+    // They are read from the ParseFirstTable helper function.
     [[intel::fpga_register]] ac_uint<8> codelencode_map_first_code[8];
     [[intel::fpga_register]] ac_uint<8> codelencode_map_last_code[8];
     [[intel::fpga_register]] ac_uint<5> codelencode_map_base_idx[8];
     [[intel::fpga_register]] ac_uint<5> codelencode_map[19];
 
     if (is_dynamic_huffman_block) {
-      ac_uint<8> codelencode_map_next_code = 0;
-      ac_uint<5> codelencode_map_counter = 0;
-      for (unsigned char codelen = 1; codelen <= 8; codelen++) {
-        codelencode_map_next_code <<= 1;
-        codelencode_map_first_code[codelen - 1] = codelencode_map_next_code;
-        codelencode_map_base_idx[codelen - 1] = codelencode_map_counter;
-        for (unsigned short symbol = 0; symbol < 19; symbol++) {
-          auto inner_codelen = codelencodelen[symbol];
-          if (inner_codelen == codelen) {
-            codelencode_map[codelencode_map_counter] = symbol;
-            codelencode_map_counter++;
-            codelencode_map_next_code++;
-          }
-        }
-        codelencode_map_last_code[codelen - 1] = codelencode_map_next_code;
-      }
+      detail::ParseFirstTable<InPipe>(bit_stream, numlitlencodes, numdistcodes,
+                                      numcodelencodes,
+                                      codelencode_map_first_code,
+                                      codelencode_map_last_code,
+                                      codelencode_map_base_idx,
+                                      codelencode_map);
     }
-    // END: parsing the code length table
+
+    // the number of literal and distance codes is known at compile time for
+    // static Huffman blocks
+    if (is_static_huffman_block) {
+      numlitlencodes = kDeflateStaticNumLitLenCodes;
+      numdistcodes = kDeflateStaticNumDistCodes;
+    }
+    // END: parsing the code length table (first table)
     ////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////
-    // BEGIN: parsing the literal and distance tables
-    // length of codelens is MAX(numlitlencodes + numdistcodes)
-    // = MAX((2^5 + 257) + (2^5 + 1)) = 322
-    // maximum code length = 15, so requires 4 bits to store
-    ac_uint<4> codelens[322];
-    ac_uint<9> total_codes_second_table = numlitlencodes + numdistcodes;
-    decltype(total_codes_second_table) codelens_idx = 0;
-    bool decoding_next_symbol = true;
-    ac_uint<8> runlen;  // MAX = (2^7 + 11)
-    int onecount = 0, otherpositivecount = 0;
-    ac_uint<4> extend_symbol;
+    // BEGIN: parsing the literal and distance tables (the second table)
 
-    // static codelens ROM (for static huffman encoding)
-    constexpr int static_numlitlencodes = 288;
-    constexpr int static_numdistcodes = 32;
-    constexpr int static_totalcodes =
-        static_numlitlencodes + static_numdistcodes;
-    constexpr auto static_codelens = [] {
-      std::array<unsigned short, 320> a{};
-      // literal codes
-      for (int i = 0; i < static_numlitlencodes; i++) {
-        if (i < 144) {
-          a[i] = 8;
-        } else if (i < 144 + 112) {
-          a[i] = 9;
-        } else if (i < 144 + 112 + 24) {
-          a[i] = 7;
-        } else {
-          a[i] = 8;
-        }
-      }
-      // distance codes
-      for (int i = 0; i < static_numdistcodes; i++) {
-        a[static_numlitlencodes + i] = 5;
-      }
-      return a;
-    }();
-
-    // for a static huffman block, the number of literal and distance codes
-    // is constant
-    if (is_static_huffman_block) {
-      numlitlencodes = static_numlitlencodes;
-      numdistcodes = static_numdistcodes;
-    }
-
-    // for static huffman block, initialize codelens with static codelens ROM
-    if (is_static_huffman_block) {
-      for (int i = 0; i < static_totalcodes; i++) {
-        codelens[i] = static_codelens[i];
-      }
-    }
-
-    // NOTE: this loop is not the main processing loop and therefore is
-    // not critical (low trip count). However, the compiler doesn't know that
-    // and tries to optimize for throughput (~Fmax/II). We don't want
-    // this loop to be our Fmax bottleneck, so increase the II.
-    [[intel::initiation_interval(3)]]  // NO-FORMAT: Attribute
-    while ((codelens_idx < total_codes_second_table) &&
-           is_dynamic_huffman_block) {
-      // read in another byte if we have space for it
-      if (bit_stream.HasSpaceForByte()) {
-        bool read_valid;
-        auto pd = InPipe::read(read_valid);
-
-        if (read_valid) {
-          done_reading = pd.flag;
-          bit_stream.NewByte(pd.data[0]);
-        }
-      }
-
-      if (decoding_next_symbol) {
-        // decoding the next code symbol, so make sure we have enough bits to
-        // do so 15 bits is the maximum bits to read both a symbol and the
-        // extra run length bits (max 8 bits for the symbol, max 7 bits for
-        // extra run length)
-        if (bit_stream.Size() >= 15) {
-          // read 15 bits
-          ac_uint<15> next_bits = bit_stream.ReadUInt<15>();
-
-          // find all possible dynamic run lengths
-          // the symbol could be from 1 to 8 bits long and the number of extra
-          // bits to read for the run length could be either 2, 3, or 7 bits
-          // (3 possibilities in 'runlen_bits').
-          [[intel::fpga_register]] ac_uint<7> extra_bit_vals[8][3];
-          constexpr int runlen_bits[] = {2, 3, 7};
-#pragma unroll
-          for (int out_codelen = 1; out_codelen <= 8; out_codelen++) {
-#pragma unroll
-            for (int j = 0; j < 3; j++) {
-              ac_uint<7> codebits(0);
-#pragma unroll
-              for (int bit = 0; bit < runlen_bits[j]; bit++) {
-                codebits[bit] = next_bits[out_codelen + bit] & 0x1;
-              }
-              extra_bit_vals[out_codelen - 1][j] = codebits;
-            }
-          }
-
-          // decode all possible code symbols from 1 to 8 bits
-          ac_uint<8> codelencode_valid_bitmap(0);
-          [[intel::fpga_register]] ac_uint<5> codelencode_offset[8];
-          [[intel::fpga_register]] ac_uint<5> codelencode_base_idx[8];
-
-#pragma unroll
-          for (int codelen = 1; codelen <= 8; codelen++) {
-            ac_uint<8> codebits(0);
-#pragma unroll
-            for (int bit = 0; bit < codelen; bit++) {
-              codebits[codelen - bit - 1] = next_bits[bit] & 0x1;
-            }
-
-            auto base_idx = codelencode_map_base_idx[codelen - 1];
-            auto first_code = codelencode_map_first_code[codelen - 1];
-            auto last_code = codelencode_map_last_code[codelen - 1];
-
-            codelencode_base_idx[codelen - 1] = base_idx;
-            codelencode_valid_bitmap[codelen - 1] =
-                ((codebits >= first_code) && (codebits < last_code)) ? 1 : 0;
-
-            codelencode_offset[codelen - 1] = codebits - first_code;
-          }
-
-          // find the shortest matching code symbol
-          ac_uint<3> shortest_match_len_idx = CTZ(codelencode_valid_bitmap);
-          ac_uint<3> shortest_match_len =
-              shortest_match_len_idx + ac_uint<1>(1);
-          ac_uint<5> base_idx = codelencode_base_idx[shortest_match_len_idx];
-          ac_uint<5> offset = codelencode_offset[shortest_match_len_idx];
-
-          // get the decoded symbol
-          auto symbol = codelencode_map[base_idx + offset];
-
-          // max shift amount will be 15 (8 bits for symbol, 7 for run length)
-          ac_uint<4> shift_amount;
-
-          // do logic based on symbol value
-          if (symbol <= 15) {
-            // ADD SYMBOL
-            codelens[codelens_idx++] = symbol;
-            decoding_next_symbol = true;
-            if (codelens_idx >= numlitlencodes) {
-              if (symbol == 1) {
-                onecount++;
-              } else if (symbol > 0) {
-                otherpositivecount++;
-              }
-            }
-            shift_amount = shortest_match_len;
-          } else if (symbol == 16) {
-            // READ 2-BIT RUN LENGTH, ADD 3, AND EXTEND LAST ELEMENT
-            runlen = extra_bit_vals[shortest_match_len_idx][0] + ac_uint<2>(3);
-            decoding_next_symbol = false;
-            extend_symbol = codelens[codelens_idx - 1];
-            shift_amount = shortest_match_len + ac_uint<2>(2);
-          } else if (symbol == 17) {
-            // READ 3-BIT RUN LENGTH, ADD 3, AND EXTEND WITH 0's
-            runlen = extra_bit_vals[shortest_match_len_idx][1] + ac_uint<2>(3);
-            decoding_next_symbol = false;
-            extend_symbol = 0;
-            shift_amount = shortest_match_len + ac_uint<2>(3);
-          } else if (symbol == 18) {
-            // READ 7-BIT RUN LENGTH, ADD 11, AND EXTEND WITH 0's
-            runlen = extra_bit_vals[shortest_match_len_idx][2] + ac_uint<4>(11);
-            decoding_next_symbol = false;
-            extend_symbol = 0;
-            shift_amount = shortest_match_len + ac_uint<3>(7);
-          }
-
-          // shift the bit stream
-          bit_stream.Shift(shift_amount);
-        }
-      } else {
-        // extending codelens
-        codelens[codelens_idx++] = extend_symbol;
-        if (codelens_idx >= numlitlencodes) {
-          if (extend_symbol == 1) {
-            onecount++;
-          } else if (extend_symbol > 0) {
-            otherpositivecount++;
-          }
-        }
-
-        // decrement the run length
-        runlen--;
-
-        // start reading decoding symbols again when runlen == 0
-        decoding_next_symbol = (runlen == 0);
-      }
-    }
-
-    // handle the case where only one distance code is defined add a dummy
-    // invalid code to make the Huffman tree complete
-    if (onecount == 1 && otherpositivecount == 0 && is_dynamic_huffman_block) {
-      int extend_amount = 32 - numdistcodes;
-      for (int i = 0; i < extend_amount; i++) {
-        codelens[numlitlencodes + numdistcodes + i] = 0;
-      }
-      codelens[numlitlencodes + 31] = 1;
-      numdistcodes += extend_amount;
-    }
-
-    // the first table is decoded, so now it is time to decode the second
-    // table, which is actually two tables:
-    //  literal table (symbols and lengths for the {length, distance} pair)
-    //  distance table (the distances for the {length, distance} pair)
-    //
-    // NOTE ON OPTIMIZATION: The DEFLATE algorithm defines the Huffman table
-    // by just storing the number of bits for each symbol. This method to
-    // convert from a list of code lengths to the Huffman table is such that
-    // codes of the same length (in bits) are sequential.
-    // Since the range of code length bits is [1, 15] bits, we can
-    // efficiently store the huffman table as follows:
-    // - Store the first and last code for each code length.
-    // - Store a map from the index to symbol in a map (lit_map and dist_map)
-    // - Store the base index for each code length into the map
-    // Then, given N bits, with a value of V, you can check for a match like so:
-    //    bool match = (V >= first_code[N]) && (V < last_code[N]);
-    // And, if we get a match for this code, we can get the symbol like so:
-    //    int offset = V - first_code[N];
-    //    symbol = map[base_idx[N] + offset];
-    //
-    // This structure is the same for both the 'lit_map' and 'dist_map' below,
-    // the only difference being there are 286 possibilities for literals
-    // and 32 for distances. When decoding, the presence of a 'length' literal
-    // implies the next thing we decode is a distance.
-
-    // parse the Huffman table for the literal and distance codes
-    // we fuse these loops to try and reduce the overhead of parsing a block
+    // These 8 tables are the second Huffman table in optimized form, which are
+    // used to decode the actual payload data in optimized form. They are read
+    // from the ParseSecondTable helper function.
     [[intel::fpga_register]] ac_uint<15> lit_map_first_code[15];
     [[intel::fpga_register]] ac_uint<15> lit_map_last_code[15];
     [[intel::fpga_register]] ac_uint<9> lit_map_base_idx[15];
     [[intel::fpga_register]] ac_uint<9> lit_map[286];
-
     [[intel::fpga_register]] ac_uint<15> dist_map_first_code[15];
     [[intel::fpga_register]] ac_uint<15> dist_map_last_code[15];
     [[intel::fpga_register]] ac_uint<5> dist_map_base_idx[15];
     [[intel::fpga_register]] ac_uint<5> dist_map[32];
 
-    // the maximum of numdistcodes and numlitlencodes
-    ac_uint<9> max_codes;
-    if (numdistcodes < numlitlencodes)
-      max_codes = numlitlencodes;
-    else
-      max_codes = numdistcodes;
+    if (is_static_huffman_block || is_dynamic_huffman_block) {
+      detail::ParseSecondTable<InPipe>(bit_stream,
+                                       is_static_huffman_block,
+                                       numlitlencodes,
+                                       numdistcodes,
+                                       numcodelencodes,
+                                       codelencode_map_first_code,
+                                       codelencode_map_last_code,
+                                       codelencode_map_base_idx,
+                                       codelencode_map,
 
-    ac_uint<15> lit_map_next_code = 0;
-    ac_uint<9> lit_map_counter = 0;
-    ac_uint<15> dist_map_next_code = 0;
-    ac_uint<5> dist_map_counter = 0;
-    for (unsigned char codelen = 1; codelen <= 15; codelen++) {
-      lit_map_next_code <<= 1;
-      lit_map_first_code[codelen - 1] = lit_map_next_code;
-      lit_map_base_idx[codelen - 1] = lit_map_counter;
-
-      dist_map_next_code <<= 1;
-      dist_map_first_code[codelen - 1] = dist_map_next_code;
-      dist_map_base_idx[codelen - 1] = dist_map_counter;
-
-      // this loop has been manually fused for the literal and distance codes
-      // we will iterate max(numdistcodes, numlitlencodes) times and predicate
-      // the decoding based on numdistcodes and numlitlencodes
-      for (unsigned short symbol = 0; symbol < max_codes; symbol++) {
-        // literal
-        if (symbol < numlitlencodes) {
-          auto inner_codelen = codelens[symbol];
-          if (inner_codelen == codelen) {
-            lit_map[lit_map_counter] = symbol;
-            lit_map_counter++;
-            lit_map_next_code++;
-          }
-        }
-
-        // distance
-        if (symbol < numdistcodes) {
-          auto inner_codelen = codelens[numlitlencodes + symbol];
-          if (inner_codelen == codelen) {
-            dist_map[dist_map_counter] = symbol;
-            dist_map_counter++;
-            dist_map_next_code++;
-          }
-        }
-      }
-
-      lit_map_last_code[codelen - 1] = lit_map_next_code;
-      dist_map_last_code[codelen - 1] = dist_map_next_code;
+                                       lit_map_first_code,
+                                       lit_map_last_code,
+                                       lit_map_base_idx,
+                                       lit_map,
+                                       dist_map_first_code,
+                                       dist_map_last_code,
+                                       dist_map_base_idx,
+                                       dist_map);
     }
-    // END: parsing the literal and distance tables
+
+    // END: parsing the literal and distance tables (the second table)
     ////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////
-    // BEGIN: decoding the bit stream (main block computation)
+    // BEGIN: decoding the bit stream (main computation loop)
     // indicates whether we are reading a distance (or literal) currently
     bool reading_distance = false;
 
@@ -500,6 +205,19 @@ void HuffmanDecoder() {
 
     // the output of this kernel goes to the LZ77 decoder
     GzipLZ77InputData<2> out_data;
+
+    // for uncompressed blocks, the first 16 bits (after aligning to a byte)
+    // is the length (in bytes) of the uncompressed data, followed by 16-bits
+    // which is ~length (for error checking; we will ignore this).
+    bool parsing_uncompressed_len = true;
+    ac_uint<2> uncompressed_len_bytes_read = 0;
+    unsigned short uncompressed_bytes_remaining;
+    unsigned char first_four_bytes[4];
+
+    // if this is an uncompressed block, we must realign to a byte boundary
+    if (is_uncompressed_block) {
+      bit_stream.AlignToByteBoundary();
+    }
 
     ac_uint<9> lit_symbol;
     ac_uint<5> dist_symbol;
@@ -557,6 +275,7 @@ void HuffmanDecoder() {
           bit_stream.Shift(ac_uint<4>(8));
         }
       } else if (bit_stream.Size() >= 30) {
+        // dynamic of static huffman block, and we know we have at least 30 bits
         // read the next 30 bits (we know we have them)
         ac_uint<30> next_bits = bit_stream.ReadUInt<30>();
 
@@ -732,7 +451,7 @@ void HuffmanDecoder() {
       }
     }  // while (!block_done)
   }    // while (!last_block)
-  // END: decoding the bit stream (main block computation)
+  // END: decoding the bit stream (main computation loop)
   ////////////////////////////////////////////////////////////////////////////
 
   // notify the downstream kernel that we are done
@@ -757,5 +476,418 @@ sycl::event SubmitHuffmanDecoder(sycl::queue& q) {
     HuffmanDecoder<InPipe, OutPipe>();
   });
 }
+
+// helper functions for parsing the block headers
+namespace detail {
+
+//
+// Parses the first 3 bits of the DEFLATE block returns their meaning:
+//    The first bit indicates whether this is the last block in a stream
+//    The following two bits indicate the block type:
+//        0: uncompressed
+//        1: static huffman
+//        2: dynamic huffman
+//        3: reserved
+//
+template <typename InPipe>
+std::pair<bool, ac_uint<2>> ParseLastBlockAndBlockType(BitStreamT& bit_stream) {
+  // read in the first byte and add it to the byte bit stream
+  auto first_pipe_data = InPipe::read();
+  bit_stream.NewByte(first_pipe_data.data[0]);
+
+  // read the first three bits
+  ac_uint<3> first_three_bits = bit_stream.ReadUInt<3>();
+  bit_stream.Shift(3);
+
+  // first bit indicates whether this is the last block
+  bool last_block = (first_three_bits.slc<1>(0) == 1);
+
+  // next 2 bits indicate the block type
+  ac_uint<2> block_type = first_three_bits.slc<2>(1);
+
+  return std::make_pair(last_block, block_type);
+}
+
+
+//
+// Parses the first Huffman table and creates the optimized Huffman table
+// structure
+//
+template <typename InPipe>
+void ParseFirstTable(BitStreamT& bit_stream,
+
+                     // outputs
+                     ac_uint<9>& numlitlencodes,
+                     ac_uint<6>& numdistcodes,
+                     ac_uint<5>& numcodelencodes,
+                     ac_uint<8> codelencode_map_first_code[8],
+                     ac_uint<8> codelencode_map_last_code[8],
+                     ac_uint<5> codelencode_map_base_idx[8],
+                     ac_uint<5> codelencode_map[19]) {
+  ac_uint<2> first_table_state = 0;
+  unsigned short codelencodelen_count = 0;
+
+  // shuffle vector for the first table
+  constexpr unsigned short codelencodelen_idxs[] = {
+      16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
+
+  [[intel::fpga_register]] ac_uint<3> codelencodelen[19];
+#pragma unroll
+  for (int i = 0; i < 19; i++) {
+    codelencodelen[i] = 0;
+  }
+
+  bool parsing = true;
+
+  // NOTE: this loop is not the main processing loop and therefore is
+  // not critical (low trip count). However, the compiler doesn't know that
+  // and tries to optimize for throughput (~Fmax/II). We don't want
+  // this loop to be our Fmax bottleneck, so increase the II.
+  [[intel::initiation_interval(3)]]  // NO-FORMAT: Attribute
+  while (parsing) {
+    // grab a byte if we have space for it
+    if (bit_stream.HasSpaceForByte()) {
+      bool read_valid;
+      auto pd = InPipe::read(read_valid);
+
+      if (read_valid) {
+        unsigned char c = pd.data[0];
+        bit_stream.NewByte(c);
+      }
+    }
+
+    // make sure we have enough bits (in the maximum case)
+    if (bit_stream.Size() >= 5) {
+      if (first_table_state == 0) {
+        // read the number of literal length codes
+        numlitlencodes = bit_stream.ReadUInt(5) + ac_uint<9>(257);
+        bit_stream.Shift(5);
+        first_table_state = 1;
+      } else if (first_table_state == 1) {
+        // read the number of distance length codes
+        numdistcodes = bit_stream.ReadUInt(5) + ac_uint<1>(1);
+        bit_stream.Shift(5);
+        first_table_state = 2;
+      } else if (first_table_state == 2) {
+        // read the number of code length codes (for encoding code lengths)
+        numcodelencodes = bit_stream.ReadUInt(4) + ac_uint<3>(4);
+        bit_stream.Shift(4);
+        first_table_state = 3;
+      } else if (codelencodelen_count < numcodelencodes) {
+        // read the code lengths themselves
+        auto tmp = bit_stream.ReadUInt(3);
+        bit_stream.Shift(3);
+        codelencodelen[codelencodelen_idxs[codelencodelen_count]] = tmp;
+        codelencodelen_count++;
+        parsing = (codelencodelen_count != numcodelencodes);
+      }
+    }
+  }
+
+  ac_uint<8> codelencode_map_next_code = 0;
+  ac_uint<5> codelencode_map_counter = 0;
+  for (unsigned char codelen = 1; codelen <= 8; codelen++) {
+    codelencode_map_next_code <<= 1;
+    codelencode_map_first_code[codelen - 1] = codelencode_map_next_code;
+    codelencode_map_base_idx[codelen - 1] = codelencode_map_counter;
+    for (unsigned short symbol = 0; symbol < 19; symbol++) {
+      auto inner_codelen = codelencodelen[symbol];
+      if (inner_codelen == codelen) {
+        codelencode_map[codelencode_map_counter] = symbol;
+        codelencode_map_counter++;
+        codelencode_map_next_code++;
+      }
+    }
+    codelencode_map_last_code[codelen - 1] = codelencode_map_next_code;
+  }
+}
+
+//
+// Parses the second Huffman table and creates the optimized Huffman table
+// structure
+//
+template <typename InPipe>
+void ParseSecondTable(BitStreamT& bit_stream,
+                      bool is_static_huffman_block,
+                      ac_uint<9> numlitlencodes,
+                      ac_uint<6> numdistcodes,
+                      ac_uint<5> numcodelencodes,
+                      ac_uint<8> codelencode_map_first_code[8],
+                      ac_uint<8> codelencode_map_last_code[8],
+                      ac_uint<5> codelencode_map_base_idx[8],
+                      ac_uint<5> codelencode_map[19],
+
+                      // outputs
+                      ac_uint<15> lit_map_first_code[15],
+                      ac_uint<15> lit_map_last_code[15],
+                      ac_uint<9> lit_map_base_idx[15],
+                      ac_uint<9> lit_map[286],
+                      ac_uint<15> dist_map_first_code[15],
+                      ac_uint<15> dist_map_last_code[15],
+                      ac_uint<5> dist_map_base_idx[15],
+                      ac_uint<5> dist_map[32]) {
+  // length of codelens is MAX(numlitlencodes + numdistcodes)
+  // = MAX((2^5 + 257) + (2^5 + 1)) = 322
+  // maximum code length = 15, so requires 4 bits to store
+  ac_uint<4> codelens[322];
+  ac_uint<9> total_codes_second_table = numlitlencodes + numdistcodes;
+  decltype(total_codes_second_table) codelens_idx = 0;
+  bool decoding_next_symbol = true;
+  ac_uint<8> runlen;  // MAX = (2^7 + 11)
+  int onecount = 0, otherpositivecount = 0;
+  ac_uint<4> extend_symbol;
+
+  // static codelens ROM (for static huffman encoding)
+  constexpr auto static_codelens = [] {
+    std::array<unsigned short, 320> a{};
+    // literal codes
+    for (int i = 0; i < kDeflateStaticNumLitLenCodes; i++) {
+      if (i < 144) {
+        a[i] = 8;
+      } else if (i < 144 + 112) {
+        a[i] = 9;
+      } else if (i < 144 + 112 + 24) {
+        a[i] = 7;
+      } else {
+        a[i] = 8;
+      }
+    }
+    // distance codes
+    for (int i = 0; i < kDeflateStaticNumDistCodes; i++) {
+      a[kDeflateStaticNumLitLenCodes + i] = 5;
+    }
+    return a;
+  }();
+
+  if (is_static_huffman_block) {
+    // for a static huffman block, initialize codelens with static codelens ROM
+    for (int i = 0; i < kDeflateStaticTotalCodes; i++) {
+      codelens[i] = static_codelens[i];
+    }
+  } else {  // is_dynamic_huffman_block
+    // NOTE: this loop is not the main processing loop and therefore is
+    // not critical (low trip count). However, the compiler doesn't know that
+    // and tries to optimize for throughput (~Fmax/II). We don't want
+    // this loop to be our Fmax bottleneck, so increase the II.
+    [[intel::initiation_interval(3)]]  // NO-FORMAT: Attribute
+    while (codelens_idx < total_codes_second_table) {
+      // read in another byte if we have space for it
+      if (bit_stream.HasSpaceForByte()) {
+        bool read_valid;
+        auto pd = InPipe::read(read_valid);
+
+        if (read_valid) {
+          bit_stream.NewByte(pd.data[0]);
+        }
+      }
+
+      if (decoding_next_symbol) {
+        // decoding the next code symbol, so make sure we have enough bits to
+        // do so 15 bits is the maximum bits to read both a symbol and the
+        // extra run length bits (max 8 bits for the symbol, max 7 bits for
+        // extra run length)
+        if (bit_stream.Size() >= 15) {
+          // read 15 bits
+          ac_uint<15> next_bits = bit_stream.ReadUInt<15>();
+
+          // find all possible dynamic run lengths
+          // the symbol could be from 1 to 8 bits long and the number of extra
+          // bits to read for the run length could be either 2, 3, or 7 bits
+          // (the 3 possibilities in 'runlen_bits').
+          [[intel::fpga_register]] ac_uint<7> extra_bit_vals[8][3];
+          constexpr int runlen_bits[] = {2, 3, 7};
+#pragma unroll
+          for (int out_codelen = 1; out_codelen <= 8; out_codelen++) {
+#pragma unroll
+            for (int j = 0; j < 3; j++) {
+              ac_uint<7> codebits(0);
+#pragma unroll
+              for (int bit = 0; bit < runlen_bits[j]; bit++) {
+                codebits[bit] = next_bits[out_codelen + bit] & 0x1;
+              }
+              extra_bit_vals[out_codelen - 1][j] = codebits;
+            }
+          }
+
+          // decode all possible code symbols from 1 to 8 bits
+          ac_uint<8> codelencode_valid_bitmap(0);
+          [[intel::fpga_register]] ac_uint<5> codelencode_offset[8];
+          [[intel::fpga_register]] ac_uint<5> codelencode_base_idx[8];
+
+#pragma unroll
+          for (int codelen = 1; codelen <= 8; codelen++) {
+            ac_uint<8> codebits(0);
+#pragma unroll
+            for (int bit = 0; bit < codelen; bit++) {
+              codebits[codelen - bit - 1] = next_bits[bit] & 0x1;
+            }
+
+            auto base_idx = codelencode_map_base_idx[codelen - 1];
+            auto first_code = codelencode_map_first_code[codelen - 1];
+            auto last_code = codelencode_map_last_code[codelen - 1];
+
+            codelencode_base_idx[codelen - 1] = base_idx;
+            codelencode_valid_bitmap[codelen - 1] =
+                ((codebits >= first_code) && (codebits < last_code)) ? 1 : 0;
+
+            codelencode_offset[codelen - 1] = codebits - first_code;
+          }
+
+          // find the shortest matching code symbol
+          ac_uint<3> shortest_match_len_idx = CTZ(codelencode_valid_bitmap);
+          ac_uint<3> shortest_match_len =
+              shortest_match_len_idx + ac_uint<1>(1);
+          ac_uint<5> base_idx = codelencode_base_idx[shortest_match_len_idx];
+          ac_uint<5> offset = codelencode_offset[shortest_match_len_idx];
+
+          // get the decoded symbol
+          auto symbol = codelencode_map[base_idx + offset];
+
+          // max shift amount will be 15 (8 bits for symbol, 7 for run length)
+          ac_uint<4> shift_amount;
+
+          // do logic based on symbol value
+          if (symbol <= 15) {
+            // ADD SYMBOL
+            codelens[codelens_idx++] = symbol;
+            decoding_next_symbol = true;
+            if (codelens_idx >= numlitlencodes) {
+              if (symbol == 1) {
+                onecount++;
+              } else if (symbol > 0) {
+                otherpositivecount++;
+              }
+            }
+            shift_amount = shortest_match_len;
+          } else if (symbol == 16) {
+            // READ 2-BIT RUN LENGTH, ADD 3, AND EXTEND LAST ELEMENT
+            runlen = extra_bit_vals[shortest_match_len_idx][0] + ac_uint<2>(3);
+            decoding_next_symbol = false;
+            extend_symbol = codelens[codelens_idx - 1];
+            shift_amount = shortest_match_len + ac_uint<2>(2);
+          } else if (symbol == 17) {
+            // READ 3-BIT RUN LENGTH, ADD 3, AND EXTEND WITH 0's
+            runlen = extra_bit_vals[shortest_match_len_idx][1] + ac_uint<2>(3);
+            decoding_next_symbol = false;
+            extend_symbol = 0;
+            shift_amount = shortest_match_len + ac_uint<2>(3);
+          } else if (symbol == 18) {
+            // READ 7-BIT RUN LENGTH, ADD 11, AND EXTEND WITH 0's
+            runlen = extra_bit_vals[shortest_match_len_idx][2] + ac_uint<4>(11);
+            decoding_next_symbol = false;
+            extend_symbol = 0;
+            shift_amount = shortest_match_len + ac_uint<3>(7);
+          }
+
+          // shift the bit stream
+          bit_stream.Shift(shift_amount);
+        }
+      } else {
+        // extending codelens
+        codelens[codelens_idx++] = extend_symbol;
+        if (codelens_idx >= numlitlencodes) {
+          if (extend_symbol == 1) {
+            onecount++;
+          } else if (extend_symbol > 0) {
+            otherpositivecount++;
+          }
+        }
+
+        // decrement the run length
+        runlen--;
+
+        // start reading decoding symbols again when runlen == 0
+        decoding_next_symbol = (runlen == 0);
+      }
+    }
+
+    // handle the case where only one distance code is defined add a dummy
+    // invalid code to make the Huffman tree complete
+    if (onecount == 1 && otherpositivecount == 0) {
+      int extend_amount = 32 - numdistcodes;
+      for (int i = 0; i < extend_amount; i++) {
+        codelens[numlitlencodes + numdistcodes + i] = 0;
+      }
+      codelens[numlitlencodes + 31] = 1;
+      numdistcodes += extend_amount;
+    }
+  }
+
+  // the first table is decoded, so now it is time to decode the second
+  // table, which is actually two tables:
+  //  literal table (symbols and lengths for the {length, distance} pair)
+  //  distance table (the distances for the {length, distance} pair)
+  //
+  // NOTE ON OPTIMIZATION: The DEFLATE algorithm defines the Huffman table
+  // by just storing the number of bits for each symbol. This method to
+  // convert from a list of code lengths to the Huffman table is such that
+  // codes of the same length (in bits) are sequential.
+  // Since the range of code length bits is [1, 15] bits, we can
+  // efficiently store the huffman table as follows:
+  // - Store the first and last code for each code length.
+  // - Store a map from the index to symbol in a map (lit_map and dist_map)
+  // - Store the base index for each code length into the map
+  // Then, given N bits, with a value of V, you can check for a match like so:
+  //    bool match = (V >= first_code[N]) && (V < last_code[N]);
+  // And, if we get a match for this code, we can get the symbol like so:
+  //    int offset = V - first_code[N];
+  //    symbol = map[base_idx[N] + offset];
+  //
+  // This structure is the same for both the 'lit_map' and 'dist_map' below,
+  // the only difference being there are 286 possibilities for literals
+  // and 32 for distances. When decoding, the presence of a 'length' literal
+  // implies the next thing we decode is a distance.
+
+  // the maximum of numdistcodes and numlitlencodes
+  ac_uint<9> max_codes;
+  if (numdistcodes < numlitlencodes)
+    max_codes = numlitlencodes;
+  else
+    max_codes = numdistcodes;
+
+  ac_uint<15> lit_map_next_code = 0;
+  ac_uint<9> lit_map_counter = 0;
+  ac_uint<15> dist_map_next_code = 0;
+  ac_uint<5> dist_map_counter = 0;
+  for (unsigned char codelen = 1; codelen <= 15; codelen++) {
+    lit_map_next_code <<= 1;
+    lit_map_first_code[codelen - 1] = lit_map_next_code;
+    lit_map_base_idx[codelen - 1] = lit_map_counter;
+
+    dist_map_next_code <<= 1;
+    dist_map_first_code[codelen - 1] = dist_map_next_code;
+    dist_map_base_idx[codelen - 1] = dist_map_counter;
+
+    // this loop has been manually fused for the literal and distance codes
+    // we will iterate max(numdistcodes, numlitlencodes) times and predicate
+    // the decoding based on numdistcodes and numlitlencodes
+    for (unsigned short symbol = 0; symbol < max_codes; symbol++) {
+      // literal
+      if (symbol < numlitlencodes) {
+        auto inner_codelen = codelens[symbol];
+        if (inner_codelen == codelen) {
+          lit_map[lit_map_counter] = symbol;
+          lit_map_counter++;
+          lit_map_next_code++;
+        }
+      }
+
+      // distance
+      if (symbol < numdistcodes) {
+        auto inner_codelen = codelens[numlitlencodes + symbol];
+        if (inner_codelen == codelen) {
+          dist_map[dist_map_counter] = symbol;
+          dist_map_counter++;
+          dist_map_next_code++;
+        }
+      }
+    }
+
+    lit_map_last_code[codelen - 1] = lit_map_next_code;
+    dist_map_last_code[codelen - 1] = dist_map_next_code;
+  }
+}
+
+}  // namespace detail
 
 #endif /* __HUFFMAN_DECODER_HPP__ */

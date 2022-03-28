@@ -34,9 +34,6 @@ class LZ77ToByteStackerPipeID;
 // decoder can computing while the LZ77 kernel reads from the history buffer
 constexpr int kHuffmanToLZ77PipeDepth = 64;
 
-// DEFLATE sets the maximum history to 32K
-constexpr size_t kLZ77MaxHistory = 32768;
-
 //
 // Submits the kernels for the GZIP decompression engine and returns the
 // SYCL events for each kernel.
@@ -76,7 +73,8 @@ std::vector<sycl::event> SubmitGzipDecompressKernels(
                                FlagBundle<BytePack<literals_per_cycle>>>;
 
     auto lz77_event = SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe,
-                                        LZ77ToByteStackerPipe, kLZ77MaxHistory,
+                                        LZ77ToByteStackerPipe,
+                                        kGzipMaxLZ77Distance,
                                         literals_per_cycle>(q);
     auto byte_stacker_event =
         SubmitByteStacker<ByteStackerKernelID, LZ77ToByteStackerPipe, OutPipe,
@@ -86,7 +84,7 @@ std::vector<sycl::event> SubmitGzipDecompressKernels(
   } else {
     auto lz77_event =
         SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe, OutPipe,
-                          kLZ77MaxHistory, literals_per_cycle>(q);
+                          kGzipMaxLZ77Distance, literals_per_cycle>(q);
     return {header_event, huffman_event, lz77_event};
   }
 }

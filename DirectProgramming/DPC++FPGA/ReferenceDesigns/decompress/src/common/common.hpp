@@ -95,6 +95,9 @@ using GzipLZ77InputData =
     LZ77InputData<n, kGzipMaxLZ77Length, kGzipMaxLZ77Distance>;
 
 // The LZ77 datastructure specific for the Snappy decompressor
+// Snappy V1.1 format sets the maximum history to 65K
+// At the time of writing this, the maximum history distance will be 32K, but
+// the specification claims support for 65K, so we will be safe.
 constexpr unsigned kSnappyMaxLZ77Length = 64;
 constexpr unsigned kSnappyMaxLZ77Distance = 1 << 16;
 template <unsigned n>
