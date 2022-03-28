@@ -56,6 +56,11 @@ void HuffmanDecoder() {
   bool done_reading = false;
 
   // processing consecutive blocks
+  // loop pipelining is disabled here because to reduce the amount of memory
+  // utilization caused by replicating local variables. Since the inner
+  // loop (the while(!block_done) loop) is the main processing loop, disabling
+  // pipelining here does not have a significant affect on the throughput
+  // of the design
   [[intel::disable_loop_pipelining]]  // NO-FORMAT: Attribute
   while (!last_block) {
     ////////////////////////////////////////////////////////////////////////////
@@ -483,7 +488,7 @@ void HuffmanDecoder() {
     // indicates whether we are reading a distance (or literal) currently
     bool reading_distance = false;
 
-    // true is the stop code (256) has been decoded and the block is done
+    // true if the stop code (256) has been decoded and the block is done
     // track when a block is done:
     //    for compressed blocks (static and dynamic), when stop code is hit
     //    for uncompressed blocks, when all uncompressed bytes are read

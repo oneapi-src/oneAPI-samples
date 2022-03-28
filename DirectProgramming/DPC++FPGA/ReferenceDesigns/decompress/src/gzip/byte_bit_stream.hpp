@@ -22,7 +22,7 @@ class ByteBitStream {
   static_assert(max_shift_bits > 0);
   static_assert(max_shift_bits <= bits);
 
-  // an acint to count from 0 to 'bits', inclusive
+  // an ac_int to count from 0 to 'bits', inclusive
   static constexpr int count_bits = fpga_tools::Log2(bits) + 1;
   using CountT = ac_int<count_bits, false>;
 

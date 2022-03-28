@@ -20,8 +20,8 @@
 // which contains either a literal from upstream, or a {length, distance} pair.
 // Given a literal input, this function simply tracks that literal in a history
 // buffer and writes it to the output. For a {length, distance} pair, this
-// this function reads 'literals_per_cycle' elements from the history buffer
-// per cycle and writes them to the output.
+// function reads 'literals_per_cycle' elements from the history buffer per
+// cycle and writes them to the output.
 //
 template <typename InPipe, typename OutPipe, size_t max_history,
           unsigned literals_per_cycle>
@@ -89,7 +89,7 @@ void LZ77DecoderMultiElement() {
   HistBufBufIdxT read_history_shuffle_idx[literals_per_cycle];
 
   // precompute the function: dist + ((i - dist) % dist)
-  // which is used for the special when the copy distance is less than
+  // which is used for the corner case when the copy distance is less than
   // 'literals_per_cycle'
   [[intel::fpga_register]]  // NO-FORMAT: Attribute
   constexpr auto mod_lut = [&] {
@@ -202,10 +202,10 @@ void LZ77DecoderMultiElement() {
         }
       });
 
-// shuffle the elements read from the history buffers to the output
-// using the shuffle vector computed earlier. Note, the numbers in the
-// shuffle vector need not be unique, which happens in the special case
-// of dist < literals_per_cycle, described above.
+      // shuffle the elements read from the history buffers to the output
+      // using the shuffle vector computed earlier. Note, the numbers in the
+      // shuffle vector need not be unique, which happens in the special case
+      // of dist < literals_per_cycle, described above.
 #pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
         out_data.byte[i] = historical_bytes[read_history_shuffle_idx[i]];
@@ -220,8 +220,8 @@ void LZ77DecoderMultiElement() {
         out_data.valid_count = literals_per_cycle;
       }
 
-// update the history read indices for the next iteration (if we are still
-// reading from the history buffers)
+      // update the history read indices for the next iteration (if we are still
+      // reading from the history buffers)
 #pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
         read_history_buffer_idx[i] =
@@ -409,8 +409,8 @@ void LZ77DecoderSingleElement() {
 }
 
 //
-// Top-level LZ77 decoder to switch between the single- and multi-element per
-// cycle variants above.
+// Top-level LZ77 decoder to select between the single- and multi-element per
+// cycle variants above, at compile time.
 //
 template <typename InPipe, typename OutPipe, size_t max_history,
           unsigned literals_per_cycle>

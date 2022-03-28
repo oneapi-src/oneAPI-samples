@@ -70,9 +70,9 @@ void ByteStacker() {
       }
 
       // decrement cache_idx by number of elements we read
-      // it is safe to always subtract literals_per_cycle since that will only
-      // happen on the last iteration of the outer while loop (when 'done'
-      // is true)
+      // it is safe to always subtract literals_per_cycle since that can only
+      // result in a negative number on the last iteration of the outer while
+      // loop (when 'done' is true), at which point the value will never be used
       cache_idx -= ac_uint<cache_idx_bits>(literals_per_cycle);
 
       // write output

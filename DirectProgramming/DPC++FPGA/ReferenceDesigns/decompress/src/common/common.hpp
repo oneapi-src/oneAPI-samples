@@ -103,7 +103,7 @@ using SnappyLZ77InputData =
 
 //
 // Holds an array of bytes, where valid_count indicates how many of the 'n'
-// bytes are valid. The valid bytes must be sequential.
+// bytes are valid. The valid bytes must be sequential and start at index 0.
 // E.g., if valid_count = 2, then byte[0] and byte[1] are valid, while byte[2],
 // byte[3], ..., byte[n-1] are not.
 //
