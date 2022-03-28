@@ -15,8 +15,7 @@ using fixed_10_3_t = ac_fixed<10, 3, true>;
 using fixed_9_2_t = ac_fixed<9, 2, true>;
 
 // Forward declare the kernel name in the global scope.
-// This is a FPGA best practice that reduces name mangling in the optimization
-// reports.
+// This is a FPGA best practice that reduces name mangling in the reports.
 class ConstructFromFloat;
 class ConstructFromACFixed;
 class CalculateWithFloat;
@@ -103,7 +102,7 @@ void TestCalculateWithACFixed(queue &q, const fixed_10_3_t &x,
   });
 }
 
-constexpr int SIZE = 5;
+constexpr int kSize= 5;
 
 int main() {
 #if defined(FPGA_EMULATOR)
@@ -125,7 +124,7 @@ int main() {
     TestConstructFromACFixed(q, b);
     std::cout << "Constructed from ac_fixed:\t" << b << "\n\n";
 
-    constexpr float inputs[SIZE] = {-0.807991899423f, -2.09982907558f,
+    constexpr float inputs[kSize] = {-0.807991899423f, -2.09982907558f,
                                     -0.742066235466f, -2.33217071676f,
                                     1.14324158042f};
 
@@ -146,7 +145,7 @@ int main() {
 
     bool pass = true;
 
-    for (int i = 0; i < SIZE; i++) {
+    for (int i = 0; i < kSize; i++) {
       fixed_10_3_t fixed_type_input = inputs[i];
       float float_type_input = inputs[i];
 
