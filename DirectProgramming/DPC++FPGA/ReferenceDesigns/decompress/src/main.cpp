@@ -48,14 +48,17 @@ static_assert(fpga_tools::IsPow2(kLiteralsPerCycle));
 // include files and aliases specific to GZIP and SNAPPY decompression
 #if defined(GZIP)
 #include "gzip/gzip_decompressor.hpp"
+#else
+#include "snappy/snappy_data_gen.hpp"
+#include "snappy/snappy_decompressor.hpp"
+#endif
 
+// aliases and testing functions specific to GZIP and SNAPPY decompression
+#if defined(GZIP)
 using GzipDecompressorT = GzipDecompressor<kLiteralsPerCycle>;
 bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
                  std::string test_dir);
 #else
-#include "snappy/snappy_data_gen.hpp"
-#include "snappy/snappy_decompressor.hpp"
-
 using SnappyDecompressorT = SnappyDecompressor<kLiteralsPerCycle>;
 bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor);
 #endif
