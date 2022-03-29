@@ -13,10 +13,11 @@
 
 using namespace sycl;
 
-using ProducerToConsumerPipe = ext::intel::pipe<  // Defined in the SYCL headers.
-    class ProducerConsumerPipe,              // An identifier for the pipe.
-    int,                                     // The type of data in the pipe.
-    4>;                                      // The capacity of the pipe.
+using ProducerToConsumerPipe =
+    ext::intel::pipe<               // Defined in the SYCL headers.
+      class ProducerConsumerPipe,   // An identifier for the pipe.
+      int,                          // The type of data in the pipe.
+      4>;                           // The capacity of the pipe.
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
