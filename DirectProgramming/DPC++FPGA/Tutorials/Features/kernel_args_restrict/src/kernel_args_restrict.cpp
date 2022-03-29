@@ -14,6 +14,8 @@
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
+// ADDING A COMMENT TO TRIGGER CI - DO NOT MERGE
+
 using namespace sycl;
 
 // Forward declare the kernel names in the global scope.
