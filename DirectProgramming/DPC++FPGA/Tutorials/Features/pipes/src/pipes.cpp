@@ -10,12 +10,12 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-
 using namespace sycl;
 
+class ProducerConsumerPipeId;
 using ProducerToConsumerPipe =
     ext::intel::pipe<                 // Defined in the SYCL headers.
-      class ProducerConsumerPipeId,   // An identifier for the pipe.
+      ProducerConsumerPipeId,         // An identifier for the pipe.
       int,                            // The type of data in the pipe.
       4>;                             // The capacity of the pipe.
 
