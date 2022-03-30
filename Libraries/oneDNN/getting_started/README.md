@@ -15,7 +15,7 @@ in Intel® DevCloud for oneAPI environment.
 
 | Optimized for                      | Description
 | :---                               | :---
-| OS                                 | Linux* Ubuntu* 18.04; Windows 10
+| OS                                 | Linux* Ubuntu* 18.04;
 | Hardware                           | Skylake with GEN9 or newer
 | Software                           | oneAPI Deep Neural Network Library (oneDNN), oneAPI DPC++/C++ Compiler, oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel® C++ Compiler
 | What you will learn                | Running a simple convolutional model on Intel CPU or Intel GPU
@@ -49,22 +49,6 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Using Visual Studio Code* (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
- - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
-
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ## Building the sample for CPU and GPU
 > **Note**: If you have not already done so, set up your CLI
@@ -74,8 +58,6 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 > Linux Sudo: . /opt/intel/oneapi/setvars.sh
 >
 > Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
@@ -119,30 +101,6 @@ source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_tbb
 CC=icc CXX=icpc cmake ..
 ```
 
-### On a Windows* System
-
-Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or
-"Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
-1. Setup oneAPI development environment
-```
-C:\Program Files (x86)\Intel\oneAPI\setvars.bat
-```
-2. Build the program using `cmake`
-```
-cd C:\Program Files (x86)\Intel\oneAPI\dnnl\latest\cpu_dpcpp_gpu_dpcpp\examples\
-mkdir build
-cd build
-set CC=clang
-set CXX=clang++
-cmake -G Ninja .. -DDNNL_CPU_RUNTIME=DPCPP -DDNNL_GPU_RUNTIME=DPCPP
-cmake --build .
-```
-
-3. Run the program
-```
-getting-started-cpp.exe
-```
-
 ### Include Files
 
 The include folder is located at ${DNNLROOT}\include on your development system".
@@ -168,10 +126,6 @@ environment variable `DNNL_VERBOSE=1`.
 #### On a Linux System
 ```
 export DNNL_VERBOSE=1
-```
-#### On a Windows* System
-```
-set DNNL_VERBOSE=1
 ```
 
 ### Example of Output
