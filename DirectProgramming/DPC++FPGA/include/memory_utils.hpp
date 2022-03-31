@@ -18,9 +18,18 @@ namespace detail {
 // Helper to check if a SYCL pipe and pointer have the same base type
 //
 template <typename PipeT, typename PtrT>
-constexpr bool pipe_and_pointer_have_same_base_v =
-    std::is_same_v<std::decay_t<decltype(std::declval<PipeT>()[0])>,
-                   std::decay_t<decltype(std::declval<PtrT>()[0])>>;
+struct pipe_and_pointer_have_same_base {
+  using PipeBaseT =
+      std::conditional_t<fpga_tools::has_subscript_v<PipeT>,
+                         std::decay_t<decltype(std::declval<PipeT>()[0])>,
+                         PipeT>;
+  using PtrBaseT = std::decay_t<decltype(std::declval<PtrT>()[0])>;
+  static constexpr bool value = std::is_same_v<PipeBaseT, PtrBaseT>;
+};
+
+template <typename PipeT, typename PtrT>
+inline constexpr bool pipe_and_pointer_have_same_base_v =
+    pipe_and_pointer_have_same_base<PipeT, PtrT>::value;
 
 //
 // Streams data from 'in_ptr' into 'Pipe', 'elements_per_cycle' elements at a
