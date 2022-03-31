@@ -63,19 +63,21 @@ The functions `TestCalculateWithFloat` and `TestCalculateWithACFixed` in this tu
 ```
 for some input `x`.
 
-The kernel `CalculateWithFloat` uses floating point values and the standard math library while `CalculateWithACFixed` uses `ac_fixed` values and the `ac_fixed` math library. The `ac_fixed` inputs are instantiated with the following parameters:
+The kernel `CalculateWithFloat` uses floating point values and the standard math library while `CalculateWithACFixed` uses `ac_fixed` values and the `ac_fixed` math library.
+
+In the kernel `CalculateWithACFixed`, the `sin_fixed` and `cos_fixed` functions require the integer part's bit width to be 3, and the input value range to be within [-pi, pi]. Therefore, `ac_fixed` inputs are instantiated with the following parameters:
 
 ```cpp
   W = 10, I = 3, S = true
 ```
 
-The `ac_fixed` numbers are smaller in size than floating point numbers, which results in a reduction of the FPGA resources at the expense of accuracy. To see the trade-offs between accuracy compare the numeric results of the operations. The area utilization differences will be discussed in the section on *Examining the Reports*.
+In this tutorial, the `ac_fixed` numbers, are smaller in size than floating point numbers, which results in a reduction of the FPGA resources at the expense of accuracy. To see the trade-offs between accuracy compare the numeric results of the operations. The area utilization differences will be discussed in the section on *Examining the Reports*.
 
 When you use the `ac_fixed` library, keep the following points in mind:
 
 1. Input Bit Width and Input Value Range Limits
 
-    The fixed-point math functions have bit width and input value range requirements. All bit width and input value range requirements are documented at the top of the `ac_fixed_math.hpp` file. For example, the `sin_fixed` and `cos_fixed` functions require the integer part's bit width to be 3, and the input value range to be within [-pi, pi].
+    The fixed-point math functions have bit width and input value range requirements. All bit width and input value range requirements are documented at the top of the `ac_fixed_math.hpp` files.
 
 2. Return Types
 

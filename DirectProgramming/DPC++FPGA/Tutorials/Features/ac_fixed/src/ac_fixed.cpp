@@ -23,14 +23,14 @@ class CalculateWithACFixed;
 
 // Not recommended Usage example:
 // Convert dynamic float value inside the kernel
-void TestConstructFromFloat(queue &q, float a,
+void TestConstructFromFloat(queue &q, const float &a,
                             ac_fixed<20, 10, true, AC_RND, AC_SAT> &b) {
-  buffer<float, 1> inp(&a, 1);
-  buffer<ac_fixed<20, 10, true, AC_RND, AC_SAT>, 1> ret_val(&b, 1);
+  buffer<float, 1> inp_buffer(&a, 1);
+  buffer<ac_fixed<20, 10, true, AC_RND, AC_SAT>, 1> ret_buffer(&b, 1);
 
   q.submit([&](handler &h) {
-    accessor in_acc{inp, h, read_only};
-    accessor out_acc{ret_val, h, write_only, no_init};
+    accessor in_acc{inp_buffer, h, read_only};
+    accessor out_acc{ret_buffer, h, write_only, no_init};
 
     h.single_task<ConstructFromFloat>([=] {
       ac_fixed<20, 10, true, AC_RND, AC_SAT> t(in_acc[0]);
@@ -43,21 +43,24 @@ void TestConstructFromFloat(queue &q, float a,
 // Recommended Usage example:
 // Convert dynamic float value outside the kernel
 void TestConstructFromACFixed(queue &q,
-                              ac_fixed<20, 10, true, AC_RND, AC_SAT> &a) {
-  buffer<ac_fixed<20, 10, true, AC_RND, AC_SAT>, 1> buff_a(&a, 1);
+                              const ac_fixed<20, 10, true, AC_RND, AC_SAT> &a,
+                              ac_fixed<20, 10, true, AC_RND, AC_SAT> &ret) {
+  buffer<ac_fixed<20, 10, true, AC_RND, AC_SAT>, 1> inp_buffer(&a, 1);
+  buffer<ac_fixed<20, 10, true, AC_RND, AC_SAT>, 1> ret_buffer(&ret, 1);
 
   q.submit([&](handler &h) {
-    accessor out_acc{buff_a, h, read_write};
+    accessor in_acc{inp_buffer, h, read_only};
+    accessor out_acc{ret_buffer, h, write_only};
 
     h.single_task<ConstructFromACFixed>([=] {
-      ac_fixed<20, 10, true, AC_RND, AC_SAT> t(out_acc[0]);
+      ac_fixed<20, 10, true, AC_RND, AC_SAT> t(in_acc[0]);
       ac_fixed<20, 10, true, AC_RND, AC_SAT> some_offset(0.5f);
       out_acc[0] = t + some_offset;
     });
   });
 }
 
-void TestCalculateWithFloat(queue &q, const float& x, float &ret) {
+void TestCalculateWithFloat(queue &q, const float &x, float &ret) {
   buffer<float, 1> inp_buffer(&x, 1);
   buffer<float, 1> ret_buffer(&ret, 1);
 
@@ -97,12 +100,14 @@ void TestCalculateWithACFixed(queue &q, const fixed_10_3_t &x,
     h.single_task<CalculateWithACFixed>([=] {
       fixed_9_2_t sin_ret = sin_fixed(x[0]);
       fixed_9_2_t cos_ret = cos_fixed(x[0]);
+      // The RHS expression evaluates to a larger `ac_fixed`, which gets
+      // truncated to fit in res[0].
       res[0] = sqrt_fixed(sin_ret * sin_ret + cos_ret * cos_ret);
     });
   });
 }
 
-constexpr int kSize= 5;
+constexpr int kSize = 5;
 
 int main() {
 #if defined(FPGA_EMULATOR)
@@ -115,20 +120,22 @@ int main() {
     // Create the SYCL device queue
     queue q(selector, dpc_common::exception_handler);
 
+    // I. Constructing `ac_fixed` Numbers
     // Rounding mode: use `AC_RND` to round towards plus infinity
     // Overflow mode: use `AC_SAT` to saturate to max and min
     ac_fixed<20, 10, true, AC_RND, AC_SAT> a;
-    ac_fixed<20, 10, true, AC_RND, AC_SAT> b = 3.1415f;
-
     TestConstructFromFloat(q, 3.1415f, a);
     std::cout << "Constructed from float:\t\t" << a << "\n";
 
-    TestConstructFromACFixed(q, b);
-    std::cout << "Constructed from ac_fixed:\t" << b << "\n\n";
+    ac_fixed<20, 10, true, AC_RND, AC_SAT> b = 3.1415f;
+    ac_fixed<20, 10, true, AC_RND, AC_SAT> c;
+    TestConstructFromACFixed(q, b, c);
+    std::cout << "Constructed from ac_fixed:\t" << c << "\n\n";
 
+    // II. Using `ac_fixed` Math Functions
     constexpr float inputs[kSize] = {-0.807991899423f, -2.09982907558f,
-                                    -0.742066235466f, -2.33217071676f,
-                                    1.14324158042f};
+                                     -0.742066235466f, -2.33217071676f,
+                                     1.14324158042f};
 
     // quantum: the minimum positive value this type can represent
     // Quantum is 1 / 2 ^ (W - I), where W and I are the total width and the
@@ -146,7 +153,6 @@ int main() {
               << "\n\n";
 
     bool pass = true;
-
     for (int i = 0; i < kSize; i++) {
       fixed_10_3_t fixed_type_input = inputs[i];
       float float_type_input = inputs[i];
