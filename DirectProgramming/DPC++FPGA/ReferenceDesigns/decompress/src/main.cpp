@@ -58,9 +58,11 @@ static_assert(fpga_tools::IsPow2(kLiteralsPerCycle));
 using GzipDecompressorT = GzipDecompressor<kLiteralsPerCycle>;
 bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
                  std::string test_dir);
+constexpr std::string_view kDecompressorName = "GZIP";
 #else
 using SnappyDecompressorT = SnappyDecompressor<kLiteralsPerCycle>;
 bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor);
+constexpr std::string_view kDecompressorName = "SNAPPY";
 #endif
 
 using namespace sycl;
@@ -116,6 +118,9 @@ int main(int argc, char* argv[]) {
       std::terminate();
     }
   }
+
+  std::cout << "Using " << kDecompressorName << " decompression\n";
+  std::cout << std::endl;
 
   // the device selector
 #if defined(FPGA_EMULATOR)

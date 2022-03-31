@@ -8,6 +8,7 @@
 
 // Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"
+#include "metaprogramming_utils.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 
@@ -411,6 +412,8 @@ void LZ77DecoderSingleElement() {
 template <typename InPipe, typename OutPipe, size_t max_history,
           unsigned literals_per_cycle>
 void LZ77Decoder() {
+  static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
+  static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
   static_assert(literals_per_cycle > 0);
   static_assert(max_history > 0);
   static_assert(fpga_tools::IsPow2(literals_per_cycle));

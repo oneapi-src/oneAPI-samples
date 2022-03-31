@@ -81,6 +81,12 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 
+   To select between GZIP and SNAPPY decompression, use the -DGZIP=1 and -DSNAPPY=1 `cmake` flags as shown below, respectively:
+   ```
+   cmake .. -DGZIP=1
+   cmake .. -DSNAPPY=1
+   ```
+
 2. Compile the design through the generated `Makefile`. The following targets are provided, and they match the recommended development flow:
 
     * Compile for emulation (fast compile time, targets emulated FPGA device).
@@ -116,6 +122,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   ```
+   To select between GZIP and SNAPPY decompression, use the -DGZIP=1 and -DSNAPPY=1 `cmake` flags as shown below, respectively:
+   ```
+   cmake .. -DGZIP=1
+   cmake .. -DSNAPPY=1
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -163,6 +174,8 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 You should see output similar to the following in the console for the GZIP and SNAPPY versions, respectively:
 #### GZIP
 ```
+Using GZIP decompression
+
 >>>>> Uncompressed File Test <<<<<
 Decompressing '../data/uncompressed.gz' 1 time
 Launching kernels for run 0
@@ -203,6 +216,8 @@ PASSED
 
 #### SNAPPY
 ```
+Using SNAPPY decompression
+
 >>>>> Only Literal Strings Test <<<<<
 Launching kernels for run 0
 All kernels finished for run 0

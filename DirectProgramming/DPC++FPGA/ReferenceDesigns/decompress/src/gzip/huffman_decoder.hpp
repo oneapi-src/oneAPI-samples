@@ -8,6 +8,7 @@
 
 // Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"
+#include "metaprogramming_utils.hpp"
 
 #include "byte_bit_stream.hpp"
 #include "../common/common.hpp"
@@ -91,6 +92,10 @@ void ParseSecondTable(BitStreamT& bit_stream,
 //
 template <typename InPipe, typename OutPipe>
 void HuffmanDecoder() {
+  // ensure the InPipe and OutPipe are SYCL pipes
+  static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
+  static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
+  
   using OutPipeBundleT = decltype(OutPipe::read());
 
   BitStreamT bit_stream;
@@ -184,7 +189,6 @@ void HuffmanDecoder() {
                                        dist_map_base_idx,
                                        dist_map);
     }
-
     // END: parsing the literal and distance tables (the second table)
     ////////////////////////////////////////////////////////////////////////////
 

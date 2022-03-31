@@ -13,21 +13,32 @@
 namespace fpga_tools {
 
 namespace detail {
+
+//
+// Helper to check if a SYCL pipe and pointer have the same base type
+//
+template <typename PipeT, typename PtrT>
+constexpr bool pipe_and_pointer_have_same_base_v =
+    std::is_same_v<std::decay_t<decltype(std::declval<PipeT>()[0])>,
+                   std::decay_t<decltype(std::declval<PtrT>()[0])>>;
+
 //
 // Streams data from 'in_ptr' into 'Pipe', 'elements_per_cycle' elements at a
 // time
 //
-template<typename Pipe, int elements_per_cycle, typename PtrT>
-void MemoryToPipeRemainder(PtrT in_ptr, size_t full_count, size_t remainder_count) {
+template <typename Pipe, int elements_per_cycle, typename PtrT>
+void MemoryToPipeRemainder(PtrT in_ptr, size_t full_count,
+                           size_t remainder_count) {
+  static_assert(fpga_tools::is_sycl_pipe_v<Pipe>);
   using PipeT = decltype(Pipe::read());
   static_assert(fpga_tools::has_subscript_v<PipeT>);
   static_assert(fpga_tools::has_subscript_v<PtrT>);
   static_assert(PipeT::size == elements_per_cycle);
-  static_assert(std::is_same_v<std::remove_reference_t<decltype(std::declval<PipeT>()[0])>, std::remove_const_t<std::remove_reference_t<decltype(std::declval<PtrT>()[0])>>>);
+  static_assert(pipe_and_pointer_have_same_base_v<PipeT, PtrT>);
 
   for (size_t i = 0; i < full_count; i++) {
     PipeT pipe_data;
-    #pragma unroll
+#pragma unroll
     for (int j = 0; j < elements_per_cycle; j++) {
       pipe_data[j] = in_ptr[i * elements_per_cycle + j];
     }
@@ -45,17 +56,18 @@ void MemoryToPipeRemainder(PtrT in_ptr, size_t full_count, size_t remainder_coun
 // Streams data from 'in_ptr' into 'Pipe', 'elements_per_cycle' elements at a
 // time with the guarantee that 'elements_per_cycle' is a multiple of 'count'
 //
-template<typename Pipe, int elements_per_cycle, typename PtrT>
+template <typename Pipe, int elements_per_cycle, typename PtrT>
 void MemoryToPipeNoRemainder(PtrT in_ptr, size_t count) {
+  static_assert(fpga_tools::is_sycl_pipe_v<Pipe>);
   using PipeT = decltype(Pipe::read());
   static_assert(fpga_tools::has_subscript_v<PipeT>);
   static_assert(fpga_tools::has_subscript_v<PtrT>);
   static_assert(PipeT::size == elements_per_cycle);
-  static_assert(std::is_same_v<std::remove_reference_t<decltype(std::declval<PipeT>()[0])>, std::remove_const_t<std::remove_reference_t<decltype(std::declval<PtrT>()[0])>>>);
+  static_assert(pipe_and_pointer_have_same_base_v<PipeT, PtrT>);
 
   for (size_t i = 0; i < count; i++) {
     PipeT pipe_data;
-    #pragma unroll
+#pragma unroll
     for (int j = 0; j < elements_per_cycle; j++) {
       pipe_data[j] = in_ptr[i * elements_per_cycle + j];
     }
@@ -67,17 +79,19 @@ void MemoryToPipeNoRemainder(PtrT in_ptr, size_t count) {
 // Streams data from 'Pipe' to 'out_ptr', 'elements_per_cycle' elements at a
 // time
 //
-template<typename Pipe, int elements_per_cycle, typename PtrT>
-void PipeToMemoryRemainder(PtrT out_ptr, size_t full_count, size_t remainder_count) {
+template <typename Pipe, int elements_per_cycle, typename PtrT>
+void PipeToMemoryRemainder(PtrT out_ptr, size_t full_count,
+                           size_t remainder_count) {
+  static_assert(fpga_tools::is_sycl_pipe_v<Pipe>);
   using PipeT = decltype(Pipe::read());
   static_assert(fpga_tools::has_subscript_v<PipeT>);
   static_assert(fpga_tools::has_subscript_v<PtrT>);
   static_assert(PipeT::size == elements_per_cycle);
-  static_assert(std::is_same_v<std::remove_reference_t<decltype(std::declval<PipeT>()[0])>, std::remove_const_t<std::remove_reference_t<decltype(std::declval<PtrT>()[0])>>>);
+  static_assert(pipe_and_pointer_have_same_base_v<PipeT, PtrT>);
 
   for (size_t i = 0; i < full_count; i++) {
     auto pipe_data = Pipe::read();
-    #pragma unroll
+#pragma unroll
     for (int j = 0; j < elements_per_cycle; j++) {
       out_ptr[i * elements_per_cycle + j] = pipe_data[j];
     }
@@ -93,17 +107,18 @@ void PipeToMemoryRemainder(PtrT out_ptr, size_t full_count, size_t remainder_cou
 // Streams data from 'Pipe' to 'out_ptr', 'elements_per_cycle' elements at a
 // time with the guarantee that 'elements_per_cycle' is a multiple of 'count'
 //
-template<typename Pipe, int elements_per_cycle, typename PtrT>
+template <typename Pipe, int elements_per_cycle, typename PtrT>
 void PipeToMemoryNoRemainder(PtrT out_ptr, size_t count) {
+  static_assert(fpga_tools::is_sycl_pipe_v<Pipe>);
   using PipeT = decltype(Pipe::read());
   static_assert(fpga_tools::has_subscript_v<PipeT>);
   static_assert(fpga_tools::has_subscript_v<PtrT>);
   static_assert(PipeT::size == elements_per_cycle);
-  static_assert(std::is_same_v<std::remove_reference_t<decltype(std::declval<PipeT>()[0])>, std::remove_const_t<std::remove_reference_t<decltype(std::declval<PtrT>()[0])>>>);
+  static_assert(pipe_and_pointer_have_same_base_v<PipeT, PtrT>);
 
   for (size_t i = 0; i < count; i++) {
     auto pipe_data = Pipe::read();
-    #pragma unroll
+#pragma unroll
     for (int j = 0; j < elements_per_cycle; j++) {
       out_ptr[i * elements_per_cycle + j] = pipe_data[j];
     }
@@ -115,11 +130,12 @@ void PipeToMemoryNoRemainder(PtrT out_ptr, size_t count) {
 //
 // Streams data from memory to a SYCL pipe 1 element a time
 //
-template<typename Pipe, typename PtrT>
+template <typename Pipe, typename PtrT>
 void MemoryToPipe(PtrT in_ptr, size_t count) {
+  static_assert(fpga_tools::is_sycl_pipe_v<Pipe>);
   using PipeT = decltype(Pipe::read());
   static_assert(fpga_tools::has_subscript_v<PtrT>);
-  static_assert(std::is_same_v<PipeT, std::remove_const_t<std::remove_reference_t<decltype(std::declval<PtrT>()[0])>>>);
+  static_assert(detail::pipe_and_pointer_have_same_base_v<PipeT, PtrT>);
 
   for (size_t i = 0; i < count; i++) {
     Pipe::write(in_ptr[i]);
@@ -129,7 +145,8 @@ void MemoryToPipe(PtrT in_ptr, size_t count) {
 //
 // Streams data from memory to a SYCL pipe 'elements_per_cycle' elements a time
 //
-template<typename Pipe, int elements_per_cycle, bool no_remainder, typename PtrT>
+template <typename Pipe, int elements_per_cycle, bool no_remainder,
+          typename PtrT>
 void MemoryToPipe(PtrT in_ptr, size_t count) {
   if constexpr (no_remainder) {
     // user promises there is not remainder
@@ -138,7 +155,8 @@ void MemoryToPipe(PtrT in_ptr, size_t count) {
     // might have a remainder and it was not specified, so calculate it
     auto full_count = (count / elements_per_cycle) * elements_per_cycle;
     auto remainder_count = count % elements_per_cycle;
-    detail::MemoryToPipeRemainder<Pipe, elements_per_cycle>(in_ptr, full_count, remainder_count);
+    detail::MemoryToPipeRemainder<Pipe, elements_per_cycle>(in_ptr, full_count,
+                                                            remainder_count);
   }
 }
 
@@ -146,25 +164,28 @@ void MemoryToPipe(PtrT in_ptr, size_t count) {
 // Streams data from memory to a SYCL pipe 'elements_per_cycle' elements a time
 // In this version, the user has specified a the amount of remainder
 //
-template<typename Pipe, int elements_per_cycle, bool no_remainder, typename PtrT>
+template <typename Pipe, int elements_per_cycle, bool no_remainder,
+          typename PtrT>
 void MemoryToPipe(PtrT in_ptr, size_t full_count, size_t remainder_count) {
   if constexpr (no_remainder) {
     // user promises there is not remainder
-    detail::MemoryToPipeNoRemainder<Pipe, elements_per_cycle>(in_ptr, full_count);
+    detail::MemoryToPipeNoRemainder<Pipe, elements_per_cycle>(in_ptr,
+                                                              full_count);
   } else {
     // might have a remainder that was specified by the user
-    detail::MemoryToPipeRemainder<Pipe, elements_per_cycle>(in_ptr, full_count, remainder_count);
+    detail::MemoryToPipeRemainder<Pipe, elements_per_cycle>(in_ptr, full_count,
+                                                            remainder_count);
   }
 }
 
 //
 // Streams data from a SYCL pipe to memory 1 element a time
 //
-template<typename Pipe, typename PtrT>
+template <typename Pipe, typename PtrT>
 void PipeToMemory(PtrT out_ptr, size_t count) {
   using PipeT = decltype(Pipe::read());
   static_assert(fpga_tools::has_subscript_v<PtrT>);
-  static_assert(std::is_same_v<PipeT, std::remove_const_t<std::remove_reference_t<decltype(std::declval<PtrT>()[0])>>>);
+  static_assert(detail::pipe_and_pointer_have_same_base_v<PipeT, PtrT>);
 
   for (size_t i = 0; i < count; i++) {
     out_ptr[i] = Pipe::read();
@@ -174,14 +195,16 @@ void PipeToMemory(PtrT out_ptr, size_t count) {
 //
 // Streams data from a SYCL pipe to memory 'elements_per_cycle' elements a time
 //
-template<typename Pipe, int elements_per_cycle, bool no_remainder, typename PtrT>
+template <typename Pipe, int elements_per_cycle, bool no_remainder,
+          typename PtrT>
 void PipeToMemory(PtrT out_ptr, size_t count) {
   if constexpr (no_remainder) {
     detail::PipeToMemoryNoRemainder<Pipe, elements_per_cycle>(out_ptr, count);
   } else {
     auto full_count = (count / elements_per_cycle) * elements_per_cycle;
     auto remainder_count = count % elements_per_cycle;
-    detail::PipeToMemoryRemainder<Pipe, elements_per_cycle>(out_ptr, full_count, remainder_count);
+    detail::PipeToMemoryRemainder<Pipe, elements_per_cycle>(out_ptr, full_count,
+                                                            remainder_count);
   }
 }
 
@@ -189,15 +212,18 @@ void PipeToMemory(PtrT out_ptr, size_t count) {
 // Streams data from a SYCL pipe to memory 'elements_per_cycle' elements a time
 // In this version, the user has specified a the amount of remainder
 //
-template<typename Pipe, int elements_per_cycle, bool no_remainder, typename PtrT>
+template <typename Pipe, int elements_per_cycle, bool no_remainder,
+          typename PtrT>
 void PipeToMemory(PtrT out_ptr, size_t full_count, size_t remainder_count) {
   if constexpr (no_remainder) {
-    detail::PipeToMemoryNoRemainder<Pipe, elements_per_cycle>(out_ptr, full_count);
+    detail::PipeToMemoryNoRemainder<Pipe, elements_per_cycle>(out_ptr,
+                                                              full_count);
   } else {
-    detail::PipeToMemoryRemainder<Pipe, elements_per_cycle>(out_ptr, full_count, remainder_count);
+    detail::PipeToMemoryRemainder<Pipe, elements_per_cycle>(out_ptr, full_count,
+                                                            remainder_count);
   }
 }
 
-} // namespace fpga_tools
+}  // namespace fpga_tools
 
 #endif /* __MEMORY_UTILS_HPP__ */

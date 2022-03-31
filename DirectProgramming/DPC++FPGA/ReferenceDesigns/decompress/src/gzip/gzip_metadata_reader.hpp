@@ -8,6 +8,7 @@
 
 // Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"
+#include "metaprogramming_utils.hpp"
 
 #include "../common/common.hpp"
 #include "gzip_header_data.hpp"
@@ -20,6 +21,10 @@
 template <typename InPipe, typename OutPipe>
 void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
                         int& out_count) {
+  // ensure the InPipe and OutPipe are SYCL pipes
+  static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
+  static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
+
   // the data type streamed out
   using OutPipeBundleT = decltype(OutPipe::read());
 

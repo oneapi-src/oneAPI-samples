@@ -8,6 +8,7 @@
 
 // Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"
+#include "metaprogramming_utils.hpp"
 // clang-format on
 
 //
@@ -18,6 +19,10 @@
 //
 template <typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 void ByteStacker() {
+  // ensure the InPipe and OutPipe are SYCL pipes
+  static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
+  static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
+  
   using OutPipeBundleT = decltype(OutPipe::read());
   constexpr int cache_idx_bits = fpga_tools::Log2(literals_per_cycle * 2) + 1;
 

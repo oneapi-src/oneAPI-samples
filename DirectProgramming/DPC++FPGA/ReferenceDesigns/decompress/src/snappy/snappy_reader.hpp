@@ -8,6 +8,7 @@
 
 // Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"
+#include "metaprogramming_utils.hpp"
 
 #include "byte_stream.hpp"
 // clang-format on
@@ -19,6 +20,10 @@
 //
 template <typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 unsigned SnappyReader(unsigned in_count) {
+  // ensure the InPipe and OutPipe are SYCL pipes
+  static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
+  static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
+
   // the type written to the output pipe
   using OutPipeBundleT = decltype(OutPipe::read());
 
