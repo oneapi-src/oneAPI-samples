@@ -30,11 +30,19 @@ An `ac_fixed` number can be defined as follows:
 ```cpp
 ac_fixed<W, I, S> a;
 ```
-Here `W` specifies the width in bits and `S` is a bool indicating if the number is signed. Signed numbers use the most significant bit (MSB) of the `W` bits to store the sign bit. The second parameter `I` is an integer that specifies the location of the fixed point relative to the MSB.
+Here `W` specifies the width in bits and `S` is a bool indicating if the number is signed. Signed numbers use the most significant bit (MSB) of the `W` bits to store the sign bit. The second parameter `I` is an integer that specifies the location of the fixed point relative to the MSB. Here are some examples of the range and quantum of `ac_fixed` numbers.
+
+```cpp
+ac_fixed<4,4,true> x; // xxxx. : range = [-8, 7], quantum = 1
+ac_fixed<4,0,true> x; // .xxxx : range = [-8/16, 7/16], quantum = 1/16
+ac_fixed<4,0,false> x; // .xxxx : range = [0, 15/16], quantum = 1/16
+ac_fixed<4,7,false> x; // xxxx000. : range = [0, 120], quantum = 8
+ac_fixed<4,-3,true> x; // (.xxxx)2^(-3) : range=[-1/16, 7/128], quantum = 1/128
+```
 
 The `ac_fixed` class also provides two more optional parameters for controlling the overflow and rounding modes. 
 
-For more details on the `ac_fixed` class, refer to the documentation provided with the installation at `%INSTALL_DIR%/include/sycl/ext/intel/ac_types/ac_datatypes_ref.pdf`.
+For more details on the `ac_fixed` class, please refer to the documentation provided with the installation at `%INSTALL_DIR%/include/sycl/ext/intel/ac_types/ac_datatypes_ref.pdf`.
 
 To use an `ac_fixed` type in your code, you must include the following header:
 
