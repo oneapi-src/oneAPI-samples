@@ -57,7 +57,7 @@ void TestConstructFromACFixed(queue &q,
   });
 }
 
-void TestCalculateWithFloat(queue &q, const float x, float &ret) {
+void TestCalculateWithFloat(queue &q, const float& x, float &ret) {
   buffer<float, 1> inp_buffer(&x, 1);
   buffer<float, 1> ret_buffer(&ret, 1);
 
