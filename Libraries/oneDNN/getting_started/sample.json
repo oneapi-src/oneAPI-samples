@@ -6,7 +6,7 @@
  "toolchain": ["dpcpp"],
  "languages": [{"cpp":{}}],
  "dependencies": ["dnnl", "tbb"],
- "os": ["linux","windows"],
+ "os": ["linux"],
  "builder": ["cli","cmake"],
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
@@ -20,32 +20,6 @@
            		"make getting-started-cpp",
 			"SYCL_BE=PI_OPENCL ./bin/getting-started-cpp gpu"
 		 ]
-	}],
-	"windows": [
-	    {
-		"id": "gsg cpu",
-		"steps": [
-			"set CC=icx",
-			"set CXX=dpcpp",
-			"mkdir build_cpu",
-                        "cd build_cpu",
-                        "cmake -G Ninja .. -DDNNL_CPU_RUNTIME=DPCPP -DDNNL_GPU_RUNTIME=DPCPP",
-                        "cmake --build .",
-                        "bin\\getting-started-cpp.exe"
-		 ]
-	    },
-	    {
-		"id": "gsg gpu",
-		"steps": [
-			"set CC=icx",
-			"set CXX=dpcpp",
-			"mkdir build_gpu",
-                        "cd build_gpu",
-                        "cmake -G Ninja .. -DDNNL_CPU_RUNTIME=DPCPP -DDNNL_GPU_RUNTIME=DPCPP",
-                        "cmake --build .",
-                        "bin\\getting-started-cpp.exe gpu"
-		 ]
-	    }
-	]
+	}]
  }
 }
