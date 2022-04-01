@@ -17,7 +17,7 @@ event Consume(queue& q, ValueT* out_ptr, IndexT total_count, IndexT offset,
   // the number of loop iterations required to consume all of the data
   const IndexT iterations = total_count / k_width;
 
-  return q.single_task<Id>([=]() [[intel::kernel_args_restrict]] {
+  return q.single_task<Id>([=] {
     // Pointer to the output data.
     // Creating a device_ptr tells the compiler that this pointer is in
     // device memory, not host memory, and avoids creating extra connections

@@ -182,17 +182,6 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   const IndexT iterations =
     fpga_tools::Log2(count_per_unit) - fpga_tools::Log2(k_width);
 
-  // store the various merge unit and merge tree kernel events
-  std::array<std::vector<event>, units> produce_a_events, produce_b_events,
-      merge_events, consume_events;
-  std::array<std::vector<event>, kReductionLevels> mt_merge_events;
-  for (size_t i = 0; i < units; i++) {
-    produce_a_events[i].resize(iterations);
-    produce_b_events[i].resize(iterations);
-    merge_events[i].resize(iterations);
-    consume_events[i].resize(iterations);
-  }
-
   // launch the sorting network kernel that performs the first log2(k_width)
   // iterations of the sort. For example, if k_width=4, the sorting network
   // sorts 4 elements per cycle, in the steady state. This means we need
@@ -206,6 +195,14 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // start with inputs of size 'k_width' since the data from the input pipe
   // was sent through a sorting network that sorted sublists of size 'k_width'.
   IndexT in_count = k_width;
+
+  // the double buffered set of kernel events to wait on
+  // instead of launching a ton of kernels to the queue, this limits the number
+  // of kernels in the queue at once to at most 4 * units
+  std::array<event, units * 4> merge_unit_events[2];
+
+  // for the first iteration, just wait on the sorting network to finish
+  merge_unit_events[0][0] = sort_network_event;
 
   // perform the sort iterations for each merge unit
   for (size_t i = 0; i < iterations; i++) {
@@ -226,20 +223,10 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
           std::conditional_t<(units == 1), OutPipe,
                              typename InternalOutPipes::template PipeAt<u>>;
 
-      // build the dependency event vector
-      std::vector<event> wait_events;
-      if (i == 0) {
-        // on the first iteration, wait for sorting network kernel to be done so
-        // that all of the data is in the temp buffers in device memory
-        wait_events.push_back(sort_network_event);
-      } else {
-        // on all iterations (except the first), Produce kernels for the
-        // current iteration must wait for the Consume kernels to be done
-        // writing to device memory from the previous iteration.
-        // This is coarse grain synchronization between the Produce and Consume
-        // kernels of each merge unit.
-        wait_events.push_back(consume_events[u][i - 1]);
-      }
+      // wait for kernels currently running to finish
+      // NOTE: we use double buffering here, so at this point we already have
+      // a set of kernels in the queue ready to launch.
+      for (auto& e : merge_unit_events[i % 2]) { e.wait(); }
 
       // the temporary device buffers reside in a single device allocation,
       // so compute the offset into the buffer for each merge unit.
@@ -252,21 +239,23 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
       ////////////////////////////////////////////////////////////////////////
       // Enqueue the merge unit kernels
       // Produce A
-      produce_a_events[u][i] =
+      merge_unit_events[(i + 1) % 2][u * 4] =
         SubmitProduceA(q, in_buf, half_count_per_unit, in_count,
-                       unit_buf_offset, wait_events);
+                       unit_buf_offset);
 
       // Produce B
-      produce_b_events[u][i] =
+      merge_unit_events[(i + 1) % 2][u * 4 + 1] =
           SubmitProduceB(q, in_buf, half_count_per_unit, in_count,
-                         unit_buf_offset + half_count_per_unit, wait_events);
+                         unit_buf_offset + half_count_per_unit);
 
       // Merge
-      merge_events[u][i] = SubmitMerge(q, count_per_unit, in_count, comp);
+      merge_unit_events[(i + 1) % 2][u * 4 + 2] =
+          SubmitMerge(q, count_per_unit, in_count, comp);
 
       // Consume
-      consume_events[u][i] = SubmitConsume(q, out_buf, count_per_unit,
-                                           unit_buf_offset, consumer_to_pipe);
+      merge_unit_events[(i + 1) % 2][u * 4 + 3] =
+          SubmitConsume(q, out_buf, count_per_unit, unit_buf_offset,
+                        consumer_to_pipe);
       ////////////////////////////////////////////////////////////////////////
     });
     ////////////////////////////////////////////////////////////////////////
@@ -291,6 +280,9 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   using InternalMTPipes =
     fpga_tools::PipeArray<InternalMergeTreePipeID, PipeType, kDefPipeDepth,
                           kReductionLevels, units>;
+
+  // the kernel events from the merge tree
+  std::array<std::vector<event>, kReductionLevels> mt_merge_events;
 
   // create the merge tree connected by pipes to merge the sorted output
   // of each merge unit into a single sorted output. The output of the last
@@ -361,15 +353,9 @@ std::vector<event> SubmitMergeSort(queue& q, size_t count, ValueT* buf_0,
   // add event from the sorting network stage
   ret.push_back(sort_network_event);
 
-  // add each merge unit's sorting events
-  for (size_t u = 0; u < units; u++) {
-    ret.insert(ret.end(), produce_a_events[u].begin(),
-               produce_a_events[u].end());
-    ret.insert(ret.end(), produce_b_events[u].begin(),
-               produce_b_events[u].end());
-    ret.insert(ret.end(), merge_events[u].begin(), merge_events[u].end());
-    ret.insert(ret.end(), consume_events[u].begin(), consume_events[u].end());
-  }
+  // add the last set of merge sort events
+  ret.insert(ret.end(), merge_unit_events[iterations % 2].begin(),
+             merge_unit_events[iterations % 2].end());
 
   // add the merge tree kernel events
   for (size_t level = 0; level < kReductionLevels; level++) {
