@@ -1,6 +1,7 @@
 #ifndef __MEMORY_TRANSFERS_HPP__
 #define __MEMORY_TRANSFERS_HPP__
 
+// Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
@@ -9,7 +10,7 @@
   Read matrix_count matrices of type TT from DDR by bursts of num_elem_per_bank
   elements, and write the matrices to the "MatrixPipe" pipe num_elem_per_bank by
   num_elem_per_bank elements.
-  Repeat this operations "repetitions" times.
+  Repeat these operations "repetitions" times.
 */
 template <typename TT,            // Datatype of the elements of the matrix
           int rows,               // Number of rows of the matrix

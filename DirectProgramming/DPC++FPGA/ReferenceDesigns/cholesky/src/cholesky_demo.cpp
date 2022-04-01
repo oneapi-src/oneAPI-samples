@@ -13,7 +13,7 @@
 // #define DEBUG
 
 /*
-  COMPLEX, COLS_COMPONENT, ROWS_COMPONENT and FIXED_ITERATIONS are defined
+  COMPLEX, MATRIX_DIMENSION and FIXED_ITERATIONS are defined
   by the build system.
   Depending on the value of COMPLEX, the real or complex Cholesky decomposition
   is defined (A = LL*)
@@ -32,7 +32,7 @@ template<typename T, bool is_complex>
 void CholeskyDecomposition(std::vector<T> &a_matrix,
                            std::vector<T> &l_matrix, sycl::queue &q,
                            int matrix_count, int repetitions) {
-  CholeskyDecompositionImpl<COLS_COMPONENT, ROWS_COMPONENT, FIXED_ITERATIONS,
+  CholeskyDecompositionImpl<MATRIX_DIMENSION, FIXED_ITERATIONS,
                             is_complex, float>(a_matrix, l_matrix, q,
                                                matrix_count, repetitions);
 }
@@ -60,8 +60,8 @@ float RandomValueInInterval(float min, float max) {
 
 int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
-  constexpr size_t kRows = ROWS_COMPONENT;
-  constexpr size_t kColumns = COLS_COMPONENT;
+  constexpr size_t kRows = MATRIX_DIMENSION;
+  constexpr size_t kColumns = MATRIX_DIMENSION;
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kLMatrixSize = (kColumns * (kColumns + 1)) / 2;
   constexpr bool kComplex = COMPLEX != 0;

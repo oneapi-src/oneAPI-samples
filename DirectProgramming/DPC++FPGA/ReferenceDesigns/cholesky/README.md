@@ -30,16 +30,16 @@ Please refer to the performance disclaimer at the end of this README.
 
 ## Purpose
 
-This FPGA reference design demonstrates the use of the Cholesky decomposition header library, a common operation employed in linear algebra.
+This FPGA reference design demonstrates Cholesky decomposition, a common operation employed in linear algebra, through use of the streaming_cholesky.hpp header library.
 The Cholesky decomposition takes a hermitian, positive-definite matrix _A_ (input) and computes the lower triangular matrix _L_ such that: _L_ * _L*_ = A, where _L*_ in the conjugate transpose of _L_.
-The algorithms employed by the header library is an FPGA throughput optimized version of the Cholesky–Banachiewicz algorithm. Background information on the Cholesky decomposition and this algorithm can be found in Wikipedia's [Cholesky decomposition](https://https://en.wikipedia.org/wiki/Cholesky_decomposition) article. 
+The algorithm employed by the header library is an FPGA throughput optimized version of the Cholesky–Banachiewicz algorithm. Background information on the Cholesky decomposition and this algorithm can be found in Wikipedia's [Cholesky decomposition](https://https://en.wikipedia.org/wiki/Cholesky_decomposition) article. 
 
 The Cholesky decomposition is used extensively in machine learning applications such as least-squares regressions and Monte-Carlo simulations.
 
 
 ### Matrix dimensions and FPGA resources
 
-The Cholesky decomposition algorithm factors a real _n_ × _n_ matrix. The algorithm computes the vector dot product of two rows of the matrix. In our FPGA implementation, the dot product is computed in a loop over the row's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *n* real multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result.
+In this reference design, the Cholesky decomposition algorithm is used to factor a real _n_ × _n_ matrix. The algorithm computes the vector dot product of two rows of the matrix. In our FPGA implementation, the dot product is computed in a loop over the row's _n_ elements. The loop is fully unrolled to maximize throughput. As a result, *n* real multiplication operations are performed in parallel on the FPGA, followed by sequential additions to compute the dot product result.
 
 We use the compiler flag `-fp-relaxed`, which permits the compiler to reorder floating point additions (i.e. to assume that floating point addition is commutative). The compiler uses this freedom to reorder the additions so that the dot product arithmetic can be optimally implemented using the FPGA's specialized floating point DSP (Digital Signal Processing) hardware.
 
@@ -61,11 +61,11 @@ To optimize the performance-critical loop in its algorithm, the design leverages
 
  The key optimization techniques used are as follows:
    1. Traversing the matrix in a column fashion to increase the read-after-write (RAW) loop iteration distance 
-   2. Using two copies of the compute matrix in order to be able to read two full rows per cycle
+   2. Using two copies of the compute matrix in order to be able to read a full row and a full column per cycle
    3. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
    4. Fully vectorizing the dot products using loop unrolling.
    5. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialised dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
-   6. Using an efficient memory banking scheme to generate high performance hardware.
+   6. Using an efficient memory banking scheme to generate high performance hardware (all local memories are single-read, single-write).
    7. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
 
 ## License
@@ -185,12 +185,9 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
 * Repeats the operation multiple times (specified as the command line argument) to evaluate performance.
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
- Increase the amount of memory that the emulator runtime is permitted to allocate by setting the CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE environment variable before running the executable.
      ```
-     export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      ./cholesky.fpga_emu           (Linux)
 
-     set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
      cholesky.fpga_emu.exe         (Windows)
      ```
 
@@ -234,21 +231,30 @@ PASSED
 
 ## Additional Design Information
 
+### Source Code Breakdown
+The following source files can be found in the `src/` sub-directory. 
+
+| File                                | Description
+|:---                                 |:---
+|`cholesky_demo.cpp`                  | Contains the `main()` function which generates the input matrices, calls the compute function and validates the results.
+|                                     |
+|`cholesky.hpp`                       | Contains the compute function that calls the kernels.
+|`memory_transfers.hpp`               | Contains functions to transfer matrices from/to the FPGA DDR with streaming interfaces.
+
 ### Compiler Flags Used
 
 | Flag | Description
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
-`-Xsclock=360MHz` | The FPGA backend attempts to achieve 360 MHz
+`-Xsclock=<target fmax>MHz` | The FPGA backend attempts to achieve <target fmax> MHz
 `-Xsfp-relaxed` | Allows the FPGA backend to re-order floating point arithmetic operations (e.g. permit assuming (a + b + c) == (c + a + b) )
 `-Xsparallel=2` | Use 2 cores when compiling the bitstream through Quartus
 `-Xsseed` | Specifies the Quartus compile seed, to potentially yield slightly higher fmax
-`-DROWS_COMPONENT` | Specifies the number of rows of the matrix
-`-DCOLS_COMPONENT` | Specifies the number of columns of the matrix
+`-DMATRIX_DIMENSION` | Specifies the number of rows/columns of the matrix
 `-DFIXED_ITERATIONS` | Used to set the ivdep safelen attribute for the performance critical triangular loop
 `-DCOMPLEX` | Used to select between the complex and real QR decomposition (real is the default)
 
-NOTE: The values for `seed`, `FIXED_ITERATIONS`, `ROWS_COMPONENT`, `COLS_COMPONENT` are set according to the board being targeted.
+NOTE: The values for `seed`, `FIXED_ITERATIONS`, `MATRIX_DIMENSION`, `COMPLEX` are set according to the board being targeted.
 
 ### Performance disclaimers
 

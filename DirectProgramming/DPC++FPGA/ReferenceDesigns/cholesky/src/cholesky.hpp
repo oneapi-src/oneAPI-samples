@@ -11,7 +11,9 @@
 #include <vector>
 
 #include "memory_transfers.hpp"
-#include "streaming_cholesky.hpp"
+
+// Included from DirectProgramming/DPC++FPGA/include/
+#include "streaming_cholesky.hpp" 
 #include "tuple.hpp"
 
 // Forward declare the kernel and pipe names
@@ -28,8 +30,7 @@ class RPipe;
   Can be configured by datatype, matrix size (must use square matrices), real
   and complex.
 */
-template <unsigned columns,      // Number of columns in the input matrix
-          unsigned rows,         // Number of rows in the input matrix
+template <unsigned dimension,    // Number of dimension/rows in the input matrix
           unsigned raw_latency,  // RAW latency for triangular loop optimization
           bool is_complex,       // Selects between ac_complex<T> and T datatype
           typename T,            // The datatype for the computation
@@ -44,8 +45,8 @@ void CholeskyDecompositionImpl(
     int repetitions             // Number of repetitions, for performance
                                 // evaluation
 ) {
-  constexpr int kAMatrixSize = columns * rows;
-  constexpr int kLMatrixSize = columns * (columns + 1) / 2;
+  constexpr int kAMatrixSize = dimension * dimension;
+  constexpr int kLMatrixSize = dimension * (dimension + 1) / 2;
   constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
 
   using PipeType = fpga_tools::NTuple<TT, kNumElementsPerDDRBurst>;
@@ -72,14 +73,14 @@ void CholeskyDecompositionImpl(
   // Launch a kernel that will repeatedly read the matrices on the FPGA DDR
   // and write their content to the AMatrixPipe pipe.
   auto ddr_read_event = q.single_task<CholeskyDDRToLocalMem>([=] {
-    MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
+    MatrixReadFromDDRToPipe<TT, dimension, dimension, kNumElementsPerDDRBurst,
                             AMatrixPipe>(a_device, matrix_count, repetitions);
   });
 
   // Read the A matrix from the AMatrixPipe pipe and compute the Cholesky
   // decomposition. Write the L output matrix to the LMatrixPipe pipe.
   q.single_task<Cholesky>(
-      fpga_linalg::StreamingCholesky<T, is_complex, rows, raw_latency,
+      fpga_linalg::StreamingCholesky<T, is_complex, dimension, raw_latency,
                         kNumElementsPerDDRBurst, AMatrixPipe, LMatrixPipe>());
 
   auto ddr_write_event =

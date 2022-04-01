@@ -27,24 +27,21 @@ endif()
 # Set design parameters according to the selected board
 if(FPGA_BOARD MATCHES ".*a10.*")
     # A10 parameters
-    set(ROWS_COMPONENT 32)
-    set(COLS_COMPONENT 32)
+    set(MATRIX_DIMENSION 32)
     set(COMPLEX 0)
     set(FIXED_ITERATIONS 39)
     set(CLOCK_TARGET 360MHz)
     set(SEED "-Xsseed=29")
 elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
-    set(ROWS_COMPONENT 32)
-    set(COLS_COMPONENT 32)
+    set(MATRIX_DIMENSION 32)
     set(COMPLEX 0)
     set(FIXED_ITERATIONS 44)
     set(CLOCK_TARGET 450MHz)
     set(SEED "-Xsseed=5")
 elseif(FPGA_BOARD MATCHES ".*agilex.*")
     # Agilex™ parameters
-    set(ROWS_COMPONENT 32)
-    set(COLS_COMPONENT 32)
+    set(MATRIX_DIMENSION 32)
     set(FIXED_ITERATIONS 45)
     set(COMPLEX 0)
     set(CLOCK_TARGET 600MHz)
@@ -57,9 +54,8 @@ if(IGNORE_DEFAULT_SEED)
     set(SEED "")
 endif()
 
-if(DEFINED ENV{ROWS_COMPONENT} AND DEFINED ENV{COLS_COMPONENT})
-    set(ROWS_COMPONENT $ENV{ROWS_COMPONENT})
-    set(COLS_COMPONENT $ENV{COLS_COMPONENT})
+if(DEFINED ENV{MATRIX_DIMENSION})
+    set(MATRIX_DIMENSION $ENV{MATRIX_DIMENSION})
 endif()
 
 if(DEFINED ENV{COMPLEX})
@@ -70,8 +66,7 @@ if(DEFINED ENV{FIXED_ITERATIONS})
     set(FIXED_ITERATIONS $ENV{FIXED_ITERATIONS})
 endif()
 
-message(STATUS "ROWS_COMPONENT=${ROWS_COMPONENT}")
-message(STATUS "COLS_COMPONENT=${COLS_COMPONENT}")
+message(STATUS "MATRIX_DIMENSION=${MATRIX_DIMENSION}")
 message(STATUS "COMPLEX=${COMPLEX}")
 message(STATUS "FIXED_ITERATIONS=${FIXED_ITERATIONS}")
 message(STATUS "SEED=${SEED}")
@@ -80,9 +75,9 @@ message(STATUS "SEED=${SEED}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fp-model=precise -Xsfp-relaxed")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -fp-model=precise -Xsfp-relaxed")
 set(HARDWARE_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
