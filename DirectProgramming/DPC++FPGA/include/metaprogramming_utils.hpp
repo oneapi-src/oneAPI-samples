@@ -115,7 +115,7 @@ template <typename T>
 inline constexpr bool has_subscript_v = has_subscript<T>::value;
 
 //
-// checks if a type is a SYCL pipe
+// checks if a type is any instance of SYCL pipe
 //
 namespace detail {
 

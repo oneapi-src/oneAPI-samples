@@ -1,5 +1,5 @@
 # Decompression
-This DPC++ reference design implements both GZIP and Snappy decompression on an FPGA.
+This DPC++ reference design can be compiled to implement either GZIP or Snappy decompression on an FPGA.
 
 ***Documentation***:
 * [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
@@ -217,6 +217,11 @@ PASSED
 #### SNAPPY
 ```
 Using SNAPPY decompression
+
+>>>>> Alice In Wonderland Test <<<<<
+Launching kernels for run 0
+All kernels finished for run 0
+>>>>> Alice In Wonderland Test: PASSED <<<<<
 
 >>>>> Only Literal Strings Test <<<<<
 Launching kernels for run 0

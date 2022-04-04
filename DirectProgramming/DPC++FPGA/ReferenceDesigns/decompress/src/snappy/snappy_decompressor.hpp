@@ -5,7 +5,7 @@
 #include <chrono>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/
@@ -54,8 +54,8 @@ std::vector<sycl::event> SubmitSnappyDecompressKernels(
 
     auto lz77_event =
         SubmitLZ77Decoder<LZ77DecoderKernelID, SnappyReaderToLZ77Pipe,
-                          LZ77ToByteStackerPipe, kSnappyMaxLZ77Distance,
-                          literals_per_cycle>(q);
+                          LZ77ToByteStackerPipe, literals_per_cycle,
+                          kSnappyMaxLZ77Distance, kSnappyMaxLZ77Length>(q);
     auto byte_stacker_event =
         SubmitByteStacker<ByteStackerKernelID, LZ77ToByteStackerPipe, OutPipe,
                           literals_per_cycle>(q);
@@ -64,7 +64,8 @@ std::vector<sycl::event> SubmitSnappyDecompressKernels(
   } else {
     auto lz77_event =
         SubmitLZ77Decoder<LZ77DecoderKernelID, SnappyReaderToLZ77Pipe, OutPipe,
-                          kSnappyMaxLZ77Distance, literals_per_cycle>(q);
+                          literals_per_cycle, kSnappyMaxLZ77Distance,
+                          kSnappyMaxLZ77Length>(q);
     return {snappy_reader_event, lz77_event};
   }
 }

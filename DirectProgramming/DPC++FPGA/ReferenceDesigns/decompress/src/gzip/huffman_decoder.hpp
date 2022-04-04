@@ -3,7 +3,7 @@
 
 // clang-format off
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/
@@ -96,7 +96,13 @@ void HuffmanDecoder() {
   static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
   static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
   
+  // make sure the input and output types are correct
+  using InPipeBundleT = decltype(InPipe::read());
   using OutPipeBundleT = decltype(OutPipe::read());
+  
+  // make sure the input and output types are correct
+  static_assert(std::is_same_v<InPipeBundleT, FlagBundle<ByteSet<1>>>);
+  static_assert(std::is_same_v<OutPipeBundleT, FlagBundle<GzipLZ77InputData>>);
 
   BitStreamT bit_stream;
   bool last_block = false;
@@ -208,7 +214,7 @@ void HuffmanDecoder() {
     bool out_ready = false;
 
     // the output of this kernel goes to the LZ77 decoder
-    GzipLZ77InputData<2> out_data;
+    GzipLZ77InputData out_data;
 
     // for uncompressed blocks, the first 16 bits (after aligning to a byte)
     // is the length (in bytes) of the uncompressed data, followed by 16-bits

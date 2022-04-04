@@ -3,7 +3,7 @@
 
 // clang-format off
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/
@@ -24,8 +24,13 @@ unsigned SnappyReader(unsigned in_count) {
   static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
   static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
 
-  // the type written to the output pipe
+  // the input and output pipe data types
+  using InPipeBundleT = decltype(InPipe::read());
   using OutPipeBundleT = decltype(OutPipe::read());
+
+  // make sure the input and output types are correct
+  static_assert(std::is_same_v<InPipeBundleT, ByteSet<literals_per_cycle>>);
+  static_assert(std::is_same_v<OutPipeBundleT, FlagBundle<SnappyLZ77InputData<literals_per_cycle>>>);
 
   // the number of bits to count to 'literals_per_cycle'
   constexpr unsigned literals_per_cycle_bits =

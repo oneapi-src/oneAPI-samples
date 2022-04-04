@@ -3,7 +3,7 @@
 
 // clang-format off
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/

@@ -3,7 +3,7 @@
 
 // clang-format off
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/
@@ -50,7 +50,7 @@ class ByteStream {
   //
   // write in 'write_n' new bytes
   //
-  template <int write_n>
+  template <size_t write_n>
   void Write(const ByteSet<write_n>& b) {
     static_assert(write_n < num_bytes);
 #pragma unroll
@@ -64,7 +64,7 @@ class ByteStream {
   //
   // write in 'write_n' new bytes
   //
-  template <int write_n>
+  template <size_t write_n>
   void Write(const BytePack<write_n>& b) {
     static_assert(write_n < num_bytes);
 #pragma unroll

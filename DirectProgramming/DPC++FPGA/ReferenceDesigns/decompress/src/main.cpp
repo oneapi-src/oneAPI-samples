@@ -57,11 +57,12 @@ static_assert(fpga_tools::IsPow2(kLiteralsPerCycle));
 #if defined(GZIP)
 using GzipDecompressorT = GzipDecompressor<kLiteralsPerCycle>;
 bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
-                 std::string test_dir);
+                 const std::string test_dir);
 constexpr std::string_view kDecompressorName = "GZIP";
 #else
 using SnappyDecompressorT = SnappyDecompressor<kLiteralsPerCycle>;
-bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor);
+bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
+                   const std::string test_dir);
 constexpr std::string_view kDecompressorName = "SNAPPY";
 #endif
 
@@ -149,7 +150,7 @@ int main(int argc, char* argv[]) {
 #if defined(GZIP)
     passed = RunGzipTest(q, decompressor, test_dir);
 #else
-    passed = RunSnappyTest(q, decompressor);
+    passed = RunSnappyTest(q, decompressor, test_dir);
 #endif
   } else {
     // decompress a specific file specified at the command line
@@ -178,7 +179,7 @@ void PrintTestResults(std::string test_name, bool passed) {
 
 #if defined(GZIP)
 bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
-                 std::string test_dir) {
+                 const std::string test_dir) {
   // the name of the files for the default test are fixed
   std::string uncompressed_filename = test_dir + "/uncompressed.gz";
   std::string static_compress_filename = test_dir + "/static_compressed.gz";
@@ -216,7 +217,21 @@ bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
 #endif
 
 #if defined(SNAPPY)
-bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor) {
+bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
+                   const std::string test_dir) {
+  std::cout << ">>>>> Alice In Wonderland Test <<<<<" << std::endl;
+  std::string alice_in_file = test_dir + "/alice29.txt.sz";
+  auto in_bytes = ReadInputFile(alice_in_file);
+  auto result = decompressor.DecompressBytes(q, in_bytes, 1, false);
+
+  std::string alice_ref_file = test_dir + "/alice29.ref.txt";
+  auto ref_bytes = ReadInputFile(alice_ref_file);
+  bool alice_test_pass =
+      (result != std::nullopt) && (result.value() == ref_bytes);
+
+  PrintTestResults("Alice In Wonderland Test", alice_test_pass);
+  std::cout << std::endl;
+
   std::cout << ">>>>> Only Literal Strings Test <<<<<" << std::endl;
   auto test1_bytes = GenerateSnappyCompressedData(333, 3, 0, 0, 3);
   auto test1_ret = decompressor.DecompressBytes(q, test1_bytes, 1, false);

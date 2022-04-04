@@ -3,7 +3,7 @@
 
 // clang-format off
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/
@@ -19,11 +19,34 @@
 //
 template <typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 void ByteStacker() {
-  // ensure the InPipe and OutPipe are SYCL pipes
+  // check that the input and output pipe types are actually pipes
   static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
   static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
-  
+
+  // literals_per_cycle must be greater than 0
+  static_assert(literals_per_cycle > 0);
+
+  // input type rules:
+  //  must have a member named 'flag' which is a boolean
+  //  must have a member named 'data' which has a subscript operator and a
+  //  member named 'valid_count'
+  using InPipeBundleT = decltype(InPipe::read());
+  static_assert(has_flag_bool_v<InPipeBundleT>);
+  static_assert(has_data_member_v<InPipeBundleT>);
+  using InDataT = decltype(std::declval<InPipeBundleT>().data);
+  static_assert(fpga_tools::has_subscript_v<InDataT>);
+  static_assert(has_valid_count_member_v<InDataT>);
+
+  // output type rules:
+  //  same as input data
   using OutPipeBundleT = decltype(OutPipe::read());
+  static_assert(has_flag_bool_v<OutPipeBundleT>);
+  static_assert(has_data_member_v<OutPipeBundleT>);
+  using OutDataT = decltype(std::declval<OutPipeBundleT>().data);
+  static_assert(fpga_tools::has_subscript_v<OutDataT>);
+  static_assert(has_valid_count_member_v<OutDataT>);
+
+  // the number of bits needed to count from 0 to 
   constexpr int cache_idx_bits = fpga_tools::Log2(literals_per_cycle * 2) + 1;
 
   // cache up to literals_per_cycle * 2 elements so that we can always

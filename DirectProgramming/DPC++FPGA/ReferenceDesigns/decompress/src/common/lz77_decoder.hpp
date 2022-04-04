@@ -3,7 +3,7 @@
 
 // clang-format off
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/
@@ -24,14 +24,14 @@
 // function reads 'literals_per_cycle' elements from the history buffer per
 // cycle and writes them to the output.
 //
-template <typename InPipe, typename OutPipe, size_t max_history,
-          unsigned literals_per_cycle>
+template <typename InPipe, typename OutPipe, size_t literals_per_cycle, size_t max_distance>
 void LZ77DecoderMultiElement() {
-  using OutPipeBundleT = FlagBundle<BytePack<literals_per_cycle>>;
+  using OutPipeBundleT = decltype(OutPipe::read());
+  using OutDataT = decltype(std::declval<OutPipeBundleT>().data);
 
   // we will cyclically partition the history to 'literals_per_cycle' buffers,
   // so each buffer gets this many elements
-  constexpr size_t history_buffer_count = max_history / literals_per_cycle;
+  constexpr size_t history_buffer_count = max_distance / literals_per_cycle;
 
   // number of bits to count from 0 to literals_per_cycle-1
   constexpr size_t history_buffer_buffer_idx_bits =
@@ -118,7 +118,7 @@ void LZ77DecoderMultiElement() {
   [[intel::ivdep(kCacheDepth)]]  // NO-FORMAT: Attribute
   while (!done) {
     bool data_valid = true;
-    BytePack<literals_per_cycle> out_data;
+    OutDataT out_data;
 
     if (!reading_history) {
       // if we aren't currently reading from the history buffers,
@@ -132,9 +132,13 @@ void LZ77DecoderMultiElement() {
       unsigned short dist = pipe_data.data.distance;
 
       // for the case of literal(s), we will simply write it to the output
+      // get the specific LZ77InputData type to see how many literals can come
+      // in the input at once and that it is less than literals_per_cycle
+      using InputLZ77DataT = decltype(pipe_data.data);
+      static_assert(InputLZ77DataT::max_literals <= literals_per_cycle);
 #pragma unroll
-      for (int i = 0; i < decltype(pipe_data.data)::max_literals; i++) {
-        out_data.byte[i] = pipe_data.data.literal[i];
+      for (int i = 0; i < InputLZ77DataT::max_literals; i++) {
+        out_data[i] = pipe_data.data.literal[i];
       }
       out_data.valid_count = pipe_data.data.valid_count;
 
@@ -209,7 +213,7 @@ void LZ77DecoderMultiElement() {
       // of dist < literals_per_cycle, described above.
 #pragma unroll
       for (int i = 0; i < literals_per_cycle; i++) {
-        out_data.byte[i] = historical_bytes[read_history_shuffle_idx[i]];
+        out_data[i] = historical_bytes[read_history_shuffle_idx[i]];
       }
 
       // we will write out min(history_counter, literals_per_cycle)
@@ -254,7 +258,7 @@ void LZ77DecoderMultiElement() {
       fpga_tools::UnrolledLoop<literals_per_cycle>([&](auto i) {
         if (write_bitmap[i]) {
           // grab the literal to write out
-          auto literal_out = out_data.byte[shuffle_vec[i]];
+          auto literal_out = out_data[shuffle_vec[i]];
 
           // the index into this history buffer
           HistBufIdxT idx_in_buf = history_buffer_idx[i];
@@ -294,11 +298,12 @@ void LZ77DecoderMultiElement() {
 //
 // Same as above but for 1 element per cycle
 //
-template <typename InPipe, typename OutPipe, size_t max_history>
+template <typename InPipe, typename OutPipe, size_t max_distance>
 void LZ77DecoderSingleElement() {
   using OutPipeBundleT = decltype(OutPipe::read());
+  using OutDataT = decltype(std::declval<OutPipeBundleT>().data);
 
-  constexpr size_t history_buffer_count = max_history;
+  constexpr size_t history_buffer_count = max_distance;
   constexpr size_t history_buffer_idx_bits =
       fpga_tools::Log2(history_buffer_count);
   constexpr size_t history_buffer_idx_mask = history_buffer_count - 1;
@@ -328,7 +333,7 @@ void LZ77DecoderSingleElement() {
   [[intel::ivdep(kCacheDepth)]]  // NO-FORMAT: Attribute
   while (!done) {
     bool data_valid = true;
-    BytePack<1> out_data;
+    OutDataT out_data;
 
     // if we aren't currently reading from the history, read from input pipe
     if (!reading_history) {
@@ -343,7 +348,7 @@ void LZ77DecoderSingleElement() {
       unsigned short dist = pipe_data.data.distance;
 
       // for the case of a literal, we will simply write it to the output
-      out_data.byte[0] = pipe_data.data.literal[0];
+      out_data[0] = pipe_data.data.literal[0];
       out_data.valid_count = ac_uint<1>(1);
 
       // if we get a length distance pair we will read 'pipe_data.data.length'
@@ -359,13 +364,13 @@ void LZ77DecoderSingleElement() {
 
     if (reading_history) {
       // read from the history buffer
-      out_data.byte[0] = history_buffer[read_history_buffer_idx];
+      out_data[0] = history_buffer[read_history_buffer_idx];
 
       // also check the cache to see if it is there
 #pragma unroll
       for (int j = 0; j < kCacheDepth + 1; j++) {
         if (history_buffer_cache_idx[j] == read_history_buffer_idx) {
-          out_data.byte[0] = history_buffer_cache_val[j];
+          out_data[0] = history_buffer_cache_val[j];
         }
       }
       out_data.valid_count = ac_uint<1>(1);
@@ -382,10 +387,10 @@ void LZ77DecoderSingleElement() {
 
     if (!done && data_valid) {
       // write to the most history buffer
-      history_buffer[history_buffer_idx] = out_data.byte[0];
+      history_buffer[history_buffer_idx] = out_data[0];
 
       // also add the most recent written value to the cache
-      history_buffer_cache_val[kCacheDepth] = out_data.byte[0];
+      history_buffer_cache_val[kCacheDepth] = out_data[0];
       history_buffer_cache_idx[kCacheDepth] = history_buffer_idx;
 #pragma unroll
       for (int j = 0; j < kCacheDepth; j++) {
@@ -409,32 +414,63 @@ void LZ77DecoderSingleElement() {
 // Top-level LZ77 decoder to select between the single- and multi-element per
 // cycle variants above, at compile time.
 //
-template <typename InPipe, typename OutPipe, size_t max_history,
-          unsigned literals_per_cycle>
+template <typename InPipe, typename OutPipe, size_t literals_per_cycle, size_t max_distance, size_t max_length>
 void LZ77Decoder() {
+  // check that the input and output pipe types are actually pipes
   static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
   static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
-  static_assert(literals_per_cycle > 0);
-  static_assert(max_history > 0);
-  static_assert(fpga_tools::IsPow2(literals_per_cycle));
-  static_assert(fpga_tools::IsPow2(max_history));
 
+  // these numbers need to be greater than 0 and powers of 2
+  static_assert(literals_per_cycle > 0);
+  static_assert(max_distance > 0);
+  static_assert(max_length > 0);
+  static_assert(fpga_tools::IsPow2(literals_per_cycle));
+  static_assert(fpga_tools::IsPow2(max_distance));
+
+  // input type rules:
+  //  must have a member named 'flag' which is a boolean
+  //  must have a member named 'data' which is an instance of LZ77InputData
+  //  the max_distance and max_length of LZ77InputData must match the function's
+  using InPipeBundleT = decltype(InPipe::read());
+  static_assert(has_flag_bool_v<InPipeBundleT>);
+  static_assert(has_data_member_v<InPipeBundleT>);
+  using InDataT = decltype(std::declval<InPipeBundleT>().data);
+  static_assert(is_lz77_input_data_v<InDataT>);
+  static_assert(InDataT::max_distance == max_distance);
+  static_assert(InDataT::max_length == max_length);
+
+  // output type rules:
+  //  must have a member named 'flag' which is a boolean
+  //  must have a member named 'data' which has a subscript operator and a
+  //  member named 'valid_count'
+  using OutPipeBundleT = decltype(OutPipe::read());
+  static_assert(has_flag_bool_v<OutPipeBundleT>);
+  static_assert(has_data_member_v<OutPipeBundleT>);
+  using OutDataT = decltype(std::declval<OutPipeBundleT>().data);
+  static_assert(fpga_tools::has_subscript_v<OutDataT>);
+  static_assert(has_valid_count_member_v<OutDataT>);
+
+  // make sure we can construct the OutPipeBundleT from OutDataT and/or a bool
+  static_assert(std::is_constructible_v<OutPipeBundleT, OutDataT>);
+  static_assert(std::is_constructible_v<OutPipeBundleT, OutDataT, bool>);
+  static_assert(std::is_constructible_v<OutPipeBundleT, bool>); 
+
+  // select which LZ77 decoder version to use based on literals_per_cycle
+  // at compile time
   if constexpr (literals_per_cycle == 1) {
-    return LZ77DecoderSingleElement<InPipe, OutPipe, max_history>();
+    return LZ77DecoderSingleElement<InPipe, OutPipe,max_distance>();
   } else {
-    return LZ77DecoderMultiElement<InPipe, OutPipe, max_history,
-                                   literals_per_cycle>();
+    return LZ77DecoderMultiElement<InPipe, OutPipe, literals_per_cycle, max_distance>();
   }
 }
 
 //
 // Creates a kernel from the LZ77 decoder function
 //
-template <typename Id, typename InPipe, typename OutPipe, size_t max_history,
-          unsigned literals_per_cycle>
+template <typename Id, typename InPipe, typename OutPipe, size_t literals_per_cycle, size_t max_distance, size_t max_length>
 sycl::event SubmitLZ77Decoder(sycl::queue& q) {
   return q.single_task<Id>([=] {
-    return LZ77Decoder<InPipe, OutPipe, max_history, literals_per_cycle>();
+    return LZ77Decoder<InPipe, OutPipe, literals_per_cycle, max_distance, max_length>();
   });
 }
 

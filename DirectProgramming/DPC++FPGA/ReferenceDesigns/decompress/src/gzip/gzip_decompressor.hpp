@@ -5,7 +5,7 @@
 #include <chrono>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/
@@ -54,7 +54,7 @@ std::vector<sycl::event> SubmitGzipDecompressKernels(
                              FlagBundle<ByteSet<1>>>;
   using HuffmanToLZ77Pipe =
       sycl::ext::intel::pipe<HuffmanToLZ77PipeID,
-                             FlagBundle<GzipLZ77InputData<2>>,
+                             FlagBundle<GzipLZ77InputData>,
                              kHuffmanToLZ77PipeDepth>;
 
   // submit the GZIP decompression kernels
@@ -74,8 +74,9 @@ std::vector<sycl::event> SubmitGzipDecompressKernels(
 
     auto lz77_event = SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe,
                                         LZ77ToByteStackerPipe,
+                                        literals_per_cycle,
                                         kGzipMaxLZ77Distance,
-                                        literals_per_cycle>(q);
+                                        kGzipMaxLZ77Length>(q);
     auto byte_stacker_event =
         SubmitByteStacker<ByteStackerKernelID, LZ77ToByteStackerPipe, OutPipe,
                           literals_per_cycle>(q);
@@ -84,7 +85,8 @@ std::vector<sycl::event> SubmitGzipDecompressKernels(
   } else {
     auto lz77_event =
         SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe, OutPipe,
-                          kGzipMaxLZ77Distance, literals_per_cycle>(q);
+                          literals_per_cycle, kGzipMaxLZ77Distance,
+                          kGzipMaxLZ77Length>(q);
     return {header_event, huffman_event, lz77_event};
   }
 }

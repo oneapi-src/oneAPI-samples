@@ -6,12 +6,14 @@
 #include <functional>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"
 #include "memory_utils.hpp"
+
+#include "common_metaprogramming.hpp"
 // clang-format on
 
 // we only use unsigned ac_ints, so this alias lets us not write the 'false'
@@ -25,15 +27,19 @@ using ac_uint = ac_int<bits, false>;
 template <typename T>
 struct FlagBundle {
   using value_type = T;
+  
+  // ensure the type we carry has a subscript operator (an array) and that
+  // it has an static integer member named 'size'
   static_assert(fpga_tools::has_subscript_v<T>);
-  FlagBundle() : data(T()), flag(false) {}
-  FlagBundle(T d_in) : data(d_in), flag(false) {}
-  FlagBundle(T d_in, bool f_in) : data(d_in), flag(f_in) {}
-  FlagBundle(bool f_in) : data(T()), flag(f_in) {}
 
   // this is used by the functions in memory_utils.hpp to ensure the size of
   // the type in the SYCL pipe matches the memory width
   static constexpr size_t size = T::size;
+
+  FlagBundle() : data(T()), flag(false) {}
+  FlagBundle(T d_in) : data(d_in), flag(false) {}
+  FlagBundle(T d_in, bool f_in) : data(d_in), flag(f_in) {}
+  FlagBundle(bool f_in) : data(T()), flag(f_in) {}
 
   unsigned char& operator[](int i) { return data[i]; }
   const unsigned char& operator[](int i) const { return data[i]; }
@@ -45,18 +51,22 @@ struct FlagBundle {
 //
 // The data that goes into the LZ77 decoder from the Huffman decoder
 //
-template <unsigned n, unsigned max_length, unsigned max_distance>
+template <size_t n_, size_t max_distance_, size_t max_length_>
 struct LZ77InputData {
+  static constexpr auto n = n_;
+  static constexpr auto max_distance = max_distance_;
+  static constexpr auto max_length = max_length_;
+  
   static_assert(n > 0);
   static_assert(max_length > 0);
   static_assert(max_distance > 0);
   
-  static constexpr unsigned size = n;
-  static constexpr unsigned max_literals = n;
-  static constexpr unsigned valid_count_bits =
+  static constexpr size_t size = n;
+  static constexpr size_t max_literals = n;
+  static constexpr size_t valid_count_bits =
       fpga_tools::Log2(max_literals) + 1;
-  static constexpr unsigned length_bits = fpga_tools::Log2(max_length) + 1;
-  static constexpr unsigned distance_bits = fpga_tools::Log2(max_distance) + 1;
+  static constexpr size_t length_bits = fpga_tools::Log2(max_length) + 1;
+  static constexpr size_t distance_bits = fpga_tools::Log2(max_distance) + 1;
 
   static_assert(valid_count_bits > 0);
   static_assert(n < fpga_tools::Pow2(valid_count_bits));
@@ -87,22 +97,40 @@ struct LZ77InputData {
   const unsigned char& operator[](int i) const { return literal[i]; }
 };
 
+//
+// Metaprogramming utils to check if type is any instance of LZ77InputData
+//
+namespace detail {
+template<typename T>
+struct is_lz77_input_data_impl : std::false_type {};
+
+template<unsigned a, unsigned b, unsigned c>
+struct is_lz77_input_data_impl<LZ77InputData<a, b, c>> : std::true_type {};
+}
+
+template <class T>
+struct is_lz77_input_data {
+  static constexpr bool value = detail::is_lz77_input_data_impl<T>{};
+};
+
+template <class T>
+inline constexpr bool is_lz77_input_data_v = is_lz77_input_data<T>::value;
+
 // The LZ77 datastructure specific for the GZIP decompressor
-constexpr unsigned kGzipMaxLZ77Length = 32768;
-constexpr unsigned kGzipMaxLZ77Distance = 32768;
-template <unsigned n>
+constexpr size_t kGzipMaxLZ77Length = 32768;
+constexpr size_t kGzipMaxLZ77Distance = 32768;
 using GzipLZ77InputData =
-    LZ77InputData<n, kGzipMaxLZ77Length, kGzipMaxLZ77Distance>;
+    LZ77InputData<1, kGzipMaxLZ77Distance, kGzipMaxLZ77Length>;
 
 // The LZ77 datastructure specific for the Snappy decompressor
 // Snappy V1.1 format sets the maximum history to 65K
 // At the time of writing this, the maximum history distance will be 32K, but
 // the specification claims support for 65K, so we will be safe.
-constexpr unsigned kSnappyMaxLZ77Length = 64;
-constexpr unsigned kSnappyMaxLZ77Distance = 1 << 16;
-template <unsigned n>
+constexpr size_t kSnappyMaxLZ77Length = 64;
+constexpr size_t kSnappyMaxLZ77Distance = 1 << 16;
+template <size_t n>
 using SnappyLZ77InputData =
-    LZ77InputData<n, kSnappyMaxLZ77Length, kSnappyMaxLZ77Distance>;
+    LZ77InputData<n, kSnappyMaxLZ77Distance, kSnappyMaxLZ77Length>;
 
 //
 // Holds an array of bytes, where valid_count indicates how many of the 'n'
@@ -110,12 +138,12 @@ using SnappyLZ77InputData =
 // E.g., if valid_count = 2, then byte[0] and byte[1] are valid, while byte[2],
 // byte[3], ..., byte[n-1] are not.
 //
-template <unsigned n>
+template <size_t n>
 struct BytePack {
   static constexpr unsigned count_bits = fpga_tools::Log2(n) + 1;
   static_assert(count_bits > 0);
   static_assert(n < fpga_tools::Pow2(count_bits));
-  static const size_t size = n;
+  static constexpr size_t size = n;
 
   unsigned char byte[n];
   ac_uint<count_bits> valid_count;
@@ -127,9 +155,9 @@ struct BytePack {
 //
 // Similar to a BytePack, but all of the bytes are valid.
 //
-template <int n>
+template <size_t n>
 struct ByteSet {
-  static const size_t size = n;
+  static constexpr size_t size = n;
 
   unsigned char byte[n];
 
@@ -179,7 +207,7 @@ class select_by_string : public sycl::default_selector {
 //
 // Reads 'filename' and returns an array of chars (the bytes of the file)
 //
-std::vector<unsigned char> ReadInputFile(std::string filename) {
+std::vector<unsigned char> ReadInputFile(const std::string filename) {
   // open file stream
   std::ifstream fin(filename);
 
@@ -203,7 +231,8 @@ std::vector<unsigned char> ReadInputFile(std::string filename) {
 //
 // Writes the chars (bytes) from 'data' to 'filename'
 //
-void WriteOutputFile(std::string filename, std::vector<unsigned char>& data) {
+void WriteOutputFile(const std::string filename,
+                     std::vector<unsigned char>& data) {
   // open file stream
   std::ofstream fout(filename.c_str());
 
@@ -238,7 +267,7 @@ class DecompressorBase {
     std::cout << "Decompressing '" << in_filename << "' " << runs
               << ((runs == 1) ? " time" : " times") << std::endl;
 
-    std::vector<unsigned char> in_bytes = ReadInputFile(in_filename);
+    auto in_bytes = ReadInputFile(in_filename);
     auto result = DecompressBytes(q, in_bytes, runs, print_stats);
 
     if (result != std::nullopt) {
