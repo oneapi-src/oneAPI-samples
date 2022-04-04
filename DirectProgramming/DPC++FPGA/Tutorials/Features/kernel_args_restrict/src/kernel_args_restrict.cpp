@@ -15,6 +15,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // ADDING A COMMENT TO TRIGGER CI - DO NOT MERGE
+// ANOTHER COMMENT TO RE-TRIGGER CI
 
 using namespace sycl;
 
