@@ -10,6 +10,7 @@
 
 // Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"
+#include "metaprogramming_utils.hpp"
 
 #include "../common/byte_stacker.hpp"
 #include "../common/common.hpp"
@@ -29,9 +30,30 @@ class LZ77ToByteStackerPipeID;
 // Submits the kernels for the Snappy decompression engine and returns the
 // SYCL events for each kernel
 //
+// Template parameters:
+//    InPipe: the input pipe that streams in compressed data,
+//      'literals_per_cycle' byte at a time
+//    OutPipe: the output pipe that streams out decompressed data,
+//      'literals_per_cycle' at a time
+//    literals_per_cycle: the number of literals streamed out the output stream.
+//      This sets how many literals can be read from the input stream at once,
+//      as well as the number that can be read at once from the history buffer
+//      in the LZ77 decoder.
+//
+//  Arguments:
+//    q: the SYCL queue
+//    in_count: the number of compressed bytes
+//    preamble_count: an output buffer for the uncompressed size read in the
+//      Snappy preamble
+//
 template <typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 std::vector<sycl::event> SubmitSnappyDecompressKernels(
     sycl::queue& q, unsigned in_count, unsigned* preamble_count) {
+  // check that the input and output pipe types are actually pipes
+  static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
+  static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
+
+  // 'literals_per_cycle' must be greater than 0 and a power of 2
   static_assert(literals_per_cycle > 0);
   static_assert(fpga_tools::IsPow2(literals_per_cycle));
 

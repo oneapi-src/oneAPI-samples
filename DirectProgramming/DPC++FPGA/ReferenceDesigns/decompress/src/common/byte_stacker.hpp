@@ -15,7 +15,15 @@
 // Data streams in the 'InPipe' pipe and can have between 0 to
 // 'literals_per_cycle' valid elements per cycle. This function takes the input
 // and "stacks" it, such that the output is always 'literals_per_cycle' valid
-// elements (except for maybe the last write).
+// elements (except possibly the last write).
+//
+//  Template parameters:
+//    InPipe: a SYCL pipe that streams in an array of bytes and a `valid_count`,
+//      which is in the range [0, literals_per_cycle]
+//    OutPipe: a SYCL pipe that streams out an array of 'literals_per_cycle'
+//      valid bytes on every write, except possibly the last iteration.
+//    literals_per_cycle: the maximum valid bytes on the input and the number
+//      valid bytes on the output (except possibly the last iteration).
 //
 template <typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 void ByteStacker() {

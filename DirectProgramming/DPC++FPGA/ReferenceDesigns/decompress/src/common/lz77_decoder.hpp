@@ -17,14 +17,26 @@
 
 //
 // Performs LZ77 decoding for more than 1 element per cycle.
-// Streams in a 'FlagBundle' containing a 'LZ77InputData' (see common.hpp)
+// Streams in 'LZ77InputData' (see common.hpp) appended with a flag (FlagBundle)
 // which contains either a literal from upstream, or a {length, distance} pair.
 // Given a literal input, this function simply tracks that literal in a history
 // buffer and writes it to the output. For a {length, distance} pair, this
 // function reads 'literals_per_cycle' elements from the history buffer per
 // cycle and writes them to the output.
 //
-template <typename InPipe, typename OutPipe, size_t literals_per_cycle, size_t max_distance>
+//  Template parameters:
+//    InPipe: a SYCL pipe that streams in LZ77InputData with a boolean flag that
+//      indicates whether the input stream is done.
+//    OutPipe: a SYCL pipe that streams out an array of literals and a
+//      'valid_count' that is in the range [0, literals_per_cycle].
+//    literals_per_cycle: the number of literals to read from the history
+//      buffer per cycle. This sets the maximum possible throughput for the
+//      LZ77 decoder.
+//    max_distance: the maximum distancefor a {length, distance} pair
+//      For example, for DEFLATE this is 32K and for snappy this is 64K.
+//
+template <typename InPipe, typename OutPipe, size_t literals_per_cycle,
+          size_t max_distance>
 void LZ77DecoderMultiElement() {
   using OutPipeBundleT = decltype(OutPipe::read());
   using OutDataT = decltype(std::declval<OutPipeBundleT>().data);
@@ -296,7 +308,9 @@ void LZ77DecoderMultiElement() {
 }
 
 //
-// Same as above but for 1 element per cycle
+// For performance reasons, we provide a special version of LZ77 for
+// literals_per_cycle = 1. See the comments on the LZ77DecoderMultiElement
+// function above for information on the template parameters.
 //
 template <typename InPipe, typename OutPipe, size_t max_distance>
 void LZ77DecoderSingleElement() {
@@ -411,10 +425,23 @@ void LZ77DecoderSingleElement() {
 }
 
 //
-// Top-level LZ77 decoder to select between the single- and multi-element per
-// cycle variants above, at compile time.
+// The top level LZ77 decoder that selects between the single- and
+// multi-element per cycle variants above, at compile time.
 //
-template <typename InPipe, typename OutPipe, size_t literals_per_cycle, size_t max_distance, size_t max_length>
+//  Template parameters:
+//    InPipe: a SYCL pipe that streams in LZ77InputData with a boolean flag that
+//      indicates whether the input stream is done.
+//    OutPipe: a SYCL pipe that streams out an array of literals and a
+//      'valid_count' that is in the range [0, literals_per_cycle].
+//    literals_per_cycle: the number of literals to read from the history
+//      buffer per cycle. This sets the maximum possible throughput for the
+//      LZ77 decoder.
+//    max_distance: the maximum distancefor a {length, distance} pair
+//      For example, for DEFLATE this is 32K and for snappy this is 64K.
+//    max_length: the maximum length for a {length, distance} pair.
+//
+template <typename InPipe, typename OutPipe, size_t literals_per_cycle,
+          size_t max_distance, size_t max_length>
 void LZ77Decoder() {
   // check that the input and output pipe types are actually pipes
   static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
@@ -467,7 +494,8 @@ void LZ77Decoder() {
 //
 // Creates a kernel from the LZ77 decoder function
 //
-template <typename Id, typename InPipe, typename OutPipe, size_t literals_per_cycle, size_t max_distance, size_t max_length>
+template <typename Id, typename InPipe, typename OutPipe,
+          size_t literals_per_cycle, size_t max_distance, size_t max_length>
 sycl::event SubmitLZ77Decoder(sycl::queue& q) {
   return q.single_task<Id>([=] {
     return LZ77Decoder<InPipe, OutPipe, literals_per_cycle, max_distance, max_length>();

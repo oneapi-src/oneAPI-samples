@@ -5,6 +5,12 @@
 // A simple CRC-32 implementation (not optimized for high performance).
 // Compute CRC-32 on 'len' elements in 'buf', starting with a CRC of 'init'.
 //
+// Arguments:
+//    init: the initial CRC value. This is used to string together multiple
+//      calls to SimpleCRC32. For the first iteration, use 0.
+//    buf: a pointer to the data
+//    len: the number of bytes pointer to by 'buf'
+//
 unsigned int SimpleCRC32(unsigned init, const void* buf, size_t len) {
   // generate the 256-element table
   constexpr uint32_t polynomial = 0xEDB88320;

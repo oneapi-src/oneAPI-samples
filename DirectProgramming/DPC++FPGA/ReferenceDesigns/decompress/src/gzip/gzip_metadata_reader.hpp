@@ -15,8 +15,20 @@
 // clang-format on
 
 //
-// Streams in bytes of the GZIP file from the 'InPipe', strips away (and parses)
-// the GZIP header and footer, and streams out the actual GZIP data.
+// A kernel that streams in bytes of the GZIP file, strips away (and parses) the
+// GZIP header and footer, and streams out the uncompressed data.
+// The output of this kernel is a stream of DEFLATE formatted blocks.
+//
+//  Template parameters:
+//    InPipe: a SYCL pipe that streams in compressed GZIP data, 1 byte at a time
+//    OutPipe: a SYCL pipe that streams out the compressed GZIP data, 1 byte at
+//      a time excluding the GZIP header and footer data
+//
+//  Arguments:
+//    in_count: the number of compressed bytes
+//    hdr_data: the parsed GZIP header
+//    crc: the parsed CRC from the GZIP footer
+//    out_count: the parsed uncompressed size from the GZIP footer
 //
 template <typename InPipe, typename OutPipe>
 void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
@@ -58,6 +70,9 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
     4 bytes: CRC-32 Checksum
     4 bytes: Uncompressed data size in bytes
   */
+
+  // This kernel reads the entire file (HEADER, DATA, and FOOTER), strips away
+  // and parses the HEADER and FOOTER, and forwards the DATA to the next kernel
 
   int i = 0;
   bool i_in_range = 0 < in_count;

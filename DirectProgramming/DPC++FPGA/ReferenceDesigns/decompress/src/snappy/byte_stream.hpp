@@ -17,6 +17,11 @@
 // bytes to be read/consumed at once (0 to 'max_shift') and multiple bytes
 // to be written in at once.
 //
+//  Template parameters:
+//    num_bytes: the number of bytes to store in the stream
+//    max_shift: the maximum number of bytes consumed per call to
+//      Shift(ShiftCountT)
+//
 template <int num_bytes, int max_shift>
 class ByteStream {
   // static asserts to check the template arguments

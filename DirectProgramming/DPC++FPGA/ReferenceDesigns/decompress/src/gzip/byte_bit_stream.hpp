@@ -13,10 +13,18 @@
 //
 // A stream of bits that is filled with a byte at a time
 //
+// Template parameters:
+//    bits: the number of bits to store in the stream. We need to store at least
+//      1 byte, so this should be at least 8.
+//    max_dynamic_read_bits: the maximum number of bits read from the stream
+//      'dynamically' via the ReadUInt(ReadCountT) function.
+//    max_shift_bits: the maximum number of bits consumed by a single call
+//      to the Shift(ShiftCountT) function.
+//
 template <int bits, int max_dynamic_read_bits, int max_shift_bits>
 class ByteBitStream {
   // static asserts to make sure the template parameters make sense
-  static_assert(bits > 0);
+  static_assert(bits >= 8);
   static_assert(max_dynamic_read_bits > 0);
   static_assert(max_dynamic_read_bits <= bits);
   static_assert(max_shift_bits > 0);

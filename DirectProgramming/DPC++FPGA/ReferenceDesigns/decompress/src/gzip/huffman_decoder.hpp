@@ -90,6 +90,11 @@ void ParseSecondTable(BitStreamT& bit_stream,
 // compressed blocks. For dynamically compressed blocks, the huffman tables are
 // also built from the input byte stream.
 //
+//  Template arguments:
+//    InPipe: a SYCL pipe that streams in compressed data, 1 byte at a time
+//    OutPipe: a SYCL pipe that streams out either literals or
+//      {length, distance} pairs.
+//
 template <typename InPipe, typename OutPipe>
 void HuffmanDecoder() {
   // ensure the InPipe and OutPipe are SYCL pipes

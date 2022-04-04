@@ -10,6 +10,7 @@
 
 // Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"
+#include "metaprogramming_utils.hpp"
 
 #include "../common/byte_stacker.hpp"
 #include "../common/common.hpp"
@@ -37,14 +38,31 @@ constexpr int kHuffmanToLZ77PipeDepth = 64;
 //
 // Submits the kernels for the GZIP decompression engine and returns the
 // SYCL events for each kernel.
-// InPipe streams data in, 1 byte at a time, and OutPipe streams out bytes
-// 'literals_per_cycle' at a time.
-// Currently, literals_per_cycle must be a power of 2.
+//
+// Template parameters:
+//    InPipe: the input pipe that streams in compressed data, 1 byte at a time
+//    OutPipe: the output pipe that streams out decompressed data,
+//      'literals_per_cycle' at a time
+//    literals_per_cycle: the maximum number of literals written to the output
+//      stream every cycle. This sets how many literals can be read from the
+//      LZ77 history buffer at once.
+//
+//  Arguments:
+//    q: the SYCL queue
+//    in_count: the number of compressed bytes
+//    hdr_data_out: a output buffer for the GZIP header data
+//    crc_out: an output buffer for the CRC in the GZIP footer
+//    count_out: an output buffer for the uncompressed size in the GZIP footer
 //
 template <typename InPipe, typename OutPipe, unsigned literals_per_cycle>
 std::vector<sycl::event> SubmitGzipDecompressKernels(
     sycl::queue &q, int in_count, GzipHeaderData *hdr_data_out, int *crc_out,
     int *count_out) {
+  // check that the input and output pipe types are actually pipes
+  static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
+  static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
+
+  // 'literals_per_cycle' must be greater than 0 and a power of 2
   static_assert(literals_per_cycle > 0);
   static_assert(fpga_tools::IsPow2(literals_per_cycle));
 
