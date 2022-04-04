@@ -28,7 +28,7 @@ The table below shows the designs and the demonstrated feature(s).
 | Design                           | Feature(s) Utilized
 | :---                             |:---
 | class_member_functor             | Usage of functor in an OpenMP offload region
-| function_pointer                 | Function called through a function pointer in an offload region (currently only for CPU target)
+| function_pointer                 | Function called through a function pointer in an offload region
 | user_defined_mapper              | Usage of the user defined mapper feature in target region map clauses
 | usm_and_composabilty_with_dpcpp  | Unified shared memory and composability with DPC++
 
