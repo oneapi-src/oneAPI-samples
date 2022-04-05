@@ -195,7 +195,7 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 
 4. Change directories to the Jacobi-Iterative sample directory.
 	```
-	cd ~/oneAPI-samples/DirectProgramming/DPC++/GraphTraversal/odd-even merge sort
+	cd ~/oneAPI-samples/DirectProgramming/DPC++/GraphTraversal/odd-even-merge-sort
 	```
 	
 5. Build the sample on GPU node using
