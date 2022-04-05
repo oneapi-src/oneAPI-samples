@@ -1225,5 +1225,12 @@
         "notes": "-",
         "removed": "False",
         "ver": "2022.2.0"
+    },
+    "d4d338a2-dd64-492a-86fe-6fb4ae4190e2": {
+        "guid": "d4d338a2-dd64-492a-86fe-6fb4ae4190e2",
+        "name": "odd-even-merge-sort",
+        "notes": "-",
+        "removed": "False",
+        "ver": "2022.2.0"	
+
     }
-}
