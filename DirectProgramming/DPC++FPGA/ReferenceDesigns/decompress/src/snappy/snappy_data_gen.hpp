@@ -4,7 +4,7 @@
 #include <vector>
 
 //
-// Function to generate compressed Snappy data.
+// A function to generate compressed Snappy data for testing purposes.
 // Generates a file as follows:
 //    'num_lit_strs' literal strings of length 'lit_str_len'
 //    'num_copies' of length 'copy_len' and offset max(16k, lit_str_len)

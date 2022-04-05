@@ -21,19 +21,19 @@
 #endif
 constexpr int kBitBufferBits = BIT_BUFFER_BITS;
 
-// maximum bits to read dynamically from the bitstream
-// more can be read statically using the templated Shift function
-// in the main loop, we are reading 30 bits every iteration, but for reading
-// in the first and second table, we read a dynamic number of bits, with a
-// maximum of 5
+// The maximum bits to read dynamically from the bitstream.
+// More bits can be read statically using the templated Shift function.
+// In the main processing loop, we are reading 30 bits every iteration,
+// but for reading in the first and second table, we read a dynamic number of
+// bits, with a maximum of 5
 constexpr int kBitBufferMaxReadBits = 5;
 
-// maximum bits consumed in one shift of the bitstream
-// the maximum number of bytes we will consume in one iteration of the main loop
-// is 30 bits
+// The maximum bits consumed in one Shift of the bitstream.
+// The maximum number of bytes consumed in one iteration of the main loop is 30
 constexpr int kBitBufferMaxShiftBits = 30;
 
-static_assert(kBitBufferBits > 8);  // need to store at least a byte
+// sanity check the kBitBufferBits
+static_assert(kBitBufferBits > 8);
 static_assert(kBitBufferBits > kBitBufferMaxReadBits);
 static_assert(kBitBufferBits > kBitBufferMaxShiftBits);
 
@@ -85,12 +85,12 @@ void ParseSecondTable(BitStreamT& bit_stream,
 
 //
 // Performs Huffman Decoding.
-// Streams in multiple DEFLATE blocks, 1 byte at a time, and performs huffman
-// decoding. Supports uncompressed, statically compressed, and dynamically
-// compressed blocks. For dynamically compressed blocks, the huffman tables are
-// also built from the input byte stream.
+// Streams in multiple DEFLATE blocks and performs huffman decoding for 
+// uncompressed, statically compressed, and dynamically compressed blocks.
+// For dynamically compressed blocks, the huffman tables are also built from the
+// input byte stream.
 //
-//  Template arguments:
+//  Template parameters:
 //    InPipe: a SYCL pipe that streams in compressed data, 1 byte at a time
 //    OutPipe: a SYCL pipe that streams out either literals or
 //      {length, distance} pairs.
@@ -113,12 +113,12 @@ void HuffmanDecoder() {
   bool last_block = false;
   bool done_reading = false;
 
-  // processing consecutive blocks
-  // loop pipelining is disabled here because to reduce the amount of memory
+  // Processing consecutive DEFLATE blocks
+  // Loop pipelining is disabled here because to reduce the amount of memory
   // utilization caused by replicating local variables. Since the inner
   // loop (the while(!block_done) loop) is the main processing loop, disabling
   // pipelining here does not have a significant affect on the throughput
-  // of the design
+  // of the design.
   [[intel::disable_loop_pipelining]]  // NO-FORMAT: Attribute
   while (!last_block) {
     ////////////////////////////////////////////////////////////////////////////
@@ -234,13 +234,14 @@ void HuffmanDecoder() {
       bit_stream.AlignToByteBoundary();
     }
 
+    // the decoded literal or distance symbol in the main processing loop
     ac_uint<9> lit_symbol;
     ac_uint<5> dist_symbol;
 
-    // main processing loop
-    // the II of this main loop can be controlled from the command line using
-    // the -DHUFFMAN_II=<desired II>. By default, we let the
-    // the compiler choose the Fmax/II to maximize throughput
+    // The main processing loop.
+    // The II of this main loop can be controlled from the command line using
+    // the -DHUFFMAN_II=<desired II>. By default, we let the the compiler choose
+    // the Fmax/II that maximizes throughput.
 #ifdef HUFFMAN_MAIN_LOOP_II
     [[intel::initiation_interval(HUFFMAN_II)]]  // NO-FORMAT: Attribute
 #endif

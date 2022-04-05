@@ -78,7 +78,7 @@ else()
   set(SEED_FLAG "-Xsseed=${SEED}")
 endif()
 
-# Allow the user to set literals per cycle
+# Allow the user to set how many literals are processed at once
 # e.g. cmake .. -DLITERALS_PER_CYCLE=2
 if(DEFINED LITERALS_PER_CYCLE)
   set(LITERALS_PER_CYCLE_FLAG "-DLITERALS_PER_CYCLE=${LITERALS_PER_CYCLE}")

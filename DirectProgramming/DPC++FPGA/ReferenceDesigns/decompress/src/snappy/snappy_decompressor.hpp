@@ -27,8 +27,8 @@ class SnappyReaderToLZ77PipeID;
 class LZ77ToByteStackerPipeID;
 
 //
-// Submits the kernels for the Snappy decompression engine and returns the
-// SYCL events for each kernel
+// Submits the kernels for the Snappy decompression engine and returns a list of
+// SYCL events from each kernel launch.
 //
 // Template parameters:
 //    InPipe: the input pipe that streams in compressed data,

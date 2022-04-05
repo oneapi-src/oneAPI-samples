@@ -14,19 +14,19 @@
 // clang-format on
 
 //
-// Streams in bytes from InPipe 'literals_per_cycle at a time and
-// generates LZ77InputData (see ../common/common.hpp) in the OutPipe for the
+// Streams in bytes from InPipe 'literals_per_cycle' at a time and
+// generates LZ77InputData (see ../common/common.hpp) to the OutPipe for the
 // LZ77Decoder kernel.
 //
 //  Template parameters:
 //    InPipe: a SYCL pipe that streams in compressed Snappy data,
-//      'literals_per_cycle' byte at a time
+//      'literals_per_cycle' bytes at a time.
 //    OutPipe: a SYCL pipe that streams out either an array of literals with
 //      a valid count (when reading a literal string) or a {length, distance}
-//      pair (when doing a copy), in the form of an LZ77InputData instance.
+//      pair (when doing a copy), in the form of LZ77InputData data.
 //      This is the input the LZ77 decoder.
 //    literals_per_cycle: the maximum number of literals read from the input
-//      (and written to the output) every cycle.
+//      (and written to the output) at once.
 //
 //  Arguments:
 //    in_count: the number of compressed bytes

@@ -16,8 +16,8 @@
 #include "common_metaprogramming.hpp"
 // clang-format on
 
-// we only use unsigned ac_ints, so this alias lets us not write the 'false'
-// template argument everytime
+// we only use unsigned ac_ints in this design, so this alias lets us not write
+// the 'false' template argument every where
 template <int bits>
 using ac_uint = ac_int<bits, false>;
 
@@ -28,8 +28,8 @@ template <typename T>
 struct FlagBundle {
   using value_type = T;
   
-  // ensure the type we carry has a subscript operator (an array) and that
-  // it has an static integer member named 'size'
+  // ensure the type carried in this class has a subscript operator and that
+  // it has a static integer member named 'size'
   static_assert(fpga_tools::has_subscript_v<T>);
 
   // this is used by the functions in memory_utils.hpp to ensure the size of
@@ -49,27 +49,36 @@ struct FlagBundle {
 };
 
 //
-// The data that goes into the LZ77 decoder from the Huffman decoder
+// The generic data that goes into the LZ77 decoder from the Huffman decoder
 //
-template <size_t n_, size_t max_distance_, size_t max_length_>
+//  Template parameters:
+//    literals_per_cycle_: the number of literals coming into the LZ77 decoder
+//      at once LZ77 decoder. This is NOT the literals_per_cycle that sets how
+//      many literals the LZ77 decoder reads from the history buffer at once.
+//    max_distance_: The maximum distance value in a {length, distance} pair.
+//      This sets how may bits are required for the variable used to index into
+//      the LZ77 decoder's history buffer.
+//    max_length_: the maximum length value in a {lengt, distance} pair.
+//
+template <size_t literals_per_cycle_, size_t max_distance_, size_t max_length_>
 struct LZ77InputData {
-  static constexpr auto n = n_;
+  static constexpr auto literals_per_cycle = literals_per_cycle_;
   static constexpr auto max_distance = max_distance_;
   static constexpr auto max_length = max_length_;
   
-  static_assert(n > 0);
+  static_assert(literals_per_cycle_ > 0);
   static_assert(max_length > 0);
   static_assert(max_distance > 0);
   
-  static constexpr size_t size = n;
-  static constexpr size_t max_literals = n;
+  static constexpr size_t size = literals_per_cycle_;
+  static constexpr size_t max_literals = literals_per_cycle_;
   static constexpr size_t valid_count_bits =
       fpga_tools::Log2(max_literals) + 1;
   static constexpr size_t length_bits = fpga_tools::Log2(max_length) + 1;
   static constexpr size_t distance_bits = fpga_tools::Log2(max_distance) + 1;
 
   static_assert(valid_count_bits > 0);
-  static_assert(n < fpga_tools::Pow2(valid_count_bits));
+  static_assert(literals_per_cycle < fpga_tools::Pow2(valid_count_bits));
   static_assert(length_bits > 0);
   static_assert(max_length < fpga_tools::Pow2(length_bits));
   static_assert(distance_bits > 0);
@@ -83,10 +92,10 @@ struct LZ77InputData {
   // either the literals, or the length from the {length, distance} pair
   union {
     ac_uint<length_bits> length;
-    unsigned char literal[n];
+    unsigned char literal[literals_per_cycle_];
   };
 
-  // either the number of valid literals, or the distance from the
+  // either the number of valid literals, or the distance in the
   // {length, distance} pair
   union {
     ac_uint<distance_bits> distance;
@@ -98,7 +107,7 @@ struct LZ77InputData {
 };
 
 //
-// Metaprogramming utils to check if type is any instance of LZ77InputData
+// Metaprogramming utils to check if a type is any instance of LZ77InputData
 //
 namespace detail {
 template<typename T>
@@ -138,14 +147,14 @@ using SnappyLZ77InputData =
 // E.g., if valid_count = 2, then byte[0] and byte[1] are valid, while byte[2],
 // byte[3], ..., byte[n-1] are not.
 //
-template <size_t n>
+template <size_t num_bytes>
 struct BytePack {
-  static constexpr unsigned count_bits = fpga_tools::Log2(n) + 1;
+  static constexpr unsigned count_bits = fpga_tools::Log2(num_bytes) + 1;
   static_assert(count_bits > 0);
-  static_assert(n < fpga_tools::Pow2(count_bits));
-  static constexpr size_t size = n;
+  static_assert(num_bytes < fpga_tools::Pow2(count_bits));
+  static constexpr size_t size = num_bytes;
 
-  unsigned char byte[n];
+  unsigned char byte[num_bytes];
   ac_uint<count_bits> valid_count;
 
   unsigned char& operator[](int i) { return byte[i]; }
@@ -155,11 +164,11 @@ struct BytePack {
 //
 // Similar to a BytePack, but all of the bytes are valid.
 //
-template <size_t n>
+template <size_t num_bytes>
 struct ByteSet {
-  static constexpr size_t size = n;
+  static constexpr size_t size = num_bytes;
 
-  unsigned char byte[n];
+  unsigned char byte[num_bytes];
 
   unsigned char& operator[](int i) { return byte[i]; }
   const unsigned char& operator[](int i) const { return byte[i]; }
@@ -258,9 +267,30 @@ void WriteOutputFile(const std::string filename,
 //
 class DecompressorBase {
  public:
+  //
+  // A virtual function that must be overriden by a deriving class.
+  // The overriding function performs the actual decompression using the FPGA.
+  // See ../gzip/gzip_decompressor.hpp and ../snappy/snappy_decompressor.hpp
+  // for the GZIP and SNAPPY versions of these, respectively
+  //
   virtual std::optional<std::vector<unsigned char>> DecompressBytes(
       sycl::queue&, std::vector<unsigned char>, int, bool) = 0;
 
+  //
+  // Reads the bytes in 'in_filename', decompresses them, and writes the
+  // output to 'out_filename' (if write_output == true). This function uses
+  // the DecompressBytes virtual function above to do the actual decompression.
+  //
+  // Arguments:
+  //    q: the SYCL queue
+  //    in_filename: the file path to the compressed input file
+  //    out_filename: the file path where to write the output file
+  //    runs: the number of times to call decompress the same file. This is for
+  //      throughput testing purposes.
+  //    print_stats: whether to print the execution time and throughput
+  //      statistics to stdout
+  //    write_output: whether to write the decompressed output to 'out_filename'
+  //
   bool DecompressFile(sycl::queue& q, std::string in_filename,
                       std::string out_filename, int runs, bool print_stats,
                       bool write_output) {
@@ -289,9 +319,20 @@ class DecompressorBase {
 // The Producer kernel reads 'literals_per_cycle' elements at a time from
 // memory (in_ptr) and writes them into InPipe. We use the utilities from
 // DirectProgramming/DPC++FPGA/include/memory_utils.hpp to do this.
-// In this design, the host code in main.cpp guarantees that
-// literals_per_cycle is a multiple of in_count_padded and therefore we
-// don't need to account for remainders.
+//
+//  Template parameters:
+//    Id: the type to use for the kernel ID
+//    InPipe: a SYCL pipe that streams bytes into the decompression engine,
+//      'literals_per_cycle' at a time
+//    literals_per_cycle: the number of bytes to read from the pointer and
+//      write to the pipe at once.
+//
+//  Arguments:
+//    q: the SYCL queue
+//    in_count_padded: the total number of bytes to read from in_ptr and write
+//      to the input pipe. In this design, we pad the size to be a multiple of
+//      literals_per_cycle.
+//    in_ptr: a pointer to the input data
 //
 template <typename Id, typename InPipe, unsigned literals_per_cycle>
 sycl::event SubmitProducer(sycl::queue& q, unsigned in_count_padded,
@@ -299,10 +340,15 @@ sycl::event SubmitProducer(sycl::queue& q, unsigned in_count_padded,
   assert(in_count_padded % literals_per_cycle == 0);
   auto iteration_count = in_count_padded / literals_per_cycle;
   return q.single_task<Id>([=] {
-    // use the MemoryToPipe utility to read from in_ptr 'literals_per_cycle'
-    // elements per cycle and write them to 'InPipe'
+    // Use the MemoryToPipe utility to read from in_ptr 'literals_per_cycle'
+    // elements at once and write them to 'InPipe'.
+    // The 'false' template argument is our way of guaranteeing to the library
+    // that 'literals_per_cycle is a multiple 'iteration_count'. In both the
+    // GZIP and SNAPPY designs, we guarantee this in the DecompressBytes
+    // functions in ../gzip/gzip_decompressor.hpp and
+    // ../snappy/snappy_decompressor.hpp respectively.
     sycl::device_ptr<unsigned char> in(in_ptr);
-    fpga_tools::MemoryToPipe<InPipe, literals_per_cycle, true>(in,
+    fpga_tools::MemoryToPipe<InPipe, literals_per_cycle, false>(in,
                                                                iteration_count);
   });
 }
@@ -311,16 +357,32 @@ sycl::event SubmitProducer(sycl::queue& q, unsigned in_count_padded,
 // Same idea as SubmitProducer but in the opposite direction. Data is streamed
 // from the SYCL pipe (OutPipe) and written to memory (out_ptr).
 //
+//  Template parameters:
+//    Id: the type to use for the kernel ID
+//    InPipe: a SYCL pipe that streams bytes from the decompression engine,
+//      'literals_per_cycle' at a time
+//    literals_per_cycle: the number of bytes to read from pipe and write to the
+//      pointer at once.
+//
+//  Arguments:
+//    q: the SYCL queue
+//    out_count_padded: the total number of bytes to read from input pipe and
+//      write to out_ptr. In this design, we pad the size to be a multiple of
+//      literals_per_cycle.
+//    out_ptr: a pointer to the output data
+//
 template <typename Id, typename OutPipe, unsigned literals_per_cycle>
 sycl::event SubmitConsumer(sycl::queue& q, unsigned out_count_padded,
                            unsigned char* out_ptr) {
   assert(out_count_padded % literals_per_cycle == 0);
   auto iteration_count = out_count_padded / literals_per_cycle;
   return q.single_task<Id>([=] {
-    // use the PipeToMemory utility to read 'literals_per_cycle'
-    // elements per cycle from 'OutPipe' and write them to 'out_ptr'
+    // Use the PipeToMemory utility to read 'literals_per_cycle'
+    // elements at once from 'OutPipe' and write them to 'out_ptr'.
+    // For details about the 'false' template parameter, see the SubmitProducer
+    // function above.
     sycl::device_ptr<unsigned char> out(out_ptr);
-    fpga_tools::PipeToMemory<OutPipe, literals_per_cycle, true>(
+    fpga_tools::PipeToMemory<OutPipe, literals_per_cycle, false>(
         out, iteration_count);
 
     // read the last 'done' signal

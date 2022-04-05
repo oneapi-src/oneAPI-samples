@@ -154,10 +154,9 @@ void MemoryToPipe(PtrT in_ptr, size_t count) {
 //
 // Streams data from memory to a SYCL pipe 'elements_per_cycle' elements a time
 //
-template <typename Pipe, int elements_per_cycle, bool no_remainder,
-          typename PtrT>
+template <typename Pipe, int elements_per_cycle, bool remainder, typename PtrT>
 void MemoryToPipe(PtrT in_ptr, size_t count) {
-  if constexpr (no_remainder) {
+  if constexpr (!remainder) {
     // user promises there is not remainder
     detail::MemoryToPipeNoRemainder<Pipe, elements_per_cycle>(in_ptr, count);
   } else {
@@ -173,10 +172,9 @@ void MemoryToPipe(PtrT in_ptr, size_t count) {
 // Streams data from memory to a SYCL pipe 'elements_per_cycle' elements a time
 // In this version, the user has specified a the amount of remainder
 //
-template <typename Pipe, int elements_per_cycle, bool no_remainder,
-          typename PtrT>
+template <typename Pipe, int elements_per_cycle, bool remainder, typename PtrT>
 void MemoryToPipe(PtrT in_ptr, size_t full_count, size_t remainder_count) {
-  if constexpr (no_remainder) {
+  if constexpr (!remainder) {
     // user promises there is not remainder
     detail::MemoryToPipeNoRemainder<Pipe, elements_per_cycle>(in_ptr,
                                                               full_count);
@@ -204,10 +202,9 @@ void PipeToMemory(PtrT out_ptr, size_t count) {
 //
 // Streams data from a SYCL pipe to memory 'elements_per_cycle' elements a time
 //
-template <typename Pipe, int elements_per_cycle, bool no_remainder,
-          typename PtrT>
+template <typename Pipe, int elements_per_cycle, bool remainder, typename PtrT>
 void PipeToMemory(PtrT out_ptr, size_t count) {
-  if constexpr (no_remainder) {
+  if constexpr (!remainder) {
     detail::PipeToMemoryNoRemainder<Pipe, elements_per_cycle>(out_ptr, count);
   } else {
     auto full_count = (count / elements_per_cycle) * elements_per_cycle;
@@ -221,10 +218,9 @@ void PipeToMemory(PtrT out_ptr, size_t count) {
 // Streams data from a SYCL pipe to memory 'elements_per_cycle' elements a time
 // In this version, the user has specified a the amount of remainder
 //
-template <typename Pipe, int elements_per_cycle, bool no_remainder,
-          typename PtrT>
+template <typename Pipe, int elements_per_cycle, bool remainder, typename PtrT>
 void PipeToMemory(PtrT out_ptr, size_t full_count, size_t remainder_count) {
-  if constexpr (no_remainder) {
+  if constexpr (!remainder) {
     detail::PipeToMemoryNoRemainder<Pipe, elements_per_cycle>(out_ptr,
                                                               full_count);
   } else {

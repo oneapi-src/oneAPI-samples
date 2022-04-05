@@ -34,9 +34,9 @@ static_assert(false, "Only one of GZIP and SNAPPY can be defined!");
 #define SNAPPY
 #endif
 
-// the number of literals to process per cycle can be set from the command line
+// the number of literals to process at once can be set from the command line
 // use the macro -DLITERALS_PER_CYCLE=<literals_per_cycle>
-// This is sent to the LZ77 decoder to read multiple elements per cycle from
+// This is sent to the LZ77 decoder to read multiple elements at once from
 // the history buffer.
 #ifndef LITERALS_PER_CYCLE
 #define LITERALS_PER_CYCLE 4

@@ -16,7 +16,7 @@
 // clang-format on
 
 //
-// Performs LZ77 decoding for more than 1 element per cycle.
+// Performs LZ77 decoding for more than 1 element at once.
 // Streams in 'LZ77InputData' (see common.hpp) appended with a flag (FlagBundle)
 // which contains either a literal from upstream, or a {length, distance} pair.
 // Given a literal input, this function simply tracks that literal in a history
@@ -30,7 +30,7 @@
 //    OutPipe: a SYCL pipe that streams out an array of literals and a
 //      'valid_count' that is in the range [0, literals_per_cycle].
 //    literals_per_cycle: the number of literals to read from the history
-//      buffer per cycle. This sets the maximum possible throughput for the
+//      buffer at once. This sets the maximum possible throughput for the
 //      LZ77 decoder.
 //    max_distance: the maximum distancefor a {length, distance} pair
 //      For example, for DEFLATE this is 32K and for snappy this is 64K.
@@ -426,7 +426,7 @@ void LZ77DecoderSingleElement() {
 
 //
 // The top level LZ77 decoder that selects between the single- and
-// multi-element per cycle variants above, at compile time.
+// multi-element variants above, at compile time.
 //
 //  Template parameters:
 //    InPipe: a SYCL pipe that streams in LZ77InputData with a boolean flag that
@@ -434,7 +434,7 @@ void LZ77DecoderSingleElement() {
 //    OutPipe: a SYCL pipe that streams out an array of literals and a
 //      'valid_count' that is in the range [0, literals_per_cycle].
 //    literals_per_cycle: the number of literals to read from the history
-//      buffer per cycle. This sets the maximum possible throughput for the
+//      buffer at once. This sets the maximum possible throughput for the
 //      LZ77 decoder.
 //    max_distance: the maximum distancefor a {length, distance} pair
 //      For example, for DEFLATE this is 32K and for snappy this is 64K.
@@ -463,6 +463,7 @@ void LZ77Decoder() {
   static_assert(has_data_member_v<InPipeBundleT>);
   using InDataT = decltype(std::declval<InPipeBundleT>().data);
   static_assert(is_lz77_input_data_v<InDataT>);
+  static_assert(InDataT::literals_per_cycle <= literals_per_cycle);
   static_assert(InDataT::max_distance == max_distance);
   static_assert(InDataT::max_length == max_length);
 
@@ -480,7 +481,7 @@ void LZ77Decoder() {
   // make sure we can construct the OutPipeBundleT from OutDataT and/or a bool
   static_assert(std::is_constructible_v<OutPipeBundleT, OutDataT>);
   static_assert(std::is_constructible_v<OutPipeBundleT, OutDataT, bool>);
-  static_assert(std::is_constructible_v<OutPipeBundleT, bool>); 
+  static_assert(std::is_constructible_v<OutPipeBundleT, bool>);
 
   // select which LZ77 decoder version to use based on literals_per_cycle
   // at compile time

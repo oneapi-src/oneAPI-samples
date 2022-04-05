@@ -71,8 +71,9 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
     4 bytes: Uncompressed data size in bytes
   */
 
-  // This kernel reads the entire file (HEADER, DATA, and FOOTER), strips away
-  // and parses the HEADER and FOOTER, and forwards the DATA to the next kernel
+  // This kernel reads the entire file (HEADER, DATA, and FOOTER) from the input
+  // SYCL pipe 'InPipe, strips away and parses the HEADER and FOOTER, and
+  // forwards the DATA to the next kernel through the SYCL pipe 'OutPipe'
 
   int i = 0;
   bool i_in_range = 0 < in_count;
@@ -100,7 +101,7 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
     auto pipe_data = InPipe::read();
     curr_byte = pipe_data[0];
 
-    // FSM for parsing the GZIP header. We will process 1 byte per cycle here.
+    // FSM for parsing the GZIP header, 1 byte at a time.
     switch (state) {
       case MagicNumber: {
         header_magic[state_counter] = curr_byte;
