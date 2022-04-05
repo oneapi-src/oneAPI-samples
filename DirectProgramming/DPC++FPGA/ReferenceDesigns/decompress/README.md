@@ -285,6 +285,8 @@ The following source files can be found in the `src/` sub-directory. The `src/co
 |`snappy/snappy_decompressor.hpp` | The top-level file for the Snappy decompressor. This file launches all of the Snappy kernels.
 |`snappy/snappy_reader.hpp`       | A kernel that reads the snappy format stream and produces either literals or {length, distance} pairs to be consumed by the LZ77 kernel.
 
+For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `unrolled_loop.hpp` see the README in the `DirectProgramming/DPC++FPGA/include/` directory.
+
 ### GZIP and SNAPPY
 This reference designs contains code to implement both GZIP and SNAPPY decompression. This was done to reduce the amount of duplicated code, since the implementations are very similar. This is illustrated in the system-level figures below, which illustrate the GZIP and SNAPPY decompression engines on the FPGA, respectively. The orange kernels on the FPGA in the dashed box make up the streaming decompression engines. The *Producer* and *Consumer* kernels are only used to stream data into and out of the decompression engines from and to device memory, respectively.
 
