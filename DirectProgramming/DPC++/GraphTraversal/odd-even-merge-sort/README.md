@@ -1,6 +1,6 @@
 ﻿# `odd-Even MergeSort` Sample
 
-This sample implements odd-even merge sort (also known as Batcher's sort)algorithm belonging to the class of sorting networks. While generally subefficient, for large sequences compared to algorithms with better asymptotic algorithmic complexity (i.e. merge sort or radix sort), this may be the preferred algorithms of choice for sorting batches of short-sized to mid-sized (key, value) array pairs.
+This sample implements odd-even mergesort (also known as Batcher's sort)algorithm belonging to the class of sorting networks. While generally subefficient, for large sequences compared to algorithms with better asymptotic algorithmic complexity (i.e. merge sort or radix sort), this may be the preferred algorithms of choice for sorting batches of short-sized to mid-sized (key, value) array pairs.
 
 This odd-even merge sort sample is implemented using DPC++ and SYCL for Intel CPU and GPU.
 
@@ -35,6 +35,7 @@ This sample contains three SYCL versions of the same program: 
 
 | Component 		| Description
 |:---			|:---
+| Common 		| Helper utility headerfiles
 | src 			| Manually migrated files(.cpp and .h)
 | CMakeLists.txt 	| Build file
 			
@@ -98,83 +99,166 @@ Perform the following steps:
 
 If an error occurs, you can get more details by running make with the VERBOSE=1 argument: make VERBOSE=1 For more comprehensive troubleshooting, use the Diagnostics Utility for Intel® oneAPI Toolkits, which provides system checks to find missing dependencies and permissions errors. [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
-## Example of Output for NROWS = 1024
-
-sycl_dpct_migrated for CPU
-
-	CPU iterations : 6263
-	CPU error : 4.987e-03
-	CPU Processing time: 1598.485962 (ms)
-	GPU iterations : 6263
-	GPU error : 4.987e-03
-	GPU Processing time: 9653.565430 (ms)
-	jacobiSYCL PASSED
+## Example of Output for array length=1048576
 	
-sycl_dpct_migrated for GPU
-
-	CPU iterations : 6263
-	CPU error : 4.987e-03
-	CPU Processing time: 1306.244019 (ms)
-	GPU iterations : 6263
-	GPU error : 4.987e-03
-	GPU Processing time: 4290.418945 (ms)
-	jacobiSYCL PASSED
-	
-sycl_migrated for CPU
-
-	Serial Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 1560.310547 (ms)
-
-	Running on Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
-	Parallel Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 8629.206055 (ms)
-	JacobiSYCL PASSED
-
 sycl_migrated for GPU
 
-	Serial Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 1288.634888 (ms)
-
 	Running on Intel(R) UHD Graphics P630 [0x3e96]
-	Parallel Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 4202.227051 (ms)
-	JacobiSYCL PASSED
 	
-sycl_migrated_optimized for CPU
+	Running GPU oddEvenMerge sort (1 identical iterations)...
 
-	Serial Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 1595.077881 (ms)
+	Testing array length 64 (16384 arrays per batch)...
+	Average time: 146.904007 ms
 
-	Running on Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
-	Parallel Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 9081.323242 (ms)
-	JacobiSYCL PASSED
 
-sycl_migrated_optimized for GPU
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: OK
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
 
-	Serial Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 1315.337280 (ms)
+	Testing array length 128 (8192 arrays per batch)...
+	Average time: 5.515000 ms
 
-	Running on Intel(R) UHD Graphics P630 [0x3e96]
-	Parallel Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 5225.020996 (ms)
-	JacobiSYCL PASSED
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: OK
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 256 (4096 arrays per batch)...
+	Average time: 6.579000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: OK
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 512 (2048 arrays per batch)...
+	Average time: 7.458000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: OK
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 1024 (1024 arrays per batch)...
+	Average time: 9.548000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 2048 (512 arrays per batch)...
+	Average time: 9.632000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 4096 (256 arrays per batch)...
+	Average time: 9.815000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 8192 (128 arrays per batch)...
+	Average time: 10.106000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 16384 (64 arrays per batch)...
+	Average time: 10.378000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 32768 (32 arrays per batch)...
+	Average time: 10.603000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 65536 (16 arrays per batch)...
+	Average time: 11.103000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 131072 (8 arrays per batch)...
+	Average time: 11.221000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 262144 (4 arrays per batch)...
+	Average time: 11.764000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 524288 (2 arrays per batch)...
+	Average time: 11.892000 ms
+
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Testing array length 1048576 (1 arrays per batch)...
+	Average time: 12.206000 ms
+
+	sortingNetworks-oddevenMerge sort, Throughput = 85.9066 MElements/s, Time = 0.01221 s, Size = 1048576 elements, NumDevsUsed = 1, Workgroup = 256
+
+	Validating the results...
+	...reading back GPU results
+	...inspecting keys array: ***Set 0 result key array is not ordered properly***
+	...inspecting keys and values array: OK
+	...stability property: NOT stable
+
+	Shutting down...
 
 
 ### Running Samples In DevCloud
