@@ -48,10 +48,10 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(NUM_ENGINES 2)
     if(DEFINED LOW_LATENCY)
-        set(SEED "-Xsseed=19")
+        set(SEED "-Xsseed=16")
         set(NUM_REORDER "")
     else()
-        set(SEED "-Xsseed=18")
+        set(SEED "-Xsseed=4")
         # For the High Bandwidth variant, specify 6 reordering units to improve global memory read bandwidth across 4 channels of DDR.
         # For Low Latency variant this is not necessary since only one channel of global memory is used (host memory).
         set(NUM_REORDER "-Xsnum-reorder=6")
