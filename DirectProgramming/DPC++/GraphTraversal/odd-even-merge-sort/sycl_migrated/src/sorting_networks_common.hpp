@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
 //=========================================================
 
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,22 +31,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SORTINGNETWORKS_COMMON_CUH
-#define SORTINGNETWORKS_COMMON_CUH
+#ifndef SORTINGNETWORKS_COMMON_DPH
+#define SORTINGNETWORKS_COMMON_DPH
 
-#include <CL/sycl.hpp>
-#include <dpct/dpct.hpp>
-#include "sortingNetworks_common.h"
+#include "sorting_networks_common.h"
 
 // Enables maximum occupancy
-#define SHARED_SIZE_LIMIT 1024U
+#define SHARED_SIZE_LIMIT 512U
 
-// Map to single instructions on G8x / G9x / G100
-#define UMUL(a, b) sycl::mul24((unsigned int)(a), (unsigned int)(b))
-#define UMAD(a, b, c) (UMUL((a), (b)) + (c))
-
-inline void Comparator(uint &keyA, uint &valA, uint &keyB,
-                                  uint &valB, uint dir) {
+inline void Comparator(uint &keyA, uint &valA, uint &keyB, uint &valB,
+                       uint dir) {
   uint t;
 
   if ((keyA > keyB) == dir) {

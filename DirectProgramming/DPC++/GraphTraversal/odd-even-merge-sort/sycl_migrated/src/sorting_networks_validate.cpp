@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
 //=========================================================
 
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sortingNetworks_common.h"
+#include "sorting_networks_common.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Validate sorted keys array (check for integrity and proper order)
@@ -129,7 +128,7 @@ extern "C" int validateValues(uint *resKey, uint *resVal, uint *srcKey,
 
   printf("...inspecting keys and values array: ");
 
- for (uint i = 0; i < batchSize;
+  for (uint i = 0; i < batchSize;
        i++, resKey += arrayLength, resVal += arrayLength) {
     for (uint j = 0; j < arrayLength; j++) {
       if (resKey[j] != srcKey[resVal[j]]) correctFlag = 0;
@@ -137,13 +136,9 @@ extern "C" int validateValues(uint *resKey, uint *resVal, uint *srcKey,
       if ((j < arrayLength - 1) && (resKey[j] == resKey[j + 1]) &&
           (resVal[j] > resVal[j + 1]))
         stableFlag = 0;
-						                             
-						                         
-						
-						   
     }
   }
-  
+
   printf(correctFlag ? "OK\n" : "***corrupted!!!***\n");
   printf(stableFlag ? "...stability property: stable!\n"
                     : "...stability property: NOT stable\n");

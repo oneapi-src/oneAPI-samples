@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.4.0)
-project (oddEvenMergeSort)
+project (odd-even-merge-sort)
 
 set(CMAKE_CXX_COMPILER "dpcpp")
 
@@ -14,7 +14,7 @@ endif ()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 option (BUILD_SYCL_MIGRATED_SUBPROJECT "Build targets from subproject sycl_migrated" ON)
-## option (BUILD_SYCL_MIGRATED_OPTIMIZED_SUBPROJECT "Build targets from subproject sycl_migrated_optimized" ON)
+# option (BUILD_SYCL_MIGRATED_OPTIMIZED_SUBPROJECT "Build targets from subproject sycl_migrated_optimized" ON)
 option (BUILD_SYCL_DPCT_MIGRATED_SUBPROJECT "Build targets from subproject sycl_dpct_migrated" ON)
 
 if (BUILD_SYCL_MIGRATED_SUBPROJECT)

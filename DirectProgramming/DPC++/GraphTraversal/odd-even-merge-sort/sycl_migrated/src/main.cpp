@@ -37,7 +37,7 @@ using namespace sycl;
 // Utilities and system includes
 #include <helper_timer.h>
 
-#include "sortingNetworks_common.h"
+#include "sorting_networks_common.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Test driver
@@ -80,7 +80,7 @@ int main(int argc, char **argv) try {
   q.memcpy(d_InputVal, h_InputVal, N * sizeof(uint)).wait();
 
   int flag = 1;
-  printf("Running GPU oddEvenMerge sort (%u identical iterations)...\n\n",
+  printf("Running GPU odd_even_merge sort (%u identical iterations)...\n\n",
          numIterations);
 
   for (uint arrayLength = 64; arrayLength <= N; arrayLength *= 2) {
@@ -107,9 +107,9 @@ int main(int argc, char **argv) try {
     if (arrayLength == N) {
       double dTimeSecs = 1.0e-3 * sdkGetTimerValue(&hTimer) / numIterations;
       printf(
-          "sortingNetworks-oddevenMerge sort, Throughput = %.4f MElements/s, "
+          "sorting_networks-odd_even_merge sort, Throughput = %.4f MElements/s, "
           "Time = %.5f "
-          "s, Size = %u elements, NumDevsUsed = %u, Workgroup = %u\n",
+          "s, Size = %u elements, Num_Devs_Used = %u, Workgroup = %u\n",
           (1.0e-6 * (double)arrayLength / dTimeSecs), dTimeSecs, arrayLength, 1,
           workgroup_size);
     }

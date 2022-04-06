@@ -36,8 +36,8 @@ using namespace sycl;
 
 #include <assert.h>
 
-#include "sortingNetworks_common.h"
-#include "sortingNetworks_common.hpp"
+#include "sorting_networks_common.h"
+#include "sorting_networks_common.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Monolithic Bacther's sort kernel for short arrays fitting into shared memory
