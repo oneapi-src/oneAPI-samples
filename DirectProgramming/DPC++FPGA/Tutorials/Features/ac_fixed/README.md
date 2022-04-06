@@ -42,7 +42,7 @@ ac_fixed<4,-3,true> x; // (.xxxx)2^(-3) : range=[-1/16, 7/128], quantum = 1/128
 
 The `ac_fixed` class also provides two more optional parameters for controlling the overflow and rounding modes. 
 
-For more details on the `ac_fixed` class, please refer to the documentation provided with the installation at `%INSTALL_DIR%/include/sycl/ext/intel/ac_types/ac_datatypes_ref.pdf`.
+For more details on the `ac_fixed` class, please refer to the documentation provided with the installation at `<installation path>/lib/oclfpga/include/ref/ac_datatypes_ref.pdf`.
 
 To use an `ac_fixed` type in your code, you must include the following header:
 
@@ -89,7 +89,7 @@ When you use the `ac_fixed` library, keep the following points in mind:
 
 2. Return Types
 
-    For fixed-point functions, each function has a default return type. Assigning the result to a non-default return type triggers a type conversion and can cause an increase in logic use or a loss of accuracy in your results.  All return types are documented at the top of the `ac_fixed_math.hpp` file. For example, for `sin_fixed` and `cos_fixed`, the input type is `ac_fixed<W, 3, true>`, and the output type is `ac_fixed<W-1, 2, true>`.
+    For fixed-point functions, each function has a default return type. Assigning the result to a non-default return type triggers a type conversion and can cause an increase in logic use or a loss of accuracy in your results.  All return types are documented at the top of the `ac_fixed_math.hpp` file. For example, for `sin_fixed` and `cos_fixed`, the input type is `ac_fixed<W, 3, true>`, and the output type is `ac_fixed<W-1, 2, true>`. You can also use the `auto` type to let the compiler use the default return type.
 
 3. Accuracy
  - Floating point vs Fixed point
