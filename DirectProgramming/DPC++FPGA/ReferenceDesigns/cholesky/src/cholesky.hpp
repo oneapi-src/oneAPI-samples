@@ -20,8 +20,7 @@ class CholeskyDDRToLocalMem;
 class Cholesky;
 class CholeskyLocalMemToDDRL;
 class APipe;
-class QPipe;
-class RPipe;
+class LPipe;
 
 /*
   Implementation of the Cholesky decomposition using multiple streaming kernels
@@ -52,7 +51,7 @@ void CholeskyDecompositionImpl(
   // Pipes to communicate the A and L matrices between kernels
   using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
   using LMatrixPipe =
-      sycl::ext::intel::pipe<RPipe, TT, kNumElementsPerDDRBurst * 4>;
+      sycl::ext::intel::pipe<LPipe, TT, kNumElementsPerDDRBurst * 4>;
 
   // Allocate FPGA DDR memory.
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);

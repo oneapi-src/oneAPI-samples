@@ -184,12 +184,7 @@ int main(int argc, char *argv[]) {
               << (kMatricesToDecompose > 1 ? "ces " : "x ") << repetitions
               << " times" << std::endl;
 
-    // Switch between ac_complex<float> and float depending on the value
-    // of COMPLEX that is set by the build system
-    constexpr bool is_complex = COMPLEX != 0;
-    using TT = std::conditional_t<is_complex, ac_complex<float>, float>;
-
-    CholeskyDecomposition<TT, is_complex>(a_matrix, l_matrix, q,
+    CholeskyDecomposition<T, kComplex>(a_matrix, l_matrix, q,
                                           kMatricesToDecompose, repetitions);
 
     // For output post-processing (op)
