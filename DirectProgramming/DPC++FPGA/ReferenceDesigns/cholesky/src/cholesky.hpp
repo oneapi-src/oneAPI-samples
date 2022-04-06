@@ -27,7 +27,7 @@ class LPipe;
   Can be configured by datatype, matrix size (must use square matrices), real
   and complex.
 */
-template <unsigned dimension,    // Number of dimension/rows in the input matrix
+template <unsigned dimension,    // Number of columns/rows in the input matrix
           unsigned raw_latency,  // RAW latency for triangular loop optimization
           bool is_complex,       // Selects between ac_complex<T> and T datatype
           typename T,            // The datatype for the computation
