@@ -1,8 +1,8 @@
 ﻿# `odd-Even MergeSort` Sample
 
-This sample implements odd-even mergesort (also known as Batcher's sort)algorithm belonging to the class of sorting networks. While generally subefficient, for large sequences compared to algorithms with better asymptotic algorithmic complexity (i.e. merge sort or radix sort), this may be the preferred algorithms of choice for sorting batches of short-sized to mid-sized (key, value) array pairs.
+This sample implements odd-even mergesort (also known as Batcher's sort) algorithm belonging to the class of sorting networks. While generally subefficient, for large sequences compared to algorithms with better asymptotic algorithmic complexity (i.e. merge sort or radix sort), this may be the preferred algorithms of choice for sorting batches of short-sized to mid-sized (key, value) array pairs.
 
-This odd-even merge sort sample is implemented using DPC++ and SYCL for Intel CPU and GPU.
+This odd-even mergesort sample is implemented using DPC++ and SYCL for Intel CPU and GPU.
 
 
 | Optimized for                     | Description
@@ -54,7 +54,7 @@ DPC++ and SYCL Implementation is explained in the code using key concepts such a
 
 
 
-## Building the odd-even merge sort Program for CPU and GPU
+## Building the odd-even mergesort Program for CPU and GPU
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
@@ -70,7 +70,7 @@ DPC++ and SYCL Implementation is explained in the code using key concepts such a
 ### On a Linux System
 
 Perform the following steps:
-1.	Build the program with cmake using the following shell commands. From the root directory of the jacobi project:
+1.	Build the program with cmake using the following shell commands. From the root directory of the odd-even-merge-sort project:
 
 	```
 	$ mkdir build
@@ -277,7 +277,7 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 	git clone https://github.com/oneapi-src/oneAPI-samples.git
 	```
 
-4. Change directories to the Jacobi-Iterative sample directory.
+4. Change directories to the odd-even-merge-sort sample directory.
 	```
 	cd ~/oneAPI-samples/DirectProgramming/DPC++/GraphTraversal/odd-even-merge-sort
 	```
