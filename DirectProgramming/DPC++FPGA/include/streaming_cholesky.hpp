@@ -118,8 +118,8 @@ struct StreamingCholesky {
 
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
-            if (write_idx == k) {
-              if constexpr (k * pipe_size + t < kColumns) {
+            if constexpr (k * pipe_size + t < kColumns) {
+              if (write_idx == k) {
                 a_load[li / kLoopIterPerColumn][k * pipe_size + t] =
                     pipe_read.template get<t>();
               }

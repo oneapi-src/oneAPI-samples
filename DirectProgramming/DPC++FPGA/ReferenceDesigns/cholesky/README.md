@@ -22,10 +22,10 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 **Performance**
 Please refer to the performance disclaimer at the end of this README.
 
-| Device                                         | Throughput
-|:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 221k matrices/s for real matrices of size 32 * 32
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 214k matrices/s for real matrices of size 32 * 32
+| Device                                            | Throughput
+|:---                                               |:---
+| Intel® PAC with Intel Arria® 10 GX FPGA           | 221k matrices/s for real matrices of size 32 * 32
+| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) | 214k matrices/s for real matrices of size 32 * 32
 
 
 ## Purpose
@@ -240,6 +240,8 @@ The following source files can be found in the `src/` sub-directory.
 |                                     |
 |`cholesky.hpp`                       | Contains the compute function that calls the kernels.
 |`memory_transfers.hpp`               | Contains functions to transfer matrices from/to the FPGA DDR with streaming interfaces.
+
+For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `unrolled_loop.hpp` see the README in the `DirectProgramming/DPC++FPGA/include/` directory.
 
 ### Compiler Flags Used
 

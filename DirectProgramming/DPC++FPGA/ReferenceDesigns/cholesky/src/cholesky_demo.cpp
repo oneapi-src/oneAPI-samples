@@ -10,7 +10,7 @@
 #include "cholesky.hpp"
 #include "dpc_common.hpp"
 
-// #define DEBUG
+// Use "#define DEBUG" to print debugging information such as matrices content
 
 /*
   COMPLEX, MATRIX_DIMENSION and FIXED_ITERATIONS are defined
@@ -28,13 +28,12 @@
   - repetitions: The number of repetitions of the computation to execute.
                  (for performance evaluation)
 */
-template<typename T, bool is_complex>
-void CholeskyDecomposition(std::vector<T> &a_matrix,
-                           std::vector<T> &l_matrix, sycl::queue &q,
-                           int matrix_count, int repetitions) {
-  CholeskyDecompositionImpl<MATRIX_DIMENSION, FIXED_ITERATIONS,
-                            is_complex, float>(a_matrix, l_matrix, q,
-                                               matrix_count, repetitions);
+template <typename T, bool is_complex>
+void CholeskyDecomposition(std::vector<T> &a_matrix, std::vector<T> &l_matrix,
+                           sycl::queue &q, int matrix_count, int repetitions) {
+  CholeskyDecompositionImpl<MATRIX_DIMENSION, FIXED_ITERATIONS, is_complex,
+                            float>(a_matrix, l_matrix, q, matrix_count,
+                                   repetitions);
 }
 
 /*
@@ -65,6 +64,7 @@ int main(int argc, char *argv[]) {
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kLMatrixSize = (kColumns * (kColumns + 1)) / 2;
   constexpr bool kComplex = COMPLEX != 0;
+  constexpr size_t kMatricesToDecompose = 8;
 
   // Get the number of times we want to repeat the decomposition
   // from the command line.
@@ -73,14 +73,13 @@ int main(int argc, char *argv[]) {
 #else
   int repetitions = argc > 1 ? atoi(argv[1]) : 819200;
 #endif
+
   if (repetitions < 1) {
-    std::cout << "Number of repetitions given is lower than 1." << std::endl;
-    std::cout << "The decomposition must occur at least 1 time." << std::endl;
-    std::cout << "Increase the number of repetitions (e.g. 16)." << std::endl;
+    std::cerr << "Number of repetitions given is lower than 1." << std::endl;
+    std::cerr << "The decomposition must occur at least 1 time." << std::endl;
+    std::cerr << "Increase the number of repetitions (e.g. 16)." << std::endl;
     return 1;
   }
-
-  constexpr size_t kMatricesToDecompose = 8;
 
   try {
     // SYCL boilerplate
@@ -91,11 +90,9 @@ int main(int argc, char *argv[]) {
 #endif
 
     // Enable the queue profiling to time the execution
-    sycl::property_list
-                    queue_properties{sycl::property::queue::enable_profiling()};
-    sycl::queue q = sycl::queue(device_selector,
-                                dpc_common::exception_handler,
-                                queue_properties);
+    sycl::queue q = sycl::queue(
+        device_selector, dpc_common::exception_handler,
+        sycl::property_list{sycl::property::queue::enable_profiling()});
     sycl::device device = q.get_device();
     std::cout << "Device name: "
               << device.get_info<sycl::info::device::name>().c_str()
@@ -123,8 +120,7 @@ int main(int argc, char *argv[]) {
     // Generate the random (hermitian and positive-definite) input matrices
     srand(kRandomSeed);
 
-    for (int matrix_index = 0; matrix_index < kMatricesToDecompose;
-         matrix_index++) {
+    for (int mat_idx = 0; mat_idx < kMatricesToDecompose; mat_idx++) {
       // Construct a single random hermitian and positive-definite matrix
       // To do so we, we generate a hermitian matrix A where each element
       // is between 0 and 1.
@@ -139,7 +135,7 @@ int main(int argc, char *argv[]) {
       constexpr float kRandomMin = 0;
       constexpr float kRandomMax = 1;
 
-      int current_matrix = matrix_index * kAMatrixSize;
+      int current_matrix = mat_idx * kAMatrixSize;
 
       for (size_t row = 0; row < kRows; row++) {
         for (size_t col = 0; col < kColumns; col++) {
@@ -172,17 +168,16 @@ int main(int argc, char *argv[]) {
       }    // end of row
 
 #ifdef DEBUG
-      std::cout << "A MATRIX " << matrix_index << std::endl;
+      std::cout << "A MATRIX " << mat_idx << std::endl;
       for (size_t row = 0; row < kRows; row++) {
         for (size_t col = 0; col < kColumns; col++) {
-          std::cout << a_matrix[current_matrix + (col * kRows) + row]
-                    << " ";
+          std::cout << a_matrix[current_matrix + (col * kRows) + row] << " ";
         }  // end of col
         std::cout << std::endl;
       }  // end of row
 #endif
 
-    }  // end of matrix_index
+    }  // end of mat_idx
 
     std::cout << "Computing the Cholesky decomposition of "
               << kMatricesToDecompose << " matri"
@@ -206,9 +201,7 @@ int main(int argc, char *argv[]) {
 
     // Check L matrices
     std::cout << "Verifying results..." << std::endl;
-    for (int matrix_index = 0; matrix_index < kMatricesToDecompose;
-         matrix_index++) {
-
+    for (int mat_idx = 0; mat_idx < kMatricesToDecompose; mat_idx++) {
       // Keep track of L element index
       size_t l_idx = 0;
 
@@ -218,7 +211,7 @@ int main(int argc, char *argv[]) {
           if (j > i)
             l_matrix_op[i][j] = 0;
           else {
-            l_matrix_op[i][j] = l_matrix[(matrix_index * kLMatrixSize) + l_idx];
+            l_matrix_op[i][j] = l_matrix[(mat_idx * kLMatrixSize) + l_idx];
             l_idx++;
           }
         }
@@ -256,20 +249,18 @@ int main(int argc, char *argv[]) {
           // L is finite at index i,j
           bool l_is_finite;
 
-          int current_matrix = matrix_index * kAMatrixSize;
+          int current_matrix = mat_idx * kAMatrixSize;
           int current_element = (j * kRows) + i;
 
 #if COMPLEX == 0
-          ll_star_eq_a =
-              abs(a_matrix[current_matrix + current_element] - l_l_star_ij) <
-              kErrorThreshold;
+          ll_star_eq_a = abs(a_matrix[current_matrix + current_element] -
+                             l_l_star_ij) < kErrorThreshold;
 
 #else
-          ll_star_eq_a =
-              (abs(a_matrix[current_matrix + current_element].r()
-                - l_l_star_ij.r()) < kErrorThreshold) &&
-              (abs(a_matrix[current_matrix + current_element].i()
-                - l_l_star_ij.i()) < kErrorThreshold);
+          ll_star_eq_a = (abs(a_matrix[current_matrix + current_element].r() -
+                              l_l_star_ij.r()) < kErrorThreshold) &&
+                         (abs(a_matrix[current_matrix + current_element].i() -
+                              l_l_star_ij.i()) < kErrorThreshold);
 #endif
 
           l_is_finite = ((i < kColumns) && IsFinite(l_matrix_op[i][j])) ||
@@ -286,14 +277,14 @@ int main(int argc, char *argv[]) {
               continue;
             }
 
-            std::cerr << "Error in matrix " << matrix_index << std::endl;
+            std::cerr << "Error in matrix " << mat_idx << std::endl;
 
             if (!ll_star_eq_a) {
-              std::cerr << "Error: A[" << i << "][" << j << "] = "
-                        << a_matrix[(current_matrix * kAMatrixSize)
-                                    + (j * kRows) + i]
-                        << " but LL*[" << i << "][" << j
-                        << "] = " << l_l_star_ij << std::endl;
+              std::cerr
+                  << "Error: A[" << i << "][" << j << "] = "
+                  << a_matrix[(current_matrix * kAMatrixSize) + (j * kRows) + i]
+                  << " but LL*[" << i << "][" << j << "] = " << l_l_star_ij
+                  << std::endl;
             }
             if (!l_is_finite) {
               std::cerr << "L[" << i << "][" << j << "] = " << l_matrix_op[i][j]
@@ -310,7 +301,7 @@ int main(int argc, char *argv[]) {
                   << "!!!!!!!!!!!!!! " << error_count << " errors" << std::endl;
         return 1;
       }
-    }  // end of matrix_index
+    }  // end of mat_idx
 
     std::cout << std::endl << "PASSED" << std::endl;
     return 0;
@@ -336,7 +327,8 @@ int main(int argc, char *argv[]) {
               << std::endl;
     std::cerr << "   In this run, more than "
               << ((kAMatrixSize + kLMatrixSize) * 2 * kMatricesToDecompose *
-                  sizeof(float)) / pow(2, 30)
+                  sizeof(float)) /
+                     pow(2, 30)
               << " GBs of memory was requested for the decomposition of a "
               << "matrix of size " << kRows << " x " << kColumns << std::endl;
     std::terminate();

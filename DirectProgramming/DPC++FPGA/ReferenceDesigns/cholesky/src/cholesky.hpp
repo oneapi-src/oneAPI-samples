@@ -2,8 +2,6 @@
 #define __CHOLESKY_HPP__
 
 #include <CL/sycl.hpp>
-#include <chrono>
-#include <cstring>
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
@@ -64,6 +62,7 @@ void CholeskyDecompositionImpl(
     std::cerr << "Error when allocating FPGA DDR" << std::endl;
     std::cerr << "The FPGA DDR may be full" << std::endl;
     std::cerr << "Try reducing the matrix sizes/count" << std::endl;
+    return;
   }
 
   // Copy the matrices to decompose on the FPGA DDR
@@ -101,7 +100,6 @@ void CholeskyDecompositionImpl(
     [[intel::loop_coalesce(2)]]
     for (int rep_idx = 0; rep_idx < repetitions; rep_idx++) {
       for (int matrix_idx = 0; matrix_idx < matrix_count; matrix_idx++) {
-
         for (int li = 0; li < kLoopIter; li++) {
           TT bank[kNumElementsPerDDRBurst];
 
