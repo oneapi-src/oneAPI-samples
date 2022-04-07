@@ -46,13 +46,13 @@ The odd-even mergesort algorithm was developed by K.E. Batcher. It is based on a
 
 In contrast to mergesort, this algorithm is not data-dependent, i.e. the same comparisons are performed regardless of the actual data. Therefore, odd-even mergesort can be implemented as a sorting network.
 
-
 ## Key implementation details
 
-DPC++ and SYCL Implementation is explained in the code using key concepts such as Cooperative Groups, Shared Memory and Data-Parallel algorithm.
+DPC++ and SYCL Implementation is explained in the code using key features such as Cooperative Groups, Shared Memory and Data-Parallel concept.
 
+In this implementation, a random sequence of power of 2 elements is given as input and the algorithm sorts the sequence in parallel.This algorithm sorts the first half of a list, and sort the second half separately, and then sort the odd-indexed entries and the even-indexed entries separately, then you need make only one more comparison-switch per pair of keys to completely sort the list.
 
-
+Comparator swaps the value if top value is greater or equal to the bottom value.
 
 ## Building the odd-even mergesort Program for CPU and GPU
 
