@@ -1,6 +1,18 @@
 #ifndef __STREAMING_QRI_HPP__
 #define __STREAMING_QRI_HPP__
 
+#ifdef __SYCL_DEVICE_ONLY__
+#define CL_CONSTANT __attribute__((opencl_constant))
+#else
+#define CL_CONSTANT
+#endif
+#define PRINTF(format, ...)                                          \
+  {                                                                  \
+    static const CL_CONSTANT char _format[] = format;                \
+    sycl::ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
+  }
+
+
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 #include "constexpr_math.hpp"
@@ -186,8 +198,11 @@ struct StreamingQRI {
 
           fpga_tools::UnrolledLoop<columns>([&](auto k) {
             auto lhs = rt_matrix[col][k];
-            auto rhs = (k == col) || (col < row) ? TT{0} :
+            auto rhs = (k >= col) || (col < row) ? TT{0} :
                                                       ri_matrix_compute[row][k];
+            if(!((k >= col) || (col < row))){
+              PRINTF("reading ri_matrix_compute at %d %d\n", row, int(k));
+            }
             if(k==col){
               div_val = lhs;
             }
@@ -200,6 +215,7 @@ struct StreamingQRI {
           // Write the result to both the working copy and the final matrix
           // This is done to only have matrices with a single read and a
           // single write.
+          PRINTF("Writing %d %d %f %f\n", row, col, current_sum, result);
           ri_matrix_compute[row][col] = result;
           ri_matrix[row][col] = result;
         }

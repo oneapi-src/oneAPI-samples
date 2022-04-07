@@ -1,5 +1,5 @@
-#ifndef __CHOLESKY_HPP__
-#define __CHOLESKY_HPP__
+#ifndef __CHOLESKY_INVERSION_HPP__
+#define __CHOLESKY_INVERSION_HPP__
 
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
@@ -11,39 +11,45 @@
 #include "memory_transfers.hpp"
 
 // Included from DirectProgramming/DPC++FPGA/include/
-#include "streaming_cholesky.hpp" 
+#include "streaming_cholesky.hpp"
+#include "streaming_cholesky_inversion.hpp"
 #include "tuple.hpp"
 
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
 class CholeskyDDRToLocalMem;
-class Cholesky;
+class CholeskyDecomposition;
+class CholeskyInversion;
 class CholeskyLocalMemToDDRL;
 class APipe;
 class LPipe;
+class IPipe;
 
 /*
-  Implementation of the Cholesky decomposition using multiple streaming kernels
+  Implementation of the Cholesky-based inversion using streaming kernels
   Can be configured by datatype, matrix size (must use square matrices), real
   and complex.
 */
-template <unsigned dimension,    // Number of dimension/rows in the input matrix
-          unsigned raw_latency,  // RAW latency for triangular loop optimization
-          bool is_complex,       // Selects between ac_complex<T> and T datatype
-          typename T,            // The datatype for the computation
+template <unsigned dimension,  // Number of columns/rows in the input matrix
+          unsigned raw_latency_decomposition,  // RAW latency for triangular
+                                               // loop optimization
+          unsigned raw_latency_inversion,  // RAW latency for triangular loop
+                                           // optimization
+          bool is_complex,  // Selects between ac_complex<T> and T datatype
+          typename T,       // The datatype for the computation
           typename TT = std::conditional_t<is_complex, ac_complex<T>, T>
           // TT will be ac_complex<T> or T depending on is_complex
           >
 void CholeskyInversionImpl(
-    std::vector<TT> &a_matrix,  // Input matrix A to decompose
-    std::vector<TT> &l_matrix,  // Output matrix L
+    std::vector<TT> &a_matrix,  // Input matrix A to invert
+    std::vector<TT> &i_matrix,  // Output matrix I (inverse of A)
     sycl::queue &q,             // Device queue
-    int matrix_count,           // Number of matrices to decompose
+    int matrix_count,           // Number of matrices to invert
     int repetitions             // Number of repetitions, for performance
                                 // evaluation
 ) {
   constexpr int kAMatrixSize = dimension * dimension;
-  constexpr int kLMatrixSize = dimension * (dimension + 1) / 2;
+  constexpr int kIMatrixSize = dimension * dimension;
   constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
 
   using PipeType = fpga_tools::NTuple<TT, kNumElementsPerDDRBurst>;
@@ -52,12 +58,13 @@ void CholeskyInversionImpl(
   using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
   using LMatrixPipe =
       sycl::ext::intel::pipe<LPipe, TT, kNumElementsPerDDRBurst * 4>;
+  using IMatrixPipe = sycl::ext::intel::pipe<IPipe, PipeType, 3>;
 
   // Allocate FPGA DDR memory.
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
-  TT *l_device = sycl::malloc_device<TT>(kLMatrixSize * matrix_count, q);
+  TT *i_device = sycl::malloc_device<TT>(kIMatrixSize * matrix_count, q);
 
-  if((a_device == nullptr) || (l_device == nullptr)){
+  if ((a_device == nullptr) || (i_device == nullptr)) {
     std::cerr << "Error when allocating FPGA DDR" << std::endl;
     std::cerr << "The FPGA DDR may be full" << std::endl;
     std::cerr << "Try reducing the matrix sizes/count" << std::endl;
@@ -77,83 +84,44 @@ void CholeskyInversionImpl(
 
   // Read the A matrix from the AMatrixPipe pipe and compute the Cholesky
   // decomposition. Write the L output matrix to the LMatrixPipe pipe.
-  q.single_task<Cholesky>(
-      fpga_linalg::StreamingCholesky<T, is_complex, dimension, raw_latency,
-                        kNumElementsPerDDRBurst, AMatrixPipe, LMatrixPipe>());
+  q.single_task<CholeskyDecomposition>(
+      fpga_linalg::StreamingCholesky<
+          T, is_complex, dimension, raw_latency_decomposition,
+          kNumElementsPerDDRBurst, AMatrixPipe, LMatrixPipe>());
 
-  auto ddr_write_event =
-  q.single_task<CholeskyLocalMemToDDRL>([=]() [[intel::kernel_args_restrict]] {
-    // Read the L matrix from the LMatrixPipe pipe and copy it to the FPGA DDR
-    // Number of DDR bursts of kNumElementsPerDDRBurst required to write
-    // one vector
-    constexpr bool kIncompleteBurst =
-       kLMatrixSize % kNumElementsPerDDRBurst != 0;
-    constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
-    constexpr int kLoopIter =
-       (kLMatrixSize / kNumElementsPerDDRBurst) + kExtraIteration;
+  // Read the L matrix from the LMatrixPipe pipe and compute the Cholesky-based
+  // inversion. Write the I output matrix to the IMatrixPipe pipe.
+  q.single_task<CholeskyInversion>(
+      fpga_linalg::StreamingCholeskyInversion<
+          T, is_complex, dimension, raw_latency_inversion,
+          kNumElementsPerDDRBurst, LMatrixPipe, IMatrixPipe>());
 
-    sycl::device_ptr<TT> vector_ptr_device(l_device);
-
-    // Repeat matrix_count complete L matrix pipe reads
-    // for as many repetitions as needed
-    [[intel::loop_coalesce(2)]]
-    for (int rep_idx = 0; rep_idx < repetitions; rep_idx++) {
-      for (int matrix_idx = 0; matrix_idx < matrix_count; matrix_idx++) {
-        for (int li = 0; li < kLoopIter; li++) {
-          TT bank[kNumElementsPerDDRBurst];
-
-          for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-            if(((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize){
-              bank[k] = LMatrixPipe::read();
-            }
-          }
-
-          // Copy the L matrix result to DDR
-          if constexpr (kIncompleteBurst){
-            // Write a burst of kNumElementsPerDDRBurst elements to DDR
-            #pragma unroll
-            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              if(((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize){
-                vector_ptr_device[(matrix_idx * kLMatrixSize)
-                          + (li * kNumElementsPerDDRBurst) + k] = bank[k];
-              }
-            }
-          }
-          else{
-            // Write a burst of kNumElementsPerDDRBurst elements to DDR
-            #pragma unroll
-            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              vector_ptr_device[(matrix_idx * kLMatrixSize)
-                          + (li * kNumElementsPerDDRBurst) + k] = bank[k];
-            }
-          }
-        }  // end of li
-      }  // end of matrix_idx
-    }    // end of rep_idx
+  auto ddr_write_event = q.single_task<CholeskyLocalMemToDDRL>([=] {
+    MatrixReadFromPipeToDDR<TT, dimension, dimension, kNumElementsPerDDRBurst,
+                            IMatrixPipe>(i_device, matrix_count, repetitions);
   });
 
   ddr_write_event.wait();
 
   // Compute the total time the execution lasted
-  auto start_time = ddr_read_event.template
-              get_profiling_info<sycl::info::event_profiling::command_start>();
-  auto end_time = ddr_write_event.template
-                get_profiling_info<sycl::info::event_profiling::command_end>();
+  auto start_time = ddr_read_event.template get_profiling_info<
+      sycl::info::event_profiling::command_start>();
+  auto end_time = ddr_write_event.template get_profiling_info<
+      sycl::info::event_profiling::command_end>();
   double diff = (end_time - start_time) / 1.0e9;
   q.throw_asynchronous();
 
   std::cout << "   Total duration:   " << diff << " s" << std::endl;
-  std::cout << "Throughput: "
-            << ((repetitions * matrix_count) / diff) * 1e-3
+  std::cout << "Throughput: " << ((repetitions * matrix_count) / diff) * 1e-3
             << "k matrices/s" << std::endl;
 
   // Copy the L matrices result from the FPGA DDR to the host memory
-  q.memcpy(l_matrix.data(), l_device, kLMatrixSize * matrix_count * sizeof(TT))
+  q.memcpy(i_matrix.data(), i_device, kIMatrixSize * matrix_count * sizeof(TT))
       .wait();
 
   // Clean allocated FPGA memory
   free(a_device, q);
-  free(l_device, q);
+  free(i_device, q);
 }
 
-#endif /* __CHOLESKY_HPP__ */
+#endif /* __CHOLESKY_INVERSION_HPP__ */

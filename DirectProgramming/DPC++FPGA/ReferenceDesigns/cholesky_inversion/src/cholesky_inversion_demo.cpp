@@ -13,11 +13,10 @@
 // Use "#define DEBUG" to print debugging information such as matrices content
 
 /*
-  COMPLEX, MATRIX_DIMENSION and FIXED_ITERATIONS are defined by the build system
-  Depending on the value of COMPLEX, computes the real or complex Cholesky-based
-  inversion.
-  The Cholesky decompostion provides the L matrix from A such that:
-  A = LL*
+  COMPLEX, MATRIX_DIMENSION, FIXED_ITERATIONS_DECOMPOSITION and
+  FIXED_ITERATIONS_INVERSION are defined by the build system Depending on the
+  value of COMPLEX, computes the real or complex Cholesky-based inversion. The
+  Cholesky decompostion provides the L matrix from A such that: A = LL*
   Therefore we can compute inv(A) = inv(LL*)
                                   = inv(L*) x inv(L)
                                   = inv(L)* x inv(L)
@@ -33,7 +32,8 @@
 template <typename T, bool is_complex>
 void CholeskyInversion(std::vector<T> &a_matrix, std::vector<T> &i_matrix,
                        sycl::queue &q, int matrix_count, int repetitions) {
-  CholeskyInversionImpl<MATRIX_DIMENSION, FIXED_ITERATIONS, is_complex, float>(
+  CholeskyInversionImpl<MATRIX_DIMENSION, FIXED_ITERATIONS_DECOMPOSITION,
+                        FIXED_ITERATIONS_INVERSION, is_complex, float>(
       a_matrix, i_matrix, q, matrix_count, repetitions);
 }
 
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kIMatrixSize = kRows * kColumns;
   constexpr bool kComplex = COMPLEX != 0;
-  constexpr size_t kMatricesToInvert = 8;
+  constexpr size_t kMatricesToInvert = 1;
 
   // Get the number of times we want to repeat the inversion from the command
   // line.
@@ -105,6 +105,7 @@ int main(int argc, char *argv[]) {
     // Create vectors to hold all the input and output matrices
     std::vector<T> a_matrix;
     std::vector<T> i_matrix;
+    std::vector<T> r, weights;
 
     a_matrix.resize(kAMatrixSize * kMatricesToInvert);
     i_matrix.resize(kIMatrixSize * kMatricesToInvert);
@@ -121,52 +122,141 @@ int main(int argc, char *argv[]) {
     // Generate the random (hermitian and positive-definite) input matrices
     srand(kRandomSeed);
 
+    // Max condition number
+    constexpr float kEpsilon = 0.5;
+
+    // Random min and max values for the random floating-point value
+    // generation
+    constexpr float kRandomMin = 0;
+    constexpr float kRandomMax = 1;
+
+    /*
+      Generate a random matrix with a given epsilon such that
+      cond(M, inf) <= (1+epsilon)/(1-epsilon)
+      This is helpful as having a condition number with infinite norm close to 1
+      reduces the numerical instability of the matrix inversion.
+      Provided an epsilon value, this function populates the output vector with
+      a matrix in a row fashion.
+
+      Algorithm courtesy of Carl Christian Kjelgaard Mikkelsen (spock@cs.umu.se)
+
+      Matlab code snipet this function reimplements in C++:
+
+        function [A, B]=myDiagonal(m,epsilon)
+
+        % Returns a matrix that is diagonally dominant by rows
+        %
+        % CALL SEQUENCE:
+        %    [A, B]=ccDiagonally(m, epsilon)
+        %
+        % INPUT:
+        %    m        the dimension
+        %    epsilon  the dominance factor epsilon in (0,1]
+        %
+        % OUTPUT:
+        %    A        a matrix which is strictly diagonally domimant by rows
+        %    B        B = D\A, where D is the diagonal of A
+        %
+        % The main purpose of this function is to construct test matrices
+        % for, say, Gaussian elimination with no pivoting.
+        %
+        % The matrix A is not necessarily well-conditioned, but
+        % the infinity norm condition number of the matrix B is bounded by
+        %
+        %                  (1+epsilon)/(1 - epsilon)
+
+        % PROGRAMMING by Carl Christian Kjelgaard Mikkelsen (spock@cs.umu.se)
+        %   2021-10-21  Initial programming and testing.
+
+        % Generate a random matrix
+        R=rand(m,m)-rand(m,m);
+
+        % Eliminate the diagonal
+        D=diag(diag(R)); R=R-D;
+
+        % Measure the weight of the off diagonal entries
+        w=abs(R)*ones(m,1);
+
+        % Construct the new diagonal elements
+        d=w/epsilon;
+
+        % Construct the matrix which is diagonally dominant
+        A=R+diag(d);
+
+        % Do the diagonal scaling
+        B=diag(diag(A))\A;
+
+
+        Once this matrix is generated, we need to alter it a little to make
+        it Hermitian
+    */
     for (int mat_idx = 0; mat_idx < kMatricesToInvert; mat_idx++) {
-      // Construct a single random hermitian and positive-definite matrix
-      // To do so we, we generate a hermitian matrix A where each element
-      // is between 0 and 1.
-      // Since A(i,j) < 1 by construction and a symmetric diagonally dominant
-      // matrix is symmetric positive definite we can be sure to have a
-      // symmetric diagonally dominant by adding nI to A
-      // A = A + n*eye(n);
-      // For complex matrices, the diagonal elements must be real.
-
-      // Random min and max values for the random floating-point value
-      // generation
-      constexpr float kRandomMin = 0;
-      constexpr float kRandomMax = 1;
-
       int current_matrix = mat_idx * kAMatrixSize;
 
-      for (size_t row = 0; row < kRows; row++) {
-        for (size_t col = 0; col < kColumns; col++) {
-          float diag_scaling = (row == col) ? float{kRows} : 0;
-
-          int index = current_matrix + (col * kRows) + row;
-          int transpose_index = current_matrix + (row * kRows) + col;
-
-          if (col >= row) {
-            float random_real = RandomValueInInterval(kRandomMin, kRandomMax);
-#if COMPLEX == 0
-            a_matrix[index] = random_real + diag_scaling;
+      // Generate a random matrix R with diagonal elements set to 0
+      // and measure the weights of the off diagonal entries
+      std::vector<T> r, weights, a_matrix_non_hermitian;
+      r.resize(kColumns * kColumns);
+      a_matrix_non_hermitian.resize(kColumns * kColumns);
+      weights.resize(kColumns);
+      for (int row = 0; row < kColumns; row++) {
+        weights[row] = {0};
+        for (int col = 0; col < kColumns; col++) {
+          if (col != row) {
+            int index = row * kColumns + col;
+            float random1 = RandomValueInInterval(kRandomMin, kRandomMax);
+            T elem;
+#if COMPLEX == 1
+            float random1I = RandomValueInInterval(kRandomMin, kRandomMax);
+            elem = {random1, random1I};
+            r[index] = elem;
 #else
-            float random_imag =
-                row == col ? float{0}
-                           : RandomValueInInterval(kRandomMin, kRandomMax);
-            ac_complex<float> random_complex{random_real + diag_scaling,
-                                             random_imag};
-            a_matrix[index] = random_complex;
+            elem = random1;
+            r[index] = elem;
 #endif
-          } else {
-            // conjugate transpose
-#if COMPLEX == 0
-            a_matrix[index] = a_matrix[transpose_index];
-#else
-            a_matrix[index] = a_matrix[transpose_index].conj();
-#endif
+            weights[row] += elem;
           }
-        }  // end of col
-      }    // end of row
+        }
+
+        // Construct the new diagonal element
+        weights[row] /= kEpsilon;
+        r[row * kColumns + row] = weights[row];
+      }
+
+      // Perform the diagonal scaling by solving:
+      // diag(diag(A))*output = A
+      for (int row = 0; row < kColumns; row++) {
+        for (int col = 0; col < kColumns; col++) {
+          int index = row * kColumns + col;
+          a_matrix_non_hermitian[index] = r[index] / r[row * kColumns + row];
+        }
+      }
+
+      // Make the matrix Hermitian
+      for (int row = 0; row < kColumns; row++) {
+        for (int col = 0; col < kColumns; col++) {
+          int index = row * kColumns + col;
+
+          a_matrix[current_matrix + index] =
+              (a_matrix_non_hermitian[index] +
+               a_matrix_non_hermitian[col * kColumns + row]) /
+              2;
+
+#if COMPLEX == 1
+            if (row > col) {
+              a_matrix[current_matrix + index] =
+                  a_matrix[current_matrix + index].conj();
+            }
+#endif
+
+          // if constexpr (kComplex) {
+          //   if (row > col) {
+          //     a_matrix[current_matrix + index] =
+          //         a_matrix[current_matrix + index].conj();
+          //   }
+          // }
+        }
+      }
 
 #ifdef DEBUG
       std::cout << "A MATRIX " << mat_idx << std::endl;
@@ -185,8 +275,8 @@ int main(int argc, char *argv[]) {
               << (kMatricesToInvert > 1 ? "ces " : "x ") << repetitions
               << " times" << std::endl;
 
-    CholeskyInversion<T, is_complex>(a_matrix, i_matrix, q, kMatricesToInvert,
-                                     repetitions);
+    CholeskyInversion<T, kComplex>(a_matrix, i_matrix, q, kMatricesToInvert,
+                                   repetitions);
 
     // For output post-processing (op)
     T i_matrix_op[kRows][kColumns];
@@ -205,6 +295,7 @@ int main(int argc, char *argv[]) {
       for (size_t i = 0; i < kRows; i++) {
         for (size_t j = 0; j < kColumns; j++) {
           i_matrix_op[i][j] = i_matrix[(mat_idx * kIMatrixSize) + i_idx];
+          i_idx++;
         }
       }
 
@@ -234,17 +325,19 @@ int main(int argc, char *argv[]) {
 
           for (size_t k = 0; k < kColumns; k++) {
 #if COMPLEX == 0
-            i_times_a_ij +=
-                i_matrix_op[i][k] * a_matrix[current_matrix + (j * kRows) + i];
-            a_times_i_ij += a_matrix[current_matrix + (i * kColumns) + j] *
+            i_times_a_ij += i_matrix_op[i][k] *
+                            a_matrix[current_matrix + (k * kColumns) + j];
+            a_times_i_ij += a_matrix[current_matrix + (i * kColumns) + k] *
                             i_matrix_op[k][j];
 #else
-            i_times_a_ij += i_matrix_op[i][k] *
-                            a_matrix[current_matrix + (j * kRows) + i].conj();
-            a_times_i_ij += a_matrix[current_matrix + (i * kColumns) + j] *
+            i_times_a_ij +=
+                i_matrix_op[i][k] *
+                a_matrix[current_matrix + (k * kColumns) + j].conj();
+            a_times_i_ij += a_matrix[current_matrix + (i * kColumns) + k] *
                             i_matrix_op[k][j].conj();
 #endif
           }
+
           // Verify that all the results are OK:
           // I x A = Id at index i,j
           bool i_times_a_is_id = false;
@@ -256,8 +349,8 @@ int main(int argc, char *argv[]) {
 #if COMPLEX == 0
           if (i == j) {
             // Diagonal elements
-            i_times_a_is_id = (abs(i_times_a_ij) - 1) < kErrorThreshold;
-            a_times_i_is_id = (abs(a_times_i_ij) - 1) < kErrorThreshold;
+            i_times_a_is_id = (abs(i_times_a_ij - 1)) < kErrorThreshold;
+            a_times_i_is_id = (abs(a_times_i_ij - 1)) < kErrorThreshold;
           } else {
             // Non diagonal elements
             i_times_a_is_id = abs(i_times_a_ij) < kErrorThreshold;
@@ -266,22 +359,17 @@ int main(int argc, char *argv[]) {
 #else
           if (i == j) {
             // Diagonal elements
-            i_times_a_is_id = (abs(i_times_a_ij.r()) - 1) < kErrorThreshold;
-            a_times_i_is_id = (abs(a_times_i_ij.r()) - 1) < kErrorThreshold;
+            i_times_a_is_id = (abs(i_times_a_ij.r() - 1)) < kErrorThreshold;
+            a_times_i_is_id = (abs(a_times_i_ij.r() - 1)) < kErrorThreshold;
           } else {
             // Non diagonal elements
             i_times_a_is_id = abs(i_times_a_ij.r()) < kErrorThreshold;
             a_times_i_is_id = abs(a_times_i_ij.r()) < kErrorThreshold;
           }
 
-          bool imag_is_zero = abs(i_times_a_is_id.i()) < kErrorThreshold;
+          bool imag_is_zero = abs(i_times_a_ij.i()) < kErrorThreshold;
           i_times_a_is_id &= imag_is_zero;
           a_times_i_is_id &= imag_is_zero;
-
-          i_eq_a = (abs(a_matrix[current_matrix + current_element].r() -
-                        i_matrix_op[i][j].r()) < kErrorThreshold) &&
-                   (abs(a_matrix[current_matrix + current_element].i() -
-                        i_matrix_op[i][j].i()) < kErrorThreshold);
 #endif
 
           i_is_finite = IsFinite(i_matrix_op[i][j]);
