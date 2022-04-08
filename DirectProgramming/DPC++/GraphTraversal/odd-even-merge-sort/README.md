@@ -78,7 +78,7 @@ Perform the following steps:
 	$ cmake ..
 	$ make
 	```
-	 This builds  `sycl_dpct_migrated`, `sycl_migrated` versions of the program.
+	 This builds  `sycl_dpct_migrated` and `sycl_migrated` versions of the program.
 	
 2.	Run the program:
 
