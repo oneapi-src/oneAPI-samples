@@ -1231,6 +1231,5 @@
         "name": "odd-even-merge-sort",
         "notes": "-",
         "removed": "False",
-        "ver": "2022.2.0"	
-
+        "ver": "2022.2.0"
     }
