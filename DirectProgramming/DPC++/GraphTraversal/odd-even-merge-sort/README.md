@@ -105,7 +105,7 @@ sycl_migrated for GPU
 
 	Running on Intel(R) UHD Graphics P630 [0x3e96]
 	
-	Running GPU oddEvenMerge sort (1 identical iterations)...
+	Running GPU odd_even_merge sort (1 identical iterations)...
 
 	Testing array length 64 (16384 arrays per batch)...
 	Average time: 146.904007 ms
@@ -250,7 +250,7 @@ sycl_migrated for GPU
 	Testing array length 1048576 (1 arrays per batch)...
 	Average time: 12.206000 ms
 
-	sortingNetworks-oddevenMerge sort, Throughput = 85.9066 MElements/s, Time = 0.01221 s, Size = 1048576 elements, NumDevsUsed = 1, Workgroup = 256
+	sorting_networks-odd_even_merge sort, Throughput = 85.9066 MElements/s, Time = 0.01221 s, Size = 1048576 elements, Num_Devs_Used = 1, Workgroup = 256
 
 	Validating the results...
 	...reading back GPU results
