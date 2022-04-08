@@ -50,7 +50,9 @@ In contrast to mergesort, this algorithm is not data-dependent, i.e. the same co
 
 DPC++ and SYCL Implementation is explained in the code using key features such as Cooperative Groups, Shared Memory and Data-Parallel concept.
 
-In this implementation, a random sequence of power of 2 elements is given as input and the algorithm sorts the sequence in parallel.This algorithm sorts the first half of a list, and sort the second half separately, and then sort the odd-indexed entries and the even-indexed entries separately, then you need make only one more comparison-switch per pair of keys to completely sort the list.
+In this implementation, a random sequence of power of 2 elements is given as input and the algorithm sorts the sequence in parallel.This algorithm sorts the first half of a list, and sort the second half separately, and then sort the odd-indexed entries and the even-indexed entries separately, then you need make only one more comparison-switch per pair of keys to completely sort the list. 
+
+In this algorithm, the input size is of array length 1048576.The code checks for all the input sizes in the intervals of 2th power from array length 64 to 1048576 calculated for one iteration.
 
 Comparator swaps the value if top value is greater or equal to the bottom value.
 
