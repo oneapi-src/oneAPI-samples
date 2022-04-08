@@ -1,5 +1,5 @@
 # Fourier Correlation Sample
-Fourier correlation has many applications, e.g.: measuring the similarity of two 1D signals, finding the best translation to overlay similar images, volumetric medical image segmentation, etc. This sample shows how to implement a 1D Fourier correlation using oneMKL kernel functions.
+Fourier correlation has many applications, e.g.: measuring the similarity of two 1D signals, finding the best translation to overlay similar images, volumetric medical image segmentation, etc. This sample shows how to implement 1D and 2D Fourier correlation using SYCL, oneMKL, and oneDPL kernel functions.
 
 For more information on oneMKL, and complete documentation of all oneMKL routines, see https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onemkl.html.
 
@@ -23,7 +23,7 @@ The algorithm can be composed using SYCL, oneMKL, and/or oneDPL. SYCL provides t
 ## Key Implementation Details
 In many applications, only the final correlation result matters, so this is all that has to be transferred from the device back to the host. In this example, two artificial signals will be created on the device, transformed in-place, then correlated. The host will retrieve the final result (i.e., the location of the maximum value) and report the optimal translation and correlation score.
 
-Two implementations of the 1D Fourier correlation algorithm are provided: one that uses explicit buffering and one that uses Unified Shared Memory (USM). Both implementations perform the correlation on the selected device, but the buffered implementation uses the oneDPL max_element function to perform the final MAXLOC reduction while the USM implementation uses the SYCL reduction operator.
+Two implementations of the 1D Fourier correlation algorithm are provided: one that uses explicit buffering and one that uses Unified Shared Memory (USM). Both implementations perform the correlation on the selected device, but the buffered implementation uses the oneDPL max_element function to perform the final MAXLOC reduction while the USM implementation uses the SYCL reduction operator. A 2D Fourier correlation example is also included to show how 2D data layout is handled during the real-to-complex and complex-to-real transforms.
 
 ## License
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
@@ -86,6 +86,44 @@ Shift the second signal 2048 elements relative to the first signal to get a maxi
 ./fcorr_1d_usm 4096
 Running on: Intel(R) Graphics Gen9 [0x3e96]
 Shift the second signal 2048 elements relative to the first signal to get a maximum, normalized correlation score of 2.99975.
+```
+If the 2D example is working correctly, two small binary images are cross-correlated and their optimum relative shift and correlation score are reported:
+```
+./fcorr_2d_usm
+Running on: Intel(R) UHD Graphics P630 [0x3e96]
+
+First image:
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 1 1 0
+0 0 0 0 0 1 1 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+
+Second image:
+0 0 0 0 0 0 0 0
+0 1 1 0 0 0 0 0
+0 1 1 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+
+Normalized Fourier correlation result:
+0 2.10734e-08 2.98023e-08 -2.10734e-08 -5.96046e-08 -2.10734e-08 2.98023e-08 2.10734e-08
+7.45058e-09 1.58051e-08 2.98023e-08 -1.58051e-08 -6.70552e-08 -1.58051e-08 2.98023e-08 1.58051e-08
+0 0 0 1 2 1 0 0
+0 0 0 2 4 2 0 0
+0 0 0 1 2 1 0 0
+5.21541e-08 2.63418e-08 -2.98023e-08 -2.63418e-08 7.45058e-09 -2.63418e-08 -2.98023e-08 2.63418e-08
+3.72529e-08 1.58051e-08 0 -1.58051e-08 -3.72529e-08 -1.58051e-08 0 1.58051e-08
+1.49012e-08 -1.05367e-08 0 1.05367e-08 -1.49012e-08 1.05367e-08 0 -1.05367e-08
+
+Shift the second image (x, y) = (4, 3) elements relative to the first image to get a maximum,
+normalized correlation score of 4. Treat the images as circularly shifted versions of each other.
 ```
 
 ### Troubleshooting
