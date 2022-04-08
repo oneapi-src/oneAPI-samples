@@ -10,19 +10,19 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               |  Basics of loop fusion<br/>The reasons for loop fusion<br/>How to use loop fusion to increase performance<br/>Understanding safe application of loop fusion
 | Time to complete                  | 20 minutes
 
 
 
 ## Purpose
-In order to understand and apply loop fusion to loops in your design, it is necessary to understand the motivation and consequences of loop fusion. 
+In order to understand and apply loop fusion to loops in your design, it is necessary to understand the motivation and consequences of loop fusion.
 
 ### Loop Fusion
 Loop fusion is a compiler transformation in which adjacent loops are merged into a single loop over the same index range. This transformation is typically applied to reduce loop overhead and improve runtime performance. Loop control structures can represent a significant area overhead on designs produced by the Intel® oneAPI DPC++ compiler. Fusing two loops into one loop reduces the number of required loop-control structures, which reduces overhead.
- 
+
 In addition, fusing outer loops can introduce concurrency where there was previously none. Consider two adjacent loops L<sub>j</sub> and L<sub>k</sub>. Within each loop, independent operations can be run concurrently, but concurrency cannot be attained <i>across</i> the loops. Combining the bodies of L<sub>j</sub> and L<sub>k</sub> forms a single loop L<sub>f</sub> with a body that spans the bodies of L<sub>j</sub> and L<sub>k</sub>. In the combined loops, concurrency can be attained for independent instructions which were formerly in separate loops. In effect, the two loops now execute as one in L<sub>f</sub> in a lockstep fashion, providing possible latency improvements.
 
 Loop fusion joins loops at the same nesting level. The merging of nested loops is known as *loop coalescing*, and tools to achieve this are described in the documentation and in the [`loop_coalesce` code sample](https://github.com/oneapi-src/oneAPI-samples/tree/da084668be646bfe9f788da7530a3efb3494e8c7/DirectProgramming/DPC++FPGA/Tutorials/Features/loop_coalesce).
@@ -33,7 +33,7 @@ The Intel® oneAPI DPC++ compiler attempts to fuse adjacent loops by default whe
 
 #### Explicit Loop Fusion
 
-The case when there are two adjacent loops L<sub>j</sub> and L<sub>k</sub>, and iteration *m* of L<sub>k</sub> depends on iteration *n* > *m* of L<sub>j</sub> is known as a *negative-distance dependency*.  A negative-distance dependency cannot be fulfilled when loop fusion is performed. The Intel® oneAPI DPC++ compiler will therefore not fuse loops that are believed to have a negative-distance dependency, even when the `fpga_loop_fuse<N>(f)` function is used. 
+The case when there are two adjacent loops L<sub>j</sub> and L<sub>k</sub>, and iteration *m* of L<sub>k</sub> depends on iteration *n* > *m* of L<sub>j</sub> is known as a *negative-distance dependency*.  A negative-distance dependency cannot be fulfilled when loop fusion is performed. The Intel® oneAPI DPC++ compiler will therefore not fuse loops that are believed to have a negative-distance dependency, even when the `fpga_loop_fuse<N>(f)` function is used.
 
 Compiler loop fusion profitability and legality heuristics can be overridden using the `fpga_loop_fuse<N>(f)` function. The `fpga_loop_fuse<N>(f)` function takes a function `f` containing loops, and an optional unsigned template parameter `N`, which specifies the number of nesting depths in which fusion should be performed. The default number of nesting depths is `N=1`.
 
@@ -50,11 +50,11 @@ for (...) { // L_21
   }
 }
 ```
-When `N=1`, `fpga_loop_fuse<N>(f)` tells the compiler to fuse L<sub>11</sub> with L<sub>21</sub>, but not L<sub>12</sub> with L<sub>22</sub>. When `N=2`, `fpga_loop_fuse<N>(f)` tells the compiler to fuse L<sub>11</sub> with L<sub>21</sub>, and L<sub>12</sub> with L<sub>22</sub>. 
+When `N=1`, `fpga_loop_fuse<N>(f)` tells the compiler to fuse L<sub>11</sub> with L<sub>21</sub>, but not L<sub>12</sub> with L<sub>22</sub>. When `N=2`, `fpga_loop_fuse<N>(f)` tells the compiler to fuse L<sub>11</sub> with L<sub>21</sub>, and L<sub>12</sub> with L<sub>22</sub>.
 
 #### Overriding Compiler Memory Checks
 
-The compiler may conservatively not fuse a pair of loops due to a suspected memory dependency when such a dependency may not exist. In this situation the compiler can be told to ignore memory safety checks by using the `fpga_loop_fuse_independent<N>(f)` function. This function requires the same parameters as the `fpga_loop_fuse<N>(f)` function. 
+The compiler may conservatively not fuse a pair of loops due to a suspected memory dependency when such a dependency may not exist. In this situation the compiler can be told to ignore memory safety checks by using the `fpga_loop_fuse_independent<N>(f)` function. This function requires the same parameters as the `fpga_loop_fuse<N>(f)` function.
 
 ***IMPORTANT***: Functional incorrectness may result if `fpga_loop_fuse_independent<N>(f)` is applied where a negative-distance dependency exists.
 
@@ -74,13 +74,25 @@ The file `loop_fusion.cpp` contains four kernels, all of which contain an outer 
 * How to use loop fusion to increase performance
 * Understanding safe application of loop fusion
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Loop Fusion Tutorial
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -113,7 +125,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
     ```
     cmake ..
    ```
@@ -129,18 +141,18 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
       ```
       make fpga_emu
       ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      make report
-     ``` 
-   * Compile for FPGA hardware (longer compile time, targets FPGA device): 
+     ```
+   * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
-     ``` 
+     ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_fusion.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
@@ -150,7 +162,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
@@ -166,21 +178,30 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
      ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      nmake report
-     ``` 
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
-     ``` 
+     ```
 
 *Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 *Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+
+### Troubleshooting
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
@@ -191,7 +212,7 @@ Locate `report.html` in the `loop_fusion_report.prj/reports/` directory. Open th
 
 Navigate to the Loops Analysis section of the optimization report under Throughput Analysis and notice that two loops were fused to one in both `DefaultFusionKernel` and in `FusionFunctionKernel`, but not in `NoFusionKernel` or in `DefaultNoFusionKernel`.
 
-In both cases where fusion has occurred, the number of loop cycles has decreased, since the total number of loop iterations decreased due to loop fusion, while the II, speculated iterations and latency are the same in the fused and non-fused loops. 
+In both cases where fusion has occurred, the number of loop cycles has decreased, since the total number of loop iterations decreased due to loop fusion, while the II, speculated iterations and latency are the same in the fused and non-fused loops.
 
 Navigate to the Area Analysis of the system under Area Analysis. The Kernel System section displays the area consumption of each kernel. Notice the area savings when loop fusion is performed in`DefaultFusionKernel`, against when it is off in `NoFusionKernel`.  As well, notice the area savings when loop fusion is manually turned on in`FusionFunctionKernel`, against when it is off by default in `DefaultNoFusionKernel`.
 
@@ -220,6 +241,6 @@ PASSED: The results are correct
 
 ### Discussion of Results
 
-Loop fusion increases the throughput by ~100% in both the cases with equally-sized and unequally-sized loops. 
+Loop fusion increases the throughput by ~100% in both the cases with equally-sized and unequally-sized loops.
 
 Note that this performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.

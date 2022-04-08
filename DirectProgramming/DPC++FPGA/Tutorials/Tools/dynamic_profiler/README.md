@@ -66,7 +66,7 @@ For this tutorial, the `-Xsprofile` flag has already been added to the cmake com
 There are two ways of obtaining data from a DPC++ program containing performance counters:
 
 1. Run the design in the Intel® VTune™ Profiler via the CPU/FPGA Interaction viewpoint.
-  
+
     Instructions on installing, configure and opening the Intel® VTune™ Profiler can be found in the [Intel® VTune™ Profiler User Guide](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/installation.html). Further instructions on setting up the Dynamic Profiler via the CPU/FPGA Interaction View can be found in the [CPU/FPGA Interaction Analysis](https://software.intel.com/content/www/us/en/develop/documentation/vtune-help/top/analyze-performance/accelerators-group/cpu-fpga-interaction-analysis-preview.html) section of the Intel® VTune™ Profiler User Guide. To extract device performance counter data, please ensure the source for the FPGA profiling data is set to "AOCL Profiler".
 
 2. Run the design from the command line using the Profiler Runtime Wrapper.
@@ -146,6 +146,18 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Tutorial
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -155,7 +167,7 @@ If running a sample in the Intel DevCloud, remember that you must specify the ty
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
-### Using Visual Studio Code*  (Optional)
+### Using Visual Studio Code* (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
 and browse and download samples.
@@ -165,9 +177,10 @@ The basic steps to build and run a sample using VS Code include:
  - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
@@ -198,6 +211,16 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler.fpga.tar.gz).
 Alternatively, if you wish to view the dynamic profiler data in the VTune Profiler, you can download a sample `dynamic_profiler_tutorial.json` file [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler_tutorial.json).
+
+### Troubleshooting
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
