@@ -45,10 +45,7 @@ using namespace sycl;
 void oddEvenMergeSortShared(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
                             uint *d_SrcVal, uint arrayLength, uint dir,
                             nd_item<3> item, uint *s_key, uint *s_val) {
-  // Handle to thread block group
-  auto cta = item.get_group();
-  // Shared memory storage for one or more small vectors
-
+  
   // Offset to the beginning of subbatch and load data
   d_SrcKey += item.get_group(2) * SHARED_SIZE_LIMIT + item.get_local_id(2);
   d_SrcVal += item.get_group(2) * SHARED_SIZE_LIMIT + item.get_local_id(2);
