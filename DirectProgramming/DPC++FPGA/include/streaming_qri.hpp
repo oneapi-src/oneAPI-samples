@@ -186,7 +186,7 @@ struct StreamingQRI {
 
           fpga_tools::UnrolledLoop<columns>([&](auto k) {
             auto lhs = rt_matrix[col][k];
-            auto rhs = (k == col) || (col < row) ? TT{0} :
+            auto rhs = (k >= col) || (col < row) ? TT{0} :
                                                       ri_matrix_compute[row][k];
             if(k==col){
               div_val = lhs;
