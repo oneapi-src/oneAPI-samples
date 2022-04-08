@@ -35,7 +35,7 @@ This sample contains three SYCL versions of the same program: 
 
 | Component 		| Description
 |:---			|:---
-| Common 		| Helper utility headerfiles
+| common 		| Helper utility headerfiles
 | src 			| Manually migrated files(.cpp and .h)
 | CMakeLists.txt 	| Build file
 			
