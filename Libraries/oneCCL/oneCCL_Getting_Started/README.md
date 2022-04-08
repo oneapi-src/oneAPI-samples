@@ -131,7 +131,7 @@ Users can rebuild the cpu_allreduce_test.cpp by typing "make cpu_allreduce_test"
   cd oneapi-toolkit/oneCCL/oneCCL_Getting_Started
   mkdir build
   cd build
-  cmake ..  -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=dpcpp -DCOMPUTE_BACKEND=dpcpp_level_zero
+  cmake ..  -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=dpcpp -DCOMPUTE_BACKEND=dpcpp
   make sycl_allreduce_test
   ```
 > NOTE: The source file "sycl_allreduce_test.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/ccl/latest/examples/sycl to build/src/sycl folder.

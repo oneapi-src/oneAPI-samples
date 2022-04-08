@@ -20,8 +20,6 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | Type      | Name                                             | Description
 | --------- | ------------------------------------------------ | -
 | Component | [getting_started](getting_started)               | A C++ sample demonstrating basics of oneDNN programming model.
-| Component | [dpcpp_interoparibility](dpcpp_interoperability) | A DPC++ example demonstrating interoperaility of oneDNN with DPC++ application code.
-| Component | [simple_model](simple_model)                     | A C++ example demonstrating implmentation of simple convolutional model with oneDNN.
 | Component | [tutorials](tutorials)                           | Hands-on Jupyter notebook tutorials among different topics.
 
 # Using Samples in Intel® DevCloud for oneAPI
