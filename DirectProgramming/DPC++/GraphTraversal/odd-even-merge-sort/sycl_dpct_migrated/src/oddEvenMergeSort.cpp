@@ -46,9 +46,6 @@ void oddEvenMergeSortShared(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
                             uint *d_SrcVal, uint arrayLength, uint dir,
                             sycl::nd_item<3> item_ct1, uint *s_key,
                             uint *s_val) {
-  // Handle to thread block group
-  auto cta = item_ct1.get_group();
-
   // Offset to the beginning of subbatch and load data
   d_SrcKey +=
       item_ct1.get_group(2) * SHARED_SIZE_LIMIT + item_ct1.get_local_id(2);
