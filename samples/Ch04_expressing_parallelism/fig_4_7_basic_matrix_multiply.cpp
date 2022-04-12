@@ -55,7 +55,7 @@ int main() {
       for (int k = 0; k < N; ++k) {
         gold += a[j * N + k] * b[k * N + i];
       }
-      if (std::abs(gold - c[j * N + i]) / gold > 1.0E-06) {
+      if (std::abs(gold - c[j * N + i]) / gold > 1.0E-05) {
         passed = false;
       }
     }
