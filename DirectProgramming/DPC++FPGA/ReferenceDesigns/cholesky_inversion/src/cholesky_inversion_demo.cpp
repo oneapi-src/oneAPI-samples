@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kIMatrixSize = kRows * kColumns;
   constexpr bool kComplex = COMPLEX != 0;
-  constexpr size_t kMatricesToInvert = 1;
+  constexpr size_t kMatricesToInvert = 8;
 
   // Get the number of times we want to repeat the inversion from the command
   // line.
