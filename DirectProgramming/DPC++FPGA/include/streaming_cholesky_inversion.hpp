@@ -95,15 +95,19 @@ struct StreamingCholeskyInversion {
     [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
     TT li_matrix[rows][kColumns];
 
-    // L inverse matrix transposed
-    [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
-    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-    TT li_matrix_transpose[kColumns][rows];
+    // // L inverse matrix transposed
+    // [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
+    // [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+    // TT li_matrix_transpose[kColumns][rows];
 
     // final inverse matrix
+    // [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
+    // [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+    // TT i_matrix[rows][kColumns];
+
     [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
     [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-    TT i_matrix[rows][kColumns];
+    TT i_matrix[kColumns * (kColumns + 1) / 2];
 
     // Compute Cholesky-based inversions as long as L input matrices are given
     while (1) {
@@ -117,18 +121,19 @@ struct StreamingCholeskyInversion {
           }
           if constexpr (is_complex) {
             l_matrix[row][col] = element.conj();
-          }
-          else{
+          } else {
             l_matrix[row][col] = element;
           }
         }
       }
 
       // PRINTF("L matrix\n");
-      // for (int col = 0; col < rows; col++) {
-      //   for (int row = 0; row < rows; row++) {
+      // for (int row = 0; row < rows; row++) {
+      //   for (int col = 0; col < rows; col++) {
       //     li_matrix_compute[row][col] = 0;
-      //     PRINTF("%f %fi  ", l_matrix[row][col].r(), l_matrix[row][col].i());
+      //     PRINTF("%f ", l_matrix[row][col]);
+      //     // PRINTF("%f %fi  ", l_matrix[row][col].r(),
+      //     l_matrix[row][col].i());
       //   }
       //   PRINTF("\n");
       // }
@@ -158,31 +163,40 @@ struct StreamingCholeskyInversion {
               ? (rows - 1) * (raw_latency - rows) + (rows - 2) * (rows - 1) / 2
               : (raw_latency - 2) * (raw_latency - 2 + 1) / 2;
       constexpr int kTotalIterations = kNormalIterations + kExtraIterations;
-      constexpr bool kThereAreExtraInitIterations = rows - 1 < raw_latency - 1;
-      constexpr int kInitExtraIterations =
-          kThereAreExtraInitIterations ? raw_latency - 1 : rows - 1;
-      constexpr int kInitIterations =
-          (rows - 2) * (rows - 1) / 2 + kInitExtraIterations;
+
+      constexpr int kInitIterations = 0;
 
       // All the loop control variables with all the requirements to apply
       // some shannonization (refer to the shannonization tutorial)
-      int row = rows - 1;
-      int row_plus_1 = rows;
-      int col = 0;
-      int col_plus_1 = 1;
-      int row_limit = rows - 1;
-      int diag_size = 1;
-      int next_diag_size = 2;
-      int diag_iteration = 0;
-      int diag_iteration_plus_1 = 1;
-      int start_row = rows - 2;
-      int start_row_plus_1 = rows - 1;
-      int start_col = 0;
-      int start_col_plus_1 = 1;
-      int next_row_limit = rows - 1;
+
+      /*
+            for(int diag_number =  0; diag_number < kColumns; diag_number++){
+              int diag_size = std::max(kColumns - diag_number, raw_latency);
+              if(diag_number == kColumns-1){
+                diag_size = 1;
+              }
+              int col = diag_number;
+              for(int row = 0; row < diag_size; row++, col++){
+                if(row<rows && col<kColumns){
+                  //compute
+                }
+              }
+            }
+      */
+
+      // All the loop control variables with all the requirements to apply
+      // some shannonization (refer to the shannonization tutorial)
+
+      int diagonal_number = 0;
+      int next_diagonal_number = 1;
+      int diagonal_size = (kColumns > raw_latency ? kColumns : raw_latency) - 1;
+      int col = diagonal_number;
+      int row = 0;
 
       [[intel::ivdep(raw_latency)]]  // NO-FORMAT: Attribute
       for (int it = 0; it < kTotalIterations + kInitIterations; it++) {
+        // PRINTF("it: %d [%d][%d]\n", it, row, col);
+
         // Only perform work when in not dummy iterations
         if (row < rows & col < kColumns) {
           TT current_sum = row == col ? TT{1} : TT{0};
@@ -190,8 +204,15 @@ struct StreamingCholeskyInversion {
 
           fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
             auto lhs = l_matrix[col][k];
-            auto rhs =
-                (k >= col) || (col < row) ? TT{0} : li_matrix_compute[row][k];
+            auto li_compute_load = li_matrix_compute[row][k];
+            TT rhs;
+            if ((k >= row) && (k < col)) {
+              rhs = li_compute_load;
+            } else {
+              rhs = TT{0};
+            }
+            // auto rhs = (k >= row) && (k < col) ? li_compute_load : TT{0};
+            // auto rhs = li_compute_load;
 
             if (k == col) {
               div_val = lhs;
@@ -206,45 +227,21 @@ struct StreamingCholeskyInversion {
           // This is done to only have matrices with a single read and a
           // single write.
           li_matrix_compute[row][col] = result;
+
           li_matrix[row][col] = result;
-          li_matrix_transpose[col][row] = result;
+          // li_matrix_transpose[row][col] = result;
         }
 
-        // Update loop indexes
-        if (row == row_limit) {
-          row_limit = next_row_limit;
-          if constexpr (kThereAreExtraInitIterations) {
-            next_row_limit = diag_iteration + 2 >= rows - 2
-                                 ? sycl::max(next_diag_size, raw_latency - 1)
-                                 : rows - 1;
-          } else {
-            next_row_limit =
-                diag_iteration + 2 >= rows
-                    ? sycl::max(next_diag_size - 2, raw_latency - 1)
-                    : rows - 1;
-          }
-
-          diag_size = next_diag_size;
-          int to_sum = diag_iteration >= rows - 2 ? -1 : 1;
-          next_diag_size = diag_size + to_sum;
-
-          row = start_row;
-          row_plus_1 = start_row_plus_1;
-          col = start_col;
-          col_plus_1 = start_col_plus_1;
-          int start = diag_iteration + 1 - rows + 2;
-          start_col = start < 0 ? 0 : start;
-          start_col_plus_1 = start_col + 1;
-          start_row = start >= 0 ? 0 : -start;
-          start_row_plus_1 = start_row + 1;
-
-          diag_iteration = diag_iteration_plus_1;
-          diag_iteration_plus_1 = diag_iteration_plus_1 + 1;
+        if (row == diagonal_size) {
+          diagonal_number = next_diagonal_number;
+          diagonal_size =
+              std::max(kColumns - next_diagonal_number, raw_latency) - 1;
+          col = next_diagonal_number;
+          row = 0;
+          next_diagonal_number++;
         } else {
-          row = row_plus_1;
-          row_plus_1++;
-          col = col_plus_1;
-          col_plus_1++;
+          row++;
+          col++;
         }
       }
 
@@ -264,65 +261,104 @@ struct StreamingCholeskyInversion {
       //   PRINTF("\n");
       // }
 
-      // Compute inv(A) = trans(inv(L))*inv(L)
-      for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < rows; col++) {
+      int idx = 0;
+      // Compute inv(A) = inv(L)*trans(inv(L))
+      for (int col = 0; col < rows; col++) {
+        TT col_of_transpose_matrix[rows];
+        int row_index;
+
+        // for (int row = col; row < rows + col; row++) {
+        for (int row = col; row < rows; row++) {
+          if(row >= rows){
+            row_index = row - rows;
+          }
+          else{
+            row_index = row;
+          }
           TT elem{0};
           fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
-            if constexpr (is_complex) {
-              elem += li_matrix[row][k] * li_matrix_transpose[k][col].conj();
+            auto li_load = li_matrix[row_index][k];
+
+            if (row_index == col) {
+              col_of_transpose_matrix[k] = li_load;
             }
-            else{
-              elem += li_matrix[row][k] * li_matrix_transpose[k][col];
+
+            // auto li_transpose_load = li_matrix_transpose[col][k];
+            // auto li_transpose_load = li_matrix[col][k];
+            auto lhs = k < row_index ? TT{0} : li_load;
+            auto rhs = k < col ? TT{0} : col_of_transpose_matrix[k];
+            if constexpr (is_complex) {
+              elem += lhs * rhs.conj();
+            } else {
+              elem += lhs * rhs;
             }
           });
-          i_matrix[row][col] = elem;
+          i_matrix[idx] = elem;
+          idx++;
+          // i_matrix[row_index][col] = elem;
+          // i_matrix[col][row_index] = elem;
         }
       }
 
       // PRINTF("Inverse matrix\n");
       // for (int row = 0; row < rows; row++) {
       //   for (int col = 0; col < rows; col++) {
-      //     PRINTF("%f ", i_matrix[row][col]);
+      //     if(row >)
+      //     PRINTF("%f ", i_matrix[row*kColumns + col]);
       //   }
       //   PRINTF("\n");
       // }
 
-
-      // Copy the inverse matrix from the local memory to the output pipe
-      // Number of pipe reads of pipe_size required to read a full column
-      constexpr int kExtraIteration = (rows % pipe_size) != 0 ? 1 : 0;
-      constexpr int kLoopIterPerColumn = rows / pipe_size + kExtraIteration;
-      // Number of pipe reads of pipe_size to read all the matrices
-      constexpr int kLoopIter = kLoopIterPerColumn * kColumns;
-      // Size in bits of the loop iterator over kLoopIter iterations
-      constexpr int kLoopIterBitSize =
-                                  fpga_tools::BitsForMaxValue<kLoopIter + 1>();
-
-      // Copy the inverse matrix result to the output pipe
-      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        int column_iter = li % kLoopIterPerColumn;
-        bool get[kLoopIterPerColumn];
-        fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
-          get[k] = column_iter == k;
-          column_iter = sycl::ext::intel::fpga_reg(column_iter);
-        });
-
-        fpga_tools::NTuple<TT, pipe_size> pipe_write;
-        fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
-          fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
-            if constexpr (t * pipe_size + k < rows) {
-              pipe_write.template get<k>() =
-                  get[t]
-                      ? i_matrix[li / kLoopIterPerColumn][t * pipe_size + k]
-                    : sycl::ext::intel::fpga_reg(pipe_write.template get<k>());
-            }
-          });
-        });
-
-        IOut::write(pipe_write);
+      // int row_idx = 0;
+      // int col_idx = 0;
+      int i_idx_pipe_write = 0;
+      for(int idx = 0; idx < kNormalIterations; idx++){
+        // IOut::write(i_matrix[row_idx][col_idx]);
+        IOut::write(i_matrix[i_idx_pipe_write]);
+        i_idx_pipe_write++;
+        // if(col_idx == kColumns-1){
+        //   row_idx++;
+        //   col_idx = row_idx;
+        // }
+        // else{
+        //   col_idx++;
+        // }
       }
+
+      // // Copy the inverse matrix from the local memory to the output pipe
+      // // Number of pipe reads of pipe_size required to read a full column
+      // constexpr int kExtraIteration = (rows % pipe_size) != 0 ? 1 : 0;
+      // constexpr int kLoopIterPerColumn = rows / pipe_size + kExtraIteration;
+      // // Number of pipe reads of pipe_size to read all the matrices
+      // constexpr int kLoopIter = kLoopIterPerColumn * kColumns;
+      // // Size in bits of the loop iterator over kLoopIter iterations
+      // constexpr int kLoopIterBitSize =
+      //     fpga_tools::BitsForMaxValue<kLoopIter + 1>();
+
+      // // Copy the inverse matrix result to the output pipe
+      // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+      // for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
+      //   int column_iter = li % kLoopIterPerColumn;
+      //   bool get[kLoopIterPerColumn];
+      //   fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
+      //     get[k] = column_iter == k;
+      //     column_iter = sycl::ext::intel::fpga_reg(column_iter);
+      //   });
+
+      //   fpga_tools::NTuple<TT, pipe_size> pipe_write;
+      //   fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto t) {
+      //     fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
+      //       if constexpr (t * pipe_size + k < rows) {
+      //         pipe_write.template get<k>() =
+      //             get[t] ? i_matrix[li / kLoopIterPerColumn][t * pipe_size + k]
+      //                    : sycl::ext::intel::fpga_reg(
+      //                          pipe_write.template get<k>());
+      //       }
+      //     });
+      //   });
+
+      //   IOut::write(pipe_write);
+      // }
 
     }  // end of while(1)
   }    // end of operator

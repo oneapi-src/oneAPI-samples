@@ -10,6 +10,8 @@
 #include "cholesky_inversion.hpp"
 #include "dpc_common.hpp"
 
+// #define DEBUG 1
+
 // Use "#define DEBUG" to print debugging information such as matrices content
 
 /*
@@ -63,7 +65,7 @@ int main(int argc, char *argv[]) {
   constexpr size_t kRows = MATRIX_DIMENSION;
   constexpr size_t kColumns = MATRIX_DIMENSION;
   constexpr size_t kAMatrixSize = kRows * kColumns;
-  constexpr size_t kIMatrixSize = kRows * kColumns;
+  constexpr size_t kIMatrixSize = kColumns * (kColumns + 1) / 2;
   constexpr bool kComplex = COMPLEX != 0;
   constexpr size_t kMatricesToInvert = 8;
 
@@ -292,10 +294,15 @@ int main(int argc, char *argv[]) {
       size_t i_idx = 0;
 
       // Read the I matrix from the output vector to the i_matrix_op matrix
-      for (size_t i = 0; i < kRows; i++) {
-        for (size_t j = 0; j < kColumns; j++) {
-          i_matrix_op[i][j] = i_matrix[(mat_idx * kIMatrixSize) + i_idx];
-          i_idx++;
+      for (size_t j = 0; j < kColumns; j++) {
+        for (size_t i = 0; i < kRows; i++) {
+          if(i<j){
+            i_matrix_op[i][j] = i_matrix_op[j][i];
+          }
+          else{
+            i_matrix_op[i][j] = i_matrix[(mat_idx * kIMatrixSize) + i_idx];
+            i_idx++;
+          }
         }
       }
 

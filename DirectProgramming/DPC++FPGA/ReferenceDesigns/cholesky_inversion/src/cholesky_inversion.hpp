@@ -49,7 +49,7 @@ void CholeskyInversionImpl(
                                 // evaluation
 ) {
   constexpr int kAMatrixSize = dimension * dimension;
-  constexpr int kIMatrixSize = dimension * dimension;
+  constexpr int kIMatrixSize = dimension * (dimension + 1) / 2;
   constexpr int kNumElementsPerDDRBurst = is_complex ? 4 : 8;
 
   using PipeType = fpga_tools::NTuple<TT, kNumElementsPerDDRBurst>;
@@ -58,7 +58,8 @@ void CholeskyInversionImpl(
   using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
   using LMatrixPipe =
       sycl::ext::intel::pipe<LPipe, TT, kNumElementsPerDDRBurst * 4>;
-  using IMatrixPipe = sycl::ext::intel::pipe<IPipe, PipeType, 3>;
+  // using IMatrixPipe = sycl::ext::intel::pipe<IPipe, PipeType, 3>;
+  using IMatrixPipe = sycl::ext::intel::pipe<IPipe, TT, kNumElementsPerDDRBurst * 4>;
 
   // Allocate FPGA DDR memory.
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
@@ -96,10 +97,69 @@ void CholeskyInversionImpl(
           T, is_complex, dimension, raw_latency_inversion,
           kNumElementsPerDDRBurst, LMatrixPipe, IMatrixPipe>());
 
-  auto ddr_write_event = q.single_task<CholeskyLocalMemToDDRL>([=] {
-    MatrixReadFromPipeToDDR<TT, dimension, dimension, kNumElementsPerDDRBurst,
-                            IMatrixPipe>(i_device, matrix_count, repetitions);
+  // auto ddr_write_event = q.single_task<CholeskyLocalMemToDDRL>([=] {
+  //   MatrixReadFromPipeToDDR<TT, dimension, dimension, kNumElementsPerDDRBurst,
+  //                           IMatrixPipe>(i_device, matrix_count, repetitions);
+  // });
+
+
+  auto ddr_write_event = q.single_task<CholeskyLocalMemToDDRL>([=
+                                    ]() [[intel::kernel_args_restrict]] {
+    // Read the R matrix from the RMatrixPipe pipe and copy it to the
+    // FPGA DDR
+    // Number of DDR burst of kNumElementsPerDDRBurst required to write
+    // one vector
+    constexpr int kRMatrixSize = dimension * (dimension + 1) / 2;
+    constexpr bool kIncompleteBurst = kRMatrixSize%kNumElementsPerDDRBurst != 0;
+    constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
+    constexpr int kLoopIter = (kRMatrixSize / kNumElementsPerDDRBurst)
+                              + kExtraIteration;
+
+    sycl::device_ptr<TT> vector_ptr_device(i_device);
+
+    // Repeat matrix_count complete R matrix pipe reads
+    // for as many repetitions as needed
+    for(int repetition_index = 0; repetition_index < repetitions;
+                                                            repetition_index++){
+      for(int matrix_index = 0; matrix_index < matrix_count; matrix_index++){
+
+        [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
+        [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+        TT r_result[kRMatrixSize/kNumElementsPerDDRBurst + kExtraIteration]
+                                                      [kNumElementsPerDDRBurst];
+        // Read a full R matrix
+        for(int vector_elem = 0; vector_elem < kRMatrixSize; vector_elem++){
+          r_result[vector_elem/kNumElementsPerDDRBurst]
+                  [vector_elem%kNumElementsPerDDRBurst] = IMatrixPipe::read();
+
+        } // end of vector_elem
+
+        // Copy the R matrix result to DDR
+        for (int li = 0; li < kLoopIter; li++) {
+          if constexpr (kIncompleteBurst){
+            // Write a burst of kNumElementsPerDDRBurst elements to DDR
+            #pragma unroll
+            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
+              if(li * kNumElementsPerDDRBurst + k < kRMatrixSize){
+                vector_ptr_device[matrix_index * kRMatrixSize
+                          + li * kNumElementsPerDDRBurst + k] = r_result[li][k];
+              }
+            }
+          }
+          else{
+            // Write a burst of kNumElementsPerDDRBurst elements to DDR
+            #pragma unroll
+            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
+              vector_ptr_device[matrix_index * kRMatrixSize
+                          + li * kNumElementsPerDDRBurst + k] = r_result[li][k];
+            }
+          }
+        } // end of matrix_index
+      }  // end of repetition_index
+    }  // end of li
   });
+
+
 
   ddr_write_event.wait();
 

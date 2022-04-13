@@ -83,10 +83,10 @@ message(STATUS "SEED=${SEED}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_DECOMPOSITION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_INVERSION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_INVERSION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -fp-model=precise -Xsfp-relaxed")
-set(HARDWARE_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed")
+set(HARDWARE_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsprofile -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
