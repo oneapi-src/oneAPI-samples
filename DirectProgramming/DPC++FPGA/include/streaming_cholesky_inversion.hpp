@@ -80,28 +80,29 @@ struct StreamingCholeskyInversion {
 
     constexpr int kColumns = rows;
 
-    // L matrix read from pipe
-    [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
-    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-    TT l_matrix[rows][kColumns];
-
-    // L inverse matrix for the compute
-    [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
-    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-    TT li_matrix_compute[rows][kColumns];
-
-    // L inverse matrix
-    [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
-    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-    TT li_matrix[rows][kColumns];
-
-    // Final inverse matrix (only the triangular elements)
-    [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
-    [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
-    TT i_matrix[kColumns * (kColumns + 1) / 2];
 
     // Compute Cholesky-based inversions as long as L input matrices are given
     while (1) {
+      // L matrix read from pipe
+      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+      TT l_matrix[rows][kColumns];
+
+      // L inverse matrix for the compute
+      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+      TT li_matrix_compute[rows][kColumns];
+
+      // L inverse matrix
+      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+      TT li_matrix[rows][kColumns];
+
+      // Final inverse matrix (only the triangular elements)
+      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
+      [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
+      TT i_matrix[kColumns * (kColumns + 1) / 2];
+
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col <= row; col++) {
           TT element = LIn::read();
@@ -258,7 +259,7 @@ struct StreamingCholeskyInversion {
       //   PRINTF("\n");
       // }
 
-      int idx = 0;
+      int inverse_matrix_write_idx = 0;
       // Compute inv(A) = inv(L)*trans(inv(L))
       for (int col = 0; col < rows; col++) {
         TT col_of_transpose_matrix[rows];
@@ -288,8 +289,8 @@ struct StreamingCholeskyInversion {
               elem += lhs * rhs;
             }
           });
-          i_matrix[idx] = elem;
-          idx++;
+          i_matrix[inverse_matrix_write_idx] = elem;
+          inverse_matrix_write_idx++;
         }
       }
 
@@ -302,12 +303,11 @@ struct StreamingCholeskyInversion {
       //   PRINTF("\n");
       // }
 
-      int i_idx_pipe_write = 0;
-      for(int idx = 0; idx < kNormalIterations; idx++){
-        IOut::write(i_matrix[i_idx_pipe_write]);
-        i_idx_pipe_write++;
+      int inverse_matrix_read_idx = 0;
+      for(int loop_count = 0; loop_count < kNormalIterations; loop_count++){
+        IOut::write(i_matrix[inverse_matrix_read_idx]);
+        inverse_matrix_read_idx++;
       }
-
 
     }  // end of while(1)
   }    // end of operator
