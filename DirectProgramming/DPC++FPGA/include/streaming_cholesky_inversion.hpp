@@ -84,22 +84,22 @@ struct StreamingCholeskyInversion {
     // Compute Cholesky-based inversions as long as L input matrices are given
     while (1) {
       // L matrix read from pipe
-      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
+      [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
       TT l_matrix[rows][kColumns];
 
       // L inverse matrix for the compute
-      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
+      [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
       TT li_matrix_compute[rows][kColumns];
 
       // L inverse matrix
-      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
+      [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
       TT li_matrix[rows][kColumns];
 
       // Final inverse matrix (only the triangular elements)
-      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
+      [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute
       TT i_matrix[kColumns * (kColumns + 1) / 2];
 
