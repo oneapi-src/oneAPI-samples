@@ -81,7 +81,7 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   short state_counter = 0;
   short errata_len = 0;
   unsigned char curr_byte;
-  GzipHeaderState state = MagicNumber;
+  GzipHeaderState state = GzipHeaderState::MagicNumber;
 
   unsigned char header_magic[2];
   unsigned char header_compression_method;
@@ -97,60 +97,60 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
   // and tries to optimize for throughput (~Fmax/II). However, we don't want
   // this loop to be our Fmax bottleneck, so increase the II.
   [[intel::initiation_interval(4)]]  // NO-FORMAT: Attribute
-  while (state != SteadyState) {
+  while (state != GzipHeaderState::SteadyState) {
     auto pipe_data = InPipe::read();
     curr_byte = pipe_data[0];
 
     // FSM for parsing the GZIP header, 1 byte at a time.
     switch (state) {
-      case MagicNumber: {
+      case GzipHeaderState::MagicNumber: {
         header_magic[state_counter] = curr_byte;
         state_counter++;
         if (state_counter == 2) {
-          state = CompressionMethod;
+          state = GzipHeaderState::CompressionMethod;
           state_counter = 0;
         }
         break;
       }
-      case CompressionMethod: {
+      case GzipHeaderState::CompressionMethod: {
         header_compression_method = curr_byte;
-        state = Flags;
+        state = GzipHeaderState::Flags;
         break;
       }
-      case Flags: {
+      case GzipHeaderState::Flags: {
         header_flags = curr_byte;
-        state = Time;
+        state = GzipHeaderState::Time;
         break;
       }
-      case Time: {
+      case GzipHeaderState::Time: {
         header_time[state_counter] = curr_byte;
         state_counter++;
         if (state_counter == 4) {
-          state = ExtraFlags;
+          state = GzipHeaderState::ExtraFlags;
           state_counter = 0;
         }
         break;
       }
-      case ExtraFlags: {
-        state = OS;
+      case GzipHeaderState::ExtraFlags: {
+        state = GzipHeaderState::OS;
         break;
       }
-      case OS: {
+      case GzipHeaderState::OS: {
         header_os = curr_byte;
         if (header_flags & 0x04) {
-          state = Errata;
+          state = GzipHeaderState::Errata;
         } else if (header_flags & 0x08) {
-          state = Filename;
+          state = GzipHeaderState::Filename;
         } else if (header_flags & 0x02) {
-          state = CRC;
+          state = GzipHeaderState::CRC;
         } else if (header_flags & 0x10) {
-          state = Comment;
+          state = GzipHeaderState::Comment;
         } else {
-          state = SteadyState;
+          state = GzipHeaderState::SteadyState;
         }
         break;
       }
-      case Errata: {
+      case GzipHeaderState::Errata: {
         if (state_counter == 0) {
           errata_len |= curr_byte;
           state_counter++;
@@ -160,13 +160,13 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
         } else {
           if ((state_counter - 2) == errata_len) {
             if (header_flags & 0x08) {
-              state = Filename;
+              state = GzipHeaderState::Filename;
             } else if (header_flags & 0x02) {
-              state = CRC;
+              state = GzipHeaderState::CRC;
             } else if (header_flags & 0x10) {
-              state = Comment;
+              state = GzipHeaderState::Comment;
             } else {
-              state = SteadyState;
+              state = GzipHeaderState::SteadyState;
             }
             state_counter = 0;
           } else {
@@ -175,15 +175,15 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
         }
         break;
       }
-      case Filename: {
+      case GzipHeaderState::Filename: {
         header_filename[state_counter] = curr_byte;
         if (curr_byte == '\0') {
           if (header_flags & 0x02) {
-            state = CRC;
+            state = GzipHeaderState::CRC;
           } else if (header_flags & 0x10) {
-            state = Comment;
+            state = GzipHeaderState::Comment;
           } else {
-            state = SteadyState;
+            state = GzipHeaderState::SteadyState;
           }
           state_counter = 0;
         } else {
@@ -191,7 +191,7 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
         }
         break;
       }
-      case CRC: {
+      case GzipHeaderState::CRC: {
         if (state_counter == 0) {
           header_crc[0] = curr_byte;
           state_counter++;
@@ -200,17 +200,17 @@ void GzipMetadataReader(int in_count, GzipHeaderData& hdr_data, int& crc,
           state_counter++;
         } else {
           if (header_flags & 0x10) {
-            state = Comment;
+            state = GzipHeaderState::Comment;
           } else {
-            state = SteadyState;
+            state = GzipHeaderState::SteadyState;
           }
           state_counter = 0;
         }
         break;
       }
-      case Comment: {
+      case GzipHeaderState::Comment: {
         if (curr_byte == '\0') {
-          state = SteadyState;
+          state = GzipHeaderState::SteadyState;
           state_counter = 0;
         } else {
           state_counter++;

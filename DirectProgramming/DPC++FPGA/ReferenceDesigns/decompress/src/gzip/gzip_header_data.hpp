@@ -8,7 +8,7 @@
 //
 // States for parsing the GZIP header
 //
-enum GzipHeaderState {
+enum class GzipHeaderState {
   MagicNumber,
   CompressionMethod,
   Flags,

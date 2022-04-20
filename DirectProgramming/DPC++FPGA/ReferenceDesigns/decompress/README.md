@@ -296,11 +296,11 @@ This reference designs contains code to implement both GZIP and SNAPPY decompres
 The following sections will first describe the GZIP design, followed by the SNAPPY design, since the SNAPPY design is essentially a subset of the GZIP design.
 
 ### GZIP and DEFLATE
-GZIP is a specific implementation of the DEFLATE protocol. The structure of a GZIP file is illustrated in the figure below. It starts with a variable length, byte-aligned header of 10 or more bytes. Then follows the data payload, which is 1 or more DEFLATE compressed blocks. After the DEFLATE blocks, there may be some small amount of padding to realign to a byte boundary, and finally an 8-byte GZIP footer, which contains the CRC-32 and size (in bytes) of the uncompressed data. For more details on the GZIP file format, [see here](https://en.wikipedia.org/wiki/Gzip)
+GZIP is a specific implementation of the DEFLATE protocol. The structure of a GZIP file is illustrated in the figure below. It starts with a variable length, byte-aligned header of 10 or more bytes. Then follows the data payload, which is 1 or more DEFLATE compressed blocks. After the DEFLATE blocks, there may be some small amount of padding to realign to a byte boundary, and finally an 8-byte GZIP footer, which contains the CRC-32 and size (in bytes) of the uncompressed data. For more details on the GZIP file format, start with the [GZIP wikipedia entry](https://en.wikipedia.org/wiki/Gzip)
 
 <img src="gzip_file_format.png" alt="gzip_file_format" width="400"/>
 
-The DEFLATE compression algorithm performs LZ77 Encoding followed by Huffman encoding. Therefore, decompression decodes in the opposite order. For more information on the DEFLATE format and LZ77 and Huffman encoding/decoding, [start here](https://en.wikipedia.org/wiki/Deflate).
+The DEFLATE compression algorithm performs LZ77 Encoding followed by Huffman encoding. Therefore, decompression decodes in the opposite order. For more information on the DEFLATE format and LZ77 and Huffman encoding/decoding, start with the [DEFLATE wikipedia entry](https://en.wikipedia.org/wiki/Deflate).
 
 A DEFLATE block is is structured as follows:
 - The first bit indicates whether this is the last block in a stream of blocks
@@ -396,7 +396,7 @@ Snappy is compression format that aims for high throughput compression and decom
 
 Unlike many compression encodings, like DEFLATE, Snappy encoding is byte oriented. The Snappy format does *not* use entropy encoding, such as Huffman or range encoding.
 
-Snappy encoding is like LZ77 encoding, which replaces portions of the byte stream with {length, distance} pairs. For more information on the Snappy format, see [here](https://en.wikipedia.org/wiki/Snappy_(compression)) and [here](https://github.com/google/snappy).
+Snappy encoding is like LZ77 encoding, which replaces portions of the byte stream with {length, distance} pairs. For more information on the Snappy format, see the [Snappy wikipedia entry](https://en.wikipedia.org/wiki/Snappy_(compression)) and [Google's Snappy GitHub page](https://github.com/google/snappy).
 
 The basic Snappy format is a *preamble* followed by the *compressed data stream*.
 
