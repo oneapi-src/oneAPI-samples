@@ -250,13 +250,6 @@ int main(int argc, char *argv[]) {
                   a_matrix[current_matrix + index].conj();
             }
 #endif
-
-          // if constexpr (kComplex) {
-          //   if (row > col) {
-          //     a_matrix[current_matrix + index] =
-          //         a_matrix[current_matrix + index].conj();
-          //   }
-          // }
         }
       }
 
@@ -297,7 +290,11 @@ int main(int argc, char *argv[]) {
       for (size_t j = 0; j < kColumns; j++) {
         for (size_t i = 0; i < kRows; i++) {
           if(i<j){
+#if COMPLEX == 0
             i_matrix_op[i][j] = i_matrix_op[j][i];
+#else
+            i_matrix_op[i][j] = i_matrix_op[j][i].conj();
+#endif
           }
           else{
             i_matrix_op[i][j] = i_matrix[(mat_idx * kIMatrixSize) + i_idx];
@@ -374,9 +371,10 @@ int main(int argc, char *argv[]) {
             a_times_i_is_id = abs(a_times_i_ij.r()) < kErrorThreshold;
           }
 
-          bool imag_is_zero = abs(i_times_a_ij.i()) < kErrorThreshold;
-          i_times_a_is_id &= imag_is_zero;
-          a_times_i_is_id &= imag_is_zero;
+          bool imag_is_zero_i_times_a = abs(i_times_a_ij.i()) < kErrorThreshold;
+          i_times_a_is_id &= imag_is_zero_i_times_a;
+          bool imag_is_zero_a_times_i = abs(a_times_i_ij.i()) < kErrorThreshold;
+          a_times_i_is_id &= imag_is_zero_a_times_i;
 #endif
 
           i_is_finite = IsFinite(i_matrix_op[i][j]);
