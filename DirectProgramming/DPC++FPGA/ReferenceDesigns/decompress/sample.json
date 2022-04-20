@@ -66,7 +66,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "xcopy /E ..\\ReferenceDesigns\\decompress\\test_data ..\\test_data\\",
+          "xcopy /E ..\\ReferenceDesigns\\decompress\\data ..\\data\\",
           "cmake -G \"NMake Makefiles\" -DGZIP=1 ../ReferenceDesigns/decompress",
           "nmake fpga_emu",
           "decompress.fpga_emu.exe"
@@ -79,7 +79,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "xcopy /E ..\\ReferenceDesigns\\decompress\\test_data ..\\test_data\\",
+          "xcopy /E ..\\ReferenceDesigns\\decompress\\data ..\\data\\",
           "cmake -G \"NMake Makefiles\" -DSNAPPY=1 ../ReferenceDesigns/decompress",
           "nmake fpga_emu",
           "decompress.fpga_emu.exe"
@@ -92,7 +92,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "xcopy /E ..\\ReferenceDesigns\\decompress\\test_data ..\\test_data\\",
+          "xcopy /E ..\\ReferenceDesigns\\decompress\\data ..\\data\\",
           "cmake -G \"NMake Makefiles\" -DGZIP=1 ../ReferenceDesigns/decompress",
           "nmake report"
         ]
@@ -104,7 +104,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "xcopy /E ..\\ReferenceDesigns\\decompress\\test_data ..\\test_data\\",
+          "xcopy /E ..\\ReferenceDesigns\\decompress\\data ..\\data\\",
           "cmake -G \"NMake Makefiles\" -DSNAPPY=1 ../ReferenceDesigns/decompress",
           "nmake report"
         ]
