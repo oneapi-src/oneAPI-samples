@@ -192,6 +192,7 @@ void LZ77DecoderMultiElement() {
           // normal case for ths shuffle vector
           read_history_shuffle_idx[i] = buf_idx;
         } else {
+          // EDGE CASE!
           // this special case happens whenever dist < literals_per_cycle
           // and we need to repeat one of the earlier elements
           // idx_back = dist_small - ((i - dist_small) % dist_small));
