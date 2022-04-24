@@ -1,9 +1,9 @@
 ﻿# `TensorFlow HelloWorld` Sample
-TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel® architecture and to extract maximum performance, the TensorFlow framework has been optimized using Intel® Deep Neural Networks (Intel® DNNL) primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow enables Intel DNNL calls by default.
+TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel® architecture and to extract maximum performance, the TensorFlow framework has been optimized using Intel® oneAPI Deep Neural Networks (Intel® oneDNN) primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow enables Intel DNNL calls by default.
 
 | Optimized for                       | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.0, Windows* 10 
+| OS                                | Linux* Ubuntu* 18.0.x and later, Windows* 10 
 | Hardware                          | Intel® Xeon® Scalable processor family or newer
 | Software                          | Intel® AI Analytics Toolkit
 | What you will learn               | How to get started to use Intel® Optimization for TensorFlow*
@@ -31,7 +31,7 @@ Intel-optimized Tensorflow is available as part of the Intel® AI Analytics Tool
 
 ##### Note: For convenience, code line os.environ["ONEDNN_VERBOSE"] = "1" has been added in the body of the script as an alternative method to setting this variable.
 
-Runtime settings for `MKLDNN_VERBOSE`, `KMP_AFFINITY`, and `Inter/Intra-op` Threads are set within the script. You can read more about these settings in this dedicated document: [Maximize TensorFlow Performance on CPU: Considerations and Recommendations for Inference Workloads](https://software.intel.com/en-us/articles/maximize-tensorflow-performance-on-cpu-considerations-and-recommendations-for-inference)
+Runtime settings for `ONEDNN_VERBOSE`, `KMP_AFFINITY`, and `Inter/Intra-op` Threads are set within the script. You can read more about these settings in this dedicated document: [Maximize TensorFlow Performance on CPU: Considerations and Recommendations for Inference Workloads](https://software.intel.com/en-us/articles/maximize-tensorflow-performance-on-cpu-considerations-and-recommendations-for-inference)
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -113,7 +113,8 @@ If you export the ONEDNN_VERBOSE as 1 in the command line, the onednn run-time v
 export ONEDNN_VERBOSE=1
 Windows: set ONEDNN_VERBOSE=1
 ```
-Notes： historical environment variables include DNNL_VERBOSE, MKLDNN_VERBOSE
+Notes：the historical environment variables include DNNL_VERBOSE, MKLDNN_VERBOSE
+
 Then run the sample again:
 ```
 python TensorFlow_HelloWorld.py
