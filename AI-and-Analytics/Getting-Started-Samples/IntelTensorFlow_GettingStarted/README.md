@@ -1,5 +1,5 @@
 ﻿# `TensorFlow HelloWorld` Sample
-TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel® architecture and to extract maximum performance, the TensorFlow framework has been optimized using Intel® oneAPI Deep Neural Networks (Intel® oneDNN) primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow enables Intel DNNL calls by default.
+TensorFlow* is a widely-used machine learning framework in the deep learning arena, demanding efficient computational resource utilization. To take full advantage of Intel® architecture and to extract maximum performance, the TensorFlow framework has been optimized using Intel® oneAPI Deep Neural Networks (Intel® oneDNN) primitives. This sample demonstrates how to train an example neural network and shows how Intel-optimized TensorFlow enables Intel oneDNN calls by default.
 
 | Optimized for                       | Description
 |:---                               |:---
@@ -10,7 +10,7 @@ TensorFlow* is a widely-used machine learning framework in the deep learning are
 | Time to complete                  | 10 minutes
 
 ## Purpose
-This sample code shows how to get started with Intel® Optimization for TensorFlow*. It implements an example neural network with one convolution layer and one ReLU layer. Developers can quickly build and train a Tensorflow neural network using a simple python code. Also, by controlling the build-in environment variable, the sample attempts to explicitly show how Intel® DNNL Primitives are called and their performance during the neural network training.
+This sample code shows how to get started with Intel® Optimization for TensorFlow*. It implements an example neural network with one convolution layer and one ReLU layer. Developers can quickly build and train a Tensorflow neural network using a simple python code. Also, by controlling the build-in environment variable, the sample attempts to explicitly show how Intel® oneDNN Primitives are called and their performance during the neural network training.
 
 Intel-optimized Tensorflow is available as part of the Intel® AI Analytics Toolkit. For more information on the optimizations and performance data, see this blog post [TensorFlow* Optimizations on Modern Intel® Architecture](https://software.intel.com/content/www/us/en/develop/articles/tensorflow-optimizations-on-modern-intel-architecture.html).
 
@@ -130,7 +130,7 @@ dnnl_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:acdb:f0 dst_f32::bl
 dnnl_verbose,exec,cpu,reorder,simple:any,undef,src_f32::blocked:cdba:f0 dst_f32:p:blocked:Acdb16a:f0,,,10x4x3x3,0.187012
 dnnl_verbose,exec,cpu,convolution,jit:avx512_common,forward_training,src_f32::blocked:abcd:f0 wei_f32:p:blocked:Acdb16a:f0 bia_undef::undef::f0 dst_f32:p:blocked:aBcd16b:f0,,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.266113
 ```
-Please see the [DNNL Developer's Guide](https://intel.github.io/mkl-dnn/dev_guide_verbose.html) for more details on the verbose log.
+Please see the [oneDNN Developer's Guide](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html) for more details on the verbose log.
 
 ## Running The Sample In DevCloud (Optional)
 
