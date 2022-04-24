@@ -63,7 +63,7 @@ TensorFlow is ready for use once you finish the Intel AI Analytics Toolkit insta
 
 
 ```
-source activate tensorflow
+conda activate tensorflow
 ```
 
 please replace ~/intel/oneapi for your oneapi installation path.
@@ -79,7 +79,8 @@ conda create --name user_tensorflow --clone tensorflow
 Then activate your conda environment with the following command:
 
 ```
-source activate user_tensorflow
+conda activate user_tensorflow
+
 ```
 
 ## Running the Sample
@@ -131,7 +132,7 @@ onednn_verbose,info,prim_template:operation,engine,primitive,implementation,prop
 onednn_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:cdba:f dst_f32:p:blocked:Acdb16a:f,,,10x4x3x3,0.00195312
 onednn_verbose,exec,cpu,convolution,brgconv:avx512_core,forward_training,src_f32::blocked:acdb:f wei_f32:p:blocked:Acdb16a:f bia_f32::blocked:a:f dst_f32::blocked:acdb:f,attr-post-ops:eltwise_relu ,alg:convolution_direct,mb,4.96411
 onednn_verbose,exec,cpu,convolution,jit:avx512_common,backward_weights,src_f32::blocked:acdb:f wei_f32:p:blocked:Acdb16a:f bia_undef::undef::f dst_f32::blocked:acdb:f,,alg:convolution_direct,mb,0.567871
-
+...
 ```
 Please see the [oneDNN Developer's Guide](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html) for more details on the verbose log.
 
