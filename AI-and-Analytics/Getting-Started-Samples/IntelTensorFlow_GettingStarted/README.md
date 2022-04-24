@@ -121,14 +121,17 @@ python TensorFlow_HelloWorld.py
 ```
 You will see the verbose output:
 ```
-2021-04-06 10:44:28.875296: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
-dnnl_verbose,info,DNNL v1.2.0 (commit N/A)
-dnnl_verbose,info,cpu,runtime:OpenMP
-dnnl_verbose,info,cpu,isa:Intel AVX-512 with Intel DL Boost
-dnnl_verbose,info,gpu,runtime:none
-dnnl_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:acdb:f0 dst_f32::blocked:abcd:f0,,,4x4x128x128,12.0649
-dnnl_verbose,exec,cpu,reorder,simple:any,undef,src_f32::blocked:cdba:f0 dst_f32:p:blocked:Acdb16a:f0,,,10x4x3x3,0.187012
-dnnl_verbose,exec,cpu,convolution,jit:avx512_common,forward_training,src_f32::blocked:abcd:f0 wei_f32:p:blocked:Acdb16a:f0 bia_undef::undef::f0 dst_f32:p:blocked:aBcd16b:f0,,alg:convolution_direct,mb4_ic4oc10_ih128oh128kh3sh1dh0ph1_iw128ow128kw3sw1dw0pw1,0.266113
+2022-04-24 16:56:02.497963: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+onednn_verbose,info,oneDNN v2.5.0 (commit N/A)
+onednn_verbose,info,cpu,runtime:OpenMP
+onednn_verbose,info,cpu,isa:Intel AVX-512 with Intel DL Boost
+onednn_verbose,info,gpu,runtime:none
+onednn_verbose,info,prim_template:operation,engine,primitive,implementation,prop_kind,memory_descriptors,attributes,auxiliary,problem_desc,exec_time
+onednn_verbose,exec,cpu,reorder,jit:uni,undef,src_f32::blocked:cdba:f dst_f32:p:blocked:Acdb16a:f,,,10x4x3x3,0.00195312
+onednn_verbose,exec,cpu,convolution,brgconv:avx512_core,forward_training,src_f32::blocked:acdb:f wei_f32:p:blocked:Acdb16a:f bia_f32::blocked:a:f dst_f32::blocked:acdb:f,attr-post-ops:eltwise_relu ,alg:convolution_direct,mb,4.96411
+onednn_verbose,exec,cpu,convolution,jit:avx512_common,backward_weights,src_f32::blocked:acdb:f wei_f32:p:blocked:Acdb16a:f bia_undef::undef::f dst_f32::blocked:acdb:f,,alg:convolution_direct,mb,0.567871
+
 ```
 Please see the [oneDNN Developer's Guide](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html) for more details on the verbose log.
 
