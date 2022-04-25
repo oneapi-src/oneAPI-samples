@@ -1,17 +1,13 @@
 #ifndef __SNAPPY_READER_HPP__
 #define __SNAPPY_READER_HPP__
 
-// clang-format off
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// Included from DirectProgramming/DPC++FPGA/include/
-#include "constexpr_math.hpp"
-#include "metaprogramming_utils.hpp"
-
 #include "byte_stream.hpp"
-// clang-format on
+#include "constexpr_math.hpp"         // included from ../../../../include
+#include "metaprogramming_utils.hpp"  // included from ../../../../include
 
 //
 // Streams in bytes from InPipe 'literals_per_cycle' at a time and
@@ -43,7 +39,9 @@ unsigned SnappyReader(unsigned in_count) {
 
   // make sure the input and output types are correct
   static_assert(std::is_same_v<InPipeBundleT, ByteSet<literals_per_cycle>>);
-  static_assert(std::is_same_v<OutPipeBundleT, FlagBundle<SnappyLZ77InputData<literals_per_cycle>>>);
+  static_assert(
+      std::is_same_v<OutPipeBundleT,
+                     FlagBundle<SnappyLZ77InputData<literals_per_cycle>>>);
 
   // the number of bits to count to 'literals_per_cycle'
   constexpr unsigned literals_per_cycle_bits =

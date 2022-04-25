@@ -1,19 +1,15 @@
 #ifndef __LZ77_DECODER_HPP__
 #define __LZ77_DECODER_HPP__
 
-// clang-format off
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// Included from DirectProgramming/DPC++FPGA/include/
-#include "constexpr_math.hpp"
-#include "metaprogramming_utils.hpp"
-#include "tuple.hpp"
-#include "unrolled_loop.hpp"
-
 #include "common.hpp"
-// clang-format on
+#include "constexpr_math.hpp"         // included from ../../../../include
+#include "metaprogramming_utils.hpp"  // included from ../../../../include
+#include "tuple.hpp"                  // included from ../../../../include
+#include "unrolled_loop.hpp"          // included from ../../../../include
 
 //
 // Performs LZ77 decoding for more than 1 element at once.
@@ -487,9 +483,10 @@ void LZ77Decoder() {
   // select which LZ77 decoder version to use based on literals_per_cycle
   // at compile time
   if constexpr (literals_per_cycle == 1) {
-    return LZ77DecoderSingleElement<InPipe, OutPipe,max_distance>();
+    return LZ77DecoderSingleElement<InPipe, OutPipe, max_distance>();
   } else {
-    return LZ77DecoderMultiElement<InPipe, OutPipe, literals_per_cycle, max_distance>();
+    return LZ77DecoderMultiElement<InPipe, OutPipe, literals_per_cycle,
+                                   max_distance>();
   }
 }
 
@@ -500,7 +497,8 @@ template <typename Id, typename InPipe, typename OutPipe,
           size_t literals_per_cycle, size_t max_distance, size_t max_length>
 sycl::event SubmitLZ77Decoder(sycl::queue& q) {
   return q.single_task<Id>([=] {
-    return LZ77Decoder<InPipe, OutPipe, literals_per_cycle, max_distance, max_length>();
+    return LZ77Decoder<InPipe, OutPipe, literals_per_cycle, max_distance,
+                       max_length>();
   });
 }
 

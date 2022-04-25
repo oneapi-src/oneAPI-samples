@@ -1,16 +1,12 @@
 #ifndef __BYTE_STREAM_HPP__
 #define __BYTE_STREAM_HPP__
 
-// clang-format off
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// Included from DirectProgramming/DPC++FPGA/include/
-#include "constexpr_math.hpp"
-
 #include "../common/common.hpp"
-// clang-format on
+#include "constexpr_math.hpp"  // included from ../../../../include
 
 //
 // A stream of bytes with capacity 'num_bytes'. This class allows multiple

@@ -1,24 +1,19 @@
 #ifndef __GZIP_DECOMPRESSOR_HPP__
 #define __GZIP_DECOMPRESSOR_HPP__
 
-// clang-format off
-#include <chrono>
-
 #include <CL/sycl.hpp>
+#include <chrono>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-
-// Included from DirectProgramming/DPC++FPGA/include/
-#include "constexpr_math.hpp"
-#include "metaprogramming_utils.hpp"
 
 #include "../common/byte_stacker.hpp"
 #include "../common/common.hpp"
 #include "../common/lz77_decoder.hpp"
 #include "../common/simple_crc32.hpp"
+#include "constexpr_math.hpp"  // included from ../../../../include
 #include "gzip_metadata_reader.hpp"
 #include "huffman_decoder.hpp"
-// clang-format on
+#include "metaprogramming_utils.hpp"  // included from ../../../../include
 
 // declare the kernel and pipe names globally to reduce name mangling
 class GzipMetadataReaderKernelID;
@@ -71,8 +66,7 @@ std::vector<sycl::event> SubmitGzipDecompressKernels(
       sycl::ext::intel::pipe<GzipMetadataToHuffmanPipeID,
                              FlagBundle<ByteSet<1>>>;
   using HuffmanToLZ77Pipe =
-      sycl::ext::intel::pipe<HuffmanToLZ77PipeID,
-                             FlagBundle<GzipLZ77InputData>,
+      sycl::ext::intel::pipe<HuffmanToLZ77PipeID, FlagBundle<GzipLZ77InputData>,
                              kHuffmanToLZ77PipeDepth>;
 
   // submit the GZIP decompression kernels
@@ -90,11 +84,10 @@ std::vector<sycl::event> SubmitGzipDecompressKernels(
         sycl::ext::intel::pipe<LZ77ToByteStackerPipeID,
                                FlagBundle<BytePack<literals_per_cycle>>>;
 
-    auto lz77_event = SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe,
-                                        LZ77ToByteStackerPipe,
-                                        literals_per_cycle,
-                                        kGzipMaxLZ77Distance,
-                                        kGzipMaxLZ77Length>(q);
+    auto lz77_event =
+        SubmitLZ77Decoder<LZ77DecoderKernelID, HuffmanToLZ77Pipe,
+                          LZ77ToByteStackerPipe, literals_per_cycle,
+                          kGzipMaxLZ77Distance, kGzipMaxLZ77Length>(q);
     auto byte_stacker_event =
         SubmitByteStacker<ByteStackerKernelID, LZ77ToByteStackerPipe, OutPipe,
                           literals_per_cycle>(q);
@@ -127,7 +120,7 @@ template <unsigned literals_per_cycle>
 class GzipDecompressor : public DecompressorBase {
  public:
   std::optional<std::vector<unsigned char>> DecompressBytes(
-      sycl::queue &q, std::vector<unsigned char> in_bytes, int runs,
+      sycl::queue &q, std::vector<unsigned char> &in_bytes, int runs,
       bool print_stats) {
     int in_count = in_bytes.size();
 

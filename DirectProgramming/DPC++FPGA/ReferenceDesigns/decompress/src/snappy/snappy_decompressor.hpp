@@ -1,22 +1,17 @@
 #ifndef __SNAPPY_DECOMPRESSOR_HPP__
 #define __SNAPPY_DECOMPRESSOR_HPP__
 
-// clang-format off
-#include <chrono>
-
 #include <CL/sycl.hpp>
+#include <chrono>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-
-// Included from DirectProgramming/DPC++FPGA/include/
-#include "constexpr_math.hpp"
-#include "metaprogramming_utils.hpp"
 
 #include "../common/byte_stacker.hpp"
 #include "../common/common.hpp"
 #include "../common/lz77_decoder.hpp"
+#include "constexpr_math.hpp"         // included from ../../../../include
+#include "metaprogramming_utils.hpp"  // included from ../../../../include
 #include "snappy_reader.hpp"
-// clang-format on
 
 // declare the kernel and pipe names globally to reduce name mangling
 class SnappyReaderKernelID;
@@ -110,7 +105,7 @@ template <unsigned literals_per_cycle>
 class SnappyDecompressor : public DecompressorBase {
  public:
   std::optional<std::vector<unsigned char>> DecompressBytes(
-      sycl::queue& q, std::vector<unsigned char> in_bytes, int runs,
+      sycl::queue& q, std::vector<unsigned char>& in_bytes, int runs,
       bool print_stats) {
     bool passed = true;
     unsigned in_count = in_bytes.size();

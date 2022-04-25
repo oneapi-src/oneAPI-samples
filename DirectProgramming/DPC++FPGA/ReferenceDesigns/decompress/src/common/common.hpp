@@ -1,20 +1,15 @@
 #ifndef __COMMON_HPP__
 #define __COMMON_HPP__
 
-// clang-format off
-#include <iostream>
-#include <functional>
-
 #include <CL/sycl.hpp>
+#include <functional>
+#include <iostream>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// Included from DirectProgramming/DPC++FPGA/include/
-#include "constexpr_math.hpp"
-#include "memory_utils.hpp"
-
 #include "common_metaprogramming.hpp"
-// clang-format on
+#include "constexpr_math.hpp"  // included from ../../../../include
+#include "memory_utils.hpp"    // included from ../../../../include
 
 // we only use unsigned ac_ints in this design, so this alias lets us not write
 // the 'false' template argument every where
@@ -27,7 +22,7 @@ using ac_uint = ac_int<bits, false>;
 template <typename T>
 struct FlagBundle {
   using value_type = T;
-  
+
   // ensure the type carried in this class has a subscript operator and that
   // it has a static integer member named 'size'
   static_assert(fpga_tools::has_subscript_v<T>);
@@ -65,15 +60,14 @@ struct LZ77InputData {
   static constexpr auto literals_per_cycle = literals_per_cycle_;
   static constexpr auto max_distance = max_distance_;
   static constexpr auto max_length = max_length_;
-  
+
   static_assert(literals_per_cycle_ > 0);
   static_assert(max_length > 0);
   static_assert(max_distance > 0);
-  
+
   static constexpr size_t size = literals_per_cycle_;
   static constexpr size_t max_literals = literals_per_cycle_;
-  static constexpr size_t valid_count_bits =
-      fpga_tools::Log2(max_literals) + 1;
+  static constexpr size_t valid_count_bits = fpga_tools::Log2(max_literals) + 1;
   static constexpr size_t length_bits = fpga_tools::Log2(max_length) + 1;
   static constexpr size_t distance_bits = fpga_tools::Log2(max_distance) + 1;
 
@@ -110,12 +104,12 @@ struct LZ77InputData {
 // Metaprogramming utils to check if a type is any instance of LZ77InputData
 //
 namespace detail {
-template<typename T>
+template <typename T>
 struct is_lz77_input_data_impl : std::false_type {};
 
-template<unsigned a, unsigned b, unsigned c>
+template <unsigned a, unsigned b, unsigned c>
 struct is_lz77_input_data_impl<LZ77InputData<a, b, c>> : std::true_type {};
-}
+}  // namespace detail
 
 template <class T>
 struct is_lz77_input_data {
@@ -216,7 +210,7 @@ class select_by_string : public sycl::default_selector {
 //
 // Reads 'filename' and returns an array of chars (the bytes of the file)
 //
-std::vector<unsigned char> ReadInputFile(const std::string filename) {
+std::vector<unsigned char> ReadInputFile(const std::string& filename) {
   // open file stream
   std::ifstream fin(filename);
 
@@ -240,7 +234,7 @@ std::vector<unsigned char> ReadInputFile(const std::string filename) {
 //
 // Writes the chars (bytes) from 'data' to 'filename'
 //
-void WriteOutputFile(const std::string filename,
+void WriteOutputFile(const std::string& filename,
                      std::vector<unsigned char>& data) {
   // open file stream
   std::ofstream fout(filename.c_str());
@@ -274,7 +268,7 @@ class DecompressorBase {
   // for the GZIP and SNAPPY versions of these, respectively
   //
   virtual std::optional<std::vector<unsigned char>> DecompressBytes(
-      sycl::queue&, std::vector<unsigned char>, int, bool) = 0;
+      sycl::queue&, std::vector<unsigned char>&, int, bool) = 0;
 
   //
   // Reads the bytes in 'in_filename', decompresses them, and writes the
@@ -291,9 +285,9 @@ class DecompressorBase {
   //      statistics to stdout
   //    write_output: whether to write the decompressed output to 'out_filename'
   //
-  bool DecompressFile(sycl::queue& q, std::string in_filename,
-                      std::string out_filename, int runs, bool print_stats,
-                      bool write_output) {
+  bool DecompressFile(sycl::queue& q, const std::string& in_filename,
+                      const std::string& out_filename, int runs,
+                      bool print_stats, bool write_output) {
     std::cout << "Decompressing '" << in_filename << "' " << runs
               << ((runs == 1) ? " time" : " times") << std::endl;
 
@@ -348,8 +342,8 @@ sycl::event SubmitProducer(sycl::queue& q, unsigned in_count_padded,
     // functions in ../gzip/gzip_decompressor.hpp and
     // ../snappy/snappy_decompressor.hpp respectively.
     sycl::device_ptr<unsigned char> in(in_ptr);
-    fpga_tools::MemoryToPipe<InPipe, literals_per_cycle, false>(in,
-                                                               iteration_count);
+    fpga_tools::MemoryToPipe<InPipe, literals_per_cycle, false>(
+        in, iteration_count);
   });
 }
 

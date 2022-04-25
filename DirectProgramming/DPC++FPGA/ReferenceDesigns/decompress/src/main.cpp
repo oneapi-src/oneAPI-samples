@@ -1,4 +1,4 @@
-// clang-format off
+#include <CL/sycl.hpp>
 #include <algorithm>
 #include <array>
 #include <fstream>
@@ -6,23 +6,18 @@
 #include <numeric>
 #include <sstream>
 #include <string>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <thread>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
-#include <CL/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
-
-// Included from DirectProgramming/DPC++FPGA/include/
-#include "constexpr_math.hpp"
+#include "constexpr_math.hpp"  // included from ../../../include
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
-
 #include "common/common.hpp"
-// clang-format on
+#include "dpc_common.hpp"
 
 // ensure only one of GZIP and SNAPPY is defined
 #if defined(GZIP) and defined(SNAPPY)

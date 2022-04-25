@@ -1,18 +1,14 @@
 #ifndef __HUFFMAN_DECODER_HPP__
 #define __HUFFMAN_DECODER_HPP__
 
-// clang-format off
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// Included from DirectProgramming/DPC++FPGA/include/
-#include "constexpr_math.hpp"
-#include "metaprogramming_utils.hpp"
-
-#include "byte_bit_stream.hpp"
 #include "../common/common.hpp"
-// clang-format on
+#include "byte_bit_stream.hpp"
+#include "constexpr_math.hpp"         // included from ../../../../include
+#include "metaprogramming_utils.hpp"  // included from ../../../../include
 
 // the size of the ByteBitStream buffer can be set from the compile comand.
 // this number was set experimentally
@@ -53,39 +49,30 @@ template <typename InPipe>
 std::pair<bool, ac_uint<2>> ParseLastBlockAndBlockType(BitStreamT& bit_stream);
 
 template <typename InPipe>
-void ParseFirstTable(BitStreamT& bit_stream,
-                     ac_uint<9>& numlitlencodes,
-                     ac_uint<6>& numdistcodes,
-                     ac_uint<5>& numcodelencodes,
+void ParseFirstTable(BitStreamT& bit_stream, ac_uint<9>& numlitlencodes,
+                     ac_uint<6>& numdistcodes, ac_uint<5>& numcodelencodes,
                      ac_uint<8> codelencode_map_first_code[8],
                      ac_uint<8> codelencode_map_last_code[8],
                      ac_uint<5> codelencode_map_base_idx[8],
                      ac_uint<5> codelencode_map[19]);
-                    
+
 template <typename InPipe>
-void ParseSecondTable(BitStreamT& bit_stream,
-                      bool is_static_huffman_block,
-                      ac_uint<9> numlitlencodes,
-                      ac_uint<6> numdistcodes,
-                      ac_uint<5> numcodelencodes,
-                      ac_uint<8> codelencode_map_first_code[8],
-                      ac_uint<8> codelencode_map_last_code[8],
-                      ac_uint<5> codelencode_map_base_idx[8],
-                      ac_uint<5> codelencode_map[19],
-                      ac_uint<15> lit_map_first_code[15],
-                      ac_uint<15> lit_map_last_code[15],
-                      ac_uint<9> lit_map_base_idx[15],
-                      ac_uint<9> lit_map[286],
-                      ac_uint<15> dist_map_first_code[15],
-                      ac_uint<15> dist_map_last_code[15],
-                      ac_uint<5> dist_map_base_idx[15],
-                      ac_uint<5> dist_map[32]);
+void ParseSecondTable(
+    BitStreamT& bit_stream, bool is_static_huffman_block,
+    ac_uint<9> numlitlencodes, ac_uint<6> numdistcodes,
+    ac_uint<5> numcodelencodes, ac_uint<8> codelencode_map_first_code[8],
+    ac_uint<8> codelencode_map_last_code[8],
+    ac_uint<5> codelencode_map_base_idx[8], ac_uint<5> codelencode_map[19],
+    ac_uint<15> lit_map_first_code[15], ac_uint<15> lit_map_last_code[15],
+    ac_uint<9> lit_map_base_idx[15], ac_uint<9> lit_map[286],
+    ac_uint<15> dist_map_first_code[15], ac_uint<15> dist_map_last_code[15],
+    ac_uint<5> dist_map_base_idx[15], ac_uint<5> dist_map[32]);
 
 }  // namespace detail
 
 //
 // Performs Huffman Decoding.
-// Streams in multiple DEFLATE blocks and performs huffman decoding for 
+// Streams in multiple DEFLATE blocks and performs huffman decoding for
 // uncompressed, statically compressed, and dynamically compressed blocks.
 // For dynamically compressed blocks, the huffman tables are also built from the
 // input byte stream.
@@ -100,11 +87,11 @@ void HuffmanDecoder() {
   // ensure the InPipe and OutPipe are SYCL pipes
   static_assert(fpga_tools::is_sycl_pipe_v<InPipe>);
   static_assert(fpga_tools::is_sycl_pipe_v<OutPipe>);
-  
+
   // make sure the input and output types are correct
   using InPipeBundleT = decltype(InPipe::read());
   using OutPipeBundleT = decltype(OutPipe::read());
-  
+
   // make sure the input and output types are correct
   static_assert(std::is_same_v<InPipeBundleT, FlagBundle<ByteSet<1>>>);
   static_assert(std::is_same_v<OutPipeBundleT, FlagBundle<GzipLZ77InputData>>);
@@ -148,12 +135,10 @@ void HuffmanDecoder() {
     [[intel::fpga_register]] ac_uint<5> codelencode_map[19];
 
     if (is_dynamic_huffman_block) {
-      detail::ParseFirstTable<InPipe>(bit_stream, numlitlencodes, numdistcodes,
-                                      numcodelencodes,
-                                      codelencode_map_first_code,
-                                      codelencode_map_last_code,
-                                      codelencode_map_base_idx,
-                                      codelencode_map);
+      detail::ParseFirstTable<InPipe>(
+          bit_stream, numlitlencodes, numdistcodes, numcodelencodes,
+          codelencode_map_first_code, codelencode_map_last_code,
+          codelencode_map_base_idx, codelencode_map);
     }
 
     // the number of literal and distance codes is known at compile time for
@@ -181,24 +166,13 @@ void HuffmanDecoder() {
     [[intel::fpga_register]] ac_uint<5> dist_map[32];
 
     if (is_static_huffman_block || is_dynamic_huffman_block) {
-      detail::ParseSecondTable<InPipe>(bit_stream,
-                                       is_static_huffman_block,
-                                       numlitlencodes,
-                                       numdistcodes,
-                                       numcodelencodes,
-                                       codelencode_map_first_code,
-                                       codelencode_map_last_code,
-                                       codelencode_map_base_idx,
-                                       codelencode_map,
+      detail::ParseSecondTable<InPipe>(
+          bit_stream, is_static_huffman_block, numlitlencodes, numdistcodes,
+          numcodelencodes, codelencode_map_first_code,
+          codelencode_map_last_code, codelencode_map_base_idx, codelencode_map,
 
-                                       lit_map_first_code,
-                                       lit_map_last_code,
-                                       lit_map_base_idx,
-                                       lit_map,
-                                       dist_map_first_code,
-                                       dist_map_last_code,
-                                       dist_map_base_idx,
-                                       dist_map);
+          lit_map_first_code, lit_map_last_code, lit_map_base_idx, lit_map,
+          dist_map_first_code, dist_map_last_code, dist_map_base_idx, dist_map);
     }
     // END: parsing the literal and distance tables (the second table)
     ////////////////////////////////////////////////////////////////////////////
@@ -524,7 +498,6 @@ std::pair<bool, ac_uint<2>> ParseLastBlockAndBlockType(BitStreamT& bit_stream) {
   return std::make_pair(last_block, block_type);
 }
 
-
 //
 // Parses the first Huffman table and creates the optimized Huffman table
 // structure
@@ -533,8 +506,7 @@ template <typename InPipe>
 void ParseFirstTable(BitStreamT& bit_stream,
 
                      // outputs
-                     ac_uint<9>& numlitlencodes,
-                     ac_uint<6>& numdistcodes,
+                     ac_uint<9>& numlitlencodes, ac_uint<6>& numdistcodes,
                      ac_uint<5>& numcodelencodes,
                      ac_uint<8> codelencode_map_first_code[8],
                      ac_uint<8> codelencode_map_last_code[8],
@@ -623,25 +595,18 @@ void ParseFirstTable(BitStreamT& bit_stream,
 // structure
 //
 template <typename InPipe>
-void ParseSecondTable(BitStreamT& bit_stream,
-                      bool is_static_huffman_block,
-                      ac_uint<9> numlitlencodes,
-                      ac_uint<6> numdistcodes,
-                      ac_uint<5> numcodelencodes,
-                      ac_uint<8> codelencode_map_first_code[8],
-                      ac_uint<8> codelencode_map_last_code[8],
-                      ac_uint<5> codelencode_map_base_idx[8],
-                      ac_uint<5> codelencode_map[19],
+void ParseSecondTable(
+    BitStreamT& bit_stream, bool is_static_huffman_block,
+    ac_uint<9> numlitlencodes, ac_uint<6> numdistcodes,
+    ac_uint<5> numcodelencodes, ac_uint<8> codelencode_map_first_code[8],
+    ac_uint<8> codelencode_map_last_code[8],
+    ac_uint<5> codelencode_map_base_idx[8], ac_uint<5> codelencode_map[19],
 
-                      // outputs
-                      ac_uint<15> lit_map_first_code[15],
-                      ac_uint<15> lit_map_last_code[15],
-                      ac_uint<9> lit_map_base_idx[15],
-                      ac_uint<9> lit_map[286],
-                      ac_uint<15> dist_map_first_code[15],
-                      ac_uint<15> dist_map_last_code[15],
-                      ac_uint<5> dist_map_base_idx[15],
-                      ac_uint<5> dist_map[32]) {
+    // outputs
+    ac_uint<15> lit_map_first_code[15], ac_uint<15> lit_map_last_code[15],
+    ac_uint<9> lit_map_base_idx[15], ac_uint<9> lit_map[286],
+    ac_uint<15> dist_map_first_code[15], ac_uint<15> dist_map_last_code[15],
+    ac_uint<5> dist_map_base_idx[15], ac_uint<5> dist_map[32]) {
   // length of codelens is MAX(numlitlencodes + numdistcodes)
   // = MAX((2^5 + 257) + (2^5 + 1)) = 322
   // maximum code length = 15, so requires 4 bits to store

@@ -1,18 +1,14 @@
 #ifndef __GZIP_METADATA_READER_HPP__
 #define __GZIP_METADATA_READER_HPP__
 
-// clang-format off
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// Included from DirectProgramming/DPC++FPGA/include/
-#include "constexpr_math.hpp"
-#include "metaprogramming_utils.hpp"
-
 #include "../common/common.hpp"
+#include "constexpr_math.hpp"  // included from ../../../../include
 #include "gzip_header_data.hpp"
-// clang-format on
+#include "metaprogramming_utils.hpp"  // included from ../../../../include
 
 //
 // A kernel that streams in bytes of the GZIP file, strips away (and parses) the
