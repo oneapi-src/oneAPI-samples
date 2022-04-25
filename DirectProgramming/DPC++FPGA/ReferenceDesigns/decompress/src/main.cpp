@@ -33,8 +33,15 @@ static_assert(false, "Only one of GZIP and SNAPPY can be defined!");
 // use the macro -DLITERALS_PER_CYCLE=<literals_per_cycle>
 // This is sent to the LZ77 decoder to read multiple elements at once from
 // the history buffer.
-#ifndef LITERALS_PER_CYCLE
+#if not defined(LITERALS_PER_CYCLE)
+// default LITERALS_PER_CYCLE for GZIP
+#if defined(GZIP)
 #define LITERALS_PER_CYCLE 4
+#endif
+// default LITERALS_PER_CYCLE for SNAPPY
+#if defined(SNAPPY)
+#define LITERALS_PER_CYCLE 8
+#endif
 #endif
 constexpr unsigned kLiteralsPerCycle = LITERALS_PER_CYCLE;
 static_assert(kLiteralsPerCycle > 0);

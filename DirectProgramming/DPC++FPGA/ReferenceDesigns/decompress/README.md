@@ -15,7 +15,7 @@ This DPC++ reference design can be compiled to implement either GZIP or Snappy d
 | Time to complete                  | 1 hour
 
 ## Purpose
-This FPGA reference design demonstrates an efficient GZIP and Snappy decompression engine. See the [Additional Design Information Section](#additional-design-information) for more information on GZIP and DEFLATE compression and decompression.
+This FPGA reference design demonstrates an efficient GZIP and Snappy decompression engine. See the [Additional Design Information Section](#additional-design-information) for more information on GZIP (DEFLATE) and Snappy compression and decompression.
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -81,7 +81,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 
-   To select between GZIP and SNAPPY decompression, use the -DGZIP=1 and -DSNAPPY=1 `cmake` flags, respectively:
+   To select between GZIP and Snappy decompression, use the -DGZIP=1 and -DSNAPPY=1 `cmake` flags, respectively:
    ```
    cmake .. -DGZIP=1
    cmake .. -DSNAPPY=1
@@ -123,7 +123,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
-   To select between GZIP and SNAPPY decompression, use the -DGZIP=1 and -DSNAPPY=1 `cmake` flags, respectively:
+   To select between GZIP and Snappy decompression, use the -DGZIP=1 and -DSNAPPY=1 `cmake` flags, respectively:
    ```
    cmake .. -DGZIP=1
    cmake .. -DSNAPPY=1
@@ -171,7 +171,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
      ```
 
 ### Example of Output
-You should see output similar to the following in the console for the GZIP and SNAPPY versions, respectively:
+You should see output similar to the following in the console for the GZIP and Snappy versions, respectively:
 #### GZIP Example Output
 ```
 Using GZIP decompression
@@ -214,7 +214,9 @@ Compression Ratio: 1021.26:1
 PASSED
 ```
 
-#### SNAPPY Example Output
+The throughput of the GZIP decompression engine is highly dependent on the compression ratio of the input file, more specifically on the amount of LZ77 compression. The file chosen for this test has a very high amount of LZ77 compression and was chosen to demonstrate the maximum throughput achievable with this implementation. When decompressing other files, the throughput might be lower.
+
+#### Snappy Example Output
 ```
 Using SNAPPY decompression
 
@@ -259,12 +261,9 @@ PASSED
 
 **Important**: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance.
 
-The throughput of the decompression engine is highly dependent on the compression ratio of the input file, more specifically on the amount of LZ77 compression. The file chosen for this test has a very high amount of LZ77 compression and was chosen to demonstrate the maximum throughput achievable with this implementation. When decompressing other files, the throughput might be lower.
-
-
 ## Additional Design Information
 ### Reference Design Source Files
-The following source files can be found in the `src/` sub-directory. The `src/common/` sub-directory contains datatypes, functions, and kernels that are common to the GZIP and SNAPPY decompression implementations. The `src/gzip/` and `src/snappy/` sub-directories contain kernels and functions that are unique to the GZIP and SNAPPY decompression implementations.
+The following source files can be found in the `src/` sub-directory. The `src/common/` sub-directory contains datatypes, functions, and kernels that are common to the GZIP and Snappy decompression implementations. The `src/gzip/` and `src/snappy/` sub-directories contain kernels and functions that are unique to the GZIP and Snappy decompression implementations.
 
 | File                            | Description
 |:---                             |:---
@@ -286,10 +285,10 @@ The following source files can be found in the `src/` sub-directory. The `src/co
 |`snappy/snappy_decompressor.hpp` | The top-level file for the Snappy decompressor. This file launches all of the Snappy kernels.
 |`snappy/snappy_reader.hpp`       | A kernel that reads the snappy format stream and produces either literals or {length, distance} pairs to be consumed by the LZ77 kernel.
 
-For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `unrolled_loop.hpp` see the README file in the `DirectProgramming/DPC++FPGA/include/` directory.
+For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tuple.hpp`, and `unrolled_loop.hpp` see the README file in the `DirectProgramming/DPC++FPGA/include/` directory.
 
-### GZIP and SNAPPY
-This reference designs contains code to implement both GZIP and SNAPPY decompression. This was done to reduce the amount of duplicated code, since the implementations are very similar. This is illustrated in the system-level figures below, which illustrate the GZIP and SNAPPY decompression engines on the FPGA, respectively. The orange kernels on the FPGA in the dashed box make up the streaming decompression engines. The *Producer* and *Consumer* kernels are only used to stream data into and out of the decompression engines from and to device memory, respectively.
+### GZIP and Snappy
+This reference designs contains code to implement both GZIP and Snappy decompression. This was done to reduce the amount of duplicated code, since the implementations are very similar. This is shown in the system-level figures below, which illustrate the GZIP and Snappy decompression engines on the FPGA, respectively. The orange kernels on the FPGA in the dashed box make up the streaming decompression engines. The *Producer* and *Consumer* kernels are only used to stream data into and out of the decompression engines from and to device memory, respectively.
 
 ##### GZIP Decompression Engine
 ![](gzip_decompression_engine_full.png)
@@ -297,10 +296,10 @@ This reference designs contains code to implement both GZIP and SNAPPY decompres
 ##### Snappy Decompression Engine
 ![](snappy_decompressor.png)
 
-The following sections will first describe the GZIP design, followed by the SNAPPY design, since the SNAPPY design is essentially a subset of the GZIP design.
+The following sections will first describe the GZIP design, followed by the Snappy design, since the Snappy design is essentially a subset of the GZIP design.
 
 ### GZIP and DEFLATE
-GZIP is an implementation of the DEFLATE protocol. The structure of a GZIP file is illustrated in the figure that follows. The file starts with a variable length, byte-aligned header of 10 or more bytes. Then follows the data payload, which is 1 or more DEFLATE compressed blocks. After the DEFLATE blocks, there might be some padding to realign to a byte boundary, and finally an 8-byte GZIP footer that contains the CRC-32 and size (in bytes) of the uncompressed data. For more details on the GZIP file format, review the [GZIP Wikipedia entry](https://en.wikipedia.org/wiki/Gzip).
+GZIP is an implementation of the DEFLATE protocol. The structure of a GZIP file is illustrated in the figure that follows. The file starts with a variable length, byte-aligned header of 10 or more bytes. Then follows the data payload, which is 1 or more DEFLATE compressed blocks. After the DEFLATE blocks, there might be some padding to realign to a byte boundary, and finally an 8-byte GZIP footer that contains the CRC-32 and size (in bytes) of the uncompressed data. For more details on the GZIP file format, see the [GZIP Wikipedia entry](https://en.wikipedia.org/wiki/Gzip).
 
 ##### GZIP File Structure
 ![](gzip_file_format.png)
@@ -341,7 +340,7 @@ The structure of the Huffman decoder is shown in the image that follows. The dec
 
 To decode the next symbol, the decoder finds the shortest of the 15 matches that were computed in parallel by performing a CTZ (count trailing zeros) operation on the valid bitmap and adds one to it, which is equivalent to finding the shortest match length.
 
-Once the shortest match length is found, the bit stream is shifted by that many bits, the symbol for that match is determined from the Huffman table, and the process repeats. If the decoded symbol is a literal, then the literal is written to the output. If the decoded symbol is a length, then no output is generated in this iteration. The length is saved and the next iteration of the loop decodes the distance and generates the {length, distance} pair output.
+Once the shortest match length is found, the bit stream is shifted by that many bits, the symbol for that match is read from the Huffman table, and the process repeats. If the decoded symbol is a literal, then the literal is written to the output. If the decoded symbol is a length, then no output is generated in this iteration. The length is saved and the next iteration of the loop decodes the distance and generates the {length, distance} pair output.
 
 ##### Huffman Decoder Structure
 ![](huffman_decoder.png)
@@ -371,14 +370,14 @@ The input to the LZ77 decoder kernel is a stream of symbols that are either an 8
 
 If the incoming command is an 8-bit literal, the LZ77 decoder simply forwards the literal to the output stream and tracks it in the history buffer. For a {length, distance} pair, the decoder goes back `distance` literals in the history buffer and streams `length` of them to the output and back into the history buffer.
 
-The LZ77 decoder can be configured to read `N` elements from the history buffer per cycle, where `N` is a compile time constant (In the source code `N` is `literals_per_cycle`). Therefore, the output of the LZ77 decoder kernel is an array of literals where the number of valid literals is in the range `[1, N]`, which is indicated by the `valid_count` variable.
+The LZ77 decoder can be configured to read `N` elements from the history buffer per cycle, where `N` is a compile time constant (In the source code `N` is called `literals_per_cycle`). Therefore, the output of the LZ77 decoder kernel is an array of literals where the number of valid literals is in the range `[1, N]`, which is indicated by the `valid_count` variable.
 
 The image that follows illustrates the multi-element LZ77 decoder. To read multiple elements from the history buffer at once, the history buffer is cyclically partitioned across `N` buffers. For example, if `N=4`, then the order in which literals are written to the history buffers is `0, 1, 2, 3, 0, 1, 2, 3, ...`. The `Current History Buffer Index` indicates which of the `N` history buffers is the next to be written to. When `N` (or less) elements come in the input, the elements are shuffled to the `N` buffers in the correct order. For example if `Current History Buffer Index` is 2, then the `N=4` incoming elements should be written to history buffers `{2, 3, 0, 1}`, respectively. In general, the order is `{Current History Buffer Index, (Current History Buffer Index + 1) % N, ..., (Current History Buffer Index + N - 1) % N}`.
 
 ##### Multi-element LZ77 Decoder Structure
 ![](lz77_decoder.png)
 
-When reading out of the history buffers, the `Current History Buffer Index` again shuffles the output of the `N` buffers so that they are streamed out in the correct order. The following example illustrates reading the history buffer for `N=4`.
+When reading out of the history buffers, the `Current History Buffer Index` is used again to shuffle the output of the `N` buffers so that they are streamed out in the correct order. The following example illustrates reading the history buffer for `N=4`.
 
 For this example, assume that to start the LZ77 decoder received 14 consecutive literals and wrote them to the output and history buffers in cyclical order (that is, to buffers `0, 1, 2, 3, 0, 1, 2, 3, ...`).
 ```
@@ -405,9 +404,9 @@ Characters:    E T H O M E P H O N E H O M E
 Buffer index:  0 1 2 3 0 1 2 3 0 1 2 3 0 1 2 0
 ```
 
-In general, this process is repeated `ceil(length/N)` times. When `length` is not a multiple of `N`, the `valid_count` is used to tell the downstream kernel how many of the `N` literals are valid. There is an edge case when the `distance` in the {length, distance} pair is less than `N`. This is handled in the code, but is omitted in this document for brevity.
+In general, this process is repeated `ceil(length/N)` times. When `length` is not a multiple of `N`, the `valid_count` is used to tell the downstream kernel how many of the `N` literals are valid. There is an edge case when the `distance` in the {length, distance} pair is less than `N`. This is handled in the code, but is omitted in this document for brevity. To see how this edge case is handled, examine the code marked with the "*EDGE CASE!*" comment in the `LZ77DecoderMultiElement` function in `common/lz77_decoder.hpp`.
 
-The history buffers have a read-after-write dependency since, when reading from the history buffers, the LZ77 decoder is also writing back to them. The history buffers are implemented in on-chip RAMs and therefore have a read latency that results in an increased loop II. To fix this II issue, we use a shift-register cache to track in-flight writes to the history buffers. This technique is described in more detail in the *Caching On-Chip Memory to Improve Loop Performance* tutorial, which can be found in [DirectProgramming/DPC++FPGA/Tutorials/DesignPatterns/onchip_memory_cache](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials/DesignPatterns/onchip_memory_cache).
+The history buffers have a read-after-write dependency since the LZ77 decoder both reads and writes back to them. The history buffers are implemented in on-chip RAMs and therefore have a read latency that results in an increased loop II. To fix this II issue, we use a shift-register cache to track in-flight writes to the history buffers. This technique is described in more detail in the *Caching On-Chip Memory to Improve Loop Performance* tutorial, which can be found in [DirectProgramming/DPC++FPGA/Tutorials/DesignPatterns/onchip_memory_cache](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials/DesignPatterns/onchip_memory_cache).
 
 #### Byte Stacker Kernel
 The input to the byte stacker kernel is an array of `N` characters and a `valid_count`, where `valid_count` is the number of valid characters in the range `[0, N]`. The kernel buffers valid characters until it can output `N` valid characters to the downstream kernel. `N` is a compile time constant and is equal to the number of literals the LZ77 decoder can read from the history buffer in a single cycle. The upstream LZ77 decoder kernel can produce less than `N` valid elements in two cases: when the Huffman decoder decodes a literal (that is, not a {length, distance} pair), or when the LZ77 decoder is reading a length that is not a multiple of `N` (for example `N = 4` and `{length, distance} = {7, 30}`).
@@ -425,7 +424,7 @@ The basic Snappy format is a *preamble* followed by the *compressed data stream*
 The first bytes of the stream, often called the *preamble*, store the uncompressed file length as a `varint` value, which is in the range [0, 2^32). A `varint` consist of a series of bytes, where the lower 7 bits are data and the upper bit is set if there are more bytes to be read. For example, an uncompressed length of 64 would be stored as 0x40, and an uncompressed length of 2097150 (0x1FFFFE) would be stored as {0xFE, 0xFF, 0x7F}. Thus, the uncompressed length is stored in the first bytes of the stream, using a maximum of 5 bytes.
 
 #### Compressed Data Stream Format
-After the 1 to 5 byte preamble comes the compressed data stream. The compressed data format contains two types of elements: literal strings and copies. A literal string is a sequence of characters, while a copy is a {length, distance} pair that instructs the decoder to go back *distance* characters in the past and copy *length* of them.
+After the 1 to 5 byte preamble is the compressed data stream. The compressed data format contains two types of elements: literal strings and copies. A literal string is a sequence of characters, while a copy is a {length, distance} pair that instructs the decoder to go back *distance* characters in the past and copy *length* of them.
 
 Each element starts with a tag byte, as illustrated in the following figure.
 
@@ -442,13 +441,13 @@ The lower 2 bits of the tag byte indicate which element follows:
 The interpretation of the remaining 6 bits in the tag byte depend on the element type:
 
 ##### Literal Strings
-For literal strings up to and including 60 elements, the upper 6 bits in the tag contain `length - 1`. For longer literals, the 6 extra tag bits indicate how many more bytes to read to get the length; `60`, `61`, `62` or `63` for `1`, `2`, `3`, and `4` bytes, respectively. After decoding the length, the literal string itself follows. These two formats are illustrated in the following figures.
+For literal strings up to and including 60 characters, the upper 6 bits in the tag contain `length - 1`. For longer literals, the 6 extra tag bits indicate how many more bytes to read to get the length; `60`, `61`, `62` or `63` for `1`, `2`, `3`, and `4` bytes, respectively. After decoding the length, the literal string itself follows. These two formats are illustrated in the following figures.
 
 ##### Literal String Byte Format
 ![](literal_tag_format.png)
 
 ##### Copies
-This design supports copies with offsets up to 65 kB. Currently, the Snappy format does not produce offsets greater than 32 kB. If the distance is increased beyond 65 kB in the future, then this design will be updated accordingly.
+This design supports copies with offsets up to 64 kB. Currently, the Snappy format does not produce offsets greater than 32 kB. If the distance is increased beyond 64 kB in the future, then this design will be updated accordingly.
 
 As discussed earlier, there are 3 options for copies depending on the value of the : a 1-, 2-, or 4-byte distance. These three formats are illustrated in the following figure.
 
@@ -469,6 +468,6 @@ The image that follows summarizes the full streaming Snappy decompression design
 
 The Snappy Reader kernel reads the input stream and decodes it to stream out either literal strings or {length, distance} pairs to the LZ77 Decoder kernel. It can decode a tag byte and the subsequent extra bytes (at most 4 extra) in a single cycle. Thus, it can provide the downstream LZ77 Decoder kernel with either a literal or a {length, distance} pair every cycle.
 
-You can set the `literals_per_cycle` parameter at compile-time. The parameter controls how many literals the Snappy Reader kernel can read from a literal string per cycle and the number of literals the LZ77 Decoder kernel can read from the history buffer per cycle. The default value for this variable is `8` (see `main.cpp`) but it can be set at compile time using the `-DLITERALS_PER_CYCLE=<value>` flag.
+You can set the `literals_per_cycle` parameter at compile-time. The parameter controls how many literals the Snappy Reader kernel can read from a literal string per cycle and the number of literals the LZ77 Decoder kernel can read from the history buffer per cycle. For the Snappy version of this design, the default value is `8` (see `main.cpp`) but it can be set at compile time using the `-DLITERALS_PER_CYCLE=<value>` flag.
 
 The details for the [Byte Stacker kernel](#Byte-Stacker-Kernel) and [LZ77 Decoder kernels](#LZ77-Decoder-Kernel) are in the earlier [GZIP and DEFLATE section](#GZIP-and-Deflate).
