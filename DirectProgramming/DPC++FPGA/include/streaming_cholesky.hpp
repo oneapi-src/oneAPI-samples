@@ -171,7 +171,8 @@ struct StreamingCholesky {
           sum += to_add;
         });
 
-        TT diff = a_load[row][column] - sum;
+        TT a_loaded = row < rows ? a_load[row][column] : TT{0};
+        TT diff = a_loaded - sum;
 
         // Only do useful work for meaningful iterations
         TT to_store;
