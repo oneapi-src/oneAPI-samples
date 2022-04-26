@@ -39,9 +39,11 @@ ac_fixed<4,7,false> x; // xxxx000. : range = [0, 120], quantum = 8
 ac_fixed<4,-3,true> x; // (.xxxx)2^(-3) : range=[-1/16, 7/128], quantum = 1/128
 ```
 
-The `ac_fixed` class also provides two more optional parameters for controlling the overflow and rounding modes. 
+When creating an `ac_fixed` value, the created value may be less precise than the source value or the conversion may trigger an overflow. `ac_fixed` provides enums to select quantization and overflow modes, which determine how the source value will be converted.
+- The default quantization mode is `AC_TRN`, which drops bits to the right of LSB when quantization occurs.
+- The default overflow mode is `AC_WRAP`, which drops bits to the left of the MSB when overflow occurs.
 
-For more details on the `ac_fixed` class, refer to [Algorithmic C Datatypes Software Version v3.7](https://cdrdv2.intel.com/v1/dl/getContent/728986).
+To select specific quantization and overflow modes, refer to section *2.1 Quantization and Overflow* in [Algorithmic C Datatypes Software Version v3.7](https://cdrdv2.intel.com/v1/dl/getContent/728986) for more details.
 
 To use an `ac_fixed` type in your code, include the following header:
 

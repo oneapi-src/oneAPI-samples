@@ -69,9 +69,9 @@ void TestCalculateWithFloat(queue &q, const float &x, float &ret) {
     accessor res{ret_buffer, h, write_only, no_init};
 
     h.single_task<CalculateWithFloat>([=] {
-      float sin_ret = sinf(x[0]);
-      float cos_ret = cosf(x[0]);
-      res[0] = sqrtf(sin_ret * sin_ret + cos_ret * cos_ret);
+      float sin_x = sinf(x[0]);
+      float cos_x = cosf(x[0]);
+      res[0] = sqrtf(sin_x * sin_x + cos_x * cos_x);
     });
   });
 }
@@ -98,16 +98,14 @@ void TestCalculateWithACFixed(queue &q, const fixed_10_3_t &x,
     accessor res{ret_buffer, h, write_only, no_init};
 
     h.single_task<CalculateWithACFixed>([=] {
-      fixed_9_2_t sin_ret = sin_fixed(x[0]);
-      fixed_9_2_t cos_ret = cos_fixed(x[0]);
+      fixed_9_2_t sin_x = sin_fixed(x[0]);
+      fixed_9_2_t cos_x = cos_fixed(x[0]);
       // The RHS expression evaluates to a larger `ac_fixed`, which gets
       // truncated to fit in res[0].
-      res[0] = sqrt_fixed(sin_ret * sin_ret + cos_ret * cos_ret);
+      res[0] = sqrt_fixed(sin_x * sin_x + cos_x * cos_x);
     });
   });
 }
-
-constexpr int kSize = 5;
 
 int main() {
 #if defined(FPGA_EMULATOR)
@@ -121,8 +119,8 @@ int main() {
     queue q(selector, dpc_common::exception_handler);
 
     // I. Constructing `ac_fixed` Numbers
-    // Rounding mode: use `AC_RND` to round towards plus infinity
-    // Overflow mode: use `AC_SAT` to saturate to max and min
+    // Set quantization mode `AC_RND` to round towards plus infinity
+    // Set overflow mode `AC_SAT` to saturate to max and min when overflow happens
     ac_fixed<20, 10, true, AC_RND, AC_SAT> a;
     TestConstructFromFloat(q, 3.1415f, a);
     std::cout << "Constructed from float:\t\t" << a << "\n";
@@ -133,6 +131,7 @@ int main() {
     std::cout << "Constructed from ac_fixed:\t" << c << "\n\n";
 
     // II. Using `ac_fixed` Math Functions
+    constexpr int kSize = 5;
     constexpr float inputs[kSize] = {-0.807991899423f, -2.09982907558f,
                                      -0.742066235466f, -2.33217071676f,
                                      1.14324158042f};
