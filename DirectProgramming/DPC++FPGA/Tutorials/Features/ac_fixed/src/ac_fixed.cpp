@@ -120,7 +120,8 @@ int main() {
 
     // I. Constructing `ac_fixed` Numbers
     // Set quantization mode `AC_RND` to round towards plus infinity
-    // Set overflow mode `AC_SAT` to saturate to max and min when overflow happens
+    // Set overflow mode `AC_SAT` to saturate to max and min when overflow
+    // happens
     ac_fixed<20, 10, true, AC_RND, AC_SAT> a;
     TestConstructFromFloat(q, 3.1415f, a);
     std::cout << "Constructed from float:\t\t" << a << "\n";
