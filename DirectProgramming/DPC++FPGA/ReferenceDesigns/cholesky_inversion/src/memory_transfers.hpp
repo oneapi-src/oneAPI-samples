@@ -133,19 +133,21 @@ void VectorReadFromPipeToDDR(
 
         // Copy the I vector result to DDR
         if constexpr (kIncompleteBurst) {
-          // Write a burst of num_elem_per_bank elements to DDR
-          fpga_tools::UnrolledLoop<num_elem_per_bank>([&](auto k) {
+// Write a burst of num_elem_per_bank elements to DDR
+#pragma unroll
+          for (int k = 0; k < num_elem_per_bank; k++) {
             if (((li * num_elem_per_bank) + k) < vector_size) {
               vector_ptr_device[(vector_idx * vector_size) +
                                 (li * num_elem_per_bank) + k] = bank[k];
             }
-          });
+          }
         } else {
-          // Write a burst of num_elem_per_bank elements to DDR
-          fpga_tools::UnrolledLoop<num_elem_per_bank>([&](auto k) {
+// Write a burst of num_elem_per_bank elements to DDR
+#pragma unroll
+          for (int k = 0; k < num_elem_per_bank; k++) {
             vector_ptr_device[(vector_idx * vector_size) +
                               (li * num_elem_per_bank) + k] = bank[k];
-          });
+          }
         }
       }  // end of li
     }    // end of vector_idx
