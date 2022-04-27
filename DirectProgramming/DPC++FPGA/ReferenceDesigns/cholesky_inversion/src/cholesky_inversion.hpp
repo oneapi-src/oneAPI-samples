@@ -97,53 +97,10 @@ void CholeskyInversionImpl(
           T, is_complex, dimension, raw_latency_inversion,
           kNumElementsPerDDRBurst, LMatrixPipe, IMatrixPipe>());
 
-  auto ddr_write_event = q.single_task<CholeskyLocalMemToDDRL>([=]() [[intel::kernel_args_restrict]] {
-    // Read the I matrix from the LMatrixPipe pipe and copy it to the FPGA DDR
-    // Number of DDR bursts of kNumElementsPerDDRBurst required to write
-    // one vector
-    constexpr bool kIncompleteBurst =
-       kIMatrixSize % kNumElementsPerDDRBurst != 0;
-    constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
-    constexpr int kLoopIter =
-       (kIMatrixSize / kNumElementsPerDDRBurst) + kExtraIteration;
-
-    sycl::device_ptr<TT> vector_ptr_device(i_device);
-
-    // Repeat matrix_count complete I matrix pipe reads
-    // for as many repetitions as needed
-    for (int rep_idx = 0; rep_idx < repetitions; rep_idx++) {
-      for (int matrix_idx = 0; matrix_idx < matrix_count; matrix_idx++) {
-        for (int li = 0; li < kLoopIter; li++) {
-          TT bank[kNumElementsPerDDRBurst];
-
-          for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-            if(((li * kNumElementsPerDDRBurst) + k) < kIMatrixSize){
-              bank[k] = IMatrixPipe::read();
-            }
-          }
-
-          // Copy the I matrix result to DDR
-          if constexpr (kIncompleteBurst){
-            // Write a burst of kNumElementsPerDDRBurst elements to DDR
-            #pragma unroll
-            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              if(((li * kNumElementsPerDDRBurst) + k) < kIMatrixSize){
-                vector_ptr_device[(matrix_idx * kIMatrixSize)
-                          + (li * kNumElementsPerDDRBurst) + k] = bank[k];
-              }
-            }
-          }
-          else{
-            // Write a burst of kNumElementsPerDDRBurst elements to DDR
-            #pragma unroll
-            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              vector_ptr_device[(matrix_idx * kIMatrixSize)
-                          + (li * kNumElementsPerDDRBurst) + k] = bank[k];
-            }
-          }
-        }  // end of li
-      }  // end of matrix_idx
-    }    // end of rep_idx
+  // Read the I matrix from the LMatrixPipe pipe and copy it to the FPGA DDR
+  auto ddr_write_event = q.single_task<CholeskyLocalMemToDDRL>([=] {
+    VectorReadFromPipeToDDR<TT, kIMatrixSize, kNumElementsPerDDRBurst,
+                            IMatrixPipe>(i_device, matrix_count, repetitions);
   });
 
   ddr_write_event.wait();

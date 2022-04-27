@@ -10,8 +10,6 @@
 #include "cholesky_inversion.hpp"
 #include "dpc_common.hpp"
 
-// #define DEBUG 1
-
 // Use "#define DEBUG" to print debugging information such as matrices content
 
 /*
@@ -245,10 +243,10 @@ int main(int argc, char *argv[]) {
               2;
 
 #if COMPLEX == 1
-            if (row > col) {
-              a_matrix[current_matrix + index] =
-                  a_matrix[current_matrix + index].conj();
-            }
+          if (row > col) {
+            a_matrix[current_matrix + index] =
+                a_matrix[current_matrix + index].conj();
+          }
 #endif
         }
       }
@@ -289,14 +287,13 @@ int main(int argc, char *argv[]) {
       // Read the I matrix from the output vector to the i_matrix_op matrix
       for (size_t j = 0; j < kColumns; j++) {
         for (size_t i = 0; i < kRows; i++) {
-          if(i<j){
+          if (i < j) {
 #if COMPLEX == 0
             i_matrix_op[i][j] = i_matrix_op[j][i];
 #else
             i_matrix_op[i][j] = i_matrix_op[j][i].conj();
 #endif
-          }
-          else{
+          } else {
             i_matrix_op[i][j] = i_matrix[(mat_idx * kIMatrixSize) + i_idx];
             i_idx++;
           }

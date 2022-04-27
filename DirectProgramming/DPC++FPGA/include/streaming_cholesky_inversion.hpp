@@ -1,17 +1,6 @@
 #ifndef __STREAMING_CHOLESKY_INVERSION_HPP__
 #define __STREAMING_CHOLESKY_INVERSION_HPP__
 
-#ifdef __SYCL_DEVICE_ONLY__
-#define CL_CONSTANT __attribute__((opencl_constant))
-#else
-#define CL_CONSTANT
-#endif
-#define PRINTF(format, ...)                                          \
-  {                                                                  \
-    static const CL_CONSTANT char _format[] = format;                \
-    sycl::ext::oneapi::experimental::printf(_format, ##__VA_ARGS__); \
-  }
-
 #include "constexpr_math.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
@@ -80,7 +69,6 @@ struct StreamingCholeskyInversion {
 
     constexpr int kColumns = rows;
 
-
     // Compute Cholesky-based inversions as long as L input matrices are given
     while (1) {
       // L matrix read from pipe
@@ -114,17 +102,6 @@ struct StreamingCholeskyInversion {
           }
         }
       }
-
-      // PRINTF("L matrix\n");
-      // for (int row = 0; row < rows; row++) {
-      //   for (int col = 0; col < rows; col++) {
-      //     li_matrix_compute[row][col] = 0;
-      //     PRINTF("%f ", l_matrix[row][col]);
-      //     // PRINTF("%f %fi  ", l_matrix[row][col].r(),
-      //     // l_matrix[row][col].i());
-      //   }
-      //   PRINTF("\n");
-      // }
 
       /*
         Compute the inverse of L
@@ -183,7 +160,6 @@ struct StreamingCholeskyInversion {
 
       [[intel::ivdep(raw_latency)]]  // NO-FORMAT: Attribute
       for (int it = 0; it < kTotalIterations + kInitIterations; it++) {
-        // PRINTF("it: %d [%d][%d]\n", it, row, col);
 
         // Only perform work when in not dummy iterations
         if (row < rows & col < kColumns) {
@@ -191,8 +167,6 @@ struct StreamingCholeskyInversion {
           TT div_val;
 
           fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
-
-            // auto lhs = l_matrix[col][k];
             auto li_loaded = l_matrix[col][k];
 
             TT lhs;
@@ -210,8 +184,6 @@ struct StreamingCholeskyInversion {
             } else {
               rhs = TT{0};
             }
-            // auto rhs = (k >= row) && (k < col) ? li_compute_load : TT{0};
-            // auto rhs = li_compute_load;
 
             if (k == col) {
               div_val = lhs;
@@ -242,22 +214,6 @@ struct StreamingCholeskyInversion {
           col++;
         }
       }
-
-      // PRINTF("L inverse matrix\n");
-      // for (int row = 0; row < rows; row++) {
-      //   for (int col = 0; col < rows; col++) {
-      //     PRINTF("%f ", li_matrix[row][col]);
-      //   }
-      //   PRINTF("\n");
-      // }
-
-      // PRINTF("L inverse matrix transpose\n");
-      // for (int row = 0; row < rows; row++) {
-      //   for (int col = 0; col < rows; col++) {
-      //     PRINTF("%f ", li_matrix_transpose[row][col]);
-      //   }
-      //   PRINTF("\n");
-      // }
 
       int inverse_matrix_write_idx = 0;
       // Compute inv(A) = inv(L)*trans(inv(L))
@@ -293,15 +249,6 @@ struct StreamingCholeskyInversion {
           inverse_matrix_write_idx++;
         }
       }
-
-      // PRINTF("Inverse matrix\n");
-      // for (int row = 0; row < rows; row++) {
-      //   for (int col = 0; col < rows; col++) {
-      //     if(row >)
-      //     PRINTF("%f ", i_matrix[row*kColumns + col]);
-      //   }
-      //   PRINTF("\n");
-      // }
 
       int inverse_matrix_read_idx = 0;
       for(int loop_count = 0; loop_count < kNormalIterations; loop_count++){

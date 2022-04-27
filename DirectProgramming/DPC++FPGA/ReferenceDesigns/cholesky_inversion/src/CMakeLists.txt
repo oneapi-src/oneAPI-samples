@@ -24,15 +24,18 @@ else()
 endif()
 
 
+# A10 parameters
+set(MATRIX_DIMENSION 32)
+set(COMPLEX 0)
+set(FIXED_ITERATIONS_DECOMPOSITION 39)
+set(FIXED_ITERATIONS_INVERSION 34)
+set(CLOCK_TARGET 360MHz)
+set(SEED "-Xsseed=29")
+
 # Set design parameters according to the selected board
 if(FPGA_BOARD MATCHES ".*a10.*")
     # A10 parameters
-    set(MATRIX_DIMENSION 32)
-    set(COMPLEX 0)
-    set(FIXED_ITERATIONS_DECOMPOSITION 39)
-    set(FIXED_ITERATIONS_INVERSION 34)
-    set(CLOCK_TARGET 360MHz)
-    set(SEED "-Xsseed=29")
+    # Nothing to do
 elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(MATRIX_DIMENSION 32)
@@ -50,7 +53,8 @@ elseif(FPGA_BOARD MATCHES ".*agilex.*")
     set(CLOCK_TARGET 600MHz)
     set(SEED "-Xsseed=5")
 else()
-    message(FATAL_ERROR "Unknown board!")
+    message(STATUS "Unknown board ${FPGA_BOARD}!")
+    message(STATUS "Using Arria 10 defaults.")
 endif()
 
 if(IGNORE_DEFAULT_SEED)

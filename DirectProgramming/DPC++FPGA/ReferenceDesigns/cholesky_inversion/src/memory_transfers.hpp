@@ -95,86 +95,61 @@ void MatrixReadFromDDRToPipe(
 }
 
 /*
-  Write matrix_count matrices of type TT from a pipe, num_elem_per_bank by
+  Read vector_count vectors of type TT from a pipe, num_elem_per_bank by
   num_elem_per_bank and write them to DDR by bursts of num_elem_per_bank
   elements.
   Repeat this operations "repetitions" times.
 */
-template <typename TT,            // Datatype of the elements of the matrix
-          int rows,               // Number of rows of the matrix
-          int columns,            // Number of columns of the matrix
+template <typename TT,            // Datatype of the elements of the vector
+          int vector_size,        // Number of elements in the vector
           int num_elem_per_bank,  // Number of TT elements per DDR burst access
-          typename MatrixPipe     // Input matrix
+          typename VectorPipe     // Input vector
           >
-void MatrixReadFromPipeToDDR(
-    TT* matrix_ptr,    // Output matrix pointer
-    int matrix_count,  // Number of matrix to write to DDR
-    int repetitions    // Number of time to read the same matrix to the pipe
+void VectorReadFromPipeToDDR(
+    TT* vector_ptr,    // Output vector pointer
+    int vector_count,  // Number of vector to write to DDR
+    int repetitions    // Number of time to read the same vector to the pipe
 ) {
-  // We may perform an incomplete memory write if the number of elements per row
-  // is not a multiple of the DDR burst size
-  constexpr bool kIncompleteBurst = rows % num_elem_per_bank != 0;
+  // The number of elements in the vector may not be a multiple of
+  // num_elem_per_bank so we may have to do an extra incomplete write to DDR.
+  constexpr bool kIncompleteBurst = vector_size % num_elem_per_bank != 0;
   constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
-  // Number of DDR burst of num_elem_per_bank required to write a full column
-  constexpr int kLoopIterPerColumn = rows / num_elem_per_bank + kExtraIteration;
-  // Number of DDR burst of num_elem_per_bank to write all the matrices
-  constexpr int kLoopIter = kLoopIterPerColumn * columns;
-  // Size in bits of the loop iterator over kLoopIter iterations
-  constexpr int kLoopIterBitSize = fpga_tools::BitsForMaxValue<kLoopIter + 1>();
-  // Size of a full matrix
-  constexpr int kMatrixSize = rows * columns;
+  constexpr int kLoopIter = (vector_size / num_elem_per_bank) + kExtraIteration;
 
-  sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
+  sycl::device_ptr<TT> vector_ptr_device(vector_ptr);
 
-  // Repeatedly read matrix_count matrices from the pipe and write them to DDR
-  for (int repetition = 0; repetition < repetitions; repetition++) {
-    for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
-      // Keep track of the current element index in the output matrix
-      // Only useful in the case of kIncompleteBurst
-      int write_idx = 0;
+  // Repeat vector_count complete I vector pipe reads
+  // for as many repetitions as needed
+  for (int rep_idx = 0; rep_idx < repetitions; rep_idx++) {
+    for (int vector_idx = 0; vector_idx < vector_count; vector_idx++) {
+      for (int li = 0; li < kLoopIter; li++) {
+        TT bank[num_elem_per_bank];
 
-      [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      [[intel::ivdep]]                   // NO-FORMAT: Attribute
-      for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
-        fpga_tools::NTuple<TT, num_elem_per_bank> pipe_read =
-            MatrixPipe::read();
-
-        bool last_burst_of_col;
-        if constexpr (kIncompleteBurst) {
-          // Check if we are writing the last DDR burst of the current column
-          last_burst_of_col =
-              (li % kLoopIterPerColumn) == kLoopIterPerColumn - 1;
+        for (int k = 0; k < num_elem_per_bank; k++) {
+          if (((li * num_elem_per_bank) + k) < vector_size) {
+            bank[k] = VectorPipe::read();
+          }
         }
 
-        fpga_tools::UnrolledLoop<num_elem_per_bank>([&](auto k) {
-          if constexpr (kIncompleteBurst) {
-            // Check if the current write index is beyond the end of the current
-            // matrix column
-            bool out_of_bounds =
-                last_burst_of_col && (k > ((rows - 1) % num_elem_per_bank));
-
-            // Only perform the DDR writes that are relevant (and don't access a
-            // memory address that may be beyond the buffer last address)
-            if (!out_of_bounds) {
-              matrix_ptr_device[matrix_index * kMatrixSize + write_idx + k] =
-                  pipe_read.template get<k>();
-            }
-          } else {
-            matrix_ptr_device[matrix_index * kMatrixSize +
-                              int(li) * num_elem_per_bank + k] =
-                pipe_read.template get<k>();
-          }
-        });
-
+        // Copy the I vector result to DDR
         if constexpr (kIncompleteBurst) {
-          // Update the current element index in the write buffer according
-          // to the write size of the current iteration
-          write_idx +=
-              last_burst_of_col ? rows % num_elem_per_bank : num_elem_per_bank;
+          // Write a burst of num_elem_per_bank elements to DDR
+          fpga_tools::UnrolledLoop<num_elem_per_bank>([&](auto k) {
+            if (((li * num_elem_per_bank) + k) < vector_size) {
+              vector_ptr_device[(vector_idx * vector_size) +
+                                (li * num_elem_per_bank) + k] = bank[k];
+            }
+          });
+        } else {
+          // Write a burst of num_elem_per_bank elements to DDR
+          fpga_tools::UnrolledLoop<num_elem_per_bank>([&](auto k) {
+            vector_ptr_device[(vector_idx * vector_size) +
+                              (li * num_elem_per_bank) + k] = bank[k];
+          });
         }
       }  // end of li
-    }    // end of matrix_index
-  }      // end of repetition
+    }    // end of vector_idx
+  }      // end of rep_idx
 }
 
 #endif /* __MEMORY_TRANSFERS_HPP__ */

@@ -1,8 +1,8 @@
 {
-  "guid": "4674C946-45F7-4bCA-9DA6-FAA1797691CB",
-  "name": "Cholesky decomposition",
+  "guid": "59E50996-975A-4A19-BD54-35496F5FA6AD",
+  "name": "Cholesky-based matrix inversion",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
-  "description": "Reference design demonstrating high-performance Cholesky decomposition of real and complex matrices on an Intel® FPGA",
+  "description": "Reference design demonstrating high-performance Cholesky-based inversion of real and complex matrices on an Intel® FPGA",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
@@ -11,7 +11,7 @@
   "commonFolder": {
     "base": "../..",
     "include": [
-      "ReferenceDesigns/cholesky",
+      "ReferenceDesigns/cholesky_inversion",
       "include"
     ],
     "exclude": []
@@ -29,7 +29,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./cholesky.fpga_emu"
+          "./cholesky_inversion.fpga_emu"
         ]
       },
       {
@@ -54,9 +54,9 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/cholesky",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/cholesky_inversion",
           "nmake fpga_emu",
-          "cholesky.fpga_emu.exe"
+          "cholesky_inversion.fpga_emu.exe"
         ]
       },
       {
@@ -66,7 +66,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/cholesky",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/cholesky_inversion",
           "nmake report"
         ]
       }
