@@ -5,20 +5,21 @@ This directory contains utility header libraries optimized for FPGA DPC++ design
 
 ### Utilities
 
-| Filename       | Description
----              |---
+| Filename           | Description
+---                  |---
 | constexpr_math.hpp | Defines utilities for statically computing math functions such as Log2.
-| pipe_utils.hpp | Utility classes for working with pipes, such as PipeArray.
-| tuple.hpp | Defines a template to implement tuples.
-| unrolled_loop.hpp | Defines a templated implementation of unrolled loops.
+| pipe_utils.hpp     | Utility classes for working with pipes, such as PipeArray.
+| tuple.hpp          | Defines a template to implement tuples.
+| unrolled_loop.hpp  | Defines a templated implementation of unrolled loops.
 
 ### Linear algebra
 
-| Filename       | Description
----              |---
-| streaming_qrd.hpp | QR decomposition of matrices with pipe interfaces.
-| streaming_qri.hpp | QR-based inversion of matrices with pipe interfaces.
-| streaming_cholesky.hpp | Cholesky decomposition of matrices with pipe interfaces.
+| Filename                         | Description
+---                                |---
+| streaming_qrd.hpp                | QR decomposition of matrices with pipe interfaces.
+| streaming_qri.hpp                | QR-based inversion of matrices with pipe interfaces.
+| streaming_cholesky.hpp           | Cholesky decomposition of matrices with pipe interfaces.
+| streaming_cholesky_inversion.hpp | Cholesky-based inversion of matrices with pipe interfaces.
 
 ## License
 Code samples are licensed under the MIT license. See
