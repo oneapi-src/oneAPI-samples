@@ -1225,5 +1225,12 @@
         "notes": "-",
         "removed": "False",
         "ver": "2022.2.0"
+    },
+    "5B587FFC-FC3F-4A07-9B66-16211A94A073": {
+        "guid": "5B587FFC-FC3F-4A07-9B66-16211A94A073",
+	"name": "Introduction to Ray Tracing with Intel Embree",
+	"notes": "-",
+	"removed": "False",
+	"ver": "2022.2.0"
     }
 }
