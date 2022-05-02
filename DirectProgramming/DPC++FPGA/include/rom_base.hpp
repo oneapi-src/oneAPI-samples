@@ -27,13 +27,15 @@
 //      constexpr SquareLUT() : ROMBase<int, lut_depth>(SquareFunctor()) {}
 //    };
 //
-//  USING A LAMDA
+//  USING A LAMBDA
 //    constexpr int lut_depth = 1024;
 //    struct SquareLUT : ROMBase<int, lut_depth> {
 //      constexpr SquareLUT() : ROMBase<int, lut_depth>(
 //        [](int x) { return x * x; }) {}
 //    };
 //
+namespace fpga_tools {
+
 template<typename T, int rom_depth>
 struct ROMBase {
   // ensure a positive depth
@@ -47,7 +49,7 @@ struct ROMBase {
 
   // constexpr constructor that initializes the contents of the ROM
   // using a user specified Functor. NOTE: the functor must be constexpr,
-  // which can be achieved with a lamda or by marking the operator() function
+  // which can be achieved with a lambda or by marking the operator() function
   // as constexpr.
   template<typename InitFunctor>
   constexpr ROMBase(const InitFunctor& func) : data_() {
@@ -64,5 +66,7 @@ struct ROMBase {
  protected:
   T data_[rom_depth];
 };
+
+}  // namespace fpga_tools
 
 #endif /* __ROM_BASE_HPP__ */
