@@ -83,7 +83,7 @@ int main() {
   ...
 }
 ```
-Notice that the FPGA emulator and the FPGA are are different target devices. It is recommended to use a preprocessor define to choose between the emulator and FPGA selectors.  This makes it easy to switch between targets using only command-line flags. Since the FPGA only supports ahead-of-time compilation, dynamic selectors (such as the default_selector) are less useful than explicit selectors when targeting FPGA.
+Notice that the FPGA emulator and the FPGA are different target devices. It is recommended to use a preprocessor define to choose between the emulator and FPGA selectors.  This makes it easy to switch between targets using only command-line flags. Since the FPGA only supports ahead-of-time compilation, dynamic selectors (such as the default_selector) are less useful than explicit selectors when targeting FPGA.
 
 
 ### Compiler Flags
