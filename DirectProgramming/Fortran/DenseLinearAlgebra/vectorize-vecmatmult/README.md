@@ -1,12 +1,12 @@
 ﻿ # `Vectorize VecMatMult` Sample
 
-In this sample, you will use the auto-vectorizer to improve the performance 
-of the sample application. You will compare the performance of the 
-serial version and the version that was compiled with the auto-vectorizer. 
-  
+In this sample, you will use the auto-vectorizer to improve the performance
+of the sample application. You will compare the performance of the
+serial version and the version that was compiled with the auto-vectorizer.
+
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | macOS* with Xcode* installed 
+| OS                                | macOS* with Xcode* installed
 | Hardware							            | Intel&reg;-based Mac*
 | Software                          | Intel&reg; Fortran Compiler
 | What you will learn               | Vectorization using Intel Fortran Compiler
@@ -14,9 +14,9 @@ serial version and the version that was compiled with the auto-vectorizer.
 
 
 ## Purpose
-The Intel® Fortran Compiler has an auto-vectorizer that detects operations in the application 
-that can be done in parallel and converts sequential operations 
-to parallel operations by using the 
+The Intel® Fortran Compiler has an auto-vectorizer that detects operations in the application
+that can be done in parallel and converts sequential operations
+to parallel operations by using the
 Single Instruction Multiple Data (SIMD) instruction set.
 
 For the Intel® compiler, vectorization is the unrolling of a loop combined with the generation of packed SIMD instructions. Because the packed instructions operate on more than one data element simultaneously, the loop can execute more efficiently. It is sometimes referred to as auto-vectorization to emphasize that the compiler automatically identifies and optimizes suitable loops on its own.
@@ -44,12 +44,29 @@ In this sample, you will use the following files:
     matvec.f90
 
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ## Building the `Fortran Vectorization` sample
 
@@ -150,13 +167,13 @@ The vectorization report matvec.optrpt indicates that the loop at line 33 in mat
 
       LOOP BEGIN at matvec.f90(32,6)
        <Remainder loop for vectorization>
-         remark #15335: remainder loop was not vectorized: vectorization possible but seemed inefficient. Use vector always directive or -vec-threshold0 to override 
+         remark #15335: remainder loop was not vectorized: vectorization possible but seemed inefficient. Use vector always directive or -vec-threshold0 to override
       LOOP END
     LOOP END
 
 Note: Your line and column numbers may be different.
 
-For more information on the **qopt-report** and **qopt-report-phase** compiler options, see the 
+For more information on the **qopt-report** and **qopt-report-phase** compiler options, see the
 [Compiler Options section](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top/compiler-reference/compiler-options.html) in the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-oneapi-dev-guide-and-reference/top.html)
 
 
@@ -173,7 +190,7 @@ The column height of the matrix needs to be padded out to be a multiple of 16 by
 To derive the maximum benefit from this alignment, we also need to tell the vectorizer it can safely assume that the arrays in matvec.f90 are aligned by using the directive
 
     !dir$ vector aligned
-    
+
 Note If you use **!dir$ vector aligned**, you must be sure that all the arrays or subarrays in the loop are 16-byte aligned. Otherwise, you may get a runtime error. Aligning data may still give a performance benefit even if **!dir$ vector aligned** is not used. See the code under the ALIGNED macro in **matvec.f90**
 
 If your compilation targets the Intel® AVX-512 instruction set, you should try to align data on a 64-byte boundary. This may result in improved performance. In this case, **!dir$ vector aligned** advises the compiler that the data is 64-byte aligned.
@@ -208,12 +225,12 @@ Note that the vectorization messages now appear at the point of inlining in **dr
              remark #15300: LOOP WAS VECTORIZED
           LOOP END
        LOOP END
-    LOOP END 
+    LOOP END
 
 
 Note: Your line and column numbers may be different.
 
-Now, run the executable and record the execution time. 
+Now, run the executable and record the execution time.
 
 ### Additional Exercises
 

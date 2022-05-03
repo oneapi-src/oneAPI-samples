@@ -37,6 +37,7 @@
 #include <math.h>
 #include <iostream>
 #include <string>
+#include <optional>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
@@ -52,6 +53,8 @@ void ParallelBitonicSort(int data_gpu[], int n, queue &q) {
   int size = pow(2, n);
   int *a = data_gpu;
 
+  std::optional<event> last_event;
+
   // step from 0, 1, 2, ...., n-1
   for (int step = 0; step < n; step++) {
     // for each step s, stage goes s, s-1, ..., 0
@@ -62,7 +65,9 @@ void ParallelBitonicSort(int data_gpu[], int n, queue &q) {
       int two_power = 1 << (step - stage);
 
       // Offload the work to kernel.
-      q.submit([&](auto &h) {
+      last_event = q.submit([&](auto &h) {
+        if (last_event.has_value())
+          h.depends_on(last_event.value());
         h.parallel_for(range<1>(size), [=](id<1> i) {
           // Assign the bitonic sequence number.
           int seq_num = i / seq_len;
@@ -96,9 +101,9 @@ void ParallelBitonicSort(int data_gpu[], int n, queue &q) {
           }
         });
       });
-      q.wait();
     }  // end stage
   }    // end step
+  q.wait();
 }
 
 void ParallelBitonicSortBuffer(int data_gpu[], int n, queue &q) {
@@ -120,7 +125,7 @@ void ParallelBitonicSortBuffer(int data_gpu[], int n, queue &q) {
       q.submit([&](auto &h) {
         accessor a(input, h);
 
-	h.parallel_for(size, [=](id<1> i) {
+        h.parallel_for(size, [=](id<1> i) {
           // Assign the bitonic sequence number.
           int seq_num = i / seq_len;
 
@@ -153,7 +158,6 @@ void ParallelBitonicSortBuffer(int data_gpu[], int n, queue &q) {
           }
         });
       });
-      q.wait();
     }  // end stage
   }    // end step
 }

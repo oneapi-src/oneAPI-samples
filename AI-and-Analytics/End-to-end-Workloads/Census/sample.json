@@ -10,16 +10,19 @@
   "targetDevice": ["CPU"],
   "ciTests": {
   	"linux": [
-    {
-  		"env": ["source activate base"],
-  		"steps": [
-         "conda create -y -n intel-aikit-modin intel-aikit-modin -c intel",
-         "conda activate intel-aikit-modin",
-         "conda install -y runipy",
-         "pip install opencensus",
-         "runipy census_modin.ipynb" 
-  		 ]
-  	}
+      {
+        "env": [],
+        "id": "Intel_Modin_E2E_py",
+        "steps": [
+          "set -e # Terminate the script on first error",
+          "source $(conda info --base)/etc/profile.d/conda.sh # Bypassing conda's disability to activate environments inside a bash script: https://github.com/conda/conda/issues/7980",
+          "conda create -y -n intel-aikit-modin intel-aikit-modin -c intel",
+          "conda activate intel-aikit-modin",
+          "conda install -y jupyter # Installing 'jupyter' for extended abilities to execute the notebook",
+          "pip install opencensus # Installing 'runipy' for extended abilities to execute the notebook",
+          "jupyter nbconvert --to notebook --execute census_modin.ipynb"
+        ]
+      }
     ]
 }
 }

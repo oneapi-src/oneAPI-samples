@@ -50,23 +50,45 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to
+this readme for instructions on how to build and run a sample.
+
 ## Building and Running the `array-transform` Program
 
-> Note: if you have not already done so, set up your CLI
-> environment by sourcing  the setvars script located in
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
 > Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
 > Linux User: . ~/intel/oneapi/setvars.sh
+>
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Setup
 
 Preliminary setup steps are needed for the debugger to function.
 Please see the setup instructions in the Get Started Guide based on
 your OS:
-[Linux](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-linux),
-[Windows](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-windows).
+[Linux](https://www.intel.com/en-us/get-started-with-debugging-dpcpp-linux),
+[Windows](https://www.intel.com/en-us/get-started-with-debugging-dpcpp-windows).
 
 
 ### Include Files
@@ -91,21 +113,6 @@ For more information, see the Intel® oneAPI
 Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
-### Using Visual Studio Code*  (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
-
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the Extension Pack for Intel® oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 
 ### Auto-Attach
@@ -190,6 +197,15 @@ $ cmake .. -DDPCPP_COMPILE_TARGET=gen12LP
 For instructions about starting and using the debugger, please
 see the
 [Get Started Guide (Linux)](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-linux).
+
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 

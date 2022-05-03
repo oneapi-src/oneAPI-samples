@@ -7,7 +7,7 @@ perform a simple video decode.
 |----------------- | ----------------------------------------
 | OS               | Ubuntu* 20.04
 | Hardware         | CPU: See [System Requirements](https://software.intel.com/content/www/us/en/develop/articles/oneapi-video-processing-library-system-requirements.html)
-|                  | GPU: Compatible with Intel® oneAPI Video Processing Library(oneVPL) GPU implementation, which can be found at https://github.com/oneapi-src/oneVPL-intel-gpu 
+|                  | GPU: Compatible with Intel® oneAPI Video Processing Library(oneVPL) GPU implementation, which can be found at https://github.com/oneapi-src/oneVPL-intel-gpu
 | Software         | Intel® oneAPI Video Processing Library(oneVPL)
 | What You Will Learn | How to use oneVPL to decode an H.265 encoded video file
 | Time to Complete | 5 minutes
@@ -36,6 +36,22 @@ Native raw frame output format: CPU=I420, GPU=NV12.
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ## Building the `hello-decode` Program
 
@@ -87,9 +103,9 @@ The instructions given above run the sample executable with the argument
 
 ```
 Implementation details:
-  ApiVersion:           2.5  
+  ApiVersion:           2.5
   Implementation type:  SW
-  AccelerationMode via: NA 
+  AccelerationMode via: NA
   Path: /opt/intel/oneapi/vpl/2021.6.0/lib/libvplswref64.so.1
 
 Decoding /home/test/intel_innersource/frameworks.media.onevpl.dispatcher/examples/hello/hello-decode/content/cars_128x96.h265 -> out.raw
@@ -107,3 +123,7 @@ ffplay -video_size 128x96 -pixel_format yuv420p -f rawvideo out.raw
 ```
 
 Use nv12 for pixel_format for GPU output.
+
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)

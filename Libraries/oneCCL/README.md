@@ -14,7 +14,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 | Type      | Name                 | Description                                                  |
 | --------- | ----------------------- | ------------------------------------------------------------ |
-| Component | [oneCCL_Getting_Started](oneCCL_Getting_Started)     | Those C++ & C API example demonstrates basic of oneCCL programming model by invoking different collective operations such as allreduce. |
+| Component | [oneCCL_Getting_Started](oneCCL_Getting_Started)     | Those C++ API example demonstrates basic of oneCCL programming model by invoking different collective operations such as allreduce. |
 | Component | [tutorials](tutorials)     | Hands-on Jupyter notebook tutorials among different topics. |
 >  Notice : Please use Intel® DevCloud for oneAPI as the environment for jupyter notebook samples. \
 Users can refer to [DevCloud Getting Started](https://devcloud.intel.com/oneapi/get-started/) for using DevCloud \
