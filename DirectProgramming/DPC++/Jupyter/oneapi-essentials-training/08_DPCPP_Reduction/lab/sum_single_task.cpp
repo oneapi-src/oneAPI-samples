@@ -9,7 +9,7 @@ using namespace sycl;
 static constexpr size_t N = 1024; // global size
 
 int main() {
-  //# setup queue with in_order property
+  //# setup sycl::queue with default device selector
   queue q;
   std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
@@ -31,4 +31,3 @@ int main() {
   free(data, q);
   return 0;
 }
-

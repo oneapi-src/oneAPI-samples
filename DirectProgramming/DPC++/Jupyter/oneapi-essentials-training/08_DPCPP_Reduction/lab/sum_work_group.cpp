@@ -43,4 +43,3 @@ int main() {
   free(data, q);
   return 0;
 }
-

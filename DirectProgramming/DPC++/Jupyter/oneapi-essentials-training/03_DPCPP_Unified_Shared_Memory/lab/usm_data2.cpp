@@ -19,11 +19,11 @@ int main() {
     data2[i] = 10;
   }
 
-  auto e1 = q.parallel_for(range<1>(N), [=](id<1> i) { data1[i] += 2; });
+  q.parallel_for(range<1>(N), [=](id<1> i) { data1[i] += 2; });
 
-  auto e2 = q.parallel_for(range<1>(N), [=](id<1> i) { data2[i] += 3; });
+  q.parallel_for(range<1>(N), [=](id<1> i) { data2[i] += 3; });
 
-  q.parallel_for(range<1>(N), {e1, e2}, [=](id<1> i) { data1[i] += data2[i]; }).wait();
+  q.parallel_for(range<1>(N), [=](id<1> i) { data1[i] += data2[i]; }).wait();
 
   for (int i = 0; i < N; i++) std::cout << data1[i] << " ";
   std::cout << "\n";
