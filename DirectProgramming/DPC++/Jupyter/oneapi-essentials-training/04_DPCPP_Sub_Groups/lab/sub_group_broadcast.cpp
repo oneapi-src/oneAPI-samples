@@ -17,7 +17,7 @@ int main() {
   int *data = malloc_shared<int>(N, q);
   for(int i=0; i<N; i++) data[i] = i;
   for(int i=0; i<N; i++) std::cout << data[i] << " "; 
-  std::cout << "\n";  
+  std::cout << "\n\n";  
 
   //# use parallel_for and sub_groups
   q.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item) {
@@ -35,4 +35,3 @@ int main() {
   free(data, q);
   return 0;
 }
-
