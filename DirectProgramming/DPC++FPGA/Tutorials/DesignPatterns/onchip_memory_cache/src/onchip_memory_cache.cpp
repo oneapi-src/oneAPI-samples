@@ -63,8 +63,8 @@ void Histogram(sycl::queue &q, buffer<uint32_t>& input_buf,
 
         // Specify that the minimum dependence-distance of
         // loop carried variables is kCacheDepth.
-        [[intel::ivdep(kCacheDepth)]] for (uint32_t n = 0;
-                                               n < kInitNumInputs; ++n) {
+        [[intel::ivdep(kCacheDepth, local_output_with_cache)]] 
+        for (uint32_t n = 0; n < kInitNumInputs; ++n) {
           // Compute the Histogram index to increment
           uint32_t b = input[n] % kNumOutputs;
 
