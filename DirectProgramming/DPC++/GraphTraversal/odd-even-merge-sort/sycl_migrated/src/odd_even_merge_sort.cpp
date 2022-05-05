@@ -169,13 +169,13 @@ extern "C" uint oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
   if (arrayLength <= SHARED_SIZE_LIMIT) {
     assert(SHARED_SIZE_LIMIT % arrayLength == 0);
 
-    q.submit([&](handler &cgh) {
+    q.submit([&](handler &h) {
       accessor<uint, 1, access_mode::read_write, access::target::local>
-          s_key_acc(range<1>(SHARED_SIZE_LIMIT), cgh);
+          s_key_acc(range<1>(SHARED_SIZE_LIMIT), h);
       accessor<uint, 1, access_mode::read_write, access::target::local>
-          s_val_acc(range<1>(SHARED_SIZE_LIMIT), cgh);
+          s_val_acc(range<1>(SHARED_SIZE_LIMIT), h);
 
-      cgh.parallel_for(nd_range<3>(range<3>(1, 1, num_workgroups) *
+      h.parallel_for(nd_range<3>(range<3>(1, 1, num_workgroups) *
                                        range<3>(1, 1, workgroup_size),
                                    range<3>(1, 1, workgroup_size)),
                        [=](nd_item<3> item) {
@@ -186,13 +186,13 @@ extern "C" uint oddEvenMergeSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
                        });
     });
   } else {
-    q.submit([&](handler &cgh) {
+    q.submit([&](handler &h) {
       accessor<uint, 1, access_mode::read_write, access::target::local>
-          s_key_acc(range<1>(SHARED_SIZE_LIMIT), cgh);
+          s_key_acc(range<1>(SHARED_SIZE_LIMIT), h);
       accessor<uint, 1, access_mode::read_write, access::target::local>
-          s_val_acc(range<1>(SHARED_SIZE_LIMIT), cgh);
+          s_val_acc(range<1>(SHARED_SIZE_LIMIT), h);
 
-      cgh.parallel_for(nd_range<3>(range<3>(1, 1, num_workgroups) *
+      h.parallel_for(nd_range<3>(range<3>(1, 1, num_workgroups) *
                                        range<3>(1, 1, workgroup_size),
                                    range<3>(1, 1, workgroup_size)),
                        [=](nd_item<3> item) {
