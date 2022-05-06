@@ -18,8 +18,8 @@
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
 class CholeskyDDRToLocalMem;
-class CholeskyDecomposition;
-class CholeskyInversion;
+class DecompositionKernel;
+class InversionKernel;
 class CholeskyLocalMemToDDRL;
 class APipe;
 class LPipe;
@@ -85,14 +85,14 @@ void CholeskyInversionImpl(
 
   // Read the A matrix from the AMatrixPipe pipe and compute the Cholesky
   // decomposition. Write the L output matrix to the LMatrixPipe pipe.
-  q.single_task<CholeskyDecomposition>(
+  q.single_task<DecompositionKernel>(
       fpga_linalg::StreamingCholesky<
           T, is_complex, dimension, raw_latency_decomposition,
           kNumElementsPerDDRBurst, AMatrixPipe, LMatrixPipe>());
 
   // Read the L matrix from the LMatrixPipe pipe and compute the Cholesky-based
   // inversion. Write the I output matrix to the IMatrixPipe pipe.
-  q.single_task<CholeskyInversion>(
+  q.single_task<InversionKernel>(
       fpga_linalg::StreamingCholeskyInversion<
           T, is_complex, dimension, raw_latency_inversion,
           kNumElementsPerDDRBurst, LMatrixPipe, IMatrixPipe>());
