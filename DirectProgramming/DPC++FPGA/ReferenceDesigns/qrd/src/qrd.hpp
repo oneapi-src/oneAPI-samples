@@ -68,9 +68,7 @@ void QRDecompositionImpl(
   q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count
                                                           * sizeof(TT)).wait();
 
-  // Launch the compute kernel and time the execution
-  auto start_time = std::chrono::high_resolution_clock::now();
-
+  auto ddr_write_event =
   q.submit([&](sycl::handler &h) {
     h.single_task<QRDDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
       MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
@@ -153,13 +151,17 @@ void QRDecompositionImpl(
   q_event.wait();
   r_event.wait();
 
-  auto end_time = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double> diff = end_time - start_time;
+  // Compute the total time the execution lasted
+  auto start_time = ddr_write_event.template
+              get_profiling_info<sycl::info::event_profiling::command_start>();
+  auto end_time = q_event.template
+                get_profiling_info<sycl::info::event_profiling::command_end>();
+  double diff = (end_time - start_time) / 1.0e9;
   q.throw_asynchronous();
 
-  std::cout << "   Total duration:   " << diff.count() << " s" << std::endl;
+  std::cout << "   Total duration:   " << diff << " s" << std::endl;
   std::cout << "Throughput: "
-            << repetitions * matrix_count / diff.count() * 1e-3
+            << repetitions * matrix_count / diff * 1e-3
             << "k matrices/s" << std::endl;
 
 

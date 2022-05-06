@@ -6,7 +6,8 @@
 
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
-#include "mp_math.hpp"
+// Included from DirectProgramming/DPC++FPGA/include/
+#include "constexpr_math.hpp"
 
 //
 // A static class that is used to convert to/from 32-bit floating point
@@ -117,8 +118,9 @@ struct QFP {
   static constexpr qfp_type FromFP32CE(float f) {
     // get the sign, exponent, and mantissa from the float
     int fp32_sign = (f < 0) ? 1 : 0;
-    int fp32_exponent = FP32ExtractExponent(f) + kFP32ExponentOffset;
-    int fp32_mantissa = FP32ExtractMantissa(f);
+    int fp32_exponent =
+        fpga_tools::FP32ExtractExponent(f) + kFP32ExponentOffset;
+    int fp32_mantissa = fpga_tools::FP32ExtractMantissa(f);
 
     // get the most significant qfp_mantissa_bits from the float's mantissa
     // NOTE: we are doing truncation here, not rounding.
@@ -192,11 +194,14 @@ struct QFP {
     float mantissa_sum = (fp32_exponent == 0) ? 0.0 : 1.0;
     for (int i = 1; i <= kFP32MantissaBits; i++) {
       mantissa_sum +=
-          ((fp32_mantissa >> (kFP32MantissaBits-i)) & 0x1) * Pow(2, -i);
+          ((fp32_mantissa >> (kFP32MantissaBits-i)) & 0x1)
+          * fpga_tools::Pow(2, -i);
     }
 
-    if (sign_bit == 0) return Pow(2, offset_exponent) * mantissa_sum;
-    else return -1.0f * Pow(2, offset_exponent) * mantissa_sum;
+    if (sign_bit == 0)
+      return fpga_tools::Pow(2, offset_exponent) * mantissa_sum;
+    else
+      return -1.0f * fpga_tools::Pow(2, offset_exponent) * mantissa_sum;
   }
 
  private:

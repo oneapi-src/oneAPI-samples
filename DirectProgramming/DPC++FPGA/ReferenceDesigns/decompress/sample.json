@@ -1,0 +1,114 @@
+{
+  "guid": "1A67F451-860B-4C5F-9ED0-C4E834CE4D48",
+  "name": "Decompression",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "description": "Optimized implementations of GZIP and SNAPPY decompression on an FPGA",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": ["include"],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu_gzip",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DGZIP=1",
+          "make fpga_emu",
+          "./decompress.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_snappy",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DSNAPPY=1",
+          "make fpga_emu",
+          "./decompress.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_gzip",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DGZIP=1",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_snappy",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DSNAPPY=1",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu_gzip",
+        "steps": [
+          "dpcpp --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\decompress\\data ..\\data\\",
+          "cmake -G \"NMake Makefiles\" -DGZIP=1 ../ReferenceDesigns/decompress",
+          "nmake fpga_emu",
+          "decompress.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_snappy",
+        "steps": [
+          "dpcpp --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\decompress\\data ..\\data\\",
+          "cmake -G \"NMake Makefiles\" -DSNAPPY=1 ../ReferenceDesigns/decompress",
+          "nmake fpga_emu",
+          "decompress.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_gzip",
+        "steps": [
+          "dpcpp --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\decompress\\data ..\\data\\",
+          "cmake -G \"NMake Makefiles\" -DGZIP=1 ../ReferenceDesigns/decompress",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_snappy",
+        "steps": [
+          "dpcpp --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\decompress\\data ..\\data\\",
+          "cmake -G \"NMake Makefiles\" -DSNAPPY=1 ../ReferenceDesigns/decompress",
+          "nmake report"
+        ]
+      }
+    ]
+  }
+}

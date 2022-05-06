@@ -191,14 +191,13 @@ The following source files can be found in the `src/` sub-directory.
 |`data_bundle.hpp`                | A generic library for bundling data to move between kernels; essentially an array.
 |`dma_kernels.hpp`                | Contains kernels that move data between the host and device, as well as reading/writing data between the FPGA and device memory.
 |`intensity_sigma_lut.hpp`        | A RAM LUT for the intensity sigma values.
-|`mp_math.hpp`                    | Metaprogramming math helper functions.
 |`qfp_exp_lut.hpp`                | A ROM LUT for computing exp(-x) on a 32-bit floating-point value (using a QFP).
 |`qfp_inv_lut.hpp`                | A ROM LUT for computing 1/x on a 32-bit floating-point value (using a QFP).
 |`qfp.hpp`                        | Contains a class with generic static methods for converting between 32-bit floating-point and quantized floating-point (QFP).
-|`rom_base.hpp`                   | A generic library for creating a ROM from a `constexpr` class.
 |`row_stencil.hpp`                | A generic library for computing a row stencil (a 1D horizontal convolution).
 |`shift_reg.hpp`                  | A generic library for a shift register.
-|`unrolled_loop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end.
+
+For `constexpr_math.hpp`, `unrolled_loop.hpp`, and `rom_base.hpp` see the README in the `DirectProgramming/DPC++FPGA/include/` directory.
 
 ### ANR Algorithm
 The ANR algorithm works on an input image that is in [Bayer format](https://en.wikipedia.org/wiki/Bayer_filter). Unlike image formats you may be used to (e.g., PNG or JPG), where each pixel has a red, green, **and** blue value (RGB), each pixel in a Bayer format image is either red, green, **or** blue, as shown in the image below. To convert to an RGB image, you take a 4x4 square and generate the RGB pixel by averaging the two green pixels. One purpose of this format is to dedicate more pixels to green, since the human eye is more sensitive to green.

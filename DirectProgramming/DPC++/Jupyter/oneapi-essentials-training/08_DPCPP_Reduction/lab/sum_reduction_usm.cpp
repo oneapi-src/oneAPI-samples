@@ -35,4 +35,3 @@ int main() {
   free(sum, q);
   return 0;
 }
-

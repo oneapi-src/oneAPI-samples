@@ -49,4 +49,3 @@ int main() {
   free(none, q);
   return 0;
 }
-
