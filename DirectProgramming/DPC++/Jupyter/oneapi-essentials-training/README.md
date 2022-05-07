@@ -43,7 +43,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 |[SYCL Sub Groups](04_DPCPP_Sub_Groups/Sub_Groups.ipynb)| + What is Sub-Goups and Motivation<br>+ Quering for __sub-group info__<br>+ Sub-group __shuffle algorithms__<br>+ Sub-group __group algorithms__<br>+ ___Lab Exercise___: Sub-Groups | 90 min |
 |[SYCL Kernel Reductions](08_DPCPP_Reduction/Reductions.ipynb)|+ What are Reductions<br>+ Challenges with parallelizing reductions<br>+ __sycl::reduce_over_group__ function for sub-groups and work-groups<br>+ __sycl::reduction__ object in parallel_for<br>+ ___Lab Exercise___: Kernel Reductions 
 |[SYCL Buffers and Accessors in depth](09_DPCPP_Buffers_And_Accessors_Indepth/DPCPP_Buffers_accessors.ipynb)| + Bufers and Accessors<br>+ Buffer properties and usecases<br>+ Create Sub-buffers<br>+ Host accessors and usecases<br>+ ___Lab Exercise___: Buffers and Accessors
-|[SYCL Task Scheduling and Data Dependences](10_DPCPP_Graphs_Scheduling_Data_management/DPCPP_Task_Scheduling_Data_dependency.ipynb)| + Different types of data dependences<br>+ Execution of graph scheduling<br>+ modes of dependences in Graphs scheduling<br>+ ___Lab Exercise___: Task Scheduling | 120 min|
+|[SYCL Task Scheduling and Data Dependency](10_DPCPP_Graphs_Scheduling_Data_management/DPCPP_Task_Scheduling_Data_dependency.ipynb)| + Different types of data dependency handling<br>+ Execution of graph scheduling<br>+ modes of dependencies in Graphs scheduling<br>+ ___Lab Exercise___: Task Scheduling
 |[Intel® oneAPI DPC++ Library (oneDPL)](07_DPCPP_Library/oneDPL_Introduction.ipynb)| + Introduction to Intel oneAPI DPC++ Library (oneDPL)<br>+ ___Lab Exercise___: Gamma Correction with oneDPL
 |[Intel® Advisor](05_Intel_Advisor/offload_advisor.ipynb)| + __Offload Advisor__ Tool usage and command-line options<br>+ ___Lab Exercise___: Generate Offload Advisor Report<br>+ __Roofline Analysis__ and command-line options<br>+ ___Lab Exercise___: Generate Roofline Report
 |[Intel® VTune Profiler](06_Intel_VTune_Profiler/Intel_VTune_Profiler.ipynb)| + Intel VTune™ Profiler usage __in Intel DevCloud__ environment using command-line options<br>+ ___Lab Exercise___: VTune Profiling by collecting __gpu_hotspots__ for sample application.
@@ -52,7 +52,6 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 #### Content Structure
 
 Each module folder has a Jupyter Notebook file (`*.ipynb`), this can be opened in Jupyter Lab to view the training contant, edit code and compile/run. Along with the Notebook file, there is a `lab` and a `src` folder with SYCL source code for samples used in the Notebook. The module folder also has `run_*.sh` files which can be used in shell terminal to compile and run each sample code.
-
 
 ## Install Directions
 
