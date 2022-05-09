@@ -14,7 +14,7 @@
 
 /*
   COMPLEX, MATRIX_DIMENSION, FIXED_ITERATIONS_DECOMPOSITION and
-  FIXED_ITERATIONS_INVERSION are defined by the build system Depending on the
+  FIXED_ITERATIONS_INVERSION are defined by the build system. Depending on the
   value of COMPLEX, computes the real or complex Cholesky-based inversion. The
   Cholesky decompostion provides the L matrix from A such that: A = LL*
   Therefore we can compute inv(A) = inv(LL*)
@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
     std::cout << "matri" << (kMatricesToInvert > 1 ? "ces" : "x") << " of size "
               << kRows << "x" << kColumns << " " << std::endl;
 
-    // Generate the random (hermitian and positive-definite) input matrices
+    // Generate the random (Hermitian and positive-definite) input matrices
     srand(kRandomSeed);
 
     // Max condition number
@@ -134,13 +134,13 @@ int main(int argc, char *argv[]) {
       Generate a random matrix with a given epsilon such that
       cond(M, inf) <= (1+epsilon)/(1-epsilon)
       This is helpful as having a condition number with infinite norm close to 1
-      reduces the numerical instability of the matrix inversion.
+      improves the numerical stability of the matrix inversion.
       Provided an epsilon value, this function populates the output vector with
       a matrix in a row fashion.
 
       Algorithm courtesy of Carl Christian Kjelgaard Mikkelsen (spock@cs.umu.se)
 
-      Matlab code snipet this function reimplements in C++:
+      Matlab code snippet this function reimplements in C++:
 
         function [A, B]=myDiagonal(m,epsilon)
 
@@ -154,7 +154,7 @@ int main(int argc, char *argv[]) {
         %    epsilon  the dominance factor epsilon in (0,1]
         %
         % OUTPUT:
-        %    A        a matrix which is strictly diagonally domimant by rows
+        %    A        a matrix which is strictly diagonally dominant by rows
         %    B        B = D\A, where D is the diagonal of A
         %
         % The main purpose of this function is to construct test matrices
@@ -203,7 +203,7 @@ int main(int argc, char *argv[]) {
         weights[row] = {0};
         for (int col = 0; col < kColumns; col++) {
           if (col != row) {
-            int index = row * kColumns + col;
+            int index = (row * kColumns) + col;
             float random1 = RandomValueInInterval(kRandomMin, kRandomMax);
             T elem;
 #if COMPLEX == 1
@@ -220,7 +220,7 @@ int main(int argc, char *argv[]) {
 
         // Construct the new diagonal element
         weights[row] /= kEpsilon;
-        r[row * kColumns + row] = weights[row];
+        r[(row * kColumns) + row] = weights[row];
       }
 
       // Perform the diagonal scaling by solving:
@@ -228,7 +228,7 @@ int main(int argc, char *argv[]) {
       for (int row = 0; row < kColumns; row++) {
         for (int col = 0; col < kColumns; col++) {
           int index = row * kColumns + col;
-          a_matrix_non_hermitian[index] = r[index] / r[row * kColumns + row];
+          a_matrix_non_hermitian[index] = r[index] / r[(row * kColumns) + row];
         }
       }
 
@@ -239,7 +239,7 @@ int main(int argc, char *argv[]) {
 
           a_matrix[current_matrix + index] =
               (a_matrix_non_hermitian[index] +
-               a_matrix_non_hermitian[col * kColumns + row]) /
+               a_matrix_non_hermitian[(col * kColumns) + row]) /
               2;
 
 #if COMPLEX == 1
@@ -381,7 +381,7 @@ int main(int argc, char *argv[]) {
             // Increase the error count for this matrix
             error_count++;
 
-            // Continue counting the errors even if we now we are going to
+            // Continue counting the errors even if we are going to
             // produce an error
             if (error) {
               continue;

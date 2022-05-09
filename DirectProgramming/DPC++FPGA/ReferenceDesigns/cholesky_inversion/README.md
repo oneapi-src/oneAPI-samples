@@ -34,7 +34,7 @@ The Cholesky decomposition takes a hermitian, positive-definite matrix _A_ (inpu
 Given this decomposition, the inverse of A can be computed as A<sup>-1</sup> = (_L_ * (_L*_))<sup>-1</sup> = (_L*_)<sup>-1</sup> * _L_<sup>-1</sup> = ((_L_<sup>-1</sup>)* ) * _L_<sup>-1</sup>.
 Therefore, in order to compute the inverse of A, one can: compute _LI_, the invert of _L_ (triangular matrix) and perform a matrix multiplication of the transpose of _LI_ by _LI_.
 A<sup>-1</sup> = (_LI_*) * _LI_.
-Because A<sup>-1</sup> is going to be symmetric, one can also only compute only half of the values.
+Because A<sup>-1</sup> is going to be symmetric, one can also compute only half of the values.
 
 
 ### Matrix dimensions and FPGA resources
@@ -57,7 +57,7 @@ A handful of extra DSPs are required to perform various arithmetic operations su
 | Kernel                | Description
 ---                     |---
 | CholeskyDecomposition | Implements a modified Cholesky–Banachiewicz decomposition algorithm.
-| CholeskyInversion     | Implements the matrix  inversion based on the CholeskyDecomposition's outputs.
+| CholeskyInversion     | Implements the matrix inversion based on the CholeskyDecomposition's outputs.
 
 To optimize the performance-critical loops in these algorithms, the design leverages concepts discussed in the following FPGA tutorials:
 * **Triangular Loop Optimization** (triangular_loop)
