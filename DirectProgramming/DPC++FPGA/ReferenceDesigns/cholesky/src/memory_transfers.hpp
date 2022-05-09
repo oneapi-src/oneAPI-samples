@@ -20,7 +20,7 @@ template <typename TT,            // Datatype of the elements of the matrix
           >
 void MatrixReadFromDDRToPipe(
     TT* matrix_ptr,    // Input matrix pointer
-    int matrix_count,  // Number of matrix to read from DDR
+    int matrix_count,  // Number of matrices to read from DDR
     int repetitions    // Number of times to write the same matrix to the pipe
 ) {
   // We may perform an incomplete memory read if the number of elements per row
@@ -29,7 +29,7 @@ void MatrixReadFromDDRToPipe(
   constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
   // Number of DDR burst reads of num_elem_per_bank elements required to read a
   // full column
-  constexpr int kLoopIterPerColumn = rows / num_elem_per_bank + kExtraIteration;
+  constexpr int kLoopIterPerColumn = (rows / num_elem_per_bank) + kExtraIteration;
   // Number of DDR burst reads of num_elem_per_bank to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns;
   // Size in bits of the loop iterator over kLoopIter iterations

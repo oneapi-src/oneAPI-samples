@@ -65,7 +65,7 @@ To optimize the performance-critical loops in these algorithms, the design lever
 * **Loop `ivdep` Attribute** (loop_ivdep)
 * **Unrolling Loops** (loop_unroll)
 
- The key optimization techniques used are as follows:
+ The key optimization techniques used are:
    1. Traversing the matrix in a column fashion to increase the read-after-write (RAW) loop iteration distance 
    2. Using two copies of the compute matrix in order to be able to read a full row and a full column per cycle
    3. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
@@ -187,7 +187,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 
 ## Running the Reference Design
 You can apply the Cholesky-based inversion to 8 matrices repeated a number of times, as shown below. This step performs the following:
-* Generates 8 random matrices.
+* Generates 8 random matrices (this number can be changed in cholesky_inversion_demo.cpp).
 * Computes the Cholesky-based inversion on all matrices.
 * Repeats the operation multiple times (optionally specified as the command line argument) to evaluate performance.
 

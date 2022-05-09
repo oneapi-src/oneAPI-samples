@@ -20,7 +20,7 @@ template <typename TT,            // Datatype of the elements of the matrix
           >
 void MatrixReadFromDDRToPipe(
     TT* matrix_ptr,    // Input matrix pointer
-    int matrix_count,  // Number of matrix to read from DDR
+    int matrix_count,  // Number of matrices to read from DDR
     int repetitions    // Number of times to write the same matrix to the pipe
 ) {
   // We may perform an incomplete memory read if the number of elements per row
@@ -29,7 +29,8 @@ void MatrixReadFromDDRToPipe(
   constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
   // Number of DDR burst reads of num_elem_per_bank elements required to read a
   // full column
-  constexpr int kLoopIterPerColumn = rows / num_elem_per_bank + kExtraIteration;
+  constexpr int kLoopIterPerColumn =
+      (rows / num_elem_per_bank) + kExtraIteration;
   // Number of DDR burst reads of num_elem_per_bank to read all the matrices
   constexpr int kLoopIter = kLoopIterPerColumn * columns;
   // Size in bits of the loop iterator over kLoopIter iterations
@@ -39,7 +40,8 @@ void MatrixReadFromDDRToPipe(
 
   sycl::device_ptr<TT> matrix_ptr_device(matrix_ptr);
 
-  // Repeatedly read matrix_count matrices from DDR and send them to the pipe
+  // Repeatedly read matrix_count matrices from the DDR and send them to the
+  // pipe
   for (int repetition = 0; repetition < repetitions; repetition++) {
     for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
       // Keep track of the current element index in the matrix
@@ -107,8 +109,8 @@ template <typename TT,            // Datatype of the elements of the vector
           >
 void VectorReadFromPipeToDDR(
     TT* vector_ptr,    // Output vector pointer
-    int vector_count,  // Number of vector to write to DDR
-    int repetitions    // Number of time to read the same vector to the pipe
+    int vector_count,  // Number of vectors to write to the DDR
+    int repetitions    // Number of times to read the same vector from the pipe
 ) {
   // The number of elements in the vector may not be a multiple of
   // num_elem_per_bank so we may have to do an extra incomplete write to DDR.

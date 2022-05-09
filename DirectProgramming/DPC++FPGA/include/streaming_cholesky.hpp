@@ -36,7 +36,7 @@ namespace fpga_linalg {
 template <typename T,       // The datatype for the computation
           bool is_complex,  // True if T is ac_complex<X>
           int rows,         // Number of rows==columns in the A matrices
-          int raw_latency,  // Read after write latency (in iterations) of
+          int raw_latency,  // Read after write (RAW) latency (in iterations) of
                             // the triangular loop of this function.
                             // This value depends on the FPGA target, the
                             // datatype, the target frequency, etc.
@@ -50,7 +50,7 @@ template <typename T,       // The datatype for the computation
                             // to read the input matrix
           typename AIn,     // A matrix input pipe, receive pipe_size
                             // elements from the pipe with each read
-          typename LOut     // L matrix output pipe, send one elements to the
+          typename LOut     // L matrix output pipe, send one element to the
                             // pipe with each write.
                             // Only lower-left elements of L are
                             // sent in row order, starting with row 0.
@@ -171,7 +171,7 @@ struct StreamingCholesky {
           sum += to_add;
         });
 
-        TT a_loaded = row < rows ? a_load[row][column] : TT{0};
+        TT a_loaded = (row < rows) ? a_load[row][column] : TT{0};
         TT diff = a_loaded - sum;
 
         // Only do useful work for meaningful iterations

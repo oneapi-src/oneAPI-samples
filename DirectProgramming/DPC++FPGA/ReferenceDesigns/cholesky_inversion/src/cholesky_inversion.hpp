@@ -72,11 +72,11 @@ void CholeskyInversionImpl(
     return;
   }
 
-  // Copy the matrices to decompose on the FPGA DDR
+  // Copy the matrices to decompose to the FPGA DDR
   q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count * sizeof(TT))
       .wait();
 
-  // Launch a kernel that will repeatedly read the matrices on the FPGA DDR
+  // Launch a kernel that will repeatedly read the matrices from the FPGA DDR
   // and write their content to the AMatrixPipe pipe.
   auto ddr_read_event = q.single_task<CholeskyDDRToLocalMem>([=] {
     MatrixReadFromDDRToPipe<TT, dimension, dimension, kNumElementsPerDDRBurst,

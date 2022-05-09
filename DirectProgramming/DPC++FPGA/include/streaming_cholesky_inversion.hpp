@@ -36,7 +36,7 @@ namespace fpga_linalg {
 template <typename T,       // The datatype for the computation
           bool is_complex,  // True if T is ac_complex<X>
           int rows,         // Number of rows==columns in the A matrices
-          int raw_latency,  // Read after write latency (in iterations) of
+          int raw_latency,  // Read after write (RAW) latency (in iterations) of
                             // the triangular loop of this function.
                             // This value depends on the FPGA target, the
                             // datatype, the target frequency, etc.
@@ -121,36 +121,36 @@ struct StreamingCholeskyInversion {
       */
 
       // Count the total number of loop iterations, using the triangular loop
-      // optimization (refer to the triangular loop optimization tutorial)
+      // optimization (refer to the Triangular Loop design pattern tutorial)
       constexpr int kNormalIterations = kColumns * (kColumns + 1) / 2;
       constexpr int kExtraIterations =
-          raw_latency > rows
-              ? (rows - 1) * (raw_latency - rows) + (rows - 2) * (rows - 1) / 2
-              : (raw_latency - 2) * (raw_latency - 2 + 1) / 2;
+          (raw_latency > rows) ? ((rows - 1) * (raw_latency - rows)) +
+                                     ((rows - 2) * (rows - 1)) / 2
+                               : (raw_latency - 2) * (raw_latency - 2 + 1) / 2;
       constexpr int kTotalIterations = kNormalIterations + kExtraIterations;
 
       constexpr int kInitIterations = 0;
 
       // All the loop control variables with all the requirements to apply
-      // some shannonization (refer to the shannonization tutorial)
+      // some shannonization (refer to the Shannonization tutorial)
 
       /*
-            for(int diag_number =  0; diag_number < kColumns; diag_number++){
-              int diag_size = std::max(kColumns - diag_number, raw_latency);
-              if(diag_number == kColumns-1){
-                diag_size = 1;
-              }
-              int col = diag_number;
-              for(int row = 0; row < diag_size; row++, col++){
-                if(row<rows && col<kColumns){
-                  //compute
-                }
-              }
-            }
-      */
+        This is what the original triangle loop looks like before the
+        transformation
 
-      // All the loop control variables with all the requirements to apply
-      // some shannonization (refer to the shannonization tutorial)
+        for(int diag_number =  0; diag_number < kColumns; diag_number++){
+          int diag_size = std::max(kColumns - diag_number, raw_latency);
+          if(diag_number == kColumns-1){
+            diag_size = 1;
+          }
+          int col = diag_number;
+          for(int row = 0; row < diag_size; row++, col++){
+            if(row<rows && col<kColumns){
+              //compute
+            }
+          }
+        }
+      */
 
       int diagonal_number = 0;
       int next_diagonal_number = 1;
@@ -160,20 +160,18 @@ struct StreamingCholeskyInversion {
 
       [[intel::ivdep(raw_latency)]]  // NO-FORMAT: Attribute
       for (int it = 0; it < kTotalIterations + kInitIterations; it++) {
-
         // Only perform work when in not dummy iterations
-        if (row < rows & col < kColumns) {
-          TT current_sum = row == col ? TT{1} : TT{0};
+        if ((row < rows) & (col < kColumns)) {
+          TT current_sum = (row == col) ? TT{1} : TT{0};
           TT div_val;
 
           fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
             auto li_loaded = l_matrix[col][k];
 
             TT lhs;
-            if(k > col){
+            if (k > col) {
               lhs = TT{0};
-            }
-            else{
+            } else {
               lhs = li_loaded;
             }
 
@@ -221,15 +219,15 @@ struct StreamingCholeskyInversion {
         TT col_of_transpose_matrix[rows];
         int row_index;
 
-        // for (int row = col; row < rows + col; row++) {
         for (int row = col; row < rows; row++) {
-          if(row >= rows){
+          if (row >= rows) {
             row_index = row - rows;
-          }
-          else{
+          } else {
             row_index = row;
           }
+          
           TT elem{0};
+
           fpga_tools::UnrolledLoop<kColumns>([&](auto k) {
             auto li_load = li_matrix[row_index][k];
 
@@ -237,8 +235,8 @@ struct StreamingCholeskyInversion {
               col_of_transpose_matrix[k] = li_load;
             }
 
-            auto lhs = k < row_index ? TT{0} : li_load;
-            auto rhs = k < col ? TT{0} : col_of_transpose_matrix[k];
+            auto lhs = (k < row_index) ? TT{0} : li_load;
+            auto rhs = (k < col) ? TT{0} : col_of_transpose_matrix[k];
             if constexpr (is_complex) {
               elem += lhs * rhs.conj();
             } else {
@@ -251,7 +249,7 @@ struct StreamingCholeskyInversion {
       }
 
       int inverse_matrix_read_idx = 0;
-      for(int loop_count = 0; loop_count < kNormalIterations; loop_count++){
+      for (int loop_count = 0; loop_count < kNormalIterations; loop_count++) {
         IOut::write(i_matrix[inverse_matrix_read_idx]);
         inverse_matrix_read_idx++;
       }
