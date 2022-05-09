@@ -1,5 +1,5 @@
 # CMAKE build directories
-build/
+build*/
 
 # emacs save files
 *~

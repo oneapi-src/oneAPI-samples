@@ -7,98 +7,59 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 
+#include "cached_local_memory.hpp"  // DirectProgramming/DPC++FPGA/include
+#include "unrolled_loop.hpp"
+
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-using namespace sycl;
 
-constexpr int kInitNumInputs = 16 * 1024 * 1024;  // Default number of inputs.
-constexpr int kNumOutputs = 64;                   // Number of outputs
-constexpr int kInitSeed = 42;         // Seed for randomizing data inputs
-constexpr int kCacheDepth = 5;        // Depth of the cache.
-constexpr int kNumRuns = 2;           // runs twice to show the impact of cache
-constexpr double kNs = 1000000000.0;  // number of nanoseconds in a second
+constexpr int kInitNumInputs = 16 * 1024 * 1024;  // Default number of inputs
+constexpr int kNumOutputs = 64;           // Number of outputs
+constexpr int kInitSeed = 42;             // Seed for randomizing data inputs
+constexpr int kMaxCacheDepth = MAX_CACHE_DEPTH; // max cache depth to test
+constexpr double kNs = 1000000000.0;      // number of nanoseconds in a second
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-template<bool use_cache>
-class Task;
+template<size_t cache_depth>
+class HistogramID;
 
-// This kernel function implements two data paths: with and without caching.
-// use_cache specifies which path to take.
-template<bool use_cache>
-void Histogram(sycl::queue &q, buffer<uint32_t>& input_buf,
-               buffer<uint32_t>& output_buf, event& e) {
+template<size_t k_cache_depth>
+void ComputeHistogram(sycl::queue &q, sycl::buffer<uint32_t>& input_buf,
+                      sycl::buffer<uint32_t>& output_buf, sycl::event& e) {
   // Enqueue  kernel
-  e = q.submit([&](handler& h) {
+  e = q.submit([&](sycl::handler& h) {
     // Get accessors to the SYCL buffers
-    accessor input(input_buf, h, read_only);
-    accessor output(output_buf, h, write_only, no_init);
+    sycl::accessor input(input_buf, h, sycl::read_only);
+    sycl::accessor output(output_buf, h, sycl::write_only, sycl::no_init);
 
-    h.single_task<Task<use_cache>>([=]() [[intel::kernel_args_restrict]] {
+    h.single_task<HistogramID<k_cache_depth>>(
+    [=]() [[intel::kernel_args_restrict]] {
 
       // On-chip memory for Histogram
-      uint32_t local_output[kNumOutputs];
-      uint32_t local_output_with_cache[kNumOutputs];
+      // A k_cache_depth of 0 is equivalent to a standard array with no cache
+      fpga_tools::CachedLocalMemory<uint32_t, kNumOutputs, k_cache_depth> 
+        histogram(0);
 
-      // Register-based cache of recently-accessed memory locations
-      uint32_t last_sum[kCacheDepth + 1];
-      uint32_t last_sum_index[kCacheDepth + 1];
-
-      // Initialize Histogram to zero
-      for (uint32_t b = 0; b < kNumOutputs; ++b) {
-        local_output[b] = 0;
-        local_output_with_cache[b] = 0;
-      }
-
+      // ivdep with safelen=0 is not allowed, safelen=1 is equivalent (i.e. it
+      // does not affect the loop at all)
+      constexpr size_t kSafeLen = k_cache_depth == 0 ? 1 : k_cache_depth;
+      
       // Compute the Histogram
-      if (!use_cache) {  // Without cache
-        for (uint32_t n = 0; n < kInitNumInputs; ++n) {
-          // Compute the Histogram index to increment
-          uint32_t b = input[n] % kNumOutputs;
-          local_output[b]++;
-        }
-      } else {  // With cache
-
-        // Specify that the minimum dependence-distance of
-        // loop carried variables is kCacheDepth.
-        [[intel::ivdep(kCacheDepth, local_output_with_cache)]] 
-        for (uint32_t n = 0; n < kInitNumInputs; ++n) {
-          // Compute the Histogram index to increment
-          uint32_t b = input[n] % kNumOutputs;
-
-          // Get the value from the on-chip mem at this index.
-          uint32_t val = local_output_with_cache[b];
-
-          // However, if this location in on-chip mem was recently
-          // written to, take the value from the cache.
-          #pragma unroll
-          for (int i = 0; i < kCacheDepth + 1; i++) {
-            if (last_sum_index[i] == b) val = last_sum[i];
-          }
-
-          // Write the new value to both the cache and the on-chip mem.
-          last_sum[kCacheDepth] = local_output_with_cache[b] = val + 1;
-          last_sum_index[kCacheDepth] = b;
-
-          // Cache is just a shift register, so shift the shift reg. Pushing
-          // into the back of the shift reg is done above.
-          #pragma unroll
-          for (int i = 0; i < kCacheDepth; i++) {
-            last_sum[i] = last_sum[i + 1];
-            last_sum_index[i] = last_sum_index[i + 1];
-          }
-        }
+      [[intel::ivdep(kSafeLen, histogram.data_)]] 
+      for (uint32_t n = 0; n < kInitNumInputs; ++n) {
+        // Compute the Histogram index to increment
+        uint32_t hist_group = input[n] % kNumOutputs;
+        auto hist_count = histogram.read(hist_group);
+        hist_count++;
+        histogram.write(hist_group, hist_count);
       }
 
       // Write output to global memory
       for (uint32_t b = 0; b < kNumOutputs; ++b) {
-        if (!use_cache) {
-          output[b] = local_output[b];
-        } else {
-          output[b] = local_output_with_cache[b];
-        }
+        output[b] = histogram.read(b);
       }
     });
   });
@@ -106,39 +67,41 @@ void Histogram(sycl::queue &q, buffer<uint32_t>& input_buf,
 
 int main() {
   // Host and kernel profiling
-  event e;
+  sycl::event e;
   ulong t1_kernel, t2_kernel;
   double time_kernel;
 
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
+  sycl::ext::intel::fpga_emulator_selector device_selector;
   std::cout << "\nEmulator output does not demonstrate true hardware "
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
 #else
-  ext::intel::fpga_selector device_selector;
+  sycl::ext::intel::fpga_selector device_selector;
 #endif
   try {
     auto prop_list =
-        property_list{property::queue::enable_profiling()};
+        sycl::property_list{sycl::property::queue::enable_profiling()};
 
     sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
 
-    platform platform = q.get_context().get_platform();
-    device device = q.get_device();
+    sycl::platform platform = q.get_context().get_platform();
+    sycl::device device = q.get_device();
     std::cout << "Platform name: "
-              << platform.get_info<info::platform::name>().c_str() << "\n";
+              << platform.get_info<sycl::info::platform::name>().c_str() 
+              << "\n";
     std::cout << "Device name: "
-              << device.get_info<info::device::name>().c_str() << "\n\n\n";
+              << device.get_info<sycl::info::device::name>().c_str() 
+              << "\n\n\n";
 
     std::cout << "\nNumber of inputs: " << kInitNumInputs << "\n";
     std::cout << "Number of outputs: " << kNumOutputs << "\n\n";
 
     // Create input and output buffers
-    auto input_buf = buffer<uint32_t>(range<1>(kInitNumInputs));
-    auto output_buf = buffer<uint32_t>(range<1>(kNumOutputs));
+    auto input_buf = sycl::buffer<uint32_t>(sycl::range<1>(kInitNumInputs));
+    auto output_buf = sycl::buffer<uint32_t>(sycl::range<1>(kNumOutputs));
 
     srand(kInitSeed);
 
@@ -147,7 +110,7 @@ int main() {
 
     {
       // Get host-side accessors to the SYCL buffers
-      host_accessor input_host(input_buf, write_only);
+      sycl::host_accessor input_host(input_buf, sycl::write_only);
       // Initialize random input
       for (int i = 0; i < kInitNumInputs; ++i) {
         input_host[i] = rand();
@@ -157,44 +120,42 @@ int main() {
         gold[b] = 0;
       }
       for (int i = 0; i < kInitNumInputs; ++i) {
-        int b = input_host[i] % kNumOutputs;
-        gold[b]++;
+        int hist_group = input_host[i] % kNumOutputs;
+        gold[hist_group]++;
       }
     }
 
     // Host accessor is now out-of-scope and is destructed. This is required
     // in order to unblock the kernel's subsequent accessor to the same buffer.
 
-    for (int i = 0; i < kNumRuns; i++) {
-      switch (i) {
-        case 0: {
-          std::cout << "Beginning run without on-chip memory caching.\n\n";
-          Histogram<false>(q, input_buf, output_buf, e);
-          break;
-        }
-        case 1: {
-          std::cout << "Beginning run with on-chip memory caching.\n\n";
-          Histogram<true>(q, input_buf, output_buf, e);
-          break;
-        }
-        default: {
-          Histogram<false>(q, input_buf, output_buf, e);
-        }
-      }
+    // iterate over the cache depths
+    for (int i = 0; i <= kMaxCacheDepth; i++) {
 
-      // Wait for kernels to finish
+      std::cout << "Beginning run without cache depth " << i;
+      if (i == 0) { std::cout << " (no cache)"; }
+      std::cout << std::endl;
+
+      fpga_tools::UnrolledLoop<kMaxCacheDepth+1>([&](auto j) {
+        if (j == i) {
+          ComputeHistogram<j>(q, input_buf, output_buf, e);
+        }
+      });
+
+      // Wait for kernel to finish
       q.wait();
 
       // Compute kernel execution time
-      t1_kernel = e.get_profiling_info<info::event_profiling::command_start>();
-      t2_kernel = e.get_profiling_info<info::event_profiling::command_end>();
+      t1_kernel = 
+        e.get_profiling_info<sycl::info::event_profiling::command_start>();
+      t2_kernel = 
+        e.get_profiling_info<sycl::info::event_profiling::command_end>();
       time_kernel = (t2_kernel - t1_kernel) / kNs;
 
       // Get accessor to output buffer. Accessing the buffer at this point in
       // the code will block on kernel completion.
-      host_accessor output_host(output_buf, read_only);
+      sycl::host_accessor output_host(output_buf);
 
-      // Verify output and print pass/fail
+      // Verify output and print pass/fail, and clear the output buffer
       bool passed = true;
       int num_errors = 0;
       for (int b = 0; b < kNumOutputs; b++) {
@@ -203,22 +164,20 @@ int main() {
           std::cout << " (mismatch, expected " << gold[b] << ")\n";
           num_errors++;
         }
+        output_host[b] = 0;
       }
 
       if (passed) {
-        std::cout << "Verification PASSED\n\n";
-
-        // Report host execution time and throughput
+        std::cout << "Verification PASSED" << std::endl;
         std::cout.setf(std::ios::fixed);
         double N_MB = (kInitNumInputs * sizeof(uint32_t)) /
                       (1024 * 1024);  // Input size in MB
-
-        // Report kernel execution time and throughput
-        std::cout << "Kernel execution time: " << time_kernel << " seconds\n";
-        std::cout << "Kernel throughput " << (i == 0 ? "without" : "with")
-                  << " caching: " << N_MB / time_kernel << " MB/s\n\n";
+        std::cout << "Kernel execution time: " << time_kernel << " seconds" 
+                  << std::endl;
+        std::cout << "Kernel throughput for cache depth " << i << ": "
+                  << (N_MB / time_kernel) << " MB/s" << std::endl << std::endl;
       } else {
-        std::cout << "Verification FAILED\n";
+        std::cout << "Verification FAILED" << std::endl;
         return 1;
       }
     }
