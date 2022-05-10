@@ -1,6 +1,19 @@
-cmake_minimum_required (VERSION 3.4)
-set (CMAKE_CXX_COMPILER "dpcpp")
+cmake_minimum_required (VERSION 3.20)
 project (array-transform LANGUAGES CXX)
+
+set(CMAKE_C_COMPILER "icx")
+set(CMAKE_CXX_COMPILER "icpx")
+if (UNIX)
+  set(IntelDPCPP_DIR $ENV{ONEAPI_ROOT}/compiler/latest/linux/IntelDPCPP)
+  set(ENV{SYCL_INCLUDE_DIR_HINT} "$ENV{ONEAPI_ROOT}/compiler/latest/linux")
+  set(ENV{SYCL_LIBRARY_DIR_HINT} "$ENV{ONEAPI_ROOT}/compiler/latest/linux")
+elseif (WIN32)
+  set(IntelDPCPP_DIR $ENV{ONEAPI_ROOT}/compiler/latest/windows/IntelDPCPP)
+  set(ENV{SYCL_INCLUDE_DIR_HINT} "$ENV{ONEAPI_ROOT}/compiler/latest/windows")
+  set(ENV{SYCL_LIBRARY_DIR_HINT} "$ENV{ONEAPI_ROOT}/compiler/latest/windows")
+endif ()
+
+find_package(IntelDPCPP REQUIRED)
 
 if (NOT CMAKE_CXX_STANDARD)
   set (CMAKE_CXX_STANDARD 17)
