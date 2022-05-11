@@ -9,7 +9,7 @@
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
   "commonFolder": {
-    "base": "../..",
+    "base": "../../..",
     "include": [
       "Tutorials/DesignPatterns/compute_units",
       "include/pipe_utils.hpp"

@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -14,7 +14,7 @@
 using namespace sycl;
 using namespace std;
 
-// Number of complex numbers passing to the DPC++ code
+// Number of complex numbers passing to the SYCL code
 static const int num_elements = 10000;
 
 class CustomDeviceSelector : public device_selector {
@@ -25,14 +25,13 @@ class CustomDeviceSelector : public device_selector {
     //We are querying for the custom device specific to a Vendor and if it is a GPU device we
     //are giving the highest rating as 3 . The second preference is given to any GPU device and the third preference is given to
     //CPU device. 
-    //**************Step1: Uncomment the following lines where you are setting the rating for the devices********
-    /*if (dev.is_gpu() & (dev.get_info<info::device::name>().find(vendorName_) !=
+    if (dev.is_gpu() & (dev.get_info<info::device::name>().find(vendorName_) !=
                         std::string::npos))
       device_rating = 3;
     else if (dev.is_gpu())
       device_rating = 2;
     else if (dev.is_cpu())
-      device_rating = 1;*/
+      device_rating = 1;
     return device_rating;
   };
 
@@ -65,12 +64,9 @@ void DpcppParallel(queue &q, std::vector<Complex2> &in_vect1,
     accessor V1(bufin_vect1,h,read_only);
     accessor V2(bufin_vect2,h,read_only);
     // Accessor set to Write mode
-    //**************STEP 2: Uncomment the below line to set the Write Accessor******************** 
-    //accessor V3 (bufout_vect,h,write_only);
+    accessor V3 (bufout_vect,h,write_only);
     h.parallel_for(R, [=](auto i) {
-      //**************STEP 3: Uncomment the below line to call the complex_mul function that computes the multiplication
-      //of the  complex numbers********************
-      //V3[i] = V1[i].complex_mul(V2[i]);
+      V3[i] = V1[i].complex_mul(V2[i]);
     });
   });
   q.wait_and_throw();

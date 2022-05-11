@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<html><style>
+        .metric-name {
+        font-weight: 600;
+        min-width: 14em;
+        display: inline-block;
+        }
+
+        .metric-value {
+        margin-left: 1em;
+        color: #336;
+        }
+
+        .metric-value-with-issue {
+        margin-left: 1em;
+        color: #C33;
+        }
+
+        li {
+        list-style-type: none;
+        }
+
+        ul {
+        margin-left: 1.5em;
+        padding-left: 0em;
+        }
+
+        body {
+        margin: 0;
+        paddind: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #336;
+        }
+
+        pre {
+        white-space:pre-wrap;
+        max-width: 40em;
+        color: #633;
+        }
+
+        .issue {
+        border-left: 3px solid #C33;
+        padding: 0.3em 0.3em 0.3em 1em;
+        }
+
+        table {
+        margin: 0 1.5em;
+        }
+
+        th, td {
+        text-align: left;
+        }
+
+        td {
+        color: #333;
+        }
+
+        th {
+        border-bottom: 2px solid #336;
+        font-weight: 600;
+        }
+
+        .table-value {
+        margin-right: 1.5em;
+        }
+
+        .brand {
+        background-color: #0071c5;
+        padding: 0.5em 1.5em;
+        width: 100%;
+        color: white;
+        font-weight: 600;
+        }
+
+        .recommendation-placeholder {
+        background-color: #eaecee;
+        padding: 1em;
+        }
+
+        .recommendation-placeholder p {
+        font-weight: 600;
+        margin: 0;
+        }
+
+        .recommendation {
+        border-left: 3px solid #bbb;
+        padding: 0.3em 0.3em 0.3em 1em;
+        margin: 0 0 0 1.5em;
+        }
+
+        .recommendation-metric {
+        font-weight: 600;
+        min-width: 14em;
+        display: inline-block;
+        margin: 0 0 0 1.5em;
+        }
+
+      </style><body><div class="brand">Intel<sup>&reg;</sup> VTune<sup>&trade;</sup> Profiler 2022.0.0</div><ul><li><span class="metric-name">Elapsed Time:
+        </span><span class="metric-value">19.457s</span><ul><li><span class="metric-name">GPU Time:
+        </span><span class="metric-value">18.544s</span></li></ul></li></ul><ul><li><span class="metric-name">EU Array Stalled/Idle:
+        </span><span class="metric-value">18.8% of Elapsed time with GPU busy</span><ul><li><span class="metric-name">GPU L3 Bandwidth Bound:
+        </span><span class="metric-value">39.8% of peak value</span><ul><li><span class="metric-name">Hottest GPU Computing Tasks Bound by GPU L3 Bandwidth:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Computing Task</span></th><th><span class="table-value">Total Time</span></th></tr></table></li></ul></li></ul><ul><li><span class="metric-name">Sampler Busy:
+        </span><span class="metric-value">0.0% of peak value</span><ul><li><span class="metric-name">Hottest GPU Computing Tasks with High Sampler Usage:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Computing Task</span></th><th><span class="table-value">Total Time</span></th></tr></table></li></ul></li></ul></li></ul><ul><li><span class="metric-name">FPU Utilization:
+        </span><span class="metric-value">43.3% of Elapsed time with GPU busy</span><ul><li><span class="metric-name">Hottest GPU Computing Tasks with High FPU Utilization:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Computing Task</span></th><th><span class="table-value">Total Time</span></th></tr></table></li></ul></li></ul><ul><li><span class="metric-name">Collection and Platform Info:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Application Command Line:
+        </span><span class="metric-value">/home/u49991/DPCPP_Performance_Portability/lab/mm_dpcpp_basic "-n" "5120" "-m" "16" </span></li></ul><ul><li><span class="metric-name">User Name:
+        </span><span class="metric-value">u49991</span></li></ul><ul><li><span class="metric-name">Operating System:
+        </span><span class="metric-value">5.4.0-80-generic DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=20.04
+DISTRIB_CODENAME=focal
+DISTRIB_DESCRIPTION="Ubuntu 20.04.3 LTS"</span></li></ul><ul><li><span class="metric-name">Computer Name:
+        </span><span class="metric-value">s001-n157</span></li></ul><ul><li><span class="metric-name">Result Size:
+        </span><span class="metric-value">328.3 MB </span></li></ul><ul><li><span class="metric-name">Collection start time:
+        </span><span class="metric-value">03:50:46 13/01/2022 UTC</span></li></ul><ul><li><span class="metric-name">Collection stop time:
+        </span><span class="metric-value">03:51:05 13/01/2022 UTC</span></li></ul><ul><li><span class="metric-name">Collector Type:
+        </span><span class="metric-value">Event-based sampling driver,User-mode sampling and tracing</span></li></ul><ul><li><span class="metric-name">CPU:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Name:
+        </span><span class="metric-value">Intel(R) microarchitecture code named Coffeelake</span></li></ul><ul><li><span class="metric-name">Frequency:
+        </span><span class="metric-value">3.696 GHz</span></li></ul><ul><li><span class="metric-name">Logical CPU Count:
+        </span><span class="metric-value">12</span></li></ul></li></ul><ul><li><span class="metric-name">GPU:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Name:
+        </span><span class="metric-value">HD Graphics P630</span></li></ul><ul><li><span class="metric-name">Vendor:
+        </span><span class="metric-value">Intel Corporation</span></li></ul><ul><li><span class="metric-name">EU Count:
+        </span><span class="metric-value">24</span></li></ul><ul><li><span class="metric-name">Max EU Thread Count:
+        </span><span class="metric-value">7</span></li></ul><ul><li><span class="metric-name">Max Core Frequency:
+        </span><span class="metric-value">1.200 GHz</span></li></ul><ul><li><span class="metric-name">GPU OpenCL Info:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Version:
+        </span><span class="metric-value"/></li></ul><ul><li><span class="metric-name">Max Compute Units:
+        </span><span class="metric-value">24</span></li></ul><ul><li><span class="metric-name">Max Work Group Size:
+        </span><span class="metric-value">256</span></li></ul><ul><li><span class="metric-name">Local Memory:
+        </span><span class="metric-value">65.5 KB </span></li></ul><ul><li><span class="metric-name">SVM Capabilities:
+        </span><span class="metric-value"/></li></ul></li></ul></li></ul></li></ul></body></html>
+
