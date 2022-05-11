@@ -48,7 +48,7 @@ void ComputeHistogram(sycl::queue &q, sycl::buffer<uint32_t>& input_buf,
       constexpr size_t kSafeLen = k_cache_depth == 0 ? 1 : k_cache_depth;
       
       // Compute the Histogram
-      [[intel::ivdep(kSafeLen, histogram.data_)]] 
+      [[intel::ivdep(kSafeLen/*, histogram.data_*/)]] 
       for (uint32_t n = 0; n < kInitNumInputs; ++n) {
         // Compute the Histogram index to increment
         uint32_t hist_group = input[n] % kNumOutputs;
