@@ -50,11 +50,11 @@ To use an `ac_fixed` type in your code, include the following header:
 ```cpp
 #include <sycl/ext/intel/ac_types/ac_fixed.hpp>
 ```
-> *IMPORTANT*: You must pass the  `-qactypes` option on Linux or the `/Qactypes` option on Windows to the `dpcpp` command when compiling your SYCL program in order to ensure that the headers are correctly included. In this tutorial, the options are passed through the `src/CMakeLists.txt` file.
+> *IMPORTANT*: You must pass the  `-qactypes` option on Linux or the `/Qactypes` option on Windows to the `dpcpp` command when building your SYCL program in order to include `ac_types` header files on the include path and link against the AC type libraries. In this tutorial, the options are passed through the `src/CMakeLists.txt` file.
 
 ### Recommended Method for Constructing `ac_fixed` Numbers
 
-The compiler uses significant FPGA resources to convert double precision (and single precision) floating-point values to `ac_fixed` values. The kernel `ConstructFromFloat` in the function `TestConstructFromFloat` constructs an `ac_fixed` object from an accessor to a native `float` type.
+The compiler uses significant FPGA resources to convert floating point values to `ac_fixed` values. The kernel `ConstructFromFloat` in the function `TestConstructFromFloat` constructs an `ac_fixed` object from an accessor to a native `float` type.
 
 In contrast, the kernel `ConstructFromACFixed` in the function `TestConstructFromACFixed` constructs an `ac_fixed` object from an accessor to another `ac_fixed` object. This consumes far less area than the previous kernel. See the section on *Examining the Reports* below to understand where to look for this difference within the optimization reports.
 
@@ -74,7 +74,7 @@ for some input `x`.
 
 The kernel `CalculateWithFloat` uses floating point values and the standard math library while `CalculateWithACFixed` uses `ac_fixed` values and the `ac_fixed` math library.
 
-In the kernel `CalculateWithACFixed`, the `sin_fixed` and `cos_fixed` functions require the integer part's bit width to be 3, and the input value range to be within [-pi, pi]. Therefore, `ac_fixed` inputs are instantiated with the following parameters:
+In the kernel `CalculateWithACFixed`, the `sin_fixed` and `cos_fixed` functions require the integer part's bit width to be 3 and the input value range to be within [-pi, pi], while the the input width of the functions can be chosen depending on the accuracy requirement. For this tutorial, `ac_fixed` inputs are instantiated with the following parameters:
 
 ```cpp
   W = 10, I = 3, S = true
@@ -86,7 +86,7 @@ When you use the `ac_fixed` library, keep the following points in mind:
 
 - Input Bit Width and Input Value Range Limits
 
-    The fixed-point math functions have bit width and input value range requirements. All bit width and input value range requirements are documented at the top of the `ac_fixed_math.hpp` files.
+    The fixed-point math functions have bit width and input value range requirements. All bit width and input value range requirements are documented at the top of the `ac_fixed_math.hpp` files, which locate in `${ONEAPI_ROOT}/compiler/latest/linux/lib/oclfpga/include/sycl/ext/intel/ac_types` on Linux or `%ONEAPI_ROOT%\compiler\latest\windows\lib\oclfpga\include\sycl\ext\intel\ac_types` on Windows.
 
 - Return Types
 
@@ -95,7 +95,7 @@ When you use the `ac_fixed` library, keep the following points in mind:
 - Accuracy
    - Floating point vs Fixed point
 
-     The host program for this tutorial shows the accuracy differences between the correct result and the result provided by the math library functions. The floating point version generates a more accurate result than the fixed point version.
+     The host program for this tutorial shows the accuracy differences between the result provided by floating point math library and the result provided by the `ac_fixed` math library functions, where the `float` version generates a more accurate result than the smaller-sized `ac_fixed` version.
  
    - Emulation vs FPGA Hardware for fixed point math operations
 
@@ -259,33 +259,50 @@ Scroll down on the Summary page of the report and expand the section titled **Co
    ./ac_fixed.fpga             # Linux
    ```
 
-### Example of Output
+### Example of Output on Emulator
 
 ```txt
+1. Testing Constructing ac_fixed from float or ac_fixed:
 Constructed from float:         3.6416015625
 Constructed from ac_fixed:      3.6416015625
 
-MAX DIFF for ac_fixed<10, 3, true>:  0.0078125
-MAX DIFF for float:                  9.53674e-07
+2. Testing calculation with float or ac_fixed math functions:
+MAX DIFF (quantum) for ac_fixed<10, 3, true>:   0.0078125
+MAX DIFF for float:                             9.53674e-07
 
-result(fixed point): 1
-result(float):       1
+Input 0:                        -0.80799192
+result(fixed point):            1
+difference(fixed point):        0
+result(float):                  1
+difference(float):              0
 
-result(fixed point): 0.992188
-result(float):       1
+Input 1:                        -2.099829
+result(fixed point):            0.9921875
+difference(fixed point):        0.0078125
+result(float):                  0.99999994
+difference(float):              5.9604645e-08
 
-result(fixed point): 1
-result(float):       1
+Input 2:                        -0.74206626
+result(fixed point):            1
+difference(fixed point):        0
+result(float):                  1
+difference(float):              0
 
-result(fixed point): 1
-result(float):       1
+Input 3:                        -2.3321707
+result(fixed point):            1
+difference(fixed point):        0
+result(float):                  1
+difference(float):              0
 
-result(fixed point): 0.992188
-result(float):       1
+Input 4:                        1.1432415
+result(fixed point):            0.9921875
+difference(fixed point):        0.0078125
+result(float):                  0.99999994
+difference(float):              5.9604645e-08
 
 PASSED: all kernel results are correct.
 ```
 
 ### Discussion of Results
 
-You can obtain a smaller hardware footprint for your kernel by ensuring that the `ac_fixed` numbers are constructed from `float` or `double` numbers outside the kernel. Additionally, you can trade-off mathematical operation accuracy for a more resource efficient design by using the `ac_fixed` math library functions.
+You can obtain a smaller hardware footprint for your kernel by ensuring that the `ac_fixed` numbers are constructed from `float` or `double` numbers outside the kernel. Additionally, you can trade-off mathematical operation accuracy for a more resource efficient design by using `ac_fixed` types of a smaller size and the corresponding `ac_fixed` math library functions.

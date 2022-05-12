@@ -34,8 +34,6 @@ set(EMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMUL
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
 set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} -Wall")
 set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
-# We do not need to supply the AC_TYPES_FLAG for the 'report' target's linking stage.
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -61,7 +59,7 @@ set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
-set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_FLAGS} -fsycl-link=early")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
 
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 

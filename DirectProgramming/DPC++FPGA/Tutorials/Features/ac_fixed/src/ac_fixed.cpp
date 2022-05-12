@@ -1,9 +1,9 @@
-// clang-format off
 #include <CL/sycl.hpp>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/ac_types/ac_fixed.hpp>
 #include <sycl/ext/intel/ac_types/ac_fixed_math.hpp>
-// clang-format on
+#include <sycl/ext/intel/fpga_extensions.hpp>
+
+#include <iomanip>  // for std::setprecision
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -11,8 +11,13 @@
 
 using namespace sycl;
 
+// Type aliases for ac_fixed types
 using fixed_10_3_t = ac_fixed<10, 3, true>;
 using fixed_9_2_t = ac_fixed<9, 2, true>;
+
+// Quantization mode `AC_RND`: round towards plus infinity
+// Overflow mode `AC_SAT`: saturate to max and min when overflow happens
+using fixed_20_10_t = ac_fixed<20, 10, true, AC_RND, AC_SAT>;
 
 // Forward declare the kernel name in the global scope.
 // This is a FPGA best practice that reduces name mangling in the reports.
@@ -23,18 +28,17 @@ class CalculateWithACFixed;
 
 // Not recommended Usage example:
 // Convert dynamic float value inside the kernel
-void TestConstructFromFloat(queue &q, const float &a,
-                            ac_fixed<20, 10, true, AC_RND, AC_SAT> &b) {
-  buffer<float, 1> inp_buffer(&a, 1);
-  buffer<ac_fixed<20, 10, true, AC_RND, AC_SAT>, 1> ret_buffer(&b, 1);
+void TestConstructFromFloat(queue &q, const float &x, fixed_20_10_t &ret) {
+  buffer<float, 1> inp_buffer(&x, 1);
+  buffer<fixed_20_10_t, 1> ret_buffer(&ret, 1);
 
   q.submit([&](handler &h) {
     accessor in_acc{inp_buffer, h, read_only};
     accessor out_acc{ret_buffer, h, write_only, no_init};
 
     h.single_task<ConstructFromFloat>([=] {
-      ac_fixed<20, 10, true, AC_RND, AC_SAT> t(in_acc[0]);
-      ac_fixed<20, 10, true, AC_RND, AC_SAT> some_offset(0.5f);
+      fixed_20_10_t t(in_acc[0]);
+      fixed_20_10_t some_offset(0.5f);
       out_acc[0] = t + some_offset;
     });
   });
@@ -42,19 +46,18 @@ void TestConstructFromFloat(queue &q, const float &a,
 
 // Recommended Usage example:
 // Convert dynamic float value outside the kernel
-void TestConstructFromACFixed(queue &q,
-                              const ac_fixed<20, 10, true, AC_RND, AC_SAT> &a,
-                              ac_fixed<20, 10, true, AC_RND, AC_SAT> &ret) {
-  buffer<ac_fixed<20, 10, true, AC_RND, AC_SAT>, 1> inp_buffer(&a, 1);
-  buffer<ac_fixed<20, 10, true, AC_RND, AC_SAT>, 1> ret_buffer(&ret, 1);
+void TestConstructFromACFixed(queue &q, const fixed_20_10_t &x,
+                              fixed_20_10_t &ret) {
+  buffer<fixed_20_10_t, 1> inp_buffer(&x, 1);
+  buffer<fixed_20_10_t, 1> ret_buffer(&ret, 1);
 
   q.submit([&](handler &h) {
     accessor in_acc{inp_buffer, h, read_only};
     accessor out_acc{ret_buffer, h, write_only};
 
     h.single_task<ConstructFromACFixed>([=] {
-      ac_fixed<20, 10, true, AC_RND, AC_SAT> t(in_acc[0]);
-      ac_fixed<20, 10, true, AC_RND, AC_SAT> some_offset(0.5f);
+      fixed_20_10_t t(in_acc[0]);
+      fixed_20_10_t some_offset(0.5f);
       out_acc[0] = t + some_offset;
     });
   });
@@ -76,7 +79,6 @@ void TestCalculateWithFloat(queue &q, const float &x, float &ret) {
   });
 }
 
-// clang-format off
 // Please refer to ac_fixed_math.hpp header file for fixed point math
 // functions' type deduction rule. In this case, following those rules:
 // I, W, S are input type template parameter (ac_fixed<W, I, S>)
@@ -87,7 +89,6 @@ void TestCalculateWithFloat(queue &q, const float &x, float &ret) {
 //*                        For unsigned (S == false), I == 1, rW =  W - I + 1
 //* cos_fixed              For signed (S == true), rI == 2, rW =  W - I + 2;
 //*                        For unsigned (S == false), I == 1, rW =  W - I + 1
-// clang-format on
 void TestCalculateWithACFixed(queue &q, const fixed_10_3_t &x,
                               fixed_9_2_t &ret) {
   buffer<fixed_10_3_t, 1> inp_buffer(&x, 1);
@@ -119,19 +120,21 @@ int main() {
     queue q(selector, dpc_common::exception_handler);
 
     // I. Constructing `ac_fixed` Numbers
-    // Set quantization mode `AC_RND` to round towards plus infinity
-    // Set overflow mode `AC_SAT` to saturate to max and min when overflow
-    // happens
-    ac_fixed<20, 10, true, AC_RND, AC_SAT> a;
+    std::cout << "1. Testing Constructing ac_fixed from float or ac_fixed:\n";
+
+    fixed_20_10_t a;
     TestConstructFromFloat(q, 3.1415f, a);
     std::cout << "Constructed from float:\t\t" << a << "\n";
 
-    ac_fixed<20, 10, true, AC_RND, AC_SAT> b = 3.1415f;
-    ac_fixed<20, 10, true, AC_RND, AC_SAT> c;
+    fixed_20_10_t b = 3.1415f;
+    fixed_20_10_t c;
     TestConstructFromACFixed(q, b, c);
     std::cout << "Constructed from ac_fixed:\t" << c << "\n\n";
 
     // II. Using `ac_fixed` Math Functions
+    std::cout
+        << "2. Testing calculation with float or ac_fixed math functions:\n";
+
     constexpr int kSize = 5;
     constexpr float inputs[kSize] = {-0.807991899423f, -2.09982907558f,
                                      -0.742066235466f, -2.33217071676f,
@@ -147,10 +150,9 @@ int main() {
     constexpr fixed_9_2_t epsilon_fixed_9_2 = quantum;
     constexpr float epsilon_float = 1.0f / (1.0f * float(1 << 20));
 
-    std::cout << "MAX DIFF for ac_fixed<10, 3, true>:  "
-              << epsilon_fixed_9_2.to_double() << "\n";
-    std::cout << "MAX DIFF for float:                  " << epsilon_float
-              << "\n\n";
+    std::cout << "MAX DIFF (quantum) for ac_fixed<10, 3, true>:\t"
+              << epsilon_fixed_9_2.to_double()
+              << "\nMAX DIFF for float:\t\t\t\t" << epsilon_float << "\n\n";
 
     bool pass = true;
     for (int i = 0; i < kSize; i++) {
@@ -163,15 +165,19 @@ int main() {
       float float_type_result;
       TestCalculateWithFloat(q, float_type_input, float_type_result);
 
-      std::cout << "result(fixed point): " << fixed_type_result.to_double()
-                << "\n";
-      std::cout << "result(float):       " << float_type_result << "\n\n";
-
       // expected result is 1.0 = sqrt(sin^2(x) + cos^2(x))
-      fixed_9_2_t diff1 = fabs(fixed_type_result.to_double() - 1.0);
-      float diff2 = fabs(float_type_result - 1.0);
+      double fixed_diff = abs(fixed_type_result.to_double() - 1.0);
+      double float_diff = abs(float_type_result - 1.0);
 
-      if (diff1 > epsilon_fixed_9_2 || diff2 > epsilon_float) {
+      std::cout << std::setprecision(8);
+      std::cout << "Input " << i << ":\t\t\t" << inputs[i]
+                << "\nresult(fixed point):\t\t" << fixed_type_result.to_double()
+                << "\ndifference(fixed point):\t" << fixed_diff
+                << "\nresult(float):\t\t\t" << float_type_result
+                << "\ndifference(float):\t\t" << float_diff << "\n\n";
+
+      // check differences
+      if (fixed_diff > epsilon_fixed_9_2 || float_diff > epsilon_float) {
         pass = false;
       }
     }
