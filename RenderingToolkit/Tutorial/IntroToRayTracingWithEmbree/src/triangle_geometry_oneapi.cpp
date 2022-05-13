@@ -23,6 +23,10 @@ using std::min;
 #ifdef _WIN32
 #define alignedMalloc(a, b) _aligned_malloc(a, b)
 #define alignedFree(a) _aligned_free(a)
+#else
+#include <mm_malloc.h>
+#define alignedMalloc(a, b) _mm_malloc(a, b)
+#define alignedFree(a) _mm_free(a)
 #endif
 
 #define TILE_SIZE_X 8

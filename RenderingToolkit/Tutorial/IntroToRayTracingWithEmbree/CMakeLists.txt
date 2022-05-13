@@ -14,10 +14,10 @@ else()
   message(STATUS "ONEAPI_ROOT DEFAULT: ${ONEAPI_ROOT}")
 endif(DEFINED ENV{ONEAPI_ROOT})
 
-find_package(embree 3.0 REQUIRED PATHS ${ONEAPI_ROOT})
-
 #tbb is used for tasking in this example
-find_package(tbb REQUIRED PATHS ${ONEAPI_ROOT})
+find_package(TBB REQUIRED PATHS ${ONEAPI_ROOT})
+
+find_package(embree 3.0 REQUIRED PATHS ${ONEAPI_ROOT})
 
 #rkcommon objects for rendering are used in this example
 find_package(rkcommon REQUIRED CONFIG PATHS ${ONEAPI_ROOT})

@@ -54,7 +54,7 @@ Open the resulting file: `triangle_geometry_oneapi.png` with an image viewer.
 ```
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
 ./triangle_geometry_oneapi
 ```
