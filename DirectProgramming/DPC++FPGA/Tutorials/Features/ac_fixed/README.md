@@ -86,7 +86,7 @@ When you use the `ac_fixed` library, keep the following points in mind:
 
 - Input Bit Width and Input Value Range Limits
 
-    The fixed-point math functions have bit width and input value range requirements. All bit width and input value range requirements are documented at the top of the `ac_fixed_math.hpp` files, which locate in `${ONEAPI_ROOT}/compiler/latest/linux/lib/oclfpga/include/sycl/ext/intel/ac_types` on Linux or `%ONEAPI_ROOT%\compiler\latest\windows\lib\oclfpga\include\sycl\ext\intel\ac_types` on Windows.
+    The fixed-point math functions have bit width and input value range requirements. All bit width and input value range requirements are documented at the top of the `ac_fixed_math.hpp` file, which locates in `${ONEAPI_ROOT}/compiler/latest/linux/lib/oclfpga/include/sycl/ext/intel/ac_types` on Linux or `%ONEAPI_ROOT%\compiler\latest\windows\lib\oclfpga\include\sycl\ext\intel\ac_types` on Windows.
 
 - Return Types
 
@@ -305,4 +305,4 @@ PASSED: all kernel results are correct.
 
 ### Discussion of Results
 
-You can obtain a smaller hardware footprint for your kernel by ensuring that the `ac_fixed` numbers are constructed from `float` or `double` numbers outside the kernel. Additionally, you can trade-off mathematical operation accuracy for a more resource efficient design by using `ac_fixed` types of a smaller size and the corresponding `ac_fixed` math library functions.
+You can obtain a smaller hardware footprint for your kernel by ensuring that the `ac_fixed` numbers are constructed from `float` or `double` numbers outside the kernel. Additionally, by using the `ac_fixed` types and math library functions, you can use an even smaller fixed point format to trade-off even more accuracy for a more resource efficient design if your application requirements allow for it.

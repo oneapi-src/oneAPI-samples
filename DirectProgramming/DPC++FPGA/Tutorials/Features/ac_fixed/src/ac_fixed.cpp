@@ -17,6 +17,8 @@ using fixed_9_2_t = ac_fixed<9, 2, true>;
 
 // Quantization mode `AC_RND`: round towards plus infinity
 // Overflow mode `AC_SAT`: saturate to max and min when overflow happens
+// For the other quantization and overflow modes, refer to section 2.1 of
+// "Algorithmic C (AC) Datatypes" document.
 using fixed_20_10_t = ac_fixed<20, 10, true, AC_RND, AC_SAT>;
 
 // Forward declare the kernel name in the global scope.
