@@ -47,7 +47,7 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 By default, the Intel® AI Analytics Toolkit is installed in the `/opt/intel/oneapi` folder. The toolkit may be loaded by sourcing the `setvars.sh` script on a Linux shell. Notice the flag `--ccl-configuration=cpu_icc`. By default, the `ccl-configuration` is set to `cpu_gpu_dpcpp`. However, since we are distributing our TensorFlow workload on multiple CPU nodes, we are configuring the Horovod installation to use CPUs.
 
 ```
-source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_icc
+source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu
 ```
 
 ### Creating a TensorFlow environment with Horovod
@@ -79,7 +79,7 @@ To execute the script on one machine without invoking Horovod, type the followin
 
 To run the script with Horovod, we invoke MPI:
 ```
-    horovodrun -np 2 `pwd`/TensorFlow_Multinode_Training_with_Horovod.py
+    mpirun -n 2 `pwd`/TensorFlow_Multinode_Training_with_Horovod.py
 ```
 
 In the example above, we run the script on two MPI threads but on the same node. To use multiple nodes, we pass the `-hosts` flag, where host1 and host2 are the hostnames of two nodes on your cluster.
@@ -87,7 +87,7 @@ In the example above, we run the script on two MPI threads but on the same node.
 Example:
 
 ```
-    horovodrun -n 2 -H host1,host2 `pwd`/TensorFlow_Multinode_Training_with_Horovod.py
+    mpirun -n 2 -H host1,host2 `pwd`/TensorFlow_Multinode_Training_with_Horovod.py
 ```
 
 ### Using Visual Studio Code*  (VS Code)
@@ -143,5 +143,14 @@ INFO:tensorflow:global_step/sec: 5.16882
 Number of tasks:  2
 Total time is: 96.9508
 ```
+### Enable oneCCL Verbose log
 
+  There are different log levels in oneCCL. Users can refer to [the link](https://oneapi-src.github.io/oneCCL/env-variables.html#ccl-log-level) for different log levels.
+
+
+  Users can enable oneCCL verbose log by following the command shown below to see more
+  runtime information from oneCCL.
+  ```
+  export CCL_LOG_LEVEL=info
+  ```
 
