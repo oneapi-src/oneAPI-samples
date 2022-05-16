@@ -75,7 +75,7 @@ void sparse_histogram(std::vector<uint64_t> &input) {
 
   auto num_bins = std::transform_reduce(
       oneapi::dpl::execution::dpcpp_default, oneapi::dpl::begin(histogram_buf),
-      oneapi::dpl::end(histogram_buf), oneapi::dpl::begin(histogram_buf) + 1, 1,
+      oneapi::dpl::end(histogram_buf) - 1, oneapi::dpl::begin(histogram_buf) + 1, 1,
       std::plus<int>(), std::not_equal_to<int>());
 
   // Create new buffer to store the unique values and their count
@@ -97,7 +97,7 @@ void sparse_histogram(std::vector<uint64_t> &input) {
 
   std::cout << "Sparse Histogram:\n";
   std::cout << "[";
-  for (int i = 0; i < num_bins - 1; i++) {
+  for (int i = 0; i < num_bins; i++) {
     sycl::host_accessor histogram_value(histogram_values_buf, sycl::read_only);
     sycl::host_accessor histogram_count(histogram_counts_buf, sycl::read_only);
     std::cout << "(" << histogram_value[i] << ", " << histogram_count[i]
