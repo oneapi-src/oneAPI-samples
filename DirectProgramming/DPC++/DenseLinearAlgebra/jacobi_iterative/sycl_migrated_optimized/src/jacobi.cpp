@@ -38,7 +38,6 @@
 #include "jacobi.h"
 
 using namespace sycl;
-using namespace sycl::ext::oneapi;
 // 8 Rows of square-matrix A processed by each CTA.
 
 #define ROWS_PER_CTA 32
@@ -64,7 +63,7 @@ static void JacobiMethod(const float *A, const double *b,
     }
   }
 
-  item_ct1.barrier();
+  sycl::group_barrier(item_ct1.get_group());
 
   sub_group tile_sg = item_ct1.get_sub_group();
 
@@ -86,7 +85,7 @@ static void JacobiMethod(const float *A, const double *b,
     }
   }
 
-  item_ct1.barrier();
+  sycl::group_barrier(item_ct1.get_group());
 
   if (item_ct1.get_local_id(2) < ROWS_PER_CTA) {
     sub_group tile_sg = item_ct1.get_sub_group();
@@ -141,7 +140,7 @@ static void finalError(double *x, double *d_sum, nd_item<3> item_ct1,
     sg_Sum[item_ct1.get_local_id(2) / tile_sg.get_local_range().get(0)] = sum;
   }
 
-  item_ct1.barrier();
+  sycl::group_barrier(item_ct1.get_group());
 
   double blockSum = 0.0;
   if (item_ct1.get_local_id(2) <
