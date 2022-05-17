@@ -140,6 +140,9 @@ void CholeskyDecompositionImpl(
   auto end_time = ddr_write_event.template
                 get_profiling_info<sycl::info::event_profiling::command_end>();
   double diff = (end_time - start_time) / 1.0e9;
+
+  // Make sure we throw any asynchronous errors if they have occurred during 
+  // the computation
   q.throw_asynchronous();
 
   std::cout << "   Total duration:   " << diff << " s" << std::endl;
