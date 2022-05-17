@@ -5,7 +5,7 @@
   "description": "This sample illustrates how to train a TensorFlow model and run inference with oneMKL and oneDNN.",
   "builder": ["cli"],
   "languages": [{"python":{}}],
-  "os":["linux",, "windows"],
+  "os":["linux","windows"],
   "targetDevice": ["CPU"],
   "ciTests": {
 	"linux": [
