@@ -38,7 +38,7 @@ using MyPipeArray = PipeArray<     // Defined in "pipe_utils.hpp".
     class MyPipe,                  // An identifier for the pipe.
     int,                           // The type of data in the pipe.
     32,                            // The capacity of each pipe.
-    10,                            // array dimension.
+    10                             // array dimension.
     >;
 ```
 

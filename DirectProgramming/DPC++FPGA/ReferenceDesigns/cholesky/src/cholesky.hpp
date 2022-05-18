@@ -20,15 +20,14 @@ class CholeskyDDRToLocalMem;
 class Cholesky;
 class CholeskyLocalMemToDDRL;
 class APipe;
-class QPipe;
-class RPipe;
+class LPipe;
 
 /*
   Implementation of the Cholesky decomposition using multiple streaming kernels
   Can be configured by datatype, matrix size (must use square matrices), real
   and complex.
 */
-template <unsigned dimension,    // Number of dimension/rows in the input matrix
+template <unsigned dimension,    // Number of columns/rows in the input matrix
           unsigned raw_latency,  // RAW latency for triangular loop optimization
           bool is_complex,       // Selects between ac_complex<T> and T datatype
           typename T,            // The datatype for the computation
@@ -52,7 +51,7 @@ void CholeskyDecompositionImpl(
   // Pipes to communicate the A and L matrices between kernels
   using AMatrixPipe = sycl::ext::intel::pipe<APipe, PipeType, 3>;
   using LMatrixPipe =
-      sycl::ext::intel::pipe<RPipe, TT, kNumElementsPerDDRBurst * 4>;
+      sycl::ext::intel::pipe<LPipe, TT, kNumElementsPerDDRBurst * 4>;
 
   // Allocate FPGA DDR memory.
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
@@ -114,8 +113,8 @@ void CholeskyDecompositionImpl(
 
           // Copy the L matrix result to DDR
           if constexpr (kIncompleteBurst) {
-// Write a burst of kNumElementsPerDDRBurst elements to DDR
-#pragma unroll
+             // Write a burst of kNumElementsPerDDRBurst elements to DDR
+             #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
               if (((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize) {
                 vector_ptr_device[(matrix_idx * kLMatrixSize) +
@@ -123,8 +122,8 @@ void CholeskyDecompositionImpl(
               }
             }
           } else {
-// Write a burst of kNumElementsPerDDRBurst elements to DDR
-#pragma unroll
+            // Write a burst of kNumElementsPerDDRBurst elements to DDR
+            #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
               vector_ptr_device[(matrix_idx * kLMatrixSize) +
                                 (li * kNumElementsPerDDRBurst) + k] = bank[k];
@@ -143,6 +142,9 @@ void CholeskyDecompositionImpl(
   auto end_time = ddr_write_event.template get_profiling_info<
       sycl::info::event_profiling::command_end>();
   double diff = (end_time - start_time) / 1.0e9;
+            
+  // Make sure we throw any asynchronous errors if they have occurred during 
+  // the computation
   q.throw_asynchronous();
 
   std::cout << "   Total duration:   " << diff << " s" << std::endl;

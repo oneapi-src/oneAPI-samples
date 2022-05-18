@@ -2,6 +2,8 @@
 #define __QFP_INV_LUT_HPP__
 
 #include "qfp.hpp"
+
+// Included from DirectProgramming/DPC++FPGA/include/
 #include "rom_base.hpp"
 
 // the QFP bits for the Pow2LUT
@@ -13,7 +15,7 @@ static_assert(kInvQFPTotalBits >= kInvQFPExponentBits);
 //
 // A LUT for computing 1/x
 //
-struct InvLUT : ROMBase<unsigned short, kInvLutDepth> {
+struct InvLUT : fpga_tools::ROMBase<unsigned short, kInvLutDepth> {
   // the QFP format
   using QFP = QFP<kInvQFPTotalBits, kInvQFPExponentBits, false>;
 

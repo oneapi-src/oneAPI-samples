@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -13,7 +13,7 @@ int main() {
   std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
   //# USM allocation using malloc_shared
-  int *data = static_cast<int *>(malloc_shared(N * sizeof(int), q));
+  int *data = malloc_shared<int>(N, q);
 
   //# Initialize data array
   for (int i = 0; i < N; i++) data[i] = i;
