@@ -5,7 +5,7 @@
 // =============================================================
 //
 //  Content:
-//     This code implements the Fourier correlation algorithm
+//     This code implements the 1D Fourier correlation algorithm
 //     using SYCL, oneMKL, oneDPL, and explicit buffering.
 //
 // =============================================================

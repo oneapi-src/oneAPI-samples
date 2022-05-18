@@ -5,8 +5,8 @@
 // =============================================================
 //
 //  Content:
-//     This code implements the Fourier correlation algorithm
-//     using oneMKL, DPC++, and unified shared memory (USM).
+//     This code implements the 1D Fourier correlation algorithm
+//     using SYCL, oneMKL, and unified shared memory (USM).
 //
 // =============================================================
 

@@ -59,7 +59,7 @@ To optimize the performance-critical loop in its algorithm, the design leverages
 * **Loop `ivdep` Attribute** (loop_ivdep)
 * **Unrolling Loops** (loop_unroll)
 
- The key optimization techniques used are:
+ The key optimization techniques used are as follows:
    1. Traversing the matrix in a column fashion to increase the read-after-write (RAW) loop iteration distance 
    2. Using two copies of the compute matrix in order to be able to read a full row and a full column per cycle
    3. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
