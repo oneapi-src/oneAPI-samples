@@ -10,7 +10,7 @@
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-#include "Tuple.hpp"
+#include "tuple.hpp"
 #include "mvdr_complex.hpp"
 
 #if not defined(REAL_IO_PIPES)
@@ -71,7 +71,7 @@ class DataOutConsumerID;
 class SinThetaProducerID;
 
 // the data type that goes through the IO pipes; both fake and real
-using XrxPipeType = NTuple<ComplexType, kNumComplexPerXrxPipe>;
+using XrxPipeType = fpga_tools::NTuple<ComplexType, kNumComplexPerXrxPipe>;
 
 // size of Training Data matrix, in units of XrxPipeTypes
 constexpr size_t kTrainingDataSize =

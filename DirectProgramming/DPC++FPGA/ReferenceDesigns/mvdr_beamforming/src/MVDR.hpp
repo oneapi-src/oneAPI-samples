@@ -149,10 +149,10 @@ template <
     // all default to 'null' pipes that go nowhere
     typename TrainingDataPipeOut =
         fpga_tools::PipeDuplicator<MVDRNullPipeID,
-          NTuple<ComplexType, k_num_complex_per_xrx_read>>,
+          fpga_tools::NTuple<ComplexType, k_num_complex_per_xrx_read>>,
     typename XrxDataPipeOut =
         fpga_tools::PipeDuplicator<MVDRNullPipeID,
-          NTuple<ComplexType, k_num_complex_per_xrx_read>>,
+          fpga_tools::NTuple<ComplexType, k_num_complex_per_xrx_read>>,
     typename SteeringVectorsPipeOut =
         fpga_tools::PipeDuplicator<MVDRNullPipeID, ComplexType>,
     typename ForwardSteeringVectorsPipeOut =
@@ -169,7 +169,7 @@ template <
         fpga_tools::PipeDuplicator<MVDRNullPipeID, ComplexType>,
     typename TransposedTrainingDataPipeOut =
         fpga_tools::PipeDuplicator<MVDRNullPipeID,
-          NTuple<ComplexType, k_num_complex_per_xrx_read>>>
+          fpga_tools::NTuple<ComplexType, k_num_complex_per_xrx_read>>>
 MVDREventArray SubmitMVDRKernels(
     queue& q,
     short num_xrx_per_weights  // Number of xrx vectors to process with
@@ -187,7 +187,7 @@ MVDREventArray SubmitMVDRKernels(
                 "k_num_sensor_inputs * k_rmb_factor must fit in a short");
 
   // Multiple pipes use this type, a group of complex wrapped in an NTuple
-  using XrxPipeType = NTuple<ComplexType, k_num_complex_per_xrx_read>;
+  using XrxPipeType = fpga_tools::NTuple<ComplexType, k_num_complex_per_xrx_read>;
 
   // Training data pipe (after demux from input data)
   constexpr int kTrainingDataPipeMinDepth =
@@ -297,7 +297,7 @@ MVDREventArray SubmitMVDRKernels(
   // Q matrix pipe
   // Q matrix not used in MVDR design, so this is a 'null' pipe (a
   // PipeDuplicator with no output pipes connected)
-  using QMatrixColumn = NTuple<ComplexType, k_num_sensor_inputs>;
+  using QMatrixColumn = fpga_tools::NTuple<ComplexType, k_num_sensor_inputs>;
   using QMatrixPipe =
       fpga_tools::PipeDuplicator<QMatrixPipeID<k_instance_num>, QMatrixColumn>;
 

@@ -1,12 +1,12 @@
-#ifndef __STREAMING_QRD_HPP__
-#define __STREAMING_QRD_HPP__
+#ifndef __STREAMING_QRD_HPP_MVDR__
+#define __STREAMING_QRD_HPP_MVDR__
 
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // utility classes
-#include "Tuple.hpp"
-#include "UnrolledLoop.hpp"
+#include "tuple.hpp"
+#include "unrolled_loop.hpp"
 
 #include "mvdr_complex.hpp"
 
@@ -80,7 +80,7 @@ event SubmitStreamingQRDKernel(queue& q) {
   static_assert(k_a_num_rows % k_pipe_width == 0,
                 "k_a_num_rows must be evenly divisible by k_pipe_width");
 
-  using PipeType = NTuple<ComplexType, k_pipe_width>;
+  using PipeType = fpga_tools::NTuple<ComplexType, k_pipe_width>;
 
   auto e = q.submit([&](handler& h) {
     h.single_task<StreamingQRDKernelName>([=] {
@@ -120,7 +120,7 @@ event SubmitStreamingQRDKernel(queue& q) {
         constexpr short kNumBanksNextPow2 = Pow2(CeilLog2(kNumBanks));
 
         // define a type that contains an entire column
-        using AColumn = NTuple<ComplexType, k_a_num_rows>;
+        using AColumn = fpga_tools::NTuple<ComplexType, k_a_num_rows>;
 
         // Three copies of the full matrix, so that each matrix has a single
         // load and a single store.
@@ -158,8 +158,8 @@ event SubmitStreamingQRDKernel(queue& q) {
           PipeType data_in = AMatrixInPipe::read();
           short col = i % (short)k_a_num_cols;
           short write_row_group = i / (short)k_a_num_cols;
-          UnrolledLoop<k_a_num_rows / k_pipe_width>([&](auto row_group) {
-            UnrolledLoop<k_pipe_width>([&](auto element) {
+          fpga_tools::UnrolledLoop<k_a_num_rows / k_pipe_width>([&](auto row_group) {
+            fpga_tools::UnrolledLoop<k_pipe_width>([&](auto element) {
               constexpr short row = row_group * k_pipe_width + element;
               if (write_row_group == row_group) {
                 a_matrix_in[col].template get<row>() =
@@ -208,7 +208,7 @@ event SubmitStreamingQRDKernel(queue& q) {
           bool i_lt_0[kNumBanks];
           ComplexType sori[kNumBanks];
 
-          UnrolledLoop<kNumBanks>([&](auto k) {
+          fpga_tools::UnrolledLoop<kNumBanks>([&](auto k) {
             j_eq_i[k] = ext::intel::fpga_reg(j == i);
             i_gt_0[k] = ext::intel::fpga_reg(i > 0);
             i_ge_0_j_ge_i[k] = ext::intel::fpga_reg(i >= 0 && j >= i);
@@ -220,7 +220,7 @@ event SubmitStreamingQRDKernel(queue& q) {
           // fetch data from a_matrix_in or a_matrix, based on value of i
           // Use of fpga_reg here is a workaround to prevent the compiler from
           // inferring some very complicated arbitrated local memory systems.
-          UnrolledLoop<k_a_num_rows>([&](auto row) {
+          fpga_tools::UnrolledLoop<k_a_num_rows>([&](auto row) {
             // load vector_t from a_matrix_in
             vector_t.template get<row>() =
                 ext::intel::fpga_reg(a_matrix_in[j_nonneg].template get<row>());
@@ -239,7 +239,7 @@ event SubmitStreamingQRDKernel(queue& q) {
 
           // perform calculations on the current column of data, and store
           // the result back to a_matrix (and q_matrix).
-          UnrolledLoop<k_a_num_rows>([&](auto row) {
+          fpga_tools::UnrolledLoop<k_a_num_rows>([&](auto row) {
             // calculate the new vector_t
             ComplexType sori_or_0 = i_lt_0[row / kNumElementsPerBank]
                                         ? 0
@@ -266,7 +266,7 @@ event SubmitStreamingQRDKernel(queue& q) {
           });
 
           ComplexType p_ij = 0;
-          UnrolledLoop<k_a_num_rows>([&](auto row) {
+          fpga_tools::UnrolledLoop<k_a_num_rows>([&](auto row) {
             p_ij += vector_t.template get<row>() *
                     vector_ti.template get<row>().conj();
           });
@@ -340,4 +340,4 @@ event SubmitStreamingQRDKernel(queue& q) {
   return e;
 }
 
-#endif  // ifndef __STREAMING_QRD_HPP__
+#endif  // ifndef __STREAMING_QRD_HPP_MVDR__
