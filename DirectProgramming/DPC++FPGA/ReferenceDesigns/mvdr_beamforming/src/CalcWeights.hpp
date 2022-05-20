@@ -5,7 +5,6 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "mvdr_complex.hpp"
-#include <complex>
 
 using namespace sycl;
 
