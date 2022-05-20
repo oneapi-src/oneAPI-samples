@@ -54,7 +54,7 @@ int main() {
                 tile[ti][tj] = input[gi][gj];
               }
             }
-            it.barrier(access::fence_space::local_space);
+            group_barrier(it.get_group());
 
             // Compute the stencil using values from local memory
             int gi = it.get_global_id(0) + 1;

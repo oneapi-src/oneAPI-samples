@@ -62,7 +62,7 @@ double run_sycl(
               // to ensure all work-items have a consistent view
               // of the matrix tile in local memory.
               tileA[i] = matrixA[m][kk + i];
-              item.barrier();
+              group_barrier(item.get_group());
 
               // Perform computation using the local memory tile, and
               // matrix B in global memory.
@@ -72,7 +72,7 @@ double run_sycl(
 
               // After computation, synchronize again, to ensure all
               // reads from the local memory tile are complete.
-              item.barrier();
+              group_barrier(item.get_group());
             }
 
             // Write the final result to global memory.

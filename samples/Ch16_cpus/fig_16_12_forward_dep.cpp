@@ -32,10 +32,10 @@ int main()
       // load a[i*n+j+1:8] before updating a[i*n+j:8] to preserve
       // loop-carried forward dependency
       auto va = a[i*n + j + 1];
-      sg.barrier();
+      group_barrier(sg);
       a[i*n + j] = va + i + 2;
     }
-    sg.barrier();
+    group_barrier(sg);
 
   }).wait();
 

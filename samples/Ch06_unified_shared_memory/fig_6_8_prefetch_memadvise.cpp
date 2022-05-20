@@ -23,7 +23,7 @@ int main() {
   // to the device instead of migrating it from the host.
   // Real values will be documented by your DPC++ backend.
   int HW_SPECIFIC_ADVICE_RO = 0;
-  Q.mem_advise(read_only_data, BLOCK_SIZE,(pi_mem_advice)HW_SPECIFIC_ADVICE_RO);
+  Q.mem_advise(read_only_data, BLOCK_SIZE, HW_SPECIFIC_ADVICE_RO);
   event e = Q.prefetch(data, BLOCK_SIZE);
 
   for (int b = 0; b < NUM_BLOCKS; b++) {

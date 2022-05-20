@@ -9,14 +9,11 @@
 using namespace sycl;
 
 struct device_latch {
-  using memory_order = memory_order;
-  using memory_scope = memory_scope;
-
   explicit device_latch(size_t num_groups) : counter(0), expected(num_groups) {}
 
   template <int Dimensions>
   void arrive_and_wait(nd_item<Dimensions>& it) {
-    it.barrier();
+    group_barrier(it.get_group());
     // Elect one work-item per work-group to be involved in the synchronization
     // All other work-items wait at the barrier after the branch
     if (it.get_local_linear_id() == 0) {
@@ -34,7 +31,7 @@ struct device_latch {
       // Synchronize with previous releases by all work-items on the device
       while (atomic_counter.load() != expected) {}
     }
-    it.barrier();
+    group_barrier(it.get_group());
   }
 
   size_t counter;

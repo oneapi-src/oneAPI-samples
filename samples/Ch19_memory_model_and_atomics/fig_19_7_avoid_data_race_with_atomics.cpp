@@ -9,10 +9,6 @@
 using namespace sycl;
 
 int main() {
-
-  using memory_order = sycl::memory_order;
-  using memory_scope = sycl::memory_scope;
-
   queue Q;
 
   const size_t N = 32;

@@ -30,7 +30,7 @@ int main() {
        if (i == round) {
          data[j] += 1;
        }
-       it.barrier();
+       group_barrier(it.get_group());
      }
    }).wait();
 

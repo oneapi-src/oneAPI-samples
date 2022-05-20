@@ -18,17 +18,14 @@ std::tuple<size_t, size_t> distribute_range(group<1> g, size_t N) {
   size_t work_per_group = N / g.get_group_range(0);
   size_t remainder = N - g.get_group_range(0) * work_per_group;
   size_t group_start =
-      g.get_id(0) * work_per_group + min(g.get_id(0), remainder);
-  size_t group_end =
-      (g.get_id(0) + 1) * work_per_group + min(g.get_id(0) + 1, remainder);
+      g.get_group_id(0) * work_per_group + min(g.get_group_id(0), remainder);
+  size_t group_end = (g.get_group_id(0) + 1) * work_per_group +
+                     min(g.get_group_id(0) + 1, remainder);
   return {group_start, group_end};
 }
 
 // Define shorthand aliases for the types of atomic needed by this kernel
 namespace {
-  using memory_order = memory_order;
-  using memory_scope = memory_scope;
-
   template <typename T>
   using local_atomic_ref = atomic_ref<
     T,
@@ -61,23 +58,24 @@ int main() {
      auto local = local_accessor<uint32_t, 1>{B, h};
      h.parallel_for(
          nd_range<1>{num_groups * num_items, num_items}, [=](nd_item<1> it) {
+           auto grp = it.get_group();
+
            // Phase 1: Work-items co-operate to zero local memory
            for (int32_t b = it.get_local_id(0); b < B;
                 b += it.get_local_range(0)) {
              local[b] = 0;
            }
-           it.barrier(); // Wait for all to be zeroed
+           group_barrier(grp); // Wait for all to be zeroed
 
            // Phase 2: Work-groups each compute a chunk of the input
            // Work-items co-operate to compute histogram in local memory
-           auto grp = it.get_group();
            const auto [group_start, group_end] = distribute_range(grp, N);
            for (int i = group_start + it.get_local_id(0); i < group_end;
                 i += it.get_local_range(0)) {
              int32_t b = input[i] % B;
              local_atomic_ref<uint32_t>(local[b])++;
            }
-           it.barrier(); // Wait for all local histogram updates to complete
+           group_barrier(grp); // Wait for all local histogram updates to complete
 
            // Phase 3: Work-items co-operate to update global memory
            for (int32_t b = it.get_local_id(0); b < B;

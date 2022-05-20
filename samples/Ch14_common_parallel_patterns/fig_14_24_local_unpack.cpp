@@ -118,16 +118,16 @@ int main() {
         }
 
         // Keep iterating as long as one work-item has work to do
-        while (any_of(sg, i < Nx)) {
+        while (any_of_group(sg, i < Nx)) {
           uint32_t converged =
               next_iteration(params, i, j, count, cr, ci, zr, zi, mandelbrot);
-          if (any_of(sg, converged)) {
+          if (any_of_group(sg, converged)) {
 
             // Replace pixels that have converged using an unpack
             // Pixels that haven't converged are not replaced
-            uint32_t index = exclusive_scan(sg, converged, plus<>());
+            uint32_t index = exclusive_scan_over_group(sg, converged, plus<>());
             i = (converged) ? iq + index : i;
-            iq += reduce(sg, converged, plus<>());
+            iq += reduce_over_group(sg, converged, plus<>());
 
             // Reset the iterator variables for the new i
             if (converged) {

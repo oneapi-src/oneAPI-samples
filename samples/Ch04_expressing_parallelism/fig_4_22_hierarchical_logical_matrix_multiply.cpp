@@ -40,8 +40,8 @@ int main() {
       range num_groups{N / B, N / B}; // N is a multiple of B
       range group_size{B, B};
       h.parallel_for_work_group(num_groups, [=](group<2> grp) {
-        int jb = grp.get_id(0);
-        int ib = grp.get_id(1);
+        int jb = grp.get_group_id(0);
+        int ib = grp.get_group_id(1);
         grp.parallel_for_work_item(group_size, [&](h_item<2> it) {
           int j = jb * B + it.get_logical_local_id(0);
           int i = ib * B + it.get_logical_local_id(1);
