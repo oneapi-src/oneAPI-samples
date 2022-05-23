@@ -1,6 +1,6 @@
-# Intel DPC++ Compatibility Tool: `Vector Add` Sample
+# Intel® DPC++ Compatibility Tool: `Vector Add` Sample
 
-This sample demonstrates how to migrate a simple program from CUDA to 
+This sample demonstrates how to migrate a simple program from CUDA to
 Data Parallel C++. Vector Add provides an easy way to verify that
 your development environment is set up correctly to use the Intel® DPC++
 Compatibility Tool (DPCT).
@@ -31,7 +31,7 @@ code handle errors.
 
 ## Key Implementation Details
 
-In addition to verifying that the necessary tools and files are installed, please ensure that they are 
+In addition to verifying that the necessary tools and files are installed, please ensure that they are
 configured correctly on your system. This sample shows the basic invocation and workflow for using dpct.
 
 
@@ -43,42 +43,66 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
-## Migrating the CUDA Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
+## Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
+## Migrating the CUDA* Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
 
 Building and running the CUDA sample is not required to migrate this project
 to a Data Parallel C++ project.
 
-> **NOTE:** Certain CUDA header files, referenced by the CUDA application 
-> source files to be migrated need to be accessible for the migration step.  
+> **NOTE:** Certain CUDA header files, referenced by the CUDA application
+> source files to be migrated need to be accessible for the migration step.
 > See the [Getting Started Guide][cuda-headers] for more details.
 
-[cuda-headers]: <https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.html#top_BEFORE_YOU_BEGIN>
+[cuda-headers]: <https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.htm>
 
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Command Line On a Linux* System
 
-1. Ensure your environment is configured to use the OneAPI tools.
 
-```sh
-$ source /opt/intel/oneapi/setvars.sh
-```
-
-2. Use dpct to migrate the CUDA code. The  migrated source code will be 
-   created in a new directory, by default named `dpct_output`. 
+1. Use dpct to migrate the CUDA code. The  migrated source code will be
+   created in a new directory, by default named `dpct_output`.
 
 ```sh
 # From the repo root directory:
 $ dpct --in-root=. src/vector_add.cu
 ```
 
-3. Inspect the migrated source code, address any `DPCT` warnings generated 
+2. Inspect the migrated source code, address any `DPCT` warnings generated
    by the Intel DPC++ Compatibility Tool, and verify the new program correctness.
 
 Warnings are printed to the console and added as comments in the migrated
 source. See the [Diagnostic Reference][diag-ref] for more information on what
 each warning means.
 
-[diag-ref]: <https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top/diagnostics-reference.html>
+[diag-ref]: <https://www.intel.com/content/www/us/en/develop/documentation/intel-dpcpp-compatibility-tool-user-guide/top/diagnostics-reference.html>
 
 This sample should generate the following warning:
 
@@ -89,7 +113,7 @@ warning: DPCT1003:0: Migrated API does not return error code. (*, 0) is inserted
 See the section titled **Addressing Warnings in Migrated Code** below to
 understand how to resolve the warnings.
 
-4. Copy the original `Makefile` into the `dpct_output` folder and update the
+3. Copy the original `Makefile` into the `dpct_output` folder and update the
    copy to build the migrated project using DPC++. Replace the CUDA
    configurations in that new `Makefile` with the following for use with DPC++:
 
@@ -100,15 +124,15 @@ SRCS = src/vector_add.dp.cpp
 
 # The remainder of the Makefile should work without changes.
 ```
-5. Switch to the migration directory with `cd dpct_output`
+4. Switch to the migration directory with `cd dpct_output`
 
-6. Build the migrated sample with the `make` command.
+5. Build the migrated sample with the `make` command.
 
-7. Run the migrated sample with the `make run` command. You should see a block
+6. Run the migrated sample with the `make run` command. You should see a block
    of even numbers, indicating the result of adding two vectors:
    `[1..N] + [1..N]`.
 
-8. Clean up the build with the `make clean` command.
+7. Clean up the build with the `make clean` command.
 
 
 ## Microsoft Visual Studio on Windows
@@ -187,3 +211,6 @@ lists a group of even numbers produced by the kernel code's execution of
 450 452 454 456 458 460 462 464 466 468 470 472 474 476 478 480
 482 484 486 488 490 492 494 496 498 500 502 504 506 508 510 512
 ```
+
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)

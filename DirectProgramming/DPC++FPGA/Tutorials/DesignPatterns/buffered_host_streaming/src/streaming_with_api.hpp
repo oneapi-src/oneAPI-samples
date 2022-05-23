@@ -115,25 +115,23 @@ void DoOneIterationAPI(queue& q, size_t buffers, size_t buffer_count,
   // therefore we can easily bound the computation of this kernel. In other
   // cases, this may not be possible and an infinite loop may be required (i.e.
   // read from the Producer pipe and produce to the Consumer pipe, forever).
-  auto kernel_event = q.submit([&](handler& h) {
-    h.single_task<APIKernel>([=] {
-      // process ALL of the possible data
-      for (size_t i = 0; i < total_count; i++) {
-        // read from the producer pipe
-        auto data = MyStreamer::ProducerPipe::read();
+  auto kernel_event = q.single_task<APIKernel>([=] {
+    // process ALL of the possible data
+    for (size_t i = 0; i < total_count; i++) {
+      // read from the producer pipe
+      auto data = MyStreamer::ProducerPipe::read();
 
-        // <<<<< your computation goes here! >>>>>
+      // <<<<< your computation goes here! >>>>>
 
-        // write to the consumer pipe
-        MyStreamer::ConsumerPipe::write(data);
-      }
-    });
+      // write to the consumer pipe
+      MyStreamer::ConsumerPipe::write(data);
+    }
   });
   
   start = high_resolution_clock::now();
 
   // Start the producer thread.
-  // The code in the lamda runs in a different thread and therefore does not
+  // The code in the lambda runs in a different thread and therefore does not
   // block the process of the 'main' thread.
   std::thread producer_thread([&] {
     size_t rep = 0;

@@ -6,6 +6,7 @@
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
+#include <oneapi/dpl/numeric>
 
 using namespace sycl;
 using namespace oneapi::dpl::execution;
@@ -22,7 +23,7 @@ int main() {
         buffer<int,1> buf(v.data(), range<1>(N));
         buffer<int,1> buf_res(result.data(), range<1>(N));
         
-        //oneDPL buffer iterators for both the input and the result vectors
+        //dpstd buffer iterators for both the input and the result vectors
         auto start_v = oneapi::dpl::begin(buf);
         auto end_v = oneapi::dpl::end(buf);
         auto start_res = oneapi::dpl::begin(buf_res);
@@ -30,11 +31,11 @@ int main() {
         
         //use std::fill to initialize the result vector
         std::fill(oneapi::dpl::execution::dpcpp_default,start_res, end_res, 0);  
-        //usage of dpl::maximum<> function call within the std::exclusive_scan function
+        //usage of dpstd::maximum<> function call within the std::exclusive_scan function
         std::exclusive_scan(oneapi::dpl::execution::dpcpp_default, start_v, end_v, start_res, int(0), oneapi::dpl::maximum<int>() );        
     }
     
     
-    for(int i = 0; i < result.size(); i++) std::cout << result[i] << std::endl;
+    for(int i = 0; i < result.size(); i++) std::cout << result[i] << "\n";
     return 0;
 }

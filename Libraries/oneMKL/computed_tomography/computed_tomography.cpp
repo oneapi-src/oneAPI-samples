@@ -94,15 +94,15 @@ typedef matrix<complex> matrix_c;
 sycl::event step1_fft_1d(matrix_r &radon_image,
                          descriptor_real &fft1d,
                          sycl::queue &main_queue,
-                         const sycl::vector_class<sycl::event> &deps = {});
+                         const std::vector<sycl::event> &deps = {});
 sycl::event step2_interpolation(matrix_r &result,
                                 matrix_r &radon_image,
                                 sycl::queue &main_queue,
-                                const sycl::vector_class<sycl::event> &deps = {});
+                                const std::vector<sycl::event> &deps = {});
 sycl::event step3_ifft_2d(matrix_r &fhat,
                           descriptor_complex &ifft2d,
                           sycl::queue &main_queue,
-                          const sycl::vector_class<sycl::event> &deps = {});
+                          const std::vector<sycl::event> &deps = {});
 
 // Support functions
 void bmp_read(matrix_r &image, std::string fname);
@@ -190,7 +190,7 @@ int main(int argc, char **argv)
 sycl::event step1_fft_1d(matrix_r &radon,
                          descriptor_real &fft1d,
                          sycl::queue &main_queue,
-                         const sycl::vector_class<sycl::event> &deps)
+                         const std::vector<sycl::event> &deps)
 {
     std::int64_t p   = radon.h;
     std::int64_t q2  = radon.w - 1; // w = 2*q + 1
@@ -220,7 +220,7 @@ sycl::event step1_fft_1d(matrix_r &radon,
 sycl::event step2_interpolation(matrix_r &fhat,
                                 matrix_r &radon_image,
                                 sycl::queue &main_queue,
-                                const sycl::vector_class<sycl::event> &deps)
+                                const std::vector<sycl::event> &deps)
 {
     // radonImage is the result of r2c FFT
     // rt(pp,:) contains frequences 0...q
@@ -290,7 +290,7 @@ sycl::event step2_interpolation(matrix_r &fhat,
 sycl::event step3_ifft_2d(matrix_r &fhat,
                           descriptor_complex &ifft2d,
                           sycl::queue &main_queue,
-                          const sycl::vector_class<sycl::event> &deps)
+                          const std::vector<sycl::event> &deps)
 {
     // Configure descriptor
     std::int64_t strides[3] = {0, (fhat.ldw) / 2, 1}; // fhat.ldw/2, in complex'es
@@ -341,6 +341,12 @@ void bmp_read(matrix_r &image, std::string fname)
     if (header.bi_compression)
         die("%s is compressed bmp\n", fname);
 
+    if (header.bi_height <= 0 || header.bi_width <= 0)
+        die("image %s has zero size\n", fname);
+
+    if (header.bi_height > 65536 || header.bi_width > 65536)
+        die("image %s too large\n", fname);
+
     image.allocate(header.bi_height, header.bi_width, header.bi_width);
     if (!image.data)
         die("no memory to read %s\n", fname);
@@ -354,12 +360,18 @@ void bmp_read(matrix_r &image, std::string fname)
             struct {
                 unsigned char b, g, r;
             } pixel;
+
             fp.read((char *)(&pixel), 3);
-            REAL_DATA gray               = (255 * 3.0 - pixel.r - pixel.g - pixel.b) / 255;
+
+            REAL_DATA gray = (255 * 3.0 - pixel.r - pixel.g - pixel.b) / 255;
             image_data[i * image.ldw + j] = gray;
         }
         fp.seekg((4 - 3 * image.w % 4) % 4, std::ios_base::cur);
     }
+
+    if (!fp)
+        die("error reading %s\n", fname);
+
     fp.close();
 }
 

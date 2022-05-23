@@ -12,9 +12,15 @@ For comprehensive instructions regarding DPC++ Programming, go to https://softwa
 
 
 ## Purpose
-This sample creates both dense and sparse histograms using oneDPL APIs, on an input array of 1000 elements with values chosen randomly berween 0 and 9. To differentiate between sparse and dense histogram, we make sure that one of the values never occurs in the input array, i.e. one bin will have always have 0 value.
 
-For the dense histogram all the bins(including the zero-size bins) are stored, whereas for the sparse algorithm only non-zero sized bins are stored.
+This sample creates both dense and sparse histograms using oneDPL APIs, on an
+input array of 1000 elements with values chosen randomly berween 0 and 9. To
+differentiate between sparse and dense histogram, we make sure that one of the
+values never occurs in the input array, i.e. one bin will have always have 0
+value.
+
+For the dense histogram all the bins(including the zero-size bins) are stored,
+whereas for the sparse algorithm only non-zero sized bins are stored.
 
 The computations are performed using Intel® oneAPI DPC++ Library (oneDPL).
 
@@ -31,8 +37,42 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the histogram program for CPU and GPU
 
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
+
 ### Running Samples In DevCloud
-Running samples in the Intel DevCloud requires you to specify a compute node. For specific instructions, jump to [Run the Histogram sample on the DevCloud](#run-histogram-on-devcloud)
+
+Running samples in the Intel DevCloud requires you to specify a compute node.
+For specific instructions, jump to
+[Run the Histogram sample on the DevCloud](#run-histogram-on-devcloud)
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 Perform the following steps:
@@ -63,6 +103,14 @@ If you see the following error message when compiling this sample:
 Error 'dpc_common.hpp' file not found
 ```
 You need to add the following directory to the list of include folders, that are required by your project, in your project's Visual Studio project property panel. The missing include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ## Running the Sample
 

@@ -11,25 +11,6 @@
 using namespace sycl;
 
 //
-// A single row of the SUPPLIER table
-// with a subset of the columns (needed for this query)
-//
-class SupplierRow {
- public:
-  SupplierRow() {}
-  // SupplierRow()
-  //    : valid(false), suppkey(0), nationkey(0) {}
-  SupplierRow(bool v_valid, DBIdentifier v_suppkey, unsigned char v_nationkey)
-      : valid(v_valid), suppkey(v_suppkey), nationkey(v_nationkey) {}
-
-  DBIdentifier PrimaryKey() const { return suppkey; }
-
-  bool valid;
-  DBIdentifier suppkey;
-  unsigned char nationkey;
-};
-
-//
 // A single row of the PARTSUPPLIER table
 // with a subset of the columns (needed for this query)
 //
@@ -70,11 +51,11 @@ class SupplierPartSupplierJoined {
 
   DBIdentifier PrimaryKey() const { return partkey; }
 
-  void Join(const SupplierRow& s_row, const PartSupplierRow& ps_row) {
+  void Join(const unsigned char nation_key, const PartSupplierRow& ps_row) {
     partkey = ps_row.partkey;
-    suppkey = s_row.suppkey;
+    suppkey = ps_row.suppkey;
     supplycost = ps_row.supplycost;
-    nationkey = s_row.nationkey;
+    nationkey = nation_key;
   }
 
   bool valid;

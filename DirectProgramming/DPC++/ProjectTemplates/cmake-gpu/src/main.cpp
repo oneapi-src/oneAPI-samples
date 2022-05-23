@@ -6,35 +6,29 @@
 
 // located in $ONEAPI_ROOT/compiler/latest/linux/include/sycl/
 #include <CL/sycl.hpp>
-#include <cstdlib>
 #include <iostream>
 
 using namespace cl::sycl;
 
-// declare the kernel name as a global to reduce name mangling
-class ExampleKernel;
+static const int num = 16;
 
 int main() {
   // create GPU device selector
   gpu_selector device_selector;
 
-  // create a buffer
-  constexpr int num = 16;
-  auto R = range<1>{ num };
-  buffer<int> A{ R };
-
   // create a kernel
-  queue q{device_selector };
-  q.submit([&](handler& h) {
-    auto out = A.get_access<access::mode::write>(h);
-    h.parallel_for<ExampleKernel>(R, [=](id<1> idx) { out[idx] = idx[0]; });
-  });
+  queue q{device_selector};
 
-  // consume result
-  auto result = A.get_access<access::mode::read>();
-  for (int index = 0; index < num; ++index) {
-    std::cout << result[index] << "\n";
-  }
+  // USM allocation using malloc_shared
+  int *data = malloc_shared<int>(num, q);
+
+  q.submit([&](handler& h) {
+    h.parallel_for(range<1>{num}, [=](id<1> idx) {data[idx] = idx[0];});
+  }).wait();
+
+  // print output
+  for (int i = 0; i < num; i++) std::cout << data[i] << std::endl;
+  free(data, q);
 
   return (EXIT_SUCCESS);
 }

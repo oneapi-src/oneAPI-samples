@@ -1,12 +1,12 @@
 ﻿# `Prefix Sum` Sample
 
-This code sample demonstrates the implementation of parallel prefix sum using Intel$reg; oneAPI Data Parallel C++ (DPC++) to
+This code sample demonstrates the implementation of parallel prefix sum using Data Parallel C++ (DPC++) to
 offload the computation to a GPU. In this implementation, a random sequence of 2**n elements is given
 (n is a positive number) as input. The algorithm computes the prefix sum in parallel. The result sequence is
 in ascending order.
 
 For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
-  
+
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04
@@ -50,13 +50,26 @@ compatible GPU is not detected.
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command
 groups.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `PrefixSum` Program for CPU and GPU
+
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -66,9 +79,26 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 FPGA) as well as whether to run in batch or interactive mode. For more information, see the Intel® oneAPI
 Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
 
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
-1. Build the program using the following `cmake` commands. 
-    ``` 
+1. Build the program using the following `cmake` commands.
+    ```
     $ cd PrefixSum
     $ mkdir build
     $ cd build
@@ -86,6 +116,15 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
     make clean
     ```
 
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 - Build the program using VS2017 or VS2019
     - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
@@ -98,16 +137,18 @@ Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/ba
 
 ## Running the sample
 ### Application Parameters
-	
+
         Usage: PrefixSum <exponent> <seed>
 
-Where an exponent is a positive number. The according length of the sequence is 2**exponent.
+Where an exponent is a positive number. The according length of the sequence is
+2**exponent.
 
 Seed is the seed used by the random generator to generate the randomness.
 
-The sample offloads the computation to GPU and then performs the verification of the results in the CPU.
-The results are verified if yk = yk-1 + xk the original compared. If the results are matched, and
-the ascending order is verified, the application will display a “Success!” message.
+The sample offloads the computation to GPU and then performs the verification
+of the results in the CPU. The results are verified if yk = yk-1 + xk the
+original compared. If the results are matched, and the ascending order is
+verified, the application will display a “Success!” message.
 
 ### Example of Output
 ```

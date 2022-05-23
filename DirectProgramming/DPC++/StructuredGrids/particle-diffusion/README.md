@@ -5,14 +5,14 @@ This code sample implements a simple example of a Monte Carlo simulation of wate
 
 The simulation model consists of water molecules moving through a 2D array of cells in a tissue sample (water molecule diffusion). In this code sample, we use a uniform rectilinear 2D array of digital cells, where cells are spaced regularly along each direction and are represented by circles.
 
-Water molecule diffusion is simulated by defining a number of particles P (simulated water molecules) at random positions in the grid, followed by random walks of these particles in the ensemble of cells in the grid. During the random walks, particles can move randomly inside or outside simulated cells. The positions of these particles at every time step in the simulation, the number of times they go through a cell membrane (in/out), and the time every particle spends inside and outside cells can be recorded. These measurements are a simple example of useful information that can be used to simulate an MR signal. 
+Water molecule diffusion is simulated by defining a number of particles P (simulated water molecules) at random positions in the grid, followed by random walks of these particles in the ensemble of cells in the grid. During the random walks, particles can move randomly inside or outside simulated cells. The positions of these particles at every time step in the simulation, the number of times they go through a cell membrane (in/out), and the time every particle spends inside and outside cells can be recorded. These measurements are a simple example of useful information that can be used to simulate an MR signal.
 
 For comprehensive instructions regarding DPC++ Programming, go to
 https://software.intel.com/en-us/oneapi-programming-guide
 and search based on relevant terms noted in the comments.
 
 For more information and details: https://software.intel.com/en-us/articles/vectorization-of-monte-carlo-simulation-for-diffusion-weighted-imaging-on-intel-xeon
-  
+
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux Ubuntu 18.04; Windows* 10 or Windows* Server 2017
@@ -26,22 +26,22 @@ Performance number tabulation [if applicable]
 | motionsim sample                  | Performance data
 |:---                               |:---
 | Scalar baseline -O2               | 1.0
-| SYCL                              | 
-| OpenMP offload                    | 
- 
+| SYCL                              |
+| OpenMP offload                    |
+
 ## Key Implementation Details
 
-SYCL implementation explained. 
+SYCL implementation explained.
 
 * DPC++ queues (including device selectors and exception handlers).
-* DPC++ buffers and accessors.  
+* DPC++ buffers and accessors.
 * The ability to call a function inside a kernel definition and pass accessor arguments as pointers.
 * Optimization using API-based programming and Atomic Functions.
 
 SYCL implementation is explained in further detail in the source code.
 
 ## How Other Tools (Intel Libraries or Intel Tools) are used
-Intel® Math Kernel Library (MKL) is used for random number generation on the CPU and device. Precise generators are used within this library to ensure that the numbers generated on the CPU and device are relatively equivalent (relative accuracy 10E-07).  
+Intel® Math Kernel Library (MKL) is used for random number generation on the CPU and device. Precise generators are used within this library to ensure that the numbers generated on the CPU and device are relatively equivalent (relative accuracy 10E-07).
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -51,17 +51,49 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the `particle-diffusion` Program for CPU and GPU
 
-### Include Files  
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your 
-development system".  
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
+### Include Files
+The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your
+development system".
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI 
-Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+
+If running a sample in the Intel DevCloud, remember that you must specify the
+compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
+For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
+(https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ## Build and run
 
-### On a Windows\* System Using NMAKE 
+### On a Windows\* System Using NMAKE
 
 Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 
@@ -81,21 +113,21 @@ Run executable with select parameters:
 ##### 3b. Run Using Binary File (Custom Parameters)
 The following table describes each command line parameter (applies to Linux\* based builds only)
 
-|    Flag and Argument          |    Description               |    Range of Possible Values    |    Default    
-|:---                           |:---                          |:---                            |:---    
-| `-i num_iterations`           | Number of iterations         | [1, &#8734;]                   | 10000    
-| `-p num_particles`            | Number of particles          | [1, &#8734;]                   | 256    
+|    Flag and Argument          |    Description               |    Range of Possible Values    |    Default
+|:---                           |:---                          |:---                            |:---
+| `-i num_iterations`           | Number of iterations         | [1, &#8734;]                   | 10000
+| `-p num_particles`            | Number of particles          | [1, &#8734;]                   | 256
 | `-g grid_size`                | Size of square grid          | [1, &#8734;]                   | 22
-| `-r rng_seed`                 | Random number generator seed | [-&#8734;, &#8734;]            | 777    
-| `-c cpu_flag`                 | Turns cpu comparison on/off  | [1 \| 0]                       | 0    
-| `-o output_flag`              | Turns grid output on/off     | [1 \| 0]                       | 1    
-| `-h`                          | Help message.                |                                |    
+| `-r rng_seed`                 | Random number generator seed | [-&#8734;, &#8734;]            | 777
+| `-c cpu_flag`                 | Turns cpu comparison on/off  | [1 \| 0]                       | 0
+| `-o output_flag`              | Turns grid output on/off     | [1 \| 0]                       | 1
+| `-h`                          | Help message.                |                                |
 
-You can run the program using the above parameters with the application binary:  
+You can run the program using the above parameters with the application binary:
 
     $ ./src/motionsim.exe
 
-Example usage:  
+Example usage:
 
     $ ./src/motionsim.exe -i 1000 -p 200 -g 30 -r 777 -c 1 -o 0
 
@@ -213,3 +245,7 @@ Note:
     Built target run
     $
 
+## Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility
+for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)

@@ -18,11 +18,11 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | Component & Segment | [Features-and-Functionality](Features-and-Functionality) | Demonstrate features from components like Int8 inference in Model Zoo.
 | Reference | [End-to-end-Workloads](End-to-end-Workloads)                     | AI End-to-end reference workloads with real world data.
 
-# Using Samples in Intel oneAPI DevCloud
+# Using Samples in Intel® DevCloud for oneAPI
 
 ## General DevCloud Usage Instructions:
 You can use AI Kit samples in
-the [Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/) environment in the following ways:
+the [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get-started/) environment in the following ways:
 * Log in to a DevCloud system via SSH
 * Launch a JupyterLab server and run Jupyter Notebooks from your web browser.   
 > Please refer to [DevCloud README](DevCloudREADME.md) for more details.
@@ -30,6 +30,28 @@ the [Intel oneAPI DevCloud](https://devcloud.intel.com/oneapi/get-started/) envi
 * use `git clone` to get a full copy of samples repository, or
 * use the `oneapi-cli` tool to download specific sample.
 > Users could refer to [the Download Samples using the oneAPI CLI Samples Browser section](https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-oneapi-hpc-linux/top/run-a-sample-project-using-the-command-line.html).
+
+## Sanity Check
+To verify the activated environment, navigate to the AI-and-Analytics
+ directory and run the `version_check.py` script:
+   
+```bash
+python version_check.py
+```
+### Example of Output
+
+Output from TensorFlow Environment
+```
+TensorFlow version:  2.6.0
+MKL enabled : True
+```
+
+Output from PyTorch Environment
+```
+PyTorch Version:  1.8.0a0+37c1f4a
+mkldnn : True,  mkl : True, openmp : True
+```
+
 ## How to submit a workload to a specific architecture
 * check the available nodes with your DevCloud account 
 ```

@@ -9,8 +9,8 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | A design pattern to generate a array of pipes in DPC++ <br> Static loop unrolling through template metaprogramming
 | Time to complete                  | 15 minutes
 
@@ -25,20 +25,20 @@ This tutorial provides a convenient pair of header files defining an abstraction
 
 ### Example 1: A simple array of pipes
 
-To create an array of pipes, include the top-level header (from this code sample) in your design:
+To create an array of pipes, include the pipe_utils.hpp header from the DirectProgramming/DPC++FPGA/include/ directory in your design:
 
 ```c++
-#include "pipe_array.hpp"
+#include "pipe_utils.hpp"
 ```
 
 As with regular pipes, an array of pipes needs template parameters for an ID, for the `min_capacity` of each pipe, and each pipe's data type. An array of pipes additionally requires one or more template parameters to specify the array size. The following code declares a one dimensional array of 10 pipes, each with `capacity=32`, that operate on `int` values.
 
 ```c++
-using MyPipeArray = PipeArray<     // Defined in "pipe_array.h".
+using MyPipeArray = PipeArray<     // Defined in "pipe_utils.hpp".
     class MyPipe,                  // An identifier for the pipe.
     int,                           // The type of data in the pipe.
     32,                            // The capacity of each pipe.
-    10,                            // array dimension.
+    10                             // array dimension.
     >;
 ```
 
@@ -50,7 +50,7 @@ Indexing inside a pipe array can be done via the `PipeArray::PipeAt` type alias,
 MyPipeArray::PipeAt<3>::write(17);
 auto x = MyPipeArray::PipeAt<3>::read();
 ```
-The template parameter `<3>` identifies a specific pipe within the array of pipes.  The index of the pipe being accessed *must* be determinable at compile time. 
+The template parameter `<3>` identifies a specific pipe within the array of pipes.  The index of the pipe being accessed *must* be determinable at compile time.
 
 In most cases, we want to use an array of pipes so that we can iterate over them in a loop. To respect the requirement that all pipe indices are uniquely determinable at compile time, we must use a static form of loop unrolling based on C++ templates. A simple example is shown in the code snippet:
 
@@ -60,11 +60,11 @@ Unroller<0, 10>::Step([](auto i) {
   MyPipeArray::PipeAt<i>::write(17);
 });
 ```
-While this may initially feel foreign to those unaccustomed to C++ template metaprogramming, this is a simple and powerful pattern common to many C++ libraries. It is easy to reuse. In addition to `pipe_array.hpp`, this code sample includes a simple header file `unroller.hpp`, which implements the  `Unroller` functionality.
+While this may initially feel foreign to those unaccustomed to C++ template metaprogramming, this is a simple and powerful pattern common to many C++ libraries. It is easy to reuse. This code sample includes a simple header file `unroller.hpp`, which implements the  `Unroller` functionality.
 
 ### Example 2: A 2D array of pipes
 
-This code sample defines a `Producer` kernel that reads data from host memory and forwards this data into a two dimensional pipe matrix. 
+This code sample defines a `Producer` kernel that reads data from host memory and forwards this data into a two dimensional pipe matrix.
 
 The following code snippet creates a two dimensional pipe array.
 ``` c++
@@ -72,7 +72,7 @@ constexpr size_t kNumRows = 2;
 constexpr size_t kNumCols = 2;
 constexpr size_t kDepth = 2;
 
-using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_array.h".
+using ProducerToConsumerPipeMatrix = PipeArray<  // Defined in "pipe_utils.hpp".
     class ProducerConsumerPipe,                  // An identifier for the pipe.
     uint64_t,                                    // The type of data in the pipe.
     kDepth,                                      // The capacity of each pipe.
@@ -99,7 +99,7 @@ h.single_task<ProducerTutorial>([=]() {
 });
 ```
 
-The code sample also defines an array of `Consumer` kernels that each read from a unique pipe in `ProducerToConsumerPipeMatrix`, process the data, and write the result to the host memory. 
+The code sample also defines an array of `Consumer` kernels that each read from a unique pipe in `ProducerToConsumerPipeMatrix`, process the data, and write the result to the host memory.
 
 ```c++
 // The consumer kernel reads from a single pipe, determined by consumer_id
@@ -122,8 +122,8 @@ The host must thus enqueue the producer kernel and `kNumRows * kNumCols` separat
   // Enqueue producer
   buffer<uint64_t,1> producer_buffer(producer_input);
   Producer(q, producer_buffer);
-  
-  // Use template-based unroll to enqueue multiple consumers    
+
+  // Use template-based unroll to enqueue multiple consumers
   std::vector<buffer<uint64_t,1>> consumer_buffers;
   Unroller<0, kNumberOfConsumers>::Step([&](auto consumer_id) {
     consumer_buffers.emplace_back(consumer_output[consumer_id].data(), items_per_consumer);
@@ -136,13 +136,25 @@ The host must thus enqueue the producer kernel and `kNumRows * kNumCols` separat
 * A design pattern to generate an array of pipes in DPC++
 * Static loop unrolling through template metaprogramming
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `pipe_array` Tutorial
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
@@ -152,6 +164,23 @@ If running a sample in the Intel DevCloud, remember that you must specify the ty
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
 
 1. Generate the `Makefile` by running `cmake`.
@@ -159,7 +188,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
     ```
     cmake ..
    ```
@@ -175,18 +204,18 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
       ```
       make fpga_emu
       ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      make report
-     ``` 
-   * Compile for FPGA hardware (longer compile time, targets FPGA device): 
+     ```
+   * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
-     ``` 
+     ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/pipe_array.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
@@ -196,7 +225,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
@@ -212,28 +241,40 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
      ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      nmake report
-     ``` 
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
-     ``` 
+     ```
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
- 
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
+*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+
+### Troubleshooting
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+
  ### In Third-Party Integrated Development Environments (IDEs)
 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
 
 
 ## Examining the Reports
-Locate `report.html` in the `pipe_array_report.prj/reports/` or `pipe_array_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the `pipe_array_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
 You can visualize the kernels and pipes generated by looking at the "System Viewer" section of the report. However, it is recommended that you first reduce the array dimensions `kNumRows` and `kNumCols` to small values (2 or 3) to facilitate visualization.
 

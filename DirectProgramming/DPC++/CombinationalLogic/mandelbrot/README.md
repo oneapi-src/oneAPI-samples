@@ -1,6 +1,9 @@
 ﻿# `Mandelbrot` Sample
 
-Mandelbrot is an infinitely complex fractal patterning that is derived from a simple formula.  It demonstrates using DPC++ for offloading computations to a GPU (or other devices) and shows how processing time can be optimized and improved with parallelism.
+Mandelbrot is an infinitely complex fractal patterning that is derived from a
+simple formula. It demonstrates using DPC++ for offloading computations to a
+GPU (or other devices) and shows how processing time can be optimized and
+improved with parallelism.
 
 For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
@@ -13,46 +16,158 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 | Time to complete                  | 15 minutes
 
 ## Purpose
-Mandelbrot is a DPC++ application that generates a fractal image by initializing a matrix of 512 x 512, where the computation at each point (pixel) is entirely independent of the computation at other points. The sample includes both parallel and serial calculation of the set, allowing for a direct comparison of results. The parallel implementation can demonstrate the use of Unified Shared Memory (USM) or buffers. You can modify parameters such as the number of rows, columns, and iterations to evaluate the difference in performance and load between USM and buffers. This is further described at the end of this document in the "Running the Sample" section.
 
-The code will attempt to execute on an available GPU and fallback to the system's CPU if a compatible GPU is not detected.  The compilation device is displayed in the output along with elapsed time to render the Mandelbrot image. This helps compare different offload implementations based on the complexity of the computation. 
+Mandelbrot is a DPC++ application that generates a fractal image by
+initializing a matrix of 512 x 512, where the computation at each point (pixel)
+is entirely independent of the computation at other points. The sample includes
+both parallel and serial calculation of the set, allowing for a direct
+comparison of results. The parallel implementation can demonstrate the use of
+Unified Shared Memory (USM) or buffers. You can modify parameters such as the
+number of rows, columns, and iterations to evaluate the difference in
+performance and load between USM and buffers. This is further described at the
+end of this document in the "Running the Sample" section.
 
-## Key Implementation Details 
-The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
- 
-## License  
+The code will attempt to execute on an available GPU and fallback to the
+system's CPU if a compatible GPU is not detected. The compilation device is
+displayed in the output along with elapsed time to render the Mandelbrot image.
+This helps compare different offload implementations based on the complexity of
+the computation.
+
+## Key Implementation Details
+
+The basic DPC++ implementation explained in the code includes device selector,
+buffer, accessor, kernel, and command groups.
+
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+
+## Setting Environment Variables
+
+
+For working at a Command-Line Interface (CLI), the tools in the oneAPI toolkits
+are configured using environment variables. Set up your CLI environment by
+sourcing the ``setvars`` script every time you open a new terminal window. This
+will ensure that your compiler, libraries, and tools are ready for development.
+
+
+### Linux
+Source the script from the installation location, which is typically in one of
+these folders:
+
+
+For root or sudo installations:
+
+
+  ``. /opt/intel/oneapi/setvars.sh``
+
+
+For normal user installations:
+
+  ``. ~/intel/oneapi/setvars.sh``
+
+**Note:** If you are using a non-POSIX shell, such as csh, use the following command:
+
+     ``$ bash -c 'source <install-dir>/setvars.sh ; exec csh'``
+
+If environment variables are set correctly, you will see a confirmation
+message.
+
+If you receive an error message, troubleshoot the problem using the
+Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
+checks to find missing dependencies and permissions errors.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+
+**Note:** [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html)
+    can also be used to set up your development environment.
+    The modulefiles scripts work with all Linux shells.
+
+
+**Note:** If you wish to fine
+    tune the list of components and the version of those components, use
+    a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html)
+    to set up your development environment.
+
+### Windows
+
+Execute the  ``setvars.bat``  script from the root folder of your
+oneAPI installation, which is typically:
+
+
+  ``"C:\Program Files (x86)\Intel\oneAPI\setvars.bat"``
+
+
+For Windows PowerShell* users, execute this command:
+
+  ``cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'``
+
+
+If environment variables are set correctly, you will see a confirmation
+message.
+
+If you receive an error message, troubleshoot the problem using the
+Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
+checks to find missing dependencies and permissions errors.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
 ## Building the `Mandelbrot` Program for CPU and GPU
 
-> Note: if you have not already done so, set up your CLI 
-> environment by sourcing  the setvars script located in 
-> the root of your oneAPI installation. 
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh  
-> Linux User: . ~/intel/oneapi/setvars.sh  
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
 > Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 
 ### Include Files
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
 
 ### Running Samples In DevCloud
-Running samples in the Intel DevCloud requires you to specify a compute node. For specific instructions, jump to [Run the sample in the DevCloud](#run-on-devcloud)
+Running samples in the Intel DevCloud requires you to specify a compute node.
+For specific instructions, jump to [Run the sample in the DevCloud](#run-on-devcloud)
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to
+this readme for instructions on how to build and run a sample.
+
 
 ### On a Linux* System
+
 Perform the following steps:
-1. Build the program using the following `cmake` commands. 
-``` 
+1. Build the program using the following `cmake` commands.
+```
 $ mkdir build
 $ cd build
 $ cmake ..
 $ make
 ```
 
-> Note: by default, executables are created for both USM and buffers. You can build individually with the following: 
+> Note: by default, executables are created for both USM and buffers. You can build individually with the following:
 >    Create buffers executable: make mandelbrot
 >    Create USM executable: make mandelbrot_usm
 
@@ -67,6 +182,13 @@ $ make
     make clean
     ```
 
+If an error occurs, you can get more details by running `make` with the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 - Build the program using VS2017 or VS2019
     - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
@@ -79,19 +201,19 @@ $ make
 
 
 ## Running the Sample
-### Application Parameters 
+### Application Parameters
 You can modify the Mandelbrot parameters from within mandel.hpp. The configurable parameters include:
-    row_size = 
+    row_size =
     col_size =
     max_iterations =
     repetitions =
-The default row and column size are 512.  Max interatins and repetitions are both 100.  By adjusting the parameters, you can observe how the performance varies using the different offload techniques.  
+The default row and column size are 512.  Max interatins and repetitions are both 100.  By adjusting the parameters, you can observe how the performance varies using the different offload techniques.
 > Note: If the values drop below 128 for row and column, the output is limited to just text in the output window.
 
 ### Example of Output
 ```
 Platform Name: Intel(R) OpenCL HD Graphics
-  Platform Version: OpenCL 2.1 
+  Platform Version: OpenCL 2.1
        Device Name: Intel(R) Gen9 HD Graphics NEO
     Max Work Group: 256
  Max Compute Units: 24
@@ -187,7 +309,7 @@ You should see output similar to this:
 
 ```
 Platform Name: Intel(R) OpenCL HD Graphics
-  Platform Version: OpenCL 2.1 
+  Platform Version: OpenCL 2.1
        Device Name: Intel(R) Gen9 HD Graphics NEO
     Max Work Group: 256
  Max Compute Units: 24

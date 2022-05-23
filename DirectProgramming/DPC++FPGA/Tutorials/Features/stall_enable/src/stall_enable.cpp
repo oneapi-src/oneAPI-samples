@@ -1,8 +1,3 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
@@ -40,11 +35,10 @@ static WorkType RealWork(WorkType a, WorkType b) {
   return a;
 }
 
-typedef accessor<WorkType, 1, access::mode::read, access::target::global_buffer>
-    ReadAccessor;
-typedef accessor<WorkType, 1, access::mode::write,
-                 access::target::global_buffer>
-    WriteAccessor;
+using ReadAccessor =
+  accessor<WorkType, 1, access::mode::read, access::target::device>;
+using WriteAccessor =
+  accessor<WorkType, 1, access::mode::write, access::target::device>;
 
 static void Work(const ReadAccessor &vec_a, const ReadAccessor &vec_b,
                  const WriteAccessor &vec_res) {
@@ -77,13 +71,14 @@ void DoSomeWork(const device_selector &selector, const WorkVec &vec_a,
       // accessor arguments won't alias (i.e. non-overlapping memory regions).
 #ifdef STALL_FREE
         h.single_task<class KernelComputeStallFree>(
-                                         [=]() [[intel::kernel_args_restrict]] {
+            [=]() [[intel::kernel_args_restrict]] {
           // Run using a function with stall free clusters
           Work(accessor_vec_a, accessor_vec_b, accessor_res);
         });
 #else // STALL_FREE
         h.single_task<class KernelComputeStallEnable>(
-                                         [=]() [[intel::kernel_args_restrict, intel::use_stall_enable_clusters]] {
+            [=]() [[intel::kernel_args_restrict,
+                    intel::use_stall_enable_clusters]] {
           // Run using a function with stall enable clusters
           Work(accessor_vec_a, accessor_vec_b, accessor_res);
         });
@@ -98,7 +93,7 @@ void DoSomeWork(const device_selector &selector, const WorkVec &vec_a,
 
   } catch (exception const &exc) {
     std::cerr << "Caught synchronous SYCL exception:\n" << exc.what() << '\n';
-    if (exc.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (exc.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

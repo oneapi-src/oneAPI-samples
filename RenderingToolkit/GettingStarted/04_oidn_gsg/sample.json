@@ -1,0 +1,56 @@
+{
+  "guid": "41F82C06-A9FA-4521-B87A-8F7304CB6631",
+  "name": "Intel Open Image Denoise Getting Started",
+  "categories": ["Toolkit/oneAPI Libraries/Open Image Denoise"],
+  "description": "This introductory 'hello rendering toolkit' sample program demonstrates how to denoise a raytraced image with Intel Open Image Denoise",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","rkcommon"],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "Intel_OIDN_oidnDenoise_lin",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+		    "cp ../accumulatedFrameCpp.pfm .",
+                    "./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
+                 ]
+                 }
+        ],
+        "windows":[
+                {
+                "id": "Intel_OIDN_oidnDenoise_win",
+                "steps":[
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . --config Release",
+                    "cd Release",
+		    "copy ..\\..\\accumulatedFrameCpp.pfm .",
+                    ".\\oidnDenoise.exe -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
+                ]
+
+                }
+        ],
+        "darwin": [
+                {
+                "id": "Intel_OIDN_oidnDenoise_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+		    "cp ../accumulatedFrameCpp.pfm .",
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib && ./oidnDenoise -hdr accumulatedFrameCpp.pfm -o denoised.pfm"
+                 ]
+                 }
+        ]
+
+
+  }
+}

@@ -20,8 +20,12 @@ endif()
 # this tutorial requires USM host allocations. Check the BSP name (which should contain the text 'usm')
 # to ensure the BSP has the required support. Allow the user to define USM_HOST_ALLOCATIONS_ENABLED
 # to override this check (e.g., cmake .. -DUSM_HOST_ALLOCATIONS_ENABLED=1)
-if(NOT FPGA_BOARD MATCHES ".usm.*" AND NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED)
-    message(FATAL_ERROR "This tutorial requires a BSP that has USM host allocations enabled")
+if(NOT FPGA_BOARD MATCHES ".usm.*" AND (NOT DEFINED USM_HOST_ALLOCATIONS_ENABLED OR USM_HOST_ALLOCATIONS_ENABLED STREQUAL "0"))
+    message(FATAL_ERROR "ERROR: This tutorial requires a BSP that has USM host allocations enabled.")
+endif()
+
+if (USM_HOST_ALLOCATIONS_ENABLED)
+    message(STATUS "USM_HOST_ALLOCATIONS_ENABLED set manually!")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
@@ -33,9 +37,9 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga -Wall -DFPGA_EMULATOR ${DEVICE_FLAG}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -Wall -DFPGA_EMULATOR ${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga ${DEVICE_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${DEVICE_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Wall -Xshardware -Xshyper-optimized-handshaking=off -Xsboard=${FPGA_BOARD} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 

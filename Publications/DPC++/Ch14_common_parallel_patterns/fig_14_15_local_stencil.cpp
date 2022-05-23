@@ -40,14 +40,13 @@ int main() {
       range<2> local_range(B, B);
       range<2> tile_size = local_range + range<2>(2, 2); // Includes boundary cells
       auto tile = local_accessor<float, 2>(tile_size, h);
-
       // Compute the average of each cell and its immediate neighbors
-      id<2> offset(1, 1);
       h.parallel_for(
-          nd_range<2>(stencil_range, local_range, offset), [=](nd_item<2> it) {
+          nd_range<2>(stencil_range, local_range), [=](nd_item<2> it) {
             // Load this tile into work-group local memory
             id<2> lid = it.get_local_id();
             range<2> lrange = it.get_local_range();
+
             for (int ti = lid[0]; ti < B + 2; ti += lrange[0]) {
               int gi = ti + B * it.get_group(0);
               for (int tj = lid[1]; tj < B + 2; tj += lrange[1]) {
@@ -58,8 +57,8 @@ int main() {
             it.barrier(access::fence_space::local_space);
 
             // Compute the stencil using values from local memory
-            int gi = it.get_global_id(0);
-            int gj = it.get_global_id(1);
+            int gi = it.get_global_id(0) + 1;
+            int gj = it.get_global_id(1) + 1;
 
             int ti = it.get_local_id(0) + 1;
             int tj = it.get_local_id(1) + 1;

@@ -101,7 +101,7 @@ void RunKernel(const device_selector &selector,
 
           // Fully unroll the accumulator loop.
           // All of the unrolled operations can be freely scheduled by the
-          // oneAPI DPC++ compiler's FPGA backend as part of a common data pipeline.
+          // oneAPI DPC++ Compiler's FPGA backend as part of a common data pipeline.
           #pragma unroll
           for (size_t j = 0; j < kSize; j++) {
 #ifdef USE_FPGA_REG
@@ -128,7 +128,7 @@ void RunKernel(const device_selector &selector,
 
           // Rotate the values of the coefficient array.
           // The loop is fully unrolled. This is a canonical code structure;
-          // the oneAPI DPC++ compiler's FPGA backend infers a shift register here.
+          // the oneAPI DPC++ Compiler's FPGA backend infers a shift register here.
           int tmp = coeff[0];
           #pragma unroll
           for (size_t j = 0; j < kSize - 1; j++) {
@@ -161,7 +161,7 @@ void RunKernel(const device_selector &selector,
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

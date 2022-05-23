@@ -14,8 +14,10 @@
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-// include the merge sort kernel header
 #include "merge_sort.hpp"
+
+// Included from DirectProgramming/DPC++FPGA/include/
+#include "constexpr_math.hpp"
 
 using namespace sycl;
 using namespace std::chrono;
@@ -38,7 +40,7 @@ constexpr bool kUseUSMHostAllocation = false;
 #endif
 constexpr size_t kMergeUnits = MERGE_UNITS;
 static_assert(kMergeUnits > 0);
-static_assert(impu::math::IsPow2(kMergeUnits));
+static_assert(fpga_tools::IsPow2(kMergeUnits));
 
 // The width of the sort, which must be a power of 2
 // This can be set by defining the preprocessor macro 'SORT_WIDTH'
@@ -48,7 +50,7 @@ static_assert(impu::math::IsPow2(kMergeUnits));
 #endif
 constexpr size_t kSortWidth = SORT_WIDTH;
 static_assert(kSortWidth >= 1);
-static_assert(impu::math::IsPow2(kSortWidth));
+static_assert(fpga_tools::IsPow2(kSortWidth));
 
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declare functions used in this file by main()
@@ -275,7 +277,7 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   // the sorter must sort a power of 2, so round up the requested count
   // to the nearest power of 2; we will pad the input to make sure the
   // output is still correct
-  const IndexT sorter_count = impu::math::RoundUpPow2(count);
+  const IndexT sorter_count = fpga_tools::RoundUpPow2(count);
 
   // allocate some memory for the merge sort to use as temporary storage
   ValueT *buf_0, *buf_1;
@@ -301,14 +303,14 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   const IndexT total_pipe_accesses = sorter_count / kSortWidth;
 
   // launch the kernel that provides data into the sorter
-  auto input_kernel_event = q.submit([&](handler &h) {
-    h.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
+  auto input_kernel_event =
+    q.single_task<InputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the input pointer and write it to the sorter's input pipe
       KernelPtrType in(in_ptr);
 
       for (IndexT i = 0; i < total_pipe_accesses; i++) {
         // read data from device memory
-        bool in_range = i < sorter_count;
+        bool in_range = i * kSortWidth < count;
 
         // build the input pipe data
         sycl::vec<ValueT, kSortWidth> data;
@@ -321,11 +323,10 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
         SortInPipe::write(data);
       }
     });
-  });
 
   // launch the kernel that reads out data from the sorter
-  auto output_kernel_event = q.submit([&](handler &h) {
-    h.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
+  auto output_kernel_event =
+    q.single_task<OutputKernelID>([=]() [[intel::kernel_args_restrict]] {
       // read from the sorter's output pipe and write to the output pointer
       KernelPtrType out(out_ptr);
       
@@ -334,7 +335,7 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
         auto data = SortOutPipe::read();
 
         // sorter_count is a multiple of kSortWidth
-        bool in_range = i < sorter_count;
+        bool in_range = i * kSortWidth < count;
 
         // only write out to device memory if the index is in range
         if (in_range) {
@@ -346,7 +347,6 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
         }
       }
     });
-  });
 
   // launch the merge sort kernels
   auto merge_sort_events =

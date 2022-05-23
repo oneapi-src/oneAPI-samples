@@ -2,7 +2,7 @@
   "guid": "D661A5C2-5FE0-40F2-BFE7-70E3BA60F088",
   "name": "FPGA Reg",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
-  "description": "An Intel® FPGA advanced tutorial demonstrating how to apply the Intel® oneAPI Data Parallel C++ (DPC++) extension ext::intel::fpga_reg",
+  "description": "An Intel® FPGA advanced tutorial demonstrating how to apply the Data Parallel C++ (DPC++) extension ext::intel::fpga_reg",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -13,6 +13,7 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -23,6 +24,7 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -34,9 +36,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/fpga_reg",
           "nmake fpga_emu",
           "fpga_reg.fpga_emu.exe"
         ]
@@ -44,9 +48,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/fpga_reg",
           "nmake report"
         ]
       }

@@ -1,6 +1,10 @@
 ﻿# `ISO3DFD OpenMP Offload` Sample
 
-The ISO3DFD sample refers to Three-Dimensional Finite-Difference Wave Propagation in Isotropic Media.  It is a three-dimensional stencil to simulate a wave propagating in a 3D isotropic medium and shows some of the more common challenges and techniques when targeting OMP Offload devices (GPU) in more complex applications to achieve good performance. 
+The ISO3DFD sample refers to Three-Dimensional Finite-Difference Wave
+Propagation in Isotropic Media. It is a three-dimensional stencil to simulate a
+wave propagating in a 3D isotropic medium and shows some of the more common
+challenges and techniques when targeting OMP Offload devices (GPU) in more
+complex applications to achieve good performance.
 
 | Optimized for                       | Description
 |:---                               |:---
@@ -22,23 +26,34 @@ Performance number tabulation
 
 ## Purpose
 
-ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic isotropic wave equation, which can be used as a proxy for propagating a seismic wave. In this sample, kernels are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions. Using OpenMP Offload, the sample can explicitly run on the GPU to propagate a seismic wave, which is a compute-intensive task.
+ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic
+isotropic wave equation, which can be used as a proxy for propagating a seismic
+wave. In this sample, kernels are implemented as 16th order in space, with
+symmetric coefficients, and 2nd order in time scheme without boundary
+conditions. Using OpenMP Offload, the sample can explicitly run on the GPU to
+propagate a seismic wave, which is a compute-intensive task.
 
-The code will attempt to find an available GPU or OpenMP Offload capable device and exit if a compatible device is not detected. By default, the output will print the device name where the OpenMP Offload code ran along with the grid computation metrics - flops and effective throughput. For validating results, an OpenMP/CPU-only version of the application will be run on host/CPU, and results will be compared to the OpenMP Offload version.
+The code will attempt to find an available GPU or OpenMP Offload capable device
+and exit if a compatible device is not detected. By default, the output will
+print the device name where the OpenMP Offload code ran along with the grid
+computation metrics - flops and effective throughput. For validating results,
+an OpenMP/CPU-only version of the application will be run on host/CPU, and
+results will be compared to the OpenMP Offload version.
 
-The code also demonstrates some of the common optimization techniques that can be used to improve 3D-stencil code running on a GPU device.
- 
-## Key Implementation Details 
+The code also demonstrates some of the common optimization techniques that can
+be used to improve 3D-stencil code running on a GPU device.
 
-The basic OpenMP Offload implementation explained in the code includes the use of the following : 
+## Key Implementation Details
+
+The basic OpenMP Offload implementation explained in the code includes the use of the following :
 * OpenMP offload target data map construct
-* Default Baseline version demonstrates the use of OpenMP offload target parallel for construct with the collapse 
+* Default Baseline version demonstrates the use of OpenMP offload target parallel for construct with the collapse
 * Optimized version 1 demonstrates the use of OpenMP offload teams distribute construct and use of num_teams and thread_limit clause
 * Incremental Optimized version 2 demonstrates the use of OpenMP offload teams distribute construct with improved data-access pattern
 * Incremental Optimized version 3 demonstrates use of OpenMP CPU threads along with OpenMP offload target construct
 
- 
-## License  
+
+## License
 
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
@@ -51,10 +66,40 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 ### Running Samples In DevCloud
 Running samples in the Intel DevCloud requires you to specify a compute node. For specific instructions, jump to [Run the ISO3DFD OpenMP Offload sample in the DevCloud](#run-iso3dfd-omp-on-devcloud)
 
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
 ### On a Linux* System
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 Perform the following steps:
-1. Build the program using the following `cmake` commands. 
-``` 
+1. Build the program using the following `cmake` commands.
+```
 $ mkdir build
 $ cd build
 $ cmake ..
@@ -85,15 +130,22 @@ make -j
     make clean
     ```
 
+
+If an error occurs, you can get more details by running `make` with the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for Intel® oneAPI Toolkits, which provides system checks to find missing dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+
 ## Running the Sample
 ```
 make run
 ```
 
-### Application Parameters 
+### Application Parameters
 You can modify the ISO3DFD parameters from the command line.
-   * Configurable Application Parameters   
-	
+   * Configurable Application Parameters
+
 	Usage: src/iso3dfd n1 n2 n3 n1_block n2_block n3_block Iterations
 
  	n1 n2 n3                       	: Grid sizes for the stencil
@@ -251,7 +303,11 @@ rm build.sh.*; rm run.sh.*; make clean
 exit
 ```
 ### Build and run additional samples
-Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to iso3dfd_omp_offload. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
+
+Several sample programs are available for you to try, many of which can be
+compiled and run in a similar fashion to iso3dfd_omp_offload. Experiment with
+running the various samples on different kinds of compute nodes or adjust their
+source code to experiment with different workloads.
 
 
 

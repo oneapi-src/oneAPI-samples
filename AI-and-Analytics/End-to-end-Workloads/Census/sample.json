@@ -2,7 +2,7 @@
   "guid": "AA055D7B-290C-4FCA-990B-B9FC88AF18D4",
   "name": "Census",
   "categories": ["Toolkit/oneAPI AI And Analytics/End-to-End Workloads"],
-  "description": "This sample illustrates the use of Intel Distrabution of Modin and Intel Extension for Scikit-learn to build and run an end-to-end machine learning workload",
+  "description": "This sample illustrates the use of Intel® Distribution of Modin* and Intel Extension for Scikit-learn to build and run an end-to-end machine learning workload",
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "dependencies": ["intelpython"],
@@ -10,15 +10,19 @@
   "targetDevice": ["CPU"],
   "ciTests": {
   	"linux": [
-    {
-  		"env": ["source activate base"],
-  		"steps": [
-         "conda create -y -n aikit-modin --override-channels intel-aikit-modin omniscidbe4py python=3.7 runipy ray-dashboard -c intel -c conda-forge",
-         "conda activate aikit-modin",
-         "pip install opencensus",
-         "runipy census_modin.ipynb" 
-  		 ]
-  	}
+      {
+        "env": [],
+        "id": "Intel_Modin_E2E_py",
+        "steps": [
+          "set -e # Terminate the script on first error",
+          "source $(conda info --base)/etc/profile.d/conda.sh # Bypassing conda's disability to activate environments inside a bash script: https://github.com/conda/conda/issues/7980",
+          "conda create -y -n intel-aikit-modin intel-aikit-modin -c intel",
+          "conda activate intel-aikit-modin",
+          "conda install -y jupyter # Installing 'jupyter' for extended abilities to execute the notebook",
+          "pip install opencensus # Installing 'runipy' for extended abilities to execute the notebook",
+          "jupyter nbconvert --to notebook --execute census_modin.ipynb"
+        ]
+      }
     ]
 }
 }

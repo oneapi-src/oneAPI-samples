@@ -1,6 +1,6 @@
 # `Nbody` sample
-An N-body simulation is a simulation of a dynamical system of particles, usually under the influence of physical forces, such as gravity. This nbody sample code is implemented using C++ and DPC++ language for Intel CPU and GPU. 
-  
+An N-body simulation is a simulation of a dynamical system of particles, usually under the influence of physical forces, such as gravity. This nbody sample code is implemented using C++ and DPC++ language for Intel CPU and GPU.
+
 | Optimized for                       | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04; Windows 10
@@ -12,10 +12,10 @@ An N-body simulation is a simulation of a dynamical system of particles, usually
 ## Purpose
 Nbody sample code simulates 16000 particles and for ten integration steps. Each particle's position, velocity and acceleration parameters are dependent on other (N-1) particles. This algorithm is highly data parallel and a perfect candidate to offload to GPU. The code demonstrates how to deal with multiple device kernels, which can be enqueued into a DPC++ queue for execution and how to handle parallel reductions.
 
-## Key Implementation Details 
+## Key Implementation Details
 The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
 
-## License  
+## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
@@ -23,30 +23,67 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the Program for CPU and GPU
 
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 ### Running Samples In DevCloud
 Running samples in the Intel DevCloud requires you to specify a compute node. For specific instructions, jump to [Run the Nbody sample on the DevCloud](#run-nbody-on-devcloud)
 
-### Include Files  
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+
+### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### On a Linux* System
 Perform the following steps:
-1. Build the program using the following `cmake` commands. 
-``` 
+1. Build the program using the following `cmake` commands.
+```
 $ mkdir build
 $ cd build
 $ cmake ..
 $ make
 ```
-2. Run the program 
+2. Run the program
     ```
     make run
     ```
 
-3. Clean the program 
+3. Clean the program
     ```
     make clean
     ```
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 - Build the program using VS2017 or VS2019
@@ -57,8 +94,8 @@ $ make
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
      - Run the following command: `MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"`
-     
-### Application Parameters 
+
+### Application Parameters
 You can modify the NBody simulation parameters from within GSimulation.cpp. The configurable parameters include:
 - set_npart(__);
 - set_nsteps(__);
@@ -90,7 +127,7 @@ Below are the default parameters:
      8       0.8     8957.7      0.066365    111.87
      9       0.9     11587       0.066617    111.45
      10      1       14572       0.06637     111.86
-    
+
     # Total Time (s)     : 0.87714
     # Average Performance : 112.09 +- 0.56002
     ===============================

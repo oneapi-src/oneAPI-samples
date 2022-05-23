@@ -1,11 +1,21 @@
 ﻿# DPC++ Hidden Markov Model` Sample
-The HMM (Hidden Markov Model) sample presents a statistical model using a Markov process to present graphable nodes that are otherwise in an unobservable state or “hidden”.  This technique helps with pattern recognition such as speech, handwriting, gesture recognition, part-of-speech tagging, partial discharges and bioinformatics. The sample offloads the complexity of the Markov process to the GPU.
 
-The directed edges of this graph are possible transitions between nodes or states defined with the following parameters: 
-- the number of states is N, the transition matrix A is a square matrix of size N. 
+The HMM (Hidden Markov Model) sample presents a statistical model using a
+Markov process to present graphable nodes that are otherwise in an unobservable
+state or “hidden”. This technique helps with pattern recognition such as
+speech, handwriting, gesture recognition, part-of-speech tagging, partial
+discharges and bioinformatics. The sample offloads the complexity of the Markov
+process to the GPU.
+
+The directed edges of this graph are possible transitions between nodes or states defined with the following parameters:
+- the number of states is N, the transition matrix A is a square matrix of size N.
 - Each element with indexes (i,j) of this matrix determines the probability to move from the state i to the state j on any step of the Markov process (i and j can be the same if the state does not change on the taken step).
 
-HMM's main assumption is that there are visible observations that depend on the current Markov process. That dependency can be described as a conditional probability distribution (represented by emission matrix). The problem is to find out the most likely chain of the hidden Markov states using the given observations set.
+HMM's main assumption is that there are visible observations that depend on the
+current Markov process. That dependency can be described as a conditional
+probability distribution (represented by emission matrix). The problem is to
+find out the most likely chain of the hidden Markov states using the given
+observations set.
 
 ## Requirements and sample info
 
@@ -19,20 +29,27 @@ HMM's main assumption is that there are visible observations that depend on the 
 
 ## Purpose
 
-The sample can use GPU offload to compute sequential steps of multiple graph traversals simultaneously.
+The sample can use GPU offload to compute sequential steps of multiple graph
+traversals simultaneously.
 
-This code sample implements the Viterbi algorithm, a dynamic programming algorithm for finding the most likely sequence of hidden states—called the Viterbi path—that results in a sequence of observed events, especially in Markov information sources and HMM.
+This code sample implements the Viterbi algorithm, a dynamic programming
+algorithm for finding the most likely sequence of hidden states—called the
+Viterbi path—that results in a sequence of observed events, especially in
+Markov information sources and HMM.
 
 - Initially, the dataset for algorithm processing is generated: initial states probability distribution Pi, transition matrix A, emission matrix B and the sequence or the observations produced by hidden Markov process.
 - First, the matrix of Viterbi values on the first states are initialized using distribution Pi and emission matrix B. The matrix of back pointers is initialized with default values -1.
 - Then, for each time step, the Viterbi matrix is set to the maximal possible value using A, B and Pi.
 - Finally, the state with maximum Viterbi value on the last step is set as a Viterbi path's final state. The previous nodes of this path are determined using the back pointers matrix's correspondent rows for each step except the last one.
 
-Note: The implementation uses logarithms of the probabilities to process small numbers correctly and replace multiplication operations with addition operations.
+Note: The implementation uses logarithms of the probabilities to process small
+numbers correctly and replace multiplication operations with addition
+operations.
 
 ## Key Implementation details
 
-The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
+The basic DPC++ implementation explained in the code includes device selector,
+buffer, accessor, kernel, and command groups.
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -40,10 +57,99 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
+
+### Setting Environment Variables
+
+
+For working at a Command-Line Interface (CLI), the tools in the oneAPI toolkits
+are configured using environment variables. Set up your CLI environment by
+sourcing the ``setvars`` script every time you open a new terminal window. This
+will ensure that your compiler, libraries, and tools are ready for development.
+
+
+#### Linux
+Source the script from the installation location, which is typically in one of
+these folders:
+
+
+For root or sudo installations:
+
+
+  ``. /opt/intel/oneapi/setvars.sh``
+
+
+For normal user installations:
+
+  ``. ~/intel/oneapi/setvars.sh``
+
+**Note:** If you are using a non-POSIX shell, such as csh, use the following command:
+
+     ``$ bash -c 'source <install-dir>/setvars.sh ; exec csh'``
+
+If environment variables are set correctly, you will see a confirmation
+message.
+
+If you receive an error message, troubleshoot the problem using the
+Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
+checks to find missing dependencies and permissions errors.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+
+**Note:** [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html)
+    can also be used to set up your development environment.
+    The modulefiles scripts work with all Linux shells.
+
+
+**Note:** If you wish to fine
+    tune the list of components and the version of those components, use
+    a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html)
+    to set up your development environment.
+
+#### Windows
+
+Execute the  ``setvars.bat``  script from the root folder of your
+oneAPI installation, which is typically:
+
+
+  ``"C:\Program Files (x86)\Intel\oneAPI\setvars.bat"``
+
+
+For Windows PowerShell* users, execute this command:
+
+  ``cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'``
+
+
+If environment variables are set correctly, you will see a confirmation
+message.
+
+If you receive an error message, troubleshoot the problem using the
+Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
+checks to find missing dependencies and permissions errors.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+
 ## Building the `DPC++ Hidden Markov Model` Program for CPU and GPU
 
 ### Running Samples In DevCloud
-Running samples in the Intel DevCloud requires you to specify a compute node. For specific instructions, jump to [Run the Hidden Markov Model sample in the DevCloud](#run-hmm-on-devcloud)
+Running samples in the Intel DevCloud requires you to specify a compute node.
+For specific instructions, jump to [Run the Hidden Markov Model sample in the DevCloud](#run-hmm-on-devcloud)
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### Include Files
 The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
@@ -68,6 +174,15 @@ The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on y
     make clean
     ```
 
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+
 ### On a Windows* System Using a Command Line Interface
 * Build the program using VS2017 or VS2019
     - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
@@ -86,6 +201,19 @@ Perform the following steps:
 4. Select **Debug** > **Start Without Debugging** menu option to run the program.
 
 ## Running the Sample
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 
 ### Application Parameters
 There are no editable parameters for this sample.
@@ -115,8 +243,14 @@ git clone https://github.com/oneapi-src/oneAPI-samples.git
 cd ~/oneAPI-samples/DirectProgramming/DPC++/GraphTraversal/hidden-markov-models
 ```
 #### Build and run the sample in batch mode
-The following describes the process of submitting build and run jobs to PBS.
-A job is a script that is submitted to PBS through the qsub utility. By default, the qsub utility does not inherit the current environment variables or your current working directory. For this reason, it is necessary to submit jobs as scripts that handle the setup of the environment variables. In order to address the working directory issue, you can either use absolute paths or pass the -d \<dir\> option to qsub to set the working directory.
+
+The following describes the process of submitting build and run jobs to PBS. A
+job is a script that is submitted to PBS through the qsub utility. By default,
+the qsub utility does not inherit the current environment variables or your
+current working directory. For this reason, it is necessary to submit jobs as
+scripts that handle the setup of the environment variables. In order to address
+the working directory issue, you can either use absolute paths or pass the -d
+\<dir\> option to qsub to set the working directory.
 
 #### Create the Job Scripts
 1.	Create a build.sh script with your preferred text editor:
@@ -146,6 +280,14 @@ cd build
 make run
 ```
 6.	Save and close the run.sh file.
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 #### Build and run
 Jobs submitted in batch mode are placed in a queue waiting for the necessary resources (compute nodes) to become available. The jobs will be executed on a first come basis on the first available node(s) having the requested property or label.
@@ -201,4 +343,8 @@ rm build.sh.*; rm run.sh.*; make clean
 exit
 ```
 ### Build and run additional samples
-Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to iso3dfd_omp_offload. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
+
+Several sample programs are available for you to try, many of which can be
+compiled and run in a similar fashion to iso3dfd_omp_offload. Experiment with
+running the various samples on different kinds of compute nodes or adjust their
+source code to experiment with different workloads.
