@@ -248,7 +248,7 @@ The following source files can be found in the `src/` sub-directory.
 |`cholesky_inversion.hpp`             | Contains the compute function that calls the kernels.
 |`memory_transfers.hpp`               | Contains functions to transfer matrices from/to the FPGA DDR with streaming interfaces.
 
-For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `unrolled_loop.hpp` see the README in the `DirectProgramming/DPC++FPGA/include/` directory.
+For descriptions of `streaming_cholesky.hpp`, `streaming_cholesky_inversion.hpp`, `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `unrolled_loop.hpp` see the README in the `DirectProgramming/DPC++FPGA/include/` directory.
 
 ### Compiler Flags Used
 
