@@ -266,7 +266,7 @@ int main(int argc, char *argv[]) {
             // Increase the error count for this matrix
             error_count++;
 
-            // Continue counting the errors even if we now we are going to
+            // Continue counting the errors even if we are going to
             // produce an error
             if (error) {
               continue;
