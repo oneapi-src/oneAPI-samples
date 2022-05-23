@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
       // is between 0 and 1.
       // Since A(i,j) < 1 by construction and a symmetric diagonally dominant
       // matrix is symmetric positive definite we can be sure to have a
-      // symmetric diagonally dominant by adding nI to A
+      // symmetric diagonally dominant matrix by adding nI to A
       // A = A + n*eye(n);
       // For complex matrices, the diagonal elements must be real.
 

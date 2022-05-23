@@ -32,7 +32,7 @@ Please refer to the performance disclaimer at the end of this README.
 
 This FPGA reference design demonstrates Cholesky decomposition, a common operation employed in linear algebra, through use of the streaming_cholesky.hpp header library.
 The Cholesky decomposition takes a hermitian, positive-definite matrix _A_ (input) and computes the lower triangular matrix _L_ such that: _L_ * _L*_ = A, where _L*_ in the conjugate transpose of _L_.
-The algorithm employed by the header library is an FPGA throughput optimized version of the Cholesky–Banachiewicz algorithm. Background information on the Cholesky decomposition and this algorithm can be found in Wikipedia's [Cholesky decomposition](https://https://en.wikipedia.org/wiki/Cholesky_decomposition) article. 
+The algorithm employed by the header library is an FPGA throughput optimized version of the Cholesky–Banachiewicz algorithm. Background information on the Cholesky decomposition and this algorithm can be found in Wikipedia's [Cholesky decomposition](https://en.wikipedia.org/wiki/Cholesky_decomposition) article. 
 
 The Cholesky decomposition is used extensively in machine learning applications such as least-squares regressions and Monte-Carlo simulations.
 

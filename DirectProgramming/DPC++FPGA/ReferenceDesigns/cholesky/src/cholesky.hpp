@@ -64,7 +64,7 @@ void CholeskyDecompositionImpl(
     return;
   }
 
-  // Copy the matrices to decompose on the FPGA DDR
+  // Copy the matrices to decompose to the FPGA DDR
   q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count * sizeof(TT))
       .wait();
 
@@ -88,7 +88,7 @@ void CholeskyDecompositionImpl(
     // Number of DDR bursts of kNumElementsPerDDRBurst required to write
     // one vector
     constexpr bool kIncompleteBurst =
-        kLMatrixSize % kNumElementsPerDDRBurst != 0;
+        (kLMatrixSize % kNumElementsPerDDRBurst) != 0;
     constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
     constexpr int kLoopIter =
         (kLMatrixSize / kNumElementsPerDDRBurst) + kExtraIteration;
@@ -97,8 +97,10 @@ void CholeskyDecompositionImpl(
 
     // Repeat matrix_count complete L matrix pipe reads
     // for as many repetitions as needed
-    [[intel::loop_coalesce(2)]] for (int rep_idx = 0; rep_idx < repetitions;
-                                     rep_idx++) {
+    // The loop coalescing directive merges the two outer loops together
+    // automatically
+    [[intel::loop_coalesce(2)]]  // NO-FORMAT: Attribute
+    for (int rep_idx = 0; rep_idx < repetitions; rep_idx++) {
       for (int matrix_idx = 0; matrix_idx < matrix_count; matrix_idx++) {
         for (int li = 0; li < kLoopIter; li++) {
           TT bank[kNumElementsPerDDRBurst];
