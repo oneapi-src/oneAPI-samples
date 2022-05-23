@@ -36,7 +36,7 @@ performance to see the benefit of Intel&reg; Neural Compressor.
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 or later
+| OS                                | Linux* Ubuntu* 18.04 or later, Windows 10*
 | Hardware                          | The Second Generation Intel&reg; Xeon&reg; Scalable processor family or newer Xeon&reg; processors
 | Software                          | Intel&reg; oneAPI AI Analytics Toolkit 2021.1 or later
 | What you will learn               | How to use Intel&reg; Neural Compressor tool to quantize the AI model based on TensorFlow* and speed up the inference on Intel&reg; Xeon&reg; CPUs
@@ -91,6 +91,8 @@ git checkout 2021.1-beta10
 
 
 ## Prepare Software Environment
+
+### Linux (Ubuntu)
 
 You can run this sample in a Jupyter notebook on your local computer
 or in the Intel&reg; DevCloud.
@@ -184,6 +186,19 @@ https://software.intel.com/content/www/us/en/develop/articles/installation-guide
 
    This step is optional if you plan to open the notebook on your local server.
 
+### Windows 10
+
+Setup the Conda running environment **user_tensorflow** by following commands:
+
+```
+conda deactivate
+conda env remove -n user_tensorflow
+conda create -n user_tensorflow python=3.9 -y
+conda activate user_tensorflow
+conda install -n user_tensorflow pycocotools -c esri -y
+conda install -n user_tensorflow neural-compressor tensorflow -c conda-forge -c intel -y
+conda install -n user_tensorflow jupyter runipy notebook -y
+```
 
 ## Run the Sample <a name="running-the-sample"></a>
 
