@@ -11,7 +11,7 @@
 #include "memory_transfers.hpp"
 
 // Included from DirectProgramming/DPC++FPGA/include/
-#include "streaming_cholesky.hpp"
+#include "streaming_cholesky.hpp" 
 #include "tuple.hpp"
 
 // Forward declare the kernel and pipe names
@@ -57,14 +57,14 @@ void CholeskyDecompositionImpl(
   TT *a_device = sycl::malloc_device<TT>(kAMatrixSize * matrix_count, q);
   TT *l_device = sycl::malloc_device<TT>(kLMatrixSize * matrix_count, q);
 
-  if ((a_device == nullptr) || (l_device == nullptr)) {
+  if((a_device == nullptr) || (l_device == nullptr)){
     std::cerr << "Error when allocating FPGA DDR" << std::endl;
     std::cerr << "The FPGA DDR may be full" << std::endl;
     std::cerr << "Try reducing the matrix sizes/count" << std::endl;
     return;
   }
 
-  // Copy the matrices to decompose to the FPGA DDR
+  // Copy the matrices to decompose on the FPGA DDR
   q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count * sizeof(TT))
       .wait();
 
@@ -79,76 +79,75 @@ void CholeskyDecompositionImpl(
   // decomposition. Write the L output matrix to the LMatrixPipe pipe.
   q.single_task<Cholesky>(
       fpga_linalg::StreamingCholesky<T, is_complex, dimension, raw_latency,
-                                     kNumElementsPerDDRBurst, AMatrixPipe,
-                                     LMatrixPipe>());
+                        kNumElementsPerDDRBurst, AMatrixPipe, LMatrixPipe>());
 
-  auto ddr_write_event = q.single_task<CholeskyLocalMemToDDRL>([=
-  ]() [[intel::kernel_args_restrict]] {
+  auto ddr_write_event =
+  q.single_task<CholeskyLocalMemToDDRL>([=]() [[intel::kernel_args_restrict]] {
     // Read the L matrix from the LMatrixPipe pipe and copy it to the FPGA DDR
     // Number of DDR bursts of kNumElementsPerDDRBurst required to write
     // one vector
     constexpr bool kIncompleteBurst =
-        (kLMatrixSize % kNumElementsPerDDRBurst) != 0;
+       kLMatrixSize % kNumElementsPerDDRBurst != 0;
     constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
     constexpr int kLoopIter =
-        (kLMatrixSize / kNumElementsPerDDRBurst) + kExtraIteration;
+       (kLMatrixSize / kNumElementsPerDDRBurst) + kExtraIteration;
 
     sycl::device_ptr<TT> vector_ptr_device(l_device);
 
     // Repeat matrix_count complete L matrix pipe reads
     // for as many repetitions as needed
-    // The loop coalescing directive merges the two outer loops together
-    // automatically
-    [[intel::loop_coalesce(2)]]  // NO-FORMAT: Attribute
+    [[intel::loop_coalesce(2)]]
     for (int rep_idx = 0; rep_idx < repetitions; rep_idx++) {
       for (int matrix_idx = 0; matrix_idx < matrix_count; matrix_idx++) {
         for (int li = 0; li < kLoopIter; li++) {
           TT bank[kNumElementsPerDDRBurst];
 
           for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-            if (((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize) {
+            if(((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize){
               bank[k] = LMatrixPipe::read();
             }
           }
 
           // Copy the L matrix result to DDR
-          if constexpr (kIncompleteBurst) {
-             // Write a burst of kNumElementsPerDDRBurst elements to DDR
-             #pragma unroll
-            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              if (((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize) {
-                vector_ptr_device[(matrix_idx * kLMatrixSize) +
-                                  (li * kNumElementsPerDDRBurst) + k] = bank[k];
-              }
-            }
-          } else {
+          if constexpr (kIncompleteBurst){
             // Write a burst of kNumElementsPerDDRBurst elements to DDR
             #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              vector_ptr_device[(matrix_idx * kLMatrixSize) +
-                                (li * kNumElementsPerDDRBurst) + k] = bank[k];
+              if(((li * kNumElementsPerDDRBurst) + k) < kLMatrixSize){
+                vector_ptr_device[(matrix_idx * kLMatrixSize)
+                          + (li * kNumElementsPerDDRBurst) + k] = bank[k];
+              }
+            }
+          }
+          else{
+            // Write a burst of kNumElementsPerDDRBurst elements to DDR
+            #pragma unroll
+            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
+              vector_ptr_device[(matrix_idx * kLMatrixSize)
+                          + (li * kNumElementsPerDDRBurst) + k] = bank[k];
             }
           }
         }  // end of li
-      }    // end of matrix_idx
-    }      // end of rep_idx
+      }  // end of matrix_idx
+    }    // end of rep_idx
   });
 
   ddr_write_event.wait();
 
   // Compute the total time the execution lasted
-  auto start_time = ddr_read_event.template get_profiling_info<
-      sycl::info::event_profiling::command_start>();
-  auto end_time = ddr_write_event.template get_profiling_info<
-      sycl::info::event_profiling::command_end>();
+  auto start_time = ddr_read_event.template
+              get_profiling_info<sycl::info::event_profiling::command_start>();
+  auto end_time = ddr_write_event.template
+                get_profiling_info<sycl::info::event_profiling::command_end>();
   double diff = (end_time - start_time) / 1.0e9;
-            
+
   // Make sure we throw any asynchronous errors if they have occurred during 
   // the computation
   q.throw_asynchronous();
 
   std::cout << "   Total duration:   " << diff << " s" << std::endl;
-  std::cout << "Throughput: " << ((repetitions * matrix_count) / diff) * 1e-3
+  std::cout << "Throughput: "
+            << ((repetitions * matrix_count) / diff) * 1e-3
             << "k matrices/s" << std::endl;
 
   // Copy the L matrices result from the FPGA DDR to the host memory

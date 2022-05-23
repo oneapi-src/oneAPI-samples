@@ -180,7 +180,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 
 ## Running the Reference Design
 You can apply the Cholesky decomposition to a number of matrices, as shown below. This step performs the following:
-* Generates 8 random matrices (this number can be changed in cholesky_demo.cpp).
+* Generates 8 random matrices.
 * Computes the Cholesky decomposition on all matrices.
 * Repeats the operation multiple times (specified as the command line argument) to evaluate performance.
 
