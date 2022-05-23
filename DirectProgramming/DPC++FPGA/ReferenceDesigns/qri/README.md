@@ -234,7 +234,7 @@ NOTE: The values for `seed`, `FIXED_ITERATIONS_QRD`, `FIXED_ITERATIONS_QRI`, `RO
 
 ### Performance disclaimers
 
-Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [edc.intel.com/content/www/us/en/products/performance/benchmarks/overview](edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
+Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [this page](https://edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
 
 Performance results are based on testing as of Jan 31, 2022 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
 

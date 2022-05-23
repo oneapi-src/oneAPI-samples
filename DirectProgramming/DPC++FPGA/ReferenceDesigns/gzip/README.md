@@ -247,7 +247,7 @@ PASSED
 
 ### Performance disclaimers
 
-Tests document the performance of components on a particular test on a specific system. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For complete information about performance and benchmark results, visit [edc.intel.com/content/www/us/en/products/performance/benchmarks/overview](edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
+Tests document the performance of components on a particular test on a specific system. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For complete information about performance and benchmark results, visit [this page](https://edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
 
 Performance results are based on testing as of October 27, 2020 (using tool version 2021.1), and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
 
