@@ -20,7 +20,7 @@
 class CholeskyDDRToLocalMem;
 class DecompositionKernel;
 class InversionKernel;
-class CholeskyLocalMemToDDRL;
+class CholeskyLocalMemToDDR;
 class APipe;
 class LPipe;
 class IPipe;
@@ -98,7 +98,7 @@ void CholeskyInversionImpl(
           kNumElementsPerDDRBurst, LMatrixPipe, IMatrixPipe>());
 
   // Read the I matrix from the LMatrixPipe pipe and copy it to the FPGA DDR
-  auto ddr_write_event = q.single_task<CholeskyLocalMemToDDRL>([=] {
+  auto ddr_write_event = q.single_task<CholeskyLocalMemToDDR>([=] {
     VectorReadFromPipeToDDR<TT, kIMatrixSize, kNumElementsPerDDRBurst,
                             IMatrixPipe>(i_device, matrix_count, repetitions);
   });

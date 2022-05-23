@@ -71,6 +71,13 @@ struct StreamingCholeskyInversion {
 
     // Compute Cholesky-based inversions as long as L input matrices are given
     while (1) {
+
+      // The compiler has difficulty automatically figuring out an optimal
+      // configuration for these memories, so force all relevant parameters.
+      // The number of private copies ensures the compiler will schedule 
+      // as many overlapping loop iterations as possible
+      // The code is written so that each memory is single read/single write
+      // so there is no need for any replicate.
       // L matrix read from pipe
       [[intel::private_copies(4)]]  // NO-FORMAT: Attribute
       [[intel::max_replicates(1)]]  // NO-FORMAT: Attribute

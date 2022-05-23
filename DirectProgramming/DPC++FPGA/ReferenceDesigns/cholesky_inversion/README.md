@@ -30,11 +30,14 @@ Please refer to the performance disclaimer at the end of this README.
 ## Purpose
 
 This FPGA reference design demonstrates Cholesky-based matrix inversion, a common operation employed in linear algebra, through use of the streaming_cholesky.hpp and the streaming_cholesky_inversion.hpp header libraries.
-The Cholesky decomposition takes a hermitian, positive-definite matrix _A_ (input) and computes the lower triangular matrix _L_ such that: _L_ * _L*_ = A, where _L*_ in the conjugate transpose of _L_.
-Given this decomposition, the inverse of A can be computed as A<sup>-1</sup> = (_L_ * (_L*_))<sup>-1</sup> = (_L*_)<sup>-1</sup> * _L_<sup>-1</sup> = ((_L_<sup>-1</sup>)* ) * _L_<sup>-1</sup>.
-Therefore, in order to compute the inverse of A, one can: compute _LI_, the invert of _L_ (triangular matrix) and perform a matrix multiplication of the transpose of _LI_ by _LI_.
-A<sup>-1</sup> = (_LI_*) * _LI_.
-Because A<sup>-1</sup> is going to be symmetric, one can also compute only half of the values.
+The Cholesky decomposition takes a hermitian, positive-definite matrix $A$ (input) and computes the lower triangular matrix $L$ such that: 
+$$ LL^{\star} = A $$
+where $L^{\star}$ in the conjugate transpose of $L$.
+Given this decomposition, the inverse of A can be computed as 
+$$ A^{-1} = (LL^{\star})^{-1} = (L^{\star})^{-1}L^{-1} = (L^{-1})^{\star} L^{-1} $$
+Therefore, in order to compute the inverse of A, one can: compute $LI$, the invert of $L$ (triangular matrix) and perform a matrix multiplication of the transpose of $LI$ by $LI$.
+$$ A^{-1} = LI^{\star}LI $$
+Because $A^{-1}$  is going to be symmetric, one can also compute only half of the values.
 
 
 ### Matrix dimensions and FPGA resources
@@ -49,7 +52,7 @@ Thus, the matrix size is constrained by the total FPGA DSP and RAM resources ava
 
 The matrix inversion algorithm used in this reference design performs a Gaussian elimination to invert the triangular matrix _L_ obtained by the Cholesky decomposition.
 To do so, another _n_ DSPs are required to perform the associated dot-product.
-Finally, the matrix product of (_LI_*) * _LI_ also requires _n_ DSPs.
+Finally, the matrix product of $LI^{\star}LI$ also requires _n_ DSPs.
 
 A handful of extra DSPs are required to perform various arithmetic operations such as division, reciprocal square root, etc.
 
