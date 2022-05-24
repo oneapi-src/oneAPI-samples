@@ -232,7 +232,7 @@ int CompressFile(queue &q, std::string &input_file,
   // only supported on the PAC-S10-USM BSP. It's not
   // needed on PAC-A10 to achieve peak performance.
   bool isS10 = (device_string.find("s10") != std::string::npos);
-  bool prepin = q.get_device().get_info<info::device::usm_host_allocations>();
+  bool prepin = q.get_device().has(aspect::usm_host_allocations);
 
   if (isS10 && !prepin) {
     std::cout << "Warning: Host allocations are not supported on this "
