@@ -5,7 +5,7 @@
   "description": "This sample illustrates how to train a TensorFlow model and run inference with oneMKL and oneDNN.",
   "builder": ["cli"],
   "languages": [{"python":{}}],
-  "os":["linux","windows"],
+  "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {
 	"linux": [
@@ -17,14 +17,5 @@
 		 ]
 	}
      ]
-	 "windows": [
-      {
-        "id": "tensorflow hello world",
-        "steps": [
-                 "source activate tensorflow",
-		  "python TensorFlow_HelloWorld.py"
-        ]
-      }
-    ]
  }
 }
