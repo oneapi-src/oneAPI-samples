@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -43,15 +43,11 @@ int main() {
       });
     });
   }
-  //# compute mid-range
-  auto mid_range = (min+max)/2.f;
  
   //# print results
   std::cout << "Sum       = " << sum << "\n";
   std::cout << "Min       = " << min << "\n"; 
   std::cout << "Max       = " << max << "\n";
-  std::cout << "Mid-Range = " << mid_range << "\n";
 
   return 0;
 }
-

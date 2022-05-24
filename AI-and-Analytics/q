@@ -6,11 +6,11 @@
 #========================================
 
 if [[ -z "${TARGET_NODE}" ]]; then
-     properties=("icx" "clx" "skx" "cfl" "xe_hp" "dg1" "gpu" ) 
+     properties=("ats" "icx" "clx" "skx" "cfl" "xe_hp" "dg1" "gpu" ) 
 else
-     properties=("${TARGET_NODE}" "icx" "clx" "skx" "cfl" "xe_hp" "dg1" "gpu" ) 
+     properties=("${TARGET_NODE}" "ats" "icx" "clx" "skx" "cfl" "xe_hp" "dg1" "gpu" ) 
 fi
-avail_1=$(pbsnodes | grep properties | sort |  cut -d',' -f6 |  uniq)
+avail_1=$(pbsnodes | grep properties | sort |  cut -d',' -f7 |  uniq)
 avail_2=$(pbsnodes | grep properties | sort |  cut -d',' -f2 |  uniq)
 for value in "${properties[@]}"
 do
@@ -37,6 +37,8 @@ elif [ "$1" == "-h" ];then
     echo "Available Nodes:"
     echo $avail_2 $avail_1   
     echo "users could select a prefer worker node by : export a value to TARGET_NODE. ex: export TARGET_NODE=icx" 
+    echo "=== Status of submitted task ==="
+    qstat
 elif [ ! -f "$1" ]; then
     echo "File $1 does not exist"
 else
