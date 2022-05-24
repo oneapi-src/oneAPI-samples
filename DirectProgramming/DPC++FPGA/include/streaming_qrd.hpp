@@ -223,22 +223,6 @@ struct StreamingQRD {
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       [[intel::ivdep(raw_latency)]]       // NO-FORMAT: Attribute
       for (int s = 0; s < kIterations; s++) {
-        // Pre-compute the next values of i and j
-        ac_int<kIBitSize, true> next_i;
-        ac_int<kJBitSize, true> next_j;
-        if (j == columns - 1) {
-          // If i reached an index at which the j inner loop don't have
-          // enough time to write its result for the next i iteration,
-          // some "dummy" iterations are introduced
-          next_j = (kVariableIterations > i)
-                      ? ac_int<kJBitSize, true>{i + 1}
-                      : ac_int<kJBitSize, true>{kVariableIterations};
-          next_i = i + 1;
-        } else {
-          next_j = j + 1;
-          next_i = i;
-        }
-
         // Two matrix columns for partial results.
         TT col[rows];
         TT col1[rows];
@@ -391,8 +375,18 @@ struct StreamingQRD {
         }
 
         // Update loop indexes
-        j = next_j;
-        i = next_i;
+        if (j == columns - 1) {
+          // If i reached an index at which the j inner loop don't have
+          // enough time to write its result for the next i iteration,
+          // some "dummy" iterations are introduced
+          j = (kVariableIterations > i)
+                      ? ac_int<kJBitSize, true>{i + 1}
+                      : ac_int<kJBitSize, true>{kVariableIterations};
+          i = i + 1;
+        } else {
+          j = j + 1;
+          i = i;
+        }
 
       }  // end of s
 

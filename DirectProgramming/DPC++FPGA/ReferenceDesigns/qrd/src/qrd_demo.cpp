@@ -186,10 +186,9 @@ int main(int argc, char *argv[]) {
     float q_ortho_error_threshold = pow(2.0, -9);
 
     // Check Q and R matrices
-    std::cout << "Verifying results on matrix ";
+    std::cout << "Verifying results...";
     for(int matrix_index = 0; matrix_index < kMatricesToDecompose;
                                                                 matrix_index++){
-      std::cout << matrix_index << std::endl;
 
       // keep track of Q and R element indexes
       size_t r_idx = 0;

@@ -434,9 +434,8 @@ int main(int argc, char *argv[]) {
     // computed an incorrect value
     constexpr float kErrorThreshold = 1e-4;
 
-    std::cout << "Verifying results on matrix ";
+    std::cout << "Verifying results... ";
     for (int matrix = 0; matrix < kMatricesToInvert; matrix++) {
-      std::cout << matrix << std::endl;
 
       // Read the inverse matrix from the output vector to inv_matrix_op
       size_t idx = 0;

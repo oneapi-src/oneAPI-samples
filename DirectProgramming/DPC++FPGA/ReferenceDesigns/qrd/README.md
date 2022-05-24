@@ -232,15 +232,7 @@ Generating 8 random complex matrices of size 128x128
 Running QR decomposition of 8 matrices 819200 times
  Total duration:   268.733 s
 Throughput: 24.387k matrices/s
-Verifying results on matrix 0
-1
-2
-3
-4
-5
-6
-7
-
+Verifying results...
 PASSED
 ```
 
@@ -252,15 +244,7 @@ Generating 8 random complex matrices of size 256x256
 Running QR decomposition of 8 matrices 819200 times
  Total duration:   888.077 s
 Throughput: 7.37954k matrices/s
-Verifying results on matrix 0
-1
-2
-3
-4
-5
-6
-7
-
+Verifying results...
 PASSED
 ```
 

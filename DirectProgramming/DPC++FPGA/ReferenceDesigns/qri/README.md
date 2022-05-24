@@ -111,7 +111,7 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
        make fpga
        ```
 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/qrd.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/qri.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 1. Generate the `Makefile` by running `cmake`.
@@ -182,15 +182,7 @@ Generating 8 random real matrices of size 32x32
 Running QR inversion of 8 matrices 16 times
    Total duration:   0.50876 s
 Throughput: 0.251592k matrices/s
-Verifying results on matrix 0
-1
-2
-3
-4
-5
-6
-7
-
+Verifying results...
 PASSED
 ```
 
@@ -202,14 +194,7 @@ Generating 8 random real matrices of size 32x32
 Running QR inversion of 8 matrices 6553600 times
    Total duration:   267.352 s
 Throughput: 196.104k matrices/s
-Verifying results on matrix 0
-1
-2
-3
-4
-5
-6
-7
+Verifying results...
 PASSED
 ```
 
