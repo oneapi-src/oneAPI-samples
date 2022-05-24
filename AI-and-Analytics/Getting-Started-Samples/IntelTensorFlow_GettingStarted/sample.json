@@ -16,7 +16,7 @@
 			"python TensorFlow_HelloWorld.py"
 		 ]
 	}
-     ]
+     ],
 	 "windows": [
       {
         "id": "tensorflow hello world",
