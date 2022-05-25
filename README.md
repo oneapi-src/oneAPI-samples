@@ -37,7 +37,6 @@ The oneAPI sample repository is organized as follows:
   * [Trace](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/Trace)
   * [UEFI debug](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/UEFI%20debug)
   * [VTune Profiler](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/VTuneProfiler)
-)
 
 ## Known Issues or Limitations
 
