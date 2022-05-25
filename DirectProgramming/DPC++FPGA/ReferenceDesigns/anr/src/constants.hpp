@@ -2,7 +2,9 @@
 #define __CONSTANTS_HPP__
 
 #include <CL/sycl/INTEL/ac_types/ac_int.hpp>
-#include "mp_math.hpp"
+
+// Included from DirectProgramming/DPC++FPGA/include/
+#include "constexpr_math.hpp"
 
 // The size of the filter can be changed at the command line
 #ifndef FILTER_SIZE
@@ -17,7 +19,7 @@ static_assert(kFilterSize > 1);
 #endif
 constexpr unsigned kPixelsPerCycle = PIXELS_PER_CYCLE;
 static_assert(kPixelsPerCycle > 0);
-static_assert(IsPow2(kPixelsPerCycle) > 0);
+static_assert(fpga_tools::IsPow2(kPixelsPerCycle) > 0);
 
 // The maximum number of columns in the image
 #ifndef MAX_COLS
@@ -38,7 +40,8 @@ static_assert(kMaxRows > 0);
 
 // pick the indexing variable size based on kMaxCols and kMaxRows
 constexpr unsigned kSmallIndexTBits =
-    Max(CeilLog2(kMaxCols), CeilLog2(kMaxRows));
+    fpga_tools::Max(fpga_tools::CeilLog2(kMaxCols),
+                    fpga_tools::CeilLog2(kMaxRows));
 using SmallIndexT = ac_int<kSmallIndexTBits, false>;
 
 // add max() function to std::numeric_limits for IndexT

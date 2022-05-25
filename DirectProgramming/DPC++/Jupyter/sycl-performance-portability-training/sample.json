@@ -1,0 +1,23 @@
+{
+  "guid": "2d9cfde2-2903-4fef-8559-baf3ef2f63cb",
+  "name": "SYCL Performance Portability",
+  "categories": [ "Toolkit/oneAPI Direct Programming/DPC++/Tutorials Jupyter Notebooks" ],
+  "description": "SYCL Performance Portability using Jupyter Notebooks",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "os": [ "linux" ],
+  "builder": [ "ide", "make" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "env": [ "source /opt/intel/oneapi/setvars.sh" ],
+        "steps": [
+          "make all",
+          "make run",
+          "make clean"
+        ]
+      }
+    ]
+  }
+}

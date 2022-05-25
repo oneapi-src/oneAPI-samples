@@ -59,16 +59,26 @@ int main() {
   auto policy = oneapi::dpl::execution::dpcpp_default;
   // We need to have the scope to have data in image2 after buffer's destruction
   {
-    // ****Step 1: Uncomment the below line to create a buffer, being responsible for moving data around and counting dependencies    
-    //buffer<ImgPixel> b(image2.data(), image2.width() * image2.height());
+    //# STEP 1: Create a buffer for the image2
 
-    // create iterator to pass buffer to the algorithm
-    // **********Step 2: Uncomment the below lines to create buffer iterators. These are passed to the algorithm
-    //auto b_begin = oneapi::dpl::begin(b);
-    //auto b_end = oneapi::dpl::end(b);
+    //# YOUR CODE GOES HERE
 
-    //*****Step 3: Uncomment the below line to call std::for_each with DPC++ support    
-    //std::for_each(policy, b_begin, b_end, gamma_f);
+
+
+
+    //# STEP 2: Create buffer iterators for the buffer that was created
+
+    //# YOUR CODE GOES HERE
+
+
+
+
+    //# STEP 3: Call std::for_each with buffer iterators and the gamma correction algorithm gamma_f
+
+    //# YOUR CODE GOES HERE
+
+
+
   }
 
   image2.write(processed_image);

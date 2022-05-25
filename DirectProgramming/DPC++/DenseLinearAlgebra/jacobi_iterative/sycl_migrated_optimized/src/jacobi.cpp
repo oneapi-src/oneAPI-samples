@@ -38,44 +38,11 @@
 #include "jacobi.h"
 
 using namespace sycl;
-using namespace sycl::ext::oneapi;
 // 8 Rows of square-matrix A processed by each CTA.
 
 #define ROWS_PER_CTA 32
 #define SUB_GRP_SIZE 16
-#define INTEL
 
-__attribute__((always_inline)) void my_add_l(double val, double *dst) {
-  atomic_ref<double, sycl::memory_order::relaxed,
-             sycl::memory_scope::work_group,
-             sycl::access::address_space::local_space>
-      aval(dst[0]);
-#ifdef INTEL  // Intel Graphics
-  double expected = aval.load();
-  double desired = expected + val;
-  while (!aval.compare_exchange_strong(expected, desired)) {
-    desired = expected + val;
-  }
-#else
-  aval.fetch_add(val);
-#endif
-}
-
-__attribute__((always_inline)) void my_add_g(double val, double *dst) {
-  atomic_ref<double, sycl::memory_order::relaxed,
-             sycl::memory_scope::work_group,
-             sycl::access::address_space::global_space>
-      aval(dst[0]);
-#ifdef INTEL  // Intel Graphics
-  double expected = aval.load();
-  double desired = expected + val;
-  while (!aval.compare_exchange_strong(expected, desired)) {
-    desired = expected + val;
-  }
-#else
-  aval.fetch_add(val);
-#endif
-}
 
 // Computes the Eigen values for the input matrix using Jacobi algorithm
 static void JacobiMethod(const float *A, const double *b,
@@ -96,7 +63,7 @@ static void JacobiMethod(const float *A, const double *b,
     }
   }
 
-  item_ct1.barrier();
+  group_barrier(item_ct1.get_group());
 
   sub_group tile_sg = item_ct1.get_sub_group();
 
@@ -108,17 +75,17 @@ static void JacobiMethod(const float *A, const double *b,
       rowThreadSum += (A[i * N_ROWS + j] * x_shared[j]);
     }
 
-    for (int offset = tile_sg.get_local_range().get(0) / 2; offset > 0;
-         offset /= 2) {
-      rowThreadSum += shift_group_left(tile_sg, rowThreadSum, offset);
-    }
+    rowThreadSum = reduce_over_group(tile_sg, rowThreadSum, sycl::plus<double>());
 
     if (tile_sg.get_local_id()[0] == 0) {
-      my_add_l(-rowThreadSum, b_shared + i % (ROWS_PER_CTA + 1));
+       atomic_ref<double, memory_order::relaxed, memory_scope::device,
+                  access::address_space::local_space>
+       at_h_sum{b_shared[i % (ROWS_PER_CTA + 1)]};
+       at_h_sum -= rowThreadSum;
     }
   }
 
-  item_ct1.barrier();
+  group_barrier(item_ct1.get_group());
 
   if (item_ct1.get_local_id(2) < ROWS_PER_CTA) {
     sub_group tile_sg = item_ct1.get_sub_group();
@@ -137,13 +104,13 @@ static void JacobiMethod(const float *A, const double *b,
       temp_sum += fabs(dx);
     }
 
-    for (int offset = tile_sg.get_local_range().get(0) / 2; offset > 0;
-         offset /= 2) {
-      temp_sum += shift_group_left(tile_sg, temp_sum, offset);
-    }
+    temp_sum = reduce_over_group(tile_sg, temp_sum, sycl::plus<double>());
 
     if (tile_sg.get_local_id()[0] == 0) {
-      my_add_g(temp_sum, sum);
+       atomic_ref<double, memory_order::relaxed, memory_scope::device,
+                  access::address_space::global_space>
+       at_sum{*sum};
+       at_sum += temp_sum;
     }
   }
 }
@@ -167,16 +134,13 @@ static void finalError(double *x, double *d_sum, nd_item<3> item_ct1,
 
   sub_group tile_sg = item_ct1.get_sub_group();
 
-  for (int offset = tile_sg.get_local_range().get(0) / 2; offset > 0;
-       offset /= 2) {
-    sum += shift_group_left(tile_sg, sum, offset);
-  }
+  sum = reduce_over_group(tile_sg, sum, sycl::plus<double>());
 
   if (tile_sg.get_local_id()[0] == 0) {
     sg_Sum[item_ct1.get_local_id(2) / tile_sg.get_local_range().get(0)] = sum;
   }
 
-  item_ct1.barrier();
+  group_barrier(item_ct1.get_group());
 
   double blockSum = 0.0;
   if (item_ct1.get_local_id(2) <
@@ -186,12 +150,13 @@ static void finalError(double *x, double *d_sum, nd_item<3> item_ct1,
   }
 
   if (item_ct1.get_local_id(2) < SUB_GRP_SIZE) {
-    for (int offset = tile_sg.get_local_range().get(0) / 2; offset > 0;
-         offset /= 2) {
-      blockSum += shift_group_left(tile_sg, blockSum, offset);
-    }
+    blockSum = reduce_over_group(tile_sg, blockSum, sycl::plus<double>());
+
     if (tile_sg.get_local_id()[0] == 0) {
-      my_add_g(blockSum, d_sum);
+       atomic_ref<double, memory_order::relaxed, memory_scope::device,
+                  access::address_space::global_space>
+       at_d_sum{*d_sum};
+       at_d_sum += blockSum;
     }
   }
 }
