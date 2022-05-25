@@ -1,0 +1,23 @@
+{
+  "guid": "f9d91098-095c-4ab6-a7ea-e1b454f04ccc",
+  "name": "Introduction to Machine Learning",
+  "categories": [ "Toolkit/oneAPI/AI/AI Analytics Toolkit/Intel Extensions for Scikit-learn/Tutorials Jupyter Notebooks" ],
+  "description": "Introduction to Machine Learning and Introduction to Intel Extensions for Scikit-learn*",
+  "toolchain": [ "python" ],
+  "languages": [ { "python": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "os": [ "linux" ],
+  "builder": [ "ide", "make" ],
+  "targetDevice": [ "CPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "env": [ "source /opt/intel/oneapi/setvars.sh" ],
+        "steps": [
+          "make all",
+          "make Run",
+          "make clean"
+        ]
+      }
+    ]
+  }
+}
