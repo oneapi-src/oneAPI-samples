@@ -26,22 +26,18 @@ using MyInt28 = ac_int<28, true>;
 
 void TestBasicOpsInt(queue &q, const int &a, const int &b, int &c, int &d,
                      int &e) {
-  buffer<int, 1> a_buf(&a, 1);
-  buffer<int, 1> b_buf(&b, 1);
   buffer<int, 1> c_buf(&c, 1);
   buffer<int, 1> d_buf(&d, 1);
   buffer<int, 1> e_buf(&e, 1);
 
   q.submit([&](handler &h) {
-    accessor a_acc(a_buf, h, read_only);
-    accessor b_acc(b_buf, h, read_only);
     accessor c_acc(c_buf, h, write_only, no_init);
     accessor d_acc(d_buf, h, write_only, no_init);
     accessor e_acc(e_buf, h, write_only, no_init);
     h.single_task<BasicOpsInt>([=]() [[intel::kernel_args_restrict]] {
-      c_acc[0] = a_acc[0] + b_acc[0];
-      d_acc[0] = a_acc[0] * b_acc[0];
-      e_acc[0] = a_acc[0] / b_acc[0];
+      c_acc[0] = a + b;
+      d_acc[0] = a * b;
+      e_acc[0] = a / b;
     });
   });
 }
@@ -49,38 +45,30 @@ void TestBasicOpsInt(queue &q, const int &a, const int &b, int &c, int &d,
 // Kernel `BasicOpsAcInt` consumes fewer resources than kernel `BasicOpsInt`.
 void TestBasicOpsAcInt(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt15 &c,
                        MyInt28 &d, MyInt15 &e) {
-  buffer<MyInt14, 1> a_buf(&a, 1);
-  buffer<MyInt14, 1> b_buf(&b, 1);
   buffer<MyInt15, 1> c_buf(&c, 1);
   buffer<MyInt28, 1> d_buf(&d, 1);
   buffer<MyInt15, 1> e_buf(&e, 1);
 
   q.submit([&](handler &h) {
-    accessor a_acc(a_buf, h, read_only);
-    accessor b_acc(b_buf, h, read_only);
     accessor c_acc(c_buf, h, write_only, no_init);
     accessor d_acc(d_buf, h, write_only, no_init);
     accessor e_acc(e_buf, h, write_only, no_init);
     h.single_task<BasicOpsAcInt>([=]() [[intel::kernel_args_restrict]] {
-      c_acc[0] = a_acc[0] + b_acc[0];
-      d_acc[0] = a_acc[0] * b_acc[0];
-      e_acc[0] = a_acc[0] / b_acc[0];
+      c_acc[0] = a + b;
+      d_acc[0] = a * b;
+      e_acc[0] = a / b;
     });
   });
 }
 
 void TestShiftOps(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt14 &c) {
-  buffer<MyInt14, 1> a_buf(&a, 1);
-  buffer<MyInt14, 1> b_buf(&b, 1);
   buffer<MyInt14, 1> c_buf(&c, 1);
 
   q.submit([&](handler &h) {
-    accessor a_acc(a_buf, h, read_only);
-    accessor b_acc(b_buf, h, read_only);
     accessor c_acc(c_buf, h, write_only, no_init);
-    h.single_task<ShiftOps>([=]() [[intel::kernel_args_restrict]] {
-      MyInt14 temp = a_acc[0] << b_acc[0];
-      c_acc[0] = temp >> b_acc[0];
+    h.single_task<ShiftOps>([=]() {
+      MyInt14 temp = a << b;
+      c_acc[0] = temp >> b;
     });
   });
 }
@@ -88,32 +76,26 @@ void TestShiftOps(queue &q, const MyInt14 &a, const MyInt14 &b, MyInt14 &c) {
 // Kernel `EfficientShiftOps` consumes fewer resources than kernel `ShiftOps`.
 void TestEfficientShiftOps(queue &q, const MyInt14 &a, const MyUInt2 &b,
                            MyInt14 &c) {
-  buffer<MyInt14, 1> a_buf(&a, 1);
-  buffer<MyUInt2, 1> b_buf(&b, 1);
   buffer<MyInt14, 1> c_buf(&c, 1);
 
   q.submit([&](handler &h) {
-    accessor a_acc(a_buf, h, read_only);
-    accessor b_acc(b_buf, h, read_only);
     accessor c_acc(c_buf, h, write_only, no_init);
-    h.single_task<EfficientShiftOps>([=]() [[intel::kernel_args_restrict]] {
-      MyInt14 temp = a_acc[0] << b_acc[0];
-      c_acc[0] = temp >> b_acc[0];
+    h.single_task<EfficientShiftOps>([=]() {
+      MyInt14 temp = a << b;
+      c_acc[0] = temp >> b;
     });
   });
 }
 
 MyInt14 TestBitAccess(queue &q, const MyInt14 &a) {
   MyInt14 res;
-  buffer<MyInt14, 1> a_buf(&a, 1);
   buffer<MyInt14, 1> res_buf(&res, 1);
 
   q.submit([&](handler &h) {
-    accessor a_acc(a_buf, h, read_only);
     accessor res_acc(res_buf, h, write_only, no_init);
-    h.single_task<BitAccess>([=]() [[intel::kernel_args_restrict]] {
+    h.single_task<BitAccess>([=]() {
       // 0b1111101
-      MyInt7 temp = a_acc[0].slc<7>(3);
+      MyInt7 temp = a.slc<7>(3);
 
       res_acc[0] = 0; // Must be initialized before being accessed by the bit
                       // select operator `[]`. Using the `[]` operator on an
