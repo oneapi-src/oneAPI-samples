@@ -31,7 +31,7 @@ Notebook Name: Owner
 * Descriptions
 
 [DPPY Intro](01_DPPY_Intro): Praveen.K.Kundurthy@intel.com
-* Introduction and Motivation for Data parallel python: These initial hands-on exercises introduce you to concepts of Data Parallel Python. In addition, it familiarizes you how to execute on multiple devices using Data Parallel Python (DPPY), utilize Numba and Numba-DPPY to write paralle code on GPU 
+* Introduction and Motivation for Data parallel python: These initial hands-on exercises introduce you to concepts of Data Parallel Python. In addition, it familiarizes you how to execute on multiple devices using Data Parallel Python (DPPY), utilize Numba and Numba-DPPY to write parallel code on GPU
 * Intro to Numba-Dppy
 * @njit Decorator:Explicit and Implicit offload
 * @dppy.kernel decorator
