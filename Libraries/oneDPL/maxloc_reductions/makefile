@@ -1,0 +1,30 @@
+# Makefile for NMAKE
+
+default: run_all
+
+all: run_all
+
+run_all: maxloc_operator.exe maxloc_implicit.exe maxloc_buffered.exe maxloc_usm.exe
+	.\maxloc_operator
+	.\maxloc_implicit
+	.\maxloc_buffered
+	.\maxloc_usm
+
+maxloc_operator.exe: maxloc_operator.cpp
+	dpcpp maxloc_operator.cpp /Femaxloc_operator.exe
+
+maxloc_implicit.exe: maxloc_implicit.cpp
+	dpcpp maxloc_implicit.cpp /Femaxloc_implicit.exe
+
+maxloc_buffered.exe: maxloc_buffered.cpp
+	dpcpp maxloc_buffered.cpp /Femaxloc_buffered.exe
+
+maxloc_usm.exe: maxloc_usm.cpp
+	dpcpp maxloc_usm.cpp /Femaxloc_usm.exe
+
+clean:
+	del /q maxloc_operator.exe maxloc_implicit.exe maxloc_buffered.exe maxloc_usm.exe
+	del /q maxloc_operator.exp maxloc_implicit.exp maxloc_buffered.exp maxloc_usm.exp
+
+pseudo: run_all clean all
+
