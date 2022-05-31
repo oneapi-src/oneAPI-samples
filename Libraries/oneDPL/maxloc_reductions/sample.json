@@ -1,5 +1,5 @@
 {
-  "guid": "69F6B0A1-3046-467F-B4A7-E61F636BC5BF",
+  "guid": "a03b5bb5-93b0-420d-ad2b-e23e73c03e58",
   "name": "Maxloc Reductions in oneAPI",
   "categories": ["Toolkit/oneAPI Libraries/oneDPL"],
   "description": "Perform maxloc reductions with oneAPI",
