@@ -24,8 +24,8 @@ int main()
     buffer<uint64_t, 1> vB{ range<1>(5) };
     buffer<uint64_t, 1> rB{ range<1>(5) };
     {
-      accessor k{kB};
-      accessor v{vB};
+      host_accessor k{kB};
+      host_accessor v{vB};
 
       // Initialize data, sorted
       k[0] = 0; k[1] = 5; k[2] = 6; k[3] = 6; k[4] = 7;
