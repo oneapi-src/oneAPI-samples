@@ -10,8 +10,8 @@ using namespace sycl;
 
 int main() {
   constexpr int size = 9;
-  std::array<double, size> A;
-  std::array<double, size> B;
+  std::array<float, size> A;
+  std::array<float, size> B;
 
   bool pass = true;
 
@@ -21,8 +21,8 @@ int main() {
 
   range sz{size};
 
-  buffer<double> bufA(A);
-  buffer<double> bufB(B);
+  buffer<float> bufA(A);
+  buffer<float> bufB(B);
   buffer<bool>   bufP(&pass, 1);
 
   Q.submit([&](handler &h) {
@@ -42,7 +42,7 @@ int main() {
   host_accessor host_A(bufA);
   host_accessor host_P(bufP);
 
-  if (host_P[0] && host_A[4] == std::log(4.00)) {
+  if (host_P[0] && host_A[4] == std::log(4.00f)) {
     std::cout << "Passed\n";
   } else {
     std::cout << "Failed\n";

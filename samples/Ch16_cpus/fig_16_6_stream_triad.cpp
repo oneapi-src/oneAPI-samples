@@ -14,9 +14,9 @@ constexpr int num_runs = 10;
 constexpr size_t scalar = 3;
 
 double triad(
-    const std::vector<double>& vecA,
-    const std::vector<double>& vecB,
-    std::vector<double>& vecC ) {
+    const std::vector<float>& vecA,
+    const std::vector<float>& vecB,
+    std::vector<float>& vecC ) {
 
   assert(vecA.size() == vecB.size() && vecB.size() == vecC.size());
   const size_t array_size = vecA.size();
@@ -25,9 +25,9 @@ double triad(
   queue Q{ property::queue::enable_profiling{} };
   std::cout << "Running on device: " << Q.get_device().get_info<info::device::name>() << "\n";
 
-  buffer<double> bufA(vecA);
-  buffer<double> bufB(vecB);
-  buffer<double> bufC(vecC);
+  buffer<float> bufA(vecA);
+  buffer<float> bufB(vecB);
+  buffer<float> bufC(vecC);
 
   for (int i = 0; i< num_runs; i++) {
     auto Q_event = Q.submit([&](handler& h) {
@@ -63,11 +63,11 @@ int main(int argc, char *argv[]) {
   }
 
   std::cout << "Running with stream size of " << array_size
-    << " elements (" << (array_size * sizeof(double))/(double)1024/1024 << "MB)\n";
+    << " elements (" << (array_size * sizeof(float))/(double)1024/1024 << "MB)\n";
 
-  std::vector<double> D(array_size, 1.0);
-  std::vector<double> E(array_size, 2.0);
-  std::vector<double> F(array_size, 0.0);
+  std::vector<float> D(array_size, 1.0);
+  std::vector<float> E(array_size, 2.0);
+  std::vector<float> F(array_size, 0.0);
 
   double min_time = triad(D, E, F);
 
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
   }
   std::cout << "Results are correct!\n\n";
 
-  size_t triad_bytes = 3 * sizeof(double) * array_size;
+  size_t triad_bytes = 3 * sizeof(float) * array_size;
   std::cout << "Triad Bytes: " << triad_bytes << "\n";
   std::cout << "Time in sec (fastest run): " << min_time * 1.0E-9 << "\n";
 
