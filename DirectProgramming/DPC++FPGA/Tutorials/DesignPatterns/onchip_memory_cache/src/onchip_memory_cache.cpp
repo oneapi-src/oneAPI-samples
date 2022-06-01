@@ -131,7 +131,7 @@ int main() {
     // iterate over the cache depths
     for (int i = 0; i <= kMaxCacheDepth; i++) {
 
-      std::cout << "Beginning run without cache depth " << i;
+      std::cout << "Beginning run with cache depth " << i;
       if (i == 0) { std::cout << " (no cache)"; }
       std::cout << std::endl;
 
