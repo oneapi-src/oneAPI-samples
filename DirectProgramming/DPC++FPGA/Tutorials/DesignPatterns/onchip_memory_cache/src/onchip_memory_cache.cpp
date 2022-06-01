@@ -7,7 +7,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 
-#include "cached_local_memory.hpp"  // DirectProgramming/DPC++FPGA/include
+#include "local_memory_cache.hpp"  // DirectProgramming/DPC++FPGA/include
 #include "unrolled_loop.hpp"
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -23,8 +23,7 @@ constexpr double kNs = 1000000000.0;      // number of nanoseconds in a second
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
-template<size_t cache_depth>
-class HistogramID;
+template<size_t cache_depth> class HistogramID;
 
 template<size_t k_cache_depth>
 void ComputeHistogram(sycl::queue &q, sycl::buffer<uint32_t>& input_buf,
@@ -38,28 +37,38 @@ void ComputeHistogram(sycl::queue &q, sycl::buffer<uint32_t>& input_buf,
     h.single_task<HistogramID<k_cache_depth>>(
     [=]() [[intel::kernel_args_restrict]] {
 
-      // On-chip memory for Histogram
+      // On-chip memory and cache for Histogram
       // A k_cache_depth of 0 is equivalent to a standard array with no cache
-      fpga_tools::CachedLocalMemory<uint32_t, kNumOutputs, k_cache_depth> 
-        histogram(0);
+      uint32_t histogram[kNumOutputs] = {0};
+      fpga_tools::LocalMemoryCache<uint32_t, kNumOutputs, k_cache_depth> 
+        histogram_cache(0);
 
       // ivdep with safelen=0 is not allowed, safelen=1 is equivalent (i.e. it
       // does not affect the loop at all)
       constexpr size_t kSafeLen = k_cache_depth == 0 ? 1 : k_cache_depth;
       
       // Compute the Histogram
-      [[intel::ivdep(kSafeLen/*, histogram.data_*/)]] 
+      [[intel::ivdep(kSafeLen, histogram)]] 
       for (uint32_t n = 0; n < kInitNumInputs; ++n) {
+
         // Compute the Histogram index to increment
         uint32_t hist_group = input[n] % kNumOutputs;
-        auto hist_count = histogram.read(hist_group);
+
+        // fetch current value from local memory
+        auto hist_count = histogram[hist_group];
+        
+        // overwrite value from memory with value from cache (if present)
+        histogram_cache.CheckCache(hist_group, hist_count);
+
+        // update the histogram value and write it back to the memory and cache
         hist_count++;
-        histogram.write(hist_group, hist_count);
+        histogram[hist_group] = hist_count;
+        histogram_cache.AddToCache(hist_group, hist_count);
       }
 
       // Write output to global memory
       for (uint32_t b = 0; b < kNumOutputs; ++b) {
-        output[b] = histogram.read(b);
+        output[b] = histogram[b];
       }
     });
   });
