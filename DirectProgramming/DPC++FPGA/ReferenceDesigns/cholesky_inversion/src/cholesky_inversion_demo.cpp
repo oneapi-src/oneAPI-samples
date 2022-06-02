@@ -63,7 +63,7 @@ float RandomValueInInterval(float min, float max) {
   Generate the input matrices for the cholesky inversion
 */
 template <int matrices_to_invert, int matrix_size, int columns, typename T>
-void generateInputData(std::vector<T> &a_matrix) {
+void GenerateInputData(std::vector<T> &a_matrix) {
   constexpr bool kComplex = COMPLEX != 0;
 
   std::cout << "Generating " << matrices_to_invert << " random ";
@@ -180,7 +180,7 @@ void generateInputData(std::vector<T> &a_matrix) {
 */
 template <int inverted_matrices, int matrix_size, int invert_matrix_size,
           int rows, int columns, typename T>
-int checkResults(std::vector<T> &a_matrix, std::vector<T> &i_matrix) {
+int CheckResults(std::vector<T> &a_matrix, std::vector<T> &i_matrix) {
   // For output post-processing (op)
   T i_matrix_op[rows][columns];
 
@@ -380,7 +380,7 @@ int main(int argc, char *argv[]) {
     i_matrix.resize(kIMatrixSize * kMatricesToInvert);
 
     // Generate the input matrices to be inverted
-    generateInputData<kMatricesToInvert, kAMatrixSize, kColumns>(a_matrix);
+    GenerateInputData<kMatricesToInvert, kAMatrixSize, kColumns>(a_matrix);
 
     std::cout << "Computing the Cholesky-based inversion of "
               << kMatricesToInvert << " matri"
@@ -392,7 +392,7 @@ int main(int argc, char *argv[]) {
                                    repetitions);
 
     // Check the returned matrices for correctness
-    return checkResults<kMatricesToInvert, kAMatrixSize, kIMatrixSize, kRows,
+    return CheckResults<kMatricesToInvert, kAMatrixSize, kIMatrixSize, kRows,
                         kColumns>(a_matrix, i_matrix);
 
   } catch (sycl::exception const &e) {
