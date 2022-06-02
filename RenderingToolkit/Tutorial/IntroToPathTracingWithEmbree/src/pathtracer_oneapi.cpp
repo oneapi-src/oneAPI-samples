@@ -475,7 +475,7 @@ struct Light_SampleRes
 Light_SampleRes sample_directional_light(Vec3fa& lightDir, const Vec3fa& lightIntensity, DifferentialGeometry& dg, Vec2f& randomLightSample) {
     Light_SampleRes res;
 
-    res.dir = lightDir;
+    res.dir = -lightDir;
     res.dist = std::numeric_limits<float>::infinity();
     res.pdf = std::numeric_limits<float>::infinity();
     res.weight = lightIntensity; // *pdf/pdf cancel
@@ -509,7 +509,7 @@ Vec3fa renderPixelFunction(float x, float y,
     for (int i = 0; i < g_max_path_length; i++)
     {
         /* terminate if contribution too low */
-        if (max(Lw.x, max(Lw.y, Lw.z)) < 0.01f)
+        if (max(Lw.x, max(Lw.y, Lw.z)) < 0.001f)
             break;
 
         /* intersect ray with scene */
@@ -574,6 +574,8 @@ Vec3fa renderPixelFunction(float x, float y,
 
         /* Create one light transmitting directionally */
         Vec3fa lightDir = normalize(Vec3fa(-1, -1, -1));
+        //Vec3fa lightDir = normalize(Vec3fa(0, -1, 0));
+        //Vec3fa lightDir = -(normalize(camera.p));
         Vec3fa lightIntensity(1.0f);
         /* Search for each light in the scene from our hit point. Aggregate the radiance if hit point is not occluded */
         {
@@ -625,6 +627,11 @@ Vec3fa renderPixelStandard(int x, int y,
         float fx = x + distrib(reng); 
         float fy = y + distrib(reng); 
         L = L + renderPixelFunction(fx, fy, width, height, reng, distrib, time, camera);
+//#define MY_DEBUG
+#ifdef MY_DEBUG
+        if (max(max(L.x, L.y), L.z) > 0.0f)
+            printf("Hit pixel at %f %f: %f %f %f\n", fx, fy, L.x, L.y, L.z);
+#endif
     }
     L = L / (float)g_spp;
     return L;
@@ -633,7 +640,7 @@ Vec3fa renderPixelStandard(int x, int y,
 
 
 /* task that renders a single screen tile */
-void renderTileTask(int taskIndex, int threadIndex, unsigned char* pixels, std::vector<std::shared_ptr<Vec3ff>> accu,
+void renderTileTask(int taskIndex, int threadIndex, unsigned char* pixels, std::vector<std::shared_ptr<Vec3ff>>& accu,
                     const unsigned int width, const unsigned int height,
                     const unsigned int channels, const float time,
                     const ISPCCamera& camera, const int numTilesX,
@@ -648,12 +655,16 @@ void renderTileTask(int taskIndex, int threadIndex, unsigned char* pixels, std::
   for (unsigned int y = y0; y < y1; y++)
     for (unsigned int x = x0; x < x1; x++) {
       Vec3fa color = renderPixelStandard(x, y, width, height, time, camera);
-
+//#define MY_DEBUG
+#ifdef MY_DEBUG
+      if (max(max(color.x, color.y), color.z) > 0.0f)
+        printf("Hit pixel at %u %u: %f %f %f\n", x, y, color.x, color.y, color.z);
+#endif
       /* write color to accumulation buffer */
 
       Vec3ff accu_color = *accu[y * width + x] + Vec3ff(color.x, color.y, color.z, 1.0f); *accu[y * width + x] = accu_color;
       float f = rcp(max(0.001f, accu_color.w));
-
+      
       /* write color from accumulation buffer to framebuffer */
       unsigned char r =
           (unsigned char)(255.0f * rkcommon::math::clamp(accu_color.x*f, 0.0f, 1.0f));
@@ -668,7 +679,7 @@ void renderTileTask(int taskIndex, int threadIndex, unsigned char* pixels, std::
 }
 
 /* called by the C++ code to render */
-void renderFrameStandard(unsigned char* pixels, std::vector<std::shared_ptr<Vec3ff>> accu, const unsigned int width,
+void renderFrameStandard(unsigned char* pixels, std::vector<std::shared_ptr<Vec3ff>>& accu, const unsigned int width,
                          const unsigned int height, const unsigned int channels,
                          const float time, const ISPCCamera& camera) {
   const int numTilesX = (width + TILE_SIZE_X - 1) / TILE_SIZE_X;
@@ -735,8 +746,8 @@ int main() {
   const unsigned int channels = 3;
 
   /* accumulation buffer used for introduction to future applications */
-  const unsigned int accu_limit = 4;
-  g_spp = 4;
+  const unsigned int accu_limit = 10;
+  g_spp = 8;
   g_max_path_length = 8;
 
   g_pixels = (unsigned char*)new unsigned char[width * height * channels];
@@ -744,10 +755,13 @@ int main() {
 
   g_accu.resize(width * height);
   for (auto i = 0; i < width * height; i++)
-      g_accu[i] = std::make_unique<Vec3ff>(0.0f);
+      g_accu[i] = std::make_shared<Vec3ff>(0.0f);
 
-  g_camera = positionCamera(Vec3fa(1.5f, 1.5f, -1.5f), Vec3fa(0, 0, 0),
+  g_camera = positionCamera(Vec3fa(1.5f, 1.5, -1.5f), Vec3fa(0, 0, 0),
                             Vec3fa(0, 1, 0), 90.0f, width, height);
+
+ // g_camera = positionCamera(Vec3fa(0, 1.5f, 0), Vec3fa(0, 0, 0),
+ //     Vec3fa(0, 1, 0), 90.0f, width, height);
 
   renderFrameStandard(g_pixels, g_accu, width, height, channels, 0.0, g_camera);
   stbi_write_png("pathtracer_single_oneapi.png", width, height, channels,
