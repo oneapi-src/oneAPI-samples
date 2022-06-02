@@ -1,12 +1,12 @@
 # `PointPillars` Sample
-This sample performs 3D object detection and classification using data (point cloud) from a LIDAR sensor as input. The Intel® oneAPI implementation is based on the paper 'PointPillars: Fast Encoders for Object Detection from Point Clouds' [1] and the implementation in [2]. It shows how DPCPP and SYCL kernels can be used in combination with the Intel® Distribution of OpenVINO™ toolkit, both part of Intel® oneAPI.
+This sample performs 3D object detection and classification using data (point cloud) from a LIDAR sensor as input. The Intel&reg; oneAPI implementation is based on the paper 'PointPillars: Fast Encoders for Object Detection from Point Clouds' [1] and the implementation in [2]. It shows how SYCL* kernels can be used in combination with the Intel&REG; Distribution of OpenVINO™ toolkit, both part of Intel&REG; oneAPI.
 
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Skylake with GEN9 or newer / Intel Xe Graphics
-| Software                          | Intel® oneAPI DPC++/C++ Compiler, Intel® Distribution of OpenVINO™ toolkit
-| What you will learn               | How to combine Intel® Distribution of OpenVINO™ toolkit and Intel® oneAPI Base Toolkit to offload the computation of a complex workload to one of Intel's supported accelerators (e.g., GPU or CPU)
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler, Intel&reg; Distribution of OpenVINO toolkit
+| What you will learn               | How to combine Intel&reg; Distribution of OpenVINO™ toolkit and Intel&reg; oneAPI Base Toolkit (Base Kit) to offload the computation of a complex workload to one of Intel's supported accelerators (e.g., GPU or CPU)
 | Time to complete                  | 30 minutes
 
 ## Purpose
@@ -14,18 +14,18 @@ PointPillars is an AI algorithm that uses LIDAR point clouds to detect and class
 
 ![Overview](data/point_pillars_overview.png)
 
-1. Pre-processing of the LiDAR input point cloud is performed. This is realized with the help of kernels implemented using SYCL and DPCPP.
-2. An anchor grid is generated. The anchors in the grid are later used in object detection to refine detected boxes by the RegionProposalNetwork (RPN). The anchor grid generation is also implemented using SYCL and DPCPP.
-3. Afterward, the pre-processed data is used by a so-called Pillar Feature Extraction (PFE) CNN to create a 2D image-like representation of the sensor environment. For the inference, this sample uses the Intel® Distribution of OpenVINO™ toolkit. The output of this CNN is a list of dense tensors (learned pillar features).
-4. To convert these dense tensors into an pseudo-image, a scatter operation is performed. This operation is again realized with SYCL and DPCPP.
-5. This pseudo-image is consumed by the second CNN, the so-called Region Proposal Network (RPN). The inference is performed with the help of the Intel® Distribution of OpenVINO™ toolkit. The output is an unfiltered list of possible object detections, their position, dimensions and classifications.
-6. Finally, this output data (object list) is post-processed with the help of the anchors created in the 2nd step. The anchors are used to decode the object position, dimension and class. Afterwards, a Non-Maximum-Suppression (NMS) is used to filter out redundant/clutter objects. Finally, the objects are sorted according to their likelihood, and then provided as output. All of these steps are implemented as SYCL and DPCPP kernels.
+1. Pre-processing of the LiDAR input point cloud is performed. This is realized with the help of kernels implemented using SYCL.
+2. An anchor grid is generated. The anchors in the grid are later used in object detection to refine detected boxes by the RegionProposalNetwork (RPN). The anchor grid generation is also implemented using SYCL.
+3. Afterward, the pre-processed data is used by a so-called Pillar Feature Extraction (PFE) CNN to create a 2D image-like representation of the sensor environment. For the inference, this sample uses the Intel&reg; Distribution of OpenVINO™ toolkit. The output of this CNN is a list of dense tensors (learned pillar features).
+4. To convert these dense tensors into an pseudo-image, a scatter operation is performed. This operation is again realized with SYCL.
+5. This pseudo-image is consumed by the second CNN, the so-called Region Proposal Network (RPN). The inference is performed with the help of the Intel&reg; Distribution of OpenVINO™ toolkit. The output is an unfiltered list of possible object detections, their position, dimensions and classifications.
+6. Finally, this output data (object list) is post-processed with the help of the anchors created in the 2nd step. The anchors are used to decode the object position, dimension and class. Afterwards, a Non-Maximum-Suppression (NMS) is used to filter out redundant/clutter objects. Finally, the objects are sorted according to their likelihood, and then provided as output. All of these steps are implemented as SYCL kernels.
 
-By default, the application will use 'host' as the execution device for SYCL/DPCPP kernels and CPU (single-threaded) for Intel® Distribution of OpenVINO™ toolkit inferencing part. The execution device and the inferencing device are displayed in the output, along with the elapsed time of each of the five steps described above. For more details refer to section: [Execution Options for the Sample Program](#execution-options-for-the-sample-program).
+By default, the application will use 'host' as the execution device for SYCL kernels and CPU (single-threaded) for Intel&reg; Distribution of OpenVINO™ toolkit inferencing part. The execution device and the inferencing device are displayed in the output, along with the elapsed time of each of the five steps described above. For more details refer to section: [Execution Options for the Sample Program](#execution-options-for-the-sample-program).
 
 ## Key Implementation Details
-This sample demonstrates a real-world, end-to-end example that uses a combination of Intel® oneAPI Base Toolkit (DPCPP, SYCL) and the Intel® Distribution of OpenVINO™ to solve object detection's complex task in a given environment. Hence, this sample will give you insights into the following aspects:
- - You will learn how to transfer data from a DPCPP/SYCL device/kernel to an OpenVINO-based inference task and back.
+This sample demonstrates a real-world, end-to-end example that uses a combination of Intel&reg; oneAPI Base Toolkit and the Intel&reg; Distribution of OpenVINO™ to solve object detection's complex task in a given environment. Hence, this sample will give you insights into the following aspects:
+ - You will learn how to transfer data from a SYCL device/kernel to an OpenVINO-based inference task and back.
  - You will learn how to implement a device manager that allows choosing the target hardware for execution, i.e., CPU, GPU or an accelerator, at runtime in a user transparent manner. As a result, the target hardware can be chosen via a command-line argument without requiring a time-consuming re-compilation (further details on the execution are provided below)
  - You will learn how to implement oneAPI-based function kernels that can be executed on the host system, on a multi-threaded CPU or a GPU.
  - You will learn how to implement standard algorithms for AI-based object detection, for example, _Non-Maximum-Suppression_, using oneAPI.
@@ -44,10 +44,10 @@ Currently, only Linux platforms are supported. It is recommended to use Ubuntu 1
 
 ### Requirements (Local or Remote Host Installation)
 To build and run the PointPillars sample, the following libraries have to be installed:
-1. Intel® Distribution of OpenVINO™ toolkit (at least 2021.1)
-2. Intel® oneAPI Base Toolkit (at least 2021.2)
+1. Intel&reg; Distribution of OpenVINO™ toolkit (at least 2021.1)
+2. Intel&reg; oneAPI Base Toolkit (at least 2021.2)
 3. Boost (including `boost::program_options` and `boost::filesystem` library). For Ubuntu, you may install the libboost-all-dev package.
-4. Optional: If the sample should be run on an Intel GPU, it might be necessary to upgrade the corresponding drivers. Therefore, please consult the following page: https://github.com/intel/compute-runtime/releases/
+4. Optional: If the sample should be run on an Intel GPU, it might be necessary to upgrade the corresponding drivers. See https://github.com/intel/compute-runtime/releases/ for updated information.
 
 ### Using Visual Studio Code*  (VS Code)
 
@@ -61,7 +61,7 @@ The basic steps to build and run a sample using VS Code include:
  - Run the sample in the VS Code terminal using the instructions below.
 
 To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+[Using Visual Studio Code with Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
@@ -71,15 +71,16 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux:
+> - For system wide installations: . /opt/intel/oneapi/setvars.sh
+> - For private installations: . ~/intel/oneapi/setvars.sh
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+> Windows:
+> - C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-1. Prepare the environment to be able to use the Intel® Distribution of OpenVINO™ toolkit and oneAPI
+1. Prepare the environment to be able to use the Intel&reg; Distribution of OpenVINO™ toolkit and oneAPI
 ```
 $ source /opt/intel/openvino_2021/bin/setupvars.sh
 $ source /opt/intel/oneapi/setvars.sh
@@ -91,7 +92,7 @@ $ mkdir build && cd build
 $ cmake ..
 $ make
 ```
-Please note that cmake will also download the ONNX models required for the two inference steps executed with the Intel® Distribution of OpenVINO™ toolkit.
+Please note that cmake will also download the ONNX models required for the two inference steps executed with the Intel&reg; Distribution of OpenVINO™ toolkit.
 
 If an error occurs, you can get more details by running `make` with the
 `VERBOSE=1` argument:
@@ -99,7 +100,7 @@ If an error occurs, you can get more details by running `make` with the
  ``make VERBOSE=1``
 
  For more comprehensive
-troubleshooting, use the Diagnostics Utility for Intel® oneAPI Toolkits, which
+troubleshooting, use the Diagnostics Utility for Intel&reg; oneAPI Toolkits, which
 provides system checks to find missing dependencies and permissions errors.
 [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
@@ -145,7 +146,7 @@ For single-threaded execution on the host system, please use:
 ```
 ./example.exe --host
 ```
-And to use an Intel® DG1 or integrated graphics, please use:
+And to use an Intel&reg; DG1 or integrated graphics, please use:
 ```
 ./example.exe --gpu
 ```
@@ -220,7 +221,7 @@ For single-threaded execution on the host system, please use:
 ```
 ./example.exe --host
 ```
-And to use an Intel® DG1 or integrated graphics, please use:
+And to use an Intel&reg; DG1 or integrated graphics, please use:
 ```
 ./example.exe --gpu
 ```
