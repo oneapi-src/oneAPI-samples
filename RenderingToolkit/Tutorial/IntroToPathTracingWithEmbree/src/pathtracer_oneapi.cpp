@@ -19,6 +19,7 @@
 #include <memory>
 #include <vector>
 #include <rkcommon/math/LinearSpace.h>
+#include "CornellBox.h"
 
 using Vec3fa = rkcommon::math::vec_t<float, 3, 1>;
 using rkcommon::math::cross;
@@ -79,6 +80,12 @@ enum MaterialType {
     MATERIAL_THIN_DIELECTRIC,
 };
 
+/* Added for geometry selection in pathtracer */
+enum SceneSelector {
+    SHOW_CUBE_AND_PLANE,
+    SHOW_CORNELL_BOX,
+};
+
 /* Added for pathtracer */
 struct Sample3f
 {
@@ -86,10 +93,20 @@ struct Sample3f
     float pdf;
 };
 
+/* Added for pathtracer */
+struct InfiniteDirectionalLight {
+    Vec3fa dir;
+    Vec3fa intensity;
+};
+
 Vec3fa* g_cube_face_colors = nullptr;
 Vec3fa* g_cube_vertex_colors = nullptr;
 Vec3fa* g_ground_face_colors = nullptr;
 Vec3fa* g_ground_vertex_colors = nullptr;
+
+/* Added for pathtracer */
+Vec3fa* g_cornell_face_colors = nullptr;
+Vec3fa* g_cornell_vertex_colors = nullptr;
 
 std::vector<unsigned int> geomIDs;
 
@@ -106,6 +123,9 @@ std::vector<std::shared_ptr<Vec3ff>> g_accu;
 unsigned int g_accu_count = 0;
 unsigned int g_max_path_length;
 unsigned int g_spp;
+SceneSelector g_sceneSelector;
+std::vector<InfiniteDirectionalLight> g_infDirectionalLights;
+unsigned int g_accu_limit;
 
 ISPCCamera g_camera;
 
@@ -144,14 +164,7 @@ void error_handler(void* userPtr, const RTCError code, const char* str) {
   exit(1);
 }
 
-/* from tutorial_device.h */
-/* vertex and triangle layout */
-struct Vertex {
-  float x, y, z, r;
-};
-struct Triangle {
-  int v0, v1, v2;
-};
+
 
 ISPCCamera positionCamera(Vec3fa from, Vec3fa to, Vec3fa up, float fov,
                           size_t width, size_t height) {
@@ -260,12 +273,12 @@ unsigned int addCube(RTCScene _scene) {
   tri++;
 
   // bottom side
-  g_cube_face_colors[tri] = Vec3fa(0.5f);
+  g_cube_face_colors[tri] = Vec3fa(1.0f);
   triangles[tri].v0 = 0;
   triangles[tri].v1 = 4;
   triangles[tri].v2 = 1;
   tri++;
-  g_cube_face_colors[tri] = Vec3fa(0.5f);
+  g_cube_face_colors[tri] = Vec3fa(1.0f);
   triangles[tri].v0 = 1;
   triangles[tri].v1 = 4;
   triangles[tri].v2 = 5;
@@ -332,30 +345,30 @@ unsigned int addGroundPlane(RTCScene _scene) {
       mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Vertex), 4);
   g_ground_vertex_colors[0] = Vec3fa(1, 0, 0);
   vertices[0].x = -10;
-  vertices[0].y = -2;
+  vertices[0].y = -1;
   vertices[0].z = -10;
   g_ground_vertex_colors[1] = Vec3fa(1, 0, 1);
   vertices[1].x = -10;
-  vertices[1].y = -2;
+  vertices[1].y = -1;
   vertices[1].z = +10;
   g_ground_vertex_colors[2] = Vec3fa(1, 1, 0);
   vertices[2].x = +10;
-  vertices[2].y = -2;
+  vertices[2].y = -1;
   vertices[2].z = -10;
   g_ground_vertex_colors[3] = Vec3fa(1, 1, 1);
   vertices[3].x = +10;
-  vertices[3].y = -2;
+  vertices[3].y = -1;
   vertices[3].z = +10;
 
   /* set triangles */
   Triangle* triangles = (Triangle*)rtcSetNewGeometryBuffer(
       mesh, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(Triangle), 2);
 
-  g_ground_face_colors[0] = Vec3fa(1, 0, 0);
+  g_ground_face_colors[0] = Vec3fa(1, 1, 1);
   triangles[0].v0 = 0;
   triangles[0].v1 = 1;
   triangles[0].v2 = 2;
-  g_ground_face_colors[1] = Vec3fa(1, 0, 0);
+  g_ground_face_colors[1] = Vec3fa(1, 1, 1);
   triangles[1].v0 = 1;
   triangles[1].v1 = 3;
   triangles[1].v2 = 2;
@@ -547,14 +560,23 @@ Vec3fa renderPixelFunction(float x, float y,
         /* default albedo is a pink color for debug */
         Vec3fa albedo = Vec3fa(0.9f, 0.7f, 0.7f);
         enum MaterialType materialType = MaterialType::MATERIAL_MATTE;
-        /* In this case an albedo as well as a material type is used */
-        if (rayhit.hit.geomID == geomIDs[0]) {
-            albedo = g_cube_face_colors[rayhit.hit.primID];
+        /* An albedo as well as a material type is used */
+        switch (g_sceneSelector) {
+        case SceneSelector::SHOW_CORNELL_BOX:
+            albedo = g_cornell_face_colors[rayhit.hit.primID];
             materialType = MaterialType::MATERIAL_MATTE;
-        }
-        else if (rayhit.hit.geomID == geomIDs[1]) {
-            albedo = g_ground_face_colors[rayhit.hit.primID];
-            materialType = MaterialType::MATERIAL_MATTE;
+            break;
+        case SceneSelector::SHOW_CUBE_AND_PLANE:
+        default:
+            if (rayhit.hit.geomID == geomIDs[0]) {
+                albedo = g_cube_face_colors[rayhit.hit.primID];
+                materialType = MaterialType::MATERIAL_MATTE;
+            }
+            else if (rayhit.hit.geomID == geomIDs[1]) {
+                albedo = g_ground_face_colors[rayhit.hit.primID];
+                materialType = MaterialType::MATERIAL_MATTE;
+            }
+            break;
         }
 
 
@@ -573,15 +595,16 @@ Vec3fa renderPixelFunction(float x, float y,
         c = c * Material__sample(albedo, materialType, Lw, wo, dg, wi1, randomMatSample);
 
         /* Create one light transmitting directionally */
-        Vec3fa lightDir = normalize(Vec3fa(-1, -1, -1));
-        //Vec3fa lightDir = normalize(Vec3fa(0, -1, 0));
+        //Vec3fa lightDir = normalize(Vec3fa(-1, -1, -1));
+        Vec3fa lightDir = normalize(Vec3fa(0, -1, 0));
         //Vec3fa lightDir = -(normalize(camera.p));
         Vec3fa lightIntensity(1.0f);
         /* Search for each light in the scene from our hit point. Aggregate the radiance if hit point is not occluded */
+        for(auto light : g_infDirectionalLights)
         {
             context.flags = RTCIntersectContextFlags::RTC_INTERSECT_CONTEXT_FLAG_INCOHERENT;
             Vec2f randomLightSample(distrib(reng), distrib(reng));
-            Light_SampleRes ls = sample_directional_light(lightDir, lightIntensity, dg, randomLightSample);
+            Light_SampleRes ls = sample_directional_light(light.dir, light.intensity, dg, randomLightSample);
             /* If the sample probability density evaluation is 0 then no need to consider this shadow ray */
             if (ls.pdf <= 0.0f) continue;
 
@@ -609,7 +632,7 @@ Vec3fa renderPixelFunction(float x, float y,
 }
 
 /* task that renders a single screen pixel */
-Vec3fa renderPixelStandard(int x, int y,
+Vec3fa renderPixelStandard(int x, int y, 
     const unsigned int width, const unsigned int height,
     const float time,
     const ISPCCamera& camera) {
@@ -621,7 +644,7 @@ Vec3fa renderPixelStandard(int x, int y,
 
     for (int i = 0; i < g_spp; i++)
     {
-        reng.seed(g_accu_count * g_spp + i);
+        reng.seed(g_accu_count * (y * width +x) * g_spp + (y * width + x) *  g_spp + i);
 
         /* calculate pixel color */
         float fx = x + distrib(reng); 
@@ -712,6 +735,11 @@ void device_cleanup() {
   g_ground_face_colors = nullptr;
   if (g_ground_vertex_colors) alignedFree(g_ground_vertex_colors);
   g_ground_vertex_colors = nullptr;
+
+  if (g_cornell_face_colors) alignedFree(g_cornell_face_colors);
+  g_cornell_face_colors = nullptr;
+  if (g_cornell_vertex_colors) alignedFree(g_cornell_vertex_colors);
+  g_cornell_vertex_colors = nullptr;
 }
 
 void device_init(char* cfg) {
@@ -719,11 +747,21 @@ void device_init(char* cfg) {
   g_scene = nullptr;
   g_scene = rtcNewScene(g_device);
 
-  /* add cube */
-  geomIDs.push_back(addCube(g_scene));
+  switch (g_sceneSelector) {
+      case SceneSelector::SHOW_CORNELL_BOX:
+        /* add cornell box */
+        geomIDs.push_back(addCornell(g_scene, g_device, &g_cornell_face_colors, &g_cornell_vertex_colors));
+        break;
+      case SceneSelector::SHOW_CUBE_AND_PLANE:
+      default:
+        /* add cube */
+        geomIDs.push_back(addCube(g_scene));
+        /* add ground plane */
+        geomIDs.push_back(addGroundPlane(g_scene));
+        break;
 
-  /* add ground plane */
-  geomIDs.push_back(addGroundPlane(g_scene));
+  }
+
 
   /* commit changes to scene */
   rtcCommitScene(g_scene);
@@ -738,17 +776,16 @@ int main() {
   /* set error handler */
   rtcSetDeviceErrorFunction(g_device, error_handler, nullptr);
 
+  g_sceneSelector = SceneSelector::SHOW_CORNELL_BOX;
   device_init(nullptr);
 
   /* create an image buffer initialize it with all zeroes */
-  const unsigned int width = 320;
-  const unsigned int height = 200;
-  const unsigned int channels = 3;
+//  const unsigned int width = 320;
+//  const unsigned int height = 200;
 
-  /* accumulation buffer used for introduction to future applications */
-  const unsigned int accu_limit = 10;
-  g_spp = 8;
-  g_max_path_length = 8;
+  const unsigned int width = 640;
+  const unsigned int height = 480;
+  const unsigned int channels = 3;
 
   g_pixels = (unsigned char*)new unsigned char[width * height * channels];
   std::memset(g_pixels, 0, sizeof(unsigned char) * width * height * channels);
@@ -757,8 +794,33 @@ int main() {
   for (auto i = 0; i < width * height; i++)
       g_accu[i] = std::make_shared<Vec3ff>(0.0f);
 
-  g_camera = positionCamera(Vec3fa(1.5f, 1.5, -1.5f), Vec3fa(0, 0, 0),
-                            Vec3fa(0, 1, 0), 90.0f, width, height);
+  /* accumulation buffer used for introduction to future applications */
+  const unsigned int g_accu_limit = 1;
+  g_spp = 4;
+  g_max_path_length = 8;
+  Vec3fa defaultLightDirection = normalize(Vec3fa(-1.0f, -1.0f, -1.0f));
+  Vec3fa defaultLightIntensity = { 1.0f, 1.0f, 1.0f };
+
+  switch (g_sceneSelector) {
+  case SceneSelector::SHOW_CORNELL_BOX:
+      g_camera = positionCamera(Vec3fa(0.0, 0.0, -2.0f), Vec3fa(0, 0, 0),
+          Vec3fa(0, 1, 0), 90.0f, width, height);
+      g_infDirectionalLights.resize(1);
+      //g_infDirectionalLights[0].dir = normalize(Vec3fa( -0.2f, -0.9f, -0.2f));
+      g_infDirectionalLights[0].dir = normalize(Vec3fa(0.0f, 0.0f, 2.0f));
+      //g_infDirectionalLights[0].intensity = 4*Vec3fa(0.78f, 0.551f, 0.183f);
+      g_infDirectionalLights[0].intensity = 4 * defaultLightIntensity;
+      break;
+  case SceneSelector::SHOW_CUBE_AND_PLANE:
+  default:
+      g_camera = positionCamera(Vec3fa(1.5f, 1.5, -1.5f), Vec3fa(0, 0, 0),
+          Vec3fa(0, 1, 0), 90.0f, width, height);
+      g_infDirectionalLights.resize(1);
+      g_infDirectionalLights[0].dir = defaultLightDirection;
+      g_infDirectionalLights[0].intensity = 4*defaultLightIntensity;
+      break;
+  }
+
 
  // g_camera = positionCamera(Vec3fa(0, 1.5f, 0), Vec3fa(0, 0, 0),
  //     Vec3fa(0, 1, 0), 90.0f, width, height);
@@ -767,7 +829,7 @@ int main() {
   stbi_write_png("pathtracer_single_oneapi.png", width, height, channels,
                  g_pixels, width * channels);
 
-  for (unsigned int i = 0; i < accu_limit; i++)
+  for (unsigned int i = 1; i < g_accu_limit; i++)
       renderFrameStandard(g_pixels, g_accu, width, height, channels, 0.0, g_camera);
 
   stbi_write_png("pathtracer_accu_oneapi.png", width, height, channels,
