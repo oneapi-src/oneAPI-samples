@@ -796,8 +796,8 @@ int main() {
 
   /* accumulation buffer used for introduction to future applications */
   const unsigned int g_accu_limit = 1;
-  g_spp = 4;
-  g_max_path_length = 8;
+  g_spp = 6;
+  g_max_path_length = 20;
   Vec3fa defaultLightDirection = normalize(Vec3fa(-1.0f, -1.0f, -1.0f));
   Vec3fa defaultLightIntensity = { 1.0f, 1.0f, 1.0f };
 
@@ -807,7 +807,8 @@ int main() {
           Vec3fa(0, 1, 0), 90.0f, width, height);
       g_infDirectionalLights.resize(1);
       //g_infDirectionalLights[0].dir = normalize(Vec3fa( -0.2f, -0.9f, -0.2f));
-      g_infDirectionalLights[0].dir = normalize(Vec3fa(0.0f, 0.0f, 2.0f));
+      //g_infDirectionalLights[0].dir = normalize(Vec3fa(0.0f, 0.0f, 2.0f));
+      g_infDirectionalLights[0].dir = normalize(Vec3fa(0.0f, -0.0f, 2.0f));
       //g_infDirectionalLights[0].intensity = 4*Vec3fa(0.78f, 0.551f, 0.183f);
       g_infDirectionalLights[0].intensity = 4 * defaultLightIntensity;
       break;
