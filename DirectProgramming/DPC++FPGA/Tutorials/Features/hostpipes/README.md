@@ -122,8 +122,8 @@ Host pipe connections for a particular host pipe are inferred by the compiler fr
 ### Testing the Tutorial
 In `hostpipes.cpp`, two hostpipes are declared for transferring host-to-device data (`H2DPipe`) and device-to-host data (`D2HPipe`).
 ```c++
-using H2DPipe = cl::sycl::ext::intel::prototype::pipe<H2DPipeID, ValueT, kPipeMinCapacity, kReadyLatency, kBitsPerSymbol, false, false, protocol_name::AVALON_MM>;
-using D2HPipe = cl::sycl::ext::intel::prototype::pipe<D2HPipeID, ValueT, kPipeMinCapacity, kReadyLatency, kBitsPerSymbol, false, false, protocol_name::AVALON_MM>;
+using H2DPipe = cl::sycl::ext::intel::prototype::pipe<H2DPipeID, ValueT, kPipeMinCapacity, kReadyLatency, kBitsPerSymbol, true, false, protocol_name::AVALON_STREAMING>;
+using D2HPipe = cl::sycl::ext::intel::prototype::pipe<D2HPipeID, ValueT, kPipeMinCapacity, kReadyLatency, kBitsPerSymbol, true, false, protocol_name::AVALON_STREAMING>;
 ```
 These host pipes are used to transfer data to and from the SubmitLoopBackKernel, which reads a data element from the H2DPipe (parameterized in the kernel template as InHostPipe), processes it using the something_complicated() function (a placeholder example of offload computation), and writes it back to the host via the D2HPipe (template parameter OutHostPipes).
 
@@ -133,7 +133,7 @@ event SubmitLoopBackKernel(queue& q, size_t count) {
   return q.single_task<KernelId>([=] {
     for (size_t i = 0; i < count; i++) {
       auto d = InHostPipe::read();
-      auto r = something_complicated(d);
+      auto r = SomethingComplicated(d);
       OutHostPipe::write(r);
     }
   });
@@ -178,7 +178,7 @@ Code samples are licensed under the MIT license. See
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-## Building the `loop_ivdep` Tutorial
+## Building the `hostpipes` Tutorial
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
@@ -226,14 +226,10 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake ..
-   ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   To compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake ..
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
@@ -254,7 +250,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/loop_ivdep.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/hostpipes.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
@@ -263,14 +259,10 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
-   ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   To compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. 
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
@@ -292,7 +284,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      nmake fpga
      ```
 
->Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
+>Note:* The Intel® FPGA PAC D5005 with Intel Stratix® 10 SX does not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 *Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ### Troubleshooting
@@ -307,7 +299,7 @@ dependencies and permissions errors.
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs]([https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html))
 
 ## Examining the Reports
 Locate `report.html` in the `loop_ivdep_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
