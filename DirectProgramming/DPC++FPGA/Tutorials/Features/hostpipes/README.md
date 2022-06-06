@@ -103,7 +103,7 @@ SecondPipeInstance::write(another_data_element);
 
 #### Blocking Read
 
-The host pipe read interface reads a single element of type datatape from the host pipe. Similar to write, the read interface on the host takes a SYCL device queue as a parameter. The device read interface consists of the class method read call with no arguments
+The host pipe read interface reads a single element of given datatape from the host pipe. Similar to write, the read interface on the host takes a SYCL device queue as a parameter. The device read interface consists of the class method read call with no arguments
 
 ```c++
 // read in device code
