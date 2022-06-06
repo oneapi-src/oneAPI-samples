@@ -43,11 +43,33 @@ class FirstPipeT;
 class SecondPipeT;
 
 // two host pipes 
-using FirstPipeInstance = cl::sycl::ext::intel::prototype::pipe<FirstPipeT, int, 8, ...>;
-using SecondPipeInstance = cl::sycl::ext::intel::prototype::pipe<SecondPipeT, float, 4, ...>;
+using FirstPipeInstance = cl::sycl::ext::intel::prototype::pipe<
+    // Usual pipe parameters
+    FirstPipeT, // An identifier for the pipe
+    int,        // The type of data in the pipe
+    8,          // The capacity of the pipe
+    // Additional host pipe parameters
+    kReadyLatency,                   // Latency for ready signal deassert
+    kBitsPerSymbol,                  // Symbol size on data bus
+    true,                            // Exposes a valid on the pipe interface
+    false,                           // First symbol in high order bits
+    protocol_name::AVALON_STREAMING  // Protocol
+    >;
+using SecondPipeInstance = cl::sycl::ext::intel::prototype::pipe<
+    // Usual pipe parameters
+    SecondPipeT, // An identifier for the pipe
+    int,         // The type of data in the pipe
+    4,           // The capacity of the pipe
+    // Additional host pipe parameters
+    kReadyLatency,                   // Latency for ready signal deassert
+    kBitsPerSymbol,                  // Symbol size on data bus
+    true,                            // Exposes a valid on the pipe interface
+    false,                           // First symbol in high order bits
+    protocol_name::AVALON_STREAMING  // Protocol
+    >;
 ```
 
-In this example, FirstPipeT and SecondPipeT are unique user-defined types that will idenfify two different host pipes. The first host pipe (which has been aliased to FirstPipeInstance), carries int type data elements and has a capacity of 8. The second host pipe (SecondPipeInstance) carries float type data elements, and has a capacity of 4. Using aliases allows these pipes to be referred to by a shorter and more descriptive handle, rather than requiring the full namespace and template parameters to be repeatedly written.
+In this example, FirstPipeT and SecondPipeT are unique user-defined types that will idenfify two different host pipes. The first host pipe (which has been aliased to FirstPipeInstance), carries int type data elements and has a capacity of 8. The second host pipe (SecondPipeInstance) carries float type data elements, and has a capacity of 4. Additonal host pipe parameters beyond these first three have been set to sensible default values, but are not germane to this tutorial. Users may consult the [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) for a thorough description of these parameters. Using aliases allows these pipes to be referred to by a shorter and more descriptive handle, rather than requiring the full namespace and template parameters to be repeatedly written.
 
 #### Additional template parameters
 
@@ -67,7 +89,7 @@ queue q(...);
 ...
 int data_element = ...;
 
-// host write
+// write from host to pipe
 FirstPipeInstance::write(q, data_element);
 ```
 
@@ -76,7 +98,7 @@ In the FPGA kernel, writes to a host pipe take a single argument, which is the e
 ```c++
 float another_data_element = ...;
 
-// device write
+// write from device to pipe
 SecondPipeInstance::write(another_data_element);
 
 #### Blocking Read
