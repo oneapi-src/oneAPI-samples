@@ -120,7 +120,7 @@ float another_read_element = SecondPipeInstance::read(q);
 Host pipe connections for a particular host pipe are inferred by the compiler from the presence of read and write calls to that host pipe in user code. A host pipe may only be connected from the host to a single kernel, i.e., host pipe calls for a particular host pipe must be restricted to the same kernel. Host pipes may also only operate in one direction, i.e., host-to-kernel or kernel-to-host. This means that host code for a particular host pipe may only contain either all writes or all reads to that pipe, and the corresponding kernel code for the same host pipe may only consist of the opposite transaction.
 
 ### Testing the Tutorial
-In `hostpipes.cpp`, two hostpipes are declared for transferring host-to-device data (H2DPipe) and device-to-host data (D2HPipe).
+In `hostpipes.cpp`, two hostpipes are declared for transferring host-to-device data (`H2DPipe`) and device-to-host data (`D2HPipe`).
 ```c++
 using H2DPipe = cl::sycl::ext::intel::prototype::pipe<H2DPipeID, ValueT, kPipeMinCapacity, kReadyLatency, kBitsPerSymbol, false, false, protocol_name::AVALON_MM>;
 using D2HPipe = cl::sycl::ext::intel::prototype::pipe<D2HPipeID, ValueT, kPipeMinCapacity, kReadyLatency, kBitsPerSymbol, false, false, protocol_name::AVALON_MM>;
