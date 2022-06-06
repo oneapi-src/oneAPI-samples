@@ -35,7 +35,7 @@ Additionally, the oneAPI 2022.3 prototype implementation of host pipes relies on
 Both of these restrictions (separate namespace and requiring USM) will be lifted in a future release. 
 
 ### Declaring a Host Pipe
-Each individual host pipe is a function scope class declaration of the templated pipe class. The first template parameter should be a user-defined type that will differentiate this particular pipe from all others. The second template parameter defines the datatype of each element carried by the pipe. The third template parameter defines the pipe capacity, which is the guaranteed minimum number of elements of datatype that can be held in a pipe. In other words, for a given pipe with capacity c, the compiler will guarantee that operations on the pipe will not block due to capacity as long as, for any consecutive n operations on the pipe, the number of writes to the pipe minus the number of reads does not exceed c.
+Each individual host pipe is a function scope class declaration of the templated pipe class. The first template parameter should be a user-defined type that will differentiate this particular pipe from all others. The second template parameter defines the datatype of each element carried by the pipe. The third template parameter defines the pipe capacity, which is the guaranteed minimum number of elements of datatype that can be held in a pipe. In other words, for a given pipe with capacity `c`, the compiler will guarantee that operations on the pipe will not block due to capacity as long as, for any consecutive `n` operations on the pipe, the number of writes to the pipe minus the number of reads does not exceed `c`.
 
 ```c++
 // unique user-defined types
