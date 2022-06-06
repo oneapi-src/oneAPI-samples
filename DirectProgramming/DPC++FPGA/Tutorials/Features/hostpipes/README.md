@@ -60,7 +60,7 @@ Host Pipes expose read and write interfaces that allow a single element to be re
 
 #### Blocking Write
 
-The host pipe write interface writes a single element of type datatape to the host pipe. On the host side, this class method takes a SYCL device queue argument as its first argument, and the element being written as its second argument.
+The host pipe write interface writes a single element of the given datatape (`int` in the examples below) to the host pipe. On the host side, this class method takes a SYCL device queue argument as its first argument, and the element being written as its second argument.
 
 ```c++
 queue q(...);
