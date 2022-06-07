@@ -3,8 +3,7 @@
 These examples demonstrate some of the new OpenMP Offload features supported
 by the Intel&reg; oneAPI DPC++/C++ Compiler.
 
-For more information on the compiler see the
-[Intel&reg oneAPI DPC++/C++ Compiler Landing Page](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/dpc-compiler.html).
+For more information, see [Intel&reg; oneAPI DPC++/C++ Compiler](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/dpc-compiler.html).
 
 | Optimized for        | Description
 |:---                  |:---
@@ -30,7 +29,7 @@ The table below shows the designs and the demonstrated feature(s).
 | class_member_functor             | Usage of functor in an OpenMP offload region
 | function_pointer                 | Function called through a function pointer in an offload region (currently only for CPU target)
 | user_defined_mapper              | Usage of the user defined mapper feature in target region map clauses
-| usm_and_composabilty_with_dpcpp  | Unified shared memory and composability with DPC++
+| usm_and_composabilty_with_dpcpp  | Unified shared memory and composability with SYCL
 
 
 ## License
@@ -56,7 +55,7 @@ The basic steps to build and run a sample using VS Code include:
  - Run the sample in the VS Code terminal using the instructions below.
 
 To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+[Using Visual Studio Code with Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
@@ -67,11 +66,12 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux:
+> - For system wide installations: . /opt/intel/oneapi/setvars.sh
+> - For private installations: . ~/intel/oneapi/setvars.sh
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+> Windows:
+> - C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
@@ -109,8 +109,8 @@ Perform the following steps:
     make clean
     ```
 
-If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel&reg; oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ### Example of Output
 
