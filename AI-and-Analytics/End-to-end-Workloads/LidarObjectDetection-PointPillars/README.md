@@ -189,7 +189,7 @@ The input data for the sample program is the example.pcd located in the /data fo
 ![SampleScene](data/image.png)
 The example.pcd file is a point cloud in ASCII using the PCL-format, which renders to (using the pcl_viewer tool):
 ![SamplePointCloud](data/pointcloud.png)
-It is worth noting that there are three cars in this scene, one of which is very far away and thus not yet properly covered in the LIDAR scan. Then, there is a black car inside the intersection, which is also well visible in the LIDAR data, and a hidden car, right behind the black one. Hence, `PointPillars` should detect at least one car.
+Note there are three cars in this scene, one of which is very far away and thus not yet properly covered in the LIDAR scan. There is a black car inside the intersection, which is also well visible in the LIDAR data, and a hidden car, right behind the black one. `PointPillars` should detect at least one car.
 
 Successful execution of the sample program results in at least one detected object and an output similar to:
 ```
@@ -228,6 +228,7 @@ And to use an Intel&reg; DG1 or integrated graphics, please use:
 These options can also be used in combination, e.g.:
 ```
 ./example.exe --cpu --gpu --host
+```
 
 ## Known Limitations
 - This sample code only works using models trained with the Sigmoid function, not with Softmax or Crossentropy
