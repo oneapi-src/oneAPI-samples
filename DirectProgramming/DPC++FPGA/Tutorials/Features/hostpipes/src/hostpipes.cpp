@@ -1,17 +1,11 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
-#include <CL/sycl.hpp>
+include <CL/sycl.hpp>
 #include <algorithm>
+#include <host_pipes.hpp>
 #include <iomanip>
 #include <iostream>
 #include <numeric>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <vector>
-
-#include "host_pipes.hpp"
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -19,7 +13,6 @@
 
 using namespace sycl;
 using namespace std::chrono;
-using namespace cl::sycl::ext::intel::prototype::internal;
 
 // forward declare kernel and pipe names to reduce name mangling
 class LoopBackKernelID;
@@ -31,21 +24,41 @@ using ValueT = int;
 constexpr size_t kPipeMinCapacity = 8;
 constexpr size_t kReadyLatency = 0;
 constexpr size_t kBitsPerSymbol = 1;
-using H2DPipe =
-    cl::sycl::ext::intel::prototype::pipe<H2DPipeID, ValueT, kPipeMinCapacity,
-                                          kReadyLatency, kBitsPerSymbol, false,
-                                          false, protocol_name::AVALON_MM>;
-using D2HPipe =
-    cl::sycl::ext::intel::prototype::pipe<D2HPipeID, ValueT, kPipeMinCapacity,
-                                          kReadyLatency, kBitsPerSymbol, false,
-                                          false, protocol_name::AVALON_MM>;
+
+using H2DPipe = cl::sycl::ext::intel::prototype::pipe<
+    // Usual pipe parameters
+    H2DPipeID,         // An identifier for the pipe
+    ValueT,            // The type of data in the pipe
+    kPipeMinCapacity,  // The capacity of the pipe
+    // Additional host pipe parameters
+    kReadyLatency,   // Latency for ready signal deassert
+    kBitsPerSymbol,  // Symbol size on data bus
+    true,            // Exposes a valid on the pipe interface
+    false,           // First symbol in high order bits
+    cl::sycl::ext::intel::prototype::internal::protocol_name::
+        AVALON_STREAMING  // Protocol
+    >;
+
+using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
+    // Usual pipe parameters
+    D2HPipeID,         // An identifier for the pipe
+    ValueT,            // The type of data in the pipe
+    kPipeMinCapacity,  // The capacity of the pipe
+    // Additional host pipe parameters
+    kReadyLatency,   // Latency for ready signal deassert
+    kBitsPerSymbol,  // Symbol size on data bus
+    true,            // Exposes a valid on the pipe interface
+    false,           // First symbol in high order bits
+    cl::sycl::ext::intel::prototype::internal::protocol_name::
+        AVALON_STREAMING  // Protocol
+    >;
 
 // forward declare the test functions
 void AlternatingTest(queue&, ValueT*, ValueT*, size_t, size_t);
 void LaunchCollectTest(queue&, ValueT*, ValueT*, size_t, size_t);
 
 // offloaded computation
-ValueT something_complicated(ValueT val) { return (ValueT)(val * sqrt(val)); }
+ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * sqrt(val)); }
 
 /////////////////////////////////////////
 
@@ -62,12 +75,13 @@ int main(int argc, char* argv[]) {
   if (argc > 1) count = atoi(argv[1]);
 
   if (count <= 0) {
-    std::cerr << "ERROR: 'count' must be positive\n";
+    std::cerr << "ERROR: 'count' must be positive" << std::endl;
     return 1;
   }
   if (count < kPipeMinCapacity) {
     std::cerr
-        << "ERROR: 'count' must be greater than the minimum pipe capacity\n";
+        << "ERROR: 'count' must be greater than the minimum pipe capacity ("
+        << kPipeMinCapacity << ")" << std::endl;
     return 1;
   }
 
@@ -78,17 +92,17 @@ int main(int argc, char* argv[]) {
 
     // make sure the device supports USM device allocations
     device d = q.get_device();
-    if (!d.get_info<info::device::usm_host_allocations>()) {
+    if (!d.has(aspect::usm_host_allocations)) {
       std::cerr << "ERROR: The selected device does not support USM host"
-                << " allocations\n";
+                << " allocations" << std::endl;
       return 1;
     }
 
-    // create input and output data
+    // create input and golden output data
     std::vector<ValueT> in(count), out(count), golden(count);
     std::generate(in.begin(), in.end(), [] { return ValueT(rand() % 77); });
     for (int i = 0; i < count; i++) {
-      golden[i] = something_complicated(in[i]);
+      golden[i] = SomethingComplicated(in[i]);
     }
 
     // validation lambda
@@ -96,7 +110,7 @@ int main(int argc, char* argv[]) {
       for (int i = 0; i < size; i++) {
         if (out[i] != in[i]) {
           std::cout << "out[" << i << "] != in[" << i << "]"
-                    << " (" << out[i] << " != " << in[i] << ")\n";
+                    << " (" << out[i] << " != " << in[i] << ")" << std::endl;
           return false;
         }
       }
@@ -132,20 +146,27 @@ int main(int argc, char* argv[]) {
   }
 }
 
-template <typename KernelId, typename InHostPipe, typename OutHostPipe>
+// This kernel reads a data element from InHostPipe, processes it,
+// and writes the result to OutHostPipe
+template <typename KernelId,    // type identifier for kernel
+          typename InHostPipe,  // host-to-device pipe
+          typename OutHostPipe  // device-to-host pipe
+          >
 event SubmitLoopBackKernel(queue& q, size_t count) {
   return q.single_task<KernelId>([=] {
     for (size_t i = 0; i < count; i++) {
       auto d = InHostPipe::read();
-      auto r = something_complicated(d);
+      auto r = SomethingComplicated(d);
       OutHostPipe::write(r);
     }
   });
 }
 
+// This test launches SubmitLoopBackKernel, then alternates writes
+// and reads to and from the H2DPipe and D2HPipe hostpipes respectively
 void AlternatingTest(queue& q, ValueT* in, ValueT* out, size_t count,
                      size_t repeats) {
-  std::cout << "\t Submitting Loopback Kernel" << std::endl;
+  std::cout << "\t Run Loopback Kernel on FPGA" << std::endl;
   auto e = SubmitLoopBackKernel<LoopBackKernelID, H2DPipe, D2HPipe>(
       q, count * repeats);
 
@@ -153,7 +174,9 @@ void AlternatingTest(queue& q, ValueT* in, ValueT* out, size_t count,
     std::cout << "\t " << r << ": "
               << "Doing " << count << " writes & reads" << std::endl;
     for (size_t i = 0; i < count; i++) {
+      // write data in host-to-device hostpipe
       H2DPipe::write(q, in[i]);
+      // read data from device-to-host hostpipe
       out[i] = D2HPipe::read(q);
     }
   }
@@ -163,9 +186,12 @@ void AlternatingTest(queue& q, ValueT* in, ValueT* out, size_t count,
   std::cout << "\t Done" << std::endl;
 }
 
+// This test launches SubmitLoopBackKernel, writes 'count'
+// elements to H2DPipe, and then reads 'count' elements from
+// D2HPipe
 void LaunchCollectTest(queue& q, ValueT* in, ValueT* out, size_t count,
                        size_t repeats) {
-  std::cout << "\t Submitting Loopback Kernel" << std::endl;
+  std::cout << "\t Run Loopback Kernel on FPGA" << std::endl;
   auto e = SubmitLoopBackKernel<LoopBackKernelID, H2DPipe, D2HPipe>(
       q, count * repeats);
 
@@ -173,12 +199,14 @@ void LaunchCollectTest(queue& q, ValueT* in, ValueT* out, size_t count,
     std::cout << "\t " << r << ": "
               << "Doing " << count << " writes" << std::endl;
     for (size_t i = 0; i < count; i++) {
+      // write data in host-to-device hostpipe
       H2DPipe::write(q, in[i]);
     }
 
     std::cout << "\t " << r << ": "
               << "Doing " << count << " reads" << std::endl;
     for (size_t i = 0; i < count; i++) {
+      // read data from device-to-host hostpipe
       out[i] = D2HPipe::read(q);
     }
   }
