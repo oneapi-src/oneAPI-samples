@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Running Alternating write-and-read" << std::endl;
     std::fill(out.begin(), out.end(), 0);
     AlternatingTest(q, in.data(), out.data(), count, 3);
-    passed &= validate(golden, out, count);
+    passed &= validate(out, golden, count);
     std::cout << std::endl;
 
     // Launch and Collect
