@@ -27,7 +27,7 @@ endif()
 # Allow the user to specify the maximum cache depth, or select a default value
 # e.g. cmake .. -DMAX_CACHE_DEPTH=4
 if(NOT DEFINED MAX_CACHE_DEPTH)
-    set(MAX_CACHE_DEPTH "5")
+    set(MAX_CACHE_DEPTH "12")
 endif()
 set(MAX_CACHE_DEPTH_FLAG "-DMAX_CACHE_DEPTH=${MAX_CACHE_DEPTH}")
 

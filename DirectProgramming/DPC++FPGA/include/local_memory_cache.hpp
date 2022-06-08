@@ -16,10 +16,9 @@ class LocalMemoryCache {
   static constexpr int kNumAddrBits = fpga_tools::CeilLog2(k_mem_depth);
   using addr_t = ac_int<kNumAddrBits, false>;
 
-  LocalMemoryCache() {}
-  LocalMemoryCache(T init_val) { 
+  LocalMemoryCache() {
     for (int i = 0; i < k_cache_depth; i++) {
-      cache_val_[i] = init_val;
+      cache_valid_[i] = false;
     }
   }
   
@@ -27,10 +26,15 @@ class LocalMemoryCache {
   LocalMemoryCache& operator=(const LocalMemoryCache&) = delete;
 
   // add a value into the cache
-  void AddToCache(addr_t addr, T val) {
+  void AddToCache(addr_t addr, T val, bool valid = true) {
     // Shift the values in the cache
     #pragma unroll
     for (int i = 0; i < k_cache_depth-1; i++) {
+      if (cache_addr_[i+1] == addr && valid) {
+        cache_valid_[i] = false;    // invalidate old cache entry at same addr
+      } else {
+        cache_valid_[i] = cache_valid_[i + 1];
+      }
       cache_val_[i] = cache_val_[i + 1];
       cache_addr_[i] = cache_addr_[i + 1];
     }
@@ -38,6 +42,7 @@ class LocalMemoryCache {
     // write the new value into the cache
     cache_val_[k_cache_depth-1] = val;
     cache_addr_[k_cache_depth-1] = addr;
+    cache_valid_[k_cache_depth-1] = valid;
   }
 
   // check if a given address is in the cache, return true on a cache hit
@@ -49,7 +54,7 @@ class LocalMemoryCache {
     // check the cache, newest value will take precedence
     #pragma unroll
     for (int i = 0; i < k_cache_depth; i++) {
-      if (cache_addr_[i] == addr) {
+      if ((cache_addr_[i] == addr) && (cache_valid_[i])) {
         val = cache_val_[i];
         return_val = true;
       } 
@@ -58,11 +63,19 @@ class LocalMemoryCache {
     return return_val;
   }
 
+  // use a template parameter here for index to avoid generating a mux
+  template <size_t index> bool GetCacheVal( addr_t &addr, T &val) {
+    val = cache_val_[index];
+    addr = cache_addr_[index];
+    return cache_valid_[index];
+  }
+
  private:
   // the cache must be implemented in registers to allow simultaneous access
   // to all elements
-  [[intel::fpga_register]] T cache_val_[k_cache_depth];
-  [[intel::fpga_register]] addr_t cache_addr_[k_cache_depth];
+  T cache_val_[k_cache_depth];
+  addr_t cache_addr_[k_cache_depth];
+  bool cache_valid_[k_cache_depth];
 };
 
 // specialization for cache size 0 (no cache)
@@ -75,13 +88,15 @@ class LocalMemoryCache<T, k_mem_depth, 0> {
   using addr_t = ac_int<kNumAddrBits, false>;
 
   LocalMemoryCache() {}
-  LocalMemoryCache(T init_val) {}
 
   LocalMemoryCache(const LocalMemoryCache&) = delete;
   LocalMemoryCache& operator=(const LocalMemoryCache&) = delete;
 
-  void AddToCache(addr_t addr, T val) {}
+  void AddToCache(addr_t addr, T val, bool valid = true) {}
   bool CheckCache(addr_t addr, T &val) { return false; }
+  template <size_t index> bool GetCacheVal( addr_t &addr, T &val) { 
+    return false;
+  }
 };
 
 }   // namespace fpga_tools
