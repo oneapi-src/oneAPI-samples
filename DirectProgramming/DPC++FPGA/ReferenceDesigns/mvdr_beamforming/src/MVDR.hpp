@@ -16,7 +16,8 @@
 #include "ForwardSubstitution.hpp"
 #include "InputDemux.hpp"
 #include "SteeringVectorGenerator.hpp"
-#include "StreamingQRD.hpp"
+#include "StreamingQRDWrapper.hpp"
+#include "DiagReciprocal.hpp"
 #include "Transpose.hpp"
 
 using namespace sycl;
@@ -27,6 +28,7 @@ enum class MVDRKernelNames {
   input_demux,
   transpose,
   streaming_qrd,
+  diag_reciprocal,
   steering_vector_generator,
   forward_substitution,
   backward_substitution,
@@ -47,6 +49,8 @@ template <size_t k_instance_num>
 class Transpose;
 template <size_t k_instance_num>
 class StreamingQRD;
+template <size_t k_instance_num>
+class DiagReciprocal;
 template <size_t k_instance_num>
 class SteeringVectorGenerator;
 template <size_t k_instance_num>
@@ -242,12 +246,13 @@ MVDREventArray SubmitMVDRKernels(
       ((k_num_sensor_inputs * (k_num_sensor_inputs + 1)) / 2) * 2;
   using RMatrixPipes =
       fpga_tools::PipeArray<RMatrixPipesID<k_instance_num>, ComplexType,
-                            kRMatrixPipeMinDepth, 2>;
+                            kRMatrixPipeMinDepth, 3>;
   using RMatrixFSPipe = typename RMatrixPipes::template PipeAt<0>;
   using RMatrixBSPipe = typename RMatrixPipes::template PipeAt<1>;
+  using RMatrixDRPipe = typename RMatrixPipes::template PipeAt<2>;
   using RMatrixDupPipe =
       fpga_tools::PipeDuplicator<RMatrixDupPipeID<k_instance_num>, ComplexType,
-                                 RMatrixFSPipe, RMatrixBSPipe, RMatrixPipeOut>;
+                                 RMatrixFSPipe, RMatrixBSPipe, RMatrixDRPipe, RMatrixPipeOut>;
   constexpr int kRDiagRecipVectorPipeMinDepth = k_num_sensor_inputs * 2;
   using RDiagRecipVectorPipes =
       fpga_tools::PipeArray<RDiagRecipVectorPipesID<k_instance_num>, float,
@@ -297,7 +302,7 @@ MVDREventArray SubmitMVDRKernels(
   // Q matrix pipe
   // Q matrix not used in MVDR design, so this is a 'null' pipe (a
   // PipeDuplicator with no output pipes connected)
-  using QMatrixColumn = fpga_tools::NTuple<ComplexType, k_num_sensor_inputs>;
+  using QMatrixColumn = fpga_tools::NTuple<ComplexType, k_num_complex_per_xrx_read>;
   using QMatrixPipe =
       fpga_tools::PipeDuplicator<QMatrixPipeID<k_instance_num>, QMatrixColumn>;
 
@@ -359,8 +364,15 @@ MVDREventArray SubmitMVDRKernels(
           k_num_complex_per_xrx_read,  // number of elements per pipe read
           TransposedTrainingDataPipe,  // A matrix input
           QMatrixPipe,                 // Q output pipe (unused in MVDR)
-          RMatrixDupPipe,              // R output pipe
-          RDiagRecipVectorDupPipe  // 1 / the value of each diagonal entry of R
+          RMatrixDupPipe               // R output pipe
+          >(q);
+
+  events[static_cast<int>(MVDRKernelNames::diag_reciprocal)] =
+      SubmitDiagReciprocalKernel<
+          DiagReciprocal<k_instance_num>,  // Name to use for the Kernel
+          k_num_sensor_inputs,             // number of rows of the R matrix
+          RMatrixDRPipe,                   // Input R pipe
+          RDiagRecipVectorDupPipe          // Output pipe for reciprocals
           >(q);
 
   events[static_cast<int>(MVDRKernelNames::forward_substitution)] =
