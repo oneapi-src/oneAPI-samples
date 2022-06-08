@@ -1,0 +1,75 @@
+{
+  "guid": "59E50996-975A-4A19-BD54-35496F5FA6AD",
+  "name": "Cholesky-based matrix inversion",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "description": "Reference design demonstrating high-performance Cholesky-based inversion of real and complex matrices on an Intel® FPGA",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": [
+      "ReferenceDesigns/cholesky_inversion",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "env": [
+          "export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
+        ],
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./cholesky_inversion.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "env": [
+          "set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
+        ],
+        "steps": [
+          "dpcpp --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/cholesky_inversion",
+          "nmake fpga_emu",
+          "cholesky_inversion.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/cholesky_inversion",
+          "nmake report"
+        ]
+      }
+    ]
+  }
+}
