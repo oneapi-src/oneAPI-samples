@@ -1,4 +1,4 @@
-include <CL/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <algorithm>
 #include <host_pipes.hpp>
 #include <iomanip>
