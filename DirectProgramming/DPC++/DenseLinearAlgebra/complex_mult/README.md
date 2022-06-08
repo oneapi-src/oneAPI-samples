@@ -3,9 +3,9 @@
 complex multiplication is a program that multiplies two large vectors of
 Complex numbers in parallel and verifies the results. It also implements
 a custom device selector to target a specific vendor device. This program is
-implemented using C++ and DPC++ language for Intel CPU and accelerators.
+implemented using C++ language and SYCL* for Intel CPU and accelerators.
 The Complex class is a custom class, and this program shows how we can use
-custom types of classes in a DPC++ program.
+custom types of classes in a SYCL* program.
 
 
 | Optimized for                     | Description
@@ -13,7 +13,7 @@ custom types of classes in a DPC++ program.
 | OS                                | Linux Ubuntu 18.04, Windows* 10
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
-| What you will learn               | Using custom type classes and offloads complex number computations to GPU using DPC++
+| What you will learn               | Using custom type classes and offloads complex number computations to GPU using SYCL*
 | Time to complete                  | 15 minutes
 
 
@@ -28,7 +28,7 @@ success message is displayed.
 This sample uses buffers to manage memory. For more information regarding
 different memory management options, refer to the vector_add sample.
 
-Complex multiplication includes both C++ and DPC++ implementations.
+Complex multiplication includes both C++ and SYCL* implementations.
 
 This program shows how to create a custom device selector and to target
 GPU or CPU of a specific vendor. The program also shows how to pass in a
@@ -39,8 +39,8 @@ the output.
 
 ## Key implementation details
 
-This program shows how we can use custom types of classes in a DPC++
-program and explains the basic DPC++ implementation, including device
+This program shows how we can use custom types of classes in a SYCL
+program and explains the basic SYCL implementation, including device
 selector, buffer, accessor, kernel and command group.
 
 
@@ -48,7 +48,7 @@ selector, buffer, accessor, kernel and command group.
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
 
 
 ## Building the complex_mult Program for CPU and GPU
@@ -98,19 +98,17 @@ Source the script from the installation location, which is typically in one of
 these folders:
 
 
-For root or sudo installations:
-
+For system wide installations:
 
   ``. /opt/intel/oneapi/setvars.sh``
 
-
-For normal user installations:
+For individual installations:
 
   ``. ~/intel/oneapi/setvars.sh``
 
 **Note:** If you are using a non-POSIX shell, such as csh, use the following command:
 
-     ``$ bash -c 'source <install-dir>/setvars.sh ; exec csh'``
+``$ bash -c 'source <install-dir>/setvars.sh ; exec csh'``
 
 If environment variables are set correctly, you will see a confirmation
 message.
@@ -159,11 +157,12 @@ checks to find missing dependencies and permissions errors.
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+> Windows:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
@@ -262,5 +261,4 @@ the various samples on different kinds of compute nodes or adjust their source
 code to experiment with different workloads.
 
 ### Troubleshooting
-If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits. See the [Diagnostics Utility for Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information.
