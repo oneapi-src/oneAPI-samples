@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <chrono>
 
-#include "local_memory_cache.hpp"  // DirectProgramming/DPC++FPGA/include
+#include "cached_local_memory.hpp"  // DirectProgramming/DPC++FPGA/include
 #include "unrolled_loop.hpp"
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -38,69 +38,21 @@ void ComputeHistogram(sycl::queue &q, sycl::buffer<uint32_t>& input_buf,
     h.single_task<HistogramID<k_cache_depth>>(
     [=]() [[intel::kernel_args_restrict]] {
 
-      // On-chip memory and cache for Histogram
+      // On-chip memory for Histogram
       // A k_cache_depth of 0 is equivalent to a standard array with no cache
-      uint32_t histogram[kNumOutputs] = {0};
-      using histogram_cache_t = fpga_tools::LocalMemoryCache<uint32_t, 
-                                                             kNumOutputs, 
-                                                             k_cache_depth>;
-      using addr_t = typename histogram_cache_t::addr_t;
-      [[intel::fpga_register]] histogram_cache_t histogram_cache;
-
-      // ivdep with safelen=0 is not allowed, safelen=1 is equivalent (i.e. it
-      // does not affect the loop at all)
-      constexpr size_t kSafeLen = std::max(
-        (size_t)1, (size_t)(k_cache_depth / 2));
-      
+      fpga_tools::CachedLocalMemory<uint32_t, kNumOutputs, k_cache_depth> 
+        histogram(0);
       // Compute the Histogram
-      [[intel::ivdep(kSafeLen, histogram)]] 
       for (uint32_t n = 0; n < kInitNumInputs; ++n) {
-
-        // Compute the Histogram index to increment
         uint32_t hist_group = input[n] % kNumOutputs;
-
-        // check if the index is in the cache
-        uint32_t hist_count;
-        bool in_cache = histogram_cache.CheckCache(hist_group, hist_count);
-
-        // only read from local memory if value is not in the cache
-        if (!in_cache) {
-          hist_count = histogram[hist_group];
-        }
-
-        // update the histogram value and write it back to the cache
+        auto hist_count = histogram.read(hist_group);
         hist_count++;
-        histogram_cache.AddToCache(hist_group, hist_count);
-
-        // write the value from halfway through the cache into the memory
-        if constexpr (k_cache_depth) {
-          addr_t addr;
-          uint32_t val;
-          in_cache = histogram_cache.template GetCacheVal<k_cache_depth/2>(
-            addr, val);
-          if (in_cache) {
-            histogram[addr] = val;
-          }
-        } else {
-          histogram[hist_group] = hist_count;
-        }
-      }
-
-      // flush the cache
-      for (int i = 0; i < k_cache_depth / 2; i++) {
-        histogram_cache.AddToCache(0, 0, false);  // shift the cache
-        addr_t addr;
-        uint32_t val;
-        bool in_cache = histogram_cache.template GetCacheVal<k_cache_depth/2>(
-          addr, val);
-        if (in_cache) {
-          histogram[addr] = val;
-        }
+        histogram.write(hist_group, hist_count);
       }
 
       // Write output to global memory
       for (uint32_t b = 0; b < kNumOutputs; ++b) {
-        output[b] = histogram[b];
+        output[b] = histogram.read(b);
       }
     });
   });
