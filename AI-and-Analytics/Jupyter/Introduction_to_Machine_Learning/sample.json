@@ -3,15 +3,16 @@
   "name": "Introduction to Machine Learning",
   "categories": [ "Toolkit/oneAPI AI And Analytics/AI Getting Started Samples/Intel Extensions for Scikit-learn Jupyter Notebooks" ],
   "description": "Introduction to Machine Learning and Introduction to Intel Extensions for Scikit-learn*",
-  "languages": [ {"python":{}} ],
-  "os": [ "linux" ],
-  "builder": [ "make" ],
-  "targetDevice": [ "CPU" ],
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
   "ciTests": {
     "linux": [
       {
         "env": [ "source /opt/intel/oneapi/setvars.sh" ],
         "steps": [
+		  "pip install -r requirements.txt # Installing notebook's & Makefile dependencies on nbconvert",
           "make all",
           "make Run",
           "make clean"
