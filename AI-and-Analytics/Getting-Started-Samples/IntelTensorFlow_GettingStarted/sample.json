@@ -8,23 +8,23 @@
   "os":["linux","windows"],
   "targetDevice": ["CPU"],
   "ciTests": {
-	"linux": [
-	{
-		"id": "tensorflow hello world",
-		"steps": [
-			"source activate tensorflow",
-			"python TensorFlow_HelloWorld.py"
-		 ]
-	}
-     ],
-	 "windows": [
+    "linux": [
       {
         "id": "tensorflow hello world",
         "steps": [
-                 "source activate tensorflow",
-		  "python TensorFlow_HelloWorld.py"
+            "source activate tensorflow",
+            "python TensorFlow_HelloWorld.py"
+         ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "tensorflow hello world",
+        "steps": [
+          "source activate tensorflow",
+          "python TensorFlow_HelloWorld.py"
         ]
       }
     ]
- }
+  }
 }
