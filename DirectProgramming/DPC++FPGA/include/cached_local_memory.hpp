@@ -88,11 +88,9 @@ class CachedLocalMemory {
 
  private:
   T data_[k_mem_depth];
-  // the cache must be implemented in registers to allow simultaneous access
-  // to all elements
-  [[intel::fpga_register]] T cache_val_[k_cache_depth];
-  [[intel::fpga_register]] addr_t cache_addr_[k_cache_depth];
-  [[intel::fpga_register]] bool cache_valid_[k_cache_depth];
+  T cache_val_[k_cache_depth];
+  addr_t cache_addr_[k_cache_depth];
+  bool cache_valid_[k_cache_depth];
 };  // class CachedLocalMemory
 
 // specialization for cache size 0 (no cache)
