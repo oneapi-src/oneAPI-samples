@@ -99,22 +99,51 @@ cd build
 CC=icc CXX=icpc cmake ..  
 make  
 ```
+### On a Windows* System
+
+Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or
+"Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
+
+#### Microsoft Visual Studio Compiler
+
+1. Setup oneAPI development environment
+```
+C:\Program Files (x86)\Intel\oneAPI\setvars.bat --dnnl-configuration=cpu_vcomp  --force
+```
+2. Build the program using `cmake`
+```
+mkdir build
+cd build
+cmake -G "Visual Studio 16 2019" ..
+cmake --build .
+```
+
 
 ### Include Files
 
 The include folder is located at ${DNNLROOT}\include on your development system".
 
-## Running the Sample
+### Running the Sample
 
-### On a Linux System
+You can get additional information during the execution of this sample by setting
+environment variable `DNNL_VERBOSE=1`.
+
+#### On a Linux System
 Take getting_started.cpp as an example.
 ```
 export DNNL_VERBOSE=1
 ```
-
 ```
 ./bin/getting-started-cpp
 ```
+#### On a Windows* System
+```
+set DNNL_VERBOSE=1
+```
+```
+bin\Debug\getting-started-cpp.exe
+```
+
 
 #### Example of Output
 
