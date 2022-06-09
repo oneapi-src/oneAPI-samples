@@ -42,6 +42,11 @@ class CachedLocalMemory {
   const T& operator[](addr_t addr) const { return read(addr); }
 
   void write(addr_t addr, T val) {
+    // write the value from the end of the cache into the memory
+    if (cache_valid_[0]) {
+      data_[cache_addr_[0]] = cache_val_[0];
+    }
+
     // Shift the values in the cache
     #pragma unroll
     for (int i = 0; i < k_cache_depth-1; i++) {
@@ -58,11 +63,6 @@ class CachedLocalMemory {
     cache_val_[k_cache_depth-1] = val;
     cache_addr_[k_cache_depth-1] = addr;
     cache_valid_[k_cache_depth-1] = true;
-
-    // write the value from halfway through the cache into the memory
-    if (cache_valid_[k_cache_depth/2]) {
-      data_[cache_addr_[k_cache_depth/2]] = cache_val_[k_cache_depth/2];
-    }
   }
 
   T read(addr_t addr) { 
