@@ -20,6 +20,7 @@ constexpr int kInitNumInputs = 16 * 1024 * 1024;  // Default number of inputs
 constexpr int kNumOutputs = 64;           // Number of outputs
 constexpr int kInitSeed = 42;             // Seed for randomizing data inputs
 constexpr int kMaxCacheDepth = MAX_CACHE_DEPTH; // max cache depth to test
+constexpr int kMinCacheDepth = MIN_CACHE_DEPTH; // min cache depth to test
 constexpr double kNs = 1000000000.0;      // number of nanoseconds in a second
 
 // Forward declare the kernel name in the global scope.
@@ -122,13 +123,13 @@ int main() {
     // in order to unblock the kernel's subsequent accessor to the same buffer.
 
     // iterate over the cache depths
-    for (int i = 0; i <= kMaxCacheDepth; i++) {
+    for (int i = kMinCacheDepth; i < kMaxCacheDepth + 1; i++) {
 
       std::cout << "Beginning run with cache depth " << i;
       if (i == 0) { std::cout << " (no cache)"; }
       std::cout << std::endl;
 
-      fpga_tools::UnrolledLoop<kMaxCacheDepth+1>([&](auto j) {
+      fpga_tools::UnrolledLoop<kMinCacheDepth, kMaxCacheDepth+1>([&](auto j) {
         if (j == i) {
           ComputeHistogram<j>(q, input_buf, output_buf, e);
         }

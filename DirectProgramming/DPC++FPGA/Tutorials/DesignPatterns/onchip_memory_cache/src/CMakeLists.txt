@@ -24,22 +24,26 @@ else()
     set(AC_TYPES_FLAG "-qactypes")
 endif()
 
-# Allow the user to specify the maximum cache depth, or select a default value
+# Allow the user to specify the minimum and maximum cache depth, or select a 
+# default value if unspecified
 # e.g. cmake .. -DMAX_CACHE_DEPTH=4
 if(NOT DEFINED MAX_CACHE_DEPTH)
-    set(MAX_CACHE_DEPTH "12")
+    set(MAX_CACHE_DEPTH "8")
 endif()
-set(MAX_CACHE_DEPTH_FLAG "-DMAX_CACHE_DEPTH=${MAX_CACHE_DEPTH}")
+if(NOT DEFINED MIN_CACHE_DEPTH)
+    set(MIN_CACHE_DEPTH "0")
+endif()
+set(CACHE_DEPTH_FLAG "-DMAX_CACHE_DEPTH=${MAX_CACHE_DEPTH} -DMIN_CACHE_DEPTH=${MIN_CACHE_DEPTH}")
 
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${MAX_CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "${AC_TYPES_FLAG} -fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${MAX_CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fintelfpga")
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${MAX_CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fintelfpga")
+set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
