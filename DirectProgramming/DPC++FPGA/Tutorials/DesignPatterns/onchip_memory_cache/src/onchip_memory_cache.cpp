@@ -155,7 +155,9 @@ int main() {
       for (int b = 0; b < kNumOutputs; b++) {
         if (num_errors < 10 && output_host[b] != gold[b]) {
           passed = false;
-          std::cout << " (mismatch, expected " << gold[b] << ")\n";
+          std::cout << " data mismatch in bucket: " << b << ", expected " 
+                    << gold[b] << ", received from kernel: "
+                    << output_host[b] << std::endl;
           num_errors++;
         }
         output_host[b] = 0;
