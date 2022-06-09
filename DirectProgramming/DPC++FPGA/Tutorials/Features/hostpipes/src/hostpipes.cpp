@@ -1,18 +1,17 @@
 #include <CL/sycl.hpp>
-#include <algorithm>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+// Host pipe support in $INTELFPGAOCLSDKROOT/include/sycl/ext/intel/prototype
 #include <host_pipes.hpp>
+
+#include <algorithm>
 #include <iomanip>
 #include <iostream>
 #include <numeric>
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <vector>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
-
-using namespace sycl;
-using namespace std::chrono;
 
 // forward declare kernel and pipe names to reduce name mangling
 class LoopBackKernelID;
@@ -54,8 +53,8 @@ using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
     >;
 
 // forward declare the test functions
-void AlternatingTest(queue&, ValueT*, ValueT*, size_t, size_t);
-void LaunchCollectTest(queue&, ValueT*, ValueT*, size_t, size_t);
+void AlternatingTest(sycl::queue&, ValueT*, ValueT*, size_t, size_t);
+void LaunchCollectTest(sycl::queue&, ValueT*, ValueT*, size_t, size_t);
 
 // offloaded computation
 ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * sqrt(val)); }
@@ -64,9 +63,9 @@ ValueT SomethingComplicated(ValueT val) { return (ValueT)(val * sqrt(val)); }
 
 int main(int argc, char* argv[]) {
 #if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
+  sycl::ext::intel::fpga_emulator_selector selector;
 #else
-  ext::intel::fpga_selector selector;
+  sycl::ext::intel::fpga_selector selector;
 #endif
 
   bool passed = true;
@@ -87,12 +86,12 @@ int main(int argc, char* argv[]) {
 
   try {
     // create the device queue
-    queue q(selector, dpc_common::exception_handler,
-            property::queue::enable_profiling{});
+    sycl::queue q(selector, dpc_common::exception_handler,
+                  sycl::property::queue::enable_profiling{});
 
     // make sure the device supports USM device allocations
-    device d = q.get_device();
-    if (!d.has(aspect::usm_host_allocations)) {
+    sycl::device d = q.get_device();
+    if (!d.has(sycl::aspect::usm_host_allocations)) {
       std::cerr << "ERROR: The selected device does not support USM host"
                 << " allocations" << std::endl;
       return 1;
@@ -121,7 +120,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Running Alternating write-and-read" << std::endl;
     std::fill(out.begin(), out.end(), 0);
     AlternatingTest(q, in.data(), out.data(), count, 3);
-    passed &= validate(out, golden, count);
+    passed &= validate(golden, out, count);
     std::cout << std::endl;
 
     // Launch and Collect
@@ -131,7 +130,7 @@ int main(int argc, char* argv[]) {
     passed &= validate(out, golden, kPipeMinCapacity);
     std::cout << std::endl;
 
-  } catch (exception const& e) {
+  } catch (sycl::exception const& e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
     std::terminate();
@@ -152,7 +151,7 @@ template <typename KernelId,    // type identifier for kernel
           typename InHostPipe,  // host-to-device pipe
           typename OutHostPipe  // device-to-host pipe
           >
-event SubmitLoopBackKernel(queue& q, size_t count) {
+sycl::event SubmitLoopBackKernel(sycl::queue& q, size_t count) {
   return q.single_task<KernelId>([=] {
     for (size_t i = 0; i < count; i++) {
       auto d = InHostPipe::read();
@@ -164,7 +163,7 @@ event SubmitLoopBackKernel(queue& q, size_t count) {
 
 // This test launches SubmitLoopBackKernel, then alternates writes
 // and reads to and from the H2DPipe and D2HPipe hostpipes respectively
-void AlternatingTest(queue& q, ValueT* in, ValueT* out, size_t count,
+void AlternatingTest(sycl::queue& q, ValueT* in, ValueT* out, size_t count,
                      size_t repeats) {
   std::cout << "\t Run Loopback Kernel on FPGA" << std::endl;
   auto e = SubmitLoopBackKernel<LoopBackKernelID, H2DPipe, D2HPipe>(
@@ -181,15 +180,15 @@ void AlternatingTest(queue& q, ValueT* in, ValueT* out, size_t count,
     }
   }
 
-  std::cout << "\t Waiting on kernel to finish" << std::endl;
-  e.wait();
+  // No need to wait on kernel to finish as the pipe reads are blocking
+
   std::cout << "\t Done" << std::endl;
 }
 
 // This test launches SubmitLoopBackKernel, writes 'count'
 // elements to H2DPipe, and then reads 'count' elements from
 // D2HPipe
-void LaunchCollectTest(queue& q, ValueT* in, ValueT* out, size_t count,
+void LaunchCollectTest(sycl::queue& q, ValueT* in, ValueT* out, size_t count,
                        size_t repeats) {
   std::cout << "\t Run Loopback Kernel on FPGA" << std::endl;
   auto e = SubmitLoopBackKernel<LoopBackKernelID, H2DPipe, D2HPipe>(
@@ -211,7 +210,7 @@ void LaunchCollectTest(queue& q, ValueT* in, ValueT* out, size_t count,
     }
   }
 
-  std::cout << "\t Waiting on kernel to finish" << std::endl;
-  e.wait();
+  // No need to wait on kernel to finish as the pipe reads are blocking
+
   std::cout << "\t Done" << std::endl;
 }
