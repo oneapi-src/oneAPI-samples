@@ -361,45 +361,62 @@ dependencies and permissions errors.
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs]([https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html))
 
 ## Examining the Reports
-Locate `report.html` in the `loop_ivdep_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the `hostpipes_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Navigate to the Loops Analysis section of the optimization report and look at the initiation interval (II) achieved by the two kernel versions.
-* **`safelen(1)`** The II reported for this version of the kernel is five cycles.
-You should see a message similar to "Compiler failed to schedule this loop with smaller II due to memory dependency."
-* **`safelen(128)`** The II reported for this version of the kernel is one cycle, the optimal result. You should see a message similar to  "a new iteration is issued into the pipelined loop datapath on every cycle".
+Open the Views menu and select System Viewer. In the left-hand pane, select LoopBackKernelID under the System hierarchy. In the main System Viewer pane, the pipe read and pipe write for the kernel are highlighted. They will show that the read is reading from the `cl::sycl::ext::intel::prototype::internal::pipe<detail::HostPipePipeId<H2DPipeID>` host pipe, and that the write is writing to the `cl::sycl::ext::intel::prototype::internal::pipe<detail::HostPipePipeId<D2HPipeID>` host pipe. Clicking on either of these host pipes will verify the width (32-bit corresponding to the `int` type) and depth (8, which is the kPipeMinCapacity each pipe was declared with).
 
+You may notice that there are additional identifiers in the pipe template (notably, `detail::HostPipePipeId`). This is an internal implementation detail of this prototype feature. You can confirm the correspondence of these pipes to the ones declared in the source code by the template parameters `H2DPipeID` and `D2HPipeID`, which are the unique types declared in the source file and used in the pipe declarations:
+
+```c++
+// forward declare kernel and pipe names to reduce name mangling
+...
+class H2DPipeID;
+class D2HPipeID;
+...
+using H2DPipe = cl::sycl::ext::intel::prototype::pipe<
+   // Usual pipe parameters
+   H2DPipeID,         // An identified for the pipe
+   ...
+   >;
+   
+using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
+   // Usual pipe parameters
+   D2HPipeID,         // An identified for the pipe
+   ...
+   >;     
+```
 
 ## Running the Sample
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
-     ./loop_ivdep.fpga_emu     (Linux)
-     loop_ivdep.fpga_emu.exe   (Windows)
+     ./hostpipes.fpga_emu     (Linux)
+     hostpipes.fpga_emu.exe   (Windows)
      ```
 2. Run the sample on the FPGA device:
      ```
-     ./loop_ivdep.fpga         (Linux)
+     ./hostpipes.fpga         (Linux)
      ```
 
 ### Example of Output
 
 ```
-SAFELEN: 1 -- kernel time : 50.9517 ms
-Throughput for kernel with SAFELEN 1: 1286KB/s
-SAFELEN: 128 -- kernel time : 10 ms
-Throughput for kernel with SAFELEN 128: 6277KB/s
-PASSED: The results are correct
+Running Alternating write-and-read
+	 Run Loopback Kernel on FPGA
+	 0: Doing 16 writes & reads
+	 1: Doing 16 writes & reads
+	 2: Doing 16 writes & reads
+	 Done
+
+Running Launch and Collect
+	 Run Loopback Kernel on FPGA
+	 0: Doing 8 writes
+	 0: Doing 8 reads
+	 1: Doing 8 writes
+	 1: Doing 8 reads
+	 2: Doing 8 writes
+	 2: Doing 8 reads
+	 Done
+
+PASSED
 ```
-
-### Discussion of Results
-
-The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA and the Intel® oneAPI DPC++ Compiler.
-
-Safelen | Kernel Time (ms) | Throughput (KB/s)
-------------- | ------------- | -----------------------
-1     | 50 | 1320
-128   | 10 | 6403
-
-With the `ivdep` attribute applied with the maximum safe `safelen` parameter, the kernel execution time is decreased by a factor of ~5.
-
-Note that this performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
