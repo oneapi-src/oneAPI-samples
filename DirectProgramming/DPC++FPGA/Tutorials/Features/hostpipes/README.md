@@ -89,30 +89,89 @@ queue q(...);
 ...
 int data_element = ...;
 
-// write from host to pipe
+// blocking write from host to pipe
 FirstPipeInstance::write(q, data_element);
 ```
 
 In the FPGA kernel, writes to a host pipe take a single argument, which is the element being written.
 
 ```c++
-float another_data_element = ...;
+int data_element = ...;
 
-// write from device to pipe
-SecondPipeInstance::write(another_data_element);
+// blocking write from device to pipe
+SecondPipeInstance::write(data_element);
+```
+
+#### Non-blocking Write
+
+Non-blocking writes add a bool argument in both host and device APIs that is passed by reference and returns true in this argument if the write was successful, and false if it was unsuccessful. 
+
+On the host:
+
+```c++
+queue q(...);
+...
+int data_element = ...;
+
+// variable to hold write success or failure
+bool success = false;
+
+// attempt non-blocking write from host to pipe until successful
+while (!success) FirstPipeInstance::write(q, data_element, success);
+```
+
+On the device:
+
+```c++
+int data_element = ...;
+
+// variable to hold write success or failur
+bool success = false;
+
+// attempt non-blocking write from device to pipe until successful
+while (!success) SecondPipeInstance::write(data_element, success);
+```
 
 #### Blocking Read
 
-The host pipe read interface reads a single element of given datatape from the host pipe. Similar to write, the read interface on the host takes a SYCL device queue as a parameter. The device read interface consists of the class method read call with no arguments
+The host pipe read interface reads a single element of given datatape from the host pipe. Similar to write, the read interface on the host takes a SYCL device queue as a parameter. The device read interface consists of the class method read call with no arguments. 
+
+On the host:
 
 ```c++
-// read in device code
+// blocking read in host code
+int read_element = SecondPipeInstance::read(q);
+```
+
+On the device:
+
+```c++
+// blocking read in device code
 int read_element = FirstPipeInstance::read();
+```
 
-...
+#### Non-blocking Read
 
-// read in host code
-float another_read_element = SecondPipeInstance::read(q);
+Similar to non-blocking writes, non-blocking reads add a bool argument in both host and device APIs that is passed by reference and returns true in this argument if the read was successful, and false if it was unsuccessful. On the host:
+
+```c++
+// variable to hold read success or failure
+bool success = false;
+
+// attempt non-blocking read until successful in host code
+int read_element;
+while (!success) read_element = SecondPipeInstance::read(q, success);
+```
+
+On the device:
+
+```c++
+// variable to hold read success or failure
+bool success = false;
+
+// attempt non-blocking read until successful in device code
+int read_element;
+while (!success) read_element = FirstPipeInstance::read(success);
 ```
 
 ### Host pipe connections
