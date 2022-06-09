@@ -162,7 +162,8 @@ int main() {
       }
 
       if (passed) {
-        std::cout << "Verification PASSED" << std::endl;
+        std::cout << "Data check succeeded for cache depth " << i 
+                  << std::endl;
         std::cout.setf(std::ios::fixed);
         double N_MB = (kInitNumInputs * sizeof(uint32_t)) /
                       (1024 * 1024);  // Input size in MB
@@ -174,6 +175,7 @@ int main() {
         std::cout << "Verification FAILED" << std::endl;
         return 1;
       }
+      std::cout << "Verification PASSED" << std::endl;
     }
   } catch (sycl::exception const& e) {
     // Catches exceptions in the host code
