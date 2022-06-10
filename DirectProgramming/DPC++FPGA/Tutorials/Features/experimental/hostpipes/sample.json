@@ -1,7 +1,7 @@
 {
   "guid": "8463BD6F-D662-4AE2-8645-BB5026FD3F94",
   "name": "Host Pipes",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features/experimental"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of host pipes",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
