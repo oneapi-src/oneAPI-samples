@@ -24,21 +24,25 @@ if(FPGA_BOARD MATCHES ".*a10.*")
     set(OUTER_UNROLL 1)
     set(INNER_UNROLL 64)
     set(OUTER_UNROLL_POW2 1)
-    set(SEED 1)
+    set(SEED "-Xsseed=1")
 elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(OUTER_UNROLL 2)
     set(INNER_UNROLL 64)
     set(OUTER_UNROLL_POW2 2)
-    set(SEED 4)
+    set(SEED "-Xsseed=4")
 elseif(FPGA_BOARD MATCHES ".*agilex.*")
     # Agilex™
     set(OUTER_UNROLL 2)
     set(INNER_UNROLL 64)
     set(OUTER_UNROLL_POW2 2)
-    set(SEED 4)
+    set(SEED "-Xsseed=4")
 else()
     message(FATAL_ERROR "Unknown board!")
+endif()
+
+if(IGNORE_DEFAULT_SEED)
+    set(SEED "")
 endif()
 
 message(STATUS "OUTER_UNROLL=${OUTER_UNROLL}")
@@ -52,7 +56,7 @@ message(STATUS "OUTER_UNROLL_POW2=${OUTER_UNROLL_POW2}")
 set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2}")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsdaz -Xsrounding=faithful -Xsparallel=2 -Xsseed=2 -Xsboard=${FPGA_BOARD} -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsdaz -Xsrounding=faithful -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 # Copy input data
