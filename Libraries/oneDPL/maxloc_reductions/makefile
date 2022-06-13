@@ -11,7 +11,7 @@ run_all: maxloc_operator.exe maxloc_implicit.exe maxloc_buffered.exe maxloc_usm.
 	.\maxloc_usm
 
 maxloc_operator.exe: maxloc_operator.cpp
-	dpcpp maxloc_operator.cpp /EHsc /Femaxloc_operator.exe
+	dpcpp maxloc_operator.cpp /Femaxloc_operator.exe
 
 maxloc_implicit.exe: maxloc_implicit.cpp
 	dpcpp maxloc_implicit.cpp /EHsc /Femaxloc_implicit.exe
