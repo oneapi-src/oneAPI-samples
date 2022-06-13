@@ -129,6 +129,9 @@ int main() {
       if (i == 0) { std::cout << " (no cache)"; }
       std::cout << std::endl;
 
+      // ComputeHistogram is templated on the cache depth, and template
+      // parameters must be compile time constants. This unrolled loop allows
+      // us to convert the runtime variable i into a compile time constant j.
       fpga_tools::UnrolledLoop<kMinCacheDepth, kMaxCacheDepth+1>([&](auto j) {
         if (j == i) {
           ComputeHistogram<j>(q, input_buf, output_buf, e);
