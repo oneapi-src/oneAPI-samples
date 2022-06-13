@@ -41,24 +41,19 @@ from oneDNN distribution. You can find those codes in
 
 Detailed code walkthrough is available in [oneDNN developer guide](https://oneapi-src.github.io/oneDNN/v2/dev_guide_examples.html)
 
-## License
-
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 
-## Building the sample for CPU and GPU
+
+## Run the Sample
 
 ### On a Linux System
 
 Perform the following steps:
-1. Setup oneAPI development environment
+#### 1. Setup oneAPI development environment
 ```
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh
 ```
-2. Build the program using `cmake`
+#### 2. Build the program using `cmake`
 ```
 mkdir build
 cd build
@@ -69,6 +64,18 @@ make
 > ${INTEL_ONEAPI_INSTALL_FOLDER}/dnnl/latest/cpu_dpcpp_gpu_dpcpp/examples/  
 > to build/src folder. Users can rebuild the all source codes by typing  
 > "make" under build folder.
+
+#### 3. Run the sample
+You can get additional information during the execution of this sample by setting
+environment variable `DNNL_VERBOSE=1`.
+
+Take getting_started.cpp as an example.
+```
+export DNNL_VERBOSE=1
+```
+```
+./bin/getting-started-cpp
+```
 
 #### Using different pre-built oneDNN binaries from Intel® oneAPI Base Toolkit 
 
@@ -106,60 +113,29 @@ Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or
 
 #### Microsoft Visual Studio Compiler
 
-1. Setup oneAPI development environment
+##### 1. Setup oneAPI development environment
 ```
 C:\Program Files (x86)\Intel\oneAPI\setvars.bat --dnnl-configuration=cpu_vcomp  --force
 ```
-2. Build the program using `cmake`
+##### 2. Build the program using `cmake`
 ```
 mkdir build
 cd build
 cmake -G "Visual Studio 16 2019" ..
 cmake --build .
 ```
-
-
-### Include Files
-
-The include folder is located at ${DNNLROOT}\include on your development system".
-
-### Running the Sample
-
+##### 3. Run the sample
 You can get additional information during the execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
 
-#### On a Linux System
-Take getting_started.cpp as an example.
-```
-export DNNL_VERBOSE=1
-```
-```
-./bin/getting-started-cpp
-```
-#### On a Windows* System
 ```
 set DNNL_VERBOSE=1
 ```
+
+Take getting_started.cpp as an example.
+
 ```
 bin\Debug\getting-started-cpp.exe
-```
-
-
-#### Example of Output
-
-```
-Example passed on CPU.
-```
-
-When executed with `DNNL_VERBOSE=1`:
-```
-dnnl_verbose,info,cpu,runtime:DPC++
-dnnl_verbose,info,cpu,isa:Intel AVX2
-dnnl_verbose,info,gpu,runtime:DPC++
-dnnl_verbose,info,cpu,engine,0,backend:OpenCL,name:Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz,driver_version:2020.10.7
-dnnl_verbose,info,gpu,engine,0,backend:Level Zero,name:Intel(R) Gen12LP,driver_version:0.8.0
-dnnl_verbose,exec,cpu,eltwise,jit:avx2,forward_inference,data_f32::blocked:acdb:f0 diff_undef::undef::f0,,alg:eltwise_relu alpha:0 beta:0,1x3x13x13,0.125
-Example passed on CPU.
 ```
 
 ### Running Samples In DevCloud
@@ -178,6 +154,36 @@ You can specify the target device for this sample using command-line arguments:
 You can get additional information during the execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.  
 
+### Include Files
+
+The include folder is located at ${DNNLROOT}\include on your development system".
+
+
+## Example of Output
+
+```
+Example passed on CPU.
+```
+
+When executed with `DNNL_VERBOSE=1`:
+```
+dnnl_verbose,info,cpu,runtime:DPC++
+dnnl_verbose,info,cpu,isa:Intel AVX2
+dnnl_verbose,info,gpu,runtime:DPC++
+dnnl_verbose,info,cpu,engine,0,backend:OpenCL,name:Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz,driver_version:2020.10.7
+dnnl_verbose,info,gpu,engine,0,backend:Level Zero,name:Intel(R) Gen12LP,driver_version:0.8.0
+dnnl_verbose,exec,cpu,eltwise,jit:avx2,forward_inference,data_f32::blocked:acdb:f0 diff_undef::undef::f0,,alg:eltwise_relu alpha:0 beta:0,1x3x13x13,0.125
+Example passed on CPU.
+```
+
+
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
 [Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
