@@ -181,8 +181,9 @@ int main() {
         std::cout << "Verification FAILED" << std::endl;
         return 1;
       }
-      std::cout << "Verification PASSED" << std::endl;
     }
+    std::cout << "Verification PASSED" << std::endl;
+
   } catch (sycl::exception const& e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
