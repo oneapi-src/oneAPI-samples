@@ -1,5 +1,5 @@
-#ifndef __CACHED_LOCAL_MEMORY_HPP__
-#define __CACHED_LOCAL_MEMORY_HPP__
+#ifndef __ONCHIP_MEMORY_WITH_CACHE_HPP__
+#define __ONCHIP_MEMORY_WITH_CACHE_HPP__
 
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 
@@ -11,17 +11,17 @@ template <typename T,             // type to store in the memory
           size_t k_mem_depth,     // depth of the memory
           size_t k_cache_depth    // number of elements in the cache
          >
-class CachedLocalMemory {
+class OnchipMemoryWithCache {
  public:
   static constexpr int kNumAddrBits = fpga_tools::CeilLog2(k_mem_depth);
   using addr_t = ac_int<kNumAddrBits, false>;
 
-  CachedLocalMemory() {
+  OnchipMemoryWithCache() {
     for (int i = 0; i < k_cache_depth; i++) {
       cache_valid_[i] = false;
     }
   }
-  CachedLocalMemory(T init_val) {
+  OnchipMemoryWithCache(T init_val) {
     for (int i = 0; i < k_mem_depth; i++) {
       data_[i] = init_val;
     }
@@ -30,8 +30,8 @@ class CachedLocalMemory {
     }
   }
 
-  CachedLocalMemory(const CachedLocalMemory&) = delete;
-  CachedLocalMemory& operator=(const CachedLocalMemory&) = delete;
+  OnchipMemoryWithCache(const OnchipMemoryWithCache&) = delete;
+  OnchipMemoryWithCache& operator=(const OnchipMemoryWithCache&) = delete;
 
   // explicitly communicate to developers that we don't want to support a
   // square bracket operator that returns a reference, as it would allow
@@ -91,25 +91,25 @@ class CachedLocalMemory {
   T cache_val_[k_cache_depth];
   addr_t cache_addr_[k_cache_depth];
   bool cache_valid_[k_cache_depth];
-};  // class CachedLocalMemory
+};  // class OnchipMemoryWithCache
 
 // specialization for cache size 0 (no cache)
 template <typename T,             // type to store in the memory
           size_t k_mem_depth      // depth of the memory
          >
-class CachedLocalMemory<T, k_mem_depth, 0> {
+class OnchipMemoryWithCache<T, k_mem_depth, 0> {
  public:
   static constexpr int kNumAddrBits = fpga_tools::CeilLog2(k_mem_depth);
   using addr_t = ac_int<kNumAddrBits, false>;
 
-  CachedLocalMemory() {}
-  CachedLocalMemory(T init_val) { 
+  OnchipMemoryWithCache() {}
+  OnchipMemoryWithCache(T init_val) { 
     for (int i = 0; i < k_mem_depth; i++) {
       data_[i] = init_val;
     }
   }
-  CachedLocalMemory(const CachedLocalMemory&) = delete;
-  CachedLocalMemory& operator=(const CachedLocalMemory&) = delete;
+  OnchipMemoryWithCache(const OnchipMemoryWithCache&) = delete;
+  OnchipMemoryWithCache& operator=(const OnchipMemoryWithCache&) = delete;
   template <typename I> T& operator[](I addr) = delete;
   const T& operator[](addr_t addr) const { return read(addr); }
   void write(addr_t addr, T val) { data_[addr] = val; }
@@ -117,8 +117,8 @@ class CachedLocalMemory<T, k_mem_depth, 0> {
 
  private:
   T data_[k_mem_depth];
-};  // class CachedLocalMemory<T, k_mem_depth, 0>
+};  // class OnchipMemoryWithCache<T, k_mem_depth, 0>
 
 }   // namespace fpga_tools
 
-#endif  // __CACHED_LOCAL_MEMORY_HPP__
+#endif  // __ONCHIP_MEMORY_WITH_CACHE_HPP__

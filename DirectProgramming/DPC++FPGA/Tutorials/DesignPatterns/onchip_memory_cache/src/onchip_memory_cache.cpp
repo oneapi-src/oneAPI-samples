@@ -8,8 +8,8 @@
 #include <algorithm>
 #include <chrono>
 
-#include "cached_local_memory.hpp"  // DirectProgramming/DPC++FPGA/include
-#include "unrolled_loop.hpp"
+#include "onchip_memory_with_cache.hpp" // DirectProgramming/DPC++FPGA/include
+#include "unrolled_loop.hpp"            // DirectProgramming/DPC++FPGA/include
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
@@ -41,7 +41,7 @@ void ComputeHistogram(sycl::queue &q, sycl::buffer<uint32_t>& input_buf,
 
       // On-chip memory for Histogram
       // A k_cache_depth of 0 is equivalent to a standard array with no cache
-      fpga_tools::CachedLocalMemory<uint32_t, kNumOutputs, k_cache_depth> 
+      fpga_tools::OnchipMemoryWithCache<uint32_t, kNumOutputs, k_cache_depth> 
         histogram(0);
       // Compute the Histogram
       for (uint32_t n = 0; n < kInitNumInputs; ++n) {
