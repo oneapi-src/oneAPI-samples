@@ -1,8 +1,3 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
 #include <CL/sycl.hpp>
 #include <numeric>
 #include <sycl/ext/intel/fpga_extensions.hpp>
@@ -16,8 +11,6 @@ using namespace sycl;
 using BurstCoalescedLSU = ext::intel::experimental::lsu<
     ext::intel::experimental::burst_coalesce<true>,
     ext::intel::experimental::statically_coalesce<false>>;
-
-constexpr size_t kNum = 5;
 
 int Operation(int a) { return a * 3 + 2; } // Arbitrary operations.
 
@@ -51,13 +44,15 @@ void KernelRun(const std::vector<int> &in_data, std::vector<int> &out_data,
         auto out_ptr = out_accessor.get_pointer();
 
         for (size_t i = 0; i < size; i++) {
+          // The following load has a label 0.
           int value = BurstCoalescedLSU::load(
               in_ptr + i, ext::oneapi::experimental::properties(
                               ext::intel::experimental::latency_anchor_id<0>));
 
-          // Constrain the latency between the above load and the below store.
           value = Operation(value);
 
+          // The following store occurs exactly 5 cycles after the label-0
+          // function, i.e., the load above.
           BurstCoalescedLSU::store(
               out_ptr + i, value,
               ext::oneapi::experimental::properties(
@@ -91,7 +86,7 @@ void GoldenRun(const std::vector<int> &in_data, std::vector<int> &out_data,
 }
 
 int main() {
-  const size_t size = kNum;
+  const size_t size = 5;
   std::vector<int> input_data(size);
   std::vector<int> result_kernel(size);
   std::vector<int> result_golden(size);

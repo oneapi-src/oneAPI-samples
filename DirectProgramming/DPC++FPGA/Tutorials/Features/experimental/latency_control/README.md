@@ -1,5 +1,5 @@
 # Latency Control
-This FPGA tutorial demonstrates how to set latency constraints between accessing functions of side effects that can be observed outside the kernel. Side effects here include pipes and global LSUs, and accessing functions of side effects refer to pipe reads/writes and LSU loads/stores.
+This FPGA tutorial demonstrates how to set latency constraints to pipes and LSUs accesses.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
@@ -10,29 +10,27 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | How to set latency constraints between accessing functions of side effects.
+| What you will learn               | How to set latency constraints to pipes and LSUs accesses.<br>How to confirm that the compiler respected the latency control directive.
 | Time to complete                  | 15 minutes
 
 ## Purpose
-This tutorial shows how to set latency constraints between accessing functions of side effects that can be observed outside the kernel. Side effects here include pipes and global LSUs, and accessing functions of side effects refer to pipe reads/writes and LSU loads/stores.
-
-The compiler strives to achieve the latency constraints, and it errors out if some constraints cannot be satisfied. For example, if one constraint specifies function A should be scheduled after function B, while another constraint specifies function B should be scheduled after function A, then that set of constraints is unsatisfiable.
+This FPGA tutorial demonstrates how to set latency constraints to pipes and LSUs accesses and how to confirm that the compiler respected the latency control directive.
 
 ### Use Model
 **Note**: The APIs described in this section are experimental. Future versions of latency controls may change these APIs in ways that are incompatible with the version described here.
 
-Latency controls APIs are provided on member functions `read()` and `write()` of class `ext::intel::experimental::pipe` and on member functions `load()` and `store()` of class `ext::intel::experimental::lsu`. Other than the latency controls support, the experimental `pipe` and `lsu` are identical to `ext::intel::pipe` and `ext::intel::lsu`. The experimental `pipe` and `lsu` are also provide by <sycl/ext/intel/fpga_extensions.hpp>.
+Latency controls APIs are provided on member functions `read()` and `write()` of class `ext::intel::experimental::pipe` and on member functions `load()` and `store()` of class `ext::intel::experimental::lsu`. Other than the latency controls support, the experimental `pipe` and `lsu` are identical to `ext::intel::pipe` and `ext::intel::lsu`. The experimental `pipe` and `lsu` are also provided by <sycl/ext/intel/fpga_extensions.hpp>.
 
 Those member functions listed above can take in a property list instance (`ext::oneapi::experimental::properties`) as a function argument, which can contain latency controls properties `latency_anchor_id` and `latency_constraint`.
 
-* `ext::intel::experimental::latency_anchor_id<N>`, where `N` is a signed integer: An label that associates with the current function, which can be referenced by `latency_constraint` properties on other functions to define relative latency constraints. Functions which have this property will be referred to as "labeled functions".
-* `ext::intel::experimental::latency_constraint<A, B, C>`: A tuple of three values which causes the current function to act as an endpoint of a latency constraint relative to a different labeled function. Functions which have this property will be referred to as "constrained functions".
+* `ext::intel::experimental::latency_anchor_id<N>`, where `N` is a signed integer: A label that can be associated with the pipes and LSUs functions listed above. This label can then be referenced by the `latency_constraint` properties to define relative latency constraints. Functions with this property will be referred to as "labeled functions".
+* `ext::intel::experimental::latency_constraint<A, B, C>`: A constraint than can be associated with the pipes and LSUs functions listed above. It provides a latency constraint between this function and a different labeled function. Functions which have this property will be referred to as "constrained functions".
   * `A` is a signed integer: The label of the labeled function which is constrained relative to the constrained function.
   * `B` is an enum value: The type of constraint, can be `latency_control_type::exact` (exact latency), `latency_control_type::max` (maximum latency), and `latency_control_type::min` (minimum latency).
   * `C` is a signed integer: The relative clock cycle difference between the labeled function and the constrained function, that the constraint should infer subject to the type of constraint (exact/max/main).
 
 ### Simple Code Example
-Latency controls on pipes. Also demonstrating a function acting as both labeled function and constrained function:
+This first example shows how to use latency controls on pipes. It also uses a function acting as both labeled function and constrained function:
 ```cpp
 using namespace sycl;
 using Pipe1 = ext::intel::experimental::pipe<class PipeClass1, int, 8>;
@@ -61,7 +59,7 @@ Pipe3::write(
                    1, ext::intel::experimental::latency_control_type::min, 2>));
 ```
 
-Latency controls on LSUs. Also demonstrating using a negative relative cycle number in `latency_constraint`, which means the constrained function is scheduled before the associated labeled function:
+This second example shows how to use latency controls on LSUs. It also uses a negative relative cycle number in `latency_constraint`, which means the constrained function is scheduled **before** the associated labeled function:
 ```cpp
 using namespace sycl;
 using BurstCoalescedLSU = sycl::ext::intel::experimental::lsu<
@@ -77,7 +75,7 @@ int value = BurstCoalescedLSU::load(
         ext::intel::experimental::latency_constraint<
             2, ext::intel::experimental::latency_control_type::max, -5>));
 
-// The following store has a lable 2.
+// The following store has a label 2.
 BurstCoalescedLSU::store(output_ptr, value,
                          sycl::ext::oneapi::experimental::properties(
                              ext::intel::experimental::latency_anchor_id<2>));
@@ -86,12 +84,15 @@ BurstCoalescedLSU::store(output_ptr, value,
 ### Rules and Limitations
 * `latency_anchor_id` must be non-negative
 * `latency_anchor_id` must be a unique number within the whole design
-* Two endpoints of a constraint must meet one of the following conditions:
-  * Both endpoints are not in any cluster
-  * Both endpoints are in the same cluster
+* The labeled function and the constrained function of a constraint must meet one of the following conditions:
+  * Both are in the same block but not in any cluster
+  * Both are in the same cluster
+
+The compiler strives to achieve the latency constraints, and it errors out if some constraints cannot be satisfied. For example, if one constraint specifies function A should be scheduled after function B, while another constraint specifies function B should be scheduled after function A, then that set of constraints is unsatisfiable.
 
 ## Key Concepts
-* How to set latency constraints between accessing functions of side effects
+* How to set latency constraints to pipes and LSUs accesses
+* How to confirm that the compiler respected the latency control directive
 
 ## License
 Code samples are licensed under the MIT license. See
