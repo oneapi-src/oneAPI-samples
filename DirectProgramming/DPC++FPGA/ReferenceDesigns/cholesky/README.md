@@ -32,7 +32,7 @@ Please refer to the performance disclaimer at the end of this README.
 
 This FPGA reference design demonstrates Cholesky decomposition, a common operation employed in linear algebra, through use of the streaming_cholesky.hpp header library.
 The Cholesky decomposition takes a hermitian, positive-definite matrix _A_ (input) and computes the lower triangular matrix _L_ such that: _L_ * _L*_ = A, where _L*_ in the conjugate transpose of _L_.
-The algorithm employed by the header library is an FPGA throughput optimized version of the Cholesky–Banachiewicz algorithm. Background information on the Cholesky decomposition and this algorithm can be found in Wikipedia's [Cholesky decomposition](https://https://en.wikipedia.org/wiki/Cholesky_decomposition) article. 
+The algorithm employed by the header library is an FPGA throughput optimized version of the Cholesky–Banachiewicz algorithm. Background information on the Cholesky decomposition and this algorithm can be found in Wikipedia's [Cholesky decomposition](https://en.wikipedia.org/wiki/Cholesky_decomposition) article. 
 
 The Cholesky decomposition is used extensively in machine learning applications such as least-squares regressions and Monte-Carlo simulations.
 
@@ -176,11 +176,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Running the Reference Design
 You can apply the Cholesky decomposition to a number of matrices, as shown below. This step performs the following:
-* Generates 8 random matrices.
+* Generates 8 random matrices (this number can be changed in cholesky_demo.cpp).
 * Computes the Cholesky decomposition on all matrices.
 * Repeats the operation multiple times (specified as the command line argument) to evaluate performance.
 
@@ -260,7 +260,7 @@ NOTE: The values for `seed`, `FIXED_ITERATIONS`, `MATRIX_DIMENSION`, `COMPLEX` a
 
 ### Performance disclaimers
 
-Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
+Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For more complete information about performance and benchmark results, visit [this page](https://edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
 
 Performance results are based on testing as of February 25, 2022 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
 

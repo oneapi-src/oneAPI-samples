@@ -1,10 +1,10 @@
 ﻿# `matrix_mul` Sample
 matrix_mul is a simple program that multiplies together two large matrices and
 verifies the results.  This program is implemented using two ways:
-    1. Data Parallel C++ (DPC++)
-    2. OpenMP (omp)
+    1. SYCL*
+    2. OpenMP (OMP)
 
-For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+For comprehensive instructions see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
 
 | Optimized for                       | Description
@@ -12,7 +12,7 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 | OS                                | Linux* Ubuntu* 18.04, Windows 10*
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler, Intel&reg; C++ Compiler, Intel&reg; oneAPI C++ Compiler Classic
-| What you will learn               | Offloads computations on 2D arrays to GPU using DPC++ and OpenMP
+| What you will learn               | Offloads computations on 2D arrays to GPU using SYCL* and OpenMP
 | Time to complete                  | 15 minutes
 
 ### Purpose
@@ -26,7 +26,7 @@ displayed.
 This sample uses buffers to manage memory.  For more information regarding
 different memory management options, refer to the vector_add sample.
 
-matrix_mul includes C++ implementations of both Data Parallel (DPC++) and
+matrix_mul includes C++ implementations of both SYCL* and
 OpenMP; each is contained in its own .cpp file. This provides a way to compare
 existing offload techniques such as OpenMP with Data Parallel C++ within a
 relatively simple sample. The default will build the DPC++ application.

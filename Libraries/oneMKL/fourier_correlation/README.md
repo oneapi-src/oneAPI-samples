@@ -20,6 +20,11 @@ Where ``DFT`` is the discrete Fourier transform, ``IDFT`` is the inverse DFT, ``
 
 The algorithm can be composed using SYCL, oneMKL, and/or oneDPL. SYCL provides the device offload and host-device memory transfer mechanisms. oneMKL provides optimized forward and backward transforms and complex conjugate multiplication functions. oneDPL provides the MAXLOC function. Therefore, the entire computation can be performed on the accelerator device.
 
+The following articles provide more detailed explanations of the implementations:
+
+ - [Efficiently Implementing Fourier Correlation Using oneAPI Math Kernel Library](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-gpu-optimization-guide/top/kernels/libraries-fcorr.html)
+ - [Accelerating the 2D Fourier Correlation Algorithm with ArrayFire and oneAPI](https://www.intel.com/content/www/us/en/developer/articles/technical/accelerate-2d-fourier-correlation-algorithm.html#gs.1duy87)
+
 ## Key Implementation Details
 In many applications, only the final correlation result matters, so this is all that has to be transferred from the device back to the host. In this example, two artificial signals will be created on the device, transformed in-place, then correlated. The host will retrieve the final result (i.e., the location of the maximum value) and report the optimal translation and correlation score.
 
