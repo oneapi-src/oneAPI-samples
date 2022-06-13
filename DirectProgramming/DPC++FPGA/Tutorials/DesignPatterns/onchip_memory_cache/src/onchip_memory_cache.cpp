@@ -52,8 +52,8 @@ void ComputeHistogram(sycl::queue &q, sycl::buffer<uint32_t>& input_buf,
       }
 
       // Write output to global memory
-      for (uint32_t b = 0; b < kNumOutputs; ++b) {
-        output[b] = histogram.read(b);
+      for (uint32_t hist_group = 0; hist_group < kNumOutputs; ++hist_group) {
+        output[hist_group] = histogram.read(hist_group);
       }
     });
   });
@@ -110,8 +110,8 @@ int main() {
         input_host[i] = rand();
       }
 
-      for (int b = 0; b < kNumOutputs; ++b) {
-        gold[b] = 0;
+      for (int hist_group = 0; hist_group < kNumOutputs; ++hist_group) {
+        gold[hist_group] = 0;
       }
       for (int i = 0; i < kInitNumInputs; ++i) {
         int hist_group = input_host[i] % kNumOutputs;
@@ -152,15 +152,16 @@ int main() {
       // Verify output and print pass/fail, and clear the output buffer
       bool passed = true;
       int num_errors = 0;
-      for (int b = 0; b < kNumOutputs; b++) {
-        if (num_errors < 10 && output_host[b] != gold[b]) {
+      for (int hist_group = 0; hist_group < kNumOutputs; hist_group++) {
+        if (num_errors < 10 && output_host[hist_group] != gold[hist_group]) {
           passed = false;
-          std::cout << " data mismatch in bucket: " << b << ", expected " 
-                    << gold[b] << ", received from kernel: "
-                    << output_host[b] << std::endl;
+          std::cout << " data mismatch in bucket: " << hist_group
+                    << ", expected " << gold[hist_group]
+                    << ", received from kernel: " << output_host[hist_group]
+                    << std::endl;
           num_errors++;
         }
-        output_host[b] = 0;
+        output_host[hist_group] = 0;
       }
 
       if (passed) {
