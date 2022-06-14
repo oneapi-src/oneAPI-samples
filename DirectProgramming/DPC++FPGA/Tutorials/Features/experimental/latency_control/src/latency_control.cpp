@@ -6,11 +6,9 @@
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-using namespace sycl;
-
-using BurstCoalescedLSU = ext::intel::experimental::lsu<
-    ext::intel::experimental::burst_coalesce<true>,
-    ext::intel::experimental::statically_coalesce<false>>;
+using BurstCoalescedLSU = sycl::ext::intel::experimental::lsu<
+    sycl::ext::intel::experimental::burst_coalesce<true>,
+    sycl::ext::intel::experimental::statically_coalesce<false>>;
 
 int Operation(int a) { return a * 3 + 2; } // Arbitrary operations.
 
@@ -22,22 +20,23 @@ class LatencyControl;
 void KernelRun(const std::vector<int> &in_data, std::vector<int> &out_data,
                const size_t &size) {
 #if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
+  sycl::ext::intel::fpga_emulator_selector device_selector;
 #else
-  ext::intel::fpga_selector device_selector;
+  sycl::ext::intel::fpga_selector device_selector;
 #endif
 
   try {
     // Create the SYCL device queue.
-    queue q(device_selector, dpc_common::exception_handler,
-            property::queue::enable_profiling{});
+    sycl::queue q(device_selector, dpc_common::exception_handler,
+                  sycl::property::queue::enable_profiling{});
 
-    buffer in_buffer(in_data);
-    buffer out_buffer(out_data);
+    sycl::buffer in_buffer(in_data);
+    sycl::buffer out_buffer(out_data);
 
-    q.submit([&](handler &h) {
-      accessor in_accessor(in_buffer, h, read_only);
-      accessor out_accessor(out_buffer, h, write_only, no_init);
+    q.submit([&](sycl::handler &h) {
+      sycl::accessor in_accessor(in_buffer, h, sycl::read_only);
+      sycl::accessor out_accessor(out_buffer, h, sycl::write_only,
+                                  sycl::no_init);
 
       h.single_task<LatencyControl>([=]() [[intel::kernel_args_restrict]] {
         auto in_ptr = in_accessor.get_pointer();
@@ -46,8 +45,9 @@ void KernelRun(const std::vector<int> &in_data, std::vector<int> &out_data,
         for (size_t i = 0; i < size; i++) {
           // The following load has a label 0.
           int value = BurstCoalescedLSU::load(
-              in_ptr + i, ext::oneapi::experimental::properties(
-                              ext::intel::experimental::latency_anchor_id<0>));
+              in_ptr + i,
+              sycl::ext::oneapi::experimental::properties(
+                  sycl::ext::intel::experimental::latency_anchor_id<0>));
 
           value = Operation(value);
 
@@ -55,14 +55,16 @@ void KernelRun(const std::vector<int> &in_data, std::vector<int> &out_data,
           // function, i.e., the load above.
           BurstCoalescedLSU::store(
               out_ptr + i, value,
-              ext::oneapi::experimental::properties(
-                  ext::intel::experimental::latency_constraint<
-                      0, ext::intel::experimental::latency_control_type::exact,
+              sycl::ext::oneapi::experimental::properties(
+                  sycl::ext::intel::experimental::latency_constraint<
+                      0,
+                      sycl::ext::intel::experimental::latency_control_type::
+                          exact,
                       5>));
         }
       });
     });
-  } catch (exception const &e) {
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code.
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 

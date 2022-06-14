@@ -88,6 +88,8 @@ BurstCoalescedLSU::store(output_ptr, value,
   * Both are in the same block but not in any cluster
   * Both are in the same cluster
 
+**Note**: Clusters can be identified in the System Viewer (Views > System Viewer) of the `report.html` report.
+
 The compiler strives to achieve the latency constraints, and it errors out if some constraints cannot be satisfied. For example, if one constraint specifies function A should be scheduled after function B, while another constraint specifies function B should be scheduled after function A, then that set of constraints is unsatisfiable.
 
 ## Key Concepts
