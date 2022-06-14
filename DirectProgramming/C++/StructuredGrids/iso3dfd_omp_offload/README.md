@@ -10,8 +10,8 @@ complex applications to achieve good performance.
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler;
-| What you will learn               | How to offload the computation to GPU using Intel&reg; oneAPI DPC++/C++ Compiler
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| What you will learn               | How to offload the computation to GPU using the Intel&reg; oneAPI DPC++/C++ Compiler
 | Time to complete                  | 15 minutes
 
 Performance number tabulation
@@ -58,13 +58,13 @@ The basic OpenMP Offload implementation explained in the code includes the use o
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
 
 
 ## Building the `ISO3DFD` Program for GPU
 
 ### Running Samples In DevCloud
-Running samples in the Intel DevCloud requires you to specify a compute node. For specific instructions, jump to [Run the ISO3DFD OpenMP Offload sample in the DevCloud](#run-iso3dfd-omp-on-devcloud)
+Running samples in the Intel DevCloud requires you to specify a compute node. For specific instructions, jump to [Run the ISO3DFD OpenMP Offload sample in the DevCloud](#run-iso3dfd-omp-on-devcloud).
 
 
 ### Using Visual Studio Code*  (Optional)
@@ -89,36 +89,38 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 Perform the following steps:
 1. Build the program using the following `cmake` commands.
-```
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make -j
-```
+    ```
+    $ mkdir build
+    $ cd build
+    $ cmake ..
+    $ make -j
+    ```
 
-> Note: by default, the executable is built with the default baseline version. You can build the kernel with optimized versions with the following:
-```
-cmake -DUSE_OPT1=1 ..
-make -j
-```
-```
-cmake -DUSE_OPT2=1 ..
-make -j
-```
-```
-cmake -DUSE_OPT3=1 ..
-make -j
-```
+    > **Note**: by default, the executable is built with the default baseline version. You can build the kernel with optimized versions with the following:
+    ```
+    cmake -DUSE_OPT1=1 ..
+    make -j
+    ```
+    ```
+    cmake -DUSE_OPT2=1 ..
+    make -j
+    ```
+    ```
+    cmake -DUSE_OPT3=1 ..
+    make -j
+    ```
 
 2. Run the program :
     ```
@@ -144,7 +146,8 @@ make run
 
 ### Application Parameters
 You can modify the ISO3DFD parameters from the command line.
-   * Configurable Application Parameters
+
+**Configurable Application Parameters**
 
 	Usage: src/iso3dfd n1 n2 n3 n1_block n2_block n3_block Iterations
 
@@ -196,18 +199,18 @@ Final wavefields from OMP Offload device and CPU are equivalent: Success
 ### Running the ISO3DFD OpenMP Offload sample in the DevCloud<a name="run-iso3dfd-omp-on-devcloud"></a>
 1.  Open a terminal on your Linux system.
 2.	Log in to DevCloud.
-```
-ssh devcloud
-```
+    ```
+    ssh devcloud
+    ```
 3.	Download the samples.
-```
-git clone https://github.com/oneapi-src/oneAPI-samples.git
-```
+    ```
+    git clone https://github.com/oneapi-src/oneAPI-samples.git
+    ```
 
 4. Change directories to the  ISO3DFD OpenMP Offload sample directory.
-```
-cd ~/oneAPI-samples/DirectProgramming/C++/StructuredGrids/iso3dfd_omp_offload
-```
+    ```
+    cd ~/oneAPI-samples/DirectProgramming/C++/StructuredGrids/iso3dfd_omp_offload
+    ```
 #### Build and run the sample in batch mode
 The following describes the process of submitting build and run jobs to PBS.
 A job is a script that is submitted to PBS through the qsub utility. By default, the qsub utility does not inherit the current environment variables or your current working directory. For this reason, it is necessary to submit jobs as scripts that handle the setup of the environment variables. In order to address the working directory issue, you can either use absolute paths or pass the -d \<dir\> option to qsub to set the working directory.
@@ -225,7 +228,6 @@ cd build
 cmake ..
 make -j
 ```
-
 3.	Save and close the build.sh file.
 
 4.	Create a run.sh script with with your preferred text editor:
@@ -256,7 +258,7 @@ Note: The -d . is used to configure the current folder as the working directory 
 ```
 watch -n 1 qstat -n -1
 ```
-Note: The watch -n 1 command is used to run qstat -n -1 and display its results every second. The **Req’d Time** column will give an estimate for when the job will complete.
+**Note**: The watch -n 1 command is used to run qstat -n -1 and display its results every second. The **Req’d Time** column will give an estimate for when the job will complete.
 
 3.	After the build job completes successfully, run the sample on a gpu node:
 ```
@@ -308,6 +310,3 @@ Several sample programs are available for you to try, many of which can be
 compiled and run in a similar fashion to iso3dfd_omp_offload. Experiment with
 running the various samples on different kinds of compute nodes or adjust their
 source code to experiment with different workloads.
-
-
-
