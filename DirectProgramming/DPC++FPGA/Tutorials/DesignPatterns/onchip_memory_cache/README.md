@@ -275,8 +275,6 @@ Kernel throughput for cache depth 8: 1059.438594 MB/s
 Verification PASSED
 ```
 
-TODO: update with real hardware run output, not emulator
-
 ### Discussion of Results
 
 As the sample results above demonstrate, adding the cache to achieve an II of 1 approximately doubles the throughput of the kernel.
