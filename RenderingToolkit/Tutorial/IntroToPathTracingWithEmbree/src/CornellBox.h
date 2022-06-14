@@ -1,34 +1,16 @@
 #pragma once
+#ifndef FILE_CORNELLBOX_SEEN
+#define FILE_CORNELL_BOX_SEEN
 
+#include "definitions.h"
 #include <embree3/rtcore.h>
 
 #include <vector>
-#include <rkcommon/math/vec.h>
 
-using Vec3fa = rkcommon::math::vec_t<float, 3, 1>;
 
-#ifdef _WIN32
-#define alignedMalloc(a, b) _aligned_malloc(a, b)
-#define alignedFree(a) _aligned_free(a)
-#else
-#include <mm_malloc.h>
-#define alignedMalloc(a, b) _mm_malloc(a, b)
-#define alignedFree(a) _mm_free(a)
-#endif
-
-/* from tutorial_device.h */
-/* vertex and triangle layout */
-struct Vertex {
-    float x, y, z, r;
-};
-
-struct Quad {
-    int v0, v1, v2, v3;
-};
-
-struct Triangle {
-    int v0, v1, v2;
-};
+/* Added for pathtracer */
+Vec3fa* g_cornell_face_colors = nullptr;
+Vec3fa* g_cornell_vertex_colors = nullptr;
 
 // mesh data
 static std::vector<Vertex> cornellBoxVertices = {
@@ -42,6 +24,7 @@ static std::vector<Vertex> cornellBoxVertices = {
     {1.00f, 1.00f, 1.00f, 0.0f},
     {-1.00f, 1.00f, 1.00f, 0.0f},
     {-1.00f, 1.00f, -1.00f, 0.0f},
+    
     // Backwall
     {1.00f, -1.00f, 1.00f, 0.0f},
     {-1.00f, -1.00f, 1.00f, 0.0f},
@@ -204,6 +187,29 @@ static std::vector<Vec3fa> cornellBoxColors = {
     {0.725f, 0.710f, 0.68f},
     {0.725f, 0.710f, 0.68f},
     {0.725f, 0.710f, 0.68f},
+    /* 0.8f intensity of reflectance gives a decent proxy for a great real life mirror */
+    // TallBox Front Face
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   // TallBox Right Face
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   // TallBox Back Face
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   // TallBox Bottom Face
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f},
+   {0.8f, 0.8f, 0.8f}
+   /* Original colors of TallBox */
+   /*
     // TallBox Front Face
     {0.725f, 0.710f, 0.68f},
     {0.725f, 0.710f, 0.68f},
@@ -223,19 +229,73 @@ static std::vector<Vec3fa> cornellBoxColors = {
     {0.725f, 0.710f, 0.68f},
     {0.725f, 0.710f, 0.68f},
     {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f} };
+    {0.725f, 0.710f, 0.68f} 
+    */
+};
 
-int addCornell(RTCScene scene, RTCDevice device, Vec3fa** g_cornell_face_colors, Vec3fa** g_cornell_vertex_colors)
+static std::vector<enum MaterialType> cornellBoxMats = {
+    // Floor
+    MaterialType::MATERIAL_MATTE,
+    // Ceiling
+    MaterialType::MATERIAL_MATTE,
+    // Backwall
+    MaterialType::MATERIAL_MATTE,
+    // RightWall
+    MaterialType::MATERIAL_MATTE,
+    // LeftWall
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Top Face
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Left Face
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Front Face
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Right Face
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Back Face
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Bottom Face
+    MaterialType::MATERIAL_MATTE,
+    // TallBox Top Face
+    MaterialType::MATERIAL_MATTE,
+    // TallBox Left Face
+    MaterialType::MATERIAL_MATTE,
+    // TallBox Front Face
+    MaterialType::MATERIAL_MATTE,
+    // TallBox Right Face
+    MaterialType::MATERIAL_MATTE,
+    // TallBox Back Face
+    MaterialType::MATERIAL_MATTE,
+    // TallBox Bottom Face
+    MaterialType::MATERIAL_MATTE
+    
+    /*
+    // TallBox Top Face
+    MaterialType::MATERIAL_MIRROR,
+    // TallBox Left Face
+    MaterialType::MATERIAL_MIRROR,
+    // TallBox Front Face
+    MaterialType::MATERIAL_MIRROR,
+    // TallBox Right Face
+    MaterialType::MATERIAL_MIRROR,
+    // TallBox Back Face
+    MaterialType::MATERIAL_MIRROR,
+    // TallBox Bottom Face
+    MaterialType::MATERIAL_MIRROR 
+    */
+    };
+
+int addCornell(RTCScene scene, RTCDevice device)
 {
     /* create a mesh for all the quads in the Cornell Box scene */
     RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_QUAD);
-    *g_cornell_face_colors = (Vec3fa*)alignedMalloc(sizeof(Vec3fa) * cornellBoxIndices.size(), 16);
-    *g_cornell_vertex_colors = (Vec3fa*)alignedMalloc(sizeof(Vec3fa) * cornellBoxVertices.size(), 16);
+    g_cornell_face_colors = (Vec3fa*)alignedMalloc(sizeof(Vec3fa) * cornellBoxIndices.size(), 16);
+    g_cornell_vertex_colors = (Vec3fa*)alignedMalloc(sizeof(Vec3fa) * cornellBoxVertices.size(), 16);
     Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
         mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Vertex), cornellBoxVertices.size());
     for (auto i = 0; i < cornellBoxVertices.size(); i++) {
         vertices[i] = cornellBoxVertices[i];
-        (*g_cornell_vertex_colors)[i] = cornellBoxColors[i];
+        g_cornell_vertex_colors[i] = cornellBoxColors[i];
     }
     
     /* set quads */
@@ -244,7 +304,7 @@ int addCornell(RTCScene scene, RTCDevice device, Vec3fa** g_cornell_face_colors,
 
     for (auto i = 0; i < cornellBoxIndices.size(); i++) {
         quads[i] = cornellBoxIndices[i];
-        (*g_cornell_face_colors)[i] = cornellBoxColors[i * 4];
+        g_cornell_face_colors[i] = cornellBoxColors[i * 4];
     }
 
     rtcSetGeometryVertexAttributeCount(mesh, 1);
@@ -256,5 +316,52 @@ int addCornell(RTCScene scene, RTCDevice device, Vec3fa** g_cornell_face_colors,
     unsigned int geomID = rtcAttachGeometry(scene, mesh);
     rtcReleaseGeometry(mesh);
     return geomID;
+}
+
+int addSphere(RTCScene scene, RTCDevice device)
+{
+    RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_SPHERE_POINT);
+    Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT4, sizeof(Vertex), 1);
+    Vertex p = { 0.0f, 0.8f, 0.0f, 0.2f };
+    vertices[0] = p;
+
+
+    rtcCommitGeometry(mesh);
+    unsigned int geomID = rtcAttachGeometry(scene, mesh);
+    rtcReleaseGeometry(mesh);
+    return geomID;
+}
+
+void cleanCornell() {
+
+    if (g_cornell_face_colors) alignedFree(g_cornell_face_colors);
+    g_cornell_face_colors = nullptr;
+    if (g_cornell_vertex_colors) alignedFree(g_cornell_vertex_colors);
+    g_cornell_vertex_colors = nullptr;
 
 }
+
+void cornellCameraLightSetup(AffineSpace3fa& _camera, std::vector<Light>& _lights, unsigned int _width, unsigned int _height) {
+
+    _camera = positionCamera(Vec3fa(0.0, 0.0, -2.0f), Vec3fa(0, 0, 0),
+        Vec3fa(0, 1, 0), 90.0f, _width, _height);
+    Light infDirectionalLight;
+
+    infDirectionalLight.dir = normalize(Vec3fa(0.0f, 0.0f, 2.0f));
+    //infDirectionalLight.dir = normalize(Vec3fa(0.0f, -1.0, 0.0f));
+    //infDirectionalLight.intensity = 3*Vec3fa(0.78f, 0.551f, 0.183f);
+    infDirectionalLight.intensity = 3*Vec3fa(1.0f, 1.0f, 1.0f);
+    infDirectionalLight.type = LightType::INFINITE_DIRECTIONAL_LIGHT;
+    //_lights.push_back(infDirectionalLight);
+
+    Light pointLight;
+    //pointLight.intensity = 0.0615f * Vec3fa(0.18f, 0.18f, 0.78f);
+    //pointLight.intensity = Vec3fa(1.0f, 1.0f, 1.0f);
+    pointLight.intensity = 2*Vec3fa(0.78f, 0.551f, 0.183f);
+    pointLight.pos = Vec3fa(0.0f, 0.9f, 0.0f);
+    pointLight.type = LightType::POINT_LIGHT;
+    _lights.push_back(pointLight);
+}
+
+
+#endif /* !FILE_CORNELLBOX_SEEN */
