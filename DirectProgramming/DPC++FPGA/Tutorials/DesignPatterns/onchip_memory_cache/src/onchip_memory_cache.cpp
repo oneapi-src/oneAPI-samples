@@ -62,7 +62,7 @@ void ComputeHistogram(sycl::queue &q, sycl::buffer<uint32_t>& input_buf,
 int main() {
   // Host and kernel profiling
   sycl::event e;
-  ulong t1_kernel, t2_kernel;
+  unsigned long t1_kernel, t2_kernel;
   double time_kernel;
 
 // Create queue, get platform and device
