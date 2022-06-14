@@ -1,9 +1,13 @@
 # Introduction to Ray Tracing with Intel® Embree
 
 ## Purpose
-This sample demonstrates building and running a basic geometric ray tracing application with Embree. A code walkthrough is provided to understand the ray tracer, as well as the usage of the Embree API. Use this walkthrough prior to further self-directed deep dive exploration of Embree tutorial programs.
+This sample demonstrates building and running a basic geometric ray tracing application with Embree.
 
-This source is a consolidated refactor of the `triangle_geometry` source hosted as part of the Embree tutorials in the Embree repository. 
+Use this code and accompanying walkthrough to understand construction of a basic ray tracer and usage of the Embree API. This sample prepares an API explorer for further self-directed exploration of Embree repository tutorial programs. Expect less than 5 minutes to compile, run, and review the ouput imagery. Expect at least 20+ minutes to understand the walkthrough and code depending on rendering algorithm and math familiarity.
+
+This sample source code is a consolidated refactor of the `triangle_geometry` source hosted as part of the Embree tutorials in the Embree [repository](https://github.com/embree/embree). 
+
+__Output Image:__
 
 ![triangle_geometry_oneapi program output](example_images/triangle_geometry_oneapi.png)
 
@@ -12,23 +16,10 @@ This source is a consolidated refactor of the `triangle_geometry` source hosted 
 | Minimum Requirements              | Description
 |:---                               |:---
 | OS                                | Linux* OS: Ubuntu* 18.04, CentOS* 8 (or compatible); Windows* 10; MacOS* 10.15+
-| Hardware                          | Intel 64 Penryn or higher with SSE4.1 extensions; ARM64 with NEON extensions
+| Hardware                          | Intel 64 Penryn or higher with SSE4.1 extensions; ARM64 with NEON extensions (Optimization: Embree is further optimized for Intel 64 Skylake or higher with AVX512 extensions)
 | Compiler Toolchain                | Windows* OS: MSVS 2019 or MSVS 2022 with Windows* SDK and CMake*; Other platforms: C++11 compiler and CMake*
 | Libraries                         | - Install Intel oneAPI Rendering Toolkit including Embree, and oneTBB -Install Intel oneAPI Base Toolkit for the 'dev-utilities' default component
 | Tools                             | .png capable image viewer 
-
-| Optimized Requirements            | Description
-| :---                              | :---
-| Hardware                          | Intel 64 Skylake or newer with AVX512 extensions, ARM64 with NEON extensions
-
-| Objective                         | Description
-|:---                               |:---
-| What you will learn               | A basic understanding of constructing a ray tracer with the Embree API.
-| Audience                          | API explorers
-| Prerequisite Knowledge            | Parametric ray equations, vector mathematics, trigonometry
-| Time to complete                  | 5 minutes to compile, run, and review output image; 20+ minutes to study
-
-
 
 ## License
 
@@ -61,20 +52,21 @@ cmake --build .
 
 Open the resulting file: `triangle_geometry_oneapi.png` with an image viewer.
 
-## Objective
+## Scene Description
 
-### Scene Description
+### Geometric Objects
 
 1. The code renders an image of two geometric objects from a perspective camera. The first object is a cube. The cube consists of 8 vertices, 12 triangles, and 6 faces. Triangles are our primitive geometric object.
-2. The cube is of size 2 x 2 x 2 units and is centered about the origin in world space. Each cube face (group of two triangles) is given a new color.
+2. The cube is of size 2 x 2 x 2 units and is centered about the origin in (x,y,z) cartesian world space. Each cube face (group of two triangles) is given a new color.
 3. The second object is our ground plane. The ground plane consists of 4 vertices, 2 triangles, and 1 face. The ground plane is red.
 4. The ground plane is 20 x 20 units in world space. The center of the ground plane is 0, -2, 0 in cartesian (x,y,z) coordinate world space. The plane is coplanar with y=-2;
-5. A light is defined in the direction of -1, -1, -1.
-6. A perspective camera is positioned at 1.5, 1.5, -1.5. The camera faces the center of the cube.
+
+### Light
+1. An infinite-distanced directional light is defined. The light is traveling in the direction of -1, -1, -1.
 
 ### Camera Transform and Ray Casts
 
-1. The virtual camera is positioned at 1.5, 1.5, -1.5 in cartesian (x,y,z) world space. The camera is looking at the origin 0, 0, 0. The camera is thus facing the center of the cube.
+1. A perspective camera is positioned at 1.5, 1.5, -1.5 in cartesian (x,y,z) world space. The camera is looking at the origin 0, 0, 0. The camera is thus facing the center of the cube.
 2. The world 'up' direction is aligned with the positive y axis (0, 1, 0).
 3. The camera is defined with an angular field of vision, specifically 90 degrees. It is also given as a width and height in pixels. We use the image aspect ratio, the field of vision, camera position, and camera look-at point to transform each ray cast based on which pixel is being computed. 
 5. All image pixel color values are initialized to black. When a ray is cast and an object hit occurs, the color associated with the intersected triangle is queried. The queried color is added to the image pixel at half magnitude/intensity.
@@ -95,7 +87,7 @@ __The ground plane rendered by itself from camera position 1.5, 1.5, -1.5. The s
 
 ![ground rendered with occlusion](example_images/ground_with_shadow.png)
 
-__Sample program output image__
+__Default sample program output image__
 
 ![triangle_geometry_oneapi program output](example_images/triangle_geometry_oneapi.png)
 
@@ -274,7 +266,7 @@ g_camera = positionCamera(Vec3fa(1.5f, 1.5f, -1.5f), Vec3fa(0, 0, 0),
 In `positionCamera`, a data structure or vector containers is setup to support image to world space transformations based on our camera parameters. There are many approaches to generating camera rays. This function precomputes a transformation for ray image locations later in the program. A proof for generating camera rays for different types of cameras is outside of the scope of this article.
 
 
-### Ray Intersection tests
+### Ray Intersection Tests
 
 In the `renderFrameStandard` function, the image is separated into tiles. Each tile is submitted for compute with the `tbb::parallel_for` function. The function uses tbb::blocked_range<size_t> and a lambda expression to further render each tile of our image within a oneTBB task. The oneTBB task is advantageous for performance scalability. Why? This is because oneTBB tasks are dynamically spawned and managed at runtime in accordance with the topology of the target system. A 320x200 basic example image with negligible secondary ray casts serves as a useful sandbox to use oneTBB. However, tile compute time is highly variable in scenes with a highly variable number secondary ray casts. The tasking infrastructure provides both task management and compute resource scalability for tasks running in parallel that may complete at varying times.
 
