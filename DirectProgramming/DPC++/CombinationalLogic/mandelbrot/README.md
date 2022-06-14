@@ -1,11 +1,11 @@
 ﻿# `Mandelbrot` Sample
 
 Mandelbrot is an infinitely complex fractal patterning that is derived from a
-simple formula. It demonstrates using DPC++ for offloading computations to a
+simple formula. It demonstrates using SYCL* for offloading computations to a
 GPU (or other devices) and shows how processing time can be optimized and
 improved with parallelism.
 
-For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+For comprehensive instructions, see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
 | Optimized for                       | Description
 |:---                               |:---
@@ -17,7 +17,7 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 
 ## Purpose
 
-Mandelbrot is a DPC++ application that generates a fractal image by
+Mandelbrot is a SYCL* application that generates a fractal image by
 initializing a matrix of 512 x 512, where the computation at each point (pixel)
 is entirely independent of the computation at other points. The sample includes
 both parallel and serial calculation of the set, allowing for a direct
@@ -35,14 +35,14 @@ the computation.
 
 ## Key Implementation Details
 
-The basic DPC++ implementation explained in the code includes device selector,
+The basic SYCL* implementation explained in the code includes device selector,
 buffer, accessor, kernel, and command groups.
 
 ## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
 
 
 ## Setting Environment Variables
@@ -59,25 +59,25 @@ Source the script from the installation location, which is typically in one of
 these folders:
 
 
-For root or sudo installations:
+For system wide installations:
 
 
   ``. /opt/intel/oneapi/setvars.sh``
 
 
-For normal user installations:
+For private installations:
 
   ``. ~/intel/oneapi/setvars.sh``
 
 **Note:** If you are using a non-POSIX shell, such as csh, use the following command:
 
-     ``$ bash -c 'source <install-dir>/setvars.sh ; exec csh'``
+  ``$ bash -c 'source <install-dir>/setvars.sh ; exec csh'``
 
 If environment variables are set correctly, you will see a confirmation
 message.
 
 If you receive an error message, troubleshoot the problem using the
-Diagnostics Utility for Intel® oneAPI Toolkits, which provides system
+Diagnostics Utility for Intel$reg; oneAPI Toolkits, which provides system
 checks to find missing dependencies and permissions errors.
 [Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
@@ -116,22 +116,22 @@ checks to find missing dependencies and permissions errors.
 
 ## Building the `Mandelbrot` Program for CPU and GPU
 
-
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh``
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+> Windows:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 
 ### Include Files
-The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
+The include folder is located at ``%ONEAPI_ROOT%\dev-utilities\latest\include`` on your development system.
 
 ### Running Samples In DevCloud
 Running samples in the Intel DevCloud requires you to specify a compute node.
@@ -154,7 +154,6 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to
 this readme for instructions on how to build and run a sample.
-
 
 ### On a Linux* System
 
