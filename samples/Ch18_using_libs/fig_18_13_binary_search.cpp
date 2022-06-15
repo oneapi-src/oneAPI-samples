@@ -48,7 +48,7 @@ int main()
     oneapi::dpl::binary_search(policy, k_beg, k_end, v_beg, v_end, r_beg);
 
     // check data
-    accessor r{rB};
+    host_accessor r{rB};
     if ((r[0] == false) && (r[1] == true) && (r[2] == false) && (r[3] == true) && (r[4] == true)) {
        std::cout << "Passed. \nRun on "
             << policy.queue().get_device().get_info<info::device::name>() << "\n";
