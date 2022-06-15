@@ -42,10 +42,13 @@ template <typename T,        // The datatype for the computation
                              // elements from the pipe with each read
           typename QOut,     // Q matrix output pipe, send pipe_size
                              // elements to the pipe with each write
-          typename ROut      // R matrix output pipe, send pipe_size
+          typename ROut,     // R matrix output pipe, send pipe_size
                              // elements to the pipe with each write.
                              // Only upper-right elements of R are
                              // sent in row order, starting with row 0.
+          bool input_matrix_order = true  // Defualt value is true for standard matrix input reads (reads the matrix one column at a time).
+                                           // Flase if read order by rows (sweeps the rows by pipe size). Each read contains pipe_size samples from the same column, then
+                                            // the next read contains samples from the next column.
           >
 struct StreamingQRD {
   void operator()() const {
@@ -175,13 +178,23 @@ struct StreamingQRD {
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
         fpga_tools::NTuple<TT, pipe_size> pipe_read = AIn::read();
 
-        int write_idx = li % kLoopIterPerColumn;
+        int write_idx;
+        int a_col_index;
+        if constexpr (input_matrix_order) { 
+          write_idx = li % kLoopIterPerColumn;
+          a_col_index = li / kLoopIterPerColumn;
+        }
+        else {
+          write_idx = li / columns;
+          a_col_index = li % columns;
+        }
+        // int write_idx = li / columns;
 
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
               if constexpr (k * pipe_size + t < rows) {
-                a_load[li / kLoopIterPerColumn].template get<k * pipe_size
+                a_load[a_col_index].template get<k * pipe_size
                                           + t>() = pipe_read.template get<t>();
               }
             }

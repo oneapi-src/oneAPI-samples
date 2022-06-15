@@ -60,7 +60,7 @@ event SubmitStreamingQRDKernel(queue& q) {
   auto e = q.submit([&](sycl::handler &h) {
       h.single_task<StreamingQRDKernelName>(
         fpga_linalg::StreamingQRD<float, true, k_a_num_rows, k_a_num_cols, k_min_inner_loop_iterations, k_pipe_width,
-                      AMatrixInPipe, QMatrixOutPipe, RMatrixOutPipe>()
+                      AMatrixInPipe, QMatrixOutPipe, RMatrixOutPipe, false>()
       );
   });
 

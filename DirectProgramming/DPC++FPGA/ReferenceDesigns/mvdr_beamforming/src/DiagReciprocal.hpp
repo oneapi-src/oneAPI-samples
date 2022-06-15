@@ -29,7 +29,7 @@ event SubmitDiagReciprocalKernel(queue& q) {
                     ComplexType in = RMatrixInPipe::read();
 
                     if (row == col) {
-                        RDiagRecipVectorOutPipe::write(1/in.real());
+                        RDiagRecipVectorOutPipe::write(sycl::rsqrt(in.real() * in.real()));
                     }
 
                     //calculate next element's row and col
