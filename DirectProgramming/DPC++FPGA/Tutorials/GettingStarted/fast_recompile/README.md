@@ -255,6 +255,7 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 2. Run the sample on the FPGA device:
      ```
      ./fast_recompile.fpga         (Linux)
+     ./fast_recompile.fpga.exe     (Windows)
      ```
 
 ### Example of Output

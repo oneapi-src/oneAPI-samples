@@ -316,6 +316,7 @@ Consult the "Loop Analysis" report to compare the optimized and unoptimized vers
 2. Run the sample on the FPGA device:
      ```
      ./triangular_loop.fpga         (Linux)
+     ./triangular_loop.fpga.exe     (Windows)
      ```
 
 ### Example of Output

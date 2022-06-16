@@ -217,6 +217,7 @@ Now, observe that the loop in block `OptKernel.B1` is not marked as _Serialized_
 2. Run the sample on the FPGA device:
      ```
      ./loop_carried_dependency.fpga         (Linux)
+     ./loop_carried_dependency.fpga.exe     (Windows)
      ```
 
 ### Example of Output

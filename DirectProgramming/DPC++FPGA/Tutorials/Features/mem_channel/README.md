@@ -324,6 +324,9 @@ significantly lower than the case where burst-interleaving is enabled.
      ```
      ./mem_channel_interleaving.fpga         (Linux)
      ./mem_channel_no_interleaving.fpga      (Linux)
+     ./mem_channel_interleaving.fpga.exe     (Windows)
+     ./mem_channel_no_interleaving.fpga.exe  (Windows)
+
      ```
 
 ### Example of Output

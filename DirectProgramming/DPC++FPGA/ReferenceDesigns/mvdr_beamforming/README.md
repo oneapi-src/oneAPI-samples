@@ -169,6 +169,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 2. Run the sample on the FPGA device.
      ```
      ./mvdr_beamforming.fpga 1024 ../data .              (Linux)
+     ./mvdr_beamforming.fpga.exe 1024 ../data .          (Windows)
      ```
 
 ### Application Parameters

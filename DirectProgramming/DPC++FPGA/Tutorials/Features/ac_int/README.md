@@ -259,6 +259,7 @@ Navigate to *System Viewer* (*Views* > *System Viewer*) and find the cluster in 
 
    ```bash
    ./ac_int.fpga         (Linux)
+   ./ac_int.fpga.exe     (Windows)
    ```
 
 ### Example of Output

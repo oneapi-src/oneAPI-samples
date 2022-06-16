@@ -152,6 +152,7 @@ Note that when running this particular sample in emulation on Windows, an enviro
 2. Run the sample on the FPGA device:
      ```
      ./autorun.fpga         (Linux)
+     ./autorun.fpga.exe     (Windows)
      ```
 
 ### Example of Output

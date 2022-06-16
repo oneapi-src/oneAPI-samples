@@ -1,4 +1,4 @@
-# Buffered Host-Device Streaming
+y# Buffered Host-Device Streaming
 This tutorial demonstrates how to create a high-performance full system CPU-FPGA design using SYCL USM.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
@@ -223,6 +223,7 @@ Locate `report.html` in the `buffered_host_streaming_report.prj/reports/` direct
 2. Run the sample on the FPGA device:
      ```
      ./buffered_host_streaming.fpga         (Linux)
+     ./buffered_host_streaming.fpga.exe     (Windows)
      ```
 
 ### Example of Output

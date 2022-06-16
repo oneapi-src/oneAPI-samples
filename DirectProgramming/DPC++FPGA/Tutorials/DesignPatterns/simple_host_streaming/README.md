@@ -221,6 +221,7 @@ Locate `report.html` in the `simple_host_streaming_report.prj/reports/` director
 2. Run the sample on the FPGA device:
      ```
      ./simple_host_streaming.fpga         (Linux)
+     ./simple_host_streaming.fpga.exe     (Windows)
      ```
 
 ### Example of Output

@@ -285,15 +285,19 @@ Compare the results to the report for the version of the design using the `intel
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./loop_ii.fpga_emu    # Linux
-   loop_ii.fpga_emu.exe  # Windows
+   ./loop_ii.fpga_emu    (Linux)
+   loop_ii.fpga_emu.exe  (Windows)
    ```
 
-2. Run the sample on the FPGA device (Linux only)
+2. Run the sample on the FPGA device
 
    ```bash
-   ./loop_ii.fpga            # Sample without intel::initiation_interval attribute
-   ./loop_ii_enable_ii.fpga  # Sample with intel::initiation_interval attribute
+   # Sample without intel::initiation_interval attribute
+   ./loop_ii.fpga               (Linux)
+   ./loop_ii.fpga.exe           (Windows)
+   # Sample with intel::initiation_interval attribute
+   ./loop_ii_enable_ii.fpga     (Linux)
+   ./loop_ii_enable_ii.fpga.exe (Windows)
    ```
 
 ### Example of Output

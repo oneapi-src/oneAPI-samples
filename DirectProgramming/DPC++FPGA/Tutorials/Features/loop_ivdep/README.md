@@ -291,6 +291,7 @@ You should see a message similar to "Compiler failed to schedule this loop with 
 2. Run the sample on the FPGA device:
      ```
      ./loop_ivdep.fpga         (Linux)
+     ./loop_ivdep.fpga.exe     (Windows)
      ```
 
 ### Example of Output

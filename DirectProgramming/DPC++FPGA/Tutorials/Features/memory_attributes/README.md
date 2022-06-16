@@ -325,6 +325,7 @@ There are often many ways to generate a stall-free memory system. As a programme
 2. Run the sample on the FPGA device:
      ```
      ./memory_attributes.fpga         (Linux)
+     ./memory_attributes.fpga.exe     (Windows)
      ```
 
 ### Example of Output

@@ -273,6 +273,7 @@ Browse the reports that were generated for the `VectorAdd` kernel's FPGA early i
 2. Run the sample on the FPGA device:
      ```
      ./fpga_compile.fpga         (Linux)
+     ./fpga_compile.fpga.exe     (Windows)
      ```
 
 ### Example of Output

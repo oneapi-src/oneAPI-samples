@@ -1,4 +1,4 @@
-# Caching On-Chip Memory to Improve Loop Performance
+https://hsdes.intel.com/appstore/article/#/18022600020# Caching On-Chip Memory to Improve Loop Performance
 This FPGA tutorial demonstrates how to build a simple cache (implemented in FPGA registers) to store recently-accessed memory locations so that the compiler can achieve II=1 on critical loops in task kernels.
 
 
@@ -210,6 +210,7 @@ Compare the Loop Analysis reports with and without the on-chip memory cache opti
 2. Run the sample on the FPGA device:
      ```
      ./onchip_memory_cache.fpga         (Linux)
+     ./onchip_memory_cache.fpga.exe     (Windows)
      ```
 
 ### Example of Output

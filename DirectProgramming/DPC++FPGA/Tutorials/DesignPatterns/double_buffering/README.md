@@ -232,6 +232,7 @@ Note that because the optimization described in this tutorial occurs at the *run
 2. Run the sample on the FPGA device:
      ```
      ./double_buffering.fpga         (Linux)
+     ./double_buffering.fpga.exe     (Windows)
      ```
 
 ### Example of Output
