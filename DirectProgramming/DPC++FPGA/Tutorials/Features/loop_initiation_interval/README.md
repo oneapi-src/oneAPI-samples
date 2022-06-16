@@ -294,10 +294,10 @@ Compare the results to the report for the version of the design using the `intel
    ```bash
    # Sample without intel::initiation_interval attribute
    ./loop_ii.fpga               (Linux)
-   ./loop_ii.fpga.exe           (Windows)
+   loop_ii.fpga.exe             (Windows)
    # Sample with intel::initiation_interval attribute
    ./loop_ii_enable_ii.fpga     (Linux)
-   ./loop_ii_enable_ii.fpga.exe (Windows)
+   loop_ii_enable_ii.fpga.exe   (Windows)
    ```
 
 ### Example of Output

@@ -299,7 +299,7 @@ Navigate to the "System Viewer" to visualize the structure of the kernel system.
 2. Run the sample on the FPGA device:
      ```
      ./pipes.fpga         (Linux)
-     ./pipes.fpga.exe     (Windows)
+     pipes.fpga.exe       (Windows)
      ```
 
 ### Example of Output

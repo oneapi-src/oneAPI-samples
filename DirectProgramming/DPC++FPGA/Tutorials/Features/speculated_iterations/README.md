@@ -216,7 +216,7 @@ These results make sense when you recall that the loop exit computation has a la
 2. Run the sample on the FPGA device:
      ```
      ./speculated iterations.fpga         (Linux)
-     ./speculated iterations.fpga.exe     (Windows)
+     speculated iterations.fpga.exe       (Windows)
      ```
 
 ### Example of Output

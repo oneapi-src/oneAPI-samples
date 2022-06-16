@@ -210,7 +210,7 @@ Compare the Loop Analysis reports with and without the on-chip memory cache opti
 2. Run the sample on the FPGA device:
      ```
      ./onchip_memory_cache.fpga         (Linux)
-     ./onchip_memory_cache.fpga.exe     (Windows)
+     onchip_memory_cache.fpga.exe       (Windows)
      ```
 
 ### Example of Output

@@ -263,7 +263,7 @@ Note that because the optimization described in this tutorial occurs at the *run
 2. Run the sample on the FPGA device:
      ```
      ./n_way_buffering.fpga         (Linux)
-     ./n_way_buffering.fpga.exe     (Windows)
+     n_way_buffering.fpga.exe       (Windows)
      ```
 
 ### Example of Output

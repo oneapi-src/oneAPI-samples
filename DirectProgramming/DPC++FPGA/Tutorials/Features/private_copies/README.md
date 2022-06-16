@@ -207,7 +207,7 @@ On the main report page, scroll down to the section titled "Estimated Resource U
 2. Run the sample on the FPGA device:
      ```
      ./private_copies.fpga         (Linux)
-     ./private_copies.fpga.exe     (Windows)
+     private_copies.fpga.exe       (Windows)
      ```
 
 

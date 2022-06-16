@@ -227,7 +227,7 @@ Navigate to the Area Analysis of the system under Area Analysis. The Kernel Syst
 2. Run the sample on the FPGA device:
      ```
      ./loop_fusion.fpga         (Linux)
-     ./loop_fusion.fpga.exe     (Windows)
+     loop_fusion.fpga.exe       (Windows)
      ```
 
 ### Example of Output

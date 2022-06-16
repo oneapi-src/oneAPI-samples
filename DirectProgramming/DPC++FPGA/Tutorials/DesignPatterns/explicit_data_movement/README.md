@@ -194,7 +194,7 @@ Locate `report.html` in the `explicit_data_movement_report.prj/reports/` directo
 2. Run the sample on the FPGA device:
      ```
      ./explicit_data_movement.fpga              (Linux)
-     ./explicit_data_movement.fpga.exe          (Windows)
+     explicit_data_movement.fpga.exe            (Windows)
      ```
 
 ### Example of Output

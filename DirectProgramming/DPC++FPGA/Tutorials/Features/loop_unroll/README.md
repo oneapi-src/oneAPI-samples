@@ -241,7 +241,7 @@ You can also check the achieved system f<sub>MAX</sub> to verify the earlier cal
 2. Run the sample on the FPGA device:
      ```
      ./loop_unroll.fpga         (Linux)
-     ./loop_unroll.fpga.exe     (Windows)
+     loop_unroll.fpga.exe       (Windows)
      ```
 
 ### Example of Output

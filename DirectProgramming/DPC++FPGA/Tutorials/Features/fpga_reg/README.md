@@ -263,8 +263,8 @@ Open the reports in Chrome*, Firefox*, Edge*, or Internet Explorer*. Observe the
    ```bash
    ./fpga_reg.fpga                (Linux)
    ./fpga_reg_registered.fpga     (Linux)
-   ./fpga_reg.fpga.exe            (Windows)
-   ./fpga_reg_registered.fpga.exe (Windows)
+   fpga_reg.fpga.exe              (Windows)
+   fpga_reg_registered.fpga.exe   (Windows)
    ```
 
 ### Example of Output

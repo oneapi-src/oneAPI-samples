@@ -174,7 +174,7 @@ Locate `report.html` in the `zero_copy_data_transfer_report.prj/reports/` direct
 2. Run the sample on the FPGA device:
      ```
      ./zero_copy_data_transfer.fpga         (Linux)
-     ./zero_copy_data_transfer.fpga.exe     (Windows)
+     zero_copy_data_transfer.fpga.exe       (Windows)
      ```
 
 ### Example of Output

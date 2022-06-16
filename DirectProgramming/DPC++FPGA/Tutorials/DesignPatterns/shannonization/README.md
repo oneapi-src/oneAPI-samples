@@ -337,7 +337,7 @@ As a consequence of the fabric architecture of the Intel Stratix® 10 SX FPGA, t
 2. Run the sample on the FPGA device:
      ```
      ./shannonization.fpga              (Linux)
-     ./shannonization.fpga.exe          (Windows)
+     shannonization.fpga.exe            (Windows)
      ```
 
 ### Application Parameters

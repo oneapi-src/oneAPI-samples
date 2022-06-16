@@ -194,7 +194,8 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
 2. Run the sample on the FPGA device.
      ```
      ./cholesky.fpga         (Linux)
-     ./cholesky.fpga.exe     (Windows)
+     
+     cholesky.fpga.exe       (Windows)
      ```
 ### Application Parameters
 

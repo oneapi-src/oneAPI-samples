@@ -218,7 +218,7 @@ Next, look at the loop details of the *KernelArgsRestrict* kernel. You will noti
 2. Run the sample on the FPGA device:
      ```
      ./kernel_args_restrict.fpga         (Linux)
-     ./kernel_args_restrict.fpga.exe     (Windows)
+     kernel_args_restrict.fpga.exe       (Windows)
      ```
 
 ### Example of Output

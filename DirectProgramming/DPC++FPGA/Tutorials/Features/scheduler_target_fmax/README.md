@@ -196,7 +196,7 @@ Navigate to the Area Analysis of System (Area Analysis > Area Analysis of System
 2. Run the sample on the FPGA device:
      ```
      ./scheduler_target_fmax.fpga         (Linux)
-     ./scheduler_target_fmax.fpga.exe     (Windows)
+     scheduler_target_fmax.fpga.exe       (Windows)
      ```
 
 ### Example of Output

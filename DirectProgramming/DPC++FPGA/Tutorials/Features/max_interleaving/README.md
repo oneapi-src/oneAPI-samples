@@ -203,7 +203,7 @@ The area usage information can also be accessed on the main report page in the S
 2. Run the sample on the FPGA device:
      ```
      ./max_interleaving.fpga         (Linux)
-     ./max_interleaving.fpga.exe     (Windows)
+     max_interleaving.fpga.exe       (Windows)
      ```
 
 

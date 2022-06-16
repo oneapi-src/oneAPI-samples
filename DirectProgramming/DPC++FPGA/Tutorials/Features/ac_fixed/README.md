@@ -257,7 +257,7 @@ Scroll down on the Summary page of the report and expand the section titled **Co
 
    ```bash
    ./ac_fixed.fpga             (Linux)
-   ./ac_fixed.fpga.exe         (Windows)
+   ac_fixed.fpga.exe           (Windows)
    ```
 
 ### Example of Output on Emulator

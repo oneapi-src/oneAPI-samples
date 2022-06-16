@@ -165,7 +165,7 @@ You can perform the QR-based inversion of 8 matrices repeatedly, as shown below.
 2. Run the sample on the FPGA device.
      ```
      ./qri.fpga               (Linux)
-     ./qri.fpga.exe           (Windows)
+     qri.fpga.exe             (Windows)
      ```
 ### Application Parameters
 

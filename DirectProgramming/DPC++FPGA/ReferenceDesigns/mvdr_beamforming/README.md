@@ -163,13 +163,13 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
      ```
      ./mvdr_beamforming.fpga_emu 1024 ../data .          (Linux)
-     ./mvdr_beamforming.fpga_emu.exe 1024 ../data .      (Windows)
+     mvdr_beamforming.fpga_emu.exe 1024 ../data .        (Windows)
      ```
 
 2. Run the sample on the FPGA device.
      ```
      ./mvdr_beamforming.fpga 1024 ../data .              (Linux)
-     ./mvdr_beamforming.fpga.exe 1024 ../data .          (Windows)
+     mvdr_beamforming.fpga.exe 1024 ../data .            (Windows)
      ```
 
 ### Application Parameters
