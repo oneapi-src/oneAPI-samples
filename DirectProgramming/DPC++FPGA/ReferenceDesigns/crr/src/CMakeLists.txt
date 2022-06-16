@@ -30,7 +30,7 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
     set(OUTER_UNROLL 2)
     set(INNER_UNROLL 64)
     set(OUTER_UNROLL_POW2 2)
-    set(SEED "-Xsseed=4")
+    set(SEED "-Xsseed=2")
 elseif(FPGA_BOARD MATCHES ".*agilex.*")
     # Agilex™
     set(OUTER_UNROLL 2)
