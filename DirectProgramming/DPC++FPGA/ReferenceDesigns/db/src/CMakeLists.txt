@@ -39,6 +39,9 @@ endif()
 # This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
     set(WIN_FLAG "/EHsc")
+    set(AC_TYPES_FLAG "/Qactypes")
+else()
+    set(AC_TYPES_FLAG "-qactypes")
 endif()
 
 # ensure a supported query was requested
@@ -125,16 +128,19 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xsboard=${FPGA_BOARD} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(REPORT_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xsboard=${FPGA_BOARD} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xsboard=${FPGA_BOARD} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE} ${DEVICE_SOURCE})
+target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
@@ -145,15 +151,17 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE} ${DEVICE_SOURCE})
+target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
-set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
-set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${REPORT_COMPILE_FLAGS}")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_FLAGS} -fsycl-link=early")
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 
 ###############################################################################
 ### FPGA Hardware
 ###############################################################################
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE} ${DEVICE_SOURCE})
+target_include_directories(${FPGA_TARGET} PRIVATE ../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")

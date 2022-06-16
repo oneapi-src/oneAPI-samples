@@ -10,6 +10,7 @@
 #include "metaprogramming_utils.hpp"  // included from ../../../../include
 #include "tuple.hpp"                  // included from ../../../../include
 #include "unrolled_loop.hpp"          // included from ../../../../include
+#include "onchip_memory_cache.hpp"          // included from ../../../../include
 
 //
 // Performs LZ77 decoding for more than 1 element at once.
@@ -75,17 +76,16 @@ void LZ77DecoderMultiElement() {
   // for each of the 'literals_per_cycle' buffers, where do we write next
   [[intel::fpga_register]] HistBufIdxT history_buffer_idx[literals_per_cycle];
 
-  // the history buffers
-  fpga_tools::NTuple<unsigned char[history_buffer_count], literals_per_cycle>
-      history_buffer;
 
-  // these shift-register caches cache in-flight writes to the history buffer
-  // and break loop carried dependencies
-  constexpr int kCacheDepth = 7;
-  [[intel::fpga_register]]  // NO-FORMAT: Attribute
-  unsigned char history_buffer_cache_val[literals_per_cycle][kCacheDepth + 1];
-  [[intel::fpga_register]]  // NO-FORMAT: Attribute
-  HistBufIdxT history_buffer_cache_idx[literals_per_cycle][kCacheDepth + 1];
+  // the OnchipMemoryWithCache history buffers cache in-flight writes to the 
+  // history buffer and break loop carried dependencies that are smaller than
+  // kCacheDepth
+  constexpr int kCacheDepth = 8;
+  // the history buffers
+  fpga_tools::NTuple<fpga_tools::OnchipMemoryWithCache<
+                         unsigned char, history_buffer_count, kCacheDepth + 1>,
+                     literals_per_cycle>
+      history_buffer;
 
   // these variables are used to read from the history buffer upon request from
   // the Huffman decoder kernel
@@ -121,9 +121,8 @@ void LZ77DecoderMultiElement() {
   bool done = false;
 
   // the main processing loop.
-  // Using the shift-register cache, we are able to break all loop carried
+  // Using the OnchipMemoryWithCache, we are able to break all loop carried
   // dependencies with a distance of 'kCacheDepth' and less
-  [[intel::ivdep(kCacheDepth)]]  // NO-FORMAT: Attribute
   while (!done) {
     bool data_valid = true;
     OutDataT out_data;
@@ -205,15 +204,7 @@ void LZ77DecoderMultiElement() {
       fpga_tools::UnrolledLoop<literals_per_cycle>([&](auto i) {
         // get the index into this buffer and read from it
         auto idx_in_buf = read_history_buffer_idx[i];
-        historical_bytes[i] = history_buffer.template get<i>()[idx_in_buf];
-
-        // also check the cache to see if it is there
-#pragma unroll
-        for (int j = 0; j < kCacheDepth + 1; j++) {
-          if (history_buffer_cache_idx[i][j] == idx_in_buf) {
-            historical_bytes[i] = history_buffer_cache_val[i][j];
-          }
-        }
+        historical_bytes[i] = history_buffer.template get<i>().read(idx_in_buf);
       });
 
       // shuffle the elements read from the history buffers to the output
@@ -271,19 +262,8 @@ void LZ77DecoderMultiElement() {
 
           // the index into this history buffer
           HistBufIdxT idx_in_buf = history_buffer_idx[i];
-          history_buffer.template get<i>()[idx_in_buf] = literal_out;
-
-          // write the new value into cache as well
-          history_buffer_cache_val[i][kCacheDepth] = literal_out;
-          history_buffer_cache_idx[i][kCacheDepth] = idx_in_buf;
-
-          // the cache is just a shift register, so shift the shift reg. Pushing
-          // into the back of the shift reg is done above.
-#pragma unroll
-          for (int j = 0; j < kCacheDepth; j++) {
-            history_buffer_cache_val[i][j] = history_buffer_cache_val[i][j + 1];
-            history_buffer_cache_idx[i][j] = history_buffer_cache_idx[i][j + 1];
-          }
+          // history_buffer.template get<i>()[idx_in_buf] = literal_out;
+          history_buffer.template get<i>().write(idx_in_buf, literal_out);
 
           // update the history buffer index
           history_buffer_idx[i] =
