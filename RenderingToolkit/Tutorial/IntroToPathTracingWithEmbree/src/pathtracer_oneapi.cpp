@@ -18,12 +18,17 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <string>
 
 #include "definitions.h"
 #include "DefaultCubeAndPlane.h"
 #include "CornellBox.h"
 
-std::vector<unsigned int> geomIDs;
+using std::string;
+/* minstd_rand is much faster for this application than ranlux48_base/ranlux24_base. In turn, ranlux was faster than mt19337 or mt1933764 on Windows */
+typedef std::minstd_rand RandomEngine;
+
+std::vector<unsigned int> g_geomIDs;
 
 RTCDevice g_device = nullptr;
 RTCScene g_scene = nullptr;
@@ -32,12 +37,12 @@ unsigned char* g_pixels;
 
 /* Additions for pathtracer */
 std::vector<std::shared_ptr<Vec3ff>> g_accu;
-unsigned int g_accu_count = 0;
+unsigned long long g_accu_count = 0;
 unsigned int g_max_path_length;
 unsigned int g_spp;
 SceneSelector g_sceneSelector;
 std::vector<Light> g_lights;
-unsigned int g_accu_limit;
+unsigned long long g_accu_limit;
 
 AffineSpace3fa g_camera;
 
@@ -228,7 +233,7 @@ Light_SampleRes sample_light(const Light& light, DifferentialGeometry& dg, const
 /* task that renders a single screen pixel */
 Vec3fa renderPixelFunction(float x, float y,
     const unsigned int width, const unsigned int height,
-    std::default_random_engine& reng, std::uniform_real_distribution<float>& distrib,
+    RandomEngine& reng, std::uniform_real_distribution<float>& distrib,
     const float time,
     const AffineSpace3fa& camera) {
     RTCIntersectContext context;
@@ -250,7 +255,7 @@ Vec3fa renderPixelFunction(float x, float y,
     for (int i = 0; i < g_max_path_length; i++)
     {
         /* terminate if contribution too low */
-        if (max(Lw.x, max(Lw.y, Lw.z)) < 0.001f)
+        if (max(Lw.x, max(Lw.y, Lw.z)) < 0.01f)
             break;
 
         /* intersect ray with scene */
@@ -258,7 +263,7 @@ Vec3fa renderPixelFunction(float x, float y,
         rtcIntersect1(g_scene, &context, &rayhit);
         const Vec3fa wo = -dir;
 
-        /* if nothing hit the path is terminated, this could be an environment map lookup insteead */
+        /* if nothing hit the path is terminated, this could be an light lookup insteead */
         if (rayhit.hit.geomID == RTC_INVALID_GEOMETRY_ID)
             break;
 
@@ -279,8 +284,8 @@ Vec3fa renderPixelFunction(float x, float y,
         dg.Ns = Ns;
 
         /* Optionally Next is:
-        * material discovery, the full pathtracer program includes objects to lookup materials from a scenegraph object
-        * texture lookup transformations based on vertex-texture assignments
+        * material discovery, the full pathtracer program includes lookup of materials from a scenegraph object
+        * texture lookup transformations are based on vertex-to-texture assignments
         * Interpolating normals from vertex normals is a possibility as well
         * This could include a required tranformation of normals for geometries that have been instanced.
         */
@@ -291,32 +296,30 @@ Vec3fa renderPixelFunction(float x, float y,
         /* An albedo as well as a material type is used */
         switch (g_sceneSelector) {
         case SceneSelector::SHOW_CORNELL_BOX:
-            if (rayhit.hit.geomID == geomIDs[0]) {
+            if (rayhit.hit.geomID == g_geomIDs[0]) {
                 albedo = g_cornell_face_colors[rayhit.hit.primID];
                 materialType = cornellBoxMats[rayhit.hit.primID];
             }
-            else if (rayhit.hit.geomID == geomIDs[1]) {
+            else if (rayhit.hit.geomID == g_geomIDs[1]) {
                 albedo = Vec3fa(1.0f, 1.0f, 1.0f);
                 materialType = MaterialType::MATERIAL_MATTE;
             }
             break;
         case SceneSelector::SHOW_CUBE_AND_PLANE:
         default:
-            if (rayhit.hit.geomID == geomIDs[0]) {
+            if (rayhit.hit.geomID == g_geomIDs[0]) {
                 albedo = g_cube_face_colors[rayhit.hit.primID];
                 materialType = MaterialType::MATERIAL_MATTE;
             }
-            else if (rayhit.hit.geomID == geomIDs[1]) {
+            else if (rayhit.hit.geomID == g_geomIDs[1]) {
                 albedo = g_ground_face_colors[rayhit.hit.primID];
                 materialType = MaterialType::MATERIAL_MATTE;
             }
             break;
         }
 
-
         /* Reference epsilon value to move away from the plane, avoid artifacts */
         dg.eps = 32.0f * 1.19209e-07f * max(max(abs(dg.P.x), abs(dg.P.y)), max(abs(dg.P.z), rayhit.ray.tfar));
-
 
         dg.Ng = face_forward(dir, normalize(dg.Ng));
         dg.Ns = face_forward(dir, normalize(dg.Ns));
@@ -329,9 +332,9 @@ Vec3fa renderPixelFunction(float x, float y,
         c = c * Material__sample(albedo, materialType, Lw, wo, dg, wi1, randomMatSample);
 
         /* Search for each light in the scene from our hit point. Aggregate the radiance if hit point is not occluded */
+        context.flags = RTCIntersectContextFlags::RTC_INTERSECT_CONTEXT_FLAG_INCOHERENT;
         for(auto light : g_lights)
         {
-            context.flags = RTCIntersectContextFlags::RTC_INTERSECT_CONTEXT_FLAG_INCOHERENT;
             Vec2f randomLightSample(distrib(reng), distrib(reng));
             Light_SampleRes ls = sample_light(light, dg, randomLightSample);
             /* If the sample probability density evaluation is 0 then no need to consider this shadow ray */
@@ -348,7 +351,6 @@ Vec3fa renderPixelFunction(float x, float y,
         if (wi1.pdf <= 1E-4f) break;
         Lw = Lw * c / wi1.pdf;
 
-
         /* setup secondary ray */
         float sign = dot(wi1.v, dg.Ng) < 0.0f ? -1.0f : 1.0f;
         dg.P = dg.P + sign * dg.eps * dg.Ng;
@@ -364,21 +366,28 @@ Vec3fa renderPixelFunction(float x, float y,
 Vec3fa renderPixelStandard(int x, int y, 
     const unsigned int width, const unsigned int height,
     const float time,
-    const AffineSpace3fa& camera, std::default_random_engine& reng, std::uniform_real_distribution<float>& distrib) {
-
-    //std::default_random_engine reng;
-    //std::uniform_real_distribution<float> distrib(0.0f, 1.0f);
+    const AffineSpace3fa& camera, RandomEngine& reng, std::uniform_real_distribution<float>& distrib) {
 
     Vec3fa L = Vec3fa(0.0f);
 
     for (int i = 0; i < g_spp; i++)
     {
-        //reng.seed(g_accu_count * (y * width +x) * g_spp + (y * width + x) *  g_spp + i);
+        /* Generate a new seed for a sample. 
+        Ray cast position for the sample, materials, and light look ups all use random numbers based off this seed. 
+        There are better and worse solutions for randomization in rendering depending on your use case. This one is simple to follow.
+        
+        Note that here 4,294,967,296 distinct seeds are used based on the pixel and sample being computed. At 3840x2160 resolution with 517 samples per pixel, random numbers, *could* start to repeat.
+        The Embree pathtracer full example uses an LCG-based algorithm written by hand.
+        */
+        unsigned long long id = (unsigned long long)g_accu_count * (width * height) * g_spp + (y * width + x) * g_spp + i;
+        reng.seed( (unsigned int)(id % std::numeric_limits<unsigned int>::max()));
 
-        /* calculate pixel color */
+        /* calculate pixel color, slightly offset the ray cast orientation randomly so each sample occurs at a slightly different location within a pixel */
+        /* Note: The */
         float fx = x + distrib(reng); 
         float fy = y + distrib(reng); 
         L = L + renderPixelFunction(fx, fy, width, height, reng, distrib, time, camera);
+/* If you are not seeing anything, try some old fashioned printf debug */
 //#define MY_DEBUG
 #ifdef MY_DEBUG
         if (max(max(L.x, L.y), L.z) > 0.0f)
@@ -396,7 +405,7 @@ void renderTileTask(int taskIndex, int threadIndex, unsigned char* pixels, std::
                     const unsigned int width, const unsigned int height,
                     const unsigned int channels, const float time,
                     const AffineSpace3fa& camera, const int numTilesX,
-                    const int numTilesY, std::default_random_engine& reng, std::uniform_real_distribution<float>& distrib) {
+                    const int numTilesY, RandomEngine& reng, std::uniform_real_distribution<float>& distrib) {
   const unsigned int tileY = taskIndex / numTilesX;
   const unsigned int tileX = taskIndex - tileY * numTilesX;
   const unsigned int x0 = tileX * TILE_SIZE_X;
@@ -444,12 +453,12 @@ void renderFrameStandard(unsigned char* pixels, std::vector<std::shared_ptr<Vec3
       tbb::blocked_range<size_t>(0, numTilesX * numTilesY, 1),
       [&](const tbb::blocked_range<size_t>& r) {
         const int threadIndex = tbb::this_task_arena::current_thread_index();
-        std::default_random_engine reng;
-        std::uniform_real_distribution<float> distrib(0.0f, 1.0f);
 
+        RandomEngine reng;
+        std::uniform_real_distribution<float> distrib(0.0f, 1.0f);
         
         for (size_t i = r.begin(); i < r.end(); i++) {
-            reng.seed(g_accu_count * numTilesX * numTilesY + i);
+            
             renderTileTask((int)i, threadIndex, pixels, accu, width, height, channels,
                 time, camera, numTilesX, numTilesY, reng, distrib);
         }
@@ -475,9 +484,7 @@ void device_cleanup() {
     break;
 
   }
-
-
-}
+  }
 
 void device_init(char* cfg) {
   /* create scene */
@@ -487,17 +494,16 @@ void device_init(char* cfg) {
   switch (g_sceneSelector) {
       case SceneSelector::SHOW_CORNELL_BOX:
         /* add cornell box */
-        geomIDs.push_back(addCornell(g_scene, g_device));
-        //geomIDs.push_back(addSphere(g_scene, g_device));
+        g_geomIDs.push_back(addCornell(g_scene, g_device));
+        //g_geomIDs.push_back(addSphere(g_scene, g_device));
         break;
       case SceneSelector::SHOW_CUBE_AND_PLANE:
       default:
         /* add cube */
-        geomIDs.push_back(addCube(g_scene, g_device));
+        g_geomIDs.push_back(addCube(g_scene, g_device));
         /* add ground plane */
-        geomIDs.push_back(addGroundPlane(g_scene, g_device));
+        g_geomIDs.push_back(addGroundPlane(g_scene, g_device));
         break;
-
   }
 
   /* commit changes to scene */
@@ -518,8 +524,8 @@ int main() {
 
     /* create an image buffer initialize it with all zeroes */
 
-    const unsigned int width = 320;
-    const unsigned int height = 240;
+    const unsigned int width = 512;
+    const unsigned int height = 512;
     const unsigned int channels = 3;
 
     g_pixels = (unsigned char*)new unsigned char[width * height * channels];
@@ -530,9 +536,9 @@ int main() {
         g_accu[i] = std::make_shared<Vec3ff>(0.0f);
 
     /* accumulation buffer used for introduction to future applications */
-    const unsigned int g_accu_limit = 64;
+    const unsigned long long g_accu_limit = 500;
     g_spp = 1;
-    g_max_path_length = 20;
+    g_max_path_length = 8;
 
     switch (g_sceneSelector) {
     case SceneSelector::SHOW_CORNELL_BOX:
@@ -548,19 +554,25 @@ int main() {
     renderFrameStandard(g_pixels, g_accu, width, height, channels, 0.0, g_camera);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> accum_time = end - start;
-    printf("Accumulation 0 of %u: %lf s\n", g_accu_limit, accum_time.count());
-    stbi_write_png("pathtracer_single_oneapi.png", width, height, channels,
+    printf("Accumulation 1 of %llu: %lf s\n", g_accu_limit, accum_time.count());
+    string strscene;
+    (g_sceneSelector == SceneSelector::SHOW_CORNELL_BOX) ? strscene = "-cornell" : strscene = "-default";
+    string suffix = string("-spp") + std::to_string(g_spp) + string("-plength") + std::to_string(g_max_path_length) + string("-accu") + std::to_string(g_accu_limit) + string("-") + std::to_string(width) + string("x") + std::to_string(height) + string(".png");
+    string prefix = "pathtracer_single_oneapi";
+    string filename = prefix + strscene + suffix;
+    stbi_write_png(filename.c_str(), width, height, channels,
         g_pixels, width * channels);
 
-    for (unsigned int i = 1; i < g_accu_limit; i++) {
+    for (unsigned long long i = 1; i < g_accu_limit; i++) {
         start = std::chrono::high_resolution_clock::now();
         renderFrameStandard(g_pixels, g_accu, width, height, channels, 0.0, g_camera);
         end = std::chrono::high_resolution_clock::now();
         accum_time = end - start;
-        printf("Accumulation %u of %u: %lf s\n", i, g_accu_limit, accum_time.count());
+        printf("Accumulation %llu of %llu: %lf s\n", i+1, g_accu_limit, accum_time.count());
     }
-
-  stbi_write_png("pathtracer_accu_oneapi.png", width, height, channels,
+    prefix = "pathtracer_accu_oneapi";
+    filename = prefix + strscene + suffix;
+  stbi_write_png(filename.c_str(), width, height, channels,
       g_pixels, width * channels);
 
   delete[] g_pixels;
