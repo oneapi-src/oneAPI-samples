@@ -13,7 +13,7 @@
 #include "data_bundle.hpp"
 
 using namespace sycl;
-using namespace hldutils;
+using namespace fpga_tools;
 
 //
 // Kernel to read data from device memory and write it into the ANR input pipe.

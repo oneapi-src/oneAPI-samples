@@ -6,12 +6,13 @@
 #include <limits>
 
 #include "data_bundle.hpp"
-#include "mp_math.hpp"
 #include "shift_reg.hpp"
+
+// Included from DirectProgramming/DPC++FPGA/include/
+#include "constexpr_math.hpp"
 #include "unrolled_loop.hpp"
 
 using namespace sycl;
-using namespace hldutils;
 
 //
 // helper function to pad the number of columns based on the filter size
@@ -70,8 +71,8 @@ template <typename InType, typename OutType, typename IndexT, typename InPipe,
 void RowStencil(IndexT rows, IndexT cols, const InType zero_val,
                 StencilFunction func, FunctionArgTypes... stencil_args) {
   // types coming into and out of the kernel from pipes, respectively
-  using InPipeT = DataBundle<InType, parallel_cols>;
-  using OutPipeT = DataBundle<OutType, parallel_cols>;
+  using InPipeT = fpga_tools::DataBundle<InType, parallel_cols>;
+  using OutPipeT = fpga_tools::DataBundle<OutType, parallel_cols>;
 
   // number of pixels to pad to the columns with
   constexpr int kPaddingPixels = filter_size / 2;
@@ -83,10 +84,10 @@ void RowStencil(IndexT rows, IndexT cols, const InType zero_val,
   // static asserts to validate template arguments
   static_assert(filter_size > 1);
   static_assert(parallel_cols > 0);
-  static_assert(IsPow2(parallel_cols));
+  static_assert(fpga_tools::IsPow2(parallel_cols));
   static_assert(std::is_integral_v<IndexT>);
   static_assert(std::is_invocable_r_v<OutType, StencilFunction, int, int,
-                                      ShiftReg<InType, filter_size>,
+                                      fpga_tools::ShiftReg<InType, filter_size>,
                                       FunctionArgTypes...>);
 
   // constants
@@ -95,7 +96,8 @@ void RowStencil(IndexT rows, IndexT cols, const InType zero_val,
   const IndexT col_loop_bound = padded_cols / parallel_cols;
 
   // the shift register
-  [[intel::fpga_register]] ShiftReg<InType, kShiftRegSize> shifty_pixels;
+  [[intel::fpga_register]]
+  fpga_tools::ShiftReg<InType, kShiftRegSize> shifty_pixels;
 
   // initialize the contents of the shift register
   #pragma unroll
@@ -121,12 +123,12 @@ void RowStencil(IndexT rows, IndexT cols, const InType zero_val,
 
       // Perform the convolution on the 1D window
       OutPipeT out_data(OutType(0));
-      UnrolledLoop<0, parallel_cols>([&](auto stencil_idx) {
+      fpga_tools::UnrolledLoop<0, parallel_cols>([&](auto stencil_idx) {
         const int col_local = col + stencil_idx;
-        ShiftReg<InType, filter_size> shifty_pixels_copy;
+        fpga_tools::ShiftReg<InType, filter_size> shifty_pixels_copy;
 
         // first, make an offsetted copy of the shift register
-        UnrolledLoop<0, filter_size>([&](auto x) {
+        fpga_tools::UnrolledLoop<0, filter_size>([&](auto x) {
           shifty_pixels_copy[x] = shifty_pixels[x + stencil_idx];
         });
 

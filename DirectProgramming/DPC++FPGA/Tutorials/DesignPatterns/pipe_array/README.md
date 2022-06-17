@@ -38,7 +38,7 @@ using MyPipeArray = PipeArray<     // Defined in "pipe_utils.hpp".
     class MyPipe,                  // An identifier for the pipe.
     int,                           // The type of data in the pipe.
     32,                            // The capacity of each pipe.
-    10,                            // array dimension.
+    10                             // array dimension.
     >;
 ```
 
@@ -270,7 +270,7 @@ dependencies and permissions errors.
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 
 ## Examining the Reports

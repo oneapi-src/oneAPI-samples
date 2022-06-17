@@ -5,7 +5,9 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "sorting_networks.hpp"
-#include "impu_math.hpp"
+
+// Included from DirectProgramming/DPC++FPGA/include/
+#include "constexpr_math.hpp"
 
 using namespace sycl;
 
@@ -22,7 +24,7 @@ event Merge(queue& q, IndexT total_count, IndexT in_count,
             CompareFunc compare) {
   // sanity check on k_width
   static_assert(k_width >= 1);
-  static_assert(impu::math::IsPow2(k_width));
+  static_assert(fpga_tools::IsPow2(k_width));
 
   // merging two lists of size 'in_count' into a single output list of
   // double the size

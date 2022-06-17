@@ -83,7 +83,7 @@ int main() {
   ...
 }
 ```
-Notice that the FPGA emulator and the FPGA are are different target devices. It is recommended to use a preprocessor define to choose between the emulator and FPGA selectors.  This makes it easy to switch between targets using only command-line flags. Since the FPGA only supports ahead-of-time compilation, dynamic selectors (such as the default_selector) are less useful than explicit selectors when targeting FPGA.
+Notice that the FPGA emulator and the FPGA are different target devices. It is recommended to use a preprocessor define to choose between the emulator and FPGA selectors.  This makes it easy to switch between targets using only command-line flags. Since the FPGA only supports ahead-of-time compilation, dynamic selectors (such as the default_selector) are less useful than explicit selectors when targeting FPGA.
 
 
 ### Compiler Flags
@@ -255,7 +255,7 @@ dependencies and permissions errors.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 
 ## Examining the Reports
