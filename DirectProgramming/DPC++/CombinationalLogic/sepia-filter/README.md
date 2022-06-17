@@ -3,9 +3,9 @@
 The sepia filter is a program that converts a color image to a Sepia tone
 image, which is a monochromatic image with a distinctive Brown Gray color. The
 program works by offloading the compute intensive conversion of each pixel to
-Sepia tone and is implemented using DPC++ for CPU and GPU.
+Sepia tone and is implemented using SYCL* for CPU and GPU.
 
-For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+For comprehensive instructions, see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
 | Optimized for                     | Description
 |:---                               |:---
@@ -17,7 +17,7 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 
 ## Purpose
 
-The sepia filter is a DPC++ application that accepts a color image as an input
+The sepia filter is a SYCL* application that accepts a color image as an input
 and converts it to a sepia tone image by applying the sepia filter coefficients
 to every pixel of the image. The sample demonstrates offloading the compute
 intensive part of the application, which is the processing of individual pixels
@@ -30,7 +30,7 @@ input image.
 
 ## Key implementation details
 
-The basic DPC++ implementation explained in the code includes device selector,
+The basic SYCL implementation explained in the code includes device selector,
 buffer, accessor, kernel, and command groups. This sample also demonstrates a
 custom device selector's implementation by overwriting the SYCL device selector
 class, offloading computation using both lambda and functor kernels, and using
@@ -40,7 +40,7 @@ event objects to time command group execution, enabling profiling.
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
 
 
 
@@ -58,13 +58,11 @@ Source the script from the installation location, which is typically in one of
 these folders:
 
 
-For root or sudo installations:
-
+For system wide installations:
 
   ``. /opt/intel/oneapi/setvars.sh``
 
-
-For normal user installations:
+For individual installations:
 
   ``. ~/intel/oneapi/setvars.sh``
 
@@ -115,16 +113,17 @@ checks to find missing dependencies and permissions errors.
 
 ## Building the Program for CPU and GPU
 
-
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 

@@ -21,36 +21,36 @@ In DPC++ task kernels for FPGA, our objective is to achieve an initiation interv
 
 When the loop contains a loop-carried variable implemented in on-chip memory, the compiler often *cannot* achieve II=1 because the memory access takes more than one clock cycle. If the updated memory location may be needed on the next loop iteration, the next iteration must be delayed to allow time for the update, hence II > 1.
 
-The on-chip memory cache technique breaks this dependency by storing recently-accessed values in a cache capable of a 1-cycle read-modify-write operation. The cache is implemented in FPGA registers rather than on-chip memory. By pulling memory accesses preferentially from the register cache, the loop-carried dependency is broken.
+The technique of using the `OnchipMemoryWithCache` class breaks this dependency by storing recently-accessed values in a cache capable of a 1-cycle read-modify-write operation. The cache is implemented in FPGA registers rather than on-chip memory. By pulling memory accesses preferentially from the register cache, the loop-carried dependency is broken.
 
-### When is the on-chip memory cache technique applicable?
+### When is the on-chip memory with cache technique applicable?
 
 ***Failure to achieve II=1 because of a loop-carried memory dependency in on-chip memory***:
-The on-chip memory cache technique is applicable if the compiler could not pipeline a loop with II=1 because of an on-chip memory dependency. (If the compiler could not achieve II=1 because of a *global* memory dependency, this technique does not apply as the access latencies are too great.)
+The on-chip memory with cache technique is applicable if the compiler could not pipeline a loop with II=1 because of an on-chip memory dependency. (If the compiler could not achieve II=1 because of a *global* memory dependency, this technique does not apply as the access latencies are too great.)
 
 To check this for a given design, view the "Loops Analysis" section of its optimization report. The report lists the II of all loops and explains why a lower II is not achievable. Check whether the reason given resembles "the compiler failed to schedule this loop with smaller II due to memory dependency". The report will describe the "most critical loop feedback path during scheduling". Check whether this includes on-chip memory load/store operations on the critical path.
 
 ***An II=1 loop with a load operation of latency 1***:
 The compiler is capable of reducing the latency of on-chip memory accesses to achieve II=1. In doing so, the compiler makes a trade-off by sacrificing f<sub>MAX</sub> to improve the II.
 
-In a design with II=1 critical loops but lower than desired f<sub>MAX</sub>, the on-chip memory cache technique may still be applicable. It can help recover f<sub>MAX</sub> by enabling the compiler to achieve II=1 with a higher latency memory access.
+In a design with II=1 critical loops but lower than desired f<sub>MAX</sub>, the on-chip memory with cache technique may still be applicable. It can help recover f<sub>MAX</sub> by enabling the compiler to achieve II=1 with a higher latency memory access.
 
 To check whether this is the case for a given design, view the "Kernel Memory Viewer" section of the optimization report. Select the on-chip memory of interest from the Kernel Memory List, and mouse over the load operation "LD" to check its latency. If the latency of the load operation is 1, this is a clear sign that the compiler has attempted to sacrifice f<sub>MAX</sub> to improve loop II.
 
 
-### Implementing the on-chip memory cache technique
+### Implementing the on-chip memory with cache technique
 
-The tutorial demonstrates the technique using a program that computes a histogram. The histogram operation accepts an input vector of values, separates the values into buckets, and counts the number of values per bucket. For each input value, an output bucket location is determined, and the count for the bucket is incremented. This count is stored in the on-chip memory, and the increment operation requires reading from memory, performing the increment, and storing the result. This read-modify-write operation is the critical path that can result in II > 1.
+The tutorial demonstrates the technique using a program that computes a histogram. The histogram operation accepts an input vector of values, separates the values into groups, and counts the number of values per group. For each input value, an output group is determined, and the count for that group is incremented. This count is stored in the on-chip memory, and the increment operation requires reading from memory, performing the increment, and storing the result. This read-modify-write operation is the critical path that can result in II > 1.
 
-To reduce II, the idea is to store recently-accessed values in an FPGA register-implemented cache that is capable of a 1-cycle read-modify-write operation. If the memory location required on a given iteration exists in the cache, it is pulled from there. The updated count is written back to *both* the cache and the on-chip memory. The `ivdep` pragma is added to inform the compiler that if a loop-carried variable (namely, the variable storing the histogram output) is needed within `CACHE_DEPTH` iterations, it is guaranteed to be available right away.
+To reduce II, the idea is to store recently-accessed values in an FPGA register-implemented cache that is capable of a 1-cycle read-modify-write operation. If the memory location required on a given iteration exists in the cache, it is pulled from there. The updated count is written back to the cache. The cache is implemented as a shift register which stores the N most recent writes.  As a value exits the end of the shift register, it is written into the on-chip memory. The implementation of the cache is hidden away inside the OnchipMemoryWithCache class, which users may reuse in their own applications.
 
 ### Selecting the cache depth
 
-While any value of `CACHE_DEPTH` results in functional hardware, the ideal value of `CACHE_DEPTH` requires some experimentation. The depth of the cache needs to roughly cover the latency of the on-chip memory access. To determine the correct value, it is suggested to start with a value of 2 and then increase it until both II = 1 and load latency > 1. In this tutorial, a `CACHE_DEPTH` of 5 is needed.
+While any value of `CACHE_DEPTH` results in functional hardware, the ideal value of `CACHE_DEPTH` requires some experimentation. The depth of the cache needs to roughly cover the latency of the on-chip memory access. To determine the correct value, it is suggested to start with a value of 1 and then increase it until both II = 1 and load latency > 1. In this tutorial, a `CACHE_DEPTH` of 7 is needed to achieve this goal.
 
-Each iteration takes only a few moments by running `make report` (refer to the section below on how to build the design). It is important to find the *minimal* value of `CACHE_DEPTH` that results in a maximal performance increase. Unnecessarily large values of `CACHE_DEPTH` consume unnecessary FPGA resources and can reduce f<sub>MAX</sub>. Therefore, at a `CACHE_DEPTH` that results in II=1 and load latency = 1, if further increases to `CACHE_DEPTH` show no improvement, `CACHE_DEPTH` should not be increased any further.
+For user designs, each iteration takes only a few moments to compile the reports. It is important to find the *minimal* value of `CACHE_DEPTH` that results in a maximal performance increase. Unnecessarily large values of `CACHE_DEPTH` consume unnecessary FPGA resources and can reduce f<sub>MAX</sub>. Therefore, at a `CACHE_DEPTH` that results in II=1 and load latency = 1, if further increases to `CACHE_DEPTH` show no improvement, `CACHE_DEPTH` should not be increased any further.
 
-Two versions of the histogram kernel are implemented in the tutorial: one with and one without caching. The report shows II > 1 for the loop in the kernel without caching and II = 1 for the one with caching.
+This tutorial creates multiple kernels sweeping across different cache depths within a single design.  This allows a single compile of the reports to determine the optimal cache depth.
 
 ## Key Concepts
 * How to implement the on-chip memory cache optimization technique
@@ -79,6 +79,8 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
+
+The included headers `onchip_memory_with_cache.hpp` and `unrolled_loop.hpp` are located in the same Code Samples GIT repo as this tutorial, at DirectProgramming/DPC++FPGA/include.
 
 ### Running Samples in DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
@@ -191,13 +193,15 @@ dependencies and permissions errors.
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 
 ## Examining the Reports
 Locate `report.html` in the `onchip_memory_cache_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-Compare the Loop Analysis reports with and without the on-chip memory cache optimization, as described in the "When is the on-chip memory cache technique applicable?" section.
+Compare the Loop Analysis reports for kernels with various cache depths, as described in the "When is the on-chip memory cache technique applicable?" section.  This will illustrate that any cache depth > 0 allows a loop II of 1.
+
+Open the Kernel Memory viewer and compare the Load Latency on the loads from kernels with various cache depths, as describe in the "When is the on-chip memory cache technique applicable?" section. This will illustrate that a cache depth of at least 7 is required to achieve a load latency of > 1.
 
 
 ## Running the Sample
@@ -216,35 +220,66 @@ Compare the Loop Analysis reports with and without the on-chip memory cache opti
 
 ```
 Platform name: Intel(R) FPGA SDK for OpenCL(TM)
-Device name: pac_a10 : Intel PAC Platform (pac_ee00000)
+Device name: pac_s10 : Intel PAC Platform (pac_f100000)
+
 
 
 Number of inputs: 16777216
 Number of outputs: 64
 
-Beginning run without local memory caching.
+Beginning run with cache depth 0 (no cache)
+Data check succeeded for cache depth 0
+Kernel execution time: 0.120812 seconds
+Kernel throughput for cache depth 0: 529.749056 MB/s
+
+Beginning run with cache depth 1
+Data check succeeded for cache depth 1
+Kernel execution time: 0.060410 seconds
+Kernel throughput for cache depth 1: 1059.430983 MB/s
+
+Beginning run with cache depth 2
+Data check succeeded for cache depth 2
+Kernel execution time: 0.060408 seconds
+Kernel throughput for cache depth 2: 1059.466199 MB/s
+
+Beginning run with cache depth 3
+Data check succeeded for cache depth 3
+Kernel execution time: 0.060410 seconds
+Kernel throughput for cache depth 3: 1059.429632 MB/s
+
+Beginning run with cache depth 4
+Data check succeeded for cache depth 4
+Kernel execution time: 0.060407 seconds
+Kernel throughput for cache depth 4: 1059.476214 MB/s
+
+Beginning run with cache depth 5
+Data check succeeded for cache depth 5
+Kernel execution time: 0.060409 seconds
+Kernel throughput for cache depth 5: 1059.447398 MB/s
+
+Beginning run with cache depth 6
+Data check succeeded for cache depth 6
+Kernel execution time: 0.060409 seconds
+Kernel throughput for cache depth 6: 1059.445539 MB/s
+
+Beginning run with cache depth 7
+Data check succeeded for cache depth 7
+Kernel execution time: 0.060407 seconds
+Kernel throughput for cache depth 7: 1059.484369 MB/s
+
+Beginning run with cache depth 8
+Data check succeeded for cache depth 8
+Kernel execution time: 0.060409 seconds
+Kernel throughput for cache depth 8: 1059.438594 MB/s
 
 Verification PASSED
-
-Kernel execution time: 0.114106 seconds
-Kernel throughput without caching: 560.884047 MB/s
-
-Beginning run with local memory caching.
-
-Verification PASSED
-
-Kernel execution time: 0.059061 seconds
-Kernel throughput with caching: 1083.623184 MB/s
 ```
 
 ### Discussion of Results
 
-A test compile of this tutorial design achieved an f<sub>MAX</sub> of approximately 250 MHz on the Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA. The results are shown in the following table:
+As the sample results above demonstrate, adding the cache to achieve an II of 1 approximately doubles the throughput of the kernel.
 
-Configuration | Execution Time (ms) | Throughput (MB/s)
--|-|-
-Without caching | 0.153 | 418
-With caching | 0.08 | 809
+Because the f<sub>MAX</sub> of a design is determined by the slowest kernel, we are not able to see the f<sub>MAX</sub> improvement of increasing the load latency from 1 to 4. To see that, you would have to compile the design with a single kernel at a time.
 
-When caching is used, performance notably increases. As previously mentioned, this technique should result in an II reduction, which should lead to a throughput improvement. The technique can also improve f<sub>MAX</sub> if the compiler had previously implemented a latency=1 load operation, in which case the f<sub>MAX</sub> increase should result in a further throughput improvement.
+When caching is used, performance noticably increases. As previously mentioned, this technique should result in an II reduction, which should lead to a throughput improvement. The technique can also improve f<sub>MAX</sub> if the compiler had previously implemented a latency=1 load operation, in which case the f<sub>MAX</sub> increase should result in a further throughput improvement.
 

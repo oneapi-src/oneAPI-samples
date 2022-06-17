@@ -2,7 +2,7 @@
 
 The purpose of this repo is to be the central aggregation, curation, and
 distribution point for Juypter notebooks that are developed in support of
-Numba Data parallel python training programs. These initial hands-on exercises introduce you to concepts of Data Parallel Python. In addition, it familiarizes you how to execute on multiple devices using Data Parallel Python (DPPY), utilize Numba and Numba-DPPY to write paralle code on GPU.
+Numba Data parallel python training programs. These initial hands-on exercises introduce you to concepts of Data Parallel Python. In addition, it familiarizes you how to execute on multiple devices using Data Parallel Python (DPPY), utilize Numba and Numba-DPPY to write parallel code on GPU.
 
 The Jupyter notebooks are tested and can be run on the Intel Devcloud. Below
 are the steps to access these Jupyter notebooks on the Intel Devcloud:
@@ -15,7 +15,7 @@ are the steps to access these Jupyter notebooks on the Intel Devcloud:
 3. Type the following command to download the Numba Data parallel Python series of
    Jupyter notebooks into your devcloud account
    `/data/oneapi_workshop/get_jupyter_notebooks.sh`
-   
+
 ### Running the Jupyter Notebooks locally on a Linux machine OR WSL:
 1. Update your system:
    sudo apt update && sudo apt upgrade -y
@@ -29,20 +29,20 @@ are the steps to access these Jupyter notebooks on the Intel Devcloud:
 5. Enter:
    conda env list
    Note: if Conda not recognized enter
-   source /opt/intel/oneapi/setvars.sh   
+   source /opt/intel/oneapi/setvars.sh
 6. Launch a terminal and enter:
     conda create –-clone base –-name <pick something> for example:
     conda create --clone base --name jupyter
 7. Conda env list:
-    You should see two environments now.  The * denotes the active environment.  
+    You should see two environments now.  The * denotes the active environment.
     Activate the new environment:
-    Conda activate jupyter    
+    Conda activate jupyter
 8. Install Jupyterlab:
-   conda install -c conda-forge jupyterlab    
+   conda install -c conda-forge jupyterlab
 9. Clone the Intel oneAPI Samples Repository, Git will likely not be installed so to install it enter:
     sudo apt install git
-    git clone https://github.com/oneapi-src/oneAPI-samples.git    
-10. Launch JupyterLab by typing in "jupyter lab" in the terminal. 
+    git clone https://github.com/oneapi-src/oneAPI-samples.git
+10. Launch JupyterLab by typing in "jupyter lab" in the terminal.
 11. Make a note of the address printed on the terminal and paste it in the browser window.
 12. JupyterLab opens up and navigate to ~/oneAPI-samples/AI-and-Analytics/Jupyter/Numba_DPPY_Essentials_training and double click on "Welcome.ipynb" to get started.
 

@@ -1,5 +1,5 @@
 //==============================================================
-// Matrix Multiplication: oneMKL
+// Matrix Multiplication: SYCL oneMKL
 //==============================================================
 // Copyright © 2021 Intel Corporation
 //

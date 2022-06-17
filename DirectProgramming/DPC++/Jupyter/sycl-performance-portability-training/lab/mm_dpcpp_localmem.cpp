@@ -22,9 +22,9 @@ void mm_kernel(queue &q, std::vector<float> &matrix_a, std::vector<float> &matri
     //# Submit command groups to execute on device
     auto e = q.submit([&](handler &h){
         //# Create accessors to copy buffers to the device
-        auto A = a.get_access<access::mode::read>(h);
-        auto B = b.get_access<access::mode::read>(h);
-        auto C = c.get_access<access::mode::write>(h);
+        accessor A(a, h, read_only);
+        accessor B(b, h, read_only);
+        accessor C(c, h, write_only);
 
         //# Define size for ND-range and work-group size
         range<2> global_size(N,N);
@@ -50,12 +50,11 @@ void mm_kernel(queue &q, std::vector<float> &matrix_a, std::vector<float> &matri
                 for (k = 0; k < M; k++) {
                     temp += A_tile[x][k] * B_tile[k][y];
                 }
-                item.barrier(access::fence_space::local_space);
             }
             C[i*N+j] = temp;
         });
     });
-    c.get_access<access::mode::read>();
+    host_accessor hc(c, read_only);
     
     //# print kernel compute duration from event profiling
     auto kernel_duration = (e.get_profiling_info<info::event_profiling::command_end>() - e.get_profiling_info<info::event_profiling::command_start>());

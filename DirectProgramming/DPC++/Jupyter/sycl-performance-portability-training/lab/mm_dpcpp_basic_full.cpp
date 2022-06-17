@@ -92,9 +92,9 @@ int main(int argc, char *argv[]) {
         //# Submit command groups to execute on device
         e = q.submit([&](handler &h){
             //# Create accessors to copy buffers to the device
-            auto A = a.get_access<access::mode::read>(h);
-            auto B = b.get_access<access::mode::read>(h);
-            auto C = c.get_access<access::mode::write>(h);
+            accessor A(a, h, read_only);
+            accessor B(b, h, read_only);
+            accessor C(c, h, write_only);
 
             //# Parallel Compute Matrix Multiplication
             h.parallel_for(range<2>{N,N}, [=](item<2> item){

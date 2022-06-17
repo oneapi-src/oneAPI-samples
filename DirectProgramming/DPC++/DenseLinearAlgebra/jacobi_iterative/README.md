@@ -1,22 +1,22 @@
 ﻿# `Jacobi Iterative` Sample
 
-This Sample Demonstrates the number of iterations needed to solve system of Linear Equations using Jacobi Iterative Method. 
-This Jacobi-iterative sample is implemented using DPC++ and SYCL for Intel CPU and GPU.
+This Sample Demonstrates the number of iterations needed to solve system of Linear Equations using Jacobi Iterative Method.
+This Jacobi-iterative sample is implemented using SYCL for Intel CPU and GPU.
 
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux Ubuntu 20.04
+| OS                                | Linux* Ubuntu 20.04
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | How to migrate CUDA to SYCL
 | Time to complete                  | 15 minutes
 
-This Sample is migrated from NVIDIA CUDA sample, Refer [NVIDIA Sample](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/3_CUDA_Features/jacobiCudaGraphs).
+This sample is migrated from NVIDIA CUDA sample, refer to [NVIDIA Sample](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/3_CUDA_Features/jacobiCudaGraphs).
 
 This sample contains four SYCL versions of the same program: 
 
-`sycl_dpct_migrated`         -> It contains DPCT tool migrated code from CUDA code with manual changes for it to work functionally. 
+`sycl_dpct_migrated`         -> It contains DPCT tool migrated code from CUDA code with manual changes for it to work functionally.
 
 | Component 		| Description
 |:---			|:---
@@ -29,35 +29,33 @@ This sample contains four SYCL versions of the same program: 
 |:---			|:---
 | Common 		| Helper utility headerfiles
 | src 			| DPCT migrated files(.cpp and .h)
-				
-`sycl_migrated`              -> It contains Manually migrated SYCL code from CUDA code.
 
-| Component 		| Description
-|:---			|:---
-| src 			| Manually migrated files(.cpp and .h)
-| CMakeLists.txt 	| Build file
-				
-`sycl_migrated_optimized`    -> It contains Manually migrated SYCL code from CUDA code with atomic operations optimization.
+`sycl_migrated`              -> It contains manually migrated SYCL code from CUDA code.
 
 | Component 		| Description
 |:---			|:---
 | src 			| Manually migrated files(.cpp and .h)
 | CMakeLists.txt 	| Build file
 
-	
+`sycl_migrated_optimized`    -> It contains manually migrated SYCL code from CUDA code with atomic operations optimization.
+
+| Component 		| Description
+|:---			|:---
+| src 			| Manually migrated files(.cpp and .h)
+| CMakeLists.txt 	| Build file
+
 ## Purpose
 
 The Jacobi method is used to find approximate numerical solutions for systems of linear equations of the form Ax = b in numerical linear algebra, which is diagonally dominant. The algorithm starts with an initial estimate for x and iteratively updates it until convergence. The Jacobi method is guaranteed to converge if the matrix A is diagonally dominant.
 
-
 ## Key implementation details
 
-DPC++ and SYCL Implementation is explained in the code using key concepts such as Cooperative Groups, Shared Memory, Reduction Stream Capture and Atomics.
+SYCL implementations are explained in the code using key concepts such as Cooperative Groups, Shared Memory, Reduction Stream Capture, and Atomics.
 
 In our case, the matrix is initiated with inputs by generating it randomly with NROWS in createLinearSystem function.
 All computations happen inside a for-loop. There are two exit criteria from the loop, first is when we reach maximum number of iteration and second is when the final error falls below the desired tolerance.
 
-Each iteration has two parts: Jacobi Method computation and Final Error computation. 
+Each iteration has two parts: Jacobi Method computation and Final Error computation.
 
 Here we compute the resulting vector of the iteration x_new. Each iteration of the Jacobi method performs the following update for the resulting vector:
 
@@ -65,9 +63,9 @@ Here we compute the resulting vector of the iteration x_new. Each iteration of t
 x_new = D^{-1}(b - (A - D) x)
 ```
 
-where n x n matrix D is a diagonal component of the matrix A. Vector x is the result of the previous iteration (or an initial guess at the first iteration).  Vector x_new is the result of the current iteration. 
+where n x n matrix D is a diagonal component of the matrix A. Vector x is the result of the previous iteration (or an initial guess at the first iteration).  Vector x_new is the result of the current iteration.
 
-In the sample, this computation is offloaded to the `Jacobi Method` device. In both Jacobi method and final error computations we use shared memory, cooperative groups and reduction. x and b vectors are loaded into shared memory for the faster and frequent memory access to the block. 
+In the sample, this computation is offloaded to the `Jacobi Method` device. In both Jacobi method and final error computations we use shared memory, cooperative groups and reduction. x and b vectors are loaded into shared memory for the faster and frequent memory access to the block.
 
 Cooperative groups are used in further dividing the work group into subgroups. Since the computation shown above happens inside subgroups which eliminates the need of block barriers and also are apt for the low granularity of reduction algorithm having each thread run much more efficiently or distributing the work effectively.
 
@@ -75,9 +73,6 @@ The reduction is performed using sync() to synchronize over different thread blo
 
 Shift group left is a SYCL primitive used to do the computation within the subgroup to add all the thread values and are passed on to the first thread. And all the subgroup sums are added through atomic add.
 
-
- 
-                                 
 To calculate the `Final error`, we added the absolute value of x substracted with 1 to the warpsum(each thread values are added) and then all the warpsum values are added to the blocksum. And the final error is stored in the g_sum.
 
 At each iteration we compute the final error as:
@@ -92,9 +87,9 @@ g_sum =  Σ (x - 1)
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux system wide installations: `. /opt/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Linux private installations: `. ~/intel/oneapi/setvars.sh`
 >
 >For more information on environment variables, see Use the setvars Script for [Linux](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
@@ -111,7 +106,6 @@ Perform the following steps:
 	$ make
 	```
 	 This builds  `sycl_dpct_migrated`, `sycl_migrated` and `sycl_migrated_optimized` versions of the program.
-	
 2.	Run the program:
 
 		Run sycl_dpct_migrated using following commands,
@@ -121,7 +115,7 @@ Perform the following steps:
 		Run sycl_migrated using following commands,
 			$ make run_cpu
 			$ make run_gpu
-			
+
 		Run sycl_migrated_optimized using following commands,
 			$ make run_smo_cpu
 			$ make run_smo_gpu
@@ -131,9 +125,8 @@ Perform the following steps:
 	```
 	$ make clean
 	```
-	
 
-If an error occurs, you can get more details by running make with the VERBOSE=1 argument: make VERBOSE=1 For more comprehensive troubleshooting, use the Diagnostics Utility for Intel® oneAPI Toolkits, which provides system checks to find missing dependencies and permissions errors. [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+If an error occurs, you can get more details by running make with the VERBOSE=1 argument: make VERBOSE=1 For more comprehensive troubleshooting, use the Diagnostics Utility for Intel&reg; oneAPI Toolkits, which provides system checks to find missing dependencies and permissions errors. [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ## Example of Output for NROWS = 1024
 
@@ -146,7 +139,7 @@ sycl_dpct_migrated for CPU
 	GPU error : 4.987e-03
 	GPU Processing time: 9653.565430 (ms)
 	jacobiSYCL PASSED
-	
+
 sycl_dpct_migrated for GPU
 
 	CPU iterations : 6263
@@ -156,7 +149,7 @@ sycl_dpct_migrated for GPU
 	GPU error : 4.987e-03
 	GPU Processing time: 4290.418945 (ms)
 	jacobiSYCL PASSED
-	
+
 sycl_migrated for CPU
 
 	Serial Implementation :
@@ -184,7 +177,7 @@ sycl_migrated for GPU
 	Error : 4.987e-03
 	Processing time : 4202.227051 (ms)
 	JacobiSYCL PASSED
-	
+
 sycl_migrated_optimized for CPU
 
 	Serial Implementation :
@@ -215,8 +208,7 @@ sycl_migrated_optimized for GPU
 
 
 ### Running Samples In DevCloud
-
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
+If running a sample in the Intel DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
 1. Open a terminal on your Linux system.
 
@@ -224,7 +216,6 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 	```
 	ssh devcloud
 	```
-
 3. Download the samples.
 	```
 	git clone https://github.com/oneapi-src/oneAPI-samples.git
@@ -234,29 +225,24 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 	```
 	cd ~/oneAPI-samples/DirectProgramming/DPC++/DenseLinearAlgebra/jacobi-iterative
 	```
-	
 5. Build the sample on GPU node using
-	```	
-	qsub  -I  -l nodes=1:gpu:ppn=2 -d . 
+	```
+	qsub  -I  -l nodes=1:gpu:ppn=2 -d .
 	```
    Note: -I (Upper case I) is used for Interactive mode, -l nodes=1:gpu:ppn=2 (lower case L) is used to assign one full GPU node to the job. Note: The -d . is used to 	          configure the current folder as the working directory for the task.
 
 6. Perform the same steps similar to Linux system.
-	
 7. Clean-up the project files
-	```	
+	```
 	make clean
 	```
-	    
 8. Disconnect from the Intel DevCloud.
 	```
 	exit
 	```
-	
-
 ## License
 
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
