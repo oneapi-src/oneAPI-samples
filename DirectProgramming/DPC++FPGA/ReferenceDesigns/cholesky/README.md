@@ -1,4 +1,4 @@
-ne# Cholesky Decomposition of Matrices
+# Cholesky Decomposition of Matrices
 The streaming_cholesky.hpp linear algebra header library implements the Cholesky decomposition of matrices with pipe interfaces.
 Its template parameters can be set to decompose custom sized real or complex square matrices.
 This DPC++ reference design demonstrates the use of this Cholesky decomposition header library on 32 * 32 real matrices.

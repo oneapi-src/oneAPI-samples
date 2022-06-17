@@ -1,4 +1,4 @@
- # Decompression
+# Decompression
 This DPC++ reference design can be compiled to implement either GZIP or Snappy decompression on an FPGA.
 
 ***Documentation***:

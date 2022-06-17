@@ -89,8 +89,8 @@ message(STATUS "SEED=${SEED}")
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS_QRD=${FIXED_ITERATIONS_QRD} -DFIXED_ITERATIONS_QRI=${FIXED_ITERATIONS_QRI} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -qactypes -fbracket-depth=512 -DFIXED_ITERATIONS_QRD=${FIXED_ITERATIONS_QRD} -DFIXED_ITERATIONS_QRI=${FIXED_ITERATIONS_QRI} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fp-model=precise -Xsfp-relaxed -Xstiming-failure-mode=ignore -Xstiming-failure-allowed-slack=50 -Xsfast-compile")
-set(HARDWARE_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET}  ${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed -Xstiming-failure-mode=ignore -Xstiming-failure-allowed-slack=50 -Xsfast-compile")
+set(HARDWARE_COMPILE_FLAGS "${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -qactypes -fbracket-depth=512 -DFIXED_ITERATIONS_QRD=${FIXED_ITERATIONS_QRD} -DFIXED_ITERATIONS_QRI=${FIXED_ITERATIONS_QRI} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fp-model=precise -Xsfp-relaxed")
+set(HARDWARE_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

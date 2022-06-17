@@ -1,4 +1,4 @@
-ne# Merge Sort
+# Merge Sort
 This DPC++ reference design demonstrates a highly paramaterizable merge sort algorithm on an FPGA.
 
 ***Documentation***:

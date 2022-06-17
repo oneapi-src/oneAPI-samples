@@ -1,4 +1,4 @@
-penede# Adaptive Noise Reduction (ANR)
+# Adaptive Noise Reduction (ANR)
 This DPC++ reference design demonstrates a highly optimized image sensor adaptive noise reduction (ANR) algorithm on an FPGA.
 
 ***Documentation***:
