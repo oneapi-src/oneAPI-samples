@@ -44,7 +44,7 @@ constexpr int kDeflateStaticTotalCodes =
     kDeflateStaticNumLitLenCodes + kDeflateStaticNumDistCodes;
 
 // forward declare the helper functions that are defined at the end of the file
-namespace detail {
+namespace huffman_decoder_detail {
 template <typename InPipe>
 std::pair<bool, ac_uint<2>> ParseLastBlockAndBlockType(BitStreamT& bit_stream);
 
@@ -68,7 +68,7 @@ void ParseSecondTable(
     ac_uint<15> dist_map_first_code[15], ac_uint<15> dist_map_last_code[15],
     ac_uint<5> dist_map_base_idx[15], ac_uint<5> dist_map[32]);
 
-}  // namespace detail
+}  // namespace huffman_decoder_detail
 
 //
 // Performs Huffman Decoding.
@@ -111,7 +111,7 @@ void HuffmanDecoder() {
     ////////////////////////////////////////////////////////////////////////////
     // BEGIN: parse the first three bits of the block
     auto [last_block_tmp, block_type] =
-        detail::ParseLastBlockAndBlockType<InPipe>(bit_stream);
+        huffman_decoder_detail::ParseLastBlockAndBlockType<InPipe>(bit_stream);
 
     last_block = last_block_tmp;
     bool is_uncompressed_block = (block_type == 0);
@@ -135,7 +135,7 @@ void HuffmanDecoder() {
     [[intel::fpga_register]] ac_uint<5> codelencode_map[19];
 
     if (is_dynamic_huffman_block) {
-      detail::ParseFirstTable<InPipe>(
+      huffman_decoder_detail::ParseFirstTable<InPipe>(
           bit_stream, numlitlencodes, numdistcodes, numcodelencodes,
           codelencode_map_first_code, codelencode_map_last_code,
           codelencode_map_base_idx, codelencode_map);
@@ -166,7 +166,7 @@ void HuffmanDecoder() {
     [[intel::fpga_register]] ac_uint<5> dist_map[32];
 
     if (is_static_huffman_block || is_dynamic_huffman_block) {
-      detail::ParseSecondTable<InPipe>(
+      huffman_decoder_detail::ParseSecondTable<InPipe>(
           bit_stream, is_static_huffman_block, numlitlencodes, numdistcodes,
           numcodelencodes, codelencode_map_first_code,
           codelencode_map_last_code, codelencode_map_base_idx, codelencode_map,
@@ -468,7 +468,7 @@ sycl::event SubmitHuffmanDecoder(sycl::queue& q) {
 }
 
 // helper functions for parsing the block headers
-namespace detail {
+namespace huffman_decoder_detail {
 
 //
 // Parses the first 3 bits of the DEFLATE block returns their meaning:
@@ -869,6 +869,6 @@ void ParseSecondTable(
   }
 }
 
-}  // namespace detail
+}  // namespace huffman_decoder_detail
 
 #endif /* __HUFFMAN_DECODER_HPP__ */
