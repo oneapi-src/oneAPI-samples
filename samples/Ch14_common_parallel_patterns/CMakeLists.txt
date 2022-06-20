@@ -15,7 +15,8 @@ add_book_sample(
 add_book_sample(
     TEST
     TARGET fig_14_13_map
-    SOURCES fig_14_13_map.cpp)
+    SOURCES fig_14_13_map.cpp
+    ADDITIONAL_COMPILE_OPTIONS -fno-fast-math)
 
 add_book_sample(
     TEST

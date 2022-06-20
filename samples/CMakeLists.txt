@@ -9,7 +9,7 @@ function(add_book_sample)
 
     set(options TEST)
     set(one_value_args TARGET)
-    set(multi_value_args SOURCES LIBS)
+    set(multi_value_args SOURCES LIBS ADDITIONAL_COMPILE_OPTIONS)
     cmake_parse_arguments(BOOK_SAMPLE
         "${options}" "${one_value_args}" "${multi_value_args}"
         ${ARGN}
@@ -17,7 +17,7 @@ function(add_book_sample)
 
     add_executable(${BOOK_SAMPLE_TARGET} ${BOOK_SAMPLE_SOURCES})
 
-    target_compile_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl -fsycl-unnamed-lambda -ferror-limit=1 -Wall -Wpedantic)
+    target_compile_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl -fsycl-unnamed-lambda -ferror-limit=1 -Wall -Wpedantic ${BOOK_SAMPLE_ADDITIONAL_COMPILE_OPTIONS})
     # Passing -fsycl via target_link_libraries for older versions of CMake:
     #target_link_options(${BOOK_SAMPLE_TARGET} PRIVATE -fsycl )
     target_link_libraries(${BOOK_SAMPLE_TARGET} PRIVATE sycl -fsycl )
