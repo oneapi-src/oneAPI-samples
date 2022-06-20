@@ -6,11 +6,11 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "common.hpp"
-#include "constexpr_math.hpp"         // included from ../../../../include
-#include "metaprogramming_utils.hpp"  // included from ../../../../include
-#include "tuple.hpp"                  // included from ../../../../include
-#include "unrolled_loop.hpp"          // included from ../../../../include
-#include "onchip_memory_cache.hpp"          // included from ../../../../include
+#include "constexpr_math.hpp"            // included from ../../../../include
+#include "metaprogramming_utils.hpp"     // included from ../../../../include
+#include "onchip_memory_with_cache.hpp"  // included from ../../../../include
+#include "tuple.hpp"                     // included from ../../../../include
+#include "unrolled_loop.hpp"             // included from ../../../../include
 
 //
 // Performs LZ77 decoding for more than 1 element at once.

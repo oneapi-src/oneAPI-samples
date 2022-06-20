@@ -6,7 +6,7 @@
 #include "query9_kernel.hpp"
 #include "pipe_types.hpp"
 
-#include "onchip_memory_cache.hpp" // DirectProgramming/DPC++FPGA/include
+#include "onchip_memory_with_cache.hpp" // DirectProgramming/DPC++FPGA/include
 
 #include "../db_utils/Accumulator.hpp"
 #include "../db_utils/LikeRegex.hpp"
