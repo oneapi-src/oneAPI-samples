@@ -214,6 +214,7 @@ Open the Kernel Memory viewer and compare the Load Latency on the loads from ker
 2. Run the sample on the FPGA device:
      ```
      ./onchip_memory_cache.fpga         (Linux)
+     onchip_memory_cache.fpga.exe       (Windows)
      ```
 
 ### Example of Output

@@ -254,15 +254,17 @@ Open the reports in Chrome*, Firefox*, Edge*, or Internet Explorer*. Observe the
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./fpga_reg.fpga_emu    # Linux
-   fpga_reg.fpga_emu.exe  # Windows
+   ./fpga_reg.fpga_emu    (Linux)
+   fpga_reg.fpga_emu.exe  (Windows)
    ```
 
 2. Run the sample on the FPGA device
 
    ```bash
-   ./fpga_reg.fpga             # Linux
-   ./fpga_reg_registered.fpga  # Linux
+   ./fpga_reg.fpga                (Linux)
+   ./fpga_reg_registered.fpga     (Linux)
+   fpga_reg.fpga.exe              (Windows)
+   fpga_reg_registered.fpga.exe   (Windows)
    ```
 
 ### Example of Output

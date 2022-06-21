@@ -249,14 +249,15 @@ Scroll down on the Summary page of the report and expand the section titled **Co
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./ac_fixed.fpga_emu    # Linux
-   ac_fixed.fpga_emu.exe  # Windows
+   ./ac_fixed.fpga_emu    (Linux)
+   ac_fixed.fpga_emu.exe  (Windows)
    ```
 
 2. Run the sample on the FPGA device
 
    ```bash
-   ./ac_fixed.fpga             # Linux
+   ./ac_fixed.fpga             (Linux)
+   ac_fixed.fpga.exe           (Windows)
    ```
 
 ### Example of Output on Emulator

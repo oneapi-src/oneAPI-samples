@@ -223,6 +223,7 @@ Locate `report.html` in the `buffered_host_streaming_report.prj/reports/` direct
 2. Run the sample on the FPGA device:
      ```
      ./buffered_host_streaming.fpga         (Linux)
+     buffered_host_streaming.fpga.exe       (Windows)
      ```
 
 ### Example of Output

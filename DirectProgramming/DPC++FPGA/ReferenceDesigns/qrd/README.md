@@ -215,6 +215,7 @@ You can perform the QR decomposition of 8 matrices repeatedly, as shown below. T
 2. Run the sample on the FPGA device.
      ```
      ./qrd.fpga         (Linux)
+     qrd.fpga.exe       (Windows)
      ```
 ### Application Parameters
 

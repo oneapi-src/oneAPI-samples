@@ -180,6 +180,8 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
      ```
      ./stall_enable.fpga         (Linux)
      ./stall_free.fpga           (Linux)
+     stall_enable.fpga.exe       (Windows)
+     stall_free.fpga.exe         (Windows)
      ```
 
 ### Example of Output

@@ -201,6 +201,7 @@ From the report, you can find the compilation information of the design and the 
 2. Run the sample on the FPGA device:
      ```
      ./printf.fpga         (Linux)
+     printf.fpga.exe       (Windows)
      ```
 
 ### Example of Output

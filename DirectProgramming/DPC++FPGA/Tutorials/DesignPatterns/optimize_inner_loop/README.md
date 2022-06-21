@@ -252,6 +252,7 @@ Version 2 of the kernel (`Producer<2>`) explicitly bounds the inner loop trip co
 2. Run the sample on the FPGA device:
      ```
      ./optimize_inner_loop.fpga        (Linux)
+     optimize_inner_loop.fpga.exe      (Windows)
      ```
 
 ### Example of Output

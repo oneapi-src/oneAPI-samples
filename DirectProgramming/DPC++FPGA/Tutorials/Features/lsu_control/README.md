@@ -311,6 +311,7 @@ For more details on the descriptions of LSU controls, styles, and modifiers, ref
 
      ```bash
      ./lsu_control.fpga         (Linux)
+     lsu_control.fpga.exe       (Windows)
      ```
 
 ### Example of Output

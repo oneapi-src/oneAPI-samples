@@ -214,6 +214,7 @@ Locate `report.html` in the `io_streaming_report.prj/reports/` directory. Open t
 2. Run the sample on the FPGA device:
      ```
      ./io_streaming.fpga         (Linux)
+     io_streaming.fpga.exe       (Windows)
      ```
 
 ### Example of Output

@@ -211,6 +211,7 @@ Locate `report.html` in the `dsp_control_report.prj/reports/` directory. Open th
 2. Run the sample on the FPGA device:
      ```
      ./dsp_control.fpga         (Linux)
+     dsp_control.fpga.exe       (Windows)
      ```
 
 ### Example of Output

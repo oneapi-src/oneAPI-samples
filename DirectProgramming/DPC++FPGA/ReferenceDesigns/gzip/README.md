@@ -197,6 +197,7 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
      ```
      aocl initialize acl0 pac_s10_usm
      ./gzip.fpga <input_file> [-o=<output_file>]         (Linux)
+     gzip.fpga.exe <input_file> [-o=<output_file>]       (Windows)
      ```
  ### Application Parameters
 

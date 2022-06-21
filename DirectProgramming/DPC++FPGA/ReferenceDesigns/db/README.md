@@ -185,6 +185,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 2. Run the sample on the FPGA device.
      ```
      ./db.fpga --dbroot=../data/sf1 --test              (Linux)
+     db.fpga.exe --dbroot=../data/sf1 --test            (Windows)
      ```
 
 ### Application Parameters

@@ -209,6 +209,7 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
 2. Run the sample on the FPGA device:
      ```
      ./loop_coalesce.fpga         (Linux)
+     loop_coalesce.fpga.exe       (Windows)
      ```
 
 ### Example of Output

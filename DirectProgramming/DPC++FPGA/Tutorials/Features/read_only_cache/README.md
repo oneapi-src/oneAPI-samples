@@ -263,6 +263,8 @@ cache has been created.
      ```
      ./read_only_cache_disabled.fpga         (Linux)
      ./read_only_cache_enabled.fpga          (Linux)
+     read_only_cache_disabled.fpga.exe       (Windows)
+     read_only_cache_enabled.fpga.exe        (Windows)
      ```
 
 ### Example of Output

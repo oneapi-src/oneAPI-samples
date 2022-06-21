@@ -203,6 +203,8 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
  2. Run the sample on the FPGA device:
      ```
      ./crr.fpga <input_file> [-o=<output_file>]                               (Linux)
+        
+     crr.fpga.exe <input_file> [-o=<output_file>]                             (Windows)
      ```
 
 ### Application Parameters

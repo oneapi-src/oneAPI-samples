@@ -164,6 +164,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 2. Run the sample on the FPGA device.
      ```
      ./merge_sort.fpga        (Linux)
+     merge_sort.fpga.exe      (Windows)
      ```
 
 ### Example of Output

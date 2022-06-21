@@ -168,6 +168,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 2. Run the sample on the FPGA device.
      ```
      ./decompress.fpga        (Linux)
+     decompress.fpga.exe    (Windows)
      ```
 
 ### Example of Output
