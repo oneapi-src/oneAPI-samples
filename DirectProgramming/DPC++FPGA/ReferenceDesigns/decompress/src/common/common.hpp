@@ -213,7 +213,7 @@ class select_by_string : public sycl::default_selector {
 //
 std::vector<unsigned char> ReadInputFile(const std::string& filename) {
   // open file stream
-  std::ifstream fin(filename);
+  std::ifstream fin(filename, std::ios::binary);
 
   // make sure it opened
   if (!fin.good() || !fin.is_open()) {
