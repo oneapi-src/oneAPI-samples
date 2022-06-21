@@ -11,8 +11,8 @@
 
 import torch
 import torch.nn as nn
-from torch.utils import mkldnn
 from torch.utils.data import Dataset, DataLoader
+import intel_extension_for_pytorch as ipex
 
 '''
 BS_TRAIN: Batch size for training data
@@ -75,6 +75,7 @@ def main():
     3. crite: Criterion function to minimize loss
     '''
     model = TestModel()
+    model = model.to(memory_format=torch.channels_last)
     optim = torch.optim.SGD(model.parameters(), lr=0.01)
     crite = nn.MSELoss(reduction='sum')
 
@@ -88,35 +89,35 @@ def main():
     testLoader  = DataLoader(test_data, batch_size=BS_TEST)
 
     '''
+    Apply Intel Extension for PyTorch optimization against the model object and optimizer object.
+    '''
+    model, optim = ipex.optimize(model, optimizer=optim)
+
+    '''
     Perform training and inference
     Use model.train() to set the model into train mode. Use model.eval() to set the model into inference mode.
     Use for loop with enumerate(instance of DataLoader) to go through the whole dataset for training/inference.
     '''
     for i in range(0, EPOCHNUM - 1):
+        '''
+        Iterate dataset for training to train the model
+        '''
         model.train()
         for batch_index, (data, y_ans) in enumerate(trainLoader):
-            '''
-            1. Clear parameters of optimization function
-            2. Do forward-propagation
-            3. Calculate loss of the forward-propagation with the criterion function
-            4. Calculate gradients with the backward() function
-            5. Update parameters of the model with the optimization function
-            '''
+            data = data.to(memory_format=torch.channels_last)
             optim.zero_grad()
             y = model(data)
             loss = crite(y, y_ans)
             loss.backward()
             optim.step()
 
+        '''
+        Iterate dataset for validation to evaluate the model
+        '''
         model.eval()
-        '''
-        1. User is suggested to use JIT mode to get best performance with Intel Deep Neural Network Library (Intel DNNL) with minimum change of Pytorch code. User may need to pass an explicit flag or invoke a specific Intel DNNL optimization pass. The PyTorch DNNL JIT backend is under development (RFC link https://github.com/pytorch/pytorch/issues/23657), so the example below is given in imperative mode.
-        2. To have model accelerated by Intel DNNL under imperative mode, user needs to explicitly insert format conversion for Intel DNNL operations using tensor.to_mkldnn() and to_dense(). For best result, user needs to insert the format conversion on the boundary of a sequence of Intel DNNL operations. This could boost performance significantly.
-        3. For inference task, user needs to prepack the model’s weight using mkldnn_utils.to_mkldnn(model) to save the weight format conversion overhead. It could bring good performance gain sometime for single batch inference.
-        '''
-        model_mkldnn = mkldnn.to_mkldnn(model)
         for batch_index, data in enumerate(testLoader):
-            y = model_mkldnn(data.to_mkldnn())
+            data = data.to(memory_format=torch.channels_last)
+            y = model(data)
 
 if __name__ == '__main__':
     main()
