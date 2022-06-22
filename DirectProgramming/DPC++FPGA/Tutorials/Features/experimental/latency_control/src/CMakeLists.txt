@@ -21,6 +21,14 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
+# Hyper-optimization is turned off to allow the same set of latency control parameters to work on both A10 and S10.
+# Users can turn it back on and try their own parameters on S10.
+if(FPGA_BOARD MATCHES ".*a10.*")
+    set(HANDSHAKING "")
+else()
+    set(HANDSHAKING "-Xshyper-optimized-handshaking=off")
+endif()
+
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
@@ -28,12 +36,8 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga")
-if(FPGA_BOARD STREQUAL "intel_a10gx_pac:pac_a10")
-    # hyper-optimized-handshaking does not apply to Intel Arria 10® FPGAs
-    set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
-else()
-    set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
-endif()
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware ${HANDSHAKING} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
