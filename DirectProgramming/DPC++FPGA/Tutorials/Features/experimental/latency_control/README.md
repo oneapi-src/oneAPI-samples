@@ -17,20 +17,26 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 This FPGA tutorial demonstrates how to set latency constraints to pipes and LSUs accesses and how to confirm that the compiler respected the latency control directive.
 
 ### Use Model
-**Note**: The APIs described in this section are experimental. Future versions of latency controls may change these APIs in ways that are incompatible with the version described here.
+**Note**: The APIs described in this section are experimental. Future versions of latency controls might change these APIs in ways that are incompatible with the version described here.
 
-Latency controls APIs are provided on member functions `read()` and `write()` of class `ext::intel::experimental::pipe` and on member functions `load()` and `store()` of class `ext::intel::experimental::lsu`. Other than the latency controls support, the experimental `pipe` and `lsu` are identical to `ext::intel::pipe` and `ext::intel::lsu`. The experimental `pipe` and `lsu` are also provided by <sycl/ext/intel/fpga_extensions.hpp>.
+Latency controls APIs are provided on member functions `read()` and `write()` of class `ext::intel::experimental::pipe` and on member functions `load()` and `store()` of class `ext::intel::experimental::lsu`. Other than the latency controls support, the experimental `pipe` and `lsu` are identical to `ext::intel::pipe` and `ext::intel::lsu`. The experimental `pipe` and `lsu` are also provided by `<sycl/ext/intel/fpga_extensions.hpp>`.
 
-Those member functions listed above can take in a property list instance (`ext::oneapi::experimental::properties`) as a function argument, which can contain latency controls properties `latency_anchor_id` and `latency_constraint`.
+These `read()`, `write()`, `load()`, and `store()` member functions can take a property list instance (`ext::oneapi::experimental::properties`) as a function argument, which can contain the following latency controls properties:
 
-* `ext::intel::experimental::latency_anchor_id<N>`, where `N` is a signed integer: A label that can be associated with the pipes and LSUs functions listed above. This label can then be referenced by the `latency_constraint` properties to define relative latency constraints. Functions with this property will be referred to as "labeled functions".
-* `ext::intel::experimental::latency_constraint<A, B, C>`: A constraint than can be associated with the pipes and LSUs functions listed above. It provides a latency constraint between this function and a different labeled function. Functions which have this property will be referred to as "constrained functions".
-  * `A` is a signed integer: The label of the labeled function which is constrained relative to the constrained function.
-  * `B` is an enum value: The type of constraint, can be `latency_control_type::exact` (exact latency), `latency_control_type::max` (maximum latency), and `latency_control_type::min` (minimum latency).
-  * `C` is a signed integer: The relative clock cycle difference between the labeled function and the constrained function, that the constraint should infer subject to the type of constraint (exact/max/main).
+* `ext::intel::experimental::latency_anchor_id<N>`, where `N` is a signed integer
+
+   A label that can be associated with the pipes and LSUs functions listed above. This label can then be referenced by the `latency_constraint` properties to define relative latency constraints. Functions with this property will be referred to as "labeled functions".
+
+* `ext::intel::experimental::latency_constraint<A, B, C>`
+
+    A constraint than can be associated with the pipes and LSUs functions listed above. It provides a latency constraint between this function and a different labeled function. Functions which have this property will be referred to as "constrained functions". This constraint has  the following parameters:
+
+   * `A` is a signed integer: The label of the labeled function which is constrained relative to the constrained function.
+   * `B` is an enum value: The type of constraint, can be `latency_control_type::exact` (exact latency), `latency_control_type::max` (maximum latency), and `latency_control_type::min` (minimum latency).
+   * `C` is a signed integer: The relative clock cycle difference between the labeled function and the constrained function, that the constraint should infer subject to the type of constraint (exact/max/main).
 
 ### Simple Code Example
-This first example shows how to use latency controls on pipes. It also uses a function acting as both labeled function and constrained function:
+The following example shows you how to use latency controls on pipes. The example also uses a function acting as both labeled function and constrained function:
 ```cpp
 using namespace sycl;
 using Pipe1 = ext::intel::experimental::pipe<class PipeClass1, int, 8>;
@@ -59,7 +65,7 @@ Pipe3::write(
                    1, ext::intel::experimental::latency_control_type::min, 2>));
 ```
 
-This second example shows how to use latency controls on LSUs. It also uses a negative relative cycle number in `latency_constraint`, which means the constrained function is scheduled **before** the associated labeled function:
+This next example shows you how to use latency controls on LSUs. It also uses a negative relative cycle number in `latency_constraint`, which means that the constrained function is scheduled **before** the associated labeled function:
 ```cpp
 using namespace sycl;
 using BurstCoalescedLSU = sycl::ext::intel::experimental::lsu<
@@ -88,13 +94,13 @@ BurstCoalescedLSU::store(output_ptr, value,
   * Both are in the same block but not in any cluster
   * Both are in the same cluster
 
-**Note**: Clusters can be identified in the System Viewer (Views > System Viewer) of the `report.html` report.
+**Note**: Clusters can be identified in the System Viewer (**Views > System Viewer**) of the `report.html` report.
 
-The compiler strives to achieve the latency constraints, and it errors out if some constraints cannot be satisfied. For example, if one constraint specifies function A should be scheduled after function B, while another constraint specifies function B should be scheduled after function A, then that set of constraints is unsatisfiable.
+The compiler tries to achieve the latency constraints, and it errors out if some constraints cannot be satisfied. For example, if one constraint specifies function A should be scheduled after function B, while another constraint specifies function B should be scheduled after function A, then that set of constraints is unsatisfiable.
 
 ## Key Concepts
-* How to set latency constraints to pipes and LSUs accesses
-* How to confirm that the compiler respected the latency control directive
+ * How to set latency constraints to pipes and LSUs accesses
+ * How to confirm that the compiler respected the latency control directive
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -236,8 +242,8 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ## Examining the Reports
 Locate `report.html` in the `latency_control_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
-1. Navigate to Schedule Viewer (Views > Schedule Viewer). In this view, you can find the load and the store that have latency constraint and then you can check the scheduled latency between them. The scheduled latency should reflect the applied latency control in the design source code. You can also verify the latency control parameters in the Details pane for the load and store nodes.
-2. Navigate to System Viewer (Views > System Viewer). In this view, you can verify the latency control parameters in the Details pane for the load and the store nodes. You can find the load and store nodes in LatencyControl.B1.
+1. Navigate to Schedule Viewer (**Views > Schedule Viewer**). In this view, you can find the load and the store that have latency constraint and then you can check the scheduled latency between them. The scheduled latency should reflect the applied latency control in the design source code. You can also verify the latency control parameters in the **Details** pane for the load and store nodes.
+2. Navigate to System Viewer (**Views > System Viewer**). In this view, you can verify the latency control parameters in the **Details** pane for the load and the store nodes. You can find the load and store nodes in **LatencyControl.B1**.
 
 ## Running the Sample
 
