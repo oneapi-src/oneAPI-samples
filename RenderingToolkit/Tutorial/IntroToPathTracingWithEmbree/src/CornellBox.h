@@ -1,6 +1,6 @@
 #pragma once
 #ifndef FILE_CORNELLBOX_SEEN
-#define FILE_CORNELL_BOX_SEEN
+#define FILE_CORNELLBOX_SEEN
 
 #include "definitions.h"
 #include <embree3/rtcore.h>
@@ -233,11 +233,17 @@ static std::vector<Vec3fa> cornellBoxColors = {
     */
 };
 
-static std::vector<enum MaterialType> cornellBoxMats = {
+static std::vector<enum class MaterialType> cornellBoxMats = {
     // Floor
     MaterialType::MATERIAL_MATTE,
+    /* Swap in thr below material to make the ceiling a matte material*/
     // Ceiling
     MaterialType::MATERIAL_MATTE,
+    /* Swap in the below material to make the ceiling a mirror */
+    /*
+    //Ceiling
+    MaterialType::MATERIAL_MIRROR,
+    */
     // Backwall
     MaterialType::MATERIAL_MATTE,
     // RightWall
@@ -256,6 +262,9 @@ static std::vector<enum MaterialType> cornellBoxMats = {
     MaterialType::MATERIAL_MATTE,
     // ShortBox Bottom Face
     MaterialType::MATERIAL_MATTE,
+
+    /* Tall Box configuration for a matte material. Swap this section in for the mirror tall box (below) as desired*/
+    /*
     // TallBox Top Face
     MaterialType::MATERIAL_MATTE,
     // TallBox Left Face
@@ -268,8 +277,10 @@ static std::vector<enum MaterialType> cornellBoxMats = {
     MaterialType::MATERIAL_MATTE,
     // TallBox Bottom Face
     MaterialType::MATERIAL_MATTE
+    */
+
+    /* Tall box configuration for a mirror material. Swap this section in to see behind the short cube */
     
-    /*
     // TallBox Top Face
     MaterialType::MATERIAL_MIRROR,
     // TallBox Left Face
@@ -282,7 +293,7 @@ static std::vector<enum MaterialType> cornellBoxMats = {
     MaterialType::MATERIAL_MIRROR,
     // TallBox Bottom Face
     MaterialType::MATERIAL_MIRROR 
-    */
+    
     };
 
 int addCornell(RTCScene scene, RTCDevice device)
@@ -341,26 +352,31 @@ void cleanCornell() {
 
 }
 
-void cornellCameraLightSetup(AffineSpace3fa& _camera, std::vector<Light>& _lights, unsigned int _width, unsigned int _height) {
+void cornellCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& lights, unsigned int width, unsigned int height) {
 
-    _camera = positionCamera(Vec3fa(0.0, 0.0, -2.0f), Vec3fa(0, 0, 0),
-        Vec3fa(0, 1, 0), 90.0f, _width, _height);
+    camera = positionCamera(Vec3fa(0.0, 0.0, -2.0f), Vec3fa(0, 0, 0),
+        Vec3fa(0, 1, 0), 90.0f, width, height);
+
+    /* Infinite directional light is not added, but here are some parameters if you would like to try it*/
+    /*
     Light infDirectionalLight;
-
     infDirectionalLight.dir = normalize(Vec3fa(0.0f, 0.0f, 2.0f));
-    //infDirectionalLight.dir = normalize(Vec3fa(0.0f, -1.0, 0.0f));
     //infDirectionalLight.intensity = 3*Vec3fa(0.78f, 0.551f, 0.183f);
     infDirectionalLight.intensity = 3*Vec3fa(1.0f, 1.0f, 1.0f);
     infDirectionalLight.type = LightType::INFINITE_DIRECTIONAL_LIGHT;
-    //_lights.push_back(infDirectionalLight);
+    lights.push_back(infDirectionalLight);
+    */
 
     Light pointLight;
-    //pointLight.intensity = 0.0615f * Vec3fa(0.18f, 0.18f, 0.78f);
-    //pointLight.intensity = Vec3fa(1.0f, 1.0f, 1.0f);
-    pointLight.intensity = 2*Vec3fa(0.78f, 0.551f, 0.183f);
-    pointLight.pos = Vec3fa(0.0f, 0.9f, 0.0f);
+    /* The magnitude of the light can be tricky. Lights such as the point light fall off at the inverse square of the distance. When designing a sandbox renderer, you may need to scale your light up or down to see your scene. */
+    pointLight.intensity = 2.f*Vec3fa(0.78f, 0.551f, 0.183f);
+    /* An interesting position for an overhead light in the Cornell Box scene. Notice increased noise when lights are near objects */
+    //pointLight.pos = Vec3fa(0.0f, 0.95f, 0.0f);
+
+    /* A somewhat central position for the point light within the box. This is similar to the position for the interactive pathtracer program shipped with Embree */
+    pointLight.pos = Vec3fa(2.f*213.0f/556.0f-1.f, 2.f * 300.f/558.8f - 1.f, 2.f * 227.f/559.2f - 1.f);
     pointLight.type = LightType::POINT_LIGHT;
-    _lights.push_back(pointLight);
+    lights.push_back(pointLight);
 }
 
 

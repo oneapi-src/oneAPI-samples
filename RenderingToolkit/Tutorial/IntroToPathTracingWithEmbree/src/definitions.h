@@ -38,7 +38,7 @@ struct Triangle {
 };
 
 /* Added for pathtracer */
-enum MaterialType {
+enum class MaterialType {
     MATERIAL_MATTE,
     MATERIAL_MIRROR,
     MATERIAL_THIN_DIELECTRIC,
@@ -57,6 +57,7 @@ using rkcommon::math::rcp;
 using Vec2f = rkcommon::math::vec2f;
 using rkcommon::math::dot;
 using rkcommon::math::clamp;
+using rkcommon::math::rsqrt;
 
 /* Added for pathtracer */
 struct DifferentialGeometry
@@ -112,12 +113,12 @@ AffineSpace3fa positionCamera(Vec3fa from, Vec3fa to, Vec3fa up, float fov,
      */
     AffineSpace3fa camMatrix;
     Vec3fa Z =
-        rkcommon::math::normalize(Vec3fa(to - from));
-    Vec3fa U = rkcommon::math::normalize(
-        rkcommon::math::cross(up,
+        normalize(Vec3fa(to - from));
+    Vec3fa U = normalize(
+        cross(up,
             Z));
-    Vec3fa V = rkcommon::math::normalize(
-        rkcommon::math::cross(Z,
+    Vec3fa V = normalize(
+        cross(Z,
             U));
     camMatrix.l.vx = U;
     camMatrix.l.vy = V;
@@ -127,7 +128,7 @@ AffineSpace3fa positionCamera(Vec3fa from, Vec3fa to, Vec3fa up, float fov,
     /* negate for a right handed camera*/
     camMatrix.l.vx = -camMatrix.l.vx;
 
-    const float fovScale = 1.0f / tanf(rkcommon::math::deg2rad(0.5f * fov));
+    const float fovScale = 1.0f / tanf(deg2rad(0.5f * fov));
 
     camMatrix.l.vz = -0.5f * width * camMatrix.l.vx +
         0.5f * height * camMatrix.l.vy +

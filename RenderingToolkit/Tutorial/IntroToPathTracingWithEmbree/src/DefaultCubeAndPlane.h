@@ -151,24 +151,27 @@ unsigned int addGroundPlane(RTCScene _scene, RTCDevice _device) {
     g_ground_face_colors = (Vec3fa*)alignedMalloc(sizeof(Vec3fa) * 2, 16);
     g_ground_vertex_colors = (Vec3fa*)alignedMalloc(sizeof(Vec3fa) * 4, 16);
 
+    /* Moving the plane up to the bottom of the cube shows more global illumination color bleed 
+    Try y = -1 to see it!
+    */
     /* set vertices */
     Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
         mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Vertex), 4);
     g_ground_vertex_colors[0] = Vec3fa(1, 0, 0);
     vertices[0].x = -10;
-    vertices[0].y = -1;
+    vertices[0].y = -2;
     vertices[0].z = -10;
     g_ground_vertex_colors[1] = Vec3fa(1, 0, 1);
     vertices[1].x = -10;
-    vertices[1].y = -1;
+    vertices[1].y = -2;
     vertices[1].z = +10;
     g_ground_vertex_colors[2] = Vec3fa(1, 1, 0);
     vertices[2].x = +10;
-    vertices[2].y = -1;
+    vertices[2].y = -2;
     vertices[2].z = -10;
     g_ground_vertex_colors[3] = Vec3fa(1, 1, 1);
     vertices[3].x = +10;
-    vertices[3].y = -1;
+    vertices[3].y = -2;
     vertices[3].z = +10;
 
     /* set triangles */
@@ -207,17 +210,30 @@ void cleanCubeAndPlane() {
 
 }
 
-void cubeAndPlaneCameraLightSetup(AffineSpace3fa& _camera, std::vector<Light>& _lights, unsigned int _width, unsigned int _height) {
+void cubeAndPlaneCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& lights, unsigned int width, unsigned int height) {
     Vec3fa defaultLightDirection = normalize(Vec3fa(-1.0f, -1.0f, -1.0f));
     Vec3fa defaultLightIntensity = { 1.0f, 1.0f, 1.0f };
 
-    _camera = positionCamera(Vec3fa(1.5f, 1.5, -1.5f), Vec3fa(0, 0, 0),
-        Vec3fa(0, 1, 0), 90.0f, _width, _height);
-    _lights.resize(1);
-    _lights[0].dir = defaultLightDirection;
-    _lights[0].intensity = defaultLightIntensity;
-    _lights[0].type = LightType::INFINITE_DIRECTIONAL_LIGHT;
+    camera = positionCamera(Vec3fa(1.5f, 1.5f, -1.5f), Vec3fa(0, 0, 0),
+        Vec3fa(0, 1, 0), 90.0f, width, height);
 
+    /* Our light from the triangle geometry sample */
+    /*
+    Light infDirectionalLight;
+    infDirectionalLight.dir = defaultLightDirection;
+    infDirectionalLight.intensity = defaultLightIntensity;
+    infDirectionalLight.type = LightType::INFINITE_DIRECTIONAL_LIGHT;
+    lights.push_back(infDirectionalLight);
+    */
+    
+    Light pointLight;
+    /* Note that the magnitude of the light can be tricky. Lights such as the point light fall off at the inverse square of the distance. When designing a sandbox renderer, you may need to scale your light up or down to see your scene. */
+    pointLight.intensity = 500.f * Vec3fa(1.f, 1.f, 1.f);
+
+    /* The point light that mimicks the direction of the directional light */
+    pointLight.pos = Vec3fa(10.0f, 10.0f, 10.0f);
+    pointLight.type = LightType::POINT_LIGHT;
+    lights.push_back(pointLight);
 }
 
 #endif /* !FILE_DEFAULTCUBEANDPLANE_SEEN */

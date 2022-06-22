@@ -19,13 +19,16 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <chrono>
 
 #include "definitions.h"
 #include "DefaultCubeAndPlane.h"
 #include "CornellBox.h"
 
 using std::string;
-/* minstd_rand is much faster for this application than ranlux48_base/ranlux24_base. In turn, ranlux was faster than mt19337 or mt1933764 on Windows */
+/* minstd_rand is much faster for this application than ranlux48_base/ranlux24_base.
+In turn, ranlux was faster than mt19937 or mt19937_64 on Windows
+*/
 typedef std::minstd_rand RandomEngine;
 
 std::vector<unsigned int> g_geomIDs;
@@ -37,7 +40,7 @@ unsigned char* g_pixels;
 
 /* Additions for pathtracer */
 std::vector<std::shared_ptr<Vec3ff>> g_accu;
-unsigned long long g_accu_count = 0;
+unsigned int g_accu_count = 0;
 unsigned int g_max_path_length;
 unsigned int g_spp;
 SceneSelector g_sceneSelector;
@@ -142,7 +145,6 @@ inline Sample3f cosineSampleHemisphere(const float  u, const float  v, const Vec
 Vec3fa Lambertian__eval(const Vec3fa& R, const Vec3fa& wo, DifferentialGeometry dg, Vec3fa wi_v) {
     /* The diffuse material. Reflectance (albedo) times the cosign fall off of the vector about the normal. */
     return R * (1.f / (float)(float(M_PI))) * clamp(dot(wi_v, dg.Ns));
-
 }
 
 Vec3fa Mirror__sample(const Vec3fa& R, const Vec3fa& Lw, const Vec3fa& wo, const DifferentialGeometry& dg, Sample3f& wi) {
@@ -152,18 +154,17 @@ Vec3fa Mirror__sample(const Vec3fa& R, const Vec3fa& Lw, const Vec3fa& wo, const
     sam.v = normalize(2.0f * dot(wo, dg.Ns) * dg.Ns - wo);
     wi = sam;
     return R;
-
 }
 
-Vec3fa Material__sample(Vec3fa R, enum MaterialType materialType, Vec3fa Lw, Vec3fa wo, DifferentialGeometry dg, Sample3f& wi, Vec2f randomMatSample) {
+Vec3fa Material__sample(Vec3fa R, enum class MaterialType materialType, Vec3fa Lw, Vec3fa wo, DifferentialGeometry dg, Sample3f& wi, Vec2f randomMatSample) {
     Vec3fa c = Vec3fa(0.0f);
     switch (materialType) {
-    case MATERIAL_MATTE:
+    case MaterialType::MATERIAL_MATTE:
         wi = cosineSampleHemisphere(randomMatSample.x, randomMatSample.y, dg.Ns);
         return Lambertian__eval(R, wo, dg, wi.v);
         break;
 
-    case MATERIAL_MIRROR:
+    case MaterialType::MATERIAL_MIRROR:
         return Mirror__sample(R, Lw, wo, dg, wi);
         break;
 /* Return our debug color if something goes awry */
@@ -174,13 +175,13 @@ Vec3fa Material__sample(Vec3fa R, enum MaterialType materialType, Vec3fa Lw, Vec
     return c;
 }
 
-Vec3fa Material__eval(Vec3fa R, enum MaterialType materialType, const Vec3fa& wo, const DifferentialGeometry& dg, const Vec3fa& wi) {
+Vec3fa Material__eval(Vec3fa R, enum class MaterialType materialType, const Vec3fa& wo, const DifferentialGeometry& dg, const Vec3fa& wi) {
     Vec3fa c = Vec3fa(0.0f);
     switch (materialType) {
-    case MATERIAL_MATTE:
+    case MaterialType::MATERIAL_MATTE:
         return Lambertian__eval(R, wo, dg, wi);
         break;
-    case MATERIAL_MIRROR:
+    case MaterialType::MATERIAL_MIRROR:
         return Vec3fa(0.0f);
         break;
         /* Return our debug color if something goes awry */
@@ -213,7 +214,7 @@ Light_SampleRes sample_light(const Light& light, DifferentialGeometry& dg, const
         // extant light vector from the hit point
         const Vec3fa dir = light.pos - dg.P;
         const float dist2 = dot(dir, dir);
-        const float invdist = rkcommon::math::rsqrt(dist2);
+        const float invdist = rsqrt(dist2);
 
         // normalized light vector
         res.dir = dir * invdist;
@@ -227,7 +228,6 @@ Light_SampleRes sample_light(const Light& light, DifferentialGeometry& dg, const
     }
 
     return res;
-
 }
 
 /* task that renders a single screen pixel */
@@ -238,7 +238,7 @@ Vec3fa renderPixelFunction(float x, float y,
     const AffineSpace3fa& camera) {
     RTCIntersectContext context;
     rtcInitIntersectContext(&context);
-    Vec3fa dir = rkcommon::math::normalize(x * camera.l.vx +
+    Vec3fa dir = normalize(x * camera.l.vx +
         y * camera.l.vy + camera.l.vz);
     Vec3fa org = Vec3fa(camera.p.x, camera.p.y, camera.p.z);
 
@@ -283,16 +283,15 @@ Vec3fa renderPixelFunction(float x, float y,
         dg.Ng = Ng;
         dg.Ns = Ns;
 
-        /* Optionally Next is:
-        * material discovery, the full pathtracer program includes lookup of materials from a scenegraph object
-        * texture lookup transformations are based on vertex-to-texture assignments
-        * Interpolating normals from vertex normals is a possibility as well
-        * This could include a required tranformation of normals for geometries that have been instanced.
+        /* Next is material discovery.
+        * Note: the full pathtracer program includes lookup of materials from a scenegraph object.
+        * This could include texture lookup transformations that are based on vertex-to-texture assignments.
+        * This could include a required tranformation of normals for geometries that have been instanced. Below is a simple option for materials.
         */
 
         /* default albedo is a pink color for debug */
         Vec3fa albedo = Vec3fa(0.9f, 0.7f, 0.7f);
-        enum MaterialType materialType = MaterialType::MATERIAL_MATTE;
+        enum class MaterialType materialType = MaterialType::MATERIAL_MATTE;
         /* An albedo as well as a material type is used */
         switch (g_sceneSelector) {
         case SceneSelector::SHOW_CORNELL_BOX:
@@ -333,7 +332,7 @@ Vec3fa renderPixelFunction(float x, float y,
 
         /* Search for each light in the scene from our hit point. Aggregate the radiance if hit point is not occluded */
         context.flags = RTCIntersectContextFlags::RTC_INTERSECT_CONTEXT_FLAG_INCOHERENT;
-        for(auto light : g_lights)
+        for(const Light& light : g_lights)
         {
             Vec2f randomLightSample(distrib(reng), distrib(reng));
             Light_SampleRes ls = sample_light(light, dg, randomLightSample);
@@ -358,8 +357,8 @@ Vec3fa renderPixelFunction(float x, float y,
         dir = normalize(wi1.v);
         initRayHit(rayhit, org, dir, dg.eps, std::numeric_limits<float>::infinity(), time);
     }
-    return L;
 
+    return L;
 }
 
 /* task that renders a single screen pixel */
@@ -373,21 +372,31 @@ Vec3fa renderPixelStandard(int x, int y,
     for (int i = 0; i < g_spp; i++)
     {
         /* Generate a new seed for a sample. 
-        Ray cast position for the sample, materials, and light look ups all use random numbers based off this seed. 
+        Ray cast position for the sample, materials, and light look ups all use random 0. <-> 1.0 floating point numbers based off this seed. 
         There are better and worse solutions for randomization in rendering depending on your use case. This one is simple to follow.
         
-        Note that here 4,294,967,296 distinct seeds are used based on the pixel and sample being computed. At 3840x2160 resolution with 517 samples per pixel, random numbers, *could* start to repeat.
-        The Embree pathtracer full example uses an LCG-based algorithm written by hand.
-        */
-        unsigned long long id = (unsigned long long)g_accu_count * (width * height) * g_spp + (y * width + x) * g_spp + i;
-        reng.seed( (unsigned int)(id % std::numeric_limits<unsigned int>::max()));
+        Note that here 4,294,967,296 distinct seeds are used based on the pixel and sample being computed. At 3840x2160 resolution with 517 samples per pixel, a random number used indiscriminantly, *could* repeat. The result could be visual artifacts.
+        The Embree pathtracer full example uses an LCG-based randomizer algorithm written by hand.
 
+        If each sample is given it's own id a0nd it is fed into the randomizer, minstd_rand, you may notice repeated visual patterns in this tutorial. So, below a hash is used.
+            function: sample at the start of accumulation + sample at the start of pixel + sample
+        id example: unsigned int hseed = g_accu_count * (width * height) * g_spp + (y * width + x) * g_spp + i
+        */
+
+        unsigned long long seed = (((unsigned long long)(y * width + x) << 32) | ((g_accu_count * g_spp + i) & 0xFFFFFFFF));
+        size_t hseed = std::hash<unsigned long long>{}(seed);
+
+        // Take a 32bit xor for seeding the random number generator with a "unique" enough value in a 32bit size. minstd_rand takes a 32-bit seed.
+        if(sizeof(size_t) == 8 ) 
+            hseed = (hseed >> 32) ^ (hseed & 0xFFFFFFF);
+
+        reng.seed(hseed);
         /* calculate pixel color, slightly offset the ray cast orientation randomly so each sample occurs at a slightly different location within a pixel */
-        /* Note: The */
+        /* Note: random offsets for samples within a pixel provide natural anti-aliasing (smoothing) near object edges */
         float fx = x + distrib(reng); 
         float fy = y + distrib(reng); 
         L = L + renderPixelFunction(fx, fy, width, height, reng, distrib, time, camera);
-/* If you are not seeing anything, try some old fashioned printf debug */
+/* If you are not seeing anything, try some printf debug */
 //#define MY_DEBUG
 #ifdef MY_DEBUG
         if (max(max(L.x, L.y), L.z) > 0.0f)
@@ -395,8 +404,8 @@ Vec3fa renderPixelStandard(int x, int y,
 #endif
     }
     L = L / (float)g_spp;
-    return L;
-    
+
+    return L;   
 }
 
 
@@ -431,11 +440,11 @@ void renderTileTask(int taskIndex, int threadIndex, unsigned char* pixels, std::
       
       /* write color from accumulation buffer to framebuffer */
       unsigned char r =
-          (unsigned char)(255.0f * rkcommon::math::clamp(accu_color.x*f, 0.0f, 1.0f));
+          (unsigned char)(255.0f * clamp(accu_color.x*f, 0.0f, 1.0f));
       unsigned char g =
-          (unsigned char)(255.0f * rkcommon::math::clamp(accu_color.y*f, 0.0f, 1.0f));
+          (unsigned char)(255.0f * clamp(accu_color.y*f, 0.0f, 1.0f));
       unsigned char b =
-          (unsigned char)(255.0f * rkcommon::math::clamp(accu_color.z*f, 0.0f, 1.0f));
+          (unsigned char)(255.0f * clamp(accu_color.z*f, 0.0f, 1.0f));
       pixels[y * width * channels + x * channels] = r;
       pixels[y * width * channels + x * channels + 1] = g;
       pixels[y * width * channels + x * channels + 2] = b;
@@ -484,9 +493,9 @@ void device_cleanup() {
     break;
 
   }
-  }
+}
 
-void device_init(char* cfg) {
+void device_init(char* cfg, unsigned int width, unsigned int height) {
   /* create scene */
   g_scene = nullptr;
   g_scene = rtcNewScene(g_device);
@@ -495,7 +504,10 @@ void device_init(char* cfg) {
       case SceneSelector::SHOW_CORNELL_BOX:
         /* add cornell box */
         g_geomIDs.push_back(addCornell(g_scene, g_device));
+        /* If you would like to add an Embree sphere see addSphere(..) as used below for an example */
         //g_geomIDs.push_back(addSphere(g_scene, g_device));
+
+        cornellCameraLightSetup(g_camera, g_lights, width, height);
         break;
       case SceneSelector::SHOW_CUBE_AND_PLANE:
       default:
@@ -503,6 +515,8 @@ void device_init(char* cfg) {
         g_geomIDs.push_back(addCube(g_scene, g_device));
         /* add ground plane */
         g_geomIDs.push_back(addGroundPlane(g_scene, g_device));
+
+        cubeAndPlaneCameraLightSetup(g_camera, g_lights, width, height);
         break;
   }
 
@@ -519,11 +533,7 @@ int main() {
     /* set error handler */
     rtcSetDeviceErrorFunction(g_device, error_handler, nullptr);
 
-    g_sceneSelector = SceneSelector::SHOW_CORNELL_BOX;
-    device_init(nullptr);
-
     /* create an image buffer initialize it with all zeroes */
-
     const unsigned int width = 512;
     const unsigned int height = 512;
     const unsigned int channels = 3;
@@ -531,38 +541,39 @@ int main() {
     g_pixels = (unsigned char*)new unsigned char[width * height * channels];
     std::memset(g_pixels, 0, sizeof(unsigned char) * width * height * channels);
 
+    /* accumulation buffer used for convenience here, but is critical in interactive/future applications */
     g_accu.resize(width * height);
     for (auto i = 0; i < width * height; i++)
         g_accu[i] = std::make_shared<Vec3ff>(0.0f);
 
-    /* accumulation buffer used for introduction to future applications */
+    //g_sceneSelector = SceneSelector::SHOW_CUBE_AND_PLANE;
+    g_sceneSelector = SceneSelector::SHOW_CORNELL_BOX;
+    device_init(nullptr, width, height);
+
+    /* Control the total number of accumulations, the total number of samples per pixel per accumulation, and the maximum path length of any given traced path.*/
     const unsigned long long g_accu_limit = 500;
     g_spp = 1;
     g_max_path_length = 8;
 
-    switch (g_sceneSelector) {
-    case SceneSelector::SHOW_CORNELL_BOX:
-        cornellCameraLightSetup(g_camera, g_lights, width, height);
-        break;
-    case SceneSelector::SHOW_CUBE_AND_PLANE:
-    default:
-        cubeAndPlaneCameraLightSetup(g_camera, g_lights, width, height);
-        break;
-    }
-
+    /* Use a basic timer to capure compute time per accumulation */
     auto start = std::chrono::high_resolution_clock::now();
     renderFrameStandard(g_pixels, g_accu, width, height, channels, 0.0, g_camera);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> accum_time = end - start;
     printf("Accumulation 1 of %llu: %lf s\n", g_accu_limit, accum_time.count());
+
+    /* Label construction for output files */
     string strscene;
     (g_sceneSelector == SceneSelector::SHOW_CORNELL_BOX) ? strscene = "-cornell" : strscene = "-default";
     string suffix = string("-spp") + std::to_string(g_spp) + string("-plength") + std::to_string(g_max_path_length) + string("-accu") + std::to_string(g_accu_limit) + string("-") + std::to_string(width) + string("x") + std::to_string(height) + string(".png");
     string prefix = "pathtracer_single_oneapi";
     string filename = prefix + strscene + suffix;
+
+    /* Write a single accumulation image (useful for comparison) */
     stbi_write_png(filename.c_str(), width, height, channels,
         g_pixels, width * channels);
 
+    /* Render all remaining accumulations (in addition to the first) */
     for (unsigned long long i = 1; i < g_accu_limit; i++) {
         start = std::chrono::high_resolution_clock::now();
         renderFrameStandard(g_pixels, g_accu, width, height, channels, 0.0, g_camera);
@@ -570,8 +581,11 @@ int main() {
         accum_time = end - start;
         printf("Accumulation %llu of %llu: %lf s\n", i+1, g_accu_limit, accum_time.count());
     }
+    /* Label construction for the accumulated output */
     prefix = "pathtracer_accu_oneapi";
     filename = prefix + strscene + suffix;
+
+    /* Write the accumulated image output */
   stbi_write_png(filename.c_str(), width, height, channels,
       g_pixels, width * channels);
 
