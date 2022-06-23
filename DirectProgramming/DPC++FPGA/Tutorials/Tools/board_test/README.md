@@ -28,7 +28,8 @@ A oneAPI board support package (BSP) consists of software layers and an FPGA har
 
 The BSP hardware components typically comprise RTL for all interfaces required by the oneAPI kernel, for example a PCIe IP for host to kernel communication, EMIF (External Memory Interface) IP for kernel to memory as well as host to FPGA board memory communication etc.
 
-The BSP software components typically consists of a MMD (Memory Mapped Device) layer and a driver. The implementation is vendor dependent.
+The BSP software components typically consists of a Memory Mapped Device (MMD) layer and a driver. The implementation is vendor dependent.
+
 
 The block diagram below shows an overview of a typical oneAPI FPGA BSP hardware design. The numbered arrows depict the following:
 * Path 1 depicts host to device global memory interface
