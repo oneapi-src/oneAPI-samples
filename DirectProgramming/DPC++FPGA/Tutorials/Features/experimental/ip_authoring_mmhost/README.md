@@ -27,12 +27,39 @@ The following parameters are available for configuration:
 | `aspace`          | The address space of the interface that associates with the host.
 | `awidth`          | The width of the memory-mapped data bus in bits
 | `dwidth`          | The width of the memory-mapped address bus in bits.
-| `latency`         | The guaranteed latency from when a read command exits the component when the external memory returns valid read data. (Minimum supported latency is 16)
+| `latency`         | The guaranteed latency from when a read command exits the component when the external memory returns valid read data.
 | `readwrite_mode`  | The port direction of the interface. (0: Read & Write, 1: Read only, 2: Write only)
 | `maxburst`        | The maximum number of data transfers that can associate with a read or write transaction.
 | `align`           | The alignment of the base pointer address in bytes. 
 | `waitrequest`     | Adds the waitrequest signal that is asserted by the agent when it is unable to respond to a read or write request.
 
+### Default interface
+
+If no memory-mapped interface parameters is informed for a pointer, then a mmhost interface with all default parameters is assumed for it.
+
+### Memory-mapped interface implementation restriction
+
+Memory-mapped interface is restricted to function implementations, which means that it is not supported for lambda implementation. Also, all parameters must be preset, even if just one parameter is being changed from the default values.
+
+#### Example Functor
+```c++
+struct MyIP {
+  mmhost(
+    ... // All mmhost parameters.
+  ) int *my_pointer;
+
+  MyIP(int *input_pointer) : my_pointer(input_pointer) { ... } // Constructor for our IP.
+    ...
+  }
+
+  void operator()() const {
+    ...
+    // Functor code
+    my_pointer[x] = y;
+    ...
+  }
+}
+```
 
 
 #### Example 1: How to set-up a correct mmhost interface
@@ -42,7 +69,7 @@ The following parameters are available for configuration:
     1,       // buffer_location or aspace
     28,      // address width
     64,      // data width
-    16,      // ! latency, must be atleast 16
+    16,      // latency
     1,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
     1,       // maxburst
     0,       // align, 0 defaults to alignment of the type
@@ -57,7 +84,7 @@ The following parameters are available for configuration:
     1,       // buffer_location or aspace
     28,      // address width
     64,      // data width
-    16,      // ! latency, must be atleast 16
+    16,      // latency
     1,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
     1,       // maxburst
     0,       // align, 0 defaults to alignment of the type
@@ -68,7 +95,7 @@ The following parameters are available for configuration:
     1,       // buffer_location or aspace
     28,      // address width
     64,      // data width
-    16,      // ! latency, must be atleast 16
+    16,      // latency
     1,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
     1,       // maxburst
     0,       // align, 0 defaults to alignment of the type
@@ -150,7 +177,6 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/memory_attributes.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
@@ -198,12 +224,12 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
      ```
-     ./memory_attributes.fpga_emu     (Linux)
-     memory_attributes.fpga_emu.exe   (Windows)
+     ./mmhost.fpga_emu     (Linux)
+     mmhost.fpga_emu.exe   (Windows)
      ```
 2. Run the sample on the FPGA device:
      ```
-     ./memory_attributes.fpga         (Linux)
+     ./mmhost.fpga         (Linux)
      ```
 
 ### Example of Output
