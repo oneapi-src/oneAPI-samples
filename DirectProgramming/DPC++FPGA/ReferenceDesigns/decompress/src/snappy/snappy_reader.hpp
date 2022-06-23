@@ -151,7 +151,8 @@ unsigned SnappyReader(unsigned in_count) {
 
   unsigned data_read = data_read_in_preamble;
   bool all_data_read = data_read >= in_count;
-  bool all_data_read_next = data_read >= in_count - literals_per_cycle;
+  bool all_data_read_next = data_read >= (in_count - literals_per_cycle);
+
 
   // keep track of the number of bytes processed
   constexpr unsigned max_bytes_processed_inc =
