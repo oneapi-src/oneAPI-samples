@@ -183,7 +183,8 @@ unsigned SnappyReader(unsigned in_count) {
         byte_stream.template Write(pipe_data);
         data_read += literals_per_cycle;
         all_data_read = all_data_read_next;
-        all_data_read_next = data_read >= in_count - literals_per_cycle;
+        all_data_read_next = data_read >= (in_count - literals_per_cycle);
+
       }
     }
 
