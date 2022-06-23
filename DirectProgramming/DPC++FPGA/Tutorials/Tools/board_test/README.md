@@ -1,5 +1,6 @@
 # Board Test
-This design contains tests to check FPGA board interfaces and reports the following metrics:
+This reference design contains tests to check FPGA board interfaces and reports the following metrics:
+
 1. Host to device global memory interface bandwidth
 2. Kernel clock frequency
 3. Kernel launch latency
