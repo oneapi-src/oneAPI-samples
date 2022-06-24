@@ -1225,5 +1225,12 @@
         "notes": "-",
         "removed": "False",
         "ver": "2022.2.0"
+    },
+    "AB771069-365A-42A6-A96A-91BC7807986D": {
+        "guid": "AB771069-365A-42A6-A96A-91BC7807986D",
+	"name": "Path Tracing with Intel Embnree",
+	"notes": "-",
+	"removed": "False",
+	"ver": "2022.2.0"
     }
 }
