@@ -255,6 +255,7 @@ Locate `report.html` in the `latency_control_report.prj/reports/` directory. Ope
 2. Run the sample on the FPGA device:
      ```
      ./latency_control.fpga         (Linux)
+     latency_control.fpga.exe       (Windows)
      ```
 
 ### Example of Output
