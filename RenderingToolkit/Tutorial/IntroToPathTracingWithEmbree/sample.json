@@ -1,0 +1,54 @@
+{
+  "guid": "AB771069-365A-42A6-A96A-91BC7807986D",
+  "name": "Path Tracing with Intel Embree ",
+  "categories": ["Toolkit/oneAPI Libraries/Embree"],
+  "description": "This sample is a walkthrough of generating an image with a pathtracer built with Intel Embree. The pathtracer walkthrough is a follow on to the 'Introduction to Ray Tracing with Intel Embree' oneAPI sample",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","rkcommon"],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "Intel_Embree_pathtracer_oneapi_lin",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "./pathtracer_oneapi"
+                 ]
+                 }
+        ],
+        "windows":[
+                {
+                "env": ["call \"C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat\""],
+                "id": "Intel_Embree_pathtracer_oneapi_win",
+                "steps":[
+                    "mkdir build",
+                    "cd build",
+                    "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
+                    "cmake --build . --config Release",
+                    "cd Release",
+                    ".\\pathtracer_oneapi.exe"
+                ]
+
+                }
+        ],
+        "darwin": [
+                {
+                "id": "Intel_Embree_pathrtracer_oneapi_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./pathtracer_oneapi"
+                 ]
+                 }
+        ]
+
+
+  }
+}
