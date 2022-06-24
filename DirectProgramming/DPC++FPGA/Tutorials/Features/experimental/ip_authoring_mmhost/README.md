@@ -237,6 +237,7 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
 ```
 kernel time : 726.779 ms
 elements in vector : 15
+Passed correctness check
 ```
 
 

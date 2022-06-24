@@ -83,6 +83,12 @@ int main(void) {
     auto y = make_malloc_shared<int>(q, size);
     auto z = make_malloc_shared<int>(q, size);
 
+    for (int i = 0; i < size; ++i) {
+      x.get()[i] = i;
+      y.get()[i] = i * 2;
+      z.get()[i] = i * 3;
+    }
+
     event e = q.single_task(VectorMADIP{x.get(), y.get(), z.get(), size});
     
     e.wait();
@@ -93,6 +99,22 @@ int main(void) {
     double kernel_time = (double)(end - start) * 1e-6;
     std::cout << "kernel time : " << kernel_time << " ms\n";
     std::cout << "elements in vector : " << size << "\n";
+
+    bool pass_check = true;
+    for (int i = 0; i < size; ++i) {
+      int mul = i * i * 2;
+      int add = mul + i * 3;
+      if (x.get()[i] != i || y.get()[i] != mul || z.get()[i] != add) {
+        pass_check = false;
+        break;
+      }
+    }
+
+    if (!pass_check) {
+      std::cout << "Failed correctness check\n";
+    } else {
+      std::cout << "Passed correctness check\n";
+    }
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
