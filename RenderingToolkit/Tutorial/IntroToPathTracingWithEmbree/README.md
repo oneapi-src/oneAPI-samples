@@ -76,8 +76,11 @@ This is a soft diffuse material that scatters light proportional to the cosign o
 We introduce a near-perfect mirror as a material surface. This mirror only reflects 80% of incident light. Limiting reflectance more closely matches the behavior of real mirrors.
 With whatever material chosen.
 ### Light
-	A point light has been added to this sample. Versus an infinitely distanced directional light, the point light demonstrates energy dissipation with distance from the light source. It also demonstrates varying amounts of light proportional to the angle of the point light to a surface.
+
+A point light has been added to this sample. Versus an infinitely distanced directional light, the point light demonstrates energy dissipation with distance from the light source. It also demonstrates varying amounts of light proportional to the angle of the point light to a surface.
+
 ### Global Illumination
+
 We describe the algorithm at a high level:
 1. At a ray-to-scene intersection we determine the light attenuation due to the material at the intersection.
 2. To do this, we generate a bounce ray pointing to a location on the unit hemisphere above an intersection. This ray represents the next leg of our ‘path’ being traced.
@@ -93,6 +96,7 @@ We describe the algorithm at a high level:
 11. In this tutorial, by default, we hardcode 1 sample per pixel. 1 sample per pixel alone will yield a noisy image. This could be changed to use more samples, but in the interest of study, by default we use accumulations of sampled image frames into an accumulation buffer.
 
 ### Accumulation buffer
+
 The accumulation buffer stores total luminance sampled underneath all pixels over all accumulations. To write to an image file output,  we divide by number of accumulations to get our per channel color averages. An accumulation buffer is useful in an interactive rendering context to intermittently update a windowed frame buffer. The application can continue with a stationary scene and camera to combine many accumulations to converge the output. Here, we use it to check a first sampling of our image before accumulating many more rendered frames. This is useful for visual debug when developing an application.
 1spp , 1 accumulation
 1spp, 500 accumulations
@@ -168,8 +172,15 @@ When reviewing other codes, notice that parameters associated with the [Phong](h
 
 ## Texturing
 ## Transparency
-	Transparent materials are omitted in this tutorial. The full Intel Embree path tracer shows [transparency]( https://github.com/embree/embree/blob/v3.13.4/tutorials/pathtracer/pathtracer_device.cpp#L1630) in materials. Keep in mind that if you have materials that have transparency or refract. You can add this 
 
+Transparent materials are omitted in this tutorial. The full Intel Embree path tracer shows [transparency]( https://github.com/embree/embree/blob/v3.13.4/tutorials/pathtracer/pathtracer_device.cpp#L1630) in materials. Keep in mind that if you have materials that have transparency or refract. You can add this 
+
+You can find more information at the [ Intel oneAPI Rendering Toolkit portal ](https://software.intel.com/content/www/us/en/develop/tools/oneapi/rendering-toolkit.html).
+
+## License
+
+Code samples are licensed under the Apache 2.0 license. See
+[LICENSE.txt](LICENSE.txt) for details.
 
 
 
