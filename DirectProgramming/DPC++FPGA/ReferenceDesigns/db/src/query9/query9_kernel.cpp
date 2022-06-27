@@ -396,6 +396,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
       });
 
       bool done = false;
+      [[intel::initiation_interval(1)]]
       do {
         FinalPipeData pipe_data = FinalPipe::read();
         done = pipe_data.done;

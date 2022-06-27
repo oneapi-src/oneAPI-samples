@@ -170,6 +170,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
     bool done = false;
 
+    [[intel::initiation_interval(1)]]
     while (!done) {
       bool valid_pipe_read;
       SupplierPartSupplierJoinedPipeData pipe_data = 
