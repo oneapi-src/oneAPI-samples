@@ -1,37 +1,35 @@
 ﻿# `Visual Studio based GPU Project` Sample
-A minimal project template for GPU using Visual Studio.
+This sample is a minimal project template using Microsoft Visual Studio* for GPU projects.
 
-For comprehensive instructions regarding DPC++ Programming, go to https://software.intel.com/en-us/oneapi-programming-guide and search based on relevant terms noted in the comments.
+For comprehensive instructions, see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
-| Optimized for                     | Description
+| Property                     | Description
 |:---                               |:---
-| OS                                | Windows 10
-| Hardware                          | Integrated Graphics from Intel (GPU) GEN9 or higher
-| Software                          | Intel&reg; oneAPI DPC++ Compiler
-| What you will learn               | Get started with DPC++ for GPU projects
-| Time to complete                  | n/a
+| What you will learn               | How to use Microsoft Visual Studio* for GPU projects
 
 ## Purpose
-This project is a template designed to help you create your own Data Parallel C++ application for GPU targets. The template assumes the use of make to build your application. Review the main.cpp source file for help with the header files you should include and how to implement "device selector" code for targeting your application's runtime device
+This project is a template designed to help you create your own SYCL*-compliant application for GPU targets. The template assumes the use of make to build your application. Review the main.cpp source file for help with the header files you should include and how to implement "device selector" code for targeting the application runtime device.
 
-If GPU is not available on your system, you can fallback to cpu or default device.
+If a GPU is not available on your system, fall back to the CPU or default device.
+
+## Prerequisites
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | Windows* 10
+| Hardware                          | Integrated Graphics from Intel (GPU) GEN9 or higher
+| Software                          | Intel&reg; oneAPI DPC++ Compiler
 
 ## Key Implementation Details
-The basic DPC++ project template for FPGA targets.
+A basic SYCL*-compliant project template for FPGA targets.
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
-## Building the `Visual Studio based GPU` Program
+## Building the `Visual Studio based GPU Project` Sample
 
 ### Include Files
-The include folder is located at %ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
+The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+### Running Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
+
 
 ### On a Windows* System Using Visual Studio* Version 2017 or Newer
 - Build the program using VS2017 or VS2019
@@ -42,3 +40,9 @@ If running a sample in the Intel DevCloud, remember that you must specify the co
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
      - Run the following command: `MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"`
+
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
