@@ -273,7 +273,7 @@ struct StreamingQRI {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
             if constexpr (t * pipe_size + k < rows) {
               pipe_write.template get<k>() =
-                  get[t] ? i_matrix[li / kLoopIterPerColumn][t * pipe_size + k]
+                  get[t] ? i_matrix[li / kLoopIterPerColumn][(t * pipe_size) + k]
                          : sycl::ext::intel::fpga_reg(
                                pipe_write.template get<k>());
             }
