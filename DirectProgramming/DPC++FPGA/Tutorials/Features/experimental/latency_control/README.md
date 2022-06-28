@@ -19,15 +19,15 @@ This FPGA tutorial demonstrates how to set latency constraints to pipes and LSUs
 ### Use Model
 **Note**: The APIs described in this section are experimental. Future versions of latency controls might change these APIs in ways that are incompatible with the version described here.
 
-Latency controls APIs are provided on member functions `read()` and `write()` of class `ext::intel::experimental::pipe` and on member functions `load()` and `store()` of class `ext::intel::experimental::lsu`. Other than the latency controls support, the experimental `pipe` and `lsu` are identical to `ext::intel::pipe` and `ext::intel::lsu`. The experimental `pipe` and `lsu` are also provided by `<sycl/ext/intel/fpga_extensions.hpp>`.
+Latency controls APIs are provided on member functions `read()` and `write()` of class `sycl::ext::intel::experimental::pipe` and on member functions `load()` and `store()` of class `sycl::ext::intel::experimental::lsu`. Other than the latency controls support, the experimental `pipe` and `lsu` are identical to `sycl::ext::intel::pipe` and `sycl::ext::intel::lsu`. The experimental `pipe` and `lsu` are also provided by `<sycl/ext/intel/fpga_extensions.hpp>`.
 
-These `read()`, `write()`, `load()`, and `store()` member functions can take a property list instance (`ext::oneapi::experimental::properties`) as a function argument, which can contain the following latency controls properties:
+These `read()`, `write()`, `load()`, and `store()` member functions can take a property list instance (`sycl::ext::oneapi::experimental::properties`) as a function argument, which can contain the following latency controls properties:
 
-* `ext::intel::experimental::latency_anchor_id<N>`, where `N` is a signed integer
+* `sycl::ext::intel::experimental::latency_anchor_id<N>`, where `N` is a signed integer
 
    A label that can be associated with the pipes and LSUs functions listed above. This label can then be referenced by the `latency_constraint` properties to define relative latency constraints. Functions with this property will be referred to as "labeled functions".
 
-* `ext::intel::experimental::latency_constraint<A, B, C>`
+* `sycl::ext::intel::experimental::latency_constraint<A, B, C>`
 
     A constraint than can be associated with the pipes and LSUs functions listed above. It provides a latency constraint between this function and a different labeled function. Functions which have this property will be referred to as "constrained functions". This constraint has  the following parameters:
 
@@ -38,36 +38,36 @@ These `read()`, `write()`, `load()`, and `store()` member functions can take a p
 ### Simple Code Example
 The following example shows you how to use latency controls on pipes. The example also uses a function acting as both labeled function and constrained function:
 ```cpp
-using namespace sycl;
-using Pipe1 = ext::intel::experimental::pipe<class PipeClass1, int, 8>;
-using Pipe2 = ext::intel::experimental::pipe<class PipeClass2, int, 8>;
-using Pipe3 = ext::intel::experimental::pipe<class PipeClass2, int, 8>;
+using Pipe1 = sycl::ext::intel::experimental::pipe<class PipeClass1, int, 8>;
+using Pipe2 = sycl::ext::intel::experimental::pipe<class PipeClass2, int, 8>;
+using Pipe3 = sycl::ext::intel::experimental::pipe<class PipeClass2, int, 8>;
 ...
 // In kernel:
 // The following read has a label 0.
-int value = Pipe1::read(ext::oneapi::experimental::properties(
-    ext::intel::experimental::latency_anchor_id<0>));
+int value = Pipe1::read(sycl::ext::oneapi::experimental::properties(
+    sycl::ext::intel::experimental::latency_anchor_id<0>));
 
 // The following write occurs exactly 2 cycles after the label-0 function, i.e.,
 // the read above. Also, it has a label 1.
 Pipe2::write(
     value,
-    ext::oneapi::experimental::properties(
-        ext::intel::experimental::latency_anchor_id<1>,
-        ext::intel::experimental::latency_constraint<
-            0, ext::intel::experimental::latency_control_type::exact, 2>));
+    sycl::ext::oneapi::experimental::properties(
+        sycl::ext::intel::experimental::latency_anchor_id<1>,
+        sycl::ext::intel::experimental::latency_constraint<
+            0, sycl::ext::intel::experimental::latency_control_type::exact,
+            2>));
 
-// The following write occurs at least 2 cycles after the label-1 function, i.e.,
-// the write above.
+// The following write occurs at least 2 cycles after the label-1 function,
+// i.e., the write above.
 Pipe3::write(
-    value, ext::oneapi::experimental::properties(
-               ext::intel::experimental::latency_constraint<
-                   1, ext::intel::experimental::latency_control_type::min, 2>));
+    value,
+    sycl::ext::oneapi::experimental::properties(
+        sycl::ext::intel::experimental::latency_constraint<
+            1, sycl::ext::intel::experimental::latency_control_type::min, 2>));
 ```
 
 This next example shows you how to use latency controls on LSUs. It also uses a negative relative cycle number in `latency_constraint`, which means that the constrained function is scheduled **before** the associated labeled function:
 ```cpp
-using namespace sycl;
 using BurstCoalescedLSU = sycl::ext::intel::experimental::lsu<
     sycl::ext::intel::experimental::burst_coalesce<false>,
     sycl::ext::intel::experimental::statically_coalesce<false>>;
@@ -78,13 +78,14 @@ using BurstCoalescedLSU = sycl::ext::intel::experimental::lsu<
 int value = BurstCoalescedLSU::load(
     input_ptr,
     sycl::ext::oneapi::experimental::properties(
-        ext::intel::experimental::latency_constraint<
-            2, ext::intel::experimental::latency_control_type::max, -5>));
+        sycl::ext::intel::experimental::latency_constraint<
+            2, sycl::ext::intel::experimental::latency_control_type::max, -5>));
 
 // The following store has a label 2.
-BurstCoalescedLSU::store(output_ptr, value,
-                         sycl::ext::oneapi::experimental::properties(
-                             ext::intel::experimental::latency_anchor_id<2>));
+BurstCoalescedLSU::store(
+    output_ptr, value,
+    sycl::ext::oneapi::experimental::properties(
+        sycl::ext::intel::experimental::latency_anchor_id<2>));
 ```
 
 ### Rules and Limitations
