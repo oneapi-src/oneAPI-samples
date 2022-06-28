@@ -37,6 +37,6 @@
 #define JACOBI_H
 
 //Number of rows
-#define N_ROWS 1024
+#define N_ROWS 512
 
 #endif
