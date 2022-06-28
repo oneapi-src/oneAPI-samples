@@ -1,4 +1,4 @@
-﻿# `Jacobi Iterative` Sample
+# `Jacobi Iterative` Sample
 
 This Sample Demonstrates the number of iterations needed to solve system of Linear Equations using Jacobi Iterative Method.
 This Jacobi-iterative sample is implemented using SYCL for Intel CPU and GPU.
@@ -16,33 +16,14 @@ This sample is migrated from NVIDIA CUDA sample, refer to [NVIDIA Sample](https:
 
 This sample contains four SYCL versions of the same program: 
 
-`sycl_dpct_migrated`         -> It contains DPCT tool migrated code from CUDA code with manual changes for it to work functionally.
+`sycl_dpct_output`           -> Contains DPCT tool migrated code(with few API's unmigrated) from CUDA code without manual change, hence not functionally working and no build enabled.
 
-| Component 		| Description
-|:---			|:---
-| Common 		| Helper utility headerfiles
-| src 			| DPCT migrated files(.cpp and .h)
-| CMakeLists.txt 	| Build file
+`sycl_dpct_migrated`         -> Contains DPCT tool migrated code from CUDA code with manual changes for it to work functionally.
 
-`sycl_dpct_output`           -> It contains DPCT tool migrated code(with few API's unmigrated) from CUDA code without manual change, hence not functionally working and no 				   build enabled.
-| Component 		| Description
-|:---			|:---
-| Common 		| Helper utility headerfiles
-| src 			| DPCT migrated files(.cpp and .h)
+`sycl_migrated`              -> Contains manually migrated SYCL code from CUDA code.
 
-`sycl_migrated`              -> It contains manually migrated SYCL code from CUDA code.
+`sycl_migrated_optimized`    -> Contains manually migrated SYCL code from CUDA code with optimizations applied.
 
-| Component 		| Description
-|:---			|:---
-| src 			| Manually migrated files(.cpp and .h)
-| CMakeLists.txt 	| Build file
-
-`sycl_migrated_optimized`    -> It contains manually migrated SYCL code from CUDA code with atomic operations optimization.
-
-| Component 		| Description
-|:---			|:---
-| src 			| Manually migrated files(.cpp and .h)
-| CMakeLists.txt 	| Build file
 
 ## Purpose
 
@@ -127,85 +108,6 @@ Perform the following steps:
 	```
 
 If an error occurs, you can get more details by running make with the VERBOSE=1 argument: make VERBOSE=1 For more comprehensive troubleshooting, use the Diagnostics Utility for Intel&reg; oneAPI Toolkits, which provides system checks to find missing dependencies and permissions errors. [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
-
-## Example of Output for NROWS = 1024
-
-sycl_dpct_migrated for CPU
-
-	CPU iterations : 6263
-	CPU error : 4.987e-03
-	CPU Processing time: 1598.485962 (ms)
-	GPU iterations : 6263
-	GPU error : 4.987e-03
-	GPU Processing time: 9653.565430 (ms)
-	jacobiSYCL PASSED
-
-sycl_dpct_migrated for GPU
-
-	CPU iterations : 6263
-	CPU error : 4.987e-03
-	CPU Processing time: 1306.244019 (ms)
-	GPU iterations : 6263
-	GPU error : 4.987e-03
-	GPU Processing time: 4290.418945 (ms)
-	jacobiSYCL PASSED
-
-sycl_migrated for CPU
-
-	Serial Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 1560.310547 (ms)
-
-	Running on Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
-	Parallel Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 8629.206055 (ms)
-	JacobiSYCL PASSED
-
-sycl_migrated for GPU
-
-	Serial Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 1288.634888 (ms)
-
-	Running on Intel(R) UHD Graphics P630 [0x3e96]
-	Parallel Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 4202.227051 (ms)
-	JacobiSYCL PASSED
-
-sycl_migrated_optimized for CPU
-
-	Serial Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 1595.077881 (ms)
-
-	Running on Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
-	Parallel Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 9081.323242 (ms)
-	JacobiSYCL PASSED
-
-sycl_migrated_optimized for GPU
-
-	Serial Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 1315.337280 (ms)
-
-	Running on Intel(R) UHD Graphics P630 [0x3e96]
-	Parallel Implementation :
-	Iterations : 6263
-	Error : 4.987e-03
-	Processing time : 5225.020996 (ms)
-	JacobiSYCL PASSED
-
 
 ### Running Samples In DevCloud
 If running a sample in the Intel DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
