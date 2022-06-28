@@ -53,8 +53,8 @@ event SubmitCalcWeightsKernel(queue& q) {
 
           // calculate Ct * y
 
-          ComplexType ctranspose_times_y (0);
-          
+          ComplexType ctranspose_times_y(0);
+
           [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
           for (short i = 0; i < (short)k_num_elements; i++) {
             ctranspose_times_y += c_vector[i].conj() * y_vector[i];
