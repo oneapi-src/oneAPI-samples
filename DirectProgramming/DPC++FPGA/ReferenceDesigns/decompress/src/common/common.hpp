@@ -4,6 +4,7 @@
 #include <CL/sycl.hpp>
 #include <functional>
 #include <iostream>
+#include <optional>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
@@ -212,7 +213,7 @@ class select_by_string : public sycl::default_selector {
 //
 std::vector<unsigned char> ReadInputFile(const std::string& filename) {
   // open file stream
-  std::ifstream fin(filename);
+  std::ifstream fin(filename, std::ios::binary);
 
   // make sure it opened
   if (!fin.good() || !fin.is_open()) {
