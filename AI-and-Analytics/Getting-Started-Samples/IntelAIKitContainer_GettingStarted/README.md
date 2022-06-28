@@ -168,8 +168,37 @@ To load the tar file on other machines:
 ```bash
 docker load -i oneapi-aikit-v1.tar
 ```
+## Troubleshooting
 
+### Docker Proxy
 
+#### Ubuntu
+For docker proxy related problem, you could follow below instructions to setup proxy for your docker client.
+
+1. Create a new directory for our Docker service configurations
+```bash
+sudo mkdir -p /etc/systemd/system/docker.service.d
+```
+2. Create a file called proxy.conf in our configuration directory.
+```bash
+sudo vi /etc/systemd/system/docker.service.d/proxy.conf
+```
+3. Add the following contents, changing the values to match your environment.
+```bash
+[Service]
+Environment="HTTP_PROXY=http://proxy-hostname:911/"
+Environment="HTTPS_PROXY="http://proxy-hostname:911/
+Environment="NO_PROXY="10.0.0.0/8,192.168.0.0/16,localhost,127.0.0.0/8,134.134.0.0/16"
+```
+4. Save your changes and exit the text editor.
+5. Reload the daemon configuration
+```bash
+sudo systemctl daemon-reload
+```
+6. Restart Docker to apply our changes
+```bash
+sudo systemctl restart docker.service
+```
 ## License
 
 Code samples are licensed under the MIT license. See
