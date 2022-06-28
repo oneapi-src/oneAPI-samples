@@ -208,7 +208,7 @@ struct StreamingQRI {
         if (row == row_limit) {
           row_limit = next_row_limit;
           if constexpr (kThereAreExtraInitIterations) {
-            next_row_limit = diag_iteration + 2 >= rows - 2
+            next_row_limit = (diag_iteration + 2) >= (rows - 2)
                                  ? sycl::max(next_diag_size, raw_latency - 1)
                                  : rows - 1;
           } else {
