@@ -6,7 +6,7 @@
 
 // utility classes
 #include "ParallelCopyArray.hpp"
-#include "unrolled_loop.hpp"
+#include "unrolled_loop.hpp"  // DirectProgramming/DPC++FPGA/include
 
 #include "mvdr_complex.hpp"
 

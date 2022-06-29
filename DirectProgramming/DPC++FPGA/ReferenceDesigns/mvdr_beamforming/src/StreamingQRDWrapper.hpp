@@ -4,15 +4,13 @@
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// utility classes
+// utility classes found in DirectProgramming/DPC++FPGA/include
+#include "mvdr_complex.hpp"
+#include "streaming_qrd.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 
-#include "mvdr_complex.hpp"
-#include "streaming_qrd.hpp"
-
 using namespace sycl;
-
 
 // SubmitStreamingQRDKernel
 // Accept an input matrix one column at a time from an array of pipes.  Perform
@@ -39,7 +37,7 @@ template <typename StreamingQRDKernelName,  // Name to use for the Kernel
                                     // of complex numbers with each write.
                                     // Column 0 is sent first, k_a_num_cols-1
                                     // is sent last
-          typename RMatrixOutPipe  // R output pipe.  Send one complex number
+          typename RMatrixOutPipe   // R output pipe.  Send one complex number
                                     // per write.  Only upper-right elements
                                     // of R are sent.  Sent in row order,
                                     // starting with row 0.
@@ -55,13 +53,12 @@ event SubmitStreamingQRDKernel(queue& q) {
   static_assert(k_a_num_rows % k_pipe_width == 0,
                 "k_a_num_rows must be evenly divisible by k_pipe_width");
 
-
-
-  auto e = q.submit([&](sycl::handler &h) {
-      h.single_task<StreamingQRDKernelName>(
-        fpga_linalg::StreamingQRD<float, true, k_a_num_rows, k_a_num_cols, k_min_inner_loop_iterations, k_pipe_width,
-                      AMatrixInPipe, QMatrixOutPipe, RMatrixOutPipe, false>()
-      );
+  auto e = q.submit([&](sycl::handler& h) {
+    h.single_task<StreamingQRDKernelName>(
+        fpga_linalg::StreamingQRD<float, true, k_a_num_rows, k_a_num_cols,
+                                  k_min_inner_loop_iterations, k_pipe_width,
+                                  AMatrixInPipe, QMatrixOutPipe, RMatrixOutPipe,
+                                  false>());
   });
 
   return e;

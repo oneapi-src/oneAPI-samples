@@ -8,28 +8,31 @@
 
 // SubmitDiagReciprocalKernel
 // Accept an upper-triangular R Matrix from QR Decomposition from StreamingQRD.
-// Compute the reciprocals of the diagonal and write them to an output pipe.
-
+// Compute the reciprocals of the square diagonal and write them to an output
+// pipe. All values on the diagonal must be real-valued (imaginary part equal to
+// 0)
 template <typename DiagReciprocalKernelName,  // name to use for kernel
-          size_t k_r_num_rows,                // Number of rows in R Matrix
-          typename RMatrixInPipe,             // The R Matrix input
-          typename RDiagRecipVectorOutPipe    // 1 / values on diagonal of R
-                                              // Matrix input
+          size_t k_r_num_rows,     // Number of rows (and cols) in R Matrix
+          typename RMatrixInPipe,  // The R Matrix input
+          typename RDiagRecipVectorOutPipe  // 1 / values on diagonal of R
+                                            // Matrix input
           >
 event SubmitDiagReciprocalKernel(queue& q) {
   auto e = q.submit([&](handler& h) {
     h.single_task<DiagReciprocalKernelName>([=] {
       // calculate total number of elements passed in for one processing
       // iteration
-      constexpr int elements = k_r_num_rows * (k_r_num_rows + 1) / 2;
+      constexpr int kElements = k_r_num_rows * (k_r_num_rows + 1) / 2;
 
       while (1) {
         int row = 1;
         int col = 1;
-        for (int i = 0; i < elements; i++) {
+        for (int i = 0; i < kElements; i++) {
           ComplexType in = RMatrixInPipe::read();
 
           if (row == col) {
+            // Reciprocal square root is cheaper to calculate than reciprocal so
+            // we square the values first
             RDiagRecipVectorOutPipe::write(sycl::rsqrt(in.real() * in.real()));
           }
 

@@ -6,8 +6,8 @@
 #include <cmath>
 
 // utility classes
-#include "tuple.hpp"
-#include "unrolled_loop.hpp"
+#include "tuple.hpp"          // DirectProgramming/DPC++FPGA/include
+#include "unrolled_loop.hpp"  // DirectProgramming/DPC++FPGA/include
 
 #include "mvdr_complex.hpp"
 
