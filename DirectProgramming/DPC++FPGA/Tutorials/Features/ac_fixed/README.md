@@ -233,7 +233,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 ### In Third-Party Integrated Development Environments (IDEs)
 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*).
-For instructions, refer to [*Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs*](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+For instructions, refer to [*Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs*](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Examining the Reports
 
@@ -249,14 +249,15 @@ Scroll down on the Summary page of the report and expand the section titled **Co
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./ac_fixed.fpga_emu    # Linux
-   ac_fixed.fpga_emu.exe  # Windows
+   ./ac_fixed.fpga_emu    (Linux)
+   ac_fixed.fpga_emu.exe  (Windows)
    ```
 
 2. Run the sample on the FPGA device
 
    ```bash
-   ./ac_fixed.fpga             # Linux
+   ./ac_fixed.fpga             (Linux)
+   ac_fixed.fpga.exe           (Windows)
    ```
 
 ### Example of Output on Emulator

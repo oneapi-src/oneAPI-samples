@@ -297,7 +297,7 @@ dependencies and permissions errors.
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the
 Visual Studio* IDE (in Windows*). For instructions, refer to the following
 link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party
-IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 
 ## Examining the Reports
@@ -324,6 +324,9 @@ significantly lower than the case where burst-interleaving is enabled.
      ```
      ./mem_channel_interleaving.fpga         (Linux)
      ./mem_channel_no_interleaving.fpga      (Linux)
+     mem_channel_interleaving.fpga.exe       (Windows)
+     mem_channel_no_interleaving.fpga.exe    (Windows)
+
      ```
 
 ### Example of Output

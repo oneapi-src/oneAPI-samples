@@ -159,7 +159,7 @@ dependencies and permissions errors.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel&reg; oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide).
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel&reg; oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
 ## Examining the Reports
 Locate `report.html` in the `zero_copy_data_transfer_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
@@ -174,6 +174,7 @@ Locate `report.html` in the `zero_copy_data_transfer_report.prj/reports/` direct
 2. Run the sample on the FPGA device:
      ```
      ./zero_copy_data_transfer.fpga         (Linux)
+     zero_copy_data_transfer.fpga.exe       (Windows)
      ```
 
 ### Example of Output

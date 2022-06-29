@@ -1,32 +1,27 @@
 ﻿# `Unrolling Loops` Sample
-The Loop Unroll demonstrates a simple example of unrolling loops to improve the throughput of a DPC++ program for GPU offload.
+This sample demonstrates a simple example of unrolling loops to improve throughput of a program using SYCL*-compliant code for GPU offload. The concepts demonstrated by the sample are:
 
-For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+- Understanding basics of loop unrolling.
+- Unrolling loops in your program.
+- Determining optimal unroll factor for your program.
 
-| Optimized for                     | Description
+For comprehensive instructions, see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+
+| Property                     | Description
 |:---                               |:---
-| OS	                | Linux* Ubuntu* 18.04,
-| Hardware	            | Skylake with GEN9 or newer,
-| Software	            | Intel® oneAPI DPC++ Compiler
-| What you will learn   | how to perform reduction with oneAPI on cpu and gpu
-| Time to complete      | 30 min
-
+| What you will learn   | How to perform loop unrolling using SYCL*
+| Time to complete      | 30 minutes
 
 ## Purpose
 
-The loop unrolling mechanism is used to increase program parallelism by duplicating the compute logic within a loop. The number of times the loop logic is duplicated is called the *unroll factor*. Depending on whether the *unroll factor* is equal to the number of loop iterations or not, loop unroll methods can be categorized as *full-loop unrolling* and *partial-loop unrolling*. A full unroll is a special case where the unroll factor is equal to the number of loop iterations.
+The loop unrolling mechanism is used to increase program parallelism by duplicating the compute logic within a loop. The *unroll factor* refers to the number of times the loop logic is duplicated. Depending on whether the *unroll factor* is equal to the number of loop iterations or not, loop unroll methods can be categorized as *full-loop unrolling* and *partial-loop unrolling*. A full unroll is a special case where the *unroll factor* is equal to the number of loop iterations.
 
-
-## Key Concepts
-* Basics of loop unrolling.
-* How to unroll loops in your program.
-* Determining the optimal unroll factor for your program.
-
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+## Prerequisites
+| Optimized for                     | Description
+|:---                               |:---
+| OS	                | Linux* Ubuntu* 18.04
+| Hardware	            | Skylake with GEN9 or newer
+| Software	            | Intel&reg; oneAPI DPC++/C++ Compiler
 
 ## Building the `loop_unroll` Tutorial
 
@@ -34,19 +29,20 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+> Windows:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (fpga_compile or fpga_runtime) and whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+### Running Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
 
 ### Using Visual Studio Code*  (Optional)
@@ -55,59 +51,50 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
  - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
 
 To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+[Using Visual Studio Code with Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ## Building the `loop-unroll` Program for CPU and GPU
 
-### Running Samples In DevCloud
-
-If running a sample in the Intel DevCloud, remember that you must
-specify the compute node (CPU, GPU, FPGA) and whether to run in
-batch or interactive mode. For more information, see the Intel® oneAPI
-Base Toolkit Get Started Guide
-(https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+### Running Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
 ### On a Linux* System
-  1. Build the program using the following `cmake` commands.
-
-  ```
-  $ cd loop-unroll
-  $ mkdir build
-  $ cd build
-  $ cmake ..
-  $ make
-  ```
-
-  2. Run the program
-
-  ```
-  $ make run
-  ```
-
-  3. Clean the program
-
-  ```
-  $ make clean
-  ```
-
+1. Build the program using the following `cmake` commands.
+   ```
+   $ cd loop-unroll
+   $ mkdir build
+   $ cd build
+   $ cmake ..
+   $ make
+   ```
+2. Run the program.
+   ```
+   $ make run
+   ```
+3. Clean the program.
+   ```
+   $ make clean
+   ```
 If an error occurs, you can get more details by running `make` with
 the `VERBOSE=1` argument:
-``make VERBOSE=1``
-For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel® oneAPI Toolkits, which provides system checks to find missing
-dependencies and permissions errors.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+```
+make VERBOSE=1
+```
+### Troubleshooting
 
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
-- Build the program using VS2017 or VS2019
+If you receive an error message, troubleshoot the problem using the Diagnostics Utility for Intel&reg; oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors. See [Diagnostics Utility for Intel&reg; oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+### On Windows* Using Visual Studio* Version 2017 or Newer
+- Build the program using VS2017 or VS2019.
     - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
     - Right-click on the project in Solution Explorer and select Rebuild.
     - From the top menu, select Debug -> Start without Debugging.
@@ -133,3 +120,9 @@ Unroll factor: 16 Kernel time: 2421.305 ms
 Throughput for kernel with unroll factor 16: 0.028 GFlops
 PASSED: The results are correct.
 ```
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

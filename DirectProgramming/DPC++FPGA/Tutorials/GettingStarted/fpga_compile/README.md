@@ -255,7 +255,7 @@ dependencies and permissions errors.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 
 ## Examining the Reports
@@ -273,6 +273,7 @@ Browse the reports that were generated for the `VectorAdd` kernel's FPGA early i
 2. Run the sample on the FPGA device:
      ```
      ./fpga_compile.fpga         (Linux)
+     fpga_compile.fpga.exe       (Windows)
      ```
 
 ### Example of Output

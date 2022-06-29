@@ -11,6 +11,8 @@
 #include "../db_utils/Unroller.hpp"
 #include "../db_utils/fifo_sort.hpp"
 
+#include "onchip_memory_with_cache.hpp" // DirectProgramming/DPC++FPGA/include
+
 using namespace std::chrono;
 
 // kernel class names
@@ -160,17 +162,15 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   //// Compute Kernel
   auto compute_event = q.single_task<Compute>([=] {
     constexpr int kAccumCacheSize = 15;
-    CachedMemory<DBDecimal,
-                  kPartTableSize,
-                  kAccumCacheSize,
-                  DBIdentifier> partkey_values;
+    fpga_tools::OnchipMemoryWithCache<DBDecimal, kPartTableSize, 
+                                      kAccumCacheSize> partkey_values;
 
     // initialize accumulator
-    partkey_values.Init();
+    partkey_values.init(0);
 
     bool done = false;
 
-    [[intel::initiation_interval(1), intel::ivdep(kAccumCacheSize)]]
+    [[intel::initiation_interval(1)]]
     while (!done) {
       bool valid_pipe_read;
       SupplierPartSupplierJoinedPipeData pipe_data = 
@@ -186,8 +186,8 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
             // partkeys start at 1
             DBIdentifier index = data.partkey - 1;
             DBDecimal val = data.supplycost * (DBDecimal)(data.availqty);
-            auto curr_val = partkey_values.Get(index);
-            partkey_values.Set(index, curr_val + val);
+            auto curr_val = partkey_values.read(index);
+            partkey_values.write(index, curr_val + val);
           }
         });
       }
@@ -199,7 +199,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
     [[intel::initiation_interval(1)]]
     for (size_t i = 0; i < kSortSize; i++) {
       size_t key = (i < kPartTableSize) ? (i + 1) : 0;
-      auto val = (i < kPartTableSize) ? partkey_values.Get(i)
+      auto val = (i < kPartTableSize) ? partkey_values.read(i)
                                       : std::numeric_limits<DBDecimal>::min();
       SortInPipe::write(OutputData(key, val));
     }

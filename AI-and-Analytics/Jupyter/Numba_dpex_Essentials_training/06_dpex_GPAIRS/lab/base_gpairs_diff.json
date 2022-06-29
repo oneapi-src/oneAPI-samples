@@ -1,0 +1,13 @@
+{
+  "metrics": [
+    [
+      1048576,
+      213.9092398884742,
+      4901.966836714
+    ]
+  ],
+  "name": "Gpairs Dppy kernel",
+  "repeat": 1,
+  "sizes": 1,
+  "step": 2
+}

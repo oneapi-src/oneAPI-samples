@@ -246,7 +246,7 @@ dependencies and permissions errors.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide).
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
 ## Examining the Reports
 This section will walk through how the HTML reports show the result of the optimizations we made in each version of the kernel, the definition of which can be found in `src/IntersectionKernel.hpp`. Start by locating `report.html` in the `shannonization_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*. The f<sub>MAX</sub> numbers mentioned in these sections assume that the Arria® 10 GX FPGA is the target. However, the discussion is similar for the Stratix® 10 SX FPGA.
@@ -337,6 +337,7 @@ As a consequence of the fabric architecture of the Intel Stratix® 10 SX FPGA, t
 2. Run the sample on the FPGA device:
      ```
      ./shannonization.fpga              (Linux)
+     shannonization.fpga.exe            (Windows)
      ```
 
 ### Application Parameters

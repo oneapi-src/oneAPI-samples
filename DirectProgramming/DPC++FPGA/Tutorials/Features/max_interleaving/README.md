@@ -175,7 +175,7 @@ dependencies and permissions errors.
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-idee
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.htmle
 )
 
 ## Examining the Reports
@@ -203,6 +203,7 @@ The area usage information can also be accessed on the main report page in the S
 2. Run the sample on the FPGA device:
      ```
      ./max_interleaving.fpga         (Linux)
+     max_interleaving.fpga.exe       (Windows)
      ```
 
 

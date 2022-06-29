@@ -261,7 +261,7 @@ dependencies and permissions errors.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Examining the Reports
 
@@ -285,15 +285,19 @@ Compare the results to the report for the version of the design using the `intel
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./loop_ii.fpga_emu    # Linux
-   loop_ii.fpga_emu.exe  # Windows
+   ./loop_ii.fpga_emu    (Linux)
+   loop_ii.fpga_emu.exe  (Windows)
    ```
 
-2. Run the sample on the FPGA device (Linux only)
+2. Run the sample on the FPGA device
 
    ```bash
-   ./loop_ii.fpga            # Sample without intel::initiation_interval attribute
-   ./loop_ii_enable_ii.fpga  # Sample with intel::initiation_interval attribute
+   # Sample without intel::initiation_interval attribute
+   ./loop_ii.fpga               (Linux)
+   loop_ii.fpga.exe             (Windows)
+   # Sample with intel::initiation_interval attribute
+   ./loop_ii_enable_ii.fpga     (Linux)
+   loop_ii_enable_ii.fpga.exe   (Windows)
    ```
 
 ### Example of Output

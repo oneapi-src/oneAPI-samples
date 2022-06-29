@@ -3,8 +3,7 @@
 These examples demonstrate some of the new OpenMP Offload features supported
 by the Intel&reg; oneAPI DPC++/C++ Compiler.
 
-For more information on the compiler see the
-[Intel&reg oneAPI DPC++/C++ Compiler Landing Page](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/dpc-compiler.html).
+For more information, see [Intel&reg; oneAPI DPC++/C++ Compiler](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/dpc-compiler.html).
 
 | Optimized for        | Description
 |:---                  |:---
@@ -18,7 +17,7 @@ For more information on the compiler see the
 ## Purpose
 
 For developers to understand some of the new OpenMP Offload features supported
-by the Intel oneAPI DPC++/C++ Compiler.
+by the Intel&reg; oneAPI DPC++/C++ Compiler.
 
 
 ## Key Implementation Details
@@ -30,7 +29,7 @@ The table below shows the designs and the demonstrated feature(s).
 | class_member_functor             | Usage of functor in an OpenMP offload region
 | function_pointer                 | Function called through a function pointer in an offload region (currently only for CPU target)
 | user_defined_mapper              | Usage of the user defined mapper feature in target region map clauses
-| usm_and_composabilty_with_dpcpp  | Unified shared memory and composability with DPC++
+| usm_and_composabilty_with_dpcpp  | Unified shared memory and composability with SYCL*
 
 
 ## License
@@ -39,15 +38,14 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
 for details.
 
-Third party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program licenses are at 
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
 
 
 
 ### Using Visual Studio Code*  (Optional)
 
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
  - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
@@ -67,21 +65,21 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+> Windows:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 
 ### Running Samples In DevCloud
 
-If running a sample in the Intel DevCloud, remember that you must specify the
+If running a sample in the Intel DevCloud, you must specify the
 compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
-(https://devcloud.intel.com/oneapi/get_started/baseToolkitSamples/)
+For more information, see [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get_started/).
 
 
 ### On a Linux* System

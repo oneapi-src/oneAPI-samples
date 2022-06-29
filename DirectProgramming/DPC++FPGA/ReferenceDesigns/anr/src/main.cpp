@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 
   // make sure the device supports USM device allocations
   auto d = q.get_device();
-  if (!d.get_info<info::device::usm_device_allocations>()) {
+  if (!d.has(aspect::usm_device_allocations)) {
     std::cerr << "ERROR: The selected device does not support USM device"
               << " allocations\n";
     std::terminate();

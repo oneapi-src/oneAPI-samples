@@ -151,7 +151,7 @@ dependencies and permissions errors.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Running the Reference Design
 
@@ -164,6 +164,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 2. Run the sample on the FPGA device.
      ```
      ./merge_sort.fpga        (Linux)
+     merge_sort.fpga.exe      (Windows)
      ```
 
 ### Example of Output

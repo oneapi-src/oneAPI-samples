@@ -236,7 +236,7 @@ dependencies and permissions errors.
 ### In Third-Party Integrated Development Environments (IDEs)
 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*).
-For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Examining the Reports
 
@@ -254,15 +254,17 @@ Open the reports in Chrome*, Firefox*, Edge*, or Internet Explorer*. Observe the
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./fpga_reg.fpga_emu    # Linux
-   fpga_reg.fpga_emu.exe  # Windows
+   ./fpga_reg.fpga_emu    (Linux)
+   fpga_reg.fpga_emu.exe  (Windows)
    ```
 
 2. Run the sample on the FPGA device
 
    ```bash
-   ./fpga_reg.fpga             # Linux
-   ./fpga_reg_registered.fpga  # Linux
+   ./fpga_reg.fpga                (Linux)
+   ./fpga_reg_registered.fpga     (Linux)
+   fpga_reg.fpga.exe              (Windows)
+   fpga_reg_registered.fpga.exe   (Windows)
    ```
 
 ### Example of Output
