@@ -1,5 +1,5 @@
 # Latency Control
-This FPGA tutorial demonstrates how to set latency constraints to pipes and LSUs accesses.
+This FPGA tutorial demonstrates how to set latency constraints to pipes and load-store units (LSUs) accesses.
 
 ***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
 The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
