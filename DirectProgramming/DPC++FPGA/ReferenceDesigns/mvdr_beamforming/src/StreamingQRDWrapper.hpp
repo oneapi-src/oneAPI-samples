@@ -4,8 +4,9 @@
 #include <CL/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// utility classes found in DirectProgramming/DPC++FPGA/include
 #include "mvdr_complex.hpp"
+
+// utility classes found in DirectProgramming/DPC++FPGA/include
 #include "streaming_qrd.hpp"
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"

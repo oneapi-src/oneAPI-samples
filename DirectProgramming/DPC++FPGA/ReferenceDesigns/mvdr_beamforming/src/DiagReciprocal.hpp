@@ -7,10 +7,10 @@
 #include "mvdr_complex.hpp"
 
 // SubmitDiagReciprocalKernel
-// Accept an upper-triangular R Matrix from QR Decomposition from StreamingQRD.
-// Compute the reciprocals of the square diagonal and write them to an output
-// pipe. All values on the diagonal must be real-valued (imaginary part equal to
-// 0)
+// Accept an upper-triangular square R Matrix from QR Decomposition from
+// StreamingQRD. Compute the reciprocals of the square diagonal and write them
+// to an output pipe. All values on the diagonal must be real-valued (imaginary
+// part equal to 0)
 template <typename DiagReciprocalKernelName,  // name to use for kernel
           size_t k_r_num_rows,     // Number of rows (and cols) in R Matrix
           typename RMatrixInPipe,  // The R Matrix input
