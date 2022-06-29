@@ -1,0 +1,3 @@
+add_subdirectory(jacobi_gpu)
+add_subdirectory(jacobi_cpu)
+add_subdirectory(jacobi_multi_gpu)

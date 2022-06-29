@@ -1,0 +1,26 @@
+{
+  "guid": "",
+  "name": "Jacobi Iterative Solver",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Jacobi_Iterative_Solver"],
+  "description": "Jacobi Iterative Solver fir CPU, GPU and multiple GPU",
+  "toolchain": ["dpcpp"],
+  "os": ["linux"],
+  "targetDevice": ["CPU, GPU, "],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run_cpu",
+	  "make run_gpu",
+	  "make run_multi_gpu"
+        ]
+      }
+    ]
+  }
+}
