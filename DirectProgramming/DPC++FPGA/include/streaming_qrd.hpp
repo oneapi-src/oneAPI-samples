@@ -385,7 +385,6 @@ struct StreamingQRD {
           i = i + 1;
         } else {
           j = j + 1;
-          i = i;
         }
 
       }  // end of s

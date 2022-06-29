@@ -108,30 +108,28 @@ void QRDecompositionImpl(
 
     // Repeat matrix_count complete R matrix pipe reads
     // for as many repetitions as needed
+    [[intel::loop_coalesce(2)]] // NO-FORMAT: Attribute
     for(int repetition_index = 0; repetition_index < repetitions;
                                                             repetition_index++){
       for(int matrix_index = 0; matrix_index < matrix_count; matrix_index++){
 
-        [[intel::private_copies(4)]]            // NO-FORMAT: Attribute
-        [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-        TT r_result[kRMatrixSize/kNumElementsPerDDRBurst + kExtraIteration]
-                                                      [kNumElementsPerDDRBurst];
-        // Read a full R matrix
-        for(int vector_elem = 0; vector_elem < kRMatrixSize; vector_elem++){
-          r_result[vector_elem/kNumElementsPerDDRBurst]
-                  [vector_elem%kNumElementsPerDDRBurst] = RMatrixPipe::read();
-
-        } // end of vector_elem
-
-        // Copy the R matrix result to DDR
         for (int li = 0; li < kLoopIter; li++) {
+          TT bank[kNumElementsPerDDRBurst];
+
+          for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
+            if(li * kNumElementsPerDDRBurst + k < kRMatrixSize){
+              bank[k] = RMatrixPipe::read();
+            }
+          }
+
+          // Copy the R matrix result to DDR
           if constexpr (kIncompleteBurst){
             // Write a burst of kNumElementsPerDDRBurst elements to DDR
             #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
               if(li * kNumElementsPerDDRBurst + k < kRMatrixSize){
                 vector_ptr_device[matrix_index * kRMatrixSize
-                          + li * kNumElementsPerDDRBurst + k] = r_result[li][k];
+                          + li * kNumElementsPerDDRBurst + k] = bank[k];
               }
             }
           }
@@ -140,7 +138,7 @@ void QRDecompositionImpl(
             #pragma unroll
             for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
               vector_ptr_device[matrix_index * kRMatrixSize
-                          + li * kNumElementsPerDDRBurst + k] = r_result[li][k];
+                          + li * kNumElementsPerDDRBurst + k] = bank[k];
             }
           }
         } // end of matrix_index
