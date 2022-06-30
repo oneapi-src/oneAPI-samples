@@ -55,8 +55,8 @@ struct Speed WriteSpeed(sycl::queue &q, sycl::buffer<char, 1> &device_buffer,
       // block_bytes)
       auto buf_offset = (i * block_bytes) / sizeof(char);
       // Accessor to access range of device buffer at buf_offset
-      sycl::accessor<char, 1, sycl::access::mode::write> mem(device_buffer, h, buf_range,
-                                                 buf_offset);
+      sycl::accessor<char, 1, sycl::access::mode::write> mem(
+          device_buffer, h, buf_range, buf_offset);
       h.copy(&hostbuf_wr[buf_offset], mem);
     });
   }
@@ -133,8 +133,8 @@ struct Speed ReadSpeed(sycl::queue &q, sycl::buffer<char, 1> &device_buffer,
       // block_bytes)
       auto buf_offset = (i * block_bytes) / sizeof(char);
       // Accessor to access range of device buffer at buf_offset
-      sycl::accessor<char, 1, sycl::access::mode::read> mem(device_buffer, h, buf_range,
-                                                buf_offset);
+      sycl::accessor<char, 1, sycl::access::mode::read> mem(
+          device_buffer, h, buf_range, buf_offset);
       h.copy(mem, &hostbuf_rd[buf_offset]);
     });
   }
