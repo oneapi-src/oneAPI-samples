@@ -408,7 +408,7 @@ Tests document performance of components on a particular test, in specific syste
 
 Performance results are based on testing as of Jan 31, 2022 and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
 
-Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](www.intel.com).
+Intel technologies’ features and benefits depend on system configuration and may require enabled hardware, software or service activation. Performance varies depending on system configuration. Check with your system manufacturer or retailer or learn more at [intel.com](https://www.intel.com).
 
 The performance was measured by Intel on Jan 31, 2022.
 
