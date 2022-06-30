@@ -6,20 +6,20 @@ This reference design contains tests to check FPGA board interfaces and reports 
 * Kernel launch latency
 * Kernel to device global memory bandwidth
 
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you navigate the samples and build your knowledge on SYCL* for FPGA. <br>
-The [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through SYCL*. <br>
+***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
+The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
 The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
 
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15, Windows 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA third-party or custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is compatible only with Ubuntu 18.04*
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to test board interfaces to ensure the designed platform provides expected performance
 | Time to complete                  | 30 minutes (not including compile time)
 
 ## Purpose
-You can use this test to check FPGA board interfaces and measure host to device and kernel to global memory interface metrics. Custom platform developers can use this test as a starting point to validate custom platform interfaces.
+This reference design implements tests to check FPGA board interfaces and measure host to device and kernel to global memory interface metrics. Custom platform developers can use this test as a starting point to validate custom platform interfaces.
 
 ### Introduction to oneAPI FPGA Board Support Package(BSP)
 
@@ -48,7 +48,7 @@ The complete test exercises following interfaces in a platform:
 * **Host to device global memory interface:** This interface is checked by performing explicit data movement between the host and device global memory. Host to device global memory bandwidth is measured and reported. As a part of this interface check, unaligned data transfers are also performed to verify that non-DMA transfers complete successfully.
 
 * **Kernel to device global memory interface:** This interface is checked by performing kernel to memory data transfers using simple read and write kernels. Kernel to memory bandwidth is measured and reported.<br> 
-  ***Note:*** This test currently does not support SYCL Unified Shared Memory (USM). For testing the USM interface, use the [Simple host streaming sample](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials/DesignPatterns/simple_host_streaming) application.
+  ***Note:*** This test currently does not support SYCL Unified Shared Memory (USM). For testing the USM interface, use the [Simple host streaming sample](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/Tutorials/DesignPatterns/simple_host_streaming) code sample.
 
 * **Host to kernel interface:** The test ensures the host to kernel communication is correct and that the host can launch a kernel successfully. It also measures the roundtrip kernel launch latency and throughput (number of kernels/ms) of single task no-operation kernels.
 
@@ -69,7 +69,7 @@ The complete board test is divided into six subtests. By default, all tests run.
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-You can find third-party program licenses here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `board_test` code sample
 
@@ -88,11 +88,9 @@ You can find third-party program licenses here: [third-party-programs.txt](https
 The included header `dpc_common.hpp` is located at `$ONEAPI_ROOT/dev-utilities/latest/include` on your development system.
 
 ### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, specify the compute node type and whether to run in batch or interactive mode. 
+If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
-***Note:*** Compiles to FPGA are supported only on `fpga_compile` nodes. Executing programs on FPGA hardware is supported only on `fpga_runtime` nodes of the appropriate type, such as `fpga_runtime:arria10` or `fpga_runtime:stratix10`.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, refer to the [Base Toolkit Getting Started Guide for Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/documentation/base-toolkit/).
-
-When compiling for FPGA hardware, Intel recommends increasing the job timeout to 12h.
+When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
 
 ### On a Linux* System
 
@@ -109,7 +107,7 @@ When compiling for FPGA hardware, Intel recommends increasing the job timeout to
    ```
    cmake -DFPGA_BOARD=intel_a10gx_pac:pac_a10 ..
    ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then, run `cmake` using the command:
+   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
    cmake -DFPGA_BOARD=<board-support-package>:<board-variant> ..
    ```
@@ -128,7 +126,7 @@ When compiling for FPGA hardware, Intel recommends increasing the job timeout to
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, you can download FPGA pre-compiled binaries (compatible with Linux* Ubuntu* 18.04) <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/board_test.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA pre-compiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/board_test.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
@@ -145,7 +143,7 @@ When compiling for FPGA hardware, Intel recommends increasing the job timeout to
    ```
    cmake -G "NMake Makefiles" -DFPGA_BOARD=intel_a10gx_pac:pac_a10 ..
    ```
-   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then, run `cmake` using the command:
+   You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" -DFPGA_BOARD=<board-support-package>:<board-variant> ..
    ```
@@ -169,7 +167,7 @@ If an error occurs, you can get more details by running make with the VERBOSE=1 
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*). For instructions, refer to the following link:<br> [FPGA Workflows on Third-Party IDEs for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
+You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Examining the Reports
 Locate `report.html` in the `board_test.prj/reports/` directory and open the report in one of the following browsers: Chrome*, Firefox*, Edge*, or Internet Explorer*
@@ -187,7 +185,7 @@ You can also examine the reports generated by the full FPGA hardware compile and
      ```
      ./board_test.fpga         (Linux)
      ```
- The above commands run all tests described in [Test Details](#test-details). To run a specific test, pass the test number as an argument to the `-test=<test number>` option with:
+ The above commands run all tests described in [Test Details](#test-details). To run a specific test, pass the test number as an argument to the `-test=<test number>` option with the executable:
  ```
  ./board_test.fpga -test=<test_number>     (Linux)
  board_test.exe -test=<test_number>        (Windows)
@@ -209,7 +207,7 @@ To view test details and usage information using the binary, use the `-help` opt
 board_test.exe -help         (Windows)
 ```
 
-### Output Example
+### Example of Output
 Running on FPGA device (Intel Stratix 10 SX platform):
 ```
 *** Board_test usage information ***
