@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 
     // Print out the device information.
     std::cout << "Running on device: "
-              << q.get_device().get_info<info::device::name>() << "\n";
+              << q.get_device().get_info<sycl::info::device::name>() << "\n";
 
     // Create a oneAPI Shim object
     ShimMetrics hldshim(q);
