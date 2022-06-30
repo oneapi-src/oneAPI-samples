@@ -24,8 +24,9 @@ int main(int argc, char* argv[]) {
     if ((tmp_test.compare(0, 6, "-test=")) == 0) {
       test_to_run = std::stoi(tmp_test.substr(6));
       if (test_to_run < 0 || test_to_run > 7) {
-        std::cerr << "Not a valid test number, please select the correct test from "
-                  << "list above and re-run binary with updated value.\n\n";
+        std::cerr
+            << "Not a valid test number, please select the correct test from "
+            << "list above and re-run binary with updated value.\n\n";
         return 1;
       }
     } else if ((tmp_test.compare(0, 5, "-help")) == 0) {
@@ -118,7 +119,8 @@ int main(int argc, char* argv[]) {
       ret |= ret_hostrw;
     }
 
-    // Test 2 - Kernel clock frequency (this is measured before all tests except 1)
+    // Test 2 - Kernel clock frequency (this is measured before all tests except
+    // 1)
     if (test_to_run == 0 || test_to_run == 5 || test_to_run == 2 ||
         test_to_run == 3 || test_to_run == 4 || test_to_run == 6 ||
         test_to_run == 7) {

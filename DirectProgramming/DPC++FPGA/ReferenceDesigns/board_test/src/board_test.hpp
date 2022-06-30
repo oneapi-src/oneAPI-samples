@@ -1,4 +1,3 @@
-//#include <limits.h>
 #include <CL/sycl.hpp>
 #include <vector>
 
@@ -18,10 +17,11 @@ class MemReadStream;
 
 // Pipe used between KernelSender and KernelReceiver -
 // ShimMetrics::KernelLaunchTest(queue &q) function
-using SendertoReceiverPipe = sycl::ext::intel::pipe<  // Defined in the SYCL headers
-    class SenderReceiverPipe,                   // An identifier for the pipe
-    unsigned int,                               // The type of data in the pipe
-    1>;                                         // The capacity of the pipe
+using SendertoReceiverPipe =
+    sycl::ext::intel::pipe<        // Defined in the SYCL headers
+        class SenderReceiverPipe,  // An identifier for the pipe
+        unsigned int,              // The type of data in the pipe
+        1>;                        // The capacity of the pipe
 
 /////////////////////////////////
 // **** class ShimMetrics **** //
@@ -51,7 +51,8 @@ class ShimMetrics {
         kernel_thruput_{0},
         kernel_mem_bw_{0},
         kernel_mem_rw_test_{false} {
-    max_buffer_size_ = q.get_device().get_info<sycl::info::device::global_mem_size>();
+    max_buffer_size_ =
+        q.get_device().get_info<sycl::info::device::global_mem_size>();
 #if defined(FPGA_EMULATOR)
     max_alloc_size_ =
         512 * kMB;  // Limiting size of all buffers used in test for emulation
@@ -314,10 +315,11 @@ size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
   } else {
     std::cout << "Wrote and readback " << (max_alloc_size_ / kMB)
               << " MB buffer\n";
-    std::cerr << "Failed write/readback test with " << errors << " errors out of "
-              << compare_count << " \\ 0x" << std::hex << compare_count
-              << std::dec  // Restoring manipulator to decimal at the end of cout
-              << " comparisons\n\n";
+    std::cerr
+        << "Failed write/readback test with " << errors << " errors out of "
+        << compare_count << " \\ 0x" << std::hex << compare_count
+        << std::dec  // Restoring manipulator to decimal at the end of cout
+        << " comparisons\n\n";
   }
 
   // Free allocated host memory
@@ -697,11 +699,11 @@ int ShimMetrics::HostRWTest(sycl::queue &q, size_t dev_offset) {
 // 3. Obtain kernel clock frequency based on time take for 128 Mglobal
 // operations (NDRange)
 // 4. If the <report_chk> is true, compare the above hardware frequency with
-// Quartus compiled frequency 
+// Quartus compiled frequency
 // 5. Return 0 (test pass) if measured frequency is within 2 of Quartus compiled
-// frequency, else report error and terminate test 
-// NOTE: If <report_chk> is set to false, comparison with Quartus compiled 
-// frequency is not done and remaining tests in board_test continue without 
+// frequency, else report error and terminate test
+// NOTE: If <report_chk> is set to false, comparison with Quartus compiled
+// frequency is not done and remaining tests in board_test continue without
 // this frequency check of 2% error tolerance
 
 int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
@@ -745,15 +747,16 @@ int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
           << "hardware generation completed successfully.\n"
           << "Reporting measured frequency and terminating test, "
           << "none of the other tests will run as hardware frequency "
-          << "may not be the expected value and may lead to functional errors.\n\n"
+          << "may not be the expected value and may lead to functional "
+          << "errors.\n\n"
           << "Measured Frequency = " << kernel_freq_ << "\n\n"
           << "If you wish to override this failure, please set "
           << "\"report_chk\" variable to \"false\" in <board_test.cpp> and "
           << "recompile host code using \"-reuse-exe=board_test.fpga\" "
           << "option in compile command.\n"
-          << " *** NOTE ***: Please run complete board_test at least once and ensure "
-          << "the hardware frequency matches expected frequency, mismatch "
-          << "may lead to functional errors.\n\n";
+          << " *** NOTE ***: Please run complete board_test at least once and "
+          << "ensure the hardware frequency matches expected frequency, "
+		  << "mismatch may lead to functional errors.\n\n";
       return 1;
     } else {
       // Quartus compiled frequency found, report it
@@ -763,7 +766,8 @@ int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
       // Check that hardware frequency is within 2% of Quartus compiled
       // frequency, terminate test if its not
       float PercentError = (fabs(board_info_.quartus_fmax_ - kernel_freq_) /
-                            (board_info_.quartus_fmax_)) * 100;
+                            (board_info_.quartus_fmax_)) *
+                           100;
       if (PercentError < 2)
         std::cout << "Measured Clock frequency is within 2 percent of "
                   << "Quartus compiled frequency. \n";
@@ -776,9 +780,9 @@ int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
             << "\"report_chk\" variable to \"false\" in <board_test.cpp> and "
             << "recompile host code using \"-reuse-exe=board_test.fpga\" "
             << "option in compile command.\n"
-            << " *** NOTE ***: Please run complete board_test at least once and ensure "
-            << "the hardware frequency matches expected frequency, mismatch "
-            << "may lead to functional errors.\n\n";
+            << " *** NOTE ***: Please run complete board_test at least once "
+            << "and ensure the hardware frequency matches expected frequency, "
+			<< "mismatch may lead to functional errors.\n\n";
         return 1;
       }
     }
@@ -791,9 +795,9 @@ int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
         << "\"report_chk\" variable to \"false\" in <board_test.cpp>\n"
         << "The Quartus compiled frequency will not be reported and the "
         << "remaining tests will run without this check\n\n"
-        << " *** NOTE ***: Please run complete board_test at least once and ensure "
-        << "the hardware frequency matches expected frequency, mismatch "
-        << "may lead to functional errors.\n\n"
+        << " *** NOTE ***: Please run complete board_test at least once and "
+        << "ensure the hardware frequency matches expected frequency, "
+		<< "mismatch may lead to functional errors.\n\n"
         << "Reporting measured frequency and continuing remaining tests.\n"
         << "Measured Frequency = " << kernel_freq_ << "\n";
   }  // End of if - else to check for reports
@@ -835,7 +839,8 @@ int ShimMetrics::KernelLaunchTest(sycl::queue &q) {
     // Work group size (1 dimension)
     constexpr size_t kReqdWgSize = 1;
     h.parallel_for<KernelSender>(
-        sycl::nd_range<1>(sycl::range<1>(kN), sycl::range<1>(kReqdWgSize)), [=](auto id) {
+        sycl::nd_range<1>(sycl::range<1>(kN), sycl::range<1>(kReqdWgSize)),
+        [=](auto id) {
           SendertoReceiverPipe::write(kTestValue);  // Blocking write
         });
   });
@@ -850,7 +855,8 @@ int ShimMetrics::KernelLaunchTest(sycl::queue &q) {
     constexpr size_t kReqdWgSize = 1;
     sycl::accessor mem(dev_buf, h);
     h.parallel_for<KernelReceiver>(
-        sycl::nd_range<1>(sycl::range<1>(kN), sycl::range<1>(kReqdWgSize)), [=](sycl::nd_item<1> it) {
+        sycl::nd_range<1>(sycl::range<1>(kN), sycl::range<1>(kReqdWgSize)),
+        [=](sycl::nd_item<1> it) {
           // Initialize to 0
           unsigned int pipe_value = 0;
           // Blocking read from pipe
@@ -1104,12 +1110,15 @@ int ShimMetrics::KernelMemRW(sycl::queue &q) {
       // Global range (1 dimension)
       size_t N = current_write_size;
       sycl::accessor mem(dev_buf, h, N, global_offset);
-      h.parallel_for<MemReadWriteStream>(sycl::range<1>{N}, [=](sycl::item<1> it) {
-        // Add 2 to all data read from global memory (meaning adding 2 to all
-        // the offsets calculated in write loops above)
-        auto gid = it.get_id(0);
-        mem[gid] = mem[gid] + 2;
-      });
+      h.parallel_for<MemReadWriteStream>(sycl::range<1>{N},
+                                         [=](sycl::item<1> it) {
+                                           // Add 2 to all data read from global
+                                           // memory (meaning adding 2 to all
+                                           // the offsets calculated in write
+                                           // loops above)
+                                           auto gid = it.get_id(0);
+                                           mem[gid] = mem[gid] + 2;
+                                         });
     });
   }  // End of kernel launch for loop
 
@@ -1336,7 +1345,8 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
 
       // Create kernel input buffer on device (memory bank selected by
       // mem_channel property)
-      sycl::buffer<unsigned, 1> dev_buf(sycl::range<1>{vector_size}, buf_prop_list);
+      sycl::buffer<unsigned, 1> dev_buf(sycl::range<1>{vector_size},
+                                        buf_prop_list);
 
       // **** Write random values to device global memory **** ///
 
@@ -1367,7 +1377,8 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
           case 0:  // kernel MemWriteStream
             h.parallel_for<MemWriteStream>(
                 sycl::nd_range<1>(sycl::range<1>(N), sycl::range<1>(kWGSize)),
-                [=](sycl::nd_item<1> it)[[intel::num_simd_work_items(kSimdItems),
+                [=](sycl::nd_item<1> it)
+                    [[intel::num_simd_work_items(kSimdItems),
                       sycl::reqd_work_group_size(1, 1, kWGSize)]] {
                       // Write global ID to memory
                       auto gid = it.get_global_id(0);
@@ -1379,7 +1390,8 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
           case 1:  // kernel MemReadStream
             h.parallel_for<MemReadStream>(
                 sycl::nd_range<1>(sycl::range<1>(N), sycl::range<1>(kWGSize)),
-                [=](sycl::nd_item<1> it)[[intel::num_simd_work_items(kSimdItems),
+                [=](sycl::nd_item<1> it)
+                    [[intel::num_simd_work_items(kSimdItems),
                       sycl::reqd_work_group_size(1, 1, kWGSize)]] {
                       // Read memory
                       auto gid = it.get_global_id(0);
@@ -1398,7 +1410,8 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
           default:
             h.parallel_for<MemReadWriteStreamNDRange>(
                 sycl::nd_range<1>(sycl::range<1>(N), sycl::range<1>(kWGSize)),
-                [=](sycl::nd_item<1> it)[[intel::num_simd_work_items(kSimdItems),
+                [=](sycl::nd_item<1> it)
+                    [[intel::num_simd_work_items(kSimdItems),
                       sycl::reqd_work_group_size(1, 1, kWGSize)]] {
                       // Read, modify and write to memory
                       auto gid = it.get_global_id(0);
@@ -1522,7 +1535,7 @@ void ShimMetrics::ReadBinary() {
         // found
         break;
       }  // End of if extracting fmax from rd_line
-    } // End of while loop reading file
+    }    // End of while loop reading file
     delete[] temp_word;
   }
 }
