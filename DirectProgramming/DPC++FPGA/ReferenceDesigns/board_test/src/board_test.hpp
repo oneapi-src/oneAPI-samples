@@ -51,13 +51,13 @@ class ShimMetrics {
         kernel_thruput_{0},
         kernel_mem_bw_{0},
         kernel_mem_rw_test_{false} {
-    max_buffer_size_ = q.get_device().get_info<info::device::global_mem_size>();
+    max_buffer_size_ = q.get_device().get_info<sycl::info::device::global_mem_size>();
 #if defined(FPGA_EMULATOR)
     max_alloc_size_ =
         512 * kMB;  // Limiting size of all buffers used in test for emulation
 #else
     max_alloc_size_ =
-        q.get_device().get_info<info::device::max_mem_alloc_size>();
+        q.get_device().get_info<sycl::info::device::max_mem_alloc_size>();
 #endif
     std::cout << "\nclGetDeviceInfo CL_DEVICE_GLOBAL_MEM_SIZE = "
               << max_buffer_size_ << "\n";
@@ -869,7 +869,7 @@ int ShimMetrics::KernelLaunchTest(sycl::queue &q) {
   e_receive.wait();
 
   // Read back data written by pipe to device memory
-  host_accessor h_buf_access{dev_buf};
+  sycl::host_accessor h_buf_access{dev_buf};
   if (h_buf_access[0] != kTestValue) {
     std::cerr << "Kernel Launch Test failed, incorrect value read back from "
               << "pipe between sender and receiver kernel:\n"
@@ -1425,8 +1425,8 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
       // **** Read data back from device **** //
 
       // Submit copy operation (copy from device to host)
-      q.submit([&](handler &h) {
-         accessor mem(dev_buf, h);
+      q.submit([&](sycl::handler &h) {
+         sycl::accessor mem(dev_buf, h);
          // Reading from device buffer into host memory
          h.copy(mem, host_data_out);
        }).wait();
