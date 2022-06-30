@@ -9,11 +9,6 @@
 // Test related header files
 #include "board_test.hpp"
 
-using namespace sycl;
-
-// Global variable used in kernel_clk_freq.cpp and kernel_mem_bw.cpp test
-// float bandwidth_nop = 0.0;
-
 int main(int argc, char* argv[]) {
   // Always print small help at the beginning of board test
   PrintHelp(0);
@@ -29,16 +24,15 @@ int main(int argc, char* argv[]) {
     if ((tmp_test.compare(0, 6, "-test=")) == 0) {
       test_to_run = std::stoi(tmp_test.substr(6));
       if (test_to_run < 0 || test_to_run > 7) {
-        std::cout
-            << "Not a valid test number, please select the correct test from "
-            << "list above and re-run binary with updated value.\n\n";
+        std::cerr << "Not a valid test number, please select the correct test from "
+                  << "list above and re-run binary with updated value.\n\n";
         return 1;
       }
     } else if ((tmp_test.compare(0, 5, "-help")) == 0) {
       PrintHelp(1);
       return 0;
     } else {
-      std::cout << "Incorrect argument passed to ./board_test.fpga! Cannot run "
+      std::cerr << "Incorrect argument passed to ./board_test.fpga! Cannot run "
                 << "test\n, please refer to usage information above for "
                 << "correct command.\nTerminating test!\n";
       return 1;
@@ -57,23 +51,23 @@ int main(int argc, char* argv[]) {
 //  macro
 //  - the FPGA device (a real FPGA)
 #if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector device_selector;
+  sycl::ext::intel::fpga_emulator_selector device_selector;
 #else
-  ext::intel::fpga_selector device_selector;
+  sycl::ext::intel::fpga_selector device_selector;
 #endif
 
-  // Variable accumulates result of each test
+  // Variable ORed with result of each test
   // Value of 0 at the end indicates all tests completed successfully
   int ret = 0;
 
   // Queue creation
   try {
     // queue properties to enable profiling
-    property_list q_prop_list{property::queue::enable_profiling()};
+    sycl::property_list q_prop_list{sycl::property::queue::enable_profiling()};
 
     // Create a queue bound to the chosen device
     // If the device is unavailable, a SYCL runtime exception is thrown
-    queue q(device_selector, dpc_common::exception_handler, q_prop_list);
+    sycl::queue q(device_selector, dpc_common::exception_handler, q_prop_list);
 
     // Print out the device information.
     std::cout << "Running on device: "
@@ -208,23 +202,23 @@ int main(int argc, char* argv[]) {
     }
   }  // End of try block
 
-  catch (exception const& e) {
+  catch (sycl::exception const& e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
     if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
-                   "system has a correctly configured FPGA board.\n";
-      std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
-      std::cerr << "If you are targeting the FPGA emulator, compile with "
-                   "-DFPGA_EMULATOR.\n";
+                << "system has a correctly configured FPGA board.\n"
+                << "Run sys_check in the oneAPI root directory to verify.\n"
+                << "If you are targeting the FPGA emulator, compile with "
+                << "-DFPGA_EMULATOR.\n";
     }
     // Caught exception, terminate program
     std::terminate();
   }  // End of catch block
 
-  // If accumulated value of returns from all tests is returned 0 (i.e. without
+  // If value of returns from all tests is 0 (i.e. without
   // errors) - Board test passed
   if (ret == 0)
     std::cout << "\nBOARD TEST PASSED\n";
