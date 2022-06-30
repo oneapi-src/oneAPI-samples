@@ -18,7 +18,7 @@ class MemReadStream;
 
 // Pipe used between KernelSender and KernelReceiver -
 // ShimMetrics::KernelLaunchTest(queue &q) function
-using SendertoReceiverPipe = ext::intel::pipe<  // Defined in the SYCL headers
+using SendertoReceiverPipe = sycl::ext::intel::pipe<  // Defined in the SYCL headers
     class SenderReceiverPipe,                   // An identifier for the pipe
     unsigned int,                               // The type of data in the pipe
     1>;                                         // The capacity of the pipe
@@ -30,7 +30,7 @@ using SendertoReceiverPipe = ext::intel::pipe<  // Defined in the SYCL headers
 // Object stores oneAPI shim metrics
 // Member Functions (details closer to function definition):
 // ShimMetrics - Constructor; initializes all metrics and obtains maximum device
-// allocation and maxmum device global memory TestGlobalMem - Host to device
+// allocation and maximum device global memory TestGlobalMem - Host to device
 // global memory interface check HostSpeed - Host to device global memory
 // bandwidth measurement HostRWTest - Unaligned read & writes from host to
 // device global memory KernelClkFreq - Kernel clock frequency measurement
@@ -41,7 +41,7 @@ using SendertoReceiverPipe = ext::intel::pipe<  // Defined in the SYCL headers
 
 class ShimMetrics {
  public:
-  ShimMetrics(queue &q)
+  ShimMetrics(sycl::queue &q)
       : h2d_rd_bw_{0},
         h2d_wr_bw_{0},
         h2d_rd_wr_bw_{0},
@@ -71,14 +71,14 @@ class ShimMetrics {
 
   ~ShimMetrics() {}
 
-  size_t TestGlobalMem(queue &q);
-  int HostSpeed(queue &q);
-  int HostRWTest(queue &q, size_t dev_offset = 0);
-  int KernelClkFreq(queue &q, bool report_chk = true);
-  int KernelLaunchTest(queue &q);
-  int KernelLatency(queue &q);
-  int KernelMemRW(queue &q);
-  int KernelMemBW(queue &q);
+  size_t TestGlobalMem(sycl::queue &q);
+  int HostSpeed(sycl::queue &q);
+  int HostRWTest(sycl::queue &q, size_t dev_offset = 0);
+  int KernelClkFreq(sycl::queue &q, bool report_chk = true);
+  int KernelLaunchTest(sycl::queue &q);
+  int KernelLatency(sycl::queue &q);
+  int KernelMemRW(sycl::queue &q);
+  int KernelMemBW(sycl::queue &q);
   void ReadBinary();
 
  private:
@@ -120,22 +120,22 @@ class ShimMetrics {
 // If this test passes (returns 0), the host to device global memory interface
 // is working fine
 
-size_t ShimMetrics::TestGlobalMem(queue &q) {
+size_t ShimMetrics::TestGlobalMem(sycl::queue &q) {
   // Data is transferred from host to device in kMaxHostChunk size transfers
   // (size in bytes)
   constexpr size_t kMaxHostChunk = 512 * kMB;
 
   // Test fails if max alloc size is 0
   if (max_alloc_size_ == 0) {
-    std::cout << "Maximum global memory allocation supported by Sycl device is "
+    std::cerr << "Maximum global memory allocation supported by Sycl device is "
               << "0! Cannot run host speed test\n\n";
     return 1;
   }
 
   // **** Create device buffer ****//
   // Creating device buffer to span all usable global memory space on device
-  buffer<unsigned long, 1> dev_buf{
-      range<1>{(max_alloc_size_ / sizeof(unsigned long))}};
+  sycl::buffer<unsigned long, 1> dev_buf{
+      sycl::range<1>{(max_alloc_size_ / sizeof(unsigned long))}};
   std::cout << "Size of buffer created = " << dev_buf.byte_size() << " bytes\n";
 
   // **** Host memory allocation **** //
@@ -163,8 +163,6 @@ size_t ShimMetrics::TestGlobalMem(queue &q) {
   unsigned long bytes_rem = max_alloc_size_;
   // offset at which write should begin in device global memory
   unsigned long offset = 0;
-  // Number of chunks of host_size written to device
-  unsigned long chunk_cnt_wr = 0;
   // Total time to write
   double sum_time_ns = 0.0;
 
@@ -185,13 +183,13 @@ size_t ShimMetrics::TestGlobalMem(queue &q) {
     }
 
     // Submit command to copy (explicit copy from host to device)
-    auto h2d_copy_e = q.submit([&](handler &h) {
+    auto h2d_copy_e = q.submit([&](sycl::handler &h) {
       // Range of buffer that needs to accessed
       auto buf_range = chunk / sizeof(unsigned long);
       // offset starts at 0 - incremented by chunk size each iteration
       auto buf_offset = offset / sizeof(unsigned long);
       // Access host_size range of buffer starting at buf_offset
-      accessor mem(dev_buf, h, buf_range, buf_offset);
+      sycl::accessor mem(dev_buf, h, buf_range, buf_offset);
       // Writing from host memory to device buffer
       h.copy(hostbuf, mem);
     });
@@ -206,7 +204,6 @@ size_t ShimMetrics::TestGlobalMem(queue &q) {
     // Increment offset and decrement remaining bytes by size of transfer
     offset += chunk;
     bytes_rem -= chunk;
-    chunk_cnt_wr++;
 
   }  // End of write-to-device while loop
 
@@ -247,13 +244,13 @@ size_t ShimMetrics::TestGlobalMem(queue &q) {
     if (chunk > host_size) chunk = host_size;
 
     // Submit copy operation (explicit copy from device to host)
-    auto d2h_copy_e = q.submit([&](handler &h) {
+    auto d2h_copy_e = q.submit([&](sycl::handler &h) {
       // Range of buffer that needs to accessed
       auto buf_range = chunk / sizeof(unsigned long);
       // offset starts at 0 - incremented by chunk size each iteration
       auto buf_offset = offset / sizeof(unsigned long);
       // Access host_size range of buffer starting at buf_offset
-      accessor mem(dev_buf, h, buf_range, buf_offset);
+      sycl::accessor mem(dev_buf, h, buf_range, buf_offset);
       // Reading from device buffer into host memory
       h.copy(mem, hostbuf);
     });
@@ -274,12 +271,12 @@ size_t ShimMetrics::TestGlobalMem(queue &q) {
       if (hostbuf[i] != (i + offset)) {
         ++errors;
         if (errors <= 32) {  // only print 32 errors
-          std::cout << "Verification failure at element " << i << ", expected "
+          std::cerr << "Verification failure at element " << i << ", expected "
                     << i << " but read back " << hostbuf[i] << "\n";
         }
         chunk_errors++;
         if (chunk_errors <= 32) {  // only print 32 errors
-          std::cout << "Verification failure at element " << i << "; chunk_cnt "
+          std::cerr << "Verification failure at element " << i << "; chunk_cnt "
                     << chunk_cnt_rd << ";, expected 0x" << std::hex << i
                     << " \\ " << std::dec << i << " but read back 0x"
                     << std::hex << hostbuf[i] << " \\ " << std::dec
@@ -289,7 +286,7 @@ size_t ShimMetrics::TestGlobalMem(queue &q) {
     }  // End of for loop
 
     if (chunk_errors > 0) {
-      std::cout << "chunk_errors for chunk " << chunk_cnt_rd << " was "
+      std::cerr << "chunk_errors for chunk " << chunk_cnt_rd << " was "
                 << chunk_errors << " \\ 0x" << std::hex << chunk_errors
                 << std::dec
                 << "\n";  // Restoring manipulator to decimal in the end of cout
@@ -317,11 +314,10 @@ size_t ShimMetrics::TestGlobalMem(queue &q) {
   } else {
     std::cout << "Wrote and readback " << (max_alloc_size_ / kMB)
               << " MB buffer\n";
-    std::cerr
-        << "Failed write/readback test with " << errors << " errors out of "
-        << compare_count << " \\ 0x" << std::hex << compare_count
-        << std::dec  // Restoring manipulator to decimal at the end of cout
-        << " comparisons\n\n";
+    std::cerr << "Failed write/readback test with " << errors << " errors out of "
+              << compare_count << " \\ 0x" << std::hex << compare_count
+              << std::dec  // Restoring manipulator to decimal at the end of cout
+              << " comparisons\n\n";
   }
 
   // Free allocated host memory
@@ -360,7 +356,7 @@ size_t ShimMetrics::TestGlobalMem(queue &q) {
 // 4. unsigned long SyclGetQSubExecTimeNs(event e)
 // 5. unsigned long SyclGetTotalTimeNs(event first_evt, event last_evt)
 
-int ShimMetrics::HostSpeed(queue &q) {
+int ShimMetrics::HostSpeed(sycl::queue &q) {
   // Total bytes to transfer
   constexpr size_t kMaxBytes = 8 * kMB;  // 8 MB;
   constexpr size_t kMaxChars = kMaxBytes / sizeof(char);
@@ -380,7 +376,7 @@ int ShimMetrics::HostSpeed(queue &q) {
 
   // Creating device buffer to span kMaxBytes size
   // Buffer that WriteSpeed and ReadSpeed functions write to & read from
-  buffer<char, 1> device_buffer{range<1>{kMaxChars}};
+  sycl::buffer<char, 1> device_buffer{sycl::range<1>{kMaxChars}};
 
   // **** Host memory allocation and initialization **** //
 
@@ -538,7 +534,7 @@ int ShimMetrics::HostSpeed(queue &q) {
 // 6. Verifies data read back matches data written
 // Program terminates if verification fails
 
-int ShimMetrics::HostRWTest(queue &q, size_t dev_offset) {
+int ShimMetrics::HostRWTest(sycl::queue &q, size_t dev_offset) {
   // Bytes to transfer (1KB)
   constexpr size_t kMaxBytes_rw = kKB;
 
@@ -561,7 +557,7 @@ int ShimMetrics::HostRWTest(queue &q, size_t dev_offset) {
   // DMA is not aligned
   constexpr size_t kOddMaxBytes = kMaxBytes_rw + 3;
   // Device buffer of kOddMaxbytes
-  buffer<char, 1> dev_buf(range<1>{kOddMaxBytes});
+  sycl::buffer<char, 1> dev_buf(sycl::range<1>{kOddMaxBytes});
 
   // **** Host memory allocation and initialization **** //
 
@@ -627,12 +623,12 @@ int ShimMetrics::HostRWTest(queue &q, size_t dev_offset) {
     // **** Write to device global memory **** //
 
     // Submit copy operation (explicit copy from host to device)
-    q.submit([&](handler &h) {
+    q.submit([&](sycl::handler &h) {
        // Range of buffer that needs to accessed = i bytes (chars)
        // Device buffer is accessed at dev_offset
        // Using +3 offset on aligned device pointer ensures that DMA is never
        // used (because the host ptr is not aligned)
-       accessor mem(dev_buf, h, i, dev_offset);
+       sycl::accessor mem(dev_buf, h, i, dev_offset);
        // Writing from host memory to device buffer
        h.copy(host_in_buf, mem);
      }).wait();  // Wait for copy to complete
@@ -640,10 +636,10 @@ int ShimMetrics::HostRWTest(queue &q, size_t dev_offset) {
     // **** Read from device global memory **** //
 
     // Submit copy operation (explicit copy from device to host)
-    q.submit([&](handler &h) {
+    q.submit([&](sycl::handler &h) {
        // Range of buffer that needs to accessed = i bytes (chars)
        // Device buffer is accessed at dev_offset
-       accessor mem(dev_buf, h, i, dev_offset);
+       sycl::accessor mem(dev_buf, h, i, dev_offset);
        // Reading from device buffer into host memory
        h.copy(mem, host_rd_buf);
      }).wait();  // Wait for copy to complete
@@ -657,7 +653,7 @@ int ShimMetrics::HostRWTest(queue &q, size_t dev_offset) {
       std::cerr << i << " bytes read/write FAILED!\n";
       for (size_t m = 0; m < i; m++) {
         if (host_in_buf[m] != host_rd_buf[m]) {
-          std::cout << "char #" << m
+          std::cerr << "char #" << m
                     << " , host input buffer = " << host_in_buf[m]
                     << " , host read back buffer = " << host_rd_buf[m] << "\n";
         }
@@ -701,16 +697,14 @@ int ShimMetrics::HostRWTest(queue &q, size_t dev_offset) {
 // 3. Obtain kernel clock frequency based on time take for 128 Mglobal
 // operations (NDRange)
 // 4. If the <report_chk> is true, compare the above hardware frequency with
-// Quartus compiled frequency NOTE: This needs the reports or
-// board_test.fpga.prj/reports directory from compilation output to be in the
-// same directory as board_test.fpga binary
+// Quartus compiled frequency 
 // 5. Return 0 (test pass) if measured frequency is within 2 of Quartus compiled
-// frequency, else report error and terminate test NOTE: If <report_chk> is set
-// to false, comparison with Quartus compiled frequency is not done and
-// remaining tests in board_test continue without this frequency check of 2%
-// error tolerance
+// frequency, else report error and terminate test 
+// NOTE: If <report_chk> is set to false, comparison with Quartus compiled 
+// frequency is not done and remaining tests in board_test continue without 
+// this frequency check of 2% error tolerance
 
-int ShimMetrics::KernelClkFreq(queue &q, bool report_chk) {
+int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
   // **** Launching an empty kernel (no op) **** //
 
   // ND Range of kernel to launch
@@ -719,13 +713,13 @@ int ShimMetrics::KernelClkFreq(queue &q, bool report_chk) {
                   // device memory (minimum on device - e.g. Cyclone V)
   constexpr size_t kGlobalSize = kTotalBytes / (sizeof(unsigned));
 
-  auto e = q.submit([&](handler &h) {
+  auto e = q.submit([&](sycl::handler &h) {
     // Global range (1 dimension)
     constexpr size_t kN = kGlobalSize;
     // Work group Size (1 dimension)
     constexpr size_t kReqdWgSize = 32 * kKB;  // 32 KB
     h.parallel_for<NopNDRange>(
-        nd_range<1>(range<1>(kN), range<1>(kReqdWgSize)), [=
+        sycl::nd_range<1>(sycl::range<1>(kN), sycl::range<1>(kReqdWgSize)), [=
     ](auto id) [[sycl::reqd_work_group_size(1, 1, kReqdWgSize)]]{});
   });
   // Wait for operation to complete
@@ -824,24 +818,24 @@ int ShimMetrics::KernelClkFreq(queue &q, bool report_chk) {
 // 6. Host reads data back from memory and checks if the value read is equal to
 // the known value (kTestVakue) Test fails if there is a data mismatch
 
-int ShimMetrics::KernelLaunchTest(queue &q) {
+int ShimMetrics::KernelLaunchTest(sycl::queue &q) {
   // Value to be written to pipe from KernelSender
   constexpr unsigned int kTestValue = 0xdead1234;
 
   // Create device buffer to read back data
   std::array<unsigned int, 1> init_val = {0};
-  buffer dev_buf(init_val);
+  sycl::buffer dev_buf(init_val);
 
   // **** Launch sender kernel (writes to pipe) **** //
 
   std::cout << "Launching kernel KernelSender ...\n";
-  auto e_send = q.submit([&](handler &h) {
+  auto e_send = q.submit([&](sycl::handler &h) {
     // Global range (1 dimension)
     constexpr size_t kN = 1;
     // Work group size (1 dimension)
     constexpr size_t kReqdWgSize = 1;
     h.parallel_for<KernelSender>(
-        nd_range<1>(range<1>(kN), range<1>(kReqdWgSize)), [=](auto id) {
+        sycl::nd_range<1>(sycl::range<1>(kN), sycl::range<1>(kReqdWgSize)), [=](auto id) {
           SendertoReceiverPipe::write(kTestValue);  // Blocking write
         });
   });
@@ -849,14 +843,14 @@ int ShimMetrics::KernelLaunchTest(queue &q) {
   // **** Launch receiver kernel (reads from pipe) **** //
 
   std::cout << "Launching kernel KernelReceiver ...\n";
-  auto e_receive = q.submit([&](handler &h) {
+  auto e_receive = q.submit([&](sycl::handler &h) {
     // Global range (1 dimension)
     constexpr size_t kN = 1;
     // Work group size (1 dimension)
     constexpr size_t kReqdWgSize = 1;
-    accessor mem(dev_buf, h);
+    sycl::accessor mem(dev_buf, h);
     h.parallel_for<KernelReceiver>(
-        nd_range<1>(range<1>(kN), range<1>(kReqdWgSize)), [=](nd_item<1> it) {
+        sycl::nd_range<1>(sycl::range<1>(kN), sycl::range<1>(kReqdWgSize)), [=](sycl::nd_item<1> it) {
           // Initialize to 0
           unsigned int pipe_value = 0;
           // Blocking read from pipe
@@ -903,7 +897,7 @@ int ShimMetrics::KernelLaunchTest(queue &q) {
 // number of kernels
 // 4. Report the latency and throughput and return
 
-int ShimMetrics::KernelLatency(queue &q) {
+int ShimMetrics::KernelLatency(sycl::queue &q) {
   // **** Launch no-op kernel multiple times **** //
   auto start = std::chrono::system_clock::now();
   constexpr size_t kNumKernels = 10000;
@@ -966,10 +960,10 @@ int ShimMetrics::KernelLatency(queue &q) {
 // definition
 // 1. void InitializeVector(unsigned *vector, size_t size, size_t offset)
 
-int ShimMetrics::KernelMemRW(queue &q) {
+int ShimMetrics::KernelMemRW(sycl::queue &q) {
   // Test fails if max alloc size is 0
   if (max_alloc_size_ == 0) {
-    std::cout << "Maximum global memory allocation supported by Sycl device is "
+    std::cerr << "Maximum global memory allocation supported by Sycl device is "
               << "0! Cannot run kernel-to-memory read wite test\n\n";
     return 1;
   }
@@ -1020,7 +1014,7 @@ int ShimMetrics::KernelMemRW(queue &q) {
 
   std::cout << "Creating device buffer\n";
 
-  buffer<unsigned, 1> dev_buf(range<1>{max_dev_vectors});
+  sycl::buffer<unsigned, 1> dev_buf(sycl::range<1>{max_dev_vectors});
 
   // **** Writing to device global memory **** //
 
@@ -1065,11 +1059,11 @@ int ShimMetrics::KernelMemRW(queue &q) {
       InitializeVector(host_data_in, num_host_vectors,
                        (global_offset + offset));
       // Submit copy operation (explicit copy from host to device)
-      q.submit([&](handler &h) {
+      q.submit([&](sycl::handler &h) {
          // Range of buffer that needs to accessed is num_host_vectors
          // offset starts at 0 - incremented by chunk size each iteration
          auto buf_offset = global_offset + offset;
-         accessor mem(dev_buf, h, num_host_vectors, buf_offset);
+         sycl::accessor mem(dev_buf, h, num_host_vectors, buf_offset);
          // Writing from host memory to device buffer
          h.copy(host_data_in, mem);
        }).wait();  // Wait for copy operation to complete
@@ -1106,11 +1100,11 @@ int ShimMetrics::KernelMemRW(queue &q) {
               << "\n";
 
     // launch kernel
-    auto e = q.submit([&](handler &h) {
+    auto e = q.submit([&](sycl::handler &h) {
       // Global range (1 dimension)
       size_t N = current_write_size;
-      accessor mem(dev_buf, h, N, global_offset);
-      h.parallel_for<MemReadWriteStream>(range<1>{N}, [=](item<1> it) {
+      sycl::accessor mem(dev_buf, h, N, global_offset);
+      h.parallel_for<MemReadWriteStream>(sycl::range<1>{N}, [=](sycl::item<1> it) {
         // Add 2 to all data read from global memory (meaning adding 2 to all
         // the offsets calculated in write loops above)
         auto gid = it.get_id(0);
@@ -1151,11 +1145,11 @@ int ShimMetrics::KernelMemRW(queue &q) {
       // Offset if max_dev_vectors chunk is broken into smaller portions
       size_t offset = offset_bytes / sizeof(unsigned);
       // Submit copy operation (explicit copy from device to host)
-      q.submit([&](handler &h) {
+      q.submit([&](sycl::handler &h) {
          // Range of buffer that needs to accessed is num_host_vectors
          // offset starts at 0 - incremented by chunk size each iteration
          auto buf_offset = global_offset + offset;
-         accessor mem(dev_buf, h, num_host_vectors, buf_offset);
+         sycl::accessor mem(dev_buf, h, num_host_vectors, buf_offset);
          // Reading from device buffer into host memory
          h.copy(mem, host_data_out);
        }).wait();  // Wait for copy operation to complete
@@ -1223,13 +1217,13 @@ int ShimMetrics::KernelMemRW(queue &q) {
 // 6. Read the theoretical bandwidth from board_spec.xml, calculate utilization
 // and report results
 
-int ShimMetrics::KernelMemBW(queue &q) {
+int ShimMetrics::KernelMemBW(sycl::queue &q) {
   std::cout << "Note: This test assumes that design was compiled with "
             << "-Xsno-interleaving option\n\n";
 
   // Test fails if max alloc size is 0
   if (max_alloc_size_ == 0) {
-    std::cout << "Maximum global memory allocation supported by Sycl device is "
+    std::cerr << "Maximum global memory allocation supported by Sycl device is "
               << "0! Cannot run kernel-to-memory bandwidth test\n\n";
     return 1;
   }
@@ -1307,34 +1301,34 @@ int ShimMetrics::KernelMemBW(queue &q) {
     for (unsigned b = 0; b < num_banks; b++) {
       // Assign a memory channel for each transfer (needed for multi-bank
       // oneAPI shims/BSP) default memory channel is 1 (lowest)
-      property_list buf_prop_list{property::buffer::mem_channel{1}};
+      sycl::property_list buf_prop_list{sycl::property::buffer::mem_channel{1}};
 
       switch (b) {
         // if the board_spec.xml has fewer banks than the dimms, mem_channel
         // defaults to 1
         case 0:
-          buf_prop_list = {property::buffer::mem_channel{1}};
+          buf_prop_list = {sycl::property::buffer::mem_channel{1}};
           break;
         case 1:
-          buf_prop_list = {property::buffer::mem_channel{2}};
+          buf_prop_list = {sycl::property::buffer::mem_channel{2}};
           break;
         case 2:
-          buf_prop_list = {property::buffer::mem_channel{3}};
+          buf_prop_list = {sycl::property::buffer::mem_channel{3}};
           break;
         case 3:
-          buf_prop_list = {property::buffer::mem_channel{4}};
+          buf_prop_list = {sycl::property::buffer::mem_channel{4}};
           break;
         case 4:
-          buf_prop_list = {property::buffer::mem_channel{5}};
+          buf_prop_list = {sycl::property::buffer::mem_channel{5}};
           break;
         case 5:
-          buf_prop_list = {property::buffer::mem_channel{6}};
+          buf_prop_list = {sycl::property::buffer::mem_channel{6}};
           break;
         case 6:
-          buf_prop_list = {property::buffer::mem_channel{7}};
+          buf_prop_list = {sycl::property::buffer::mem_channel{7}};
           break;
         default:
-          buf_prop_list = {property::buffer::mem_channel{1}};
+          buf_prop_list = {sycl::property::buffer::mem_channel{1}};
           break;
       }  // End of switch for setting buffer property
 
@@ -1342,21 +1336,21 @@ int ShimMetrics::KernelMemBW(queue &q) {
 
       // Create kernel input buffer on device (memory bank selected by
       // mem_channel property)
-      buffer<unsigned, 1> dev_buf(range<1>{vector_size}, buf_prop_list);
+      sycl::buffer<unsigned, 1> dev_buf(sycl::range<1>{vector_size}, buf_prop_list);
 
       // **** Write random values to device global memory **** ///
 
       // Submit copy operation (explicit copy from host to device)
-      q.submit([&](handler &h) {
-         accessor mem(dev_buf, h);
+      q.submit([&](sycl::handler &h) {
+         sycl::accessor mem(dev_buf, h);
          // Writing from host memory to device buffer
          h.copy(host_data_in, mem);
        }).wait();  // Wait for copy operation to complete
 
       // ****  Submit kernel tasks **** //
 
-      auto e = q.submit([&](handler &h) {
-        accessor mem(dev_buf, h);
+      auto e = q.submit([&](sycl::handler &h) {
+        sycl::accessor mem(dev_buf, h);
         // Work group Size (1 dimension)
         constexpr size_t kWGSize = 1024 * 32;
         constexpr size_t kSimdItems = 16;
@@ -1372,8 +1366,8 @@ int ShimMetrics::KernelMemBW(queue &q) {
         switch (k) {
           case 0:  // kernel MemWriteStream
             h.parallel_for<MemWriteStream>(
-                nd_range<1>(range<1>(N), range<1>(kWGSize)),
-                [=](nd_item<1> it)[[intel::num_simd_work_items(kSimdItems),
+                sycl::nd_range<1>(sycl::range<1>(N), sycl::range<1>(kWGSize)),
+                [=](sycl::nd_item<1> it)[[intel::num_simd_work_items(kSimdItems),
                       sycl::reqd_work_group_size(1, 1, kWGSize)]] {
                       // Write global ID to memory
                       auto gid = it.get_global_id(0);
@@ -1384,8 +1378,8 @@ int ShimMetrics::KernelMemBW(queue &q) {
             break;
           case 1:  // kernel MemReadStream
             h.parallel_for<MemReadStream>(
-                nd_range<1>(range<1>(N), range<1>(kWGSize)),
-                [=](nd_item<1> it)[[intel::num_simd_work_items(kSimdItems),
+                sycl::nd_range<1>(sycl::range<1>(N), sycl::range<1>(kWGSize)),
+                [=](sycl::nd_item<1> it)[[intel::num_simd_work_items(kSimdItems),
                       sycl::reqd_work_group_size(1, 1, kWGSize)]] {
                       // Read memory
                       auto gid = it.get_global_id(0);
@@ -1403,8 +1397,8 @@ int ShimMetrics::KernelMemBW(queue &q) {
           case 2:  // MemReadWriteStream (also the default)
           default:
             h.parallel_for<MemReadWriteStreamNDRange>(
-                nd_range<1>(range<1>(N), range<1>(kWGSize)),
-                [=](nd_item<1> it)[[intel::num_simd_work_items(kSimdItems),
+                sycl::nd_range<1>(sycl::range<1>(N), sycl::range<1>(kWGSize)),
+                [=](sycl::nd_item<1> it)[[intel::num_simd_work_items(kSimdItems),
                       sycl::reqd_work_group_size(1, 1, kWGSize)]] {
                       // Read, modify and write to memory
                       auto gid = it.get_global_id(0);

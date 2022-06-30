@@ -1,6 +1,5 @@
 // Header file to accompany board_test
 #include <CL/sycl.hpp>
-using namespace sycl;
 
 constexpr size_t kKB = 1024;
 constexpr size_t kMB = 1024 * 1024;
@@ -107,11 +106,11 @@ void PrintHelp(int details) {
 // Gets profiling information from a SYCL event and
 // returns execution time for a given SYCL event from a queue
 
-unsigned long SyclGetQSubExecTimeNs(event e) {
+unsigned long SyclGetQSubExecTimeNs(sycl::event e) {
   unsigned long submit_time =
-      e.get_profiling_info<info::event_profiling::command_submit>();
+      e.get_profiling_info<sycl::info::event_profiling::command_submit>();
   unsigned long end_time =
-      e.get_profiling_info<info::event_profiling::command_end>();
+      e.get_profiling_info<sycl::info::event_profiling::command_end>();
   return (end_time - submit_time);
 }  // End of SyclGetQSubExecTimeNs
 
@@ -128,11 +127,11 @@ unsigned long SyclGetQSubExecTimeNs(event e) {
 // Gets profiling information from a Sycl event and
 // returns execution time for a given SYCL event from a queue
 
-unsigned long SyclGetQStExecTimeNs(event e) {
+unsigned long SyclGetQStExecTimeNs(sycl::event e) {
   unsigned long start_time =
-      e.get_profiling_info<info::event_profiling::command_start>();
+      e.get_profiling_info<sycl::info::event_profiling::command_start>();
   unsigned long end_time =
-      e.get_profiling_info<info::event_profiling::command_end>();
+      e.get_profiling_info<sycl::info::event_profiling::command_end>();
   return (end_time - start_time);
 }  // End of SyclGetQStExecTimeNs
 
@@ -151,11 +150,11 @@ unsigned long SyclGetQStExecTimeNs(event e) {
 // Gets profiling information from two different Sycl events and
 // returns the total execution time for all events between first and last
 
-unsigned long SyclGetTotalTimeNs(event first_evt, event last_evt) {
+unsigned long SyclGetTotalTimeNs(sycl::event first_evt, sycl::event last_evt) {
   unsigned long first_evt_submit =
-      first_evt.get_profiling_info<info::event_profiling::command_submit>();
+      first_evt.get_profiling_info<sycl::info::event_profiling::command_submit>();
   unsigned long last_evt_end =
-      last_evt.get_profiling_info<info::event_profiling::command_end>();
+      last_evt.get_profiling_info<sycl::info::event_profiling::command_end>();
   return (last_evt_end - first_evt_submit);
 }  // End of SyclGetTotalTimeNs
 
