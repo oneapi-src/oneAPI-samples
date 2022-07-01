@@ -108,12 +108,14 @@ void QRDecompositionImpl(
 
     // Repeat matrix_count complete R matrix pipe reads
     // for as many repetitions as needed
-    [[intel::loop_coalesce(2)]] // NO-FORMAT: Attribute
+    [[intel::loop_coalesce(3)]] // NO-FORMAT: Attribute
     for(int repetition_index = 0; repetition_index < repetitions;
                                                             repetition_index++){
       for(int matrix_index = 0; matrix_index < matrix_count; matrix_index++){
 
         for (int li = 0; li < kLoopIter; li++) {
+          [[intel::fpga_memory]] // NO-FORMAT: Attribute
+          [[intel::private_copies(8)]] // NO-FORMAT: Attribute
           TT bank[kNumElementsPerDDRBurst];
 
           for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
