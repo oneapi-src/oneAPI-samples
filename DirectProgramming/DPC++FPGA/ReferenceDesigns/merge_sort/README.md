@@ -127,7 +127,10 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
      nmake report
      ```
-   * An FPGA hardware target is not provided on Windows*.
+   * Compile for FPGA hardware (longer compile time, targets FPGA device):
+     ```
+     nmake fpga
+     ```
 
 *Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005
 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA
