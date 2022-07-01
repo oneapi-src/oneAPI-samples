@@ -178,7 +178,6 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      nmake report
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device).
-
      ```
      nmake fpga
      ```
