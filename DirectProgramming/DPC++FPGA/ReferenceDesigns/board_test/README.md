@@ -225,7 +225,7 @@ The tests are:
 Note: Kernel Clock Frequency is run along with all tests except 1 (Host Speed and Host Read Write test)
 
 Running all tests 
-Running on device: pac_s10 : Intel PAC Platform (pac_f000001)
+Running on device: pac_s10 : Intel PAC Platform (pac_ee00000)
 
 clGetDeviceInfo CL_DEVICE_GLOBAL_MEM_SIZE = 34359737344
 clGetDeviceInfo CL_DEVICE_MAX_MEM_ALLOC_SIZE = 34359737344
@@ -236,8 +236,8 @@ Device buffer size available for allocation = 34359737344 bytes
 *****************************************************************
 
 Size of buffer created = 34359737344 bytes
-Writing 32767 MB to device global memory ... 7774.69 MB/s
-Reading 32767 MB from device global memory ... 6584.19 MB/s
+Writing 32767 MB to device global memory ... 7462.91 MB/s
+Reading 32767 MB from device global memory ... 6188.28 MB/s
 Verifying data ...
 Successfully wrote and readback 32767 MB buffer
 
@@ -254,34 +254,34 @@ Transferring 8192 KBs in 1 8192 KB blocks ...
 Writing 8192 KBs with block size (in bytes) below:
 
 Block_Size Avg Max Min End-End (MB/s)
-   32768 1128.52 1557.28 286.21 892.39 
-   65536 1740.38 2513.67 651.88 1480.86 
-  131072 2352.17 3407.48 836.27 2093.22 
-  262144 3431.90 4233.49 2185.98 3190.16 
-  524288 3812.53 4848.16 3096.93 3667.55 
- 1048576 4363.63 4875.98 3884.19 4280.78 
- 2097152 4523.95 4882.84 4137.46 4489.17 
- 4194304 5312.95 5323.40 5302.54 5290.96 
- 8388608 5807.87 5807.87 5807.87 5807.87 
+   32768 429.32 1087.94 26.37 407.51 
+   65536 659.07 1602.89 61.65 634.23 
+  131072 821.27 2180.32 215.22 801.83 
+  262144 1645.40 2791.99 422.74 1544.55 
+  524288 2183.01 3152.49 1173.56 2155.32 
+ 1048576 3129.02 3626.10 2356.49 3102.71 
+ 2097152 3433.38 3854.89 3163.94 3417.06 
+ 4194304 3973.04 4163.90 3798.91 3964.90 
+ 8388608 4412.13 4412.13 4412.13 4412.13 
 
 Reading 8192 KBs with block size (in bytes) below:
 
 Block_Size Avg Max Min End-End (MB/s)
-   32768 1980.89 2148.21 1678.93 1566.57 
-   65536 2889.33 3066.43 2500.90 2158.95 
-  131072 3741.37 4019.16 3386.98 3045.76 
-  262144 4360.49 4544.05 4006.35 3977.76 
-  524288 4607.98 4830.92 3476.28 4404.34 
- 1048576 4760.10 4815.10 4679.96 4675.91 
- 2097152 4708.08 4767.73 4578.13 4666.14 
- 4194304 5340.10 5672.05 5044.85 5326.73 
- 8388608 5732.58 5732.58 5732.58 5732.58 
+   32768 837.41 1369.71 479.84 756.23 
+   65536 1280.98 1979.54 714.56 1185.66 
+  131072 1951.20 2610.64 1372.24 1841.02 
+  262144 2398.59 3006.94 629.56 2309.85 
+  524288 3273.74 3690.34 3059.41 3197.51 
+ 1048576 3586.16 3809.06 3421.94 3544.91 
+ 2097152 3630.12 3795.49 3441.44 3610.78 
+ 4194304 4330.42 4443.38 4223.06 4324.10 
+ 8388608 4659.93 4659.93 4659.93 4659.93 
 
-Host write top speed = 5807.87 MB/s
-Host read top speed = 5732.58 MB/s
+Host write top speed = 4412.13 MB/s
+Host read top speed = 4659.93 MB/s
 
 
-HOST-TO-MEMORY BANDWIDTH = 5770 MB/s
+HOST-TO-MEMORY BANDWIDTH = 4536 MB/s
 
 
 *****************************************************************
@@ -297,17 +297,10 @@ HOST READ-WRITE TEST PASSED!
 *******************  Kernel Clock Frequency Test  ***************
 *****************************************************************
 
-*** NOTE ***: This test expects the reports folder generated during compile to be in one of the following locations : 
-    1. Same directory as board_test.fpga binary
-    2. Inside board_test.prj folder in the same directory as board_test.fpga binary
-    If the reports folder is not found, the test will return only the measured kernel clock frequency and fail, none of the other tests will run as hardware frequency may not be the expected value and may lead to functional errors.
-    If you wish to override this failure, please set "report_chk" variable to "false" in <board_test.cpp> and recompile host code only using "-reuse-exe=board_test.fpga" option in compile command.
-    Please run complete board_test at least once and ensure the hardware frequency matches expected frequency, mismatch may lead to functional error.
+Measured Frequency    =   330.542 MHz 
+Quartus Compiled Frequency  =   331 MHz 
 
-Measured Frequency    =   327.737 MHz 
-Quartus Compiled Frequency  =   328 MHz 
-
-Measured Clock frequency is within 2 percent of quartus compiled frequency. 
+Measured Clock frequency is within 2 percent of Quartus compiled frequency. 
 
 *****************************************************************
 ********************* Kernel Launch Test ************************
@@ -325,9 +318,9 @@ KERNEL_LAUNCH_TEST PASSED
 ********************  Kernel Latency  **************************
 *****************************************************************
 
-Processed 10000 kernels in 189.0976 ms
-Single kernel round trip time = 18.9098 us
-Throughput = 52.8827 kernels/ms
+Processed 10000 kernels in 149.3585 ms
+Single kernel round trip time = 14.9359 us
+Throughput = 66.9530 kernels/ms
 Kernel execution is complete
 
 *****************************************************************
@@ -357,32 +350,18 @@ KERNEL TO MEMORY READ WRITE TEST PASSED
 
 Note: This test assumes that design was compiled with -Xsno-interleaving option
 
-Size of memory bank 1 = 0x200000000 bytes 
-Size of memory bank 2 = 0x200000000 bytes 
-Size of memory bank 3 = 0x200000000 bytes 
-Size of memory bank 4 = 0x200000000 bytes 
 
 Performing kernel transfers of 4096 MBs on the default global memory (address starting at 0)
 Launching kernel MemWriteStream ... 
 Launching kernel MemReadStream ... 
 Launching kernel MemReadWriteStream ... 
 
-Summarizing bandwidth in MB/s/bank for banks 1 to 4
- 15862.1  15874.6  15871.7  15879.5  MemWriteStream
- 17339.5  17339.9  17339.5  17339.8  MemReadStream
- 16014.4  16018.5  16018.2  16018.5  MemReadWriteStream
+Summarizing bandwidth in MB/s/bank for banks 1 to 8
+ 16138.4  16137.4  16137.6  16138.5  16138.4  16137.3  16137.4  16138.1  MemWriteStream
+ 17341.3  17341.2  17341.2  17341.1  17341.1  17341.1  17341.2  17341.1  MemReadStream
+ 16050.6  16049.9  16049.5  16049.5  16049.3  16049.7  16049.8  16049.5  MemReadWriteStream
 
-Name of the global memory type      :    DDR
-Number Of Interfaces            :    4
-Max Bandwidth (all memory interfaces)   :    76800 MB/s 
-Max Bandwidth of 1 memory interface in board_spec.xml :    19200 MB/s 
-
-It is assumed that all memory interfaces have equal widths. 
-
-BOARD BANDWIDTH UTILIZATION = 85.4672
-Warning : Board bandwidth utilization is less than 90% 
-
-KERNEL-TO-MEMORY BANDWIDTH = 16409.7 MB/s/bank
+KERNEL-TO-MEMORY BANDWIDTH = 16509.6 MB/s/bank
 
 BOARD TEST PASSED
  
