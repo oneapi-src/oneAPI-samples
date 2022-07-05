@@ -47,8 +47,8 @@ template <typename T,       // The datatype for the computation
                             // Only upper-right elements of R are
                             // sent in row order, starting with row 0.
           bool k_column_order =
-              true  // Defualt value is true for standard matrix input reads
-                    // (reads the matrix one column at a time). Flase if read
+              true  // Default value is true for standard matrix input reads
+                    // (reads the matrix one column at a time). False if read
                     // order by rows (sweeps the rows by pipe size). Each read
                     // contains pipe_size samples from the same column, then the
                     // next read contains samples from the next column.
@@ -227,8 +227,8 @@ struct StreamingQRD {
       // Depending on the context, will contain:
       // -> -s[j]: for all the iterations to compute a_j
       // -> ir: for one iteration per j iterations to compute Q_i
-      [[intel::fpga_memory]] [[intel::private_copies(
-          2)]]  // NO-FORMAT: Attribute
+      [[intel::fpga_memory]]
+      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
       TT s_or_ir[columns];
 
       T pip1, ir;
