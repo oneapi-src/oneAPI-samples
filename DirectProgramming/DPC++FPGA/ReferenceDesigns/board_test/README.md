@@ -375,7 +375,7 @@ BOARD TEST PASSED
 | `board_test.cpp`             | Contains the `main()` function and the test selection logic as well as calls to each test.
 | `board_test.hpp`             | Contains the definitions for all the individual tests in board_test
 | `host_speed.hpp`             | Header for host speed test; contains definition of functions used in host speed test
-| `helper.hpp`                 | Contains constants used throughout the code as well as definition of functions that print help and measure execution time
+| `helper.hpp`                 | Contains constants (e.g. binary name) used throughout the code as well as definition of functions that print help and measure execution time
 
 ### Compiler Flags Used
 
