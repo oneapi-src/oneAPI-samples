@@ -96,56 +96,21 @@ void QRDecompositionImpl(
                                     ]() [[intel::kernel_args_restrict]] {
     // Read the R matrix from the RMatrixPipe pipe and copy it to the
     // FPGA DDR
-    // Number of DDR burst of kNumElementsPerDDRBurst required to write
-    // one vector
-    constexpr bool kIncompleteBurst = kRMatrixSize%kNumElementsPerDDRBurst != 0;
-    constexpr int kExtraIteration = kIncompleteBurst ? 1 : 0;
-    constexpr int kLoopIter = (kRMatrixSize / kNumElementsPerDDRBurst)
-                              + kExtraIteration;
-
     sycl::device_ptr<TT> vector_ptr_device(r_device);
-
 
     // Repeat matrix_count complete R matrix pipe reads
     // for as many repetitions as needed
-    [[intel::loop_coalesce(3)]] // NO-FORMAT: Attribute
-    for(int repetition_index = 0; repetition_index < repetitions;
-                                                            repetition_index++){
-      for(int matrix_index = 0; matrix_index < matrix_count; matrix_index++){
-
-        for (int li = 0; li < kLoopIter; li++) {
-          [[intel::fpga_memory]] // NO-FORMAT: Attribute
-          [[intel::private_copies(8)]] // NO-FORMAT: Attribute
-          TT bank[kNumElementsPerDDRBurst];
-
-          for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-            if(li * kNumElementsPerDDRBurst + k < kRMatrixSize){
-              bank[k] = RMatrixPipe::read();
-            }
-          }
-
-          // Copy the R matrix result to DDR
-          if constexpr (kIncompleteBurst){
-            // Write a burst of kNumElementsPerDDRBurst elements to DDR
-            #pragma unroll
-            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              if(li * kNumElementsPerDDRBurst + k < kRMatrixSize){
-                vector_ptr_device[matrix_index * kRMatrixSize
-                          + li * kNumElementsPerDDRBurst + k] = bank[k];
-              }
-            }
-          }
-          else{
-            // Write a burst of kNumElementsPerDDRBurst elements to DDR
-            #pragma unroll
-            for (int k = 0; k < kNumElementsPerDDRBurst; k++) {
-              vector_ptr_device[matrix_index * kRMatrixSize
-                          + li * kNumElementsPerDDRBurst + k] = bank[k];
-            }
-          }
-        } // end of matrix_index
-      }  // end of repetition_index
-    }  // end of li
+    for (int repetition_index = 0; repetition_index < repetitions;
+         repetition_index++) {
+      
+      [[intel::loop_coalesce(2)]]  // NO-FORMAT: Attribute
+      for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
+        for (int r_idx = 0; r_idx < kRMatrixSize; r_idx++) {
+          vector_ptr_device[matrix_index * kRMatrixSize + r_idx] =
+              RMatrixPipe::read();
+        }  // end of r_idx
+      }    // end of repetition_index
+    }      // end of li
   });
 
   q_event.wait();
