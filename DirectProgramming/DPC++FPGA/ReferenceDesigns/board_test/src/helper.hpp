@@ -7,7 +7,7 @@ constexpr size_t kGB = 1024 * 1024 * 1024;
 constexpr size_t kRandomSeed = 1009;
 
 #if defined(_WIN32) || defined(_WIN64)
-  std::string kBinaryName = "board_test.exe";
+  std::string kBinaryName = "board_test.fpga.exe";
 #elif __linux__
   std::string kBinaryName = "board_test.fpga";
   #define _popen popen
