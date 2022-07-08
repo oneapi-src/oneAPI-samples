@@ -250,6 +250,8 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     MaterialType::MATERIAL_MATTE,
     // LeftWall
     MaterialType::MATERIAL_MATTE,
+    /* Small box configuration for a matte material. Swap this section in for the glass (thin dielectric) material as desired */
+    /*
     // ShortBox Top Face
     MaterialType::MATERIAL_MATTE,
     // ShortBox Left Face
@@ -262,6 +264,20 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     MaterialType::MATERIAL_MATTE,
     // ShortBox Bottom Face
     MaterialType::MATERIAL_MATTE,
+    */
+
+    // ShortBox Top Face
+    MaterialType::MATERIAL_GLASS,
+    // ShortBox Left Face
+    MaterialType::MATERIAL_GLASS,
+    // ShortBox Front Face
+    MaterialType::MATERIAL_GLASS,
+    // ShortBox Right Face
+    MaterialType::MATERIAL_GLASS,
+    // ShortBox Back Face
+    MaterialType::MATERIAL_GLASS,
+    // ShortBox Bottom Face
+    MaterialType::MATERIAL_GLASS,
 
     /* Tall Box configuration for a matte material. Swap this section in for the mirror tall box (below) as desired*/
     /*
@@ -296,6 +312,13 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     
     };
 
+static std::vector<enum class MaterialType> sphereMats = {
+    //Just one material for our sphere primitive (Defined as singular Vec4 point for embree)
+    MaterialType::MATERIAL_GLASS
+};
+
+Vec3fa g_sphere_face_colors = { 1.f, 1.f, 1.f };
+
 int addCornell(RTCScene scene, RTCDevice device)
 {
     /* create a mesh for all the quads in the Cornell Box scene */
@@ -326,6 +349,12 @@ int addCornell(RTCScene scene, RTCDevice device)
     rtcCommitGeometry(mesh);
     unsigned int geomID = rtcAttachGeometry(scene, mesh);
     rtcReleaseGeometry(mesh);
+
+    MatAndPrimColorTable mpTable;
+    mpTable.materialTable = cornellBoxMats;
+    mpTable.primColorTable = g_cornell_face_colors;
+    g_geomIDs.insert(std::make_pair(geomID, mpTable));
+
     return geomID;
 }
 
@@ -336,10 +365,15 @@ int addSphere(RTCScene scene, RTCDevice device)
     Vertex p = { 0.0f, 0.8f, 0.0f, 0.2f };
     vertices[0] = p;
 
-
     rtcCommitGeometry(mesh);
     unsigned int geomID = rtcAttachGeometry(scene, mesh);
     rtcReleaseGeometry(mesh);
+
+    MatAndPrimColorTable mpTable;
+    mpTable.materialTable = sphereMats;
+    mpTable.primColorTable = &g_sphere_face_colors;
+    g_geomIDs.insert(std::make_pair(geomID, mpTable));
+
     return geomID;
 }
 

@@ -31,7 +31,11 @@ In turn, ranlux was faster than mt19937 or mt19937_64 on Windows
 */
 typedef std::minstd_rand RandomEngine;
 
-std::vector<unsigned int> g_geomIDs;
+//std::vector<unsigned int> g_geomIDs;
+
+//std::vector< std::pair<unsigned int, MatAndPrimColorTable> > g_geomIDs;
+
+
 
 RTCDevice g_device = nullptr;
 RTCScene g_scene = nullptr;
@@ -156,7 +160,82 @@ Vec3fa Mirror__sample(const Vec3fa& R, const Vec3fa& Lw, const Vec3fa& wo, const
     return R;
 }
 
-Vec3fa Material__sample(Vec3fa R, enum class MaterialType materialType, Vec3fa Lw, Vec3fa wo, DifferentialGeometry dg, Sample3f& wi, Vec2f randomMatSample) {
+inline Vec3fa sample_component2(const Vec3fa& c0, const Sample3f& wi0, const Medium& medium0,
+    const Vec3fa& c1, const Sample3f& wi1, const Medium& medium1,
+    const Vec3fa& Lw, Sample3f& wi_o, Medium& medium_o, const float s)
+{
+    const Vec3fa m0 = Lw * c0 / wi0.pdf;
+    const Vec3fa m1 = Lw * c1 / wi1.pdf;
+
+    const float C0 = wi0.pdf == 0.0f ? 0.0f : max(max(m0.x, m0.y), m0.z);
+    const float C1 = wi1.pdf == 0.0f ? 0.0f : max(max(m1.x, m1.y), m1.z);
+    const float C = C0 + C1;
+
+    Sample3f ret;
+    if (C == 0.0f) {
+        ret.v = Vec3fa(0, 0, 0);
+        ret.pdf = 0.0f;
+
+        wi_o = ret;
+        return Vec3fa(0, 0, 0);
+    }
+
+    /* Compare weights for the reflection and the refraction. Pick a direction given s is a random between 0 and 1 */
+    const float CP0 = C0 / C;
+    const float CP1 = C1 / C;
+    if (s < CP0) {
+        ret.v = wi0.v;
+        ret.pdf = wi0.pdf * CP0;
+        wi_o = ret;
+        medium_o = medium0;
+        return c0;
+    }
+    else {
+        ret.v = wi1.v;
+        ret.pdf = wi1.pdf * CP1;
+        wi_o = ret;
+        medium_o = medium1;
+        return c1;
+    }
+}
+
+inline float fresnelDielectric(const float cosi, const float eta)
+{
+    const float k = 1.0f - eta * eta * (1.0f - cosi * cosi);
+    if (k < 0.0f) return 1.0f;
+    const float cost = sqrt(k);
+
+    const float Rper = (eta * cosi - cost) * rcp(eta * cosi + cost);
+    const float Rpar = (cosi - eta * cost) * rcp(cosi + eta * cost);
+    return 0.5f * (Rpar * Rpar + Rper * Rper);
+}
+
+Vec3fa ThinDielectric__sample(const Vec3fa& Lw, const Vec3fa& wo, const DifferentialGeometry& dg, Sample3f& wi_o, Medium& medium, const Vec2f& s)
+{
+    /* eta for glass is between 1.4 and 1.8. The other parameters are placeholders. */
+    const float eta = 1.4f;
+    const float thickness = 0.1f;
+    const Vec3fa transmission = Vec3fa(1.0f);
+    const Vec3fa transmissionFactor = Vec3fa(logf(transmission.x), logf(transmission.y), logf(transmission.z)) * thickness;
+
+    float cosThetaO = clamp(dot(wo, dg.Ns));
+    if (cosThetaO <= 0.0f) return Vec3fa(0.0f);
+    float R = fresnelDielectric(cosThetaO, rcp(eta));
+    Sample3f wit;
+    wit.pdf = 1.f;
+    wit.v = -wo;
+
+    Sample3f wis;
+    wis.pdf = 1.f;
+    wis.v = normalize(2.0f * dot(wo, dg.Ns) * dg.Ns - wo);
+
+    Vec3fa ct = Vec3fa(exp(transmissionFactor.x * rcp(cosThetaO)), exp(transmissionFactor.y * rcp(cosThetaO)), exp(transmissionFactor.z * rcp(cosThetaO))) * Vec3fa(1.0f - R);
+    Vec3fa cs = Vec3fa(R);
+    /* With the thin dialectric, we use the same medium for the space between geometry. However this could be extended for Dielectics that have significant mass (thick glass/water) */
+    return sample_component2(cs, wis, medium, ct, wit, medium, Lw, wi_o, medium, s.x);
+}
+
+Vec3fa Material__sample(Vec3fa R, enum class MaterialType materialType, const Vec3fa& Lw, const Vec3fa& wo, const DifferentialGeometry& dg, Sample3f& wi, Medium& medium, const Vec2f& randomMatSample) {
     Vec3fa c = Vec3fa(0.0f);
     switch (materialType) {
     case MaterialType::MATERIAL_MATTE:
@@ -166,6 +245,9 @@ Vec3fa Material__sample(Vec3fa R, enum class MaterialType materialType, Vec3fa L
 
     case MaterialType::MATERIAL_MIRROR:
         return Mirror__sample(R, Lw, wo, dg, wi);
+        break;
+    case MaterialType::MATERIAL_GLASS:
+        return ThinDielectric__sample(Lw, wo, dg, wi, medium, randomMatSample);
         break;
 /* Return our debug color if something goes awry */
     default: c = R;
@@ -182,6 +264,9 @@ Vec3fa Material__eval(Vec3fa R, enum class MaterialType materialType, const Vec3
         return Lambertian__eval(R, wo, dg, wi);
         break;
     case MaterialType::MATERIAL_MIRROR:
+        return Vec3fa(0.0f);
+        break;
+    case MaterialType::MATERIAL_GLASS:
         return Vec3fa(0.0f);
         break;
         /* Return our debug color if something goes awry */
@@ -236,6 +321,7 @@ Vec3fa renderPixelFunction(float x, float y,
     RandomEngine& reng, std::uniform_real_distribution<float>& distrib,
     const float time,
     const AffineSpace3fa& camera) {
+
     RTCIntersectContext context;
     rtcInitIntersectContext(&context);
     Vec3fa dir = normalize(x * camera.l.vx +
@@ -248,6 +334,10 @@ Vec3fa renderPixelFunction(float x, float y,
 
     Vec3fa L = Vec3fa(0.0f);
     Vec3fa Lw = Vec3fa(1.0f);
+    /* Create vaccum medium.This helps for refractions passing through different mediums... like glass(dielectric) material */
+    Medium medium;
+    medium.transmission = Vec3fa(1.0f);
+    medium.eta = 1.f;
 
     DifferentialGeometry dg;
 
@@ -292,30 +382,10 @@ Vec3fa renderPixelFunction(float x, float y,
         /* default albedo is a pink color for debug */
         Vec3fa albedo = Vec3fa(0.9f, 0.7f, 0.7f);
         enum class MaterialType materialType = MaterialType::MATERIAL_MATTE;
+        materialType = g_geomIDs[rayhit.hit.geomID].materialTable[rayhit.hit.primID];
+        albedo = g_geomIDs[rayhit.hit.geomID].primColorTable[rayhit.hit.primID];
         /* An albedo as well as a material type is used */
-        switch (g_sceneSelector) {
-        case SceneSelector::SHOW_CORNELL_BOX:
-            if (rayhit.hit.geomID == g_geomIDs[0]) {
-                albedo = g_cornell_face_colors[rayhit.hit.primID];
-                materialType = cornellBoxMats[rayhit.hit.primID];
-            }
-            else if (rayhit.hit.geomID == g_geomIDs[1]) {
-                albedo = Vec3fa(1.0f, 1.0f, 1.0f);
-                materialType = MaterialType::MATERIAL_MATTE;
-            }
-            break;
-        case SceneSelector::SHOW_CUBE_AND_PLANE:
-        default:
-            if (rayhit.hit.geomID == g_geomIDs[0]) {
-                albedo = g_cube_face_colors[rayhit.hit.primID];
-                materialType = MaterialType::MATERIAL_MATTE;
-            }
-            else if (rayhit.hit.geomID == g_geomIDs[1]) {
-                albedo = g_ground_face_colors[rayhit.hit.primID];
-                materialType = MaterialType::MATERIAL_MATTE;
-            }
-            break;
-        }
+ 
 
         /* Reference epsilon value to move away from the plane, avoid artifacts */
         dg.eps = 32.0f * 1.19209e-07f * max(max(abs(dg.P.x), abs(dg.P.y)), max(abs(dg.P.z), rayhit.ray.tfar));
@@ -325,10 +395,15 @@ Vec3fa renderPixelFunction(float x, float y,
 
         /* weight scaling based on material sample */
         Vec3fa c = Vec3fa(1.0f);
+        
+        /* scale down mediums that do not transmit as much light */
+        const Vec3fa transmission = medium.transmission;
+        if (transmission != Vec3fa(1.0f))
+            c = c * Vec3fa(pow(transmission.x, rayhit.ray.tfar), pow(transmission.y, rayhit.ray.tfar), pow(transmission.z, rayhit.ray.tfar));
 
         Sample3f wi1;
         Vec2f randomMatSample(distrib(reng), distrib(reng));
-        c = c * Material__sample(albedo, materialType, Lw, wo, dg, wi1, randomMatSample);
+        c = c * Material__sample(albedo, materialType, Lw, wo, dg, wi1, medium, randomMatSample);
 
         /* Search for each light in the scene from our hit point. Aggregate the radiance if hit point is not occluded */
         context.flags = RTCIntersectContextFlags::RTC_INTERSECT_CONTEXT_FLAG_INCOHERENT;
@@ -503,18 +578,21 @@ void device_init(char* cfg, unsigned int width, unsigned int height) {
   switch (g_sceneSelector) {
       case SceneSelector::SHOW_CORNELL_BOX:
         /* add cornell box */
-        g_geomIDs.push_back(addCornell(g_scene, g_device));
-        /* If you would like to add an Embree sphere see addSphere(..) as used below for an example */
-        //g_geomIDs.push_back(addSphere(g_scene, g_device));
+
+        addCornell(g_scene, g_device);
+
+        /* If you would like to add an Embree sphere see addSphere(..) as used below for an example... Remember to look for materials properties of additional geometric objects */
+        addSphere(g_scene, g_device);
 
         cornellCameraLightSetup(g_camera, g_lights, width, height);
         break;
       case SceneSelector::SHOW_CUBE_AND_PLANE:
       default:
         /* add cube */
-        g_geomIDs.push_back(addCube(g_scene, g_device));
+        addCube(g_scene, g_device);
+
         /* add ground plane */
-        g_geomIDs.push_back(addGroundPlane(g_scene, g_device));
+        addGroundPlane(g_scene, g_device);
 
         cubeAndPlaneCameraLightSetup(g_camera, g_lights, width, height);
         break;
@@ -534,8 +612,8 @@ int main() {
     rtcSetDeviceErrorFunction(g_device, error_handler, nullptr);
 
     /* create an image buffer initialize it with all zeroes */
-    const unsigned int width = 512;
-    const unsigned int height = 512;
+    const unsigned int width = 256;
+    const unsigned int height = 256;
     const unsigned int channels = 3;
 
     g_pixels = (unsigned char*)new unsigned char[width * height * channels];
@@ -551,7 +629,7 @@ int main() {
     device_init(nullptr, width, height);
 
     /* Control the total number of accumulations, the total number of samples per pixel per accumulation, and the maximum path length of any given traced path.*/
-    const unsigned long long g_accu_limit = 500;
+    const unsigned long long g_accu_limit = 2000;
     g_spp = 1;
     g_max_path_length = 8;
 

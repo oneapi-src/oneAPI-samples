@@ -9,6 +9,27 @@ Vec3fa* g_cube_vertex_colors = nullptr;
 Vec3fa* g_ground_face_colors = nullptr;
 Vec3fa* g_ground_vertex_colors = nullptr;
 
+static std::vector<enum class MaterialType> cubeMats = {
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE
+};
+
+static std::vector<enum class MaterialType> groundMats = {
+    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_MATTE
+};
+
+
 /* adds a cube to the scene */
 unsigned int addCube(RTCScene _scene, RTCDevice _device) {
     /* create a triangulated cube with 12 triangles and 8 vertices */
@@ -139,6 +160,12 @@ unsigned int addCube(RTCScene _scene, RTCDevice _device) {
     rtcCommitGeometry(mesh);
     unsigned int geomID = rtcAttachGeometry(_scene, mesh);
     rtcReleaseGeometry(mesh);
+
+    MatAndPrimColorTable mpTable;
+    mpTable.materialTable = cubeMats;
+    mpTable.primColorTable = g_cube_face_colors;
+    g_geomIDs.insert(std::make_pair(geomID, mpTable));
+
     return geomID;
 }
 
@@ -154,6 +181,7 @@ unsigned int addGroundPlane(RTCScene _scene, RTCDevice _device) {
     /* Moving the plane up to the bottom of the cube shows more global illumination color bleed 
     Try y = -1 to see it!
     */
+    /* The color of the ground plane is changed to white to see global illumination effects */
     /* set vertices */
     Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
         mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Vertex), 4);
@@ -195,6 +223,12 @@ unsigned int addGroundPlane(RTCScene _scene, RTCDevice _device) {
     rtcCommitGeometry(mesh);
     unsigned int geomID = rtcAttachGeometry(_scene, mesh);
     rtcReleaseGeometry(mesh);
+
+    MatAndPrimColorTable mpTable;
+    mpTable.materialTable = groundMats;
+    mpTable.primColorTable = g_ground_face_colors;
+    g_geomIDs.insert(std::make_pair(geomID, mpTable));
+
     return geomID;
 }
 

@@ -6,6 +6,7 @@
 /* Added for pathtracer */
 #include <rkcommon/math/LinearSpace.h>
 #include <rkcommon/math/AffineSpace.h>
+#include <utility>
 
 using Vec3fa = rkcommon::math::vec_t<float, 3, 1>;
 using rkcommon::math::LinearSpace3fa;
@@ -22,6 +23,21 @@ using rkcommon::math::AffineSpace3fa;
 
 #define TILE_SIZE_X 8
 #define TILE_SIZE_Y 8
+
+using Vec3fa = rkcommon::math::vec_t<float, 3, 1>;
+using rkcommon::math::cross;
+using rkcommon::math::deg2rad;
+using rkcommon::math::normalize;
+using std::max;
+using std::min;
+
+/* Additions for pathtracer */
+using Vec3ff = rkcommon::math::vec4f;
+using rkcommon::math::rcp;
+using Vec2f = rkcommon::math::vec2f;
+using rkcommon::math::dot;
+using rkcommon::math::clamp;
+using rkcommon::math::rsqrt;
 
 /* from tutorial_device.h */
 /* vertex, quad, and triangle layout */
@@ -41,23 +57,20 @@ struct Triangle {
 enum class MaterialType {
     MATERIAL_MATTE,
     MATERIAL_MIRROR,
-    MATERIAL_THIN_DIELECTRIC,
+    MATERIAL_GLASS,
 };
 
-using Vec3fa = rkcommon::math::vec_t<float, 3, 1>;
-using rkcommon::math::cross;
-using rkcommon::math::deg2rad;
-using rkcommon::math::normalize;
-using std::max;
-using std::min;
+struct Medium {
+    Vec3fa transmission;
+    float eta;
+};
 
-/* Additions for pathtracer */
-using Vec3ff = rkcommon::math::vec4f;
-using rkcommon::math::rcp;
-using Vec2f = rkcommon::math::vec2f;
-using rkcommon::math::dot;
-using rkcommon::math::clamp;
-using rkcommon::math::rsqrt;
+struct MatAndPrimColorTable {
+    std::vector<enum class MaterialType> materialTable;
+    Vec3fa* primColorTable;
+};
+/* for holding material properties for each geometry id */
+std::map< unsigned int, MatAndPrimColorTable> g_geomIDs;
 
 /* Added for pathtracer */
 struct DifferentialGeometry
