@@ -1,24 +1,14 @@
-﻿# `simple-add-dpc++` Sample
+﻿# `Simple-Add` Sample
 
-`simple-add-dpc++` provides the simplest example of DPC++ while providing an
-example of using both buffers and Unified Shared Memory.
+The `Simple-Add` sample demonstrates the simplest SYCL*-compliant programming methods using both buffers and Unified Shared Memory.
 
 For comprehensive instructions, see the [Intel&reg; oneAPI Programming
 Guide](https://software.intel.com/en-us/oneapi-programming-guide) and search
 based on relevant terms noted in the comments.
 
-
-| Optimized for                     | Description
-|:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br>Windows* 10
-| Hardware                          | Skylake with GEN9 or newer <br>Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
-
-
-
 ## Purpose
 
-The `simple-add-dpc++` is a simple program that adds two large vectors of
+The `Simple-Add` is a simple program that adds two large vectors of
 integers and verifies the results. This program is implemented using C++ and
 SYCL* for Intel&reg; CPU and accelerators.
 
@@ -35,28 +25,29 @@ if a compatible GPU is not detected. If successful, the name of the offload
 device and a success message is displayed, which confirms your development
 environment is set up correctly.
 
+## Prerequisites
+
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | Ubuntu* 18.04 <br>Windows* 10
+| Hardware                          | Skylake with GEN9 or newer <br>Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA
+| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+
+
 ## Key Implementation Details
 
 The basic SYCL* implementation explained in the code includes device selector,
 USM, buffer, accessor, kernel, and command groups.
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
-for details.
-
-Third party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
-
 ## Known Issues
 
-With oneAPI 2021.4 the argument for accessors was changed from 'noinit' to
-'no_init'. The change was derived from a change between the SYCL 2020
+With oneAPI 2021.4 the argument for accessors was changed from `noinit` to
+`no_init`. The change was derived from a change between the SYCL 2020
 provisional spec and that of the 2020Rev3 spec.
 
 If running this sample and it fails, do one of the following
 - Update the Intel® oneAPI Base Toolkit to 2021.4
-- Change the 'no_init' argument  to 'noinit'
+- Change the `no_init` argument  to `noinit`
 
 ## Setting Environment Variables
 
@@ -97,13 +88,6 @@ work with all Linux shells.
     file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html)
     to set up your development environment.
 
-### Troubleshooting
-If you receive an error message, troubleshoot the problem using the Diagnostics
-Utility for Intel&reg; oneAPI Toolkits, which provides system checks to find
-missing dependencies and permissions errors. See [Diagnostics Utility for
-Intel&reg; oneAPI Toolkits User
-Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
-
 ### Windows*
 
 Execute the  ``setvars.bat``  script from the root folder of your oneAPI
@@ -118,7 +102,14 @@ For Windows PowerShell* users, execute this command:
 
 If environment variables are set correctly, you will see a confirmation message.
 
-## Building the `simple add DPC++` Program for CPU and GPU
+### Troubleshooting
+If you receive an error message, troubleshoot the problem using the Diagnostics
+Utility for Intel&reg; oneAPI Toolkits, which provides system checks to find
+missing dependencies and permissions errors. See [Diagnostics Utility for
+Intel&reg; oneAPI Toolkits User
+Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+## Build the `Simple-Add` Program for CPU and GPU
 
 > **Note**: If you have not already done so, set up your CLI environment by
 > sourcing  the `setvars` script located in the root of your oneAPI
@@ -142,8 +133,8 @@ If environment variables are set correctly, you will see a confirmation message.
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
 your development system.
 
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, you must specify the compute node
+### Run the Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, you must specify the compute node
 (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more
 information, see the Intel&reg; oneAPI Base Toolkit [Get Started
 Guide](https://devcloud.intel.com/oneapi/get_started/).
@@ -154,10 +145,9 @@ You can use Visual Studio Code (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI
-   Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg;oneAPI Toolkits**.
  - Configure the oneAPI environment with the extension **Environment
-   Configurator for Intel oneAPI Toolkits**.
+   Configurator for Intel&reg; oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
 
@@ -168,7 +158,7 @@ Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs
 After learning how to use the extensions for Intel oneAPI Toolkits, return to
 this readme for instructions on how to build and run a sample.
 
-### Linux*
+### On Linux*
 Perform the following steps:
 1. Build the `simple-add-dpc++` program using the following make commands
    (default uses USM):
@@ -188,7 +178,7 @@ Perform the following steps:
     make clean
     ```
 
-### On Windows Using a Command Line Interface
+### On Windows* Using a Command Line Interface
 1. Select **Programs** > **Intel oneAPI 2021** > **Intel oneAPI Command Prompt**
    to launch a command window.
 2. Build the program using the following `nmake` commands (Windows supports USM
@@ -208,7 +198,7 @@ Perform the following steps:
     nmake -f Makefile.win clean
     ```
 
-### On Windows Using Visual Studio* Version 2017 or Newer
+### On Windows Using Visual Studio* Version 2017 or Later
 Perform the following steps:
 1. Launch the Visual Studio* 2017.
 2. Select the menu sequence **File** > **Open** > **Project/Solution**.
@@ -220,9 +210,9 @@ Perform the following steps:
 7. Select **Debug** > **Start Without Debugging** menu option to run the
    program.
 
-## Building the `simple-add` Program for Intel&reg; FPGA
+## Build the `Simple-Add` Program for Intel&reg; FPGA
 
-### On Linux
+### On Linux*
 
 Perform the following steps:
 
@@ -249,7 +239,7 @@ Perform the following steps:
     make report -f Makefile.fpga
     ```
 
-### On Windows Using a Command Line Interface
+### On Windows* Using a Command Line Interface
 Perform the following steps:
 
 >**Note**: On Windows, you can only compile and run on the FPGA emulator.
@@ -281,7 +271,7 @@ Perform the following steps:
 ### Application Parameters
 There are no editable parameters for this sample.
 
-### Example of Output
+### Example Output
 ```
 simple-add output snippet changed to:
 Running on device:        Intel(R) Gen9 HD Graphics NEO
@@ -293,3 +283,10 @@ Array size: 10000
 [9999]: 9999 + 100000 = 109999
 Successfully completed on device.
 ```
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+for details.
+
+Third party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
