@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<html><style>
+        .metric-name {
+        font-weight: 600;
+        min-width: 14em;
+        display: inline-block;
+        }
+
+        .metric-value {
+        margin-left: 1em;
+        color: #336;
+        }
+
+        .metric-value-with-issue {
+        margin-left: 1em;
+        color: #C33;
+        }
+
+        li {
+        list-style-type: none;
+        }
+
+        ul {
+        margin-left: 1.5em;
+        padding-left: 0em;
+        }
+
+        body {
+        margin: 0;
+        paddind: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #336;
+        }
+
+        pre {
+        white-space:pre-wrap;
+        max-width: 40em;
+        color: #633;
+        }
+
+        .issue {
+        border-left: 3px solid #C33;
+        padding: 0.3em 0.3em 0.3em 1em;
+        }
+
+        table {
+        margin: 0 1.5em;
+        }
+
+        th, td {
+        text-align: left;
+        }
+
+        td {
+        color: #333;
+        }
+
+        th {
+        border-bottom: 2px solid #336;
+        font-weight: 600;
+        }
+
+        .table-value {
+        margin-right: 1.5em;
+        }
+
+        .brand {
+        background-color: #0071c5;
+        padding: 0.5em 1.5em;
+        width: 100%;
+        color: white;
+        font-weight: 600;
+        }
+
+        .recommendation-placeholder {
+        background-color: #eaecee;
+        padding: 1em;
+        }
+
+        .recommendation-placeholder p {
+        font-weight: 600;
+        margin: 0;
+        }
+
+        .recommendation {
+        border-left: 3px solid #bbb;
+        padding: 0.3em 0.3em 0.3em 1em;
+        margin: 0 0 0 1.5em;
+        }
+
+        .recommendation-metric {
+        font-weight: 600;
+        min-width: 14em;
+        display: inline-block;
+        margin: 0 0 0 1.5em;
+        }
+
+      </style><body><div class="brand">Intel<sup>&reg;</sup> VTune<sup>&trade;</sup> Profiler 2022.0.0</div><ul><li><span class="metric-name">Elapsed Time:
+        </span><span class="metric-value">24.475s</span><ul><li><span class="metric-name">Paused Time:
+        </span><span class="metric-value">0s</span></li></ul></li></ul><ul><li><span class="metric-name">Effective CPU Utilization:
+        </span><span class="metric-value-with-issue">17.6% (2.111 out of 12 logical CPUs)<div class="issues"><pre class="issue">The metric value is low, which may signal a poor logical CPU cores utilization caused by load imbalance, threading runtime overhead, contended synchronization, or thread/process underutilization. Explore sub-metrics to estimate the efficiency of MPI and OpenMP parallelism or run the Locks and Waits analysis to identify parallel bottlenecks for other parallel runtimes.</pre></div></span><ul><li><span class="metric-name">Total Thread Count:
+        </span><span class="metric-value">14</span><ul><li><span class="metric-name">Thread Oversubscription:
+        </span><span class="metric-value">0s (0.0% of CPU Time)</span></li></ul></li></ul><ul><li><span class="metric-name">Wait Time with poor CPU Utilization:
+        </span><span class="metric-value">19.390s (73.0% of Wait Time)</span><ul><li><span class="metric-name">Top Waiting Objects:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Sync Object</span></th><th><span class="table-value">Wait Time with poor CPU Utilization</span></th><th><span class="table-value">(% from Object Wait Time)(%)</span></th><th><span class="table-value">Wait Count</span></th></tr><tr><td><span class="table-value">Condition Variable 0x0d43fa13</span></td><td><span class="table-value">6.377s</span></td><td><span class="table-value">64.0%</span></td><td><span class="table-value">1</span></td></tr><tr><td><span class="table-value">Condition Variable 0xd9e74274</span></td><td><span class="table-value">6.270s</span></td><td><span class="table-value">63.6%</span></td><td><span class="table-value">1</span></td></tr><tr><td><span class="table-value">Futex 0x251f10cb</span></td><td><span class="table-value">4.865s</span></td><td><span class="table-value">100.0%</span></td><td><span class="table-value">56</span></td></tr><tr><td><span class="table-value">Condition Variable 0x17c7c503</span></td><td><span class="table-value">1.201s</span></td><td><span class="table-value">100.0%</span></td><td><span class="table-value">439</span></td></tr><tr><td><span class="table-value">Mutex 0xe462291b</span></td><td><span class="table-value">0.225s</span></td><td><span class="table-value">100.0%</span></td><td><span class="table-value">229</span></td></tr><tr><td><span class="table-value">[Others]</span></td><td><span class="table-value">0.453s</span></td><td><span class="table-value">100.0%</span></td><td><span class="table-value">355</span></td></tr></table></li></ul></li></ul><ul><li><span class="metric-name">Spin and Overhead Time:
+        </span><span class="metric-value">0.345s (0.7% of CPU Time)</span><ul><li><span class="metric-name">Top Functions with Spin or Overhead Time:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Function</span></th><th><span class="table-value">Module</span></th><th><span class="table-value">Spin and Overhead Time</span></th><th><span class="table-value">(% from CPU Time)(%)</span></th></tr><tr><td><span class="table-value">__sched_yield</span></td><td><span class="table-value">libc.so.6</span></td><td><span class="table-value">0.245s</span></td><td><span class="table-value">0.5%</span></td></tr><tr><td><span class="table-value">[MKL SERVICE]@get_dynamic</span></td><td><span class="table-value">libmkl_intel_thread.so.2</span></td><td><span class="table-value">0.030s</span></td><td><span class="table-value">0.1%</span></td></tr><tr><td><span class="table-value">_PyFunction_Vectorcall</span></td><td><span class="table-value">python3.9</span></td><td><span class="table-value">0.028s</span></td><td><span class="table-value">0.1%</span></td></tr><tr><td><span class="table-value">PyObject_GetAttr</span></td><td><span class="table-value">python3.9</span></td><td><span class="table-value">0.012s</span></td><td><span class="table-value">0.0%</span></td></tr><tr><td><span class="table-value">std::__atomic_base&lt;int&gt;::load</span></td><td><span class="table-value">libtbb.so.12</span></td><td><span class="table-value">0.012s</span></td><td><span class="table-value">0.0%</span></td></tr><tr><td><span class="table-value">[Others]</span></td><td><span class="table-value">N/A</span></td><td><span class="table-value">0.018s</span></td><td><span class="table-value">0.0%</span></td></tr></table></li></ul></li></ul></li></ul><ul><li><span class="metric-name">Collection and Platform Info:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Application Command Line:
+        </span><span class="metric-value">python "bs_erf_numba_numpy.py" "--steps" "1" "--size" "268435456" </span></li></ul><ul><li><span class="metric-name">Operating System:
+        </span><span class="metric-value">5.4.0-80-generic DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=20.04
+DISTRIB_CODENAME=focal
+DISTRIB_DESCRIPTION="Ubuntu 20.04.4 LTS"</span></li></ul><ul><li><span class="metric-name">Computer Name:
+        </span><span class="metric-value">s001-n159</span></li></ul><ul><li><span class="metric-name">Result Size:
+        </span><span class="metric-value">35.7 MB </span></li></ul><ul><li><span class="metric-name">Collection start time:
+        </span><span class="metric-value">23:32:24 09/05/2022 UTC</span></li></ul><ul><li><span class="metric-name">Collection stop time:
+        </span><span class="metric-value">23:32:50 09/05/2022 UTC</span></li></ul><ul><li><span class="metric-name">Collector Type:
+        </span><span class="metric-value">User-mode sampling and tracing</span></li></ul><ul><li><span class="metric-name">CPU:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Name:
+        </span><span class="metric-value">Intel(R) microarchitecture code named Coffeelake</span></li></ul><ul><li><span class="metric-name">Frequency:
+        </span><span class="metric-value">3.696 GHz</span></li></ul><ul><li><span class="metric-name">Logical CPU Count:
+        </span><span class="metric-value">12</span></li></ul><ul><li><span class="metric-name">Cache Allocation Technology:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Level 2 capability:
+        </span><span class="metric-value">not detected</span></li></ul><ul><li><span class="metric-name">Level 3 capability:
+        </span><span class="metric-value">not detected</span></li></ul></li></ul></li></ul></li></ul></body></html>
+

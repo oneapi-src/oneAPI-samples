@@ -1,7 +1,8 @@
-
-// Copyright (C) 2020 Intel Corporation
-
+//==============================================================
+// Copyright © Intel Corporation
+//
 // SPDX-License-Identifier: MIT
+// =============================================================
 
 #include <CL/sycl.hpp>
 using namespace sycl;
@@ -17,7 +18,7 @@ int main() {
     host_array[i] = i;
   }
 
-  // We will learn how to simplify this example later
+  // Submit the queue
   Q.submit([&](handler &h) {
       h.parallel_for(N, [=](id<1> i) {
           // access sharedArray and hostArray on device

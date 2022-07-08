@@ -95,6 +95,17 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `fpga_reg` Design
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 
@@ -205,12 +216,27 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      nmake fpga
      ```
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005
+(with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware
+on Windows* requires a third-party or custom Board Support Package (BSP) with
+Windows* support.<br> *Note:* If you encounter any issues with long paths when
+compiling under Windows*, you may have to create your ‘build’ directory in a
+shorter path, for example c:\samples\build. You can then run cmake from that
+directory, and provide cmake with the full path to your sample directory.
+
+### Troubleshooting
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*).
-For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Examining the Reports
 
@@ -228,15 +254,17 @@ Open the reports in Chrome*, Firefox*, Edge*, or Internet Explorer*. Observe the
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./fpga_reg.fpga_emu    # Linux
-   fpga_reg.fpga_emu.exe  # Windows
+   ./fpga_reg.fpga_emu    (Linux)
+   fpga_reg.fpga_emu.exe  (Windows)
    ```
 
 2. Run the sample on the FPGA device
 
    ```bash
-   ./fpga_reg.fpga             # Linux
-   ./fpga_reg_registered.fpga  # Linux
+   ./fpga_reg.fpga                (Linux)
+   ./fpga_reg_registered.fpga     (Linux)
+   fpga_reg.fpga.exe              (Windows)
+   fpga_reg_registered.fpga.exe   (Windows)
    ```
 
 ### Example of Output

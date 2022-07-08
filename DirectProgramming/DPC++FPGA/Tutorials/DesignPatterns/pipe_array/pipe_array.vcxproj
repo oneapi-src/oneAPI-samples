@@ -14,8 +14,6 @@
     <ClCompile Include="src\pipe_array.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\pipe_array.h" />
-    <ClInclude Include="src\pipe_array_internal.h" />
     <ClInclude Include="src\unroller.h" />
   </ItemGroup>
   <ItemGroup>

@@ -16,8 +16,8 @@ class BufferWorker;
 
 // kernel using buffers to transfer data
 template <typename T>
-double BufferKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
-                    const unsigned int size) {
+double SubmitBufferKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
+                          const unsigned int size) {
   // start timer
   auto start = high_resolution_clock::now();
 

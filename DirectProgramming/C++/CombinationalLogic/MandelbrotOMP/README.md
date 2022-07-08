@@ -1,6 +1,6 @@
 # `Mandelbrot` Sample
 
-Mandelbrot is an infinitely complex fractal patterning that is derived from a simple formula. This sample demonstrates how to accelerate program performance with SIMD and parallelization using OpenMP*, in the context of calculating the Mandelbrot set.
+Mandelbrot is an infinitely complex fractal patterning that is derived from a simple formula. This sample demonstrates how to accelerate program performance with SIMD and parallelization using OpenMP* in the context of calculating the Mandelbrot set.
 
 
 | Optimized for                     | Description
@@ -23,7 +23,7 @@ Performance number tabulation
 
 ## Purpose
 
-Mandelbrot is a C++ application that generates a fractal image by tracking how many iterations of the function z_n+1 = z_n^2 + c remain bounded, where c is a coordinate on the complex plane and z_0 = 0. In performing this calculation, complex numbers belonging to the Mandelbrot set will take infinite iterations as they will always remain bounded. So a maximum depth of iterations is set so that the program may execute infinite time.
+Mandelbrot is a C++ application that generates a fractal image by tracking how many iterations of the function $z_n+1 = $z_n^2 + c$ remain bounded, where c is a coordinate on the complex plane and z_0 = 0. In performing this calculation, complex numbers belonging to the Mandelbrot set will take infinite iterations as they will always remain bounded. So a maximum depth of iterations is set so that the program may execute infinite time.
 
 Each point on the complex plane can be calculated independently, which lends the Mandelbrot image's calculation to parallelism. Furthermore, since each point's calculation is identical, the program can take advantage of SIMD directives to get even greater performance. This code sample demonstrates how to optimize a serial implementation of the Mandelbrot image calculation using OpenMP pragmas for SIMD and parallelization.
 
@@ -38,7 +38,7 @@ The four mandelbrot function implementations are all identically written. The on
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
 
 ### Using Visual Studio Code*  (Optional)
 
@@ -50,20 +50,36 @@ The basic steps to build and run a sample using VS Code include:
  - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel®
+oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
+
 ## Building the `Mandelbrot` Program
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+>
+> Windows:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 Perform the following steps:
 1. Build the program using the following `make` commands.
-```
-$ export perf_num=1     *optional, will enable performance tabulation mode
-$ make
-```
+    ```
+    $ export perf_num=1     *optional, will enable performance tabulation mode
+    $ make
+    ```
 
 2. Run the program:
     ```
@@ -75,6 +91,8 @@ $ make
     make clean
     ```
 
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
 
 ## Running the Sample
 

@@ -23,6 +23,19 @@ Code samples are licensed under the MIT license. See
 
 ## Building the Reference Design
 
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
@@ -116,11 +129,29 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
    * An FPGA hardware target is not provided on Windows*.
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005
+(with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA
+hardware on Windows* requires a third-party or custom Board Support Package
+(BSP) with Windows* support.
+
+ *Note:* If you encounter any issues with long
+paths when compiling under Windows*, you may have to create your ‘build’
+directory in a shorter path, for example c:\samples\build. You can then run
+cmake from that directory, and provide cmake with the full path to your sample
+directory.
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Running the Reference Design
 
@@ -133,6 +164,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
 2. Run the sample on the FPGA device.
      ```
      ./merge_sort.fpga        (Linux)
+     merge_sort.fpga.exe      (Windows)
      ```
 
 ### Example of Output
@@ -154,15 +186,13 @@ The following source files can be found in the `src/` sub-directory.
 | File                           | Description
 |:---                            |:---
 |`main.cpp`                      | Contains the `main()` function and the top-level interfaces.
-|`merge_sort.hpp`                 | The function to submit all of the merge sort kernels (`SortingNetwork`, `Produce`, `Merge`, and `Consume`).
+|`merge_sort.hpp`                | The function to submit all of the merge sort kernels (`SortingNetwork`, `Produce`, `Merge`, and `Consume`).
 |`consume.hpp`                   | The `Consume` kernel for the merge unit. This kernel reads from an input pipe and writes out to either a different output pipe, or to device memory.
-|`impu_math.hpp`                 | Metaprogramming math helper functions (*impu* = Intel Metaprogramming Utilities)
 |`merge.hpp`                     | The `Merge` kernel for the merge unit and the merge tree. This kernel streams in two sorted lists, merges them into a single sorted list of double the size, and streams the data out a pipe.
-|`pipe_array.hpp`                | Header file containing the definition of an array of pipes.
-|`pipe_array_internal.hpp`       | Helper for pipe_array.hpp.
 |`produce.hpp`                   | The `Produce` kernel for the merge unit. This kernel reads from input pipes or performs strided reads from device memory and writes the data to an output pipe.
-|`sorting_networks.hpp`           | Contains all of the code relevant to sorting networks, including the `SortingNetwork` kernel, as well as the `BitonicSortingNetwork` and `MergeSortNetwork` helper functions.
-|`unrolled_loop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end.
+|`sorting_networks.hpp`          | Contains all of the code relevant to sorting networks, including the `SortingNetwork` kernel, as well as the `BitonicSortingNetwork` and `MergeSortNetwork` helper functions.
+
+For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the README in the `DirectProgramming/DPC++FPGA/include/` directory.
 
 ### Merge Sort Details
 This section will describe how the merge sort design is structured and how it takes advantage of the spatial compute of the FPGA. <br/>

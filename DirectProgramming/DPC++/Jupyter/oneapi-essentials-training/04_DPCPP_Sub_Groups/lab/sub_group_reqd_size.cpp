@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -27,7 +27,7 @@ int main() {
     auto out = stream(1024, 768, h);
 
     //# nd-range kernel with user specified sub_group size
-    h.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item)[[intel::reqd_sub_group_size(32)]] {
+    h.parallel_for(nd_range<1>(N, B), [=](nd_item<1> item)[[intel::reqd_sub_group_size(8)]] {
       //# get sub_group handle
       auto sg = item.get_sub_group();
 

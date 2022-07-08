@@ -5,14 +5,24 @@
   "description": "Intel® FPGA tutorial demonstrating the caching of on-chip memory to reduce loop initiation interval",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
-  "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "Tutorials/DesignPatterns/onchip_memory_cache",
+      "include/onchip_memory_with_cache.hpp",
+      "include/unrolled_loop.hpp"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -23,6 +33,7 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -34,9 +45,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/onchip_memory_cache",
           "nmake fpga_emu",
           "onchip_memory_cache.fpga_emu.exe"
         ]
@@ -44,9 +57,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/onchip_memory_cache",
           "nmake report"
         ]
       }

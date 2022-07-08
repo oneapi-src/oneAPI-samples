@@ -1,10 +1,10 @@
 ﻿# `matrix_mul` Sample
 matrix_mul is a simple program that multiplies together two large matrices and
 verifies the results.  This program is implemented using two ways:
-    1. Data Parallel C++ (DPC++)
-    2. OpenMP (omp)
+1. SYCL*
+2. OpenMP (OMP)
 
-For comprehensive instructions see the [DPC++ Programming](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
+For comprehensive instructions, see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) and search based on relevant terms noted in the comments.
 
 
 | Optimized for                       | Description
@@ -12,7 +12,7 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 | OS                                | Linux* Ubuntu* 18.04, Windows 10*
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler, Intel&reg; C++ Compiler, Intel&reg; oneAPI C++ Compiler Classic
-| What you will learn               | Offloads computations on 2D arrays to GPU using DPC++ and OpenMP
+| What you will learn               | Offloads computations on 2D arrays to GPU using SYCL* and OpenMP
 | Time to complete                  | 15 minutes
 
 ### Purpose
@@ -26,14 +26,17 @@ displayed.
 This sample uses buffers to manage memory.  For more information regarding
 different memory management options, refer to the vector_add sample.
 
-matrix_mul includes C++ implementations of both Data Parallel (DPC++) and
+matrix_mul includes C++ implementations of both SYCL* and
 OpenMP; each is contained in its own .cpp file. This provides a way to compare
-existing offload techniques such as OpenMP with Data Parallel C++ within a
-relatively simple sample. The default will build the DPC++ application.
-Separate OpenMP build instructions are provided below. Note: matrix_mul does not
-support OpenMP on Windows.
+existing offload techniques such as OpenMP with SYCL* within a
+relatively simple sample. The default will build the SYCL* application.
+Separate OpenMP build instructions are provided below.
 
-The code will attempt to execute on an available GPU first and fallback to the system's CPU if a compatible GPU is not detected.  The device used for the compilation is displayed in the output.
+**Note**: matrix_mul does not support OpenMP on Windows.
+
+The code will attempt to execute on an available GPU first and fallback to the
+system's CPU if a compatible GPU is not detected. The device used for the
+compilation is displayed in the output.
 
 ## Key implementation details
 SYCL implementation explained.
@@ -43,24 +46,26 @@ OpenMP offload implementation explained.
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
 
-## Building the `matrrix_mul` Program for DPC++ and OpenMP
-
-> Note: if you have not already done so, set up your CLI
-> environment by sourcing  the setvars script located in
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
-> Linux User: . ~/intel/oneapi/setvars.sh
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+> Linux:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+>
+> Windows:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ## Include Files
-The include folder is located at "%ONEAPI_ROOT%\dev-utilities\latest\include" on your development system.
+The include folder is located at `"%ONEAPI_ROOT%\dev-utilities\latest\include"` on your development system.
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
-
+If running a sample in the Intel DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
 ### Using Visual Studio Code*  (Optional)
 
@@ -78,7 +83,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
-### How to build for DPC++ on Linux
+### How to build for SYCL* on Linux
    * Build the program using Make
     cd matrix_mul &&
     make all
@@ -100,7 +105,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    * Clean the program
     make clean
 
-### How to build for DPC++ on Windows
+### How to build for SYCL* on Windows
 The OpenMP offload target is not supported on Windows yet.
 
 #### Command Line using MSBuild
@@ -130,8 +135,9 @@ You can modify the computation size by adjusting the size parameter
    N = m_size / 4;
    P = m_size / 2;
 
-### Example of Output
-#### DPC++
+## Example of Output
+
+### SYCL*
 ```
  ./matrix_mul_dpc
 Running on device: Intel(R) Gen9 HD Graphics NEO
@@ -139,7 +145,7 @@ Problem size: c(150,600) = a(150,300) * b(300,600)
 Result of matrix multiplication using DPC++: Success - The results are correct!
 ```
 
-#### OpenMP
+### OpenMP
 ```
 ./matrix_mul_omp
 Problem size: c(150,600) = a(150,300) * b(300,600)
@@ -148,3 +154,5 @@ The default device id: 0
 Result of matrix multiplication using OpenMP: Success - The results are correct!
 Result of matrix multiplication using GPU offloading: Success - The results are correct!
 ```
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).

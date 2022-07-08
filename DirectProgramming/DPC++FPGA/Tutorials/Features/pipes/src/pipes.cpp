@@ -10,13 +10,13 @@
 // e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
 #include "dpc_common.hpp"
 
-
 using namespace sycl;
 
-using ProducerToConsumerPipe = ext::intel::pipe<  // Defined in the SYCL headers.
-    class ProducerConsumerPipe,              // An identifier for the pipe.
-    int,                                     // The type of data in the pipe.
-    4>;                                      // The capacity of the pipe.
+using ProducerToConsumerPipe =
+    ext::intel::pipe<                 // Defined in the SYCL headers.
+      class ProducerConsumerPipeId,   // An identifier for the pipe.
+      int,                            // The type of data in the pipe.
+      4>;                             // The capacity of the pipe.
 
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
@@ -99,8 +99,12 @@ int main(int argc, char *argv[]) {
   std::vector<int> producer_input(array_size, -1);
   std::vector<int> consumer_output(array_size, -1);
 
-  // Initialize the input data with numbers from 0, 1, 2, ..., array_size-1
-  std::iota(producer_input.begin(), producer_input.begin(), 0);
+  // Initialize the input data with random numbers smaller than 46340.
+  // Any number larger than this will have integer overflow when squared. 
+  constexpr int max_val = 46340;
+  for (size_t i = 0; i < array_size; i++) {
+    producer_input[i] = rand() % max_val;
+  }
 
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;

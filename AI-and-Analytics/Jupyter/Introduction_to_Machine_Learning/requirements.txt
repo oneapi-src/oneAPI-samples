@@ -1,0 +1,6 @@
+###### Requirements without Version Specifiers ######
+tqdm
+seaborn
+openpyxl
+Pillow
+nbconvert

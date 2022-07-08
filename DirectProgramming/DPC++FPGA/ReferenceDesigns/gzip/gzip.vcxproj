@@ -22,8 +22,6 @@
     <ClInclude Include="src\crc32.hpp" />
     <ClInclude Include="src\gzipkernel.hpp" />
     <ClInclude Include="src\kernels.hpp" />
-    <ClInclude Include="src\pipe_array.hpp" />
-    <ClInclude Include="src\pipe_array_internal.hpp" />
     <ClInclude Include="src\WriteGzip.hpp" />
   </ItemGroup>
   <ItemGroup>

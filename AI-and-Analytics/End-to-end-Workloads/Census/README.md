@@ -20,7 +20,7 @@ Data transformation stage normalizes the income to the yearly inflation, balance
 Dataset is from IPUMS USA, University of Minnesota, [www.ipums.org](https://ipums.org/) (Steven Ruggles, Sarah Flood, Ronald Goeken, Josiah Grover, Erin Meyer, Jose Pacas and Matthew Sobek. IPUMS USA: Version 10.0 [dataset]. Minneapolis, MN: IPUMS, 2020. https://doi.org/10.18128/D010.V10.0)
 
 ## Key Implementation Details
-This end-to-end workload sample code is implemented for CPU using the Python language.  With the installation of Intel AI Analytics Toolkit, the conda environment is prepared with Python version 3.7, Intel Distribution of Modin* , Ray, Intel® Extension for Scikit-Learn, NumPy following which the sample code can be directly run using the underlying steps in this README. 
+This end-to-end workload sample code is implemented for CPU using the Python language.  With the installation of Intel AI Analytics Toolkit, the conda environment is prepared with Python version 3.7, Intel Distribution of Modin* , Ray, Intel® Extension for Scikit-Learn, NumPy following which the sample code can be directly run using the underlying steps in this README.
 
 ## License
 
@@ -39,11 +39,11 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 To install the Intel® Distribution of Modin* python environment, use the following command:
 #### Linux
 ```
-conda create -y -n modin-conda-forge -c conda-forge --strict-channel-priority modin-all scikit-learn-intelex
+conda create -y -n intel-aikit-modin intel-aikit-modin -c intel
 ```
 Then activate your conda environment with the following command:
 ```
-conda activate modin-conda-forge
+conda activate intel-aikit-modin
 ```
 
 Additionally, install the following in the conda environment
@@ -51,7 +51,7 @@ Additionally, install the following in the conda environment
 ### Install Jupyter Notebook
 Needed to launch Jupyter Notebook in the directory housing the code example
 ```
-conda install jupyter nb_conda_kernels -c conda-forge
+conda install jupyter nb_conda_kernels
 ```
 
 ### opencensus
@@ -77,3 +77,23 @@ Run the Program
 ##### Expected Printed Output:
 Expected Cell Output shown for census_modin.ipynb:
 ![Output](Expected_output.jpg "Expected output for Jupyter Notebook")
+
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the Generate Launch Configurations extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.

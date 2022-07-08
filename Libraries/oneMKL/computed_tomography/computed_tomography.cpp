@@ -341,6 +341,12 @@ void bmp_read(matrix_r &image, std::string fname)
     if (header.bi_compression)
         die("%s is compressed bmp\n", fname);
 
+    if (header.bi_height <= 0 || header.bi_width <= 0)
+        die("image %s has zero size\n", fname);
+
+    if (header.bi_height > 65536 || header.bi_width > 65536)
+        die("image %s too large\n", fname);
+
     image.allocate(header.bi_height, header.bi_width, header.bi_width);
     if (!image.data)
         die("no memory to read %s\n", fname);
@@ -354,12 +360,18 @@ void bmp_read(matrix_r &image, std::string fname)
             struct {
                 unsigned char b, g, r;
             } pixel;
+
             fp.read((char *)(&pixel), 3);
-            REAL_DATA gray               = (255 * 3.0 - pixel.r - pixel.g - pixel.b) / 255;
+
+            REAL_DATA gray = (255 * 3.0 - pixel.r - pixel.g - pixel.b) / 255;
             image_data[i * image.ldw + j] = gray;
         }
         fp.seekg((4 - 3 * image.w % 4) % 4, std::ios_base::cur);
     }
+
+    if (!fp)
+        die("error reading %s\n", fname);
+
     fp.close();
 }
 

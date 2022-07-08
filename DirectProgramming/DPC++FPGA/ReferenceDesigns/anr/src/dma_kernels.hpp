@@ -13,7 +13,7 @@
 #include "data_bundle.hpp"
 
 using namespace sycl;
-using namespace hldutils;
+using namespace fpga_tools;
 
 //
 // Kernel to read data from device memory and write it into the ANR input pipe.
@@ -40,24 +40,22 @@ event SubmitInputDMA(queue &q, T *in_ptr, int rows, int cols, int frames) {
   const int iterations = cols * rows / pixels_per_cycle;
 
   // Using device memory
-  return q.submit([&](handler &h) {
-    h.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
-      device_ptr<T> in(in_ptr);
+  return q.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
+    device_ptr<T> in(in_ptr);
 
-      // coalesce the following two loops into a single for-loop using the
-      // loop_coalesce attribute
-      [[intel::loop_coalesce(2)]]
-      for (int f = 0; f < frames; f++) {
-        for (int i = 0; i < iterations; i++) {
-          PipeType pipe_data;
-          #pragma unroll
-          for (int k = 0; k < pixels_per_cycle; k++) {
-            pipe_data[k] = NonCachingLSU::load(in + i * pixels_per_cycle + k);
-          }
-          Pipe::write(pipe_data);
+    // coalesce the following two loops into a single for-loop using the
+    // loop_coalesce attribute
+    [[intel::loop_coalesce(2)]]
+    for (int f = 0; f < frames; f++) {
+      for (int i = 0; i < iterations; i++) {
+        PipeType pipe_data;
+        #pragma unroll
+        for (int k = 0; k < pixels_per_cycle; k++) {
+          pipe_data[k] = NonCachingLSU::load(in + i * pixels_per_cycle + k);
         }
+        Pipe::write(pipe_data);
       }
-    });
+    }
   });
 }
 
@@ -78,24 +76,22 @@ event SubmitOutputDMA(queue &q, T *out_ptr, int rows, int cols, int frames) {
   const int iterations = cols * rows / pixels_per_cycle;
 
   // Using device memory
-  return q.submit([&](handler &h) {
-    h.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
-      device_ptr<T> out(out_ptr);
+  return q.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
+    device_ptr<T> out(out_ptr);
 
-      // coalesce the following two loops into a single for-loop using the
-      // loop_coalesce attribute
-      [[intel::loop_coalesce(2)]]
-      for (int f = 0; f < frames; f++) {
-        for (int i = 0; i < iterations; i++) {
-          auto pipe_data = Pipe::read();
-          #pragma unroll
-          for (int k = 0; k < pixels_per_cycle; k++) {
-            out[i * pixels_per_cycle + k] = pipe_data[k];
-          }
+    // coalesce the following two loops into a single for-loop using the
+    // loop_coalesce attribute
+    [[intel::loop_coalesce(2)]]
+    for (int f = 0; f < frames; f++) {
+      for (int i = 0; i < iterations; i++) {
+        auto pipe_data = Pipe::read();
+        #pragma unroll
+        for (int k = 0; k < pixels_per_cycle; k++) {
+          out[i * pixels_per_cycle + k] = pipe_data[k];
         }
       }
-    });
-  });
+    }
+});
 }
 
 #endif /* __DMA_KERNELS_HPP__ */

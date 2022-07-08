@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -23,12 +23,11 @@ int main() {
     buffer buf_sum(&sum, range(1));
 
     q.submit([&](handler& h) {
-      //# create accessors for buffers
+      //# create accessors for buffer
       accessor acc_data(buf_data, h, read_only);
-      accessor acc_sum(buf_sum, h);
 
       //# nd-range kernel parallel_for with reduction parameter
-      h.parallel_for(nd_range<1>{N, B}, ext::oneapi::reduction(acc_sum, 0, plus<>()), [=](nd_item<1> it, auto& temp) {
+      h.parallel_for(nd_range<1>{N, B}, reduction(buf_sum, h, plus<>()), [=](nd_item<1> it, auto& temp) {
         auto i = it.get_global_id(0);
         temp.combine(acc_data[i]);
       });

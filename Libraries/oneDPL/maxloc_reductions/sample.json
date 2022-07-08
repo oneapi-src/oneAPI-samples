@@ -1,0 +1,32 @@
+{
+  "guid": "a03b5bb5-93b0-420d-ad2b-e23e73c03e58",
+  "name": "Maxloc Reductions in oneAPI",
+  "categories": ["Toolkit/oneAPI Libraries/oneDPL"],
+  "description": "Perform maxloc reductions with oneAPI",
+  "toolchain": [ "dpcpp" ],
+  "dependencies": [ "oneDPL" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "maxloc_reductions",
+        "steps": [
+          "make clean",
+          "make"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "maxloc_reductions",
+        "steps": [
+          "nmake clean",
+          "nmake"
+        ]
+      }
+    ]
+  }
+}

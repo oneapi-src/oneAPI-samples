@@ -5,8 +5,8 @@
 // =============================================================
 //
 //  Content:
-//     This code implements the Fourier correlation algorithm
-//     using oneMKL, DPC++, and unified shared memory (USM).
+//     This code implements the 1D Fourier correlation algorithm
+//     using SYCL, oneMKL, and unified shared memory (USM).
 //
 // =============================================================
 
@@ -19,16 +19,9 @@
 #include <oneapi/mkl/vm.hpp>
 
 template <typename T, typename I>
-struct pair {
-  bool operator>(const pair& o) const {
-    return val >= o.val || (val == o.val && idx >= o.idx);
-  }
-  T val;
-  I idx;
-};
+using maxloc = sycl::ext::oneapi::maximum<std::pair<T, I>>;
 
-template <typename T, typename I>
-using maxloc = sycl::ext::oneapi::maximum<pair<T, I>>;
+constexpr size_t L = 1;
 
 int main(int argc, char** argv) {
   unsigned int N = (argc == 1) ? 32 : std::stoi(argv[1]);
@@ -37,15 +30,13 @@ int main(int argc, char** argv) {
 
   // Initialize SYCL queue
   sycl::queue Q(sycl::default_selector{});
-  auto sycl_device = Q.get_device();
-  auto sycl_context = Q.get_context();
   std::cout << "Running on: "
             << Q.get_device().get_info<sycl::info::device::name>() << "\n";
 
   // Initialize signal and correlation arrays
-  auto sig1 = sycl::malloc_shared<float>(N + 2, sycl_device, sycl_context);
-  auto sig2 = sycl::malloc_shared<float>(N + 2, sycl_device, sycl_context);
-  auto corr = sycl::malloc_shared<float>(N + 2, sycl_device, sycl_context);
+  auto sig1 = sycl::malloc_shared<float>(N + 2, Q);
+  auto sig2 = sycl::malloc_shared<float>(N + 2, Q);
+  auto corr = sycl::malloc_shared<float>(N + 2, Q);
 
   // Initialize input signals with artificial data
   std::uint32_t seed = (unsigned)time(NULL);  // Get RNG seed value
@@ -92,23 +83,22 @@ int main(int argc, char** argv) {
 
   // Find the shift that gives maximum correlation value using parallel maxloc
   // reduction
-  pair<float, int>* max_res = sycl::malloc_shared<pair<float, int>>(1, Q);
-  pair<float, int> max_identity = {std::numeric_limits<float>::min(),
-                                   std::numeric_limits<int>::min()};
+  std::pair<float, int>* max_res =
+       sycl::malloc_shared<std::pair<float, int>>(1, Q);
+  std::pair<float, int> max_identity = {std::numeric_limits<float>::min(),
+                                        std::numeric_limits<int>::min()};
   *max_res = max_identity;
   auto red_max = reduction(max_res, max_identity, maxloc<float, int>());
 
-  Q.submit([&](sycl::handler& h) {
-     h.parallel_for(sycl::nd_range<1>{N, N / 16}, red_max,
-                    [=](sycl::nd_item<1> item, auto& max_res) {
-                      int i = item.get_global_id(0);
-                      pair<float, int> partial = {corr[i], i};
-                      max_res.combine(partial);
-                    });
+  Q.parallel_for(sycl::nd_range<1>{N, L}, red_max,
+                 [=](sycl::nd_item<1> item, auto& max_res) {
+                    int i = item.get_global_id(0);
+		    std::pair<float, int> partial = {corr[i], i};
+                    max_res.combine(partial);
    })
       .wait();
-  float max_corr = max_res->val;
-  int shift = max_res->idx;
+  float max_corr = max_res->first;
+  int shift = max_res->second;
   shift =
       (shift > N / 2) ? shift - N : shift;  // Treat the signals as circularly
                                             // shifted versions of each other.
@@ -118,8 +108,8 @@ int main(int argc, char** argv) {
             << max_corr / N << ".\n";
 
   // Cleanup
-  sycl::free(sig1, sycl_context);
-  sycl::free(sig2, sycl_context);
-  sycl::free(corr, sycl_context);
-  sycl::free(max_res, sycl_context);
+  sycl::free(sig1, Q);
+  sycl::free(sig2, Q);
+  sycl::free(corr, Q);
+  sycl::free(max_res, Q);
 }

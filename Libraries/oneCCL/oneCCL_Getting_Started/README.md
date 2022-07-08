@@ -13,8 +13,8 @@ By using all reduce collective operation samples, users can understand how to co
 ## List of Samples
 | C++ API | Collective Operation |
 | ------ | ------ |
-| sycl_allreduce_test.cpp |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
-| cpu_allreduce_test.cpp/cpu_allreduce_bf16_test.c |[Allreduce](https://intel.github.io/oneccl/spec/communication_primitives.html#allreduce) |
+| sycl_allreduce_test.cpp |[Allreduce](https://spec.oneapi.io/versions/latest/elements/oneCCL/source/spec/collective_operations.html#allreduce) |
+| cpu_allreduce_test.cpp/cpu_allreduce_bf16_test.c |[Allreduce](https://spec.oneapi.io/versions/latest/elements/oneCCL/source/spec/collective_operations.html#allreduce) |
 >  Notice: Please use Intel® DevCloud for oneAPI as the environment for jupyter notebook samples. \
 Users can refer to [DevCloud Getting Started](https://devcloud.intel.com/oneapi/get-started/) for using DevCloud \
 Users can use JupyterLab from DevCloud via "One-click Login in", and download samples via "git clone" or the "oneapi-cli" tool \
@@ -66,9 +66,38 @@ The samples also require an OpenCL driver. Please refer [System Requirements](ht
 You can refer to this page [oneAPI](https://software.intel.com/en-us/oneapi) for toolkit installation.
 
 
+### Using Visual Studio Code* (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+
+To learn more about the extensions, see
+[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 
 ## Building the samples for CPU and GPU
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 
 ### on a Linux* System
 
@@ -102,7 +131,7 @@ Users can rebuild the cpu_allreduce_test.cpp by typing "make cpu_allreduce_test"
   cd oneapi-toolkit/oneCCL/oneCCL_Getting_Started
   mkdir build
   cd build
-  cmake ..  -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=dpcpp -DCOMPUTE_BACKEND=dpcpp_level_zero
+  cmake ..  -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=dpcpp -DCOMPUTE_BACKEND=dpcpp
   make sycl_allreduce_test
   ```
 > NOTE: The source file "sycl_allreduce_test.cpp" will be copied from ${INTEL_ONEAPI_INSTALL_FOLDER}/ccl/latest/examples/sycl to build/src/sycl folder.
@@ -171,19 +200,15 @@ The include folder is located at ${CCL_ROOT}}\include on your development system
 
 - Enable oneCCL Verbose log
 
-  There are different log levels in oneCCL. Users can refer to the below table for different log levels.
-
-  | CCL_LOG_LEVEL | value
-  | :------ | :------
-  | ERROR | 0
-  | INFO | 1
-  | DEBUG | 2
-  | TRACE | 3
+  There are different log levels in oneCCL. Users can refer to [the link](https://oneapi-src.github.io/oneCCL/env-variables.html#ccl-log-level) for different log levels.
 
 
   Users can enable oneCCL verbose log by following the command shown below to see more
   runtime information from oneCCL.
   ```
-  export CCL_LOG_LEVEL=1
+  export CCL_LOG_LEVEL=info
   ```
 
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)

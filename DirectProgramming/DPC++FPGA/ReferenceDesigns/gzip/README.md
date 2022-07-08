@@ -59,6 +59,18 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the `gzip` Reference Design
 
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+>
+> Linux User: . ~/intel/oneapi/setvars.sh
+>
+> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
@@ -100,25 +112,27 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
    ```
+   To compile for the Low Latency version of the design use the command
+
+   ```
+   cmake .. -DLOW_LATENCY=1 -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
+   ```
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
       ```
       make fpga_emu
       ```
-    > Note: for the Low Latency variant, use `make fpga_emu_ll`. Only supported on Stratix® 10 SX.
 
    * Generate the optimization report:
      ```
      make report
      ```
-    > Note: for the Low Latency variant, use `make report_ll`. Only supported on Stratix® 10 SX.
 
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
      ```
-    > Note: for the Low Latency variant, use `make fpga_ll`. Only supported on Stratix® 10 SX.
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/gzip.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
@@ -137,6 +151,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
    ```
+   To compile for the Low Latency version of the design use the command:
+
+   ```
+   cmake -G "Nmake Makefiles" .. -DLOW_LATENCY=1 -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
+   ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -144,19 +163,27 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
      nmake fpga_emu
      ```
-    > Note: for the Low Latency variant, use `nmake fpga_emu_ll`. Only supported on Stratix® 10 SX.
    * Generate the optimization report:
      ```
      nmake report
      ```
-    > Note: for the Low Latency variant, use `nmake report_ll`. Only supported on Stratix® 10 SX.
    * An FPGA hardware target is not provided on Windows*.
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
+*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel® oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 
 ## Running the Reference Design
@@ -166,13 +193,12 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
      ./gzip.fpga_emu <input_file> [-o=<output_file>]     (Linux)
      gzip.fpga_emu.exe <input_file> [-o=<output_file>]   (Windows)
      ```
-    > Note: for the Low Latency variant use `gzip_ll.fpga_emu`. Only supported on Stratix® 10 SX.
 2. Run the sample on the FPGA device:
      ```
      aocl initialize acl0 pac_s10_usm
      ./gzip.fpga <input_file> [-o=<output_file>]         (Linux)
+     gzip.fpga.exe <input_file> [-o=<output_file>]       (Windows)
      ```
-     > Note: for the Low Latency variant use `gzip_ll.fpga`. Only supported on Stratix® 10 SX.
  ### Application Parameters
 
 | Argument | Description
@@ -205,8 +231,7 @@ PASSED
 | `gzipkernel.hpp`              | Header file for `gzipkernels.cpp`.
 | `gzipkernel)ll.hpp`              | Header file for `gzipkernels_ll.cpp`.
 | `CompareGzip.hpp`              | Header file for `CompareGzip.cpp`.
-| `pipe_array.hpp`                | Header file containing the definition of an array of pipes.
-| `pipe_array_internal.hpp`       | Helper for pipe_array.hpp.
+| `pipe_utils.hpp`             | Header file containing the definition of an array of pipes. This header can be found in the DirectProgramming/DPC++FPGA/include/ directory of this repository.
 | `WriteGzip.hpp`                | Header file for `WriteGzip.cpp`.
 
 ### Compiler Flags Used
@@ -215,7 +240,7 @@ PASSED
 ---    |---
 `-Xshardware` | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsparallel=2` | Uses two cores when compiling the bitstream through Quartus®
-`-Xsseed=8` | Uses seed 8 (seed 33 for Low latency Variant) during Quartus®, yields slightly higher fmax
+`-Xsseed=<seed_num>` | Uses a particular seed while running Quartus®, selected to yield the best Fmax for this desgin
 `-Xsnum-reorder=6` | On Intel Stratix® 10 SX only, specify a wider data path for read data from global memory
 `-Xsopt-arg="-nocaching"` | Specifies that cached LSUs should not be used.
 `-DNUM_ENGINES=<1|2>` | Specifies that 1 GZIP engine should be compiled when targeting Intel Arria® 10 GX and two engines when targeting Intel Stratix® 10 SX
@@ -223,7 +248,7 @@ PASSED
 
 ### Performance disclaimers
 
-Tests document the performance of components on a particular test on a specific system. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
+Tests document the performance of components on a particular test on a specific system. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase.  For complete information about performance and benchmark results, visit [this page](https://edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
 
 Performance results are based on testing as of October 27, 2020 (using tool version 2021.1), and may not reflect all publicly available security updates.  See configuration disclosure for details.  No product or component can be absolutely secure.
 

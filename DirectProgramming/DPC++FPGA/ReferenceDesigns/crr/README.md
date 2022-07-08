@@ -1,36 +1,31 @@
 # CRR Binomial Tree Model for Option Pricing
-An FPGA-optimized reference design computing the Cox-Ross-Rubinstein (CRR) binomial tree model with Greeks for American exercise options.
-
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming. <br>
-Additional reference material specific to option pricing algorithms is provided in the References section of this README.
-
-| Optimized for                     | Description
----                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA; <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX)
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | Review a high performance DPC++ design optimized for FPGA
-| Time to complete                  | 1 hr (not including compile time)
-
-
-
-
-**Performance**
-Please refer to the performance disclaimer at the end of this README.
-
-| Device                                         | Throughput
-|:---                                            |:---
-| Intel® PAC with Intel Arria® 10 GX FPGA        | 118 assets/s
-| Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)      | 243 assets/s
-
+A field programmable gate array (FPGA)-optimized reference design computing the Cox-Ross-Rubinstein (CRR) binomial tree model with Greeks for American exercise options.
 
 ## Purpose
 This sample implements the Cox-Ross-Rubinstein (CRR) binomial tree model that is used in the finance field for American exercise options with five Greeks (delta, gamma, theta, vega and rho). The simple idea is to model all possible asset price paths using a binomial tree.
 
-## Key Implementation Details
+## Prerequisites
+| Optimized for                     | Description
+---                                 |---
+| OS                                | Ubuntu* 18.04/20.04 <br>RHEL*/CentOS* 8 <br>SUSE* 15 <br>Windows* 10
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA; <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 
+### Performance
+> **Note**: Please refer to the [Performance Disclaimers](#performance-disclaimers) section below.
+
+| Device                                         | Throughput
+|:---                                            |:---
+| Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA        | 118 assets/s
+| Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX)      | 243 assets/s
+
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
+
+
+## Key Implementation Details
 ### Design Inputs
 This design reads inputs from the `ordered_inputs.csv` file. The inputs are:
 
@@ -57,27 +52,34 @@ This design writes outputs to the `ordered_outputs.csv` file. The outputs are:
 | `theta`                           | Measures the sensitivity of the derivative's value to the passage of time.
 | `rho`                             | Measures sensitivity to the interest of rate.
 
-### Design Correctness
+#### Design Correctness
 This design tests the optimized FPGA code's correctness by comparing its output to a golden result computed on the CPU.
 
-### Design Performance
+#### Design Performance
 This design measures the FPGA performance to determine how many assets can be processed per second.
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
 ## Building the CRR Program
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+>
+> Windows:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+>
+>For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+### Run Samples in DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see [Intel&reg; DevCloud for oneAPI Get Started](https://devcloud.intel.com/oneapi/documentation/base-toolkit/).
 
-When compiling for FPGA hardware, it is recommended to increase the job timeout to 48h.
+When compiling for FPGA hardware, it is recommended to increase the job timeout to **48h**.
 
 
 ### Using Visual Studio Code*  (Optional)
@@ -91,23 +93,20 @@ The basic steps to build and run a sample using VS Code include:
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions and how to configure the oneAPI environment, see [Using Visual Studio Code with Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
-
-### On a Linux* System
+### On Linux*
 
 1. Generate the `Makefile` by running `cmake`.
      ```
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -127,20 +126,20 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
      make fpga
      ```
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/crr.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/crr.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/crr.fpga.tar.gz).
 
-### On a Windows* System
+### On Windows*
 
 1. Generate the `Makefile` by running `cmake`.
      ```
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -158,11 +157,21 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
    * An FPGA hardware target is not provided on Windows*.
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 
- ### In Third-Party Integrated Development Environments (IDEs)
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+## Troubleshooting
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel&reg; oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors. See the [Diagnostics Utility for Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information.
+
+### In Third-Party Integrated Development Environments (IDEs)
+
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, see [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
 ## Running the Reference Design
 
@@ -175,6 +184,8 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Vi
  2. Run the sample on the FPGA device:
      ```
      ./crr.fpga <input_file> [-o=<output_file>]                               (Linux)
+        
+     crr.fpga.exe <input_file> [-o=<output_file>]                             (Windows)
      ```
 
 ### Application Parameters
@@ -212,8 +223,8 @@ Avg throughput: 66.2 assets/s
 `-Xshardware`                       | Target FPGA hardware (as opposed to FPGA emulator)
 `-Xsdaz`                            | Denormals are zero
 `-Xsrounding=faithful`              | Rounds results to either the upper or lower nearest single-precision numbers
-`-Xsparallel=2`                     | Uses 2 cores when compiling the bitstream through Quartus®
-`-Xsseed=2`                         | Uses seed 2 during Quartus®, yields slightly higher f<sub>MAX</sub>
+`-Xsparallel=2`                     | Uses 2 cores when compiling the bitstream through Quartus&reg;
+`-Xsseed=2`                         | Uses seed 2 during Quartus&reg;, yields slightly higher f<sub>MAX</sub>
 
 ### Preprocessor Define Flags
 
@@ -224,11 +235,11 @@ Avg throughput: 66.2 assets/s
 `-DOUTER_UNROLL_POW2=1`             | Uses the value 1 for the constant OUTER_UNROLL_POW2, controls the number of memory banks
 
 
-NOTE: The Xsseed, DOUTER_UNROLL, DINNER_UNROLL and DOUTER_UNROLL_POW2 values differ depending on the board being targeted. More information about the unroll factors can be found in `/src/CRR_common.hpp`.
+> **Note**: The `Xsseed`, `DOUTER_UNROLL`, `DINNER_UNROLL` and `DOUTER_UNROLL_POW2` values differ depending on the board being targeted. More information about the unroll factors can be found in `/src/CRR_common.hpp`.
 
-### Performance disclaimers
+### Performance Disclaimers
 
-Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase. For more complete information about performance and benchmark results, visit [www.intel.com/benchmarks](www.intel.com/benchmarks).
+Tests document performance of components on a particular test, in specific systems. Differences in hardware, software, or configuration will affect actual performance. Consult other sources of information to evaluate performance as you consider your purchase. For more complete information about performance and benchmark results, visit [this page](https://edc.intel.com/content/www/us/en/products/performance/benchmarks/overview).
 
 Performance results are based on testing as of July 20, 2020 and may not reflect all publicly available security updates. See configuration disclosure for details. No product or component can be absolutely secure.
 
@@ -238,15 +249,20 @@ The performance was measured by Intel on July 20, 2020
 
 Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
 
-(C) Intel Corporation.
+&copy; Intel Corporation.
 
-### References
+## Additional References
 
-[Khronous SYCL Resources](https://www.khronos.org/sycl/resources)
+- [Khronous Group SYCL Resources](https://www.khronos.org/sycl/resources)
 
-[Binomial options pricing model](https://en.wikipedia.org/wiki/Binomial_options_pricing_model)
+- [Wikipedia article on Binomial options pricing model](https://en.wikipedia.org/wiki/Binomial_options_pricing_model)
 
-[Wike page for finance Greeks](https://en.wikipedia.org/wiki/Greeks_(finance))
+- [Wikipedia article on Greeks (finance)](https://en.wikipedia.org/wiki/Greeks_(finance))
 
-[OpenCL Intercept Layer](https://github.com/intel/opencl-intercept-layer)
+- [GitHub repository for Intercept Layer for OpenCL&trade; Applications](https://github.com/intel/opencl-intercept-layer)
 
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
