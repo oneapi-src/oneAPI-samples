@@ -103,6 +103,27 @@ struct MyIP {
   ) int *memory_mapped_pointer;
 ```
 
+### Pointer arguments and ipinterfaces.xml
+
+The compiler infers a unique global memory for each pointer argument that is annotated with a buffer location. An entry describing the interface of each such memory can be found in the file ipinterfaces.xml which is generated in the "*.prj" output directory. The entry specifies various properties of the memory including the start address that was assigned to the memory by the compiler. Each buffer_location will have its address defined there, among other parameters. 
+
+To understand how these start addresses are generated and how the compiler assigns special values to the top bits of the addresses please see the complete documentation on memory-mapped interfaces. If the parameters are not set correctly, this can lead to undefined behaviour.
+
+The file will have the following entries based on the kernel arguments used in this tutorial:Example of a pointer argument in the ipinterfaces.xml:
+```xml
+<global_mem name="1" default="1" max_bandwidth="0" config_addr="0x0" type="device private" allocation_type="host,shared">
+  <interface name="1" type="agent" width="64" address="0x2000000000000" latency="16" latency_type="fixed" waitrequest="1" size="0x10000000">
+    <port name="mem1_r" direction="r"/>
+  </interface>
+</global_mem>
+<global_mem name="2" max_bandwidth="0" config_addr="0x0" type="device private" allocation_type="host,shared">
+  <interface name="2" port="mem2_rw" type="agent" width="64" address="0x3000000000000" latency="16" latency_type="fixed" waitrequest="1" size="0x10000000"/>
+</global_mem>
+<global_mem name="3" max_bandwidth="0" config_addr="0x0" type="device private" allocation_type="host,shared">
+    <interface name="3" port="mem3_rw" type="agent" width="64" address="0x4000000000000" latency="16" latency_type="fixed" waitrequest="1" size="0x10000000"/>
+</global_mem>
+```
+
 ### Tutorial Code Overview
 This tutorial demonstrates how to implement a memory-mapped interface in an IP authoring flow. The design performs a multiply and add operation on two input vectors, stores the result of the multiple in the second vector, and the result of the add in an output-only vector.
 

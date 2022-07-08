@@ -6,18 +6,24 @@
 #include "dpc_common.hpp"
 
 using namespace cl::sycl;
+using ext::intel::experimental::property::usm::buffer_location;
 
 template<typename T>
-inline std::shared_ptr<T> make_malloc_shared(queue &q, int n = 1) {
-  T *mem = malloc_shared<T>(sizeof(T) * n, q);
+inline std::shared_ptr<T> make_malloc_shared(queue &q, int n, int kBL) {
+  T *mem = malloc_shared<T>(sizeof(T) * n, q, property_list{buffer_location(kBL)});
   return std::move(std::shared_ptr<T>(mem, [&q](T *ptr) {
     sycl::free(ptr, q);
   }));
 }
 
+constexpr int BL1 = 1;
+constexpr int BL2 = 2;
+constexpr int BL3 = 3;
+
+
 struct VectorMADIP {
   register_map_mmhost(
-    1,       // buffer_location or aspace
+    BL1,       // buffer_location or aspace
     28,      // address width
     64,      // data width
     16,      // ! latency, must be atleast 16
@@ -27,7 +33,7 @@ struct VectorMADIP {
     1        // waitrequest, 0: false, 1: true
   ) int *x;
   register_map_mmhost(
-    2,       // buffer_location or aspace
+    BL2,       // buffer_location or aspace
     28,      // address width
     64,      // data width
     16,      // ! latency, must be atleast 16
@@ -37,7 +43,7 @@ struct VectorMADIP {
     1        // waitrequest, 0: false, 1: true
   ) int *y;
   register_map_mmhost(
-    3,       // buffer_location or aspace
+    BL3,       // buffer_location or aspace
     28,      // address width
     64,      // data width
     16,      // ! latency, must be atleast 16
@@ -79,9 +85,9 @@ int main(void) {
 
     int size = 15;
 
-    auto x = make_malloc_shared<int>(q, size);
-    auto y = make_malloc_shared<int>(q, size);
-    auto z = make_malloc_shared<int>(q, size);
+    auto x = make_malloc_shared<int>(q, size, BL1);
+    auto y = make_malloc_shared<int>(q, size, BL2);
+    auto z = make_malloc_shared<int>(q, size, BL3);
 
     for (int i = 0; i < size; ++i) {
       x.get()[i] = i;
@@ -111,9 +117,9 @@ int main(void) {
     }
 
     if (!pass_check) {
-      std::cout << "Failed correctness check\n";
+      std::cout << "--> FAIL\n";
     } else {
-      std::cout << "Passed correctness check\n";
+      std::cout << "--> PASS\n";
     }
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
