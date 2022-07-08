@@ -24,7 +24,7 @@ The following parameters are available for configuration:
 
 | Memory Attribute                 | Description
 ---                                |---
-| `aspace`          | The address space of the interface that associates with the host.
+| `buffer_location`          | The address space of the interface that associates with the host.
 | `awidth`          | The width of the memory-mapped data bus in bits
 | `dwidth`          | The width of the memory-mapped address bus in bits.
 | `latency`         | The guaranteed latency from when a read command exits the component when the external memory returns valid read data.
@@ -103,7 +103,7 @@ struct MyIP {
   ) int *memory_mapped_pointer;
 ```
 
-### Pointer arguments and ipinterfaces.xml
+### Memory Base Addresses assigned by the compiler
 
 The compiler infers a unique global memory for each pointer argument that is annotated with a buffer location. An entry describing the interface of each such memory can be found in the file ipinterfaces.xml which is generated in the "*.prj" output directory. The entry specifies various properties of the memory including the start address that was assigned to the memory by the compiler. Each buffer_location will have its address defined there, among other parameters. 
 
