@@ -53,7 +53,7 @@ The complete test exercises following interfaces in a platform:
 * **Host to kernel interface:** The test ensures the host to kernel communication is correct and that the host can launch a kernel successfully. It also measures the roundtrip kernel launch latency and throughput (number of kernels/ms) of single task no-operation kernels.
 
 In addition to the above interface checks, the test also measures **Kernel clock frequency**. The test measures the frequency the programmed kernel is running at on the FPGA device and reports it. By default, this test fails if the measured frequency is not within 2% of the compiled frequency.<br>
-***Note:*** The test allows overriding this failure. However, this may lead to functional errors, and Intel does not recommend it. The override option is provided to allow debug in case where platform design changes are done to force kernel to run at slower clock (this is not a common use-case). The usage section describes how to override this option if required.
+***Note:*** The test allows overriding this failure. However, this may lead to functional errors, and Intel does not recommend it. The override option is provided to allow debug in case where platform design changes are done to force kernel to run at slower clock (this is not a common use-case). The [Running the Sample section](#running-the-sample) describes how to override this option if required.
 
 The complete board test is divided into six subtests. By default, all tests run. You can choose to run a single test by using the `-test=<test number>` option. Refer to the [Running the Sample](#running-the-sample) section for test usage instructions.
 1. Host Speed and Host Read Write Test
