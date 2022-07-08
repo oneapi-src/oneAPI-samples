@@ -1,64 +1,59 @@
-#include <sycl/ext/intel/fpga_extensions.hpp>
-#include <sycl/ext/intel/experimental/interfaces.hpp>
-
 #include <CL/sycl.hpp>
 #include <iomanip>
+#include <sycl/ext/intel/experimental/interfaces.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+
 #include "dpc_common.hpp"
 
 using namespace cl::sycl;
 using ext::intel::experimental::property::usm::buffer_location;
 
-template<typename T>
+template <typename T>
 inline std::shared_ptr<T> make_malloc_shared(queue &q, int n, int kBL) {
-  T *mem = malloc_shared<T>(sizeof(T) * n, q, property_list{buffer_location(kBL)});
-  return std::move(std::shared_ptr<T>(mem, [&q](T *ptr) {
-    sycl::free(ptr, q);
-  }));
+  T *mem =
+      malloc_shared<T>(sizeof(T) * n, q, property_list{buffer_location(kBL)});
+  return std::move(
+      std::shared_ptr<T>(mem, [&q](T *ptr) { sycl::free(ptr, q); }));
 }
 
 constexpr int BL1 = 1;
 constexpr int BL2 = 2;
 constexpr int BL3 = 3;
 
-
 struct VectorMADIP {
-  register_map_mmhost(
-    BL1,       // buffer_location or aspace
-    28,      // address width
-    64,      // data width
-    16,      // ! latency, must be atleast 16
-    1,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-    1,       // maxburst
-    0,       // align, 0 defaults to alignment of the type
-    1        // waitrequest, 0: false, 1: true
-  ) int *x;
-  register_map_mmhost(
-    BL2,       // buffer_location or aspace
-    28,      // address width
-    64,      // data width
-    16,      // ! latency, must be atleast 16
-    0,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-    1,       // maxburst
-    0,       // align, 0 defaults to alignment of the type
-    1        // waitrequest, 0: false, 1: true
-  ) int *y;
-  register_map_mmhost(
-    BL3,       // buffer_location or aspace
-    28,      // address width
-    64,      // data width
-    16,      // ! latency, must be atleast 16
-    0,       // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
-    1,       // maxburst
-    0,       // align, 0 defaults to alignment of the type
-    1        // waitrequest, 0: false, 1: true
-  ) int *z;
+  register_map_mmhost(BL1,  // buffer_location or aspace
+                      28,   // address width
+                      64,   // data width
+                      16,   // ! latency, must be atleast 16
+                      1,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
+                      1,    // maxburst
+                      0,    // align, 0 defaults to alignment of the type
+                      1     // waitrequest, 0: false, 1: true
+                      ) int *x;
+  register_map_mmhost(BL2,  // buffer_location or aspace
+                      28,   // address width
+                      64,   // data width
+                      16,   // ! latency, must be atleast 16
+                      0,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
+                      1,    // maxburst
+                      0,    // align, 0 defaults to alignment of the type
+                      1     // waitrequest, 0: false, 1: true
+                      ) int *y;
+  register_map_mmhost(BL3,  // buffer_location or aspace
+                      28,   // address width
+                      64,   // data width
+                      16,   // ! latency, must be atleast 16
+                      0,    // read_write_mode, 0: ReadWrite, 1: Read, 2: Write
+                      1,    // maxburst
+                      0,    // align, 0 defaults to alignment of the type
+                      1     // waitrequest, 0: false, 1: true
+                      ) int *z;
   int size;
 
-  VectorMADIP(int *x_, int *y_, int *z_, int size_) : 
-  x(x_), y(y_), z(z_), size(size_) {}
+  VectorMADIP(int *x_, int *y_, int *z_, int size_)
+      : x(x_), y(y_), z(z_), size(size_) {}
 
-  register_map_interface
-  void operator()() const {
+  register_map_interface void operator()() const {
     for (int i = 0; i < size; ++i) {
       int mul = x[i] * y[i];
       int add = mul + z[i];
@@ -77,7 +72,7 @@ int main(void) {
 
   try {
     sycl::queue q(device_selector, dpc_common::exception_handler,
-      property::queue::enable_profiling{});
+                  property::queue::enable_profiling{});
 
     // Print out the device information.
     std::cout << "Running on device: "
@@ -96,7 +91,7 @@ int main(void) {
     }
 
     event e = q.single_task(VectorMADIP{x.get(), y.get(), z.get(), size});
-    
+
     e.wait();
 
     double start = e.get_profiling_info<info::event_profiling::command_start>();

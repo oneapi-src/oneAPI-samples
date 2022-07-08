@@ -1,5 +1,5 @@
 {
-  "guid": "31BCA673-F514-4E2E-A8B3-A0B42D63884C",
+  "guid": "8DCA17F8-6A9B-401A-A62F-CB79A5B013C7",
   "name": "Memory-mapped interfaces",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating the use of memory-mapped interfaces parameters for IP authoring.",
