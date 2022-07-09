@@ -1263,8 +1263,6 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
          (host_data_in == NULL || host_data_out == NULL)) {
     vector_size = vector_size / 2;
     total_bytes_used = vector_size * sizeof(unsigned);
-    // host_data_in = (unsigned *)malloc(total_bytes_used);
-    // host_data_out = (unsigned *)malloc(total_bytes_used);
     host_data_in = new (std::nothrow) unsigned[total_bytes_used];
     host_data_out = new (std::nothrow) unsigned[total_bytes_used];
   }
