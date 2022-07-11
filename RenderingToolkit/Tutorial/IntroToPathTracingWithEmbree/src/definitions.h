@@ -39,7 +39,7 @@ using rkcommon::math::dot;
 using rkcommon::math::clamp;
 using rkcommon::math::rsqrt;
 
-/* from tutorial_device.h */
+/* originally from tutorial_device.h */
 /* vertex, quad, and triangle layout */
 struct Vertex {
     float x, y, z, r;
@@ -60,16 +60,18 @@ enum class MaterialType {
     MATERIAL_GLASS,
 };
 
+/* Added for pathtracer */
 struct Medium {
     Vec3fa transmission;
     float eta;
 };
 
+/* Added for path tracer: creating a lookup structure for intersected geometries */
 struct MatAndPrimColorTable {
     std::vector<enum class MaterialType> materialTable;
     Vec3fa* primColorTable;
 };
-/* for holding material properties for each geometry id */
+/* Added for path tracer: for holding material properties for each geometry id */
 std::map< unsigned int, MatAndPrimColorTable> g_geomIDs;
 
 /* Added for pathtracer */
@@ -82,7 +84,7 @@ struct DifferentialGeometry
     Vec3fa P;
     Vec3fa Ng;
     Vec3fa Ns;
-    Vec3fa Tx; //direction along hair
+    Vec3fa Tx;
     Vec3fa Ty;
     float eps;
 };

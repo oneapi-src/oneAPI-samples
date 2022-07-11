@@ -3,10 +3,9 @@
 #define FILE_CORNELLBOX_SEEN
 
 #include "definitions.h"
+
 #include <embree3/rtcore.h>
-
 #include <vector>
-
 
 /* Added for pathtracer */
 Vec3fa* g_cornell_face_colors = nullptr;
@@ -251,34 +250,35 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     // LeftWall
     MaterialType::MATERIAL_MATTE,
     /* Small box configuration for a matte material. Swap this section in for the glass (thin dielectric) material as desired */
+    
+    // ShortBox Top Face
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Left Face
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Front Face
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Right Face
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Back Face
+    MaterialType::MATERIAL_MATTE,
+    // ShortBox Bottom Face
+    MaterialType::MATERIAL_MATTE,
+    
+    /* Small box configuration for glass material. Swap this section in for the matte above. */
     /*
     // ShortBox Top Face
-    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_GLASS,
     // ShortBox Left Face
-    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_GLASS,
     // ShortBox Front Face
-    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_GLASS,
     // ShortBox Right Face
-    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_GLASS,
     // ShortBox Back Face
-    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_GLASS,
     // ShortBox Bottom Face
-    MaterialType::MATERIAL_MATTE,
+    MaterialType::MATERIAL_GLASS,
     */
-
-    // ShortBox Top Face
-    MaterialType::MATERIAL_GLASS,
-    // ShortBox Left Face
-    MaterialType::MATERIAL_GLASS,
-    // ShortBox Front Face
-    MaterialType::MATERIAL_GLASS,
-    // ShortBox Right Face
-    MaterialType::MATERIAL_GLASS,
-    // ShortBox Back Face
-    MaterialType::MATERIAL_GLASS,
-    // ShortBox Bottom Face
-    MaterialType::MATERIAL_GLASS,
-
     /* Tall Box configuration for a matte material. Swap this section in for the mirror tall box (below) as desired*/
     /*
     // TallBox Top Face
@@ -312,12 +312,7 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     
     };
 
-static std::vector<enum class MaterialType> sphereMats = {
-    //Just one material for our sphere primitive (Defined as singular Vec4 point for embree)
-    MaterialType::MATERIAL_GLASS
-};
 
-Vec3fa g_sphere_face_colors = { 1.f, 1.f, 1.f };
 
 int addCornell(RTCScene scene, RTCDevice device)
 {
@@ -358,24 +353,7 @@ int addCornell(RTCScene scene, RTCDevice device)
     return geomID;
 }
 
-int addSphere(RTCScene scene, RTCDevice device)
-{
-    RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_SPHERE_POINT);
-    Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT4, sizeof(Vertex), 1);
-    Vertex p = { 0.0f, 0.8f, 0.0f, 0.2f };
-    vertices[0] = p;
 
-    rtcCommitGeometry(mesh);
-    unsigned int geomID = rtcAttachGeometry(scene, mesh);
-    rtcReleaseGeometry(mesh);
-
-    MatAndPrimColorTable mpTable;
-    mpTable.materialTable = sphereMats;
-    mpTable.primColorTable = &g_sphere_face_colors;
-    g_geomIDs.insert(std::make_pair(geomID, mpTable));
-
-    return geomID;
-}
 
 void cleanCornell() {
 
@@ -387,11 +365,18 @@ void cleanCornell() {
 }
 
 void cornellCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& lights, unsigned int width, unsigned int height) {
+    /* A default camera view as specified from Cornell box presets given input from Intel OSPRay*/
+    //camera = positionCamera(Vec3fa(0.0, 0.0, -2.0f), Vec3fa(0, 0, 0),
+    //    Vec3fa(0, 1, 0), 90.0f, width, height);
 
-    camera = positionCamera(Vec3fa(0.0, 0.0, -2.0f), Vec3fa(0, 0, 0),
-        Vec3fa(0, 1, 0), 90.0f, width, height);
+    /* A camera position that connects the field of vision angle of the camera to the bounds of the cornell box */
+    float fov = 30.0f;
+    float fovrad = fov * M_PI / 180.0f;
+    float half_fovrad = fovrad * 0.5f;
+    camera = positionCamera(Vec3fa(0.0, 0.0, -1.0f - 1.f/tanf(half_fovrad)), Vec3fa(0, 0, 0),
+        Vec3fa(0, 1, 0), fov, width, height);
 
-    /* Infinite directional light is not added, but here are some parameters if you would like to try it*/
+    /* An infinite directional light as is used in triangle_geometry is not added, but here are some parameters if you would like to try a directional light */
     /*
     Light infDirectionalLight;
     infDirectionalLight.dir = normalize(Vec3fa(0.0f, 0.0f, 2.0f));
@@ -403,11 +388,11 @@ void cornellCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& lights,
 
     Light pointLight;
     /* The magnitude of the light can be tricky. Lights such as the point light fall off at the inverse square of the distance. When designing a sandbox renderer, you may need to scale your light up or down to see your scene. */
-    pointLight.intensity = 2.f*Vec3fa(0.78f, 0.551f, 0.183f);
+    pointLight.intensity = 3.f*Vec3fa(0.78f, 0.551f, 0.183f);
     /* An interesting position for an overhead light in the Cornell Box scene. Notice increased noise when lights are near objects */
     //pointLight.pos = Vec3fa(0.0f, 0.95f, 0.0f);
 
-    /* A somewhat central position for the point light within the box. This is similar to the position for the interactive pathtracer program shipped with Embree */
+    /* A somewhat central position for the point light within the box. This is similar to the position for the interactive pathtracer program shipped with Intel Embree */
     pointLight.pos = Vec3fa(2.f*213.0f/556.0f-1.f, 2.f * 300.f/558.8f - 1.f, 2.f * 227.f/559.2f - 1.f);
     pointLight.type = LightType::POINT_LIGHT;
     lights.push_back(pointLight);

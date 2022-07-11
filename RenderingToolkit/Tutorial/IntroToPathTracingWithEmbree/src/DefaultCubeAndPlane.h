@@ -1,8 +1,11 @@
 #pragma once
 #ifndef FILE_DEFAULTCUBEANDPLANE_SEEN
-#define FILE_DEFAULTCUBEANEPLANE_SEEN
+#define FILE_DEFAULTCUBEANDPLANE_SEEN
 
 #include "definitions.h"
+
+#include <embree3/rtcore.h>
+#include <vector>
 
 Vec3fa* g_cube_face_colors = nullptr;
 Vec3fa* g_cube_vertex_colors = nullptr;
@@ -10,6 +13,7 @@ Vec3fa* g_ground_face_colors = nullptr;
 Vec3fa* g_ground_vertex_colors = nullptr;
 
 static std::vector<enum class MaterialType> cubeMats = {
+
     MaterialType::MATERIAL_MATTE,
     MaterialType::MATERIAL_MATTE,
     MaterialType::MATERIAL_MATTE,
@@ -22,6 +26,7 @@ static std::vector<enum class MaterialType> cubeMats = {
     MaterialType::MATERIAL_MATTE,
     MaterialType::MATERIAL_MATTE,
     MaterialType::MATERIAL_MATTE
+
 };
 
 static std::vector<enum class MaterialType> groundMats = {
@@ -250,6 +255,9 @@ void cubeAndPlaneCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& li
 
     camera = positionCamera(Vec3fa(1.5f, 1.5f, -1.5f), Vec3fa(0, 0, 0),
         Vec3fa(0, 1, 0), 90.0f, width, height);
+    /* Zoomed out camera position below: */
+    //camera = positionCamera(Vec3fa(3.f, 3.f, -3.f), Vec3fa(0, 0, 0),
+    //    Vec3fa(0, 1, 0), 90.0f, width, height);
 
     /* Our light from the triangle geometry sample */
     /*
@@ -261,8 +269,8 @@ void cubeAndPlaneCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& li
     */
     
     Light pointLight;
-    /* Note that the magnitude of the light can be tricky. Lights such as the point light fall off at the inverse square of the distance. When designing a sandbox renderer, you may need to scale your light up or down to see your scene. */
-    pointLight.intensity = 500.f * Vec3fa(1.f, 1.f, 1.f);
+    /* Picking the magnitude of the light can be tricky. Lights such as the point light fall off at the inverse square of the distance. When building a renderer, you may need to scale your light up or down to see your scene. */
+    pointLight.intensity = 800.f * Vec3fa(1.f, 1.f, 1.f);
 
     /* The point light that mimicks the direction of the directional light */
     pointLight.pos = Vec3fa(10.0f, 10.0f, 10.0f);

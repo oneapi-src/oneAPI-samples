@@ -13,7 +13,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb/stb_image_write.h>
 
-/* Addition for pathtracer */
+/* Additions for pathtracer */
 #include <random>
 #include <map>
 #include <memory>
@@ -22,6 +22,7 @@
 #include <chrono>
 
 #include "definitions.h"
+#include "Sphere.h"
 #include "DefaultCubeAndPlane.h"
 #include "CornellBox.h"
 
@@ -31,16 +32,10 @@ In turn, ranlux was faster than mt19937 or mt19937_64 on Windows
 */
 typedef std::minstd_rand RandomEngine;
 
-//std::vector<unsigned int> g_geomIDs;
-
-//std::vector< std::pair<unsigned int, MatAndPrimColorTable> > g_geomIDs;
-
-
-
 RTCDevice g_device = nullptr;
 RTCScene g_scene = nullptr;
 
-unsigned char* g_pixels;
+unsigned char* g_pixels = nullptr;
 
 /* Additions for pathtracer */
 std::vector<std::shared_ptr<Vec3ff>> g_accu;
@@ -56,34 +51,32 @@ AffineSpace3fa g_camera;
 void error_handler(void* userPtr, const RTCError code, const char* str) {
   if (code == RTC_ERROR_NONE) return;
 
-  printf("fail: Embree Error: ");
+  std::cout << "fail: Embree Error: ";
   switch (code) {
     case RTC_ERROR_UNKNOWN:
-      printf("RTC_ERROR_UNKNOWN");
+      std::cout << "RTC_ERROR_UNKNOWN";
       break;
     case RTC_ERROR_INVALID_ARGUMENT:
-      printf("RTC_ERROR_INVALID_ARGUMENT");
+      std::cout << "RTC_ERROR_INVALID_ARGUMENT";
       break;
     case RTC_ERROR_INVALID_OPERATION:
-      printf("RTC_ERROR_INVALID_OPERATION");
+      std::cout << "RTC_ERROR_INVALID_OPERATION";
       break;
     case RTC_ERROR_OUT_OF_MEMORY:
-      printf("RTC_ERROR_OUT_OF_MEMORY");
+      std::cout << "RTC_ERROR_OUT_OF_MEMORY";
       break;
     case RTC_ERROR_UNSUPPORTED_CPU:
-      printf("RTC_ERROR_UNSUPPORTED_CPU");
+      std::cout << "RTC_ERROR_UNSUPPORTED_CPU";
       break;
     case RTC_ERROR_CANCELLED:
-      printf("RTC_ERROR_CANCELLED");
+      std::cout << "RTC_ERROR_CANCELLED";
       break;
     default:
-      printf("invalid error code");
+      std::cout << "invalid error code";
       break;
   }
   if (str) {
-    printf(" (");
-    while (*str) putchar(*str++);
-    printf(")\n");
+      std::cout << " (" << str << ")\n";
   }
   exit(1);
 }
@@ -173,10 +166,9 @@ inline Vec3fa sample_component2(const Vec3fa& c0, const Sample3f& wi0, const Med
 
     Sample3f ret;
     if (C == 0.0f) {
-        ret.v = Vec3fa(0, 0, 0);
-        ret.pdf = 0.0f;
+        wi_o.v = Vec3fa(0, 0, 0);
+        wi_o.pdf = 0.0f;
 
-        wi_o = ret;
         return Vec3fa(0, 0, 0);
     }
 
@@ -184,19 +176,26 @@ inline Vec3fa sample_component2(const Vec3fa& c0, const Sample3f& wi0, const Med
     const float CP0 = C0 / C;
     const float CP1 = C1 / C;
     if (s < CP0) {
-        ret.v = wi0.v;
-        ret.pdf = wi0.pdf * CP0;
-        wi_o = ret;
+        wi_o.v = wi0.v;
+        wi_o.pdf = wi0.pdf * CP0;
+
         medium_o = medium0;
         return c0;
     }
     else {
-        ret.v = wi1.v;
-        ret.pdf = wi1.pdf * CP1;
-        wi_o = ret;
+        wi_o.v = wi1.v;
+        wi_o.pdf = wi1.pdf * CP1;
+       
         medium_o = medium1;
         return c1;
     }
+}
+
+inline float fresnelDielectric(const float cosi, const float cost, const float eta)
+{
+    const float Rper = (eta * cosi - cost) * rcp(eta * cosi + cost);
+    const float Rpar = (cosi - eta * cost) * rcp(cosi + eta * cost);
+    return 0.5f * (Rpar * Rpar + Rper * Rper);
 }
 
 inline float fresnelDielectric(const float cosi, const float eta)
@@ -205,9 +204,55 @@ inline float fresnelDielectric(const float cosi, const float eta)
     if (k < 0.0f) return 1.0f;
     const float cost = sqrt(k);
 
-    const float Rper = (eta * cosi - cost) * rcp(eta * cosi + cost);
-    const float Rpar = (cosi - eta * cost) * rcp(cosi + eta * cost);
-    return 0.5f * (Rpar * Rpar + Rper * Rper);
+    return fresnelDielectric(cosi, cost, eta);
+}
+
+
+
+Vec3fa Dielectric__sample(const Vec3fa& Lw, const Vec3fa& wo, const DifferentialGeometry& dg, Sample3f& wi_o, Medium& medium, const Vec2f& s)
+{
+    float eta = 0.0f;
+    Medium mediumOutside;
+    mediumOutside.eta = 1.0f;
+    mediumOutside.transmission = Vec3fa(1.f);
+
+    Medium mediumInside;
+    mediumInside.eta = 1.4f;
+    mediumInside.transmission = Vec3fa(1.f);
+
+    Medium mediumFront, mediumBack;
+    if (medium.eta == mediumInside.eta && medium.transmission == mediumInside.transmission) {
+        eta = mediumInside.eta / mediumOutside.eta;
+        mediumFront = mediumInside;
+        mediumBack = mediumOutside;
+    }
+    else {
+        eta = mediumOutside.eta / mediumInside.eta;
+        mediumFront = mediumOutside;
+        mediumBack = mediumInside;
+    }
+
+    float cosThetaO = clamp(dot(wo, dg.Ns));
+    float cosThetaI;
+
+    /* refraction computation */
+    Sample3f wit;
+
+    const float k = 1.0f - eta * eta * (1.0f - cosThetaO * cosThetaO);
+    if (k < 0.0f) { cosThetaI = 0.0f; wit.v = Vec3fa(0.f); wit.pdf = 0.0f; }
+    cosThetaI = sqrt(k);
+    wit.v = eta * (cosThetaO * dg.Ns - wo) - cosThetaI * dg.Ns;
+    wit.pdf = eta * eta;
+
+    /* reflection computation */
+    Sample3f wis;
+    wis.v = normalize(2.0f * dot(wo, dg.Ns) * dg.Ns - wo);
+    wis.pdf = 1.0f;
+
+    float R = fresnelDielectric(cosThetaO, cosThetaI, eta);
+    Vec3fa cs = Vec3fa(R);
+    Vec3fa ct = Vec3fa(1.0f - R);
+    return sample_component2(cs, wis, mediumFront, ct, wit, mediumBack, Lw, wi_o, medium, s.x);
 }
 
 Vec3fa ThinDielectric__sample(const Vec3fa& Lw, const Vec3fa& wo, const DifferentialGeometry& dg, Sample3f& wi_o, Medium& medium, const Vec2f& s)
@@ -247,7 +292,8 @@ Vec3fa Material__sample(Vec3fa R, enum class MaterialType materialType, const Ve
         return Mirror__sample(R, Lw, wo, dg, wi);
         break;
     case MaterialType::MATERIAL_GLASS:
-        return ThinDielectric__sample(Lw, wo, dg, wi, medium, randomMatSample);
+        return Dielectric__sample(Lw, wo, dg, wi, medium, randomMatSample);
+//        return ThinDielectric__sample(Lw, wo, dg, wi, medium, randomMatSample);
         break;
 /* Return our debug color if something goes awry */
     default: c = R;
@@ -475,7 +521,7 @@ Vec3fa renderPixelStandard(int x, int y,
 //#define MY_DEBUG
 #ifdef MY_DEBUG
         if (max(max(L.x, L.y), L.z) > 0.0f)
-            printf("Hit pixel at %f %f: %f %f %f\n", fx, fy, L.x, L.y, L.z);
+            std::cout << "Hit pixel at " << fx << " , " << fy << ": " << L.x << " " << L.y << " " << L.z << "\n";
 #endif
     }
     L = L / (float)g_spp;
@@ -506,7 +552,7 @@ void renderTileTask(int taskIndex, int threadIndex, unsigned char* pixels, std::
       //#define MY_DEBUG
 #ifdef MY_DEBUG
       if (max(max(color.x, color.y), color.z) > 0.0f)
-        printf("Hit pixel at %u %u: %f %f %f\n", x, y, color.x, color.y, color.z);
+          std::cout << "Hit pixel at :" << x << " , " << y << ": " << color.x << " " << color.y << " " << color.z << "\n";
 #endif
       /* write color to accumulation buffer */
 
@@ -561,10 +607,12 @@ void device_cleanup() {
   switch (g_sceneSelector) {
   case SceneSelector::SHOW_CORNELL_BOX:
       cleanCornell();
+      cleanSphere();
       break;
   case SceneSelector::SHOW_CUBE_AND_PLANE:
   default:
     cleanCubeAndPlane();
+    //cleanSphere();
     break;
 
   }
@@ -578,11 +626,10 @@ void device_init(char* cfg, unsigned int width, unsigned int height) {
   switch (g_sceneSelector) {
       case SceneSelector::SHOW_CORNELL_BOX:
         /* add cornell box */
-
         addCornell(g_scene, g_device);
 
-        /* If you would like to add an Embree sphere see addSphere(..) as used below for an example... Remember to look for materials properties of additional geometric objects */
-        addSphere(g_scene, g_device);
+        /* If you would like to add an Intel Embree sphere see addSphere(..) as used below for an example... Remember to look for materials properties set in our header files */
+        addSphere(g_scene, g_device, Vec3fa(0.6f, -0.8f, -0.6f), 0.2f);
 
         cornellCameraLightSetup(g_camera, g_lights, width, height);
         break;
@@ -593,6 +640,9 @@ void device_init(char* cfg, unsigned int width, unsigned int height) {
 
         /* add ground plane */
         addGroundPlane(g_scene, g_device);
+
+        /* The sphere can be used in the cube and plane scene with a corresponding position for that scene */
+        //addSphere(g_scene, g_device, Vec3fa(2.5f, 0.f, 2.5f), 1.f);
 
         cubeAndPlaneCameraLightSetup(g_camera, g_lights, width, height);
         break;
@@ -612,9 +662,13 @@ int main() {
     rtcSetDeviceErrorFunction(g_device, error_handler, nullptr);
 
     /* create an image buffer initialize it with all zeroes */
-    const unsigned int width = 256;
-    const unsigned int height = 256;
+    const unsigned int width = 512;
+    const unsigned int height = 512;
     const unsigned int channels = 3;
+    /* Control the total number of accumulations, the total number of samples per pixel per accumulation, and the maximum path length of any given traced path.*/
+    const unsigned long long g_accu_limit = 500;
+    g_spp = 1;
+    g_max_path_length = 8;
 
     g_pixels = (unsigned char*)new unsigned char[width * height * channels];
     std::memset(g_pixels, 0, sizeof(unsigned char) * width * height * channels);
@@ -628,27 +682,22 @@ int main() {
     g_sceneSelector = SceneSelector::SHOW_CORNELL_BOX;
     device_init(nullptr, width, height);
 
-    /* Control the total number of accumulations, the total number of samples per pixel per accumulation, and the maximum path length of any given traced path.*/
-    const unsigned long long g_accu_limit = 2000;
-    g_spp = 1;
-    g_max_path_length = 8;
-
     /* Use a basic timer to capure compute time per accumulation */
     auto start = std::chrono::high_resolution_clock::now();
     renderFrameStandard(g_pixels, g_accu, width, height, channels, 0.0, g_camera);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> accum_time = end - start;
-    printf("Accumulation 1 of %llu: %lf s\n", g_accu_limit, accum_time.count());
+    std::cout << "Accumulation 1 of " << g_accu_limit << ": " << accum_time.count() << "s\n";
 
     /* Label construction for output files */
     string strscene;
     (g_sceneSelector == SceneSelector::SHOW_CORNELL_BOX) ? strscene = "-cornell" : strscene = "-default";
     string suffix = string("-spp") + std::to_string(g_spp) + string("-plength") + std::to_string(g_max_path_length) + string("-accu") + std::to_string(g_accu_limit) + string("-") + std::to_string(width) + string("x") + std::to_string(height) + string(".png");
     string prefix = "pathtracer_single_oneapi";
-    string filename = prefix + strscene + suffix;
+    string singleFilename = prefix + strscene + suffix;
 
     /* Write a single accumulation image (useful for comparison) */
-    stbi_write_png(filename.c_str(), width, height, channels,
+    stbi_write_png(singleFilename.c_str(), width, height, channels,
         g_pixels, width * channels);
 
     /* Render all remaining accumulations (in addition to the first) */
@@ -657,21 +706,22 @@ int main() {
         renderFrameStandard(g_pixels, g_accu, width, height, channels, 0.0, g_camera);
         end = std::chrono::high_resolution_clock::now();
         accum_time = end - start;
-        printf("Accumulation %llu of %llu: %lf s\n", i+1, g_accu_limit, accum_time.count());
+        std::cout << "Accumulation " << i + 1 << " of " << g_accu_limit << ": " << accum_time.count() << "s" << std::endl;
     }
     /* Label construction for the accumulated output */
     prefix = "pathtracer_accu_oneapi";
-    filename = prefix + strscene + suffix;
+    string accumFilename = prefix + strscene + suffix;
 
     /* Write the accumulated image output */
-  stbi_write_png(filename.c_str(), width, height, channels,
+  stbi_write_png(accumFilename.c_str(), width, height, channels,
       g_pixels, width * channels);
+  std::cout << "Output images: \n  '" << singleFilename << "'\n  '" << accumFilename << "'\n... written to disk\n";
 
   delete[] g_pixels;
   g_pixels = nullptr;
 
   device_cleanup();
   rtcReleaseDevice(g_device);
-  printf("success\n");
+  std::cout << "success\n";
   return 0;
 }
