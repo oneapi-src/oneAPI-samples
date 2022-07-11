@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(PathTracerOneAPI LANGUAGES CXX)
+project(rkPathTracer LANGUAGES CXX)
 
 set(ONEAPI_ROOT "")
 if(DEFINED ENV{ONEAPI_ROOT})
@@ -43,15 +43,15 @@ endif(NOT MSVC)
 #stb headers are located in dev-utilities. oneAPI 2022.2 release and earlier: these header only libraries are distributed with the oneAPI Base Toolkit.
 include_directories(${ONEAPI_ROOT}/dev-utilities/latest/include)
 
-add_executable(pathtracer_oneapi src/pathtracer_oneapi.cpp)
+add_executable(rkPathTracer src/rkPathTracer.cpp)
 if(MSVC)
 # Set MSVS debugger environment variables so it is easier to attach the MSVS debugger after altering the application
-    set_target_properties(pathtracer_oneapi
+    set_target_properties(rkPathTracer
 	    PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=%PATH%;${embree_DIR}/../../../bin;${rkcommon_DIR}/../../../bin;${tbb_DIR}/../../../bin;"
     )
 endif(MSVC)
-target_link_libraries(pathtracer_oneapi PRIVATE embree TBB::tbb rkcommon::rkcommon)
+target_link_libraries(rkPathTracer PRIVATE embree TBB::tbb rkcommon::rkcommon)
 
-install(TARGETS pathtracer_oneapi
+install(TARGETS rkPathTracer
   DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

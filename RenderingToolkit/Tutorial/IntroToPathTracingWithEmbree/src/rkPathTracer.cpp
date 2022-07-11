@@ -257,7 +257,7 @@ Vec3fa Dielectric__sample(const Vec3fa& Lw, const Vec3fa& wo, const Differential
 
 Vec3fa ThinDielectric__sample(const Vec3fa& Lw, const Vec3fa& wo, const DifferentialGeometry& dg, Sample3f& wi_o, Medium& medium, const Vec2f& s)
 {
-    /* eta for glass is between 1.4 and 1.8. The other parameters are placeholders. */
+    /* eta for glass is between 1.4 and 1.8. */
     const float eta = 1.4f;
     const float thickness = 0.1f;
     const Vec3fa transmission = Vec3fa(1.0f);
@@ -692,7 +692,7 @@ int main() {
     /* Label construction for output files */
     string strscene;
     (g_sceneSelector == SceneSelector::SHOW_CORNELL_BOX) ? strscene = "-cornell" : strscene = "-default";
-    string suffix = string("-spp") + std::to_string(g_spp) + string("-plength") + std::to_string(g_max_path_length) + string("-accu") + std::to_string(g_accu_limit) + string("-") + std::to_string(width) + string("x") + std::to_string(height) + string(".png");
+    string suffix = string("-spp") + std::to_string(g_spp)  + string("-accu") + std::to_string(g_accu_limit) + string("-plength") + std::to_string(g_max_path_length) + string("-") + std::to_string(width) + string("x") + std::to_string(height) + string(".png");
     string prefix = "pathtracer_single_oneapi";
     string singleFilename = prefix + strscene + suffix;
 
