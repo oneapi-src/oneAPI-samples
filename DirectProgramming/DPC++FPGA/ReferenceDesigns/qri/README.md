@@ -1,15 +1,12 @@
 # QR-based inversion of Matrices
-This DPC++ reference design demonstrates high performance QR-based inversion of complex/real matrices on FPGA.
 
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
+This reference design demonstrates high performance QR-based inversion of complex/real matrices on FPGA.
 
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition to compute a matrix inversion.
 | Time to complete                  | 1 hr (not including compile time)
 
@@ -19,6 +16,12 @@ This FPGA reference design demonstrates QR-based inversion of complex/real matri
 
 The algorithms employed by the reference design are the Gram-Schmidt QR decomposition algorithm and the thin QR factorization method. Background information on these algorithms can be found in Wikipedia's [QR decomposition](https://en.wikipedia.org/wiki/QR_decomposition) article. The original algorithm has been modified and optimized for performance on FPGAs in this implementation.
 The inverse of the input matrix A: inv(A) is then computed as inv(R) * transpose(Q).
+
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
+
 
 ### Matrix dimensions and FPGA resources
 
@@ -50,24 +53,32 @@ To optimize the performance-critical loop in its algorithm, the design leverages
    1. Refactoring the original Gram-Schmidt algorithm to merge two dot products of the QR decomposition into one, thus reducing the total number of dot products needed from three to two. This helps us reduce the DSPs required for the implementation.
    2. Converting the nested loop into a single merged loop and applying Triangular Loop optimizations. This allows us to generate a design that is very well pipelined.
    3. Fully vectorizing the dot products using loop unrolling.
-   4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialised dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
+   4. Using the compiler flag -Xsfp-relaxed to re-order floating point operations and allowing the inference of a specialized dot-product DSP. This further reduces the number of DSP blocks needed by the implementation, the overall latency, and pipeline depth.
    5. Using an efficient memory banking scheme to generate high performance hardware.
    6. Using the `fpga_reg` attribute to insert more pipeline stages where needed to improve the frequency achieved by the design.
    7. Using the triangular loop optimization technique to maintain high throughput in triangular loops
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the Reference Design
+
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+>
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+>
+>For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Code Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
 
@@ -79,13 +90,13 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    cd build
    ```
 
-   If you are compiling for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   If you are compiling for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
 
    ```
    cmake ..
    ```
 
-   If instead you are compiling for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   If instead you are compiling for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -119,11 +130,11 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
@@ -139,12 +150,12 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      ```
    * An FPGA hardware target is not provided on Windows*.
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
+*Note:* The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 *Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
+You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
 ## Running the Reference Design
 You can perform the QR-based inversion of 8 matrices repeatedly, as shown below. This step performs the following:
@@ -195,7 +206,7 @@ Verifying results on matrix 0
 PASSED
 ```
 
-Example output when running on Intel® PAC with Intel Arria® 10 GX FPGA for 8 matrices (each consisting of 32*32 real numbers):
+Example output when running on Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA for 8 matrices (each consisting of 32*32 real numbers):
 
 ```
 Device name: pac_a10 : Intel PAC Platform (pac_f100000)
@@ -245,4 +256,10 @@ The performance was measured by Intel on Jan 31, 2022.
 
 Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
 
-(C) Intel Corporation.
+&copy; Intel Corporation.
+
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

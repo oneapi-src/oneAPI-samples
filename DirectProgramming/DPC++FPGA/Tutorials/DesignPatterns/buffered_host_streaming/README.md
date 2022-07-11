@@ -1,25 +1,27 @@
 # Buffered Host-Device Streaming
-This tutorial demonstrates how to create a high-performance full system CPU-FPGA design using SYCL USM.
-
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
+This tutorial demonstrates how to create a high-performance full system CPU-FPGA design using SYCL* USM.
 
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support (and SYCL USM support) <br> **Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
 | Software                          | Intel® oneAPI DPC++ Compiler
 | What you will learn               | How to optimally stream data between the host and device to maximize throughput
 | Time to complete                  | 45 minutes
 
-*Notice: SYCL USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) with USM support (i.e., intel_s10sx_pac:pac_s10_usm)* <br/>
-_Notice: This tutorial demonstrates an implementation of host streaming that will be supplanted by better techniques in a future release. See the [Drawbacks and Future Work](#drawbacks-and-future-work)_
+> **Note**: SYCL* USM host allocations (and therefore this tutorial) are only supported for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) with USM support (for example, intel_s10sx_pac:pac_s10_usm).
+
+This tutorial demonstrates an implementation of host streaming that will be supplanted by better techniques in a future release. See the [Drawbacks and Future Work](#drawbacks-and-future-work).
 
 ## Purpose
 This tutorial demonstrates how to optimize a full system design that streams data from the host, to the device, and back to the host. This tutorial illustrates techniques to create heterogeneous designs that can achieve high throughput. The techniques described in this tutorial are not specific to a CPU-FPGA system (like the one used in this tutorial); they apply to GPUs, multi-core CPUs, and other processing units.
 
 Before starting this tutorial, we recommend first reviewing the **Simple Host Streaming** (simple_host_streaming), **Double Buffering** (double_buffering), and **N-Way Buffering** (n_way_buffering) FPGA tutorials. The concepts explained in these tutorials will be used in this tutorial to create a highly optimized heterogeneous design. This tutorial also assumes that the reader has a basic understanding of multi-threaded C++ programming. More information on C++ multi-threading programming can be found [here](http://www.cplusplus.com/reference/multithreading/).
+
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
 
 ### Overview
 In this tutorial, we will create a design where a *Producer* (running on the CPU) produces data into USM host allocations, a *Kernel* (running on the FPGA) processes this data and produces output into host allocations, and a *Consumer* (running on the CPU) consumes the data. Data is shared between the host and FPGA device via host pointers (pointers to USM host allocations).
@@ -88,29 +90,23 @@ We are currently working on a new API and tutorial to address these drawbacks. T
 * Run time SYCL kernel management
 * C++17 Multi-threaded programming
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
 ## Building the `buffered_host_streaming` Tutorial
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+>For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+### Running Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -208,7 +204,7 @@ dependencies and permissions errors.
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel&reg; oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Examining the Reports
 Locate `report.html` in the `buffered_host_streaming_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
@@ -227,11 +223,12 @@ Locate `report.html` in the `buffered_host_streaming_report.prj/reports/` direct
      ```
 
 ### Example of Output
-The following results were obtained on a system with the following specifications:</br>
-*CPU*: Intel&reg; Xeon&reg; CPU E5-1650 v3 @ 3.50GHz (6 cores, 12 threads) </br>
-*CPU Memory*: 65GB </br>
-*Accelerator*: Intel&reg; PAC D5005 (with Intel Stratix&reg; 10 SX FPGA) </br>
-*PCIe*: Gen3 x16 </br>
+The following results were obtained on a system with the following specifications:
+
+- **CPU**: Intel&reg; Xeon&reg; CPU E5-1650 v3 @ 3.50GHz (6 cores, 12 threads) 
+- **CPU Memory**: 65GB 
+- **Accelerator**: Intel&reg; PAC D5005 (with Intel Stratix&reg; 10 SX FPGA)
+- **PCIe**: Gen3 x16 
 
 You should see the following output in the console:
 
@@ -273,7 +270,7 @@ You should see the following output in the console:
 
     PASSED
     ```
-    NOTE: The FPGA emulator does not accurately represent the performance (throughput or latency) of the kernels.
+   > **Note**: The FPGA emulator does not accurately represent the performance (throughput or latency) of the kernels.
 
 2. When running on the FPGA device
     ```
@@ -314,3 +311,9 @@ You should see the following output in the console:
     PASSED
     ```
     NOTE: In the performance results above, the FPGA kernel is **not** the bottleneck of the full system; the *Producer*/*Consumer* running in parallel are. The full design achieves ~87% of the maximum possible throughput (as measured by the roofline analysis).
+
+## License
+
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
