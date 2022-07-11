@@ -1,42 +1,44 @@
 # Adaptive Noise Reduction (ANR)
-This DPC++ reference design demonstrates a highly optimized image sensor adaptive noise reduction (ANR) algorithm on an FPGA.
+This SYCL*-compliant reference design demonstrates a highly optimized image sensor adaptive noise reduction (ANR) algorithm for field programmable gate arrays (FPGAs).
 
-***Documentation***:
-* [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-* [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-* [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
-
-| Optimized for                     | Description
+| Property                     | Description
 ---                                 |---
-| OS                                | Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | How to create a parameterizable image processing pipeline to implement an Adaptive Noise Reduction (ANR) algorithm on an FPGA.
-| Time to complete                  | 1 hour
+| What you will learn               | How to create a parameterizable image processing pipeline to implement an Adaptive Noise Reduction (ANR) algorithm on a FPGA.
+| Time to complete                  | ~1 hour
 
 ## Purpose
-This FPGA reference design demonstrates a parameterizable image processing pipeline that implements an Adaptive Noise Reduction (ANR) algorithm using a bilateral filter. See the [Additional Design Information Section](#additional-design-information) for more information on the ANR algorithm itself and how it was implemented for the FPGA.
+This FPGA reference design demonstrates a parameterizable image processing pipeline that implements an Adaptive Noise Reduction (ANR) algorithm using a bilateral filter. 
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+See the [Additional Design Information Section](#additional-design-information) for more information on the ANR algorithm itself and how it was implemented for the FPGA.
+
+## Prerequisites
+
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | Ubuntu* 18.04/20.04 <bR>RHEL*/CentOS* 8 <BR>SUSE* 15 <BR>Windows* 10
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br>Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br>Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br>Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
 
 ### Using Visual Studio Code*  (Optional)
 
-You can use Visual Studio Code (VS Code) extensions to set your environment,
+You can use Visual Studio Code* (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg;oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
- - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the Generate Launch Configurations extension.
+ - (Linux only) Debug your GPU application with GDB for Intel&reg; oneAPI toolkits using the Generate Launch Configurations extension.
 
 To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+[Using Visual Studio Code with Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ## Building the Reference Design
 
@@ -44,11 +46,12 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
+> Windows:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
@@ -56,12 +59,12 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Code Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+### Run Code Sample in DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see [Intel&reg; DevCloud for oneAPI documentation](https://devcloud.intel.com/oneapi/documentation/base-toolkit/).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
 
-### On a Linux* System
+### On Linux*
 1. Install the design into a directory `build` from the design directory by running `cmake`:
 
    ```
@@ -69,13 +72,13 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    cd build
    ```
 
-   If you are compiling for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   If you are compiling for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
 
    ```
    cmake ..
    ```
 
-   If instead you are compiling for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   If instead you are compiling for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -101,19 +104,19 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
        make fpga
        ```
 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/anr.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/anr.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/anr.fpga.tar.gz).
 
-### On a Windows* System
+### On Windows*
 1. Generate the `Makefile` by running `cmake`.
      ```
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
@@ -132,24 +135,24 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
      nmake fpga
      ```
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
-*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
-
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 If an error occurs, you can get more details by running `make` with
 the `VERBOSE=1` argument:
-``make VERBOSE=1``
+```
+make VERBOSE=1
+```
 For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel® oneAPI Toolkits, which provides system checks to find missing
-dependencies and permissions errors.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+Intel&reg; oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors. See the [Diagnostics Utility for Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
+You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
-## Running the Reference Design
+## Run the Reference Design
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
      ```
@@ -163,7 +166,7 @@ You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) an
      anr.fpga.exe      (Windows)
      ```
 
-### Example of Output
+## Example Output
 You should see output similar to the following in the console:
 ```
 Runs:             2
@@ -178,7 +181,7 @@ Execution time: 45.0012 ms
 Throughput: 488.876 MB/s
 PASSED
 ```
-NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance.
+> **Note**: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance.
 
 
 ## Additional Design Information
@@ -208,9 +211,9 @@ The ANR algorithm works on an input image that is in [Bayer format](https://en.w
 
 <img src="bayer.png" alt="bayer" width="400"/>
 
-The ANR algorithm uses a [bilateral filter](https://en.wikipedia.org/wiki/Bilateral_filter). Unilateral filters (e.g., a [Box blur](https://en.wikipedia.org/wiki/Box_blur) or [Gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur)) replace the intensity of a given pixel with a weighted average of the neighbouring pixels, where the weight of each neighouring pixel depends on the spatial distance from the pixel being computed. With bilateral filters, like the one used in this design, the weight of each neighbouring pixel depends on both the spatial distance, and the difference in pixel intensity. This makes bilateral filters much better at preserving sharp edges. <br/>
+The ANR algorithm uses a [bilateral filter](https://en.wikipedia.org/wiki/Bilateral_filter). Unilateral filters (e.g., a [Box blur](https://en.wikipedia.org/wiki/Box_blur) or [Gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur)) replace the intensity of a given pixel with a weighted average of the neighboring pixels, where the weight of each neighboring pixel depends on the spatial distance from the pixel being computed. With bilateral filters, like the one used in this design, the weight of each neighboring pixel depends on both the spatial distance, and the difference in pixel intensity. This makes bilateral filters much better at preserving sharp edges. <br/>
 
-Bilateral filters are non-linear and therefore non-separable. Note that in the case of a 5x5 window (shown below), only 9 pixels (not 25) are used in the computation; this is an artifact of the Bayer image format. The most accurate approach would produce the bilateral filter window and convolve the entire window of the given pixel colour (for the image below, red) at once to generate the output pixel (the middle pixel). For the 5x5 case, this would result in 9 multiplications that need to be summed. <br/>
+Bilateral filters are non-linear and therefore non-separable. In the case of a 5x5 window (shown below), only 9 pixels (not 25) are used in the computation; this is an artifact of the Bayer image format. The most accurate approach would produce the bilateral filter window and convolve the entire window of the given pixel color (for the image below, red) at once to generate the output pixel (the middle pixel). For the 5x5 case, this would result in 9 multiplications that need to be summed. <br/>
 
 <img src="conv.png" alt="conv" width="400"/>
 
@@ -246,7 +249,12 @@ In this design, we use the following generic header files:
   - `RowStencil` (*row_stencil.hpp*): A library for generalizing a row stencil (i.e., the horizontal filter) using C++ functors for callbacks to perform the filter. This library hides the details of the shift register and padding logic and allows the user to simply worry about the filter convolution.
   - `ShiftReg` (*shift_reg.hpp*): A library to implement a shift register. This hides the logic necessary to ensure the compiler infers an efficient shift register behind easy-to-use API calls.
   - `UnrolledLoop` (*unrolled_loop.hpp*): A library that implements a front-end unrolled loop using C++ metaprogramming.
-  - *mp_math.hpp*: A set of various `constexpr` math functions that are implemented using C++ metaprogramming.
+  - `mp_math.hpp`: A set of various `constexpr` math functions that are implemented using C++ metaprogramming.
 
   For more information on the usage and implementation of these header libraries, view the source code (the `.hpp` files), which are well commented for documentation.
 
+## License
+
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
