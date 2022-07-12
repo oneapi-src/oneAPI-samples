@@ -31,7 +31,10 @@ set(FIXED_ITERATIONS 39)
 set(CLOCK_TARGET 360MHz)
 set(SEED "-Xsseed=29")
 # Overwrite design parameters according to the selected board
-if(FPGA_BOARD MATCHES ".*s10.*")
+if(FPGA_BOARD MATCHES ".*a10.*")
+    # A10 parameters
+    # Nothing to do
+elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(MATRIX_DIMENSION 32)
     set(COMPLEX 0)
