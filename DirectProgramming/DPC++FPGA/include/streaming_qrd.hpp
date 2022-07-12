@@ -376,7 +376,7 @@ struct StreamingQRD {
 
         // Update loop indexes
         if (j == (columns - 1)) {
-          // If i reached an index at which the j inner loop don't have
+          // If i reached an index at which the j inner loop doesn't have
           // enough time to write its result for the next i iteration,
           // some "dummy" iterations are introduced
           j = (kVariableIterations > i)
