@@ -149,7 +149,10 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
        ```
        _Note:_ If you are compiling Query 9 (`-DQUERY=9`), the report generation time is unusually long.
 
-    * An FPGA hardware target is not provided on Windows*.
+    * Compile for FPGA hardware (longer compile time, targets FPGA device):
+      ```
+      nmake fpga
+      ```
 
 *Note:* The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
 *Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
