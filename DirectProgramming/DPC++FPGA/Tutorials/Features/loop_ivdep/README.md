@@ -1,21 +1,13 @@
-
-
 # Loop `ivdep` Attribute
 This FPGA tutorial demonstrates how to apply the `ivdep` attribute to a loop to aid the compiler's loop dependence analysis.
 
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
-
 | Optimized for                     | Description
----                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+|:---                               |:---
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               |  Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a *safe* dependence distance <br> How to aid the compiler's dependence analysis to maximize performance
 | Time to complete                  | 30 minutes
-
-
 
 ## Purpose
 In order to understand and apply `ivdep` to loops in your design, it is necessary to understand the concepts of loop-carried memory dependencies. Unlike many other attributes that can improve a design's performance, `ivdep` has functional implications. Using it incorrectly will result in undefined behavior for your design!
@@ -26,7 +18,7 @@ A *loop-carried memory dependency* refers to a situation where memory access in 
 * **Anti-dependence (Write-After-Read)** - A memory location read must occur before a future iteration writes to the same memory location.
 * **Output-dependence (Write-After-Write)** - A memory location write must occur before a future iteration writes to the same memory location.
 
-The Intel® oneAPI DPC++ Compiler employs static analysis to scan the program's code to establish the dependence relationships between all memory accesses in a loop. However, depending on the complexity of the addressing expressions and the loop's stride or upper bound, the compiler may not be able to statically determine precise dependence information.
+The compiler employs static analysis to scan the program's code to establish the dependence relationships between all memory accesses in a loop. However, depending on the complexity of the addressing expressions and the loop's stride or upper bound, the compiler may not be able to statically determine precise dependence information.
 
 In such scenarios, the compiler must conservatively assume some statements to be dependent in order to guarantee the functional correctness of the generated hardware. Precise dependence information is crucially important to generate an efficient pipelined datapath. Such information reduces the number of assumed dependencies, allowing the hardware schedule to extract as much pipeline parallelism from loops as possible.
 
@@ -93,7 +85,7 @@ The `ivdep(a)` attribute indicates to the compiler that it can disregard assumed
 
 The `ivdep` attribute can also be applied to a loop without a specific array or pointer argument. When applied in this manner, the `ivdep` attribute indicates to the compiler that it can ignore all assumed loop-carried dependencies on accesses to all arrays and pointers with the loop.
 
-***IMPORTANT***: It is recommended best practice that users always apply `ivdep` with an array or pointer specified so that they explicitly understand which accesses are affected. Specifying `ivdep` incorrectly by telling the compiler to disregard loop-carried dependencies where some exist results in undefined (and likely incorrect) behaviour.
+**IMPORTANT**: It is recommended best practice that users always apply `ivdep` with an array or pointer specified so that they explicitly understand which accesses are affected. Specifying `ivdep` incorrectly by telling the compiler to disregard loop-carried dependencies where some exist results in undefined (and likely incorrect) behavior.
 
 ### Specifying that memory accesses do *not* cause loop-carried dependencies across a fixed distance
 Apply the `ivdep` attribute with an additional `safelen` parameter to set a specific lower bound on the dependence distance that can possibly be attributed to loop-carried dependencies in the associated loop.
@@ -106,7 +98,7 @@ for (int i = 0; i < n; i++) {
 ```
 The `ivdep(a,n)` attribute informs the compiler to generate a pipelined loop datapath that can issue a new iteration as soon as the iteration `n` iterations ago has completed. The attribute parameter (`safelen`) is a refinement of the compiler static loop-carried dependence analysis that infers the dependence present in the code but is otherwise unable to determine its distance accurately.
 
-***IMPORTANT***: Applying the `ivdep` attribute or the `ivdep` attribute with a `safelen` parameter may lead to incorrect results if the annotated loop exhibits loop-carried memory dependencies. The attribute directs the compiler to generate hardware assuming no loop-carried dependencies. Specifying this assumption incorrectly is an invalid use of the attribute and results in undefined (and likely incorrect) behavior.
+**IMPORTANT**: Applying the `ivdep` attribute or the `ivdep` attribute with a `safelen` parameter may lead to incorrect results if the annotated loop exhibits loop-carried memory dependencies. The attribute directs the compiler to generate hardware assuming no loop-carried dependencies. Specifying this assumption incorrectly is an invalid use of the attribute and results in undefined (and likely incorrect) behavior.
 
 ### Testing the Tutorial
 In `loop_ivdep.cpp`, the `ivdep` attribute is applied to the kernel work loop with a `safelen` parameter of 1 and 128.
@@ -116,7 +108,7 @@ In `loop_ivdep.cpp`, the `ivdep` attribute is applied to the kernel work loop wi
 ```
 The `ivdep` attribute with the `safelen` parameter equal to 1 informs the compiler that iterations of the associated loop do not form a loop-carried memory dependence with a distance of at least 1. That is, the attribute is redundant and is equivalent to the code without the attribute in place.
 
-**_Try this!_**: Compile the tutorial program in `loop_ivdep.cpp` with and without the `[[intel::ivdep]]` attribute altogether and compare the resulting reports.
+**Try this!** Compile the tutorial program in `loop_ivdep.cpp` with and without the `[[intel::ivdep]]` attribute altogether and compare the resulting reports.
 
 The `ivdep` attribute with `safelen` parameter equal to 128 is reflective of the maximum number of iterations of the associated loop among which no loop-carried memory dependence occurs. The annotated loop nest contains a dependence on values of array `temp_buffer`:
 
@@ -129,17 +121,16 @@ for (size_t j = 0; j < kMatrixSize * kRowLength; j++) {
 ```
 Observe that the indexing expression on `temp_buffer` evaluates to the same index every `kRowLength` iterations of the `j` loop. Specifying the `ivdep` attribute on the `j` loop without a `safelen` parameter, or with a `safelen` parameter >= `kRowLength` leads to undefined behavior because the generated hardware does not adhere to the ordering constraint imposed by the dependence. Specifying the `ivdep` attribute with a `safelen` attribute <= `kRowLength` is valid and will result in a better performing end result.
 
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
+
 ## Key Concepts
-* Basics of loop-carried dependencies
-* The notion of a loop-carried dependence distance
-* Determining what constitutes a *safe* dependence distance
-* How to aid the compiler's dependence analysis to maximize performance
-
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+* Basics of loop-carried dependencies.
+* The notion of a loop-carried dependence distance.
+* Determining what constitutes a *safe* dependence distance.
+* How to aid the compiler's dependence analysis to maximize performance.
 
 ## Building the `loop_ivdep` Tutorial
 
@@ -147,20 +138,21 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+>For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+### Running Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -171,16 +163,14 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
- - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the Generate Launch Configurations extension.
+ - (Linux only) Debug your GPU application with GDB for Intel&reg; oneAPI toolkits using the Generate Launch Configurations extension.
 
 To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+[Using Visual Studio Code with Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ### On a Linux* System
 
@@ -189,11 +179,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -226,11 +216,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -255,8 +245,9 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      nmake fpga
      ```
 
->Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
-*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ### Troubleshooting
 
@@ -264,16 +255,16 @@ If an error occurs, you can get more details by running `make` with
 the `VERBOSE=1` argument:
 ``make VERBOSE=1``
 For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel® oneAPI Toolkits, which provides system checks to find missing
+Intel&reg; oneAPI Toolkits, which provides system checks to find missing
 dependencies and permissions errors.
 [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
 ## Examining the Reports
-Locate `report.html` in the `loop_ivdep_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the `loop_ivdep_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
 Navigate to the Loops Analysis section of the optimization report and look at the initiation interval (II) achieved by the two kernel versions.
 * **`safelen(1)`** The II reported for this version of the kernel is five cycles.
@@ -306,13 +297,20 @@ PASSED: The results are correct
 
 ### Discussion of Results
 
-The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA and the Intel® oneAPI DPC++ Compiler.
+The following table summarizes the execution time (in ms) and throughput (in MFlops) for `safelen` parameters of 1 (redundant attribute) and 128 (`kRowLength`) for a default input matrix size of 128 x 128 floats on Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA and the Intel&reg; oneAPI DPC++ Compiler.
 
-Safelen | Kernel Time (ms) | Throughput (KB/s)
-------------- | ------------- | -----------------------
-1     | 50 | 1320
-128   | 10 | 6403
+|Safelen | Kernel Time (ms) | Throughput (KB/s)
+|:---  |:--- |:---
+|1     | 50 | 1320
+|128   | 10 | 6403
 
 With the `ivdep` attribute applied with the maximum safe `safelen` parameter, the kernel execution time is decreased by a factor of ~5.
 
-Note that this performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
+> **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
+
+
+## License
+
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
