@@ -1,15 +1,11 @@
 # Latency Control
 This FPGA tutorial demonstrates how to set latency constraints to pipes and load-store units (LSUs) accesses.
 
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
-
 | Optimized for                     | Description
----                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+|:---                                 |:---
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg;10 GX FPGA <br> Intel&reg;FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg;10 SX) <br> Intel&reg;FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel&reg;FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Software                          | Intel&reg;oneAPI DPC++ Compiler <br> Intel&reg;FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to set latency constraints to pipes and LSUs accesses.<br>How to confirm that the compiler respected the latency control directive.
 | Time to complete                  | 15 minutes
 
@@ -17,7 +13,7 @@ The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programmi
 This FPGA tutorial demonstrates how to set latency constraints to pipes and LSUs accesses and how to confirm that the compiler respected the latency control directive.
 
 ### Use Model
-**Note**: The APIs described in this section are experimental. Future versions of latency controls might change these APIs in ways that are incompatible with the version described here.
+> **Note**: The APIs described in this section are experimental. Future versions of latency controls might change these APIs in ways that are incompatible with the version described here.
 
 Latency controls APIs are provided on member functions `read()` and `write()` of class `sycl::ext::intel::experimental::pipe` and on member functions `load()` and `store()` of class `sycl::ext::intel::experimental::lsu`. Other than the latency controls support, the experimental `pipe` and `lsu` are identical to `sycl::ext::intel::pipe` and `sycl::ext::intel::lsu`. The experimental `pipe` and `lsu` are also provided by `<sycl/ext/intel/fpga_extensions.hpp>`.
 
@@ -29,7 +25,7 @@ These `read()`, `write()`, `load()`, and `store()` member functions can take a p
 
 * `sycl::ext::intel::experimental::latency_constraint<A, B, C>`
 
-    A constraint than can be associated with the pipes and LSUs functions listed above. It provides a latency constraint between this function and a different labeled function. Functions which have this property will be referred to as "constrained functions". This constraint has  the following parameters:
+    A constraint then can be associated with the pipes and LSUs functions listed above. It provides a latency constraint between this function and a different labeled function. Functions which have this property will be referred to as "constrained functions". This constraint has  the following parameters:
 
    * `A` is a signed integer: The label of the labeled function which is constrained relative to the constrained function.
    * `B` is an enum value: The type of constraint, can be `latency_control_type::exact` (exact latency), `latency_control_type::max` (maximum latency), and `latency_control_type::min` (minimum latency).
@@ -95,38 +91,38 @@ BurstCoalescedLSU::store(
   * Both are in the same block but not in any cluster
   * Both are in the same cluster
 
-**Note**: Clusters can be identified in the System Viewer (**Views > System Viewer**) of the `report.html` report.
+> **Note**: Clusters can be identified in the System Viewer (**Views > System Viewer**) of the `report.html` report.
 
 The compiler tries to achieve the latency constraints, and it errors out if some constraints cannot be satisfied. For example, if one constraint specifies function A should be scheduled after function B, while another constraint specifies function B should be scheduled after function A, then that set of constraints is unsatisfiable.
 
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
+
 ## Key Concepts
- * How to set latency constraints to pipes and LSUs accesses
- * How to confirm that the compiler respected the latency control directive
-
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+ * How to set latency constraints to pipes and LSUs accesses.
+ * How to confirm that the compiler respected the latency control directive.
 
 ## Building the `latency_control` Tutorial
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+>For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+### Running Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg;oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -136,15 +132,14 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions and how to configure the oneAPI environment, see the
+[Using Visual Studio Code with Intel&reg;oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 
@@ -153,11 +148,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   To compile for the Intel&reg;PAC with Intel Arria&reg;10 GX FPGA, run `cmake` using the command:
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg;FPGA PAC D5005 (with Intel Stratix&reg;10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -190,11 +185,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   To compile for the Intel&reg;PAC with Intel Arria&reg;10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg;FPGA PAC D5005 (with Intel Stratix&reg;10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -219,10 +214,12 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      nmake fpga
      ```
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005
-(with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware
+> **Note**: The Intel&reg;PAC with Intel Arria&reg;10 GX FPGA and Intel&reg;FPGA PAC D5005
+(with Intel Stratix&reg;10 SX) do not support Windows*. Compiling to FPGA hardware
 on Windows* requires a third-party or custom Board Support Package (BSP) with
-Windows* support.<br> *Note:* If you encounter any issues with long paths when
+Windows* support.
+
+> **Note**: If you encounter any issues with long paths when
 compiling under Windows*, you may have to create your ‘build’ directory in a
 shorter path, for example c:\samples\build. You can then run cmake from that
 directory, and provide cmake with the full path to your sample directory.
@@ -232,18 +229,19 @@ If an error occurs, you can get more details by running `make` with
 the `VERBOSE=1` argument:
 ``make VERBOSE=1``
 For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel® oneAPI Toolkits, which provides system checks to find missing
+Intel&reg;oneAPI Toolkits, which provides system checks to find missing
 dependencies and permissions errors.
 [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg;oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Examining the Reports
 Locate `report.html` in the `latency_control_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
 1. Navigate to Schedule Viewer (**Views > Schedule Viewer**). In this view, you can find the load and the store that have latency constraint and then you can check the scheduled latency between them. The scheduled latency should reflect the applied latency control in the design source code. You can also verify the latency control parameters in the **Details** pane for the load and store nodes.
+
 2. Navigate to System Viewer (**Views > System Viewer**). In this view, you can verify the latency control parameters in the **Details** pane for the load and the store nodes. You can find the load and store nodes in **LatencyControl.B1**.
 
 ## Running the Sample
@@ -263,3 +261,8 @@ Locate `report.html` in the `latency_control_report.prj/reports/` directory. Ope
 ```
 PASSED: all kernel results are correct.
 ```
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
