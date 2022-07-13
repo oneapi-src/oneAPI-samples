@@ -1,33 +1,20 @@
 # Read-Only Cache
 This FPGA tutorial demonstrates how to use the read-only cache feature to boost
-the throughput of an FPGA DPC++ design that requires reading from off-chip
+the throughput of a SYCL*-compliant FPGA design that requires reading from off-chip
 memory in a non-contiguous manner.
 
-***Documentation***:  The [DPC++ FPGA Code Samples
-Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html)
-helps you to navigate the samples and build your knowledge of DPC++ for FPGA.
-<br>
-The [oneAPI DPC++ FPGA Optimization
-Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)
-is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming
-Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general
-resource for target-independent DPC++ programming.
-
 | Optimized for                     | Description
----                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+|:---                                |:---
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and when to use the read-only cache feature
 | Time to complete                  | 30 minutes
-
-
 
 ## Purpose
 
 This FPGA tutorial demonstrates an example of using the read-only cache to
-boost the throughput of an FPGA DPC++ design. Specifically, the read-only cache
+boost the throughput of a FPGA design. Specifically, the read-only cache
 is most appropriate for non-contiguous read accesses from off-chip memory
 buffers that are guaranteed to be constant throughout the execution of a
 kernel. The read-only cache is optimized for high cache hit performance.
@@ -65,18 +52,15 @@ table contains 512 integers as indicated by the `kLUTSize` constant, the chosen
 size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
 `-Xsread-only-cache-size=2048` is passed to `dpcpp`.
 
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
+
 ## Key Concepts
 * How to use the read-only cache feature
 * The scenarios in which this feature can help improve the throughput of a
   design
-
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
-for details.
-
-Third party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Using Visual Studio Code*  (Optional)
 
@@ -84,42 +68,41 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
- - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+ - (Linux only) Debug your GPU application with GDB for Intel&reg; oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+To learn more about the extensions, see the 
+[Using Visual Studio Code with Intel&reg; oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ## Building the `read_only_cache` Tutorial
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+>For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The included header `dpc_common.hpp` is located at
 `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the
+### Running Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, remember that you must specify the
 type of compute node and whether to run in batch or interactive mode. Compiles
 to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA
 hardware is only supported on fpga_runtime nodes of the appropriate type, such
 as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor
 executing programs on FPGA hardware are supported on the login nodes. For more
-information, see the Intel® oneAPI Base Toolkit Get Started Guide
+information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide
 ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout
@@ -132,12 +115,12 @@ to 12h.
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake`
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake`
    using the command:
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix®
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg;
    10 SX), run `cmake` using the command:
 
    ```
@@ -178,12 +161,12 @@ to 12h.
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake`
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake`
    using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix®
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg;
    10 SX), run `cmake` using the command:
 
    ```
@@ -212,11 +195,12 @@ to 12h.
      nmake fpga
      ```
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005
-(with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA
+> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005
+(with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA
 hardware on Windows* requires a third-party or custom Board Support Package
-(BSP) with Windows* support.<br>
-*Note:* If you encounter any issues with long paths when compiling under
+(BSP) with Windows* support.
+
+> **Note**: If you encounter any issues with long paths when compiling under
 Windows*, you may have to create your ‘build’ directory in a shorter path, for
 example c:\samples\build.  You can then run cmake from that directory, and
 provide cmake with the full path to your sample directory.
@@ -226,22 +210,19 @@ If an error occurs, you can get more details by running `make` with
 the `VERBOSE=1` argument:
 ``make VERBOSE=1``
 For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel® oneAPI Toolkits, which provides system checks to find missing
+Intel&reg; oneAPI Toolkits, which provides system checks to find missing
 dependencies and permissions errors.
 [Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the
-Visual Studio* IDE (in Windows*). For instructions, refer to the following
-link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party
-IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
 
 ## Examining the Reports
 Locate the pair of `report.html` files in the
 `read_only_cache_disabled_report.prj` and `read_only_cache_enabled_report.prj`
-directories. Open the reports in any of Chrome*, Firefox*, Edge*, or Internet
+directories. Open the reports in Chrome*, Firefox*, Edge*, or Internet
 Explorer*. Navigate to the "Area Analysis of System" section of each report
 (Area Analysis > Area Analysis of System) and expand the "Kernel System" entry
 in the table. Notice that when the read-only cache is enabled, a new entry
@@ -294,14 +275,22 @@ Kernel throughput with the read-only cache: 298.51 MB/s
 ### Discussion of Results
 
 A test compile of this tutorial design achieved the following results on the
-Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA:
+Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA:
 
 Configuration | Execution Time (ms) | Throughput (MB/s)
--|-|-
-Without caching | 3.377 | 148.06
-With caching | 1.675 | 298.51
+|:--- |:--- |:---
+|Without caching | 3.377 | 148.06
+|With caching | 1.675 | 298.51
 
 When the read-only cache is enabled, performance notably increases. As
 previously mentioned, when the global memory accesses are random (i.e.
 non-contiguous), enabling the read-only cache and sizing it correctly may allow
 the design to achieve a higher throughput.
+
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+for details.
+
+Third party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

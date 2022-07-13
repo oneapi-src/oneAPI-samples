@@ -2,21 +2,17 @@
 # Avoiding Aliasing of Kernel Arguments
 This tutorial explains the  `kernel_args_restrict` attribute and its effect on the performance of FPGA kernels.
 
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
-
 | Optimized for                     | Description
----                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               |  The problem of *pointer aliasing* and its impact on compiler optimizations <br> The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel <br> The effect this attribute can have on your kernel's performance on FPGA
+|:---                               |:---
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| What you will learn               |  The problem of *pointer aliasing* and its impact on compiler optimizations. <br> The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel. <br> The effect this attribute can have on your kernel's performance on FPGA.
 | Time to complete                  | 20 minutes
 
 
 ## Purpose
-Due to pointer aliasing, the compiler must be conservative about optimizations that reorder, parallelize or overlap operations that could alias. This tutorial demonstrates the use of the DPC++ `[[intel::kernel_args_restrict]]` kernel attribute, which should be applied any time you can guarantee that kernel arguments do not alias. This attribute enables more aggressive compiler optimizations and often improves kernel performance on FPGA.
+Due to pointer aliasing, the compiler must be conservative about optimizations that reorder, parallelize or overlap operations that could alias. This tutorial demonstrates the use of the SYCL*-compliant `[[intel::kernel_args_restrict]]` kernel attribute, which should be applied any time you can guarantee that kernel arguments do not alias. This attribute enables more aggressive compiler optimizations and often improves kernel performance on FPGA.
 
 
 ### What Is Pointer Aliasing?
@@ -41,23 +37,22 @@ This possibility of aliasing forces the compiler to be conservative. Without mor
 If this code is compiled to FPGA, the performance penalty of this conservatism is severe. The loop in `myCopy` cannot be pipelined, because the next iteration of the loop cannot begin until the current iteration has completed.
 
 ### A Promise to the Compiler
-The developer often knows that pointer arguments will never alias in practice, as with the `myCopy` function. In your DPC++ program, you can use the `[[intel::kernel_args_restrict]]` attribute to inform the compiler that none of a kernel's arguments will alias to any another, thereby enabling more aggressive optimizations. If the non-aliasing assumption is violated at runtime, the result will be undefined behavior.
+The developer often knows that pointer arguments will never alias in practice, as with the `myCopy` function. In your program, you can use the `[[intel::kernel_args_restrict]]` attribute to inform the compiler that none of a kernel's arguments will alias to any another, thereby enabling more aggressive optimizations. If the non-aliasing assumption is violated at runtime, the result will be undefined behavior.
 
 C and OpenCL programmers may recognize this concept as the `restrict` keyword.
 
 ### Tutorial Code Description
 In this tutorial, we will show how to use the `kernel_args_restrict` attribute for your kernel and its effect on performance. We show two kernels that perform the same function; one with and one without `[[intel::kernel_args_restrict]]` being applied to it. The function of the kernel is simple: copy the contents of one buffer to another. We will analyze the effect of the `[[intel::kernel_args_restrict]]` attribute on the kernel's performance by analyzing loop II in the reports and the latency of the kernel on actual hardware.
 
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
+
 ## Key Concepts
-* The problem of *pointer aliasing* and its impact on compiler optimizations
-* The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel
-* The effect this attribute can have on your kernel's performance on FPGA
-
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+* The problem of *pointer aliasing* and its impact on compiler optimizations.
+* The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel.
+* The effect this attribute can have on your kernel's performance on FPGA.
 
 ## Building the `kernel_args_restrict` Tutorial
 
@@ -65,19 +60,20 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+>For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+### Running Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
 
@@ -88,15 +84,14 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions and how to configure the oneAPI environment, see the
+[Using Visual Studio Code with Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 
@@ -105,11 +100,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
@@ -141,11 +136,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
@@ -169,24 +164,25 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      nmake fpga
      ```
 
->Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
-*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
 ### Troubleshooting
 If an error occurs, you can get more details by running `make` with
 the `VERBOSE=1` argument:
 ``make VERBOSE=1``
 For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel® oneAPI Toolkits, which provides system checks to find missing
+Intel&reg; oneAPI Toolkits, which provides system checks to find missing
 dependencies and permissions errors.
 [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
  ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
 ## Examining the Reports
-Locate `report.html` in the `kernel_args_restrict_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the `kernel_args_restrict_report.prj/reports/` directory. Open the report in Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
 Navigate to the *Loop Analysis* report (*Throughput Analysis* > *Loop Analysis*). In the *Loop List pane*, you should see two kernels: one is the kernel without the attribute applied (*KernelArgsNoRestrict*) and the other with the attribute applied (*KernelArgsRestrict*). Each kernel has a single for-loop, which appears in the *Loop List* pane. Click on the loop under each kernel to see how the compiler optimized it.
 
@@ -230,11 +226,17 @@ PASSED
 
 ### Discussion of Results
 
-The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on the Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA) is shown.
+The throughput observed when running the kernels with and without the `kernel_args_restrict` attribute should reflect the difference in loop II seen in the reports. The ratios will not exactly match because the loop IIs are estimates. An example ratio (compiled and run on the Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA) is shown.
 
-Attribute used?  | II | Kernel Throughput (MB/s)
-------------- | ------------- | --------
-No  | ~187 | 8
-Yes  | ~1 | 767
+|Attribute used?  | II | Kernel Throughput (MB/s)
+|:--- |:--- |:---
+|No  | ~187 | 8
+|Yes  | ~1 | 767
 
-Note that this performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
+> **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
+
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
