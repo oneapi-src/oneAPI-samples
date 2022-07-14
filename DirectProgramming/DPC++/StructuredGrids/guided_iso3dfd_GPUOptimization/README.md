@@ -1,6 +1,6 @@
-# `Guided ISO3DFD` Sample
+# `guided iso3dfd GPUOptimization` Sample
 
-The `Guided ISO3DFD` sample demonstrates how to use the Intel&reg; oneAPI Base Toolkit (Base Kit) and tools found in the Base Kit to optimize code for GPU offload. The ISO3DFD sample refers to Three-Dimensional Finite-Difference Wave Propagation in Isotropic Media; it is a three-dimensional stencil to simulate a wave propagating in a 3D isotropic medium.
+The `guided iso3dfd GPUOptimization` sample demonstrates how to use the Intel&reg; oneAPI Base Toolkit (Base Kit) and tools found in the Base Kit to optimize code for GPU offload. The ISO3DFD sample refers to Three-Dimensional Finite-Difference Wave Propagation in Isotropic Media; it is a three-dimensional stencil to simulate a wave propagating in a 3D isotropic medium.
 
 This sample follows the workflow found in [Optimize Your GPU Application with the Intel&reg; oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/gpu-optimization-workflow.html#gs.101gmt2).
 
@@ -146,7 +146,7 @@ dependencies and permissions errors. See [Diagnostics Utility for Intel&reg; one
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2019" or "x64 Native Tools Command Prompt for VS2022"
-     - Run the following command: `MSBuild "Optimization Guide.sln" /t:Rebuild /p:Configuration="Release"`
+     - Run the following command: `MSBuild "guided_iso3dfd.sln" /t:Rebuild /p:Configuration="Release"`
 
 ### Application Parameters
 
@@ -184,7 +184,7 @@ Each analysis run will create a separate dataset and report in a corresponding f
 
 The first step is to run offload modeling on the CPU only version of the application (1_CPU_only) to identify code regions that are good opportunities for GPU offload. Running accurate modeling can take considerable time as Intel&reg; Advisor performs analysis on your project.  There are two commands provided below. The first is fast, but less accurate and should only be used as a proof of concept.  The second will give considerably more helpful and accurate profile information. Depending on your system, modeling may take well **over an hour**.
 
-Run one of the following from the from the `build` directory on Linux or from the `Optimization Guide` on Windows.
+Run one of the following from the from the `build` directory on Linux or from the `guided_iso3dfd_GPUOptimization` on Windows.
 
 Command 1: Fast but not as accurate.\
 For Linux:\

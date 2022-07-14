@@ -1,6 +1,6 @@
 {
     "guid": "5241A04C-874F-4627-BABD-31C849CC4C55",
-    "name": "GPU Optimization Guide ISO3DFD",
+    "name": "Guided iso3dfd GPU optimization",
     "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Structured Grids"],
     "description": "Step-by-step GPU optimization guide with Intel Advisor and ISO3DFD sample",
     "toolchain": [ "dpcpp" ],
