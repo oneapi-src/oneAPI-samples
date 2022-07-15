@@ -1,7 +1,8 @@
 cmake_minimum_required (VERSION 3.5)
+set(CMAKE_CXX_COMPILER dpcpp)
+
 project (all-pairs-shortest-paths)
 
-set(CMAKE_CXX_COMPILER dpcpp)
 
 
 # Set default build type to RelWithDebInfo if not specified
