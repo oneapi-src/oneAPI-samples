@@ -8,6 +8,7 @@
 #include <oneapi/dpl/random>
 #include "mkl/mkl.h"
 
+extern "C"{void genmat_(double *A, double *B, double n);}
 using namespace sycl;
 
 // Selectors for specific targets
@@ -49,72 +50,54 @@ void multiply(real* &P, real* &matrix, real* &P_inv, int N);
 
 int main(int argc, char *argv[])
 {  
-    // std::vector<real> vars = {};
-
-    // if(argc == 8)
-    // {
-    //     N = atoi(argv[1]);
-    //     vars.push_back(atof(argv[2]));
-    //     vars.push_back(atof(argv[3]));
-    //     vars.push_back(atof(argv[4]));
-    //     vars.push_back(atof(argv[5]));
-    //     vars.push_back(atof(argv[6]));
-    //     max_sweeps = atoi(argv[7]);
-    // }
-    // std:: cout << argc << std::endl;
- 
-    // std::cout << N << " " << vars[0] << " " << vars[1] << " " << vars[2] << " " << vars[3] << " " << vars[4] << " " << max_sweeps << std::endl;
     auto begin_runtime = std::chrono::high_resolution_clock::now();
     queue q(selector);
 
     // outfile.open("report.txt", std::ios_base::out);
 
+    real* A = malloc_shared<real>(N*N, q);
+    memset(A, 0, sizeof(*A)*N*N);
+    real* B = malloc_shared<real>(N*N, q);
+    memset(B, 0, sizeof(*B)*N*N);
     real* matrix = malloc_shared<real>(N*N, q);
     memset(matrix, 0, sizeof(*matrix)*N*N);
-    real* matrix_T = malloc_shared<real>(N*N, q);
-    memset(matrix_T, 0, sizeof(*matrix_T)*N*N);
-
 
     std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
 
     auto begin_matrix = std::chrono::high_resolution_clock::now();
-    {
-        real *matrix = malloc_shared<real>(N*N, q);
-        memset(matrix, 0, sizeof(*matrix)*N*N);
-        q.submit([&](handler& h){
-        stream out(1024, 256, h);
-        h.parallel_for(range<1>(N), [=](id<1> id){
-            int i = id;
+    
+    q.submit([&](handler& h){
+    stream out(1024, 256, h);
+    h.parallel_for(range<1>(N), [=](id<1> id){
+        int i = id;
 
-            oneapi::dpl::minstd_rand engine(seed, i);
 
-            oneapi::dpl::uniform_real_distribution<real> distr(0, 5);
-
-            for(int j=i*N; j<=N*i+i; ++j)
-            {
-                matrix[j] = distr(engine);
-                matrix[j] = round(10. * matrix[j]) / 10.;
-            }
+        for(int j=i*N+i; j<i*N+N; ++j) 
+        {
+            oneapi::dpl::minstd_rand engine(seed, j);
+            oneapi::dpl::uniform_real_distribution<real> distr(-2, 8);
+            A[j] = distr(engine);
+        }     
         });
     });
     q.wait();
 
-    for(int i=0; i<N; ++i)
+     for(int i=0; i<N; ++i)
     {
         for(int j=i*N; j<N*(i+1); ++j)
         {
-            std::cout << matrix[j] << " ";
-            
+            std::cout << A[j] << " ";
         }
         std::cout<<std::endl;
     }
+
     std::cout<<std::endl;
     q.submit([&](handler& h){
         stream out(1024, 256, h);
         h.parallel_for(range<1>(N*N), [=](id<1> id){
             int i = id/N;
             int j = id%N;
-            matrix_T[id] = matrix[N*j+i];
+            B[id] = A[N*j+i];
             
         });
     });
@@ -124,20 +107,39 @@ int main(int argc, char *argv[])
     {
         for(int j=i*N; j<N*(i+1); ++j)
         {
-            std::cout << matrix_T[j] << " ";            
+            std::cout << B[j] << " ";
         }
         std::cout<<std::endl;
     }
-    std::cout<<std::endl;
 
+    q.submit([&](handler& h){
+        h.parallel_for(range<1>(N), [=](id<1> i){  
+            for(int j=0; j<N; j++) {
+            real tmp = 0;
+            for(int l=0; l<N; l++) {
+                tmp += A[N*i+l]*B[N*l+j];
+            }
+            matrix[N*i + j] = tmp;
+        }
+        });
+    });
+    q.wait();
+
+    std::cout<<std::endl;    
     
+    // genmat_(matrix, B, N);
+    for(int i=0; i<N; ++i)
+    {
+        for(int j=i*N; j<N*(i+1); ++j)
+        {
+            // if(j%N==j/N) matrix[j]*=10;
+            std::cout << matrix[j] << " ";
+        }
+        std::cout<<std::endl;
     }
+
     real sqr = sqrt(2);
-    // original_matrix = {1, 1/2, 1/3, 1/4, 1/2, 1/3, 1/4, 1/5, 1/3, 1/4, 1/5, 1/6, 1/4, 1/5, 1/6, 1/7};
-    // original_matrix = {5,7,6,5,
-    //                    7,10,8,7,
-    //                    6,8,10,9,
-    //                    5,7,9,10};
+
     matrix[0] = 1;
     matrix[1] = sqr;
     matrix[2] = 2;
@@ -148,29 +150,23 @@ int main(int argc, char *argv[])
     matrix[7] = sqr;
     matrix[8] = 1;
 
-    // matrix[0] = 1;
-    // matrix[1] = 1/2;
-    // matrix[2] = 1/3;
-    // matrix[3] = 1/4;
-    // matrix[4] = 1/2;
-    // matrix[5] = 1/3;
-    // matrix[6] = 1/4;
-    // matrix[7] = 1/5;
-    // matrix[8] = 1/3;
-    // matrix[9] = 1/4;
-    // matrix[10] = 1/5;
-    // matrix[11] = 1/6;
-    // matrix[12] = 1/4;
-    // matrix[13] = 1/5;
-    // matrix[14] = 1/6;
-    // matrix[15] = 1/7;
-
-    double a[N*N];
-    for(int i=0; i<N*N; ++i) a[i] = matrix[i];
     auto end_matrix = std::chrono::high_resolution_clock::now();
     auto elapsed_matrix = std::chrono::duration_cast<std::chrono::nanoseconds>(end_matrix - begin_matrix);
 
     std::cout << "\nMatrix generated, time elapsed: " << elapsed_matrix.count() * 1e-9 << " seconds.\n";
+    real ei[N*N];
+    for(int i=0; i<N*N; ++i) ei[i] = matrix[i];
+
+    for(int i=0; i<N; ++i)
+    {
+        for(int j=i*N; j<N*(i+1); ++j)
+        {
+            std::cout << ei[j] << " ";
+        }
+        std::cout<<std::endl;
+    }
+
+    std::cout<<std::endl;
 
     auto begin_computations = std::chrono::high_resolution_clock::now();
 
@@ -250,16 +246,18 @@ int main(int argc, char *argv[])
         dgetrf(&N, &N, P_inv, &lda, &ipiv, &info);
         dgetri(&N, P_inv, &lda, &ipiv, work, &lwork, &info);
 
+        
+        multiply(P, matrix, P_inv, N);
+
         for(int i=0; i<N; ++i)
         {
             for(int j=i*N; j<N*(i+1); ++j)
             {
-                std::cout << P[j] << " ";
+                std::cout << matrix[j] << " ";
             }
             std::cout<<std::endl;
         }        
-        
-        multiply(P, matrix, P_inv, N);
+        free( (void*)work );
 
         ++sweeps;
 
@@ -283,6 +281,7 @@ int main(int argc, char *argv[])
     std::cout << "Checking results\n";
 
     ////////////////////////////////////////////////////////////////////////////////////////////
+    {
     int LDA = N;
     int n = N, lda = LDA, info, lwork, liwork;
     int iwkopt;
@@ -297,13 +296,13 @@ int main(int argc, char *argv[])
     /* Query and allocate the optimal workspace */
     lwork = -1;
     liwork = -1;
-    dsyevd_("Vectors", "Upper", &n, a, &lda, w, &wkopt, &lwork, &iwkopt, &liwork, &info);
+    dsyevd_("Vectors", "Upper", &n, ei, &lda, w, &wkopt, &lwork, &iwkopt, &liwork, &info);
     lwork = (int)wkopt;
-    work = (double*)malloc( lwork*sizeof(double) );
+    work = (double*)malloc( lwork*sizeof(double));
     liwork = iwkopt;
     iwork = (int*)malloc( liwork*sizeof(int) );
     /* Solve eigenproblem */
-    dsyevd_( "Vectors", "Upper", &n, a, &lda, w, work, &lwork, iwork,
+    dsyevd_( "Vectors", "Upper", &n, ei, &lda, w, work, &lwork, iwork,
                     &liwork, &info );
     /* Check for convergence */
     if( info > 0 ) {
@@ -313,11 +312,11 @@ int main(int argc, char *argv[])
     /* Print eigenvalues */
     print_matrix( (char*)"Eigenvalues", 1, n, w, 1 );
     /* Print eigenvectors */
-    print_matrix( (char*)"Eigenvectors (stored columnwise)", n, n, a, lda );
+    print_matrix( (char*)"Eigenvectors (stored columnwise)", n, n, ei, lda );
     /* Free workspace */
     free( (void*)iwork );
     free( (void*)work );
-    
+    }
     auto begin_check = std::chrono::high_resolution_clock::now();
 
     auto end_check = std::chrono::high_resolution_clock::now();
@@ -329,10 +328,11 @@ int main(int argc, char *argv[])
     auto elapsed_runtime = std::chrono::duration_cast<std::chrono::nanoseconds>(end_runtime - begin_runtime);
 
     std::cout << "Total runtime is " << elapsed_runtime.count() * 1e-9 << " seconds.\n";
-
+    
     free(position, q); 
     free(matrix, q);
-    free(matrix_T, q);
+    free(A, q);
+    free(B, q);
     // outfile.close();
     
     return 0; 
