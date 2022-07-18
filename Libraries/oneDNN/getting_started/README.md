@@ -1,6 +1,6 @@
 # `oneDNN Getting Started` Sample
 
-oneAPI Deep Neural Network Library (oneDNN) is an open-source performance
+Intel® oneAPI Deep Neural Network Library (oneDNN) is an open-source performance
 library for deep learning applications. The library includes basic building
 blocks for neural networks optimized for Intel Architecture Processors
 and Intel Processor Graphics. oneDNN is intended for deep learning
@@ -8,22 +8,22 @@ applications and framework developers interested in improving application
 performance on Intel CPUs and GPUs.
 You can find library source code and code used by these samples at the oneDNN Github repository.
 
-This sample guides users how to compile oneDNN applications and executes the binaries on different Intel architectures. The sample also
-also includes [a Jupyer Notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_getting_started.ipynb) that
+This sample guides users how to compile oneDNN applications and executes the binaries on different Intel architectures. The sample also includes [a Jupyter Notebook](https://github.com/oneapi-src/oneAPI-samples/blob/master/Libraries/oneDNN/tutorials/tutorial_getting_started.ipynb) that
 demonstrates how to compile the code with various oneDNN configurations
 in Intel® DevCloud for oneAPI environment.
 
 | Optimized for                      | Description
 | :---                               | :---
-| OS                                 | Linux* Ubuntu* 18.04;
+| OS                                 | Linux* Ubuntu* 18.04
 | Hardware                           | Skylake with GEN9 or newer
-| Software                           | oneAPI Deep Neural Network Library (oneDNN), oneAPI DPC++/C++ Compiler, oneAPI Threading Building Blocks (oneTBB), GNU Compiler Collection, Intel® C++ Compiler
+| Software                           | Intel® oneAPI Deep Neural Network Library (oneDNN) <br> Intel® oneAPI DPC++/C++ Compiler <br> Intel® oneAPI Threading Building Blocks (oneTBB) <br> GNU Compiler Collection <br> Intel® C++ Compiler
 | What you will learn                | Running a simple convolutional model on Intel CPU or Intel GPU
 | Time to complete                   | 15 minutes
 
 ## Purpose
 
-This sample demonstrates how to compile oneDNN applications and executes the binaries on different Intel architectures by using Intel® oneAPI Base Toolkit.  
+This sample demonstrates how to compile oneDNN applications and executes the binaries on different Intel architectures by using Intel® oneAPI Base Toolkit.
+
 With this code sample, you will learn:
 * How to configure oneDNN environment for different pre-built oneDNN binaries from Intel® oneAPI Base Toolkit.
 * How to compile oneDNN applications with different pre-built oneDNN binaries from Intel® oneAPI Base Toolkit.
@@ -39,7 +39,7 @@ This sample uses example files under `${DNNLROOT}/examples/`
 from oneDNN distribution. You can find those codes in
 [oneDNN Github repository](https://github.com/oneapi-src/oneDNN/blob/dev-v2/examples/).
 
-Detailed code walkthrough is available in [oneDNN developer guide](https://oneapi-src.github.io/oneDNN/v2/dev_guide_examples.html)
+Detailed code walkthrough is available in [oneDNN developer guide](https://oneapi-src.github.io/oneDNN/v2/dev_guide_examples.html).
 
 
 
@@ -79,7 +79,7 @@ export DNNL_VERBOSE=1
 
 #### Using different pre-built oneDNN binaries from Intel® oneAPI Base Toolkit 
 
-By default, the sample uses oneAPI DPC++/C++ Compiler and can execute on CPUs or
+By default, the sample uses the Intel® oneAPI DPC++/C++ Compiler and will execute on CPUs or
 Intel GPUs. You can build the sample with CPU support with other compilers
 and threading runtimes:
 * GNU C++ Compiler and GNU OpenMP runtime
@@ -139,7 +139,7 @@ bin\Debug\getting-started-cpp.exe
 ```
 
 ### Running Samples In DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
 
 ### Application Parameters
 
@@ -156,7 +156,7 @@ environment variable `DNNL_VERBOSE=1`.
 
 ### Include Files
 
-The include folder is located at ${DNNLROOT}\include on your development system".
+The include folder is located at `${DNNLROOT}\include` on your development system.
 
 
 ## Example of Output
@@ -179,11 +179,11 @@ Example passed on CPU.
 
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 ## License
 
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
