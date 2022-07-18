@@ -83,8 +83,7 @@ Perform the following steps:
 
 2. Run the program:
     ```
-    make run_prog1
-    make run_prog2
+    make run
     ```
 
 3. Clean the program using:
@@ -104,9 +103,6 @@ dependencies and permissions errors. See [Diagnostics Utility for Intel&reg; one
 
 ### Output Example
 ```
-Device: Intel(R) HD Graphics 630 [0x5912]
-PASSED!
-Built target run_prog1
 
 Kernel Loading Done
 Platforms Found: 3
@@ -114,7 +110,7 @@ Using Platform: Intel(R) FPGA Emulation Platform for OpenCL(TM)
 Devices Found: 1
 Device: Intel(R) FPGA Emulation Device
 Passed!
-Built target run_prog2
+Built target run
 ```
 ## License
 
