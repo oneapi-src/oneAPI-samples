@@ -196,14 +196,14 @@ You can apply the Cholesky-based inversion to 8 matrices repeated a number of ti
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
      ```
-     ./cholesky.fpga_emu           (Linux)
+     ./cholesky_inversion.fpga_emu           (Linux)
 
-     cholesky.fpga_emu.exe         (Windows)
+     cholesky_inversion.fpga_emu.exe         (Windows)
      ```
 
 2. Run the sample on the FPGA device.
      ```
-     ./cholesky.fpga         (Linux)
+     ./cholesky_inversion.fpga         (Linux)
      ```
 ### Application Parameters
 
