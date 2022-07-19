@@ -19,7 +19,10 @@ For comprehensive instructions see the [DPC++ Programming](https://software.inte
 
 This sample starts with a CPU oriented application and shows how to use SYCL and the oneAPI tools to offload regions of the code to the target system's GPU.  We'll use Intel Advisor to conduct offload modeling to identify code regions that will benefit the most from GPU offload. Once the initial offload is complete, we'll walk through how to develop an optimization strategy by iteratively optimizing the code baed on opportunities exposed Intel Advisor to run roofline analysis. 
 
-ISO3DFD is a finite difference stencil kernel for solving the 3D acoustic isotropic wave equation, which can be used as a proxy for propagating a seismic wave. In this sample, kernels are implemented as 16th order in space, with symmetric coefficients, and 2nd order in time scheme without boundary conditions.
+- `1_guided_jacobi_iterative_solver_cpu.cpp`: basic serial CPU implementation.
+- `2_guided_jacobi_iterative_solver_gpu`: initial GPU offload version using SYCL.
+- `3_guided_jacobi_iterative_solver_GPUOptimization.cpp`: GPU optimized version by changing the Jacobi Method core calculations.
+- `4_guided_jacobi_iterative_solver_MultiGPU.cpp`: MultiGPU version. Currently unavailable.
 
 ## Key Implementation Details
 
@@ -60,16 +63,17 @@ $ cmake ..
 
 2. Run the program :
 ```
-$ make run_cpu 
+$ make run_1_cpu 
 ```
 > Note: the following run commands area also available and correspond to the specific build targets. 
 
-    make run_cpu
-    make run_gpu
+    make run_1_cpu
+    make run_2_gpu
+    make run_3_gpu_optimized
 
 > Note: the command below will be available when multi GPU enviroment can bu run on devcloud
 
-    make run_multi_gpu
+    make run_4_multi_gpu
 
 3. Clean the program using:
 
