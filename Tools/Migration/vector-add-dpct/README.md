@@ -1,92 +1,75 @@
 # Intel® DPC++ Compatibility Tool: `Vector Add` Sample
 
 This sample demonstrates how to migrate a simple program from CUDA to
-Data Parallel C++. Vector Add provides an easy way to verify that
+SYCL-compliant code. Vector Add provides an easy way to verify that
 your development environment is set up correctly to use the Intel® DPC++
 Compatibility Tool (DPCT).
 
-
 | Optimized for         | Description
 |:---                   |:---
-| OS                    | Linux* Ubuntu* 18.04; Windows 10
-| Software              | Intel&reg; DPC++ Compatibility Tool;
+| OS                    | Linux* Ubuntu* 18.04 <br> Windows* 10
+| Software              | Intel&reg; DPC++ Compatibility Tool
 | What you will learn   | Simple invocation of dpct to migrate CUDA code
 | Time to complete      | 10 minutes
 
 
 ## Purpose
 
-This simple project adds two vectors of `[1..N]` and prints the result. It starts as a CUDA project to provide you with an example of migrating from an existing CUDA project to a Data Parallel C++ project.
+This simple project adds two vectors of `[1..N]` and prints the result. It starts as a CUDA project to provide you with an example of migrating from an existing CUDA project to a SYCL-compliant project.
 
-The migration of existing CUDA projects to Data Parallel C++ projects may
+The migration of existing CUDA projects to SYCL-compliant projects may
 result in warnings printed to the console and added as comments in
 the migrated source, which will use .dp.cpp file extensions. Signs represent
 areas in the resulting source code that require additional attention from the
 developer. This is because the code could not be migrated by the tool or some
 other reasons that need further review and manual work for the
-code to be Data Parallel C++ compliant, correct, or performant. For this sample,
+code to be SYCL compliant, correct, or performant. For this sample,
 the warning results from a difference in how the original code and generated
 code handle errors.
 
-
 ## Key Implementation Details
-
 In addition to verifying that the necessary tools and files are installed, please ensure that they are
 configured correctly on your system. This sample shows the basic invocation and workflow for using dpct.
 
-
-## License
-
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
-
 ## Using Visual Studio Code* (Optional)
-
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions, see the 
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
 
-## Migrating the CUDA* Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
-
+## Migrating the CUDA* Sample to Data Parallel C++ with the Intel® DPC++ Compatibility Tool
 Building and running the CUDA sample is not required to migrate this project
-to a Data Parallel C++ project.
+to a SYCL*-compliant project.
 
-> **NOTE:** Certain CUDA header files, referenced by the CUDA application
-> source files to be migrated need to be accessible for the migration step.
-> See the [Getting Started Guide][cuda-headers] for more details.
-
-[cuda-headers]: <https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.htm>
-
+> **Note**: Certain CUDA header files, referenced by the CUDA application
+> source files to be migrated, need to be accessible for the migration step.
+> See *Before you Begin* in [Get Started with the Intel® DPC++ Compatibility Tool](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.html#top_BEFORE_YOU_BEGIN).
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Command Line On a Linux* System
-
-
 1. Use dpct to migrate the CUDA code. The  migrated source code will be
    created in a new directory, by default named `dpct_output`.
 
@@ -96,13 +79,10 @@ $ dpct --in-root=. src/vector_add.cu
 ```
 
 2. Inspect the migrated source code, address any `DPCT` warnings generated
-   by the Intel DPC++ Compatibility Tool, and verify the new program correctness.
+   by the Intel® DPC++ Compatibility Tool, and verify the new program correctness.
 
 Warnings are printed to the console and added as comments in the migrated
-source. See the [Diagnostic Reference][diag-ref] for more information on what
-each warning means.
-
-[diag-ref]: <https://www.intel.com/content/www/us/en/develop/documentation/intel-dpcpp-compatibility-tool-user-guide/top/diagnostics-reference.html>
+source. See *Diagnostic Reference* in the [Intel® DPC++ Compatibility Tool Developer Guide and Reference](https://www.intel.com/content/www/us/en/develop/documentation/intel-dpcpp-compatibility-tool-user-guide/top/diagnostics-reference.html) for more information on what each warning means.
 
 This sample should generate the following warning:
 
@@ -114,8 +94,8 @@ See the section titled **Addressing Warnings in Migrated Code** below to
 understand how to resolve the warnings.
 
 3. Copy the original `Makefile` into the `dpct_output` folder and update the
-   copy to build the migrated project using DPC++. Replace the CUDA
-   configurations in that new `Makefile` with the following for use with DPC++:
+   copy to build the migrated project using SYCL. Replace the CUDA
+   configurations in that new `Makefile` with the following for use with SYCL:
 
 ```make
 CXX = dpcpp
@@ -151,7 +131,7 @@ line as long as you first initialize your environment with:
 ```
 
 3. Inspect the migrated source code and address any `DPCT` warnings generated
-   by the Intel DPC++ Compatibility Tool. Warnings appear in a tool window and
+   by the Intel® DPC++ Compatibility Tool. Warnings appear in a tool window and
    are written to a `migration.log` file in the project directory.
 
 This sample should generate the following warning:
@@ -174,7 +154,7 @@ Migration generated one warning for code that `dpct` could not migrate:
 warning: DPCT1003:0: Migrated API does not return error code. (*, 0) is inserted. You may need to rewrite this code.
 ```
 
-Since DPC++ uses exceptions rather than error codes for error handling, the
+Since SYCL uses exceptions rather than error codes for error handling, the
 tool removed the conditional statement to exit on failure and instead wrapped
 the code in a `try` block. However, `dpct` retained the error status variable
 and changed the source to always assign an error code of `0` to it. One way to
@@ -213,4 +193,10 @@ lists a group of even numbers produced by the kernel code's execution of
 ```
 
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
