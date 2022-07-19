@@ -17,7 +17,7 @@
                     "cd build",
                     "cmake ..",
                     "cmake --build . ",
-                    "./pathtracer_oneapi"
+                    "./rkPathTracer"
                  ]
                  }
         ],
@@ -31,7 +31,7 @@
                     "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
                     "cmake --build . --config Release",
                     "cd Release",
-                    ".\\pathtracer_oneapi.exe"
+                    ".\\rkPathTracer.exe"
                 ]
 
                 }
@@ -44,7 +44,7 @@
                     "cd build",
                     "cmake ..",
                     "cmake --build . ",
-                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./pathtracer_oneapi"
+                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./rkPathTracer"
                  ]
                  }
         ]
