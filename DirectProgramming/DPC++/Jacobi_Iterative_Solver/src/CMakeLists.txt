@@ -1,17 +1,22 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++17")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 
-add_executable(jacobi_cpu_iterative_solver jacobi_cpu_iterative_solver.cpp)
-target_link_libraries(jacobi_cpu_iterative_solver OpenCL sycl)
+add_executable(1_guided_jacobi_iterative_solver_cpu 1_guided_jacobi_iterative_solver_cpu)
+target_link_libraries(1_guided_jacobi_iterative_solver_cpu OpenCL sycl)
 
-add_custom_target(run_cpu ./jacobi_cpu_iterative_solver)
+add_custom_target(run_1_cpu ./1_guided_jacobi_iterative_solver_cpu)
 
-add_executable(jacobi_gpu_iterative_solver jacobi_gpu_iterative_solver.cpp)
-target_link_libraries(jacobi_gpu_iterative_solver OpenCL sycl)
+add_executable(2_guided_jacobi_iterative_solver_gpu 2_guided_jacobi_iterative_solver_gpu.cpp)
+target_link_libraries(2_guided_jacobi_iterative_solver_gpu OpenCL sycl)
 
-add_custom_target(run_gpu ./jacobi_gpu_iterative_solver)
+add_custom_target(run_2_gpu ./2_guided_jacobi_iterative_solver_gpu)
 
-add_executable(jacobi_multi_gpu_iterative_solver jacobi_multi_gpu_iterative_solver.cpp)
-target_link_libraries(jacobi_multi_gpu_iterative_solver OpenCL sycl)
+add_executable(3_guided_jacobi_iterative_solver_GPUOptimization 3_guided_jacobi_iterative_solver_GPUOptimization.cpp)
+target_link_libraries(3_guided_jacobi_iterative_solver_GPUOptimization OpenCL sycl)
 
-add_custom_target(run_multi_gpu ./jacobi_multi_gpu_iterative_solver)
+add_custom_target(run_3_gpu_optimization ./3_guided_jacobi_iterative_solver_GPUOptimization)
+
+add_executable(4_guided_jacobi_iterative_solver_MultiGPU 4_guided_jacobi_iterative_solver_MultiGPU.cpp)
+target_link_libraries(4_guided_jacobi_iterative_solver_MultiGPU OpenCL sycl)
+
+add_custom_target(run_4_multi_gpu ./4_guided_jacobi_iterative_solver_MultiGPU)

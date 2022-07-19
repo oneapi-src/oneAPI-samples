@@ -169,7 +169,6 @@ int main(int argc, char *argv[])
                     int i = id/N;
                     int j = id%N;
                     int it = N*i+i;
-
                     
                     if(N*i+j!=it) data[i] = data[i] - ((old_values[j] * static_cast<real>(M[N*i+j]))); 
 
@@ -214,7 +213,7 @@ int main(int argc, char *argv[])
         accessor NR {buf_new_res, h};
         h.parallel_for(range<1>(N), [=](id<1> id){       
             real diff = fabs(NR[id]-R[id]);
-            if(diff>calculation_error) all_eq[0] = false;
+            if(diff>calculation_error) {out << diff << " " << id << endl; all_eq[0] = false;}
         });
     });
 
