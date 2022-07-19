@@ -1,4 +1,4 @@
-# `Jacobi Iterative Solver` Sample
+k# `Jacobi Iterative Solver` Sample
 
 The `Jacobi Iterative Solver` Sample shows how to use the Intel Base Toolkit to use CPU, GPU and multi Gpu offload using SYCL and the differences in sample runtime using different targes.  
 
@@ -30,14 +30,6 @@ The basic DPC++ implementation explained in the code includes the use of the fol
 * DPC++ local buffers and accessors (declare local memory buffers and accessors to be accessed and managed by each DPC++ workgroup)
 * Code for Shared Local Memory (SLM) optimizations
 * DPC++ kernels (including parallel_for function and range<1> objects)
-
-
-## License
-
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Building the `Jacobi Iterative Solver` Program for CPU and GPU
 
@@ -81,17 +73,29 @@ $ make run_1_cpu
 $ make clean
 ```
 
-4. Example of Output
+## Guided Builds
+
+Below is the step by step guide that shows how to optimize the Jacobi Iterative method. We'll start with code that runs on the CPU, then a basic implementation of GPU offload, then run a GPU optimiezd version of the code. We will use the Intel&reg; Advisor analysis tool to provide performance analysis of the built applications. 
+
+> **Note**: The actual results and measurements may vary depending on your actual hardware.
+
+
+### Offloading modeling
+
+## Output
 ```
-[ 16%] Building CXX object src/jacobi_gpu/CMakeFiles/jacobi_gpu_iterative_solver.dir/jacobi_gpu_iterative_solver.cpp.o
-[ 33%] Linking CXX executable jacobi_gpu_iterative_solver
-[ 33%] Built target jacobi_gpu_iterative_solver
-[ 50%] Building CXX object src/jacobi_cpu/CMakeFiles/jacobi_cpu_iterative_solver.dir/jacobi_cpu_iterative_solver.cpp.o
-[ 66%] Linking CXX executable jacobi_cpu_iterative_solver
-[ 66%] Built target jacobi_cpu_iterative_solver
-[ 83%] Building CXX object src/jacobi_multi_gpu/CMakeFiles/jacobi_multi_gpu_iterative_solver.dir/jacobi_multi_gpu_iterative_solver.cpp.o
-[100%] Linking CXX executable jacobi_multi_gpu_iterative_solver
-[100%] Built target jacobi_multi_gpu_iterative_solver
+[ 12%] Building CXX object src/CMakeFiles/4_guided_jacobi_iterative_solver_MultiGPU.dir/4_guided_jacobi_iterative_solver_MultiGPU.cpp.o
+[ 25%] Linking CXX executable 4_guided_jacobi_iterative_solver_MultiGPU
+[ 25%] Built target 4_guided_jacobi_iterative_solver_MultiGPU
+[ 37%] Building CXX object src/CMakeFiles/2_guided_jacobi_iterative_solver_gpu.dir/2_guided_jacobi_iterative_solver_gpu.cpp.o
+[ 50%] Linking CXX executable 2_guided_jacobi_iterative_solver_gpu
+[ 50%] Built target 2_guided_jacobi_iterative_solver_gpu
+[ 62%] Building CXX object src/CMakeFiles/3_guided_jacobi_iterative_solver_GPUOptimization.dir/3_guided_jacobi_iterative_solver_GPUOptimization.cpp.o
+[ 75%] Linking CXX executable 3_guided_jacobi_iterative_solver_GPUOptimization
+[ 75%] Built target 3_guided_jacobi_iterative_solver_GPUOptimization
+[ 87%] Building CXX object src/CMakeFiles/1_guided_jacobi_iterative_solver_cpu.dir/1_guided_jacobi_iterative_solver_cpu.cpp.o
+[100%] Linking CXX executable 1_guided_jacobi_iterative_solver_cpu
+[100%] Built target 1_guided_jacobi_iterative_solver_cpu
 
 Scanning dependencies of target run_cpu
 ./jacobi_cpu_iterative_solver
@@ -126,4 +130,13 @@ X8 equals: -0.09521910620
 X9 equals: 0.19864875400
 Built target run_cpu
 ```
+
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
+
 
