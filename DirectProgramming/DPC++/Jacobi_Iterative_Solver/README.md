@@ -1,4 +1,4 @@
-k# `Jacobi Iterative Solver` Sample
+# `Jacobi Iterative Solver` Sample
 
 The `Jacobi Iterative Solver` Sample shows how to use the Intel Base Toolkit to use CPU, GPU and multi Gpu offload using SYCL and the differences in sample runtime using different targes.  
 
