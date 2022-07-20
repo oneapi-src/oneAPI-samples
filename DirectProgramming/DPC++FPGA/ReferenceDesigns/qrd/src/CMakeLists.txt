@@ -24,15 +24,17 @@ else()
 endif()
 
 
-# Set design parameters according to the selected board
+# A10 parameters
+set(ROWS_COMPONENT 128)
+set(COLS_COMPONENT 128)
+set(COMPLEX 1)
+set(FIXED_ITERATIONS 64)
+set(CLOCK_TARGET 360MHz)
+set(SEED "-Xsseed=7")
+# Overwrite design parameters according to the selected board
 if(FPGA_BOARD MATCHES ".*a10.*")
     # A10 parameters
-    set(ROWS_COMPONENT 128)
-    set(COLS_COMPONENT 128)
-    set(COMPLEX 1)
-    set(FIXED_ITERATIONS 64)
-    set(CLOCK_TARGET 360MHz)
-    set(SEED "-Xsseed=7")
+    # Nothing to do
 elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(ROWS_COMPONENT 256)
@@ -50,24 +52,28 @@ elseif(FPGA_BOARD MATCHES ".*agilex.*")
     set(CLOCK_TARGET 600MHz)
     set(SEED "-Xsseed=5")
 else()
-    message(FATAL_ERROR "Unknown board!")
+    message(STATUS "Unknown board ${FPGA_BOARD}!")
+    message(STATUS "Using Arria 10 defaults.")
 endif()
 
 if(IGNORE_DEFAULT_SEED)
     set(SEED "")
 endif()
 
-if(DEFINED ENV{ROWS_COMPONENT} AND DEFINED ENV{COLS_COMPONENT})
-    set(ROWS_COMPONENT $ENV{ROWS_COMPONENT})
-    set(COLS_COMPONENT $ENV{COLS_COMPONENT})
+if(SET_ROWS_COMPONENT)
+    set(ROWS_COMPONENT ${SET_ROWS_COMPONENT})
 endif()
 
-if(DEFINED ENV{COMPLEX})
-    set(COMPLEX $ENV{COMPLEX})
+if(SET_COLS_COMPONENT)
+    set(COLS_COMPONENT ${SET_COLS_COMPONENT})
 endif()
 
-if(DEFINED ENV{FIXED_ITERATIONS})
-    set(FIXED_ITERATIONS $ENV{FIXED_ITERATIONS})
+if(SET_COMPLEX)
+    set(COMPLEX ${SET_COMPLEX})
+endif()
+
+if(SET_FIXED_ITERATIONS)
+    set(FIXED_ITERATIONS ${SET_FIXED_ITERATIONS})
 endif()
 
 message(STATUS "ROWS_COMPONENT=${ROWS_COMPONENT}")

@@ -24,14 +24,16 @@ else()
 endif()
 
 
-# Set design parameters according to the selected board
+# A10 parameters
+set(MATRIX_DIMENSION 32)
+set(COMPLEX 0)
+set(FIXED_ITERATIONS 39)
+set(CLOCK_TARGET 360MHz)
+set(SEED "-Xsseed=29")
+# Overwrite design parameters according to the selected board
 if(FPGA_BOARD MATCHES ".*a10.*")
     # A10 parameters
-    set(MATRIX_DIMENSION 32)
-    set(COMPLEX 0)
-    set(FIXED_ITERATIONS 39)
-    set(CLOCK_TARGET 360MHz)
-    set(SEED "-Xsseed=29")
+    # Nothing to do
 elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(MATRIX_DIMENSION 32)
@@ -44,26 +46,27 @@ elseif(FPGA_BOARD MATCHES ".*agilex.*")
     set(MATRIX_DIMENSION 32)
     set(FIXED_ITERATIONS 45)
     set(COMPLEX 0)
-    set(CLOCK_TARGET 600MHz)
+    set(CLOCK_TARGET 520MHz)
     set(SEED "-Xsseed=5")
 else()
-    message(FATAL_ERROR "Unknown board!")
+    message(STATUS "Unknown board ${FPGA_BOARD}!")
+    message(STATUS "Using Arria 10 defaults.")
 endif()
 
 if(IGNORE_DEFAULT_SEED)
     set(SEED "")
 endif()
 
-if(DEFINED ENV{MATRIX_DIMENSION})
-    set(MATRIX_DIMENSION $ENV{MATRIX_DIMENSION})
+if(SET_MATRIX_DIMENSION)
+    set(MATRIX_DIMENSION ${SET_MATRIX_DIMENSION})
 endif()
 
-if(DEFINED ENV{COMPLEX})
-    set(COMPLEX $ENV{COMPLEX})
+if(SET_COMPLEX)
+    set(COMPLEX ${SET_COMPLEX})
 endif()
 
-if(DEFINED ENV{FIXED_ITERATIONS})
-    set(FIXED_ITERATIONS $ENV{FIXED_ITERATIONS})
+if(SET_FIXED_ITERATIONS)
+    set(FIXED_ITERATIONS ${SET_FIXED_ITERATIONS})
 endif()
 
 message(STATUS "MATRIX_DIMENSION=${MATRIX_DIMENSION}")
