@@ -1,11 +1,11 @@
 # `Intel® Extension for Scikit-learn: SVC for Adult dataset` Sample
-This sample code uses the [Adult dataset](https://archive.ics.uci.edu/ml/datasets/adult) to show how to train and predict with a SVC algorithm using Intel® Extension for Scikit-learn. It demonstrates how to use software products that can be found in the [Intel® oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html), [Intel(R) Extension for Scikit-learn](https://intel.github.io/scikit-learn-intelex/), and [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+This sample code uses the [Adult dataset](https://archive.ics.uci.edu/ml/datasets/adult) to show how to train and predict with a SVC algorithm using Intel® Extension for Scikit-learn. It demonstrates how to use software products that can be found in the [Intel® oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html), [Intel(R) Extension for Scikit-learn](https://intel.github.io/scikit-learn-intelex/), and [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 | Optimized for                     | Description
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher, 64-bit Windows 10, macOS 10.14 or higher
 | Hardware                          | Intel Atom® Processors; Intel® Core™ Processor Family; Intel® Xeon® Processor Family; Intel® Xeon® Scalable processor family
-| Software                          | Intel® oneAPI AI Analytics Toolkit
+| Software                          | Intel® AI Analytics Toolkit
 | What you will learn               | How to get started with Intel® Extension for Scikit-learn
 | Time to complete                  | 25 minutes
 
