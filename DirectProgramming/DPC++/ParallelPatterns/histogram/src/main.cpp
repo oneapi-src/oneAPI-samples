@@ -73,33 +73,37 @@ void sparse_histogram(std::vector<uint64_t> &input) {
   std::sort(oneapi::dpl::execution::dpcpp_default,
             oneapi::dpl::begin(histogram_buf), oneapi::dpl::end(histogram_buf));
 
-  auto num_bins = std::transform_reduce(
-      oneapi::dpl::execution::dpcpp_default, oneapi::dpl::begin(histogram_buf),
-      oneapi::dpl::end(histogram_buf) - 1, oneapi::dpl::begin(histogram_buf) + 1, 1,
-      std::plus<int>(), std::not_equal_to<int>());
-
-  // Create new buffer to store the unique values and their count
+  // Create new buffer to store the unique valuesand their count;
+  // oneapi::dpl::reduce_by_segment requires a sufficient buffer size(for worst case).
+  // TODO: To consider usage of just 'sort' and 'transform_reduce' for calculate
+  // a final result.There is a guess that such approach is more effective.
   cl::sycl::buffer<uint64_t, 1> histogram_values_buf{
-      cl::sycl::range<1>(num_bins)};
+      cl::sycl::range<1>(N)};
   cl::sycl::buffer<uint64_t, 1> histogram_counts_buf{
-      cl::sycl::range<1>(num_bins)};
+      cl::sycl::range<1>(N)};
 
   cl::sycl::buffer<uint64_t, 1> _const_buf{cl::sycl::range<1>(N)};
   std::fill(oneapi::dpl::execution::dpcpp_default,
             oneapi::dpl::begin(_const_buf), oneapi::dpl::end(_const_buf), 1);
 
+  auto histogram_values_buf_begin = oneapi::dpl::begin(histogram_values_buf);
+  auto histogram_counts_buf_begin = oneapi::dpl::begin(histogram_counts_buf);
+
   // Find the count of each value
-  oneapi::dpl::reduce_by_segment(
+  const auto result = oneapi::dpl::reduce_by_segment(
       oneapi::dpl::execution::dpcpp_default, oneapi::dpl::begin(histogram_buf),
       oneapi::dpl::end(histogram_buf), oneapi::dpl::begin(_const_buf),
-      oneapi::dpl::begin(histogram_values_buf),
-      oneapi::dpl::begin(histogram_counts_buf));
+      histogram_values_buf_begin,
+      histogram_counts_buf_begin);
+
+  const auto num_bins = result.first - histogram_values_buf_begin;
+  assert(num_bins == result.second - histogram_counts_buf_begin);
 
   std::cout << "Sparse Histogram:\n";
+  sycl::host_accessor histogram_value(histogram_values_buf, sycl::read_only);
+  sycl::host_accessor histogram_count(histogram_counts_buf, sycl::read_only);
   std::cout << "[";
   for (int i = 0; i < num_bins; i++) {
-    sycl::host_accessor histogram_value(histogram_values_buf, sycl::read_only);
-    sycl::host_accessor histogram_count(histogram_counts_buf, sycl::read_only);
     std::cout << "(" << histogram_value[i] << ", " << histogram_count[i]
               << ") ";
   }
