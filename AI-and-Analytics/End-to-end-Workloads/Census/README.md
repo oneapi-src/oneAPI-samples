@@ -1,6 +1,6 @@
 # End-to-end Machine Learning Workload: `Census` Sample
 
-This sample code illustrates how to use Intel® Distribution of Modin* for ETL operations and ridge regression algorithm from the Intel® extension of scikit-learn library to build and run an end to end machine learning workload. Both Intel Distribution of Modin* and  Intel® Extension for Scikit-learn libraries are available together in [Intel&reg; oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). This sample code demonstrates how to seamlessly run the end-to-end census workload using the toolkit, without any external dependencies.
+This sample code illustrates how to use Intel® Distribution of Modin* for ETL operations and ridge regression algorithm from the Intel® extension of scikit-learn library to build and run an end to end machine learning workload. Both Intel Distribution of Modin* and  Intel® Extension for Scikit-learn libraries are available together in [Intel&reg; AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html). This sample code demonstrates how to seamlessly run the end-to-end census workload using the toolkit, without any external dependencies.
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -20,7 +20,7 @@ Data transformation stage normalizes the income to the yearly inflation, balance
 Dataset is from IPUMS USA, University of Minnesota, [www.ipums.org](https://ipums.org/) (Steven Ruggles, Sarah Flood, Ronald Goeken, Josiah Grover, Erin Meyer, Jose Pacas and Matthew Sobek. IPUMS USA: Version 10.0 [dataset]. Minneapolis, MN: IPUMS, 2020. https://doi.org/10.18128/D010.V10.0)
 
 ## Key Implementation Details
-This end-to-end workload sample code is implemented for CPU using the Python language.  With the installation of Intel AI Analytics Toolkit, the conda environment is prepared with Python version 3.7, Intel Distribution of Modin* , Ray, Intel® Extension for Scikit-Learn, NumPy following which the sample code can be directly run using the underlying steps in this README.
+This end-to-end workload sample code is implemented for CPU using the Python language.  With the installation of Intel&reg; AI Analytics Toolkit, the conda environment is prepared with Python version 3.7, Intel Distribution of Modin* , Ray, Intel® Extension for Scikit-Learn, NumPy following which the sample code can be directly run using the underlying steps in this README.
 
 ## License
 
@@ -30,7 +30,7 @@ Code samples are licensed under the MIT license. See
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
 
 ## Building Intel Distribution of Modin* and Intel® Extension for Scikit-learn for CPU to build and run end-to-end workload
-Intel Distribution of Modin* and Intel® Extension for Scikit-learn is ready for use once you finish the Intel AI Analytics Toolkit installation with the Conda Package Manager.
+Intel Distribution of Modin* and Intel® Extension for Scikit-learn is ready for use once you finish the Intel&reg; AI Analytics Toolkit installation with the Conda Package Manager.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi), and the Intel® oneAPI Toolkit [Installation Guide](https://software.intel.com/content/www/us/en/develop/documentation/installation-guide-for-intel-oneapi-toolkits-linux/top/installation/install-using-package-managers/conda/install-intel-ai-analytics-toolkit-via-conda.html) for conda environment setup and installation steps.
 

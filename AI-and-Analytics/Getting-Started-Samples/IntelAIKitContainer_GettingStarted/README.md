@@ -1,13 +1,13 @@
-﻿# Intel&reg; oneAPI AI Analytics Toolkit Container Sample
+﻿# Intel&reg; AI Analytics Toolkit (AI Kit) Container Sample
 
 Containers allow you to set up and configure environments for
-building, running, and profiling oneAPI AI applications and distribute
+building, running, and profiling AI applications and distribute
 them using images. You can also use Kubernetes* to automate the
 deployment and management of containers in the cloud.
 
 This get started sample shows the easiest way to start using any of
-the [Intel® oneAPI AI Analytics
-Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html)
+the [Intel® AI Analytics
+Toolkit (AI Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html)
 components without the hassle of installing the toolkit, configuring
 networking and file sharing.
 
@@ -22,12 +22,12 @@ networking and file sharing.
 
 ## Purpose
 
-This sample provides a Bash script to help users configure their Intel
-oneAPI AI Analytics Toolkit container environment. Developers can
+This sample provides a Bash script to help users configure their Intel&reg; AI Analytics Toolkit 
+container environment. Developers can
 quickly build and train deep learning models using this Docker*
 environment.
 
-For more information on the one API AIKit container, see [oneAPI AIKit
+For more information on the one API AIKit container, see [AI Kit
 Container Repository](https://hub.docker.com/r/intel/oneapi-aikit).
 
 
@@ -55,7 +55,7 @@ configuration steps:
 
 This sample uses a configuration script to automatically configure the
 environment. This provides fast and less error prone setup. For
-complete instructions for using the oneAPI AI Analytics containers see
+complete instructions for using the AI Kit containers see
 the [Getting Started Guide](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top/using-containers.html.)
 
 To run the configuration script on Linux*, type the following command

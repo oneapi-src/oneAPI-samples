@@ -5,7 +5,7 @@ Intel® Extension for PyTorch\* extends PyTorch with optimizations for extra per
 |:---                               |:---
 | OS                                | Linux\* Ubuntu\* 18.04
 | Hardware                          | Intel® Xeon® Scalable Processor family
-| Software                          | Intel® oneAPI AI Analytics Toolkit
+| Software                          | Intel® AI Analytics Toolkit (AI Kit)
 | What you will learn               | How to get started with Intel® Optimization for PyTorch
 | Time to complete                  | 15 minutes
 
