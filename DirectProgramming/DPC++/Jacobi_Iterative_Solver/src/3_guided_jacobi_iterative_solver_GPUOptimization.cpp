@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
                 old_values[id] = data[id];
                 data[id] = R[id];
             });
-        }).wait();
+        });
         
         
         q.submit([&](handler& h){
@@ -171,14 +171,14 @@ int main(int argc, char *argv[])
                     
                 if(i!=j) data[i] = data[i] - ((old_values[j] * (M[N*i+j])));
             });
-        }).wait();
+        });
 
         q.submit([&](handler& h){
             accessor M {buf_mat, h, read_only};
             h.parallel_for(range<1>(N), [=](id<1> id){
                 data[id] = data[id]/(M[N*id+id]);
             });
-        }).wait();
+        });
         
         ++sweeps;
         is_equal = check_if_equal(data, old_values);
