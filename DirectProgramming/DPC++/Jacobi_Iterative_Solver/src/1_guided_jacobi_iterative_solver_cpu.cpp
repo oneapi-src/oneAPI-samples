@@ -13,7 +13,7 @@ typedef double real;
 
 // Program variables, feel free to change anything 
 // make run 30000 0.000000001 -1000 1000 100 777
-static const int N = 30000;
+static const int N = 3000;
 static const real check_error = 1e-15;
 static const real calculation_error = 1e-10;
 static const int min_rand = -1000;
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     auto begin_matrix = std::chrono::high_resolution_clock::now();
 
     generate_matrix(matrix, results);
-
+    
     buffer buf_mat(matrix);
     buffer buf_res(results);
 

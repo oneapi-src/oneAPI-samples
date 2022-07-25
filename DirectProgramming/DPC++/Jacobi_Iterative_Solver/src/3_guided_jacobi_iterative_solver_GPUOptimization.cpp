@@ -13,7 +13,7 @@ typedef double real;
 
 // Program variables, feel free to change anything 
 // make run 30000 0.000000001 -1000 1000 100 777
-static const int N = 10000;
+static const int N = 3000;
 static const real check_error = 1e-15;
 static const real calculation_error = 1e-10;
 static const int min_rand = -1000;
@@ -31,7 +31,7 @@ cpu_selector selector;
 // of using sycl based RNG which had to be used as using
 // external (non sycl) functions slows down the execution
 // drasticly.
-void generate_matrix(std::vector<float> &matrix, std::vector<real> &results)
+void generate_matrix(std::vector<real> &matrix, std::vector<real> &results)
 {
     queue q(selector);
 
@@ -72,7 +72,7 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results)
     });
 }
 // Function responsible for printing the matrix, called only for N < 10
-void print_matrix(std::vector<float> matrix, std::vector<real> results)
+void print_matrix(std::vector<real> matrix, std::vector<real> results)
 {
     for(int i=0; i<N; ++i)
     {
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
     // std::cout.open("report.txt", std::ios_base::out);
 
-    std::vector<float> matrix(N*N);
+    std::vector<real> matrix(N*N);
     std::vector<real> results(N);
 
     queue q(selector);
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     real *data = malloc_shared<real>(N, q);
     real *old_values = malloc_shared<real>(N, q);
 
-    for(int i=0; i<N; i++) data[i] = 0;
+    for(int i=0; i<N; i++) data[i] = 0.0;
 
     bool is_equal = false;
     int sweeps = 0;
@@ -151,41 +151,39 @@ int main(int argc, char *argv[])
     // as the error calculation could be invalid for a very 
     // small error rate because of the float type representation.
     do{
-        {
-            q.submit([&](handler& h){
+        
+        q.submit([&](handler& h){
             accessor M {buf_mat, h, read_only};
             accessor R {buf_res, h, read_only};
             h.parallel_for(range<1>(N), [=](id<1> id){
                 old_values[id] = data[id];
-                data[id] = R[id]/static_cast<real>(M[N*id+id]);
+                data[id] = R[id];
             });
-            }).wait();
-        }
-        {
-            q.submit([&](handler& h){
-                accessor M {buf_mat, h, read_only};
-                accessor R {buf_res, h, read_only};
-                h.parallel_for(range<1>(N*N), [=](id<1> id){
-                    int i = id/N;
-                    int j = id%N;
-                    int it = N*i+i;
+        }).wait();
+        
+        
+        q.submit([&](handler& h){
+            accessor M {buf_mat, h, read_only};
+            accessor R {buf_res, h, read_only};
+            h.parallel_for(range<1>(N*N), [=](id<1> id){
+                int i = id/N;
+                int j = id%N;
                     
-                    if(N*i+j!=it) data[i] = data[i] - ((old_values[j] * static_cast<real>(M[N*i+j]))); 
+                if(i!=j) data[i] = data[i] - ((old_values[j] * (M[N*i+j])));
+            });
+        }).wait();
 
-                });
-            }).wait();
-        }
-        {
-            q.submit([&](handler& h){
+        q.submit([&](handler& h){
             accessor M {buf_mat, h, read_only};
             h.parallel_for(range<1>(N), [=](id<1> id){
-                data[id] = data[id]/static_cast<real>(M[N*id+id]);
+                data[id] = data[id]/(M[N*id+id]);
             });
-            }).wait();
-        }
+        }).wait();
+        
         ++sweeps;
         is_equal = check_if_equal(data, old_values);
-    }while(!is_equal && sweeps<max_sweeps);
+
+    }while(!is_equal && sweeps<100);
 
     auto end_computations = std::chrono::high_resolution_clock::now();
     auto elapsed_computations = std::chrono::duration_cast<std::chrono::nanoseconds>(end_computations - begin_computations);
@@ -213,7 +211,7 @@ int main(int argc, char *argv[])
         accessor NR {buf_new_res, h};
         h.parallel_for(range<1>(N), [=](id<1> id){       
             real diff = fabs(NR[id]-R[id]);
-            if(diff>calculation_error) {out << diff << " " << id << endl; all_eq[0] = false;}
+            if(diff>calculation_error) {all_eq[0] = false;}
         });
     });
 
