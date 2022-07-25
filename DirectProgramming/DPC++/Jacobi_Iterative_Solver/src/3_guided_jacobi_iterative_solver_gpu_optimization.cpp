@@ -13,14 +13,14 @@ typedef double real;
 
 // Program variables, feel free to change anything 
 // make run 30000 0.000000001 -1000 1000 100 777
-static const int N = 3000;
+static const int N = 3;
 static const real check_error = 1e-15;
 static const real calculation_error = 1e-10;
 static const int min_rand = -1000;
 static const int max_rand = 1000;
 int max_sweeps = 100;
 static const std::uint32_t seed = 666;
-gpu_selector selector;
+cpu_selector selector;
 
 // std::ofstream std::cout;
 
@@ -121,8 +121,9 @@ int main(int argc, char *argv[])
 
     auto begin_matrix = std::chrono::high_resolution_clock::now();
 
-    generate_matrix(matrix, results);
-
+    // generate_matrix(matrix, results);
+    matrix = {5,-1,2,3,8,-2,1,1,4};
+    results = {12,-25,6};
     buffer buf_mat(matrix);
     buffer buf_res(results);
 
@@ -157,33 +158,40 @@ int main(int argc, char *argv[])
             accessor R {buf_res, h, read_only};
             h.parallel_for(range<1>(N), [=](id<1> id){
                 old_values[id] = data[id];
-                data[id] = R[id];
             });
         });
         
         
+        
+        for(int i=0; i<N;++i) old_values[i] = data[i];
         q.submit([&](handler& h){
+            stream out(1024, 256, h);
             accessor M {buf_mat, h, read_only};
             accessor R {buf_res, h, read_only};
-            h.parallel_for(range<1>(N*N), [=](id<1> id){
-                int i = id/N;
-                int j = id%N;
-                    
-                if(i!=j) data[i] = data[i] - ((old_values[j] * (M[N*i+j])));
-            });
-        });
-
-        q.submit([&](handler& h){
-            accessor M {buf_mat, h, read_only};
             h.parallel_for(range<1>(N), [=](id<1> id){
-                data[id] = data[id]/(M[N*id+id]);
+                int i = id;
+                
+                int it = N*i+i;
+
+                for(int z=0; z<N; ++z)
+                {
+                    int j = N*z+i;
+                    if(i==0) data[z] = R[z];
+                    out << id << data[z] << " " << old_values[i] << " " << j << " " << M[j] << endl;
+                    if(z!=i) {data[z] = data[z] - (old_values[i] * static_cast<real>(M[j])); 
+                   }
+                }   
+
+                if((i+1)%N==0) data[i] = data[i]/static_cast<real>(M[it]);
             });
-        });
+        }).wait();
         
+        for (int i=0;i<N;++i) std::cout << data[i] << " ";
+        std::cout << std::endl;
         ++sweeps;
         is_equal = check_if_equal(data, old_values);
 
-    }while(!is_equal && sweeps<100);
+    }while(!is_equal && sweeps<1);
 
     auto end_computations = std::chrono::high_resolution_clock::now();
     auto elapsed_computations = std::chrono::duration_cast<std::chrono::nanoseconds>(end_computations - begin_computations);

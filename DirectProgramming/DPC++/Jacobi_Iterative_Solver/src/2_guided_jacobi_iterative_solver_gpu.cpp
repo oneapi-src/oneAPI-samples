@@ -11,8 +11,7 @@ using namespace sycl;
 
 typedef double real;
 
-// Program variables, feel free to change anything 
-// make run 30000 0.000000001 -1000 1000 100 777
+// Program variables, feel free to change anything .
 static const int N = 30000;
 static const real check_error = 1e-15;
 static const real calculation_error = 1e-10;
@@ -21,8 +20,7 @@ static const int max_rand = 1000;
 int max_sweeps = 100;
 static const std::uint32_t seed = 666;
 gpu_selector selector;
-
-// std::ofstream std::cout;
+std::ofstream outfile;
 
 // Function responsible for generating a float type
 // diagonally dominant matrix. Float had to be used 
@@ -39,7 +37,6 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results)
     buffer buf_res(results);    
 
     q.submit([&](handler& h){
-        // stream out(1024, 256, h);
         accessor M {buf_mat, h};
         accessor R {buf_res, h};
         h.parallel_for(range<1>(N), [=](id<1> id){
@@ -71,7 +68,7 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results)
         });
     });
 }
-// Function responsible for printing the matrix, called only for N < 10
+// Function responsible for printing the matrix, called only for N < 10.
 void print_matrix(std::vector<float> matrix, std::vector<real> results)
 {
     for(int i=0; i<N; ++i)
@@ -83,26 +80,40 @@ void print_matrix(std::vector<float> matrix, std::vector<real> results)
         }
         std::cout << "][" << results[i] << "]\n";
     }
+
+    for(int i=0; i<N; ++i)
+    {
+        outfile << '[';
+        for(int j=i*N; j<N*(i+1); ++j)
+        {
+            outfile << matrix[j] << " ";
+        }
+        outfile << "][" << results[i] << "]\n";
+    }
 }
-// Function responsible for printing the results
+// Function responsible for printing the results.
 void print_results(real* data, int N)
 {
-    std::cout << std::fixed;
-    std::cout << std::setprecision(11);
-    for(int i=0; i<N; ++i) std::cout << "X" << i+1 << " equals: " << data[i] << std::endl;
+    outfile << std::fixed;
+    outfile << std::setprecision(11);
+    for(int i=0; i<N; ++i) outfile << "X" << i+1 << " equals: " << data[i] << std::endl;
 }
-// Function responsible for checking if the algorithm has finished
+// Function responsible for checking if the algorithm has finished.
+// For each of the newly calculated results the difference is checked
+// betwenn it and the corresponding result from the previous iteration.
+// If the difference between them is less than the error variable the 
+// number is incremented by one, if all the results are correct the function
+// returns a bool value that is true and the main function can stop.
 bool check_if_equal(real *data, real *old_values)
 {
-    int number = 0;
+    int correct_result = 0;
 
     for(int i = 0; i < N; ++i)
     {
-        real temp = fabs(data[i]-old_values[i]);
-        if(temp<check_error) number++;
+        if(fabs(data[i]-old_values[i])<check_error) correct_result++;
     }
 
-    return number==N;
+    return correct_result==N;
 }
 
 int main(int argc, char *argv[])
@@ -110,7 +121,7 @@ int main(int argc, char *argv[])
     for(int i =0; i<argc; ++i)  std::cout << argv[i] << std::endl;
     auto begin_runtime = std::chrono::high_resolution_clock::now();
 
-    // std::cout.open("report.txt", std::ios_base::out);
+    outfile.open("report.txt", std::ios_base::out);
 
     std::vector<float> matrix(N*N);
     std::vector<real> results(N);
@@ -118,11 +129,12 @@ int main(int argc, char *argv[])
     queue q(selector);
 
     std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
+    outfile << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
 
     auto begin_matrix = std::chrono::high_resolution_clock::now();
 
     generate_matrix(matrix, results);
-
+    
     buffer buf_mat(matrix);
     buffer buf_res(results);
 
@@ -130,6 +142,7 @@ int main(int argc, char *argv[])
     auto elapsed_matrix = std::chrono::duration_cast<std::chrono::nanoseconds>(end_matrix - begin_matrix);
 
     std::cout << "\nMatrix generated, time elapsed: " << elapsed_matrix.count() * 1e-9 << " seconds.\n";
+    outfile << "\nMatrix generated, time elapsed: " << elapsed_matrix.count() * 1e-9 << " seconds.\n";
 
     if(N<10) print_matrix(matrix, results);
 
@@ -143,13 +156,9 @@ int main(int argc, char *argv[])
     bool is_equal = false;
     int sweeps = 0;
     
-    // The main functionality of the Jacobi Solver. 
-    // Every iteration calculates new values until 
-    // there are no changes detected between the values
-    // calculated this iteration and the one before.
-    // Casting to double had to be added in this place
-    // as the error calculation could be invalid for a very 
-    // small error rate because of the float type representation.
+    // The main functionality of the Jacobi Solver. Every iteration
+    // calculates new values until the difference between the values
+    // calculatedthis iteration and the one before is less than the error.
     do{
         for(int i=0; i<N;++i) old_values[i] = data[i];
         q.submit([&](handler& h){
@@ -177,46 +186,63 @@ int main(int argc, char *argv[])
     auto elapsed_computations = std::chrono::duration_cast<std::chrono::nanoseconds>(end_computations - begin_computations);
 
     std::cout << "\nComputations complete, time elapsed: " << elapsed_computations.count() * 1e-9 << " seconds.\n";
-    std::cout << "Total number of sweeps: " << sweeps << std::endl;
-    std::cout << "Checking results\n";
+    std::cout << "Total number of sweeps: " << sweeps << "\nChecking results\n";
+    outfile << "\nComputations complete, time elapsed: " << elapsed_computations.count() * 1e-9 << " seconds.\n";
+    outfile << "Total number of sweeps: " << sweeps << "\nChecking results\n";
 
     auto begin_check = std::chrono::high_resolution_clock::now();
 
     std::vector<real> new_results(N, 0);
 
+    // Calculating a new set of results from the calculated values.
     for(int i=0; i<N*N; ++i)
     {
         new_results[i/N] += data[i%N]*static_cast<real>(matrix[i]);
-    } 
- 
+    }
+
     bool *all_eq = malloc_shared<bool>(1, q);
     all_eq[0] = true;
-    buffer buf_new_res(new_results);
 
-    q.submit([&](handler& h){
-        stream out(1024, 256, h);
-        accessor R {buf_res, h};
-        accessor NR {buf_new_res, h};
-        h.parallel_for(range<1>(N), [=](id<1> id){       
-            real diff = fabs(NR[id]-R[id]);
-            if(diff>calculation_error) all_eq[0] = false;
+    // Comparing the newly calculated results with the ones that were
+    // given. If the difference is less than the error rate for each of
+    // the elements, then all values have been calculated correctly.
+    {
+        buffer buf_new_res(new_results);
+        
+        q.submit([&](handler& h){
+            accessor R {buf_res, h, read_only};
+            accessor NR {buf_new_res, h, read_only};
+            h.parallel_for(range<1>(N), [=](id<1> id){       
+                real diff = fabs(NR[id]-R[id]);
+                if(diff>calculation_error) all_eq[0] = false;
+            });
         });
-    });
+    }
 
-    if(all_eq[0]) std::cout << "All values are correct.\n";
-    else std::cout << "There has been some errors. The values are not correct.\n";
+    if(all_eq[0]) 
+    {
+        std::cout << "All values are correct.\n";
+        outfile << "All values are correct.\n";
+    }
+    else 
+    {
+        std::cout << "There have been some errors. The values are not correct.\n";
+        outfile << "There have been some errors. The values are not correct.\n";
+    }
 
     auto end_check = std::chrono::high_resolution_clock::now();
     auto elapsed_check = std::chrono::duration_cast<std::chrono::nanoseconds>(end_check - begin_check);
 
     std::cout << "\nCheck complete, time elapsed: " << elapsed_check.count() * 1e-9 << " seconds.\n";
+    outfile << "\nCheck complete, time elapsed: " << elapsed_check.count() * 1e-9 << " seconds.\n";
 
     auto end_runtime = std::chrono::high_resolution_clock::now();
     auto elapsed_runtime = std::chrono::duration_cast<std::chrono::nanoseconds>(end_runtime - begin_runtime);
 
     std::cout << "Total runtime is " << elapsed_runtime.count() * 1e-9 << " seconds.\n";
+    outfile << "Total runtime is " << elapsed_runtime.count() * 1e-9 << " seconds.\n";
 
-    // print_results(data, N);
+    print_results(data, N);
     free(data, q);
     free(old_values, q);
 
