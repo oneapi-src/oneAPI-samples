@@ -20,7 +20,7 @@ static const int min_rand = -1000;
 static const int max_rand = 1000;
 int max_sweeps = 100;
 static const std::uint32_t seed = 666;
-cpu_selector selector;
+gpu_selector selector;
 
 // std::ofstream std::cout;
 
