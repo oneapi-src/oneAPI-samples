@@ -19,7 +19,7 @@ More examples can be found at [Examples](https://intel.github.io/intel-extension
 ## Key implementation details
 This Hello World sample code is implemented for CPU using the Python language.
 
-*Please* **export the environment variable `DNNL_VERBOSE=1`** *to display the deep learning primitives trace during execution.*
+Please **export the environment variable `DNNL_VERBOSE=1`** to display the deep learning primitives trace during execution.
 
 ### Notes
  - The test dataset is inherited from `torch.utils.data.Dataset`.
@@ -69,12 +69,12 @@ your desired conda environment using the following command:
     conda activate user_pytorch
     ```
 
-4.	Navigate to the directory with the TensorFlow sample:
+3. Navigate to the directory with the sample:
     ```
     cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted
     ```
 
-5. Run the Python script
+4. Run the Python script
     To run the program on Linux\*, Windows\* and MacOS\*, type the following command in the terminal with Python installed:
 
     ```
@@ -99,11 +99,11 @@ Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneA
 
 ### Submit The Sample in Batch Mode
 
-1.	Navigate to the directory with the TensorFlow sample:
+1. Navigate to the directory with the TensorFlow sample:
 ```
 cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted
 ```
-2. submit this "Intel_Extension_For_PyTorch_GettingStarted" workload on the selected node with the run script.
+2. Submit this "Intel_Extension_For_PyTorch_GettingStarted" workload on the selected node with the run script.
 ```
 ./q ./run.sh
 ```
@@ -116,7 +116,7 @@ Several sample programs are available for you to try, many of which can be compi
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
 [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
 
-### Using Visual Studio Code*  (Optional)
+### Using Visual Studio Code\* (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
 and browse and download samples.
