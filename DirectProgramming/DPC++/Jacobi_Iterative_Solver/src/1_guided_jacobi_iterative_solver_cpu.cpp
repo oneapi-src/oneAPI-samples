@@ -13,7 +13,7 @@ typedef double real;
 
 // Program variables, feel free to change anything 
 // make run 30000 0.000000001 -1000 1000 100 777
-static const int N = 9;
+static const int N = 30000;
 static const real check_error = 1e-15;
 static const real calculation_error = 1e-10;
 static const int min_rand = -1000;
@@ -214,7 +214,7 @@ int main(int argc, char *argv[])
 
     std::cout << "Total runtime is " << elapsed_runtime.count() * 1e-9 << " seconds.\n";
 
-    print_results(data, N);
+    // print_results(data, N);
     free(data, q);
     free(old_values, q);
 
