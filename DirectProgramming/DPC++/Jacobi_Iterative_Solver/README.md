@@ -109,7 +109,7 @@ In this case we will want to run the roofline analysis to look for areas where t
  
 ### GPU optimized offloaded version
 
-![offload Modeling results](images/gpu.png)
+![offload Modeling results](images/gpu.PNG)
 
 ## Output
 ```
