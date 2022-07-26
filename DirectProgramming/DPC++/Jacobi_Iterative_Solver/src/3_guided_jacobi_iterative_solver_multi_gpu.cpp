@@ -12,7 +12,7 @@ using namespace sycl;
 typedef double real;
 
 // Program variables, feel free to change anything .
-static const int N = 30000;
+static const int N = 3;
 static const real check_error = 1e-15;
 static const real calculation_error = 1e-10;
 static const int min_rand = -1000;
@@ -119,7 +119,8 @@ bool check_if_equal(std::vector <real> data, std::vector<real> old_values)
     int correct_result = 0;
 
     for(int i = 0; i < N; ++i)
-    {
+    {   
+        std::cout << fabs(data[i]-old_values[i]) << std::endl;
         if(fabs(data[i]-old_values[i])<check_error) correct_result++;
     }
 
