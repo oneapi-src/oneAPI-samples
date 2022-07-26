@@ -54,27 +54,6 @@ struct Triangle {
 };
 
 /* Added for pathtracer */
-enum class MaterialType {
-    MATERIAL_MATTE,
-    MATERIAL_MIRROR,
-    MATERIAL_GLASS,
-};
-
-/* Added for pathtracer */
-struct Medium {
-    Vec3fa transmission;
-    float eta;
-};
-
-/* Added for path tracer: creating a lookup structure for intersected geometries */
-struct MatAndPrimColorTable {
-    std::vector<enum class MaterialType> materialTable;
-    Vec3fa* primColorTable;
-};
-/* Added for path tracer: for holding material properties for each geometry id */
-std::map< unsigned int, MatAndPrimColorTable> g_geomIDs;
-
-/* Added for pathtracer */
 struct DifferentialGeometry
 {
     unsigned int instIDs[RTC_MAX_INSTANCE_LEVEL_COUNT];
@@ -83,16 +62,13 @@ struct DifferentialGeometry
     float u, v;
     Vec3fa P;
     Vec3fa Ng;
+    /* This sample does not interpolate normals for normal specific shading. Ns is a place holder. */
     Vec3fa Ns;
+    /* This sample does not use textures. Tx is a place holder. */
     Vec3fa Tx;
+    /* This sample does not use textures. Ty is a place holder. */
     Vec3fa Ty;
     float eps;
-};
-
-/* Added for geometry selection in pathtracer */
-enum class SceneSelector {
-    SHOW_CUBE_AND_PLANE,
-    SHOW_CORNELL_BOX,
 };
 
 /* Added for pathtracer */
@@ -103,23 +79,10 @@ struct Sample3f
 };
 
 /* Added for pathtracer */
-struct InfiniteDirectionalLight {
-    Vec3fa dir;
-    Vec3fa intensity;
-};
-
-/* Added for pathtracer */
-enum class LightType {
-    INFINITE_DIRECTIONAL_LIGHT,
-    POINT_LIGHT
-};
-
-struct Light {
-    enum LightType type;
-    Vec3fa dir;
-    Vec3fa intensity;
-    Vec3fa pos;
-};
+inline Vec3fa face_forward(const Vec3fa& dir, const Vec3fa& _Ng) {
+    const Vec3fa Ng = _Ng;
+    return dot(dir, Ng) < 0.0f ? Ng : -Ng;
+}
 
 AffineSpace3fa positionCamera(Vec3fa from, Vec3fa to, Vec3fa up, float fov,
     size_t width, size_t height) {
@@ -152,5 +115,6 @@ AffineSpace3fa positionCamera(Vec3fa from, Vec3fa to, Vec3fa up, float fov,
 
     return camMatrix;
 }
+
 
 #endif /* !FILE_DEFINITIONS_SEEN */

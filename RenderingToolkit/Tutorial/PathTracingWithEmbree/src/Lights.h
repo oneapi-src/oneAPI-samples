@@ -1,5 +1,21 @@
 #pragma once
 
+#ifndef FILE_LIGHTSSEEN
+#define FILE_LIGHTSSEEN
+/* Added for pathtracer */
+
+enum class LightType {
+    INFINITE_DIRECTIONAL_LIGHT,
+    POINT_LIGHT
+};
+
+struct Light {
+    enum LightType type;
+    Vec3fa dir;
+    Vec3fa intensity;
+    Vec3fa pos;
+};
+
 /* Added for pathtracer */
 struct Light_SampleRes {
   Vec3fa weight;  //!< radiance that arrives at the given point divided by pdf
@@ -40,3 +56,5 @@ Light_SampleRes sample_light(const Light& light, DifferentialGeometry& dg,
 
   return res;
 }
+
+#endif /* FILE_LIGHTSSEEN */

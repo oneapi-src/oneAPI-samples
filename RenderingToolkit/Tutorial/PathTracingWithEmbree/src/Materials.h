@@ -1,8 +1,32 @@
-#pagma once
-/// cosine-weighted sampling of hemisphere oriented along the +z-axis
-////////////////////////////////////////////////////////////////////////////////
+#pragma once
 
-/* Added for pathtracer transforming a normal */
+
+#ifndef FILE_MATERIALSSEEN
+#define FILE_MATERIALSSEEN
+
+/* Added for pathtracer */
+enum class MaterialType {
+    MATERIAL_MATTE,
+    MATERIAL_MIRROR,
+    MATERIAL_GLASS,
+};
+
+/* Added for pathtracer */
+struct Medium {
+    Vec3fa transmission;
+    float eta;
+};
+
+/* Added for path tracer: creating a lookup structure for intersected geometries */
+struct MatAndPrimColorTable {
+    std::vector<enum class MaterialType> materialTable;
+    Vec3fa* primColorTable;
+};
+
+/* Added for path tracer: for holding material properties for each geometry id */
+std::map< unsigned int, MatAndPrimColorTable> g_geomIDs;
+
+/* Added for pathtracer. The frame function creates a transform from a normal. */
 LinearSpace3fa frame(const Vec3fa& N) {
   const Vec3fa dx0(0, N.z, -N.y);
   const Vec3fa dx1(-N.z, 0, N.x);
@@ -34,22 +58,9 @@ inline Sample3f cosineSampleHemisphere(const float u, const float v,
   return s;
 }
 
-Vec3fa Lambertian__eval(const Vec3fa& R, const Vec3fa& wo,
-                        DifferentialGeometry dg, Vec3fa wi_v) {
-  /* The diffuse material. Reflectance (albedo) times the cosign fall off of the
-   * vector about the normal. */
-  return R * (1.f / (float)(float(M_PI))) * clamp(dot(wi_v, dg.Ns));
-}
 
-Vec3fa Mirror__sample(const Vec3fa& R, const Vec3fa& Lw, const Vec3fa& wo,
-                      const DifferentialGeometry& dg, Sample3f& wi) {
-  Sample3f sam;
-  sam.pdf = 1.0f;
-  /* Compute a reflection vector 2 * N.L * N - L */
-  sam.v = normalize(2.0f * dot(wo, dg.Ns) * dg.Ns - wo);
-  wi = sam;
-  return R;
-}
+
+
 
 inline Vec3fa sample_component2(const Vec3fa& c0, const Sample3f& wi0,
                                 const Medium& medium0, const Vec3fa& c1,
@@ -104,6 +115,58 @@ inline float fresnelDielectric(const float cosi, const float eta) {
 
   return fresnelDielectric(cosi, cost, eta);
 }
+
+inline Vec3fa Dielectric_eval(const Vec3fa& R, const Vec3fa& wo,
+    const DifferentialGeometry& dg, Vec3fa wi_v) {
+    return Vec3fa(0.0f);
+}
+
+/* Monte Carlo ray tracing "_eval" functions:
+   evaluates X for a given set of random variables (direction) 
+*/
+
+inline Vec3fa ThinDielectric_eval(const Vec3fa& R, const Vec3fa& wo,
+    const DifferentialGeometry& dg, Vec3fa wi_v) {
+    return Vec3fa(0.0f);
+}
+
+inline Vec3fa Lambertian_eval(const Vec3fa& R, const Vec3fa& wo,
+    const DifferentialGeometry& dg, const Vec3fa& wi_v) {
+    /* The diffuse material. Reflectance (albedo) times the cosign fall off of the
+     * vector about the normal. */
+    return R * (1.f / (float)(float(M_PI))) * clamp(dot(wi_v, dg.Ns));
+}
+
+inline Vec3fa Mirror_eval(const Vec3fa& R, const Vec3fa& wo,
+    const DifferentialGeometry& dg, Vec3fa wi_v) {
+    return Vec3fa(0.0f);
+}
+
+Vec3fa Material__eval(Vec3fa R, MaterialType materialType,
+    const Vec3fa& wo, const DifferentialGeometry& dg,
+    const Vec3fa& wi) {
+    Vec3fa c = Vec3fa(0.0f);
+    switch (materialType) {
+    case MaterialType::MATERIAL_MATTE:
+        return Lambertian_eval(R, wo, dg, wi);
+        break;
+    case MaterialType::MATERIAL_MIRROR:
+        return Mirror_eval(R, wo, dg, wi);
+        break;
+    case MaterialType::MATERIAL_GLASS:
+        return Dielectric_eval(R, wo, dg, wi);
+        /* Try thin dielectric!? */
+        break;
+        /* Return our debug color if something goes awry */
+    default:
+        c = R;
+        break;
+    }
+    return c;
+}
+
+
+/* Material Sampling Functions */
 
 Vec3fa Dielectric__sample(const Vec3fa& Lw, const Vec3fa& wo,
                           const DifferentialGeometry& dg, Sample3f& wi_o,
@@ -191,17 +254,34 @@ Vec3fa ThinDielectric__sample(const Vec3fa& Lw, const Vec3fa& wo,
                            s.x);
 }
 
-Vec3fa Material__sample(Vec3fa R, enum class MaterialType materialType,
+Vec3fa Lambertian_sample(Vec3fa R,
+    const Vec3fa& wo, const DifferentialGeometry& dg,
+    Sample3f& wi, const Vec2f& randomMatSample) {
+
+    wi = cosineSampleHemisphere(randomMatSample.x, randomMatSample.y, dg.Ns);
+    return Lambertian_eval(R, wo, dg, wi.v);
+
+}
+
+Vec3fa Mirror__sample(const Vec3fa& R, const Vec3fa& Lw, const Vec3fa& wo,
+    const DifferentialGeometry& dg, Sample3f& wi) {
+    Sample3f sam;
+    sam.pdf = 1.0f;
+    /* Compute a reflection vector 2 * N.L * N - L */
+    sam.v = normalize(2.0f * dot(wo, dg.Ns) * dg.Ns - wo);
+    wi = sam;
+    return R;
+}
+
+Vec3fa Material_sample(Vec3fa R, MaterialType materialType,
                         const Vec3fa& Lw, const Vec3fa& wo,
                         const DifferentialGeometry& dg, Sample3f& wi,
                         Medium& medium, const Vec2f& randomMatSample) {
   Vec3fa c = Vec3fa(0.0f);
   switch (materialType) {
     case MaterialType::MATERIAL_MATTE:
-      wi = cosineSampleHemisphere(randomMatSample.x, randomMatSample.y, dg.Ns);
-      return Lambertian__eval(R, wo, dg, wi.v);
+      return Lambertian_sample(R, wo, dg, wi, randomMatSample);
       break;
-
     case MaterialType::MATERIAL_MIRROR:
       return Mirror__sample(R, Lw, wo, dg, wi);
       break;
@@ -219,32 +299,50 @@ Vec3fa Material__sample(Vec3fa R, enum class MaterialType materialType,
   return c;
 }
 
-Vec3fa Material__eval(Vec3fa R, enum class MaterialType materialType,
-                      const Vec3fa& wo, const DifferentialGeometry& dg,
-                      const Vec3fa& wi) {
-  Vec3fa c = Vec3fa(0.0f);
-  switch (materialType) {
-    case MaterialType::MATERIAL_MATTE:
-      return Lambertian__eval(R, wo, dg, wi);
-      break;
-    case MaterialType::MATERIAL_MIRROR:
-      return Vec3fa(0.0f);
-      break;
-    case MaterialType::MATERIAL_GLASS:
-      return Vec3fa(0.0f);
-      break;
-      /* Return our debug color if something goes awry */
-    default:
-      c = R;
-      break;
-  }
-  return c;
+
+
+
+
+float Lambertian_pdf(R, wo, dg, wi) {
+
+
+
+}
+float Mirror_pdf() {
+
+
 }
 
-float Material__pdf(Vec3fa R, enum class MaterialType materialType,
+float Dielectric_pdf() {
+
+
+}
+
+
+
+
+/* Determine Probability Density Function for Materials */
+
+float Material_pdf(MaterialType materialType,
                       const Vec3fa& wo, const DifferentialGeometry& dg,
                       const Vec3fa& wi){
 
+    switch (materialType) {
+    case MaterialType::MATERIAL_MATTE:
+        return Lambertian_pdf(R, wo, dg, wi);
+        break;
+    case MaterialType::MATERIAL_MIRROR:
+        return Mirror_pdf();
+        break;
+    case MaterialType::MATERIAL_GLASS:
+        return Dielectric_pdf();
+        break;
+        /* Return our debug color if something goes awry */
+    default:
+        c = R;
+        break;
+    }
+    return Vec3fa(0.0f);
 }
 
 /*
@@ -260,3 +358,4 @@ X_pdf()
 
 */
 
+#endif /* FILE_MATERIALSSEEN */

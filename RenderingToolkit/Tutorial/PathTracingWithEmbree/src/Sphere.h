@@ -21,6 +21,7 @@ int addSphere(RTCScene scene, RTCDevice device, const Vec3fa& pos,
   Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
       mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT4, sizeof(Vertex), 1);
 
+  // Sphere primitive defined as singular Vec4 point for embree
   Vertex p = {pos.x, pos.y, pos.z, radius};
   vertices[0] = p;
 
