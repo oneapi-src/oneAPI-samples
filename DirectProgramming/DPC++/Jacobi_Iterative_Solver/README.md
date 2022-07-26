@@ -106,10 +106,12 @@ Based on the output captured from Advisor we can see a predicted acceleration if
 Thw  2_guided_jacobi_iterative_solver_gpu uses the basic offload of each for loop into a GPU. For example the main loop calculating the unknown variables will be calculated by N kernels where N is the number of rows in the matrix. 
 
 In this case we will want to run the roofline analysis to look for areas where there is room for performance optimization.
- 
-### GPU optimized offloaded version
 
 ![offload Modeling results](images/gpu.PNG)
+
+### Multi GPU version
+
+Currently unavailable.
 
 ## Output
 ```
