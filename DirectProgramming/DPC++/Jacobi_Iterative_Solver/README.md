@@ -73,14 +73,36 @@ $ make run_1_cpu
 $ make clean
 ```
 
+> **Note**: For GPU Analysis on Linux* enable collecting GPU hardware metrics by setting the value of dev.i915 perf_stream_paranoidsysctl option to 0 as follows. This command makes a temporary change that is lost after reboot:
+>
+> `sudo sysctl -w dev.i915.perf_stream_paranoid=0`
+>
+>To make a permanent change, enter:
+>
+> `sudo echo dev.i915.perf_stream_paranoid=0 > /etc/sysctl.d/60-mdapi.conf`
+
 ## Guided Builds
 
 Below is the step by step guide that shows how to optimize the Jacobi Iterative method. We'll start with code that runs on the CPU, then a basic implementation of GPU offload, then run a GPU optimiezd version of the code. We will use the Intel&reg; Advisor analysis tool to provide performance analysis of the built applications. 
 
 > **Note**: The actual results and measurements may vary depending on your actual hardware.
 
-
 ### Offloading modeling
+
+The first step is running the modeling on the CPU only version to identify the parts of code that can be accelerated.
+
+To run the Advisor with the cpu the following command has to be used:
+
+`advisor --collect=offload --config=gen9_gt2 --project-dir=./../advisor/1_cpu -- ./src/1_guided_jacobi_iterative_solver_cpu`\
+
+> **Note**: If you are connecting to a remote system where the oneAPI tools are installed, you may not be able to launch the Intel&reg; Advisor gui.  You can transfer the html report to a local machine for viewing.
+
+Based on the output captured from Advisor we can see a predicted acceleration if we use GPU offload.
+
+![offload Modeling results](images/cpu.png)
+
+### GPU basic offloaded version
+### GPU optimized offloaded version
 
 ## Output
 ```
@@ -137,6 +159,5 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
 
 
