@@ -178,10 +178,10 @@ int main(int argc, char *argv[])
     // The main functionality of the Jacobi Solver. Every iteration
     // calculates new values until the difference between the values
     // calculatedthis iteration and the one before is less than the error.
-    {
-        buffer buf_data(data);
-        buffer buf_old_values(old_values);
+    {        
         do{
+            buffer buf_data(data);
+            buffer buf_old_values(old_values);
             for(int i=0; i<N;++i) old_values[i] = data[i];
             q[0].submit([&](handler& h){
                 accessor D {buf_data, h};
