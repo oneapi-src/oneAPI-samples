@@ -204,6 +204,7 @@ int main(int argc, char *argv[])
                 });
             }).wait();
             
+            std::out << data[0] << " " << old_values[0] << std::endl;
             ++sweeps;
             is_equal = check_if_equal(data, old_values);
         }while(!is_equal && sweeps<max_sweeps);
