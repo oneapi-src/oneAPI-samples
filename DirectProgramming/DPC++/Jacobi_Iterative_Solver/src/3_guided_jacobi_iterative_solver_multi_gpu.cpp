@@ -184,6 +184,7 @@ int main(int argc, char *argv[])
             buffer buf_old_values(old_values);
             for(int i=0; i<N;++i) old_values[i] = data[i];
             q[0].submit([&](handler& h){
+                stream out(1024, 256, h);
                 accessor D {buf_data, h};
                 accessor OV {buf_old_values, h};
                 accessor M {buf_mat, h, read_only};
@@ -199,6 +200,7 @@ int main(int argc, char *argv[])
                             D[i] = D[i] - (OV[z] * static_cast<real>(M[j])); 
                         j=j+1;}                
                     D[i] = D[i]/static_cast<real>(M[it]);
+                    out << D[i] << endl;
                 });
             }).wait();
             
