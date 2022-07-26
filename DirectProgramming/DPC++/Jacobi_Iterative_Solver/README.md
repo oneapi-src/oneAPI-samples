@@ -93,18 +93,20 @@ $ make run_1_cpu
 > Note: the following run commands area also available and correspond to the specific build targets. 
 
     make run_2_gpu
-    make run_3_gpu_optimized
     make clean
 
 > Note: the command below will be available when multi GPU enviroment can bu run on devcloud
 
-    make run_4_multi_gpu
+    make run_3_multi_gpu
 
 ## Guided Builds
 
 Below is the step by step guide that shows how to optimize the Jacobi Iterative method. We'll start with code that runs on the CPU, then a basic implementation of GPU offload, then run a GPU optimiezd version of the code. We will use the Intel&reg; Advisor analysis tool to provide performance analysis of the built applications. 
 
 > **Note**: The actual results and measurements may vary depending on your actual hardware.
+
+> **Note**: The runtime of the Advisor may take a long time.
+
 
 ### Offloading modeling
 
@@ -141,20 +143,12 @@ To view the results:
 Currently unavailable.
 
 ## Output
-```
-[ 12%] Building CXX object src/CMakeFiles/4_guided_jacobi_iterative_solver_MultiGPU.dir/4_guided_jacobi_iterative_solver_MultiGPU.cpp.o
-[ 25%] Linking CXX executable 4_guided_jacobi_iterative_solver_MultiGPU
-[ 25%] Built target 4_guided_jacobi_iterative_solver_MultiGPU
-[ 37%] Building CXX object src/CMakeFiles/2_guided_jacobi_iterative_solver_gpu.dir/2_guided_jacobi_iterative_solver_gpu.cpp.o
-[ 50%] Linking CXX executable 2_guided_jacobi_iterative_solver_gpu
-[ 50%] Built target 2_guided_jacobi_iterative_solver_gpu
-[ 62%] Building CXX object src/CMakeFiles/3_guided_jacobi_iterative_solver_GPUOptimization.dir/3_guided_jacobi_iterative_solver_GPUOptimization.cpp.o
-[ 75%] Linking CXX executable 3_guided_jacobi_iterative_solver_GPUOptimization
-[ 75%] Built target 3_guided_jacobi_iterative_solver_GPUOptimization
-[ 87%] Building CXX object src/CMakeFiles/1_guided_jacobi_iterative_solver_cpu.dir/1_guided_jacobi_iterative_solver_cpu.cpp.o
-[100%] Linking CXX executable 1_guided_jacobi_iterative_solver_cpu
-[100%] Built target 1_guided_jacobi_iterative_solver_cpu
 
+Here is an example of the output for some uses of the code.
+
+### CPU version for a 9x9 matrix
+
+```
 Scanning dependencies of target run_cpu
 ./jacobi_cpu_iterative_solver
 Device : Intel(R) Core(TM) i7-10610U CPU @ 1.80GHz
@@ -187,6 +181,23 @@ X7 equals: -0.13914309700
 X8 equals: -0.09521910620
 X9 equals: 0.19864875400
 Built target run_cpu
+```
+
+### GPU version for a 30000x30000 matrix
+
+```
+Device : Intel(R) Graphics [0x020a]
+
+Matrix generated, time elapsed: 3.58536 seconds.
+
+Computations complete, time elapsed: 3.41483 seconds.
+Total number of sweeps: 7
+Checking results
+All values are correct.
+
+Check complete, time elapsed: 2.61934 seconds.
+Total runtime is 13.5157 seconds.
+[100%] Built target run_2_gpu
 ```
 
 ## License
