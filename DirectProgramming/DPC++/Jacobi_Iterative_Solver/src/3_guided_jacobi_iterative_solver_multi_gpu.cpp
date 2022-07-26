@@ -160,147 +160,147 @@ bool check_if_equal(std::vector <real> data, std::vector<real> old_values)
 
 int main(int argc, char *argv[])
 {  
-    for(int i =0; i<argc; ++i)  std::cout << argv[i] << std::endl;
-    auto begin_runtime = std::chrono::high_resolution_clock::now();
+    // for(int i =0; i<argc; ++i)  std::cout << argv[i] << std::endl;
+    // auto begin_runtime = std::chrono::high_resolution_clock::now();
 
-    outfile.open("report.txt", std::ios_base::out);
+    // outfile.open("report.txt", std::ios_base::out);
 
-    std::vector<float> matrix(N*N);
-    std::vector<real> results(N);
+    // std::vector<float> matrix(N*N);
+    // std::vector<real> results(N);
 
-    std::vector<queue> q;
-    for (const auto &p : platform::get_platforms()) {
-        if (p.get_info<info::platform::name>().find("Level-Zero") != std::string::npos){
-        for (const auto &d : p.get_devices()) {
-            if(d.is_gpu() && d.get_info<info::device::name>().find("Intel") != std::string::npos){
-                q.push_back(queue(d));
-                std::cout << "--Found GPU: " << d.get_info<info::device::name>() << "\n";
-            }
-        }
-      }
-    }
-    std::cout << q.size() << std::endl;
+    // std::vector<queue> q;
+    // for (const auto &p : platform::get_platforms()) {
+    //     if (p.get_info<info::platform::name>().find("Level-Zero") != std::string::npos){
+    //     for (const auto &d : p.get_devices()) {
+    //         if(d.is_gpu() && d.get_info<info::device::name>().find("Intel") != std::string::npos){
+    //             q.push_back(queue(d));
+    //             std::cout << "--Found GPU: " << d.get_info<info::device::name>() << "\n";
+    //         }
+    //     }
+    //   }
+    // }
+    // std::cout << q.size() << std::endl;
 
-    auto begin_matrix = std::chrono::high_resolution_clock::now();
+    // auto begin_matrix = std::chrono::high_resolution_clock::now();
 
-    generate_matrix(matrix, results);
+    // generate_matrix(matrix, results);
     
-    buffer buf_mat(matrix);
-    buffer buf_res(results);
+    // buffer buf_mat(matrix);
+    // buffer buf_res(results);
 
-    auto end_matrix = std::chrono::high_resolution_clock::now();
-    auto elapsed_matrix = std::chrono::duration_cast<std::chrono::nanoseconds>(end_matrix - begin_matrix);
+    // auto end_matrix = std::chrono::high_resolution_clock::now();
+    // auto elapsed_matrix = std::chrono::duration_cast<std::chrono::nanoseconds>(end_matrix - begin_matrix);
 
-    std::cout << "\nMatrix generated, time elapsed: " << elapsed_matrix.count() * 1e-9 << " seconds.\n";
-    outfile << "\nMatrix generated, time elapsed: " << elapsed_matrix.count() * 1e-9 << " seconds.\n";
+    // std::cout << "\nMatrix generated, time elapsed: " << elapsed_matrix.count() * 1e-9 << " seconds.\n";
+    // outfile << "\nMatrix generated, time elapsed: " << elapsed_matrix.count() * 1e-9 << " seconds.\n";
 
-    if(N<10) print_matrix(matrix, results);
+    // if(N<10) print_matrix(matrix, results);
 
-    auto begin_computations = std::chrono::high_resolution_clock::now();
+    // auto begin_computations = std::chrono::high_resolution_clock::now();
 
-    std::vector<real> data(N, 0);
-    std::vector<real> old_values(N, 0);
+    // std::vector<real> data(N, 0);
+    // std::vector<real> old_values(N, 0);
 
-    for(int i=0; i<N; i++) data[i] = 0;
+    // for(int i=0; i<N; i++) data[i] = 0;
 
-    bool is_equal = false;
-    int sweeps = 0;
+    // bool is_equal = false;
+    // int sweeps = 0;
     
-    // The main functionality of the Jacobi Solver. Every iteration
-    // calculates new values until the difference between the values
-    // calculatedthis iteration and the one before is less than the error.
-    {        
-        do{
-            buffer buf_data(data);
-            buffer buf_old_values(old_values);
-            for(int i=0; i<N;++i) old_values[i] = data[i];
-            q[0].submit([&](handler& h){
-                accessor D {buf_data, h};
-                accessor OV {buf_old_values, h};
-                accessor M {buf_mat, h, read_only};
-                accessor R {buf_res, h, read_only};
-                h.parallel_for(range<1>(N), [=](id<1> id){
-                    int i = id;
-                    int j = N*i;
-                    int it = N*i+i;
+    // // The main functionality of the Jacobi Solver. Every iteration
+    // // calculates new values until the difference between the values
+    // // calculatedthis iteration and the one before is less than the error.
+    // {        
+    //     do{
+    //         buffer buf_data(data);
+    //         buffer buf_old_values(old_values);
+    //         for(int i=0; i<N;++i) old_values[i] = data[i];
+    //         q[0].submit([&](handler& h){
+    //             accessor D {buf_data, h};
+    //             accessor OV {buf_old_values, h};
+    //             accessor M {buf_mat, h, read_only};
+    //             accessor R {buf_res, h, read_only};
+    //             h.parallel_for(range<1>(N), [=](id<1> id){
+    //                 int i = id;
+    //                 int j = N*i;
+    //                 int it = N*i+i;
 
-                    D[i] = R[i];
-                    for(int z=0; z<N; ++z){
-                        if(z!=i) 
-                            D[i] = D[i] - (OV[z] * static_cast<real>(M[j])); 
-                        j=j+1;}                
-                    D[i] = D[i]/static_cast<real>(M[it]);
-                });
-            }).wait();
+    //                 D[i] = R[i];
+    //                 for(int z=0; z<N; ++z){
+    //                     if(z!=i) 
+    //                         D[i] = D[i] - (OV[z] * static_cast<real>(M[j])); 
+    //                     j=j+1;}                
+    //                 D[i] = D[i]/static_cast<real>(M[it]);
+    //             });
+    //         }).wait();
             
-            buf_data.get_access<access::mode::read>();
-            buf_old_values.get_access<access::mode::read>();
+    //         buf_data.get_access<access::mode::read>();
+    //         buf_old_values.get_access<access::mode::read>();
 
-            ++sweeps;
-            is_equal = check_if_equal(data, old_values);
-        }while(!is_equal && sweeps<max_sweeps);
-    }
-    auto end_computations = std::chrono::high_resolution_clock::now();
-    auto elapsed_computations = std::chrono::duration_cast<std::chrono::nanoseconds>(end_computations - begin_computations);
+    //         ++sweeps;
+    //         is_equal = check_if_equal(data, old_values);
+    //     }while(!is_equal && sweeps<max_sweeps);
+    // }
+    // auto end_computations = std::chrono::high_resolution_clock::now();
+    // auto elapsed_computations = std::chrono::duration_cast<std::chrono::nanoseconds>(end_computations - begin_computations);
 
-    std::cout << "\nComputations complete, time elapsed: " << elapsed_computations.count() * 1e-9 << " seconds.\n";
-    std::cout << "Total number of sweeps: " << sweeps << "\nChecking results\n";
-    outfile << "\nComputations complete, time elapsed: " << elapsed_computations.count() * 1e-9 << " seconds.\n";
-    outfile << "Total number of sweeps: " << sweeps << "\nChecking results\n";
+    // std::cout << "\nComputations complete, time elapsed: " << elapsed_computations.count() * 1e-9 << " seconds.\n";
+    // std::cout << "Total number of sweeps: " << sweeps << "\nChecking results\n";
+    // outfile << "\nComputations complete, time elapsed: " << elapsed_computations.count() * 1e-9 << " seconds.\n";
+    // outfile << "Total number of sweeps: " << sweeps << "\nChecking results\n";
 
-    auto begin_check = std::chrono::high_resolution_clock::now();
+    // auto begin_check = std::chrono::high_resolution_clock::now();
 
-    std::vector<real> new_results(N, 0);
+    // std::vector<real> new_results(N, 0);
 
-    // Calculating a new set of results from the calculated values.
-    for(int i=0; i<N*N; ++i)
-    {
-        new_results[i/N] += data[i%N]*static_cast<real>(matrix[i]);
-    }
+    // // Calculating a new set of results from the calculated values.
+    // for(int i=0; i<N*N; ++i)
+    // {
+    //     new_results[i/N] += data[i%N]*static_cast<real>(matrix[i]);
+    // }
 
-    bool *all_eq = malloc_shared<bool>(1, q[0]);
-    all_eq[0] = true;
+    // bool *all_eq = malloc_shared<bool>(1, q[0]);
+    // all_eq[0] = true;
 
-    // Comparing the newly calculated results with the ones that were
-    // given. If the difference is less than the error rate for each of
-    // the elements, then all values have been calculated correctly.
-    {
-        buffer buf_new_res(new_results);
+    // // Comparing the newly calculated results with the ones that were
+    // // given. If the difference is less than the error rate for each of
+    // // the elements, then all values have been calculated correctly.
+    // {
+    //     buffer buf_new_res(new_results);
         
-        q[0].submit([&](handler& h){
-            accessor R {buf_res, h, read_only};
-            accessor NR {buf_new_res, h, read_only};
-            h.parallel_for(range<1>(N), [=](id<1> id){       
-                real diff = fabs(NR[id]-R[id]);
-                if(diff>calculation_error) all_eq[0] = false;
-            });
-        });
-    }
+    //     q[0].submit([&](handler& h){
+    //         accessor R {buf_res, h, read_only};
+    //         accessor NR {buf_new_res, h, read_only};
+    //         h.parallel_for(range<1>(N), [=](id<1> id){       
+    //             real diff = fabs(NR[id]-R[id]);
+    //             if(diff>calculation_error) all_eq[0] = false;
+    //         });
+    //     });
+    // }
 
-    if(all_eq[0]) 
-    {
-        std::cout << "All values are correct.\n";
-        outfile << "All values are correct.\n";
-    }
-    else 
-    {
-        std::cout << "There have been some errors. The values are not correct.\n";
-        outfile << "There have been some errors. The values are not correct.\n";
-    }
+    // if(all_eq[0]) 
+    // {
+    //     std::cout << "All values are correct.\n";
+    //     outfile << "All values are correct.\n";
+    // }
+    // else 
+    // {
+    //     std::cout << "There have been some errors. The values are not correct.\n";
+    //     outfile << "There have been some errors. The values are not correct.\n";
+    // }
 
-    auto end_check = std::chrono::high_resolution_clock::now();
-    auto elapsed_check = std::chrono::duration_cast<std::chrono::nanoseconds>(end_check - begin_check);
+    // auto end_check = std::chrono::high_resolution_clock::now();
+    // auto elapsed_check = std::chrono::duration_cast<std::chrono::nanoseconds>(end_check - begin_check);
 
-    std::cout << "\nCheck complete, time elapsed: " << elapsed_check.count() * 1e-9 << " seconds.\n";
-    outfile << "\nCheck complete, time elapsed: " << elapsed_check.count() * 1e-9 << " seconds.\n";
+    // std::cout << "\nCheck complete, time elapsed: " << elapsed_check.count() * 1e-9 << " seconds.\n";
+    // outfile << "\nCheck complete, time elapsed: " << elapsed_check.count() * 1e-9 << " seconds.\n";
 
-    auto end_runtime = std::chrono::high_resolution_clock::now();
-    auto elapsed_runtime = std::chrono::duration_cast<std::chrono::nanoseconds>(end_runtime - begin_runtime);
+    // auto end_runtime = std::chrono::high_resolution_clock::now();
+    // auto elapsed_runtime = std::chrono::duration_cast<std::chrono::nanoseconds>(end_runtime - begin_runtime);
 
-    std::cout << "Total runtime is " << elapsed_runtime.count() * 1e-9 << " seconds.\n";
-    outfile << "Total runtime is " << elapsed_runtime.count() * 1e-9 << " seconds.\n";
+    // std::cout << "Total runtime is " << elapsed_runtime.count() * 1e-9 << " seconds.\n";
+    // outfile << "Total runtime is " << elapsed_runtime.count() * 1e-9 << " seconds.\n";
 
-    print_results(data, N);
+    // print_results(data, N);
 
     return 0; 
 }
