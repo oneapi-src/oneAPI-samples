@@ -185,8 +185,8 @@ int main(int argc, char *argv[])
             for(int i=0; i<N;++i) old_values[i] = data[i];
             q[0].submit([&](handler& h){
                 stream out(1024, 256, h);
-                accessor D {buf_data, h,read_write};
-                accessor OV {buf_old_values, h,read_write};
+                accessor D {buf_data, h};
+                accessor OV {buf_old_values, h};
                 accessor M {buf_mat, h, read_only};
                 accessor R {buf_res, h, read_only};
                 h.parallel_for(range<1>(N), [=](id<1> id){
@@ -204,6 +204,9 @@ int main(int argc, char *argv[])
                 });
             }).wait();
             
+            buf_data.get_access<access::mode::read>();
+            buf_old_values.get_access<access::mode::read>();
+
             std::cout << data[0] << " " << old_values[0] << std::endl;
             ++sweeps;
             is_equal = check_if_equal(data, old_values);
