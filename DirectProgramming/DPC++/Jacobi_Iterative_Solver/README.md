@@ -21,8 +21,7 @@ This sample starts with a CPU oriented application and shows how to use SYCL and
 
 - `1_guided_jacobi_iterative_solver_cpu.cpp`: basic serial CPU implementation.
 - `2_guided_jacobi_iterative_solver_gpu`: initial GPU offload version using SYCL.
-- `3_guided_jacobi_iterative_solver_GPUOptimization.cpp`: GPU optimized version by changing the Jacobi Method core calculations.
-- `4_guided_jacobi_iterative_solver_MultiGPU.cpp`: MultiGPU version. Currently unavailable.
+- `3_guided_jacobi_iterative_solver_multi_gpu.cpp`: Multi GPU version. Currently unavailable.
 
 ## Key Implementation Details
 
