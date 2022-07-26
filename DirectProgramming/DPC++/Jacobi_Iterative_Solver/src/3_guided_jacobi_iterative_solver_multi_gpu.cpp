@@ -49,8 +49,39 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results)
     q[0].submit([&](handler& h){
         accessor M {buf_mat, h};
         accessor R {buf_res, h};
-        h.parallel_for(range<1>(N), [=](id<1> id){
+        h.parallel_for(range<1>(N/2), [=](id<1> id){
             int i = id;
+            int j = N*i;
+            int it = N*i+i;
+
+            real sum = 0;
+
+            oneapi::dpl::minstd_rand engine(seed, i+j);
+
+            oneapi::dpl::uniform_real_distribution<real> distr(min_rand, max_rand);
+
+            for(int j=i*N; j<N*(i+1); ++j)
+            {
+                M[j] = distr(engine);
+                M[j] = round(100. * M[j]) / 100.;
+                sum += fabs(M[j]);
+            }
+
+            oneapi::dpl::uniform_int_distribution<int> distr2(0, 100);
+            int gen_neg = distr2(engine);
+
+            if(gen_neg<50) M[i*N+i] = sum +1;
+            else M[i*N+i] = -1*(sum +1);
+
+            R[i] = distr(engine);
+            R[i] = round(100. * R[i]) / 100.;
+        });
+    });
+    q[0].submit([&](handler& h){
+        accessor M {buf_mat, h};
+        accessor R {buf_res, h};
+        h.parallel_for(range<1>(N/2), [=](id<1> id){
+            int i = N/2+id;
             int j = N*i;
             int it = N*i+i;
 
@@ -184,7 +215,6 @@ int main(int argc, char *argv[])
             buffer buf_old_values(old_values);
             for(int i=0; i<N;++i) old_values[i] = data[i];
             q[0].submit([&](handler& h){
-                stream out(1024, 256, h);
                 accessor D {buf_data, h};
                 accessor OV {buf_old_values, h};
                 accessor M {buf_mat, h, read_only};
@@ -200,14 +230,12 @@ int main(int argc, char *argv[])
                             D[i] = D[i] - (OV[z] * static_cast<real>(M[j])); 
                         j=j+1;}                
                     D[i] = D[i]/static_cast<real>(M[it]);
-                    out << D[i] << endl;
                 });
             }).wait();
             
             buf_data.get_access<access::mode::read>();
             buf_old_values.get_access<access::mode::read>();
 
-            std::cout << data[0] << " " << old_values[0] << std::endl;
             ++sweeps;
             is_equal = check_if_equal(data, old_values);
         }while(!is_equal && sweeps<max_sweeps);
