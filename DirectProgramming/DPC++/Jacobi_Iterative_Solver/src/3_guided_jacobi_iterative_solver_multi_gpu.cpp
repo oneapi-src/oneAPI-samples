@@ -185,8 +185,8 @@ int main(int argc, char *argv[])
             for(int i=0; i<N;++i) old_values[i] = data[i];
             q[0].submit([&](handler& h){
                 stream out(1024, 256, h);
-                accessor D {buf_data, h};
-                accessor OV {buf_old_values, h};
+                accessor D {buf_data, h,read_write};
+                accessor OV {buf_old_values, h,read_write};
                 accessor M {buf_mat, h, read_only};
                 accessor R {buf_res, h, read_only};
                 h.parallel_for(range<1>(N), [=](id<1> id){
