@@ -54,11 +54,11 @@ std::ostream &operator<<(std::ostream &os, const ComplexType &val) {
   return os;
 }
 
-bool AlmostEqual(float x, float y, float epsilon = 0.0002f) {
+bool AlmostEqual(float x, float y, float epsilon = 0.0004f) {
   return std::fabs(x - y) < epsilon;
 }
 
-bool AlmostEqual(ComplexType x, ComplexType y, float epsilon = 0.0002f) {
+bool AlmostEqual(ComplexType x, ComplexType y, float epsilon = 0.0004f) {
   bool real_close = AlmostEqual(x.real(), y.real(), epsilon);
   bool imag_close = AlmostEqual(x.imag(), y.imag(), epsilon);
   return real_close && imag_close;
