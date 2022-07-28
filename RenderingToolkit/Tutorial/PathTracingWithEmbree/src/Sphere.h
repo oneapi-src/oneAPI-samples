@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "definitions.h"
+#include "Materials.h"
 
 static std::vector<enum class MaterialType> sphereMats = {
     // Just one material for our sphere primitive (Defined as singular Vec4

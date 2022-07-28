@@ -7,6 +7,8 @@
 #include <vector>
 
 #include "definitions.h"
+#include "Materials.h"
+#include "Lights.h"
 
 Vec3fa* g_cube_face_colors = nullptr;
 Vec3fa* g_cube_vertex_colors = nullptr;
@@ -248,7 +250,7 @@ void cleanCubeAndPlane() {
 }
 
 void cubeAndPlaneCameraLightSetup(AffineSpace3fa& camera,
-                                  std::vector<Light>& lights,
+                                  std::vector<struct Light>& lights,
                                   unsigned int width, unsigned int height) {
   Vec3fa defaultLightDirection = normalize(Vec3fa(-1.0f, -1.0f, -1.0f));
   Vec3fa defaultLightIntensity = {1.0f, 1.0f, 1.0f};

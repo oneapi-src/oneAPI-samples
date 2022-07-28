@@ -1,6 +1,7 @@
 #pragma once
 #include "CornellBox.h"
 #include "DefaultCubeAndPlane.h"
+#include "Sphere.h"
 #include "Lights.h"
 
 #include <embree3/rtcore.h>
@@ -13,6 +14,8 @@ enum class SceneSelector {
 
 /* The most basic scene graph possible for exploratory code... please consider the scene graph from ospray studio or embree itself as better production references */
 struct SceneGraph {
+
+public:
     SceneGraph(RTCDevice device, SceneSelector SELECT_SCENE, unsigned int width, unsigned int height);
 
     void SceneGraph::init_embree_scene(const RTCDevice device, SceneSelector SELECT_SCENE, const unsigned int width, const unsigned int height);
@@ -21,17 +24,20 @@ struct SceneGraph {
     
     bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir, RTCRayHit& rayhit, DifferentialGeometry& dg);
 
-    bool SceneGraph::intersect_shadowray_and_scene(Vec3fa org, Vec3fa dir, RTCRayHit rayhit, DifferentialGeometry& dg);
+    void SceneGraph::cast_shadow_ray(DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType, const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time, Vec3fa& L, RandomEngine& reng,
+        std::uniform_real_distribution<float>& distrib);
 
     void SceneGraph::set_intersect_context_coherent();
 
     void SceneGraph::set_intersect_context_incoherent();
 
-
+    Vec3fa SceneGraph::get_camera_origin();
+    
+    Vec3fa SceneGraph::get_direction_from_pixel(float x, float y);
 
 	~SceneGraph();
 
-    std::vector<Light> m_lights;
+    std::vector<struct Light> m_lights;
 protected:
     //std::vector<Light> m_lights;
 private:
@@ -143,9 +149,33 @@ bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir, RTCRayHit& r
 
 }
 
-bool SceneGraph::intersect_shadowray_and_scene(Vec3fa org, Vec3fa dir, RTCRayHit rayhit, DifferentialGeometry& dg) {
+void SceneGraph::cast_shadow_ray(DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType, const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time, Vec3fa& L, RandomEngine& reng,
+    std::uniform_real_distribution<float>& distrib) {
 
+    for (const Light& light : m_lights) {
+        Vec2f randomLightSample(distrib(reng), distrib(reng));
+        Light_SampleRes ls = sample_light(light, dg, randomLightSample);
+        /* If the sample probability density evaluation is 0 then no need to
+         * consider this shadow ray */
+        if (ls.pdf <= 0.0f) continue;
 
+        RTCRayHit shadow;
+        init_RayHit(shadow, dg.P, ls.dir, dg.eps, ls.dist, time);
+        rtcOccluded1(m_scene, &m_context, &shadow.ray);
+        if (shadow.ray.tfar >= 0.0f) {
+            L = L + Lw * ls.weight *
+                Material_eval(albedo, materialType, Lw, wo, dg, ls.dir, medium, randomLightSample);
+        }
+    }
+
+}
+
+Vec3fa SceneGraph::get_camera_origin() {
+    return Vec3fa(m_camera.p.x, m_camera.p.y, m_camera.p.z);
+}
+
+Vec3fa SceneGraph::get_direction_from_pixel(float x, float y) {
+    return normalize(x * m_camera.l.vx + y * m_camera.l.vy + m_camera.l.vz);
 }
 
 /* called by the C++ code for cleanup */

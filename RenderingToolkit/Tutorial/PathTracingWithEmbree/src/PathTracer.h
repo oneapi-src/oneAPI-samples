@@ -10,21 +10,13 @@ public:
 
     ~PathTracer();
 
-    /* minstd_rand is much faster for this application than
-    ranlux48_base/ranlux24_base. In turn, ranlux was faster than mt19937 or
-    mt19937_64 on Windows
-    */
-    typedef std::minstd_rand RandomEngine;
-
     static void PathTracer::handle_error(void* userPtr, const RTCError code, const char* str);
 
     void PathTracer::init_device(const char* cfg = nullptr);
 
     void PathTracer::init_scene(char* cfg, unsigned int width, unsigned int height);
 
-    /* Added for pathtracer: Initializes a rayhit data structure. Used for embree to perform ray triangle intersect */
-    inline void PathTracer::init_RayHit(RTCRayHit& rayhit, const Vec3fa& org, const Vec3fa& dir,
-        float tnear, float tfar, float time);
+
 
     /* called by the C++ code to render */
     void PathTracer::render_accumulation();
@@ -43,6 +35,8 @@ public:
 
     unsigned char* PathTracer::get_pixels();
 
+    unsigned char* m_pixels = nullptr;
+
 private:
     /* We might want to use this function outside of our path tracer at somepoint */
     inline Vec3fa face_forward(const Vec3fa& dir, const Vec3fa& _Ng);
@@ -56,7 +50,7 @@ private:
 
     std::shared_ptr<SceneGraph> m_sg;
 
-    unsigned char* m_pixels = nullptr;
+    
 
     /* Additions for pathtracer */
     std::vector<std::shared_ptr<Vec3ff>> m_accu;
@@ -82,7 +76,7 @@ private:
 }
 */
 
-PathTracer::PathTracer(unsigned int width, unsigned int height, unsigned int channels, unsigned int samples_per_pixel, unsigned int accumulation_limit, unsigned int max_path_length, SceneSelector SELECTED_SCENE) : m_width(width), m_height(height), m_channels(channels), m_spp(samples_per_pixel), m_accu_limit(accumulation_limit), m_max_path_length(max_path_length) {
+PathTracer::PathTracer(unsigned int width, unsigned int height, unsigned int channels, unsigned int samples_per_pixel, unsigned int accumulation_limit, unsigned int max_path_length, SceneSelector SELECTED_SCENE) : m_width(width), m_height(height), m_channels(channels), m_spp(samples_per_pixel), m_accu_limit(accumulation_limit), m_max_path_length(max_path_length), m_sceneSelector(SELECTED_SCENE) {
     m_accu_count = 0;
     m_pixels = (unsigned char*)new unsigned char[m_width * m_height * m_channels];
     std::memset(m_pixels, 0, sizeof(unsigned char) * m_width * m_height * m_channels);
@@ -131,7 +125,7 @@ void PathTracer::handle_error(void* userPtr, const RTCError code, const char* st
     exit(1);
 }
 
-void PathTracer::init_device(const char* cfg = nullptr) {
+void PathTracer::init_device(const char* cfg) {
     /* create device */
     m_device = rtcNewDevice(nullptr);
     handle_error(nullptr, rtcGetDeviceError(m_device),
@@ -143,27 +137,8 @@ void PathTracer::init_device(const char* cfg = nullptr) {
 }
 
 void PathTracer::init_scene(char* cfg, unsigned int width, unsigned int height) {
-    m_sg = std::make_shared<SceneGraph>(m_width, m_height);
+    m_sg = std::make_shared<SceneGraph>(m_device, m_sceneSelector, m_width, m_height);
 }
-
-/* Added for pathtracer */
-inline void PathTracer::init_RayHit(RTCRayHit& rayhit, const Vec3fa& org, const Vec3fa& dir,
-                       float tnear, float tfar, float time) {
-  rayhit.ray.dir_x = dir.x;
-  rayhit.ray.dir_y = dir.y;
-  rayhit.ray.dir_z = dir.z;
-  rayhit.ray.org_x = org.x;
-  rayhit.ray.org_y = org.y;
-  rayhit.ray.org_z = org.z;
-  rayhit.ray.tnear = tnear;
-  rayhit.ray.time = time;
-  rayhit.ray.tfar = tfar;
-  rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
-  rayhit.hit.primID = RTC_INVALID_GEOMETRY_ID;
-  rayhit.ray.mask = -1;
-}
-
-
 
 /* called by the C++ code to render */
 void PathTracer::render_accumulation() {
@@ -293,8 +268,10 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
                            std::uniform_real_distribution<float>& distrib
                            ) {
 
-  Vec3fa dir = normalize(x * m_camera.l.vx + y * m_camera.l.vy + m_camera.l.vz);
-  Vec3fa org = Vec3fa(m_camera.p.x, m_camera.p.y, m_camera.p.z);
+    Vec3fa dir = m_sg->get_direction_from_pixel(x, y);
+    //normalize(x * m_camera.l.vx + y * m_camera.l.vy + m_camera.l.vz);
+    Vec3fa org = m_sg->get_camera_origin();
+    //Vec3fa(m_camera.p.x, m_camera.p.y, m_camera.p.z);
 
   /* initialize ray */
   RTCRayHit rayhit;
@@ -303,10 +280,8 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
 
   Vec3fa L = Vec3fa(0.0f);
   Vec3fa Lw = Vec3fa(1.0f);
-  /* Create vaccum medium.This helps for refractions passing through different
-   * mediums... like glass(dielectric) material */
+
   Medium medium;
-  medium.transmission = Vec3fa(1.0f);
   medium.eta = 1.f;
 
   DifferentialGeometry dg;
@@ -338,49 +313,34 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
     /* weight scaling based on material sample */
     Vec3fa c = Vec3fa(1.0f);
 
-    /* scale down mediums that do not transmit as much light */
-    const Vec3fa transmission = medium.transmission;
-    if (transmission != Vec3fa(1.0f))
-      c = c * Vec3fa(pow(transmission.x, rayhit.ray.tfar),
-                     pow(transmission.y, rayhit.ray.tfar),
-                     pow(transmission.z, rayhit.ray.tfar));
-
-    Sample3f wi1;
+    Vec3fa wi1;
     Vec2f randomMatSample(distrib(reng), distrib(reng));
     const Vec3fa wo = -dir;
-    c = c * Material_sample(albedo, materialType, Lw, wo, dg, wi1, medium,
-                             randomMatSample);
+    //c = c * Material_sample(albedo, materialType, Lw, wo, dg, wi1, medium,
+                             //randomMatSample);
+    wi1 = normalize(Material_sample(materialType, Lw, wo, dg, medium,
+                                 randomMatSample));
+    c = c * Material_eval(albedo, materialType, Lw, wo, dg, wi1, medium,
+                                 randomMatSample);
 
     /* Search for each light in the scene from our hit point. Aggregate the
      * radiance if hit point is not occluded */
     m_sg->set_intersect_context_incoherent();
 
-    //m_sg->cast_shadow_ray();
+    /* Cast shadow ray(s) from the hit point */
+    //m_sg->cast_shadow_ray(dg, albedo, materialType, wo, m_time, L, Lw, reng, distrib);
+    m_sg->cast_shadow_ray(dg, albedo, materialType, Lw, wo, medium, m_time, L, reng,
+        distrib);
 
-    for (const Light& light : m_lights) {
-      Vec2f randomLightSample(distrib(reng), distrib(reng));
-      Light_SampleRes ls = sample_light(light, dg, randomLightSample);
-      /* If the sample probability density evaluation is 0 then no need to
-       * consider this shadow ray */
-      if (ls.pdf <= 0.0f) continue;
-
-      RTCRayHit shadow;
-      init_RayHit(shadow, dg.P, ls.dir, dg.eps, ls.dist, m_time);
-      rtcOccluded1(m_scene, &m_context, &shadow.ray);
-      if (shadow.ray.tfar >= 0.0f) {
-        L = L + Lw * ls.weight *
-                    Material__eval(albedo, materialType, wo, dg, ls.dir);
-      }
-    }
-
-    if (wi1.pdf <= 1E-4f) break;
-    Lw = Lw * c / wi1.pdf;
+    float nextPDF = Material_pdf(materialType, Lw, wo, dg, medium, randomMatSample);
+    if (nextPDF <= 1E-4f) break;
+    Lw = Lw * c / nextPDF;
 
     /* setup secondary ray */
-    float sign = dot(wi1.v, dg.Ng) < 0.0f ? -1.0f : 1.0f;
+    float sign = dot(wi1, dg.Ng) < 0.0f ? -1.0f : 1.0f;
     dg.P = dg.P + sign * dg.eps * dg.Ng;
     org = dg.P;
-    dir = normalize(wi1.v);
+    dir = normalize(wi1);
     init_RayHit(rayhit, org, dir, dg.eps, std::numeric_limits<float>::infinity(),
                m_time);
   }
@@ -394,7 +354,9 @@ unsigned char* PathTracer::get_pixels() {
 }
 
 PathTracer::~PathTracer() {
-    //nothing here thus far
+    if (m_pixels) {
+        delete m_pixels; m_pixels = nullptr;
+    }
 }
 
 

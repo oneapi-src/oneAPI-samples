@@ -7,6 +7,8 @@
 #include <vector>
 
 #include "definitions.h"
+#include "Materials.h"
+#include "Lights.h"
 
 /* Added for pathtracer */
 Vec3fa* g_cornell_face_colors = nullptr;

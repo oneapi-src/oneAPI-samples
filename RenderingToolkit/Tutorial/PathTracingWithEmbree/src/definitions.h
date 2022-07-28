@@ -39,6 +39,12 @@ using rkcommon::math::dot;
 using rkcommon::math::clamp;
 using rkcommon::math::rsqrt;
 
+/* minstd_rand is much faster for this application than
+ranlux48_base/ranlux24_base. In turn, ranlux was faster than mt19937 or
+mt19937_64 on Windows
+*/
+typedef std::minstd_rand RandomEngine;
+
 /* originally from tutorial_device.h */
 /* vertex, quad, and triangle layout */
 struct Vertex {
@@ -62,7 +68,7 @@ struct DifferentialGeometry
     float u, v;
     Vec3fa P;
     Vec3fa Ng;
-    /* This sample does not interpolate normals for normal specific shading. Ns is a place holder. */
+    /* This sample program does not interpolate normals for normal specific shading. Ns is set to Ng, the regular normal. */
     Vec3fa Ns;
     /* This sample does not use textures. Tx is a place holder. */
     Vec3fa Tx;
@@ -82,6 +88,23 @@ struct Sample3f
 inline Vec3fa face_forward(const Vec3fa& dir, const Vec3fa& _Ng) {
     const Vec3fa Ng = _Ng;
     return dot(dir, Ng) < 0.0f ? Ng : -Ng;
+}
+
+/* Added for pathtracer: Initializes a rayhit data structure. Used for embree to perform ray to primitive intersect */
+inline void init_RayHit(RTCRayHit& rayhit, const Vec3fa& org, const Vec3fa& dir,
+    float tnear, float tfar, float time) {
+    rayhit.ray.dir_x = dir.x;
+    rayhit.ray.dir_y = dir.y;
+    rayhit.ray.dir_z = dir.z;
+    rayhit.ray.org_x = org.x;
+    rayhit.ray.org_y = org.y;
+    rayhit.ray.org_z = org.z;
+    rayhit.ray.tnear = tnear;
+    rayhit.ray.time = time;
+    rayhit.ray.tfar = tfar;
+    rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
+    rayhit.hit.primID = RTC_INVALID_GEOMETRY_ID;
+    rayhit.ray.mask = -1;
 }
 
 AffineSpace3fa positionCamera(Vec3fa from, Vec3fa to, Vec3fa up, float fov,

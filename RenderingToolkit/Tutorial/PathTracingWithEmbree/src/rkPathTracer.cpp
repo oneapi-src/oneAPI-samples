@@ -32,6 +32,56 @@
 
 using std::string;
 
+int write_image_first_accumulation(SceneSelector sceneSelector, unsigned int width, unsigned int height, unsigned int channels, unsigned int spp, unsigned int accu_limit, unsigned int max_path_length, unsigned char* pixels)
+{
+    int ret = -1;
+
+    /* Label construction for output files */
+    string strscene;
+    (sceneSelector == SceneSelector::SHOW_CORNELL_BOX) ? strscene = "-cornell"
+        : strscene = "-default";
+    string suffix = string("-spp") + std::to_string(spp) + string("-accu") +
+        std::to_string(accu_limit) + string("-plength") +
+        std::to_string(max_path_length) + string("-") +
+        std::to_string(width) + string("x") + std::to_string(height) +
+        string(".png");
+    string prefix = "pathtracer-single";
+    string singleFilename = prefix + strscene + suffix;
+
+    /* Write a single accumulation image (useful for comparison) */
+    if (ret = stbi_write_png(singleFilename.c_str(), width, height, channels, pixels,
+        width * channels))
+        std::cout << "Output image: '" << singleFilename << "'... written to disk\n";
+
+
+    return ret;
+}
+
+int write_image_all_accumulations(SceneSelector sceneSelector, unsigned int width, unsigned int height, unsigned int channels, unsigned int spp, unsigned int accu_limit, unsigned int max_path_length, unsigned char* pixels)
+{
+    int ret = -1;
+
+    /* Label construction for output files */
+    string strscene;
+    (sceneSelector == SceneSelector::SHOW_CORNELL_BOX) ? strscene = "-cornell"
+        : strscene = "-default";
+    string suffix = string("-spp") + std::to_string(spp) + string("-accu") +
+        std::to_string(accu_limit) + string("-plength") +
+        std::to_string(max_path_length) + string("-") +
+        std::to_string(width) + string("x") + std::to_string(height) +
+        string(".png");
+
+    /* Label construction for the accumulated output */
+    string prefix = "pathtracer-accu";
+    string accumFilename = prefix + strscene + suffix;
+
+    /* Write the accumulated image output */
+    if (ret = stbi_write_png(accumFilename.c_str(), width, height, channels, pixels,
+        width * channels))
+        std::cout << "Output image: '" << accumFilename << "'... written to disk\n";
+    return ret;
+}
+
 int main() {
 
 
@@ -47,53 +97,38 @@ int main() {
   const unsigned int max_path_length = 8;
 
   std::unique_ptr<PathTracer> pt;
+
   SceneSelector sceneSelector = SceneSelector::SHOW_CORNELL_BOX;
   //SceneSelector sceneSelector = SceneSelector::SHOW_CUBE_AND_PLANE;
-  pt = std::make_unique<PathTracer>(width, height, spp, channels, accu_limit, max_path_length, SceneSelector::SHOW_CORNELL_BOX);
+  pt = std::make_unique<PathTracer>(width, height, channels, spp, accu_limit, max_path_length, SceneSelector::SHOW_CORNELL_BOX);
 
   /* Use a basic timer to capure compute time per accumulation */
   auto start = std::chrono::high_resolution_clock::now();
+
   pt->render_accumulation();
+
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> accum_time = end - start;
   std::cout << "Accumulation 1 of " << accu_limit << ": "
             << accum_time.count() << "s\n";
 
-  /* Label construction for output files */
-  string strscene;
-  (sceneSelector == SceneSelector::SHOW_CORNELL_BOX) ? strscene = "-cornell"
-                                                       : strscene = "-default";
-  string suffix = string("-spp") + std::to_string(spp) + string("-accu") +
-                  std::to_string(accu_limit) + string("-plength") +
-                  std::to_string(max_path_length) + string("-") +
-                  std::to_string(width) + string("x") + std::to_string(height) +
-                  string(".png");
-  string prefix = "pathtracer-single";
-  string singleFilename = prefix + strscene + suffix;
-
-  /* Write a single accumulation image (useful for comparison) */
-  stbi_write_png(singleFilename.c_str(), width, height, channels, pt->get_pixels(),
-                 width * channels);
+  write_image_first_accumulation(sceneSelector, width, height, channels, spp, accu_limit, max_path_length, pt->get_pixels());
 
   /* Render all remaining accumulations (in addition to the first) */
   for (unsigned long long i = 1; i < accu_limit; i++) {
     start = std::chrono::high_resolution_clock::now();
+
     pt->render_accumulation();
+
     end = std::chrono::high_resolution_clock::now();
     accum_time = end - start;
     std::cout << "Accumulation " << i + 1 << " of " << accu_limit << ": "
               << accum_time.count() << "s" << std::endl;
   }
-  /* Label construction for the accumulated output */
-  prefix = "pathtracer-accu";
-  string accumFilename = prefix + strscene + suffix;
 
-  /* Write the accumulated image output */
-  stbi_write_png(accumFilename.c_str(), width, height, channels, pt->get_pixels(),
-                 width * channels);
-  std::cout << "Output images: \n  '" << singleFilename << "'\n  '"
-            << accumFilename << "'\n... written to disk\n";
+  write_image_all_accumulations(sceneSelector, width, height, channels, spp, accu_limit, max_path_length, pt->get_pixels());
 
   std::cout << "success\n";
   return 0;
 }
+
