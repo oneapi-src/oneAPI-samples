@@ -6,10 +6,6 @@
 #endif
 #endif
 
-#include <embree3/rtcore.h>
-#include <rkcommon/math/vec.h>
-#include <rkcommon/memory/malloc.h>
-#include <tbb/parallel_for.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb/stb_image_write.h>
 
@@ -17,18 +13,12 @@
 #include <chrono>
 #include <map>
 #include <memory>
-#include <random>
 #include <string>
 #include <vector>
 
-#include "CornellBox.h"
-#include "DefaultCubeAndPlane.h"
-#include "Sphere.h"
 #include "definitions.h"
 
-#include "Materials.h"
-#include "Lights.h"
-#include "PathTracer.h"
+#include "Renderer.h"
 
 using std::string;
 
@@ -96,29 +86,29 @@ int main() {
   const unsigned int spp = 1;
   const unsigned int max_path_length = 8;
 
-  std::unique_ptr<PathTracer> pt;
+  std::unique_ptr<Renderer> r;
 
   SceneSelector sceneSelector = SceneSelector::SHOW_CORNELL_BOX;
   //SceneSelector sceneSelector = SceneSelector::SHOW_CUBE_AND_PLANE;
-  pt = std::make_unique<PathTracer>(width, height, channels, spp, accu_limit, max_path_length, SceneSelector::SHOW_CORNELL_BOX);
+  r = std::make_unique<Renderer>(width, height, channels, spp, accu_limit, max_path_length, SceneSelector::SHOW_CORNELL_BOX);
 
   /* Use a basic timer to capure compute time per accumulation */
   auto start = std::chrono::high_resolution_clock::now();
 
-  pt->render_accumulation();
+  r->render_accumulation();
 
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> accum_time = end - start;
   std::cout << "Accumulation 1 of " << accu_limit << ": "
             << accum_time.count() << "s\n";
 
-  write_image_first_accumulation(sceneSelector, width, height, channels, spp, accu_limit, max_path_length, pt->get_pixels());
+  write_image_first_accumulation(sceneSelector, width, height, channels, spp, accu_limit, max_path_length, r->get_pixels());
 
   /* Render all remaining accumulations (in addition to the first) */
   for (unsigned long long i = 1; i < accu_limit; i++) {
     start = std::chrono::high_resolution_clock::now();
 
-    pt->render_accumulation();
+    r->render_accumulation();
 
     end = std::chrono::high_resolution_clock::now();
     accum_time = end - start;
@@ -126,7 +116,7 @@ int main() {
               << accum_time.count() << "s" << std::endl;
   }
 
-  write_image_all_accumulations(sceneSelector, width, height, channels, spp, accu_limit, max_path_length, pt->get_pixels());
+  write_image_all_accumulations(sceneSelector, width, height, channels, spp, accu_limit, max_path_length, r->get_pixels());
 
   std::cout << "success\n";
   return 0;

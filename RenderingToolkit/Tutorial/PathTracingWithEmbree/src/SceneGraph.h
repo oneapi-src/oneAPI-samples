@@ -24,7 +24,7 @@ public:
     
     bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir, RTCRayHit& rayhit, DifferentialGeometry& dg);
 
-    void SceneGraph::cast_shadow_ray(DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType, const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time, Vec3fa& L, RandomEngine& reng,
+    void SceneGraph::cast_shadow_rays(DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType, const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time, Vec3fa& L, RandomEngine& reng,
         std::uniform_real_distribution<float>& distrib);
 
     void SceneGraph::set_intersect_context_coherent();
@@ -149,7 +149,7 @@ bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir, RTCRayHit& r
 
 }
 
-void SceneGraph::cast_shadow_ray(DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType, const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time, Vec3fa& L, RandomEngine& reng,
+void SceneGraph::cast_shadow_rays(DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType, const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time, Vec3fa& L, RandomEngine& reng,
     std::uniform_real_distribution<float>& distrib) {
 
     for (const Light& light : m_lights) {
@@ -185,7 +185,7 @@ void SceneGraph::scene_cleanup() {
     switch (m_sceneSelector) {
     case SceneSelector::SHOW_CORNELL_BOX:
         cleanCornell();
-        cleanSphere();
+        //cleanSphere();
         break;
     case SceneSelector::SHOW_CUBE_AND_PLANE:
     default:

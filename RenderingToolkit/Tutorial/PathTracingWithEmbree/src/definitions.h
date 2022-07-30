@@ -2,11 +2,14 @@
 #ifndef FILE_DEFINITIONS_SEEN
 #define FILE_DEFINITIONS_SEEN
 
+#include <random>
+#include <utility>
+
+#include <embree3/rtcore.h>
 #include <rkcommon/math/vec.h>
 /* Added for pathtracer */
 #include <rkcommon/math/LinearSpace.h>
 #include <rkcommon/math/AffineSpace.h>
-#include <utility>
 
 using Vec3fa = rkcommon::math::vec_t<float, 3, 1>;
 using rkcommon::math::LinearSpace3fa;

@@ -317,7 +317,7 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     MaterialType::MATERIAL_MIRROR,
     // TallBox Bottom Face
     MaterialType::MATERIAL_MIRROR
-
+    
 };
 
 int addCornell(RTCScene scene, RTCDevice device) {

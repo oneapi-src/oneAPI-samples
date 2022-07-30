@@ -178,7 +178,6 @@ inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3
     const float C1 = refractionPDF == 0.0f ? 0.0f : max(max(m1.x, m1.y), m1.z);
     const float C = C0 + C1;
 
-    Sample3f ret;
     if (C == 0.0f) {
         return Vec3fa(0, 0, 0);
     }
@@ -315,7 +314,7 @@ Vec3fa Lambertian_sample(
 Vec3fa Mirror_sample(const Vec3fa& Lw, const Vec3fa& wo,
     const DifferentialGeometry& dg) {
     /* Compute a reflection vector 2 * N.L * N - L */
-    return normalize(2.0f * dot(wo, dg.Ns) * dg.Ns - wo);
+    return 2.0f * dot(wo, dg.Ns) * dg.Ns - wo;
 }
 
 Vec3fa Material_sample(MaterialType materialType,
@@ -448,6 +447,23 @@ float Material_pdf(MaterialType materialType, const Vec3fa& Lw,
     return 0.f;
 }
 
+inline bool Material_direct_illumination(MaterialType materialType) {
+    switch (materialType) {
+    case MaterialType::MATERIAL_MATTE:
+        return true;
+        break;
+    case MaterialType::MATERIAL_MIRROR:
+        return false;
+        break;
+    case MaterialType::MATERIAL_GLASS:
+        return true;
+        /* Try thin dielectric!? */
+        break;
+    default:
+        break;
+    }
+    return false;
+}
 /*
 
 // evaluates X for a given set of random variables (direction) 
