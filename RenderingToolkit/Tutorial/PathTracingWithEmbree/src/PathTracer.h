@@ -95,9 +95,16 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
     Vec3fa wi1;
     Vec2f randomMatSample(distrib(reng), distrib(reng));
     const Vec3fa wo = -dir;
-    if(Material_direct_illumination(materialType))
-      sg->cast_shadow_rays(dg, albedo, materialType, Lw, wo, medium, m_time, L, reng,
-        distrib);
+
+    /* Search for each light in the scene from our hit point. Aggregate the
+ * radiance if hit point is not occluded */
+    sg->set_intersect_context_incoherent();
+
+    if (Material_direct_illumination(materialType)) {
+        /* Cast shadow ray(s) from the hit point */
+        sg->cast_shadow_rays(dg, albedo, materialType, Lw, wo, medium, m_time, L, reng,
+            distrib);
+    }
     //c = c * Material_sample(albedo, materialType, Lw, wo, dg, wi1, medium,
                              //randomMatSample);
     wi1 = Material_sample(materialType, Lw, wo, dg, medium,
@@ -105,11 +112,7 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
     c = c * Material_eval(albedo, materialType, Lw, wo, dg, wi1, medium,
                                  randomMatSample);
 
-    /* Search for each light in the scene from our hit point. Aggregate the
-     * radiance if hit point is not occluded */
-    sg->set_intersect_context_incoherent();
 
-    /* Cast shadow ray(s) from the hit point */
     //m_sg->cast_shadow_ray(dg, albedo, materialType, wo, m_time, L, Lw, reng, distrib);
 
 

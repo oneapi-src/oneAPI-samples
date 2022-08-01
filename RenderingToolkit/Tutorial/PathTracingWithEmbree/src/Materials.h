@@ -61,48 +61,6 @@ inline Vec3fa cosinePDFHemisphere(const float s) {
 
 }
 
-
-
-
-inline Vec3fa sample_component2(const Vec3fa& c0, const Sample3f& wi0,
-                                const Medium& medium0, const Vec3fa& c1,
-                                const Sample3f& wi1, const Medium& medium1,
-                                const Vec3fa& Lw, Sample3f& wi_o,
-                                Medium& medium_o, const float s) {
-  const Vec3fa m0 = Lw * c0 / wi0.pdf;
-  const Vec3fa m1 = Lw * c1 / wi1.pdf;
-
-  const float C0 = wi0.pdf == 0.0f ? 0.0f : max(max(m0.x, m0.y), m0.z);
-  const float C1 = wi1.pdf == 0.0f ? 0.0f : max(max(m1.x, m1.y), m1.z);
-  const float C = C0 + C1;
-
-  Sample3f ret;
-  if (C == 0.0f) {
-    wi_o.v = Vec3fa(0, 0, 0);
-    wi_o.pdf = 0.0f;
-
-    return Vec3fa(0, 0, 0);
-  }
-
-  /* Compare weights for the reflection and the refraction. Pick a direction
-   * given s is a random between 0 and 1 */
-  const float CP0 = C0 / C;
-  const float CP1 = C1 / C;
-  if (s < CP0) {
-    wi_o.v = wi0.v;
-    wi_o.pdf = wi0.pdf * CP0;
-
-    medium_o = medium0;
-    return c0;
-  } else {
-    wi_o.v = wi1.v;
-    wi_o.pdf = wi1.pdf * CP1;
-
-    medium_o = medium1;
-    return c1;
-  }
-}
-
 inline float fresnelDielectric(const float cosi, const float cost,
                                const float eta) {
   const float Rper = (eta * cosi - cost) * rcp(eta * cosi + cost);
@@ -124,7 +82,7 @@ inline float fresnelDielectric(const float cosi, const float eta) {
 
 inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3fa& wo,
     const DifferentialGeometry& dg, Vec3fa wi_v, const Medium& medium, const float& s) {
-
+    
     float eta = 0.0f;
     Medium mediumOutside;
     mediumOutside.eta = 1.0f;
@@ -179,17 +137,17 @@ inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3
     const float C = C0 + C1;
 
     if (C == 0.0f) {
-        return Vec3fa(0, 0, 0);
+        return albedo;
     }
 
     /* Compare weights for the reflection and the refraction. Pick a direction
      * given s is a random between 0 and 1 */
     const float CP0 = C0 / C;
-    const float CP1 = C1 / C;
     if (s < CP0)
         return albedo * cs;
     else
         return albedo * ct;
+
 }
 
 inline Vec3fa Lambertian_eval(const Vec3fa& albedo, const Vec3fa& wo,
@@ -404,7 +362,7 @@ float Dielectric_pdf(const Vec3fa& Lw, const Vec3fa& wo,
     const float C = C0 + C1;
 
     if (C == 0.0f) {
-        pdf = 0.0f;
+        return 0.0f;
     }
     /* Compare weights for the reflection and the refraction. Pick a pdf
  * given s.x is a random between 0 and 1 */
@@ -456,7 +414,7 @@ inline bool Material_direct_illumination(MaterialType materialType) {
         return false;
         break;
     case MaterialType::MATERIAL_GLASS:
-        return true;
+        return false;
         /* Try thin dielectric!? */
         break;
     default:
