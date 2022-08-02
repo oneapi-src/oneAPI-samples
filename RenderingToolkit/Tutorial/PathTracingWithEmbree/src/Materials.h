@@ -137,7 +137,7 @@ inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3
     const float C = C0 + C1;
 
     if (C == 0.0f) {
-        return albedo;
+        return Vec3fa(0.f, 0.f, 0.f);
     }
 
     /* Compare weights for the reflection and the refraction. Pick a direction
@@ -146,7 +146,7 @@ inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3
     if (s < CP0)
         return albedo * cs;
     else
-        return albedo * ct;
+      return albedo * ct;
 
 }
 
@@ -354,11 +354,11 @@ float Dielectric_pdf(const Vec3fa& Lw, const Vec3fa& wo,
     Vec3fa cs = Vec3fa(R);
     Vec3fa ct = Vec3fa(1.0f - R);
 
-    const Vec3fa m0 = Lw * cs / refractPDF;
-    const Vec3fa m1 = Lw * ct / reflectPDF;
+    const Vec3fa m0 = Lw * cs / reflectPDF;
+    const Vec3fa m1 = Lw * ct / refractPDF;
 
-    const float C0 = refractPDF == 0.0f ? 0.0f : max(max(m0.x, m0.y), m0.z);
-    const float C1 = reflectPDF == 0.0f ? 0.0f : max(max(m1.x, m1.y), m1.z);
+    const float C0 = reflectPDF == 0.0f ? 0.0f : max(max(m0.x, m0.y), m0.z);
+    const float C1 = refractPDF == 0.0f ? 0.0f : max(max(m1.x, m1.y), m1.z);
     const float C = C0 + C1;
 
     if (C == 0.0f) {
