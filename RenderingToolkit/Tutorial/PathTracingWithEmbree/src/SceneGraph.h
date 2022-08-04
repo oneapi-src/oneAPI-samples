@@ -2,6 +2,7 @@
 #include "CornellBox.h"
 #include "DefaultCubeAndPlane.h"
 #include "Sphere.h"
+#include "Pool.h"
 #include "Lights.h"
 
 #include <embree3/rtcore.h>
@@ -10,6 +11,7 @@
 enum class SceneSelector {
     SHOW_CUBE_AND_PLANE,
     SHOW_CORNELL_BOX,
+    SHOW_POOL
 };
 
 /* The most basic scene graph possible for exploratory code... please consider the scene graph from ospray studio or embree itself as better production references */
@@ -89,6 +91,11 @@ void SceneGraph::init_embree_scene(const RTCDevice device, SceneSelector SELECT_
          // addSphere(m_scene, m_device, Vec3fa(2.5f, 0.f, 2.5f), 1.f);
 
         cubeAndPlaneCameraLightSetup(m_camera, m_lights, width, height);
+        break;
+    case SceneSelector::SHOW_POOL:
+        addPool(m_scene, device);
+        addWater(m_scene, device);
+        poolCameraLightSetup(m_camera, m_lights, width, height);
         break;
     }
 
@@ -188,9 +195,15 @@ void SceneGraph::scene_cleanup() {
         //cleanSphere();
         break;
     case SceneSelector::SHOW_CUBE_AND_PLANE:
-    default:
         cleanCubeAndPlane();
         // cleanSphere();
+        break;
+    case SceneSelector::SHOW_POOL:
+        cleanPool();
+        cleanWater();
+        // cleanSphere();
+        break;
+    default:
         break;
     }
 }

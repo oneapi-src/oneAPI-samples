@@ -9,6 +9,7 @@ enum class MaterialType {
     MATERIAL_MATTE,
     MATERIAL_MIRROR,
     MATERIAL_GLASS,
+    MATERIAL_WATER
 };
 
 /* Added for pathtracer */
@@ -81,14 +82,14 @@ inline float fresnelDielectric(const float cosi, const float eta) {
 */
 
 inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3fa& wo,
-    const DifferentialGeometry& dg, Vec3fa wi_v, const Medium& medium, const float& s) {
+    const DifferentialGeometry& dg, Vec3fa wi_v, const Medium& medium, const float dielEta, const float s) {
     
     float eta = 0.0f;
     Medium mediumOutside;
     mediumOutside.eta = 1.0f;
 
     Medium mediumInside;
-    mediumInside.eta = 1.4f;
+    mediumInside.eta = dielEta;
 
     Medium mediumFront, mediumBack;
     if (medium.eta == mediumInside.eta) {
@@ -174,8 +175,11 @@ Vec3fa Material_eval(Vec3fa albedo, MaterialType materialType,
         return Mirror_eval(albedo, wo, dg, wi);
         break;
     case MaterialType::MATERIAL_GLASS:
-        return Dielectric_eval(albedo, Lw, wo, dg, wi, medium, s.x);
+        return Dielectric_eval(albedo, Lw, wo, dg, wi, medium, 1.5f, s.x);
         /* Try thin dielectric!? */
+        break;
+    case MaterialType::MATERIAL_WATER:
+        return Dielectric_eval(albedo, Lw, wo, dg, wi,  medium, 1.3f, s.x);
         break;
         /* Return our debug color if something goes awry */
     default:
@@ -189,13 +193,13 @@ Vec3fa Material_eval(Vec3fa albedo, MaterialType materialType,
 
 Vec3fa Dielectric_sample(const Vec3fa& Lw, const Vec3fa& wo,
                           const DifferentialGeometry& dg,
-                          Medium& medium, const float& s) {
+                          Medium& medium, float dielEta, const float s) {
   float eta = 0.0f;
   Medium mediumOutside;
   mediumOutside.eta = 1.0f;
 
   Medium mediumInside;
-  mediumInside.eta = 1.4f;
+  mediumInside.eta = dielEta;
 
   Medium mediumFront, mediumBack;
   if (medium.eta == mediumInside.eta) {
@@ -288,10 +292,13 @@ Vec3fa Material_sample(MaterialType materialType,
       return Mirror_sample(Lw, wo, dg);
       break;
     case MaterialType::MATERIAL_GLASS:
-      return Dielectric_sample(Lw, wo, dg, medium, randomMatSample.x);
-      //        return ThinDielectric__sample(Lw, wo, dg, wi, medium,
-      //        randomMatSample);
+      return Dielectric_sample(Lw, wo, dg, medium, 1.5f, randomMatSample.x);
       break;
+    case MaterialType::MATERIAL_WATER:
+        return Dielectric_sample(Lw, wo, dg, medium, 1.3f, randomMatSample.x);
+        //        return ThinDielectric__sample(Lw, wo, dg, wi, medium,
+        //        randomMatSample);
+        break;
       /* Return our debug color if something goes awry */
     default:
       break;
@@ -314,7 +321,7 @@ float Mirror_pdf() {
 
 float Dielectric_pdf(const Vec3fa& Lw, const Vec3fa& wo,
     const DifferentialGeometry& dg,
-    const Medium& medium, const float& s) {
+    const Medium& medium, const float dielEta, const float s) {
     float pdf = 0.f;
 
     float eta = 0.0f;
@@ -322,7 +329,7 @@ float Dielectric_pdf(const Vec3fa& Lw, const Vec3fa& wo,
     mediumOutside.eta = 1.0f;
 
     Medium mediumInside;
-    mediumInside.eta = 1.4f;
+    mediumInside.eta = dielEta;
 
     if (medium.eta == mediumInside.eta ) {
         eta = mediumInside.eta / mediumOutside.eta;
@@ -396,7 +403,11 @@ float Material_pdf(MaterialType materialType, const Vec3fa& Lw,
         break;
     case MaterialType::MATERIAL_GLASS:
         return Dielectric_pdf(Lw, wo,
-            dg, medium, randomSample.x);
+            dg, medium, 1.5f, randomSample.x);
+        break;
+    case MaterialType::MATERIAL_WATER:
+        return Dielectric_pdf(Lw, wo,
+            dg, medium, 1.3f, randomSample.x);
         break;
         /* Return our debug color if something goes awry */
     default:
@@ -414,9 +425,11 @@ inline bool Material_direct_illumination(MaterialType materialType) {
         return false;
         break;
     case MaterialType::MATERIAL_GLASS:
+    case MaterialType::MATERIAL_WATER:
         return false;
         /* Try thin dielectric!? */
         break;
+    
     default:
         break;
     }

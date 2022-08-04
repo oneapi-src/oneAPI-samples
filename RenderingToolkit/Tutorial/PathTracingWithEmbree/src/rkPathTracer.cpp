@@ -28,8 +28,22 @@ int write_image_first_accumulation(SceneSelector sceneSelector, unsigned int wid
 
     /* Label construction for output files */
     string strscene;
-    (sceneSelector == SceneSelector::SHOW_CORNELL_BOX) ? strscene = "-cornell"
-        : strscene = "-default";
+
+    switch (sceneSelector) {
+    case SceneSelector::SHOW_CORNELL_BOX:
+        strscene = "-cornell";
+        break;
+    case SceneSelector::SHOW_CUBE_AND_PLANE:
+        strscene = "-cubeandplane";
+        break;
+    case SceneSelector::SHOW_POOL:
+        strscene = "-pool";
+        break;
+    default:
+        strscene = "-default";
+        break;
+
+    };
     string suffix = string("-spp") + std::to_string(spp) + string("-accu") +
         std::to_string(accu_limit) + string("-plength") +
         std::to_string(max_path_length) + string("-") +
@@ -53,8 +67,22 @@ int write_image_all_accumulations(SceneSelector sceneSelector, unsigned int widt
 
     /* Label construction for output files */
     string strscene;
-    (sceneSelector == SceneSelector::SHOW_CORNELL_BOX) ? strscene = "-cornell"
-        : strscene = "-default";
+    switch (sceneSelector) {
+    case SceneSelector::SHOW_CORNELL_BOX:
+        strscene = "-cornell";
+        break;
+    case SceneSelector::SHOW_CUBE_AND_PLANE:
+        strscene = "-cubeandplane";
+        break;
+    case SceneSelector::SHOW_POOL:
+        strscene = "-pool";
+        break;
+    default:
+            strscene = "-default";
+            break;
+
+    };
+
     string suffix = string("-spp") + std::to_string(spp) + string("-accu") +
         std::to_string(accu_limit) + string("-plength") +
         std::to_string(max_path_length) + string("-") +
@@ -88,9 +116,10 @@ int main() {
 
   std::unique_ptr<Renderer> r;
 
-  SceneSelector sceneSelector = SceneSelector::SHOW_CORNELL_BOX;
+  SceneSelector sceneSelector = SceneSelector::SHOW_POOL;
+  //SceneSelector sceneSelector = SceneSelector::SHOW_CORNELL_BOX;
   //SceneSelector sceneSelector = SceneSelector::SHOW_CUBE_AND_PLANE;
-  r = std::make_unique<Renderer>(width, height, channels, spp, accu_limit, max_path_length, SceneSelector::SHOW_CORNELL_BOX);
+  r = std::make_unique<Renderer>(width, height, channels, spp, accu_limit, max_path_length, sceneSelector);
 
   /* Use a basic timer to capure compute time per accumulation */
   auto start = std::chrono::high_resolution_clock::now();
