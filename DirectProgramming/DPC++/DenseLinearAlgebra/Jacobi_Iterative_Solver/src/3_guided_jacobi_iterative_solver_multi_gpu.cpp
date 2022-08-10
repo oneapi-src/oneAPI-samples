@@ -151,7 +151,6 @@ bool check_if_equal(std::vector <real> data, std::vector<real> old_values)
 
     for(int i = 0; i < N; ++i)
     {   
-        std::cout << data[i] << " " << old_values[i] << std::endl;
         if(fabs(data[i]-old_values[i])<check_error) correct_result++;
     }
 
