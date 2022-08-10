@@ -12,7 +12,7 @@ using namespace sycl;
 typedef double real;
 
 // Program variables, feel free to change anything .
-static const int N = 4;
+static const int N = 10;
 static const real check_error = 1e-15;
 static const real calculation_error = 1e-10;
 static const int min_rand = -1000;
@@ -37,7 +37,7 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results)
         for (const auto &d : p.get_devices()) {
             if(d.is_gpu() && d.get_info<info::device::name>().find("Intel") != std::string::npos){
                 q.push_back(queue(d));
-                std::cout << "--Found GPU: " << d.get_info<info::device::name>() << "\n";
+                outfile << "--Found GPU: " << d.get_info<info::device::name>() << "\n";
             }
         }
       }
@@ -77,7 +77,7 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results)
             R[i] = round(100. * R[i]) / 100.;
         });
     });
-    q[1].submit([&](handler& h){
+    q[0].submit([&](handler& h){
         accessor M {buf_mat, h};
         accessor R {buf_res, h};
         h.parallel_for(range<1>(N/2), [=](id<1> id){
