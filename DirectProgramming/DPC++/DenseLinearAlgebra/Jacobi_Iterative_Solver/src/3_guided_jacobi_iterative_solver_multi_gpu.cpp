@@ -218,8 +218,27 @@ int main(int argc, char *argv[])
                 accessor OV {buf_old_values, h};
                 accessor M {buf_mat, h, read_only};
                 accessor R {buf_res, h, read_only};
-                h.parallel_for(range<1>(N), [=](id<1> id){
+                h.parallel_for(range<1>(N/2), [=](id<1> id){
                     int i = id;
+                    int j = N*i;
+                    int it = N*i+i;
+
+                    D[i] = R[i];
+                    for(int z=0; z<N; ++z){
+                        if(z!=i) 
+                            D[i] = D[i] - (OV[z] * static_cast<real>(M[j])); 
+                        j=j+1;}                
+                    D[i] = D[i]/static_cast<real>(M[it]);
+                });
+            }).wait();
+
+            q[0].submit([&](handler& h){
+                accessor D {buf_data, h};
+                accessor OV {buf_old_values, h};
+                accessor M {buf_mat, h, read_only};
+                accessor R {buf_res, h, read_only};
+                h.parallel_for(range<1>(N/2), [=](id<1> id){
+                    int i = N/2+id;
                     int j = N*i;
                     int it = N*i+i;
 
