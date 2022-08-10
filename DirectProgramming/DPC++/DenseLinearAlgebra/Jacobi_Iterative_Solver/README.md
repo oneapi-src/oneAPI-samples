@@ -119,7 +119,7 @@ advisor-gui ../advisor/1_cpu/e000/e000.advixeexp
 ```
 > **Note**: If you are connecting to a remote system with oneAPI tools installed, you might not be able to launch the Intel&reg; Advisor graphical interface. You can transfer the HTML-based report to a local machine to view it.
 
-Based on the output captured from Intel&reg; Advisor, one can see a predicted acceleration when using GPU offload.
+Based on the output captured from Intel&reg; Advisor, one can see an estimated speed-up if we offload loops identified in the Top Offloaded section of the output. We can get about 9x speed up for one loop and a 4.5x speed up for another. The generation of the matrix can be spede up almost 7x times. In the next step, we will offload those loops to the GPUs.
 
 ![offload Modeling results](images/cpu.png)
 
@@ -139,6 +139,8 @@ advisor --collect=roofline --profile-gpu --project-dir=./../advisor/2_gpu -- ./s
 ```
 advisor-gui ../advisor/2_gpu/e000/e000.advixeexp
 ```
+
+As we can see in the charts below, the execution time has been sped up as we predicted in all cases besides the main loop. The reason is that we have to wait for each iteration to finish calculations, as the next iteration is dependant on the results we get. This is why 74.6% of the time the GPU has been in the "Stalled" mode. 
 
 ![offload Modeling results](images/gpu.PNG)
 
