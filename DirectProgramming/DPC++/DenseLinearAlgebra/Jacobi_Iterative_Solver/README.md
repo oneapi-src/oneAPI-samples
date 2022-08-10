@@ -98,7 +98,7 @@ These guided instructions show how to optimize code using the Jacobi Iterative m
 
 2. Change the code for basic GPU offload.
 
-3. Change the code for optimized GPU offload.
+3. Change the code for the multi GPU offload. (Currently unavailable)
 
 In each step, the Intel&reg; Advisor analysis tool provides performance analysis for the applications. The Intel&reg; Advisor runtime might take a long time.
 
@@ -106,6 +106,8 @@ In each step, the Intel&reg; Advisor analysis tool provides performance analysis
 
 ### CPU Offload Modeling
 The first step is to run offload modeling on the CPU version to identify portions of the code can benefit from acceleration.
+
+> **Note**: This process may take up to 30 minutes.
 
 1. Run the Intel&reg; Advisor to model the CPU code.
 ```
