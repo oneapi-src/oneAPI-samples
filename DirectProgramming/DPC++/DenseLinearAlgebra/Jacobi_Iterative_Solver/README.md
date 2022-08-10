@@ -121,7 +121,7 @@ advisor-gui ../advisor/1_cpu/e000/e000.advixeexp
 
 Based on the output captured from Intel&reg; Advisor, one can see an estimated speed-up if we offload loops identified in the Top Offloaded section of the output. We can get about 9x speed up for one loop and a 4.5x speed up for another. The generation of the matrix can be spede up almost 7x times. In the next step, we will offload those loops to the GPUs.
 
-![offload Modeling results](images/cpu.png)
+![offload Modeling results](images/cpu.PNG)
 
 ### Basic GPU Offload
 The second step is to offload to a GPU. The `2_guided_jacobi_iterative_solver_gpu` uses the basic offload of each for loop into a GPU. For example, the main loop calculating the unknown variables will be calculated by N kernels where N is the number of rows in the matrix. Even this basic offload improves the execution time.
