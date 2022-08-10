@@ -77,7 +77,7 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results)
             R[i] = round(100. * R[i]) / 100.;
         });
     });
-    q[0].submit([&](handler& h){
+    q[1].submit([&](handler& h){
         accessor M {buf_mat, h};
         accessor R {buf_res, h};
         h.parallel_for(range<1>(N/2), [=](id<1> id){
@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
                 });
             }).wait();
 
-            q[0].submit([&](handler& h){
+            q[1].submit([&](handler& h){
                 accessor D {buf_data, h};
                 accessor OV {buf_old_values, h};
                 accessor M {buf_mat, h, read_only};
