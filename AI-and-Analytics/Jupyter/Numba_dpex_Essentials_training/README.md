@@ -21,7 +21,7 @@ are the steps to access these Jupyter notebooks on the Intel Devcloud:
    sudo apt update && sudo apt upgrade -y
 2. After the update a reboot will be required, enter:
    sudo reboot
-3. Download and Install Intel® oneAPI Base Toolkit and Intel® oneAPI AI Analytics Toolkit.
+3. Download and Install Intel® oneAPI Base Toolkit and Intel® AI Analytics Toolkit (AI Kit).
    https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html
 4. You can close the terminal and launch a new one and enter:
    source .bashrc

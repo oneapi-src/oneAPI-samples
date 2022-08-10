@@ -7,11 +7,10 @@
 
 int main() {
 
-    sycl::queue Q(sycl::default_selector{});
-    auto policy = oneapi::dpl::execution::make_device_policy(Q);
+    auto policy = oneapi::dpl::execution::dpcpp_default;
 
     const size_t n = 7;
-    auto data = sycl::malloc_shared<int>(n, Q);
+    auto data = sycl::malloc_shared<int>(n, policy.queue());
 
     data[0] = 2;
     data[1] = 2;
@@ -22,7 +21,6 @@ int main() {
     data[6] = 1;
 
     auto maxloc = oneapi::dpl::max_element(policy, data, data + n);
-    policy.queue().wait();
 
     std::cout << "Run on "
               << policy.queue().get_device().template
@@ -32,6 +30,6 @@ int main() {
               << oneapi::dpl::distance(data, maxloc)
               << std::endl;
 
-    sycl::free(data, Q);
+    sycl::free(data, policy.queue());
     return 0;
 }

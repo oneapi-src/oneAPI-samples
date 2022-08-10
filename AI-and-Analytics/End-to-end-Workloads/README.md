@@ -1,6 +1,6 @@
-# End-to-end samples for Intel® oneAPI AI Analytics Toolkit (AI Kit)
+# End-to-end samples for Intel® AI Analytics Toolkit (AI Kit)
 
-The Intel® oneAPI AI Analytics Toolkit (AI Kit) gives data scientists, AI
+The Intel® AI Analytics Toolkit (AI Kit) gives data scientists, AI
 developers, and researchers familiar Python* tools and frameworks to
 accelerate end-to-end data science and analytics pipelines on Intel®
 architectures. The components are built using oneAPI libraries for low-level
