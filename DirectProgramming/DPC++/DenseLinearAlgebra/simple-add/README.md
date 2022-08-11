@@ -142,16 +142,25 @@ Optionally, build the program using MSBuild.
 ### On Linux*
 1. Based on your requirements, build for FPGA emulation using `make`.
     ```
+    # For using the USM version
     make fpga_emu -f Makefile.fpga
+    # For using the buffers version
+    make fpga_emu -f Makefile.fpga BUFFERS=1
     ```
 2. If you have the hardware, build for FPGA hardware using 'make'. 
    (The hardware compilation might take a long time.)
     ```
-    make hw -f Makefile.fpga
+    # For using the USM version
+    make fpga -f Makefile.fpga
+    # For using the buffers version
+    make fpga_emu -f Makefile.fpga BUFFERS=1
     ````
 3. Generate static optimization reports for design analysis.
     ```
+    # For using the USM version
     make report -f Makefile.fpga
+    # For using the buffers version
+    make report -f Makefile.fpga BUFFERS=1
     ```
    The path to the generated report is similar to `simple-add_report.prj/reports/report.html`.
 
@@ -160,12 +169,15 @@ Optionally, build the program using MSBuild.
 Generating an HTML optimization report and compiling and running on the FPGA
 hardware is not currently supported.
 
-1. Select **Programs** > **Intel oneAPI 2021** > **Intel oneAPI Command Prompt**
+1. Select **Programs** > **Intel oneAPI 2022** > **Intel oneAPI Command Prompt**
    to launch a command window.
 
 2. Build the program using the following `nmake` commands:
    ```
-   nmake -f Makefile.win.fpga
+   # For using the USM version
+   nmake fpga_emu -f Makefile.win.fpga
+   # For using the buffers version
+   nmake fpga_emu -f Makefile.win.fpga BUFFERS=1
    ```
 ## Run the `Simple Add` Sample
 ### Linux*
@@ -181,17 +193,26 @@ hardware is not currently supported.
 ### Linux* for FPGA
 1. Run the program for FPGA emulation using `make`.
     ```
+    # For using the USM version
     make run_emu -f Makefile.fpga
+    # For using the buffers version
+    make run_emu -f Makefile.fpga BUFFERS=1
     ```
 2. If you have the appropriate hardware and you have built the program, run the program for FPGA hardware.
     ```
+    # For using the USM version
     make run_hw -f Makefile.fpga
+    # For using the buffers version
+    make run_hw -f Makefile.fpga BUFFERS=1
     ```
 
 ### Windows*
 3. Run the program using 'nmake`.
    ```
-   nmake -f Makefile.win.fpga run
+   # For using the USM version
+   nmake -f Makefile.win.fpga run_emu
+   # For using the buffers version
+   nmake -f Makefile.win.fpga run_emu BUFFERS=1
    ```
 ### Application Parameters
 The sample has no configurable parameters.
