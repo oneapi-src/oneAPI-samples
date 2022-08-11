@@ -18,7 +18,7 @@ The sample includes three versions of the `Jacobi Iterative Solver` program.
 |:---                             |:---
 |`1_guided_jacobi_iterative_solver_cpu.cpp` | Demonstrates a basic, serial CPU implementation.
 |`2_guided_jacobi_iterative_solver_gpu`| Demonstrates an initial single-GPU offload using SYCL.
-|`3_guided_jacobi_iterative_solver_multi_gpu.cpp`| Demonstrates multi-GPU offload using SYCL. (Currently unavailable.)
+|`3_guided_jacobi_iterative_solver_multi_gpu.cpp`| Demonstrates multi-GPU offload using SYCL. (Preview.)
 
 > **Note**: For comprehensive information about oneAPI programming, see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide). (Use search or the table of contents to find relevant information quickly.)
 
@@ -85,11 +85,16 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    make run_2_gpu
    ```
-4. Optionally, clean the project.
+4. Run the program for multiple GPUs. (Optional)
+   ```
+   make run_3_multi_gpu
+   ```
+   > **Note**: This option is currently untested but the user should be able to run it on a multi GPU environment.
+   
+5. Optionally, clean the project.
    ```
    make clean
    ```
-> **Note**: You can run the `run_3_multi_gpu` program in Intel&reg; DevCloud only when multi-GPU environments are made available.
 
 ## Guided Builds and Offloads
 These guided instructions show how to optimize code using the Jacobi Iterative method in the following steps:
@@ -128,7 +133,7 @@ The second step is to offload to a GPU. The `2_guided_jacobi_iterative_solver_gp
 
 Once the offload code changes, run the roofline analysis to look for performance optimization opportunities.
 
-> **Note**: Multi-GPU programs are not supported currently.
+> **Note**: Multi-GPU programs are not supported currently, so no output from Intel&reg; Advisor is currently available.
 
 1. Run the Intel&reg; Advisor again.
 ```
