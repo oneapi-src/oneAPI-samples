@@ -1,8 +1,8 @@
 {
   "guid": "",
   "name": "Jacobi Iterative Solver",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Jacobi_Iterative_Solver"],
-  "description": "Jacobi Iterative Solver fir CPU, GPU and multiple GPU",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra"],
+  "description": "Jacobi Iterative Solver provides step by step instructions for CPU, GPU and multiple GPU offload",
   "toolchain": ["dpcpp"],
   "os": ["linux"],
   "targetDevice": ["CPU, GPU, "],
@@ -16,9 +16,9 @@
           "cd build",
           "cmake ..",
           "make",
-          "make run_cpu",
-	  "make run_gpu",
-	  "make run_multi_gpu"
+          "make run_1_cpu",
+	  "make run_2_gpu",
+	  "make run_3_multi_gpu"
         ]
       }
     ]
