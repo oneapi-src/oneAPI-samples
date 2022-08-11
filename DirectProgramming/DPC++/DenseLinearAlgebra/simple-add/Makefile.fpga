@@ -14,9 +14,9 @@ run_hw: simple-add-buffers.fpga
 	./simple-add-buffers.fpga
 else
 SRC := src/simple-add-usm.cpp
-fpga_emu: simple-add-usm.fpga_emu_usm
-run_emu: simple-add-usm.fpga_emu_usm
-	./simple-add-usm.fpga_emu_usm
+fpga_emu: simple-add-usm.fpga_emu
+run_emu: simple-add-usm.fpga_emu
+	./simple-add-usm.fpga_emu
 report: simple-add-usm_report.a_usm
 fpga: simple-add-usm.fpga
 run_hw: simple-add-usm.fpga
@@ -25,7 +25,7 @@ endif
 
 simple-add-buffers.fpga_emu: $(SRC)
 	$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -DFPGA_EMULATOR=1	
-simple-add-usm.fpga_emu_usm: $(SRC)
+simple-add-usm.fpga_emu: $(SRC)
 	$(CXX) $(CXXFLAGS) -fintelfpga $^ -o $@ -DFPGA_EMULATOR=1
 
 a_buffers.o: $(SRC)
@@ -49,4 +49,4 @@ simple-add-usm_report.a_usm: dev_usm.o
 	$(CXX) $(CXXFLAGS) -fintelfpga -fsycl-link $^ -o $@ -Xshardware
 
 clean:
-	rm -rf *.o *.d *.out *.mon *.emu *.aocr *.aoco *.prj *.fpga_emu *.fpga_emu_usm simple-add-buffers.fpga  simple-add-usm.fpga *.a *.a_usm
+	rm -rf *.o *.d *.out *.mon *.emu *.aocr *.aoco *.prj *.fpga_emu *.fpga_emu simple-add-buffers.fpga  simple-add-usm.fpga *.a *.a_usm

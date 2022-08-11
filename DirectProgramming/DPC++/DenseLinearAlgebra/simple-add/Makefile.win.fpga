@@ -7,7 +7,7 @@ SRC = src/simple-add-buffers.cpp
 EXE = simple-add-buffers.fpga_emu.exe
 else
 SRC = src/simple-add-usm.cpp
-EXE = simple-add-usm.fpga_emu_usm.exe
+EXE = simple-add-usm.fpga_emu.exe
 endif
 
 all: fpga_emu
