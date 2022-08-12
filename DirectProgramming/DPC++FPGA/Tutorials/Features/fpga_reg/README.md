@@ -7,7 +7,7 @@ This FPGA tutorial demonstrates how a power user can apply the SYCL*-compliant C
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to use the `ext::intel::fpga_reg` extension <br> How `ext::intel::fpga_reg` can be used to re-structure the compiler-generated hardware <br> Situations in which applying  `ext::intel::fpga_reg` might be beneficial
 | Time to complete                  | 20 minutes
@@ -19,6 +19,7 @@ This FPGA tutorial demonstrates an example of using the `ext::intel::fpga_reg` e
 * Help reduce the fanout of specific signals in the SYCL-compliant design.
 * Improve the overall f<sub>MAX</sub> of the generated hardware.
 
+Note: A f<sub>MAX</sub> improvement is not always possible when using `ext::intel::fpga_reg`.
 
 ### Simple Code Example
 
@@ -141,11 +142,6 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cmake ..
    ```
 
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
-   ```bash
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
-   ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```bash
    cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
@@ -184,11 +180,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
-   ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
