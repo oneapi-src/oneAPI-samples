@@ -50,12 +50,12 @@ When working with the command-line interface (CLI), you should configure the one
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
 ### Include Files
-After installing the toolkits, the include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You might need to use some of the resources from this location to build the examples.
+After installing the toolkits, the include folder is at `%ONEAPI_ROOT%/dev-utilities/latest/include` on your development system. You might need to use some of the resources from this location to build the examples.
 
 Alternatively, you can get the common resources from the [oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/common) GitHub repository.
 
 ### On Linux*
-1. Change to the sample directory on your system.
+1. Change to the `oneAPI-samples/Publications/GPU-Opt-Guide` directory on your system.
 2. Build the example program.
    ```sh
    mkdir -p build
