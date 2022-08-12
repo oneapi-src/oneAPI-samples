@@ -153,7 +153,7 @@ Optionally, build the program using MSBuild.
     # For using the USM version
     make fpga -f Makefile.fpga
     # For using the buffers version
-    make fpga_emu -f Makefile.fpga BUFFERS=1
+    make fpga -f Makefile.fpga BUFFERS=1
     ````
 3. Generate static optimization reports for design analysis.
     ```
@@ -169,10 +169,9 @@ Optionally, build the program using MSBuild.
 Generating an HTML optimization report and compiling and running on the FPGA
 hardware is not currently supported.
 
-1. Select **Programs** > **Intel oneAPI 2022** > **Intel oneAPI Command Prompt**
-   to launch a command window.
+1. Open the **Intel oneAPI Command Prompt**.
 
-2. Build the program using the following `nmake` commands:
+2. Build the program.
    ```
    # For using the USM version
    nmake fpga_emu -f Makefile.win.fpga
