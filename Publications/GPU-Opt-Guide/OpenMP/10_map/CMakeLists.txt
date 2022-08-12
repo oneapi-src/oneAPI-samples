@@ -1,0 +1,2 @@
+add_example(test_map_tofrom)
+add_example(test_map_to_or_from)
