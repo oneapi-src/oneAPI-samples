@@ -18,7 +18,7 @@ input array of 1,000 elements with values chosen randomly ranging from 0 to 9 (i
 | Optimized for       | Description
 | :---                | :---
 | OS                  | Ubuntu* 18.04
-| Hardware            | Skylake with GEN9 or newer <br> Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA
+| Hardware            | Skylake with GEN9 or newer
 | Software            | Intel® oneAPI DPC++ Compiler
 
 ## Key Implementation Details
@@ -32,7 +32,7 @@ sourcing the `setvars` script every time you open a new terminal window. This
 practice ensures that your compiler, libraries, and tools are ready for
 development.
 
-## Build the `Histogram` Program
+## Build the `Histogram` Program for GPU or CPU
 > **Note**: If you have not already done so, set up your CLI environment by
 > sourcing  the `setvars` script in the root of your oneAPI installation.
 >
