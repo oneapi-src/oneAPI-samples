@@ -250,7 +250,7 @@ void cleanCubeAndPlane() {
 }
 
 void cubeAndPlaneCameraLightSetup(AffineSpace3fa& camera,
-                                  std::vector<struct Light>& lights,
+                                  std::vector<std::shared_ptr<Light>>& lights,
                                   unsigned int width, unsigned int height) {
   Vec3fa defaultLightDirection = normalize(Vec3fa(-1.0f, -1.0f, -1.0f));
   Vec3fa defaultLightIntensity = {1.0f, 1.0f, 1.0f};
@@ -270,16 +270,16 @@ void cubeAndPlaneCameraLightSetup(AffineSpace3fa& camera,
   lights.push_back(infDirectionalLight);
   */
 
-  Light pointLight;
+
   /* Picking the magnitude of the light can be tricky. Lights such as the point
    * light fall off at the inverse square of the distance. When building a
    * renderer, you may need to scale your light up or down to see your scene. */
-  pointLight.intensity = 800.f * Vec3fa(1.f, 1.f, 1.f);
+  Vec3fa pow = 800.f * Vec3fa(1.f, 1.f, 1.f);
 
   /* The point light that mimicks the direction of the directional light */
-  pointLight.pos = Vec3fa(10.0f, 10.0f, 10.0f);
-  pointLight.type = LightType::POINT_LIGHT;
-  lights.push_back(pointLight);
+  Vec3fa pos = Vec3fa(10.0f, 10.0f, 10.0f);
+
+  lights.push_back(std::make_shared<PointLight>(pos, pow, 0.f));
 }
 
 #endif /* !FILE_DEFAULTCUBEANDPLANE_SEEN */

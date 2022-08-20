@@ -39,7 +39,7 @@ public:
 
 	~SceneGraph();
 
-    std::vector<struct Light> m_lights;
+    std::vector<std::shared_ptr<Light>> m_lights;
 protected:
     //std::vector<Light> m_lights;
 private:
@@ -159,9 +159,10 @@ bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir, RTCRayHit& r
 void SceneGraph::cast_shadow_rays(DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType, const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time, Vec3fa& L, RandomEngine& reng,
     std::uniform_real_distribution<float>& distrib) {
 
-    for (const Light& light : m_lights) {
+    for (std::shared_ptr<Light> light : m_lights) {
         Vec2f randomLightSample(distrib(reng), distrib(reng));
-        Light_SampleRes ls = sample_light(light, dg, randomLightSample);
+        Light_SampleRes ls = light->sample(dg, randomLightSample);
+
         /* If the sample probability density evaluation is 0 then no need to
          * consider this shadow ray */
         if (ls.pdf <= 0.0f) continue;

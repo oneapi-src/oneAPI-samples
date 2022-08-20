@@ -249,7 +249,7 @@ unsigned int addWater(RTCScene _scene, RTCDevice _device) {
 
 
 
-void poolCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& lights,
+void poolCameraLightSetup(AffineSpace3fa& camera, std::vector<std::shared_ptr<Light>>& lights,
     unsigned int width, unsigned int height) {
 
      /* A camera position that connects the field of vision angle of the camera to
@@ -262,11 +262,11 @@ void poolCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& lights,
         Vec3fa(0, 0, 0), Vec3fa(0, 1, 0), fov, width, height);
 
 
-    Light pointLight;
+    
     /* The magnitude of the light can be tricky. Lights such as the point light
      * fall off at the inverse square of the distance. When designing a sandbox
      * renderer, you may need to scale your light up or down to see your scene. */
-    pointLight.intensity = 5.f * Vec3fa(0.9922, 0.9843, 0.8275);
+    Vec3fa pow = 5.f * Vec3fa(0.9922, 0.9843, 0.8275);
 
      /* A somewhat central position for the point light within the box. This is
       * similar to the position for the interactive pathtracer program shipped with
@@ -274,9 +274,9 @@ void poolCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& lights,
     //pointLight.pos =
     //    Vec3fa(2.f * 213.0f / 556.0f - 1.f, 2.f * 300.f / 558.8f - 1.f,
     //        2.f * 227.f / 559.2f - 1.f);
-    pointLight.pos = Vec3fa(0.0f, 0.0f, -2.0f);
-    pointLight.type = LightType::POINT_LIGHT;
-    lights.push_back(pointLight);
+    Vec3fa pos(0.0f, 0.0f, -2.0f);
+
+    lights.push_back(std::make_shared<PointLight>(pos, pow, 0.f));
 }
 
 void cleanPool() {

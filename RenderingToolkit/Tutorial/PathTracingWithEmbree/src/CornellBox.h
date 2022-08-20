@@ -369,7 +369,7 @@ void cleanCornell() {
   g_cornell_vertex_colors = nullptr;
 }
 
-void cornellCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& lights,
+void cornellCameraLightSetup(AffineSpace3fa& camera, std::vector<std::shared_ptr<Light>>& lights,
                              unsigned int width, unsigned int height) {
   /* A default camera view as specified from Cornell box presets given input
    * from Intel OSPRay*/
@@ -396,11 +396,10 @@ void cornellCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& lights,
   lights.push_back(infDirectionalLight);
   */
 
-  Light pointLight;
   /* The magnitude of the light can be tricky. Lights such as the point light
    * fall off at the inverse square of the distance. When designing a sandbox
    * renderer, you may need to scale your light up or down to see your scene. */
-  pointLight.intensity = 3.f * Vec3fa(0.78f, 0.551f, 0.183f);
+  Vec3fa pow = 3.f * Vec3fa(0.78f, 0.551f, 0.183f);
   /* An interesting position for an overhead light in the Cornell Box scene.
    * Notice increased noise when lights are near objects */
   // pointLight.pos = Vec3fa(0.0f, 0.95f, 0.0f);
@@ -408,11 +407,13 @@ void cornellCameraLightSetup(AffineSpace3fa& camera, std::vector<Light>& lights,
   /* A somewhat central position for the point light within the box. This is
    * similar to the position for the interactive pathtracer program shipped with
    * Intel Embree */
-  pointLight.pos =
+  Vec3fa pos =
       Vec3fa(2.f * 213.0f / 556.0f - 1.f, 2.f * 300.f / 558.8f - 1.f,
              2.f * 227.f / 559.2f - 1.f);
-  pointLight.type = LightType::POINT_LIGHT;
-  lights.push_back(pointLight);
+
+
+  
+  lights.push_back(std::make_shared<PointLight>(pos, pow, 0.f));
 }
 
 #endif /* !FILE_CORNELLBOX_SEEN */

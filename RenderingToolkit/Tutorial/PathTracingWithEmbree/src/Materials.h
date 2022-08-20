@@ -28,40 +28,6 @@ struct MatAndPrimColorTable {
 /* Added for path tracer: for holding material properties for each geometry id */
 std::map< unsigned int, MatAndPrimColorTable> g_geomIDs;
 
-/* Added for pathtracer. The frame function creates a transform from a normal. */
-LinearSpace3fa frame(const Vec3fa& N) {
-  const Vec3fa dx0(0, N.z, -N.y);
-  const Vec3fa dx1(-N.z, 0, N.x);
-
-  const Vec3fa dx = normalize((dot(dx0, dx0) > dot(dx1, dx1)) ? dx0 : dx1);
-  const Vec3fa dy = normalize(cross(N, dx));
-
-  return LinearSpace3fa(dx, dy, N);
-}
-
-/*! Cosine weighted hemisphere sampling. Up direction is provided as argument.
- */
-inline Vec3fa cosineSampleHemisphere(const float u, const float v,
-                                       const Vec3fa& N) {
-  /* Determine cartesian coordinate for new Vec3fa */
-  const float phi = float(2.0 * M_PI) * u;
-  const float cosTheta = sqrt(v);
-  const float sinTheta = sqrt(1.0f - v);
-  const float sinPhi = sinf(phi);
-  const float cosPhi = cosf(phi);
-
-  Vec3fa localDir = Vec3fa(cosPhi * sinTheta, sinPhi * sinTheta, cosTheta);
-  /* Gives the new Vec3fa transformed about the input Vec3fa */
-
-  return frame(N) * localDir;
-
-}
-
-inline Vec3fa cosinePDFHemisphere(const float s) {
-    return sqrt(s) / float(M_PI);
-
-}
-
 inline float fresnelDielectric(const float cosi, const float cost,
                                const float eta) {
   const float Rper = (eta * cosi - cost) * rcp(eta * cosi + cost);

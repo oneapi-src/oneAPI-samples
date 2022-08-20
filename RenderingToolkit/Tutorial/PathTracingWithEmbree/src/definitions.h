@@ -48,6 +48,12 @@ mt19937_64 on Windows
 */
 typedef std::minstd_rand RandomEngine;
 
+struct PosInf {
+    __forceinline operator float() const { return std::numeric_limits<float>::infinity(); }
+};
+
+PosInf inf;
+
 /* originally from tutorial_device.h */
 /* vertex, quad, and triangle layout */
 struct Vertex {
@@ -86,6 +92,106 @@ struct Sample3f
     Vec3fa v;
     float pdf;
 };
+
+inline float cosineSampleHemispherePDF(const Vec3fa& dir)
+{
+    return dir.z / float(M_PI);
+}
+
+/* Added for pathtracer. The frame function creates a transform from a normal. */
+LinearSpace3fa frame(const Vec3fa& N) {
+    const Vec3fa dx0(0, N.z, -N.y);
+    const Vec3fa dx1(-N.z, 0, N.x);
+
+    const Vec3fa dx = normalize((dot(dx0, dx0) > dot(dx1, dx1)) ? dx0 : dx1);
+    const Vec3fa dy = normalize(cross(N, dx));
+
+    return LinearSpace3fa(dx, dy, N);
+}
+
+inline Vec3fa cartesian(const float phi, const float sinTheta, const float cosTheta)
+{
+    const float sinPhi = sinf(phi);
+    const float cosPhi = cosf(phi);
+    //sincosf(phi, &sinPhi, &cosPhi);
+    return Vec3fa(cosPhi * sinTheta,
+        sinPhi * sinTheta,
+        cosTheta);
+}
+
+inline Vec3fa cartesian(const float phi, const float cosTheta)
+{
+    return cartesian(phi, sqrt(max(0.f, 1.f - (cosTheta*cosTheta))), cosTheta);
+}
+
+
+
+/// cosine-weighted sampling of hemisphere oriented along the +z-axis
+////////////////////////////////////////////////////////////////////////////////
+
+inline Vec3fa cosineSampleHemisphere(const Vec2f s)
+{
+    const float phi = float(2.f * M_PI) * s.x;
+    const float cosTheta = sqrt(s.y);
+    const float sinTheta = sqrt(1.0f - s.y);
+    return cartesian(phi, sinTheta, cosTheta);
+}
+
+/*! Cosine weighted hemisphere sampling. Up direction is provided as argument.
+ */
+inline Vec3fa cosineSampleHemisphere(const float u, const float v,
+    const Vec3fa& N) {
+    /* Determine cartesian coordinate for new Vec3fa */
+    const float phi = float(2.0f * M_PI) * u;
+    const float cosTheta = sqrt(v);
+    const float sinTheta = sqrt(1.0f - v);
+    const float sinPhi = sinf(phi);
+    const float cosPhi = cosf(phi);
+
+    Vec3fa localDir = Vec3fa(cosPhi * sinTheta, sinPhi * sinTheta, cosTheta);
+    /* Gives the new Vec3fa transformed about the input Vec3fa */
+
+    return frame(N) * localDir;
+
+}
+
+inline Vec3fa cosinePDFHemisphere(const float s) {
+    return sqrt(s) / float(M_PI);
+
+}
+
+/// sampling of cone of directions oriented along the +z-axis
+////////////////////////////////////////////////////////////////////////////////
+
+inline Vec3fa uniformSampleCone(const float cosAngle, const Vec2f& s)
+{
+    const float phi = float(2.f * M_PI) * s.x;
+    const float cosTheta = 1.0f - s.y * (1.0f - cosAngle);
+    return cartesian(phi, cosTheta);
+}
+
+inline float uniformSampleConePDF(const float cosAngle)
+{
+    return rcp(float(2.f * M_PI) * (1.0f - cosAngle));
+}
+
+/// sampling of disk
+////////////////////////////////////////////////////////////////////////////////
+
+inline Vec3fa uniformSampleDisk(const float radius, const Vec2f& s)
+{
+    const float r = sqrtf(s.x) * radius;
+    const float phi = float(2.0f * float(M_PI)) * s.y;
+    const float sinPhi = sinf(phi);
+    const float cosPhi = cosf(phi);
+    //sincosf(phi, &sinPhi, &cosPhi);
+    return Vec3fa(r * cosPhi, r * sinPhi, 0.f);
+}
+
+inline float uniformSampleDiskPDF(const float radius)
+{
+    return rcp(float(M_PI) * (radius*radius));
+}
 
 /* Added for pathtracer */
 inline Vec3fa face_forward(const Vec3fa& dir, const Vec3fa& _Ng) {
