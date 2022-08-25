@@ -19,13 +19,13 @@ using namespace sycl;
 typedef double real;
 
 // Program variables, feel free to change anything .
-static const int N = 30000;
-static const real check_error = 1e-15;
-static const real calculation_error = 1e-10;
-static const int min_rand = -1000;
-static const int max_rand = 1000;
-int max_sweeps = 100;
-static const std::uint32_t seed = 666;
+static const int kN = 30000;
+static const real kCheckError = 1e-15;
+static const real kCalculationError = 1e-10;
+static const int kMinRand = -1000;
+static const int kMaxRand = 1000;
+static const int kMaxSweeps = 100;
+static const std::uint32_t kSeed = 666;
 gpu_selector selector;
 std::ofstream outfile;
 
@@ -36,8 +36,8 @@ std::ofstream outfile;
 // of using sycl based RNG which had to be used as using
 // external (non sycl) functions slows down the execution
 // drasticly.
-void generate_matrix(std::vector<float> &input_matrix,
-                     std::vector<real> &input_results) {
+void GenerateMatrix(std::vector<float> &input_matrix,
+                    std::vector<real> &input_results) {
   queue q(selector);
 
   buffer bufin_mat(input_matrix);
@@ -46,17 +46,17 @@ void generate_matrix(std::vector<float> &input_matrix,
   q.submit([&](handler &h) {
     accessor M{bufin_mat, h};
     accessor R{bufin_res, h};
-    h.parallel_for(range<1>(N), [=](id<1> id) {
+    h.parallel_for(range<1>(kN), [=](id<1> id) {
       int i = id;
-      int j = N * i;
+      int j = kN * i;
 
       real sum = 0;
 
-      oneapi::dpl::minstd_rand engine(seed, i + j);
+      oneapi::dpl::minstd_rand engine(kSeed, i + j);
 
-      oneapi::dpl::uniform_real_distribution<real> distr(min_rand, max_rand);
+      oneapi::dpl::uniform_real_distribution<real> distr(kMinRand, kMaxRand);
 
-      for (int j = i * N; j < N * (i + 1); ++j) {
+      for (int j = i * kN; j < kN * (i + 1); ++j) {
         M[j] = distr(engine);
         M[j] = round(100. * M[j]) / 100.;
         sum += fabs(M[j]);
@@ -66,9 +66,9 @@ void generate_matrix(std::vector<float> &input_matrix,
       int gen_neg = distr2(engine);
 
       if (gen_neg < 50)
-        M[i * N + i] = sum + 1;
+        M[i * kN + i] = sum + 1;
       else
-        M[i * N + i] = -1 * (sum + 1);
+        M[i * kN + i] = -1 * (sum + 1);
 
       R[i] = distr(engine);
       R[i] = round(100. * R[i]) / 100.;
@@ -76,29 +76,29 @@ void generate_matrix(std::vector<float> &input_matrix,
   });
 }
 // Function responsible for printing the matrix, called only for N < 10.
-void print_matrix(std::vector<float> input_matrix,
-                  std::vector<real> input_results) {
-  for (int i = 0; i < N; ++i) {
+void PrintMatrix(std::vector<float> input_matrix,
+                 std::vector<real> input_results) {
+  for (int i = 0; i < kN; ++i) {
     std::cout << '[';
-    for (int j = i * N; j < N * (i + 1); ++j) {
+    for (int j = i * kN; j < kN * (i + 1); ++j) {
       std::cout << input_matrix[j] << " ";
     }
     std::cout << "][" << input_results[i] << "]\n";
   }
 
-  for (int i = 0; i < N; ++i) {
+  for (int i = 0; i < kN; ++i) {
     outfile << '[';
-    for (int j = i * N; j < N * (i + 1); ++j) {
+    for (int j = i * kN; j < kN * (i + 1); ++j) {
       outfile << input_matrix[j] << " ";
     }
     outfile << "][" << input_results[i] << "]\n";
   }
 }
 // Function responsible for printing the results.
-void print_results(real *output_data, int N) {
+void PrintResults(real *output_data, int kN) {
   outfile << std::fixed;
   outfile << std::setprecision(11);
-  for (int i = 0; i < N; ++i)
+  for (int i = 0; i < kN; ++i)
     outfile << "X" << i + 1 << " equals: " << output_data[i] << std::endl;
 }
 // Function responsible for checking if the algorithm has finished.
@@ -107,15 +107,15 @@ void print_results(real *output_data, int N) {
 // If the difference between them is less than the error variable the
 // number is incremented by one, if all the results are correct the function
 // returns a bool value that is true and the main function can stop.
-bool check_if_equal(real *output_data, real *old_output_data) {
+bool CheckIfEqual(real *output_data, real *old_output_data) {
   int correct_result = 0;
 
-  for (int i = 0; i < N; ++i) {
-    if (fabs(output_data[i] - old_output_data[i]) < check_error)
+  for (int i = 0; i < kN; ++i) {
+    if (fabs(output_data[i] - old_output_data[i]) < kCheckError)
       correct_result++;
   }
 
-  return correct_result == N;
+  return correct_result == kN;
 }
 
 int main(int argc, char *argv[]) {
@@ -123,8 +123,8 @@ int main(int argc, char *argv[]) {
 
   outfile.open("report.txt", std::ios_base::out);
 
-  std::vector<float> input_matrix(N * N);
-  std::vector<real> input_results(N);
+  std::vector<float> input_matrix(kN * kN);
+  std::vector<real> input_results(kN);
 
   queue q(selector);
 
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
 
   auto begin_matrix = std::chrono::high_resolution_clock::now();
 
-  generate_matrix(input_matrix, input_results);
+  GenerateMatrix(input_matrix, input_results);
 
   buffer bufin_mat(input_matrix);
   buffer bufin_res(input_results);
@@ -149,14 +149,14 @@ int main(int argc, char *argv[]) {
   outfile << "\nMatrix generated, time elapsed: "
           << elapsed_matrix.count() * 1e-9 << " seconds.\n";
 
-  if (N < 10) print_matrix(input_matrix, input_results);
+  if (kN < 10) PrintMatrix(input_matrix, input_results);
 
   auto begin_computations = std::chrono::high_resolution_clock::now();
 
-  real *output_data = malloc_shared<real>(N, q);
-  real *old_output_data = malloc_shared<real>(N, q);
+  real *output_data = malloc_shared<real>(kN, q);
+  real *old_output_data = malloc_shared<real>(kN, q);
 
-  for (int i = 0; i < N; i++) output_data[i] = 0;
+  for (int i = 0; i < kN; i++) output_data[i] = 0;
 
   bool is_equal = false;
   int sweeps = 0;
@@ -165,17 +165,17 @@ int main(int argc, char *argv[]) {
   // calculates new values until the difference between the values
   // calculatedthis iteration and the one before is less than the error.
   do {
-    for (int i = 0; i < N; ++i) old_output_data[i] = output_data[i];
+    for (int i = 0; i < kN; ++i) old_output_data[i] = output_data[i];
     q.submit([&](handler &h) {
        accessor M{bufin_mat, h, read_only};
        accessor R{bufin_res, h, read_only};
-       h.parallel_for(range<1>(N), [=](id<1> id) {
+       h.parallel_for(range<1>(kN), [=](id<1> id) {
          int i = id;
-         int j = N * i;
-         int it = N * i + i;
+         int j = kN * i;
+         int it = kN * i + i;
 
          output_data[i] = R[i];
-         for (int z = 0; z < N; ++z) {
+         for (int z = 0; z < kN; ++z) {
            if (z != i)
              output_data[i] = output_data[i] -
                               (old_output_data[z] * static_cast<real>(M[j]));
@@ -186,8 +186,8 @@ int main(int argc, char *argv[]) {
      }).wait();
 
     ++sweeps;
-    is_equal = check_if_equal(output_data, old_output_data);
-  } while (!is_equal && sweeps < max_sweeps);
+    is_equal = CheckIfEqual(output_data, old_output_data);
+  } while (!is_equal && sweeps < kMaxSweeps);
 
   auto end_computations = std::chrono::high_resolution_clock::now();
   auto elapsed_computations =
@@ -203,12 +203,12 @@ int main(int argc, char *argv[]) {
 
   auto begin_check = std::chrono::high_resolution_clock::now();
 
-  std::vector<real> output_results(N, 0);
+  std::vector<real> output_results(kN, 0);
 
   // Calculating a new set of results from the calculated values.
-  for (int i = 0; i < N * N; ++i) {
-    output_results[i / N] +=
-        output_data[i % N] * static_cast<real>(input_matrix[i]);
+  for (int i = 0; i < kN * kN; ++i) {
+    output_results[i / kN] +=
+        output_data[i % kN] * static_cast<real>(input_matrix[i]);
   }
 
   bool *all_eq = malloc_shared<bool>(1, q);
@@ -223,9 +223,9 @@ int main(int argc, char *argv[]) {
     q.submit([&](handler &h) {
       accessor R{bufin_res, h, read_only};
       accessor NR{bufout_res, h, read_only};
-      h.parallel_for(range<1>(N), [=](id<1> id) {
+      h.parallel_for(range<1>(kN), [=](id<1> id) {
         real diff = fabs(NR[id] - R[id]);
-        if (diff > calculation_error) all_eq[0] = false;
+        if (diff > kCalculationError) all_eq[0] = false;
       });
     });
   }
@@ -256,7 +256,7 @@ int main(int argc, char *argv[]) {
   outfile << "Total runtime is " << elapsed_runtime.count() * 1e-9
           << " seconds.\n";
 
-  print_results(output_data, N);
+  PrintResults(output_data, kN);
   free(output_data, q);
   free(old_output_data, q);
 
