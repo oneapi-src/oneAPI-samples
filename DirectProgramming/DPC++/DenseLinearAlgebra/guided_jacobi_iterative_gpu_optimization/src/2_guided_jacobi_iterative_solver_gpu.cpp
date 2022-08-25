@@ -16,12 +16,12 @@
 
 using namespace sycl;
 
-typedef double real;
+typedef double Real;
 
 // Program variables, feel free to change anything .
-static const int kN = 30000;
-static const real kCheckError = 1e-15;
-static const real kCalculationError = 1e-10;
+static const int kSize = 30000;
+static const Real kCheckError = 1e-15;
+static const Real kCalculationError = 1e-10;
 static const int kMinRand = -1000;
 static const int kMaxRand = 1000;
 static const int kMaxSweeps = 100;
@@ -37,68 +37,68 @@ std::ofstream outfile;
 // external (non sycl) functions slows down the execution
 // drasticly.
 void GenerateMatrix(std::vector<float> &input_matrix,
-                    std::vector<real> &input_results) {
+                    std::vector<Real> &input_results) {
   queue q(selector);
 
   buffer bufin_mat(input_matrix);
   buffer bufin_res(input_results);
 
   q.submit([&](handler &h) {
-    accessor M{bufin_mat, h};
-    accessor R{bufin_res, h};
-    h.parallel_for(range<1>(kN), [=](id<1> id) {
+    accessor in_mat_acc{bufin_mat, h};
+    accessor in_res_acc{bufin_res, h};
+    h.parallel_for(range<1>(kSize), [=](id<1> id) {
       int i = id;
-      int j = kN * i;
+      int j = kSize * i;
 
-      real sum = 0;
+      Real sum = 0;
 
       oneapi::dpl::minstd_rand engine(kSeed, i + j);
 
-      oneapi::dpl::uniform_real_distribution<real> distr(kMinRand, kMaxRand);
+      oneapi::dpl::uniform_real_distribution<Real> distr(kMinRand, kMaxRand);
 
-      for (int j = i * kN; j < kN * (i + 1); ++j) {
-        M[j] = distr(engine);
-        M[j] = round(100. * M[j]) / 100.;
-        sum += fabs(M[j]);
+      for (int j = i * kSize; j < kSize * (i + 1); ++j) {
+        in_mat_acc[j] = distr(engine);
+        in_mat_acc[j] = round(100. * in_mat_acc[j]) / 100.;
+        sum += fabs(in_mat_acc[j]);
       }
 
       oneapi::dpl::uniform_int_distribution<int> distr2(0, 100);
       int gen_neg = distr2(engine);
 
       if (gen_neg < 50)
-        M[i * kN + i] = sum + 1;
+        in_mat_acc[i * kSize + i] = sum + 1;
       else
-        M[i * kN + i] = -1 * (sum + 1);
+        in_mat_acc[i * kSize + i] = -1 * (sum + 1);
 
-      R[i] = distr(engine);
-      R[i] = round(100. * R[i]) / 100.;
+      in_res_acc[i] = distr(engine);
+      in_res_acc[i] = round(100. * in_res_acc[i]) / 100.;
     });
   });
 }
 // Function responsible for printing the matrix, called only for N < 10.
-void PrintMatrix(std::vector<float> input_matrix,
-                 std::vector<real> input_results) {
-  for (int i = 0; i < kN; ++i) {
+void PrintMatrix(const std::vector<float> &input_matrix,
+                 const std::vector<Real> &input_results) {
+  for (int i = 0; i < kSize; ++i) {
     std::cout << '[';
-    for (int j = i * kN; j < kN * (i + 1); ++j) {
+    for (int j = i * kSize; j < kSize * (i + 1); ++j) {
       std::cout << input_matrix[j] << " ";
     }
     std::cout << "][" << input_results[i] << "]\n";
   }
 
-  for (int i = 0; i < kN; ++i) {
+  for (int i = 0; i < kSize; ++i) {
     outfile << '[';
-    for (int j = i * kN; j < kN * (i + 1); ++j) {
+    for (int j = i * kSize; j < kSize * (i + 1); ++j) {
       outfile << input_matrix[j] << " ";
     }
     outfile << "][" << input_results[i] << "]\n";
   }
 }
 // Function responsible for printing the results.
-void PrintResults(real *output_data, int kN) {
+void PrintResults(Real *output_data, int kSize) {
   outfile << std::fixed;
   outfile << std::setprecision(11);
-  for (int i = 0; i < kN; ++i)
+  for (int i = 0; i < kSize; ++i)
     outfile << "X" << i + 1 << " equals: " << output_data[i] << std::endl;
 }
 // Function responsible for checking if the algorithm has finished.
@@ -107,15 +107,15 @@ void PrintResults(real *output_data, int kN) {
 // If the difference between them is less than the error variable the
 // number is incremented by one, if all the results are correct the function
 // returns a bool value that is true and the main function can stop.
-bool CheckIfEqual(real *output_data, real *old_output_data) {
+bool CheckIfEqual(Real *output_data, Real *old_output_data) {
   int correct_result = 0;
 
-  for (int i = 0; i < kN; ++i) {
+  for (int i = 0; i < kSize; ++i) {
     if (fabs(output_data[i] - old_output_data[i]) < kCheckError)
       correct_result++;
   }
 
-  return correct_result == kN;
+  return correct_result == kSize;
 }
 
 int main(int argc, char *argv[]) {
@@ -123,8 +123,8 @@ int main(int argc, char *argv[]) {
 
   outfile.open("report.txt", std::ios_base::out);
 
-  std::vector<float> input_matrix(kN * kN);
-  std::vector<real> input_results(kN);
+  std::vector<float> input_matrix(kSize * kSize);
+  std::vector<Real> input_results(kSize);
 
   queue q(selector);
 
@@ -149,14 +149,14 @@ int main(int argc, char *argv[]) {
   outfile << "\nMatrix generated, time elapsed: "
           << elapsed_matrix.count() * 1e-9 << " seconds.\n";
 
-  if (kN < 10) PrintMatrix(input_matrix, input_results);
+  if (kSize < 10) PrintMatrix(input_matrix, input_results);
 
   auto begin_computations = std::chrono::high_resolution_clock::now();
 
-  real *output_data = malloc_shared<real>(kN, q);
-  real *old_output_data = malloc_shared<real>(kN, q);
+  Real *output_data = malloc_shared<Real>(kSize, q);
+  Real *old_output_data = malloc_shared<Real>(kSize, q);
 
-  for (int i = 0; i < kN; i++) output_data[i] = 0;
+  for (int i = 0; i < kSize; i++) output_data[i] = 0;
 
   bool is_equal = false;
   int sweeps = 0;
@@ -165,23 +165,23 @@ int main(int argc, char *argv[]) {
   // calculates new values until the difference between the values
   // calculatedthis iteration and the one before is less than the error.
   do {
-    for (int i = 0; i < kN; ++i) old_output_data[i] = output_data[i];
+    for (int i = 0; i < kSize; ++i) old_output_data[i] = output_data[i];
     q.submit([&](handler &h) {
        accessor M{bufin_mat, h, read_only};
        accessor R{bufin_res, h, read_only};
-       h.parallel_for(range<1>(kN), [=](id<1> id) {
+       h.parallel_for(range<1>(kSize), [=](id<1> id) {
          int i = id;
-         int j = kN * i;
-         int it = kN * i + i;
+         int j = kSize * i;
+         int it = kSize * i + i;
 
          output_data[i] = R[i];
-         for (int z = 0; z < kN; ++z) {
+         for (int z = 0; z < kSize; ++z) {
            if (z != i)
              output_data[i] = output_data[i] -
-                              (old_output_data[z] * static_cast<real>(M[j]));
+                              (old_output_data[z] * static_cast<Real>(M[j]));
            j = j + 1;
          }
-         output_data[i] = output_data[i] / static_cast<real>(M[it]);
+         output_data[i] = output_data[i] / static_cast<Real>(M[it]);
        });
      }).wait();
 
@@ -203,12 +203,12 @@ int main(int argc, char *argv[]) {
 
   auto begin_check = std::chrono::high_resolution_clock::now();
 
-  std::vector<real> output_results(kN, 0);
+  std::vector<Real> output_results(kSize, 0);
 
   // Calculating a new set of results from the calculated values.
-  for (int i = 0; i < kN * kN; ++i) {
-    output_results[i / kN] +=
-        output_data[i % kN] * static_cast<real>(input_matrix[i]);
+  for (int i = 0; i < kSize * kSize; ++i) {
+    output_results[i / kSize] +=
+        output_data[i % kSize] * static_cast<Real>(input_matrix[i]);
   }
 
   bool *all_eq = malloc_shared<bool>(1, q);
@@ -223,8 +223,8 @@ int main(int argc, char *argv[]) {
     q.submit([&](handler &h) {
       accessor R{bufin_res, h, read_only};
       accessor NR{bufout_res, h, read_only};
-      h.parallel_for(range<1>(kN), [=](id<1> id) {
-        real diff = fabs(NR[id] - R[id]);
+      h.parallel_for(range<1>(kSize), [=](id<1> id) {
+        Real diff = fabs(NR[id] - R[id]);
         if (diff > kCalculationError) all_eq[0] = false;
       });
     });
@@ -256,7 +256,7 @@ int main(int argc, char *argv[]) {
   outfile << "Total runtime is " << elapsed_runtime.count() * 1e-9
           << " seconds.\n";
 
-  PrintResults(output_data, kN);
+  PrintResults(output_data, kSize);
   free(output_data, q);
   free(old_output_data, q);
 
