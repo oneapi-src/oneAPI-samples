@@ -1,3 +1,9 @@
+
+//==============================================================
+// Copyright © 2022 Intel Corporation
+//
+// SPDX-License-Identifier: MIT
+// =============================================================
 #include <bits/stdc++.h>
 
 #include <CL/sycl.hpp>
@@ -30,7 +36,7 @@ std::ofstream outfile;
 // of using sycl based RNG which had to be used as using
 // external (non sycl) functions slows down the execution
 // drasticly.
-void generate_matrix(std::vector<float> &matrix, std::vector<real> &results) {
+void generate_matrix(std::vector<float> &input_matrix, std::vector<real> &input_results) {
   std::vector<queue> q;
   for (const auto &p : platform::get_platforms()) {
     if (p.get_info<info::platform::name>().find("Level-Zero") !=
@@ -46,12 +52,12 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results) {
     }
   }
 
-  buffer buf_mat(matrix);
-  buffer buf_res(results);
+  buffer bufin_mat(input_matrix);
+  buffer bufin_res(input_results);
 
   q[0].submit([&](handler &h) {
-    accessor M{buf_mat, h};
-    accessor R{buf_res, h};
+    accessor M{bufin_mat, h};
+    accessor R{bufin_res, h};
     h.parallel_for(range<1>(N / 2), [=](id<1> id) {
       int i = id;
       int j = N * i;
@@ -82,8 +88,8 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results) {
     });
   });
   q[1].submit([&](handler &h) {
-    accessor M{buf_mat, h};
-    accessor R{buf_res, h};
+    accessor M{bufin_mat, h};
+    accessor R{bufin_res, h};
     h.parallel_for(range<1>(N / 2), [=](id<1> id) {
       int i = N / 2 + id;
       int j = N * i;
@@ -115,21 +121,21 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results) {
   });
 }
 // Function responsible for printing the matrix, called only for N < 10.
-void print_matrix(std::vector<float> matrix, std::vector<real> results) {
+void print_matrix(std::vector<float> input_matrix, std::vector<real> input_results) {
   for (int i = 0; i < N; ++i) {
     std::cout << '[';
     for (int j = i * N; j < N * (i + 1); ++j) {
-      std::cout << matrix[j] << " ";
+      std::cout << input_matrix[j] << " ";
     }
-    std::cout << "][" << results[i] << "]\n";
+    std::cout << "][" << input_results[i] << "]\n";
   }
 
   for (int i = 0; i < N; ++i) {
     outfile << '[';
     for (int j = i * N; j < N * (i + 1); ++j) {
-      outfile << matrix[j] << " ";
+      outfile << input_matrix[j] << " ";
     }
-    outfile << "][" << results[i] << "]\n";
+    outfile << "][" << input_results[i] << "]\n";
   }
 }
 // Function responsible for printing the results.
@@ -145,24 +151,23 @@ void print_results(std::vector<real> data, int N) {
 // If the difference between them is less than the error variable the
 // number is incremented by one, if all the results are correct the function
 // returns a bool value that is true and the main function can stop.
-bool check_if_equal(std::vector<real> data, std::vector<real> old_values) {
+bool check_if_equal(std::vector<real> data, std::vector<real> old_output_data) {
   int correct_result = 0;
 
   for (int i = 0; i < N; ++i) {
-    if (fabs(data[i] - old_values[i]) < check_error) correct_result++;
+    if (fabs(data[i] - old_output_data[i]) < check_error) correct_result++;
   }
 
   return correct_result == N;
 }
 
 int main(int argc, char *argv[]) {
-  for (int i = 0; i < argc; ++i) std::cout << argv[i] << std::endl;
   auto begin_runtime = std::chrono::high_resolution_clock::now();
 
   outfile.open("report.txt", std::ios_base::out);
 
-  std::vector<float> matrix(N * N);
-  std::vector<real> results(N);
+  std::vector<float> input_matrix(N * N);
+  std::vector<real> input_results(N);
 
   std::vector<queue> q;
   for (const auto &p : platform::get_platforms()) {
@@ -181,10 +186,10 @@ int main(int argc, char *argv[]) {
 
   auto begin_matrix = std::chrono::high_resolution_clock::now();
 
-  generate_matrix(matrix, results);
+  generate_matrix(input_matrix, input_results);
 
-  buffer buf_mat(matrix);
-  buffer buf_res(results);
+  buffer bufin_mat(input_matrix);
+  buffer bufin_res(input_results);
 
   auto end_matrix = std::chrono::high_resolution_clock::now();
   auto elapsed_matrix = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -195,14 +200,14 @@ int main(int argc, char *argv[]) {
   outfile << "\nMatrix generated, time elapsed: "
           << elapsed_matrix.count() * 1e-9 << " seconds.\n";
 
-  if (N < 10) print_matrix(matrix, results);
+  if (N < 10) print_matrix(input_matrix, input_results);
 
   auto begin_computations = std::chrono::high_resolution_clock::now();
 
-  std::vector<real> data(N, 0);
-  std::vector<real> old_values(N, 0);
+  std::vector<real> output_data(N, 0);
+  std::vector<real> old_output_data(N, 0);
 
-  for (int i = 0; i < N; i++) data[i] = 0;
+  for (int i = 0; i < N; i++) output_data[i] = 0;
 
   bool is_equal = false;
   int sweeps = 0;
@@ -212,14 +217,14 @@ int main(int argc, char *argv[]) {
   // calculatedthis iteration and the one before is less than the error.
   {
     do {
-      buffer buf_data(data);
-      buffer buf_old_values(old_values);
-      for (int i = 0; i < N; ++i) old_values[i] = data[i];
+      buffer bufout_data(output_data);
+      buffer bufold_out_data(old_output_data);
+      for (int i = 0; i < N; ++i) old_output_data[i] = output_data[i];
       q[0].submit([&](handler &h) {
-            accessor D{buf_data, h};
-            accessor OV{buf_old_values, h};
-            accessor M{buf_mat, h, read_only};
-            accessor R{buf_res, h, read_only};
+            accessor D{bufout_data, h};
+            accessor OV{bufold_out_data, h};
+            accessor M{bufin_mat, h, read_only};
+            accessor R{bufin_res, h, read_only};
             h.parallel_for(range<1>(N / 2), [=](id<1> id) {
               int i = id;
               int j = N * i;
@@ -236,10 +241,10 @@ int main(int argc, char *argv[]) {
           .wait();
 
       q[1].submit([&](handler &h) {
-            accessor D{buf_data, h};
-            accessor OV{buf_old_values, h};
-            accessor M{buf_mat, h, read_only};
-            accessor R{buf_res, h, read_only};
+            accessor D{bufout_data, h};
+            accessor OV{bufold_out_data, h};
+            accessor M{bufin_mat, h, read_only};
+            accessor R{bufin_res, h, read_only};
             h.parallel_for(range<1>(N / 2), [=](id<1> id) {
               int i = N / 2 + id;
               int j = N * i;
@@ -255,11 +260,11 @@ int main(int argc, char *argv[]) {
           })
           .wait();
 
-      buf_data.get_access<access::mode::read>();
-      buf_old_values.get_access<access::mode::read>();
+      bufout_data.get_access<access::mode::read>();
+      bufold_out_data.get_access<access::mode::read>();
 
       ++sweeps;
-      is_equal = check_if_equal(data, old_values);
+      is_equal = check_if_equal(output_data, old_output_data);
     } while (!is_equal && sweeps < max_sweeps);
   }
   auto end_computations = std::chrono::high_resolution_clock::now();
@@ -276,11 +281,11 @@ int main(int argc, char *argv[]) {
 
   auto begin_check = std::chrono::high_resolution_clock::now();
 
-  std::vector<real> new_results(N, 0);
+  std::vector<real> output_results(N, 0);
 
   // Calculating a new set of results from the calculated values.
   for (int i = 0; i < N * N; ++i) {
-    new_results[i / N] += data[i % N] * static_cast<real>(matrix[i]);
+    output_results[i / N] += output_data[i % N] * static_cast<real>(input_matrix[i]);
   }
 
   bool *all_eq = malloc_shared<bool>(1, q[0]);
@@ -290,11 +295,11 @@ int main(int argc, char *argv[]) {
   // given. If the difference is less than the error rate for each of
   // the elements, then all values have been calculated correctly.
   {
-    buffer buf_new_res(new_results);
+    buffer bufout_res(output_results);
 
     q[0].submit([&](handler &h) {
-      accessor R{buf_res, h, read_only};
-      accessor NR{buf_new_res, h, read_only};
+      accessor R{bufin_res, h, read_only};
+      accessor NR{bufout_res, h, read_only};
       h.parallel_for(range<1>(N), [=](id<1> id) {
         real diff = fabs(NR[id] - R[id]);
         if (diff > calculation_error) all_eq[0] = false;
@@ -328,7 +333,7 @@ int main(int argc, char *argv[]) {
   outfile << "Total runtime is " << elapsed_runtime.count() * 1e-9
           << " seconds.\n";
 
-  print_results(data, N);
+  print_results(output_data, N);
 
   return 0;
 }

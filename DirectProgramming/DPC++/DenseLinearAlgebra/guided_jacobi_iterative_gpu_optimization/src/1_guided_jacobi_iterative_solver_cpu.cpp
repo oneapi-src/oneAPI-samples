@@ -1,3 +1,9 @@
+
+//==============================================================
+// Copyright © 2022 Intel Corporation
+//
+// SPDX-License-Identifier: MIT
+// =============================================================
 #include <bits/stdc++.h>
 
 #include <CL/sycl.hpp>
@@ -30,10 +36,11 @@ std::ofstream outfile;
 // of using sycl based RNG which had to be used as using
 // external (non sycl) functions slows down the execution
 // drasticly.
-void generate_matrix(std::vector<float> &matrix, std::vector<real> &results) {
-  for (int i = 0; i < N; ++i) {
+void generate_matrix(std::vector<float> &input_matrix, std::vector<real> &input_results)
+{
+  for (int i = 0; i < N; ++i)
+  {
     int j = N * i;
-    int it = N * i + i;
 
     real sum = 0;
 
@@ -41,44 +48,51 @@ void generate_matrix(std::vector<float> &matrix, std::vector<real> &results) {
 
     oneapi::dpl::uniform_real_distribution<real> distr(min_rand, max_rand);
 
-    for (int j = i * N; j < N * (i + 1); ++j) {
-      matrix[j] = distr(engine);
-      matrix[j] = round(100. * matrix[j]) / 100.;
-      sum += fabs(matrix[j]);
+    for (int j = i * N; j < N * (i + 1); ++j)
+    {
+      input_matrix[j] = distr(engine);
+      input_matrix[j] = round(100. * input_matrix[j]) / 100.;
+      sum += fabs(input_matrix[j]);
     }
 
     oneapi::dpl::uniform_int_distribution<int> distr2(0, 100);
     int gen_neg = distr2(engine);
 
     if (gen_neg < 50)
-      matrix[i * N + i] = sum + 1;
+      input_matrix[i * N + i] = sum + 1;
     else
-      matrix[i * N + i] = -1 * (sum + 1);
+      input_matrix[i * N + i] = -1 * (sum + 1);
 
-    results[i] = distr(engine);
-    results[i] = round(100. * results[i]) / 100.;
+    input_results[i] = distr(engine);
+    input_results[i] = round(100. * input_results[i]) / 100.;
   }
 }
 // Function responsible for printing the matrix, called only for N < 10.
-void print_matrix(std::vector<float> matrix, std::vector<real> results) {
-  for (int i = 0; i < N; ++i) {
+void print_matrix(std::vector<float> input_matrix, std::vector<real> input_results)
+{
+  for (int i = 0; i < N; ++i)
+  {
     std::cout << '[';
-    for (int j = i * N; j < N * (i + 1); ++j) {
-      std::cout << matrix[j] << " ";
+    for (int j = i * N; j < N * (i + 1); ++j)
+    {
+      std::cout << input_matrix[j] << " ";
     }
-    std::cout << "][" << results[i] << "]\n";
+    std::cout << "][" << input_results[i] << "]\n";
   }
 
-  for (int i = 0; i < N; ++i) {
+  for (int i = 0; i < N; ++i)
+  {
     outfile << '[';
-    for (int j = i * N; j < N * (i + 1); ++j) {
-      outfile << matrix[j] << " ";
+    for (int j = i * N; j < N * (i + 1); ++j)
+    {
+      outfile << input_matrix[j] << " ";
     }
-    outfile << "][" << results[i] << "]\n";
+    outfile << "][" << input_results[i] << "]\n";
   }
 }
 // Function responsible for printing the results.
-void print_results(real *data, int N) {
+void print_results(real *data, int N)
+{
   outfile << std::fixed;
   outfile << std::setprecision(11);
   for (int i = 0; i < N; ++i)
@@ -90,31 +104,34 @@ void print_results(real *data, int N) {
 // If the difference between them is less than the error variable the
 // number is incremented by one, if all the results are correct the function
 // returns a bool value that is true and the main function can stop.
-bool check_if_equal(real *data, real *old_values) {
+bool check_if_equal(real *data, real *old_output_data)
+{
   int correct_result = 0;
 
-  for (int i = 0; i < N; ++i) {
-    if (fabs(data[i] - old_values[i]) < check_error) correct_result++;
+  for (int i = 0; i < N; ++i)
+  {
+    if (fabs(data[i] - old_output_data[i]) < check_error)
+      correct_result++;
   }
 
   return correct_result == N;
 }
 
-int main(int argc, char *argv[]) {
-  for (int i = 0; i < argc; ++i) std::cout << argv[i] << std::endl;
+int main(int argc, char *argv[])
+{
   auto begin_runtime = std::chrono::high_resolution_clock::now();
 
   outfile.open("report.txt", std::ios_base::out);
 
-  std::vector<float> matrix(N * N);
-  std::vector<real> results(N);
+  std::vector<float> input_matrix(N * N);
+  std::vector<real> input_results(N);
 
   std::cout << "Running the code on CPU\n";
   outfile << "Running the code on CPU\n";
 
   auto begin_matrix = std::chrono::high_resolution_clock::now();
 
-  generate_matrix(matrix, results);
+  generate_matrix(input_matrix, input_results);
 
   auto end_matrix = std::chrono::high_resolution_clock::now();
   auto elapsed_matrix = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -125,14 +142,16 @@ int main(int argc, char *argv[]) {
   outfile << "\nMatrix generated, time elapsed: "
           << elapsed_matrix.count() * 1e-9 << " seconds.\n";
 
-  if (N < 10) print_matrix(matrix, results);
+  if (N < 10)
+    print_matrix(input_matrix, input_results);
 
   auto begin_computations = std::chrono::high_resolution_clock::now();
 
-  real data[N];
-  real old_values[N];
+  real output_data[N];
+  real old_output_data[N];
 
-  for (int i = 0; i < N; i++) data[i] = 0;
+  for (int i = 0; i < N; i++)
+    output_data[i] = 0;
 
   bool is_equal = false;
   int sweeps = 0;
@@ -140,23 +159,27 @@ int main(int argc, char *argv[]) {
   // The main functionality of the Jacobi Solver. Every iteration
   // calculates new values until the difference between the values
   // calculatedthis iteration and the one before is less than the error.
-  do {
-    for (int i = 0; i < N; ++i) old_values[i] = data[i];
-    for (int i = 0; i < N; ++i) {
+  do
+  {
+    for (int i = 0; i < N; ++i)
+      old_output_data[i] = output_data[i];
+    for (int i = 0; i < N; ++i)
+    {
       int j = N * i;
       int it = N * i + i;
 
-      data[i] = results[i];
-      for (int z = 0; z < N; ++z) {
+      output_data[i] = input_results[i];
+      for (int z = 0; z < N; ++z)
+      {
         if (z != i)
-          data[i] = data[i] - (old_values[z] * static_cast<real>(matrix[j]));
+          output_data[i] = output_data[i] - (old_output_data[z] * static_cast<real>(input_matrix[j]));
         j = j + 1;
       }
-      data[i] = data[i] / static_cast<real>(matrix[it]);
+      output_data[i] = output_data[i] / static_cast<real>(input_matrix[it]);
     }
 
     ++sweeps;
-    is_equal = check_if_equal(data, old_values);
+    is_equal = check_if_equal(output_data, old_output_data);
   } while (!is_equal && sweeps < max_sweeps);
 
   auto end_computations = std::chrono::high_resolution_clock::now();
@@ -173,11 +196,12 @@ int main(int argc, char *argv[]) {
 
   auto begin_check = std::chrono::high_resolution_clock::now();
 
-  std::vector<real> new_results(N, 0);
+  std::vector<real> output_results(N, 0);
 
   // Calculating a new set of results from the calculated values.
-  for (int i = 0; i < N * N; ++i) {
-    new_results[i / N] += data[i % N] * static_cast<real>(matrix[i]);
+  for (int i = 0; i < N * N; ++i)
+  {
+    output_results[i / N] += output_data[i % N] * static_cast<real>(input_matrix[i]);
   }
 
   bool all_eq = true;
@@ -185,15 +209,20 @@ int main(int argc, char *argv[]) {
   // Comparing the newly calculated results with the ones that were
   // given. If the difference is less than the error rate for each of
   // the elements, then all values have been calculated correctly.
-  for (int i = 0; i < N; ++i) {
-    real diff = fabs(new_results[i] - results[i]);
-    if (diff > calculation_error) all_eq = false;
+  for (int i = 0; i < N; ++i)
+  {
+    real diff = fabs(output_results[i] - input_results[i]);
+    if (diff > calculation_error)
+      all_eq = false;
   }
 
-  if (all_eq) {
+  if (all_eq)
+  {
     std::cout << "All values are correct.\n";
     outfile << "All values are correct.\n";
-  } else {
+  }
+  else
+  {
     std::cout << "There have been some errors. The values are not correct.\n";
     outfile << "There have been some errors. The values are not correct.\n";
   }
@@ -216,7 +245,7 @@ int main(int argc, char *argv[]) {
   outfile << "Total runtime is " << elapsed_runtime.count() * 1e-9
           << " seconds.\n";
 
-  print_results(data, N);
+  print_results(output_data, N);
 
   return 0;
 }
