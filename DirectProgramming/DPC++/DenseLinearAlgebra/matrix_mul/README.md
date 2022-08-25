@@ -52,6 +52,15 @@ The code attempts to run the calculation on both the GPU and CPU and verify the 
 ### Include Files
 The include folder is located at `"%ONEAPI_ROOT%\dev-utilities\latest\include"` on your development system. You will need to use some of the resources from this location to build the sample.
 
+### Running Samples In DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify
+the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive
+mode.
+
+For specific instructions, jump to [Run the sample in the DevCloud](#run-on-devcloud)
+
+For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/get-started/hpc-toolkit/)
+
 ### Using Visual Studio Code* (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
@@ -149,6 +158,48 @@ The default device id: 0
 Result of matrix multiplication using OpenMP: Success - The results are correct!
 Result of matrix multiplication using GPU offloading: Success - The results are correct!
 ```
+
+### Running the sample in the DevCloud<a name="run-on-devcloud"></a>
+
+#### Build and run
+
+To launch build and run jobs on DevCloud submit scripts to PBS through the qsub utility.
+> Note that all parameters are already specified in the build and run scripts.
+1. Build the sample on a gpu node.
+
+    ```bash
+    qsub build.sh
+    ```
+
+2. When the build job completes, there will be a `build.sh.oXXXXXX` file in the directory. After the build job completes, run the sample on a gpu node:
+
+    ```bash
+    qsub run.sh
+    ```
+
+3. To build and run for OpenMP use the `build_omp.sh` and `run_omp.sh` scripts accordingly.
+
+#### Additional information
+
+1. In order to inspect the job progress, use the qstat utility.
+
+    ```bash
+    watch -n 1 qstat -n -1
+    ```
+
+    > Note: The watch `-n 1` command is used to run `qstat -n -1` and display its results every second.
+2. When a job terminates, a couple of files are written to the disk:
+
+    <script_name>.sh.eXXXX, which is the job stderr
+
+    <script_name>.sh.oXXXX, which is the job stdout
+
+    > Here XXXX is the job ID, which gets printed to the screen after each qsub command.
+3. To inspect the output of the sample use cat command.
+
+    ```bash
+    cat run.sh.oXXXX
+    ```
 
 ## License
 Code samples are licensed under the MIT license. See
