@@ -52,11 +52,6 @@ void generate_matrix(std::vector<float> &input_matrix, std::vector<real> &input_
     }
   }
 
-  if(q.size()<2)
-  {
-    std::cout << "Two GPUs are needed to run this code. Aborting\n";
-    return 0;
-  }
   buffer bufin_mat(input_matrix);
   buffer bufin_res(input_results);
 
@@ -187,6 +182,12 @@ int main(int argc, char *argv[]) {
         }
       }
     }
+  }
+
+  if(q.size()<2)
+  {
+    std::cout << "Two GPUs are needed to run this code. Aborting\n";
+    return 0;
   }
 
   auto begin_matrix = std::chrono::high_resolution_clock::now();
