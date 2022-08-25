@@ -36,7 +36,8 @@ std::ofstream outfile;
 // of using sycl based RNG which had to be used as using
 // external (non sycl) functions slows down the execution
 // drasticly.
-void generate_matrix(std::vector<float> &input_matrix, std::vector<real> &input_results) {
+void generate_matrix(std::vector<float> &input_matrix,
+                     std::vector<real> &input_results) {
   std::vector<queue> q;
   for (const auto &p : platform::get_platforms()) {
     if (p.get_info<info::platform::name>().find("Level-Zero") !=
@@ -121,7 +122,8 @@ void generate_matrix(std::vector<float> &input_matrix, std::vector<real> &input_
   });
 }
 // Function responsible for printing the matrix, called only for N < 10.
-void print_matrix(std::vector<float> input_matrix, std::vector<real> input_results) {
+void print_matrix(std::vector<float> input_matrix,
+                  std::vector<real> input_results) {
   for (int i = 0; i < N; ++i) {
     std::cout << '[';
     for (int j = i * N; j < N * (i + 1); ++j) {
@@ -184,8 +186,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  if(q.size()<2)
-  {
+  if (q.size() < 2) {
     std::cout << "Two GPUs are needed to run this code. Aborting\n";
     return 0;
   }
@@ -291,7 +292,8 @@ int main(int argc, char *argv[]) {
 
   // Calculating a new set of results from the calculated values.
   for (int i = 0; i < N * N; ++i) {
-    output_results[i / N] += output_data[i % N] * static_cast<real>(input_matrix[i]);
+    output_results[i / N] +=
+        output_data[i % N] * static_cast<real>(input_matrix[i]);
   }
 
   bool *all_eq = malloc_shared<bool>(1, q[0]);

@@ -36,15 +36,14 @@ std::ofstream outfile;
 // of using sycl based RNG which had to be used as using
 // external (non sycl) functions slows down the execution
 // drasticly.
-void generate_matrix(std::vector<float> &input_matrix, std::vector<real> &input_results)
-{
+void generate_matrix(std::vector<float> &input_matrix,
+                     std::vector<real> &input_results) {
   queue q(selector);
 
   buffer bufin_mat(input_matrix);
   buffer bufin_res(input_results);
 
-  q.submit([&](handler &h)
-           {
+  q.submit([&](handler &h) {
     accessor M{bufin_mat, h};
     accessor R{bufin_res, h};
     h.parallel_for(range<1>(N), [=](id<1> id) {
@@ -73,34 +72,30 @@ void generate_matrix(std::vector<float> &input_matrix, std::vector<real> &input_
 
       R[i] = distr(engine);
       R[i] = round(100. * R[i]) / 100.;
-    }); });
+    });
+  });
 }
 // Function responsible for printing the matrix, called only for N < 10.
-void print_matrix(std::vector<float> input_matrix, std::vector<real> input_results)
-{
-  for (int i = 0; i < N; ++i)
-  {
+void print_matrix(std::vector<float> input_matrix,
+                  std::vector<real> input_results) {
+  for (int i = 0; i < N; ++i) {
     std::cout << '[';
-    for (int j = i * N; j < N * (i + 1); ++j)
-    {
+    for (int j = i * N; j < N * (i + 1); ++j) {
       std::cout << input_matrix[j] << " ";
     }
     std::cout << "][" << input_results[i] << "]\n";
   }
 
-  for (int i = 0; i < N; ++i)
-  {
+  for (int i = 0; i < N; ++i) {
     outfile << '[';
-    for (int j = i * N; j < N * (i + 1); ++j)
-    {
+    for (int j = i * N; j < N * (i + 1); ++j) {
       outfile << input_matrix[j] << " ";
     }
     outfile << "][" << input_results[i] << "]\n";
   }
 }
 // Function responsible for printing the results.
-void print_results(real *output_data, int N)
-{
+void print_results(real *output_data, int N) {
   outfile << std::fixed;
   outfile << std::setprecision(11);
   for (int i = 0; i < N; ++i)
@@ -112,12 +107,10 @@ void print_results(real *output_data, int N)
 // If the difference between them is less than the error variable the
 // number is incremented by one, if all the results are correct the function
 // returns a bool value that is true and the main function can stop.
-bool check_if_equal(real *output_data, real *old_output_data)
-{
+bool check_if_equal(real *output_data, real *old_output_data) {
   int correct_result = 0;
 
-  for (int i = 0; i < N; ++i)
-  {
+  for (int i = 0; i < N; ++i) {
     if (fabs(output_data[i] - old_output_data[i]) < check_error)
       correct_result++;
   }
@@ -125,8 +118,7 @@ bool check_if_equal(real *output_data, real *old_output_data)
   return correct_result == N;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   auto begin_runtime = std::chrono::high_resolution_clock::now();
 
   outfile.open("report.txt", std::ios_base::out);
@@ -157,16 +149,14 @@ int main(int argc, char *argv[])
   outfile << "\nMatrix generated, time elapsed: "
           << elapsed_matrix.count() * 1e-9 << " seconds.\n";
 
-  if (N < 10)
-    print_matrix(input_matrix, input_results);
+  if (N < 10) print_matrix(input_matrix, input_results);
 
   auto begin_computations = std::chrono::high_resolution_clock::now();
 
   real *output_data = malloc_shared<real>(N, q);
   real *old_output_data = malloc_shared<real>(N, q);
 
-  for (int i = 0; i < N; i++)
-    output_data[i] = 0;
+  for (int i = 0; i < N; i++) output_data[i] = 0;
 
   bool is_equal = false;
   int sweeps = 0;
@@ -174,12 +164,9 @@ int main(int argc, char *argv[])
   // The main functionality of the Jacobi Solver. Every iteration
   // calculates new values until the difference between the values
   // calculatedthis iteration and the one before is less than the error.
-  do
-  {
-    for (int i = 0; i < N; ++i)
-      old_output_data[i] = output_data[i];
-    q.submit([&](handler &h)
-             {
+  do {
+    for (int i = 0; i < N; ++i) old_output_data[i] = output_data[i];
+    q.submit([&](handler &h) {
        accessor M{bufin_mat, h, read_only};
        accessor R{bufin_res, h, read_only};
        h.parallel_for(range<1>(N), [=](id<1> id) {
@@ -190,12 +177,13 @@ int main(int argc, char *argv[])
          output_data[i] = R[i];
          for (int z = 0; z < N; ++z) {
            if (z != i)
-             output_data[i] = output_data[i] - (old_output_data[z] * static_cast<real>(M[j]));
+             output_data[i] = output_data[i] -
+                              (old_output_data[z] * static_cast<real>(M[j]));
            j = j + 1;
          }
          output_data[i] = output_data[i] / static_cast<real>(M[it]);
-       }); })
-        .wait();
+       });
+     }).wait();
 
     ++sweeps;
     is_equal = check_if_equal(output_data, old_output_data);
@@ -218,9 +206,9 @@ int main(int argc, char *argv[])
   std::vector<real> output_results(N, 0);
 
   // Calculating a new set of results from the calculated values.
-  for (int i = 0; i < N * N; ++i)
-  {
-    output_results[i / N] += output_data[i % N] * static_cast<real>(input_matrix[i]);
+  for (int i = 0; i < N * N; ++i) {
+    output_results[i / N] +=
+        output_data[i % N] * static_cast<real>(input_matrix[i]);
   }
 
   bool *all_eq = malloc_shared<bool>(1, q);
@@ -232,23 +220,20 @@ int main(int argc, char *argv[])
   {
     buffer bufout_res(output_results);
 
-    q.submit([&](handler &h)
-             {
+    q.submit([&](handler &h) {
       accessor R{bufin_res, h, read_only};
       accessor NR{bufout_res, h, read_only};
       h.parallel_for(range<1>(N), [=](id<1> id) {
         real diff = fabs(NR[id] - R[id]);
         if (diff > calculation_error) all_eq[0] = false;
-      }); });
+      });
+    });
   }
 
-  if (all_eq[0])
-  {
+  if (all_eq[0]) {
     std::cout << "All values are correct.\n";
     outfile << "All values are correct.\n";
-  }
-  else
-  {
+  } else {
     std::cout << "There have been some errors. The values are not correct.\n";
     outfile << "There have been some errors. The values are not correct.\n";
   }

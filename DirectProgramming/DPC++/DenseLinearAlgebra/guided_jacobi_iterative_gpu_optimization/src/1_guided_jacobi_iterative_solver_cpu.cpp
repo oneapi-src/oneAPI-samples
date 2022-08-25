@@ -36,10 +36,9 @@ std::ofstream outfile;
 // of using sycl based RNG which had to be used as using
 // external (non sycl) functions slows down the execution
 // drasticly.
-void generate_matrix(std::vector<float> &input_matrix, std::vector<real> &input_results)
-{
-  for (int i = 0; i < N; ++i)
-  {
+void generate_matrix(std::vector<float> &input_matrix,
+                     std::vector<real> &input_results) {
+  for (int i = 0; i < N; ++i) {
     int j = N * i;
 
     real sum = 0;
@@ -48,8 +47,7 @@ void generate_matrix(std::vector<float> &input_matrix, std::vector<real> &input_
 
     oneapi::dpl::uniform_real_distribution<real> distr(min_rand, max_rand);
 
-    for (int j = i * N; j < N * (i + 1); ++j)
-    {
+    for (int j = i * N; j < N * (i + 1); ++j) {
       input_matrix[j] = distr(engine);
       input_matrix[j] = round(100. * input_matrix[j]) / 100.;
       sum += fabs(input_matrix[j]);
@@ -68,31 +66,26 @@ void generate_matrix(std::vector<float> &input_matrix, std::vector<real> &input_
   }
 }
 // Function responsible for printing the matrix, called only for N < 10.
-void print_matrix(std::vector<float> input_matrix, std::vector<real> input_results)
-{
-  for (int i = 0; i < N; ++i)
-  {
+void print_matrix(std::vector<float> input_matrix,
+                  std::vector<real> input_results) {
+  for (int i = 0; i < N; ++i) {
     std::cout << '[';
-    for (int j = i * N; j < N * (i + 1); ++j)
-    {
+    for (int j = i * N; j < N * (i + 1); ++j) {
       std::cout << input_matrix[j] << " ";
     }
     std::cout << "][" << input_results[i] << "]\n";
   }
 
-  for (int i = 0; i < N; ++i)
-  {
+  for (int i = 0; i < N; ++i) {
     outfile << '[';
-    for (int j = i * N; j < N * (i + 1); ++j)
-    {
+    for (int j = i * N; j < N * (i + 1); ++j) {
       outfile << input_matrix[j] << " ";
     }
     outfile << "][" << input_results[i] << "]\n";
   }
 }
 // Function responsible for printing the results.
-void print_results(real *data, int N)
-{
+void print_results(real *data, int N) {
   outfile << std::fixed;
   outfile << std::setprecision(11);
   for (int i = 0; i < N; ++i)
@@ -104,21 +97,17 @@ void print_results(real *data, int N)
 // If the difference between them is less than the error variable the
 // number is incremented by one, if all the results are correct the function
 // returns a bool value that is true and the main function can stop.
-bool check_if_equal(real *data, real *old_output_data)
-{
+bool check_if_equal(real *data, real *old_output_data) {
   int correct_result = 0;
 
-  for (int i = 0; i < N; ++i)
-  {
-    if (fabs(data[i] - old_output_data[i]) < check_error)
-      correct_result++;
+  for (int i = 0; i < N; ++i) {
+    if (fabs(data[i] - old_output_data[i]) < check_error) correct_result++;
   }
 
   return correct_result == N;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   auto begin_runtime = std::chrono::high_resolution_clock::now();
 
   outfile.open("report.txt", std::ios_base::out);
@@ -142,16 +131,14 @@ int main(int argc, char *argv[])
   outfile << "\nMatrix generated, time elapsed: "
           << elapsed_matrix.count() * 1e-9 << " seconds.\n";
 
-  if (N < 10)
-    print_matrix(input_matrix, input_results);
+  if (N < 10) print_matrix(input_matrix, input_results);
 
   auto begin_computations = std::chrono::high_resolution_clock::now();
 
   real output_data[N];
   real old_output_data[N];
 
-  for (int i = 0; i < N; i++)
-    output_data[i] = 0;
+  for (int i = 0; i < N; i++) output_data[i] = 0;
 
   bool is_equal = false;
   int sweeps = 0;
@@ -159,20 +146,18 @@ int main(int argc, char *argv[])
   // The main functionality of the Jacobi Solver. Every iteration
   // calculates new values until the difference between the values
   // calculatedthis iteration and the one before is less than the error.
-  do
-  {
-    for (int i = 0; i < N; ++i)
-      old_output_data[i] = output_data[i];
-    for (int i = 0; i < N; ++i)
-    {
+  do {
+    for (int i = 0; i < N; ++i) old_output_data[i] = output_data[i];
+    for (int i = 0; i < N; ++i) {
       int j = N * i;
       int it = N * i + i;
 
       output_data[i] = input_results[i];
-      for (int z = 0; z < N; ++z)
-      {
+      for (int z = 0; z < N; ++z) {
         if (z != i)
-          output_data[i] = output_data[i] - (old_output_data[z] * static_cast<real>(input_matrix[j]));
+          output_data[i] =
+              output_data[i] -
+              (old_output_data[z] * static_cast<real>(input_matrix[j]));
         j = j + 1;
       }
       output_data[i] = output_data[i] / static_cast<real>(input_matrix[it]);
@@ -199,9 +184,9 @@ int main(int argc, char *argv[])
   std::vector<real> output_results(N, 0);
 
   // Calculating a new set of results from the calculated values.
-  for (int i = 0; i < N * N; ++i)
-  {
-    output_results[i / N] += output_data[i % N] * static_cast<real>(input_matrix[i]);
+  for (int i = 0; i < N * N; ++i) {
+    output_results[i / N] +=
+        output_data[i % N] * static_cast<real>(input_matrix[i]);
   }
 
   bool all_eq = true;
@@ -209,20 +194,15 @@ int main(int argc, char *argv[])
   // Comparing the newly calculated results with the ones that were
   // given. If the difference is less than the error rate for each of
   // the elements, then all values have been calculated correctly.
-  for (int i = 0; i < N; ++i)
-  {
+  for (int i = 0; i < N; ++i) {
     real diff = fabs(output_results[i] - input_results[i]);
-    if (diff > calculation_error)
-      all_eq = false;
+    if (diff > calculation_error) all_eq = false;
   }
 
-  if (all_eq)
-  {
+  if (all_eq) {
     std::cout << "All values are correct.\n";
     outfile << "All values are correct.\n";
-  }
-  else
-  {
+  } else {
     std::cout << "There have been some errors. The values are not correct.\n";
     outfile << "There have been some errors. The values are not correct.\n";
   }
