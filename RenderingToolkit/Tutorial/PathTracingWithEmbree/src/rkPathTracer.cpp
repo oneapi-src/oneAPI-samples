@@ -116,8 +116,8 @@ int main() {
 
   std::unique_ptr<Renderer> r;
 
-  SceneSelector sceneSelector = SceneSelector::SHOW_POOL;
-  //SceneSelector sceneSelector = SceneSelector::SHOW_CORNELL_BOX;
+  //SceneSelector sceneSelector = SceneSelector::SHOW_POOL;
+  SceneSelector sceneSelector = SceneSelector::SHOW_CORNELL_BOX;
   //SceneSelector sceneSelector = SceneSelector::SHOW_CUBE_AND_PLANE;
   r = std::make_unique<Renderer>(width, height, channels, spp, accu_limit, max_path_length, sceneSelector);
 

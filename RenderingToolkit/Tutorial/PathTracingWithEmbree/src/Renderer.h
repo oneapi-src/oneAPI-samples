@@ -85,7 +85,9 @@ Renderer::Renderer(unsigned int width, unsigned int height, unsigned int channel
 
     init_scene(nullptr, m_width, m_height);
 
-    m_pt = std::make_shared<PathTracer>(max_path_length);
+    //m_pt = std::make_shared<PathTracer>(max_path_length);
+    // For Multiple Importance sampling we need per pixel storage for light PDFs
+    m_pt = std::make_shared<PathTracer>(max_path_length, m_width, m_height, m_sg->getNumLights());
 }
 
 void Renderer::handle_error(void* userPtr, const RTCError code, const char* str) {
@@ -245,7 +247,7 @@ Vec3fa Renderer::render_pixel_samples(int x, int y, RandomEngine& reng,
         float fx = x + distrib(reng);
         float fy = y + distrib(reng);
         L = L +
-            m_pt->render_path(fx, fy, reng, distrib, m_sg);
+            m_pt->render_path(fx, fy, reng, distrib, m_sg, y * m_width + x);
         /* If you are not seeing anything, try some printf debug */
         //#define MY_DEBUG
 #ifdef MY_DEBUG

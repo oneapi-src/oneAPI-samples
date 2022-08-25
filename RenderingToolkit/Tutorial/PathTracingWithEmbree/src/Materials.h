@@ -9,7 +9,8 @@ enum class MaterialType {
     MATERIAL_MATTE,
     MATERIAL_MIRROR,
     MATERIAL_GLASS,
-    MATERIAL_WATER
+    MATERIAL_WATER,
+    MATERIAL_EMITTER
 };
 
 /* Added for pathtracer */
@@ -104,7 +105,7 @@ inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3
     const float C = C0 + C1;
 
     if (C == 0.0f) {
-        return Vec3fa(0.f, 0.f, 0.f);
+      return Vec3fa(0.f, 0.f, 0.f);
     }
 
     /* Compare weights for the reflection and the refraction. Pick a direction
@@ -114,7 +115,6 @@ inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3
         return albedo * cs;
     else
       return albedo * ct;
-
 }
 
 inline Vec3fa Lambertian_eval(const Vec3fa& albedo, const Vec3fa& wo,
@@ -212,7 +212,6 @@ Vec3fa Dielectric_sample(const Vec3fa& Lw, const Vec3fa& wo,
   const float C1 = refractionPDF == 0.0f ? 0.0f : max(max(m1.x, m1.y), m1.z);
   const float C = C0 + C1;
 
-  Sample3f ret;
   if (C == 0.0f) {
       return Vec3fa(0, 0, 0);
   }

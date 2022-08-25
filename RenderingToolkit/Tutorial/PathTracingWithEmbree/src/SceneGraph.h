@@ -29,6 +29,8 @@ public:
     void SceneGraph::cast_shadow_rays(DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType, const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time, Vec3fa& L, RandomEngine& reng,
         std::uniform_real_distribution<float>& distrib);
 
+    float SceneGraph::cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir, float tnear, float tfar, float _time);
+
     void SceneGraph::set_intersect_context_coherent();
 
     void SceneGraph::set_intersect_context_incoherent();
@@ -37,18 +39,22 @@ public:
     
     Vec3fa SceneGraph::get_direction_from_pixel(float x, float y);
 
+    unsigned int SceneGraph::getNumLights();
+
+    std::shared_ptr<Light> SceneGraph::get_light_from_geomID(unsigned int geomID);
+
 	~SceneGraph();
 
     std::vector<std::shared_ptr<Light>> m_lights;
 protected:
-    //std::vector<Light> m_lights;
+    // nothing here yet
 private:
 	RTCScene m_scene;
     SceneSelector m_sceneSelector;
     rkcommon::math::AffineSpace3fa m_camera;
 
     RTCIntersectContext m_context;
-
+    std::map<unsigned int, size_t> m_mapGeomToLightIdx;
     void SceneGraph::scene_cleanup();
 
 };
@@ -76,7 +82,7 @@ void SceneGraph::init_embree_scene(const RTCDevice device, SceneSelector SELECT_
          * set in our header files */
         addSphere(m_scene, device, Vec3fa(0.6f, -0.8f, -0.6f), 0.2f);
 
-        cornellCameraLightSetup(m_camera, m_lights, width, height);
+        cornellCameraLightSetup(m_scene, device, m_mapGeomToLightIdx, m_camera, m_lights, width, height);
         break;
     case SceneSelector::SHOW_CUBE_AND_PLANE:
     default:
@@ -158,6 +164,7 @@ bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir, RTCRayHit& r
 
 void SceneGraph::cast_shadow_rays(DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType, const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time, Vec3fa& L, RandomEngine& reng,
     std::uniform_real_distribution<float>& distrib) {
+    Vec3fa ret;
 
     for (std::shared_ptr<Light> light : m_lights) {
         Vec2f randomLightSample(distrib(reng), distrib(reng));
@@ -178,12 +185,31 @@ void SceneGraph::cast_shadow_rays(DifferentialGeometry& dg, Vec3fa& albedo, Mate
 
 }
 
+float SceneGraph::cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir, float tnear, float tfar, float _time ) {
+    RTCRayHit shadow;
+    init_RayHit(shadow, org, dir, tnear, tfar, _time);
+    rtcOccluded1(m_scene, &m_context, &shadow.ray);
+    return shadow.ray.tfar;
+
+}
+
 Vec3fa SceneGraph::get_camera_origin() {
     return Vec3fa(m_camera.p.x, m_camera.p.y, m_camera.p.z);
 }
 
 Vec3fa SceneGraph::get_direction_from_pixel(float x, float y) {
     return normalize(x * m_camera.l.vx + y * m_camera.l.vy + m_camera.l.vz);
+}
+
+unsigned int SceneGraph::getNumLights() {
+    return m_lights.size();
+
+}
+
+std::shared_ptr<Light> SceneGraph::get_light_from_geomID(unsigned int geomID) {
+    size_t idx = m_mapGeomToLightIdx[geomID];
+
+    return m_lights[idx];
 }
 
 /* called by the C++ code for cleanup */
@@ -193,7 +219,7 @@ void SceneGraph::scene_cleanup() {
     switch (m_sceneSelector) {
     case SceneSelector::SHOW_CORNELL_BOX:
         cleanCornell();
-        //cleanSphere();
+        cleanSphere();
         break;
     case SceneSelector::SHOW_CUBE_AND_PLANE:
         cleanCubeAndPlane();

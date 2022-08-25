@@ -179,18 +179,19 @@ static std::vector<Vec3fa> cornellBoxColors = {
     {0.725f, 0.710f, 0.68f},
     {0.725f, 0.710f, 0.68f},
     {0.725f, 0.710f, 0.68f},
-    // TallBox Top Face
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    // TallBox Left Face
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
-    {0.725f, 0.710f, 0.68f},
     /* 0.8f intensity of reflectance gives a decent proxy for a great real life
-       mirror */
+   mirror */
+   /*
+    // TallBox Top Face
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    // TallBox Left Face
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
+    {0.8f, 0.8f, 0.8f},
     // TallBox Front Face
     {0.8f, 0.8f, 0.8f},
     {0.8f, 0.8f, 0.8f},
@@ -211,8 +212,19 @@ static std::vector<Vec3fa> cornellBoxColors = {
     {0.8f, 0.8f, 0.8f},
     {0.8f, 0.8f, 0.8f},
     {0.8f, 0.8f, 0.8f}
+
+    */
     /* Original colors of TallBox */
-    /*
+    // TallBox Top Face
+     {0.725f, 0.710f, 0.68f},
+     {0.725f, 0.710f, 0.68f},
+     {0.725f, 0.710f, 0.68f},
+     {0.725f, 0.710f, 0.68f},
+     // TallBox Left Face
+     {0.725f, 0.710f, 0.68f},
+     {0.725f, 0.710f, 0.68f},
+     {0.725f, 0.710f, 0.68f},
+     {0.725f, 0.710f, 0.68f},
      // TallBox Front Face
      {0.725f, 0.710f, 0.68f},
      {0.725f, 0.710f, 0.68f},
@@ -233,7 +245,7 @@ static std::vector<Vec3fa> cornellBoxColors = {
      {0.725f, 0.710f, 0.68f},
      {0.725f, 0.710f, 0.68f},
      {0.725f, 0.710f, 0.68f}
-     */
+     
 };
 
 static std::vector<enum class MaterialType> cornellBoxMats = {
@@ -287,7 +299,7 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     */
     /* Tall Box configuration for a matte material. Swap this section in for the
        mirror tall box (below) as desired*/
-    /*
+    
     // TallBox Top Face
     MaterialType::MATERIAL_MATTE,
     // TallBox Left Face
@@ -300,11 +312,11 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     MaterialType::MATERIAL_MATTE,
     // TallBox Bottom Face
     MaterialType::MATERIAL_MATTE
-    */
+    
 
     /* Tall box configuration for a mirror material. Swap this section in to see
        behind the short cube */
-
+    /*
     // TallBox Top Face
     MaterialType::MATERIAL_MIRROR,
     // TallBox Left Face
@@ -317,7 +329,7 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     MaterialType::MATERIAL_MIRROR,
     // TallBox Bottom Face
     MaterialType::MATERIAL_MIRROR
-    
+    */
 };
 
 int addCornell(RTCScene scene, RTCDevice device) {
@@ -369,7 +381,7 @@ void cleanCornell() {
   g_cornell_vertex_colors = nullptr;
 }
 
-void cornellCameraLightSetup(AffineSpace3fa& camera, std::vector<std::shared_ptr<Light>>& lights,
+void cornellCameraLightSetup(RTCScene scene, RTCDevice device, std::map<unsigned int, size_t>& mapGeomToLightIdx, AffineSpace3fa& camera, std::vector<std::shared_ptr<Light>>& lights,
                              unsigned int width, unsigned int height) {
   /* A default camera view as specified from Cornell box presets given input
    * from Intel OSPRay*/
@@ -390,8 +402,8 @@ void cornellCameraLightSetup(AffineSpace3fa& camera, std::vector<std::shared_ptr
   /*
   Light infDirectionalLight;
   infDirectionalLight.dir = normalize(Vec3fa(0.0f, 0.0f, 2.0f));
-  //infDirectionalLight.intensity = 3*Vec3fa(0.78f, 0.551f, 0.183f);
-  infDirectionalLight.intensity = 3*Vec3fa(1.0f, 1.0f, 1.0f);
+  //infDirectionalLight.pow = 3*Vec3fa(0.78f, 0.551f, 0.183f);
+  infDirectionalLight.pow = 3*Vec3fa(1.0f, 1.0f, 1.0f);
   infDirectionalLight.type = LightType::INFINITE_DIRECTIONAL_LIGHT;
   lights.push_back(infDirectionalLight);
   */
@@ -411,9 +423,17 @@ void cornellCameraLightSetup(AffineSpace3fa& camera, std::vector<std::shared_ptr
       Vec3fa(2.f * 213.0f / 556.0f - 1.f, 2.f * 300.f / 558.8f - 1.f,
              2.f * 227.f / 559.2f - 1.f);
 
+  //float radius = 0.f;
+  float radius = 0.15f;
+  lights.push_back(std::make_shared<PointLight>(pos, pow, radius));
+  //Place holder to toggle light geometries
+  if (radius > 0.f && true) {
+      std::shared_ptr<PointLight> newPointLight = std::dynamic_pointer_cast<PointLight>(lights.back());
+      unsigned int geomID = newPointLight->addGeometry(scene, device);
+      mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));  
+  }
 
-  
-  lights.push_back(std::make_shared<PointLight>(pos, pow, 0.f));
+
 }
 
 #endif /* !FILE_CORNELLBOX_SEEN */
