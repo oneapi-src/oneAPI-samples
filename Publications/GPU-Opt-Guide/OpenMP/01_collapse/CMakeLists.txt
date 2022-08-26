@@ -1,0 +1,4 @@
+add_example(test_collapse_2levels)
+add_example(test_collapse_3levels)
+add_example(test_collapse_4levels)
+add_example(test_no_collapse)
