@@ -38,7 +38,7 @@ public:
     virtual Light_EvalRes eval(const Vec3fa& org,
         const Vec3fa&);
 
-    LightType type;
+    LightType m_type;
 };
 
 Light_EvalRes Light::eval(const Vec3fa& dg,
@@ -53,7 +53,7 @@ Light_EvalRes Light::eval(const Vec3fa& dg,
 
 class PointLight : public Light  {
 public:
-    PointLight(Vec3fa pos, Vec3fa pow, float r) : m_position(pos), power(pow), m_radius(r) { this->type = LightType::POINT_LIGHT; };
+    PointLight(Vec3fa pos, Vec3fa pow, float r) : m_position(pos), m_power(pow), m_radius(r) { m_type = LightType::POINT_LIGHT; };
     ~PointLight() {};
 
     Light_SampleRes sample(const DifferentialGeometry& dg, const Vec2f& s);
@@ -68,7 +68,7 @@ Light_EvalRes eval(
     inline void cleanGeometry();
 
     Vec3fa m_position;
-    Vec3fa power;
+    Vec3fa m_power;
     float m_radius;
 
 };
@@ -90,7 +90,7 @@ Light_SampleRes PointLight::sample(const DifferentialGeometry& dg, const Vec2f& 
     res.pdf = inf; // per default we always take this res
 
     // convert from power to radiance by attenuating by distance^2
-    res.weight = this->power * (invdist * invdist);
+    res.weight = m_power * (invdist * invdist);
     const float sinTheta = m_radius * invdist;
 
     if ((m_radius > 0.f) && (sinTheta > 0.005f)) {
@@ -110,7 +110,7 @@ Light_SampleRes PointLight::sample(const DifferentialGeometry& dg, const Vec2f& 
             res.dir = frame(dg.Ns) * localDir;
             res.pdf = cosineSampleHemispherePDF(localDir);
             // TODO:
-            res.weight = this->power * rcp(m_radius*m_radius);
+            res.weight = m_power * rcp(m_radius*m_radius);
             res.dist = m_radius;
         }
     }
@@ -149,7 +149,7 @@ Light_SampleRes PointLight::sample(const DifferentialGeometry& dg, const Vec2f& 
                 const float cosTheta = sqrt(1.f - sinTheta2);
                 res.pdf = uniformSampleConePDF(cosTheta);
                 const float invdist = rcp(t_near);
-                res.value = this->power * res.pdf * (invdist* invdist);
+                res.value = m_power * res.pdf * (invdist* invdist);
             }
         }
     }
@@ -178,10 +178,6 @@ unsigned int PointLight::addGeometry(RTCScene scene, RTCDevice device) {
         g_geomIDs.insert(std::make_pair(geomID, mpTable));
 
         return geomID;
-
-
-
-
 }
 
 /* Only a place holder. Nothing is here because we do not attach any attributes
@@ -200,34 +196,34 @@ public:
         Light_EvalRes eval(
         const Vec3fa& org,
         const Vec3fa& dir);
-    LinearSpace3fa coordFrame;   //!< coordinate frame, with vz == direction *towards* the light source
-    Vec3fa radiance;   //!< RGB color and intensity of light
-    float cosAngle;   //!< Angular limit of the cone light in an easier to use form: cosine of the half angle in radians
-    float pdf;        //!< Probability to sample a direction to the light
+    LinearSpace3fa m_coordFrame;   //!< coordinate frame, with vz == direction *towards* the light source
+    Vec3fa m_radiance;   //!< RGB color and intensity of light
+    float m_cosAngle;   //!< Angular limit of the cone light in an easier to use form: cosine of the half angle in radians
+    float m_pdf;        //!< Probability to sample a direction to the light
 };
 
 //! Set the parameters of an ispc-side DirectionalLight object
 DirectionalLight::DirectionalLight(const Vec3fa& _direction, const Vec3fa& _radiance, float _cosAngle)
 {
-    this->coordFrame = frame(_direction);
-    this->radiance = _radiance;
-    this->cosAngle = _cosAngle;
-    this->pdf = _cosAngle < COS_ANGLE_MAX ? uniformSampleConePDF(_cosAngle) : inf;
-    this->type = LightType::INFINITE_DIRECTIONAL_LIGHT;
+    m_coordFrame = frame(_direction);
+    m_radiance = _radiance;
+    m_cosAngle = _cosAngle;
+    m_pdf = _cosAngle < COS_ANGLE_MAX ? uniformSampleConePDF(_cosAngle) : inf;
+    m_type = LightType::INFINITE_DIRECTIONAL_LIGHT;
 }
 
 
 Light_SampleRes DirectionalLight::sample(const DifferentialGeometry& dg, const Vec2f& s) {
     Light_SampleRes res;
 
-    res.dir = this->coordFrame.vz;
+    res.dir = m_coordFrame.vz;
     res.dist = inf;
-    res.pdf = this->pdf;
+    res.pdf = m_pdf;
 
-    if (this->cosAngle < COS_ANGLE_MAX)
-        res.dir = this->coordFrame * uniformSampleCone(this->cosAngle, s);
+    if (m_cosAngle < COS_ANGLE_MAX)
+        res.dir = m_coordFrame * uniformSampleCone(m_cosAngle, s);
 
-    res.weight = this->radiance; // *pdf/pdf cancel
+    res.weight = m_radiance; // *pdf/pdf cancel
 
     return res;
 }
@@ -240,9 +236,9 @@ Light_EvalRes DirectionalLight::eval(
     Light_EvalRes res;
     res.dist = inf;
 
-    if (this->cosAngle < COS_ANGLE_MAX && dot(this->coordFrame.vz, dir) > this->cosAngle) {
-        res.value = this->radiance * this->pdf;
-        res.pdf = this->pdf;
+    if (m_cosAngle < COS_ANGLE_MAX && dot(m_coordFrame.vz, dir) > m_cosAngle) {
+        res.value = m_radiance * m_pdf;
+        res.pdf = m_pdf;
     }
     else {
         res.value = Vec3fa(0.f);
@@ -255,32 +251,39 @@ Light_EvalRes DirectionalLight::eval(
 class SpotLight : public Light {
 public:
     SpotLight(const Vec3fa& _position, const Vec3fa& _direction, const Vec3fa&
-        _power, float _cosAngleMax, float _cosAngleScale, float radius) :
-        position(_position),
-        power(power),
-        cosAngleMax(cosAngleMax),
-        cosAngleScale(cosAngleScale),
-        m_radius(radius) 
+        _power, float _cosAngleMax, float _cosAngleScale, float _radius) :
+        m_position(_position),
+        m_direction(_direction),
+        m_power(_power),
+        m_cosAngleMax(_cosAngleMax),
+        m_cosAngleScale(_cosAngleScale),
+        m_radius(_radius)
+        
     {
 
-        this->coordFrame = frame(_direction);
-        this->diskPdf = uniformSampleDiskPDF(radius);
+        m_coordFrame = frame(_direction);
+        m_diskPdf = uniformSampleDiskPDF(_radius);
     };
     ~SpotLight() {};
     Light_SampleRes sample(
         const DifferentialGeometry& dg,
         const Vec2f& s);
+    //Light_EvalRes eval(
+    //        const DifferentialGeometry& dg,
+    //        const Vec3fa& dir);
     Light_EvalRes eval(
-            const DifferentialGeometry& dg,
+            const Vec3fa& org,
             const Vec3fa& dir);
+    unsigned int SpotLight::addGeometry(RTCScene scene, RTCDevice device);
 
-    Vec3fa position;         //!< Position of the SpotLight
-    LinearSpace3fa coordFrame;         //!< coordinate frame, with vz == direction that the SpotLight is emitting
-    Vec3fa power;            //!< RGB color and intensity of the SpotLight
-    float cosAngleMax;      //!< Angular limit of the spot in an easier to use form: cosine of the half angle in radians
-    float cosAngleScale;    //!< 1/(cos(border of the penumbra area) - cosAngleMax); positive
+    Vec3fa m_position;         //!< Position of the SpotLight
+    LinearSpace3fa m_coordFrame;         //!< coordinate frame, with vz == direction that the SpotLight is emitting
+    Vec3fa m_power;            //!< RGB color and intensity of the SpotLight
+    float m_cosAngleMax;      //!< Angular limit of the spot in an easier to use form: cosine of the half angle in radians
+    float m_cosAngleScale;    //!< 1/(cos(border of the penumbra area) - cosAngleMax); positive
     float m_radius;           //!< defines the size of the (extended) SpotLight
-    float diskPdf;          //!< pdf of disk with radius
+    float m_diskPdf;          //!< pdf of disk with radius
+    Vec3fa m_direction;        // store the disk direction
 
 };
 
@@ -292,10 +295,10 @@ Light_SampleRes SpotLight::sample(
     Light_SampleRes res;
 
     // extant light vector from the hit point
-    res.dir = this->position - dg.P;
+    res.dir = m_position - dg.P;
 
     if (m_radius > 0.f)
-        res.dir = this->coordFrame * uniformSampleDisk(m_radius, s) + res.dir;
+        res.dir = m_coordFrame * uniformSampleDisk(m_radius, s) + res.dir;
 
     const float dist2 = dot(res.dir, res.dir);
     const float invdist = rsqrt(dist2);
@@ -305,22 +308,22 @@ Light_SampleRes SpotLight::sample(
     res.dist = dist2 * invdist;
 
     // cosine of the negated light direction and light vector.
-    const float cosAngle = -dot(this->coordFrame.vz, res.dir);
-    const float angularAttenuation = clamp((cosAngle - this->cosAngleMax) * this->cosAngleScale);
+    const float cosAngle = -dot(m_coordFrame.vz, res.dir);
+    const float angularAttenuation = clamp((cosAngle - m_cosAngleMax) * m_cosAngleScale);
 
     if (m_radius > 0.f)
-        res.pdf = this->diskPdf * dist2 * abs(cosAngle);
+        res.pdf = m_diskPdf * dist2 * abs(cosAngle);
     else
         res.pdf = inf; // we always take this res
 
       // convert from power to radiance by attenuating by distance^2; attenuate by angle
-    res.weight = this->power * ((invdist*invdist) * angularAttenuation);
+    res.weight = m_power * ((invdist*invdist) * angularAttenuation);
 
     return res;
 }
 
 Light_EvalRes SpotLight::eval(
-    const DifferentialGeometry& dg,
+    const Vec3fa& org,
     const Vec3fa& dir)
 {
     Light_EvalRes res;
@@ -330,17 +333,17 @@ Light_EvalRes SpotLight::eval(
 
     if (m_radius > 0.f) {
         // intersect disk
-        const float cosAngle = -dot(dir, this->coordFrame.vz);
-        if (cosAngle > this->cosAngleMax) { // inside illuminated cone?
-            const Vec3fa vp = dg.P - this->position;
-            const float dp = dot(vp, this->coordFrame.vz);
+        const float cosAngle = -dot(dir, m_coordFrame.vz);
+        if (cosAngle > m_cosAngleMax) { // inside illuminated cone?
+            const Vec3fa vp = org - m_position;
+            const float dp = dot(vp, m_coordFrame.vz);
             if (dp > 0.f) { // in front of light?
                 const float t = dp * rcp(cosAngle);
                 const Vec3fa vd = vp + t * dir;
                 if (dot(vd, vd) < (m_radius*m_radius)) { // inside disk?
-                    const float angularAttenuation = min((cosAngle - this->cosAngleMax) * this->cosAngleScale, 1.f);
-                    const float pdf = this->diskPdf * cosAngle;
-                    res.value = this->power * (angularAttenuation * pdf); // *sqr(t)/sqr(t) cancels
+                    const float angularAttenuation = min((cosAngle - m_cosAngleMax) * m_cosAngleScale, 1.f);
+                    const float pdf = m_diskPdf * cosAngle;
+                    res.value = m_power * (angularAttenuation * pdf); // *sqr(t)/sqr(t) cancels
                     res.dist = t;
                     res.pdf = pdf * (t*t);
                 }
@@ -349,6 +352,34 @@ Light_EvalRes SpotLight::eval(
     }
 
     return res;
+}
+
+unsigned int SpotLight::addGeometry(RTCScene scene, RTCDevice device) {
+
+    RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_ORIENTED_DISC_POINT);
+    Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
+        mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT4, sizeof(Vertex), 1);
+
+    // Sphere primitive defined as singular Vec4 point for embree
+    Vertex p = { m_position.x, m_position.y, m_position.z, m_radius };
+    vertices[0] = p;
+
+    Normal* normals = (Normal*)rtcSetNewGeometryBuffer(
+        mesh, RTC_BUFFER_TYPE_NORMAL, 0, RTC_FORMAT_FLOAT3, sizeof(Normal), 1);
+    Normal n = { m_direction.x, m_direction.y, m_direction.z };
+    normals[0] = n;
+
+    rtcCommitGeometry(mesh);
+    unsigned int geomID = rtcAttachGeometry(scene, mesh);
+    rtcReleaseGeometry(mesh);
+
+    MatAndPrimColorTable mpTable;
+    mpTable.materialTable = { MaterialType::MATERIAL_EMITTER };
+    //We don't want to store albedo colors for the point light, we will use sample/eval functions and members of the light object
+    mpTable.primColorTable = nullptr;
+    g_geomIDs.insert(std::make_pair(geomID, mpTable));
+
+    return geomID;
 }
 
 #endif /* FILE_LIGHTSSEEN */

@@ -69,6 +69,11 @@ struct Triangle {
 };
 
 /* Added for pathtracer */
+struct Normal {
+    float x, y, z;
+};
+
+/* Added for pathtracer */
 struct DifferentialGeometry
 {
     unsigned int instIDs[RTC_MAX_INSTANCE_LEVEL_COUNT];

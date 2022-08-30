@@ -411,7 +411,7 @@ void cornellCameraLightSetup(RTCScene scene, RTCDevice device, std::map<unsigned
   /* The magnitude of the light can be tricky. Lights such as the point light
    * fall off at the inverse square of the distance. When designing a sandbox
    * renderer, you may need to scale your light up or down to see your scene. */
-  Vec3fa pow = 3.f * Vec3fa(0.78f, 0.551f, 0.183f);
+  //Vec3fa pow = 3.f * Vec3fa(0.78f, 0.551f, 0.183f);
   /* An interesting position for an overhead light in the Cornell Box scene.
    * Notice increased noise when lights are near objects */
   // pointLight.pos = Vec3fa(0.0f, 0.95f, 0.0f);
@@ -419,20 +419,30 @@ void cornellCameraLightSetup(RTCScene scene, RTCDevice device, std::map<unsigned
   /* A somewhat central position for the point light within the box. This is
    * similar to the position for the interactive pathtracer program shipped with
    * Intel Embree */
-  Vec3fa pos =
-      Vec3fa(2.f * 213.0f / 556.0f - 1.f, 2.f * 300.f / 558.8f - 1.f,
-             2.f * 227.f / 559.2f - 1.f);
+  //Vec3fa pos =
+  //    Vec3fa(2.f * 213.0f / 556.0f - 1.f, 2.f * 300.f / 558.8f - 1.f,
+  //           2.f * 227.f / 559.2f - 1.f);
 
   //float radius = 0.f;
-  float radius = 0.15f;
-  lights.push_back(std::make_shared<PointLight>(pos, pow, radius));
+  //float radius = 0.075f;
+  //lights.push_back(std::make_shared<PointLight>(pos, pow, radius));
   //Place holder to toggle light geometries
-  if (radius > 0.f && true) {
-      std::shared_ptr<PointLight> newPointLight = std::dynamic_pointer_cast<PointLight>(lights.back());
-      unsigned int geomID = newPointLight->addGeometry(scene, device);
-      mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));  
-  }
+  //if (radius > 0.f && true) {
+  //    std::shared_ptr<PointLight> newPointLight = std::dynamic_pointer_cast<PointLight>(lights.back());
+ //    unsigned int geomID = newPointLight->addGeometry(scene, device);
+  //    mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));  
+  //}
 
+  Vec3fa spotPos(0.f, 0.95f, 0.0f);
+  Vec3fa spotDir(0.f, -1.f, 0.f);
+  Vec3fa spotPow = 5.f * Vec3fa(0.78f, 0.551f, 0.183f);
+  float spotCosAngleMax = cosf(80.f * M_PI / 180.f);
+  float spotCosAngleScale = 50.f;
+  float spotRadius = 0.4f;
+  lights.push_back(std::make_shared<SpotLight>(spotPos, spotDir, spotPow, spotCosAngleMax, spotCosAngleScale, spotRadius));
+  std::shared_ptr<SpotLight> newSpotLight = std::dynamic_pointer_cast<SpotLight>(lights.back());
+  unsigned int geomID = newSpotLight->addGeometry(scene, device);
+  mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));  
 
 }
 

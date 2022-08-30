@@ -272,7 +272,6 @@ Vec3fa Material_sample(MaterialType materialType,
   return dir;
 }
 
-
 /* Compute PDF */
 
 /* Important to use the same random sample as is used for the Lambertian_sample(..) if looking just for the pdf */
@@ -280,6 +279,11 @@ float Lambertian_pdf(const float& s) {
     float cosTheta = sqrt(s);
     return cosTheta / float(M_PI);
 }
+
+float Lambertian_pdf(const DifferentialGeometry& dg, const Vec3fa& dir) {
+    return max(dot(dir, dg.Ns), 0.f) / float(M_PI);
+}
+
 float Mirror_pdf() {
     return 1.0f;
 }
@@ -351,6 +355,71 @@ float Dielectric_pdf(const Vec3fa& Lw, const Vec3fa& wo,
 }
 
 
+float Dielectric_pdf(const Vec3fa& Lw, const Vec3fa& wo,
+    const DifferentialGeometry& dg,
+    const Medium& medium, const float dielEta, const Vec3fa& dir) {
+    float pdf = 0.f;
+
+    float eta = 0.0f;
+    Medium mediumOutside;
+    mediumOutside.eta = 1.0f;
+
+    Medium mediumInside;
+    mediumInside.eta = dielEta;
+
+    if (medium.eta == mediumInside.eta) {
+        eta = mediumInside.eta / mediumOutside.eta;
+    }
+    else {
+        eta = mediumOutside.eta / mediumInside.eta;
+    }
+
+    float cosThetaO = clamp(dot(wo, dg.Ns));
+    float cosThetaI;
+
+    /* refraction computation */
+    float refractPDF;
+    const float k = 1.0f - eta * eta * (1.0f - cosThetaO * cosThetaO);
+    if (k < 0.0f) {
+        cosThetaI = 0.0f;
+        refractPDF = 0.0f;
+    }
+    else {
+        cosThetaI = sqrt(k);
+        refractPDF = eta * eta;
+    }
+
+    /* reflection computation */
+    float reflectPDF;
+    reflectPDF = 1.0f;
+
+    float R = fresnelDielectric(cosThetaO, cosThetaI, eta);
+    Vec3fa cs = Vec3fa(R);
+    Vec3fa ct = Vec3fa(1.0f - R);
+
+    const Vec3fa m0 = Lw * cs / reflectPDF;
+    const Vec3fa m1 = Lw * ct / refractPDF;
+
+    const float C0 = reflectPDF == 0.0f ? 0.0f : max(max(m0.x, m0.y), m0.z);
+    const float C1 = refractPDF == 0.0f ? 0.0f : max(max(m1.x, m1.y), m1.z);
+    const float C = C0 + C1;
+
+    if (C == 0.0f) {
+        return 0.0f;
+    }
+    /* Compare weights for the reflection and the refraction. Pick a pdf
+ * given s.x is a random between 0 and 1 */
+    const float CP0 = C0 / C;
+    const float CP1 = C1 / C;
+    if (dot(dir, dg.Ng) > 0.f) {
+        pdf = reflectPDF * CP0;
+    }
+    else {
+        pdf = refractPDF * CP1;
+    }
+
+    return pdf;
+}
 
 
 /* Determine Probability Density Function for Materials */
@@ -373,6 +442,32 @@ float Material_pdf(MaterialType materialType, const Vec3fa& Lw,
     case MaterialType::MATERIAL_WATER:
         return Dielectric_pdf(Lw, wo,
             dg, medium, 1.3f, randomSample.x);
+        break;
+        /* Return our debug color if something goes awry */
+    default:
+        break;
+    }
+    return 0.f;
+}
+
+float Material_pdf(MaterialType materialType, const Vec3fa& Lw,
+    const Vec3fa& wo, const DifferentialGeometry& dg,
+    const Medium& medium, const Vec3fa& dir) {
+
+    switch (materialType) {
+    case MaterialType::MATERIAL_MATTE:
+        return Lambertian_pdf(dg, dir);
+        break;
+    case MaterialType::MATERIAL_MIRROR:
+        return Mirror_pdf();
+        break;
+    case MaterialType::MATERIAL_GLASS:
+        return Dielectric_pdf(Lw, wo,
+            dg, medium, 1.5f, dir);
+        break;
+    case MaterialType::MATERIAL_WATER:
+        return Dielectric_pdf(Lw, wo,
+            dg, medium, 1.3f, dir);
         break;
         /* Return our debug color if something goes awry */
     default:
