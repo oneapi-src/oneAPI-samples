@@ -76,6 +76,13 @@ You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develo
 ## Include Files
 Many oneAPI code samples, like this one, share common include files. The include files are installed locally and are located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You will need the `dpc_common.hpp` from that location to build these samples.
 
+### Running Samples in DevCloud
+If running a sample in the Intel DevCloud, remember that you must specify the compute node (cpu, gpu, fpga_compile, or fpga_runtime) and whether to run in batch or interactive mode.
+
+For specific instructions, jump to [Run the sample in the DevCloud](#run-on-devcloud)
+
+For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/get-started/base-toolkit/](https://devcloud.intel.com/oneapi/get-started/base-toolkit/)).
+
 ## Build the `Simple Add` Program
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
@@ -214,6 +221,49 @@ Array size: 10000
 [9999]: 9999 + 100000 = 109999
 Successfully completed on device.
 ```
+
+### Running the sample in the DevCloud<a name="run-on-devcloud"></a>
+
+#### Build and run
+
+To launch build and run jobs on DevCloud submit scripts to PBS through the qsub utility.
+> Note that all parameters are already specified in the build and run scripts.
+1. Build the sample on a gpu node.
+
+    ```bash
+    qsub build.sh
+    ```
+
+2. When the build job completes, there will be a `build.sh.oXXXXXX` file in the directory. After the build job completes, run the sample on a gpu node:
+
+    ```bash
+    qsub run.sh
+    ```
+
+3. To build and run for FPGA emulator use accordingly the `build_fpga_emu.sh` and `run_fpga_emu.sh` scripts, for FPGA hardware use the `build_fpga.sh` and `run_fpga.sh` scripts.
+
+#### Additional information
+
+1. In order to inspect the job progress, use the qstat utility.
+
+    ```bash
+    watch -n 1 qstat -n -1
+    ```
+
+    > Note: The watch `-n 1` command is used to run `qstat -n -1` and display its results every second.
+2. When a job terminates, a couple of files are written to the disk:
+
+    <script_name>.sh.eXXXX, which is the job stderr
+
+    <script_name>.sh.oXXXX, which is the job stdout
+
+    > Here XXXX is the job ID, which gets printed to the screen after each qsub command.
+3. To inspect the output of the sample use cat command.
+
+    ```bash
+    cat run.sh.oXXXX
+    ```
+
 ## License
 Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)

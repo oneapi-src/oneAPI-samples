@@ -1,0 +1,3 @@
+add_example(test_omp_thread_num_1)
+add_example(test_omp_thread_num_2)
+add_example(test_omp_thread_num_3)
