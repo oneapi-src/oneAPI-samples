@@ -240,16 +240,91 @@ The sample completed successfully!
 [100%] Built target run
 ```
 
-### Example Output for Intel® DevCloud
+### Running the Hidden Markov Model sample in the DevCloud<a name="run-hmm-on-devcloud"></a>
+
+1.  Open a terminal on your Linux system. 2.	Log in to DevCloud.
 ```
-[100%] Built target hidden-markov-models
-Scanning dependencies of target run
-Device: Intel(R) UHD Graphics P630 [0x3e96] Intel(R) Level-Zero
-The Viterbi path is:
-16 4 17 0 16 8 16 4 17 0 1 4 17 8 16 8 16 8 12 11
-The sample completed successfully!
-[100%] Built target run
+ssh devcloud
 ```
+3.	Download the samples.
+```
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+```
+
+4. Change directories to the  Hidden Markov Model sample directory.
+```
+cd ~/oneAPI-samples/DirectProgramming/DPC++/GraphTraversal/hidden-markov-models
+```
+### Build and run the sample in batch mode
+
+The following describes the process of submitting build and run jobs to PBS. A
+job is a script that is submitted to PBS through the qsub utility. By default,
+the qsub utility does not inherit the current environment variables or your
+current working directory. For this reason, it is necessary to submit jobs as
+scripts that handle the setup of the environment variables. In order to address
+the working directory issue, you can either use absolute paths or pass the -d
+\<dir\> option to qsub to set the working directory.
+
+#### Build and run using prepared scripts
+
+To launch build and run jobs on DevCloud submit scripts to PBS through the qsub utility. Jobs submitted in batch mode are placed in a queue waiting for the necessary
+resources (compute nodes) to become available. The jobs will be executed on a first come basis on the first available node(s) having the requested property or label.
+> Note that all parameters are already specified in the build and run scripts.
+
+1. Build the sample on a gpu node.
+
+  ```bash
+  qsub build.sh
+  ```
+
+If an error occurs, you can get more details by running `make` with the
+`VERBOSE=1` argument:
+```
+make VERBOSE=1
+```
+
+2. When the build job completes, there will be a `build.sh.oXXXXXX` file in the directory. After the build job completes, run the sample on a gpu node:
+
+  ```bash
+  qsub run.sh
+  ```
+
+3. To build and run for FPGA emulator use accordingly the `build_fpga_emu.sh` and `run_fpga_emu.sh` scripts, for FPGA hardware use the `build_fpga.sh` and `run_fpga.sh` scripts.
+
+#### Additional information
+
+1. In order to inspect the job progress, use the qstat utility.
+
+  ```bash
+  watch -n 1 qstat -n -1
+  ```
+  
+  > Note: The watch `-n 1` command is used to run `qstat -n -1` and display its results every second. If no results are displayed, the job has completed.
+
+2. When a job terminates, a couple of files are written to the disk:
+
+   <script_name>.sh.eXXXX, which is the job stderr
+
+   <script_name>.sh.oXXXX, which is the job stdout
+
+   > Here XXXX is the job ID, which gets printed to the screen after each qsub command.
+3. To inspect the output of the sample use cat command.
+
+  ```bash
+  cat run.sh.oXXXX
+  ```
+
+  You should see output similar to this:
+
+  ```
+  [100%] Built target hidden-markov-models
+  Scanning dependencies of target run
+  Device: Intel(R) UHD Graphics P630 [0x3e96] Intel(R) Level-Zero
+  The Viterbi path is:
+  16 4 17 0 16 8 16 4 17 0 1 4 17 8 16 8 16 8 12 11
+  The sample completed successfully!
+  [100%] Built target run
+  ```
 
 ## License
 Code samples are licensed under the MIT license. See
