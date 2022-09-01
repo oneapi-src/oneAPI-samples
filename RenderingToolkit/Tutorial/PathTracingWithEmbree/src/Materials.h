@@ -29,6 +29,19 @@ struct MatAndPrimColorTable {
 /* Added for path tracer: for holding material properties for each geometry id */
 std::map< unsigned int, MatAndPrimColorTable> g_geomIDs;
 
+inline Vec3fa refract(const Vec3fa& V, const Vec3fa& N, const float eta,
+    const float cosi, float& cost, float& refractionPDF)
+{
+    const float k = 1.0f - eta * eta * (1.0f - cosi * cosi);
+    if (k < 0.0f) { cost = 0.0f; refractionPDF = 0.f;  return Vec3fa(0.f); }
+    cost = sqrt(k);
+    refractionPDF = eta * eta;
+    return eta * (cosi * N - V) - cost * N;
+}
+
+/*! Reflects a viewing vector V at a normal N. */
+inline Vec3fa reflect(const Vec3fa& V, const Vec3fa& N) { return 2.0f * dot(V, N) * N - V; }
+
 inline float fresnelDielectric(const float cosi, const float cost,
                                const float eta) {
   const float Rper = (eta * cosi - cost) * rcp(eta * cosi + cost);
@@ -76,21 +89,12 @@ inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3
     /* refraction computation */
     Vec3fa refractionDir;
     float refractionPDF;
-    const float k = 1.0f - eta * eta * (1.0f - cosThetaO * cosThetaO);
-    if (k < 0.0f) {
-        cosThetaI = 0.0f;
-        refractionDir = Vec3fa(0.f);
-        refractionPDF = 0.f;
-    }
-    else {
-        cosThetaI = sqrt(k);
-        refractionDir = eta * (cosThetaO * dg.Ns - wo) - cosThetaI * dg.Ns;
-        refractionPDF = eta * eta;
-    }
+    refractionDir = refract(wo, dg.Ns, eta, cosThetaO, cosThetaI, refractionPDF);
+
 
     /* reflection computation */
     Vec3fa reflectionDir;
-    reflectionDir = 2.0f * dot(wo, dg.Ns) * dg.Ns - wo;
+    reflectionDir = reflect(wo, dg.Ns);
     float reflectionPDF = 1.0f;
 
     float R = fresnelDielectric(cosThetaO, cosThetaI, eta);
@@ -159,7 +163,7 @@ Vec3fa Material_eval(Vec3fa albedo, MaterialType materialType,
 
 Vec3fa Dielectric_sample(const Vec3fa& Lw, const Vec3fa& wo,
                           const DifferentialGeometry& dg,
-                          Medium& medium, float dielEta, const float s) {
+                          const Medium& medium, float dielEta, Medium& nextMedium, const float s) {
   float eta = 0.0f;
   Medium mediumOutside;
   mediumOutside.eta = 1.0f;
@@ -184,21 +188,11 @@ Vec3fa Dielectric_sample(const Vec3fa& Lw, const Vec3fa& wo,
   /* refraction computation */
   Vec3fa refractionDir;
   float refractionPDF;
-  const float k = 1.0f - eta * eta * (1.0f - cosThetaO * cosThetaO);
-  if (k < 0.0f) {
-    cosThetaI = 0.0f;
-    refractionDir = Vec3fa(0.f);
-    refractionPDF = 0.f;
-  }
-  else {
-      cosThetaI = sqrt(k);
-      refractionDir = eta * (cosThetaO * dg.Ns - wo) - cosThetaI * dg.Ns;
-      refractionPDF = eta * eta;
-  }
+  refractionDir = refract(wo, dg.Ns, eta, cosThetaO, cosThetaI, refractionPDF);
 
   /* reflection computation */
   Vec3fa reflectionDir;
-  reflectionDir = 2.0f * dot(wo, dg.Ns) * dg.Ns - wo;
+  reflectionDir = reflect(wo, dg.Ns);
   float reflectionPDF = 1.0f;
 
   float R = fresnelDielectric(cosThetaO, cosThetaI, eta);
@@ -221,11 +215,11 @@ Vec3fa Dielectric_sample(const Vec3fa& Lw, const Vec3fa& wo,
   const float CP0 = C0 / C;
   const float CP1 = C1 / C;
   if (s < CP0) {
-      medium = mediumFront;
+      nextMedium = mediumFront;
       return reflectionDir;
   }
   else {
-      medium = mediumBack;
+      nextMedium = mediumBack;
       return refractionDir;
   }
 }
@@ -247,7 +241,7 @@ Vec3fa Mirror_sample(const Vec3fa& Lw, const Vec3fa& wo,
 Vec3fa Material_sample(MaterialType materialType,
                         const Vec3fa& Lw, const Vec3fa& wo,
                         const DifferentialGeometry& dg,
-                        Medium& medium, const Vec2f& randomMatSample) {
+                        const Medium& medium, Medium& nextMedium, const Vec2f& randomMatSample) {
   Vec3fa dir = Vec3fa(0.0f);
   switch (materialType) {
     case MaterialType::MATERIAL_MATTE:
@@ -257,10 +251,10 @@ Vec3fa Material_sample(MaterialType materialType,
       return Mirror_sample(Lw, wo, dg);
       break;
     case MaterialType::MATERIAL_GLASS:
-      return Dielectric_sample(Lw, wo, dg, medium, 1.5f, randomMatSample.x);
+      return Dielectric_sample(Lw, wo, dg, medium, 1.5f, nextMedium, randomMatSample.x);
       break;
     case MaterialType::MATERIAL_WATER:
-        return Dielectric_sample(Lw, wo, dg, medium, 1.3f, randomMatSample.x);
+        return Dielectric_sample(Lw, wo, dg, medium, 1.3f, nextMedium, randomMatSample.x);
         //        return ThinDielectric__sample(Lw, wo, dg, wi, medium,
         //        randomMatSample);
         break;

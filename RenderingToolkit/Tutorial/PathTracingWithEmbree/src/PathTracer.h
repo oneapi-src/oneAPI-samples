@@ -100,8 +100,8 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
   Vec3fa L = Vec3fa(0.0f);
   Vec3fa Lw = Vec3fa(1.0f);
 
-  Medium medium;
-  medium.eta = 1.f;
+  Medium medium, nextMedium;
+  medium.eta = nextMedium.eta = 1.f;
 
   DifferentialGeometry dg;
 
@@ -167,7 +167,7 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
                 distrib);
         }
 
-        wi1 = Material_sample(materialType, Lw, wo, dg, medium,
+        wi1 = Material_sample(materialType, Lw, wo, dg, medium, nextMedium,
             randomMatSample);
         c = c * Material_eval(albedo, materialType, Lw, wo, dg, wi1, medium,
             randomMatSample);
@@ -215,7 +215,7 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
 
        L = L + Lw * misValue;
 
-       wi1 = Material_sample(materialType, Lw, wo, dg, medium,
+       wi1 = Material_sample(materialType, Lw, wo, dg, medium, nextMedium,
         randomMatSample);
        //nextPDF = Material_pdf(materialType, Lw, wo, dg, medium, wi1);
        nextPDF = Material_pdf(materialType, Lw, wo, dg, medium, randomMatSample);
@@ -231,6 +231,7 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
 
     }
     /* setup secondary ray */
+    medium = nextMedium;
     float sign = dot(wi1, dg.Ng) < 0.0f ? -1.0f : 1.0f;
     dg.P = dg.P + sign * dg.eps * dg.Ng;
     org = dg.P;
