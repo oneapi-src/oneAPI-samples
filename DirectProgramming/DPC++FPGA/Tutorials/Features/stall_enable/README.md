@@ -98,9 +98,13 @@ To learn more about the extensions, see the
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
+     ```
+     make fpga_emu
+     ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization reports:
      ```
      make report
@@ -138,6 +142,10 @@ To learn more about the extensions, see the
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -173,7 +181,14 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
      ./stall_enable.fpga_emu     (Linux)
      stall_enable.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./stall_enable.fpga_sim     (Linux)
+     ./stall_free.fpga_sim       (Linux)
+     stall_enable.fpga_sim.exe   (Windows)
+     stall_free.fpga_sim.exe     (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./stall_enable.fpga         (Linux)
      ./stall_free.fpga           (Linux)

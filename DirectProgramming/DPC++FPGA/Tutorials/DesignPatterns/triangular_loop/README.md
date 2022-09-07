@@ -227,12 +227,16 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
+     ```
+     make fpga_emu
+     ```
    * Generate the optimization report:
      ```
      make report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size):
+     ```
+     make fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -248,8 +252,8 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cd build
    ```
    To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
+   ```
+   cmake -G "NMake Makefiles" ..
    ```
    Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
@@ -270,6 +274,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Generate the optimization report:
      ```
      nmake report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size):
+     ```
+     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -307,7 +315,12 @@ Consult the "Loop Analysis" report to compare the optimized and unoptimized vers
      ./triangular_loop.fpga_emu     (Linux)
      triangular_loop.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./triangular_loop.fpga_sim     (Linux)
+     triangular_loop.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./triangular_loop.fpga         (Linux)
      triangular_loop.fpga.exe       (Windows)
