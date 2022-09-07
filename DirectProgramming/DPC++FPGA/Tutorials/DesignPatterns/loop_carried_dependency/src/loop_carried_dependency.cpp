@@ -84,7 +84,7 @@ void PrintTime(const event &e, queue &q, const char *kind) {
 
   cout << "Run: " << kind << ":\n";
 #if defined(FPGA_SIMULATOR)
-  double kernel_time = (double)(end_k - start_k) * 1e-9256;
+  double kernel_time = (double)(end_k - start_k) * 1e-9;
   cout << "kernel time : " << kernel_time << " s\n";
 #else
   double kernel_time = (double)(end_k - start_k) * 1e-6;
