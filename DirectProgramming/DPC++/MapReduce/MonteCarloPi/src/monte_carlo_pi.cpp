@@ -160,6 +160,5 @@ int main() {
   std::cout
       << "The simulation plot graph has been written to 'MonteCarloPi.bmp'\n";
 
-  getchar();
   return 0;
 }
