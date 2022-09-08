@@ -20,7 +20,8 @@ set(AC_TYPES_FLAG "-qactypes")
 if(WIN32)
 #   set(WIN_LINK_FLAG "/F 12582912")
 #   set(WIN_LINK_FLAG "-Wl,--stack,12582912")
-    set(WIN_LINK_FLAG "-Wl,-z,stack-size=12582912")
+#   set(WIN_LINK_FLAG "-Wl,-z,stack-size=12582912")
+    set(WIN_LINK_FLAG "-Wl,-f,12582912")
 endif()
 
 # A10 parameters
