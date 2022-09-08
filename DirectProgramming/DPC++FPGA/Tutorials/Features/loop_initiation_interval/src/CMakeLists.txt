@@ -5,6 +5,8 @@ set(SOURCE_FILE loop_initiation_interval.cpp)
 set(TARGET_NAME loop_ii)
 set(TARGET_NAME_ENABLE_II loop_ii_enable_ii)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
+set(SIMULATOR_TARGET_ENABLE_II ${TARGET_NAME_ENABLE_II}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(FPGA_TARGET_ENABLE_II ${TARGET_NAME_ENABLE_II}.fpga)
 
@@ -38,6 +40,9 @@ endif()
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_SIMULATOR ${DEVICE_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_SIMULATOR_FLAGS}")
+# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga ${DEVICE_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
@@ -46,10 +51,10 @@ set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${DEVI
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR -DA10 fpga_compile.cpp -o fpga_compile.fpga_emu
+#    dpcpp -fintelfpga -DFPGA_EMULATOR -DA10 loop_initiation_interval.cpp -o loop_ii.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -DA10 -o fpga_compile.cpp.o -c fpga_compile.cpp
-#    [link]    dpcpp -fintelfpga fpga_compile.cpp.o -o fpga_compile.fpga_emu
+#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -DA10 -o loop_ii.cpp.o -c loop_initiation_interval.cpp
+#    [link]    dpcpp -fintelfpga loop_ii.cpp.o -o loop_ii.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -76,13 +81,29 @@ set_target_properties(${FPGA_EARLY_IMAGE_ENABLE_II} PROPERTIES LINK_FLAGS "${HAR
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR -DA10 loop_initiation_interval.cpp -o loop_ii.fpga_sim
+# CMake executes:
+#    [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -DA10 -o loop_ii.cpp.o -c loop_initiation_interval.cpp
+#    [link]    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DA10 loop_ii.cpp.o -o loop_ii.fpga_sim
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+add_executable(${SIMULATOR_TARGET_ENABLE_II} ${SOURCE_FILE})
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${SIMULATOR_TARGET_ENABLE_II})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET_ENABLE_II} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS} -DENABLE_II")
+set_target_properties(${SIMULATOR_TARGET_ENABLE_II} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+
+###############################################################################
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
 #   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 loop_initiation_interval.cpp -o loop_ii.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o loop_initiation_interval.cpp.o -DA10 -c loop_initiation_interval.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 loop_initiation_interval.cpp.o -o loop_ii.fpga
+#   [compile] dpcpp -fintelfpga -o loop_ii.cpp.o -DA10 -c loop_initiation_interval.cpp
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 loop_ii.cpp.o -o loop_ii.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
 add_executable(${FPGA_TARGET_ENABLE_II} EXCLUDE_FROM_ALL ${SOURCE_FILE})

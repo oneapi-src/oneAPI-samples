@@ -16,7 +16,13 @@ constexpr size_t kInitLoopSize = 10;
 // long-running loop trip count
 constexpr size_t kLongLoopSize = 10000;
 // problem input size
-constexpr size_t kInputSize = 1000000;
+#if defined(FPGA_EMULATOR)
+  constexpr size_t kInputSize = 10000;
+#elif defined(FPGA_SIMULATOR)
+  constexpr size_t kInputSize = 10;
+#else
+  constexpr size_t kInputSize = 1000000;
+#endif
 
 // Forward declare the kernel name in the global scope
 // This FPGA best practice reduces name mangling in the optimization reports
@@ -59,6 +65,8 @@ double GetExecutionTime(const event &e) {
 void RunKernel(std::vector<int> &in, std::vector<int> &out) {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector selector;
 #endif

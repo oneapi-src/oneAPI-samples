@@ -13,12 +13,16 @@
 
 #include "exception_handler.hpp"
 
-// Use smaller values if run on the emulator to keep the CPU runtime reasonable
+// Use smaller values if run on the emulator or simulator to keep the CPU
+// runtime/simulation time reasonable
 // Use the largest possible int values on the FPGA to show the difference in
 // performance with and without speculated_iterations
 #if defined(FPGA_EMULATOR)
 constexpr float kUpper = 3.0f;
 constexpr size_t kExpectedIterations = 1e3;
+#elif defined(FPGA_SIMULATOR)
+constexpr float kUpper = 2.0f;
+constexpr size_t kExpectedIterations = 1e2;
 #else
 constexpr float kUpper = 8.0f;
 constexpr size_t kExpectedIterations = 1e8;
@@ -95,6 +99,8 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
 int main(int argc, char *argv[]) {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector selector;
 #endif
