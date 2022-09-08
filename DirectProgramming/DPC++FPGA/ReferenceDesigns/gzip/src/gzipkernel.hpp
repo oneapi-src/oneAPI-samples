@@ -4,7 +4,7 @@
 
 #include <CL/sycl.hpp>
 
-using namespace cl::sycl;
+using namespace sycl;
 
 extern "C" void SubmitGzipTasks(
     queue &sycl_device,

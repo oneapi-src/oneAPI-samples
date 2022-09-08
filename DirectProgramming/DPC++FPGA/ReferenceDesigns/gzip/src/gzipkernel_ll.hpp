@@ -5,7 +5,7 @@
 #include <CL/sycl.hpp>
 #include "kernels.hpp"
 
-using namespace cl::sycl;
+using namespace sycl;
 
 //extern "C" 
 std::vector<event> SubmitGzipTasks(queue &q, size_t block_size,

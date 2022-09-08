@@ -90,7 +90,7 @@ void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
     double end = e.get_profiling_info<info::event_profiling::command_end>();
     kernel_time = (double)(end - start) * 1e-6f;
 
-  } catch (cl::sycl::exception const &e) {
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:" << '\n' << e.what() << '\n';
 
