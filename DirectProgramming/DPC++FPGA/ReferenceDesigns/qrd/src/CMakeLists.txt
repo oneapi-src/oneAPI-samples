@@ -17,12 +17,9 @@ endif()
 # Include ac_types headers and link against ac_types emulation libraries
 set(AC_TYPES_FLAG "-qactypes")
 
+# Setting the stack size on Windows as the default one is too small for this program
 if(WIN32)
-#   set(WIN_LINK_FLAG "/F 12582912")
-#   set(WIN_LINK_FLAG "-Wl,--stack,12582912")
-#   set(WIN_LINK_FLAG "-Wl,-z,stack-size=12582912")
-#   set(WIN_LINK_FLAG "-Wl,-f,12582912")
-    set(WIN_LINK_FLAG "-Wl,-F,12582912")
+    set(WIN_LINK_FLAG "-Wl,-stack:12582912")
 endif()
 
 # A10 parameters
