@@ -19,7 +19,6 @@ endif()
 # Include ac_types headers and link against ac_types emulation libraries
 set(AC_TYPES_FLAG "-qactypes")
 
-
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
