@@ -17,11 +17,11 @@ constexpr size_t kInitLoopSize = 10;
 constexpr size_t kLongLoopSize = 10000;
 // problem input size
 #if defined(FPGA_EMULATOR)
-  constexpr size_t kInputSize = 10000;
+constexpr size_t kInputSize = 10000;
 #elif defined(FPGA_SIMULATOR)
-  constexpr size_t kInputSize = 10;
+constexpr size_t kInputSize = 10;
 #else
-  constexpr size_t kInputSize = 1000000;
+constexpr size_t kInputSize = 1000000;
 #endif
 
 // Forward declare the kernel name in the global scope
@@ -93,16 +93,17 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
 
           // All kernels share a common clock domain, thus this design needs to
           // be compiled twice to showcase the same design with different fMAX
-          // If ENABLE_II is defined, the intel::initiation_interval attribute will be set for
-          // the next loop, the short initialization loop Explicitly setting the
-          // II for a loop will tell the compiler to schedule the loop while
-          // enforcing the set II, overriding the default heuristic of finding
-          // the minimum II * (1/fMAX) Relaxing the II on a short loop with a
-          // long feedback path will remove the bottleneck the loop had on the
-          // maximum achievable fMAX of the design The default targeted fMAX is
-          // 240MHz for Arria® 10 and 480MHz for Stratix® 10, so different IIs
-          // need to be specified so the compiler can schedule the loop such
-          // that it does not restrict the maximum fMAX
+          // If ENABLE_II is defined, the intel::initiation_interval attribute
+          // will be set for the next loop, the short initialization loop
+          // Explicitly setting the II for a loop will tell the compiler to
+          // schedule the loop while enforcing the set II, overriding the
+          // default heuristic of finding the minimum II * (1/fMAX) Relaxing the
+          // II on a short loop with a long feedback path will remove the
+          // bottleneck the loop had on the maximum achievable fMAX of the
+          // design The default targeted fMAX is 240MHz for Arria® 10 and 480MHz
+          // for Stratix® 10, so different IIs need to be specified so the
+          // compiler can schedule the loop such that it does not restrict the
+          // maximum fMAX
 #if defined(ENABLE_II)
 #if defined(A10)
           [[intel::initiation_interval(3)]]
@@ -142,13 +143,13 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
 
           int sum = 0;
 
-          // The intel::initiation_interval attribute is added here to "assert" that II=1 for
-          // this loop. Even though we fully expect the compiler to achieve
-          // II=1 here by default, some developers find it helful to include
-          // the attribute to "document" this expectation. If a future code
-          // change causes an unexpected II regression, the compiler will error
-          // out. Without the intel::initiation_interval attribute, an II regression may go
-          // unnoticed.
+          // The intel::initiation_interval attribute is added here to "assert"
+          // that II=1 for this loop. Even though we fully expect the compiler
+          // to achieve II=1 here by default, some developers find it helful to
+          // include the attribute to "document" this expectation. If a future
+          // code change causes an unexpected II regression, the compiler will
+          // error out. Without the intel::initiation_interval attribute, an II
+          // regression may go unnoticed.
 #if defined(ENABLE_II)
           [[intel::initiation_interval(1)]]
 #endif
@@ -161,9 +162,9 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
           // "sum" calculated in the last operation of a previous iteration The
           // compiler is able to achieve an II of 1 and the default targeted
           // fMAX for Arria® 10, but falls a little short on Stratix® 10. The
-          // intel::initiation_interval attribute should not be used to relax the II of this loop
-          // as the drop in occupancy of the long loop is not worth achieving a
-          // slightly higher fMAX
+          // intel::initiation_interval attribute should not be used to relax
+          // the II of this loop as the drop in occupancy of the long loop is
+          // not worth achieving a slightly higher fMAX
           for (size_t k = 0; k < kLongLoopSize; k++) {
             sum += SomethingComplicated(num + k);
           }
@@ -217,10 +218,11 @@ int main() {
   }
 
   // Run kernel once. Since fMAX is a global constraint, we cannot run two
-  // kernels demonstrating the use of the intel::initiation_interval attribute since the kernel
-  // without the intel::initiation_interval attribute would restrict the global fMAX, thus
-  // affecting the design with the intel::initiation_interval attribute. Rely on the preprocessor
-  // defines to change the kernel behaviour.
+  // kernels demonstrating the use of the intel::initiation_interval attribute
+  // since the kernel without the intel::initiation_interval attribute would
+  // restrict the global fMAX, thus affecting the design with the
+  // intel::initiation_interval attribute. Rely on the preprocessor defines to
+  // change the kernel behaviour.
   RunKernel(in, out);
 
   // validate results
