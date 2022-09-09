@@ -1,5 +1,5 @@
 # `Jacobi Iterative Solver` Sample
-The `Jacobi Iterative Solver` sample demonstrates how to use Intel&reg; oneAPI Base Toolkit (Base Kit) to target CPU, GPU, and multi-GPU to offload resource intensive computation using SYCL*. The targeted sample code demonstrates optimization and runtime differences for each type of device.
+The `Jacobi Iterative Solver` sample demonstrates how to use Intel® oneAPI Base Toolkit (Base Kit) to target CPU, GPU, and multi-GPU to offload resource intensive computation using SYCL*. The targeted sample code demonstrates optimization and runtime differences for each type of device.
 
 | Property                          | Description
 |:---                               |:---
@@ -10,7 +10,7 @@ The `Jacobi Iterative Solver` sample demonstrates how to use Intel&reg; oneAPI B
 ## Purpose
 The `Jacobi Iterative Solver` sample illustrates how to use the Jacobi Iterative method to solve linear equations. In this case, the sample solves a system of equations represented by two input matrices. The first matrix is the number of unknown variables. The second matrix contains the results. The sample code calculates the results using the Jacobi method and compares the newly calculated results with the old ones.
 
-This sample starts with a CPU-oriented application and shows how to use SYCL and the Intel&reg; oneAPI tools to offload regions of the code to a GPU on the target system. The guided instructions walk you through using Intel&reg; Advisor for offload modeling to identify code regions that can benefit from GPU offload. After the initial offload, the instructions walk you through developing an optimization strategy by iteratively optimizing the code based on opportunities exposed Intel&reg; Advisor to run roofline analysis.
+This sample starts with a CPU-oriented application and shows how to use SYCL and the Intel® oneAPI tools to offload regions of the code to a GPU on the target system. The guided instructions walk you through using Intel® Advisor for offload modeling to identify code regions that can benefit from GPU offload. After the initial offload, the instructions walk you through developing an optimization strategy by iteratively optimizing the code based on opportunities exposed Intel® Advisor to run roofline analysis.
 
 The sample includes three versions of the `Jacobi Iterative Solver` program.
 
@@ -20,14 +20,14 @@ The sample includes three versions of the `Jacobi Iterative Solver` program.
 |`2_guided_jacobi_iterative_solver_gpu`| Demonstrates an initial single-GPU offload using SYCL.
 |`3_guided_jacobi_iterative_solver_multi_gpu.cpp`| Demonstrates multi-GPU offload using SYCL. (Preview.)
 
-> **Note**: For comprehensive information about oneAPI programming, see the [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide). (Use search or the table of contents to find relevant information quickly.)
+> **Note**: For comprehensive information about oneAPI programming, see the [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide). (Use search or the table of contents to find relevant information quickly.)
 
 ## Prerequisites
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04; Windows 10
+| OS                                | Ubuntu* 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
+| Software                          | Intel® oneAPI DPC++/C++ Compiler
 
 ## Key Implementation Details
 The basic SYCL implementation explained in the code includes:
@@ -61,13 +61,13 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
  - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
 
 To learn more about the extensions and how to configure the oneAPI environment, see the 
-[Using Visual Studio Code with Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ### On Linux*
 1. Build the program using the following `cmake` commands.
@@ -105,7 +105,7 @@ These guided instructions show how to optimize code using the Jacobi Iterative m
 
 3. Change the code for the multi GPU offload. (Currently unavailable)
 
-In each step, the Intel&reg; Advisor analysis tool provides performance analysis for the applications. The Intel&reg; Advisor runtime might take a long time.
+In each step, the Intel® Advisor analysis tool provides performance analysis for the applications. The Intel® Advisor runtime might take a long time.
 
 > **Note**: The performance results and measurements depend on hardware. Your results may vary from what is shown.
 
@@ -114,7 +114,7 @@ The first step is to run offload modeling on the CPU version to identify portion
 
 > **Note**: This process may take up to 30 minutes.
 
-1. Run the Intel&reg; Advisor to model the CPU code.
+1. Run the Intel® Advisor to model the CPU code.
 ```
 advisor --collect=offload --config=gen9_gt2 --project-dir=./../advisor/1_cpu -- ./src/1_guided_jacobi_iterative_solver_cpu
 ```
@@ -122,9 +122,9 @@ advisor --collect=offload --config=gen9_gt2 --project-dir=./../advisor/1_cpu -- 
 ```
 advisor-gui ../advisor/1_cpu/e000/e000.advixeexp
 ```
-> **Note**: If you are connecting to a remote system with oneAPI tools installed, you might not be able to launch the Intel&reg; Advisor graphical interface. You can transfer the HTML-based report to a local machine to view it.
+> **Note**: If you are connecting to a remote system with oneAPI tools installed, you might not be able to launch the Intel® Advisor graphical interface. You can transfer the HTML-based report to a local machine to view it.
 
-Based on the output captured from Intel&reg; Advisor, one can see an estimated speed-up if we offload loops identified in the Top Offloaded section of the output. We can get about 9x speed up for one loop and a 4.5x speed up for another. The generation of the matrix can be spede up almost 7x times. In the next step, we will offload those loops to the GPUs.
+Based on the output captured from Intel® Advisor, one can see an estimated speed-up if we offload loops identified in the Top Offloaded section of the output. We can get about 9x speedup for one loop and a 4.5x speedup for another. The generation of the matrix can be speedup almost 7x times. In the next step, we will offload those loops to the GPUs.
 
 ![offload Modeling results](images/cpu.PNG)
 
@@ -133,9 +133,9 @@ The second step is to offload to a GPU. The `2_guided_jacobi_iterative_solver_gp
 
 Once the offload code changes, run the roofline analysis to look for performance optimization opportunities.
 
-> **Note**: Multi-GPU programs are not supported currently, so no output from Intel&reg; Advisor is currently available.
+> **Note**: Multi-GPU programs are not supported currently, so no output from Intel® Advisor is currently available.
 
-1. Run the Intel&reg; Advisor again.
+1. Run the Intel® Advisor again.
 ```
 advisor --collect=roofline --profile-gpu --project-dir=./../advisor/2_gpu -- ./src/2_guided_jacobi_iterative_solver_gpu
 ```
@@ -145,13 +145,13 @@ advisor --collect=roofline --profile-gpu --project-dir=./../advisor/2_gpu -- ./s
 advisor-gui ../advisor/2_gpu/e000/e000.advixeexp
 ```
 
-As we can see in the charts below, the execution time has been sped up as we predicted in all cases besides the main loop. The reason is that we have to wait for each iteration to finish calculations, as the next iteration is dependant on the results we get. This is why 74.6% of the time the GPU has been in the "Stalled" mode. 
+As we can see in the charts below, the execution time has been sped up as we predicted in all cases besides the main loop. The reason is that we have to wait for each iteration to finish calculations, as the next iteration is dependent on the results we get. This is why 74.6% of the time that the GPU has been in the "Stalled" mode. 
 
 ![offload Modeling results](images/gpu.PNG)
 
 
-### Run the `Jacobi Iterative Solver` Sample in Intel&reg; DevCloud
-If running a sample in the Intel&reg; DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
+### Run the `Jacobi Iterative Solver` Sample in Intel® DevCloud
+If running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
 ## Example Output
 ### CPU Results
