@@ -1,7 +1,7 @@
 #ifndef __STREAMING_QRD_HPP__
 #define __STREAMING_QRD_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // utility classes

@@ -1,9 +1,9 @@
 #ifndef __ANR_PARAMS_HPP__
 #define __ANR_PARAMS_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include <CL/sycl/INTEL/ac_types/ac_fixed.hpp>
+#include <sycl/ext/intel/ac_types/ac_fixed.hpp>
 #include <iostream>
 #include <string>
 #include <utility>
