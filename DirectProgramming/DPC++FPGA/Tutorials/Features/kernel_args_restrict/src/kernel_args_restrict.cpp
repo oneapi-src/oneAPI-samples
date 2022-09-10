@@ -12,7 +12,7 @@
 #include "dpc_common.hpp"
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 using namespace sycl;
 
@@ -33,9 +33,9 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
                 std::vector<int> &r_out) {
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
@@ -50,7 +50,7 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
     // submit the task that DOES NOT apply the kernel_args_restrict attribute
     auto e_nr = q.submit([&](handler &h) {
       accessor in_acc(in_buf, h, read_only);
-      accessor out_acc(nr_out_buf, h, write_only, noinit);
+      accessor out_acc(nr_out_buf, h, write_only, no_init);
 
       h.single_task<KernelArgsNoRestrict>([=]() {
         for (size_t i = 0; i < size; i++) {
@@ -62,7 +62,7 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
     // submit the task that DOES apply the kernel_args_restrict attribute
     auto e_r = q.submit([&](handler &h) {
       accessor in_acc(in_buf, h, read_only);
-      accessor out_acc(r_out_buf, h, write_only, noinit);
+      accessor out_acc(r_out_buf, h, write_only, no_init);
 
       h.single_task<KernelArgsRestrict>([=]() [[intel::kernel_args_restrict]] {
         for (size_t i = 0; i < size; i++) {
@@ -86,7 +86,7 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

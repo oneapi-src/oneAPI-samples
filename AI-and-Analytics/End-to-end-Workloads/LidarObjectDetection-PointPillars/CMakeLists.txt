@@ -3,11 +3,11 @@ cmake_minimum_required(VERSION 3.5)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-project(LidarObjectDetection-PointPillars VERSION 1.0.0)
-
 set(CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_COMPILER dpcpp)
+
+project(LidarObjectDetection-PointPillars VERSION 1.0.0)
 
 ############################################################
 # gather all dependencies
@@ -22,11 +22,11 @@ if (InferenceEngine_FOUND)
 endif()
 
 if (NOT InferenceEngine_FOUND)
-  message(STATUS "ERROR: OpenVINO with version 2021.2 or newer required.")
+  message(STATUS "ERROR: OpenVINO™ with version 2021.2 or newer required.")
   if (IE_VERSION)
     message(STATUS "   Found only ${IE_VERSION}")
   endif()
-  message(STATUS "  Please ensure that OpenVINO is correctly installed and that the OpenVINO environment is setup,")
+  message(STATUS "  Please ensure that OpenVINO™ is correctly installed and that the OpenVINO™ environment is setup,")
   message(STATUS "  i.e. run 'source <path/to/openvino>/bin/setupvars.sh' before calling cmake")
   return()
 endif()

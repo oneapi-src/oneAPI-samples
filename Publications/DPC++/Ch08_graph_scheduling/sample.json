@@ -1,0 +1,57 @@
+{
+  "guid": "5945066a-c0a2-4ac1-8ca7-4aa7e87da1f0",
+  "name": "Chapter 08 - Scheduling Kernals and Data Movement",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_8_3_linear_dependence_in_order.cpp - Linear dependence chain with in-order queues * fig_8_4_linear_dependence_events.cpp - Linear dependence chain with events * fig_8_5_linear_dependence_buffers.cpp - Linear dependence chain with buffers and accessors * fig_8_6_y_in_order.cpp - Y pattern with in-order queues * fig_8_7_y_events.cpp - Y pattern with events * fig_8_8_y_buffers.cpp - Y pattern with accessors",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch08_graph_scheduling",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_8_8_y_buffers",
+          "make fig_8_7_y_events",
+          "make fig_8_6_y_in_order",
+          "make fig_8_5_linear_dependence_buffers",
+          "make fig_8_4_linear_dependence_events",
+          "make fig_8_3_linear_dependence_in_order"        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_8_8_y_buffers",
+          "nmake fig_8_7_y_events",
+          "nmake fig_8_6_y_in_order",
+          "nmake fig_8_5_linear_dependence_buffers",
+          "nmake fig_8_4_linear_dependence_events",
+          "nmake fig_8_3_linear_dependence_in_order"   
+        ]
+      }
+    ]
+  }
+}

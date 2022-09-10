@@ -1,0 +1,62 @@
+{
+  "guid": "48b5dba6-3e96-4b3c-b7ab-beceed16c38d",
+  "name": "Chapter 09 - Communication and Synchronization",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_9_4_naive_matrix_multiplication.cpp - The naïve matrix multiplication kernel from Chapter 4 * fig_9_7_local_accessors.cpp - Declaring and using local accessors * fig_9_8_ndrange_tiled_matrix_multiplication.cpp - Expressing a tiled matrix multiplication kernel with an ND-range parallel_for and work-group local memory * fig_9_9_local_hierarchical.cpp - Hierarchical kernel with a local memory variable * fig_9_10_hierarchical_tiled_matrix_multiplication.cpp - A tiled matrix multiplication kernel implemented as a hierarchical kernel * fig_9_11_sub_group_barrier.cpp - Querying and using the sub_group class * fig_9_13_matrix_multiplication_broadcast.cpp - Matrix multiplication kernel includes a broadcast operation * fig_9_14_ndrange_sub_group_matrix_multiplication.cpp - Tiled matrix multiplication kernel expressed with ND-range parallel_for and sub-group collective functions",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch09_work_item_communication",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_9_4_naive_matmul",
+          "make fig_9_7_local_accessors",
+          "make fig_9_8_ndrange_tiled_matmul",
+          "make fig_9_13_matmul_broadcast",
+          "make fig_9_10_hier_tiled_matmul",
+          "make fig_9_11_sub_group_barrier",
+          "make fig_9_14_ndrange_sub_group_matmul",
+          "make fig_9_9_local_hier"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force b9 >nul 2>nul || echo remove",
+          "mkdir b9",
+          "cd b9",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_9_4_naive_matmul",
+          "nmake fig_9_7_local_accessors",
+          "nmake fig_9_8_ndrange_tiled_matmul",
+          "nmake fig_9_13_matmul_broadcast",
+          "nmake fig_9_10_hier_tiled_matmul",
+          "nmake fig_9_11_sub_group_barrier",
+          "nmake fig_9_14_ndrange_sub_group_matmul",
+          "nmake fig_9_9_local_hier"
+        ]
+      }
+    ]
+  }
+}

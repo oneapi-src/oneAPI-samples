@@ -1,0 +1,63 @@
+{
+  "guid": "B2974A99-4BC6-4F3E-AD3E-C17FE86AC2A4",
+  "name": "Adaptive Noise Reduction",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "description": "A highly optimized adaptive noise reduction (ANR) algorithm on an FPGA.",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./anr.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "dpcpp --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\anr\\test_data ..\\test_data\\",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/anr",
+          "nmake fpga_emu",
+          "anr.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "xcopy /E ..\\ReferenceDesigns\\anr\\test_data ..\\test_data\\",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/anr",
+          "nmake report"
+        ]
+      }
+    ]
+  }
+}

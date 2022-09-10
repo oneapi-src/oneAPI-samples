@@ -5,7 +5,7 @@
 #include <vector>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 using namespace sycl;
 using namespace std::chrono;
@@ -16,8 +16,8 @@ class BufferWorker;
 
 // kernel using buffers to transfer data
 template <typename T>
-double BufferKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
-                    const unsigned int size) {
+double SubmitBufferKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
+                          const unsigned int size) {
   // start timer
   auto start = high_resolution_clock::now();
 
@@ -29,7 +29,7 @@ double BufferKernel(queue& q, std::vector<T>& in, std::vector<T>& out,
     // launch the computation kernel
     auto kernel_event = q.submit([&](handler& h) {
       accessor in_a(in_buf, h, read_only);
-      accessor out_a(out_buf, h, write_only, noinit);
+      accessor out_a(out_buf, h, write_only, no_init);
 
       h.single_task<BufferWorker>([=]() [[intel::kernel_args_restrict]] {
         for (size_t i = 0; i < size; i++) {

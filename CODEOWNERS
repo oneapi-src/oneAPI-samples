@@ -4,18 +4,17 @@
 # the repo. Unless a later match takes precedence,
 # they will be requested for
 # review when someone opens a pull request.
-*       @JoeOster @pmpeter1 @tomlenth
+*       PM, @pmpeter1 , @tomlenth
 
 # This owner owns any files in the given
 # directory at the root of the repository and any of its
 # subdirectories.
-/DirectProgramming/DPC++/ @JoeOster @moushumi-maria, @pmpeter1
-/DirectProgramming/Jupyter/ @JoeOster @praveenkk123
-/DirectProgramming/C++/ @JoeOster @pmpeter1 @Propanu
-/DirectProgramming/Fortran/ @JoeOster @pmpeter1 @Propanu
-/Tools/ @JoeOster @Propanu
-/Libraries/ @JoeOster @Propanu @mav-intel @JoeOster
-
+/DirectProgramming/DPC++/ PM, @moushumi-maria, @pmpeter1
+/DirectProgramming/Jupyter/ PM, @praveenkk123
+/DirectProgramming/C++/ PM, @pmpeter1 @Propanu
+/DirectProgramming/Fortran/ PM, @pmpeter1 @Propanu
+/Tools/ PM, @Propanu
+/Libraries/ PM, @Propanu @mav-intel 
 # Reviwers for all sample.json modification 
 *sample.json @pfische1 @mkitez
 

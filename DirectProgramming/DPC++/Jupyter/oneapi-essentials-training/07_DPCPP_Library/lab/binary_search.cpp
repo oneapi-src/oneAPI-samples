@@ -22,7 +22,7 @@ int main() {
     
     //Create queue with default selector  
     queue q;
-    std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
+    std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
     //Initialize the input vector for search
     std::vector<int> input_seq{0, 2, 2, 2, 3, 3, 3, 3, 6, 6};

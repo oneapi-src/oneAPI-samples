@@ -161,12 +161,10 @@ void GSimulation::Start() {
     // Second kernel updates the velocity and position for all particles
     q.submit([&](handler& h) {
        auto p = pbuf.get_access(h);
-       #if(__SYCL_COMPILER_VERSION <= 20200827)
-       h.parallel_for(ndrange, intel::reduction(energy, 0.f, std::plus<RealType>()), [=](nd_item<1> it, auto& energy) {
-       #else
-       h.parallel_for(ndrange, ONEAPI::reduction(energy, 0.f, std::plus<RealType>()), [=](nd_item<1> it, auto& energy) {
-       #endif
-	 auto i = it.get_global_id();
+       h.parallel_for(ndrange, reduction(energy, 0.f, std::plus<RealType>()), [=](nd_item<1> it, auto& energy) {
+	       
+         auto i = it.get_global_id();
+         
          p[i].vel[0] += p[i].acc[0] * dt;  // 2flops
          p[i].vel[1] += p[i].acc[1] * dt;  // 2flops
          p[i].vel[2] += p[i].acc[2] * dt;  // 2flops

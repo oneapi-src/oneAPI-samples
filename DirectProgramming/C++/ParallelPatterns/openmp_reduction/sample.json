@@ -1,5 +1,5 @@
  {
- 	"guid": "ECF6C8EB-753B-4107-AF64-60662CE41726",
+ 	"guid": "c52eb5b5-5260-47d3-aded-15c5b27779d5",
  	"name": "OpenMP* Reduction",
  	"categories": ["Toolkit/oneAPI Direct Programming/C++/Parallel Patterns"],
  	"description": "This sample models OpenMP* (OMP) Reduction in different ways showing capability of Intel® oneAPI",

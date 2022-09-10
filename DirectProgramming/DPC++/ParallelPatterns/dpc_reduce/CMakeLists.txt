@@ -1,8 +1,9 @@
 # required cmake version
 cmake_minimum_required(VERSION 3.5)
 
-project (dpc_reduce)
 set(CMAKE_CXX_COMPILER "mpiicpc")
+
+project (dpc_reduce)
 
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)

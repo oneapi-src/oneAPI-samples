@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iostream>
 #include <vector>
 
@@ -36,9 +36,9 @@ int main() {
   //  - the FPGA emulator device (CPU emulation of the FPGA)
   //  - the FPGA device (a real FPGA)
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
@@ -65,10 +65,10 @@ int main() {
 
         // The SYCL runtime uses the accessors to infer data dependencies.
         // A "read" accessor must wait for data to be copied to the device
-        // before the kernel can start. A "write noinit" accessor does not.
+        // before the kernel can start. A "write no_init" accessor does not.
         accessor a(buf_a, h, read_only);
         accessor b(buf_b, h, read_only);
-        accessor r(buf_r, h, write_only, noinit);
+        accessor r(buf_r, h, write_only, no_init);
 
         // The kernel uses single_task rather than parallel_for.
         // The task's for loop is executed in pipeline parallel on the FPGA,
@@ -96,7 +96,7 @@ int main() {
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

@@ -6,7 +6,7 @@
 #include <numeric>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
@@ -22,14 +22,14 @@ class KernelDefault;
 
 // Aliases for LSU Control Extension types
 // Implemented using template arguments such as prefetch & burst_coalesce
-// on the new INTEL::lsu class to specify LSU style and modifiers
-using PrefetchingLSU = INTEL::lsu<INTEL::prefetch<true>,
-                                  INTEL::statically_coalesce<false>>;
+// on the new ext::intel::lsu class to specify LSU style and modifiers
+using PrefetchingLSU = ext::intel::lsu<ext::intel::prefetch<true>,
+                                  ext::intel::statically_coalesce<false>>;
 
-using PipelinedLSU = INTEL::lsu<>;
+using PipelinedLSU = ext::intel::lsu<>;
 
-using BurstCoalescedLSU = INTEL::lsu<INTEL::burst_coalesce<true>,
-                                     INTEL::statically_coalesce<false>>;
+using BurstCoalescedLSU = ext::intel::lsu<ext::intel::burst_coalesce<true>,
+                                     ext::intel::statically_coalesce<false>>;
 
 // Input data and output data size constants
 constexpr size_t kMaxVal = 128;
@@ -54,9 +54,9 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
   std::fill(output_data.begin(), output_data.end(), -1);
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
   try {
     // create the SYCL device queue
@@ -67,7 +67,7 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
     buffer input_buffer(input_data);
 
     auto e_p = q.submit([&](handler &h) {
-      accessor output_a(output_buffer, h, write_only, noinit);
+      accessor output_a(output_buffer, h, write_only, no_init);
       accessor input_a(input_buffer, h, read_only);
 
       // Kernel that uses the prefetch LSU
@@ -84,7 +84,7 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
     });
 
     auto e_b = q.submit([&](handler &h) {
-      accessor output_a(output_buffer, h, write_only, noinit);
+      accessor output_a(output_buffer, h, write_only, no_init);
       accessor input_a(input_buffer, h, read_only);
       
       // Kernel that uses the burst-coalesced LSU
@@ -101,7 +101,7 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
     });
 
     auto e_d = q.submit([&](handler &h) {
-      accessor output_a(output_buffer, h, write_only, noinit);
+      accessor output_a(output_buffer, h, write_only, no_init);
       accessor input_a(input_buffer, h, read_only);
       
       // Kernel that uses the default LSUs
@@ -134,7 +134,7 @@ void KernelRun(const std::vector<int> &input_data, const size_t &input_size,
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

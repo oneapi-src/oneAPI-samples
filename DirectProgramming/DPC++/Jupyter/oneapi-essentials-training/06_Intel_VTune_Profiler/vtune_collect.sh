@@ -23,8 +23,8 @@ type=gpu-hotspots
 
 rm -r vtune_data
 
-echo "Vtune Collect $type"
+echo "VTune Collect $type"
 vtune -collect $type -result-dir vtune_data $(pwd)/iso3dfd 256 256 256 8 8 8 20 sycl gpu
 
-echo "Vtune Summary Report"
+echo "VTune Summary Report"
 vtune -report summary -result-dir vtune_data -format html -report-output $(pwd)/summary.html

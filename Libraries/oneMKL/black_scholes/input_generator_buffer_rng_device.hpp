@@ -6,7 +6,7 @@
 
 /*******************************************************************************
 !  Content:
-!      Black-Scholes formula MKL VML based Example
+!      Black-Scholes formula Intel(r) Math Kernel Library (Intel(r) MKL) VML based Example
 !******************************************************************************/
 
 #pragma once

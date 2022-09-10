@@ -1,4 +1,4 @@
-# Code Samples of Intel(R) VTune(TM) Profiler
+# Code Samples of Intel&reg; VTune(TM) Profiler
 
 | Code sample name                          | Supported Intel(r) Architecture(s) | Description
 |:---                                       |:---                                |:---

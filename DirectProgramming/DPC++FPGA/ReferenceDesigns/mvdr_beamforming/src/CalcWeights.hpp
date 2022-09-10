@@ -2,7 +2,7 @@
 #define __CALC_WEIGHTS_HPP__
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "mvdr_complex.hpp"
 
@@ -55,6 +55,8 @@ event SubmitCalcWeightsKernel(queue& q) {
 
           float re = 0;
           float im = 0;
+          
+          [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
           for (short i = 0; i < (short)k_num_elements; i++) {
             auto c = c_vector[i];
             auto y = y_vector[i];

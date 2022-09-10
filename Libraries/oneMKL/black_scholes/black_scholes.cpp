@@ -6,7 +6,7 @@
 
 /*******************************************************************************
 !  Content:
-!      Black-Scholes formula MKL VML based Example
+!      Black-Scholes formula Intel(r) Math Kernel Library (Intel(r) MKL) VML based Example
 !******************************************************************************/
 
 #include <algorithm>
@@ -27,6 +27,7 @@ using namespace oneapi;
 
 #include "input_generator.hpp"
 #include "black_scholes.hpp"
+#include "code_wrapper.tpp"
 
 namespace {
 
@@ -83,7 +84,7 @@ void async_sycl_error(sycl::exception_list el) {
         try {
             std::rethrow_exception(*l);
         } catch(const sycl::exception & e) {
-            std::cerr << "SYCL exception occured with code " << e.get_cl_code() << " with " << e.what() << std::endl;
+            std::cerr << "SYCL exception occured with code " << code_wrapper(e) << " with " << e.what() << std::endl;
         }
     }
 }
@@ -184,7 +185,7 @@ int sample_run(int64_t nopt) {
         }
     }
     catch (sycl::exception const & re) {
-        std::cerr << "SYCL exception occured with code " << re.get_cl_code() << " with " << re.what() << std::endl;
+        std::cerr << "SYCL exception occured with code " << code_wrapper(re) << " with " << re.what() << std::endl;
         return -1;
     }
 

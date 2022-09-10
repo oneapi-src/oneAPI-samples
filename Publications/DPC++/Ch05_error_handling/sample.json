@@ -1,0 +1,63 @@
+{
+  "guid": "60a71766-b0d6-4d8e-9223-8d5628c1bec0",
+  "name": "Chapter 05 - Error Handling",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_5_1_async_task_graph.cpp - Separation of host program and task graph executions * fig_5_2_sync_error.cpp - Creating a synchronous error * fig_5_3_async_error.cpp - Creating an asynchronous error * fig_5_4_unhandled_exception.cpp - Unhandled exception in C++ * fig_5_5_terminate.cpp - std::terminate is called when a SYCL asynchronous exception isn’t handled * fig_5_6_catch_snip.cpp - Pattern to catch sycl::exception specifically * fig_5_7_catch.cpp - Pattern to catch exceptions from a block of code * fig_5_8_lambda_handler.cpp - Example asynchronous handler implementation defined as a lambda * fig_5_9_default_handler_proxy.cpp - Example of how the default asynchronous handler behaves ",  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch05_error_handling",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_5_1_async_task_graph",
+          "make fig_5_2_sync_error",
+          "make fig_5_3_async_error",
+          "make fig_5_4_unhandled_exception",
+          "make fig_5_7_catch",
+          "make fig_5_9_default_handler_proxy",
+          "make fig_5_6_catch_snip",
+          "make fig_5_8_lambda_handler",
+          "make fig_5_5_terminate"  
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_5_1_async_task_graph",
+          "nmake fig_5_2_sync_error",
+          "nmake fig_5_3_async_error",
+          "nmake fig_5_4_unhandled_exception",
+          "nmake fig_5_7_catch",
+          "nmake fig_5_9_default_handler_proxy",
+          "nmake fig_5_6_catch_snip",
+          "nmake fig_5_8_lambda_handler",
+          "nmake fig_5_5_terminate"  
+        ]
+      }
+    ]
+  }
+}

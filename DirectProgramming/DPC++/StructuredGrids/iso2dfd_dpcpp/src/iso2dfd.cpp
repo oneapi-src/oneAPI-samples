@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-// ISO2DFD: Intel® oneAPI DPC++ Language Basics Using 2D-Finite-Difference-Wave
+// ISO2DFD: Data Parallel C++ Language Basics Using 2D-Finite-Difference-Wave
 // Propagation
 //
 // ISO2DFD is a finite difference stencil kernel for solving the 2D acoustic
@@ -30,6 +30,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <CL/sycl.hpp>
 #include <cmath>
 #include <cstring>

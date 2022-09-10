@@ -1,0 +1,60 @@
+{
+  "guid": "662c9ce1-c87c-4d70-9432-67b0df0931b0",
+  "name": "Chapter 03 - Data Management",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_3_4_usm_explicit_data_movement.cpp - USM explicit data movement  * fig_3_5_usm_implicit_data_movement.cpp - USM implicit data movement  * fig_3_6_buffers_and_accessors.cpp - Buffers and accessors  * fig_3_10_in_order.cpp - In-order queue usage  * fig_3_11_depends_on.cpp - Using events and depends_on * fig_3_13_read_after_write.cpp - Read-after-Write  * fig_3_15_write_after_read_and_write_after_write.cpp - Write-after-Read and Write-after-Write ",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch03_data_management",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_3_11_depends_on",
+          "make fig_3_6_buffers_and_accessors",
+          "make fig_3_13_read_after_write",
+          "make fig_3_10_in_order",
+          "make fig_3_15_write_read_and_write_write",
+          "make fig_3_4_usm_explicit_data_movement",
+          "make fig_3_5_usm_implicit_data_movement"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force b3 >nul 2>nul || echo remove",
+          "mkdir b3",
+          "cd b3",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_3_11_depends_on",
+          "nmake fig_3_6_buffers_and_accessors",
+          "nmake fig_3_13_read_after_write",
+          "nmake fig_3_10_in_order",
+          "nmake fig_3_15_write_read_and_write_write",
+          "nmake fig_3_4_usm_explicit_data_movement",
+          "nmake fig_3_5_usm_implicit_data_movement"
+        ]
+      }
+    ]
+  }
+}

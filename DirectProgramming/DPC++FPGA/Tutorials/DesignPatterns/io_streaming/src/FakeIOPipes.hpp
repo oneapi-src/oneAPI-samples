@@ -6,7 +6,7 @@
 #include <utility>
 
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 // the "detail" namespace is commonly used in C++ as an internal namespace
 // (to a file) that is not meant to be visible to the public and should be
@@ -18,7 +18,7 @@ namespace detail {
 
 using namespace sycl;
 
-template <typename Id, typename T, bool use_host_alloc>
+template <typename ID, typename T, bool use_host_alloc>
 class ProducerConsumerBaseImpl {
  protected:
   // private members
@@ -153,7 +153,7 @@ class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
   ProducerImpl &operator=(ProducerImpl const &) = delete;
 
   // the pipe to connect to in device code
-  using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
+  using Pipe = sycl::ext::intel::pipe<PipeID, T, min_capacity>;
 
   // the implementation of the static
   static std::pair<event, event> Start(queue &q,
@@ -186,7 +186,7 @@ class ProducerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
 
       // the producing kernel
       // NO-FORMAT comments are for clang-format
-      h.single_task<KernelID>([=
+      h.single_task<Id>([=
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         kernel_ptr_type ptr(kernel_ptr);
         for (size_t i = 0; i < count; i++) {
@@ -223,7 +223,7 @@ class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
   ConsumerImpl &operator=(ConsumerImpl const &) = delete;
 
   // the pipe to connect to in device code
-  using Pipe = sycl::INTEL::pipe<PipeID, T, min_capacity>;
+  using Pipe = sycl::ext::intel::pipe<PipeID, T, min_capacity>;
 
   static std::pair<event, event> Start(queue &q,
                                        size_t count = BaseImpl::count_) {
@@ -243,7 +243,7 @@ class ConsumerImpl : public ProducerConsumerBaseImpl<Id, T, use_host_alloc> {
     // launch the kernel to read the output into device side global memory
     auto kernel_event = q.submit([&](handler &h) {
       // NO-FORMAT comments are for clang-format
-      h.single_task<KernelID>([=
+      h.single_task<Id>([=
       ]() [[intel::kernel_args_restrict]] {  // NO-FORMAT: Attribute
         kernel_ptr_type ptr(kernel_ptr);
         for (size_t i = 0; i < count; i++) {

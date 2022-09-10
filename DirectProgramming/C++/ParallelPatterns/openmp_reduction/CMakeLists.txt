@@ -7,6 +7,6 @@ if (NOT CMAKE_BUILD_TYPE)
         FORCE)
 endif()
 
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 3.5)
 project(openmp_reduction LANGUAGES CXX)
 add_subdirectory (src)

@@ -2,7 +2,7 @@
   "guid": "31BCA673-F514-4E2E-A8B3-A0B42D63884C",
   "name": "Memory Attributes",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
-  "description": "An Intel® FPGA tutorial demonstrating the use of on-chip memory attributes to control memory structures in a Intel® oneAPI Data Parallel C++ (DPC++) program",
+  "description": "An Intel® FPGA tutorial demonstrating the use of on-chip memory attributes to control memory structures in a Data Parallel C++ (DPC++) program",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -13,6 +13,7 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -23,6 +24,7 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -34,9 +36,11 @@
       {
         "id": "fpga_emu",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/memory_attributes",
           "nmake fpga_emu",
           "memory_attributes.fpga_emu.exe"
         ]
@@ -44,9 +48,11 @@
       {
         "id": "report",
         "steps": [
+          "dpcpp --version",
+          "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ..",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/memory_attributes",
           "nmake report"
         ]
       }

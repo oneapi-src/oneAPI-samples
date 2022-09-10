@@ -1,0 +1,54 @@
+{
+  "guid": "25b534cd-4dc7-43dc-b3d0-05795b0b0f64",
+  "name": "Chapter 07 - Buffers",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_7_2_3_4_creating_buffers.cpp - Creating buffers, Part 1 - Figure 7-3. Creating buffers, Part 2  - Figure 7-4. Creating buffers, Part 3 * fig_7_5_buffer_properties.cpp - Buffer properties * fig_7_8_accessors_simple.cpp - Simple accessor creation * fig_7_10_accessors.cpp - Accessor creation with specified usage",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch07_buffers",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_7_10_accessors",
+          "make fig_7_8_accessors_simple",
+          "make fig_7_5_buffer_properties",
+          "make fig_7_2_3_4_creating_buffers"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_7_10_accessors",
+          "nmake fig_7_8_accessors_simple",
+          "nmake fig_7_5_buffer_properties",
+          "nmake fig_7_2_3_4_creating_buffers"
+        ]
+      }
+    ]
+  }
+}

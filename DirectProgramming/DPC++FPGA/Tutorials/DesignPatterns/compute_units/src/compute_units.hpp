@@ -1,8 +1,3 @@
-//==============================================================
-// Copyright Intel Corporation
-//
-// SPDX-License-Identifier: MIT
-// =============================================================
 #include <CL/sycl.hpp>
 #include <utility>
 
@@ -12,16 +7,12 @@ template <typename Func, template <std::size_t> typename Name,
 class SubmitOneComputeUnit {
 public:
   SubmitOneComputeUnit(Func &&f, sycl::queue &q) {
-
-    q.submit([&](sycl::handler &h) {
-      h.single_task<Name<Index>>([=] {
-        static_assert(
-            std::is_invocable<
-                Func, std::integral_constant<std::size_t, Index>>::value,
-            "The callable Func passed to SubmitComputeUnits must take a single "
-            "argument of type auto");
-        f(std::integral_constant<std::size_t, Index>());
-      });
+    q.single_task<Name<Index>>([=] {
+      static_assert(
+          std::is_invocable_v<Func, std::integral_constant<std::size_t, Index>>,
+          "The callable Func passed to SubmitComputeUnits must take a single "
+          "argument of type auto");
+      f(std::integral_constant<std::size_t, Index>());
     });
   }
 };

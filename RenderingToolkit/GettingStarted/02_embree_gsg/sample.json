@@ -1,0 +1,54 @@
+{
+  "guid": "87FA013D-0B19-45AE-BCD5-43412BE0A99F",
+  "name": "Intel Embree Getting Started",
+  "categories": ["Toolkit/oneAPI Libraries/Embree"],
+  "description": "This introductory hello rendering toolkit sample illustrates how to cast a ray into a scene with Intel Embree",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","rkcommon"],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "Intel_Embree_minimal_lin",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "./minimal"
+                 ]
+                 }
+        ],
+        "windows":[
+                {
+                "env": ["call \"C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat\""],
+                "id": "Intel_Embree_minimal_win",
+                "steps":[
+                    "mkdir build",
+                    "cd build",
+                    "cmake -G\"Visual Studio 16 2019\" -A x64 -DCMAKE_PREFIX_PATH=\"C:/Program Files (x86)/Intel/oneAPI\" ..",
+                    "cmake --build . --config Release",
+                    "cd Release",
+                    ".\\minimal.exe"
+                ]
+
+                }
+        ],
+        "darwin": [
+                {
+                "id": "Intel_Embree_minimal_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "export DYLD_LIBRARY_PATH=${LIBRARY_PATH} && ./minimal"
+                 ]
+                 }
+        ]
+
+
+  }
+}

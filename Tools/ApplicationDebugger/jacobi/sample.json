@@ -2,7 +2,7 @@
   "guid": "CFAC8EF8-E362-4054-ABE3-A04EEBEBCB46",
   "name": "Jacobi",
   "categories": ["Toolkit/oneAPI Tools/Application Debugger"],
-  "description": "A small Intel® oneAPI Data Parallel C++ (DPC++) example which solves a harcoded linear system with Jacobi iteration. The sample includes two versions of the same program: with and without bugs.",
+  "description": "A small Data Parallel C++ (DPC++) example which solves a harcoded linear system with Jacobi iteration. The sample includes two versions of the same program: with and without bugs.",
   "toolchain": ["dpcpp"],
   "dependencies": ["debugger"],
   "languages": [{"cpp":{}}],

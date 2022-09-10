@@ -1,0 +1,58 @@
+{
+  "guid": "b9a18214-3bbb-4487-89c5-34fa7db239bd",
+  "name": "Chapter 10 - Defining Kernels",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "* fig_10_2_kernel_lambda.cpp - Kernel defined using a lambda expression * fig_10_3_optional_kernel_lambda_elements.cpp - More elements of a kernel lambda expression, including optional elements * fig_10_4_named_kernel_lambda.cpp - Naming kernel lambda expressions * fig_10_5_unnamed_kernel_lambda.cpp - Using unnamed kernel lambda expressions * fig_10_6_kernel_functor.cpp - Kernel as a named function object * fig_10_8_opencl_object_interop.cpp - Kernel created from an OpenCL kernel object",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch10_expressing_kernels",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_10_2_kernel_lambda",
+          "make fig_10_3_optional_kernel_lambda_elements",
+          "make fig_10_4_named_kernel_lambda",
+          "make fig_10_5_unnamed_kernel_lambda",
+          "make fig_10_6_kernel_functor",          
+          "make fig_10_8_opencl_object_interop"          
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_10_2_kernel_lambda",
+          "nmake fig_10_3_optional_kernel_lambda_elements",
+          "nmake fig_10_4_named_kernel_lambda",
+          "nmake fig_10_5_unnamed_kernel_lambda",
+          "nmake fig_10_6_kernel_functor",          
+          "nmake fig_10_8_opencl_object_interop"          
+        ]
+      }
+    ]
+  }
+}

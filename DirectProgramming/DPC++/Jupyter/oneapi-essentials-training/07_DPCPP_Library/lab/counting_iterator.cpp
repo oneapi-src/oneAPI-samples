@@ -3,9 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <oneapi/dpl/numeric>
+#include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/execution>
 #include <oneapi/dpl/iterator>
+#include <oneapi/dpl/numeric>
+
 
 using namespace sycl;
 using namespace oneapi::dpl::execution;

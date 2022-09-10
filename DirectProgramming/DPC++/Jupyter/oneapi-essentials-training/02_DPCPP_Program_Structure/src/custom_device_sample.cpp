@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -32,6 +32,6 @@ int main() {
     my_device_selector selector(vendor_name);
     queue q(selector);
     std::cout << "Device: "
-    << q.get_device().get_info<info::device::name>() << std::endl;
+    << q.get_device().get_info<info::device::name>() << "\n";
     return 0;
 }

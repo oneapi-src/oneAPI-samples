@@ -1,4 +1,3 @@
-
 # oneAPI-samples/Common/
 
 

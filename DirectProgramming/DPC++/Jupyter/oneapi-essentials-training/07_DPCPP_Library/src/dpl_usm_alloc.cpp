@@ -13,7 +13,7 @@ const int N = 4;
 
 int main() {
   queue q;
-  std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
+  std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
     
   //# USM allocator 
   usm_allocator<int, usm::alloc::shared> alloc(q);
@@ -23,6 +23,6 @@ int main() {
   std::fill(make_device_policy(q), v.begin(), v.end(), 20);
   q.wait();
     
-  for (int i = 0; i < v.size(); i++) std::cout << v[i] << std::endl;
+  for (int i = 0; i < v.size(); i++) std::cout << v[i] << "\n";
   return 0;
 }

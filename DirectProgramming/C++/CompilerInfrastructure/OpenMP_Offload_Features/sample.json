@@ -1,0 +1,28 @@
+{
+  "guid": "DBE51810-C64F-45F0-87EF-38898BE1D826",
+  "name": "OpenMP Offload",
+  "categories": [ "Toolkit/oneAPI Direct Programming/C++/Compiler Infrastructure" ],
+  "description": "Demonstration of the new OpenMP offload features supported by the Intel(r) oneAPI DPC++/C++ Compiler",
+  "toolchain": [ "dpcpp" ],
+  "languages": [{"cpp":{}}],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "ciTests": {
+    "linux": [
+      {
+        "env": [ "source /opt/intel/oneapi/setvars.sh" ],
+        "steps": [
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "make run_prog1",
+          "make run_prog2",
+          "make run_prog3",
+          "make clean"
+        ]
+      }
+    ]
+  }
+}

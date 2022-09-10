@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 
@@ -37,7 +37,7 @@ void TransposeAndFold(const device_selector &selector,
 
     event e = q.submit([&](handler &h) {
       accessor accessor_input(buffer_input, h, read_only);
-      accessor accessor_output(buffer_output, h, write_only, noinit);
+      accessor accessor_output(buffer_output, h, write_only, no_init);
 
       h.single_task<KernelCompute<safe_len>>([=]()
                                              [[intel::kernel_args_restrict]] {
@@ -54,7 +54,7 @@ void TransposeAndFold(const device_selector &selector,
         // location that are less than kRowLength iterations apart.
         // The ivdep here instructs the compiler that it can safely assume no
         // loop-carried dependencies over safe_len consecutive iterations.
-        [[intel::ivdep(safe_len)]]
+        [[intel::ivdep(temp_buffer, safe_len)]]
         for (size_t j = 0; j < kMatrixSize * kRowLength; j++) {
           #pragma unroll
           for (size_t i = 0; i < kRowLength; i++) {
@@ -80,7 +80,7 @@ void TransposeAndFold(const device_selector &selector,
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";
@@ -107,9 +107,9 @@ int main() {
   }
 
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector selector;
+  ext::intel::fpga_emulator_selector selector;
 #else
-  INTEL::fpga_selector selector;
+  ext::intel::fpga_selector selector;
 #endif
 
   // Instantiate kernel logic with the min and max correct safelen parameter

@@ -2,7 +2,7 @@
  "guid": "70FAEF03-6509-4B6C-B995-D42A65CE36EE",
  "name": "Tutorials",
  "categories": ["Toolkit/oneAPI Libraries/oneCCL"],
- "description": "Intel® oneCCL Tutorials",
+ "description": "oneAPI Collective Communications Library (oneCCL) Tutorials",
  "toolchain": ["dpcpp"],
  "languages": [{"cpp":{}}],
  "dependencies": ["ccl"],

@@ -1,15 +1,3 @@
-//==============================================================
-//
-// SAMPLE SOURCE CODE - SUBJECT TO THE TERMS OF SAMPLE CODE LICENSE AGREEMENT,
-// http://software.intel.com/en-us/articles/intel-sample-source-code-license-agreement/
-//
-// Copyright 2016 Intel Corporation
-//
-// THIS FILE IS PROVIDED "AS IS" WITH NO WARRANTIES, EXPRESS OR IMPLIED,
-// INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT OF INTELLECTUAL PROPERTY RIGHTS.
-//
-// =============================================================
 /* [DESCRIPTION]
  * This C code sample demonstrates how to use C, Intel(R) MMX(TM),
  * Intel(R) Streaming SIMD Extensions 3 (Intel(R) SSE3),
@@ -80,12 +68,12 @@ int main() {
     product = AVX2_dot_product(x, y);
     printf("Dot Product computed by Intel(R) AVX2 intrinsics:  %f\n", product);
   } else
-    printf("Your Processor does not support AVX2 instrinsics.\n");
+    printf("Your Processor does not support Intel(R) AVX2 instrinsics.\n");
   if (_may_i_use_cpu_feature(_FEATURE_AVX)) {
     product = AVX_dot_product(x, y);
     printf("Dot Product computed by Intel(R) AVX intrinsics:  %f\n", product);
   } else
-    printf("Your Processor does not support AVX intrinsics.\n");
+    printf("Your Processor does not support Intel(R) AVX intrinsics.\n");
 #else
   printf("Use Intel(R) Compiler to compute with Intel(R) AVX intrinsics\n");
 #endif

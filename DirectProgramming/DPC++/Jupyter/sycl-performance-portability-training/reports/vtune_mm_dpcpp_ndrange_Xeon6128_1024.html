@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<html><style>
+        .metric-name {
+        font-weight: 600;
+        min-width: 14em;
+        display: inline-block;
+        }
+
+        .metric-value {
+        margin-left: 1em;
+        color: #336;
+        }
+
+        .metric-value-with-issue {
+        margin-left: 1em;
+        color: #C33;
+        }
+
+        li {
+        list-style-type: none;
+        }
+
+        ul {
+        margin-left: 1.5em;
+        padding-left: 0em;
+        }
+
+        body {
+        margin: 0;
+        paddind: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #336;
+        }
+
+        pre {
+        white-space:pre-wrap;
+        max-width: 40em;
+        color: #633;
+        }
+
+        .issue {
+        border-left: 3px solid #C33;
+        padding: 0.3em 0.3em 0.3em 1em;
+        }
+
+        table {
+        margin: 0 1.5em;
+        }
+
+        th, td {
+        text-align: left;
+        }
+
+        td {
+        color: #333;
+        }
+
+        th {
+        border-bottom: 2px solid #336;
+        font-weight: 600;
+        }
+
+        .table-value {
+        margin-right: 1.5em;
+        }
+
+        .brand {
+        background-color: #0071c5;
+        padding: 0.5em 1.5em;
+        width: 100%;
+        color: white;
+        font-weight: 600;
+        }
+
+        .recommendation-placeholder {
+        background-color: #eaecee;
+        padding: 1em;
+        }
+
+        .recommendation-placeholder p {
+        font-weight: 600;
+        margin: 0;
+        }
+
+        .recommendation {
+        border-left: 3px solid #bbb;
+        padding: 0.3em 0.3em 0.3em 1em;
+        margin: 0 0 0 1.5em;
+        }
+
+        .recommendation-metric {
+        font-weight: 600;
+        min-width: 14em;
+        display: inline-block;
+        margin: 0 0 0 1.5em;
+        }
+
+      </style><body><div class="brand">Intel<sup>&reg;</sup> VTune<sup>&trade;</sup> Profiler 2022.0.0</div><ul><li><span class="metric-name">Elapsed Time:
+        </span><span class="metric-value">2.844s</span><ul><li><span class="metric-name">CPU Time:
+        </span><span class="metric-value">1.884s</span><ul><li><span class="metric-name">Effective Time:
+        </span><span class="metric-value">1.884s</span></li></ul><ul><li><span class="metric-name">Spin Time:
+        </span><span class="metric-value">0s</span><ul><li><span class="metric-name">Imbalance or Serial Spinning:
+        </span><span class="metric-value">0s</span></li></ul><ul><li><span class="metric-name">Lock Contention:
+        </span><span class="metric-value">0s</span></li></ul><ul><li><span class="metric-name">Other:
+        </span><span class="metric-value">0s</span></li></ul></li></ul><ul><li><span class="metric-name">Overhead Time:
+        </span><span class="metric-value">0s</span><ul><li><span class="metric-name">Creation:
+        </span><span class="metric-value">0s</span></li></ul><ul><li><span class="metric-name">Scheduling:
+        </span><span class="metric-value">0s</span></li></ul><ul><li><span class="metric-name">Reduction:
+        </span><span class="metric-value">0s</span></li></ul><ul><li><span class="metric-name">Atomics:
+        </span><span class="metric-value">0s</span></li></ul><ul><li><span class="metric-name">Other:
+        </span><span class="metric-value">0s</span></li></ul></li></ul></li></ul><ul><li><span class="metric-name">Instructions Retired:
+        </span><span class="metric-value">1,513,000,000</span></li></ul><ul><li><span class="metric-name">Microarchitecture Usage:
+        </span><span class="metric-value-with-issue">11.5% of Pipeline Slots<div class="issues"><pre class="issue">You code efficiency on this platform is too low.
+
+Possible cause: memory stalls, instruction starvation, branch misprediction or long latency instructions.
+
+Next steps: Run Microarchitecture Exploration analysis to identify the cause of the low microarchitecture usage efficiency.</pre></div></span><ul><li><span class="metric-name">CPI Rate:
+        </span><span class="metric-value-with-issue">3.191<div class="issues"><pre class="issue">The CPI may be too high. This could be caused by issues such as memory stalls, instruction starvation, branch misprediction or long latency instructions. Explore the other hardware-related metrics to identify what is causing high CPI.</pre></div></span></li></ul></li></ul><ul><li><span class="metric-name">Total Thread Count:
+        </span><span class="metric-value">13</span></li></ul><ul><li><span class="metric-name">Paused Time:
+        </span><span class="metric-value">0s</span></li></ul></li></ul><ul><li><span class="metric-name">Top Hotspots:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Function</span></th><th><span class="table-value">Module</span></th><th><span class="table-value">CPU Time</span></th><th><span class="table-value">% of CPU Time(%)</span></th></tr><tr><td><span class="table-value">mm_kernel(cl::sycl::queue&amp;, std::vector&lt;float, std::allocator&lt;float&gt;&gt;&amp;, std::vector&lt;float, std::allocator&lt;float&gt;&gt;&amp;, std::vector&lt;float, std::allocator&lt;float&gt;&gt;&amp;, unsigned long, unsigned long)::{lambda(cl::sycl::handler&amp;)#1}::operator()(cl::sycl::handler&amp;) const::{lambda(cl::sycl::nd_item&lt;(int)2&gt;)#1}</span></td><td><span class="table-value">d621b7e0a2c35e56</span></td><td><span class="table-value">0.922s</span></td><td><span class="table-value">48.9%</span></td></tr><tr><td><span class="table-value">[Outside any known module]</span></td><td><span class="table-value">[Unknown]</span></td><td><span class="table-value">0.286s</span></td><td><span class="table-value">15.2%</span></td></tr><tr><td><span class="table-value">Intel::OpenCL::Utils::OclNonReentrantSpinMutex::Lock</span></td><td><span class="table-value">libcpu_device.so.2021.13.11.0</span></td><td><span class="table-value">0.276s</span></td><td><span class="table-value">14.6%</span></td></tr><tr><td><span class="table-value">Intel::OpenCL::Utils::AtomicCounter::operator long</span></td><td><span class="table-value">libcpu_device.so.2021.13.11.0</span></td><td><span class="table-value">0.075s</span></td><td><span class="table-value">4.0%</span></td></tr><tr><td><span class="table-value">hw_pause</span></td><td><span class="table-value">libcpu_device.so.2021.13.11.0</span></td><td><span class="table-value">0.070s</span></td><td><span class="table-value">3.7%</span></td></tr><tr><td><span class="table-value">[Others]</span></td><td><span class="table-value">N/A</span></td><td><span class="table-value">0.256s</span></td><td><span class="table-value">13.6%</span></td></tr></table></li></ul><ul><li><span class="metric-name">Top Tasks:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Task Type</span></th><th><span class="table-value">Task Time</span></th><th><span class="table-value">Task Count</span></th><th><span class="table-value">Average Task Time</span></th></tr><tr><td><span class="table-value">tbb_parallel_for</span></td><td><span class="table-value">1.135s</span></td><td><span class="table-value">27</span></td><td><span class="table-value">0.042s</span></td></tr><tr><td><span class="table-value">tbb_custom</span></td><td><span class="table-value">0.226s</span></td><td><span class="table-value">7</span></td><td><span class="table-value">0.032s</span></td></tr></table></li></ul><ul><li><span class="metric-name">Effective Physical Core Utilization:
+        </span><span class="metric-value-with-issue">3.9% (0.464 out of 12)<div class="issues"><pre class="issue">The metric value is low, which may signal a poor physical CPU cores utilization caused by:
+    - load imbalance
+    - threading runtime overhead
+    - contended synchronization
+    - thread/process underutilization
+    - incorrect affinity that utilizes logical cores instead of physical cores
+Explore sub-metrics to estimate the efficiency of MPI and OpenMP parallelism or run the Locks and Waits analysis to identify parallel bottlenecks for other parallel runtimes.</pre></div></span><ul><li><span class="metric-name">Effective Logical Core Utilization:
+        </span><span class="metric-value-with-issue">2.8% (0.663 out of 24)<div class="issues"><pre class="issue">The metric value is low, which may signal a poor logical CPU cores utilization. Consider improving physical core utilization as the first step and then look at opportunities to utilize logical cores, which in some cases can improve processor throughput and overall performance of multi-threaded applications.</pre></div></span></li></ul></li></ul><ul><li><span class="metric-name">Collection and Platform Info:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Application Command Line:
+        </span><span class="metric-value">/home/u49991/DPCPP_Performance_Portability/lab/mm_dpcpp_ndrange "-n" "1024" "-m" "64" </span></li></ul><ul><li><span class="metric-name">Operating System:
+        </span><span class="metric-value">5.4.0-80-generic DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=20.04
+DISTRIB_CODENAME=focal
+DISTRIB_DESCRIPTION="Ubuntu 20.04.3 LTS"</span></li></ul><ul><li><span class="metric-name">Computer Name:
+        </span><span class="metric-value">s001-n008</span></li></ul><ul><li><span class="metric-name">Result Size:
+        </span><span class="metric-value">5.5 MB </span></li></ul><ul><li><span class="metric-name">Collection start time:
+        </span><span class="metric-value">12:46:02 13/01/2022 UTC</span></li></ul><ul><li><span class="metric-name">Collection stop time:
+        </span><span class="metric-value">12:46:05 13/01/2022 UTC</span></li></ul><ul><li><span class="metric-name">Collector Type:
+        </span><span class="metric-value">Driverless Perf per-process sampling</span></li></ul><ul><li><span class="metric-name">CPU:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Name:
+        </span><span class="metric-value">Intel(R) Xeon(R) Processor code named Skylake</span></li></ul><ul><li><span class="metric-name">Frequency:
+        </span><span class="metric-value">3.392 GHz</span></li></ul><ul><li><span class="metric-name">Logical CPU Count:
+        </span><span class="metric-value">24</span></li></ul><ul><li><span class="metric-name">Cache Allocation Technology:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Level 2 capability:
+        </span><span class="metric-value">not detected</span></li></ul><ul><li><span class="metric-name">Level 3 capability:
+        </span><span class="metric-value">available</span></li></ul></li></ul></li></ul></li></ul></body></html>
+

@@ -14,18 +14,18 @@ bool checkGridDimension(size_t n1, size_t n2, size_t n3, unsigned int dimX,
                         unsigned int dimY, unsigned int blockZ) {
   if (n1 % dimX) {
     std::cout << " ERROR: Invalid Grid Size: n1 should be multiple of DIMX - "
-              << dimX << std::endl;
+              << dimX << "\n";
     return true;
   }
   if (n2 % dimY) {
     std::cout << " ERROR: Invalid Grid Size: n2 should be multiple of DIMY - "
-              << dimY << std::endl;
+              << dimY << "\n";
     ;
     return true;
   }
   if (n3 % blockZ) {
     std::cout << " ERROR: Invalid Grid Size: n3 should be multiple of BLOCKZ - "
-              << blockZ << std::endl;
+              << blockZ << "\n";
     ;
     return true;
   }
@@ -46,7 +46,7 @@ bool checkBlockDimension(cl::sycl::queue& q, unsigned int dimX,
   if ((maxBlockSize > 1) && (dimX * dimY > maxBlockSize)) {
     std::cout << "ERROR: Invalid block sizes: n1_Tblock * n2_Tblock should be "
                  "less than or equal to "
-              << maxBlockSize << std::endl;
+              << maxBlockSize << "\n";
     ;
     return true;
   }
@@ -67,16 +67,16 @@ void printTargetInfo(cl::sycl::queue& q, unsigned int dimX, unsigned int dimY) {
       device.get_info<cl::sycl::info::device::max_compute_units>();
 
   std::cout << " Running on " << device.get_info<cl::sycl::info::device::name>()
-            << std::endl;
+            << "\n";
   std::cout << " The Device Max Work Group Size is : " << maxBlockSize
-            << std::endl;
-  std::cout << " The Device Max EUCount is : " << maxEUCount << std::endl;
-  std::cout << " The blockSize x is : " << dimX << std::endl;
-  std::cout << " The blockSize y is : " << dimY << std::endl;
+            << "\n";
+  std::cout << " The Device Max EUCount is : " << maxEUCount << "\n";
+  std::cout << " The blockSize x is : " << dimX << "\n";
+  std::cout << " The blockSize y is : " << dimY << "\n";
 #ifdef USE_SHARED
-  std::cout << " Using Shared Local Memory Kernel : " << std::endl;
+  std::cout << " Using Shared Local Memory Kernel : " << "\n";
 #else
-  std::cout << " Using Global Memory Kernel : " << std::endl;
+  std::cout << " Using Global Memory Kernel : " << "\n";
 
 #endif
 }
@@ -86,22 +86,22 @@ void printTargetInfo(cl::sycl::queue& q, unsigned int dimX, unsigned int dimY) {
  * Utility function to get input arguments
  */
 void usage(std::string programName) {
-  std::cout << " Incorrect parameters " << std::endl;
+  std::cout << " Incorrect parameters " << "\n";
   std::cout << " Usage: ";
   std::cout << programName
-            << " n1 n2 n3 b1 b2 b3 Iterations [omp|sycl] [gpu|cpu]" << std::endl
-            << std::endl;
-  std::cout << " n1 n2 n3      : Grid sizes for the stencil " << std::endl;
+            << " n1 n2 n3 b1 b2 b3 Iterations [omp|sycl] [gpu|cpu]" << "\n"
+            << "\n";
+  std::cout << " n1 n2 n3      : Grid sizes for the stencil " << "\n";
   std::cout << " b1 b2 b3      : cache block sizes for cpu openmp version. "
-            << std::endl;
-  std::cout << " Iterations    : No. of timesteps. " << std::endl;
+            << "\n";
+  std::cout << " Iterations    : No. of timesteps. " << "\n";
   std::cout << " [omp|sycl]    : Optional: Run the OpenMP or the SYCL variant."
-            << " Default is to use both for validation " << std::endl;
+            << " Default is to use both for validation " << "\n";
   std::cout
       << " [gpu|cpu]     : Optional: Device to run the SYCL version"
       << " Default is to use the GPU if available, if not fallback to CPU "
-      << std::endl
-      << std::endl;
+      << "\n"
+      << "\n";
 }
 
 /*
@@ -120,16 +120,16 @@ void printStats(double time, size_t n1, size_t n2, size_t n3,
   mflops = (7.0f * HALF_LENGTH + 5.0f) * throughput_mpoints;
   mbytes = 12.0f * throughput_mpoints;
 
-  std::cout << "--------------------------------------" << std::endl;
-  std::cout << "time         : " << time / 1e3f << " secs" << std::endl;
+  std::cout << "--------------------------------------" << "\n";
+  std::cout << "time         : " << time / 1e3f << " secs" << "\n";
   std::cout << "throughput   : " << throughput_mpoints << " Mpts/s"
-            << std::endl;
-  std::cout << "flops        : " << mflops / 1e3f << " GFlops" << std::endl;
-  std::cout << "bytes        : " << mbytes / 1e3f << " GBytes/s" << std::endl;
-  std::cout << std::endl
-            << "--------------------------------------" << std::endl;
-  std::cout << std::endl
-            << "--------------------------------------" << std::endl;
+            << "\n";
+  std::cout << "flops        : " << mflops / 1e3f << " GFlops" << "\n";
+  std::cout << "bytes        : " << mbytes / 1e3f << " GBytes/s" << "\n";
+  std::cout << "\n"
+            << "--------------------------------------" << "\n";
+  std::cout << "\n"
+            << "--------------------------------------" << "\n";
 }
 
 /*
@@ -172,3 +172,4 @@ bool within_epsilon(float* output, float* reference, const size_t dimx,
   if (error) printf("error (Euclidean norm): %.9e\n", norm2);
   return error;
 }
+

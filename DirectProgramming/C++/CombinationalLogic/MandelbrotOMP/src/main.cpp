@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
 
   assert(width % 8 == 0);
 
-#ifndef __INTEL_COMPILER
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
   CUtilTimer timer;
   printf(
       "This example will check how many iterations of z_n+1 = z_n^2 + c a "

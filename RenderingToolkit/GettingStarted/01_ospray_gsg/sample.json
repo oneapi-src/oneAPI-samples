@@ -1,0 +1,53 @@
+{
+  "guid": "40C26D31-D553-4BD9-9E1D-63DDF352CB85",
+  "name": "Intel OSPRay Getting Started",
+  "categories": ["Toolkit/oneAPI Libraries/OSPRay"],
+  "description": "This introductory 'hello rendering toolkit' sample program demonstrates how to render triangle data with the pathtracer from Intel OSPRay",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","ospray","openvkl","embree","rkcommon","oidn"],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+                {
+  		"id": "Intel_OSPRay_ospTutorial_lin",
+  		"steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "./ospTutorialCpp"
+  		 ]
+  	         }
+        ],
+        "windows":[
+		{
+		"id": "Intel_OSPRay_ospTutorial_win",
+		"steps":[
+                    "mkdir build",
+                    "cd build",
+		    "cmake ..",
+		    "cmake --build . --config Release",
+		    "cd Release",
+		    ".\\ospTutorialCpp.exe"
+		]
+
+		}
+	],
+        "darwin": [
+                {
+                "id": "Intel_OSPRay_ospTutorial_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib:${ONEAPI_ROOT}/oidn/latest/lib && ./ospTutorialCpp"
+                 ]
+                 }
+        ]
+
+
+  }
+}

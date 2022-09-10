@@ -1,0 +1,75 @@
+{
+  "guid": "4674C946-45F7-4bCA-9DA6-FAA1797691CB",
+  "name": "Cholesky decomposition",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
+  "description": "Reference design demonstrating high-performance Cholesky decomposition of real and complex matrices on an Intel® FPGA",
+  "toolchain": ["dpcpp"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": [
+      "ReferenceDesigns/cholesky",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "env": [
+          "export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
+        ],
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./cholesky.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "env": [
+          "set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
+        ],
+        "steps": [
+          "dpcpp --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/cholesky",
+          "nmake fpga_emu",
+          "cholesky.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "dpcpp --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/cholesky",
+          "nmake report"
+        ]
+      }
+    ]
+  }
+}

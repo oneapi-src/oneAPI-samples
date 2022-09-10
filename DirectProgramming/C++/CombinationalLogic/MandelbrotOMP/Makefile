@@ -1,21 +1,9 @@
-#==============================================================
-#
-# SAMPLE SOURCE CODE - SUBJECT TO THE TERMS OF SAMPLE CODE LICENSE AGREEMENT,
-# http://software.intel.com/en-us/articles/intel-sample-source-code-license-agreement/
-#
-# Copyright Intel Corporation
-#
-# THIS FILE IS PROVIDED "AS IS" WITH NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT
-# NOT LIMITED TO ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-# PURPOSE, NON-INFRINGEMENT OF INTELLECTUAL PROPERTY RIGHTS.
-#
-# =============================================================
 CXX := icpc
 SRCDIR := src
 BUILDDIR := release
 CFLAGS := -O3 -ipo -qopenmp -std=c++11
 EXTRA_CFLAGS :=
-LIBFLAGS := -qopenmp
+LIBFLAGS := -qopenmp -ipo
 
 ifdef perf_num
 	EXTRA_CFLAGS += -D PERF_NUM

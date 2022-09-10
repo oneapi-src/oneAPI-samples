@@ -1,0 +1,24 @@
+{
+  "guid": "d4d338a2-dd64-492a-86fe-6fb4ae4190e2",
+  "name": "odd-even-merge-sort",
+  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/GraphTraversal"],
+  "description": "This is the preferred algorithm of choice for sorting batches of short-sized to mid-sized (key, value) array pairs",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run_cpu",
+                        "make run_gpu"
+                 ]
+        }]
+
+  }
+}

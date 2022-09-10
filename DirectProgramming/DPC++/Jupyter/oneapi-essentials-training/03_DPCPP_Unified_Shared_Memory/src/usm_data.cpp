@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -11,7 +11,7 @@ static const int N = 256;
 int main() {
   /* in_order queue property */
   queue q{property::queue::in_order()};
-  std::cout << "Device : " << q.get_device().get_info<info::device::name>() << std::endl;
+  std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
   int *data = static_cast<int *>(malloc_shared(N * sizeof(int), q));
   for (int i = 0; i < N; i++) data[i] = 10;
@@ -24,7 +24,7 @@ int main() {
   q.wait();
 
   for (int i = 0; i < N; i++) std::cout << data[i] << " ";
-  std::cout << std::endl;
+  std::cout << "\n";
   free(data, q);
   return 0;
 }

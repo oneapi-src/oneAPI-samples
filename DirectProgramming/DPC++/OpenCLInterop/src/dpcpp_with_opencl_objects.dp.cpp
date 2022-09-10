@@ -7,6 +7,7 @@
 #include <CL/opencl.h>
 #include <stdio.h>
 #include <CL/sycl.hpp>
+#include <CL/sycl/backend/opencl.hpp>
 using namespace sycl;
 
 constexpr int MAX_SOURCE_SIZE = 0x100000;
@@ -46,7 +47,7 @@ int main(int argc, char **argv) {
   ret = clGetPlatformIDs(ret_num_platforms, ocl_platforms, NULL);
   // Set Platform to Use
   int platform_index = 0;
-  platform sycl_platform(ocl_platforms[platform_index]);
+  platform sycl_platform = opencl::make<platform>(ocl_platforms[platform_index]);
   std::cout << "Using Platform: "
             << sycl_platform.get_info<info::platform::name>() << std::endl;
 
@@ -81,15 +82,15 @@ int main(int argc, char **argv) {
 
   {  // DPC++ Application Scope
     // Construct SYCL versions of the context, queue, kernel, and buffers
-    context sycl_context(ocl_context);
-    queue sycl_queue(ocl_queue, sycl_context);
+    context sycl_context = opencl::make<context>(ocl_context);
+    queue sycl_queue = opencl::make<queue>(sycl_context, ocl_queue);
     std::cout << "Device: "
               << sycl_queue.get_device().get_info<info::device::name>()
               << std::endl;
-    kernel sycl_kernel(ocl_kernel, sycl_context);
-    buffer<int, 1> sycl_buf_a(ocl_buf_a, sycl_context);
-    buffer<int, 1> sycl_buf_b(ocl_buf_b, sycl_context);
-    buffer<int, 1> sycl_buf_c(ocl_buf_c, sycl_context);
+    kernel sycl_kernel = make_kernel<backend::opencl>(ocl_kernel, sycl_context);
+    buffer<int, 1> sycl_buf_a = make_buffer<backend::opencl, int>(ocl_buf_a, sycl_context);
+    buffer<int, 1> sycl_buf_b = make_buffer<backend::opencl, int>(ocl_buf_b, sycl_context);
+    buffer<int, 1> sycl_buf_c = make_buffer<backend::opencl, int>(ocl_buf_c, sycl_context);
     sycl_queue.submit([&](handler &h) {
       // Create accessors for each of the buffers
       accessor a_accessor(sycl_buf_a, h, read_only);

@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <CL/sycl.hpp>
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cmath>
 #include <iomanip>
 #include <random>
@@ -59,7 +59,7 @@ void SimplePow(sycl::queue &q, buffer<float, 1> &buffer_a,
   e = q.submit([&](handler &h) {
     // Get kernel access to the buffers
     accessor accessor_a(buffer_a, h, read_only);
-    accessor accessor_b(buffer_b, h, read_write, noinit);
+    accessor accessor_b(buffer_b, h, read_write, no_init);
 
     const int num = kSize;
     assert(kPow >= 2);
@@ -173,9 +173,9 @@ void ProcessOutput(buffer<float, 1> &input_buf, buffer<float, 1> &output_buf,
    completes.
 */
 void ProcessInput(buffer<float, 1> &buf) {
-  // We are generating completely new input data, so can the noinit property
+  // We are generating completely new input data, so can the no_init property
   // here to indicate we don't care about the SYCL buffer's current contents.
-  host_accessor buf_acc(buf, write_only, noinit);
+  host_accessor buf_acc(buf, write_only, no_init);
 
   // RNG seed
   auto seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -200,13 +200,13 @@ void ProcessInput(buffer<float, 1> &buf) {
 int main() {
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
-  INTEL::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
   std::cout << "\nEmulator output does not demonstrate true hardware "
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
 #else
-  INTEL::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
 
   try {
@@ -347,7 +347,7 @@ int main() {
     std::cerr << "Caught a SYCL host exception:\n" << e.what() << "\n";
 
     // Most likely the runtime couldn't find FPGA hardware!
-    if (e.get_cl_code() == CL_DEVICE_NOT_FOUND) {
+    if (e.code().value() == CL_DEVICE_NOT_FOUND) {
       std::cerr << "If you are targeting an FPGA, please ensure that your "
                    "system has a correctly configured FPGA board.\n";
       std::cerr << "Run sys_check in the oneAPI root directory to verify.\n";

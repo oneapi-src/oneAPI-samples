@@ -1,0 +1,30 @@
+{
+ "guid": "82e7612f-2810-4d12-9c75-c17fcbb946fa",
+ "name": "Intel® Neural Compressor Tensorflow Getting Started",
+ "categories": ["Toolkit/oneAPI AI And Analytics/AI Getting Started Samples"],
+ "description": "This sample illustrates how to run Intel® Neural Compressor to quantize the FP32 model trained by Keras on Tensorflow to INT8 model to speed up the inference.",
+ "languages": [{"python":{}}],
+ "dependencies": ["tensorflow","neural-compressor"],
+ "os": ["linux"],
+ "builder": ["cli"],
+ "targetDevice": ["CPU"],
+ "ciTests": {
+	"linux": [
+	{
+		"env": ["source ${ONEAPI_ROOT}/setvars.sh --force",
+			"conda env remove -n user_tensorflow",
+			"conda create -n user_tensorflow -c ${ONEAPI_ROOT}/conda_channel python=`python -V| awk '{print $2}'` -y",
+			"conda activate user_tensorflow",
+			"conda install -n user_tensorflow -c ${ONEAPI_ROOT}/conda_channel tensorflow python-flatbuffers -y",
+			"conda install -n user_tensorflow -c ${ONEAPI_ROOT}/conda_channel neural-compressor -y --offline",
+			"conda install -n user_tensorflow -c ${ONEAPI_ROOT}/conda_channel lpot -y --offline",
+			"conda install -n user_tensorflow runipy notebook -y"
+        ],
+		"id": "neural-compressor tensorflow",
+		"steps": [
+			"runipy inc_sample_tensorflow.ipynb"
+		 ]
+	}
+    ]
+ }
+}

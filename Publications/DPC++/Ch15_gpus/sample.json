@@ -1,0 +1,58 @@
+{
+  "guid": "42601abe-219f-425a-9170-073553c93979",
+  "name": "Chapter 15 - Programming for GPUs",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_15_3_single_task_matrix_multiplication.cpp - A single task matrix multiplication looks a lot like CPU host code * fig_15_5_somewhat_parallel_matrix_multiplication.cpp - Somewhat-parallel matrix multiplication * fig_15_7_more_parallel_matrix_multiplication.cpp - Even more parallel matrix multiplication * fig_15_10_divergent_control_flow.cpp - Kernel with divergent control flow * fig_15_12_small_work_group_matrix_multiplication.cpp - Inefficient single-item, somewhat-parallel matrix multiplication * fig_15_18_columns_matrix_multiplication.cpp - Computing columns of the result matrix in parallel, not rows",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch15_gpus",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_15_12_small_work_group_matrix_multiplication",
+          "make fig_15_10_divergent_control_flow",
+          "make fig_15_18_columns_matrix_multiplication",
+          "make fig_15_7_more_parallel_matrix_multiplication",
+          "make fig_15_5_somewhat_parallel_matrix_multiplication",
+          "make fig_15_3_single_task_matrix_multiplication"
+          ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_15_12_small_work_group_matrix_multiplication",
+          "nmake fig_15_10_divergent_control_flow",
+          "nmake fig_15_18_columns_matrix_multiplication",
+          "nmake fig_15_7_more_parallel_matrix_multiplication",
+          "nmake fig_15_5_somewhat_parallel_matrix_multiplication",
+          "nmake fig_15_3_single_task_matrix_multiplication"
+        ]
+      }
+    ]
+  }
+}

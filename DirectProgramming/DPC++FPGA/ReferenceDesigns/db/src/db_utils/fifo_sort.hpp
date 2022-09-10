@@ -1,7 +1,7 @@
 #ifndef __FIFO_SORT_H__
 #define __FIFO_SORT_H__
 
-#include <CL/sycl/INTEL/fpga_extensions.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iostream>
 #include <tuple>
 #include <utility>

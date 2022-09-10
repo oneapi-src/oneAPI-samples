@@ -1,7 +1,7 @@
 {
   "guid": "f51eea84-5732-4425-a530-113448519667",
   "name": "DPC++ Essentials Tutorials",
-  "categories": [ "Toolkit/DirectProgramming/DPC++/Jupyter/oneapi-essentials-training/" ],
+  "categories": [ "Toolkit/oneAPI Direct Programming/DPC++/Tutorials Jupyter Notebooks" ],
   "description": "DPC++ Essentials Tutorials using Jupyter Notebooks",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],

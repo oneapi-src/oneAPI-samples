@@ -7,6 +7,7 @@
     "languages": [{"cpp":{}}],
     "toolchain": ["icc"],
     "guid": "5AFED65F-F725-411D-B21C-B59008D1166D",
+    "targetDevice": [ "CPU" ],
     "ciTests": {
         "darwin": [ 
             { "id": "standard", "steps": [ "make", "make run", "make clean" ] },

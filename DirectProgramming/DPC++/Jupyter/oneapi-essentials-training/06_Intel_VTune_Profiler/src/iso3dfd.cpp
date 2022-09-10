@@ -44,7 +44,7 @@
  */
 void initialize(float* ptr_prev, float* ptr_next, float* ptr_vel, size_t n1,
                 size_t n2, size_t n3) {
-  std::cout << "Initializing ... " << std::endl;
+  std::cout << "Initializing ... " << "\n";
   size_t dim2 = n2 * n1;
 
   for (size_t i = 0; i < n3; i++) {
@@ -236,16 +236,16 @@ int main(int argc, char* argv[]) {
   }
 
   std::cout << "Grid Sizes: " << n1 - 2 * HALF_LENGTH << " "
-            << n2 - 2 * HALF_LENGTH << " " << n3 - 2 * HALF_LENGTH << std::endl;
+            << n2 - 2 * HALF_LENGTH << " " << n3 - 2 * HALF_LENGTH << "\n";
   std::cout << "Memory Usage: " << ((3 * nsize * sizeof(float)) / (1024 * 1024))
-            << " MB" << std::endl;
+            << " MB" << "\n";
 
   // Check if running OpenMP OR Serial version on CPU
   if (omp) {
 #if defined(_OPENMP)
-    std::cout << " ***** Running OpenMP variant *****" << std::endl;
+    std::cout << " ***** Running OpenMP variant *****" << "\n";
 #else
-    std::cout << " ***** Running C++ Serial variant *****" << std::endl;
+    std::cout << " ***** Running C++ Serial variant *****" << "\n";
 #endif
 
     // Initialize arrays and introduce initial conditions (source)
@@ -281,7 +281,7 @@ int main(int argc, char* argv[]) {
 
   // Check if running DPC++/SYCL version
   if (sycl) {
-    std::cout << " ***** Running SYCL variant *****" << std::endl;
+    std::cout << " ***** Running SYCL variant *****" << "\n";
     // exception handler
     /*
       The exception_list parameter is an iterable list of std::exception_ptr
@@ -344,7 +344,7 @@ int main(int argc, char* argv[]) {
     auto time =
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
             .count();
-    std::cout << "SYCL time: " << time << " ms" << std::endl;
+    std::cout << "SYCL time: " << time << " ms" << "\n";
 
     printStats(time, n1, n2, n3, nIterations);
   }
@@ -354,10 +354,10 @@ int main(int argc, char* argv[]) {
   if (omp && sycl) {
     if (nIterations % 2) {
       error = within_epsilon(next_base, temp, n1, n2, n3, HALF_LENGTH, 0, 0.1f);
-      if (error) std::cout << "Error  = " << error << std::endl;
+      if (error) std::cout << "Error  = " << error << "\n";
     } else {
       error = within_epsilon(prev_base, temp, n1, n2, n3, HALF_LENGTH, 0, 0.1f);
-      if (error) std::cout << "Error  = " << error << std::endl;
+      if (error) std::cout << "Error  = " << error << "\n";
     }
     delete[] temp;
   }
@@ -368,3 +368,4 @@ int main(int argc, char* argv[]) {
 
   return error ? 1 : 0;
 }
+

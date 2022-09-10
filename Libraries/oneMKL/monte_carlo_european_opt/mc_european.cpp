@@ -22,14 +22,6 @@
 
 using namespace oneapi;
 
-// Temporary code for beta08 compatibility. Reduce routine is moved from intel::
-// to ONEAPI:: namespace
-#if __SYCL_COMPILER_VERSION < 20200902L
-using sycl::intel::reduce;
-#else
-using sycl::ONEAPI::reduce;
-#endif
-
 // Default number of options
 static const auto num_options_default = 2048;
 // Default number of independent samples
@@ -97,7 +89,7 @@ static void mc_kernel(sycl::queue& q, EngineType& engine, size_t num_samples,
                                sc = sycl::max(rng - strike_price, 0.0);
 
                                count_sc_acc[item.get_group_linear_id()] =
-                                   reduce(item.get_group(), sc, std::plus<double>());
+                                   sycl::reduce_over_group(item.get_group(), sc, std::plus<double>());
                            });
         });
 
@@ -114,7 +106,7 @@ static void mc_kernel(sycl::queue& q, EngineType& engine, size_t num_samples,
                                sp = sycl::max(strike_price - rng, 0.0);
 
                                count_sp_acc[item.get_group_linear_id()] =
-                                   reduce(item.get_group(), sp, std::plus<double>());
+                                   sycl::reduce_over_group(item.get_group(), sp, std::plus<double>());
                            });
         });
     }

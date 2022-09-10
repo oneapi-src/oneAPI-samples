@@ -1,16 +1,4 @@
-#==============================================================
-#
-# SAMPLE SOURCE CODE - SUBJECT TO THE TERMS OF SAMPLE CODE LICENSE AGREEMENT,
-# http://software.intel.com/en-us/articles/intel-sample-source-code-license-agreement/
-#
-# Copyright Intel Corporation
-#
-# THIS FILE IS PROVIDED "AS IS" WITH NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT
-# NOT LIMITED TO ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-# PURPOSE, NON-INFRINGEMENT OF INTELLECTUAL PROPERTY RIGHTS.
-#
-# =============================================================
-CC = icc
+CC = icpx
 EXECS=intrin_dot_sample.exe intrin_double_sample.exe intrin_ftz_sample.exe
 DBG_EXECS=intrin_dot_sample_dbg.exe intrin_double_sample_dbg.exe intrin_ftz_sample_dbg.exe
 
@@ -43,10 +31,10 @@ intrin_ftz_sample_dbg.exe: intrin_ftz_sample_dbg.o
 	$(CC) -O0 -g $^ -o $@
 
 %.o: src/%.cpp
-	$(CC) -O2 -c -o $@  $<
+	$(CC) -O2 -msse3 -c -o $@  $<
 
 %_dbg.o: src/%.cpp
-	$(CC) -O0 -g -c -o $@  $<
+	$(CC) -O0 -msse3 -g -c -o $@  $<
 
 clean:
 	/bin/rm -f core.* *.o *.exe

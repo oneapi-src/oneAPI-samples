@@ -1,0 +1,66 @@
+{
+  "guid": "b93d6b84-9812-47e6-ad2a-7a221d5b32fb",
+  "name": "Chapter 02 - Where Code Executes",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_2_2_simple_program.cpp - Simple SYCL program  * fig_2_7_implicit_default_selector.cpp - Implicit default device selector through trivial construction of a queue  * fig_2_9_host_selector.cpp - Selecting the host device using the host_selector class * fig_2_10_cpu_selector.cpp - CPU device selector example * fig_2_12_multiple_selectors.cpp  - Example device identification output from various classes of device selectors and demonstration that device selectors can be used for cons * fig_2_13_gpu_plus_fpga.cpp - Creating queues to both GPU and FPGA devices  * fig_2_15_custom_selector.cpp - Custom selector for Intel Arria FPGA device  * fig_2_18_simple_device_code.cpp - Submission of device code  * fig_2_22_simple_device_code_2.cpp - Submission of device code  * fig_2_23_fallback.cpp - Fallback queue example",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch02_where_code_runs",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_2_2_simple_program",
+          "make fig_2_7_implicit_default_selector",
+          "make fig_2_10_cpu_selector",
+          "make fig_2_12_multiple_selectors",
+          "make fig_2_13_gpu_plus_fpga",
+          "make fig_2_18_simple_device_code",
+          "make fig_2_15_custom_selector",
+          "make fig_2_9_host_selector",
+          "make fig_2_22_simple_device_code_2",
+          "make fig_2_23_fallback"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_2_2_simple_program",
+          "nmake fig_2_7_implicit_default_selector",
+          "nmake fig_2_10_cpu_selector",
+          "nmake fig_2_12_multiple_selectors",
+          "nmake fig_2_13_gpu_plus_fpga",
+          "nmake fig_2_18_simple_device_code",
+          "nmake fig_2_15_custom_selector",
+          "nmake fig_2_9_host_selector",
+          "nmake fig_2_22_simple_device_code_2",
+          "nmake fig_2_23_fallback"
+        ]
+      }
+    ]
+  }
+}

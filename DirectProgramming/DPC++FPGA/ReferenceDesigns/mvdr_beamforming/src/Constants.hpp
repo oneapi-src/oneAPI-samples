@@ -10,7 +10,7 @@ constexpr bool kUseUSMHostAllocation = true;
 constexpr bool kUseUSMHostAllocation = false;
 #endif
 
-// Large array is 64 sensors.  This is not the default because the Quartus
+// Large array is 64 sensors.  This is not the default because the Quartus®
 // compile time at this size is very long (> 24 hours)
 #ifdef LARGE_SENSOR_ARRAY
 #define NUM_SENSORS 64

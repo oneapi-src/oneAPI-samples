@@ -2,20 +2,14 @@
 # Triangular Loop Optimization
 
 This FPGA tutorial demonstrates an advanced technique to improve the performance of nested triangular loops with loop-carried dependencies in single-task kernels.
- 
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
- 
+
 | Optimized for                     | Description
----                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04* 
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit 
+|:---                               |:---
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and when to apply the triangular loop optimization technique
 | Time to complete                  | 30 minutes
- 
-
 
 ## Purpose
 
@@ -36,9 +30,9 @@ A triangular loop is a loop nest where the inner-loop range depends on the outer
 In this example, the inner-loop executes fewer and fewer iterations as overall execution progresses. Each iteration of the inner-loop performs a read from index `[x]` and a read-modify-write on indices `[y]=x+1` to `[y]=n-1`. Expressed graphically (with _n_=10), these operations look like:
 
 ```c++
-    y=0 1 2 3 4 5 6 7 8 9  
+    y=0 1 2 3 4 5 6 7 8 9
 ==========================
-x=0   o x x x x x x x x x 
+x=0   o x x x x x x x x x
 x=1     o x x x x x x x x
 x=2       o x x x x x x x
 x=3         o x x x x x x
@@ -47,7 +41,7 @@ x=5             o x x x x
 x=6               o x x x
 x=7                 o x x
 x=8                   o x
-x=9       
+x=9
 
 Legend: read="o", read-modify-write="x"
 ```
@@ -56,9 +50,9 @@ The picture is triangular in shape, hence the name "triangular loop".
 
 ### Performance challenge
 
-In the above example, the table shows that in outer-loop iteration `x=0`, the program reads `local_buf[x=0]` and reads, modifies, and writes the values from `local_buf[y=1]` through `local_buf[y=9]`. This pattern of memory accesses results in a loop-carried dependency across the outer loop iterations. For example, the read at `x=2` depends on the value written at `x=1,y=2`. 
+In the above example, the table shows that in outer-loop iteration `x=0`, the program reads `local_buf[x=0]` and reads, modifies, and writes the values from `local_buf[y=1]` through `local_buf[y=9]`. This pattern of memory accesses results in a loop-carried dependency across the outer loop iterations. For example, the read at `x=2` depends on the value written at `x=1,y=2`.
 
-Generally, a new iteration is launched on every cycle as long as a sufficient number of inner-loop 
+Generally, a new iteration is launched on every cycle as long as a sufficient number of inner-loop
 iterations are executed *between* any two iterations that are dependent on one another.
 
 However, the challenge in the triangular loop pattern is that the trip-count of the inner-loop
@@ -68,27 +62,27 @@ A key observation is that this increased II is only functionally necessary when 
 
 ### Optimization concept
 
-The triangular loop optimization alters the code to guarantee that the trip count never falls below some minimum (_M_). This is accomplished by executing extra 'dummy' iterations of the inner loop when the *true* trip count falls below _M_. 
+The triangular loop optimization alters the code to guarantee that the trip count never falls below some minimum (_M_). This is accomplished by executing extra 'dummy' iterations of the inner loop when the *true* trip count falls below _M_.
 
-The purpose of the dummy iterations is to allow extra time for the loop-carried dependency to resolve. No actual computation (or side effects) takes place during these added iterations. Note that the extra iterations are only executed on inner loop invocations that require them. When the inner-loop trip count is large, extra iterations are not needed. 
+The purpose of the dummy iterations is to allow extra time for the loop-carried dependency to resolve. No actual computation (or side effects) takes place during these added iterations. Note that the extra iterations are only executed on inner loop invocations that require them. When the inner-loop trip count is large, extra iterations are not needed.
 
-This technique allows the compiler to achieve II=1. 
+This technique allows the compiler to achieve II=1.
 
 Applying the triangular loop optimization to the original example, the post-optimization execution graph for _M_=6 (with _n_=10) appears as follows:
 
 ```c++
-    y=0 1 2 3 4 5 6 7 8 9 
+    y=0 1 2 3 4 5 6 7 8 9
 ==========================
-x=0   o x x x x x x x x x   
-x=1     o x x x x x x x x   
-x=2       o x x x x x x x   
-x=3         o x x x x x x   
-x=4           o x x x x x   
-x=5           - o x x x x   
-x=6           - - o x x x   
-x=7           - - - o x x   
-x=8           - - - - o x   
-x=9          
+x=0   o x x x x x x x x x
+x=1     o x x x x x x x x
+x=2       o x x x x x x x
+x=3         o x x x x x x
+x=4           o x x x x x
+x=5           - o x x x x
+x=6           - - o x x x
+x=7           - - - o x x
+x=8           - - - - o x
+x=9
               <---M=6--->
 
 Legend: read="o", read-modify-write="x", dummy iteration="-"
@@ -110,7 +104,7 @@ int x = 0, y = 1;
 // Total iterations of the merged loop
 const int loop_bound = TotalIterations(M, n);
 
-[[intelfpga::ivdep(M)]] 
+[[intelfpga::ivdep(M)]]
 for (int i = 0; i < loop_bound; i++) {
 
   // Determine if this is a real or dummy iteration
@@ -118,7 +112,7 @@ for (int i = 0; i < loop_bound; i++) {
   if (compute) {
     local_buf[y] = local_buf[y] + SomethingComplicated(local_buf[x]);
   }
-  
+
   y++;
   if (y == n) {
     x++;
@@ -146,8 +140,8 @@ x=5             o x x x x                 x=5           -
 x=6               o x x x                 x=6           - -
 x=7                 o x x                 x=7           - - -
 x=8                   o x                 x=8           - - - -
-x=9 
-                                                        <(M-2)>  
+x=9
+                                                        <(M-2)>
                                                         <---M=6--->
 ```
 The number of "real" iterations on the left is 10+9+8+7+6+5+4+3+2 = 54. The formula for a
@@ -159,27 +153,55 @@ Summing the number of real and dummy iterations gives the total iterations of th
 
 ***Use of ivdep***: Since the loop is restructured to ensure that a minimum of M iterations is executed, the `[[intelfpga::ivdep(M)]]` is used to hint to the compiler that at least _M_ iterations always separate any pair of dependent iterations.
 
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
 
 
 ## Key Concepts
-* The triangular loop advanced optimization technique and situations in which it is applicable
-* Using `ivdep safelen` to convey the broken loop-carried dependency to the compiler
-
-## License  
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+* The triangular loop advanced optimization technique and situations in which it is applicable.
+* Using `ivdep safelen` to convey the broken loop-carried dependency to the compiler.
 
 ## Building the `triangular_loop` Tutorial
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script located in
+> the root of your oneAPI installation.
+>
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+>
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+>
+>For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+
 
 ### Include Files
 The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+### Running Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
+
+
+### Using Visual Studio Code*  (Optional)
+
+You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
+and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
+ - Open a Terminal in VS Code (**Terminal>New Terminal**).
+ - Run the sample in the VS Code terminal using the instructions below.
+ - (Linux only) Debug your GPU application with GDB for Intel&reg; oneAPI toolkits using the Generate Launch Configurations extension.
+
+To learn more about the extensions and how to configure the oneAPI environment, see the
+[Using Visual Studio Code with Intel&reg; oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
 
 ### On a Linux* System
 
@@ -188,11 +210,11 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
    cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -204,18 +226,18 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
       ```
       make fpga_emu
       ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      make report
-     ``` 
-   * Compile for FPGA hardware (longer compile time, targets FPGA device): 
+     ```
+   * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
-     ``` 
+     ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/triangular_loop.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
@@ -225,11 +247,11 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
    cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
@@ -241,27 +263,39 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
-   * Compile for emulation (fast compile time, targets emulated FPGA device): 
+   * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
      ```
-   * Generate the optimization report: 
+   * Generate the optimization report:
      ```
      nmake report
-     ``` 
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
-     ``` 
+     ```
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
- 
+> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX) do not support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
+
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+
+### Troubleshooting
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
+``make VERBOSE=1``
+For more comprehensive troubleshooting, use the Diagnostics Utility for
+Intel&reg; oneAPI Toolkits, which provides system checks to find missing
+dependencies and permissions errors.
+[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+
  ### In Third-Party Integrated Development Environments (IDEs)
- 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+
+You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Examining the Reports
-Locate `report.html` in the `triangular_loop_report.prj/reports/` or `triangular_loop_s10_pac_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
+Locate `report.html` in the `triangular_loop_report.prj/reports/` directory. Open the report in any of Chrome*, Firefox*, Edge*, or Internet Explorer*.
 
 Consult the "Loop Analysis" report to compare the optimized and unoptimized versions of the loop.
 
@@ -276,6 +310,7 @@ Consult the "Loop Analysis" report to compare the optimized and unoptimized vers
 2. Run the sample on the FPGA device:
      ```
      ./triangular_loop.fpga         (Linux)
+     triangular_loop.fpga.exe       (Windows)
      ```
 
 ### Example of Output
@@ -304,12 +339,17 @@ Throughput with optimization: 904.489876 MB/s
 ```
 
 ### Discussion of Results
-A test compile of this tutorial design achieved an f<sub>MAX</sub> of approximately 210 MHz on the Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA. The results with and without the optimization are shown in the following table:
+A test compile of this tutorial design achieved an f<sub>MAX</sub> of approximately 210 MHz on the Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA. The results with and without the optimization are shown in the following table:
 
 Configuration | Overall Execution Time (ms) | Throughput (MB/s)
--|-|-
-Without optimization | 4972 | 25.7
-With optimization | 161 | 796.6
+|:---|:---|:---
+|Without optimization | 4972 | 25.7
+|With optimization | 161 | 796.6
 
 Without optimization, the compiler achieved an II of 30 on the inner-loop. With the optimization, the compiler achieves an II of 1, and the throughput increased by approximately 30x.
 
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

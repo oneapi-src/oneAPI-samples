@@ -1,0 +1,58 @@
+{
+  "guid": "500e074f-96d8-4c3c-b482-564faad83696",
+  "name": "Chapter 12 - Device Information",
+  "categories": [ "Toolkit/Publication: Data Parallel C++" ],
+  "description": "fig_12_1_assigned_device.cpp - Device we have been assigned by default * fig_12_2_try_catch.cpp - Using try-catch to select a GPU device if possible, host device if not * fig_12_3_device_selector.cpp - Custom device selector—our preferred solution * fig_12_4_curious.cpp - Simple use of device query mechanisms: curious.cpp * fig_12_6_very_curious.cpp - More detailed use of device query mechanisms: verycurious.cpp * fig_12_7_invocation_parameters.cpp - Fetching parameters that can be used to shape a kernel",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux", "windows" ],
+  "builder": [ "ide", "cmake" ],
+  "commonFolder": {
+    "base": "..",
+    "include": [
+      "Ch12_device_information",
+      "LICENSE.txt",
+      "README.md",
+      "CMakeLists.txt"
+    ],
+    "exclude": [
+      "sample-folder-name/test.sh"
+    ]
+   },
+   "ciTests": {
+    "linux": [
+      {
+        "steps": [
+          "rm -rf ../build || true",
+          "mkdir ../build",
+          "cd ../build",
+          "cmake ..",
+          "make fig_12_7_invocation_parameters",
+          "make fig_12_6_very_curious",
+          "make fig_12_4_curious",
+          "make fig_12_2_try_catch",
+          "make fig_12_3_device_selector",
+          "make fig_12_1_assigned_device"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "steps": [
+          "cd ..",
+	        "rmdir -Recurse -Force build >nul 2>nul || echo remove",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ..",
+          "nmake fig_12_7_invocation_parameters",
+          "nmake fig_12_6_very_curious",
+          "nmake fig_12_4_curious",
+          "nmake fig_12_2_try_catch",
+          "nmake fig_12_3_device_selector",
+          "nmake fig_12_1_assigned_device"
+        ]
+      }
+    ]
+  }
+}

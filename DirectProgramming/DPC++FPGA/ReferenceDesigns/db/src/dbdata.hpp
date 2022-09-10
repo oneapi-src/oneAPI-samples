@@ -9,11 +9,11 @@
 #include <vector>
 
 // database types
-typedef unsigned int DBIdentifier;
-typedef unsigned int DBUint;
-typedef unsigned int DBInt;
-typedef long long DBDecimal;
-typedef unsigned int DBDate;
+using DBIdentifier = unsigned int;
+using DBUint = unsigned int;
+using DBInt = unsigned int;
+using DBDecimal = long long;
+using DBDate = unsigned int;
 
 // Set the scale factor
 //
@@ -29,6 +29,12 @@ constexpr float kSF = 0.01f;
 #else
 constexpr float kSF = 1.0f;
 #endif
+
+// add some padding rows to the end of each table.
+// this avoids having to predicate global memory when the access granularity
+// is not a multiple of the total number of rows.
+// 16 was chosen because it is the largest access granularity
+constexpr size_t kPaddingRows = 16;
 
 // ensure the selected scale factor is supported
 static_assert((kSF == 0.01f || kSF == 1.0f), "Unsupported Scale Factor (kSF)");

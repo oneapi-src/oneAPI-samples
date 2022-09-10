@@ -6,6 +6,6 @@ if (NOT CMAKE_BUILD_TYPE)
         STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel"
         FORCE)
 endif()
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 3.4)
 project (SepiaFilter)
 add_subdirectory (src)

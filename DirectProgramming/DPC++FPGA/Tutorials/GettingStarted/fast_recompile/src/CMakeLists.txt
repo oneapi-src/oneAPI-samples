@@ -20,48 +20,43 @@ if(WIN32)
     set(WIN_FLAG "/EHsc")
 endif()
 
-set(EMULATOR_COMPILE_FLAGS ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR -c)
-set(EMULATOR_LINK_FLAGS -fintelfpga)
-set(HARDWARE_COMPILE_FLAGS ${WIN_FLAG} -fintelfpga -c)
-set(HARDWARE_LINK_FLAGS -fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS})
+# A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
+# 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
+# 2. The "link" stage invokes the compiler's FPGA backend before linking.
+#    For this reason, FPGA backend flags must be passed as link flags in CMake.
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
-# To compile manually:
-#   dpcpp -fintelfpga -DFPGA_EMULATOR -c host.cpp -o host_emu.o
-#   dpcpp -fintelfpga -DFPGA_EMULATOR -c kernel.cpp -o dev_emu.o
-#   dpcpp -fintelfpga -fsycl-link=image dev_emu.o -o dev_image_emu.a
-#   dpcpp -fintelfpga host_emu.o dev_image_emu.a -o fast_recompile.fpga
-
-if(WIN32)
-    set(EMULATOR_TARGET ${EMULATOR_TARGET}.exe)
-endif()
+# To compile in a single command:
+#    dpcpp -fintelfpga -DFPGA_EMULATOR host.cpp kernel.cpp -o fast_recompile.fpga_emu
+# CMake executes:
+#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o host.cpp.o -c host.cpp
+#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o kernel.cpp.o -c kernel.cpp
+#    [link]    dpcpp -fintelfpga host.cpp.o kernel.cpp.o -o fast_recompile.fpga_emu
+add_executable(${EMULATOR_TARGET} ${HOST_SOURCE_FILE} ${DEVICE_SOURCE_FILE})
+set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
+set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
-set(HOST_EMU_OBJ "host_emu.o")
-set(DEVICE_EMU_OBJ "dev_emu.o")
-set(DEVICE_IMAGE_EMU_OBJ "dev_image_emu.a")
 
-set(CMAKE_CXX_FLAGS_LIST ${CMAKE_CXX_FLAGS_LIST})
-separate_arguments(CMAKE_CXX_FLAGS_LIST)
+###############################################################################
+### Generate Report
+###############################################################################
+# To compile manually:
+#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early host.cpp kernel.cpp -o fast_compile_report.a
+set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
+# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+add_executable(${FPGA_EARLY_IMAGE} ${HOST_SOURCE_FILE} ${DEVICE_SOURCE_FILE})
+add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS ${HARDWARE_COMPILE_FLAGS})
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
-add_custom_command(OUTPUT ${HOST_EMU_OBJ}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${EMULATOR_COMPILE_FLAGS}
-                   ${CMAKE_CURRENT_SOURCE_DIR}/${HOST_SOURCE_FILE} -o ${HOST_EMU_OBJ}
-                   DEPENDS ${HOST_SOURCE_FILE} ${KERNEL_HEADER_FILE})
-
-add_custom_command(OUTPUT ${DEVICE_EMU_OBJ}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${EMULATOR_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${DEVICE_SOURCE_FILE} -o ${DEVICE_EMU_OBJ}
-                   DEPENDS ${DEVICE_SOURCE_FILE} ${KERNEL_HEADER_FILE})
-
-add_custom_command(OUTPUT ${DEVICE_IMAGE_EMU_OBJ}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${EMULATOR_LINK_FLAGS} -fsycl-link=image ${DEVICE_EMU_OBJ} -o ${DEVICE_IMAGE_EMU_OBJ}
-                   DEPENDS ${DEVICE_EMU_OBJ})
-
-add_custom_command(OUTPUT ${EMULATOR_TARGET}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} -fintelfpga ${HOST_EMU_OBJ} ${DEVICE_IMAGE_EMU_OBJ} -o ${CMAKE_BINARY_DIR}/${EMULATOR_TARGET}
-                   DEPENDS ${HOST_EMU_OBJ} ${DEVICE_IMAGE_EMU_OBJ})
 
 ###############################################################################
 ### FPGA Hardware
@@ -81,11 +76,14 @@ set(DEVICE_IMAGE_OBJ "dev_image.a")
 
 set(CMAKE_CXX_FLAGS_LIST "${CMAKE_CXX_FLAGS}")
 separate_arguments(CMAKE_CXX_FLAGS_LIST)
+set(HARDWARE_COMPILE_FLAGS_LIST "${HARDWARE_COMPILE_FLAGS}")
+separate_arguments(HARDWARE_COMPILE_FLAGS_LIST)
 set(HARDWARE_LINK_FLAGS_LIST "${HARDWARE_LINK_FLAGS}")
 separate_arguments(HARDWARE_LINK_FLAGS_LIST)
+ 
 
 add_custom_command(OUTPUT ${HOST_OBJ}
-                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/${HOST_SOURCE_FILE} -o ${HOST_OBJ}
+                   COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_COMPILE_FLAGS_LIST} -c ${CMAKE_CURRENT_SOURCE_DIR}/${HOST_SOURCE_FILE} -o ${HOST_OBJ}
                    DEPENDS ${HOST_SOURCE_FILE} ${KERNEL_HEADER_FILE})
 
 add_custom_command(OUTPUT ${DEVICE_IMAGE_OBJ}

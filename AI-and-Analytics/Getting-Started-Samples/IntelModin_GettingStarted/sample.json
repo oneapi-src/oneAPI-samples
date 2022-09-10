@@ -10,11 +10,18 @@
   "ciTests": {
   	"linux": [
     {
-  		"env": ["source /opt/intel/oneapi/setvars.sh --force", "conda create -n aikit-modin-test -c intel -c conda-forge matplotlib runipy intel-aikit-modin", "source activate aikit-modin-test"],
+  		"env": [],
   		"id": "Intel_Modin_GS_py",
   		"steps": [
-         "runipy IntelModin_GettingStarted.ipynb" 
-  		 ]
+			"set -e # Terminate the script on first error",
+			"source $(conda info --base)/etc/profile.d/conda.sh # Bypassing conda's disability to activate environments inside a bash script: https://github.com/conda/conda/issues/7980",
+			"conda create -y -n intel-aikit-modin intel-aikit-modin -c intel",
+			"conda activate intel-aikit-modin",
+			"pip install -r requirements.txt # Installing notebook's dependencies",
+			"pip install runipy # Installing 'runipy' for extended abilities to execute the notebook",
+			"runipy IntelModin_GettingStarted.ipynb # Test 'Modin is faster than pandas' case",
+			"MODIN_CPUS=1 runipy IntelModin_GettingStarted.ipynb # Test 'Modin is slower than pandas' case"
+  		]
   	}
     ]
 }

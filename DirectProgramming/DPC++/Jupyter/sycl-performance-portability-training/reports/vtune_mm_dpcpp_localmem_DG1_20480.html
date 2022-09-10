@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<html><style>
+        .metric-name {
+        font-weight: 600;
+        min-width: 14em;
+        display: inline-block;
+        }
+
+        .metric-value {
+        margin-left: 1em;
+        color: #336;
+        }
+
+        .metric-value-with-issue {
+        margin-left: 1em;
+        color: #C33;
+        }
+
+        li {
+        list-style-type: none;
+        }
+
+        ul {
+        margin-left: 1.5em;
+        padding-left: 0em;
+        }
+
+        body {
+        margin: 0;
+        paddind: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #336;
+        }
+
+        pre {
+        white-space:pre-wrap;
+        max-width: 40em;
+        color: #633;
+        }
+
+        .issue {
+        border-left: 3px solid #C33;
+        padding: 0.3em 0.3em 0.3em 1em;
+        }
+
+        table {
+        margin: 0 1.5em;
+        }
+
+        th, td {
+        text-align: left;
+        }
+
+        td {
+        color: #333;
+        }
+
+        th {
+        border-bottom: 2px solid #336;
+        font-weight: 600;
+        }
+
+        .table-value {
+        margin-right: 1.5em;
+        }
+
+        .brand {
+        background-color: #0071c5;
+        padding: 0.5em 1.5em;
+        width: 100%;
+        color: white;
+        font-weight: 600;
+        }
+
+        .recommendation-placeholder {
+        background-color: #eaecee;
+        padding: 1em;
+        }
+
+        .recommendation-placeholder p {
+        font-weight: 600;
+        margin: 0;
+        }
+
+        .recommendation {
+        border-left: 3px solid #bbb;
+        padding: 0.3em 0.3em 0.3em 1em;
+        margin: 0 0 0 1.5em;
+        }
+
+        .recommendation-metric {
+        font-weight: 600;
+        min-width: 14em;
+        display: inline-block;
+        margin: 0 0 0 1.5em;
+        }
+
+      </style><body><div class="brand">Intel<sup>&reg;</sup> VTune<sup>&trade;</sup> Profiler 2022.0.0</div><ul><li><span class="metric-name">Elapsed Time:
+        </span><span class="metric-value">749.268s</span><ul><li><span class="metric-name">GPU Time:
+        </span><span class="metric-value">745.555s</span></li></ul></li></ul><ul><li><span class="metric-name">0:27:0.0 : DG1 [Iris Xe MAX Graphics]:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">EU Array Stalled/Idle:
+        </span><span class="metric-value-with-issue">78.4% of Elapsed time with GPU busy<div class="issues"><pre class="issue">The percentage of time when the EUs were stalled or idle is high, which has a negative impact on compute-bound applications.</pre></div></span><ul><li><span class="metric-name">Occupancy:
+        </span><span class="metric-value">99.9% of peak value</span><ul><li><span class="metric-name">Hottest GPU Computing Tasks with Low Occupancy:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Computing Task</span></th><th><span class="table-value">Total Time</span></th><th><span class="table-value">SIMD Width</span></th><th><span class="table-value">Occupancy(%)</span></th><th><span class="table-value">SIMD Utilization(%)</span></th></tr></table></li></ul></li></ul><ul><li><span class="metric-name">Sampler Busy:
+        </span><span class="metric-value">0.0% of peak value</span><ul><li><span class="metric-name">Hottest GPU Computing Tasks with High Sampler Usage:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Computing Task</span></th><th><span class="table-value">Total Time</span></th></tr></table></li></ul></li></ul></li></ul></li></ul><ul><li><span class="metric-name">0:106:0.0 : DG1 [Iris Xe MAX Graphics]:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">EU Array Stalled/Idle:
+        </span><span class="metric-value-with-issue">100.0% of Elapsed time with GPU busy<div class="issues"><pre class="issue">The percentage of time when the EUs were stalled or idle is high, which has a negative impact on compute-bound applications.</pre></div></span><ul><li><span class="metric-name">Occupancy:
+        </span><span class="metric-value-with-issue">0.0% of peak value<div class="issues"><pre class="issue">Several factors including shared local memory, use of memory barriers, and inefficient work scheduling can cause a low value of the occupancy metric.</pre></div></span><ul><li><span class="metric-name">Hottest GPU Computing Tasks with Low Occupancy:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Computing Task</span></th><th><span class="table-value">Total Time</span></th><th><span class="table-value">SIMD Width</span></th><th><span class="table-value">Occupancy(%)</span></th><th><span class="table-value">SIMD Utilization(%)</span></th></tr></table></li></ul></li></ul><ul><li><span class="metric-name">Sampler Busy:
+        </span><span class="metric-value">0.0% of peak value</span><ul><li><span class="metric-name">Hottest GPU Computing Tasks with High Sampler Usage:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Computing Task</span></th><th><span class="table-value">Total Time</span></th></tr></table></li></ul></li></ul></li></ul></li></ul><ul><li><span class="metric-name">Collection and Platform Info:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Application Command Line:
+        </span><span class="metric-value">/home/u49991/DPCPP_Performance_Portability/lab/mm_dpcpp_localmem "-n" "20480" "-m" "16" </span></li></ul><ul><li><span class="metric-name">Operating System:
+        </span><span class="metric-value">5.4.0-80-generic DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=20.04
+DISTRIB_CODENAME=focal
+DISTRIB_DESCRIPTION="Ubuntu 20.04.3 LTS"</span></li></ul><ul><li><span class="metric-name">Computer Name:
+        </span><span class="metric-value">s011-n004</span></li></ul><ul><li><span class="metric-name">Result Size:
+        </span><span class="metric-value">12.5 GB </span></li></ul><ul><li><span class="metric-name">Collection start time:
+        </span><span class="metric-value">02:03:07 14/01/2022 UTC</span></li></ul><ul><li><span class="metric-name">Collection stop time:
+        </span><span class="metric-value">02:15:36 14/01/2022 UTC</span></li></ul><ul><li><span class="metric-name">Collector Type:
+        </span><span class="metric-value">Event-based sampling driver,Driverless Perf system-wide sampling,User-mode sampling and tracing</span></li></ul><ul><li><span class="metric-name">CPU:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Name:
+        </span><span class="metric-value">Intel(R) Xeon(R) Processor code named Cascadelake</span></li></ul><ul><li><span class="metric-name">Frequency:
+        </span><span class="metric-value">3.504 GHz</span></li></ul><ul><li><span class="metric-name">Logical CPU Count:
+        </span><span class="metric-value">24</span></li></ul></li></ul></li></ul></body></html>
+
