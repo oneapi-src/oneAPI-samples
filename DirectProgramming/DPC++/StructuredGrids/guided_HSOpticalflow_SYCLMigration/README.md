@@ -114,7 +114,7 @@ When running a sample in the Intel&reg; DevCloud, you must specify the compute n
 You can submit build and run jobs through a Portable Bash Script (PBS). A job is a script that submitted to PBS through the `qsub` utility. By default, the `qsub` utility does not inherit the current environment variables or your current working directory, so you might need to submit jobs to configure the environment variables. To indicate the correct working directory, you can use either absolute paths or pass the `-d \<dir\>` option to `qsub`.
 
 1. Open a terminal on a Linux* system.
-2. Log in to Intel&reg;7 DevCloud.
+2. Log in to Intel&reg; DevCloud.
     ```
     ssh devcloud
     ```
