@@ -67,14 +67,19 @@ In order to help the users navigate the code samples in a coherent manner that b
 | [fpga_reg](Tutorials/Features/fpga_reg) | How to use the `ext::intel::fpga_reg` extension <br> How `ext::intel::fpga_reg` can be used to re-structure the compiler-generated hardware <br> Situations in which applying  `ext::intel::fpga_reg` might be beneficial |
 | [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
 | [mem_channel](Tutorials/Features/mem_channel) | How and when to use the `mem_channel` buffer property and the `-Xsno-interleaving` flag |
-
-| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
-| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
-| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
-| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
-| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
-
-
+| [private_copies](Tutorials/Features/private_copies) | The basic usage of the `private_copies` attribute <br> How the `private_copies` attribute affects the throughput and resource use of your FPGA program <br> How to apply the `private_copies` attribute to variables or arrays in your program <br> How to identify the correct `private_copies` factor for your program |
+| [read_only_cache](Tutorials/Features/read_only_cache) | How and when to use the read-only cache feature |
+| [triangular_loop](Tutorials/DesignPatterns/triangular_loop) | How and when to apply the triangular loop optimization technique |
+| [loop_coalesce](Tutorials/Features/loop_coalesce) | What the `loop_coalesce` attribute does <br> How `loop_coalesce` attribute affects resource usage and loop throughput <br> How to apply the `loop_coalesce` attribute to loops in your program <br> Which loops make good candidates for coalescing |
+| [loop_fusion](Tutorials/Features/loop_fusion) | Basics of loop fusion<br/>The reasons for loop fusion<br/>How to use loop fusion to increase performance<br/>Understanding safe application of loop fusion |
+| [loop_initiation_interval](Tutorials/Features/loop_initiation_interval) | The f<sub>MAX</sub>-II tradeoff <br>Default behavior of the compiler when scheduling loops <br> How to use `intel::initiation_interval` to attempt to set the II for a loop <br> Scenarios in which `intel::initiation_interval` can be helpful in optimizing kernel performance |
+| [max_interleaving](Tutorials/Features/max_interleaving) | The basic usage of the `max_interleaving` attribute <br> How the `max_interleaving` attribute affects loop resource use <br> How to apply the `max_interleaving` attribute to loops in your program |
+| [stall_enable](Tutorials/Features/stall_enable) | What the `use_stall_enable_clusters` attribute does <br> How `use_stall_enable_clusters` attribute affects resource usage and latency <br> How to apply the `use_stall_enable_clusters` attribute to kernels in your program |
+| [loop_carried_dependency](Tutorials/DesignPatterns/loop_carried_dependency) | A technique to remove loop carried dependencies from your FPGA device code, and when to apply it |
+| [onchip_memory_cache](Tutorials/DesignPatterns/onchip_memory_cache) |How and when to implement the on-chip memory cache optimization |
+| [shannonization](Tutorials/DesignPatterns/shannonization) | How to make FPGA-specific optimizations to remove computation from the critical path and improve f<sub>MAX</sub>/II |
+| [n_way_buffering](Tutorials/DesignPatterns/n_way_buffering) | How and when to apply the N-way buffering optimization technique |
+| [system_profiling](Tutorials/Tools/system_profiling) | Summary of profiling tools available for performance optimization <br> About the Intercept Layer for OpenCL™ Applications <br> How to set up and use this tool <br> A case study of using this tool to identify when the double buffering system-level optimization is beneficial |
 
 
 
