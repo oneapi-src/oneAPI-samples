@@ -1,13 +1,14 @@
 # required cmake version
 cmake_minimum_required(VERSION 3.5)
 
-project (bitonic-sort)
 
 if(WIN32)
         set(CMAKE_CXX_COMPILER "dpcpp-cl")
 else()
         set(CMAKE_CXX_COMPILER "dpcpp")
 endif()
+
+project (bitonic-sort)
 
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)

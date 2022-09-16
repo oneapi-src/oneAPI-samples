@@ -1,25 +1,26 @@
 # `array-transform` Sample
 
-This is a small DPC++ code sample for exercising application debugging using
-Intel&reg; Distribution for GDB\*.  It is highly recommended that you go
+This is a small SYCL*-compliant code sample for exercising application debugging using
+Intel&reg; Distribution for GDB*.  It is highly recommended that you go
 through this sample *after* you familiarize yourself with the basics of
-DPC++, and *before* you start using the debugger.
+SYCL programming, and *before* you start using the debugger.
 
-This sample accompanies the
-[Get Started Guide](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
-of the application debugger.
 
 | Optimized for       | Description
 |---------------------|--------------
-| OS                  | Linux Ubuntu 18.04 to 20.04, CentOS* 8, Fedora* 30, SLES 15; Windows* 10
+| OS                  | Linux* Ubuntu* 18.04 to 20.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 <br> Windows* 10
 | Hardware            | Kaby Lake with GEN9 (on GPU) or newer (on CPU)
 | Software            | Intel&reg; oneAPI DPC++/C++ Compiler
-| What you will learn | Essential debugger features for effective debugging of DPC++ on CPU, GPU, and FPGA emulator
+| What you will learn | Essential debugger features for effective debugging on CPU, GPU, and FPGA emulator
 | Time to complete    | 20 minutes for CPU or FPGA emulator; 30 minutes for GPU
+
+This sample accompanies 
+[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
+of the application debugger.
 
 ## Purpose
 
-The `array-transform` sample is a DPC++ application with a small
+The `array-transform` sample is a SYCL-conforming application with a small
 computation kernel that is designed to illustrate key debugger
 features such as breakpoint definition, thread switching,
 scheduler-locking and SIMD lane views.  The sample is intended
@@ -31,24 +32,16 @@ code sample provides the ability to select the target device by passing the
 program `cpu`, `gpu`, or `accelerator` as the command-line argument.
 The selected device is displayed in the output.  Concrete instructions
 about how to run the program and example outputs are given further
-below.  For complete setup and usage instructions, see the
-[Get Started Guide](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
+below.  For complete setup and usage instructions, see [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
 of the application debugger.
 
 
 ## Key Implementation Details
 
-The basic DPC++ implementation explained in the code includes device
+The basic SYCL implementation explained in the code includes device
 selection, buffer, accessor, and command groups.  The kernel contains
 data access via read/write accessors and a conditional statement to
-illustrate (in)active SIMD lanes on a GPU.
-
-## License
-
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+illustrate (in) active SIMD lanes on a GPU.
 
 ## Using Visual Studio Code* (Optional)
 
@@ -62,34 +55,33 @@ The basic steps to build and run a sample using VS Code include:
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions, see the 
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to
-this readme for instructions on how to build and run a sample.
 
 ## Building and Running the `array-transform` Program
-
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Setup
 
 Preliminary setup steps are needed for the debugger to function.
 Please see the setup instructions in the Get Started Guide based on
-your OS:
-[Linux](https://www.intel.com/en-us/get-started-with-debugging-dpcpp-linux),
-[Windows](https://www.intel.com/en-us/get-started-with-debugging-dpcpp-windows).
-
+your OS: 
+- [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
+- [Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/)
 
 ### Include Files
 
@@ -190,13 +182,12 @@ or for the Gen12 family:
 $ cmake .. -DDPCPP_COMPILE_TARGET=gen12LP
 ```
 
-> *Note:* AoT compilation is particularly helpful in larger
+> **Note**: AoT compilation is particularly helpful in larger
 > applications where compiling with debug information takes
 > considerably longer time.
 
 For instructions about starting and using the debugger, please
-see the
-[Get Started Guide (Linux)](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-linux).
+see [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/).
 
 
 If an error occurs, you can get more details by running `make` with
@@ -230,8 +221,7 @@ dependencies and permissions errors.
    respectively.
 
 For detailed instructions about starting and using the debugger,
-please see the
-[Get Started Guide (Windows)](https://software.intel.com/en-us/get-started-with-debugging-dpcpp-windows).
+please see [Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/).
 
 
 ### Example Outputs
@@ -367,7 +357,7 @@ at array-transform.cpp:56
 
 `maint jit dump <addr> <filename>`
 : Save the JIT'ed objfile that contains address `addr` into the file
-  `filename`.  Useful for extracting the DPC++ kernel when running on
+  `filename`.  Useful for extracting the kernel when running on
   the CPU device.
 
 `cond [-force] <N> <exp>`
@@ -381,3 +371,9 @@ at array-transform.cpp:56
 
 \* Intel is a trademark of Intel Corporation or its subsidiaries.  Other
 names and brands may be claimed as the property of others.
+
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

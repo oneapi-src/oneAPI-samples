@@ -1,28 +1,25 @@
 # Intel® DPC++ Compatibility Tool: `Needleman-Wunsch` Sample
 
 This project demonstrates how to migrate a Make/CMake project from CUDA to
-Data Parallel C++ using the Intel DPC++ Compatibility Tool.
+SYCL* using the Intel® DPC++ Compatibility Tool.
 
 | Optimized for         | Description
 |:---                   |:---
-| OS                    | Linux* Ubuntu* 18.04; Windows 10
-| Software              | Intel® DPC++ Compatibility Tool;
+| OS                    | Linux* Ubuntu* 18.04 <br> Windows* 10
+| Software              | Intel® DPC++ Compatibility Tool
 | What you will learn   | Simple invocation of dpct to migrate CUDA code
 | Time to complete      | 10 minutes
 
 The program, `needleman-Wunsch`, naively implements the [Needleman-Wunsch
-algorithm][nw-algorithm], which is used in bioinformatics to align protein and
-nucleotide sequences. The code is based on [Rodinia][rodinia], a set of
+algorithm](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm), which is used in bioinformatics to align protein and
+nucleotide sequences. The code is based on [Rodinia](http://lava.cs.virginia.edu/Rodinia/download_links.htm), a set of
 benchmarks for heterogeneous computing. As compared to the `Intel® DPC++
 Compatibility Tool: Vector Add` sample, this sample represents a more typical
 example of migrating a working project.
 
-[nw-algorithm]: <https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm>
-[rodinia]: <http://lava.cs.virginia.edu/Rodinia/download_links.htm>
-
 If your project uses Make or CMake, you can use compilation database support to
 provide compilation options, settings, macro definitions, and include paths to
-the Intel DPC++ Compatibility Tool. The compilations database is a JSON* file
+the Intel® DPC++ Compatibility Tool. The compilations database is a JSON* file
 containing the commands required to build a particular project. You can generate
 a compilation database by running the intercept-build script described below.
 
@@ -35,54 +32,44 @@ Compatibility Tool to use. Migrate the project and prepare the project to
 build and run using the Intel&reg; oneAPI DPC++ Compiler
 
 
-## License
-
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
-
 ## Using Visual Studio Code* (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions, see the 
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
-
-
-## Migrating the CUDA Sample to Data Parallel C++ with the Intel DPC++ Compatibility Tool
+## Migrating the CUDA Sample to Data Parallel C++ with the Intel® DPC++ Compatibility Tool
 
 Building and running the CUDA sample is not required to migrate this project
-to a Data Parallel C++ project.
+to a SYCL-compliant project.
 
-> **NOTE:** Certain CUDA header files, referenced by the CUDA application
+> **Note**: Certain CUDA header files, referenced by the CUDA application
 > source files to be migrated, need to be accessible for the migration step.
-> See the [Getting Started Guide][cuda-headers] for more details.
-
-[cuda-headers]: <https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.html#top_BEFORE_YOU_BEGIN>
+> See *Before you Begin* in [Get Started with the Intel® DPC++ Compatibility Tool](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top.html#top_BEFORE_YOU_BEGIN).
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 
 ### On a Linux* System
@@ -98,7 +85,7 @@ $ intercept-build make
 ```
    This creates the file `compile_commands.json` in the working directory.
 
-2. Use the Intel DPC++ Compatibility Tool and compilation database to migrate
+2. Use the Intel® DPC++ Compatibility Tool and compilation database to migrate
    the CUDA code. The new project will be created in the `migration` directory.
 
 ```sh
@@ -106,13 +93,10 @@ $ dpct -p compile_commands.json --in-root=. --out-root=migration
 ```
 
 3. Inspect the migrated source code, address any `DPCT` warnings generated
-   by the Intel DPC++ Compatibility Tool, and verify the new program correctness.
+   by the Intel® DPC++ Compatibility Tool, and verify the new program correctness.
 
-Warnings are printed to the console and added as comments inside the migrated
-source files. See the [Diagnostic Reference][diag-ref] for more information on
-what each warning means.
-
-[diag-ref]: <https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-dpcpp-compatibility-tool/top/diagnostics-reference.html>
+Warnings are printed to the console and added as comments in the migrated
+source. See *Diagnostic Reference* in the [Intel® DPC++ Compatibility Tool Developer Guide and Reference](https://www.intel.com/content/www/us/en/develop/documentation/intel-dpcpp-compatibility-tool-user-guide/top/diagnostics-reference.html) for more information on what each warning means.
 
 This sample should generate the following warning messages:
 ```
@@ -128,8 +112,8 @@ See the section titled **Addressing Warnings in Migrated Code** below to
 understand how to resolve the warnings.
 
 4. Copy the original `Makefile` into the `migration` folder and update the
-   copy to build the migrated project using DPC++. Replace the CUDA
-   configurations in that new `Makefile` with the following for use with DPC++:
+   copy to build the migrated project using SYCL. Replace the CUDA
+   configurations in that new `Makefile` with the following for SYCL:
 
 ```make
 CXX = dpcpp
@@ -168,7 +152,7 @@ error: assigning to 'int' from incompatible type 'typename info::param_traits<in
    project, which will be added to the open solution.
 
 3. Inspect the generated source code and address any `DPCT` warnings generated
-   by the Intel DPC++ Compatibility Tool. Warnings appear in a tool window and
+   by the Intel® DPC++ Compatibility Tool. Warnings appear in a tool window and
    are written to a `migration.log` file in the project directory.
 
 This sample should generate the following warning messages:
@@ -201,14 +185,12 @@ warning: DPCT1049:4: The workgroup size passed to the SYCL kernel may exceed the
 warning: DPCT1049:5: The workgroup size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the workgroup size if needed.
 ```
 
-
 ## Resolve the DPCT1003, DPCT1009, and DPCT1043
-
 First, start with the warnings specific to `needle.dp.cpp` located in the
 migrated source directory.
 
 In this case, the original CUDA call `cudaDriverGetVersion` was migrated to an
-equivalent DPC++ construct. However, because CUDA uses error codes while DPC++
+equivalent SYCL construct. However, because CUDA uses error codes while SYCL
 uses exceptions to handle errors, `dpct` added the DPCT1003 message in the
 comments to indicate that additional manual edits are likely required. The
 same call also resulted in message DPCT1043, which warns that the device
@@ -250,7 +232,6 @@ After the code is fixed, save the file in the text editor.
 
 
 ## Resolve DPCT1049
-
 This DPCT message appears twice in `needle.dp.cpp`, and it simply warns that
 the maximum workgroup size for your GPU may be different from the CUDA limit.
 If you examine the code, we are running workgroup sizes of `BLOCK_SIZE=16`
@@ -284,7 +265,7 @@ sycl::range<2> ref_range_ct1(BLOCK_SIZE, BLOCK_SIZE);
 
 Open `needle.h`, also located in the migrated source directory.
 
-The equivalent of a CUDA block is an SYCL workgroup in DPC++. The maximum size
+The equivalent of a CUDA block is a SYCL workgroup. The maximum size
 of a block for a CUDA-enabled device may be different than the maximum size of
 a work-group for a SYCL-enabled device. You can use `clinfo` to get information
 about the max workgroup size available on your system. Often the block
@@ -308,4 +289,10 @@ Processing bottom-right matrix
 ```
 
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

@@ -5,7 +5,7 @@ This sample contains two Jupyter notebooks from Intel Model Zoo to help users an
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04
 | Hardware                          | Intel® Xeon® Scalable processor family or newer
-| Software                          | Intel® oneAPI AI Analytics Toolkit
+| Software                          | Intel® AI Analytics Toolkit (AI Kit)
 | What you will learn               | Analyze the performance benefit from using Intel Optimizations for Tensorflow*
 | Time to complete                  | 40 minutes
 
@@ -20,7 +20,7 @@ This sample helps demonstrate AI workloads and deep learning models optimized by
 
 Jupyter notebooks help users analyze the performance benefit from using Intel Optimizations for Tensorflow with the oneDNN library.
 
->The notebooks are released with oneAPI AI Analytics Toolkit, and they are under the /opt/intel/oneapi/modelzoo/latest/models/docs/notebooks/perf_analysis folder.
+>The notebooks are released with Intel® AI Analytics Toolkit, and they are under the /opt/intel/oneapi/modelzoo/latest/models/docs/notebooks/perf_analysis folder.
 Users could also find the notebooks in Model Zoo Github by following the links in the below table.
 
 | Analysis Type | Notebook | Notes|
@@ -81,7 +81,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 
 
-##### **2. Linux with Intel® oneAPI AI Analytics Toolkit (AI Kit)**
+##### **2. Linux with Intel® AI Analytics Toolkit (AI Kit)**
 ---
 ###### **Stock TensorFlow**
 
@@ -111,7 +111,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ### Running the Sample
 
-1. Copy the Intel Model Zoo from your AI Analytics Toolkit installation path: `$cp -rf /opt/intel/oneapi/modelzoo/latest/models ~/`
+1. Copy the Intel Model Zoo from your AI Kit installation path: `$cp -rf /opt/intel/oneapi/modelzoo/latest/models ~/`
 2. cd ~/models; git init; git add . ; git commit -m 'initial commit'
 3. Launch Jupyter notebook: `$jupyter notebook --ip=0.0.0.0`
 4. Follow the instructions to open the URL with the token in your browser

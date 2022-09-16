@@ -1,24 +1,14 @@
 # Global Memory Channels
 This FPGA tutorial demonstrates how to use the `mem_channel` buffer property in
-conjuction with the `-Xsno-interleaving` flag to reduce the area consumed by a
-DPC++ FPGA design.
+conjunction with the `-Xsno-interleaving` flag to reduce the area consumed by a
+SYCL*-compliant FPGA design.
 
-***Documentation***:  The [DPC++ FPGA Code Samples
-Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html)
-helps you to navigate the samples and build your knowledge of DPC++ for FPGA.
-<br>
-The [oneAPI DPC++ FPGA Optimization
-Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide)
-is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming
-Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general
-resource for target-independent DPC++ programming.
 
 | Optimized for                     | Description
----                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
+|:---                               |:---
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How and when to use the `mem_channel` buffer property and the `-Xsno-interleaving` flag
 | Time to complete                  | 30 minutes
 
@@ -27,10 +17,10 @@ resource for target-independent DPC++ programming.
 ## Purpose
 
 This FPGA tutorial demonstrates an example of using the `mem_channel` buffer
-property in conjuction with the `-Xsno-interleaving` flag to reduce the amount
-of resources required to implement a DPC++ FPGA design.
+property in conjunction with the `-Xsno-interleaving` flag to reduce the amount
+of resources required to implement a SYCL-compliant FPGA design.
 
-By default, the Intel® oneAPI DPC++ compiler configures each global memory type
+By default, the compiler configures each global memory type
 in a burst-interleaved manner where memory words are interleaved across the
 available memory channels. This usually leads to better throughput because it
 prevents load imbalance by ensuring that memory accesses do not favor one
@@ -40,20 +30,21 @@ without worrying about where each buffer should be allocated. However, this
 configuration can be expensive in terms of FPGA resources because the global
 memory interconnect required to orchestrate the memory accesses across all the
 channels is complex. For more information about burst-interleaving, please
-refer to the [oneAPI DPC++ FPGA Optimization
-Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
+refer to the [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide).
 
-The Intel® oneAPI DPC++ compiler allows you to avoid this area overhead by
+The compiler allows you to avoid this area overhead by
 disabling burst-interleaving and assigning buffers to individual channels. There
 are two advantages to such configuration:
+
 1. A simpler global memory interconnect is built, which requires a smaller
    amount of FPGA resources than the interconnect needed for the
    burst-interleaving configuration.
+
 2. Potential improvements to the global memory bandwidth utilization due to
    less contention at each memory channel.
 
 Burst-interleaving should only be disabled in situations where satisfactory
-load balancing can be achived by assigning buffers to individual channels.
+load balancing can be achieved by assigning buffers to individual channels.
 Otherwise, the global memory bandwidth utilization may be reduced, which will
 negatively impact the throughput of your design.
 
@@ -62,7 +53,7 @@ To disable burst-interleaving, you need to pass the
 global memory type is indicated in the board specification XML file for the
 Board Support Package (BSP) that you're using. The board specification XML
 file, called `board_spec.xml`, can be found in the root directory of your BSP.
-For example, for the Intel® PAC with Intel Arria® 10 GX FPGA BSP, the location
+For example, for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA BSP, the location
 of this file is:
 `$INTELFPGAOCLSDKROOT/board/intel_a10gx_pac/hardware/pac_a10/board_spec.xml`.
 Note that this BSP only has a single memory type available as indicated in its
@@ -73,6 +64,7 @@ available.
 
 With interleaving disabled, you now have to specify, using the `mem_channel`
 property, in which memory channel each buffer should be allocated:
+
 ```c++
 buffer a_buf(a_vec, {property::buffer::mem_channel{1}});
 buffer b_buf(b_vec, {property::buffer::mem_channel{2}});
@@ -113,56 +105,53 @@ created with our without the `mem_channel` property.
 
 To decide what channel IDs to select in the source code, the macros
 `TWO_CHANNELS` and `FOUR_CHANNELS` are also used. The macro `TWO_CHANNELS` is
-defined when the design is compiled for the Intel® PAC with Arria® 10 GX FPGA
+defined when the design is compiled for the Intel&reg; PAC with Arria&reg; 10 GX FPGA
 because that board has an external memory with two available channels. In that
 case, the 4 buffers are evenly assigned to the available channels on that
-board. When the design is compiled for the Intel® FPGA PAC D5005 Stratix® 10 SX
+board. When the design is compiled for the Intel&reg; FPGA PAC D5005 Stratix&reg; 10 SX
 FPGA, the 4 buffers are assigned to the 4 available channels on that board.
 For other devices, please make sure to pass the correct macro (or create your
 own) that clearly matches the number of channels available.
 
+### Additional Documentation
+- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
 
 ## Key Concepts
 * How to disable global memory burst-interleaving using the
   `-Xsno-interleaving` flag and the `mem_channel` buffer property.
 * The scenarios in which disabling burst-interleaving can help reduce the area
-  consumed by a DPC++ FPGA design without impacting throughput.
-
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
-for details.
-
-Third party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+  consumed by a FPGA design without impacting throughput.
 
 ## Building the `mem_channel` Tutorial
+
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
+>For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 
 ### Include Files
 The included header `dpc_common.hpp` is located at
 `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the
+### Running Samples in Intel&reg; DevCloud
+If running a sample in the Intel&reg; DevCloud, remember that you must specify the
 type of compute node and whether to run in batch or interactive mode. Compiles
 to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA
 hardware is only supported on fpga_runtime nodes of the appropriate type, such
 as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor
 executing programs on FPGA hardware are supported on the login nodes. For more
-information, see the Intel® oneAPI Base Toolkit Get Started Guide
+information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide
 ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout
@@ -174,17 +163,15 @@ You can use Visual Studio Code (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
- - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
+ - (Linux only) Debug your GPU application with GDB for Intel&reg; oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions, see the 
+[Using Visual Studio Code with Intel&reg; oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to
-this readme for instructions on how to build and run a sample.
 
 ### On a Linux* System
 
@@ -193,12 +180,12 @@ this readme for instructions on how to build and run a sample.
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake`
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake`
    using the command:
     ```
     cmake ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix®
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg;
    10 SX), run `cmake` using the command:
 
    ```
@@ -239,12 +226,12 @@ this readme for instructions on how to build and run a sample.
    mkdir build
    cd build
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake`
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake`
    using the command:
     ```
     cmake -G "NMake Makefiles" ..
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix®
+   Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg;
    10 SX), run `cmake` using the command:
 
    ```
@@ -273,11 +260,12 @@ this readme for instructions on how to build and run a sample.
      nmake fpga
      ```
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005
-(with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA
+> **Note**: The Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA and Intel&reg; FPGA PAC D5005
+(with Intel Stratix&reg; 10 SX) do not yet support Windows*. Compiling to FPGA
 hardware on Windows* requires a third-party or custom Board Support Package
-(BSP) with Windows* support.<br>
-*Note:* If you encounter any issues with long paths when compiling under
+(BSP) with Windows* support.
+
+> **Note**: If you encounter any issues with long paths when compiling under
 Windows*, you may have to create your ‘build’ directory in a shorter path, for
 example c:\samples\build.  You can then run cmake from that directory, and
 provide cmake with the full path to your sample directory.
@@ -288,7 +276,7 @@ If an error occurs, you can get more details by running `make` with
 the `VERBOSE=1` argument:
 ``make VERBOSE=1``
 For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel® oneAPI Toolkits, which provides system checks to find missing
+Intel&reg; oneAPI Toolkits, which provides system checks to find missing
 dependencies and permissions errors.
 [Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
@@ -296,13 +284,12 @@ dependencies and permissions errors.
 
 You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the
 Visual Studio* IDE (in Windows*). For instructions, refer to the following
-link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party
-IDEs](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
+link: [FPGA Workflows on Third-Party IDEs for Intel&reg; oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html).
 
 
 ## Examining the Reports
 Locate the pair of `report.html` files in the `mem_channel_interleaving.prj`
-and `mem_channel_no_interleaving.prj` directories. Open the reports in any of
+and `mem_channel_no_interleaving.prj` directories. Open the reports in 
 Chrome*, Firefox*, Edge*, or Internet Explorer*. In the "Summary" tab, locate
 the "Quartus Fitter Resource Utilization Summary" entry and expand it to see
 the table showing the FPGA resources that were allocated for the design. Notice
@@ -320,6 +307,7 @@ significantly lower than the case where burst-interleaving is enabled.
     Note that the `mem_channel` property and the `-Xsno-interleaving` flag have
     no impact on the emulator which is why we only have a single executable for
     this flow.
+
 2. Run the sample on the FPGA device (two executables should be generated):
      ```
      ./mem_channel_interleaving.fpga         (Linux)
@@ -352,23 +340,29 @@ Kernel throughput without burst-interleaving: 796.379552 MB/s
 ### Discussion of Results
 
 A test compile of this tutorial design achieved the following results on the
-Intel® Programmable Acceleration Card with Intel® Arria® 10 GX FPGA. The table
+Intel&reg; Programmable Acceleration Card with Intel&reg; Arria&reg; 10 GX FPGA. The table
 below shows the performance of the design as well as the resources consumed by
 the kernel system.
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
--|-|-|-|-|-|-|-
-Without `-Xsno-interleaving` | 4.004 | 749.23 | 23,815.4 | 26,727  | 1094 | 53 | 0
-With `-Xsno-interleaving` | 3.767 | 796.38 | 7,060.7  | 16,396  | 38 | 41  | 0
+|:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
+|Without `-Xsno-interleaving` | 4.004 | 749.23 | 23,815.4 | 26,727  | 1094 | 53 | 0
+|With `-Xsno-interleaving` | 3.767 | 796.38 | 7,060.7  | 16,396  | 38 | 41  | 0
 
-Similarly, when compiled for the Intel® Programmable Acceleration Card with
-Intel® Stratix® 10 SX FPGA, the tutorial design achieved the following results:
+Similarly, when compiled for the Intel&reg; Programmable Acceleration Card with
+Intel&reg; Stratix&reg; 10 SX FPGA, the tutorial design achieved the following results:
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
--|-|-|-|-|-|-|-
-Without `-Xsno-interleaving` | 2.913  | 1029.90 | 14,999.6 | 47,532 | 11 | 345 | 0
-With `-Xsno-interleaving` | 2.913 | 1029.77 | 9,564.1 | 28,616 | 11 | 186 | 0
+|:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
+|Without `-Xsno-interleaving` | 2.913  | 1029.90 | 14,999.6 | 47,532 | 11 | 345 | 0
+|With `-Xsno-interleaving` | 2.913 | 1029.77 | 9,564.1 | 28,616 | 11 | 186 | 0
 
 Notice that the throughput of the design when burst-interleaving is disabled is
 equal or better than when burst-interleaving is enabled. However, the resource
 utilization is significantly lower without burst-interleaving. Therefore, this
 is a design where disabling burst-interleaving and manually assigning buffers
 to channels is a net win.
+
+## License
+
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
