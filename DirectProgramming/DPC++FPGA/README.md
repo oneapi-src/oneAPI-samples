@@ -35,6 +35,7 @@ In order to help the users navigate the code samples in a coherent manner that b
 | [fast_recompile](Tutorials/GettingStarted/fast_recompile) | Why to separate host and device code compilation in your FPGA project<br> How to use the -reuse-exe and device link methods<br> Which method to choose for your project |
 
 ### Tier 2
+
 | Sample   |      Description |
 |----------|------------------|
 | [printf](Tutorials/Features/printf) | How to declare and use printf in program |
@@ -46,6 +47,7 @@ In order to help the users navigate the code samples in a coherent manner that b
 | [double_buffering](Tutorials/DesignPatterns/double_buffering) | How and when to implement the double buffering optimization technique |
 
 ### Tier 3
+
 | Sample   |      Description |
 |----------|------------------|
 | [compute_units](Tutorials/DesignPatterns/compute_units) | A design pattern to generate multiple compute units using template metaprogramming |
@@ -81,9 +83,21 @@ In order to help the users navigate the code samples in a coherent manner that b
 | [n_way_buffering](Tutorials/DesignPatterns/n_way_buffering) | How and when to apply the N-way buffering optimization technique |
 | [system_profiling](Tutorials/Tools/system_profiling) | Summary of profiling tools available for performance optimization <br> About the Intercept Layer for OpenCL™ Applications <br> How to set up and use this tool <br> A case study of using this tool to identify when the double buffering system-level optimization is beneficial |
 
-
-
-
+### Tier 4
+| Sample   |      Description |
+|----------|------------------|
+| [anr](ReferenceDesigns/anr) | How to create a parameterizable image processing pipeline to implement an Adaptive Noise Reduction (ANR) algorithm on a FPGA |
+| [board_test](ReferenceDesigns/board_test) | How to test board interfaces to ensure the designed platform provides expected performance |
+| [cholesky](ReferenceDesigns/cholesky) | How to implement high performance matrix Cholesky decomposition on a FPGA |
+| [cholesky_inversion](ReferenceDesigns/cholesky_inversion) | How to implement high performance Cholesky matrix decomposition on a FPGA |
+| [crr](ReferenceDesigns/crr) | How to implement the Cox-Ross-Rubinstein (CRR) binomial tree model on a FPGA |
+| [db](ReferenceDesigns/db) | How to accelerate database queries using an FPGA |
+| [decompress](ReferenceDesigns/decompress) | How to implement an efficient GZIP and Snappy decompression engine on a FPGA |
+| [gzip](ReferenceDesigns/gzip) | How to implement a high-performance multi-engine compression algorithm on FPGA |
+| [merge_sort](ReferenceDesigns/merge_sort) | How to use the spatial compute of the FPGA to create a merge sort design that takes advantage of thread- and SIMD-level parallelism |
+| [mvdr_beamforming](ReferenceDesigns/mvdr_beamforming) | How to create a full, complex system that performs IO streaming using SYCL*-compliant code |
+| [qrd](ReferenceDesigns/qrd) | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm |
+| [qri](ReferenceDesigns/qri) | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition to compute a matrix inversion |
 
 ### Additional Documentation
 - [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
