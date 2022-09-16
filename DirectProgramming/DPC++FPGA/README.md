@@ -6,16 +6,77 @@ These require the Intel® oneAPI DPC++ Compiler as well as the Intel® FPGA Add-
 The latest versions of code samples on the master branch are not guaranteed to be stable. 
 Use a [stable release version](https://github.com/oneapi-src/oneAPI-samples/tags) of the repository that corresponds to the version of the compiler you are using.
 
+NOTE: The [FPGA Optimization Guide for Intel® oneAPI Toolkits, Chapter 1: Introduction To FPGA Design Concepts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/introduction-to-fpga-design-concepts.html) covers fundamental FPGA concepts, and it is a prerequisite for all FPGA-specific code samples. 
+
 ## Repository Structure
 
 This folder is organized as follows:
-- **Tutorials**
-  - **GettingStarted**: basic samples to get you through your first compiles
-  - **Features**: each sample in this folder demonstrates a compiler feature is isolation (such as loop unrolling)
-  - **DesignPatterns**: each sample in this folder shows coding patterns that generates more efficient hardware
-  - **Tools**: samples showing external debugging tools in action (profiling)
-- **ReferenceDesigns**: Showcases high performance designs that take advantage of multiple features and design patterns shown in the Tutorials
-- **include**: a set of commonly used functions wrapped up as libraries
+- [Tutorials](Tutorials)
+  - [GettingStarted](Tutorials/GettingStarted): basic samples to get you through your first compiles
+  - [Features](Tutorials/Features): each sample in this folder demonstrates a compiler feature is isolation (such as loop unrolling)
+  - [DesignPatterns](Tutorials/DesignPatterns): each sample in this folder shows coding patterns that generates more efficient hardware
+  - [Tools](Tutorials/Tools): samples showing external debugging tools in action (profiling)
+- [ReferenceDesigns](ReferenceDesigns): Showcases high performance designs that take advantage of multiple features and design patterns shown in the _Tutorials_
+- [include](include): a set of commonly used functions wrapped up as libraries
+
+## Samples categorization
+
+In order to help the users navigate the code samples in a coherent manner that builds on complexity and use-case, these are categorized by tiers:
+- [Tier 1](#tier-1): get started
+- [Tier 2](#tier-2): explore the fundamentals
+- [Tier 3](#tier-3): explore advances techniques
+- [Tier 4](#tier-4): explore the refenrece designs
+
+### Tier 1
+
+| Sample   |      Description |
+|----------|------------------|
+| [fpga_compile](Tutorials/GettingStarted/fpga_compile)     | How and why compiling SYCL* code for FPGA differs from CPU or GPU<br> FPGA device image types and when to use them<br> The compile options used to target FPGA |
+| [fast_recompile](Tutorials/GettingStarted/fast_recompile) | Why to separate host and device code compilation in your FPGA project<br> How to use the -reuse-exe and device link methods<br> Which method to choose for your project |
+
+### Tier 2
+| Sample   |      Description |
+|----------|------------------|
+| [printf](Tutorials/Features/printf) | How to declare and use printf in program |
+| [kernel_args_restrict](Tutorials/Features/kernel_args_restrict) | The problem of pointer aliasing and its impact on compiler optimizations.<br> The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel.<br>The effect this attribute can have on your kernel's performance on FPGA |
+| [loop_unroll](Tutorials/Features/loop_unroll) | Basics of loop unrolling.<br> How to unroll loops in your program.<br> Determining the optimal unroll factor for your program |
+| [pipes](Tutorials/Features/pipes) | The basics of using SYCL*-compliant pipes extension for FPGA<br> How to declare and use pipes |
+| [explicit_data_movement](Tutorials/DesignPatterns/explicit_data_movement) | How to explicitly manage the movement of data for the FPGA |
+| [loop_ivdep](Tutorials/Features/loop_ivdep) | Basics of loop-carried dependencies<br> The notion of a loop-carried dependence distance<br> What constitutes a safe dependence distance<br> How to aid the compiler's dependence analysis to maximize performance<br> :warning: **This looks like a Tier 3 sample?** |
+| [double_buffering](Tutorials/DesignPatterns/double_buffering) | How and when to implement the double buffering optimization technique |
+
+### Tier 3
+| Sample   |      Description |
+|----------|------------------|
+| [compute_units](Tutorials/DesignPatterns/compute_units) | A design pattern to generate multiple compute units using template metaprogramming |
+| [ac_int](Tutorials/Features/ac_int) | Using the `ac_int` data type for basic operations<br> Efficiently using the left shift operation<br> Setting and reading certain bits of an `ac_int` number |
+| [ac_fixed](Tutorials/Features/ac_fixed) | How different methods of `ac_fixed` number construction affect hardware resource utilization <br>Recommended method for constructing `ac_fixed` numbers in your kernel <br>Accessing and using the `ac_fixed` math library functions <br>Trading off accuracy of results for reduced resource usage on the FPGA |
+| [dsp_control](Tutorials/Features/dsp_control) | How to apply global DSP control in command-line interface. <br> How to apply local DSP control in source code. <br> Scope of datatypes and math operations that support DSP control |
+| [scheduler_target_fmax](Tutorials/Features/scheduler_target_fmax) | The behavior of the `scheduler_target_fmax_mhz` attribute and when to use it. <br> The effect this attribute can have on kernel performance on FPGA |
+| [speculated_iterations](Tutorials/Features/speculated_iterations) | What the `speculated_iterations` attribute does <br> How to apply the `speculated_iterations` attribute to loops in your program <br> How to determine the optimal number of speculated iterations |
+| [optimize_inner_loop](Tutorials/DesignPatterns/optimize_inner_loop) | How to optimize the throughput of an inner loop with a low trip |
+| [dynamic_profiler](Tutorials/Tools/dynamic_profiler) | About the Intel&reg; FPGA Dynamic Profiler for DPC++ <br> How to set up and use this tool <br> A case study of using this tool to identify performance bottlenecks in pipes |
+| [latency_control (experimental)](Tutorials/Features/experimental/latency_control) | How to set latency constraints to pipes and LSUs accesses.<br>How to confirm that the compiler respected the latency control directive |
+| [autorun](Tutorials/DesignPatterns/autorun) | How and when to use autorun kernels |
+| [pipe_array](Tutorials/DesignPatterns/pipe_array) | A design pattern to generate an array of pipes using SYCL* <br> Static loop unrolling through template metaprogramming |
+| [io_streaming](Tutorials/DesignPatterns/io_streaming) | How to stream data through the FPGA's IO using IO pipes |
+| [zero_copy_data_transfer](Tutorials/DesignPatterns/zero_copy_data_transfer) | How to use SYCL USM host allocations for the FPGA |
+| [simple_host_streaming](Tutorials/DesignPatterns/simple_host_streaming) | How to achieve low-latency host-device streaming while maintaining throughput |
+| [buffered_host_streaming](Tutorials/DesignPatterns/buffered_host_streaming) | How to optimally stream data between the host and device to maximize throughput |
+| [memory_attributes](Tutorials/Features/memory_attributes) | The basic concepts of on-chip memory attributes <br> How to apply memory attributes in your program <br> How to confirm that the memory attributes were respected by the compiler <br> A case study of the type of performance/area trade-offs enabled by memory attributes |
+| [fpga_reg](Tutorials/Features/fpga_reg) | How to use the `ext::intel::fpga_reg` extension <br> How `ext::intel::fpga_reg` can be used to re-structure the compiler-generated hardware <br> Situations in which applying  `ext::intel::fpga_reg` might be beneficial |
+| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
+| [mem_channel](Tutorials/Features/mem_channel) | How and when to use the `mem_channel` buffer property and the `-Xsno-interleaving` flag |
+
+| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
+| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
+| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
+| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
+| [lsu_control](Tutorials/Features/lsu_control) | The basic concepts of LSU styles and LSU modifiers <br>  How to use the LSU controls extension to request specific configurations <br>  How to confirm what LSU configurations are implemented <br> A case study of the type of area trade-offs enabled by LSU |
+
+
+
+
 
 
 
