@@ -8,7 +8,7 @@
 #include <CL/sycl.hpp>
 #include <iostream>
 
-using namespace cl::sycl;
+using namespace sycl;
 
 static const int num = 16;
 

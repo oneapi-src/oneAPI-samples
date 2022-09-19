@@ -5,7 +5,7 @@
 // =============================================================
 
 #include <CL/sycl.hpp>
-using namespace cl::sycl;
+using namespace sycl;
 
 #include <chrono>
 #include <cmath>
@@ -28,11 +28,11 @@ using namespace cl::sycl;
  */
 #define PAD 0
 
-bool iso_3dfd_device(cl::sycl::queue&, float*, float*, float*, float*, size_t,
+bool iso_3dfd_device(sycl::queue&, float*, float*, float*, float*, size_t,
                      size_t, size_t, size_t, size_t, size_t, size_t,
                      unsigned int);
 
-void printTargetInfo(cl::sycl::queue&, unsigned int, unsigned int);
+void printTargetInfo(sycl::queue&, unsigned int, unsigned int);
 
 void usage(std::string);
 
@@ -44,4 +44,4 @@ bool within_epsilon(float*, float*, const size_t, const size_t, const size_t,
 bool checkGridDimension(size_t, size_t, size_t, unsigned int, unsigned int,
                         unsigned int);
 
-bool checkBlockDimension(cl::sycl::queue&, unsigned int, unsigned int);
+bool checkBlockDimension(sycl::queue&, unsigned int, unsigned int);

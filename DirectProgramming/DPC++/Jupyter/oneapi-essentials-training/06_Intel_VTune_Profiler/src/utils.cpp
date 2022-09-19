@@ -37,11 +37,11 @@ bool checkGridDimension(size_t n1, size_t n2, size_t n3, unsigned int dimX,
  * Host-Code
  * Utility function to validate block sizes
  */
-bool checkBlockDimension(cl::sycl::queue& q, unsigned int dimX,
+bool checkBlockDimension(sycl::queue& q, unsigned int dimX,
                          unsigned int dimY) {
   auto device = q.get_device();
   auto maxBlockSize =
-      device.get_info<cl::sycl::info::device::max_work_group_size>();
+      device.get_info<sycl::info::device::max_work_group_size>();
 
   if ((maxBlockSize > 1) && (dimX * dimY > maxBlockSize)) {
     std::cout << "ERROR: Invalid block sizes: n1_Tblock * n2_Tblock should be "
@@ -58,15 +58,15 @@ bool checkBlockDimension(cl::sycl::queue& q, unsigned int dimX,
  * Host-Code
  * Utility function to print device info
  */
-void printTargetInfo(cl::sycl::queue& q, unsigned int dimX, unsigned int dimY) {
+void printTargetInfo(sycl::queue& q, unsigned int dimX, unsigned int dimY) {
   auto device = q.get_device();
   auto maxBlockSize =
-      device.get_info<cl::sycl::info::device::max_work_group_size>();
+      device.get_info<sycl::info::device::max_work_group_size>();
 
   auto maxEUCount =
-      device.get_info<cl::sycl::info::device::max_compute_units>();
+      device.get_info<sycl::info::device::max_compute_units>();
 
-  std::cout << " Running on " << device.get_info<cl::sycl::info::device::name>()
+  std::cout << " Running on " << device.get_info<sycl::info::device::name>()
             << "\n";
   std::cout << " The Device Max Work Group Size is : " << maxBlockSize
             << "\n";
