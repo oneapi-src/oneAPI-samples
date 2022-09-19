@@ -76,12 +76,6 @@ You repeat this back-of-the-envelope calculation for different unroll factors:
 
 On an Intel&reg; Programmable Acceleration Card with Intel Arria&reg; 10 GX FPGA, it is reasonable to predict that this program will become memory-bandwidth limited when the unroll factor grows from 4 to 8. Check this prediction by running the design following the instructions below.
 
-
-### Additional Documentation
-- [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
-- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
-- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
-
 ## Key Concepts
 * Basics of loop unrolling.
 * How to unroll loops in your program.
