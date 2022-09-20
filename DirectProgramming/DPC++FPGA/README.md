@@ -124,7 +124,7 @@ When working with the command-line interface (CLI), you should configure the one
 
 All the FPGA code samples include the `dpc_common.hpp` header. The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You might need to use some of the resources from this location to build the sample.
 
->**Note**: You can get the common resources from the [oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/common) GitHub repository.
+>**Note**: You can get the common resources from the [oneAPI-samples](/common) GitHub repository.
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
