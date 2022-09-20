@@ -14,11 +14,11 @@ At the same time, Intel&reg; Neural Compressor tunes the quanization
 method to reduce the accuracy loss, which is a big blocker for
 low-precision inference.
 
-Intel&reg; Neural Compressor is part of Intel&reg; oneAPI AI Analytics
-Kit and works with Intel&reg; Optimizations for TensorFlow*.
+Intel&reg; Neural Compressor is part of Intel&reg; AI Analytics
+Kit (AI Kit) and works with Intel&reg; Optimizations for TensorFlow*.
 
 Refer to the official web site for detailed information and news:
-[https://github.com/intel/neural-compressor](https://github.com/intel/neural-compressor)
+[https://github.com/intel/neural-compressor](https://github.com/intel/neural-compressor).
 
 
 ## Purpose
@@ -38,7 +38,7 @@ performance to see the benefit of Intel&reg; Neural Compressor.
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 or later, Windows 10*
 | Hardware                          | The Second Generation Intel&reg; Xeon&reg; Scalable processor family or newer Xeon&reg; processors
-| Software                          | Intel&reg; oneAPI AI Analytics Toolkit 2021.1 or later
+| Software                          | Intel&reg; AI Analytics Toolkit 2021.1 or later
 | What you will learn               | How to use Intel&reg; Neural Compressor tool to quantize the AI model based on TensorFlow* and speed up the inference on Intel&reg; Xeon&reg; CPUs
 | Time to complete                  | 10 minutes
 
@@ -46,7 +46,7 @@ performance to see the benefit of Intel&reg; Neural Compressor.
 ### Intel® Neural Compressor and Sample Code Versions
 
 This sample code is always updated for the Intel® Neural Compressor
-version in the latest Intel® oneAPI AI Analytics Kit release.
+version in the latest Intel® AI Analytics Kit release.
 
 If you want to get the sample code for an earlier toolkit release,
 checkout the corresponding git tag.
@@ -109,12 +109,12 @@ or in the Intel&reg; DevCloud.
 >
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-1. Install Intel® oneAPI AI Analytics Toolkit.
+1. Install Intel® AI Analytics Toolkit.
 
    If you use the Intel&reg; DevCloud, skip this step. The toolkit is
    already installed for you.
 
-   For installation instructions, refer to [Intel&reg; AI Analytics Toolkit Powered by oneAPI](
+   For installation instructions, refer to [Intel&reg; AI Analytics Toolkit Installation Guides](
 https://software.intel.com/content/www/us/en/develop/articles/installation-guide-for-intel-oneapi-toolkits.html).
 
    Intel&reg; Optimizations for TensorFlow* is included in Intel&reg;
@@ -139,7 +139,7 @@ https://software.intel.com/content/www/us/en/develop/articles/installation-guide
                             /opt/intel/oneapi/tensorflow/2.3.0
    ```
 
-   By default, the Intel® oneAPI AI Analytics Toolkit is installed in
+   By default, the Intel® AI Analytics Toolkit is installed in
    the `/opt/intel/oneapi` folder, which requires root privileges to manage it.
 
    - If you have the root access to your oneAPI installation path:

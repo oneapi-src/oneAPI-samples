@@ -1,6 +1,6 @@
 ﻿# Intel&reg; Modin* Get Started Sample
 
-This get started sample code shows how to use distributed Pandas using the Intel® Distribution of Modin* package. It demonstrates how to use software products that can be found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+This get started sample code shows how to use distributed Pandas using the Intel® Distribution of Modin* package. It demonstrates how to use software products that can be found in the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 | Property                          | Description
 | :---                              | :---
@@ -19,7 +19,7 @@ In this sample, you will run Intel Distribution of Modin*-accelerated Pandas fun
 | :---                              | :---
 | OS                                | 64-bit Linux: Ubuntu 18.04 or higher
 | Hardware                          | Intel® Atom® processors; Intel® Core™ processor family; Intel® Xeon® processor family; Intel® Xeon® Scalable Performance processor family
-| Software                          | Intel® Distribution of Modin*, Intel® oneAPI AI Analytics Toolkit
+| Software                          | Intel® Distribution of Modin*, Intel® AI Analytics Toolkit
 
 
 ## Key Implementation Details

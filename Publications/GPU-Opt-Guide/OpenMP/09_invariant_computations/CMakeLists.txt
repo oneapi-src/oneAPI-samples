@@ -1,0 +1,2 @@
+add_example(test_loop_invariant)
+add_example(test_no_loop_invariant)

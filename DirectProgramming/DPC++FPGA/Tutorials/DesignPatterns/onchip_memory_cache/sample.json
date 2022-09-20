@@ -5,9 +5,18 @@
   "description": "Intel® FPGA tutorial demonstrating the caching of on-chip memory to reduce loop initiation interval",
   "toolchain": ["dpcpp"],
   "os": ["linux", "windows"],
-  "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "Tutorials/DesignPatterns/onchip_memory_cache",
+      "include/onchip_memory_with_cache.hpp",
+      "include/unrolled_loop.hpp"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {

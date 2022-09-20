@@ -1,0 +1,1 @@
+add_example(test_omp_work_group)

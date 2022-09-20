@@ -1,7 +1,9 @@
 cmake_minimum_required (VERSION 3.5)
-project (loop-unroll)
 
 set(CMAKE_CXX_COMPILER dpcpp)
+
+project (loop-unroll)
+
 
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)

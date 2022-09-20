@@ -4,6 +4,7 @@
 #include <fstream>
 #include <limits>
 #include <numeric>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <sycl/ext/intel/fpga_extensions.hpp>
@@ -60,12 +61,12 @@ static_assert(fpga_tools::IsPow2(kLiteralsPerCycle));
 using GzipDecompressorT = GzipDecompressor<kLiteralsPerCycle>;
 bool RunGzipTest(sycl::queue& q, GzipDecompressorT decompressor,
                  const std::string test_dir);
-constexpr std::string_view kDecompressorName = "GZIP";
+std::string decompressor_name = "GZIP";
 #else
 using SnappyDecompressorT = SnappyDecompressor<kLiteralsPerCycle>;
 bool RunSnappyTest(sycl::queue& q, SnappyDecompressorT decompressor,
                    const std::string test_dir);
-constexpr std::string_view kDecompressorName = "SNAPPY";
+std::string decompressor_name = "SNAPPY";
 #endif
 
 using namespace sycl;
@@ -122,7 +123,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  std::cout << "Using " << kDecompressorName << " decompression\n";
+  std::cout << "Using " << decompressor_name << " decompression\n";
   std::cout << std::endl;
 
   // the device selector

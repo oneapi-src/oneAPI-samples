@@ -150,8 +150,9 @@ unsigned SnappyReader(unsigned in_count) {
   unsigned literal_len_counter;
 
   unsigned data_read = data_read_in_preamble;
-  bool all_data_read = data_read < in_count;
-  bool all_data_read_next = data_read < in_count - literals_per_cycle;
+  bool all_data_read = data_read >= in_count;
+  bool all_data_read_next = data_read >= (in_count - literals_per_cycle);
+
 
   // keep track of the number of bytes processed
   constexpr unsigned max_bytes_processed_inc =
@@ -175,13 +176,15 @@ unsigned SnappyReader(unsigned in_count) {
   while (bytes_processed_in_range) {
     // grab new bytes if there is space
     if (byte_stream.Space() >= literals_per_cycle) {
+
       bool valid_read;
       auto pipe_data = InPipe::read(valid_read);
       if (valid_read) {
         byte_stream.template Write(pipe_data);
         data_read += literals_per_cycle;
         all_data_read = all_data_read_next;
-        all_data_read_next = data_read >= in_count - 2 * literals_per_cycle;
+        all_data_read_next = data_read >= (in_count - literals_per_cycle);
+
       }
     }
 

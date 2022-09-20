@@ -3,6 +3,7 @@
 
 #include <CL/sycl.hpp>
 #include <chrono>
+#include <optional>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
