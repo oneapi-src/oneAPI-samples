@@ -9,7 +9,7 @@ This tutorial demonstrates a simple example of unrolling loops to improve throug
 
 ## Prerequisites
 
-This sample is part of the FPGA code samples for which you can find useful information about how to navigate these samples and basic setup instructions in the readme located at the top level of the FPGA code samples: [DirectProgramming/DPC++FPGA](https://github.com/yuguen-intel/oneAPI-samples/DirectProgramming/DPC++FPGA).
+This sample is part of the FPGA code samples for which you can find useful information about how to navigate these samples and basic setup instructions in the readme located at the top level of the FPGA code samples: [DirectProgramming/DPC++FPGA](/DirectProgramming/DPC++FPGA).
 
 | Optimized for                     | Description
 |:---                                 |:---
