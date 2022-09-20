@@ -57,15 +57,13 @@ public:
     ~PointLight() {};
 
     Light_SampleRes sample(const DifferentialGeometry& dg, const Vec2f& s);
-    //Light_EvalRes eval(
-    //    const DifferentialGeometry& dg,
-    //    const Vec3fa& dir);
+
 Light_EvalRes eval(
         const Vec3fa& org,
         const Vec3fa& dir);
-    unsigned int addGeometry(RTCScene scene, RTCDevice device);
+    unsigned int add_geometry(RTCScene scene, RTCDevice device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim);
 
-    inline void cleanGeometry();
+    inline void clean_geometry();
 
     Vec3fa m_position;
     Vec3fa m_power;
@@ -118,9 +116,6 @@ Light_SampleRes PointLight::sample(const DifferentialGeometry& dg, const Vec2f& 
     return res;
 }
 
-//Light_EvalRes PointLight::eval(
-//    const DifferentialGeometry& dg,
-//    const Vec3fa& dir)
     Light_EvalRes PointLight::eval(
         const Vec3fa& org,
         const Vec3fa& dir)
@@ -157,7 +152,7 @@ Light_SampleRes PointLight::sample(const DifferentialGeometry& dg, const Vec2f& 
     return res;
 }
 
-unsigned int PointLight::addGeometry(RTCScene scene, RTCDevice device) {
+unsigned int PointLight::add_geometry(RTCScene scene, RTCDevice device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim) {
 
         RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_SPHERE_POINT);
         Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
@@ -173,16 +168,16 @@ unsigned int PointLight::addGeometry(RTCScene scene, RTCDevice device) {
 
         MatAndPrimColorTable mpTable;
         mpTable.materialTable = { MaterialType::MATERIAL_EMITTER };
-        //We don't want to store albedo colors for the point light, we will use sample/eval functions and members of the light object
+        //We don't want to store 'albedo' colors for the point light, we will use sample/eval functions and members of the light object
         mpTable.primColorTable = nullptr;
-        g_geomIDs.insert(std::make_pair(geomID, mpTable));
+        mapGeomToPrim.insert(std::make_pair(geomID, mpTable));
 
         return geomID;
 }
 
 /* Only a place holder. Nothing is here because we do not attach any attributes
  * for the sphere.  */
-inline void PointLight::cleanGeometry() {}
+inline void PointLight::clean_geometry() {}
 
 class DirectionalLight : public Light {
 public:
@@ -190,9 +185,7 @@ public:
     ~DirectionalLight() {};
 
     Light_SampleRes sample(const DifferentialGeometry& dg, const Vec2f& s);
-    //Light_EvalRes eval(
-    //    const DifferentialGeometry&,
-    //    const Vec3fa& dir);
+
         Light_EvalRes eval(
         const Vec3fa& org,
         const Vec3fa& dir);
@@ -263,18 +256,17 @@ public:
 
         m_coordFrame = frame(_direction);
         m_diskPdf = uniformSampleDiskPDF(_radius);
+        
     };
     ~SpotLight() {};
     Light_SampleRes sample(
         const DifferentialGeometry& dg,
         const Vec2f& s);
-    //Light_EvalRes eval(
-    //        const DifferentialGeometry& dg,
-    //        const Vec3fa& dir);
+
     Light_EvalRes eval(
             const Vec3fa& org,
             const Vec3fa& dir);
-    unsigned int SpotLight::addGeometry(RTCScene scene, RTCDevice device);
+    unsigned int SpotLight::add_geometry(RTCScene scene, RTCDevice device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim);
 
     Vec3fa m_position;         //!< Position of the SpotLight
     LinearSpace3fa m_coordFrame;         //!< coordinate frame, with vz == direction that the SpotLight is emitting
@@ -354,7 +346,7 @@ Light_EvalRes SpotLight::eval(
     return res;
 }
 
-unsigned int SpotLight::addGeometry(RTCScene scene, RTCDevice device) {
+unsigned int SpotLight::add_geometry(RTCScene scene, RTCDevice device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim) {
 
     RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_ORIENTED_DISC_POINT);
     Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
@@ -377,7 +369,7 @@ unsigned int SpotLight::addGeometry(RTCScene scene, RTCDevice device) {
     mpTable.materialTable = { MaterialType::MATERIAL_EMITTER };
     //We don't want to store albedo colors for the point light, we will use sample/eval functions and members of the light object
     mpTable.primColorTable = nullptr;
-    g_geomIDs.insert(std::make_pair(geomID, mpTable));
+    mapGeomToPrim.insert(std::make_pair(geomID, mpTable));
 
     return geomID;
 }

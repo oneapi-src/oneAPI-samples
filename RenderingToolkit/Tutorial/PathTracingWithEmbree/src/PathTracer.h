@@ -133,7 +133,7 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
     Vec3fa albedo = Vec3fa(0.9f, 0.7f, 0.7f);
     MaterialType materialType = MaterialType::MATERIAL_MATTE;
     materialType =
-        g_geomIDs[rayhit.hit.geomID].materialTable[rayhit.hit.primID];
+        sg->m_mapGeomToPrim[rayhit.hit.geomID].materialTable[rayhit.hit.primID];
     if (materialType == MaterialType::MATERIAL_EMITTER) {
         std::shared_ptr<Light> light = sg->get_light_from_geomID(rayhit.hit.geomID);
         Light_EvalRes le = light->eval(org, dir);
@@ -143,7 +143,7 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
         break;
     }
     else {
-        albedo = g_geomIDs[rayhit.hit.geomID].primColorTable[rayhit.hit.primID];
+        albedo = sg->m_mapGeomToPrim[rayhit.hit.geomID].primColorTable[rayhit.hit.primID];
         /* An albedo as well as a material type is used */
     }
 

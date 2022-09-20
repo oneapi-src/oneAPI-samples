@@ -6,17 +6,50 @@
 
 #include <vector>
 
+#include "Geometry.h"
 #include "definitions.h"
 #include "Materials.h"
 
-static std::vector<enum class MaterialType> sphereMats = {
-    // Just one material for our sphere primitive (Defined as singular Vec4
-    // point for embree)
-    MaterialType::MATERIAL_GLASS};
+class Sphere : public Geometry {
+public:
+    Sphere(RTCScene scene, RTCDevice device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim, enum class MaterialType sphereMat, const Vec3fa& pos, const Vec3fa& color,
+        float radius, std::map<unsigned int, size_t>& mapGeomToLightIdx, std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
+        unsigned int width, unsigned int height);
+    ~Sphere();
 
-Vec3fa g_sphere_face_colors = {1.f, 1.f, 1.f};
+    unsigned int Sphere::add_geometry(RTCScene scene, RTCDevice device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim, enum class MaterialType sphereMat, const Vec3fa& pos, const Vec3fa& color,
+        float radius);
 
-int addSphere(RTCScene scene, RTCDevice device, const Vec3fa& pos,
+
+    /* Place holder ... Could put a default sphere in here but we will leave it blank for now */
+    void add_geometry(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim) {}
+    /* Place holder ... Could put a default light or camera in here but we will leave it blank for now */
+    void setup_camera_and_lights(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim, std::map<unsigned int, size_t>& mapGeomToLightIdx, std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
+        unsigned int width, unsigned int height) {}
+    /* Place holder */
+    void clean_geometry();
+
+    // Just one material for our sphere primitive
+    enum class MaterialType m_sphereMat;
+    Vec3fa Sphere::m_sphere_face_colors;
+    Vec3fa m_pos;
+    Vec3fa m_radius;
+    
+};
+
+Sphere::Sphere(RTCScene scene, RTCDevice device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim, enum class MaterialType sphereMat, const Vec3fa& pos, const Vec3fa& color,
+    float radius, std::map<unsigned int, size_t>& mapGeomToLightIdx, std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
+    unsigned int width, unsigned int height) {
+    /* The unused variables are in case you would like to try lights with this sphere. See the setup_camera_and_lights(..) functions from the other Geometry objects */
+    m_sphereMat = sphereMat;
+    m_sphere_face_colors = color;
+    m_pos = pos;
+    m_radius = radius;
+    add_geometry(scene, device, mapGeomToPrim, sphereMat, pos, color, radius);
+    
+}
+
+unsigned int Sphere::add_geometry(RTCScene scene, RTCDevice device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim, enum class MaterialType sphereMat, const Vec3fa& pos, const Vec3fa& color,
               float radius) {
   RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_SPHERE_POINT);
   Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
@@ -30,16 +63,23 @@ int addSphere(RTCScene scene, RTCDevice device, const Vec3fa& pos,
   unsigned int geomID = rtcAttachGeometry(scene, mesh);
   rtcReleaseGeometry(mesh);
 
+
+
   MatAndPrimColorTable mpTable;
-  mpTable.materialTable = sphereMats;
-  mpTable.primColorTable = &g_sphere_face_colors;
-  g_geomIDs.insert(std::make_pair(geomID, mpTable));
+  mpTable.materialTable = std::vector<enum class MaterialType>({ m_sphereMat });
+  mpTable.primColorTable = &m_sphere_face_colors;
+  mapGeomToPrim.insert(std::make_pair(geomID, mpTable));
 
   return geomID;
 }
 
+Sphere::~Sphere() {
+    clean_geometry();
+}
+
 /* Only a place holder. Nothing is here because we do not attach any attributes
  * for the sphere.  */
-inline void cleanSphere() {}
+void Sphere::clean_geometry() {}
+
 
 #endif /* FILE_SPHERE_SEEN */

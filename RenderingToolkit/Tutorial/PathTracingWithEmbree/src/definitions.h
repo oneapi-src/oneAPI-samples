@@ -2,6 +2,8 @@
 #ifndef FILE_DEFINITIONS_SEEN
 #define FILE_DEFINITIONS_SEEN
 
+/* The definitions.h file is home to 3D math utility types and 3D math utilty functions. Embree repository tutorial sources often place these into an optics.h or sampling.g */
+
 #include <random>
 #include <utility>
 
@@ -24,6 +26,7 @@ using rkcommon::math::AffineSpace3fa;
 #define alignedFree(a) _mm_free(a)
 #endif
 
+/* Here we define the tile size in use for oneTBB tasks */
 #define TILE_SIZE_X 8
 #define TILE_SIZE_Y 8
 

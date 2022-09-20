@@ -6,16 +6,163 @@
 
 #include <vector>
 
+#include "Geometry.h"
 #include "definitions.h"
 #include "Materials.h"
 #include "Lights.h"
 
+
+class CornellBoxGeometry : public Geometry {
+public:
+
+    CornellBoxGeometry(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
+        std::map<unsigned int, size_t>& mapGeomToLightIdx, std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
+        unsigned int width, unsigned int height);
+    ~CornellBoxGeometry();
+
+private:
+    void add_geometry(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim);
+    void setup_camera_and_lights(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim, std::map<unsigned int, size_t>& mapGeomToLightIdx, std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
+        unsigned int width, unsigned int height);
+    void clean_geometry();
 /* Added for pathtracer */
-Vec3fa* g_cornell_face_colors = nullptr;
-Vec3fa* g_cornell_vertex_colors = nullptr;
+Vec3fa* m_cornell_face_colors = nullptr;
+Vec3fa* m_cornell_vertex_colors = nullptr;
+
 
 // mesh data
-static std::vector<Vertex> cornellBoxVertices = {
+static const std::vector<Vertex> m_cornellBoxVertices;
+
+static const std::vector<Vec3fa> m_cornellBoxColors;
+
+static const std::vector<enum class MaterialType> m_cornellBoxMats; 
+
+static const std::vector<Quad> CornellBoxGeometry::m_cornellBoxIndices;
+
+};
+
+CornellBoxGeometry::CornellBoxGeometry(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim, 
+    std::map<unsigned int, size_t>& mapGeomToLightIdx, std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
+    unsigned int width, unsigned int height) {
+
+    add_geometry(scene, device, mapGeomToPrim);
+    setup_camera_and_lights(scene, device, mapGeomToPrim, mapGeomToLightIdx, lights, camera, width, height);
+
+}
+
+void CornellBoxGeometry::add_geometry(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim) {
+  /* create a mesh for all the quads in the Cornell Box scene */
+  RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_QUAD);
+  m_cornell_face_colors =
+      (Vec3fa*)alignedMalloc(sizeof(Vec3fa) * m_cornellBoxIndices.size(), 16);
+  m_cornell_vertex_colors =
+      (Vec3fa*)alignedMalloc(sizeof(Vec3fa) * m_cornellBoxVertices.size(), 16);
+  Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
+      mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Vertex),
+      m_cornellBoxVertices.size());
+  for (auto i = 0; i < m_cornellBoxVertices.size(); i++) {
+    vertices[i] = m_cornellBoxVertices[i];
+    m_cornell_vertex_colors[i] = m_cornellBoxColors[i];
+  }
+
+  /* set quads */
+  Quad* quads = (Quad*)rtcSetNewGeometryBuffer(mesh, RTC_BUFFER_TYPE_INDEX, 0,
+                                               RTC_FORMAT_UINT4, sizeof(Quad),
+                                               m_cornellBoxIndices.size());
+
+  for (auto i = 0; i < m_cornellBoxIndices.size(); i++) {
+    quads[i] = m_cornellBoxIndices[i];
+    m_cornell_face_colors[i] = m_cornellBoxColors[i * 4];
+  }
+
+  rtcSetGeometryVertexAttributeCount(mesh, 1);
+  rtcSetSharedGeometryBuffer(mesh, RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE, 0,
+                             RTC_FORMAT_FLOAT3, *m_cornell_vertex_colors, 0,
+                             sizeof(Vec3fa), m_cornellBoxVertices.size());
+
+  rtcCommitGeometry(mesh);
+  unsigned int geomID = rtcAttachGeometry(scene, mesh);
+  rtcReleaseGeometry(mesh);
+
+  MatAndPrimColorTable mpTable;
+  mpTable.materialTable = m_cornellBoxMats;
+  mpTable.primColorTable = m_cornell_face_colors;
+  mapGeomToPrim.insert(std::make_pair(geomID, mpTable));
+
+}
+
+void CornellBoxGeometry::clean_geometry() {
+  if (m_cornell_face_colors) alignedFree(m_cornell_face_colors);
+  m_cornell_face_colors = nullptr;
+  if (m_cornell_vertex_colors) alignedFree(m_cornell_vertex_colors);
+  m_cornell_vertex_colors = nullptr;
+}
+
+void CornellBoxGeometry::setup_camera_and_lights(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim, std::map<unsigned int, size_t>& mapGeomToLightIdx,  std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
+                             unsigned int width, unsigned int height) {
+  /* A default camera view as specified from Cornell box presets given input
+   * from Intel OSPRay*/
+  // camera = positionCamera(Vec3fa(0.0, 0.0, -2.0f), Vec3fa(0, 0, 0),
+  //     Vec3fa(0, 1, 0), 90.0f, width, height);
+
+  /* A camera position that connects the field of vision angle of the camera to
+   * the bounds of the cornell box */
+  float fov = 30.0f;
+  float fovrad = fov * M_PI / 180.0f;
+  float half_fovrad = fovrad * 0.5f;
+  camera = positionCamera(Vec3fa(0.0, 0.0, -1.0f - 1.f / tanf(half_fovrad)),
+                          Vec3fa(0, 0, 0), Vec3fa(0, 1, 0), fov, width, height);
+
+  /* The magnitude of the light can be tricky. Lights such as the point light
+   * fall off at the inverse square of the distance. When designing a sandbox
+   * renderer, you may need to scale your light up or down to see your scene. */
+  //Vec3fa pow = 3.f * Vec3fa(0.78f, 0.551f, 0.183f);
+  /* An interesting position for an overhead light in the Cornell Box scene.
+   * Notice increased noise when lights are near objects */
+  // Vec3fa pos = Vec3fa(0.0f, 0.95f, 0.0f);
+
+  /* A somewhat central position for the point light within the box. This is
+   * similar to the position for the interactive pathtracer program shipped with
+   * Intel Embree */
+  //Vec3fa pos =
+  //    Vec3fa(2.f * 213.0f / 556.0f - 1.f, 2.f * 300.f / 558.8f - 1.f,
+  //           2.f * 227.f / 559.2f - 1.f);
+
+  /* Below is a setup for a delta point light or a spherical geometric light */
+
+  /* Delta is 0 radius */
+  //float radius = 0.f;
+  //float radius = 0.075f;
+  //lights.push_back(std::make_shared<PointLight>(pos, pow, radius));
+  //Place holder to toggle light geometries
+  //if (radius > 0.f && true) {
+  //    std::shared_ptr<PointLight> newPointLight = std::dynamic_pointer_cast<PointLight>(lights.back());
+ //    unsigned int geomID = newPointLight->add_geometry(scene, device);
+  //    mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));  
+  //}
+
+  /* Here we have a light as a disc geometry */
+  Vec3fa spotPos(0.f, 0.95f, 0.0f);
+  Vec3fa spotDir(0.f, -1.f, 0.f);
+  Vec3fa spotPow = 5.f * Vec3fa(0.78f, 0.551f, 0.183f);
+  float spotCosAngleMax = cosf(80.f * M_PI / 180.f);
+  float spotCosAngleScale = 50.f;
+  float spotRadius = 0.4f;
+  lights.push_back(std::make_shared<SpotLight>(spotPos, spotDir, spotPow, spotCosAngleMax, spotCosAngleScale, spotRadius));
+  /* Add geometry if you want it! */
+  if (spotRadius > 0.f) {
+      std::shared_ptr<SpotLight> pSpotLight = std::dynamic_pointer_cast<SpotLight>(lights.back());
+      unsigned int geomID = pSpotLight->add_geometry(scene, device, mapGeomToPrim);
+      mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));
+  }
+}
+
+
+CornellBoxGeometry::~CornellBoxGeometry() {
+    clean_geometry();
+}
+
+const std::vector<Vertex> CornellBoxGeometry::m_cornellBoxVertices = {
     // Floor
     {1.00f, -1.00f, -1.00f, 0.0f},
     {-1.00f, -1.00f, -1.00f, 0.0f},
@@ -101,9 +248,9 @@ static std::vector<Vertex> cornellBoxVertices = {
     {0.53f, -1.00f, -0.09f, 0.0f},
     {-0.04f, -1.00f, 0.09f, 0.0f},
     {0.14f, -1.00f, 0.67f, 0.0f},
-    {0.71f, -1.00f, 0.49f, 0.0f}};
+    {0.71f, -1.00f, 0.49f, 0.0f} };
 
-static std::vector<Quad> cornellBoxIndices = {
+const std::vector<Quad> CornellBoxGeometry::m_cornellBoxIndices = {
     {0, 1, 2, 3},      // Floor
     {4, 5, 6, 7},      // Ceiling
     {8, 9, 10, 11},    // Backwall
@@ -123,7 +270,7 @@ static std::vector<Quad> cornellBoxIndices = {
     {64, 65, 66, 67}   // TallBox Bottom Face
 };
 
-static std::vector<Vec3fa> cornellBoxColors = {
+const std::vector<Vec3fa> CornellBoxGeometry::m_cornellBoxColors = {
     // Floor
     {0.725f, 0.710f, 0.68f},
     {0.725f, 0.710f, 0.68f},
@@ -245,41 +392,41 @@ static std::vector<Vec3fa> cornellBoxColors = {
      {0.725f, 0.710f, 0.68f},
      {0.725f, 0.710f, 0.68f},
      {0.725f, 0.710f, 0.68f}
-     
+
 };
 
-static std::vector<enum class MaterialType> cornellBoxMats = {
+const std::vector<enum class MaterialType> CornellBoxGeometry::m_cornellBoxMats = {
     // Floor
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     /* Swap in thr below material to make the ceiling a matte material*/
     // Ceiling
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     /* Swap in the below material to make the ceiling a mirror */
     /*
     //Ceiling
     MaterialType::MATERIAL_MIRROR,
     */
     // Backwall
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // RightWall
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // LeftWall
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     /* Small box configuration for a matte material. Swap this section in for
        the glass (thin dielectric) material as desired */
 
     // ShortBox Top Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // ShortBox Left Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // ShortBox Front Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // ShortBox Right Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // ShortBox Back Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // ShortBox Bottom Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
 
     /* Small box configuration for glass material. Swap this section in for the
        matte above. */
@@ -299,20 +446,20 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     */
     /* Tall Box configuration for a matte material. Swap this section in for the
        mirror tall box (below) as desired*/
-    
+
     // TallBox Top Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // TallBox Left Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // TallBox Front Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // TallBox Right Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // TallBox Back Face
-    MaterialType::MATERIAL_MATTE,
+MaterialType::MATERIAL_MATTE,
     // TallBox Bottom Face
-    MaterialType::MATERIAL_MATTE
-    
+MaterialType::MATERIAL_MATTE
+
 
     /* Tall box configuration for a mirror material. Swap this section in to see
        behind the short cube */
@@ -331,119 +478,5 @@ static std::vector<enum class MaterialType> cornellBoxMats = {
     MaterialType::MATERIAL_MIRROR
     */
 };
-
-int addCornell(RTCScene scene, RTCDevice device) {
-  /* create a mesh for all the quads in the Cornell Box scene */
-  RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_QUAD);
-  g_cornell_face_colors =
-      (Vec3fa*)alignedMalloc(sizeof(Vec3fa) * cornellBoxIndices.size(), 16);
-  g_cornell_vertex_colors =
-      (Vec3fa*)alignedMalloc(sizeof(Vec3fa) * cornellBoxVertices.size(), 16);
-  Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
-      mesh, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(Vertex),
-      cornellBoxVertices.size());
-  for (auto i = 0; i < cornellBoxVertices.size(); i++) {
-    vertices[i] = cornellBoxVertices[i];
-    g_cornell_vertex_colors[i] = cornellBoxColors[i];
-  }
-
-  /* set quads */
-  Quad* quads = (Quad*)rtcSetNewGeometryBuffer(mesh, RTC_BUFFER_TYPE_INDEX, 0,
-                                               RTC_FORMAT_UINT4, sizeof(Quad),
-                                               cornellBoxIndices.size());
-
-  for (auto i = 0; i < cornellBoxIndices.size(); i++) {
-    quads[i] = cornellBoxIndices[i];
-    g_cornell_face_colors[i] = cornellBoxColors[i * 4];
-  }
-
-  rtcSetGeometryVertexAttributeCount(mesh, 1);
-  rtcSetSharedGeometryBuffer(mesh, RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE, 0,
-                             RTC_FORMAT_FLOAT3, *g_cornell_vertex_colors, 0,
-                             sizeof(Vec3fa), cornellBoxVertices.size());
-
-  rtcCommitGeometry(mesh);
-  unsigned int geomID = rtcAttachGeometry(scene, mesh);
-  rtcReleaseGeometry(mesh);
-
-  MatAndPrimColorTable mpTable;
-  mpTable.materialTable = cornellBoxMats;
-  mpTable.primColorTable = g_cornell_face_colors;
-  g_geomIDs.insert(std::make_pair(geomID, mpTable));
-
-  return geomID;
-}
-
-void cleanCornell() {
-  if (g_cornell_face_colors) alignedFree(g_cornell_face_colors);
-  g_cornell_face_colors = nullptr;
-  if (g_cornell_vertex_colors) alignedFree(g_cornell_vertex_colors);
-  g_cornell_vertex_colors = nullptr;
-}
-
-void cornellCameraLightSetup(RTCScene scene, RTCDevice device, std::map<unsigned int, size_t>& mapGeomToLightIdx, AffineSpace3fa& camera, std::vector<std::shared_ptr<Light>>& lights,
-                             unsigned int width, unsigned int height) {
-  /* A default camera view as specified from Cornell box presets given input
-   * from Intel OSPRay*/
-  // camera = positionCamera(Vec3fa(0.0, 0.0, -2.0f), Vec3fa(0, 0, 0),
-  //     Vec3fa(0, 1, 0), 90.0f, width, height);
-
-  /* A camera position that connects the field of vision angle of the camera to
-   * the bounds of the cornell box */
-  float fov = 30.0f;
-  float fovrad = fov * M_PI / 180.0f;
-  float half_fovrad = fovrad * 0.5f;
-  camera = positionCamera(Vec3fa(0.0, 0.0, -1.0f - 1.f / tanf(half_fovrad)),
-                          Vec3fa(0, 0, 0), Vec3fa(0, 1, 0), fov, width, height);
-
-  /* An infinite directional light as is used in triangle_geometry is not added,
-   * but here are some parameters if you would like to try a directional light
-   */
-  /*
-  Light infDirectionalLight;
-  infDirectionalLight.dir = normalize(Vec3fa(0.0f, 0.0f, 2.0f));
-  //infDirectionalLight.pow = 3*Vec3fa(0.78f, 0.551f, 0.183f);
-  infDirectionalLight.pow = 3*Vec3fa(1.0f, 1.0f, 1.0f);
-  infDirectionalLight.type = LightType::INFINITE_DIRECTIONAL_LIGHT;
-  lights.push_back(infDirectionalLight);
-  */
-
-  /* The magnitude of the light can be tricky. Lights such as the point light
-   * fall off at the inverse square of the distance. When designing a sandbox
-   * renderer, you may need to scale your light up or down to see your scene. */
-  //Vec3fa pow = 3.f * Vec3fa(0.78f, 0.551f, 0.183f);
-  /* An interesting position for an overhead light in the Cornell Box scene.
-   * Notice increased noise when lights are near objects */
-  // pointLight.pos = Vec3fa(0.0f, 0.95f, 0.0f);
-
-  /* A somewhat central position for the point light within the box. This is
-   * similar to the position for the interactive pathtracer program shipped with
-   * Intel Embree */
-  //Vec3fa pos =
-  //    Vec3fa(2.f * 213.0f / 556.0f - 1.f, 2.f * 300.f / 558.8f - 1.f,
-  //           2.f * 227.f / 559.2f - 1.f);
-
-  //float radius = 0.f;
-  //float radius = 0.075f;
-  //lights.push_back(std::make_shared<PointLight>(pos, pow, radius));
-  //Place holder to toggle light geometries
-  //if (radius > 0.f && true) {
-  //    std::shared_ptr<PointLight> newPointLight = std::dynamic_pointer_cast<PointLight>(lights.back());
- //    unsigned int geomID = newPointLight->addGeometry(scene, device);
-  //    mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));  
-  //}
-
-  Vec3fa spotPos(0.f, 0.95f, 0.0f);
-  Vec3fa spotDir(0.f, -1.f, 0.f);
-  Vec3fa spotPow = 5.f * Vec3fa(0.78f, 0.551f, 0.183f);
-  float spotCosAngleMax = cosf(80.f * M_PI / 180.f);
-  float spotCosAngleScale = 50.f;
-  float spotRadius = 0.4f;
-  lights.push_back(std::make_shared<SpotLight>(spotPos, spotDir, spotPow, spotCosAngleMax, spotCosAngleScale, spotRadius));
-  std::shared_ptr<SpotLight> newSpotLight = std::dynamic_pointer_cast<SpotLight>(lights.back());
-  unsigned int geomID = newSpotLight->addGeometry(scene, device);
-  mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));  
-
-}
 
 #endif /* !FILE_CORNELLBOX_SEEN */

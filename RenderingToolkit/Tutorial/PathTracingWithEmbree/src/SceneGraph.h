@@ -1,9 +1,11 @@
 #pragma once
+#include "Geometry.h"
 #include "CornellBox.h"
 #include "DefaultCubeAndPlane.h"
 #include "Sphere.h"
 #include "Pool.h"
 #include "Lights.h"
+
 
 #include <embree3/rtcore.h>
 
@@ -46,6 +48,10 @@ public:
 	~SceneGraph();
 
     std::vector<std::shared_ptr<Light>> m_lights;
+
+    /* Added for path tracer: for holding material properties for each geometry id */
+    std::map< unsigned int, MatAndPrimColorTable> m_mapGeomToPrim;
+
 protected:
     // nothing here yet
 private:
@@ -56,6 +62,9 @@ private:
     RTCIntersectContext m_context;
     std::map<unsigned int, size_t> m_mapGeomToLightIdx;
     void SceneGraph::scene_cleanup();
+
+    //We'll use this 'geometries' container to automatically clean up the data arrays created that are used to create embree geometries //
+    std::vector<std::unique_ptr<Geometry>> geometries;
 
 };
 
@@ -73,35 +82,47 @@ void SceneGraph::init_embree_scene(const RTCDevice device, SceneSelector SELECT_
     m_scene = rtcNewScene(device);
 
     switch (m_sceneSelector) {
+
+    case SceneSelector::SHOW_CUBE_AND_PLANE:
+        /* add cube, add ground plane, and light */ 
+
+        geometries.push_back(std::make_unique<CubeAndPlane>(m_scene, device, m_mapGeomToPrim,
+            m_mapGeomToLightIdx, m_lights, m_camera,
+            width, height));
+
+            /* The sphere can be used in the cube and plane scene with a corresponding
+             * position for that scene */
+
+             /* geometries.push_back(std::make_unique<Sphere>(m_scene, device, m_mapGeomToPrim, MaterialType::MATERIAL_MIRROR, Vec3fa(2.5f, 0.f, 2.5f), Vec3fa(0.8f, 0.8f, 0.8f),
+              1.0f, m_mapGeomToLightIdx, m_lights, m_camera,
+              width, height));
+             */
+
+        break;
+    case SceneSelector::SHOW_POOL:
+
+        geometries.push_back(std::make_unique<Pool>(m_scene, device, m_mapGeomToPrim,
+            m_mapGeomToLightIdx, m_lights, m_camera,
+            width, height));
+        break;
     case SceneSelector::SHOW_CORNELL_BOX:
+    default:
         /* add cornell box */
-        addCornell(m_scene, device);
+        geometries.push_back(std::make_unique<CornellBoxGeometry>(m_scene, device, m_mapGeomToPrim,
+            m_mapGeomToLightIdx, m_lights, m_camera,
+            width, height));
+
 
         /* If you would like to add an Intel Embree sphere see addSphere(..) as
          * used below for an example... Remember to look for materials properties
          * set in our header files */
-        addSphere(m_scene, device, Vec3fa(0.6f, -0.8f, -0.6f), 0.2f);
+        Vec3fa pos = { 0.6f, -0.8f, -0.6f };
+        Vec3fa color = { 1.f, 1.f, 1.f };
+        float radius = 0.2f;
+        geometries.push_back(std::make_unique<Sphere>(m_scene, device, m_mapGeomToPrim, MaterialType::MATERIAL_GLASS, pos, color,
+            radius, m_mapGeomToLightIdx, m_lights, m_camera,
+            width, height));
 
-        cornellCameraLightSetup(m_scene, device, m_mapGeomToLightIdx, m_camera, m_lights, width, height);
-        break;
-    case SceneSelector::SHOW_CUBE_AND_PLANE:
-    default:
-        /* add cube */
-        addCube(m_scene, device);
-
-        /* add ground plane */
-        addGroundPlane(m_scene, device);
-
-        /* The sphere can be used in the cube and plane scene with a corresponding
-         * position for that scene */
-         // addSphere(m_scene, m_device, Vec3fa(2.5f, 0.f, 2.5f), 1.f);
-
-        cubeAndPlaneCameraLightSetup(m_camera, m_lights, width, height);
-        break;
-    case SceneSelector::SHOW_POOL:
-        addPool(m_scene, device);
-        addWater(m_scene, device);
-        poolCameraLightSetup(m_camera, m_lights, width, height);
         break;
     }
 
@@ -216,23 +237,6 @@ std::shared_ptr<Light> SceneGraph::get_light_from_geomID(unsigned int geomID) {
 void SceneGraph::scene_cleanup() {
     rtcReleaseScene(m_scene);
     m_scene = nullptr;
-    switch (m_sceneSelector) {
-    case SceneSelector::SHOW_CORNELL_BOX:
-        cleanCornell();
-        cleanSphere();
-        break;
-    case SceneSelector::SHOW_CUBE_AND_PLANE:
-        cleanCubeAndPlane();
-        // cleanSphere();
-        break;
-    case SceneSelector::SHOW_POOL:
-        cleanPool();
-        cleanWater();
-        // cleanSphere();
-        break;
-    default:
-        break;
-    }
 }
 
 SceneGraph::~SceneGraph() {

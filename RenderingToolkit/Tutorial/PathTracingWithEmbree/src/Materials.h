@@ -26,9 +26,6 @@ struct MatAndPrimColorTable {
     Vec3fa* primColorTable;
 };
 
-/* Added for path tracer: for holding material properties for each geometry id */
-std::map< unsigned int, MatAndPrimColorTable> g_geomIDs;
-
 inline Vec3fa refract(const Vec3fa& V, const Vec3fa& N, const float eta,
     const float cosi, float& cost, float& refractionPDF)
 {
