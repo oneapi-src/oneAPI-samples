@@ -5,7 +5,7 @@
   "description": "Jacobi Iterative Solver provides step by step instructions for CPU, GPU and multiple GPU offload",
   "toolchain": ["dpcpp"],
   "os": ["linux"],
-  "targetDevice": ["CPU, GPU, "],
+  "targetDevice": ["CPU", "GPU"],
   "builder": ["cmake"],
   "languages": [{"cpp":{}}],
   "ciTests": {
