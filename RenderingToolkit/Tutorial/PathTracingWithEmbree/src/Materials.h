@@ -59,7 +59,7 @@ inline float fresnelDielectric(const float cosi, const float eta) {
 */
 
 inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3fa& wo,
-    const DifferentialGeometry& dg, Vec3fa wi_v, const Medium& medium, const float dielEta, const float s) {
+    const DifferentialGeometry& dg, const Vec3fa& wi_v, const Medium& medium, const float dielEta, const float s) {
     
     float eta = 0.0f;
     Medium mediumOutside;
@@ -118,6 +118,66 @@ inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3
       return albedo * ct;
 }
 
+inline Vec3fa Dielectric_eval(const Vec3fa& albedo, const Vec3fa& Lw, const Vec3fa& wo,
+    const DifferentialGeometry& dg, const Vec3fa& wi_v, const Medium& medium, const float dielEta) {
+
+    float eta = 0.0f;
+    Medium mediumOutside;
+    mediumOutside.eta = 1.0f;
+
+    Medium mediumInside;
+    mediumInside.eta = dielEta;
+
+    Medium mediumFront, mediumBack;
+    if (medium.eta == mediumInside.eta) {
+        eta = mediumInside.eta / mediumOutside.eta;
+        mediumFront = mediumInside;
+        mediumBack = mediumOutside;
+    }
+    else {
+        eta = mediumOutside.eta / mediumInside.eta;
+        mediumFront = mediumOutside;
+        mediumBack = mediumInside;
+    }
+
+    float cosThetaO = clamp(dot(wo, dg.Ns));
+    float cosThetaI;
+
+    /* refraction computation */
+    Vec3fa refractionDir;
+    float refractionPDF;
+    refractionDir = refract(wo, dg.Ns, eta, cosThetaO, cosThetaI, refractionPDF);
+
+
+    /* reflection computation */
+    Vec3fa reflectionDir;
+    reflectionDir = reflect(wo, dg.Ns);
+    float reflectionPDF = 1.0f;
+
+    float R = fresnelDielectric(cosThetaO, cosThetaI, eta);
+    Vec3fa cs = Vec3fa(R);
+    Vec3fa ct = Vec3fa(1.0f - R);
+
+    const Vec3fa m0 = Lw * cs / reflectionPDF;
+    const Vec3fa m1 = Lw * ct / refractionPDF;
+
+    const float C0 = reflectionPDF == 0.0f ? 0.0f : max(max(m0.x, m0.y), m0.z);
+    const float C1 = refractionPDF == 0.0f ? 0.0f : max(max(m1.x, m1.y), m1.z);
+    const float C = C0 + C1;
+
+    if (C == 0.0f) {
+        return Vec3fa(0.f, 0.f, 0.f);
+    }
+
+    /* Compare weights for the reflection and the refraction. Pick a direction
+     * given s is a random between 0 and 1 */
+    const float CP0 = C0 / C;
+    if (dot(wi_v, dg.Ns) >= 0.f)
+        return albedo * cs;
+    else
+        return albedo * ct;
+}
+
 inline Vec3fa Lambertian_eval(const Vec3fa& albedo, const Vec3fa& wo,
     const DifferentialGeometry& dg, const Vec3fa& wi_v) {
     /* The diffuse material. Reflectance (albedo) times the cosign fall off of the
@@ -147,6 +207,31 @@ Vec3fa Material_eval(Vec3fa albedo, MaterialType materialType,
         break;
     case MaterialType::MATERIAL_WATER:
         return Dielectric_eval(albedo, Lw, wo, dg, wi,  medium, 1.3f, s.x);
+        break;
+        /* Return our debug color if something goes awry */
+    default:
+        break;
+    }
+    return c;
+}
+
+Vec3fa Material_eval(Vec3fa albedo, MaterialType materialType,
+    const Vec3fa& Lw, const Vec3fa& wo, const DifferentialGeometry& dg,
+    const Vec3fa& wi, const Medium& medium) {
+    Vec3fa c = Vec3fa(0.0f);
+    switch (materialType) {
+    case MaterialType::MATERIAL_MATTE:
+        return Lambertian_eval(albedo, wo, dg, wi);
+        break;
+    case MaterialType::MATERIAL_MIRROR:
+        return Mirror_eval(albedo, wo, dg, wi);
+        break;
+    case MaterialType::MATERIAL_GLASS:
+        return Dielectric_eval(albedo, Lw, wo, dg, wi, medium, 1.5f);
+        /* Try thin dielectric!? */
+        break;
+    case MaterialType::MATERIAL_WATER:
+        return Dielectric_eval(albedo, Lw, wo, dg, wi, medium, 1.3f);
         break;
         /* Return our debug color if something goes awry */
     default:
@@ -252,10 +337,7 @@ Vec3fa Material_sample(MaterialType materialType,
       break;
     case MaterialType::MATERIAL_WATER:
         return Dielectric_sample(Lw, wo, dg, medium, 1.3f, nextMedium, randomMatSample.x);
-        //        return ThinDielectric__sample(Lw, wo, dg, wi, medium,
-        //        randomMatSample);
         break;
-      /* Return our debug color if something goes awry */
     default:
       break;
   }
@@ -271,8 +353,8 @@ float Lambertian_pdf(const float& s) {
     return cosTheta / float(M_PI);
 }
 
-float Lambertian_pdf(const DifferentialGeometry& dg, const Vec3fa& dir) {
-    return max(dot(dir, dg.Ns), 0.f) / float(M_PI);
+float Lambertian_pdf(const DifferentialGeometry& dg, const Vec3fa& wi1) {
+    return dot(wi1, dg.Ns) / float(M_PI);
 }
 
 float Mirror_pdf() {
@@ -348,7 +430,7 @@ float Dielectric_pdf(const Vec3fa& Lw, const Vec3fa& wo,
 
 float Dielectric_pdf(const Vec3fa& Lw, const Vec3fa& wo,
     const DifferentialGeometry& dg,
-    const Medium& medium, const float dielEta, const Vec3fa& dir) {
+    const Medium& medium, const float dielEta, const Vec3fa& wi1) {
     float pdf = 0.f;
 
     float eta = 0.0f;
@@ -402,7 +484,7 @@ float Dielectric_pdf(const Vec3fa& Lw, const Vec3fa& wo,
  * given s.x is a random between 0 and 1 */
     const float CP0 = C0 / C;
     const float CP1 = C1 / C;
-    if (dot(dir, dg.Ng) > 0.f) {
+    if (dot(wi1, dg.Ns) >= 0.f) {
         pdf = reflectPDF * CP0;
     }
     else {
@@ -434,7 +516,6 @@ float Material_pdf(MaterialType materialType, const Vec3fa& Lw,
         return Dielectric_pdf(Lw, wo,
             dg, medium, 1.3f, randomSample.x);
         break;
-        /* Return our debug color if something goes awry */
     default:
         break;
     }
@@ -443,24 +524,23 @@ float Material_pdf(MaterialType materialType, const Vec3fa& Lw,
 
 float Material_pdf(MaterialType materialType, const Vec3fa& Lw,
     const Vec3fa& wo, const DifferentialGeometry& dg,
-    const Medium& medium, const Vec3fa& dir) {
+    const Medium& medium, const Vec3fa& wi1) {
 
     switch (materialType) {
     case MaterialType::MATERIAL_MATTE:
-        return Lambertian_pdf(dg, dir);
+        return Lambertian_pdf(dg, wi1);
         break;
     case MaterialType::MATERIAL_MIRROR:
         return Mirror_pdf();
         break;
     case MaterialType::MATERIAL_GLASS:
         return Dielectric_pdf(Lw, wo,
-            dg, medium, 1.5f, dir);
+            dg, medium, 1.5f, wi1);
         break;
     case MaterialType::MATERIAL_WATER:
         return Dielectric_pdf(Lw, wo,
-            dg, medium, 1.3f, dir);
+            dg, medium, 1.3f, wi1);
         break;
-        /* Return our debug color if something goes awry */
     default:
         break;
     }
@@ -478,7 +558,6 @@ inline bool Material_direct_illumination(MaterialType materialType) {
     case MaterialType::MATERIAL_GLASS:
     case MaterialType::MATERIAL_WATER:
         return false;
-        /* Try thin dielectric!? */
         break;
     
     default:

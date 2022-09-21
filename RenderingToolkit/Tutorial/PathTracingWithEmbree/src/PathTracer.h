@@ -158,78 +158,21 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
  * radiance if hit point is not occluded */
     sg->set_intersect_context_incoherent();
 
-
-    //Not MIS versus MIS
-    if (true) {
-        if (Material_direct_illumination(materialType)) {
-            /* Cast shadow ray(s) from the hit point */
-            sg->cast_shadow_rays(dg, albedo, materialType, Lw, wo, medium, m_time, L, reng,
-                distrib);
-        }
-
-        wi1 = Material_sample(materialType, Lw, wo, dg, medium, nextMedium,
-            randomMatSample);
-        c = c * Material_eval(albedo, materialType, Lw, wo, dg, wi1, medium,
-            randomMatSample);
-
-
-        float nextPDF = Material_pdf(materialType, Lw, wo, dg, medium, randomMatSample);
-        if (nextPDF <= 1E-4f) break;
-        Lw = Lw * c / nextPDF;
+    if (Material_direct_illumination(materialType)) {
+        /* Cast shadow ray(s) from the hit point */
+        sg->cast_shadow_rays(dg, albedo, materialType, Lw, wo, medium, m_time, L, reng,
+            distrib);
     }
-    else {
-        float sumPDF = 0.f;
-        size_t misIdx = 0;
-        size_t numLights = m_misLightStorage[pxID].size();
-        for (std::shared_ptr<Light> light : sg->m_lights) {
-            Vec2f randomLightSample(distrib(reng), distrib(reng));
-            Light_SampleRes ls = light->sample(dg, randomLightSample);
 
-            m_misLightStorage[pxID][misIdx].sam = ls;
-            sumPDF += ls.pdf;
-            /* If the sample probability density evaluation is 0 then no need to
-                * consider this shadow ray */
-            if (ls.pdf <= 0.0f) continue;
-
-            float tfar = sg->cast_shadow_ray(dg.P, ls.dir, dg.eps, ls.dist, m_time);
-            m_misLightStorage[pxID][misIdx].tfar = tfar;
-            m_misLightStorage[pxID][misIdx].randomLightSample = randomLightSample;
-            misIdx++;
-        }
-        //float nextPDF = Material_pdf(materialType, Lw, wo, dg, medium, m_misLightStorage[pxID][0].sam.dir);
-        float nextPDF = Material_pdf(materialType, Lw, wo, dg, medium, m_misLightStorage[pxID][0].randomLightSample);
-//            if (nextPDF >= 0.f)
-//               sumPDF += nextPDF;
-
-        Vec3fa misValue(0.f);
-
-        for(auto i = 0; i< numLights; i++) {
-            float lightPDF = m_misLightStorage[pxID][i].sam.pdf;
-            if (m_misLightStorage[pxID][i].tfar >= 0.f && lightPDF > 0.f) {
-                Vec3fa value = m_misLightStorage[pxID][i].sam.weight *  
-                    Material_eval(albedo, materialType, Lw, wo, dg, m_misLightStorage[pxID][i].sam.dir, medium, m_misLightStorage[pxID][i].randomLightSample);
-                    float misLightWeight = numLights * lightPDF / (numLights * sumPDF + nextPDF);
-;                    misValue += misLightWeight * value / lightPDF;
-            }
-        }
-
-       L = L + Lw * misValue;
-
-       wi1 = Material_sample(materialType, Lw, wo, dg, medium, nextMedium,
+    /* Sample, Eval, and PDF computation are split and internally perform some redundant calculation */
+    wi1 = Material_sample(materialType, Lw, wo, dg, medium, nextMedium,
         randomMatSample);
-       //nextPDF = Material_pdf(materialType, Lw, wo, dg, medium, wi1);
-       nextPDF = Material_pdf(materialType, Lw, wo, dg, medium, randomMatSample);
-       c = c * Material_eval(albedo, materialType, Lw, wo, dg, wi1, medium,
-        randomMatSample);
+    c = c * Material_eval(albedo, materialType, Lw, wo, dg, wi1, medium);
+    float nextPDF = Material_pdf(materialType, Lw, wo, dg, medium, wi1);
 
-    
     if (nextPDF <= 1E-4f) break;
-    //float misMatWeight = nextPDF / (numLights * sumPDF + nextPDF);
-    //Lw = Lw * c * misMatWeight / nextPDF;
-
     Lw = Lw * c / nextPDF;
 
-    }
     /* setup secondary ray */
     medium = nextMedium;
     float sign = dot(wi1, dg.Ng) < 0.0f ? -1.0f : 1.0f;
@@ -238,7 +181,6 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
     dir = normalize(wi1);
     init_RayHit(rayhit, org, dir, dg.eps, inf,
                m_time);
-
 
   }
 
