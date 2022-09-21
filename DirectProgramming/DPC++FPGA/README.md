@@ -49,7 +49,7 @@ To help you understand and use the code samples in a coherent manner, the sample
 | [double_buffering](Tutorials/DesignPatterns/double_buffering)             | Design Pattern | How and when to implement the double buffering optimization technique
 | [explicit_data_movement](Tutorials/DesignPatterns/explicit_data_movement) | Design Pattern | How to explicitly manage the movement of data for the FPGA
 | [kernel_args_restrict](Tutorials/Features/kernel_args_restrict)           | Basic Feature  | The problem of pointer aliasing and its impact on compiler optimizations. <br> The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel <br> The effect this attribute can have on kernel performance on FPGA
-| [loop_ivdep](Tutorials/Features/loop_ivdep)                               | Basic Feature  | Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a safe dependence distance <br> How to aid the compiler's dependence analysis to maximize performance <br> **Warning**: This looks like a Tier 3 sample.
+| [loop_ivdep](Tutorials/Features/loop_ivdep)                               | Basic Feature  | Basics of loop-carried dependencies <br> The notion of a loop-carried dependence distance <br> What constitutes a safe dependence distance <br> How to aid the compiler's dependence analysis to maximize performance
 | [loop_unroll](Tutorials/Features/loop_unroll)                             | Basic Feature  | Basics of loop unrolling. <br> How to unroll loops in your program <br> Determining the optimal unroll factor for your program
 | [pipes](Tutorials/Features/pipes)                                         | Basic Feature  | The basics of using SYCL*-compliant pipes extension for FPGA <br> How to declare and use pipes
 | [printf](Tutorials/Features/printf)                                       | Design Pattern | How to declare and use `printf` in program
@@ -109,6 +109,33 @@ All the Tier 4 samples are in the Reference Design category.
 | [mvdr_beamforming](ReferenceDesigns/mvdr_beamforming)     | How to create a full, complex system that performs IO streaming using SYCL*-compliant code
 | [qrd](ReferenceDesigns/qrd)                               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm
 | [qri](ReferenceDesigns/qri)                               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition to compute a matrix inversion
+
+#### Start exploring the FPGA code samples with this selection
+
+The following FPGA samples represent a selection of useful tutorials suitable to get you started on your first oneAPI application on the FPGA
+
+```mermaid
+graph TD;
+    id1[FPGA Compile Flow: fpga_compile]
+    id2[Save Development Time: fast_recompile]
+    id3[Avoid Aliasing of Kernel Arguments: kernel_args_restrict]
+    id4[Optimize by Improving Loop Throughput: loop_unroll]
+    id5[Transfer Data with Pipes: pipes]
+    id6[Improve Performance with Double Buffering: double_buffering]
+    id1-->id2-->id3-->id4-->id5-->id6;
+    click id1 href "Tutorials/GettingStarted/fpga_compile" "fpga_compile"
+    click id2 href "Tutorials/GettingStarted/fast_recompile" "fast_recompile"
+    click id3 href "Tutorials/Features/kernel_args_restrict" "kernel_args_restrict"
+    click id4 href "Tutorials/Features/loop_unroll" "loop_unroll"
+    click id5 href "Tutorials/Features/pipes" "pipes"
+    click id6 href "Tutorials/DesignPatterns/double_buffering" "double_buffering"
+    style id1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    style id2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    style id3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    style id4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    style id5 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    style id6 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+```
 
 ## Build and Run the Samples on Local Development System
 
