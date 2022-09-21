@@ -6,50 +6,63 @@
 
 #include <vector>
 
-#include "definitions.h"
-#include "Materials.h"
 #include "Lights.h"
+#include "Materials.h"
+#include "definitions.h"
 
 class CubeAndPlane : public Geometry {
+ public:
+  CubeAndPlane(const RTCScene& scene, const RTCDevice& device,
+               std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
+               std::map<unsigned int, size_t>& mapGeomToLightIdx,
+               std::vector<std::shared_ptr<Light>>& lights,
+               AffineSpace3fa& camera, unsigned int width, unsigned int height);
+  ~CubeAndPlane();
 
-public:
-    CubeAndPlane(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
-        std::map<unsigned int, size_t>& mapGeomToLightIdx, std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
-        unsigned int width, unsigned int height);
-    ~CubeAndPlane();
+ private:
+  void add_geometry(
+      const RTCScene& scene, const RTCDevice& device,
+      std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim);
+  void setup_camera_and_lights(
+      const RTCScene& scene, const RTCDevice& device,
+      std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
+      std::map<unsigned int, size_t>& mapGeomToLightIdx,
+      std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
+      unsigned int width, unsigned int height);
 
+  unsigned int addCube(
+      const RTCScene& scene, const RTCDevice& device,
+      std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim);
+  unsigned int addGroundPlane(
+      const RTCScene& scene, const RTCDevice& device,
+      std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim);
+  void clean_geometry();
 
+  Vec3fa* m_cube_face_colors = nullptr;
+  Vec3fa* m_cube_vertex_colors = nullptr;
+  Vec3fa* m_ground_face_colors = nullptr;
+  Vec3fa* m_ground_vertex_colors = nullptr;
 
-private:
-    void add_geometry(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim);
-    void setup_camera_and_lights(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim, std::map<unsigned int, size_t>& mapGeomToLightIdx, std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
-        unsigned int width, unsigned int height);
-
-    unsigned int addCube(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim);
-    unsigned int addGroundPlane(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim);
-    void clean_geometry();
-
-    Vec3fa* m_cube_face_colors = nullptr;
-    Vec3fa* m_cube_vertex_colors = nullptr;
-    Vec3fa* m_ground_face_colors = nullptr;
-    Vec3fa* m_ground_vertex_colors = nullptr;
-
-    static const std::vector<enum class MaterialType> m_cubeMats;
-    static const std::vector<enum class MaterialType> m_groundMats;
+  static const std::vector<enum class MaterialType> m_cubeMats;
+  static const std::vector<enum class MaterialType> m_groundMats;
 };
 
-CubeAndPlane::CubeAndPlane(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
-    std::map<unsigned int, size_t>& mapGeomToLightIdx, std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
+CubeAndPlane::CubeAndPlane(
+    const RTCScene& scene, const RTCDevice& device,
+    std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
+    std::map<unsigned int, size_t>& mapGeomToLightIdx,
+    std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
     unsigned int width, unsigned int height) {
-    add_geometry(scene, device, mapGeomToPrim);
-    setup_camera_and_lights(scene, device, mapGeomToPrim, mapGeomToLightIdx, lights, camera, width, height);
-
+  add_geometry(scene, device, mapGeomToPrim);
+  setup_camera_and_lights(scene, device, mapGeomToPrim, mapGeomToLightIdx,
+                          lights, camera, width, height);
 };
 
-void CubeAndPlane::add_geometry(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim) {
-    addCube(scene, device, mapGeomToPrim);
-    addGroundPlane(scene, device, mapGeomToPrim);
-
+void CubeAndPlane::add_geometry(
+    const RTCScene& scene, const RTCDevice& device,
+    std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim) {
+  addCube(scene, device, mapGeomToPrim);
+  addGroundPlane(scene, device, mapGeomToPrim);
 }
 
 const std::vector<enum class MaterialType> CubeAndPlane::m_cubeMats = {
@@ -70,13 +83,12 @@ const std::vector<enum class MaterialType> CubeAndPlane::m_cubeMats = {
 };
 
 const std::vector<enum class MaterialType> CubeAndPlane::m_groundMats = {
-    MaterialType::MATERIAL_MATTE,
-    MaterialType::MATERIAL_MATTE
-};
-
+    MaterialType::MATERIAL_MATTE, MaterialType::MATERIAL_MATTE};
 
 /* adds a cube to the scene */
-unsigned int CubeAndPlane::addCube(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim) {
+unsigned int CubeAndPlane::addCube(
+    const RTCScene& scene, const RTCDevice& device,
+    std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim) {
   /* create a triangulated cube with 12 triangles and 8 vertices */
   RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE);
 
@@ -215,7 +227,9 @@ unsigned int CubeAndPlane::addCube(const RTCScene& scene, const RTCDevice& devic
 }
 
 /* adds a ground plane to the scene */
-unsigned int CubeAndPlane::addGroundPlane(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim) {
+unsigned int CubeAndPlane::addGroundPlane(
+    const RTCScene& scene, const RTCDevice& device,
+    std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim) {
   /* create a triangulated plane with 2 triangles and 4 vertices */
   RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE);
 
@@ -289,13 +303,14 @@ void CubeAndPlane::clean_geometry() {
   m_ground_vertex_colors = nullptr;
 }
 
-CubeAndPlane::~CubeAndPlane() {
-    clean_geometry();
-}
+CubeAndPlane::~CubeAndPlane() { clean_geometry(); }
 
-void CubeAndPlane::setup_camera_and_lights(const RTCScene& scene, const RTCDevice& device, std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim, std::map<unsigned int, size_t>& mapGeomToLightIdx, std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
+void CubeAndPlane::setup_camera_and_lights(
+    const RTCScene& scene, const RTCDevice& device,
+    std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
+    std::map<unsigned int, size_t>& mapGeomToLightIdx,
+    std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
     unsigned int width, unsigned int height) {
-
   Vec3fa defaultLightIntensity = {1.0f, 1.0f, 1.0f};
 
   camera = positionCamera(Vec3fa(1.5f, 1.5f, -1.5f), Vec3fa(0, 0, 0),
@@ -305,10 +320,11 @@ void CubeAndPlane::setup_camera_and_lights(const RTCScene& scene, const RTCDevic
   //     Vec3fa(0, 1, 0), 90.0f, width, height);
 
   /* We've implemented a directional light... Try it with this direction :
-    
+
     Vec3fa defaultLightDirection = normalize(Vec3fa(-1.0f, -1.0f, -1.0f));
-    
-    This will give results even more similar to the original triangle geometry sample. You may want to change the power as well.
+
+    This will give results even more similar to the original triangle geometry
+    sample. You may want to change the power as well.
   */
   /* Picking the magnitude of the light can be tricky. Lights such as the point
    * light fall off at the inverse square of the distance. When building a
@@ -322,11 +338,12 @@ void CubeAndPlane::setup_camera_and_lights(const RTCScene& scene, const RTCDevic
 
   /* If radius is greater than 0 lets try to build a geometry */
   if (radius > 0.f) {
-      std::shared_ptr<PointLight> pPointLight = std::dynamic_pointer_cast<PointLight>(lights.back());
-      unsigned int geomID = pPointLight->add_geometry(scene, device, mapGeomToPrim);
-      mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));
+    std::shared_ptr<PointLight> pPointLight =
+        std::dynamic_pointer_cast<PointLight>(lights.back());
+    unsigned int geomID =
+        pPointLight->add_geometry(scene, device, mapGeomToPrim);
+    mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));
   }
-
 }
 
 #endif /* !FILE_DEFAULTCUBEANDPLANE_SEEN */
