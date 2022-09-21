@@ -165,6 +165,12 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      make report
      ```
 
+   * Compile for simulation (fast compile time, targets simulated FPGA device)
+
+     ```bash
+     make fpga_sim
+     ```
+
    * Compile and run on FPGA hardware (longer compile time, targets an FPGA device) using:
 
      ```bash
@@ -204,6 +210,12 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size):
+
+     ```
+     nmake fpga_sim
+     ```
+
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -251,7 +263,14 @@ Navigate to *System Viewer* (*Views* > *System Viewer*) and find the cluster in 
    ac_int.fpga_emu.exe   (Windows)
    ```
 
-2. Run the sample on the FPGA device
+2. Run the sample of the FPGA simulator device
+
+   ```bash
+   ./ac_int.fpga_sim        (Linux)
+   ac_int.fpga_sim.exe      (Windows)
+   ```
+
+3. Run the sample on the FPGA device
 
    ```bash
    ./ac_int.fpga         (Linux)
