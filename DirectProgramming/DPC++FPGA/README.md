@@ -116,25 +116,19 @@ The following FPGA samples represent a selection of useful tutorials suitable to
 
 ```mermaid
 graph TD;
-    id1[FPGA Compile Flow: fpga_compile]
-    id2[Save Development Time: fast_recompile]
-    id3[Avoid Aliasing of Kernel Arguments: kernel_args_restrict]
-    id4[Optimize by Improving Loop Throughput: loop_unroll]
-    id5[Transfer Data with Pipes: pipes]
-    id6[Improve Performance with Double Buffering: double_buffering]
-    id1-->id2-->id3-->id4-->id5-->id6;
-    click id1 href "Tutorials/GettingStarted/fpga_compile" "fpga_compile"
-    click id2 href "Tutorials/GettingStarted/fast_recompile" "fast_recompile"
-    click id3 href "Tutorials/Features/kernel_args_restrict" "kernel_args_restrict"
-    click id4 href "Tutorials/Features/loop_unroll" "loop_unroll"
-    click id5 href "Tutorials/Features/pipes" "pipes"
-    click id6 href "Tutorials/DesignPatterns/double_buffering" "double_buffering"
-    style id1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-    style id2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-    style id3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-    style id4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-    style id5 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-    style id6 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    sample1[FPGA Compile Flow: fpga_compile]
+    sample2[Save Development Time: fast_recompile]
+    sample3[Avoid Aliasing of Kernel Arguments: kernel_args_restrict]
+    sample4[Optimize by Improving Loop Throughput: loop_unroll]
+    sample5[Transfer Data with Pipes: pipes]
+    sample6[Improve Performance with Double Buffering: double_buffering]
+    sample1-->sample2-->sample3-->sample4-->sample5-->sample6;
+    style sample1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    style sample2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    style sample3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    style sample4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    style sample5 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
+    style sample6 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
 ## Build and Run the Samples on Local Development System
