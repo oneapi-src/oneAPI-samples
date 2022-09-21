@@ -25,9 +25,12 @@ set(AC_TYPES_FLAG "-qactypes")
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -Wall")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
+# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA backend compilation
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Xssimulation ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Wall ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation ${AC_TYPES_FLAG} ${USER_SIMULATOR_FLAGS}")
+# use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Wall")
 set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
-# use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
 ### FPGA Emulator
@@ -41,6 +44,21 @@ add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
+
+###############################################################################
+### FPGA Hardware
+###############################################################################
+# To compile in a single command:
+#   dpcpp -fintelfpga -DFPGA_SIMULATOR ${AC_TYPES_FLAG} -Xssimulation -Xsboard=<FPGA_BOARD> ac_fixed.cpp -o ac_fixed.fpga
+# CMake executes:
+#   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR ${AC_TYPES_FLAG} -o ac_fixed.cpp.o -c ac_fixed.cpp
+#   [link]    dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsboard=<FPGA_BOARD> ac_fixed.cpp.o -o ac_fixed.fpga
+add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_custom_target(fpga DEPENDS ${FPGA_TARGET})
+set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULTOR_COMPILE_FLAGS}")
+set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${SIMULTOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+# The -reuse-exe flag enables rapid recompilation of host-only code changes.
+# See DPC++FPGA/GettingStarted/fast_recompile for details.
 
 ###############################################################################
 ### Generate Report
