@@ -44,6 +44,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 |[SYCL Kernel Reductions](08_DPCPP_Reduction/Reductions.ipynb)|+ What are Reductions<br>+ Challenges with parallelizing reductions<br>+ __sycl::reduce_over_group__ function for sub-groups and work-groups<br>+ __sycl::reduction__ object in parallel_for<br>+ ___Lab Exercise___: Kernel Reductions 
 |[SYCL Buffers and Accessors in depth](09_DPCPP_Buffers_And_Accessors_Indepth/DPCPP_Buffers_accessors.ipynb)| + Buffers and Accessors<br>+ Buffer properties and usecases<br>+ Create Sub-buffers<br>+ Host accessors and usecases<br>+ ___Lab Exercise___: Buffers and Accessors
 |[SYCL Task Scheduling and Data Dependency](10_DPCPP_Graphs_Scheduling_Data_management/DPCPP_Task_Scheduling_Data_dependency.ipynb)| + Different types of data dependencies<br>+ Execution of graph scheduling<br>+ modes of dependencies in Graphs scheduling<br>+ ___Lab Exercise___: Task Scheduling | 120 min|
+|[SYCL Local Memory And Atomics](12_DPCPP_Local_Memory_And_Atomics/Local_Memory_Atomics.ipynb)| + Query Local memory type and size<br>+ Local memory and Group barriers<br>+ Local Accessor usage<br>+ Atomic Operations Buffers<br>+ Atomic Operations USM<br>+ ___Lab Exercise___: Atomic Operation | 90 min|
 |[Intel® oneAPI DPC++ Library (oneDPL)](07_DPCPP_Library/oneDPL_Introduction.ipynb)| + Introduction to Intel oneAPI DPC++ Library (oneDPL)<br>+ ___Lab Exercise___: Gamma Correction with oneDPL
 |[Intel® Advisor](05_Intel_Advisor/offload_advisor.ipynb)| + __Offload Advisor__ Tool usage and command-line options<br>+ ___Lab Exercise___: Generate Offload Advisor Report<br>+ __Roofline Analysis__ and command-line options<br>+ ___Lab Exercise___: Generate Roofline Report
 |[Intel® VTune Profiler](06_Intel_VTune_Profiler/Intel_VTune_Profiler.ipynb)| + Intel VTune™ Profiler usage __in Intel DevCloud__ environment using command-line options<br>+ ___Lab Exercise___: VTune Profiling by collecting __gpu_hotspots__ for sample application.
@@ -60,6 +61,7 @@ The modules listed above include Introduction to oneAPI, oneAPI Tools, SYCL Prog
 |[SYCL Kernel Reductions](08_DPCPP_Reduction/Reductions.ipynb)|intermediate|You will learn how to write SYCL code to perform reductions effeciently on accelerator devices.
 |[SYCL Buffers and Accessors in depth](09_DPCPP_Buffers_And_Accessors_Indepth/DPCPP_Buffers_accessors.ipynb)| intermediate|You will learn more advanced properties of buffer memory model.
 |[SYCL Task Scheduling and Data Dependences](10_DPCPP_Graphs_Scheduling_Data_management/DPCPP_Task_Scheduling_Data_dependency.ipynb)|intermediate|You will learn how data movement can be controlled in SYCL programs when using Buffers and USM.<br>You will also lean about graph scheduling with buffers memory model
+|[SYCL Local Memory and Atomics](12_DPCPP_Local_Memory_And_Atomics/LocalMemory_Atomics.ipynb)|intermediate|You will learn how to utilize device's Shared Local Memory to reduce latency in accessing data for kernel computation and Atomic operations to avoid data race conditions.
 
 #### Content Structure
 
