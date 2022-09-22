@@ -3,6 +3,7 @@
 #ifndef FILE_LIGHTSSEEN
 #define FILE_LIGHTSSEEN
 /* Added for pathtracer */
+#include "Materials.h"
 #include "definitions.h"
 
 // for very small cones treat as singular light, because float precision is not

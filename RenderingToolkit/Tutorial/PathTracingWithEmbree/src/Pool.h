@@ -57,15 +57,15 @@ class Pool : public Geometry {
 // mesh data
 const std::vector<Vertex> Pool::m_poolBoxVertices = {
     // South Wall
-    {1.00f, -1.00f, -5.00f, 0.0f},
-    {-1.00f, -1.00f, -5.00f, 0.0f},
+    {1.00f, -1.00f, -10.00f, 0.0f},
+    {-1.00f, -1.00f, -10.00f, 0.0f},
     {-1.00f, -1.00f, 1.00f, 0.0f},
     {1.00f, -1.00f, 1.00f, 0.0f},
     // North Wall
-    {1.00f, 1.00f, -5.00f, 0.0f},
+    {1.00f, 1.00f, -10.00f, 0.0f},
     {1.00f, 1.00f, 1.00f, 0.0f},
     {-1.00f, 1.00f, 1.00f, 0.0f},
-    {-1.00f, 1.00f, -5.00f, 0.0f},
+    {-1.00f, 1.00f, -10.00f, 0.0f},
 
     // Foundation
     {1.00f, -1.00f, 1.00f, 0.0f},
@@ -74,20 +74,20 @@ const std::vector<Vertex> Pool::m_poolBoxVertices = {
     {1.00f, 1.00f, 1.00f, 0.0f},
     // East Wall
     {-1.00f, -1.00f, 1.00f, 0.0f},
-    {-1.00f, -1.00f, -5.00f, 0.0f},
-    {-1.00f, 1.00f, -5.00f, 0.0f},
+    {-1.00f, -1.00f, -10.00f, 0.0f},
+    {-1.00f, 1.00f, -10.00f, 0.0f},
     {-1.00f, 1.00f, 1.00f, 0.0f},
     // West Wall
-    {1.00f, -1.00f, -5.00f, 0.0f},
+    {1.00f, -1.00f, -10.00f, 0.0f},
     {1.00f, -1.00f, 1.00f, 0.0f},
     {1.00f, 1.00f, 1.00f, 0.0f},
-    {1.00f, 1.00f, -5.00f, 0.0f},
+    {1.00f, 1.00f, -10.00f, 0.0f},
 
     // Unseen wall
-    {1.00f, -1.00f, -5.00f, 0.0f},
-    {-1.00f, -1.00f, -5.00f, 0.0f},
-    {-1.00f, 1.00f, -5.00f, 0.0f},
-    {1.00f, 1.00f, -5.00f, 0.0f}
+    {1.00f, -1.00f, -10.00f, 0.0f},
+    {-1.00f, -1.00f, -10.00f, 0.0f},
+    {-1.00f, 1.00f, -10.00f, 0.0f},
+    {1.00f, 1.00f, -10.00f, 0.0f}
 
 };
 
@@ -150,7 +150,7 @@ const std::vector<enum class MaterialType> Pool::m_poolBoxMats = {
 
 };
 
-// static std::vector<enum class MaterialType> Pool::m_waterMats;
+inline float square(const float& in) { return in * in; }
 
 Pool::Pool(const RTCScene& scene, const RTCDevice& device,
            std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
@@ -254,10 +254,12 @@ unsigned int Pool::addWater(
       vertices[j * latticeWidth + i].z =
           1.0f - waterDepth +
           horizScale * waterDepth *
-              sinf(horizPeriods * (float(i) / (latticeWidth - 1)) * 2.f *
-                   float(M_PI));
+              sinf((horizPeriods *
+                    (square(float(i) / (latticeWidth - 1)) +
+                     square(float(j) / (latticeWidth - 1))) *
+                    2.f * float(M_PI)));
       //+  vertScale * waterDepth * sinf(vertPeriods*(float(j) /
-      //float(latticeWidth - 1)) * 2.f * float(M_PI));
+      // float(latticeWidth - 1)) * 2.f * float(M_PI));
     }
   }
 
@@ -321,24 +323,28 @@ void Pool::setup_camera_and_lights(
   /* The magnitude of the light can be tricky. Lights such as the point light
    * fall off at the inverse square of the distance. When designing a sandbox
    * renderer, you may need to scale your light up or down to see your scene. */
-  Vec3fa pow = 5.f * Vec3fa(0.9922, 0.9843, 0.8275);
+  Vec3fa spotPow = 15.f * Vec3fa(0.9922, 0.9843, 0.8275);
 
   /* A somewhat central position for the point light within the box. This is
    * similar to the position for the interactive pathtracer program shipped with
    * Intel Embree */
-  // pointLight.pos =
-  //     Vec3fa(2.f * 213.0f / 556.0f - 1.f, 2.f * 300.f / 558.8f - 1.f,
-  //         2.f * 227.f / 559.2f - 1.f);
-  Vec3fa pos(0.0f, 0.0f, -2.0f);
-  float radius = 0.f;
-  lights.push_back(std::make_shared<PointLight>(pos, pow, radius));
 
-  /* If radius is greater than 0 lets try to build a geometry */
-  if (radius > 0.f) {
-    std::shared_ptr<PointLight> newSpotLight =
-        std::dynamic_pointer_cast<PointLight>(lights.back());
+  /* Here we have a light as a disc geometry */
+  Vec3fa spotPos(0.f, 0.f, -5.0f);
+  Vec3fa spotDir(0.f, 0.f, 1.f);
+
+  float spotCosAngleMax = cosf(80.f * M_PI / 180.f);
+  float spotCosAngleScale = 50.f;
+  float spotRadius = 0.4f;
+  lights.push_back(std::make_shared<SpotLight>(spotPos, spotDir, spotPow,
+                                               spotCosAngleMax,
+                                               spotCosAngleScale, spotRadius));
+  /* Add geometry if you want it! */
+  if (spotRadius > 0.f) {
+    std::shared_ptr<SpotLight> pSpotLight =
+        std::dynamic_pointer_cast<SpotLight>(lights.back());
     unsigned int geomID =
-        newSpotLight->add_geometry(scene, device, mapGeomToPrim);
+        pSpotLight->add_geometry(scene, device, mapGeomToPrim);
     mapGeomToLightIdx.insert(std::make_pair(geomID, lights.size() - 1));
   }
 }

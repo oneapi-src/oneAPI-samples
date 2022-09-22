@@ -3,6 +3,8 @@
 #ifndef FILE_MATERIALSSEEN
 #define FILE_MATERIALSSEEN
 
+#include "definitions.h"
+
 /* Added for pathtracer */
 enum class MaterialType {
   MATERIAL_MATTE,

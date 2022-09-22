@@ -121,8 +121,8 @@ void SceneGraph::init_embree_scene(const RTCDevice device,
           m_scene, device, m_mapGeomToPrim, m_mapGeomToLightIdx, m_lights,
           m_camera, width, height));
 
-      /* If you would like to add an Intel Embree sphere see addSphere(..) as
-       * used below for an example... Remember to look for materials properties
+      /* If you would like to add an Intel Embree sphere see below for an
+       * example... Remember to look for materials properties
        * set in our header files */
       Vec3fa pos = {0.6f, -0.8f, -0.6f};
       Vec3fa color = {1.f, 1.f, 1.f};
