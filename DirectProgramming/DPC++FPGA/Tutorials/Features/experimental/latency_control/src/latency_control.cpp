@@ -20,10 +20,13 @@ class LatencyControl;
 void KernelRun(const std::vector<int> &in_data, std::vector<int> &out_data,
                const size_t &size) {
 #if defined(FPGA_EMULATOR)
-  sycl::ext::intel::fpga_emulator_selector device_selector;
+  ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
-  sycl::ext::intel::fpga_selector device_selector;
+  ext::intel::fpga_selector device_selector;
 #endif
+
 
   try {
     // Create the SYCL device queue.
