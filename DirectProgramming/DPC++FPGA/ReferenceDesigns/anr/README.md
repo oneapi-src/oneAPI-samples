@@ -251,7 +251,8 @@ qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
   |Available Nodes    |Command Options
   |:---               |:---
   |FPGA Compile Time  |`qsub -l nodes=1:fpga_compile:ppn=2 -d .`
-  |FPGA Runtime       |`qsub -l nodes=1:fpga_runtime:ppn=2 -d .`
+  |FPGA Runtime (Arria 10)       |`qsub -l nodes=1:fpga_runtime:arria10:ppn=2 -d .`
+  |FPGA Runtime (Stratix 10)       |`qsub -l nodes=1:fpga_runtime:stratix10:ppn=2 -d .`
   |GPU	             |`qsub -l nodes=1:gpu:ppn=2 -d .`
   |CPU	             |`qsub -l nodes=1:xeon:ppn=2 -d .`
 
