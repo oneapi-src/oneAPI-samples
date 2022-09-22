@@ -1,5 +1,5 @@
 # `Adaptive Noise Reduction` Sample
-This `Adaptive Noise Reduction` (ANR) is a reference design to demonstrate a highly optimized image sensor adaptive noise reduction algorithm for field programmable gate arrays (FPGAs).
+This `Adaptive Noise Reduction` (ANR) sample is a reference design to demonstrate a highly optimized image sensor adaptive noise reduction algorithm for field programmable gate arrays (FPGAs).
 
 | Area                      | Description
 ---                         |---
