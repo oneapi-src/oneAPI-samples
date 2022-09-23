@@ -12,7 +12,7 @@
 enum class SceneSelector { SHOW_CUBE_AND_PLANE, SHOW_CORNELL_BOX, SHOW_POOL };
 
 /* The most basic scene graph possible for exploratory code... please consider
- * the scene graph from ospray studio or embree itself as better production
+ * the scene graph from ospray studio or embree tutorials themselves as better production
  * references */
 struct SceneGraph {
  public:

@@ -553,17 +553,5 @@ inline bool Material_direct_illumination(MaterialType materialType) {
   }
   return false;
 }
-/*
-
-// evaluates X for a given set of random variables (direction)
-X_eval()
-
-// generates a random variable (direction) based on X (material, light source)
-X_sample()
-
-// return the PDF for a given random variable (direction) when it would have
-been samples based on X X_pdf()
-
-*/
 
 #endif /* FILE_MATERIALSSEEN */
