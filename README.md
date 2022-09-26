@@ -19,10 +19,11 @@ The oneAPI-sample repository is organized by high-level categories.
   * [C++](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/C%2B%2B)
   * [DPC++](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2B)
   * [DPC++FPGA](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA)
-  * [Fortran](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA)
+  * [Fortran](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/Fortran)
 * [Libraries](https://github.com/oneapi-src/oneAPI-samples/tree/master/Libraries)
 * [Publications](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications)
   * [Data Parallel C++](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications/DPC%2B%2B)
+  * [GPU Optimization Guide Examples](https://github.com/oneapi-src/oneAPI-samples/tree/master/Publications/GPU-Opt-Guide)
 * [RenderingToolkit](https://github.com/oneapi-src/oneAPI-samples/tree/master/RenderingToolkit)
 * [Tools](https://github.com/oneapi-src/oneAPI-samples/tree/master/Tools/)
 

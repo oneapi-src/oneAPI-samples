@@ -18,5 +18,6 @@
 				"python scripts/ci_test.py"
 			]
 		}]
-	}
+	},
+    "expertise": "Code Optimization"
 }
