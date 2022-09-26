@@ -2,7 +2,7 @@
 #define __QUERY9_KERNEL_HPP__
 #pragma once
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "../dbdata.hpp"

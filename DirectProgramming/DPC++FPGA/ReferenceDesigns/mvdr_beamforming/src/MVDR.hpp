@@ -1,7 +1,7 @@
 #ifndef __MVDR_HPP__
 #define __MVDR_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <array>
 

@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "IntersectionKernel.hpp"

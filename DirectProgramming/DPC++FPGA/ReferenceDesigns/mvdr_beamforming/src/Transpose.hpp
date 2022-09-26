@@ -1,7 +1,7 @@
 #ifndef __TRANSPOSE_HPP__
 #define __TRANSPOSE_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "Tuple.hpp"
