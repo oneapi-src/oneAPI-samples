@@ -17,26 +17,20 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
 endif()
 
-# This is a Windows-specific flag that enables error handling in host code
-if(WIN32)
-    set(PLATFORM_SPECIFIC_COMPILE_FLAGS "/EHsc /Qactypes /Wall")
-    set(PLATFORM_SPECIFIC_LINK_FLAGS "/Qactypes")
-else()
-    set(PLATFORM_SPECIFIC_COMPILE_FLAGS "-qactypes -Wformat-security -Werror=format-security -Wall")
-    set(PLATFORM_SPECIFIC_LINK_FLAGS "")
-endif()
+# Include ac_types headers and link against ac_types emulation libraries
+set(AC_TYPES_FLAG "-qactypes ")
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "${PLATFORM_SPECIFIC_COMPILE_FLAGS} -fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "${PLATFORM_SPECIFIC_COMPILE_FLAGS} -fintelfpga")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR -Wformat-security -Werror=format-security -Wall ${AC_TYPES_FLAG}")
+set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga -Wformat-security -Werror=format-security -Wall ${AC_TYPES_FLAG}")
 # By default oneAPI compiler burst interleaves across same memory type, 
 # -Xsno-interleaving is used to disable burst interleaving and test each memory bank independently
 # Refer to https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/disabl-burst-int.html for more information
-set(HARDWARE_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsno-interleaving=default -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsno-interleaving=default -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

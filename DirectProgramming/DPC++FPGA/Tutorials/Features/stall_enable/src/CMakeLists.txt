@@ -26,18 +26,13 @@ if (${NO_HYPER_OPTIMIZATION})
     set(HYPER_FLAG -Xshyper-optimized-handshaking=off)
 endif(${NO_HYPER_OPTIMIZATION})
 
-# This is a Windows-specific flag that enables exception handling in host code
-if(WIN32)
-    set(WIN_FLAG "/EHsc")
-endif()
-
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${HYPER_FLAG} -fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${HYPER_FLAG} -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${HYPER_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
