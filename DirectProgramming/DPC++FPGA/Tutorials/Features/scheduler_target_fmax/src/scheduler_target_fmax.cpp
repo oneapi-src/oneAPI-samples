@@ -26,6 +26,8 @@ void KernelRun(size_t size, const std::vector<char> &input_data,
                std::vector<unsigned> &output_data) {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
