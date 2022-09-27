@@ -36,47 +36,17 @@ struct PathTracer {
    * interpolation, nor animation */
   const float m_time = 0.0f;
 
-  /* MIS needs reglar storage at each path segment to capture light PDFs */
-  std::vector<std::vector<misData> > m_misLightStorage;
-
   unsigned int m_numLights;
 
-  void PathTracer::initialize_misData(misData& misOut);
 };
-
-/* Leave this in for later */
-/* struct GuidedPathTracer {
-    //
-    Device guiding_device;
-    Field guding_field;
-    SampleDataStorage guiding sample_data_storage;
-}
-*/
 
 PathTracer::PathTracer(unsigned int max_path_length)
     : m_max_path_length(max_path_length) {}
 
-void PathTracer::initialize_misData(misData& misOut) {
-  misOut.sam.weight = 0.f;
-  misOut.sam.dir = Vec3fa(0.f);
-  misOut.sam.dist = inf;
-  misOut.sam.pdf = 0.f;
-  misOut.tfar = 0.f;
-  misOut.randomLightSample = Vec2f(0.f);
-}
-
 PathTracer::PathTracer(unsigned int max_path_length, unsigned int width,
                        unsigned int height, unsigned int numLights)
     : m_max_path_length(max_path_length), m_numLights(numLights) {
-  // Set up for MIS pdfs for each light at each path segment of each pixel
-  std::vector<misData> misLightDefaults;
-  misData misDefault;
-  initialize_misData(misDefault);
 
-  for (auto i = 0; i < numLights; i++) misLightDefaults.push_back(misDefault);
-
-  for (auto i = 0; i < width * height; i++)
-    m_misLightStorage.push_back(misLightDefaults);
 }
 
 /* task that renders a single screen pixel */
@@ -103,13 +73,6 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
   sg->set_intersect_context_coherent();
   /* iterative path tracer loop */
   for (int i = 0; i < m_max_path_length; i++) {
-    /* MIS prep for lights */
-    if (true) {
-      misData misDefault;
-      initialize_misData(misDefault);
-      std::fill(m_misLightStorage[pxID].begin(), m_misLightStorage[pxID].end(),
-                misDefault);
-    }
     /* terminate if contribution too low */
     if (max(Lw.x, max(Lw.y, Lw.z)) < 0.01f) break;
 

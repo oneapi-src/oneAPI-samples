@@ -14,6 +14,10 @@ Expect at least an hour for following the algorithm, self-directed edits, then t
 
 Some example output images from this `rkPathTracer` tutorial program:
 
+We present a series of two walk through paths.
+1. A _key features_ description of the logical additions to this application to make it a monte carlo path tracer.
+2. A source code walk through describing how the features are implemented with Embree API calls.
+
 This sample source code is a consolidated refactor of the `pathtracer` source hosted as part of the Intel&reg; Embree tutorials in the [Embree
 repository](https://github.com/embree/embree) on GitHub.
 
@@ -104,11 +108,11 @@ Surface properties affect the light reflected. Here we introduce material proper
 
 ## Key Features Added
 
-New features added to the ray tracer `triangle_geometry` sample are discussed at a high level. The features are then highlighted with in-source implementation details. It may take a few rounds of looking at the high level description and then the source-accompanied description to understand the application.
+New features added to the ray tracer `triangle_geometry` sample are discussed at a high level. The features are then highlighted with in-source implementation details. It may take a few rounds of looking at the key feature description and the source-accompanied description to understand the application.
 
 
 
-### Added Scenes
+### Feature: Added Scenes
 
 Global illumination is difficult to demonstrate without surfaces affecting and reflecting light to visible surfaces within the scene.
 
@@ -123,11 +127,11 @@ To demonstrate, we have three sets of hardcoded scene data.
 The audience is ecouraged to modify and rebuild the scenes to examine and understand behavior!
 
 
-### Materials
+### Feature: Materials
 We three basic materials implemented in the sample.
 
 1) Lambertian(https://en.wikipedia.org/wiki/Lambertian_reflectance)
-   This is a soft diffuse material that scatters light proportional to the cosine of the angle of incidence in all directions. Another word often used to describe a Lambertian surface is a *matte*ù surface.
+   This is a soft diffuse material that scatters light proportional to the cosine of the angle of incidence in all directions. Another description often used for a Lambertian surface is: ideal matteù surface.
 
 2) Mirror
    We introduce a mirror as a material surface. In our sample we give the mirror an albedo that can be used to limit reflected energy similar to imperfect real life mirrors. Limiting reflectance more closely matches the behavior of real mirrors.
@@ -137,7 +141,7 @@ We three basic materials implemented in the sample.
 
 The audience is ecouraged to modify material parameters to examine behavior!
    
-### Light
+### Feature: Light
 
 We have 3 basic lights implemented.
 
@@ -153,7 +157,7 @@ This light emits in all directions. It can also have a radius (making it a spher
 
 This is a disc light that emits in a specified direction. It also has a radius and corresponding geometry. It can leave soft shadows in the scene.
 
-### Global Illumination
+### Feature: Global Illumination
 
 We describe our core algorithm at a high (imformal) level:
 
@@ -171,14 +175,18 @@ We describe our core algorithm at a high (imformal) level:
 
 Mulitple samples can be taken for each pixel. They can be used to generate an aggregate of samples per pixel. In this implementation, each sample will be taken at a random offset within the bounds of the pixel. This provides an antialiasing effect for the image.
 
-### Accumulation buffer
+### Feature: Accumulation buffer
 
-Next, The accumulation buffer stores total luminance sampled underneath all pixels over all accumulations. To write to an image file output,  we divide each pixel by number of accumulations to get our per channel color averages.
-An accumulation buffer is useful in an interactive rendering context to intermittently update a windowed frame buffer. The application can continue with a stationary scene and camera to accumulate and thus converge the image.
-In this tutorial program, we use it to write the first sample of all pixels in our image before accumulating many more rendered frames. This is useful for visual debug when developing an application.
-The Luminance samples are stored added to an accumulation buffer. The accumulation buffer is divided by number of accumulations to give red green and blue pixel triplets. The application writes an image to disk.
- 
-If we had taken an infinite number of samples with infinite path length, all paths under all sampled pixels can logically account for all light in the scene. Such a result will be a converged image. Practically, we will set the number of samples per pixel, set an accumulation limit, and maximum path length to the discretion of the application. We set these to 1, 500, and 8 in the application respectively. Change these values to see the affect noise from a limited number of samples or paths segments has on an image.
+- Next, The accumulation buffer stores total luminance sampled underneath all pixels over all accumulations. To write to an image file output,  we divide each pixel by number of accumulations to get our per channel color averages.
+- An accumulation buffer is useful in an interactive rendering context to intermittently update a windowed frame buffer. The application can continue with a stationary scene and camera to accumulate and thus converge the image.
+- In this tutorial program, we use the buffer to write the first sample of all pixels in our image before accumulating many more rendered frames (accumulations).
+
+
+### Feature: Convergence 
+
+- If we had taken an infinite number of samples with infinite path length, all paths under all sampled pixels can logically account for all light in the scene. Such a result will be a converged image.
+- Practically, we will set the number of samples per pixel, set an accumulation limit, and maximum path length to the discretion of the application.
+- We set these to 1, 500, and 8 in the application respectively. Change these values to see the affect noise from a limited number of samples or paths segments has on an image.
 
 
 Examples:
@@ -216,7 +224,9 @@ See the API pdf (manual)[https://raw.githubusercontent.com/embree/embree/master/
 
 ## Details of Improvements (Source)
 
-### Scene Selection
+It is highly advised to walk through the source in an IDE environment that allows for quick lookup of symbol and function definitions!
+
+### rkPathTracer.cpp
 In `rkPathTracer.cpp` we have `main(..)`. The application will create a Renderer to render a selected scene. The renderer first generates and writes an image with one accumulation. The render then renders all accumulations.
 ```
   std::unique_ptr<Renderer> r;
@@ -261,7 +271,7 @@ The audience is encouraged to alter these values, then review single and multipl
 ```
 The values above are resident in higher level APIs like Intel OSPRay for controlling scenes. Look for them in the Intel OSPRay Studio showcase reference application GUI.
 
-### Renderer
+### Renderer.h
 
 The renderer initializes a pixel buffer and the accumulation buffer.
 
@@ -307,7 +317,7 @@ The Renderer then creates a Path Tracer object:
                                       m_sg->getNumLights());
 ```
 
-### Scene
+### SceneGraph.h
 
 The `SceneGraph` initializes the Embree scene with `rtcNewScene(..)`. The Scene Graph then will intialize Embree geometries based on the selected scene. std::map objects are used for lookup tables to find Embree geometry and primitive information when we intersect objects when ray tracing.
 
@@ -336,14 +346,14 @@ void SceneGraph::init_embree_scene(const RTCDevice device,
 ```
 
 
-### Geometry
+### Geometry.h
 
-The `Geometry` object does not do anything special except allow an easy/extensible mechanism for geometry creation and destruction. Use the geometries std::vector object to add remove edit geometries and create your own scenes in this application.
+The `Geometry` object does not do anything special except allow an easy/extensible mechanism for geometry creation and destruction. Use the `geometries` std::vector object to add, remove, or edit geometries and create your own scenes in this application.
 
 
-### Cornell
+### CornellBox.h
 
-The Cornell box is one such derived Geometry object. When it is created we create Embree geometry with `rtcNewGeometry` in `add_geometry(..)`. 
+The Cornell box is one such derived `Geometry` object. When it is created we create Embree geometry with `rtcNewGeometry(..)` in `CornellBox::add_geometry(..)`. 
 
 Creating the box geometry means setting a buffer of defined vertex positions for the geometry with `rtcSetNewGeometryBuffer(..)` and giving it `RTC_BUFFER_TYPE_VERTEX`.
 ```
@@ -352,7 +362,7 @@ Creating the box geometry means setting a buffer of defined vertex positions for
       m_cornellBoxVertices.size());
 ```
 
-Next, we setup an index buffer for for the Geometry defining Quads.
+Next, we setup an index buffer for the Geometry defining Quads.
 
 ```
   /* set quads */
@@ -386,9 +396,10 @@ We set up a look up map for each face's albedo (color) and assigned material. Th
   mapGeomToPrim.insert(std::make_pair(geomID, mpTable));
 ```
 
-The other `Geometry` derivative objects are highly similar, albeit the may use different primitive types. Note that the `Sphere` object uses an Embree defined Sphere primative as opposed to defining vertices manually for a sphere.
+The other `Geometry` derivative objects are highly similar. Albeit, the may use different primitive types. 
 
-The Cornell scene also configures a light and camera associated with it. The camera view is oriented based on field of view, look at direction, up direction, width and height in pixels.
+- Note that the `Sphere` object uses an Embree defined Sphere primative as opposed to defining many vertices manually to approximate a sphere.
+- The Cornell scene also configures a light and camera associated with it. The camera view is oriented based on field of view, look at direction, up direction, width and height in pixels.
 
 ```
  float fov = 30.0f;
@@ -421,70 +432,415 @@ We define a spot light with given direction, position, radius, powerm and openin
   }
 ```
 
+Adding the light geometry is similar to adding our other geometries. See Light.h for the implementation.
 
 
 
 
+### Materials.h
 
-### Materials
+`Materials.h` defines functions `sample` `eval` and `pdf` for each Material. They are for computing:
+- a direction sample
+- a light quantity (for color) given the sample
+- a probability distribution function (PDF) value given the sample.
 
-### Lights
+These functions are used later in the path tracer loop.
 
-### Accumulation Buffer
+Each `Material_` prefixed function runs a material specific code path. In this example, we use one of Lambertian (Matte), Mirror, or Dielectric (Frenel) materials depending on the material assigned to an intersected surface.
 
-### Accumulate
+_Sample_
 
-### Path Loop
+Example: A matte sample given a 2D random variable:
+```
+Vec3fa Lambertian_sample(const Vec3fa& wo, const DifferentialGeometry& dg,
+                         const Vec2f& randomMatSample) {
+  return cosineSampleHemisphere(randomMatSample.x, randomMatSample.y, dg.Ns);
+}
+...
+inline Vec3fa cosineSampleHemisphere(const float u, const float v,
+                                     const Vec3fa& N) {
+  /* Determine cartesian coordinate for new Vec3fa */
+  const float phi = float(2.0f * M_PI) * u;
+  const float cosTheta = sqrt(v);
+  const float sinTheta = sqrt(1.0f - v);
+  const float sinPhi = sinf(phi);
+  const float cosPhi = cosf(phi);
+
+  Vec3fa localDir = Vec3fa(cosPhi * sinTheta, sinPhi * sinTheta, cosTheta);
+  /* Gives the new Vec3fa transformed about the input Vec3fa */
+
+  return frame(N) * localDir;
+}
+
+```
+
+_Eval_
+
+Example: appearance evaluation given a direction from a matte material:
+```
+inline Vec3fa Lambertian_eval(const Vec3fa& albedo, const Vec3fa& wo,
+                              const DifferentialGeometry& dg,
+                              const Vec3fa& wi_v) {
+  /* The diffuse material. Reflectance (albedo) times the cosign fall off of the
+   * vector about the normal. */
+  return albedo * (1.f / (float)(float(M_PI))) * clamp(dot(wi_v, dg.Ns));
+}
+```
+
+_PDF_:
+
+Example: Probability Distribution Function for a matte material:
+```
+float Lambertian_pdf(const DifferentialGeometry& dg, const Vec3fa& wi1) {
+  return dot(wi1, dg.Ns) / float(M_PI);
+}
+```
+
+
+Some compute between sample, eval, and pdf functions for a material may be redundant. Obtaining direction, eval, and pdf values is seperated for study purposes. In the Embree 3 repository tutorials, a `Sample` data structure is used to group pdf information with a direction.
+
+Note that the path tracer application on the Embree repository contains implementations of several more material models.
+
+### Lights.h
+
+Similarly we use sample and eval functions for each of the three lights implemented.
+
+With the sample function, a random direction is sampled from the intersection point to the light surface. Sometimes with lights that have geometries, we will see in the path tracing loop that a random direction to the surface will be obscure. This provides a soft shadow effect.
+
+```
+Light_SampleRes SpotLight::sample(const DifferentialGeometry& dg,
+                                  const Vec2f& s) {
+  Light_SampleRes res;
+
+  // extant light vector from the hit point
+  res.dir = m_position - dg.P;
+
+  if (m_radius > 0.f)
+    res.dir = m_coordFrame * uniformSampleDisk(m_radius, s) + res.dir;
+
+  const float dist2 = dot(res.dir, res.dir);
+  const float invdist = rsqrt(dist2);
+
+  // normalized light vector
+  res.dir = res.dir * invdist;
+  res.dist = dist2 * invdist;
+
+  // cosine of the negated light direction and light vector.
+  const float cosAngle = -dot(m_coordFrame.vz, res.dir);
+  const float angularAttenuation =
+      clamp((cosAngle - m_cosAngleMax) * m_cosAngleScale);
+
+  if (m_radius > 0.f)
+    res.pdf = m_diskPdf * dist2 * abs(cosAngle);
+  else
+    res.pdf = inf;  // we always take this res
+
+  // convert from power to radiance by attenuating by distance^2; attenuate by
+  // angle
+  res.weight = m_power * ((invdist * invdist) * angularAttenuation);
+
+  return res;
+}
+```
+
+With the eval function, a light value is taken given a particular direction toward the light. `SpotLight` Example:
+```
+Light_EvalRes SpotLight::eval(const Vec3fa& org, const Vec3fa& dir) {
+  Light_EvalRes res;
+  res.value = Vec3fa(0.f);
+  res.dist = inf;
+  res.pdf = 0.f;
+
+  if (m_radius > 0.f) {
+    // intersect disk
+    const float cosAngle = -dot(dir, m_coordFrame.vz);
+    if (cosAngle > m_cosAngleMax) {  // inside illuminated cone?
+      const Vec3fa vp = org - m_position;
+      const float dp = dot(vp, m_coordFrame.vz);
+      if (dp > 0.f) {  // in front of light?
+        const float t = dp * rcp(cosAngle);
+        const Vec3fa vd = vp + t * dir;
+        if (dot(vd, vd) < (m_radius * m_radius)) {  // inside disk?
+          const float angularAttenuation =
+              min((cosAngle - m_cosAngleMax) * m_cosAngleScale, 1.f);
+          const float pdf = m_diskPdf * cosAngle;
+          res.value =
+              m_power * (angularAttenuation * pdf);  // *sqr(t)/sqr(t) cancels
+          res.dist = t;
+          res.pdf = pdf * (t * t);
+        }
+      }
+    }
+  }
+
+  return res;
+}
+```
+
+### Renderer.h (Accumulation)
+
+At this point, all objects and parameters for Embree have been supplied and configured. We are now able to query and extract results from the Embree API. In `Renderer.h`, we revisit `render_accumulation(..)`.
+
+The compute work for our image is split into image based 2D tiles. oneTBB will then schedule tasks to get executed on hardware thread elements. Scheduling is based on dynamic detection of system multithreading topology. 
+
+Each `tbb::parallel_for(..)` task will get its own set of tiles to compute on. The number of tiles is derived from the oneTBB runtime. Each tile gets its own random number generator, see `RandomEngine`.
+
+```
+  tbb::parallel_for(
+      tbb::blocked_range<size_t>(0, numTilesX * numTilesY, 1),
+      [&](const tbb::blocked_range<size_t>& r) {
+        const int threadIndex = tbb::this_task_arena::current_thread_index();
+
+        RandomEngine reng;
+        std::uniform_real_distribution<float> distrib(0.0f, 1.0f);
+
+        for (size_t i = r.begin(); i < r.end(); i++) {
+          render_tile_task((int)i, threadIndex, numTilesX, numTilesY, reng,
+                           distrib);
+        }
+      },
+      tgContext);
+```
+
+Performance monitors that show multithreaded residency will show usage of all hardware threads leading to a major increase to performance over a single threaded implementation.
+
+In the `Renderer::render_tile_task(..)` function we render each ray color sample from each pixel of the image.
+```
+void Renderer::render_tile_task(
+    int taskIndex, int threadIndex, const int numTilesX, const int numTilesY,
+    RandomEngine& reng, std::uniform_real_distribution<float>& distrib) {
+  const unsigned int tileY = taskIndex / numTilesX;
+  const unsigned int tileX = taskIndex - tileY * numTilesX;
+  const unsigned int x0 = tileX * TILE_SIZE_X;
+  const unsigned int x1 = min(x0 + TILE_SIZE_X, m_width);
+  const unsigned int y0 = tileY * TILE_SIZE_Y;
+  const unsigned int y1 = min(y0 + TILE_SIZE_Y, m_height);
+
+  for (unsigned int y = y0; y < y1; y++)
+    for (unsigned int x = x0; x < x1; x++) {
+      Vec3fa color = render_pixel_samples(x, y, reng, distrib);
+...
+```
+
+The result color is added to the accumulation buffer.
+
+Each result color channel of the accumulation buffer is transformed to 8bit unsigned characters, and stored in the output pixel buffer.
+```
+      /* write color from accumulation buffer to framebuffer */
+      unsigned char r =
+          (unsigned char)(255.0f * clamp(accu_color.x * f, 0.0f, 1.0f));
+      unsigned char g =
+          (unsigned char)(255.0f * clamp(accu_color.y * f, 0.0f, 1.0f));
+      unsigned char b =
+          (unsigned char)(255.0f * clamp(accu_color.z * f, 0.0f, 1.0f));
+      m_pixels[y * m_width * m_channels + x * m_channels] = r;
+      m_pixels[y * m_width * m_channels + x * m_channels + 1] = g;
+      m_pixels[y * m_width * m_channels + x * m_channels + 2] = b;
+```
+
+An accumulation buffer is useful in an interactive application where the frame buffer is blitted to screen. For example, Intel OSPRay Studio will render accumulation passes and blit each update to screen. The result is a stationary camera will allow accumulation updates to converge the result of the image. The `rkPathTracer` sample application uses the accumulation buffer for study.
+
+
+### PathTracer.h (Path Loop)
+
+The path tracing loop for each sample under each pixel for each accumulation is in `PathTracer.h`.
+
+In PathTracer::render_path(..) we:
+
+Find a direction and origin for the specified path.
+
+```
+  Vec3fa dir = sg->get_direction_from_pixel(x, y);
+  Vec3fa org = sg->get_camera_origin();
+```
+Initialize an Embree `RTCRayHit` data structure for storage of collision information. The RTCRayHit structure stores our ray information but also our normal, barycentric coordinates for extended features like textures, as well as geometry identification information.
+
+```
+  /* initialize ray */
+  RTCRayHit rayhit;
+  init_RayHit(rayhit, org, dir, 0.0f, std::numeric_limits<float>::infinity(),
+              m_time);
+
+```
+
+Initialize our aggregate path luminance and the luminance weight. The luminance weight will be attenuated as our path encounters intersections.
+
+```
+
+  Vec3fa L = Vec3fa(0.0f);
+  Vec3fa Lw = Vec3fa(1.0f);
+```
+
+Initialize a fresnel constant for the ray origin. This is used to calculate indexes of refraction accross different mediums. We use `1.f` for a vaccum.
+
+```
+  Medium medium, nextMedium;
+  medium.eta = nextMedium.eta = 1.f;
+```
+
+Define a `DifferentialGeometry` data structure for storing hit information.
+
+```
+  DifferentialGeometry dg;
+```
+Lastly, we tell Embree to be free to optimize for coherent rays, given that first rays on the path are primary rays.
+
+```
+  sg->set_intersect_context_coherent();
+```
+
+Next, we iterate for every segment of the path. If it so happens that our remaining weight along the path is sufficiently low, we terminate the path.
+```
+    /* terminate if contribution too low */
+    if (max(Lw.x, max(Lw.y, Lw.z)) < 0.01f) break;
+```
+Perform an intersection test for the path segment into the scene. If nothing is encountered we terminate the path. Otherwise, we flip the direction of the ray as we look to perform material computation with a ray leaving the material (ultimately, into our camera)
+```
+    if (!sg->intersect_path_and_scene(org, dir, rayhit, dg)) break;
+
+    const Vec3fa wo = -dir;
+```
+
+Ask our SceneGraph what material the ray intersected. So, we access the lookup table constructed earlier for primitive materials.
+```
+    materialType =
+        sg->m_mapGeomToPrim[rayhit.hit.geomID].materialTable[rayhit.hit.primID];
+```
+
+If we encounter a geometry that is a light source, we evaluate the light coming to our origin point and add that intensity to our aggregate luminance for the path. The path is terminated if it hits an emitter.
+```
+    if (materialType == MaterialType::MATERIAL_EMITTER) {
+      std::shared_ptr<Light> light =
+          sg->get_light_from_geomID(rayhit.hit.geomID);
+      Light_EvalRes le = light->eval(org, dir);
+      L = L + Lw * le.value;
+      ...
+      break;
+```
+If we do not encounter an emitter we look up the albedo of the material:
+
+```
+      albedo = sg->m_mapGeomToPrim[rayhit.hit.geomID]
+                   .primColorTable[rayhit.hit.primID];
+```
+We initialize an attenuation scaling value for our material. As well as a data structure for our incoming ray (the next segment), and a random variable for sampling a direction from our material.
+```
+    Vec3fa c = Vec3fa(1.0f);
+
+    Vec3fa wi1;
+    Vec2f randomMatSample(distrib(reng), distrib(reng));
+```
+
+
+We tell Embree our rays will become incoherent (no longer primary rays)
+```
+sg->set_intersect_context_incoherent();
+```
+
+If the material does not simply pass light through, we perform a shadow ray test to each light. We perform a random sample on each light, perform an occlusion test to the sample, then add direction and material weighted luminance to our running total for the path.
+```
+    if (Material_direct_illumination(materialType)) {
+      /* Cast shadow ray(s) from the hit point */
+      sg->cast_shadow_rays(dg, albedo, materialType, Lw, wo, medium, m_time, L,
+                           reng, distrib);
+    }
+
+    ...
+    //From SceneGraph.h cast_shadow_rays
+        Vec2f randomLightSample(distrib(reng), distrib(reng));
+    Light_SampleRes ls = light->sample(dg, randomLightSample);
+
+    /* If the sample probability density evaluation is 0 then no need to
+     * consider this shadow ray */
+    if (ls.pdf <= 0.0f) continue;
+
+    RTCRayHit shadow;
+    init_RayHit(shadow, dg.P, ls.dir, dg.eps, ls.dist, time);
+    rtcOccluded1(m_scene, &m_context, &shadow.ray);
+    if (shadow.ray.tfar >= 0.0f) {
+      L = L + Lw * ls.weight *
+                  Material_eval(albedo, materialType, Lw, wo, dg, ls.dir,
+                                medium, randomLightSample);
+    }
+
+```
+
+Next we figure our attenuation and the details for the next segment of the path.
+
+We sample the material to find a direction based off the material properties and random value (BRDF).
+```
+    wi1 = Material_sample(materialType, Lw, wo, dg, medium, nextMedium,
+                          randomMatSample);
+```
+
+We attenuate our 'color' evaluation for the material based on the direction sample.
+```
+    c = c * Material_eval(albedo, materialType, Lw, wo, dg, wi1, medium);
+```
+
+
+We find the monte carlo estimator proportion (probability distribution function) value for the direction sample.
+```
+    float nextPDF = Material_pdf(materialType, Lw, wo, dg, medium, wi1);
+```
+
+We scale our luminance weighting for subsequent segments by the current materials attenuation and the directional PDF.
+```
+    if (nextPDF <= 1E-4f) break;
+    Lw = Lw * c / nextPDF;
+```
+
+We set the medium state for the next segment.
+```
+  medium = nextMedium;
+```
+
+We move slightly up from the intersection point along the unit normal. This location is used as our next origin. `dg.eps` and epsilon value is used to avoid artifacts.
+```
+    float sign = dot(wi1, dg.Ng) < 0.0f ? -1.0f : 1.0f;
+    dg.P = dg.P + sign * dg.eps * dg.Ng;
+    org = dg.P;
+```
+
+We set our next direction to be the incoming light ray to the surface. Then we initialize the `RTCRayHit` data structure for computation over the next segment in the pathtracer loop.
+```
+    dir = normalize(wi1);
+    init_RayHit(rayhit, org, dir, dg.eps, inf, m_time);
+```
+
+Finally, when the `PathTracer::render_path(..)` function has completed. The total luminance `L` for the path is returned.
+```
+      return L;
+```
 
 ## Performance and Quality
 
-### VTune
+### Intel VTune Amplifier
 
-Intel VTune Amplifier is a great tool when attempting to optimize your application. The hotspots chart below from VTune helps us find bottlenecks in our application. The unnamed functions are rtcIntersect1 and rtcOccluded1. The chart shows that together, these `Embree` functions, are the plurality of the compute, which for this introductory application is desirable.
+Intel VTune Amplifier is a great tool when attempting to optimize your application. The hotspots mode from VTune helps us find bottlenecks in our application.
 
-```
-Top Hotspots
-Function             Module                 CPU Time  % of CPU Time(%)
--------------------  ---------------------  --------  ----------------
-func@0x1814b9a20     embree3.dll            130.604s             23.6%
-fdlog                ucrtbase.dll           108.756s             19.6%
-func@0x1814cce90     embree3.dll             84.626s             15.3%
-renderPixelFunction  rkPathTracer.exe        30.289s              5.5%
-cosf                 ucrtbase.dll            13.829s              2.5%
-[Others]             N/A                    185.692s             33.5%
+Random Number Generation
 
-Top Tasks
-Task Type   Task Time  Task Count  Average Task Time
-----------  ---------  ----------  -----------------
-tbb_custom   625.022s       1,461             0.428s
-```
+`rtcIntersect1` and `rtcOccluded1` constitute a significant portion of the compute. Looking at the other functions we see `fdlog(..)`.
+`fdlog(..)` is called by the application's random number generation routines. This suggests that for this scene, and this renderer's monte carlo scheme, random number generation is also significant proportion of compute effort.
+The full Embree tutorials use a hand written fast LCG based random number generator. For explanation and simplicity purposes, we use C++11 random number generators in this tutorial. The quality (recurrence, distribution, speed) of random numbers will affect the quality of your results.
 
-### rtcIntersect1/rtcOccluded1
-
-In this example `RTC_INTERSECT_CONTEXT_FLAG_COHERENT` is set prior to tracing primary rays with `rtcIntersect`. Using this bitflag shows [enhanced performance]( https://github.com/embree/embree/blob/v3.13.4/doc/src/api.md#fast-coherent-rays) when using ray packets. It is in place in our tutorial program because our primary rays are coherent.
-
-Other rtcIntersect<n>/rtcOccluded<n> calls can schedule 
-
-### Random Number Generation
-
-rtcIntersect and rtcOccluded together are a plurality of compute. Looking at the other functions we see `fdlog(..)`.
-fdlog is called by the application's random number generation routines. This suggests that for this scene, and this renderer's monte carlo scheme, random number generation is a significant proportion of the code.
-The full Embree tutorials use a hand written fast LCG based random number generator. For explanation and simplicity purposes, we use C++11 random number generators in this tutorial. The quality (recurrence, distribution, speed) of random numbers will affect the quality of your results.  For example, moving to `mt19937` based random number generators without any extra hashing gives reasonable results in single accumulation and multi-accumulation images. However, it  was observed to perform slower than a `minstd_rand` generator. This performance impact was observed in the VTune hotspots function profile. However, a quality trade off can be readily observed if the `minstd_rand` generator is not hashed as in our tutorial. Visual artifacts may be apparent even given a high sample count.
+For example, moving to `mt19937` based random number generators without any extra hashing gives reasonable results in single accumulation and multi-accumulation images. However, it  was observed to perform slower than a `minstd_rand` generator. This performance impact was observed in the VTune hotspots function profile. However, a quality trade off can be readily observed if the `minstd_rand` generator is not hashed as in our tutorial. Visual artifacts may be apparent even given a high sample count.
 We observe random number concerns due to their impact on performance. Random number needs can be different amongst different applications.
 
 ### Fidelity And Convergence
 
-Convergence in an image is highly dependent on scene configuration. Keeping a point light at an sharp angle with respect to visible surfaces from the light can result in a noisier image. In instances where convergence is taking longer a developer may consider a denoise pass provided by functionality from a library like Intel Open Image Denoise. Many vendors of professional rendering solutions use Intel Open Image Denoise as a default final frame pass to enhance image quality.
-Ceiling point Light 500 samples
-Ceiling point Light 1000 samples
-Ceiling point Light 2000 samples
+Convergence in an image is highly dependent on scene configuration. Keeping a light at an sharp angle with respect to visible surfaces from the light can result in a noisier image. In instances where convergence is taking longer, a developer may consider a denoise pass provided from a library like Intel Open Image Denoise. Many vendors of professional rendering solutions use Intel Open Image Denoise as a final frame pass to enhance image quality.
+Cornell Box at 500 samples
+Cornell Box at 1000 samples
+Cornell Box at 2000 samples
 Intel Open Image Denoise oidnDenoise 
 
 # Next Steps:
 
 ## Ray tracers in the wild
 
-### Intel OSPRay off-the-shelf renderers
+### Intel&reg; OSPRay: off-the-shelf renderers
 The Intel OSPRay API defines renderer objects. If you are looking for an off the shelf renderer for your environment, consider any of these [renderers]( https://www.ospray.org/documentation.html#renderers)
 - Pathtracer `pathtracer`:
 Supports volumetric visualization, global illumination, materials, textures. Significant superset of features over this tutorial program.
@@ -496,19 +852,24 @@ Supports volumetric visualization, ambient occlusion, no lights.
 ### Scene Graphs:
 Typical rendering applications employ a scenegraph for managing complex scene data from cameras, instancing, objects, to materials, textures, and animations. This tutorial hardcodes a few basic geometric objects and materials. The full Intel Embree tutorial programs contain a basic reference [scene graph]( https://github.com/embree/embree/blob/v3.13.4/tutorials/common/tutorial/tutorial.cpp). Similarly, the OSPRay ospExamples viewer employs a reference scene graph. Lastly, Intel OSPRay Studio uses it‚Äôs own reference scene graph.
 Each implementation can be a good reference point in building out your own scene graph in a production application. When moving beyond sandbox programs, software scalability challenges make a scene graph a practical necessity.
-    Lights
-    Our lights have no physical dimensions. This keeps tutorial code simple. However, interesting lights and images are often generated with lights that have dimensions. Consider augmenting this application‚Äôs directional light an point light to give them a physical size. The full Intel Embree tutorials demonstrate a few different [light types to try](https://github.com/embree/embree/tree/v3.13.4/tutorials/common/lights)
+
+
+### Lights
+
+Our lights are limited. This keeps tutorial code simple. Consider augmenting this application lights. See the full Intel Embree tutorials demonstrate a few different [light types to try](https://github.com/embree/embree/tree/v3.13.4/tutorials/common/lights)
 
 ### Materials omissions
 
 Bidirectional Ray Distribution Function (BRDF) parameterization
 
-The full Embree tutorial application passes a structure representing a BRDF representing reflectance model parameters. Our application hard codes reflection models in the interest of simplicity. However, the full tutorial application includes a BRDF parser for use with geometric models stored on disk in .obj/.mtl format.
-When reviewing other codes, notice that parameters associated with the [Phong](https://en.wikipedia.org/wiki/Phong_reflection_model) reflection model are considered.
+The full Embree tutorial application passes a structure representing a BiDirectional Ray Distribution Function (BRDF) representing reflectance model parameters. Our application hard codes reflection models in the interest of simplicity. However, the full tutorial application includes a BRDF parser for use with geometric models stored on disk in .obj/.mtl format.
+For example: when reviewing Embree repository codes, notice that parameters associated with the [Phong](https://en.wikipedia.org/wiki/Phong_reflection_model) reflection model are considered.
+
+`pathtracer_device.cpp` from the Embree tutorials features additional hand coded material types.
 
 ### Texturing
 
-We do not cover texturing in this sample. Review the Intel Embree repository source to see a demonstration of applying terxtures.
+We do not cover texturing in this sample. Review the Embree repository source to see a demonstration of applying textures.
 
 ### Transparency
 
@@ -517,7 +878,7 @@ Transparent materials are omitted in this tutorial. The full Intel Embree path t
 ## More Information
 You can find more information at the [ Intel oneAPI Rendering Toolkit portal ](https://software.intel.com/content/www/us/en/develop/tools/oneapi/rendering-toolkit.html).
 
-## License
+# License
 
 Code samples are licensed under the Apache 2.0 license. See
 [LICENSE.txt](LICENSE.txt) for details.
