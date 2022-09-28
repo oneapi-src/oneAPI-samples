@@ -1,10 +1,11 @@
 # required cmake version
 cmake_minimum_required(VERSION 3.5)
 
+set(CMAKE_CXX_COMPILER "dpcpp")
+
 # CMakeLists.txt for ISO2DFD_DPCPP project
 project (iso2dfd_dpcpp)
 
-set(CMAKE_CXX_COMPILER "dpcpp")
 
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)

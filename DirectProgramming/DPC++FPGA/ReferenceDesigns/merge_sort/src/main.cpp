@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 // dpc_common.hpp can be found in the dev-utilities include folder.
@@ -131,14 +131,14 @@ int main(int argc, char *argv[]) {
 
   // make sure the device supports USM device allocations
   auto d = q.get_device();
-  if (!d.get_info<info::device::usm_device_allocations>()) {
+  if (!q.get_device().has(aspect::usm_device_allocations)) {
     std::cerr << "ERROR: The selected device does not support USM device"
               << " allocations\n";
     std::terminate();
   }
 
   // make sure the device support USM host allocations if we chose to use them
-  if (!d.get_info<info::device::usm_host_allocations>() &&
+  if (!q.get_device().has(aspect::usm_host_allocations) &&
       kUseUSMHostAllocation) {
     std::cerr << "ERROR: The selected device does not support USM host"
               << " allocations\n";

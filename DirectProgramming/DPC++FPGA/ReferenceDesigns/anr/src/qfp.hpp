@@ -4,7 +4,7 @@
 #include <array>
 #include <limits>
 
-#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
+#include <sycl/ext/intel/ac_types/ac_int.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"

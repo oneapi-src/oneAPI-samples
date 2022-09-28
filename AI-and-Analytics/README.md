@@ -1,8 +1,8 @@
-# Intel® oneAPI AI Analytics Toolkit (AI Kit)
+# Intel® AI Analytics Toolkit (AI Kit)
 
-The Intel® oneAPI AI Analytics Toolkit (AI Kit) gives data scientists, AI developers, and researchers familiar Python* tools and frameworks to accelerate end-to-end data science and analytics pipelines on Intel® architectures. The components are built using oneAPI libraries for low-level compute optimizations. This toolkit maximizes performance from preprocessing through machine learning, and provides interoperability for efficient model development.
+The Intel® AI Analytics Toolkit (AI Kit) gives data scientists, AI developers, and researchers familiar Python* tools and frameworks to accelerate end-to-end data science and analytics pipelines on Intel® architectures. The components are built using oneAPI libraries for low-level compute optimizations. This toolkit maximizes performance from preprocessing through machine learning, and provides interoperability for efficient model development.
 
-You can find more information at [ AI Kit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+You can find more information at [AI Kit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -30,6 +30,28 @@ the [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get-started/
 * use `git clone` to get a full copy of samples repository, or
 * use the `oneapi-cli` tool to download specific sample.
 > Users could refer to [the Download Samples using the oneAPI CLI Samples Browser section](https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-intel-oneapi-hpc-linux/top/run-a-sample-project-using-the-command-line.html).
+
+## Sanity Check
+To verify the activated environment, navigate to the AI-and-Analytics
+ directory and run the `version_check.py` script:
+   
+```bash
+python version_check.py
+```
+### Example of Output
+
+Output from TensorFlow Environment
+```
+TensorFlow version:  2.6.0
+MKL enabled : True
+```
+
+Output from PyTorch Environment
+```
+PyTorch Version:  1.8.0a0+37c1f4a
+mkldnn : True,  mkl : True, openmp : True
+```
+
 ## How to submit a workload to a specific architecture
 * check the available nodes with your DevCloud account 
 ```

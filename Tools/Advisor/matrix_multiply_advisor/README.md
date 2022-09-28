@@ -1,37 +1,32 @@
 # `Matrix Multiply` Sample
 A sample containing multiple implementations of matrix multiplication code
-sample and is implemented using the DPC++ language for CPU and GPU.
+sample and is implemented using SYCL* for CPU and GPU.
 
 | Optimized for                       | Description
 |:---                               |:---
-| OS                                | Linux Ubuntu 18.04; Windows 10
+| OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10
 | Hardware                          | Kaby Lake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler; Intel&reg; Advisor
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; Advisor
 | What you will learn               | How to profile an application using Intel&reg; Advisor
 | Time to complete                  | 15 minutes
 
 ## Purpose
 
 The Matrix Multiplication sample performs basic matrix multiplication. Three
-versions are provided that use different features of DPC++.
+versions are provided that use different SYCL features.
 
 ## Key Implementation details
 
-The basic DPC++ implementation explained in the code includes device selector,
-buffer, accessor, kernel, and command groups. The include folder is located at
-%ONEAPI_ROOT%\dev-utilities\latest\include on your development system.
+The basic SYCL implementation explained in the code includes device selector,
+buffer, accessor, kernel, and command groups. 
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+## Include Files 
+The include folder is located at
+`%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-Third party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
-
-### Running Samples In DevCloud
-Running samples in the Intel DevCloud requires you to specify a compute node.
-For specific instructions, jump to [Run the Matrix Multiply Advisor sample on the DevCloud](#run-matmul-advisor-on-devcloud)
+### Running Samples In Intel&reg; DevCloud
+Running samples in the Intel&reg; DevCloud requires you to specify a compute node.
+For specific instructions, jump to [Run the Matrix Multiply Advisor sample on the DevCloud](#run-matmul-advisor-on-devcloud).
 
 ## Using Visual Studio Code* (Optional)
 
@@ -39,44 +34,44 @@ You can use Visual Studio Code (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+To learn more about the extensions, see the
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to
-this readme for instructions on how to build and run a sample.
 
 ## How to Build
-
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: `. ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
-> For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-This sample contains three versions of matrix multiplication using DPC++:
+This sample contains three versions of matrix multiplication:
 
-    multiply1 – basic implementation of matrix multiply using DPC++
-    multiply1_1 – basic implementation that replaces the buffer store with a local accessor “acc” to reduce memory traffic
-    multiply1_2 – the basic implementation, plus adding the local accessor and matrix tiling
+- `multiply1` – basic implementation of matrix multiply using SYCL
+- `multiply1_1` – basic implementation that replaces the buffer store with a local accessor “acc” to reduce memory traffic
+- `multiply1_2` – the basic implementation, plus adding the local accessor and matrix tiling
 
-Edit the line in src/multiply.hpp to select the version of the multiply function:
-#define MULTIPLY multiply1
+Edit the line in `src/multiply.hpp` to select the version of the multiply function:
+`#define MULTIPLY multiply1`.
 
 
 ### On a Linux* System
-	To build DPC++ version:
+	To build the SYCL version:
 	cd <sample dir>
 	cmake .
 	make
@@ -106,31 +101,28 @@ dependencies and permissions errors.
 
 
 ### Example of Output
+```
+./matrix.dpcpp
 
-   ./matrix.dpcpp
+Using multiply kernel: multiply1
 
-   Using multiply kernel: multiply1
+Running on Intel(R) Gen9
 
-   Running on Intel(R) Gen9
+Elapsed Time: 0.539631s
+```
 
-   Elapsed Time: 0.539631s
-
-
-## Running an Intel Advisor analysis
-------------------------------------------
-
-See the Advisor Cookbook here: https://software.intel.com/en-us/advisor-cookbook
-
+## Running an Intel® Advisor analysis
+See the [Intel® Advisor Cookbook](https://software.intel.com/en-us/advisor-cookbook).
 
 ### Running the Matrix Multiply Advisor sample in the DevCloud<a name="run-matmul-advisor-on-devcloud"></a>
-This sample contains 3 version of matrix multiplication using DPC++:
+This sample contains 3 version of matrix multiplication:
 
-    multiply1 – basic implementation of matrix multiply using DPC++
-    multiply1_1 – basic implementation that replaces the buffer store with a local accessor “acc” to reduce memory traffic
-    multiply1_2 – the basic implementation, plus adding the local accessor and matrix tiling
+- `multiply1` – basic implementation of matrix multiply using SYCL
+- `multiply1_1` – basic implementation that replaces the buffer store with a local accessor “acc” to reduce memory traffic
+- `multiply1_2` – the basic implementation, plus adding the local accessor and matrix tiling
 
-Edit the line in src/multiply.hpp to select the version of the multiply function:
-#define MULTIPLY multiply1
+Edit the line in `src/multiply.hpp` to select the version of the multiply function:
+`#define MULTIPLY multiply1`.
 
 1.  Open a terminal on your Linux system.
 2.	Log in to DevCloud.
@@ -166,7 +158,7 @@ make
 
 3.	Save and close the build.sh file.
 
-4.	Create a run.sh script with with your preferred text editor:
+4.	Create a run.sh script with your preferred text editor:
 ```
 nano run.sh
 ```
@@ -230,7 +222,7 @@ Elapsed Time: 1.79388s
 Built target run
 ```
 
-6.	Remove the stdout and stderr files and clean-up the project files.
+6.	Remove the stdout and stderr files and clean up the project files.
 ```
 rm build.sh.*; rm run.sh.*; make clean
 ```
@@ -238,11 +230,15 @@ rm build.sh.*; rm run.sh.*; make clean
 ```
 exit
 ```
-## Running an Intel Advisor analysis
-------------------------------------------
-
-See the Advisor Cookbook here: https://software.intel.com/en-us/advisor-cookbook
+## Running an Intel&reg; Advisor analysis
+See the [Intel® Advisor Cookbook](https://software.intel.com/en-us/advisor-cookbook).
 
 ### Build and run additional samples
 Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to this sample. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
 
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

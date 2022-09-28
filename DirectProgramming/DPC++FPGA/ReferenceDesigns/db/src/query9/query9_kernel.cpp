@@ -6,6 +6,8 @@
 #include "query9_kernel.hpp"
 #include "pipe_types.hpp"
 
+#include "onchip_memory_with_cache.hpp" // DirectProgramming/DPC++FPGA/include
+
 #include "../db_utils/Accumulator.hpp"
 #include "../db_utils/LikeRegex.hpp"
 #include "../db_utils/MapJoin.hpp"
@@ -383,18 +385,18 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       // the accumulators
-      constexpr int kAccumCacheSize = 7;
-      BRAMAccumulator<DBDecimal, (25 * 7), kAccumCacheSize, unsigned char>
-          sum_profit_local[kFinalDataMaxSize];
+      constexpr int kAccumCacheSize = 8;
+      NTuple<kFinalDataMaxSize, fpga_tools::OnchipMemoryWithCache<
+                                    DBDecimal, (25 * 7), kAccumCacheSize>>
+          sum_profit_local;
 
       // initialize the accumulators
       UnrolledLoop<0, kFinalDataMaxSize>([&](auto j) {
-        sum_profit_local[j].Init();
+        sum_profit_local.template get<j>().init(0);
       });
 
       bool done = false;
-
-      [[intel::initiation_interval(1), intel::ivdep(kAccumCacheSize)]]
+      [[intel::initiation_interval(1)]]
       do {
         FinalPipeData pipe_data = FinalPipe::read();
         done = pipe_data.done;
@@ -429,7 +431,9 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           unsigned char idx_final = D_valid ? idx : 0;
           DBDecimal amount_final = D_valid ? amount : 0;
 
-          sum_profit_local[j].Accumulate(idx_final, amount_final);
+          auto current_amount = sum_profit_local.template get<j>().read(idx_final);
+          auto computed_amount = current_amount + amount_final;
+          sum_profit_local.template get<j>().write(idx_final, computed_amount);
         });
       } while (!done);
 
@@ -442,7 +446,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           DBDecimal amount = 0;
 
           UnrolledLoop<0, kFinalDataMaxSize>([&](auto j) {
-            amount += sum_profit_local[j].Get(in_idx);
+            amount += sum_profit_local.template get<j>().read(in_idx);
           });
 
           sum_profit_accessor[out_idx] = amount;

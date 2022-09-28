@@ -21,5 +21,6 @@
 			"SYCL_BE=PI_OPENCL ./bin/getting-started-cpp gpu"
 		 ]
 	}]
- }
+ },
+ "expertise": "Getting Started"
 }

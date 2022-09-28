@@ -2,9 +2,9 @@
 #define __GZIPKERNEL_H__
 #pragma once
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
-using namespace cl::sycl;
+using namespace sycl;
 
 extern "C" void SubmitGzipTasks(
     queue &sycl_device,

@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.4.0)
-project (jacobi_iterative)
 
 set(CMAKE_CXX_COMPILER "dpcpp")
 
+project (jacobi_iterative)
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)
 	message (STATUS "Default CMAKE_BUILD_TYPE not set using Release with Debug Info")
