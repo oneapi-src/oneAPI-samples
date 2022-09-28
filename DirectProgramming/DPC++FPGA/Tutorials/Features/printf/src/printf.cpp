@@ -1,4 +1,4 @@
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include "dpc_common.hpp"
