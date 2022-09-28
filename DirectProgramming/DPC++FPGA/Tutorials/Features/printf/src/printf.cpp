@@ -1,7 +1,7 @@
 #include <sycl/sycl.hpp>
 #include <iostream>
 #include <sycl/ext/intel/fpga_extensions.hpp>
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 // According to the OpenCL C spec, the format string must be in the constant
 // address space. To simplify code when invoking printf, the following macros

@@ -8,9 +8,7 @@
 #include <iomanip>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 constexpr size_t kRowLength = 128;
 constexpr size_t kMinSafelen = 1;
@@ -29,7 +27,7 @@ void TransposeAndFold(const device_selector &selector,
                       std::array<float, kMatrixSize> &m_output) {
   double kernel_time = 0;
   try {
-  queue q(selector, dpc_common::exception_handler,
+  queue q(selector, fpga_tools::exception_handler,
           property::queue::enable_profiling{});
 
     buffer buffer_input(m_input);

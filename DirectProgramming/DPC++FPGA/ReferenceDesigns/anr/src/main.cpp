@@ -16,9 +16,7 @@
 #include "constants.hpp"
 #include "data_bundle.hpp"
 #include "dma_kernels.hpp"
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 using namespace std::chrono;
@@ -88,7 +86,7 @@ int main(int argc, char* argv[]) {
 #endif
 
   // create the device queue
-  queue q(selector, dpc_common::exception_handler);
+  queue q(selector, fpga_tools::exception_handler);
 
   // make sure the device supports USM device allocations
   auto d = q.get_device();
