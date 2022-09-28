@@ -42,6 +42,7 @@ set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsno-interleaving=default -Xsb
 #    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o board_test.cpp.o -c board_test.cpp
 #    [link]    dpcpp -fintelfpga board_test.cpp.o -o board_test.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
@@ -53,6 +54,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 #   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -Xsno-interleaving=default -fsycl-link=early board_test.cpp -o board_test.a
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
+target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
@@ -67,6 +69,7 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 #   [compile] dpcpp -fintelfpga -o board_test.cpp.o -c board_test.cpp
 #   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -Xsno-interleaving=default board_test.cpp.o -o board_test.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+target_include_directories(${FPGA_TARGET} PRIVATE ../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
