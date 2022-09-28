@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(TriangleGeometryOneAPI LANGUAGES CXX)
+project(rkRayTracer LANGUAGES CXX)
 
 set(ONEAPI_ROOT "")
 if(DEFINED ENV{ONEAPI_ROOT})
@@ -43,15 +43,15 @@ endif(NOT MSVC)
 #stb headers are located in dev-utilities. oneAPI 2022.2 release and earlier: these header only libraries are distributed with the oneAPI Base Toolkit.
 include_directories(${ONEAPI_ROOT}/dev-utilities/latest/include)
 
-add_executable(triangle_geometry_oneapi src/triangle_geometry_oneapi.cpp)
+add_executable(rkRayTracer src/rkRayTracer.cpp)
 if(MSVC)
 # Set MSVS debugger environment variables so it is easier to attach the MSVS debugger after altering the application
-    set_target_properties(triangle_geometry_oneapi
+    set_target_properties(rkRayTracer
 	    PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=%PATH%;${embree_DIR}/../../../bin;${rkcommon_DIR}/../../../bin;${tbb_DIR}/../../../bin;"
     )
 endif(MSVC)
-target_link_libraries(triangle_geometry_oneapi PRIVATE embree TBB::tbb rkcommon::rkcommon)
+target_link_libraries(rkRayTracer PRIVATE embree TBB::tbb rkcommon::rkcommon)
 
-install(TARGETS triangle_geometry_oneapi
+install(TARGETS rkRayTracer
   DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

@@ -18,8 +18,8 @@ repository](https://github.com/embree/embree) on GitHub.
 
 __Output Image:__
 
-![triangle_geometry_oneapi program
-output](example_images/triangle_geometry_oneapi.png)
+![rkRayTracer program
+output](example_images/rkRayTracer.png)
 
 ## Prerequisites
 
@@ -41,12 +41,12 @@ cd build
 cmake -G"Visual Studio 16 2019" -A x64 ..
 cmake --build . --config Release
 cd Release
-.\triangle_geometry_oneapi.exe
+.\rkRayTracer.exe
 ```
 **Note**: Visual Studio 2022 users should use the `-G"Visual Studio 17 2022"`
 generator flag.
 
-Open the resulting file: `triangle_geometry_oneapi.png` with an image viewer.
+Open the resulting file: `rkRayTracer.png` with an image viewer.
 
 ### Linux* or macOS*
 ```
@@ -54,10 +54,10 @@ mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
-./triangle_geometry_oneapi
+./rkRayTracer
 ```
 
-Open the resulting file: `triangle_geometry_oneapi.png` with an image viewer.
+Open the resulting file: `rkRayTracer.png` with an image viewer.
 
 ## Scene Description
 
@@ -118,8 +118,8 @@ shadows from the omitted cube are still rendered__
 
 __Default sample program output image__
 
-![triangle_geometry_oneapi program
-output](example_images/triangle_geometry_oneapi.png)
+![rkRayTracer program
+output](example_images/rkRayTracer.png)
 
 
 ## Code Walkthrough using Embree API
@@ -578,7 +578,7 @@ desirable for output images to be written in floating point for high dynamic
 range file types.
 
 ```
-  stbi_write_png("triangle_geometry_oneapi.png", width, height, channels,
+  stbi_write_png("rkRayTracer.png", width, height, channels,
                  g_pixels, width * channels);
 ```
 
@@ -620,13 +620,13 @@ colors. Lastly, the `RTCDevice` is released with `rtcReleaseDevice`
 
 ### Preview of full feature codes
 
-The `triangle_geometry_oneapi` sample avoids some implementation features in the
+The `rkRayTracer` sample avoids some implementation features in the
 interest of being a basic introduction. However, the full details of ray tracing
 features available with Intel&reg; Embree are best observed in the Intel&reg;
 Embree tutorial codes. These codes reside within the [Embree
 repository](https://github.com/embree/embree).
 
-The Intel&reg; oneAPI Rendering Toolkit `triangle_geometry_oneapi` sample
+The Intel&reg; oneAPI Rendering Toolkit `rkRayTracer` sample
 forgoes use of the Embree common library found in the full codes. The Embree
 common library implements math, tasking, and system access routines that are
 common to rendering applications. The Intel&reg; Embree common library lives in
@@ -738,7 +738,7 @@ embree/common/algorithms. Full Embree tutorials also encapsulate
 current_thread_index underneath the TaskScheduler object found in
 embree/common/tasking/taskschedulertbb.h
 
-triangle_geometry_oneapi sample:
+rkRayTracer sample:
 ```
     tbb::task_group_context tgContext;
     tbb::parallel_for(tbb::blocked_range<size_t>(0,numTilesX * numTilesY, 1), [&](const tbb::blocked_range<size_t>& r) {

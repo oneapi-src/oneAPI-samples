@@ -489,7 +489,7 @@ int main() {
                             Vec3fa(0, 1, 0), 90.0f, width, height);
 
   renderFrameStandard(g_pixels, width, height, channels, 0.0, g_camera);
-  stbi_write_png("triangle_geometry_oneapi.png", width, height, channels,
+  stbi_write_png("rkRayTracer.png", width, height, channels,
                  g_pixels, width * channels);
 
   delete[] g_pixels;
