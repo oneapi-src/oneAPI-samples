@@ -16,9 +16,11 @@ using namespace sycl;
 // choose the device selector based on emulation or actual hardware
 // we make this a global variable so it can be used by the autorun kernels
 #if defined(FPGA_EMULATOR)
-ext::intel::fpga_emulator_selector ds;
+ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+ext::intel::fpga_simulator_selector device_selector;
 #else
-ext::intel::fpga_selector ds;
+ext::intel::fpga_selector device_selector;
 #endif
 
 // declare the kernel names globally to reduce name mangling
@@ -55,7 +57,7 @@ struct MyAutorun {
 
 // declaring a global instance of this class causes the constructor to be called
 // before main() starts, and the constructor launches the kernel.
-fpga_tools::Autorun<ARKernelID> ar_kernel{ds, MyAutorun{}};
+fpga_tools::Autorun<ARKernelID> ar_kernel{device_selector, MyAutorun{}};
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +75,7 @@ struct MyAutorunForever {
 // declaring a global instance of this class causes the constructor to be called
 // before main() starts, and the constructor launches the kernel.
 fpga_tools::AutorunForever<ARForeverKernelID> ar_forever_kernel{
-    ds, MyAutorunForever{}};
+    device_selector, MyAutorunForever{}};
 ////////////////////////////////////////////////////////////////////////////////
 
 //
@@ -120,7 +122,7 @@ int main() {
 
   try {
     // create the queue
-    queue q(ds, dpc_common::exception_handler);
+    queue q(device_selector, dpc_common::exception_handler);
 
     // stream data through the Autorun kernel
     std::cout << "Running the Autorun kernel test\n";

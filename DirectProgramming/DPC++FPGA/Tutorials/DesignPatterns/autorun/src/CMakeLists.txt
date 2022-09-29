@@ -22,6 +22,8 @@ endif()
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsboard=${FPGA_BOARD} ${USER_SIMULATOR_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
@@ -51,6 +53,21 @@ add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
+
+###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#   dpcpp -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsboard=<FPGA_BOARD> autorun.cpp -o autorun.fpga
+# CMake executes:
+#   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o autorun.cpp.o -c autorun.cpp
+#   [link]    dpcpp -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> autorun.cpp.o -o autorun.fpga
+add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_custom_target(fpga DEPENDS ${FPGA_TARGET})
+set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+# The -reuse-exe flag enables rapid recompilation of host-only code changes.
+# See DPC++FPGA/GettingStarted/fast_recompile for details.
 
 ###############################################################################
 ### FPGA Hardware
