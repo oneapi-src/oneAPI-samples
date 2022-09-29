@@ -25,7 +25,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsboard=${FPGA_BOARD} ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl -Xsboard=${FPGA_BOARD} ${USER_SIMULATOR_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
@@ -65,10 +65,10 @@ set_target_properties(${FPGA_EARLY_IMAGE_REG} PROPERTIES LINK_FLAGS "${HARDWARE_
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsboard=<FPGA_BOARD> fpga_reg.cpp -o fpga_reg.fpga
+#   dpcpp -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> fpga_reg.cpp -o fpga_reg.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o fpga_reg.cpp.o -c fpga_reg.cpp
-#   [link]    dpcpp -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> fpga_reg.cpp.o -o fpga_reg.fpga
+#   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> fpga_reg.cpp.o -o fpga_reg.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_executable(${FPGA_TARGET_REG} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET} ${FPGA_TARGET_REG})

@@ -24,7 +24,7 @@ set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 # use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA backend compilation
 set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsboard=${FPGA_BOARD} -Xsdsp-mode=prefer-softlogic ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl -Xsboard=${FPGA_BOARD} -Xsdsp-mode=prefer-softlogic ${USER_SIMULATOR_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} -Xsdsp-mode=prefer-softlogic ${USER_HARDWARE_FLAGS}")
@@ -46,10 +46,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsboard=<FPGA_BOARD> -Xsdsp-mode=prefer-softlogic dsp_control.cpp -o dsp_control.fpga
+#   dpcpp -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> -Xsdsp-mode=prefer-softlogic dsp_control.cpp -o dsp_control.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o dsp_control.cpp.o -c dsp_control.cpp
-#   [link]    dpcpp -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -Xsdsp-mode=prefer-softlogic dsp_control.cpp.o -o dsp_control.fpga
+#   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> -Xsdsp-mode=prefer-softlogic dsp_control.cpp.o -o dsp_control.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
