@@ -26,9 +26,9 @@ set(AC_TYPES_FLAG "-qactypes")
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -Wall")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Wall")
-set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # We do not need to supply the AC_TYPES_FLAG for the 'report' target's linking stage.
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -48,7 +48,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early ac_int.cpp -o ac_int_report.a
+#   dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_BOARD> -fsycl-link=early ac_int.cpp -o ac_int_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -61,10 +61,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_F
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=<FPGA_BOARD> ac_int.cpp -o ac_int.fpga
+#   dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_BOARD> ac_int.cpp -o ac_int.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga ${AC_TYPES_FLAG} -o ac_int.cpp.o -c ac_int.cpp
-#   [link]    dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=<FPGA_BOARD> ac_int.cpp.o -o ac_int.fpga
+#   [link]    dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_BOARD> ac_int.cpp.o -o ac_int.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")

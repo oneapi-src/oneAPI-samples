@@ -38,7 +38,7 @@ set(CACHE_DEPTH_FLAG "-DMAX_CACHE_DEPTH=${MAX_CACHE_DEPTH} -DMIN_CACHE_DEPTH=${M
 set(EMULATOR_COMPILE_FLAGS "-Wall ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "${AC_TYPES_FLAG} -fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fintelfpga")
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS}")
+set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_BOARD} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -60,7 +60,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early onchip_memory_cache.cpp -o onchip_memory_cache_report.a
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> -fsycl-link=early onchip_memory_cache.cpp -o onchip_memory_cache_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -74,10 +74,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_F
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> onchip_memory_cache.cpp -o onchip_memory_cache.fpga
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> onchip_memory_cache.cpp -o onchip_memory_cache.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o onchip_memory_cache.cpp.o -c onchip_memory_cache.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> onchip_memory_cache.cpp.o -o onchip_memory_cache.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> onchip_memory_cache.cpp.o -o onchip_memory_cache.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})

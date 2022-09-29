@@ -95,7 +95,7 @@ message(STATUS "NUM_REORDER=${NUM_REORDER}")
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg=\"-nocaching\" -Xsboard=${FPGA_BOARD} -DNUM_ENGINES=${NUM_ENGINES} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg=\"-nocaching\" -Xstarget=${FPGA_BOARD} -DNUM_ENGINES=${NUM_ENGINES} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

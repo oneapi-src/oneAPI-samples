@@ -26,7 +26,7 @@ set(AC_TYPES_FLAG "-qactypes")
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -Wall")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Wall")
-set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -46,7 +46,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early ac_fixed.cpp -o ac_fixed_report.a
+#   dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_BOARD> -fsycl-link=early ac_fixed.cpp -o ac_fixed_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -60,10 +60,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=<FPGA_BOARD> ac_fixed.cpp -o ac_fixed.fpga
+#   dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_BOARD> ac_fixed.cpp -o ac_fixed.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga ${AC_TYPES_FLAG} -o ac_fixed.cpp.o -c ac_fixed.cpp
-#   [link]    dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=<FPGA_BOARD> ac_fixed.cpp.o -o ac_fixed.fpga
+#   [link]    dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_BOARD> ac_fixed.cpp.o -o ac_fixed.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")

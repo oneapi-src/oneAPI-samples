@@ -130,9 +130,9 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
 set(REPORT_COMPILE_FLAGS "-Wall -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xsboard=${FPGA_BOARD} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
+set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xstarget=${FPGA_BOARD} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 ${SEED} -Xstarget=${FPGA_BOARD} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

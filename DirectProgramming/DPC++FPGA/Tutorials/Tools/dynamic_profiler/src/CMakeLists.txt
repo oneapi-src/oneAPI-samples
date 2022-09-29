@@ -23,7 +23,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} -Xsprofile ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_BOARD} -Xsprofile ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -43,10 +43,10 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> dynamic_profiler.cpp -o dynamic_profiler.fpga
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> dynamic_profiler.cpp -o dynamic_profiler.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o dynamic_profiler.cpp.o -c dynamic_profiler.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> dynamic_profiler.cpp.o -o dynamic_profiler.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> dynamic_profiler.cpp.o -o dynamic_profiler.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")

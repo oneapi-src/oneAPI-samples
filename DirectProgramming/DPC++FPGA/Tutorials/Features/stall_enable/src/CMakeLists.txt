@@ -33,7 +33,7 @@ endif(${NO_HYPER_OPTIMIZATION})
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${HYPER_FLAG} -fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${HYPER_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_BOARD} ${HYPER_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -56,7 +56,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET} ${STALL_FREE_EMULATOR_TARG
 ### Generate Report
 ###############################################################################
 # To compile manually (Stall Enable):
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early stall_enable.cpp -o stall_enable.a
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> -fsycl-link=early stall_enable.cpp -o stall_enable.a
 set(FPGA_EARLY_IMAGE ${STALL_ENABLE_TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -65,7 +65,7 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 
 # To compile manually (Stall Free):
-#   dpcpp -DSTALL_FREE -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early stall_enable.cpp -o stall_enable.a
+#   dpcpp -DSTALL_FREE -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> -fsycl-link=early stall_enable.cpp -o stall_enable.a
 set(FPGA_STALL_FREE_EARLY_IMAGE ${STALL_FREE_TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_STALL_FREE_EARLY_IMAGE} ${SOURCE_FILE})
@@ -77,10 +77,10 @@ set_target_properties(${FPGA_STALL_FREE_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HA
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command (Stall Enable):
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> stall_enable.cpp -o stall_enable.fpga
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> stall_enable.cpp -o stall_enable.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o stall_enable.cpp.o -c stall_enable.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> stall_enable.cpp.o -o stall_enable.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> stall_enable.cpp.o -o stall_enable.fpga
 add_executable(${FPGA_TARGET_STALL_ENABLE} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 set_target_properties(${FPGA_TARGET_STALL_ENABLE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET_STALL_ENABLE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_STALL_ENABLE}")
@@ -88,10 +88,10 @@ set_target_properties(${FPGA_TARGET_STALL_ENABLE} PROPERTIES LINK_FLAGS "${HARDW
 # See DPC++FPGA/GettingStarted/fast_recompile for details.
 
 # To compile in a single command (Stall Enable):
-#   dpcpp -fintelfpga -DSTALL_FREE -Xshardware -Xsboard=<FPGA_BOARD> stall_enable.cpp -o stall_free.fpga
+#   dpcpp -fintelfpga -DSTALL_FREE -Xshardware -Xstarget=<FPGA_BOARD> stall_enable.cpp -o stall_free.fpga
 # CMake executes:
 #   [compile] dpcpp -DSTALL_FREE -fintelfpga -o stall_free.cpp.o -c stall_free.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> stall_free.cpp.o -o stall_free.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> stall_free.cpp.o -o stall_free.fpga
 add_executable(${FPGA_TARGET_STALL_FREE} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET_STALL_ENABLE} ${FPGA_TARGET_STALL_FREE})
 set_target_properties(${FPGA_TARGET_STALL_FREE} PROPERTIES COMPILE_FLAGS "${STALL_FREE_DEFINE} ${HARDWARE_COMPILE_FLAGS}")

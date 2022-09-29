@@ -30,7 +30,7 @@ set(HARDWARE_COMPILE_FLAGS "-fintelfpga -Wformat-security -Werror=format-securit
 # By default oneAPI compiler burst interleaves across same memory type, 
 # -Xsno-interleaving is used to disable burst interleaving and test each memory bank independently
 # Refer to https://www.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/flags-attr-prag-ext/optimization-flags/disabl-burst-int.html for more information
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsno-interleaving=default -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsno-interleaving=default -Xstarget=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -50,7 +50,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -Xsno-interleaving=default -fsycl-link=early board_test.cpp -o board_test.a
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> -Xsno-interleaving=default -fsycl-link=early board_test.cpp -o board_test.a
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
@@ -62,10 +62,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -Xsno-interleaving=default board_test.cpp -o board_test.fpga
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> -Xsno-interleaving=default board_test.cpp -o board_test.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o board_test.cpp.o -c board_test.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -Xsno-interleaving=default board_test.cpp.o -o board_test.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> -Xsno-interleaving=default board_test.cpp.o -o board_test.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")

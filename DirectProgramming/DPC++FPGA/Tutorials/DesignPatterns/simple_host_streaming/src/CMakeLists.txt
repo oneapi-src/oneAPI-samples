@@ -35,7 +35,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -Wall -DFPGA_EMULATOR ${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga ${DEVICE_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Wall -Xshardware -Xshyper-optimized-handshaking=off -Xsboard=${FPGA_BOARD} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Wall -Xshardware -Xshyper-optimized-handshaking=off -Xstarget=${FPGA_BOARD} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -55,7 +55,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xsboard=<FPGA_BOARD> -fsycl-link=early simple_host_streaming.cpp -o simple_host_streaming_report.a
+#   dpcpp -fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xstarget=<FPGA_BOARD> -fsycl-link=early simple_host_streaming.cpp -o simple_host_streaming_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -68,10 +68,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xsboard=<FPGA_BOARD> simple_host_streaming.cpp -o simple_host_streaming.fpga
+#   dpcpp -fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xstarget=<FPGA_BOARD> simple_host_streaming.cpp -o simple_host_streaming.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o simple_host_streaming.cpp.o -c simple_host_streaming.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xsboard=<FPGA_BOARD> simple_host_streaming.cpp.o -o simple_host_streaming.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xstarget=<FPGA_BOARD> simple_host_streaming.cpp.o -o simple_host_streaming.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")

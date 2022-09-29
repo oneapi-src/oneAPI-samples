@@ -39,7 +39,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga ${DEVICE_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_BOARD} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -59,7 +59,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -DA10 -fsycl-link=early loop_initiation_interval.cpp -o loop_ii_report.a
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> -DA10 -fsycl-link=early loop_initiation_interval.cpp -o loop_ii_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 set(FPGA_EARLY_IMAGE_ENABLE_II ${TARGET_NAME_ENABLE_II}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
@@ -76,10 +76,10 @@ set_target_properties(${FPGA_EARLY_IMAGE_ENABLE_II} PROPERTIES LINK_FLAGS "${HAR
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -DA10 loop_initiation_interval.cpp -o loop_ii.fpga
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> -DA10 loop_initiation_interval.cpp -o loop_ii.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o loop_initiation_interval.cpp.o -DA10 -c loop_initiation_interval.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -DA10 loop_initiation_interval.cpp.o -o loop_ii.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> -DA10 loop_initiation_interval.cpp.o -o loop_ii.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_executable(${FPGA_TARGET_ENABLE_II} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET} ${FPGA_TARGET_ENABLE_II})

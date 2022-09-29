@@ -92,7 +92,7 @@ This section includes a helpful list of commands and options to compile this des
 
 **Optimization report (explicit board)**
 
-`dpcpp -fintelfpga -Xshardware -fsycl-link=early -Xsboard=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile_report.a`
+`dpcpp -fintelfpga -Xshardware -fsycl-link=early -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile_report.a`
 
 **FPGA hardware (default board)**
 
@@ -100,7 +100,7 @@ This section includes a helpful list of commands and options to compile this des
 
 **FPGA hardware (explicit board)**
 
-`dpcpp -fintelfpga -Xshardware -Xsboard=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile.fpga`
+`dpcpp -fintelfpga -Xshardware -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile.fpga`
 
 
 The compiler options used are explained in the table.
@@ -109,7 +109,7 @@ The compiler options used are explained in the table.
 | `-fintelfpga`      | Perform ahead-of-time compilation for FPGA.
 | `-DFPGA_EMULATOR`  | Adds a preprocessor define that invokes the emulator device selector in this sample (see code snippet above).
 | `-Xshardware`      | `-Xs` is used to pass arguments to the FPGA backend. <br> Since the emulator is the default FPGA target, you must pass `Xshardware` to instruct the compiler to target FPGA hardware.
-| `-Xsboard`         | Optional argument to specify the FPGA board target. <br> If omitted, a default FPGA board is chosen.
+| `-Xstarget`         | Optional argument to specify the FPGA board target. <br> If omitted, a default FPGA board is chosen.
 | `-fsycl-link=early`| Instructs the compiler to stop after creating the FPGA early image (and associated optimization report).
 
 Notice that whether you target the FPGA emulator or FPGA hardware must be specified twice: through compiler options for the ahead-of-time compilation and through the runtime device selector.
