@@ -24,7 +24,7 @@ struct Medium {
 /* Added for path tracer: creating a lookup structure for intersected geometries
  */
 struct MatAndPrimColorTable {
-  std::vector<enum class MaterialType> materialTable;
+  std::vector<MaterialType> materialTable;
   Vec3fa* primColorTable;
 };
 

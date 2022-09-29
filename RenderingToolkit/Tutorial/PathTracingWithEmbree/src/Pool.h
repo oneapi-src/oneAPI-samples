@@ -44,8 +44,8 @@ class Pool : public Geometry {
   static const std::vector<Vertex> m_poolBoxVertices;
   static const std::vector<Quad> m_poolBoxIndices;
   static const std::vector<Vec3fa> m_poolBoxColors;
-  static const std::vector<enum class MaterialType> m_poolBoxMats;
-  std::vector<enum class MaterialType> Pool::m_waterMats;
+  static const std::vector<MaterialType> m_poolBoxMats;
+  std::vector<MaterialType> m_waterMats;
 
   /* Added for pathtracer */
   Vec3fa* m_pool_face_colors = nullptr;
@@ -134,7 +134,7 @@ const std::vector<Vec3fa> Pool::m_poolBoxColors = {
 
 };
 
-const std::vector<enum class MaterialType> Pool::m_poolBoxMats = {
+const std::vector<MaterialType> Pool::m_poolBoxMats = {
     // Floor
     MaterialType::MATERIAL_MATTE,
     // Ceiling

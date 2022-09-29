@@ -19,26 +19,26 @@ struct Renderer {
            unsigned int max_path_length, SceneSelector SELECTED_SCENE);
   ~Renderer();
 
-  static void Renderer::handle_error(void* userPtr, const RTCError code,
+  static void handle_error(void* userPtr, const RTCError code,
                                      const char* str);
 
-  void Renderer::init_device(const char* cfg = nullptr);
+  void init_device(const char* cfg = nullptr);
 
-  void Renderer::init_scene(char* cfg, unsigned int width, unsigned int height);
+  void init_scene(char* cfg, unsigned int width, unsigned int height);
 
   /* called by the C++ code to render */
-  void Renderer::render_accumulation();
+  void render_accumulation();
 
   /* task that renders a single screen tile */
-  void Renderer::render_tile_task(
+  void render_tile_task(
       int taskIndex, int threadIndex, const int numTilesX, const int numTilesY,
       RandomEngine& reng, std::uniform_real_distribution<float>& distrib);
 
-  Vec3fa Renderer::render_pixel_samples(
+  Vec3fa render_pixel_samples(
       int x, int y, RandomEngine& reng,
       std::uniform_real_distribution<float>& distrib);
 
-  unsigned char* Renderer::get_pixels();
+  unsigned char* get_pixels();
 
   unsigned char* m_pixels = nullptr;
 

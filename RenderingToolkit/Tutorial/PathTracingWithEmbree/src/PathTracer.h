@@ -24,7 +24,7 @@ struct PathTracer {
   ~PathTracer();
 
   /* task that renders a single path pixel */
-  Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
+  Vec3fa render_path(float x, float y, RandomEngine& reng,
                                  std::uniform_real_distribution<float>& distrib,
                                  std::shared_ptr<SceneGraph> sg,
                                  unsigned int pxID);

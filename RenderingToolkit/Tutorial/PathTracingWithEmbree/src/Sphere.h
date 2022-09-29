@@ -14,17 +14,17 @@ class Sphere : public Geometry {
  public:
   Sphere(RTCScene scene, RTCDevice device,
          std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
-         enum class MaterialType sphereMat, const Vec3fa& pos,
+         MaterialType sphereMat, const Vec3fa& pos,
          const Vec3fa& color, float radius,
          std::map<unsigned int, size_t>& mapGeomToLightIdx,
          std::vector<std::shared_ptr<Light>>& lights, AffineSpace3fa& camera,
          unsigned int width, unsigned int height);
   ~Sphere();
 
-  unsigned int Sphere::add_geometry(
+  unsigned int add_geometry(
       RTCScene scene, RTCDevice device,
       std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
-      enum class MaterialType sphereMat, const Vec3fa& pos, const Vec3fa& color,
+      MaterialType sphereMat, const Vec3fa& pos, const Vec3fa& color,
       float radius);
 
   /* Place holder ... Could put a default sphere in here but we will leave it
@@ -44,15 +44,15 @@ class Sphere : public Geometry {
   void clean_geometry();
 
   // Just one material for our sphere primitive
-  enum class MaterialType m_sphereMat;
-  Vec3fa Sphere::m_sphere_face_colors;
+  MaterialType m_sphereMat;
+  Vec3fa m_sphere_face_colors;
   Vec3fa m_pos;
   Vec3fa m_radius;
 };
 
 Sphere::Sphere(RTCScene scene, RTCDevice device,
                std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
-               enum class MaterialType sphereMat, const Vec3fa& pos,
+               MaterialType sphereMat, const Vec3fa& pos,
                const Vec3fa& color, float radius,
                std::map<unsigned int, size_t>& mapGeomToLightIdx,
                std::vector<std::shared_ptr<Light>>& lights,
@@ -71,7 +71,7 @@ Sphere::Sphere(RTCScene scene, RTCDevice device,
 unsigned int Sphere::add_geometry(
     RTCScene scene, RTCDevice device,
     std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim,
-    enum class MaterialType sphereMat, const Vec3fa& pos, const Vec3fa& color,
+    MaterialType sphereMat, const Vec3fa& pos, const Vec3fa& color,
     float radius) {
   RTCGeometry mesh = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_SPHERE_POINT);
   Vertex* vertices = (Vertex*)rtcSetNewGeometryBuffer(
@@ -86,7 +86,7 @@ unsigned int Sphere::add_geometry(
   rtcReleaseGeometry(mesh);
 
   MatAndPrimColorTable mpTable;
-  mpTable.materialTable = std::vector<enum class MaterialType>({m_sphereMat});
+  mpTable.materialTable = std::vector<MaterialType>({m_sphereMat});
   mpTable.primColorTable = &m_sphere_face_colors;
   mapGeomToPrim.insert(std::make_pair(geomID, mpTable));
 

@@ -41,9 +41,9 @@ class CornellBoxGeometry : public Geometry {
 
   static const std::vector<Vec3fa> m_cornellBoxColors;
 
-  static const std::vector<enum class MaterialType> m_cornellBoxMats;
+  static const std::vector<MaterialType> m_cornellBoxMats;
 
-  static const std::vector<Quad> CornellBoxGeometry::m_cornellBoxIndices;
+  static const std::vector<Quad> m_cornellBoxIndices;
 };
 
 CornellBoxGeometry::CornellBoxGeometry(
@@ -409,7 +409,7 @@ const std::vector<Vec3fa> CornellBoxGeometry::m_cornellBoxColors = {
 
 };
 
-const std::vector<enum class MaterialType>
+const std::vector<MaterialType>
     CornellBoxGeometry::m_cornellBoxMats = {
         // Floor
         MaterialType::MATERIAL_MATTE,

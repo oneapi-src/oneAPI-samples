@@ -19,37 +19,37 @@ struct SceneGraph {
   SceneGraph(RTCDevice device, SceneSelector SELECT_SCENE, unsigned int width,
              unsigned int height);
 
-  void SceneGraph::init_embree_scene(const RTCDevice device,
+  void init_embree_scene(const RTCDevice device,
                                      SceneSelector SELECT_SCENE,
                                      const unsigned int width,
                                      const unsigned int height);
 
-  void SceneGraph::init_embree_context();
+  void init_embree_context();
 
-  bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
+  bool intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
                                             RTCRayHit& rayhit,
                                             DifferentialGeometry& dg);
 
-  void SceneGraph::cast_shadow_rays(
+  void cast_shadow_rays(
       DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType,
       const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time,
       Vec3fa& L, RandomEngine& reng,
       std::uniform_real_distribution<float>& distrib);
 
-  float SceneGraph::cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir,
+  float cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir,
                                     float tnear, float tfar, float _time);
 
-  void SceneGraph::set_intersect_context_coherent();
+  void set_intersect_context_coherent();
 
-  void SceneGraph::set_intersect_context_incoherent();
+  void set_intersect_context_incoherent();
 
-  Vec3fa SceneGraph::get_camera_origin();
+  Vec3fa get_camera_origin();
 
-  Vec3fa SceneGraph::get_direction_from_pixel(float x, float y);
+  Vec3fa get_direction_from_pixel(float x, float y);
 
-  unsigned int SceneGraph::getNumLights();
+  unsigned int getNumLights();
 
-  std::shared_ptr<Light> SceneGraph::get_light_from_geomID(unsigned int geomID);
+  std::shared_ptr<Light> get_light_from_geomID(unsigned int geomID);
 
   ~SceneGraph();
 
@@ -68,7 +68,7 @@ struct SceneGraph {
 
   RTCIntersectContext m_context;
   std::map<unsigned int, size_t> m_mapGeomToLightIdx;
-  void SceneGraph::scene_cleanup();
+  void scene_cleanup();
 
   // We'll use this 'geometries' container to automatically clean up the data
   // arrays created that are used to create embree geometries //

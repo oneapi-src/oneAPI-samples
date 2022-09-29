@@ -254,7 +254,7 @@ class SpotLight : public Light {
   Light_SampleRes sample(const DifferentialGeometry& dg, const Vec2f& s);
 
   Light_EvalRes eval(const Vec3fa& org, const Vec3fa& dir);
-  unsigned int SpotLight::add_geometry(
+  unsigned int add_geometry(
       RTCScene scene, RTCDevice device,
       std::map<unsigned int, MatAndPrimColorTable>& mapGeomToPrim);
 

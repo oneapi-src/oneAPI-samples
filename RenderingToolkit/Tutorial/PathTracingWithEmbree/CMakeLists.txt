@@ -17,7 +17,7 @@ endif(DEFINED ENV{ONEAPI_ROOT})
 #tbb is used for tasking in this example
 find_package(TBB REQUIRED PATHS ${ONEAPI_ROOT})
 
-find_package(embree 3.0 REQUIRED PATHS ${ONEAPI_ROOT})
+find_package(embree 3.0 REQUIRED PATHS ${ONEAPI_ROOT}/embree/latest/lib/cmake/embree NO_DEFAULT_PATH)
 
 #rkcommon objects for rendering are used in this example
 find_package(rkcommon REQUIRED CONFIG PATHS ${ONEAPI_ROOT})
@@ -27,7 +27,7 @@ if(MSVC)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_CXX_EXTENSIONS OFF)
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  set(CMAKE_CXX_STANDARD 14)
 endif(MSVC)
 
 # Set default build type to RelWithDebInfo if not specified

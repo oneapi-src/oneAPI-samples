@@ -43,8 +43,8 @@ class CubeAndPlane : public Geometry {
   Vec3fa* m_ground_face_colors = nullptr;
   Vec3fa* m_ground_vertex_colors = nullptr;
 
-  static const std::vector<enum class MaterialType> m_cubeMats;
-  static const std::vector<enum class MaterialType> m_groundMats;
+  static const std::vector<MaterialType> m_cubeMats;
+  static const std::vector<MaterialType> m_groundMats;
 };
 
 CubeAndPlane::CubeAndPlane(
@@ -65,7 +65,7 @@ void CubeAndPlane::add_geometry(
   addGroundPlane(scene, device, mapGeomToPrim);
 }
 
-const std::vector<enum class MaterialType> CubeAndPlane::m_cubeMats = {
+const std::vector<MaterialType> CubeAndPlane::m_cubeMats = {
     /* Two tris per face and six faces */
     MaterialType::MATERIAL_MATTE,
     MaterialType::MATERIAL_MATTE,
@@ -82,7 +82,7 @@ const std::vector<enum class MaterialType> CubeAndPlane::m_cubeMats = {
 
 };
 
-const std::vector<enum class MaterialType> CubeAndPlane::m_groundMats = {
+const std::vector<MaterialType> CubeAndPlane::m_groundMats = {
     MaterialType::MATERIAL_MATTE, MaterialType::MATERIAL_MATTE};
 
 /* adds a cube to the scene */
