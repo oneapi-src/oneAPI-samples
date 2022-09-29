@@ -1,4 +1,4 @@
-# Path Tracing with Intel&reg; Embree
+# Path Tracing with Intel&reg; Embree and the Intel&reg; oneAPI Rendering Toolkit
 
 ## Purpose
 
@@ -12,11 +12,11 @@ Expect less than 10 minutes to compile and run the application on contemporary h
 
 Expect at least an hour for following the algorithm, self-directed edits, then to rebuild, rerun, and understand the application.
 
-Some example output images from this `rkPathTracer` tutorial program:
+Example output images from this `rkPathTracer` tutorial program:
 
 We present a series of two walk through paths.
 1. A _key features_ description of the logical additions to this application to make it a monte carlo path tracer.
-2. A source code walk through describing how the features are implemented with Embree API calls.
+2. A _source code_ walk through describing how the features are implemented with Embree API calls.
 
 This sample source code is a consolidated refactor of the `pathtracer` source hosted as part of the Intel&reg; Embree tutorials in the [Embree
 repository](https://github.com/embree/embree) on GitHub.
@@ -28,7 +28,7 @@ repository](https://github.com/embree/embree) on GitHub.
 | OS                   | Linux* Ubuntu* 18.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 <br>macOS* 10.15+                                                                                                                                            |
 | Hardware             | Intel 64 Penryn or higher with SSE4.1 extensions; ARM64 with NEON extensions <br>(Optimization requirement: Intel&reg; Embree is further optimized for Intel 64 Skylake or higher with AVX512 extensions)                       |
 | Compiler Toolchain   | Windows* OS: MSVS 2019 or MSVS 2022 with Windows* SDK and CMake* <br>Other platforms: C++11 compiler and CMake*                                                                                                                 |
-| Libraries            | Install Intel&reg; oneAPI Rendering Toolkit (Render Kit), including Intel&reg; Embree and Intel¬Æ oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component |
+| Libraries            | Install Intel&reg; oneAPI Rendering Toolkit (Render Kit) to get Intel&reg; Embree and Intel&reg; oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component |
 | Tools                | .png capable image viewer                                                                                                                                                                                                       |
 
 ## Build and Run
@@ -98,7 +98,7 @@ However, this was only the first step to computing light transport used to simul
 
 ## What is path tracing?
 
-Path tracing implments a simulation of global illumination.
+Path tracing implements a simulation of global illumination.
 
 Our primary rays alone do not capture light illuminating a surface from other surfaces visible to the intersection. So, in this tutorial, we construct a multiple segment ray path. The path continues from a primary ray intersection point to sample light from all other visible surfaces and lights in the scene.
 By integrating the light visible from the hemisphere above all intersections for the paths intersection, (global illumination)[https://en.wikipedia.org/wiki/Path_tracing] is simulated.
@@ -108,8 +108,9 @@ Surface properties affect the light reflected. Here we introduce material proper
 
 ## Key Features Added
 
-New features added to the ray tracer `triangle_geometry` sample are discussed at a high level. The features are then highlighted with in-source implementation details. It may take a few rounds of looking at the key feature description and the source-accompanied description to understand the application.
+This program adds application level features to the `triangle_geometry` sample demonstrate a reference monte carlo path tracer program.
 
+New features added are discussed at a high level. The features are then described with in-source implementation details. It may take a few rounds of looking at the key feature description and the source-accompanied description to understand the application.
 
 
 ### Feature: Added Scenes
@@ -120,23 +121,23 @@ To demonstrate, we have three sets of hardcoded scene data.
 
 1. We implement Cornell Box scene geometry, as defined within Intel OSPRay for the Intel OSPRay `ospExamples` application. The Cornell Box is a familiar dataset that can show capability of computing global illumination and shadows. We have a code stub to add an extra sphere to the scene.
 
-2. We implement the `trangle_geometry` scene. The intent with this scene is to observe the same scene in a global illumination environment.
+2. We implement the `triangle_geometry` scene. The intent with this scene is to observe the same scene in a global illumination environment.
 
 3. We have a 'pool' scene. This scene is heavily centered on observing the behavior of a fresnel surface.
 
-The audience is ecouraged to modify and rebuild the scenes to examine and understand behavior!
+Each geometry specified allows the user to try different materials and colors. The audience is encouraged to modify and rebuild the scenes to examine and understand behavior!
 
 
 ### Feature: Materials
 We three basic materials implemented in the sample.
 
-1) Lambertian(https://en.wikipedia.org/wiki/Lambertian_reflectance)
-   This is a soft diffuse material that scatters light proportional to the cosine of the angle of incidence in all directions. Another description often used for a Lambertian surface is: ideal matteù surface.
+1. Lambertian(https://en.wikipedia.org/wiki/Lambertian_reflectance)
+   This is a soft diffuse material that scatters light proportional to the cosine of the angle of incidence in all directions. Another description often used for a Lambertian surface is: ideal _matte_ surface.
 
-2) Mirror
+2. Mirror
    We introduce a mirror as a material surface. In our sample we give the mirror an albedo that can be used to limit reflected energy similar to imperfect real life mirrors. Limiting reflectance more closely matches the behavior of real mirrors.
 
-3) Fresnel
+3. Fresnel
    We introduce fresnel materials. These materials have reflective and refractive light transport behaviors.
 
 The audience is ecouraged to modify material parameters to examine behavior!
@@ -159,21 +160,21 @@ This is a disc light that emits in a specified direction. It also has a radius a
 
 ### Feature: Global Illumination
 
-We describe our core algorithm at a high (imformal) level:
+We describe our core algorithm at a high (informal) level:
 
-1. We take a color sample at each pixel of our image. The sample is to be computed from an n-segment ray eminating from a pixel. The pixel is mapped to the capture plane of a virtual camera. The ray is cast into the scene.
+1. We take a color sample at each pixel of our image. The sample is to be computed from an n-segment ray emanating from a pixel. The pixel is mapped to the capture plane of a virtual camera. The ray is cast into the scene.
 2. At a ray-to-scene intersection, we determine the light coming from the material at the intersection. If it is a light source we add that lights radiance based on the light type and ray direction before terminating the path.
-2. Otherwise, we perform a shadow ray test from the intersection to all light emitters in the scene. We aggregate the visible radiance proportional to the type of light and distance to the surface and the material.
-2. Next, we generate a bounce ray pointing to a location on the unit hemisphere above an intersection. The bounce ray direction is a function of the material. This ray represents the direction of the next segment of our *path* being traced.
-3. In the case of a Lambertian surface we generate a ray segment randomly as a representative reflection of all incident light at the point. Lowhttps://stackoverflow.com/questions/22575662/filename-too-long-in-git-for-windowser ray angles (approaching tangent) will contribute very global light through the new ray segment. Higher angles will contribute more.
-4. In the case of a mirror, the reflection is not random. It is computed as a mirror ray. Our mirror material rays will not attenuate based on direction. They will only attenuate based upon the inherent reflectivity of the mirror.
-5. Lastly, Fresnel materials will reflect or refract rays based on a material constant (eta) and the angle of incidence. Different materials will have different constant. 
-6. Light attenuation (color) is evaluated based on the material and corresponding outgoing and incoming light directions from the surface. Note: The directions are referred to in source as Omega out and Omega in, *wo* and *wi*.
-7. The probability distribution function is computed for the path segment. This allows us to integrate multiple samples per pixel together in a montecarlo fashion. It also appropriately attenuates radiance sampled from a given direction.
-8. The light weight for subsequent path segments is computed. The weight is attenuated by material evaluated attentuation (e.g. color) and the pdf.
-9. The next path segment is computed. If the path is at its maximum length the Luminance sample for the pixel is returned.
+3. Otherwise, we perform a shadow ray test from the intersection to all light emitters in the scene. We aggregate the visible radiance proportional to the type of light and distance to the surface and the material.
+4. Next, we generate a bounce ray pointing to a location on the unit hemisphere above an intersection. The bounce ray direction is a function of the material. This ray represents the direction of the next segment of our *path* being traced.
+5. In the case of a Lambertian surface we generate a ray segment randomly as a representative reflection of all incident light at the point. Lowhttps://stackoverflow.com/questions/22575662/filename-too-long-in-git-for-windowser ray angles (approaching tangent) will contribute very global light through the new ray segment. Higher angles will contribute more.
+6. In the case of a mirror, the reflection is not random. It is computed as a mirror ray. Our mirror material rays will not attenuate based on direction. They will only attenuate based upon the inherent reflectivity of the mirror.
+7. Lastly, Fresnel materials will reflect or refract rays based on a material constant (eta) and the angle of incidence. Different materials will have different constant.
+8. Light attenuation (color) is evaluated based on the material and corresponding outgoing and incoming light directions from the surface. Note: The directions are referred to in source as Omega out and Omega in, *wo* and *wi*.
+9. The probability distribution function is computed for the path segment. This allows us to integrate multiple samples per pixel together in a montecarlo fashion. It also appropriately attenuates radiance sampled from a given direction.
+10. The light weight for subsequent path segments is computed. The weight is attenuated by material evaluated attenuation (e.g. color) and the pdf.
+11. The next path segment is computed. If the path is at its maximum length the Luminance sample for the pixel is returned.
 
-Mulitple samples can be taken for each pixel. They can be used to generate an aggregate of samples per pixel. In this implementation, each sample will be taken at a random offset within the bounds of the pixel. This provides an antialiasing effect for the image.
+Multiple samples can be taken for each pixel. They can be used to generate an aggregate of samples per pixel. In this implementation, each sample will be taken at a random offset within the bounds of the pixel. This provides an antialiasing effect for the image.
 
 ### Feature: Accumulation buffer
 
@@ -190,8 +191,8 @@ Mulitple samples can be taken for each pixel. They can be used to generate an ag
 
 
 Examples:
-1spp , 1 accumulation
-1spp, 500 accumulations
+1spp , 1 accumulation, 1 total sample
+1spp, 500 accumulations, 500 total samples
 
 ### Embree functions
 
@@ -319,7 +320,7 @@ The Renderer then creates a Path Tracer object:
 
 ### SceneGraph.h
 
-The `SceneGraph` initializes the Embree scene with `rtcNewScene(..)`. The Scene Graph then will intialize Embree geometries based on the selected scene. std::map objects are used for lookup tables to find Embree geometry and primitive information when we intersect objects when ray tracing.
+The `SceneGraph` initializes the Embree scene with `rtcNewScene(..)`. The Scene Graph then will initialize Embree geometries based on the selected scene. std::map objects are used for lookup tables to find Embree geometry and primitive information when we intersect objects when ray tracing.
 
 ```
 void SceneGraph::init_embree_scene(const RTCDevice device,
@@ -345,10 +346,19 @@ void SceneGraph::init_embree_scene(const RTCDevice device,
 
 ```
 
+We use a list of geometries (from `Geometry.h`) to keep all of our scenes automatically managed. Definition:
+
+```
+  // We'll use this 'geometries' container to automatically clean up the data
+  // arrays created that are used to create embree geometries //
+  std::vector<std::unique_ptr<Geometry>> geometries;
+```
 
 ### Geometry.h
 
-The `Geometry` object does not do anything special except allow an easy/extensible mechanism for geometry creation and destruction. Use the `geometries` std::vector object to add, remove, or edit geometries and create your own scenes in this application.
+The `Geometry` object only serves to allow an extensible mechanism for geometry creation and destruction.
+
+Use the `geometries` std::vector object to add, remove, or edit geometries and create your own scenes in this application.
 
 
 ### CornellBox.h
@@ -371,7 +381,7 @@ Next, we setup an index buffer for the Geometry defining Quads.
                                                m_cornellBoxIndices.size());
 ```
 Lastly, we bind vertex colors to a vertex attribute with `rtcSetGeometryVertexAttributeCount(..)` and `rtcSetSharedGeometryBuffer(..)`. Vertex attributes are not used directly in this sample. They are a place holder for expanding the application to consider vertex colors with the API.
-Notice that such buffers need to be aligned per the API specficiation. `alignedMalloc(..)` is used.
+Notice that such buffers need to be aligned per the API specificiation. `alignedMalloc(..)` is used.
 
 ```
   rtcSetGeometryVertexAttributeCount(mesh, 1);
@@ -396,9 +406,9 @@ We set up a look up map for each face's albedo (color) and assigned material. Th
   mapGeomToPrim.insert(std::make_pair(geomID, mpTable));
 ```
 
-The other `Geometry` derivative objects are highly similar. Albeit, the may use different primitive types. 
+The other `Geometry` derivative objects are highly similar. Albeit, the may use different primitive types (e.g. Quad vs Triangle)
 
-- Note that the `Sphere` object uses an Embree defined Sphere primative as opposed to defining many vertices manually to approximate a sphere.
+- Note that the `Sphere` object uses an Embree defined Sphere primitive as opposed to defining many vertices manually to approximate a sphere.
 - The Cornell scene also configures a light and camera associated with it. The camera view is oriented based on field of view, look at direction, up direction, width and height in pixels.
 
 ```
@@ -434,19 +444,47 @@ We define a spot light with given direction, position, radius, powerm and openin
 
 Adding the light geometry is similar to adding our other geometries. See Light.h for the implementation.
 
+Each of the geometries has the ability to assign a hard coded material. Example with Cornell Box:
+```
+const std::vector<enum class MaterialType>
+    CornellBoxGeometry::m_cornellBoxMats = {
+        // Floor
+        MaterialType::MATERIAL_MATTE,
+        /* Swap in thr below material to make the ceiling a matte material*/
+        // Ceiling
+        MaterialType::MATERIAL_MATTE,
+        /* Swap in the below material to make the ceiling a mirror */
+        /*
+        //Ceiling
+        MaterialType::MATERIAL_MIRROR,
+        */
+        // Backwall
+        MaterialType::MATERIAL_MATTE,
+        ...
+```
 
-
+Use the enum below to try different materials for the different scenes. It is defined in `Materials.h` described next.
+```
+/* Added for pathtracer */
+enum class MaterialType {
+  MATERIAL_MATTE,
+  MATERIAL_MIRROR,
+  MATERIAL_GLASS,
+  MATERIAL_WATER,
+  MATERIAL_EMITTER
+};
+```
 
 ### Materials.h
 
 `Materials.h` defines functions `sample` `eval` and `pdf` for each Material. They are for computing:
 - a direction sample
 - a light quantity (for color) given the sample
-- a probability distribution function (PDF) value given the sample.
+- a probability distribution function (PDF) value given the sample
 
 These functions are used later in the path tracer loop.
 
-Each `Material_` prefixed function runs a material specific code path. In this example, we use one of Lambertian (Matte), Mirror, or Dielectric (Frenel) materials depending on the material assigned to an intersected surface.
+Each `Material_` prefixed function runs a material specific code path. In this example, we use one of Lambertian (Matte), Mirror, or Dielectric (Fresnel) materials depending on the material assigned to an intersected surface.
 
 _Sample_
 
@@ -497,7 +535,7 @@ float Lambertian_pdf(const DifferentialGeometry& dg, const Vec3fa& wi1) {
 ```
 
 
-Some compute between sample, eval, and pdf functions for a material may be redundant. Obtaining direction, eval, and pdf values is seperated for study purposes. In the Embree 3 repository tutorials, a `Sample` data structure is used to group pdf information with a direction.
+Some compute between sample, eval, and pdf functions for a material may be redundant. Obtaining direction, eval, and pdf values is separated for study purposes. In the Embree 3 repository tutorials, a `Sample` data structure is used to group pdf information with a direction.
 
 Note that the path tracer application on the Embree repository contains implementations of several more material models.
 
@@ -581,9 +619,9 @@ Light_EvalRes SpotLight::eval(const Vec3fa& org, const Vec3fa& dir) {
 
 At this point, all objects and parameters for Embree have been supplied and configured. We are now able to query and extract results from the Embree API. In `Renderer.h`, we revisit `render_accumulation(..)`.
 
-The compute work for our image is split into image based 2D tiles. oneTBB will then schedule tasks to get executed on hardware thread elements. Scheduling is based on dynamic detection of system multithreading topology. 
+The compute work for our image is split into image based 2D tiles. Intel&reg; oneTBB will then schedule tasks to get executed on hardware thread elements. Scheduling is based on dynamic detection of system multithreading topology.
 
-Each `tbb::parallel_for(..)` task will get its own set of tiles to compute on. The number of tiles is derived from the oneTBB runtime. Each tile gets its own random number generator, see `RandomEngine`.
+Each `tbb::parallel_for(..)` task will get its own set of tiles to compute on. The number of tiles is derived from the oneTBB runtime. Each tile gets its own random number generator, see the definitition of a `RandomEngine` data structure.
 
 ```
   tbb::parallel_for(
@@ -645,7 +683,7 @@ An accumulation buffer is useful in an interactive application where the frame b
 
 The path tracing loop for each sample under each pixel for each accumulation is in `PathTracer.h`.
 
-In PathTracer::render_path(..) we:
+In `PathTracer::render_path(..)` we:
 
 Find a direction and origin for the specified path.
 
@@ -671,7 +709,7 @@ Initialize our aggregate path luminance and the luminance weight. The luminance 
   Vec3fa Lw = Vec3fa(1.0f);
 ```
 
-Initialize a fresnel constant for the ray origin. This is used to calculate indexes of refraction accross different mediums. We use `1.f` for a vaccum.
+Initialize a fresnel constant for the ray origin. This is used to calculate indexes of refraction across different mediums. We use `1.f` for a vacuum.
 
 ```
   Medium medium, nextMedium;
@@ -815,7 +853,7 @@ Finally, when the `PathTracer::render_path(..)` function has completed. The tota
 
 ## Performance and Quality
 
-### Intel VTune Amplifier
+### Intel&reg; VTune&trade; Amplifier
 
 Intel VTune Amplifier is a great tool when attempting to optimize your application. The hotspots mode from VTune helps us find bottlenecks in our application.
 
@@ -856,13 +894,13 @@ Each implementation can be a good reference point in building out your own scene
 
 ### Lights
 
-Our lights are limited. This keeps tutorial code simple. Consider augmenting this application lights. See the full Intel Embree tutorials demonstrate a few different [light types to try](https://github.com/embree/embree/tree/v3.13.4/tutorials/common/lights)
+Our lights are limited. This keeps tutorial code simple. Consider adding different lights. See the full Intel Embree tutorials demonstrate a few different [light types to try](https://github.com/embree/embree/tree/v3.13.4/tutorials/common/lights)
 
 ### Materials omissions
 
-Bidirectional Ray Distribution Function (BRDF) parameterization
+Bi-directional Ray Distribution Function (BRDF) parameterization
 
-The full Embree tutorial application passes a structure representing a BiDirectional Ray Distribution Function (BRDF) representing reflectance model parameters. Our application hard codes reflection models in the interest of simplicity. However, the full tutorial application includes a BRDF parser for use with geometric models stored on disk in .obj/.mtl format.
+The full Embree tutorial application passes a structure representing a Bi-directional Ray Distribution Function (BRDF) representing reflectance model parameters. Our application hard codes reflection models in the interest of simplicity. However, the full tutorial application includes a BRDF parser for use with geometric models stored on disk in .obj/.mtl format.
 For example: when reviewing Embree repository codes, notice that parameters associated with the [Phong](https://en.wikipedia.org/wiki/Phong_reflection_model) reflection model are considered.
 
 `pathtracer_device.cpp` from the Embree tutorials features additional hand coded material types.

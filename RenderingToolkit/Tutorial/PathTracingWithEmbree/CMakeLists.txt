@@ -43,7 +43,10 @@ endif(NOT MSVC)
 #stb headers are located in dev-utilities. oneAPI 2022.2 release and earlier: these header only libraries are distributed with the oneAPI Base Toolkit.
 include_directories(${ONEAPI_ROOT}/dev-utilities/latest/include)
 
-add_executable(rkPathTracer src/rkPathTracer.cpp)
+set(HEADERS src/CornellBox.h  src/DefaultCubeAndPlane.h  src/Geometry.h  src/Lights.h src/Materials.h src/PathTracer.h src/Pool.h src/Renderer.h src/SceneGraph.h src/S
+phere.h src/definitions.h)
+add_executable(rkPathTracer src/rkPathTracer.cpp ${HEADERS})
+
 if(MSVC)
 # Set MSVS debugger environment variables so it is easier to attach the MSVS debugger after altering the application
     set_target_properties(rkPathTracer
