@@ -84,8 +84,8 @@ endif()
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} ${ENABLE_USM}")
-set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Wall -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -Xssimulation -Xsghdl")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Wall -Xssimulation -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -Xsghdl -Xstarget=${FPGA_BOARD}")
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
 set(REPORT_LINK_FLAGS "-fintelfpga -Wall -Xshardware -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} ${PROFILE_FLAG} -Xsparallel=2 -Xstarget=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
@@ -123,10 +123,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_F
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -qactypes -Xssimulation -Xsghdl -Xstarget=<FPGA_BOARD> mvdr_beamforming.cpp -o mvdr_beamforming.fpga
+#   dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -qactypes -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_BOARD> mvdr_beamforming.cpp -o mvdr_beamforming.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -fbracket-depth=512 -o mvdr_beamforming.cpp.o -c mvdr_beamforming.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -Xssimulation -Xsghdl -Xstarget=<FPGA_BOARD> mvdr_beamforming.cpp.o -o mvdr_beamforming.fpga
+#   [compile] dpcpp -fintelfpga -fbracket-depth=512 -o mvdr_beamforming.cpp.o -c mvdr_beamforming.cpp -FPGA_SIMULATOR
+#   [link]    dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -Xstarget=<FPGA_BOARD> -Xssimulation -Xsghdl mvdr_beamforming.cpp.o -o mvdr_beamforming.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
