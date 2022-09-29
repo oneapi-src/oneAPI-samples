@@ -24,6 +24,8 @@ endif()
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsboard=${FPGA_BOARD} ${USER_SIMULATOR_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
@@ -60,6 +62,24 @@ set_target_properties(${FPGA_EARLY_IMAGE_REG} PROPERTIES LINK_FLAGS "${HARDWARE_
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#   dpcpp -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsboard=<FPGA_BOARD> fpga_reg.cpp -o fpga_reg.fpga
+# CMake executes:
+#   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o fpga_reg.cpp.o -c fpga_reg.cpp
+#   [link]    dpcpp -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> fpga_reg.cpp.o -o fpga_reg.fpga
+add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_executable(${FPGA_TARGET_REG} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_custom_target(fpga DEPENDS ${FPGA_TARGET} ${FPGA_TARGET_REG})
+set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+# The -reuse-exe flag enables rapid recompilation of host-only code changes.
+# See DPC++FPGA/GettingStarted/fast_recompile for details.
+set_target_properties(${FPGA_TARGET_REG} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS} -DUSE_FPGA_REG")
+set_target_properties(${FPGA_TARGET_REG} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_REG}")
+
+###############################################################################
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
@@ -76,4 +96,3 @@ set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAG
 # See DPC++FPGA/GettingStarted/fast_recompile for details.
 set_target_properties(${FPGA_TARGET_REG} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS} -DUSE_FPGA_REG")
 set_target_properties(${FPGA_TARGET_REG} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_REG}")
-

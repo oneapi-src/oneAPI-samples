@@ -198,6 +198,8 @@ int main(int argc, char *argv[]) {
   // Run the kernel on either the FPGA emulator, or FPGA
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector selector;
 #endif
