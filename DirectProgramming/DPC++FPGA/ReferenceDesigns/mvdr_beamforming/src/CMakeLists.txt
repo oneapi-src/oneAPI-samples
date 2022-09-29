@@ -123,10 +123,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_F
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -qactypes -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_BOARD> mvdr_beamforming.cpp -o mvdr_beamforming.fpga
+#   dpcpp -fintelfpga -fbracket-depth=512 -qactypes -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_BOARD> mvdr_beamforming.cpp -o mvdr_beamforming.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -fbracket-depth=512 -o mvdr_beamforming.cpp.o -c mvdr_beamforming.cpp -FPGA_SIMULATOR
-#   [link]    dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -Xstarget=<FPGA_BOARD> -Xssimulation -Xsghdl mvdr_beamforming.cpp.o -o mvdr_beamforming.fpga
+#   [link]    dpcpp -fintelfpga -fbracket-depth=512 -Xstarget=<FPGA_BOARD> -Xssimulation -Xsghdl mvdr_beamforming.cpp.o -o mvdr_beamforming.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
