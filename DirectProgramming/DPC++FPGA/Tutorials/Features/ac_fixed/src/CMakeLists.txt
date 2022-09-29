@@ -4,6 +4,7 @@
 set(SOURCE_FILE ac_fixed.cpp)
 set(TARGET_NAME ac_fixed)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection

@@ -4,6 +4,7 @@
 set(SOURCE_FILE kernel_args_restrict.cpp)
 set(TARGET_NAME kernel_args_restrict)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection

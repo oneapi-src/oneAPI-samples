@@ -5,6 +5,8 @@ set(SOURCE_FILE fpga_reg.cpp)
 set(TARGET_NAME fpga_reg)
 set(TARGET_NAME_REG fpga_reg_registered)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
+set(SIMULATOR_TARGET_REG ${TARGET_NAME_REG}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(FPGA_TARGET_REG ${TARGET_NAME_REG}.fpga)
 

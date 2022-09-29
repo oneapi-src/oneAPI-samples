@@ -4,6 +4,7 @@
 set(SOURCE_FILE scheduler_target_fmax.cpp)
 set(TARGET_NAME scheduler_target_fmax)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection

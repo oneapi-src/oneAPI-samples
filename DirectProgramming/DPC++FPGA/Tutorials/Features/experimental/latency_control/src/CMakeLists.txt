@@ -4,6 +4,7 @@
 set(SOURCE_FILE latency_control.cpp)
 set(TARGET_NAME latency_control)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
