@@ -26,8 +26,8 @@ set(AC_TYPES_FLAG "-qactypes")
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -Wall")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
 # use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA backend compilation
-set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Xssimulation ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Wall ${USER_SIMULATOR_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation ${AC_TYPES_FLAG} ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Wall ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsboard=${FPGA_BOARD} ${USER_SIMULATOR_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Wall")
 set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")

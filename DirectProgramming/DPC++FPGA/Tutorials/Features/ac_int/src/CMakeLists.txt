@@ -28,9 +28,9 @@ set(EMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -Wall")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
 # use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA
 # simulator compilation
-set(SIMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga -Xssimulation ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Wall ${USER_SIMULATOR_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation ${AC_TYPES_FLAG} ${USER_SIMULATOR_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} -Wall")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Wall ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsboard=${FPGA_BOARD} ${AC_TYPES_FLAG} ${USER_SIMULATOR_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Wall")
 set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # We do not need to supply the AC_TYPES_FLAG for the 'report' target's linking stage.
 set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
@@ -53,10 +53,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu
+#    dpcpp -fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Xssimulation -Xsboard=<FPGA_BOARD> fpga_compile.cpp -o fpga_compile.fpga_emu
 # CMake executes:
 #    [compile] dpcpp -fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -o fpga_compile.cpp.o -c fpga_compile.cpp
-#    [link]    dpcpp -fintelfpga ${AC_TYPES_FLAG} fpga_compile.cpp.o -o fpga_compile.fpga_emu
+#    [link]    dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsboard=<FPGA_BOARD> fpga_compile.cpp.o -o fpga_compile.fpga_emu
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
