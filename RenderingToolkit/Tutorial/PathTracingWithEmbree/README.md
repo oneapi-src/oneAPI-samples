@@ -166,7 +166,7 @@ We describe our core algorithm at a high (informal) level:
 2. At a ray-to-scene intersection, we determine the light coming from the material at the intersection. If it is a light source we add that lights radiance based on the light type and ray direction before terminating the path.
 3. Otherwise, we perform a shadow ray test from the intersection to all light emitters in the scene. We aggregate the visible radiance proportional to the type of light and distance to the surface and the material.
 4. Next, we generate a bounce ray pointing to a location on the unit hemisphere above an intersection. The bounce ray direction is a function of the material. This ray represents the direction of the next segment of our *path* being traced.
-5. In the case of a Lambertian surface we generate a ray segment randomly as a representative reflection of all incident light at the point. Lowhttps://stackoverflow.com/questions/22575662/filename-too-long-in-git-for-windowser ray angles (approaching tangent) will contribute very global light through the new ray segment. Higher angles will contribute more.
+5. In the case of a Lambertian surface we generate a ray segment randomly as a representative reflection of all incident light at the point. Lower ray angles (approaching tangent) will contribute very global light through the new ray segment. Higher angles will contribute more.
 6. In the case of a mirror, the reflection is not random. It is computed as a mirror ray. Our mirror material rays will not attenuate based on direction. They will only attenuate based upon the inherent reflectivity of the mirror.
 7. Lastly, Fresnel materials will reflect or refract rays based on a material constant (eta) and the angle of incidence. Different materials will have different constant.
 8. Light attenuation (color) is evaluated based on the material and corresponding outgoing and incoming light directions from the surface. Note: The directions are referred to in source as Omega out and Omega in, *wo* and *wi*.
@@ -629,12 +629,10 @@ Each `tbb::parallel_for(..)` task will get its own set of tiles to compute on. T
       [&](const tbb::blocked_range<size_t>& r) {
         const int threadIndex = tbb::this_task_arena::current_thread_index();
 
-        RandomEngine reng;
-        std::uniform_real_distribution<float> distrib(0.0f, 1.0f);
+        RandomSampler reng;
 
         for (size_t i = r.begin(); i < r.end(); i++) {
-          render_tile_task((int)i, threadIndex, numTilesX, numTilesY, reng,
-                           distrib);
+          render_tile_task((int)i, threadIndex, numTilesX, numTilesY, reng);
         }
       },
       tgContext);
@@ -646,7 +644,7 @@ In the `Renderer::render_tile_task(..)` function we render each ray color sample
 ```
 void Renderer::render_tile_task(
     int taskIndex, int threadIndex, const int numTilesX, const int numTilesY,
-    RandomEngine& reng, std::uniform_real_distribution<float>& distrib) {
+    RandomSampler& reng) {
   const unsigned int tileY = taskIndex / numTilesX;
   const unsigned int tileX = taskIndex - tileY * numTilesX;
   const unsigned int x0 = tileX * TILE_SIZE_X;
@@ -656,13 +654,13 @@ void Renderer::render_tile_task(
 
   for (unsigned int y = y0; y < y1; y++)
     for (unsigned int x = x0; x < x1; x++) {
-      Vec3fa color = render_pixel_samples(x, y, reng, distrib);
+      Vec3fa Lsample = render_pixel_samples(x, y, reng);
 ...
 ```
 
-The result color is added to the accumulation buffer.
+The result L sample is added to the accumulation buffer.
 
-Each result color channel of the accumulation buffer is transformed to 8bit unsigned characters, and stored in the output pixel buffer.
+Each result channel of the accumulation buffer is transformed to 8bit unsigned characters, and stored in the output pixel buffer. The write will be dependent on your output image buffer requirements.
 ```
       /* write color from accumulation buffer to framebuffer */
       unsigned char r =
@@ -678,6 +676,18 @@ Each result color channel of the accumulation buffer is transformed to 8bit unsi
 
 An accumulation buffer is useful in an interactive application where the frame buffer is blitted to screen. For example, Intel OSPRay Studio will render accumulation passes and blit each update to screen. The result is a stationary camera will allow accumulation updates to converge the result of the image. The `rkPathTracer` sample application uses the accumulation buffer for study.
 
+### RandomSampler.h
+
+`RandomSampler.h` provides an implementation of an LCG based random number generation engine. Random number solutions are critical for application performance and visual fidelity.
+
+For our subpixel samples we use many random values to pick ray origins. We also sample surfaces directions from BRDFs and locations on light emitters. A high quality generator is important to reduce visual artifacts.
+
+This by hand implementation is constructed to be portable and fast. It was originally part of utility code on the Embree repository.
+
+`get_float()` returns a float between 0.f and 1.f
+seed(..) seeds the random number generator based on input parameters.
+
+Sidebar: std::hash is implementation defined and not cryptographic. Using it to seed a random generator (including those in C++11 random library) is not recommended.
 
 ### PathTracer.h (Path Loop)
 
@@ -766,7 +776,7 @@ We initialize an attenuation scaling value for our material. As well as a data s
     Vec3fa c = Vec3fa(1.0f);
 
     Vec3fa wi1;
-    Vec2f randomMatSample(distrib(reng), distrib(reng));
+    Vec2f randomMatSample(reng.get_float(), reng.get_float());
 ```
 
 
@@ -780,12 +790,12 @@ If the material does not simply pass light through, we perform a shadow ray test
     if (Material_direct_illumination(materialType)) {
       /* Cast shadow ray(s) from the hit point */
       sg->cast_shadow_rays(dg, albedo, materialType, Lw, wo, medium, m_time, L,
-                           reng, distrib);
+                           reng);
     }
 
     ...
     //From SceneGraph.h cast_shadow_rays
-        Vec2f randomLightSample(distrib(reng), distrib(reng));
+        Vec2f randomLightSample(reng.get_float(), reng.get_float());
     Light_SampleRes ls = light->sample(dg, randomLightSample);
 
     /* If the sample probability density evaluation is 0 then no need to

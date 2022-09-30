@@ -7,6 +7,7 @@
 #include "Lights.h"
 #include "SceneGraph.h"
 #include "definitions.h"
+#include "RandomSampler.h"
 
 struct misData {
   Light_SampleRes sam;
@@ -24,8 +25,7 @@ struct PathTracer {
   ~PathTracer();
 
   /* task that renders a single path pixel */
-  Vec3fa render_path(float x, float y, RandomEngine& reng,
-                                 std::uniform_real_distribution<float>& distrib,
+  Vec3fa render_path(float x, float y, RandomSampler& reng,
                                  std::shared_ptr<SceneGraph> sg,
                                  unsigned int pxID);
 
@@ -50,8 +50,7 @@ PathTracer::PathTracer(unsigned int max_path_length, unsigned int width,
 }
 
 /* task that renders a single screen pixel */
-Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
-                               std::uniform_real_distribution<float>& distrib,
+Vec3fa PathTracer::render_path(float x, float y, RandomSampler& reng,
                                std::shared_ptr<SceneGraph> sg,
                                unsigned int pxID) {
   Vec3fa dir = sg->get_direction_from_pixel(x, y);
@@ -113,7 +112,7 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
     Vec3fa c = Vec3fa(1.0f);
 
     Vec3fa wi1;
-    Vec2f randomMatSample(distrib(reng), distrib(reng));
+    Vec2f randomMatSample(reng.get_float(), reng.get_float());
 
     /* Search for each light in the scene from our hit point. Aggregate the
      * radiance if hit point is not occluded */
@@ -122,7 +121,7 @@ Vec3fa PathTracer::render_path(float x, float y, RandomEngine& reng,
     if (Material_direct_illumination(materialType)) {
       /* Cast shadow ray(s) from the hit point */
       sg->cast_shadow_rays(dg, albedo, materialType, Lw, wo, medium, m_time, L,
-                           reng, distrib);
+                           reng);
     }
 
     /* Sample, Eval, and PDF computation are split and internally perform some

@@ -6,8 +6,6 @@
 #include <embree3/rtcore.h>
 #include <tbb/parallel_for.h>
 
-#include <random>
-
 #include "PathTracer.h"
 #include "SceneGraph.h"
 #include "definitions.h"
@@ -32,11 +30,10 @@ struct Renderer {
   /* task that renders a single screen tile */
   void render_tile_task(
       int taskIndex, int threadIndex, const int numTilesX, const int numTilesY,
-      RandomEngine& reng, std::uniform_real_distribution<float>& distrib);
+      RandomSampler& reng);
 
   Vec3fa render_pixel_samples(
-      int x, int y, RandomEngine& reng,
-      std::uniform_real_distribution<float>& distrib);
+      int x, int y, RandomSampler& reng);
 
   unsigned char* get_pixels();
 
@@ -162,12 +159,10 @@ void Renderer::render_accumulation() {
       [&](const tbb::blocked_range<size_t>& r) {
         const int threadIndex = tbb::this_task_arena::current_thread_index();
 
-        RandomEngine reng;
-        std::uniform_real_distribution<float> distrib(0.0f, 1.0f);
+        RandomSampler reng;
 
         for (size_t i = r.begin(); i < r.end(); i++) {
-          render_tile_task((int)i, threadIndex, numTilesX, numTilesY, reng,
-                           distrib);
+          render_tile_task((int)i, threadIndex, numTilesX, numTilesY, reng);
         }
       },
       tgContext);
@@ -180,7 +175,7 @@ void Renderer::render_accumulation() {
 /* task that renders a single screen tile */
 void Renderer::render_tile_task(
     int taskIndex, int threadIndex, const int numTilesX, const int numTilesY,
-    RandomEngine& reng, std::uniform_real_distribution<float>& distrib) {
+    RandomSampler& reng) {
   const unsigned int tileY = taskIndex / numTilesX;
   const unsigned int tileX = taskIndex - tileY * numTilesX;
   const unsigned int x0 = tileX * TILE_SIZE_X;
@@ -190,7 +185,7 @@ void Renderer::render_tile_task(
 
   for (unsigned int y = y0; y < y1; y++)
     for (unsigned int x = x0; x < x1; x++) {
-      Vec3fa color = render_pixel_samples(x, y, reng, distrib);
+      Vec3fa Lsample = render_pixel_samples(x, y, reng);
 
       /* In case you run into issues with visibility try manual debug */
       //#define MY_DEBUG
@@ -202,7 +197,7 @@ void Renderer::render_tile_task(
       /* write color to accumulation buffer */
 
       Vec3ff accu_color =
-          *m_accu[y * m_width + x] + Vec3ff(color.x, color.y, color.z, 1.0f);
+          *m_accu[y * m_width + x] + Vec3ff(Lsample.x, Lsample.y, Lsample.z, 1.0f);
       *m_accu[y * m_width + x] = accu_color;
       float f = rcp(max(0.001f, accu_color.w));
 
@@ -221,46 +216,25 @@ void Renderer::render_tile_task(
 
 /* task that renders a single screen pixel */
 Vec3fa Renderer::render_pixel_samples(
-    int x, int y, RandomEngine& reng,
-    std::uniform_real_distribution<float>& distrib) {
+    int x, int y, RandomSampler& reng) {
   Vec3fa L = Vec3fa(0.0f);
 
   for (int i = 0; i < m_spp; i++) {
     /* Generate a new seed for a sample.
-    Ray cast position for the sample, materials, and light look ups all use
-    random 0. <-> 1.0 floating point numbers based off this seed. There are
-    better and worse solutions for randomization in rendering depending on your
-    use case. This one is simple to follow.
-
-    Note that here 4,294,967,296 distinct seeds are used based on the pixel and
-    sample being computed. At 3840x2160 resolution with 517 samples per pixel, a
-    random number used indiscriminantly, *could* repeat. The result could be
-    visual artifacts. The Embree Renderer full example uses an LCG-based
-    randomizer algorithm written by hand.
-
-    If each sample is given it's own id a0nd it is fed into the randomizer,
-    minstd_rand, you may notice repeated visual patterns in this tutorial. So,
-    below a hash is used. function: sample at the start of accumulation + sample
-    at the start of pixel + sample id example: unsigned int hseed = g_accu_count
-    * (width * height) * g_spp + (y * width + x) * g_spp + i
+    Make sure to use a portable random number generator when necessary. This application uses a hand coded LCG generator from the Embree repository.
+    Be careful when considering a cryptographic random number input for one of the C++11 and later random number generators in the <random> library.
+    std::hash behavior is implementation defined, therefore using it to seed your random number generator may or may not give a good distribution.
     */
 
-    unsigned long long seed = (((unsigned long long)(y * m_width + x) << 32) |
-                               ((m_accu_count * m_spp + i) & 0xFFFFFFFF));
-    size_t hseed = std::hash<unsigned long long>{}(seed);
 
-    // Take a 32bit xor for seeding the random number generator with a "unique"
-    // enough value in a 32bit size. minstd_rand takes a 32-bit seed.
-    if (sizeof(size_t) == 8) hseed = (hseed >> 32) ^ (hseed & 0xFFFFFFF);
-
-    reng.seed(hseed);
+    reng.seed(x, y, m_accu_count * m_spp + i);
     /* calculate pixel color, slightly offset the ray cast orientation randomly
      * so each sample occurs at a slightly different location within a pixel */
     /* Note: random offsets for samples within a pixel provide natural
      * anti-aliasing (smoothing) near object edges */
-    float fx = x + distrib(reng);
-    float fy = y + distrib(reng);
-    L = L + m_pt->render_path(fx, fy, reng, distrib, m_sg, y * m_width + x);
+    float fx = x + reng.get_float();
+    float fy = y + reng.get_float();
+    L = L + m_pt->render_path(fx, fy, reng, m_sg, y * m_width + x);
     /* If you are not seeing anything, try some printf debug */
     //#define MY_DEBUG
 #ifdef MY_DEBUG

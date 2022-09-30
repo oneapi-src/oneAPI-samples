@@ -157,7 +157,7 @@ void CornellBoxGeometry::setup_camera_and_lights(
   /* Here we have a light as a disc geometry */
   Vec3fa spotPos(0.f, 0.95f, 0.0f);
   Vec3fa spotDir(0.f, -1.f, 0.f);
-  Vec3fa spotPow = 5.f * Vec3fa(0.78f, 0.551f, 0.183f);
+  Vec3fa spotPow = 10.f * Vec3fa(0.78f, 0.551f, 0.183f);
   float spotCosAngleMax = cosf(80.f * M_PI / 180.f);
   float spotCosAngleScale = 50.f;
   float spotRadius = 0.4f;

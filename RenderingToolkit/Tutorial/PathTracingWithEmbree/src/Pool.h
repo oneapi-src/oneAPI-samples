@@ -323,7 +323,7 @@ void Pool::setup_camera_and_lights(
   /* The magnitude of the light can be tricky. Lights such as the point light
    * fall off at the inverse square of the distance. When designing a sandbox
    * renderer, you may need to scale your light up or down to see your scene. */
-  Vec3fa spotPow = 15.f * Vec3fa(0.9922, 0.9843, 0.8275);
+  Vec3fa spotPow = 20.f * Vec3fa(0.9922, 0.9843, 0.8275);
 
   /* A somewhat central position for the point light within the box. This is
    * similar to the position for the interactive pathtracer program shipped with

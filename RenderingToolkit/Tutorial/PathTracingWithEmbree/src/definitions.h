@@ -9,7 +9,6 @@
 #include <embree3/rtcore.h>
 #include <rkcommon/math/vec.h>
 
-#include <random>
 #include <utility>
 /* Added for pathtracer */
 #include <rkcommon/math/AffineSpace.h>
@@ -46,12 +45,6 @@ using Vec2f = rkcommon::math::vec2f;
 using rkcommon::math::clamp;
 using rkcommon::math::dot;
 using rkcommon::math::rsqrt;
-
-/* minstd_rand is much faster for this application than
-ranlux48_base/ranlux24_base. In turn, ranlux was faster than mt19937 or
-mt19937_64 on Windows
-*/
-typedef std::minstd_rand RandomEngine;
 
 struct PosInf {
   __forceinline operator float() const {

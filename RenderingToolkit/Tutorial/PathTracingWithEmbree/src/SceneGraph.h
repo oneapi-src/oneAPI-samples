@@ -7,6 +7,7 @@
 #include "Lights.h"
 #include "Pool.h"
 #include "Sphere.h"
+#include "RandomSampler.h"
 
 /* Added for geometry selection in pathtracer */
 enum class SceneSelector { SHOW_CUBE_AND_PLANE, SHOW_CORNELL_BOX, SHOW_POOL };
@@ -33,8 +34,7 @@ struct SceneGraph {
   void cast_shadow_rays(
       DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType,
       const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time,
-      Vec3fa& L, RandomEngine& reng,
-      std::uniform_real_distribution<float>& distrib);
+      Vec3fa& L, RandomSampler& reng);
 
   float cast_shadow_ray(const Vec3fa& org, const Vec3fa& dir,
                                     float tnear, float tfar, float _time);
@@ -192,12 +192,11 @@ bool SceneGraph::intersect_path_and_scene(Vec3fa& org, Vec3fa& dir,
 void SceneGraph::cast_shadow_rays(
     DifferentialGeometry& dg, Vec3fa& albedo, MaterialType materialType,
     const Vec3fa& Lw, const Vec3fa& wo, const Medium& medium, float time,
-    Vec3fa& L, RandomEngine& reng,
-    std::uniform_real_distribution<float>& distrib) {
+    Vec3fa& L, RandomSampler& reng) {
   Vec3fa ret;
 
   for (std::shared_ptr<Light> light : m_lights) {
-    Vec2f randomLightSample(distrib(reng), distrib(reng));
+    Vec2f randomLightSample(reng.get_float(), reng.get_float());
     Light_SampleRes ls = light->sample(dg, randomLightSample);
 
     /* If the sample probability density evaluation is 0 then no need to
