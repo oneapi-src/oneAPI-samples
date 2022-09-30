@@ -30,10 +30,10 @@ struct Renderer {
   /* task that renders a single screen tile */
   void render_tile_task(
       int taskIndex, int threadIndex, const int numTilesX, const int numTilesY,
-      RandomSampler& reng);
+      RandomSampler& randomSampler);
 
   Vec3fa render_pixel_samples(
-      int x, int y, RandomSampler& reng);
+      int x, int y, RandomSampler& randomSampler);
 
   unsigned char* get_pixels();
 
@@ -159,10 +159,10 @@ void Renderer::render_accumulation() {
       [&](const tbb::blocked_range<size_t>& r) {
         const int threadIndex = tbb::this_task_arena::current_thread_index();
 
-        RandomSampler reng;
+        RandomSampler randomSampler;
 
         for (size_t i = r.begin(); i < r.end(); i++) {
-          render_tile_task((int)i, threadIndex, numTilesX, numTilesY, reng);
+          render_tile_task((int)i, threadIndex, numTilesX, numTilesY, randomSampler);
         }
       },
       tgContext);
@@ -175,7 +175,7 @@ void Renderer::render_accumulation() {
 /* task that renders a single screen tile */
 void Renderer::render_tile_task(
     int taskIndex, int threadIndex, const int numTilesX, const int numTilesY,
-    RandomSampler& reng) {
+    RandomSampler& randomSampler) {
   const unsigned int tileY = taskIndex / numTilesX;
   const unsigned int tileX = taskIndex - tileY * numTilesX;
   const unsigned int x0 = tileX * TILE_SIZE_X;
@@ -185,7 +185,7 @@ void Renderer::render_tile_task(
 
   for (unsigned int y = y0; y < y1; y++)
     for (unsigned int x = x0; x < x1; x++) {
-      Vec3fa Lsample = render_pixel_samples(x, y, reng);
+      Vec3fa Lsample = render_pixel_samples(x, y, randomSampler);
 
       /* In case you run into issues with visibility try manual debug */
       //#define MY_DEBUG
@@ -216,7 +216,7 @@ void Renderer::render_tile_task(
 
 /* task that renders a single screen pixel */
 Vec3fa Renderer::render_pixel_samples(
-    int x, int y, RandomSampler& reng) {
+    int x, int y, RandomSampler& randomSampler) {
   Vec3fa L = Vec3fa(0.0f);
 
   for (int i = 0; i < m_spp; i++) {
@@ -227,14 +227,14 @@ Vec3fa Renderer::render_pixel_samples(
     */
 
 
-    reng.seed(x, y, m_accu_count * m_spp + i);
+    randomSampler.seed(x, y, m_accu_count * m_spp + i);
     /* calculate pixel color, slightly offset the ray cast orientation randomly
      * so each sample occurs at a slightly different location within a pixel */
     /* Note: random offsets for samples within a pixel provide natural
      * anti-aliasing (smoothing) near object edges */
-    float fx = x + reng.get_float();
-    float fy = y + reng.get_float();
-    L = L + m_pt->render_path(fx, fy, reng, m_sg, y * m_width + x);
+    float fx = x + randomSampler.get_float();
+    float fy = y + randomSampler.get_float();
+    L = L + m_pt->render_path(fx, fy, randomSampler, m_sg, y * m_width + x);
     /* If you are not seeing anything, try some printf debug */
     //#define MY_DEBUG
 #ifdef MY_DEBUG
