@@ -18,16 +18,16 @@ This FPGA reference design demonstrates Cholesky-based matrix inversion, a commo
 
 The Cholesky decomposition takes a hermitian, positive-definite matrix $A$ (input) and computes the lower triangular matrix $L$ such that:
 
-$$ LL^{\star} = A $$
+$LL^{\star} = A$
 where $L^{\star}$ in the conjugate transpose of $L$.
 
 Given this decomposition, the inverse of A can be computed as
 
-$$ A^{-1} = (LL^{\star})^{-1} = (L^{\star})^{-1}L^{-1} = (L^{-1})^{\star} L^{-1} $$
+$A^{-1} = (LL^{\star})^{-1} = (L^{\star})^{-1}L^{-1} = (L^{-1})^{\star} L^{-1}$
 
 Therefore, in order to compute the inverse of A, one can: compute $LI$, the invert of $L$ (triangular matrix) and perform a matrix multiplication of the transpose of $LI$ by $LI$.
 
-$$ A^{-1} = LI^{\star}LI $$
+$A^{-1} = LI^{\star}LI$
 
 Because $A^{-1}$  is going to be symmetric, one can also compute only half of the values.
 
