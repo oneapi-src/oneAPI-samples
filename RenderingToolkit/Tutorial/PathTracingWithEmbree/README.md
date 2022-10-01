@@ -1,5 +1,5 @@
 # Path Tracing with Intel&reg; Embree and the Intel&reg; oneAPI Rendering Toolkit
-
+![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
 ## Purpose
 
 By walking through this pathtracer tutorial, you will understand how to implement a basic pathtracer with Intel Embree. You will have a better understanding of:
@@ -8,17 +8,15 @@ By walking through this pathtracer tutorial, you will understand how to implemen
 - typical scene controls of interest in the Intel OSPRay Studio showcase reference application or other professional rendering solutions.
 - full feature tutorial codes on the Intel Embree github repository.
 
-Expect less than 10 minutes to compile and run the application on contemporary hardware. 
+Expect less than 10 minutes to compile and run the unmodified application on contemporary hardware. 
 
 Expect at least an hour for following the algorithm, self-directed edits, then to rebuild, rerun, and understand the application.
 
-Example output images from this `rkPathTracer` tutorial program:
-
-We present a series of two walk through paths.
-1. A _key features_ description of the logical additions to this application to make it a monte carlo path tracer.
+We present a series of two walk through paths:
+1. A _key features_ description of the logical additions to the previous `rkRayTracer` (triangle_geometry) application to create a monte carlo path tracer.
 2. A _source code_ walk through describing how the features are implemented with Embree API calls.
 
-This sample source code is a consolidated refactor of the `pathtracer` source hosted as part of the Intel&reg; Embree tutorials in the [Embree
+This sample source code is a consolidated refactor of the `pathtracer` source hosted as part of the Embree tutorials in the [Embree
 repository](https://github.com/embree/embree) on GitHub.
 
 ## Prerequisites
@@ -117,13 +115,19 @@ New features added are discussed at a high level. The features are then describe
 
 Global illumination is difficult to demonstrate without surfaces affecting and reflecting light to visible surfaces within the scene.
 
-To demonstrate, we have three sets of hardcoded scene data.
+To demonstrate, we have three sets of hardcoded scene data. Each is followed by an example image that can be configured and generated with this tutorial source code.
 
-1. We implement Cornell Box scene geometry, as defined within Intel OSPRay for the Intel OSPRay `ospExamples` application. The Cornell Box is a familiar dataset that can show capability of computing global illumination and shadows. We have a code stub to add an extra sphere to the scene.
+1. We implement Cornell Box scene geometry, as defined within Intel&reg; OSPRay for the OSPRay `ospExamples` application. The Cornell Box is a familiar dataset that can show capability of computing global illumination and shadows. We have a code stub to add an extra sphere to the scene.
 
-2. We implement the `triangle_geometry` scene. The intent with this scene is to observe the same scene in a global illumination environment.
+![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
+
+2. We implement the `triangle_geometry` scene from `rkRayTracer` and the Embree repository tutorials. The intent with this scene is to observe a familiar scene in a global illumination environment.
+
+![pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png)
 
 3. We have a 'pool' scene. This scene is heavily centered on observing the behavior of a fresnel surface.
+
+![pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png)
 
 Each geometry specified allows the user to try different materials and colors. The audience is encouraged to modify and rebuild the scenes to examine and understand behavior!
 
@@ -131,16 +135,22 @@ Each geometry specified allows the user to try different materials and colors. T
 ### Feature: Materials
 We three basic materials implemented in the sample.
 
-1. Lambertian(https://en.wikipedia.org/wiki/Lambertian_reflectance)
+1. [Lambertian](https://en.wikipedia.org/wiki/Lambertian_reflectance):
    This is a soft diffuse material that scatters light proportional to the cosine of the angle of incidence in all directions. Another description often used for a Lambertian surface is: ideal _matte_ surface.
+   
+   ![lambertian surfaces in Cornell Box scene](example-images/lambertian.png)
 
-2. Mirror
-   We introduce a mirror as a material surface. In our sample we give the mirror an albedo that can be used to limit reflected energy similar to imperfect real life mirrors. Limiting reflectance more closely matches the behavior of real mirrors.
+2. Mirror:
+   We introduce a mirror as a material surface. In our sample, we give the mirror an albedo that can be used to limit reflected energy similar to imperfect real life mirrors. Limiting reflectance more closely matches the behavior of real mirrors. Below see an example mirror material as specified on the tall box within the Cornell Box scene.
+   
+   ![tall box mirror surface in the Cornell Box scene](example-images/mirror.png)
 
-3. Fresnel
-   We introduce fresnel materials. These materials have reflective and refractive light transport behaviors.
+3. Fresnel:
+   We introduce fresnel materials. These materials have reflective and refractive light transport behaviors. Below see an example fresnel (glass) sphere added to the Cornell Box scene.
+   
+   ![glass (fresnel) sphere added to the Cornell Box scene](example-images/fresnelsphere.png)
 
-The audience is ecouraged to modify material parameters to examine behavior!
+The audience is ecouraged to modify material, albedo, and even geometry parameters to examine behavior!
    
 ### Feature: Light
 
@@ -185,14 +195,51 @@ Multiple samples can be taken for each pixel. They can be used to generate an ag
 
 ### Feature: Convergence 
 
-- If we had taken an infinite number of samples with infinite path length, all paths under all sampled pixels can logically account for all light in the scene. Such a result will be a converged image.
-- Practically, we will set the number of samples per pixel, set an accumulation limit, and maximum path length to the discretion of the application.
-- We set these to 1, 500, and 8 in the application respectively. Change these values to see the affect noise from a limited number of samples or paths segments has on an image.
+- Our image is _converged_ if we take an infinite number of samples with infinite path length. All paths under all sampled pixels can logically account for all light in the scene.
+- Practically, because compute resources are finite we will set the number of samples per pixel, set an accumulation limit, and maximum path length to the discretion of the application.
+- We set these to 1, 500, and 8 in the application by default respectively. Change these values to see the affect of noise from a limited number of samples or path segments has on an image.
 
 
 Examples:
-1spp , 1 accumulation, 1 total sample
-1spp, 500 accumulations, 500 total samples
+
+
+1spp x 1 accumulation, 1 total sample per pixel (no mirror)
+
+![pathtracer-single-cornell-spp1-accu4000-plength8-512x512-nomirror.png](example-images/pathtracer-single-cornell-spp1-accu4000-plength8-512x512-nomirror.png)
+
+1spp x 1000 accumulations, 1000 total samples per pixel (no mirror)
+
+![pathtracer-accu-cornell-spp1-accu1000-plength8-512x512-nomirror.png](example-images/pathtracer-accu-cornell-spp1-accu1000-plength8-512x512-nomirror.png)
+
+1spp x 4000 accumulations, 4000 total samples per pixel (no mirror)
+
+![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512-nomirror.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512-nomirror.png)
+
+1spp x 1 accumulation, 1 total sample per pixel (mirror)
+
+![pathtracer-single-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-single-cornell-spp1-accu4000-plength8-512x512.png)
+
+1spp x 4000 accumulations, 4000 total samples per pixel (mirror)
+
+![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
+
+1spp x 1 accumulation, 1 total sample per pixel
+
+![pathtracer-single-cubeandplane-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-single-cubeandplane-spp1-accu4000-plength8-512x512.png)
+
+1spp x 4000 accumulations, 4000 total samples per pixel
+
+![pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cubeandplane-spp1-accu4000-plength8-512x512.png)
+
+1spp x 1 accumulation, 1 total sample per pixel
+
+![pathtracer-single-pool-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-single-pool-spp1-accu4000-plength8-512x512.png)
+
+1spp x 4000 accumulations, 4000 total samples per pixel
+
+![pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-pool-spp1-accu4000-plength8-512x512.png)
+
+
 
 ### Embree functions
 
@@ -221,7 +268,7 @@ Scene:
 - rtcNewScene(...)
 - rtcReleaseScene(...)
 
-See the API pdf (manual)[https://raw.githubusercontent.com/embree/embree/master/readme.pdf] for more information (~2MB).
+See the API pdf [manual](https://raw.githubusercontent.com/embree/embree/master/readme.pdf) for more information (~2MB).
 
 ## Details of Improvements (Source)
 
@@ -621,7 +668,7 @@ At this point, all objects and parameters for Embree have been supplied and conf
 
 The compute work for our image is split into image based 2D tiles. Intel&reg; oneTBB will then schedule tasks to get executed on hardware thread elements. Scheduling is based on dynamic detection of system multithreading topology.
 
-Each `tbb::parallel_for(..)` task will get its own set of tiles to compute on. The number of tiles is derived from the oneTBB runtime. Each tile gets its own random number generator, see the definitition of a `RandomEngine` data structure.
+Each `tbb::parallel_for(..)` task will get its own set of tiles to compute on. The number of tiles is derived from the oneTBB runtime. Each tile gets its own random number generator, see the definitition of a `RandomSampler` data structure.
 
 ```
   tbb::parallel_for(
@@ -629,10 +676,10 @@ Each `tbb::parallel_for(..)` task will get its own set of tiles to compute on. T
       [&](const tbb::blocked_range<size_t>& r) {
         const int threadIndex = tbb::this_task_arena::current_thread_index();
 
-        RandomSampler reng;
+        RandomSampler randomSampler;
 
         for (size_t i = r.begin(); i < r.end(); i++) {
-          render_tile_task((int)i, threadIndex, numTilesX, numTilesY, reng);
+          render_tile_task((int)i, threadIndex, numTilesX, numTilesY, randomSampler);
         }
       },
       tgContext);
@@ -644,7 +691,7 @@ In the `Renderer::render_tile_task(..)` function we render each ray color sample
 ```
 void Renderer::render_tile_task(
     int taskIndex, int threadIndex, const int numTilesX, const int numTilesY,
-    RandomSampler& reng) {
+    RandomSampler& randomSampler) {
   const unsigned int tileY = taskIndex / numTilesX;
   const unsigned int tileX = taskIndex - tileY * numTilesX;
   const unsigned int x0 = tileX * TILE_SIZE_X;
@@ -654,7 +701,7 @@ void Renderer::render_tile_task(
 
   for (unsigned int y = y0; y < y1; y++)
     for (unsigned int x = x0; x < x1; x++) {
-      Vec3fa Lsample = render_pixel_samples(x, y, reng);
+      Vec3fa Lsample = render_pixel_samples(x, y, randomSampler);
 ...
 ```
 
@@ -678,11 +725,11 @@ An accumulation buffer is useful in an interactive application where the frame b
 
 ### RandomSampler.h
 
-`RandomSampler.h` provides an implementation of an LCG based random number generation engine. Random number solutions are critical for application performance and visual fidelity.
+`RandomSampler.h` provides an implementation of an LCG (linear congruential engine) based random number generation engine. Random number solutions are critical for application performance and visual fidelity.
 
 For our subpixel samples we use many random values to pick ray origins. We also sample surfaces directions from BRDFs and locations on light emitters. A high quality generator is important to reduce visual artifacts.
 
-This by hand implementation is constructed to be portable and fast. It was originally part of utility code on the Embree repository.
+This by-hand implementation is constructed to be portable and fast. It was originally part of utility code on the Embree repository.
 
 `get_float()` returns a float between 0.f and 1.f
 seed(..) seeds the random number generator based on input parameters.
@@ -776,7 +823,7 @@ We initialize an attenuation scaling value for our material. As well as a data s
     Vec3fa c = Vec3fa(1.0f);
 
     Vec3fa wi1;
-    Vec2f randomMatSample(reng.get_float(), reng.get_float());
+    Vec2f randomMatSample(randomSampler.get_float(), randomSampler.get_float());
 ```
 
 
@@ -790,12 +837,12 @@ If the material does not simply pass light through, we perform a shadow ray test
     if (Material_direct_illumination(materialType)) {
       /* Cast shadow ray(s) from the hit point */
       sg->cast_shadow_rays(dg, albedo, materialType, Lw, wo, medium, m_time, L,
-                           reng);
+                           randomSampler);
     }
 
     ...
     //From SceneGraph.h cast_shadow_rays
-        Vec2f randomLightSample(reng.get_float(), reng.get_float());
+        Vec2f randomLightSample(randomSampler.get_float(), randomSampler.get_float());
     Light_SampleRes ls = light->sample(dg, randomLightSample);
 
     /* If the sample probability density evaluation is 0 then no need to
@@ -863,26 +910,19 @@ Finally, when the `PathTracer::render_path(..)` function has completed. The tota
 
 ## Performance and Quality
 
+### Fidelity And Convergence
+
+In instances where convergence is taking longer, a developer may consider a denoise pass provided from a library like Intel Open Image Denoise. Many vendors of professional rendering solutions use Intel Open Image Denoise as a final frame pass to enhance image quality.
+Cornell Box at 1 spp
+Intel Open Image Denoise oidnDenoise 
+
+### Intel Implicit SIMD Program Compiler (Intel ISPC)
+
+Intel ISPC is a compiler for a C hybrid that allows 
+
 ### Intel&reg; VTune&trade; Amplifier
 
 Intel VTune Amplifier is a great tool when attempting to optimize your application. The hotspots mode from VTune helps us find bottlenecks in our application.
-
-Random Number Generation
-
-`rtcIntersect1` and `rtcOccluded1` constitute a significant portion of the compute. Looking at the other functions we see `fdlog(..)`.
-`fdlog(..)` is called by the application's random number generation routines. This suggests that for this scene, and this renderer's monte carlo scheme, random number generation is also significant proportion of compute effort.
-The full Embree tutorials use a hand written fast LCG based random number generator. For explanation and simplicity purposes, we use C++11 random number generators in this tutorial. The quality (recurrence, distribution, speed) of random numbers will affect the quality of your results.
-
-For example, moving to `mt19937` based random number generators without any extra hashing gives reasonable results in single accumulation and multi-accumulation images. However, it  was observed to perform slower than a `minstd_rand` generator. This performance impact was observed in the VTune hotspots function profile. However, a quality trade off can be readily observed if the `minstd_rand` generator is not hashed as in our tutorial. Visual artifacts may be apparent even given a high sample count.
-We observe random number concerns due to their impact on performance. Random number needs can be different amongst different applications.
-
-### Fidelity And Convergence
-
-Convergence in an image is highly dependent on scene configuration. Keeping a light at an sharp angle with respect to visible surfaces from the light can result in a noisier image. In instances where convergence is taking longer, a developer may consider a denoise pass provided from a library like Intel Open Image Denoise. Many vendors of professional rendering solutions use Intel Open Image Denoise as a final frame pass to enhance image quality.
-Cornell Box at 500 samples
-Cornell Box at 1000 samples
-Cornell Box at 2000 samples
-Intel Open Image Denoise oidnDenoise 
 
 # Next Steps:
 
