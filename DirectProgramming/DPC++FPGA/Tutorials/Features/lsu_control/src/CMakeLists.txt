@@ -4,6 +4,7 @@
 set(SOURCE_FILE lsu_control.cpp)
 set(TARGET_NAME lsu_control)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
@@ -25,14 +26,17 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga")
+set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -Xssimulation -DFPGA_SIMULATOR ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_TARGET} ${USER_SIMULATOR_FLAGS}")
+# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
+set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
 if(FPGA_DEVICE STREQUAL "intel_a10gx_pac:pac_a10")
     # hyper-optimized-handshaking does not apply to Intel Arria 10® FPGAs
-    set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+    set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 else()
-    set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+    set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xshyper-optimized-handshaking=off -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 endif()
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -49,6 +53,19 @@ target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
+
+###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#    dpcpp -fintelfpga -Xssimulation  -DFPGA_SIMULATOR lsu_control.cpp -o lsu_control.fpga_sim
+# CMake executes:
+#    [compile] dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o lsu_control.cpp.o -c lsu_control.cpp
+#    [link]    dpcpp -fintelfpga -Xssimulation  lsu_control.cpp.o -o lsu_control.fpga_sim
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 
 ###############################################################################
 ### Generate Report

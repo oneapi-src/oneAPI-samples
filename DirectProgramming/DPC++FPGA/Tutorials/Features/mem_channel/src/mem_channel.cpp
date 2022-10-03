@@ -76,8 +76,10 @@ int main() {
 // Create queue, get platform and device
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
 #else
-  ext::intel::fpga_selector device_selector;
+  ext::intel::fpga_selector selector;
 #endif
   try {
     auto prop_list =

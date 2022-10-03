@@ -121,6 +121,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -156,6 +160,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Generate the optimization report:
      ```
      nmake report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -209,7 +217,12 @@ Next, look at the loop details of the *KernelArgsRestrict* kernel. You will noti
      ./kernel_args_restrict.fpga_emu     (Linux)
      kernel_args_restrict.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./kernel_args_restrict.fpga_sim     (Linux)
+     kernel_args_restrict.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./kernel_args_restrict.fpga         (Linux)
      kernel_args_restrict.fpga.exe       (Windows)
@@ -231,7 +244,7 @@ The throughput observed when running the kernels with and without the `kernel_ar
 |No  | ~187 | 8
 |Yes  | ~1 | 767
 
-> **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator, while useful for verifying functionality, will generally not reflect differences in performance.
+> **Note**: This performance difference will be apparent only when running on FPGA hardware. The emulator and simulator, while useful for verifying functionality, will generally not reflect differences in performance of the memory system.
 
 ## License
 Code samples are licensed under the MIT license. See
