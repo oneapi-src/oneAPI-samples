@@ -54,7 +54,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 #    dpcpp -fintelfpga -Xssimulation  -DFPGA_SIMULATOR loop_carried_dependency.cpp -o loop_carried_dependency.fpga_emu
 # CMake executes:
 #    [compile] dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o loop_carried_dependency.cpp.o -c loop_carried_dependency.cpp
-#    [link]    dpcpp -fintelfpga -Xssimulation  triangular_loop.cpp.o -o triangular_loop.fpga_emu
+#    [link]    dpcpp -fintelfpga -Xssimulation  loop_carried_dependency.cpp.o -o loop_carried_dependency.fpga_emu
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
