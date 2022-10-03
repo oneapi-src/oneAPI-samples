@@ -15,6 +15,7 @@ This directory contains utility header libraries optimized for SYCL*-compliant F
 | `rom_base.hpp`                | A generic base class to create ROMs in the FPGA using and initializer lambda or functor.                                                  | `ReferenceDesigns/anr/`
 | `tuple.hpp`                   | Defines a template to implement tuples.                                                                                                   | `ReferenceDesigns/cholesky_inversion/`<br> `ReferenceDesigns/qri/`<br> `ReferenceDesigns/cholesky/`
 | `unrolled_loop.hpp`           | Defines a templated implementation of unrolled loops.                                                                                     | `Tutorials/DesignPatterns/pipe_array/`<br> `ReferenceDesigns/cholesky/`<br> `ReferenceDesigns/anr/`
+| `exception_handler.hpp`       | Defines an exception handler to catch SYCL asynchronous exceptions.                                                                       | All the samples use it 
 
 ### Linear Algebra
 
