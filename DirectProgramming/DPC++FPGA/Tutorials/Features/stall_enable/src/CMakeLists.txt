@@ -65,7 +65,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET} ${STALL_FREE_EMULATOR_TARG
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_SIMULATOR triangular_loop.cpp -o triangular_loop.fpga_emu
+#    dpcpp -fintelfpga -Xssimulation  -DFPGA_SIMULATOR triangular_loop.cpp -o triangular_loop.fpga_emu
 # CMake executes:
 #    [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o triangular_loop.cpp.o -c triangular_loop.cpp
 #    [link]    dpcpp -fintelfpga triangular_loop.cpp.o -o triangular_loop.fpga_emu
