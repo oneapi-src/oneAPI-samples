@@ -4,6 +4,7 @@
 set(SOURCE_FILE dynamic_profiler.cpp)
 set(TARGET_NAME dynamic_profiler)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
@@ -22,6 +23,8 @@ endif()
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsboard=${FPGA_BOARD} -Xsprofile ${USER_SIMULATOR_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} -Xsprofile ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
@@ -40,6 +43,18 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_CO
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 
 ###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#    dpcpp -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -DFPGA_SIMULATOR dynamic_profiler.cpp -o dynamic_profiler.fpga_sim
+# CMake executes:
+#   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o dynamic_profiler.cpp.o -c dynamic_profiler.cpp
+#   [link]    dpcpp -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> dynamic_profiler.cpp.o -o dynamic_profiler.fpga_sim
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+
+###############################################################################
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
@@ -56,3 +71,6 @@ set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAG
 add_custom_target(run
                   COMMAND aocl profile -output-dir .. ../${TARGET_NAME}.fpga
                   DEPENDS ${TARGET_NAME}.fpga)
+add_custom_target(run_sim
+                  COMMAND aocl profile -output-dir .. ../${TARGET_NAME}.fpga_sim
+                  DEPENDS ${TARGET_NAME}.fpga_sim)

@@ -6,7 +6,7 @@
   The main content of this sample is in the README file.
 */
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cmath>
 #include <numeric>
@@ -36,6 +36,8 @@ class ConsumerAfterKernel;
 
 // kSize = # of floats to process on each kernel execution.
 #if defined(FPGA_EMULATOR)
+constexpr int kSize = 4096;
+#elif defined(FPGA_SIMULATOR)
 constexpr int kSize = 4096;
 #else
 constexpr int kSize = 262144;
@@ -187,8 +189,10 @@ int main() {
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
   std::cout << "\nThe Dynamic Profiler cannot be used in the emulator "
-               "flow. Please compile to FPGA hardware to collect "
-               "dynamic profiling data. \n\n";
+               "flow. Please compile to FPGA hardware or simulator flow "
+               "to collect dynamic profiling data. \n\n";
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
