@@ -53,7 +53,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 # To compile in a single command:
 #    dpcpp -fintelfpga -DFPGA_SIMULATOR triangular_loop.cpp -o triangular_loop.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o triangular_loop.cpp.o -c triangular_loop.cpp
+#    [compile] dpcpp -fintelfpga -Xssimulation  -DFPGA_SIMULATOR -o triangular_loop.cpp.o -c triangular_loop.cpp
 #    [link]    dpcpp -fintelfpga triangular_loop.cpp.o -o triangular_loop.fpga_emu
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
