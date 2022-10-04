@@ -63,10 +63,10 @@ set_target_properties(library_archive PROPERTIES IMPORTED_LOCATION ${CMAKE_ARCHI
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR use_library.cpp lib.a -o use_library.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR use_library.cpp lib.a -o use_library.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o use_library.o -c use_library.cpp
-#    [link]    dpcpp -fintelfpga use_library.cpp.o -o use_library.fpga_emu lib.a lib_sycl.o
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o use_library.o -c use_library.cpp
+#    [link]    icpx -fsycl -fintelfpga use_library.cpp.o -o use_library.fpga_emu lib.a lib_sycl.o
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 target_link_libraries(${EMULATOR_TARGET} library_archive)
@@ -77,7 +77,7 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early use_library.cpp lib.a -o use_library_report.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early use_library.cpp lib.a -o use_library_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -91,10 +91,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp lib.a -o use_library.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp lib.a -o use_library.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o use_library.cpp.o -c use_library.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
+#   [compile] icpx -fsycl -fintelfpga -o use_library.cpp.o -c use_library.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
 add_executable(${FPGA_TARGET} ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 target_link_libraries(${FPGA_TARGET} library_archive)
