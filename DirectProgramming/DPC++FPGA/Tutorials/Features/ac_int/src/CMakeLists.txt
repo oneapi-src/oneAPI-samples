@@ -50,6 +50,19 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 
 ###############################################################################
+### Generate Report
+###############################################################################
+# To compile manually:
+#   dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early ac_int.cpp -o ac_int_report.a
+set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
+# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
+add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
+add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
+set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_FLAGS} -fsycl-link=early")
+# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
+
+###############################################################################
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
@@ -62,18 +75,6 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 
-###############################################################################
-### Generate Report
-###############################################################################
-# To compile manually:
-#   dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early ac_int.cpp -o ac_int_report.a
-set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
-# The compile output is not an executable, but an intermediate compilation result unique to DPC++.
-add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
-add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
-set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
-set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_FLAGS} -fsycl-link=early")
-# fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
 ### FPGA Hardware

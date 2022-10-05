@@ -52,19 +52,6 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 
 ###############################################################################
-### FPGA Simulator
-###############################################################################
-# To compile in a single command:
-#   dpcpp -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> latency_control.cpp -o latency_control.fpga
-# CMake executes:
-#   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o latency_control.cpp.o -c latency_control.cpp
-#   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> latency_control.cpp.o -o latency_control.fpga
-add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-add_custom_target(fpga DEPENDS ${FPGA_TARGET})
-set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
-
-###############################################################################
 ### Generate Report
 ###############################################################################
 # To compile manually:
@@ -76,6 +63,19 @@ add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
+
+###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#   dpcpp -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> latency_control.cpp -o latency_control.fpga
+# CMake executes:
+#   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o latency_control.cpp.o -c latency_control.cpp
+#   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> latency_control.cpp.o -o latency_control.fpga
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_custom_target(fpga DEPENDS ${SIMULATOR_TARGET})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
 
 ###############################################################################
 ### FPGA Hardware

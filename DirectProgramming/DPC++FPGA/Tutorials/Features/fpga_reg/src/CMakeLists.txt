@@ -71,15 +71,15 @@ set_target_properties(${FPGA_EARLY_IMAGE_REG} PROPERTIES LINK_FLAGS "${HARDWARE_
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o fpga_reg.cpp.o -c fpga_reg.cpp
 #   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> fpga_reg.cpp.o -o fpga_reg.fpga
-add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-add_executable(${FPGA_TARGET_REG} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-add_custom_target(fpga DEPENDS ${FPGA_TARGET} ${FPGA_TARGET_REG})
-set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_executable(${SIMULATOR_TARGET_REG} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_custom_target(fpga DEPENDS ${SIMULATOR_TARGET} ${SIMULATOR_TARGET_REG})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
 # See DPC++FPGA/GettingStarted/fast_recompile for details.
-set_target_properties(${FPGA_TARGET_REG} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS} -DUSE_FPGA_REG")
-set_target_properties(${FPGA_TARGET_REG} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_REG}")
+set_target_properties(${SIMULATOR_TARGET_REG} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS} -DUSE_FPGA_REG")
+set_target_properties(${SIMULATOR_TARGET_REG} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET_REG}")
 
 ###############################################################################
 ### FPGA Hardware

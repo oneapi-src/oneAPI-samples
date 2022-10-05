@@ -79,6 +79,11 @@ The following instructions assume you are in the project's root folder.
      make report
      ```
      Locate the FPGA optimization report, `report.html`, in the `fpga_report.prj/reports/` directory.
+   - Use the following commands to build and run the template for FPGA simulator:
+     ```
+     make fpga_sim
+     ./cmake.fpga_sim
+     ```
    - Use the following commands to build and run the template for FPGA Hardware (takes about **one hour**, and the system must have at least **32 Gb** of physical dynamic memory):
      ```
      make fpga

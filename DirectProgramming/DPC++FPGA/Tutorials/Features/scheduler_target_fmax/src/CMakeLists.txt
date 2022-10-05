@@ -56,17 +56,17 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
-### FPGA Simulator 
+### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
 #   dpcpp -fintelfpga -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> scheduler_target_fmax.cpp -o scheduler_target_fmax.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o scheduler_target_fmax.cpp.o -c scheduler_target_fmax.cpp
 #   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> scheduler_target_fmax.cpp.o -o scheduler_target_fmax.fpga
-add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-add_custom_target(fpga DEPENDS ${FPGA_TARGET})
-set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_custom_target(fpga DEPENDS ${SIMULATOR_TARGET})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
 # See DPC++FPGA/GettingStarted/fast_recompile for details.
 

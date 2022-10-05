@@ -138,7 +138,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake .. -DFPGA_TARGET=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
+   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -169,7 +169,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    You can also compile for a custom FPGA platform with SYCL USM support. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_TARGET=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DUSM_HOST_ALLOCATIONS_ENABLED=1
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
