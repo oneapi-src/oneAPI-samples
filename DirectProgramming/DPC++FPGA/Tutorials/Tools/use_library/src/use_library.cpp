@@ -22,9 +22,11 @@ SYCL_EXTERNAL float SyclSquare(float x) {
 int main() {
   unsigned result = 0;
 
-  // Select either the FPGA emulator (CPU) or FPGA device
+  // Select the FPGA emulator (CPU), FPGA simulator, or FPGA device
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector
 #else
   ext::intel::fpga_selector device_selector;
 #endif
