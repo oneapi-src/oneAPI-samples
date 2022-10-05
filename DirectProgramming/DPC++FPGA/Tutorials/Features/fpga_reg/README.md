@@ -6,7 +6,7 @@ This FPGA tutorial demonstrates how a power user can apply the SYCL*-compliant C
 
 | Optimized for                     | Description
 ---                                 |---
-| OS                                | Linux*Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE*15 <br> Windows* 10
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> ***Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to use the `ext::intel::fpga_reg` extension <br> How `ext::intel::fpga_reg` can be used to re-structure the compiler-generated hardware <br> Situations in which applying  `ext::intel::fpga_reg` might be beneficial
@@ -178,7 +178,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      make fpga
      ```
 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux*Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/fpga_reg.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/fpga_reg.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
