@@ -98,11 +98,11 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o use_library.cpp.o -c use_library.cpp -DFPGA_SIMULATOR
 #   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
-add_executable(${FPGA_TARGET} ${SOURCE_FILE})
-add_custom_target(fpga DEPENDS ${FPGA_TARGET})
-target_link_libraries(${FPGA_TARGET} library_archive)
-set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+add_custom_target(fpga DEPENDS ${SIMULATOR_TARGET})
+target_link_libraries(${SIMULATOR_TARGET} library_archive)
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
 
 ###############################################################################
 ### FPGA Hardware

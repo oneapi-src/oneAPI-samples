@@ -2,17 +2,14 @@
 
 This FPGA tutorial demonstrates how to build DPC++ device libraries from RTL sources and use them in your DPC++ design.
 
-***Documentation***:  The [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-The [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-The [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
 
 | Optimized for                     | Description
----                                 |---
-| OS                                | Linux* Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
-| Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | How to create and use libraries in DPC++ FPGA projects <br> How power users can incorporate RTL source code in DPC++ for FPGA
-| Time to complete                  | 15 minutes
+|:---                               |:---
+| OS                                | CentOS* Linux 8 <br> Red Hat* Enterprise Linux* 8 <br> SUSE* Linux Enterprise Server 15 <br> Ubuntu* 18.04 LTS <br> Ubuntu 20.04 <br>Windows* 10
+| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br>Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br>Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Software                          | Intel&reg; oneAPI DPC++ Compiler <br>Intel&reg; FPGA Add-On for oneAPI Base Toolkit
+| What you will learn               | How different methods of `ac_fixed` number construction affect hardware resource utilization <br>Recommended method for constructing `ac_fixed` numbers in your kernel <br>Accessing and using the `ac_fixed` math library functions <br>Trading off accuracy of results for reduced resource usage on the FPGA
+| Time to complete                  | 30 minutes
 
 _Notice: The FPGA library feature is not yet supported in Windows*_
 
@@ -46,20 +43,12 @@ To use the generated library in your project, simply add the generated library a
 # Compile for FPGA emulator
 dpcpp -fintelfpga use_library.cpp lib.a -o use_library_emu.fpga -DFPGA_EMULATOR
 
+# Compile for FPGA Simulator
+dpcpp -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xssimulation -DFPGA_SIMULATOR
+
 # Compile for FPGA hardware
 dpcpp -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware
 ```
-
-* How to create and use libraries in DPC++ FPGA projects
-* How power users can incorporate RTL source code in DPC++ for FPGA
-
-## License
-
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
 
 ## Building the `use_library` Tutorial
 
@@ -87,13 +76,13 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
    Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```bash
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
 
    ```bash
-   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -108,6 +97,12 @@ When compiling for FPGA hardware, it is recommended to increase the job timeout 
 
      ```bash
      make report
+     ```
+
+   * Compile for FPGA Simulator
+
+     ```bash
+     make fpga_sim
      ```
 
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
@@ -130,7 +125,13 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*). For instr
      ./use_library.fpga_emu     (Linux)
      ```
 
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device
+
+     ```bash
+     ./use_library.fpga_sim         (Linux)
+     ```
+
+3. Run the sample on the FPGA device:
 
      ```bash
      ./use_library.fpga         (Linux)
@@ -141,3 +142,9 @@ You can compile and run this tutorial in the Eclipse* IDE (in Linux*). For instr
 ```bash
 PASSED: result is correct!
 ```
+
+## License
+
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
