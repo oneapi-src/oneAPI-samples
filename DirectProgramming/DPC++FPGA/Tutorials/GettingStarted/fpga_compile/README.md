@@ -54,7 +54,7 @@ Optimization reports are generated after both stages. The optimization report ge
 The [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design.html) contains a chapter on how to analyze the reports generated after the FPGA early image and FPGA image.
 
 #### FPGA Hardware
-This is a full compile through to the FPGA hardware image. You can target the Intel® PAC with Intel Arria® 10 GX FPGA, the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), or a custom board.
+This is a full compile through to the FPGA hardware image. You can target the Intel® PAC with Intel Arria® 10 GX FPGA, the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), or a custom device.
 
 ### Device Selectors
 The following code snippet demonstrates how you can specify the target device in your source code. The selector is used to specify the target device at runtime.
@@ -86,19 +86,19 @@ This section includes a helpful list of commands and options to compile this des
 
 `dpcpp -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu`
 
-**Optimization report (default board)**
+**Optimization report (default FPGA device)**
 
 `dpcpp -fintelfpga -Xshardware -fsycl-link=early fpga_compile.cpp -o fpga_compile_report.a`
 
-**Optimization report (explicit board)**
+**Optimization report (explicit FPGA device)**
 
 `dpcpp -fintelfpga -Xshardware -fsycl-link=early -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile_report.a`
 
-**FPGA hardware (default board)**
+**FPGA hardware (default FPGA device)**
 
 `dpcpp -fintelfpga -Xshardware fpga_compile.cpp -o fpga_compile.fpga`
 
-**FPGA hardware (explicit board)**
+**FPGA hardware (explicit FPGA device)**
 
 `dpcpp -fintelfpga -Xshardware -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile.fpga`
 
