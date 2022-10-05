@@ -8,13 +8,13 @@ set(FPGA_TARGET_INTERLEAVING ${TARGET_NAME}_interleaving.fpga)
 set(FPGA_TARGET_NO_INTERLEAVING ${TARGET_NAME}_no_interleaving.fpga)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
@@ -24,13 +24,13 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 set(NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS "-DNO_INTERLEAVING")
-if (FPGA_BOARD STREQUAL "intel_a10gx_pac:pac_a10")
+if (FPGA_DEVICE STREQUAL "intel_a10gx_pac:pac_a10")
   string(APPEND NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS " -DTWO_CHANNELS")
-elseif (FPGA_BOARD STREQUAL "intel_s10sx_pac:pac_s10")
+elseif (FPGA_DEVICE STREQUAL "intel_s10sx_pac:pac_s10")
   string(APPEND NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS " -DFOUR_CHANNELS")
 endif()
 
@@ -51,7 +51,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> -fsycl-link=early mem_channel.cpp -o mem_channel_report.a
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early mem_channel.cpp -o mem_channel_report.a
 set(FPGA_EARLY_IMAGE_INTERLEAVING ${TARGET_NAME}_interleaving_report.a)
 set(FPGA_EARLY_IMAGE_NO_INTERLEAVING ${TARGET_NAME}_no_interleaving_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
@@ -69,10 +69,10 @@ set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES LINK_FLAGS 
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> mem_channel.cpp -o mem_channel.fpga
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> mem_channel.cpp -o mem_channel.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o mem_channel.cpp.o -c mem_channel.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_BOARD> mem_channel.cpp.o -o mem_channel.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> mem_channel.cpp.o -o mem_channel.fpga
 add_executable(${FPGA_TARGET_INTERLEAVING} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_executable(${FPGA_TARGET_NO_INTERLEAVING} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET_INTERLEAVING} ${FPGA_TARGET_NO_INTERLEAVING})
