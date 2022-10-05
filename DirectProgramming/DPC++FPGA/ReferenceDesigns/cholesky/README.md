@@ -145,7 +145,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following command instead:
    ```
-   cmake .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -179,7 +179,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    For the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), enter the following command instead:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
    1. Compile for emulation (fast compile time, targets emulated FPGA device):
