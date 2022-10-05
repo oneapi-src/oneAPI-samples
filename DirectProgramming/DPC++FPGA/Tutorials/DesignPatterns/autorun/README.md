@@ -199,7 +199,7 @@ You can compile and run this tutorial in the Eclipse*IDE (in Linux*) and the Vis
 
 Note that when running this particular sample in emulation on Windows, an environment variable must be set as shown or the execution will hang.
 
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
 
      ```
      ./autorun.fpga_sim         (Linux)
