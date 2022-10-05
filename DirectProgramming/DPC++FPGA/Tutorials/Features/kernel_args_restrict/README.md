@@ -117,7 +117,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
     ```
     cmake ..
-   ```
+    ```
 
    Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
@@ -135,20 +135,20 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
    - Compile for emulation (fast compile time, targets emulated FPGA device):
 
-      ```
-      make fpga_emu
-      ```
-
-   - Compile for simulation (fast compile time, targets simulated FPGA device)
-
-     ```bash
-     make fpga_sim
+     ```
+     make fpga_emu
      ```
 
    - Generate the optimization report:
 
      ```
      make report
+     ```
+
+   - Compile for simulation (fast compile time, targets simulated FPGA device)
+
+     ```
+     make fpga_sim
      ```
 
    - Compile for FPGA hardware (longer compile time, targets FPGA device):
@@ -172,7 +172,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
     ```
     cmake -G "NMake Makefiles" ..
-   ```
+    ```
 
    Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
@@ -194,16 +194,16 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      nmake fpga_emu
      ```
 
-   - Compile for the simulation target (fast compile time, targets simulated FPGA device)
-
-     ```
-     nmake fpga_sim
-     ```
-
    - Generate the optimization report:
 
      ```
      nmake report
+     ```
+
+   - Compile for the simulation target (fast compile time, targets simulated FPGA device)
+
+     ```
+     nmake fpga_sim
      ```
 
    - Compile for FPGA hardware (longer compile time, targets FPGA device):
@@ -301,3 +301,4 @@ Code samples are licensed under the MIT license. See
 [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
 Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+

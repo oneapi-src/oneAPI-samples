@@ -304,7 +304,7 @@ Locate `report.html` in the `latency_control_report.prj/reports/` directory. Ope
      latency_control.fpga_emu.exe   (Windows)
      ```
 
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
 
      ```
      ./latency_control.fpga_sim         (Linux)

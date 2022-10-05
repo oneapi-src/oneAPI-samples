@@ -116,15 +116,15 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      make report
      ```
 
-   - Compile for FPGA hardware (longer compile time, targets FPGA device):
-
    - Compile for simulation (fast compile time, targets simulated FPGA device)
 
      ```bash
      make fpga_sim
      ```
 
-     ```
+   - Compile for FPGA hardware (longer compile time, targets FPGA device):
+
+     ```bash
      make fpga
      ```
 
