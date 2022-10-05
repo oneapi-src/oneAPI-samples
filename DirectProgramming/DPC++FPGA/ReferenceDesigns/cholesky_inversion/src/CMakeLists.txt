@@ -5,13 +5,13 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 # Include ac_types headers and link against ac_types emulation libraries
@@ -26,10 +26,10 @@ set(CLOCK_TARGET 360MHz)
 set(SEED "-Xsseed=29")
 
 # Set design parameters according to the selected board
-if(FPGA_BOARD MATCHES ".*a10.*")
+if(FPGA_DEVICE MATCHES ".*a10.*")
     # A10 parameters
     # Nothing to do
-elseif(FPGA_BOARD MATCHES ".*s10.*")
+elseif(FPGA_DEVICE MATCHES ".*s10.*")
     # S10 parameters
     set(MATRIX_DIMENSION 32)
     set(COMPLEX 0)
@@ -37,7 +37,7 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
     set(FIXED_ITERATIONS_INVERSION 44)
     set(CLOCK_TARGET 450MHz)
     set(SEED "-Xsseed=5")
-elseif(FPGA_BOARD MATCHES ".*agilex.*")
+elseif(FPGA_DEVICE MATCHES ".*agilex.*")
     # Agilex™ parameters
     set(MATRIX_DIMENSION 32)
     set(FIXED_ITERATIONS_DECOMPOSITION 45)
@@ -46,7 +46,7 @@ elseif(FPGA_BOARD MATCHES ".*agilex.*")
     set(CLOCK_TARGET 520MHz)
     set(SEED "-Xsseed=5")
 else()
-    message(STATUS "Unknown board ${FPGA_BOARD}!")
+    message(STATUS "Unknown board ${FPGA_DEVICE}!")
     message(STATUS "Using Arria 10 defaults.")
 endif()
 
@@ -83,7 +83,7 @@ message(STATUS "SEED=${SEED}")
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${AC_TYPES_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -fno-finite-math-only -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_INVERSION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga -Wall ${AC_TYPES_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS_DECOMPOSITION=${FIXED_ITERATIONS_DECOMPOSITION} -DFIXED_ITERATIONS_INVERSION=${FIXED_ITERATIONS_INVERSION} -DCOMPLEX=${COMPLEX} -DMATRIX_DIMENSION=${MATRIX_DIMENSION} -fp-model=precise -Xsfp-relaxed")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

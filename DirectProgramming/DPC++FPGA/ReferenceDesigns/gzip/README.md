@@ -104,12 +104,12 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
+   cmake .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10_usm
    ```
    To compile for the Low Latency version of the design use the command
 
    ```
-   cmake .. -DLOW_LATENCY=1 -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
+   cmake .. -DLOW_LATENCY=1 -DFPGA_TARGET=intel_s10sx_pac:pac_s10_usm
    ```
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
@@ -143,12 +143,12 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
+   cmake -G "NMake Makefiles" .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10_usm
    ```
    To compile for the Low Latency version of the design use the command:
 
    ```
-   cmake -G "Nmake Makefiles" .. -DLOW_LATENCY=1 -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm
+   cmake -G "Nmake Makefiles" .. -DLOW_LATENCY=1 -DFPGA_TARGET=intel_s10sx_pac:pac_s10_usm
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
