@@ -4,7 +4,7 @@ This tutorial explains the  `kernel_args_restrict` attribute and its effect on t
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux*Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE*15 <br> Windows* 10
+| OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
 | Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel&reg; FPGA 3rd party / custom platforms with oneAPI support <br> **Note**: Intel&reg; FPGA PAC hardware is only compatible with Ubuntu 18.04*
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               |  The problem of *pointer aliasing* and its impact on compiler optimizations. <br> The behavior of the `kernel_args_restrict` attribute and when to use it on your kernel. <br> The effect this attribute can have on your kernel's performance on FPGA.
@@ -157,7 +157,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      make fpga
      ```
 
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux*Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/kernel_args_restrict.fpga.tar.gz" download>here</a>.
+3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/kernel_args_restrict.fpga.tar.gz" download>here</a>.
 
 ### On a Windows* System
 
