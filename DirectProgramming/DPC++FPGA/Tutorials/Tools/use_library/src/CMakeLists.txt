@@ -3,17 +3,18 @@ set(HEADER_FILE lib.hpp)
 set(LIBRARY_ARCHIVE lib.a)
 set(TARGET_NAME use_library)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(REPORT_TARGET ${TARGET_NAME}_report.a)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 # Library source files
@@ -25,8 +26,10 @@ set(RTL_SOURCE_OBJECT lib_rtl.o)
 # Flags
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS} -DFPGA_SIMULATOR")
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 # Flag lists for custom commands
@@ -63,10 +66,10 @@ set_target_properties(library_archive PROPERTIES IMPORTED_LOCATION ${CMAKE_ARCHI
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR use_library.cpp lib.a -o use_library.fpga_emu
+#    dpcpp -fintelfpga -DFPGA_EMULATOR use_library.cpp lib.a -o use_library.fpga_emu
 # CMake executes:
-#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o use_library.o -c use_library.cpp
-#    [link]    icpx -fsycl -fintelfpga use_library.cpp.o -o use_library.fpga_emu lib.a lib_sycl.o
+#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o use_library.o -c use_library.cpp
+#    [link]    dpcpp -fintelfpga use_library.cpp.o -o use_library.fpga_emu lib.a lib_sycl.o
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 target_link_libraries(${EMULATOR_TARGET} library_archive)
@@ -77,7 +80,7 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   icpx -fsycl -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early use_library.cpp lib.a -o use_library_report.a
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early use_library.cpp lib.a -o use_library_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -88,13 +91,27 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
 
 ###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#   dpcpp -fintelfpga -Xssimulation -Xsghdl -DFPGA_SIMULATOR -Xstarget=<FPGA_DEVICE> use_library.cpp lib.a -o use_library.fpga
+# CMake executes:
+#   [compile] dpcpp -fintelfpga -o use_library.cpp.o -c use_library.cpp -DFPGA_SIMULATOR
+#   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
+add_executable(${FPGA_TARGET} ${SOURCE_FILE})
+add_custom_target(fpga DEPENDS ${FPGA_TARGET})
+target_link_libraries(${FPGA_TARGET} library_archive)
+set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+
+###############################################################################
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   icpx -fsycl -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp lib.a -o use_library.fpga
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> use_library.cpp lib.a -o use_library.fpga
 # CMake executes:
-#   [compile] icpx -fsycl -fintelfpga -o use_library.cpp.o -c use_library.cpp
-#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
+#   [compile] dpcpp -fintelfpga -o use_library.cpp.o -c use_library.cpp
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
 add_executable(${FPGA_TARGET} ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 target_link_libraries(${FPGA_TARGET} library_archive)

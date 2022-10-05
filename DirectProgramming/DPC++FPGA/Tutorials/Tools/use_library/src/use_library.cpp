@@ -6,10 +6,7 @@
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include "lib.hpp"
-
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -33,7 +30,7 @@ int main() {
 #endif
 
   try {
-    queue q(device_selector, dpc_common::exception_handler);
+    queue q(device_selector, fpga_tools::exception_handler);
 
     // The scalar inputs are passed to the kernel using the lambda capture,
     // but a SYCL buffer must be used to return a scalar from the kernel.
@@ -93,3 +90,4 @@ int main() {
   std::cout << "PASSED: result is correct!\n";
   return 0;
 }
+

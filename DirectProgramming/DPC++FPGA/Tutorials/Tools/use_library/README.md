@@ -1,4 +1,3 @@
-
 # Using FPGA Cross-Language Libraries
 
 This FPGA tutorial demonstrates how to build DPC++ device libraries from RTL sources and use them in your DPC++ design.
@@ -63,10 +62,6 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 
 ## Building the `use_library` Tutorial
-
-### Include Files
-
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
 
