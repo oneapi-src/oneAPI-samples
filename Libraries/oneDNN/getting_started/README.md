@@ -135,13 +135,13 @@ C:\Program Files (x86)\Intel\oneAPI\setvars.bat
 ```
 
 ##### 2. Download [oneAPI Level Zero headers](https://github.com/oneapi-src/level-zero/releases/tag/v1.0) from Github and unpack the archive.
+##### or open `Intel oneAPI Commmand Prompt` instead. 
 
 ##### 3. Generate Ninja project
 ```
 mkdir build
 cd build
 
-Set C and C++ compilers
 set CC=icx
 set CXX=icx
 
@@ -150,7 +150,7 @@ cmake .. -G Ninja -DDNNL_CPU_RUNTIME=DPCPP
                   -DCMAKE_PREFIX_PATH=<path to Level Zero headers> 
 ```
 
-##### Run the sample
+#### Run the sample
 You can get additional information during the execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
 
