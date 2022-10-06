@@ -14,13 +14,13 @@ set(STALL_FREE_SIMULATOR_TARGET ${STALL_FREE_TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET_STALL_FREE ${STALL_FREE_TARGET_NAME}.fpga)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_TARGET)
-    set(FPGA_TARGET "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_TARGET was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_TARGET} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_TARGET}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 # Allow disabling of hyper-optimization for S10
@@ -40,10 +40,10 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${HYPER_FLAG} -fintelfpga -Xssimulation -DFPGA_SIMULATOR ${USER_SIMULATOR_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_TARGET} ${HYPER_FLAG} ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${HYPER_FLAG} ${USER_SIMULATOR_FLAGS}")
 # use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
 set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${HYPER_FLAG} -fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_TARGET} ${HYPER_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${HYPER_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -82,7 +82,7 @@ add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${STALL_FREE_SIMULATOR_TA
 ### Generate Report
 ###############################################################################
 # To compile manually (Stall Enable):
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_TARGET> -fsycl-link=early stall_enable.cpp -o stall_enable.a
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early stall_enable.cpp -o stall_enable.a
 set(FPGA_EARLY_IMAGE ${STALL_ENABLE_TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -91,7 +91,7 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
 
 # To compile manually (Stall Free):
-#   dpcpp -DSTALL_FREE -fintelfpga -Xshardware -Xstarget=<FPGA_TARGET> -fsycl-link=early stall_enable.cpp -o stall_enable.a
+#   dpcpp -DSTALL_FREE -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early stall_enable.cpp -o stall_enable.a
 set(FPGA_STALL_FREE_EARLY_IMAGE ${STALL_FREE_TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_STALL_FREE_EARLY_IMAGE} ${SOURCE_FILE})
@@ -103,10 +103,10 @@ set_target_properties(${FPGA_STALL_FREE_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HA
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command (Stall Enable):
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_TARGET> stall_enable.cpp -o stall_enable.fpga
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> stall_enable.cpp -o stall_enable.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o stall_enable.cpp.o -c stall_enable.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_TARGET> stall_enable.cpp.o -o stall_enable.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> stall_enable.cpp.o -o stall_enable.fpga
 add_executable(${FPGA_TARGET_STALL_ENABLE} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 set_target_properties(${FPGA_TARGET_STALL_ENABLE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET_STALL_ENABLE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_STALL_ENABLE}")
@@ -114,10 +114,10 @@ set_target_properties(${FPGA_TARGET_STALL_ENABLE} PROPERTIES LINK_FLAGS "${HARDW
 # See DPC++FPGA/GettingStarted/fast_recompile for details.
 
 # To compile in a single command (Stall Enable):
-#   dpcpp -fintelfpga -DSTALL_FREE -Xshardware -Xstarget=<FPGA_TARGET> stall_enable.cpp -o stall_free.fpga
+#   dpcpp -fintelfpga -DSTALL_FREE -Xshardware -Xstarget=<FPGA_DEVICE> stall_enable.cpp -o stall_free.fpga
 # CMake executes:
 #   [compile] dpcpp -DSTALL_FREE -fintelfpga -o stall_free.cpp.o -c stall_free.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_TARGET> stall_free.cpp.o -o stall_free.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> stall_free.cpp.o -o stall_free.fpga
 add_executable(${FPGA_TARGET_STALL_FREE} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET_STALL_ENABLE} ${FPGA_TARGET_STALL_FREE})
 set_target_properties(${FPGA_TARGET_STALL_FREE} PROPERTIES COMPILE_FLAGS "${STALL_FREE_DEFINE} ${HARDWARE_COMPILE_FLAGS}")
