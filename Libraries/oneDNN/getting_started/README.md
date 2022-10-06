@@ -150,6 +150,12 @@ cmake .. -G Ninja -DDNNL_CPU_RUNTIME=DPCPP
                   -DCMAKE_PREFIX_PATH=<path to Level Zero headers> 
 ```
 
+
+##### 4. Build the library 
+```
+cmake --build .
+```
+
 #### Run the sample
 You can get additional information during the execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
