@@ -14,7 +14,7 @@ in Intel® DevCloud for oneAPI environment.
 
 | Optimized for                      | Description
 | :---                               | :---
-| OS                                 | Linux* Ubuntu* 18.04
+| OS                                 | Linux* Ubuntu* 18.04; Windows 10
 | Hardware                           | Skylake with GEN9 or newer
 | Software                           | Intel® oneAPI Deep Neural Network Library (oneDNN) <br> Intel® oneAPI DPC++/C++ Compiler <br> Intel® oneAPI Threading Building Blocks (oneTBB) <br> GNU Compiler Collection <br> Intel® C++ Compiler
 | What you will learn                | Running a simple convolutional model on Intel CPU or Intel GPU
@@ -124,7 +124,33 @@ cd build
 cmake -G "Visual Studio 16 2019" ..
 cmake --build .
 ```
-##### 3. Run the sample
+
+
+#### oneAPI DPC++ Compiler
+
+##### 1. Setup oneAPI development environment
+
+```
+C:\Program Files (x86)\Intel\oneAPI\setvars.bat 
+```
+
+##### 2. Download [oneAPI Level Zero headers](https://github.com/oneapi-src/level-zero/releases/tag/v1.0) from Github and unpack the archive.
+
+##### 3. Generate Ninja project
+```
+mkdir build
+cd build
+
+Set C and C++ compilers
+set CC=icx
+set CXX=icx
+
+cmake .. -G Ninja -DDNNL_CPU_RUNTIME=DPCPP 
+                  -DDNNL_GPU_RUNTIME=DPCPP 
+                  -DCMAKE_PREFIX_PATH=<path to Level Zero headers> 
+```
+
+##### Run the sample
 You can get additional information during the execution of this sample by setting
 environment variable `DNNL_VERBOSE=1`.
 
