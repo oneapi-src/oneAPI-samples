@@ -16,23 +16,16 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
 endif()
 
-# These are Windows-specific flags:
-# 1. /EHsc This is a Windows-specific flag that enables exception handling in host code
-# 2. /Qactypes Include ac_types headers and link against ac_types emulation libraries
-if(WIN32)
-    set(WIN_FLAG "/EHsc")
-    set(AC_TYPES_FLAG "/Qactypes")
-else()
-    set(AC_TYPES_FLAG "-qactypes")
-endif()
+# Include ac_types headers and link against ac_types emulation libraries
+set(AC_TYPES_FLAG "-qactypes")
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -Wall")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -Wall")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
-set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} -Wall")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Wall")
 set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
