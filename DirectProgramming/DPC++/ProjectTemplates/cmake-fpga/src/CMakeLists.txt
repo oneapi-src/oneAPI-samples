@@ -44,7 +44,7 @@ add_custom_command(OUTPUT ${DEVICE_OBJ_FILE}
 
 # FPGA simulator
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
-add_custom_target(fpga DEPENDS ${SIMULATOR_TARGET})
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS ${SIMULATOR_COMPILE_FLAGS})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS ${SIMULATOR_LINK_FLAGS})
 
