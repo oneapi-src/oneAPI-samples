@@ -104,15 +104,6 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 
 ###############################################################################
-### FPGA Simulator
-###############################################################################
-add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
-target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
-add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
-
-###############################################################################
 ### Generate Report
 ###############################################################################
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
@@ -123,6 +114,15 @@ add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_FLAGS} -fsycl-link=early")
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
+
+###############################################################################
+### FPGA Simulator
+###############################################################################
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 
 ###############################################################################
 ### FPGA Hardware
