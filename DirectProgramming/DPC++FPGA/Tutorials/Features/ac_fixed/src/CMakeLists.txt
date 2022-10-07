@@ -69,8 +69,8 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 #   [link]    dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> ac_fixed.cpp.o -o ac_fixed.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULTOR_COMPILE_FLAGS}")
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULTOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
 # See DPC++FPGA/GettingStarted/fast_recompile for details.
 
