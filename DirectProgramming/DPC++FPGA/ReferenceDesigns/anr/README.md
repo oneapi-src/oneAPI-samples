@@ -143,7 +143,7 @@ The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your de
    ```
    For **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -177,7 +177,7 @@ The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your de
    ```
    To compile for the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 
 3. Compile the design. (The provided targets match the recommended development flow.)
