@@ -12,6 +12,7 @@
     "base": "../..",
     "include": [
       "ReferenceDesigns/board_test"
+      "include"
     ],
     "exclude": []
   },
