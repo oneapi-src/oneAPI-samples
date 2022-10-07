@@ -1,7 +1,8 @@
-
-// Copyright (C) 2020 Intel Corporation
-
+//==============================================================
+// Copyright © Intel Corporation
+//
 // SPDX-License-Identifier: MIT
+// =============================================================
 
 #include <CL/sycl.hpp>
 #include<array>
@@ -17,7 +18,7 @@ int main() {
   for (int i = 0; i < N; i++)
     host_array[i] = N;
 
-  // We will learn how to simplify this example later
+  // Submit the queue
   Q.submit([&](handler &h) {
       // copy hostArray to deviceArray
       h.memcpy(device_array, &host_array[0], N * sizeof(int));

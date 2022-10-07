@@ -1,7 +1,8 @@
-
-// Copyright (C) 2020 Intel Corporation
-
+//==============================================================
+// Copyright © Intel Corporation
+//
 // SPDX-License-Identifier: MIT
+// =============================================================
 
 #include <CL/sycl.hpp>
 #include<array>

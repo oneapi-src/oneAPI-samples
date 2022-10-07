@@ -29,6 +29,8 @@
 
 using namespace sycl;
 
+// num_repetitions: How many times to repeat the kernel invocation
+size_t num_repetitions = 1;
 // Vector type and data size for this example.
 size_t vector_size = 10000;
 typedef std::vector<int> IntVector; 
@@ -63,25 +65,30 @@ void VectorAdd(queue &q, const IntVector &a_vector, const IntVector &b_vector,
   buffer b_buf(b_vector);
   buffer sum_buf(sum_parallel.data(), num_items);
 
-  // Submit a command group to the queue by a lambda function that contains the
-  // data access permission and device computation (kernel).
-  q.submit([&](handler &h) {
-    // Create an accessor for each buffer with access permission: read, write or
-    // read/write. The accessor is a mean to access the memory in the buffer.
-    accessor a(a_buf, h, read_only);
-    accessor b(b_buf, h, read_only);
+  for (size_t i = 0; i < num_repetitions; i++ ) {
 
-    // The sum_accessor is used to store (with write permission) the sum data.
-    accessor sum(sum_buf, h, write_only, no_init);
-
-    // Use parallel_for to run vector addition in parallel on device. This
-    // executes the kernel.
-    //    1st parameter is the number of work items.
-    //    2nd parameter is the kernel, a lambda that specifies what to do per
-    //    work item. The parameter of the lambda is the work item id.
-    // DPC++ supports unnamed lambda kernel by default.
-    h.parallel_for(num_items, [=](auto i) { sum[i] = a[i] + b[i]; });
-  });
+    // Submit a command group to the queue by a lambda function that contains the
+    // data access permission and device computation (kernel).
+    q.submit([&](handler &h) {
+      // Create an accessor for each buffer with access permission: read, write or
+      // read/write. The accessor is a mean to access the memory in the buffer.
+      accessor a(a_buf, h, read_only);
+      accessor b(b_buf, h, read_only);
+  
+      // The sum_accessor is used to store (with write permission) the sum data.
+      accessor sum(sum_buf, h, write_only, no_init);
+  
+      // Use parallel_for to run vector addition in parallel on device. This
+      // executes the kernel.
+      //    1st parameter is the number of work items.
+      //    2nd parameter is the kernel, a lambda that specifies what to do per
+      //    work item. The parameter of the lambda is the work item id.
+      // DPC++ supports unnamed lambda kernel by default.
+      h.parallel_for(num_items, [=](auto i) { sum[i] = a[i] + b[i]; });
+    });
+  };
+  // Wait until compute tasks on GPU done
+  q.wait();
 }
 
 //************************************
@@ -95,6 +102,8 @@ void InitializeVector(IntVector &a) {
 // Demonstrate vector add both in sequential on CPU and in parallel on device.
 //************************************
 int main(int argc, char* argv[]) {
+  // Change num_repetitions if it was passed as argument
+  if (argc > 2) num_repetitions = std::stoi(argv[2]);
   // Change vector_size if it was passed as argument
   if (argc > 1) vector_size = std::stoi(argv[1]);
   // Create device selector for the device of your interest.

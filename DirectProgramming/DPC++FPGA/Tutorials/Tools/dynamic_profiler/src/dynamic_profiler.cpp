@@ -6,7 +6,7 @@
   The main content of this sample is in the README file.
 */
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cmath>
 #include <numeric>

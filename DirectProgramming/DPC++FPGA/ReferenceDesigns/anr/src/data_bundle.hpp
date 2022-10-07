@@ -1,7 +1,7 @@
 #ifndef __DATA_BUNDLE_HPP__
 #define __DATA_BUNDLE_HPP__
 
-namespace hldutils {
+namespace fpga_tools {
 
 //
 // A class used to group together 'bundle_size' elements of type 'T' into a
@@ -96,6 +96,6 @@ struct DataBundle {
   }
 };
 
-}  // namespace hldutils
+}  // namespace fpga_tools
 
 #endif /* __DATA_BUNDLE_HPP__ */

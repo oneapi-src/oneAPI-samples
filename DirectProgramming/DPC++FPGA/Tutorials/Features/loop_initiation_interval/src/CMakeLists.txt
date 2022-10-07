@@ -9,21 +9,21 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(FPGA_TARGET_ENABLE_II ${TARGET_NAME_ENABLE_II}.fpga)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
     set(DEVICE_FLAG "-DA10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    if(FPGA_BOARD MATCHES ".*a10.*")
+    if(FPGA_DEVICE MATCHES ".*a10.*")
       set(DEVICE_FLAG "-DA10")
-    elseif(FPGA_BOARD MATCHES ".*s10.*")
+    elseif(FPGA_DEVICE MATCHES ".*s10.*")
       set(DEVICE_FLAG "-DS10")
-    elseif(FPGA_BOARD MATCHES ".*agilex.*")
+    elseif(FPGA_DEVICE MATCHES ".*agilex.*")
       set(DEVICE_FLAG "-DAgilex")
     endif()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 if(NOT DEFINED DEVICE_FLAG)
@@ -32,19 +32,14 @@ if(NOT DEFINED DEVICE_FLAG)
                          -DDEVICE_FLAG=-DAgilex.")
 endif()
 
-# This is a Windows-specific flag that enables exception handling in host code
-if(WIN32)
-    set(WIN_FLAG "/EHsc")
-endif()
-
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
+set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga ${DEVICE_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga ${DEVICE_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
@@ -64,7 +59,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -DA10 -fsycl-link=early loop_initiation_interval.cpp -o loop_ii_report.a
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 -fsycl-link=early loop_initiation_interval.cpp -o loop_ii_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 set(FPGA_EARLY_IMAGE_ENABLE_II ${TARGET_NAME_ENABLE_II}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
@@ -81,10 +76,10 @@ set_target_properties(${FPGA_EARLY_IMAGE_ENABLE_II} PROPERTIES LINK_FLAGS "${HAR
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -DA10 loop_initiation_interval.cpp -o loop_ii.fpga
+#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 loop_initiation_interval.cpp -o loop_ii.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -o loop_initiation_interval.cpp.o -DA10 -c loop_initiation_interval.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -DA10 loop_initiation_interval.cpp.o -o loop_ii.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 loop_initiation_interval.cpp.o -o loop_ii.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_executable(${FPGA_TARGET_ENABLE_II} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET} ${FPGA_TARGET_ENABLE_II})

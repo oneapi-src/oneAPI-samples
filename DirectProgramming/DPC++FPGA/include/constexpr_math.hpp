@@ -46,15 +46,14 @@ constexpr T RoundUpToMultiple(T num, T multiple) {
 template <typename T>
 constexpr T Pow2(T n) {
   static_assert(std::is_integral_v<T>);
-  static_assert(std::is_unsigned_v<T>);
-  return T(1) << n;
+  return (n < 0) ? (T(1) << (-n)) : (T(1) << n);
 }
 
-// returns whether 'n' is a power of 2
+// returns whether abs(n) is a power of 2
 template <typename T>
 constexpr bool IsPow2(T n) {
   static_assert(std::is_integral_v<T>);
-  static_assert(std::is_unsigned_v<T>);
+  if (n < 0) n = -n;
   return (n != 0) && ((n & (n - 1)) == 0);
 }
 

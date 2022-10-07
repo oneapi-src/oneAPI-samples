@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -9,8 +9,7 @@ using namespace sycl;
 static const int N = 256;
 
 int main() {
-  /* in_order queue property */
-  queue q{property::queue::in_order()};
+  queue q;
   std::cout << "Device : " << q.get_device().get_info<info::device::name>() << "\n";
 
   int *data = static_cast<int *>(malloc_shared(N * sizeof(int), q));

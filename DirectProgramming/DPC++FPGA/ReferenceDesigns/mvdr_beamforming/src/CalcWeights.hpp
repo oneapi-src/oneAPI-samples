@@ -1,7 +1,7 @@
 #ifndef __CALC_WEIGHTS_HPP__
 #define __CALC_WEIGHTS_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "mvdr_complex.hpp"

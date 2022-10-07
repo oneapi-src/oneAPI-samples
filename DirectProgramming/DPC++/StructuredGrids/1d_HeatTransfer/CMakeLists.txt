@@ -1,10 +1,11 @@
 # required cmake version
 cmake_minimum_required(VERSION 3.5)
 
+set(CMAKE_CXX_COMPILER "dpcpp")
+
 # CMakeLists.txt for 1d_HeatTransfer project
 project (1d_HeatTransfer)
 
-set(CMAKE_CXX_COMPILER "dpcpp")
 
 # Set default build type to RelWithDebInfo if not specified
 if (NOT CMAKE_BUILD_TYPE)

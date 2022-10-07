@@ -5,35 +5,35 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
-# This is a Windows-specific flag that enables error handling in host code
+# Include ac_types headers and link against ac_types emulation libraries
+set(AC_TYPES_FLAG "-qactypes")
+
+# Setting the stack size on Windows as the default one is too small for this program
 if(WIN32)
-    set(PLATFORM_SPECIFIC_COMPILE_FLAGS "/EHsc /Qactypes /Wall")
-    set(PLATFORM_SPECIFIC_LINK_FLAGS "/Qactypes /F 12582912")
-else()
-    set(PLATFORM_SPECIFIC_COMPILE_FLAGS "-qactypes -Wall")
-    set(PLATFORM_SPECIFIC_LINK_FLAGS "")
+    set(WIN_LINK_FLAG "-Wl,-stack:12582912")
 endif()
 
-
-# Set design parameters according to the selected board
-if(FPGA_BOARD MATCHES ".*a10.*")
+# A10 parameters
+set(ROWS_COMPONENT 128)
+set(COLS_COMPONENT 128)
+set(COMPLEX 1)
+set(FIXED_ITERATIONS 64)
+set(CLOCK_TARGET 360MHz)
+set(SEED "-Xsseed=7")
+# Overwrite design parameters according to the selected board
+if(FPGA_DEVICE MATCHES ".*a10.*")
     # A10 parameters
-    set(ROWS_COMPONENT 128)
-    set(COLS_COMPONENT 128)
-    set(COMPLEX 1)
-    set(FIXED_ITERATIONS 64)
-    set(CLOCK_TARGET 360MHz)
-    set(SEED "-Xsseed=7")
-elseif(FPGA_BOARD MATCHES ".*s10.*")
+    # Nothing to do
+elseif(FPGA_DEVICE MATCHES ".*s10.*")
     # S10 parameters
     set(ROWS_COMPONENT 256)
     set(COLS_COMPONENT 256)
@@ -41,7 +41,7 @@ elseif(FPGA_BOARD MATCHES ".*s10.*")
     set(FIXED_ITERATIONS 110)
     set(CLOCK_TARGET 480MHz)
     set(SEED "-Xsseed=22")
-elseif(FPGA_BOARD MATCHES ".*agilex.*")
+elseif(FPGA_DEVICE MATCHES ".*agilex.*")
     # Agilex™ parameters
     set(ROWS_COMPONENT 256)
     set(COLS_COMPONENT 256)
@@ -50,24 +50,28 @@ elseif(FPGA_BOARD MATCHES ".*agilex.*")
     set(CLOCK_TARGET 600MHz)
     set(SEED "-Xsseed=5")
 else()
-    message(FATAL_ERROR "Unknown board!")
+    message(STATUS "Unknown board ${FPGA_DEVICE}!")
+    message(STATUS "Using Arria 10 defaults.")
 endif()
 
 if(IGNORE_DEFAULT_SEED)
     set(SEED "")
 endif()
 
-if(DEFINED ENV{ROWS_COMPONENT} AND DEFINED ENV{COLS_COMPONENT})
-    set(ROWS_COMPONENT $ENV{ROWS_COMPONENT})
-    set(COLS_COMPONENT $ENV{COLS_COMPONENT})
+if(DEFINED SET_ROWS_COMPONENT)
+    set(ROWS_COMPONENT ${SET_ROWS_COMPONENT})
 endif()
 
-if(DEFINED ENV{COMPLEX})
-    set(COMPLEX $ENV{COMPLEX})
+if(DEFINED SET_COLS_COMPONENT)
+    set(COLS_COMPONENT ${SET_COLS_COMPONENT})
 endif()
 
-if(DEFINED ENV{FIXED_ITERATIONS})
-    set(FIXED_ITERATIONS $ENV{FIXED_ITERATIONS})
+if(DEFINED SET_COMPLEX)
+    set(COMPLEX ${SET_COMPLEX})
+endif()
+
+if(DEFINED SET_FIXED_ITERATIONS)
+    set(FIXED_ITERATIONS ${SET_FIXED_ITERATIONS})
 endif()
 
 message(STATUS "ROWS_COMPONENT=${ROWS_COMPONENT}")
@@ -80,10 +84,10 @@ message(STATUS "SEED=${SEED}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fintelfpga -fno-finite-math-only -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fp-model=precise -Xsfp-relaxed")
-set(HARDWARE_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} -fp-model=precise -Xsfp-relaxed")
+set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${AC_TYPES_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -fno-finite-math-only -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} ${WIN_LINK_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-fintelfpga -Wall ${AC_TYPES_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} ${WIN_LINK_FLAG} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

@@ -7,7 +7,7 @@
 #include <thread>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "common.hpp"
@@ -131,7 +131,7 @@ void DoOneIterationAPI(queue& q, size_t buffers, size_t buffer_count,
   start = high_resolution_clock::now();
 
   // Start the producer thread.
-  // The code in the lamda runs in a different thread and therefore does not
+  // The code in the lambda runs in a different thread and therefore does not
   // block the process of the 'main' thread.
   std::thread producer_thread([&] {
     size_t rep = 0;

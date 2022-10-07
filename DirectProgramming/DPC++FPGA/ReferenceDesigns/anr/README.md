@@ -1,166 +1,273 @@
-# Adaptive Noise Reduction (ANR)
-This DPC++ reference design demonstrates a highly optimized image sensor adaptive noise reduction (ANR) algorithm on an FPGA.
+# `Adaptive Noise Reduction` Sample
+This `Adaptive Noise Reduction` (ANR) sample is a reference design to demonstrate a highly optimized image sensor adaptive noise reduction algorithm for field programmable gate arrays (FPGAs).
 
-***Documentation***:
-* [DPC++ FPGA Code Samples Guide](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of DPC++ for FPGA. <br>
-* [oneAPI DPC++ FPGA Optimization Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) is the reference manual for targeting FPGAs through DPC++. <br>
-* [oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) is a general resource for target-independent DPC++ programming.
-
-| Optimized for                     | Description
----                                 |---
-| OS                                | Ubuntu* 18.04/20.04, RHEL*/CentOS* 8, SUSE* 15; Windows* 10
-| Hardware                          | Intel&reg; Programmable Acceleration Card (PAC) with Intel Arria&reg; 10 GX FPGA <br> Intel&reg; FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix&reg; 10 SX) <br> Intel Xeon&reg; CPU E5-1650 v2 @ 3.50GHz (host machine)
-| Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; FPGA Add-On for oneAPI Base Toolkit
-| What you will learn               | How to create a parameterizable image processing pipeline to implement an Adaptive Noise Reduction (ANR) algorithm on an FPGA.
-| Time to complete                  | 1 hour
+| Area                      | Description
+---                         |---
+| What you will learn       | How to create a parameterizable image processing pipeline to implement an Adaptive Noise Reduction (ANR) algorithm on a FPGA.
+| Time to complete          | ~1 hour
 
 ## Purpose
-This FPGA reference design demonstrates a parameterizable image processing pipeline that implements an Adaptive Noise Reduction (ANR) algorithm using a bilateral filter. See the [Additional Design Information Section](#additional-design-information) for more information on the ANR algorithm itself and how it was implemented for the FPGA.
+This FPGA reference design demonstrates a parameterizable image processing pipeline that implements an Adaptive Noise Reduction (ANR) algorithm using a bilateral filter.
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+See [Key Implementation Details](#key-implementation-details) below for more information on the ANR algorithm itself and how it was implemented for the FPGA.
 
-### Using Visual Studio Code*  (Optional)
+## Prerequisites
 
-You can use Visual Studio Code (VS Code) extensions to set your environment,
-create launch configurations, and browse and download samples.
+| Optimized for                     | Description
+|:---                               |:---
+| OS                                | Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> FPGA Programmable Acceleration Card (PAC) D5005 (with Intel Stratix® 10 SX) <br> Intel Xeon® CPU E5-1650 v2 @ 3.50GHz (host machine)
+| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
- - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the Generate Launch Configurations extension.
+### Additional Documentation
 
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+- [Explore SYCL* Through Intel® FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
+- [FPGA Optimization Guide for Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel® oneAPI Toolkits.
+- [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel® oneAPI Toolkits.
 
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+## Key Implementation Details
 
-## Building the Reference Design
+### ANR Algorithm
+
+The adaptive noise reduction (ANR) algorithm uses an input image that is in a Bayer format. (See the [Bayer format](https://en.wikipedia.org/wiki/Bayer_filter) Wikipedia article for more information.)  Unlike image formats you may be used to, like PNG or JPG, where each pixel has a red, green, and blue value (RGB), each pixel in a Bayer format image is either red, green, or blue. (See the image below.) To convert to an RGB image, one must operate on a 4x4 square and generate the RGB pixel by averaging the two green pixels. One purpose of this format is to dedicate more pixels to green as the human eye is more sensitive to green.
+
+![Bayer format](bayer.png)
+
+The ANR algorithm uses a bilateral filter. Unilateral filters (for example, a Box blur or Gaussian blur) replace the intensity of a given pixel with a weighted average of the neighboring pixels; the weight of each neighboring pixel depends on the spatial distance from the pixel being computed. With bilateral filters, like the one used in this design, the weight of each neighboring pixel depends on both the spatial distance and the difference in pixel intensity. This difference makes bilateral filters better at preserving sharp edges. (See the [bilateral filter](https://en.wikipedia.org/wiki/Bilateral_filter), [Box blur](https://en.wikipedia.org/wiki/Box_blur), and [Gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur) Wikipedia articles for more information.)
+
+Bilateral filters are non-linear and therefore non-separable. In the case of a 5x5 window (shown below), only 9 pixels (not 25) are used in the computation. This difference is an artifact of the Bayer image format. The most accurate approach would produce the bilateral filter window and combine the entire window of the given pixel color (for the image below, red) at once to generate the output pixel (the middle pixel). For the 5x5 case, this would result in 9 multiplications that need to be summed.
+
+![converted](conv.png)
+
+This produces a long chain of adders to sum the results of the multiplications. The design approximates a bilateral filter by making it separable. The first step is to apply a 1D vertical filter to the middle pixel and then a 1D horizontal filter, as shown in the image below. This approach reduces the number of multiplications needing to be summed together to 3. The code in the design applies vertical filter to *all* pixels first and then applies the horizontal filter, which results in the *corner* pixels indirectly applying some weight to the middle pixel.
+
+![Bilateral Estimate](bilateral_estimate.png)
+
+### ANR FPGA Design
+The ANR algorithm is designed as a streaming kernel system with input pixels streaming through the input pipe, and the denoised output pixels streaming out the output pipe, as shown in the figure below. The design consists of two kernels, `Vertical Kernel` and `Horizontal Kernel`, that are connected by an internal SYCL pipe, as shown in the figure below. The `Vertical Kernel` computes an intensity sigma value based on the current pixel, computes the bilateral filter, and applies it to the current window to produce an intermediate pixel value. The `Vertical Kernel` kernel sends three values through the internal pipe: the original pixel value, the current pixel value (the intermediate pixel that was just computed), and the intensity sigma value. The `Horizontal Kernel` streams in these tuples and performs a similar computation on a horizontal window. The algorithm uses the forwarded intensity sigma value to compute the bilateral filer, the new pixel values to perform the bilateral filter computation, and the original pixel to perform *alpha blending*, where the output pixel is a weighted percentage of the original pixel value and the denoised pixel value.
+
+![ANR design](anr_ip.png)
+
+To compute a given pixel, the `Vertical Kernel` must store previous rows (lines) of the input image. (The image shows the technique.) The pixels are streamed in from the pipe and used with pixels from previous rows to perform the 1D vertical window operation.
+
+![Vertical kernel](vertical_kernel.png)
+
+
+The logic for the `Horizontal Kernel`, shown below, is simpler since it operates on a single row at a time.
+
+![Horizontal kernel](horizontal_kernel.png)
+
+To produce the input data and consume the output, the design sets up a full system as shown in the figure below. The `Input Kernel` reads input data from device memory and provides it to the ANR design via the input pipe. The `Output Kernel` reads the output from the ANR design from the output pipe and writes it to device memory. The oneAPI host code then uses the output data to validate the accuracy of the ANR algorithm against a golden result using Peak signal-to-noise ratio (PSNR). (See the [Peak signal-to-noise ratio (PSNR)](https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio) Wikipedia article for more information.)
+
+![ANR system](anr_system.png)
+
+### Quantized Floating-Point (QFP)
+Floating-point values consist of a sign bit, an exponent, and a mantissa. In this design, we take 32-bit single-precision floating values and convert them to quantized floating-point (QFP) values, which use fewer bits. (See the [32-bit single-precision](https://en.wikipedia.org/wiki/Single-precision_floating-point_format) Wikipedia article for more information.)
+
+All of the QFPs in this design have 10 bits total but use a different number for the exponent and mantissa. The purpose of this conversion is to be able to create lookup-table (LUT) read-only memories (ROMs) to approximate expensive 32-bit floating-point operations, like an exponential (`exp(x)`) and inversion (`1/x`). Creating LUT ROMs for 32-bit floats would require `2^32*4 = 17GB` bytes of on-chip memory. If the float can be *quantized* to 10 bits, it requires only `2^10*4 = 4KB` of on-chip memory, at the expense of reduced precision.
+
+
+#### Source Code Breakdown
+
+The following source files are in the `src` directory.
+
+| File                            | Description
+|:---                             |:---
+|`main.cpp`                       | Contains the `main()` function and the top-level launching, validation, and performance measurements.
+|`anr_params.hpp`                 | A class for parsing and holding the ANR specific parameters, such as the sigma coefficients, the filter size, and the alpha value.
+|`anr.hpp`                        | Contains the logic for submitting all of the ANR kernels to the queue and the top-level description of the bilateral filter (both horizontal and vertical).
+|`column_stencil.hpp`             | A generic library for computing a column stencil (a 1D vertical convolution).
+|`constants.hpp`                  | Contains the constants and datatypes for the ANR algorithm.
+|`data_bundle.hpp`                | A generic library for bundling data to move between kernels; essentially an array.
+|`dma_kernels.hpp`                | Contains kernels that move data between the host and device, as well as reading/writing data between the FPGA and device memory.
+|`intensity_sigma_lut.hpp`        | A RAM LUT for the intensity sigma values.
+|`qfp_exp_lut.hpp`                | A ROM LUT for computing exp(-x) on a 32-bit floating-point value (using a QFP).
+|`qfp_inv_lut.hpp`                | A ROM LUT for computing 1/x on a 32-bit floating-point value (using a QFP).
+|`qfp.hpp`                        | Contains a class with generic static methods for converting between 32-bit floating-point and quantized floating-point (QFP).
+|`row_stencil.hpp`                | A generic library for computing a row stencil (a 1D horizontal convolution).
+|`shift_reg.hpp`                  | A generic library for a shift register.
+
+For `constexpr_math.hpp`, `unrolled_loop.hpp`, and `rom_base.hpp` see the README in the `DirectProgramming/DPC++FPGA/include/` directory.
+
+#### Reusable Header Files
+
+The design uses the following generic header files.
+
+>**Note**: Some of these headers files are in the `..DPC++FPGA\include` folder. You might need to copy some of them to the reference design sample `src` directory to compile the program correctly.
+
+| File                                    | Description
+|:---                                     |:---
+|`ColumnStencil` (*column_stencil.hpp*)   | A library for generalizing a column stencil (i.e., the vertical filter) using C++ functors for callbacks to perform the filter. This library hides the details of the FIFO line stores and padding logic and allows the user to worry about the filter convolution.
+|`DataBundle` (*data_bundle.hpp*)         | A library for holding multiple pieces of the same data. This class is similar to a C++ `std::array`, but ensures that the constructors and `operator=` are overridden properly to avoid expensive loops.
+|`ROMBase` (*rom_base.hpp*)               | This library provides a base class for creating a `constexpr` class that results in a ROM in the FPGA.
+|`UnrolledLoop` (*unrolled_loop.hpp*)     | A library that implements a front-end unrolled loop using C++ metaprogramming.
+|`mp_math.hpp`                            | A set of various `constexpr` math functions that are implemented using C++ metaprogramming.
+
+>**Note**: For more information on the usage and implementation of these header libraries, view the comments in the source code in the `.hpp` files.
+
+## Set Environment Variables
+
+When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
+
+## Build the `Adaptive Noise Reduction` Reference Design
 
 > **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Linux User: . ~/intel/oneapi/setvars.sh
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Code Samples in DevCloud
-If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
+The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You might need to use some of the resources from this location to build the sample. 
 
-When compiling for FPGA hardware, it is recommended to increase the job timeout to 24h.
+>**Note**: You can get the common resources from the [oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/common) GitHub repository.
 
-### On a Linux* System
-1. Install the design into a directory `build` from the design directory by running `cmake`:
+### On Linux*
+
+1. Change to the sample directory.
+2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
 
    ```
    mkdir build
    cd build
-   ```
-
-   If you are compiling for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-
-   ```
    cmake ..
    ```
-
-   If instead you are compiling for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-
+   For **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-2. Compile the design through the generated `Makefile`. The following targets are provided, and they match the recommended development flow:
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      make fpga_emu
+      ```
+   2. Generate HTML performance report.
+      ```
+      make report
+      ```
+      The report resides at `anr_report.prj/reports/report.html`.
 
-    * Compile for emulation (fast compile time, targets emulated FPGA device).
+   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+      ```
+      make fpga
+      ```
 
-       ```
-       make fpga_emu
-       ```
+   (Optional) The hardware compiles listed above can take several hours to complete; alternatively, you can download FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) from [https://iotdk.intel.com/fpga-precompiled-binaries/latest/anr.fpga.tar.gz](https://iotdk.intel.com/fpga-precompiled-binaries/latest/anr.fpga.tar.gz).
 
-    * Generate HTML performance report. Find the report in `anr_report.prj/reports/report.html`directory.
+### On Windows*
 
-       ```
-       make report
-       ```
+>**Note**: The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
 
-    * Compile for FPGA hardware (longer compile time, targets FPGA device).
-
-       ```
-       make fpga
-       ```
-
-3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded <a href="https://iotdk.intel.com/fpga-precompiled-binaries/latest/anr.fpga.tar.gz" download>here</a>.
-
-### On a Windows* System
-1. Generate the `Makefile` by running `cmake`.
-     ```
+1. Change to the sample directory.
+2. Build the program for **Intel® PAC with Intel Arria® 10 GX FPGA**, which is the default.
+   ```
    mkdir build
    cd build
+   cmake -G "NMake Makefiles" ..
    ```
-   To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
-    ```
-    cmake -G "NMake Makefiles" ..
+   To compile for the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
-   ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 
-2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
-   * Compile for emulation (fast compile time, targets emulated FPGA device):
-     ```
-     nmake fpga_emu
-     ```
-   * Generate the optimization report:
-     ```
-     nmake report
-     ```
-   * An FPGA hardware target is not provided on Windows*.
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-*Note:* The Intel® PAC with Intel Arria® 10 GX FPGA and Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX) do not yet support Windows*. Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.<br>
-*Note:* If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
+   1. Compile for emulation (fast compile time, targets emulated FPGA device).
+      ```
+      nmake fpga_emu
+      ```
+   2. Generate HTML performance report.
+      ```
+      nmake report
+      ```
+      The report resides at `anr_report.prj/reports/report.html`.
 
+   3. Compile for FPGA hardware (longer compile time, targets FPGA device).
+      ```
+      nmake fpga
+      ```
+>**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your ‘build’ directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory.
 
+#### Troubleshooting
 
 If an error occurs, you can get more details by running `make` with
 the `VERBOSE=1` argument:
-``make VERBOSE=1``
-For more comprehensive troubleshooting, use the Diagnostics Utility for
-Intel® oneAPI Toolkits, which provides system checks to find missing
-dependencies and permissions errors.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+```
+make VERBOSE=1
+```
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
-### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this Reference Design in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*). For instructions, refer to the following link: [Intel® oneAPI DPC++ FPGA Workflows on Third-Party IDEs](https://software.intel.com/en-us/articles/intel-oneapi-dpcpp-fpga-workflow-on-ide)
+## Run the `Adaptive Noise Reduction` Reference Design
 
-## Running the Reference Design
+### On Linux
 
- 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
-     ```
-     ./anr.fpga_emu    (Linux)
-     anr.fpga_emu.exe  (Windows)
-     ```
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+    ```
+    ./anr.fpga_emu
+    ```
+2. Alternatively, run the sample on the FPGA device.
+   ```
+   ./anr.fpga
+   ```
 
-2. Run the sample on the FPGA device.
-     ```
-     ./anr.fpga        (Linux)
-     ```
+### On Windows
 
-### Example of Output
-You should see output similar to the following in the console:
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+    ```
+    anr.fpga_emu.exe
+    ```
+2. Alternatively, run the sample on the FPGA device.
+   ```
+   anr.fpga.exe
+   ```
+
+### Build and Run the Samples on Intel® DevCloud (Optional)
+
+When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
+
+Use the Linux instructions to build and run the program.
+
+You can specify a FPGA runtime node using a single line script similar to the following example.
+
+```
+qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
+```
+
+- `-I` (upper case I) requests an interactive session.
+- `-l nodes=1:fpga_runtime:ppn=2` (lower case L) assigns one full node.
+- `-d .` makes the current folder as the working directory for the task.
+
+  |Available Nodes    |Command Options
+  |:---               |:---
+  |FPGA Compile Time  |`qsub -l nodes=1:fpga_compile:ppn=2 -d .`
+  |FPGA Runtime (Arria 10)       |`qsub -l nodes=1:fpga_runtime:arria10:ppn=2 -d .`
+  |FPGA Runtime (Stratix 10)       |`qsub -l nodes=1:fpga_runtime:stratix10:ppn=2 -d .`
+  |GPU	             |`qsub -l nodes=1:gpu:ppn=2 -d .`
+  |CPU	             |`qsub -l nodes=1:xeon:ppn=2 -d .`
+
+>**Note**: For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
+
+Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to 24 hours.
+
+Executing programs on FPGA hardware is only supported on `fpga_runtime` nodes of the appropriate type, such as `fpga_runtime:arria10` or `fpga_runtime:stratix10`.
+
+Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® DevCloud for oneAPI [*Intel® oneAPI Base Toolkit Get Started*](https://devcloud.intel.com/oneapi/get_started/) page.
+
+>**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
+
+## Example Output
+
 ```
 Runs:             2
 Columns:          1920
@@ -174,76 +281,10 @@ Execution time: 45.0012 ms
 Throughput: 488.876 MB/s
 PASSED
 ```
-NOTE: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the design's actual hardware performance.
+> **Note**: When running on the FPGA emulator, the *Execution time* and *Throughput* do not reflect the hardware performance of the design.
 
+## License
 
-## Additional Design Information
-### Source Code Breakdown
-The following source files can be found in the `src/` sub-directory.
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-| File                            | Description
-|:---                             |:---
-|`main.cpp`                       | Contains the `main()` function and the top-level launching, validation, and performance measurements.
-|`anr_params.hpp`                 | A class for parsing and holding the ANR specific parameters, such as the sigma coefficients, the filter size, and the alpha value.
-|`anr.hpp`                        | Contains the logic for submitting all of the ANR kernels to the queue and the top-level description of the bilateral filter (both horizontal and vertical).
-|`column_stencil.hpp`             | A generic library for computing a column stencil (a 1D vertical convolution).
-|`constants.hpp`                  | Contains the constants and datatypes for the ANR algorithm.
-|`data_bundle.hpp`                | A generic library for bundling data to move between kernels; essentially an array.
-|`dma_kernels.hpp`                | Contains kernels that move data between the host and device, as well as reading/writing data between the FPGA and device memory.
-|`intensity_sigma_lut.hpp`        | A RAM LUT for the intensity sigma values.
-|`mp_math.hpp`                    | Metaprogramming math helper functions.
-|`qfp_exp_lut.hpp`                | A ROM LUT for computing exp(-x) on a 32-bit floating-point value (using a QFP).
-|`qfp_inv_lut.hpp`                | A ROM LUT for computing 1/x on a 32-bit floating-point value (using a QFP).
-|`qfp.hpp`                        | Contains a class with generic static methods for converting between 32-bit floating-point and quantized floating-point (QFP).
-|`rom_base.hpp`                   | A generic library for creating a ROM from a `constexpr` class.
-|`row_stencil.hpp`                | A generic library for computing a row stencil (a 1D horizontal convolution).
-|`shift_reg.hpp`                  | A generic library for a shift register.
-|`unrolled_loop.hpp`              | A templated-based loop unroller that unrolls loops in the compiler front end.
-
-### ANR Algorithm
-The ANR algorithm works on an input image that is in [Bayer format](https://en.wikipedia.org/wiki/Bayer_filter). Unlike image formats you may be used to (e.g., PNG or JPG), where each pixel has a red, green, **and** blue value (RGB), each pixel in a Bayer format image is either red, green, **or** blue, as shown in the image below. To convert to an RGB image, you take a 4x4 square and generate the RGB pixel by averaging the two green pixels. One purpose of this format is to dedicate more pixels to green, since the human eye is more sensitive to green.
-
-<img src="bayer.png" alt="bayer" width="400"/>
-
-The ANR algorithm uses a [bilateral filter](https://en.wikipedia.org/wiki/Bilateral_filter). Unilateral filters (e.g., a [Box blur](https://en.wikipedia.org/wiki/Box_blur) or [Gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur)) replace the intensity of a given pixel with a weighted average of the neighbouring pixels, where the weight of each neighouring pixel depends on the spatial distance from the pixel being computed. With bilateral filters, like the one used in this design, the weight of each neighbouring pixel depends on both the spatial distance, and the difference in pixel intensity. This makes bilateral filters much better at preserving sharp edges. <br/>
-
-Bilateral filters are non-linear and therefore non-separable. Note that in the case of a 5x5 window (shown below), only 9 pixels (not 25) are used in the computation; this is an artifact of the Bayer image format. The most accurate approach would produce the bilateral filter window and convolve the entire window of the given pixel colour (for the image below, red) at once to generate the output pixel (the middle pixel). For the 5x5 case, this would result in 9 multiplications that need to be summed. <br/>
-
-<img src="conv.png" alt="conv" width="400"/>
-
-This produces a long chain of adders to sum the results of the multiplications. In this design, we approximate the bilateral filter by making it separable. We first apply a 1D vertical filter to the middle pixel, and then a 1D horizontal filter, as shown in the image below. This reduces the number of multiplications that need to be summed together to 3. In our design, we apply the vertical filter to *all* pixels first, and then apply the horizontal filter, which results in the *corner* pixels indirectly applying some weight to the middle pixel.
-
-<img src="bilateral_estimate.png" alt="bilateral_estimate" width="900"/>
-
-### ANR FPGA Design
-The ANR algorithm is designed as a streaming kernel system with input pixels streaming through the input pipe, and the denoised output pixels streaming out the output pipe, as shown in the figure below. The design consists of two kernels, `Vertical Kernel` and `Horizontal Kernel`, that are connected by an internal SYCL pipe, as shown in the figure below. The `Vertical Kernel` computes an intensity sigma value based on the current pixel, computes the bilateral filter, and applies it to the current window to produce an intermediate pixel value. The `Vertical Kernel` kernel sends three values through the internal pipe: the original pixel value, the current pixel value (i.e., intermediate pixel that was just computed), and the intensity sigma value. The `Horizontal Kernel` streams in these tuples and performs a similar computation but on a horizontal window. It uses the forwarded intensity sigma value to compute the bilateral filer, the new pixel values to perform the bilateral filter computation, and the original pixel to perform *alpha blending*, where the output pixel is a weighted percentage of the original pixel value and the denoised pixel value.
-
-<img src="anr_ip.png" alt="anr_ip" width="900"/>
-
-To compute a given pixel, the `Vertical Kernel` must store previous rows (i.e., lines) of the input image. The technique to do so is shown in the image below. The pixels are streamed in from the pipe and used with pixels from previous rows to perform the 1D vertical window operation.
-
-<img src="vertical_kernel.png" alt="vertical_kernel" width="900"/>
-
-The logic for the `Horizontal Kernel`, shown below, is much simpler since it operates on a single row at a time.
-
-<img src="horizontal_kernel.png" alt="horizontal_kernel" width="900"/>
-
-To produce the input data and consume the output, we setup a full system as shown in the figure below. The `Input Kernel` reads input data from device memory and provides it to the ANR design via the input pipe. The `Output Kernel` reads the ANR design's output from the output pipe and writes it to device memory. The oneAPI host code then uses the output data to validate the accuracy of the ANR algorithm against a golden result using the [Peak signal-to-noise ratio (PSNR)](https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio).
-
-<img src="anr_system.png" alt="anr_system" width="800"/>
-
-### Quantized Floating-Point (QFP)
-Floating-point values consist of a sign bit, an exponent, and a mantissa. In this design, we take [32-bit single-precision](https://en.wikipedia.org/wiki/Single-precision_floating-point_format) floating values and convert them to quantized floating-point (QFP) values which use less bits. All of the QFPs in this design have 10 bits total, but use a different number for the exponent and mantissa. The purpose of this conversion is to be able to create lookup-table (LUT) read-only memories (ROMs) to approximate expensive 32-bit floating-point operations like an exponential (`exp(x)`) and inversion (`1/x`). Creating LUT ROMs for 32-bit floats would require `2^32*4 = 17GB` bytes of on-chip memory. However, if the float can be *quantized* to 10 bits, it requires only `2^10*4 = 4KB` of on-chip memory, at the expense of reduced precision.
-
-### Reusable Header Files
-In this design, we use the following generic header files:
-  - `ColumnStencil` (*column_stencil.hpp*): A library for generalizing a column stencil (i.e., the vertical filter) using C++ functors for callbacks to perform the filter. This library hides the details of the FIFO line stores and padding logic and allows the user to simply worry about the filter convolution.
-  - `DataBundle` (*data_bundle.hpp*): A library for holding multiple pieces of the same data. This class is similar to a C++ `std::array`, but ensures that the constructors and `operator=` are overriden properly to avoid expensive loops.
-  - `ROMBase` (*rom_base.hpp*): This library provides a base class for creating a `constexpr` class that results in a ROM in the FPGA.
-  - `RowStencil` (*row_stencil.hpp*): A library for generalizing a row stencil (i.e., the horizontal filter) using C++ functors for callbacks to perform the filter. This library hides the details of the shift register and padding logic and allows the user to simply worry about the filter convolution.
-  - `ShiftReg` (*shift_reg.hpp*): A library to implement a shift register. This hides the logic necessary to ensure the compiler infers an efficient shift register behind easy-to-use API calls.
-  - `UnrolledLoop` (*unrolled_loop.hpp*): A library that implements a front-end unrolled loop using C++ metaprogramming.
-  - *mp_math.hpp*: A set of various `constexpr` math functions that are implemented using C++ metaprogramming.
-
-  For more information on the usage and implementation of these header libraries, view the source code (the `.hpp` files), which are well commented for documentation.
-
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
