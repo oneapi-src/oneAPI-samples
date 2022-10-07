@@ -5,13 +5,13 @@ set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 # Select between SNAPPY and GZIP decompression
@@ -63,11 +63,11 @@ if(IGNORE_DEFAULT_SEED)
 else()
   if (NOT DEFINED SEED)
     # the default seed for each FPGA type
-    if(FPGA_BOARD MATCHES ".*a10.*")
+    if(FPGA_DEVICE MATCHES ".*a10.*")
       set(SEED 1)
-    elseif(FPGA_BOARD MATCHES ".*s10.*")
+    elseif(FPGA_DEVICE MATCHES ".*s10.*")
       set(SEED 2)
-    elseif(FPGA_BOARD MATCHES ".*agilex.*")
+    elseif(FPGA_DEVICE MATCHES ".*agilex.*")
       set(SEED 3)
     else()
       message(STATUS "SEED not defined and no known seed for this board -- defaulting to SEED = 1")
@@ -95,9 +95,9 @@ set(CONSTEXPR_STEPS "-fconstexpr-steps=5084968")
 set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
 set(SIMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG} -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation ${SEED_FLAG} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation ${SEED_FLAG} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG}")
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 ${SEED_FLAG} -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 ${SEED_FLAG} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 

@@ -8,17 +8,17 @@ set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 # check if the BSP has USM host allocations
-if(FPGA_BOARD MATCHES ".usm.*")
+if(FPGA_DEVICE MATCHES ".usm.*")
     set(ENABLE_USM "-DUSM_HOST_ALLOCATIONS")
     message(STATUS "USM host allocations are enabled")
 endif()
@@ -94,7 +94,7 @@ set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} ${ENABLE_USM}")
 set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
 set(SIMULATOR_LINK_FLAGS "-Wall -fintelfpga -fbracket-depth=512 ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} -Xssimulation -Xsghdl")
 set(HARDWARE_COMPILE_FLAGS "${WIN_FLAG} -fbracket-depth=512 -fintelfpga ${AC_TYPES_FLAG} ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG}")
-set(REPORT_LINK_FLAGS "-Wall -fintelfpga -Xshardware -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} ${PROFILE_FLAG} -Xsparallel=2 -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
+set(REPORT_LINK_FLAGS "-Wall -fintelfpga -Xshardware -fbracket-depth=512 ${ENABLE_USM} ${SENSOR_SIZE_FLAG} ${NUM_SENSORS_FLAG} ${QRD_MIN_ITERATIONS_FLAG} ${REAL_IO_PIPES_FLAG} ${STREAMING_PIPE_WIDTH_FLAG} ${PROFILE_FLAG} -Xsparallel=2 -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
@@ -116,7 +116,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -qactypes -Xsboard=<FPGA_BOARD> -fsycl-link=early mvdr_beamforming.cpp -o mvdr_beamforming_report.a
+#   dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -qactypes -Xstarget=<FPGA_DEVICE> -fsycl-link=early mvdr_beamforming.cpp -o mvdr_beamforming_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
@@ -130,10 +130,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_F
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -qactypes -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> mvdr_beamforming.cpp -o mvdr_beamforming.fpga
+#   dpcpp -fintelfpga -fbracket-depth=512 -qactypes -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> mvdr_beamforming.cpp -o mvdr_beamforming.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -fbracket-depth=512 -o mvdr_beamforming.cpp.o -c mvdr_beamforming.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -Xssimulation -Xsghdl -Xsboard=<FPGA_BOARD> mvdr_beamforming.cpp.o -o mvdr_beamforming.fpga
+#   [compile] dpcpp -fintelfpga -fbracket-depth=512 -o mvdr_beamforming.cpp.o -c mvdr_beamforming.cpp -FPGA_SIMULATOR
+#   [link]    dpcpp -fintelfpga -Xssimulation -fbracket-depth=512 -Xstarget=<FPGA_DEVICE> -Xsghdl mvdr_beamforming.cpp.o -o mvdr_beamforming.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
@@ -144,10 +144,10 @@ set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LIN
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -qactypes -Xsboard=<FPGA_BOARD> mvdr_beamforming.cpp -o mvdr_beamforming.fpga
+#   dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -qactypes -Xstarget=<FPGA_DEVICE> mvdr_beamforming.cpp -o mvdr_beamforming.fpga
 # CMake executes:
 #   [compile] dpcpp -fintelfpga -fbracket-depth=512 -o mvdr_beamforming.cpp.o -c mvdr_beamforming.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -Xsboard=<FPGA_BOARD> mvdr_beamforming.cpp.o -o mvdr_beamforming.fpga
+#   [link]    dpcpp -fintelfpga -Xshardware -fbracket-depth=512 -Xstarget=<FPGA_DEVICE> mvdr_beamforming.cpp.o -o mvdr_beamforming.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../include)
@@ -162,7 +162,7 @@ set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAG
 ###############################################################################
 set(UDP_LOOPBACK_TARGET udp_loopback_test.fpga)
 set(UDP_LOOPBACK_COMPILE_FLAGS "-Wall -fintelfpga")
-set(UDP_LOOPBACK_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${FLAT_COMPILE_FLAG} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
+set(UDP_LOOPBACK_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${FLAT_COMPILE_FLAG} ${USER_HARDWARE_FLAGS} ${UDP_LINK_FLAGS}")
 add_executable(${UDP_LOOPBACK_TARGET} EXCLUDE_FROM_ALL udp_loopback_test.cpp)
 add_custom_target(udp_loopback_test DEPENDS ${UDP_LOOPBACK_TARGET})
 set_target_properties(${UDP_LOOPBACK_TARGET} PROPERTIES COMPILE_FLAGS "${UDP_LOOPBACK_COMPILE_FLAGS}")

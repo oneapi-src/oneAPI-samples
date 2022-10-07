@@ -4,13 +4,13 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 # This is a Windows-specific flag that enables error handling in host code
@@ -19,19 +19,19 @@ if(WIN32)
 endif()
 
 # Set design parameters according to the selected board
-if(FPGA_BOARD MATCHES ".*a10.*")
+if(FPGA_DEVICE MATCHES ".*a10.*")
     # A10 parameters
     set(OUTER_UNROLL 1)
     set(INNER_UNROLL 64)
     set(OUTER_UNROLL_POW2 1)
     set(SEED "-Xsseed=1")
-elseif(FPGA_BOARD MATCHES ".*s10.*")
+elseif(FPGA_DEVICE MATCHES ".*s10.*")
     # S10 parameters
     set(OUTER_UNROLL 2)
     set(INNER_UNROLL 64)
     set(OUTER_UNROLL_POW2 2)
     set(SEED "-Xsseed=2")
-elseif(FPGA_BOARD MATCHES ".*agilex.*")
+elseif(FPGA_DEVICE MATCHES ".*agilex.*")
     # Agilex™
     set(OUTER_UNROLL 2)
     set(INNER_UNROLL 64)
@@ -56,7 +56,7 @@ message(STATUS "OUTER_UNROLL_POW2=${OUTER_UNROLL_POW2}")
 set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2}")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsdaz -Xsrounding=faithful -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsdaz -Xsrounding=faithful -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} -DOUTER_UNROLL=${OUTER_UNROLL} -DINNER_UNROLL=${INNER_UNROLL} -DOUTER_UNROLL_POW2=${OUTER_UNROLL_POW2} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 # Copy input data

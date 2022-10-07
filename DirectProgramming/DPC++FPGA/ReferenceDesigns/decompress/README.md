@@ -74,7 +74,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    If instead you are compiling for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 
    To select between GZIP and Snappy decompression, use the -DGZIP=1 and -DSNAPPY=1 `cmake` flags, respectively:
@@ -117,7 +117,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    ```
    Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    To select between GZIP and Snappy decompression, use the -DGZIP=1 and -DSNAPPY=1 `cmake` flags, respectively:
    ```
