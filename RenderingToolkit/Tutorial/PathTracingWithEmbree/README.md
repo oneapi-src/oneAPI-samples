@@ -1,12 +1,14 @@
 # Path Tracing with Intel&reg; Embree and the Intel&reg; oneAPI Rendering Toolkit
+
 ![pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu4000-plength8-512x512.png)
+
 ## Purpose
 
 By walking through this pathtracer tutorial, you will understand how to implement a basic pathtracer with Intel Embree. You will have a better understanding of:
-- A pathtracer renderer such as the one implemented within Intel OSPRay.
-- Visual quality considerations when implementing applications with Embree.
-- typical scene controls of interest in the Intel OSPRay Studio showcase reference application or other professional rendering solutions.
-- full feature tutorial codes on the Intel Embree github repository.
+- A pathtracer renderer, including the pathtracer as implemented within Intel OSPRay.
+- How to explore the full featured tutorial codes on the Intel Embree github repository. 
+- Visual quality considerations when implementing applications with Intel Embree.
+- Typical scene controls of interest in the Intel OSPRay Studio showcase reference application or other professional rendering solutions.
 
 Expect less than 10 minutes to compile and run the unmodified application on contemporary hardware. 
 
@@ -87,11 +89,13 @@ Open the resulting .png image files with an image viewer.
 
 ## Ray Tracer Introduction Recap
 
-In the Introduction to Ray Tracing with Intel Embree sample, we walked through a program that found basic albedo (surface color) and basic lighting for a cube and a plane.
+In the Introduction to Ray Tracing with Intel Embree sample, we walked through a program that found basic albedo (surface color) and trivial lighting for a cube and a plane. Recap Image:
 
-The output image was generated via rays cast from each pixel of our camera to determine color at the corresponding scene geometry intersection. These initial rays from the camera are the primary rays in our scene.
+![rkPathTracer.png](example-images/rkRayTracer.png)
+
+The output image was generated via rays cast from each pixel of our camera to corresponding scene geometry intersection. These initial rays from the camera are the primary rays in our scene. We determine color at the intersection.
 Then, if and only if the intersected surface was not occluded from the light position, the albedo would be increased to full strength. The difference in albedo intensity gave the impression of a shadow on the plane underneath the cube. 
-appearance of depth with a shadow and an idea of distance for the cube hovering above our plane. 
+The shadow gives the appearance of depth and an idea of distance for the cube hovering above our plane. 
 However, this was only the first step to computing light transport used to simulate generation of a photoreal image. So far, in the `triangle_geometry` sample application, we have only simulated direct illumination.
 
 ## What is path tracing?
@@ -99,17 +103,16 @@ However, this was only the first step to computing light transport used to simul
 Path tracing implements a simulation of global illumination.
 
 Our primary rays alone do not capture light illuminating a surface from other surfaces visible to the intersection. So, in this tutorial, we construct a multiple segment ray path. The path continues from a primary ray intersection point to sample light from all other visible surfaces and lights in the scene.
-By integrating the light visible from the hemisphere above all intersections for the paths intersection, (global illumination)[https://en.wikipedia.org/wiki/Path_tracing] is simulated.
+By integrating the light visible from the hemisphere above all intersections for the paths intersection, [global illumination](https://en.wikipedia.org/wiki/Path_tracing) is simulated.
 
 The path itself need not stop after one additional path 'segment' (a segment being a reflection or refraction). Multiple bounces can capture light from multiple surfaces. In a limited compute resource environment, we either set a constant path length or create logical heuristics limiting the path length.
 Surface properties affect the light reflected. Here we introduce material properties to alter the light reflected off surfaces. Such a function is commonly referred to as a bidirectional ray distribution function (BRDF).
 
 ## Key Features Added
 
-This program adds application level features to the `triangle_geometry` sample demonstrate a reference monte carlo path tracer program.
+This program adds application level features to the `rkRayTracer`/`triangle_geometry` sample demonstrate a reference monte carlo path tracer program.
 
 New features added are discussed at a high level. The features are then described with in-source implementation details. It may take a few rounds of looking at the key feature description and the source-accompanied description to understand the application.
-
 
 ### Feature: Added Scenes
 
@@ -168,7 +171,7 @@ This light emits in all directions. It can also have a radius (making it a spher
 
 This is a disc light that emits in a specified direction. It also has a radius and corresponding geometry. It can leave soft shadows in the scene.
 
-### Feature: Global Illumination
+### Feature: Simulating Global Illumination
 
 We describe our core algorithm at a high (informal) level:
 
@@ -176,7 +179,7 @@ We describe our core algorithm at a high (informal) level:
 2. At a ray-to-scene intersection, we determine the light coming from the material at the intersection. If it is a light source we add that lights radiance based on the light type and ray direction before terminating the path.
 3. Otherwise, we perform a shadow ray test from the intersection to all light emitters in the scene. We aggregate the visible radiance proportional to the type of light and distance to the surface and the material.
 4. Next, we generate a bounce ray pointing to a location on the unit hemisphere above an intersection. The bounce ray direction is a function of the material. This ray represents the direction of the next segment of our *path* being traced.
-5. In the case of a Lambertian surface we generate a ray segment randomly as a representative reflection of all incident light at the point. Lower ray angles (approaching tangent) will contribute very global light through the new ray segment. Higher angles will contribute more.
+5. In the case of a Lambertian surface we generate a ray segment randomly as a representative reflection of all incident light at the point. Lower ray angles (approaching tangent) will contribute very little global light through the new ray segment. Higher angles will contribute more.
 6. In the case of a mirror, the reflection is not random. It is computed as a mirror ray. Our mirror material rays will not attenuate based on direction. They will only attenuate based upon the inherent reflectivity of the mirror.
 7. Lastly, Fresnel materials will reflect or refract rays based on a material constant (eta) and the angle of incidence. Different materials will have different constant.
 8. Light attenuation (color) is evaluated based on the material and corresponding outgoing and incoming light directions from the surface. Note: The directions are referred to in source as Omega out and Omega in, *wo* and *wi*.
@@ -200,7 +203,7 @@ Multiple samples can be taken for each pixel. They can be used to generate an ag
 - We set these to 1, 500, and 8 in the application by default respectively. Change these values to see the affect of noise from a limited number of samples or path segments has on an image.
 
 
-Examples:
+## Example Images:
 
 
 1spp x 1 accumulation, 1 total sample per pixel (no mirror)
@@ -685,7 +688,9 @@ Each `tbb::parallel_for(..)` task will get its own set of tiles to compute on. T
       tgContext);
 ```
 
-Performance monitors that show multithreaded residency will show usage of all hardware threads leading to a major increase to performance over a single threaded implementation.
+Performance monitors that show multithreaded residency will show optimized usage of hardware threads. This leads to a major increase to performance over a single threaded implementation.
+
+See the Intel® oneTBB [page](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onetbb.html) for more information on oneTBB.
 
 In the `Renderer::render_tile_task(..)` function we render each ray color sample from each pixel of the image.
 ```
@@ -731,8 +736,8 @@ For our subpixel samples we use many random values to pick ray origins. We also 
 
 This by-hand implementation is constructed to be portable and fast. It was originally part of utility code on the Embree repository.
 
-`get_float()` returns a float between 0.f and 1.f
-seed(..) seeds the random number generator based on input parameters.
+`RandomSampler::get_float()` returns a float between 0.f and 1.f
+`RandomSampler::seed(..)` seeds the random number generator based on input parameters.
 
 Sidebar: std::hash is implementation defined and not cryptographic. Using it to seed a random generator (including those in C++11 random library) is not recommended.
 
@@ -912,54 +917,93 @@ Finally, when the `PathTracer::render_path(..)` function has completed. The tota
 
 ### Fidelity And Convergence
 
-In instances where convergence is taking longer, a developer may consider a denoise pass provided from a library like Intel Open Image Denoise. Many vendors of professional rendering solutions use Intel Open Image Denoise as a final frame pass to enhance image quality.
-Cornell Box at 1 spp
-Intel Open Image Denoise oidnDenoise 
+In instances where convergence is taking longer, a developer may consider a denoise pass provided from a library like Intel&reg; Open Image Denoise. Many vendors of professional rendering solutions use Open Image Denoise as a final frame pass to enhance image quality.
+Cornell Box at 256 spp:
 
-### Intel Implicit SIMD Program Compiler (Intel ISPC)
+![pathtracer-accu-cornell-spp1-accu256-plength8-512x512.png](example-images/pathtracer-accu-cornell-spp1-accu256-plength8-512x512.png)
 
-Intel ISPC is a compiler for a C hybrid that allows 
+Open Image Denoise `oidnDenoise` program with 256spp image only as input:
+
+![256spp-denoised.png](example-images/256spp-denoised.png)
+
+### Intel&reg; Implicit SPMD Program Compiler (Intel ISPC)
+
+Intel ISPC is a compiler. It ingests C hybrid source code that can be used effectively in Embree client applications. 
+
+This source allows for a programmatic control over usage of SIMD compute lanes available on x86 hardware architecture. Usage of these lanes allows for better performance opportunities.
+
+Note that this tutorial does not use ISPC C source in the interest of being an introduction to the API. Note that on the Embree respository, ISPC versions of tutorial sources reside next to pure C/C++ versions.
+
+ISPC C for Embree client applications
 
 ### Intel&reg; VTune&trade; Amplifier
 
-Intel VTune Amplifier is a great tool when attempting to optimize your application. The hotspots mode from VTune helps us find bottlenecks in our application.
+Intel VTune Amplifier is a great tool when attempting to optimize a ray tracing application application.
 
-# Next Steps:
+Intel VTune Amplifier can help you obtain performance from the capabilities on the platform.
+- It provides a `hotspots` mode. It shows which functions in the call stack are using the most compute time. Spend optimization efforts on the bottleneck functions in your application.
+- Output also has a visualization of hardware thread residency. This reinforces the value of any multithreaded approach actually using sing multithreaded compute hardware effectively.
+- The tool can show you residency for SIMD (Single Instruction Multiple Data) Vector hardware operations. As a rule of thumb, the higher vector hardware utility for a program the better the performance.
+- See the Intel VTune Amplifier [metrics of interest](https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/reference/cpu-metrics-reference.html):
+    - SIMD Instructions per Cycle
+    - SIMD Compute-to-L2 Access Ratio
+    - SIMD Compute-to-L1 Access Ratio
+    - FP Vector
+    - FP x87
+    - CPU Utilization
+    - FPU Utilization
+    - % of Packed FP Instructions
+    - % of 128-bit Packed Floating Point Instructions
+    - % of 256-bit Packed Floating Point Instructions
+    - % of Packed SIMD Instructions
+    - % of Scalar FP Instructions
+    - % of Scalar SIMD Instructions
 
-## Ray tracers in the wild
+Use Intel VTune Amplifier if you are considering program performance-affecting changes, including but not limited to: 
+- Random number routines (third-party or your own)
+- Adding Ray splitting techniques
+- Generating additional output buffers (normal, albedo)
+- Using a different tasking or threading model
 
-### Intel&reg; OSPRay: off-the-shelf renderers
-The Intel OSPRay API defines renderer objects. If you are looking for an off the shelf renderer for your environment, consider any of these [renderers]( https://www.ospray.org/documentation.html#renderers)
+Running your Intel Embree based application through Intel VTune Amplifier is highly recommended.
+
+# Next Steps
+
+## Intel&reg; OSPRay: off-the-shelf renderers
+If you are interested in using a complete renderer that uses such pathtracer capability in your software, the Intel OSPRay API defines such renderer objects. Consider any of these [renderers]( https://www.ospray.org/documentation.html#renderers)
 - Pathtracer `pathtracer`:
-Supports volumetric visualization, global illumination, materials, textures. Significant superset of features over this tutorial program.
+    - Supports volumetric visualization, global illumination, materials, textures. Significant superset of features over this tutorial program.
 - SciVis `scivis`:
-Supports volumetric visualization, ambient occlusion, lights.
+    - Supports volumetric visualization, ambient occlusion, lights.
 -AmbientOcclusion `ao`:
-Supports volumetric visualization, ambient occlusion, no lights.
+    - Supports volumetric visualization, ambient occlusion, no lights.
 
-### Scene Graphs:
-Typical rendering applications employ a scenegraph for managing complex scene data from cameras, instancing, objects, to materials, textures, and animations. This tutorial hardcodes a few basic geometric objects and materials. The full Intel Embree tutorial programs contain a basic reference [scene graph]( https://github.com/embree/embree/blob/v3.13.4/tutorials/common/tutorial/tutorial.cpp). Similarly, the OSPRay ospExamples viewer employs a reference scene graph. Lastly, Intel OSPRay Studio uses it’s own reference scene graph.
-Each implementation can be a good reference point in building out your own scene graph in a production application. When moving beyond sandbox programs, software scalability challenges make a scene graph a practical necessity.
+## Scene Graphs:
+Typical rendering applications employ a scenegraph for managing complex scene data from cameras, instances, objects, to materials, textures, and animations. This tutorial hardcodes a few basic geometric objects and materials staged within the `SceneGraph`. To review other, more complete reference Scene Graphs see:
+- The full Intel Embree tutorial programs that contain a basic reference [scene graph]( https://github.com/embree/embree/blob/v3.13.4/tutorials/common/tutorial/tutorial.cpp).
+- Similarly, the Intel OSPRay `ospExamples` viewer implements a reference scene graph. 
+- Lastly, Intel OSPRay Studio uses it’s own reference scene graph.
 
+Each implementation can be a good reference point in building out your own scene graph in a production application. When moving beyond sandbox study programs, software scalability challenges make a robust scene graph a practical necessity.
 
-### Lights
+## Lights
 
-Our lights are limited. This keeps tutorial code simple. Consider adding different lights. See the full Intel Embree tutorials demonstrate a few different [light types to try](https://github.com/embree/embree/tree/v3.13.4/tutorials/common/lights)
+For simplicity, our lights in this sample code are limited. Consider adding different lights. See the full Intel Embree tutorials demonstrate a few different [light types to try](https://github.com/embree/embree/tree/v3.13.4/tutorials/common/lights)
 
-### Materials omissions
+## Materials omissions
 
 Bi-directional Ray Distribution Function (BRDF) parameterization
 
 The full Embree tutorial application passes a structure representing a Bi-directional Ray Distribution Function (BRDF) representing reflectance model parameters. Our application hard codes reflection models in the interest of simplicity. However, the full tutorial application includes a BRDF parser for use with geometric models stored on disk in .obj/.mtl format.
 For example: when reviewing Embree repository codes, notice that parameters associated with the [Phong](https://en.wikipedia.org/wiki/Phong_reflection_model) reflection model are considered.
 
-`pathtracer_device.cpp` from the Embree tutorials features additional hand coded material types.
+`pathtracer_device.cpp` from the Embree [tutorials](https://github.com/embree/embree/blob/v3.13.5/tutorials/pathtracer/pathtracer_device.cpp) features additional hand coded material types.
 
-### Texturing
+## Texturing
 
-We do not cover texturing in this sample. Review the Embree repository source to see a demonstration of applying textures.
+We do not cover texturing in this sample. Review the Embree repository source to see a demonstration of applying textures. See `OBJMaterial__preprocess(..)` in `pathtracer_device.cpp`: [Reference](https://github.com/embree/embree/blob/698442324ccddd11725fb8875275dc1384f7fb40/tutorials/pathtracer/pathtracer_device.cpp#L477)
 
-### Transparency
+## Transparency
 
 Transparent materials are omitted in this tutorial. The full Intel Embree path tracer demonstrates [transparency]( https://github.com/embree/embree/blob/v3.13.4/tutorials/pathtracer/pathtracer_device.cpp#L1630) in materials. 
 

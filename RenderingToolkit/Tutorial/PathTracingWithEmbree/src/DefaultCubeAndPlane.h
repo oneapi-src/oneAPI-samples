@@ -266,11 +266,11 @@ unsigned int CubeAndPlane::addGroundPlane(
   Triangle* triangles = (Triangle*)rtcSetNewGeometryBuffer(
       mesh, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(Triangle), 2);
 
-  m_ground_face_colors[0] = Vec3fa(1, 1, 1);
+  m_ground_face_colors[0] = Vec3fa(1, 0, 0);
   triangles[0].v0 = 0;
   triangles[0].v1 = 1;
   triangles[0].v2 = 2;
-  m_ground_face_colors[1] = Vec3fa(1, 1, 1);
+  m_ground_face_colors[1] = Vec3fa(1, 0, 0);
   triangles[1].v0 = 1;
   triangles[1].v1 = 3;
   triangles[1].v2 = 2;
