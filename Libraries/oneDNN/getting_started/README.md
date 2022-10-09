@@ -133,9 +133,14 @@ cmake --build .
 ```
 C:\Program Files (x86)\Intel\oneAPI\setvars.bat 
 ```
+##### or open `Intel oneAPI Commmand Prompt` instead. 
 
 ##### 2. Download [oneAPI Level Zero headers](https://github.com/oneapi-src/level-zero/releases/tag/v1.0) from Github and unpack the archive.
-##### or open `Intel oneAPI Commmand Prompt` instead. 
+
+
+**Intel oneAPI DPC++/C++ Compiler on Windows requires __CMake v3.21__ or later**
+
+
 
 ##### 3. Generate Ninja project
 ```
