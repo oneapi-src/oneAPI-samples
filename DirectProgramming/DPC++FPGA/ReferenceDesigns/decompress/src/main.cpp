@@ -1,4 +1,4 @@
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <array>
 #include <fstream>
@@ -16,9 +16,7 @@
 #include "constexpr_math.hpp"  // included from ../../../include
 
 #include "common/common.hpp"
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 // ensure only one of GZIP and SNAPPY is defined
 #if defined(GZIP) and defined(SNAPPY)
@@ -138,7 +136,7 @@ int main(int argc, char* argv[]) {
 #endif
 
   // create the device queue
-  queue q(selector, dpc_common::exception_handler);
+  queue q(selector, fpga_tools::exception_handler);
 
   // create the decompressor based on which decompression version we are using
 #if defined(GZIP)

@@ -8,6 +8,14 @@
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "Tutorials/DesignPatterns/loop_carried_dependency",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
@@ -57,5 +65,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Code Optimization"
 }

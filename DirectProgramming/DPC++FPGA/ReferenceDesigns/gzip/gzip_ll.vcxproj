@@ -99,7 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include; $(ProjectDir)\..\..\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,12 +118,12 @@
       <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>
       </ObjectFileName>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include; $(ProjectDir)\..\..\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SpecifyDevCmplAdditionalOptions>-Xsboard=intel_s10sx_pac:pac_s10_usm; -Xsnum-reorder=6; -Xsopt-arg=-nocaching</SpecifyDevCmplAdditionalOptions>
+      <SpecifyDevCmplAdditionalOptions>-Xstarget=intel_s10sx_pac:pac_s10_usm; -Xsnum-reorder=6; -Xsopt-arg=-nocaching</SpecifyDevCmplAdditionalOptions>
     </Link>
     <Manifest />
   </ItemDefinitionGroup>
@@ -137,7 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include; $(ProjectDir)\..\..\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,14 +160,14 @@
       <AdditionalOptions>-DFPGA_EMULATOR %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>
       </ObjectFileName>
-      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ONEAPI_ROOT)dev-utilities\latest\include; $(ProjectDir)\..\..\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SpecifyDevCmplAdditionalOptions>-Xsboard=intel_s10sx_pac:pac_s10_usm; -Xsnum-reorder=6; -Xsopt-arg=-nocaching</SpecifyDevCmplAdditionalOptions>
+      <SpecifyDevCmplAdditionalOptions>-Xstarget=intel_s10sx_pac:pac_s10_usm; -Xsnum-reorder=6; -Xsopt-arg=-nocaching</SpecifyDevCmplAdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

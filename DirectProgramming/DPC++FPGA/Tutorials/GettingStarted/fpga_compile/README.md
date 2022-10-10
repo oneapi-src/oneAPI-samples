@@ -54,7 +54,7 @@ Optimization reports are generated after both stages. The optimization report ge
 The [FPGA Optimization Guide for Intel® oneAPI Toolkits Developer Guide](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide/top/analyze-your-design.html) contains a chapter on how to analyze the reports generated after the FPGA early image and FPGA image.
 
 #### FPGA Hardware
-This is a full compile through to the FPGA hardware image. You can target the Intel® PAC with Intel Arria® 10 GX FPGA, the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), or a custom board.
+This is a full compile through to the FPGA hardware image. You can target the Intel® PAC with Intel Arria® 10 GX FPGA, the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), or a custom device.
 
 ### Device Selectors
 The following code snippet demonstrates how you can specify the target device in your source code. The selector is used to specify the target device at runtime.
@@ -86,21 +86,21 @@ This section includes a helpful list of commands and options to compile this des
 
 `dpcpp -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu`
 
-**Optimization report (default board)**
+**Optimization report (default FPGA device)**
 
 `dpcpp -fintelfpga -Xshardware -fsycl-link=early fpga_compile.cpp -o fpga_compile_report.a`
 
-**Optimization report (explicit board)**
+**Optimization report (explicit FPGA device)**
 
-`dpcpp -fintelfpga -Xshardware -fsycl-link=early -Xsboard=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile_report.a`
+`dpcpp -fintelfpga -Xshardware -fsycl-link=early -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile_report.a`
 
-**FPGA hardware (default board)**
+**FPGA hardware (default FPGA device)**
 
 `dpcpp -fintelfpga -Xshardware fpga_compile.cpp -o fpga_compile.fpga`
 
-**FPGA hardware (explicit board)**
+**FPGA hardware (explicit FPGA device)**
 
-`dpcpp -fintelfpga -Xshardware -Xsboard=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile.fpga`
+`dpcpp -fintelfpga -Xshardware -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile.fpga`
 
 
 The compiler options used are explained in the table.
@@ -109,7 +109,7 @@ The compiler options used are explained in the table.
 | `-fintelfpga`      | Perform ahead-of-time compilation for FPGA.
 | `-DFPGA_EMULATOR`  | Adds a preprocessor define that invokes the emulator device selector in this sample (see code snippet above).
 | `-Xshardware`      | `-Xs` is used to pass arguments to the FPGA backend. <br> Since the emulator is the default FPGA target, you must pass `Xshardware` to instruct the compiler to target FPGA hardware.
-| `-Xsboard`         | Optional argument to specify the FPGA board target. <br> If omitted, a default FPGA board is chosen.
+| `-Xstarget`         | Optional argument to specify the FPGA target. <br> If omitted, a default FPGA board is chosen.
 | `-fsycl-link=early`| Instructs the compiler to stop after creating the FPGA early image (and associated optimization report).
 
 Notice that whether you target the FPGA emulator or FPGA hardware must be specified twice: through compiler options for the ahead-of-time compilation and through the runtime device selector.
@@ -140,8 +140,6 @@ Notice that whether you target the FPGA emulator or FPGA hardware must be specif
 >
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Include Files
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in Intel&reg; DevCloud
 If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
@@ -179,11 +177,11 @@ To learn more about the extensions, see the
    Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -216,11 +214,11 @@ To learn more about the extensions, see the
    Alternatively, to compile for the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), run `cmake` using the command:
 
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:

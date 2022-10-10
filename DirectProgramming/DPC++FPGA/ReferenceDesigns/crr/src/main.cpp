@@ -90,7 +90,7 @@
 //
 //
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cstddef>
 #include <cstdlib>
@@ -103,9 +103,7 @@
 
 #include "CRR_common.hpp"
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace std;
 using namespace sycl;
@@ -114,7 +112,7 @@ class CRRSolver;
 double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
                   vector<CRRResParams> &res_params,
                   vector<CRRPerStepMeta> &in_params2, queue &q) {
-  dpc_common::TimeInterval timer;
+  auto start = std::chrono::steady_clock::now();
 
   constexpr int steps = kMaxNSteps2;
 
@@ -334,7 +332,8 @@ double CrrSolver(const int n_items, vector<CRRMeta> &in_params,
     }
   }
 
-  double diff = timer.Elapsed();
+  auto end = std::chrono::steady_clock::now();
+  double diff = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
   return diff;
 }
 
@@ -739,7 +738,7 @@ int main(int argc, char *argv[]) {
     ext::intel::fpga_selector device_selector;
 #endif
 
-    queue q(device_selector, dpc_common::exception_handler);
+    queue q(device_selector, fpga_tools::exception_handler);
 
     std::cout << "Running on device:  "
               << q.get_device().get_info<info::device::name>().c_str() << "\n";

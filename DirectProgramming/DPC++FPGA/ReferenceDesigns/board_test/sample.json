@@ -12,6 +12,7 @@
     "base": "../..",
     "include": [
       "ReferenceDesigns/board_test"
+      "include"
     ],
     "exclude": []
   },
@@ -64,5 +65,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Reference Designs and End to End"
 }

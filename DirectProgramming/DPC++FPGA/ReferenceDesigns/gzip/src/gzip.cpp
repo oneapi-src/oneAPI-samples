@@ -1,4 +1,4 @@
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 #include <fstream>
@@ -10,9 +10,7 @@
 #include "gzipkernel.hpp"
 #include "kernels.hpp"
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 
 using namespace sycl;
@@ -128,7 +126,7 @@ int main(int argc, char *argv[]) {
     ext::intel::fpga_selector device_selector;
 #endif
     auto prop_list = property_list{property::queue::enable_profiling()};
-    queue q(device_selector, dpc_common::exception_handler, prop_list);
+    queue q(device_selector, fpga_tools::exception_handler, prop_list);
 
     std::cout << "Running on device:  "
               << q.get_device().get_info<info::device::name>().c_str() << "\n";
@@ -322,7 +320,7 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
   event e_k_huff        [kNumEngines][buffers_count]; // Huffman Encoding kernel
 
 #ifndef FPGA_EMULATOR
-  dpc_common::TimeInterval perf_timer;
+  auto start = std::chrono::steady_clock::now();
 #endif
 
   
@@ -381,7 +379,8 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
 
 // Stop the timer.
 #ifndef FPGA_EMULATOR
-  double diff_total = perf_timer.Elapsed();
+  auto end = std::chrono::steady_clock::now();
+  double diff_total = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
   double gbps = iterations * isz / (double)diff_total / 1000000000.0;
 #endif
 

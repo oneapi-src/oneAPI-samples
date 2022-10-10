@@ -1,7 +1,7 @@
 #ifndef __SNAPPY_DECOMPRESSOR_HPP__
 #define __SNAPPY_DECOMPRESSOR_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <chrono>
 #include <optional>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>

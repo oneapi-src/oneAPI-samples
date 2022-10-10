@@ -1,7 +1,7 @@
 #ifndef __COMMON_HPP__
 #define __COMMON_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <functional>
 #include <iostream>
 #include <optional>

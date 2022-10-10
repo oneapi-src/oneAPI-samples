@@ -7,12 +7,10 @@
 #include <utility>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 #include "merge_sort.hpp"
 
@@ -127,7 +125,7 @@ int main(int argc, char *argv[]) {
 #endif
 
   // create the device queue
-  queue q(selector, dpc_common::exception_handler);
+  queue q(selector, fpga_tools::exception_handler);
 
   // make sure the device supports USM device allocations
   auto d = q.get_device();

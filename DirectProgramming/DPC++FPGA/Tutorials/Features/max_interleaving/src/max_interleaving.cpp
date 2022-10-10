@@ -4,14 +4,12 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include <array>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -41,7 +39,7 @@ void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
   double kernel_time = 0.0;
 
   try {
-    queue q(selector, dpc_common::exception_handler,
+    queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer array_a_buffer(array_a);
@@ -90,7 +88,7 @@ void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
     double end = e.get_profiling_info<info::event_profiling::command_end>();
     kernel_time = (double)(end - start) * 1e-6f;
 
-  } catch (cl::sycl::exception const &e) {
+  } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
     std::cerr << "Caught a SYCL host exception:" << '\n' << e.what() << '\n';
 

@@ -3,13 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <vector>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -67,7 +65,7 @@ void RunKernel(std::vector<int> &in, std::vector<int> &out) {
 
   try {
     // create the SYCL device queue
-    queue q(selector, dpc_common::exception_handler,
+    queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer in_buf(in);
