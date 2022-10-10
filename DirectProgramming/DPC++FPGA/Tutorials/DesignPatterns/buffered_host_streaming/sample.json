@@ -11,6 +11,7 @@
   "commonFolder": {
     "base": "../../..",
     "include": [
+      "README.md",
       "Tutorials/DesignPatterns/buffered_host_streaming",
       "include"
     ],

@@ -11,6 +11,7 @@
   "commonFolder": {
     "base": "../../..",
     "include": [
+      "README.md",
       "Tutorials/DesignPatterns/zero_copy_data_transfer",
       "include"
     ],
