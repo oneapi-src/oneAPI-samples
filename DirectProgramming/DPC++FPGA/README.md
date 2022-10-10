@@ -174,22 +174,14 @@ All the Tier 4 samples are in the [ReferenceDesigns](ReferenceDesigns) category.
 
 The following FPGA samples represent a selection of useful tutorials suitable to get you started on your first oneAPI application on the FPGA
 
-```mermaid
-graph TD;
-    sample1[FPGA Compile Flow: fpga_compile]
-    sample2[Save Development Time: fast_recompile]
-    sample3[Avoid Aliasing of Kernel Arguments: kernel_args_restrict]
-    sample4[Optimize by Improving Loop Throughput: loop_unroll]
-    sample5[Transfer Data with Pipes: pipes]
-    sample6[Improve Performance with Double Buffering: double_buffering]
-    sample1-->sample2-->sample3-->sample4-->sample5-->sample6;
-    style sample1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-    style sample2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-    style sample3 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-    style sample4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-    style sample5 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-    style sample6 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-```
+| Subject                                   | Sample
+|:---                                       |:---
+| FPGA Compile Flow                         | [fpga_compile](Tutorials/GettingStarted/fpga_compile)
+| Save Development Time                     | [fast_recompile](Tutorials/GettingStarted/fast_recompile)
+| Avoid Aliasing of Kernel Arguments        | [kernel_args_restrict](Tutorials/Features/kernel_args_restrict)
+| Optimize by Improving Loop Throughput     | [loop_unroll](Tutorials/Features/loop_unroll)
+| Transfer Data with Pipes                  | [pipes](Tutorials/Features/pipes)  
+| Improve Performance with Double Buffering | [double_buffering](Tutorials/DesignPatterns/double_buffering)
 
 ## Build and Run the Samples on Local Development System
 
