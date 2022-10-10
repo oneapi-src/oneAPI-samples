@@ -10,9 +10,7 @@
 #include <string>
 #include <vector>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 using namespace std;
@@ -72,7 +70,7 @@ void RunKernel(const device_selector &selector,
   size_t input_size = vec_a.size();
 
   try {
-    queue q(selector, dpc_common::exception_handler,
+    queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer device_a(vec_a);

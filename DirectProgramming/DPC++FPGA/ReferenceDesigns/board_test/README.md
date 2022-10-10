@@ -92,10 +92,6 @@ When working with the command-line interface (CLI), you should configure the one
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Include Files
-
-The included header `dpc_common.hpp` is at `$ONEAPI_ROOT/dev-utilities/latest/include` on your development system.
-
 ### Use Visual Studio Code* (VS Code) (Optional)
 
 You can use Visual Studio Code* (VS Code) extensions to set your environment,

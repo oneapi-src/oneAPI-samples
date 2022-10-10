@@ -11,7 +11,7 @@
   "commonFolder": {
     "base": "../..",
     "include": [
-      "ReferenceDesigns/qri",
+      "ReferenceDesigns/qrd",
       "include"
     ],
     "exclude": []

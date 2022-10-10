@@ -8,9 +8,7 @@
 #include <iostream>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 constexpr size_t kTripCount{10000000};
 constexpr size_t kDifferentTripCount{kTripCount + 1};
@@ -61,7 +59,7 @@ auto KernelRuntime(event e) {
 // no dependencies between loops
 void DefaultFusion(FixedArray &m_array_1, FixedArray &m_array_2) {
   try {
-    queue q(selector, dpc_common::exception_handler,
+    queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer buff_1(m_array_1);
@@ -100,7 +98,7 @@ void DefaultFusion(FixedArray &m_array_1, FixedArray &m_array_2) {
 // this attribute not present, the loops would fuse by default.
 void NoFusion(FixedArray &m_array_1, FixedArray &m_array_2) {
   try {
-    queue q(selector, dpc_common::exception_handler,
+    queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer buff_1(m_array_1);
@@ -140,7 +138,7 @@ void NoFusion(FixedArray &m_array_1, FixedArray &m_array_2) {
 // Does not fuse inner loops by default, since the trip counts are different.
 void DefaultNoFusion(FixedArray &m_array_1, FixedArray &m_array_2) {
   try {
-    queue q(selector, dpc_common::exception_handler,
+    queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer buff_1(m_array_1);
@@ -182,7 +180,7 @@ void DefaultNoFusion(FixedArray &m_array_1, FixedArray &m_array_2) {
 // fuse by default, since the trip counts of the loops are different.
 void FusionFunction(FixedArray &m_array_1, FixedArray &m_array_2) {
   try {
-    queue q(selector, dpc_common::exception_handler,
+    queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer buff_1(m_array_1);

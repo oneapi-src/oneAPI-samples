@@ -35,6 +35,7 @@ set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER
 #    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o double_buffering.cpp.o -c double_buffering.cpp
 #    [link]    dpcpp -fintelfpga double_buffering.cpp.o -o double_buffering.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
@@ -48,6 +49,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 #   [compile] dpcpp -fintelfpga -o double_buffering.cpp.o -c double_buffering.cpp
 #   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> double_buffering.cpp.o -o double_buffering.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")

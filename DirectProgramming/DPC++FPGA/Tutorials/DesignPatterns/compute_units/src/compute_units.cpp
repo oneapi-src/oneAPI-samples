@@ -2,9 +2,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 #include "compute_units.hpp"
 #include "pipe_utils.hpp" // Included from DirectProgramming/DPC++FPGA/include/
 
@@ -54,7 +52,7 @@ int main() {
   float out_data = 0;
 
   try {
-    queue q(device_selector, dpc_common::exception_handler);
+    queue q(device_selector, fpga_tools::exception_handler);
 
     // Enqueue the Source kernel
     SourceKernel(q, kTestData);
