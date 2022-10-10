@@ -30,10 +30,10 @@ This area of the oneAPI-sample repository has a general structure intended to he
 
 To help you understand and use the code samples in a coherent manner, the samples are categorized by the tiers.
 
-- [Tier 1](#tier-1:get-started): Get Started
-- [Tier 2](#tier-2:explore-the-fundametals): Explore the Fundamentals
-- [Tier 3](#tier-3:explore-the-advanced-techniques): Explore the Advanced Techniques
-- [Tier 4](#tier-4:explore-the-reference-designs): Explore the Reference Designs
+- [Tier 1](#tier-1-get-started): Get Started
+- [Tier 2](#tier-2-explore-the-fundamentals): Explore the Fundamentals
+- [Tier 3](#tier-3-explore-the-advances-techniques): Explore the Advanced Techniques
+- [Tier 4](#tier-4-explore-the-reference-designs): Explore the Reference Designs
 
 #### Tier 1: Get Started
 
