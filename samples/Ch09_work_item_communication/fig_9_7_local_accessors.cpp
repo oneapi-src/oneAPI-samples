@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <array>
 #include <iostream>
 using namespace sycl;
@@ -17,7 +17,7 @@ int main() {
   {
     buffer dataBuf{data};
 
-    queue Q{host_selector()};
+    queue Q{ default_selector_v };
     std::cout << "Running on device: "
               << Q.get_device().get_info<info::device::name>() << "\n";
 
@@ -27,14 +27,10 @@ int main() {
       accessor dataAcc {dataBuf, h};
 
       // This is a 1D local accessor consisting of 16 ints:
-      auto localIntAcc =
-          accessor<int, 1, access::mode::read_write, access::target::local>(
-              16, h);
+      auto localIntAcc = local_accessor<int, 1>(16, h);
 
       // This is a 2D local accessor consisting of 4 x 4 floats:
-      auto localFloatAcc =
-          accessor<float, 2, access::mode::read_write, access::target::local>(
-              {4, 4}, h);
+      auto localFloatAcc = local_accessor<float, 2>({4, 4}, h);
 
       h.parallel_for(nd_range<1>{{size}, {16}}, [=](nd_item<1> item) {
         auto index = item.get_global_id();

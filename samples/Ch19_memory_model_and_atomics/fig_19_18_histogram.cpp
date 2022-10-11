@@ -2,17 +2,13 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <cstdio>
 #include <numeric>
 #include <random>
 
 using namespace sycl;
-
-template <typename T, int dimensions>
-using local_accessor =
-    accessor<T, dimensions, access::mode::read_write, access::target::local>;
 
 std::tuple<size_t, size_t> distribute_range(group<1> g, size_t N) {
   size_t work_per_group = N / g.get_group_range(0);

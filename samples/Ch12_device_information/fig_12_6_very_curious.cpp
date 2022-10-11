@@ -2,14 +2,14 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 using namespace sycl;
 
-template <auto query, typename T>
+template <typename queryT, typename T>
 void do_query( const T& obj_to_query, const std::string& name, int indent=4) {
   std::cout << std::string(indent, ' ') << name << " is '"
-    << obj_to_query.template get_info<query>() << "'\n";
+    << obj_to_query.template get_info<queryT>() << "'\n";
 }
 
 
@@ -25,7 +25,6 @@ int main() {
     // Loop through the devices available in this plaform
     for (auto &dev : this_platform.get_devices() ) {
       std::cout << "  Device: " << dev.get_info<info::device::name>() << "\n";
-      std::cout << "    is_host(): " << (dev.is_host() ? "Yes" : "No") << "\n";
       std::cout << "    is_cpu(): " << (dev.is_cpu() ? "Yes" : "No") << "\n";
       std::cout << "    is_gpu(): " << (dev.is_gpu() ? "Yes" : "No") << "\n";
       std::cout << "    is_accelerator(): "

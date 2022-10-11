@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp> // For fpga_selector
 #include <iostream>
 #include <string>
@@ -16,10 +16,10 @@ void output_dev_info( const device& dev, const std::string& selector_name) {
 }
 
 int main() {
-  output_dev_info( device{ default_selector{}}, "default_selector" );
-  output_dev_info( device{ cpu_selector{}}, "cpu_selector" );
-  output_dev_info( device{ gpu_selector{}}, "gpu_selector" );
-  output_dev_info( device{ accelerator_selector{}}, "accelerator_selector" );
+  output_dev_info( device{ default_selector_v}, "default_selector" );
+  output_dev_info( device{ cpu_selector_v}, "cpu_selector" );
+  output_dev_info( device{ gpu_selector_v}, "gpu_selector" );
+  output_dev_info( device{ accelerator_selector_v}, "accelerator_selector" );
   output_dev_info( device{ ext::intel::fpga_selector{}}, "fpga_selector" );
 
   return 0;

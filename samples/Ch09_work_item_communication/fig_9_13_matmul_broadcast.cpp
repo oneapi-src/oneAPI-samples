@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <chrono>
 using namespace sycl;
 
@@ -42,9 +42,7 @@ double run_sycl(
 
       // Local accessor, for one matrix tile:
       constexpr int tile_size = 16;
-      auto tileA =
-          accessor<T, 1, access::mode::read_write, access::target::local>(
-              tile_size, h);
+      auto tileA = local_accessor<T, 1>(tile_size, h);
 
 // BEGIN CODE SNIP
       h.parallel_for(

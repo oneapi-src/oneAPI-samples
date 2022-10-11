@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: MIT
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 using namespace sycl;
 
 // BEGIN CODE SNIP
@@ -26,8 +26,8 @@ void say_device(const queue& Q) {
 }
 
 int main() { 
-  queue Q1{ gpu_selector{}, handle_async_error };
-  queue Q2{ cpu_selector{}, handle_async_error };
+  queue Q1{ gpu_selector_v, handle_async_error };
+  queue Q2{ cpu_selector_v, handle_async_error };
   say_device(Q1);
   say_device(Q2);
 
