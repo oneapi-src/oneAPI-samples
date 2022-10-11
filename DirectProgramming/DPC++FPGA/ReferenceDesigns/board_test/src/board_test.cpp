@@ -2,9 +2,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 // Test related header files
 #include "board_test.hpp"
@@ -68,7 +66,7 @@ int main(int argc, char* argv[]) {
 
     // Create a queue bound to the chosen device
     // If the device is unavailable, a SYCL runtime exception is thrown
-    sycl::queue q(device_selector, dpc_common::exception_handler, q_prop_list);
+    sycl::queue q(device_selector, fpga_tools::exception_handler, q_prop_list);
 
     // Print out the device information.
     std::cout << "Running on device: "

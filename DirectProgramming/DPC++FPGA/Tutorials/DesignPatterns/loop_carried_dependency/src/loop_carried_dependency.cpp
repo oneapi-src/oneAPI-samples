@@ -7,9 +7,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <string>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 using namespace std;
@@ -146,7 +144,7 @@ int main(int argc, char *argv[]) {
 
   try {
     // Create a profiling queue
-    queue q(selector, dpc_common::exception_handler,
+    queue q(selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     // compute result on device

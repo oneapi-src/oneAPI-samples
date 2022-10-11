@@ -12,7 +12,7 @@
     "base": "../..",
     "include": [
       "ReferenceDesigns/gzip",
-      "include/pipe_utils.hpp"
+      "include"
     ],
     "exclude": []
   },
@@ -45,7 +45,7 @@
           "dpcpp --version",
           "mkdir build",
           "cd build",
-          "cmake .. -DLOW_LATENCY=1 -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm",
+          "cmake .. -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
           "make fpga_emu",
           "./gzip.fpga_emu ../src/gzip.cpp -o=test.gz"
         ]
@@ -56,7 +56,7 @@
           "dpcpp --version",
           "mkdir build",
           "cd build",
-          "cmake .. -DLOW_LATENCY=1 -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm",
+          "cmake .. -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
           "make report"
         ]
       }
@@ -94,7 +94,7 @@
           "mkdir build",
           "cd build",
           "xcopy /E ..\\ReferenceDesigns\\gzip\\src ..\\src\\",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1 -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
           "nmake fpga_emu",
           "gzip.fpga_emu.exe ../src/gzip.cpp -o=test.gz"
         ]
@@ -106,7 +106,7 @@
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1 -DFPGA_BOARD=intel_s10sx_pac:pac_s10_usm",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
           "nmake report"
         ]
       }

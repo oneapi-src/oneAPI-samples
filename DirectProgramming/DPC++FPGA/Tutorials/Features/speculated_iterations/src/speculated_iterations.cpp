@@ -11,9 +11,7 @@
 #include <string>
 #include <type_traits>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 // Use smaller values if run on the emulator to keep the CPU runtime reasonable
 // Use the largest possible int values on the FPGA to show the difference in
@@ -38,7 +36,7 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
   try {
     // create the device queue with profiling enabled
     auto prop_list = property_list{property::queue::enable_profiling()};
-    queue q(selector, dpc_common::exception_handler, prop_list);
+    queue q(selector, fpga_tools::exception_handler, prop_list);
 
     // The scalar inputs are passed to the kernel using the lambda capture,
     // but a SYCL buffer must be used to return a scalar from the kernel.

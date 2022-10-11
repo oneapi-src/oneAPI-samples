@@ -7,9 +7,7 @@
 #include <numeric>
 #include <vector>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
@@ -40,7 +38,7 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
 
   try {
     // create the SYCL device queue
-    queue q(device_selector, dpc_common::exception_handler,
+    queue q(device_selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer in_buf(in);
