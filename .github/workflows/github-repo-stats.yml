@@ -12,7 +12,7 @@ jobs:
     name: github-repo-stats
     runs-on: ubuntu-latest
     steps:
-      - name: run-ghrs
+      - name: master
         # Use latest release.
         uses: jgehrcke/github-repo-stats@RELEASE
         with:
