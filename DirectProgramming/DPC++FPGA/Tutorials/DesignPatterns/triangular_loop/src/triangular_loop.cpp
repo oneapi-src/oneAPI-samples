@@ -7,9 +7,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -138,7 +136,7 @@ int main() {
     auto prop_list =
         property_list{property::queue::enable_profiling()};
 
-    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
+    sycl::queue q(device_selector, fpga_tools::exception_handler, prop_list);
 
     platform platform = q.get_context().get_platform();
     device device = q.get_device();

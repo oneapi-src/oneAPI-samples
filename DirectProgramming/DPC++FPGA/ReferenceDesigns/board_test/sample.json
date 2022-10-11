@@ -11,7 +11,8 @@
   "commonFolder": {
     "base": "../..",
     "include": [
-      "ReferenceDesigns/board_test"
+      "ReferenceDesigns/board_test",
+      "include"
     ],
     "exclude": []
   },

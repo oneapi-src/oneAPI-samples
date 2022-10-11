@@ -115,10 +115,9 @@ When working with the command-line interface (CLI), you should configure the one
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-
 ### Include Files
 
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. Additionally, the FPGA samples use many of the headers in the [`DirectProgramming/DPC++FPGA/include`](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/include) folder.
+The FPGA samples use many of the headers in the [`DirectProgramming/DPC++FPGA/include`](https://github.com/oneapi-src/oneAPI-samples/tree/master/DirectProgramming/DPC%2B%2BFPGA/include) folder.
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
@@ -145,7 +144,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    For the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following command instead:
    ```
-   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -179,7 +178,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    For the Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX), enter the following command instead:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
    1. Compile for emulation (fast compile time, targets emulated FPGA device):

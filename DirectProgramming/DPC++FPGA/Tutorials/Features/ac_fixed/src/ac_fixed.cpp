@@ -5,9 +5,7 @@
 
 #include <iomanip>  // for std::setprecision
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -119,7 +117,7 @@ int main() {
 
   try {
     // Create the SYCL device queue
-    queue q(selector, dpc_common::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
 
     // I. Constructing `ac_fixed` Numbers
     std::cout << "1. Testing Constructing ac_fixed from float or ac_fixed:\n";

@@ -8,6 +8,14 @@
   "targetDevice": ["FPGA"],
   "builder": ["cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "Tutorials/Tools/dynamic_profiler",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
