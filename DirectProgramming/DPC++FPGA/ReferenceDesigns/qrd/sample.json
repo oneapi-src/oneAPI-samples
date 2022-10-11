@@ -11,7 +11,7 @@
   "commonFolder": {
     "base": "../..",
     "include": [
-      "ReferenceDesigns/qri",
+      "ReferenceDesigns/qrd",
       "include"
     ],
     "exclude": []
@@ -71,5 +71,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Reference Designs and End to End"
 }

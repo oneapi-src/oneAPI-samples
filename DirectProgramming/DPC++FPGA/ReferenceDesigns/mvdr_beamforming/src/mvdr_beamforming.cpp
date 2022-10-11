@@ -7,16 +7,14 @@
 #include <thread>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "Tuple.hpp"
 #include "mvdr_complex.hpp"
 
 #if not defined(REAL_IO_PIPES)
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 #endif
 
 #include "Constants.hpp"
@@ -232,7 +230,7 @@ int main(int argc, char *argv[]) {
 #if defined(REAL_IO_PIPES)
     queue q(selector);
 #else
-    queue q(selector, dpc_common::exception_handler);
+    queue q(selector, fpga_tools::exception_handler);
 #endif
 
     // initialize the producers and consumers

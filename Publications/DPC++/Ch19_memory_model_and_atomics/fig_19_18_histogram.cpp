@@ -11,10 +11,6 @@
 using namespace sycl;
 using namespace sycl::ext::oneapi;
 
-template <typename T, int dimensions>
-using local_accessor =
-    accessor<T, dimensions, access::mode::read_write, access::target::local>;
-
 std::tuple<size_t, size_t> distribute_range(group<1> g, size_t N) {
   size_t work_per_group = N / g.get_group_range(0);
   size_t remainder = N - g.get_group_range(0) * work_per_group;

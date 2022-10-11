@@ -8,10 +8,10 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(A10_PAC_BOARD_NAME "intel_a10gx_pac:pac_a10")
 set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10")
 set(FPGA_DEVICE_NAME ${A10_PAC_BOARD_NAME})
-if (DEFINED FPGA_BOARD)
-    set(FPGA_DEVICE_NAME ${FPGA_BOARD})
+if (DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE_NAME ${FPGA_DEVICE})
 endif()
-# use: cmake -D FPGA_BOARD=<board> to override the default FPGA card
+# use: cmake -D FPGA_DEVICE=<device> to override the default FPGA card
 #      (third party or custom FPGA cards can also be used)
 
 
@@ -19,7 +19,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR ")
 set(EMULATOR_LINK_FLAGS    "-fintelfpga ")
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga")
-set(HARDWARE_LINK_FLAGS    "-fintelfpga -Xshardware -Xsboard=${FPGA_DEVICE_NAME} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS    "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE_NAME} ${USER_HARDWARE_FLAGS}")
 # use: cmake -D USER_HARDWARE_FLAGS=<flags> to set additional flags for FPGA backend compilation
 
 

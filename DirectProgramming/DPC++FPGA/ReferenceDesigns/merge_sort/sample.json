@@ -12,7 +12,7 @@
     "base": "../..",
     "include": [
       "ReferenceDesigns/merge_sort",
-      "include/pipe_utils.hpp"
+      "include"
     ],
     "exclude": []
   },
@@ -65,5 +65,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Reference Designs and End to End"
 }

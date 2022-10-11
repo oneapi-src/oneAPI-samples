@@ -10,7 +10,10 @@
   "languages": [{"cpp":{}}],
   "commonFolder": {
     "base": "../..",
-    "include": ["include"],
+    "include": [
+      "ReferenceDesigns/decompress",
+      "include"
+    ],
     "exclude": []
   },
   "ciTests": {
@@ -110,5 +113,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Reference Designs and End to End"
 }

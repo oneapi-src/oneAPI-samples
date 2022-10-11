@@ -3,15 +3,13 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cmath>
 #include <iomanip>
 #include <random>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -212,7 +210,7 @@ int main() {
   try {
     auto prop_list = property_list{property::queue::enable_profiling()};
 
-    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
+    sycl::queue q(device_selector, fpga_tools::exception_handler, prop_list);
 
     platform platform = q.get_context().get_platform();
     device device = q.get_device();
@@ -268,7 +266,7 @@ int main() {
 
       // Start the timer. This will include the time to process the input data
       // for the first 2 kernel executions.
-      dpc_common::TimeInterval exec_time;
+      auto start = std::chrono::steady_clock::now();
 
       if (i == 0) {  // Single buffering
         for (int i = 0; i < kTimes; i++) {
@@ -322,7 +320,8 @@ int main() {
       }
 
       // Stop the timer.
-      double time_span = exec_time.Elapsed();
+      auto end = std::chrono::steady_clock::now();
+      double time_span = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
 
       std::cout << "\nOverall execution time "
                 << ((i == 0) ? "without" : "with")
