@@ -35,7 +35,14 @@ using namespace sycl;
 template <int N> class KernelCompute;
 
 template <int spec_iter>
-void ComplexExit(const device_selector &selector, float bound, int &res) {
+void ComplexExit(float bound, int &res) {
+#if defined(FPGA_EMULATOR)
+  ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
+#else
+  ext::intel::fpga_selector selector;
+#endif
   double kernel_time_ms = 0.0;
   try {
     // create the device queue with profiling enabled
@@ -97,13 +104,6 @@ void ComplexExit(const device_selector &selector, float bound, int &res) {
 }
 
 int main(int argc, char *argv[]) {
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
 
   float bound = kUpper;
 
@@ -120,17 +120,17 @@ int main(int argc, char *argv[]) {
 // This reflects compute latency differences on different hardware
 // architectures, and is a low-level optimization.
 #if defined(A10)
-  ComplexExit<0>(selector, bound, r0);
-  ComplexExit<10>(selector, bound, r1);
-  ComplexExit<27>(selector, bound, r2);
+  ComplexExit<0>(bound, r0);
+  ComplexExit<10>(bound, r1);
+  ComplexExit<27>(bound, r2);
 #elif defined(S10)
-  ComplexExit<0>(selector, bound, r0);
-  ComplexExit<10>(selector, bound, r1);
-  ComplexExit<54>(selector, bound, r2);
+  ComplexExit<0>(bound, r0);
+  ComplexExit<10>(bound, r1);
+  ComplexExit<54>(bound, r2);
 #elif defined(Agilex)
-  ComplexExit<0>(selector, bound, r0);
-  ComplexExit<10>(selector, bound, r1);
-  ComplexExit<50>(selector, bound, r2);
+  ComplexExit<0>(bound, r0);
+  ComplexExit<10>(bound, r1);
+  ComplexExit<50>(bound, r2);
 #else
   std::static_assert(false, "Invalid FPGA board macro");
 #endif

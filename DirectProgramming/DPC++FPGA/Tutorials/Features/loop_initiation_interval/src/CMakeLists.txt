@@ -89,7 +89,9 @@ set_target_properties(${FPGA_EARLY_IMAGE_ENABLE_II} PROPERTIES LINK_FLAGS "${HAR
 #    [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -DA10 -o loop_ii.cpp.o -c loop_initiation_interval.cpp
 #    [link]    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DA10 loop_ii.cpp.o -o loop_ii.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 add_executable(${SIMULATOR_TARGET_ENABLE_II} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET_ENABLE_II} PRIVATE ../../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${SIMULATOR_TARGET_ENABLE_II})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")

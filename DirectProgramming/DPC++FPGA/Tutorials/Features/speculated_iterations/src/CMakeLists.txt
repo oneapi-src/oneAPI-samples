@@ -82,6 +82,7 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 #    [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -DA10 -o speculated_iterations.cpp.o -c speculated_iterations.cpp
 #    [link]    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DA10 speculated_iterations.cpp.o -o speculated_iterations.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
