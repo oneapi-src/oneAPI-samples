@@ -67,7 +67,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET} ${STALL_FREE_EMULATOR_TARG
 #    [compile] dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o triangular_loop.cpp.o -c triangular_loop.cpp
 #    [link]    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> triangular_loop.cpp.o -o triangular_loop.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
-target_include_directories(${SIMMULATOR_TARGET} PRIVATE ../../../../include)
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 add_executable(${STALL_FREE_SIMULATOR_TARGET} ${SOURCE_FILE})
