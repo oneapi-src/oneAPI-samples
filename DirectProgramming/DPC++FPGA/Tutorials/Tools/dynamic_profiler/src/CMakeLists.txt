@@ -52,6 +52,8 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 #   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o dynamic_profiler.cpp.o -c dynamic_profiler.cpp
 #   [link]    dpcpp -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> dynamic_profiler.cpp.o -o dynamic_profiler.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 

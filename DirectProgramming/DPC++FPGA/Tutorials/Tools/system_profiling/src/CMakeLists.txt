@@ -52,8 +52,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 #   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o double_buffering.cpp.o -c double_buffering.cpp
 #   [link]    dpcpp -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> double_buffering.cpp.o -o double_buffering.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 
 ###############################################################################
 ### FPGA Hardware
