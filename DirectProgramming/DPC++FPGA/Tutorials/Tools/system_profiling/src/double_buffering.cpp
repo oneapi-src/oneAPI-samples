@@ -211,7 +211,7 @@ int main() {
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
 #elif defined(FPGA_SIMULATOR)
-  ext::intel::fpga_simulator_selector selector;
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
