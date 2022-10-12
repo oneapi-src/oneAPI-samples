@@ -11,9 +11,9 @@ For comprehensive instructions regarding distributed training with oneCCL in PyT
 
 | Optimized for                       | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04
+| OS                                | Linux\* Ubuntu\* 18.04
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel Extension for PyTorch*;
+| Software                          | Intel Extension for PyTorch\*;
 | What you will learn               | How to perform distributed training with oneCCL in PyTorch
 | Time to complete                  | 60 minutes
 
@@ -37,7 +37,7 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 ## Building the `torch-ccl Getting Started` Sample
 
-### On a Linux* System 
+### On a Linux\* System 
 
 Please follow instructions [here](https://github.com/intel/optimized-models/tree/master/pytorch/distributed#distributed-training-with-oneccl-in-pytorch).
 

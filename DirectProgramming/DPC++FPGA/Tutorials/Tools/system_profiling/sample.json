@@ -8,6 +8,14 @@
   "targetDevice": ["FPGA"],
   "builder": ["cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "Tutorials/Tools/system_profiling",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
@@ -22,5 +30,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Code Optimization"
 }

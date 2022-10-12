@@ -1,11 +1,9 @@
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -56,7 +54,7 @@ void DoSomeWork(const device_selector &selector, const WorkVec &vec_a,
   try {
     auto prop_list = property_list{property::queue::enable_profiling()};
 
-    queue q(selector, dpc_common::exception_handler, prop_list);
+    queue q(selector, fpga_tools::exception_handler, prop_list);
 
     buffer buffer_in_a(vec_a);
     buffer buffer_in_b(vec_b);

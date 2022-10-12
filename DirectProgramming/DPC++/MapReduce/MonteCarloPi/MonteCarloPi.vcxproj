@@ -55,7 +55,7 @@
       <SuppressStartupBanner>false</SuppressStartupBanner>
     </ClCompile>
     <Link>
-      <SpecifyDevCmplAdditionalOptions>/Od</SpecifyDevCmplAdditionalOptions>
+      <SpecifyDevCmplAdditionalOptions>/O2</SpecifyDevCmplAdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

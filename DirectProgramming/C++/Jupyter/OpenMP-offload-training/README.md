@@ -3,16 +3,16 @@
 The the content of this repo is a collection of Jupyter notebooks that were
 developed to teach OpenMP Offload.
 
-The Jupyter notebooks are tested and can be run on the Intel Devcloud. Below
-are the steps to access these Jupyter notebooks on the Intel Devcloud:
+The Jupyter notebooks are tested and can be run on the Intel DevCloud. Below
+are the steps to access these Jupyter notebooks on the Intel DevCloud:
 
-1. Register with the Intel Devcloud at
-   https://intelsoftwaresites.secure.force.com/devcloud/oneapi
+1. Register with the Intel DevCloud at
+   https://intelsoftwaresites.secure.force.com/devcloud/oneapi.
 
-2. SSH into the Intel Devcloud "terminal"
+2. SSH into the Intel DevCloud "terminal".
 
 3. Type the following command to download the oneAPI-essentials series of
-   Jupyter notebooks and OpenMP offload notebooks into your devcloud account
+   Jupyter notebooks and OpenMP offload notebooks into your DevCloud account
    `/data/oneapi_workshop/get_jupyter_notebooks.sh`
 
 | Optimized for         | Description
@@ -26,8 +26,8 @@ are the steps to access these Jupyter notebooks on the Intel Devcloud:
 
 ## Running the Jupyter Notebooks
 
-1. Open "OpenMP Welcome.ipynb" with JupyterLab
-2. Start the modules of interest
+1. Open "OpenMP Welcome.ipynb" with JupyterLab.
+2. Start the modules of interest.
 3. Follow the instructions in each notebook and execute cells when instructed.
 
 ## License
@@ -45,21 +45,26 @@ Third party program Licenses can be found here:
 * Introduce Developer Training Modules
 * Describe oneAPI Tool Modules
 
-[Introduction to OpenMP Offload](intro) 
+[Introduction to OpenMP Offload](intro)
 * oneAPI Software Model Overview and Workflow
 * HPC Single-Node Workflow with oneAPI
 * Simple OpenMP Code Example
 * Target Directive Explanation
 * _Lab Exercise_: Vector Increment with Target Directive
 
-[Managing Data Transfers](datatransfer) 
+[Managing Data Transfers](datatransfer)
 * Offloading Data
 * Target Data Region
 * _Lab Exercise_: Target Data Region
 * Mapping Global Variable to Device
 
-[Utilizing GPU Parallelism](parallelism) 
+[Utilizing GPU Parallelism](parallelism)
 * Device Parallelism
 * OpenMP Constructs and Teams
 * Host Device Concurrency
 * _Lab Exercise_: OpenMP Device Parallelism
+
+[Unified Shared Memory](USM) 
+* Allocating Unified Shared Memory
+* USM Explicit Data Movement
+* _Lab Exercise_: Unified Shared Memory

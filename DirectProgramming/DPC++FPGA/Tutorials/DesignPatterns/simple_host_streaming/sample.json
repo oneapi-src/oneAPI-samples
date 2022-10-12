@@ -8,6 +8,14 @@
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "Tutorials/DesignPatterns/simple_host_streaming",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
@@ -57,6 +65,7 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Code Optimization"
 }
 

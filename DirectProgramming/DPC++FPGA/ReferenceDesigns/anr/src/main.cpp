@@ -1,4 +1,4 @@
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <algorithm>
 #include <array>
@@ -16,10 +16,7 @@
 #include "constants.hpp"
 #include "data_bundle.hpp"
 #include "dma_kernels.hpp"
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
-#include "mp_math.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 using namespace std::chrono;
@@ -89,11 +86,11 @@ int main(int argc, char* argv[]) {
 #endif
 
   // create the device queue
-  queue q(selector, dpc_common::exception_handler);
+  queue q(selector, fpga_tools::exception_handler);
 
   // make sure the device supports USM device allocations
   auto d = q.get_device();
-  if (!d.get_info<info::device::usm_device_allocations>()) {
+  if (!d.has(aspect::usm_device_allocations)) {
     std::cerr << "ERROR: The selected device does not support USM device"
               << " allocations\n";
     std::terminate();

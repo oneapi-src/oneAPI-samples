@@ -10,7 +10,7 @@ add_executable(prog1 class_member_functor.cpp)
 add_custom_target(run_prog1 ./prog1)
 
 add_executable(prog2 function_pointer.cpp)
-add_custom_target(run_prog2 ./prog2)
+add_custom_target(run_prog2 ${CMAKE_COMMAND} -E env OMP_TARGET_OFFLOAD=DISABLED ./prog2)
 
 add_executable(prog3 user_defined_mapper.cpp)
 add_custom_target(run_prog3 ./prog3)

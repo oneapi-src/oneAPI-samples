@@ -7,15 +7,15 @@
 #include <utility>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
-// include the merge sort kernel header
 #include "merge_sort.hpp"
+
+// Included from DirectProgramming/DPC++FPGA/include/
+#include "constexpr_math.hpp"
 
 using namespace sycl;
 using namespace std::chrono;
@@ -38,7 +38,7 @@ constexpr bool kUseUSMHostAllocation = false;
 #endif
 constexpr size_t kMergeUnits = MERGE_UNITS;
 static_assert(kMergeUnits > 0);
-static_assert(impu::math::IsPow2(kMergeUnits));
+static_assert(fpga_tools::IsPow2(kMergeUnits));
 
 // The width of the sort, which must be a power of 2
 // This can be set by defining the preprocessor macro 'SORT_WIDTH'
@@ -48,7 +48,7 @@ static_assert(impu::math::IsPow2(kMergeUnits));
 #endif
 constexpr size_t kSortWidth = SORT_WIDTH;
 static_assert(kSortWidth >= 1);
-static_assert(impu::math::IsPow2(kSortWidth));
+static_assert(fpga_tools::IsPow2(kSortWidth));
 
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declare functions used in this file by main()
@@ -125,18 +125,18 @@ int main(int argc, char *argv[]) {
 #endif
 
   // create the device queue
-  queue q(selector, dpc_common::exception_handler);
+  queue q(selector, fpga_tools::exception_handler);
 
   // make sure the device supports USM device allocations
   auto d = q.get_device();
-  if (!d.get_info<info::device::usm_device_allocations>()) {
+  if (!q.get_device().has(aspect::usm_device_allocations)) {
     std::cerr << "ERROR: The selected device does not support USM device"
               << " allocations\n";
     std::terminate();
   }
 
   // make sure the device support USM host allocations if we chose to use them
-  if (!d.get_info<info::device::usm_host_allocations>() &&
+  if (!q.get_device().has(aspect::usm_host_allocations) &&
       kUseUSMHostAllocation) {
     std::cerr << "ERROR: The selected device does not support USM host"
               << " allocations\n";
@@ -275,7 +275,7 @@ double FPGASort(queue &q, ValueT *in_ptr, ValueT *out_ptr, IndexT count) {
   // the sorter must sort a power of 2, so round up the requested count
   // to the nearest power of 2; we will pad the input to make sure the
   // output is still correct
-  const IndexT sorter_count = impu::math::RoundUpPow2(count);
+  const IndexT sorter_count = fpga_tools::RoundUpPow2(count);
 
   // allocate some memory for the merge sort to use as temporary storage
   ValueT *buf_0, *buf_1;

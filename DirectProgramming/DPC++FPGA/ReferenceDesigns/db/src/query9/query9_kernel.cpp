@@ -6,6 +6,8 @@
 #include "query9_kernel.hpp"
 #include "pipe_types.hpp"
 
+#include "onchip_memory_with_cache.hpp" // DirectProgramming/DPC++FPGA/include
+
 #include "../db_utils/Accumulator.hpp"
 #include "../db_utils/LikeRegex.hpp"
 #include "../db_utils/MapJoin.hpp"
@@ -297,32 +299,34 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
     h.single_task<JoinPartSupplierSupplier>(
           [=]() [[intel::kernel_args_restrict]] {
       // +1 is to account for fact that SUPPKEY is [1,kSF*10000]
-      using ArrayMapType = ArrayMap<SupplierRow, kSupplierTableSize + 1>;
-      ArrayMapType array_map;
-      array_map.Init();
+      unsigned char nation_key_map_data[kSupplierTableSize + 1];
+      bool nation_key_map_valid[kSupplierTableSize + 1];
+      for (int i = 0; i < kSupplierTableSize + 1; i++) {
+        nation_key_map_valid[i] = false;
+      }
 
       ///////////////////////////////////////////////
       //// Stage 1
       // populate the array map
-      // why a map? keys may not be sequential.
-      [[intel::initiation_interval(1), intel::ivdep]]
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < s_rows; i++) {
-        // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed
         // to be unique in range [1:kSF*10000]
         DBIdentifier s_suppkey = i + 1;
         unsigned char s_nationkey = s_nationkey_accessor[i];
-
-        array_map.Set(s_suppkey, SupplierRow(true, s_suppkey, s_nationkey));
+        
+        nation_key_map_data[s_suppkey] = s_nationkey;
+        nation_key_map_valid[s_suppkey] = true;
       }
       ///////////////////////////////////////////////
 
       ///////////////////////////////////////////////
       //// Stage 2
       // MAPJOIN PARTSUPPLIER and SUPPLIER tables by suppkey
-      MapJoin<ArrayMapType, PartSupplierPipe, PartSupplierRow,
+      MapJoin<unsigned char, PartSupplierPipe, PartSupplierRow,
               kPartSupplierDuplicatePartkeys, PartSupplierPartsPipe,
-              SupplierPartSupplierJoined>(array_map);
+              SupplierPartSupplierJoined>(nation_key_map_data,
+                                          nation_key_map_valid);
 
       // tell downstream we are done
       PartSupplierPartsPipe::write(
@@ -381,18 +385,18 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
 
     h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
       // the accumulators
-      constexpr int ACCUM_CACHE_SIZE = 7;
-      BRAMAccumulator<DBDecimal, (25 * 7), ACCUM_CACHE_SIZE, unsigned char>
-          sum_profit_local[kFinalDataMaxSize];
+      constexpr int kAccumCacheSize = 8;
+      NTuple<kFinalDataMaxSize, fpga_tools::OnchipMemoryWithCache<
+                                    DBDecimal, (25 * 7), kAccumCacheSize>>
+          sum_profit_local;
 
       // initialize the accumulators
       UnrolledLoop<0, kFinalDataMaxSize>([&](auto j) {
-        sum_profit_local[j].Init();
+        sum_profit_local.template get<j>().init(0);
       });
 
       bool done = false;
-
-      [[intel::initiation_interval(1), intel::ivdep(ACCUM_CACHE_SIZE)]]
+      [[intel::initiation_interval(1)]]
       do {
         FinalPipeData pipe_data = FinalPipe::read();
         done = pipe_data.done;
@@ -427,7 +431,9 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           unsigned char idx_final = D_valid ? idx : 0;
           DBDecimal amount_final = D_valid ? amount : 0;
 
-          sum_profit_local[j].Accumulate(idx_final, amount_final);
+          auto current_amount = sum_profit_local.template get<j>().read(idx_final);
+          auto computed_amount = current_amount + amount_final;
+          sum_profit_local.template get<j>().write(idx_final, computed_amount);
         });
       } while (!done);
 
@@ -440,7 +446,7 @@ bool SubmitQuery9(queue& q, Database& dbinfo, std::string colour,
           DBDecimal amount = 0;
 
           UnrolledLoop<0, kFinalDataMaxSize>([&](auto j) {
-            amount += sum_profit_local[j].Get(in_idx);
+            amount += sum_profit_local.template get<j>().read(in_idx);
           });
 
           sum_profit_accessor[out_idx] = amount;

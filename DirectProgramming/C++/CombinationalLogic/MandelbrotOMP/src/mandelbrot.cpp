@@ -30,7 +30,7 @@
 #include "mandelbrot.hpp"
 
 #include <complex>
-#ifdef __INTEL_COMPILER
+#if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
 #include <omp.h>
 #endif
 #include <emmintrin.h>
@@ -84,7 +84,7 @@ unsigned char* serial_mandelbrot(double x0, double y0, double x1, double y1,
   return output;
 }
 
-#ifdef __INTEL_COMPILER
+#if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
 
 #define NUM_THREADS \
   8  // USER: Experiment with various threadcounts for parallelization
@@ -251,4 +251,4 @@ unsigned char* omp_mandelbrot(double x0, double y0, double x1, double y1,
   return output;
 }
 
-#endif  // __INTEL_COMPILER
+#endif  // __INTEL_COMPILER or __INTEL_LLVM_COMPILER

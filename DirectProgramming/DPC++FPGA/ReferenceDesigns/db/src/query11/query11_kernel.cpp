@@ -4,13 +4,14 @@
 
 #include "query11_kernel.hpp"
 #include "pipe_types.hpp"
-#include "../db_utils/Accumulator.hpp"
+#include "../db_utils/CachedMemory.hpp"
 #include "../db_utils/MapJoin.hpp"
 #include "../db_utils/Misc.hpp"
 #include "../db_utils/Tuple.hpp"
 #include "../db_utils/Unroller.hpp"
-#include "../db_utils/ShannonIterator.hpp"
 #include "../db_utils/fifo_sort.hpp"
+
+#include "onchip_memory_with_cache.hpp" // DirectProgramming/DPC++FPGA/include
 
 using namespace std::chrono;
 
@@ -56,7 +57,6 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
   // create space for the input buffers
   // SUPPLIER
-  buffer s_suppkey_buf(dbinfo.s.suppkey);
   buffer s_nationkey_buf(dbinfo.s.nationkey);
   
   // PARTSUPPLIER
@@ -88,10 +88,7 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
     // kernel to produce the PARTSUPPLIER table
     h.single_task<ProducePartSupplier>([=]() [[intel::kernel_args_restrict]] {
       [[intel::initiation_interval(1)]]
-      for (size_t i = 0; i < ps_iters + 1; i++) {
-        bool done = (i == ps_iters);
-        bool valid = (i != ps_iters);
-
+      for (size_t i = 0; i < ps_iters; i++) {
         // bulk read of data from global memory
         NTuple<kJoinWinSize, PartSupplierRow> data;
 
@@ -110,8 +107,11 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
         // write to pipe
         ProducePartSupplierPipe::write(
-            PartSupplierRowPipeData(done, valid, data));
+            PartSupplierRowPipeData(false, true, data));
       }
+
+      // tell the downstream kernel we are done producing data
+      ProducePartSupplierPipe::write(PartSupplierRowPipeData(true, false));
     });
   });
   ///////////////////////////////////////////////////////////////////////////
@@ -121,33 +121,35 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
   auto join_event = q.submit([&](handler& h) {
     // SUPPLIER table accessors
     size_t s_rows = dbinfo.s.rows;
-    accessor s_suppkey_accessor(s_suppkey_buf, h, read_only);
     accessor s_nationkey_accessor(s_nationkey_buf, h, read_only);
 
     h.single_task<JoinPartSupplierParts>([=]() [[intel::kernel_args_restrict]] {
-      // initialize the mapper
+      // initialize the array map
       // +1 is to account for fact that SUPPKEY is [1,kSF*10000]
-      using ArrayMapType = ArrayMap<SupplierRow, kSupplierTableSize + 1>;
-      ArrayMapType array_map;
-      array_map.Init();
+      unsigned char nation_key_map_data[kSupplierTableSize + 1];
+      bool nation_key_map_valid[kSupplierTableSize + 1];
+      for (int i = 0; i < kSupplierTableSize + 1; i++) {
+        nation_key_map_valid[i] = false;
+      }
 
       // populate MapJoiner map
       // why a map? keys may not be sequential
-      [[intel::initiation_interval(1), intel::ivdep]]
+      [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < s_rows; i++) {
-        // read in supplier and nation key
         // NOTE: based on TPCH docs, SUPPKEY is guaranteed to be unique
         // in the range [1:kSF*10000]
-        DBIdentifier s_suppkey = s_suppkey_accessor[i];
+        DBIdentifier s_suppkey = i + 1;
         unsigned char s_nationkey = s_nationkey_accessor[i];
-
-        array_map.Set(s_suppkey, SupplierRow(true,s_suppkey,s_nationkey));
+        
+        nation_key_map_data[s_suppkey] = s_nationkey;
+        nation_key_map_valid[s_suppkey] = true;
       }
 
       // MAPJOIN PARTSUPPLIER and SUPPLIER tables by suppkey
-      MapJoin<ArrayMapType, ProducePartSupplierPipe, PartSupplierRow,
+      MapJoin<unsigned char, ProducePartSupplierPipe, PartSupplierRow,
               kJoinWinSize, PartSupplierPartsPipe,
-              SupplierPartSupplierJoined>(array_map);
+              SupplierPartSupplierJoined>(nation_key_map_data,
+                                          nation_key_map_valid);
       
       // tell downstream we are done
       PartSupplierPartsPipe::write(
@@ -158,60 +160,49 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
   ///////////////////////////////////////////////////////////////////////////
   //// Compute Kernel
-  auto compute_event = q.submit([&](handler& h) {
-    // kernel to produce the PARTSUPPLIER table
-    h.single_task<Compute>([=]() [[intel::kernel_args_restrict]] {
-      constexpr int ACCUM_CACHE_SIZE = 5;
-      BRAMAccumulator<DBDecimal,
-                      kPartTableSize,
-                      ACCUM_CACHE_SIZE,
-                      DBIdentifier> partkey_values;
+  auto compute_event = q.single_task<Compute>([=] {
+    constexpr int kAccumCacheSize = 15;
+    fpga_tools::OnchipMemoryWithCache<DBDecimal, kPartTableSize, 
+                                      kAccumCacheSize> partkey_values;
 
-      // initialize accumulator
-      partkey_values.Init();
+    // initialize accumulator
+    partkey_values.init(0);
 
-      bool done = false;
+    bool done = false;
 
-      [[intel::initiation_interval(1), intel::ivdep]]
-      while (!done) {
-        SupplierPartSupplierJoinedPipeData pipe_data = 
-            PartSupplierPartsPipe::read();
+    [[intel::initiation_interval(1)]]
+    while (!done) {
+      bool valid_pipe_read;
+      SupplierPartSupplierJoinedPipeData pipe_data = 
+          PartSupplierPartsPipe::read(valid_pipe_read);
 
-        done = pipe_data.done;
+      done = pipe_data.done && valid_pipe_read;
 
-        if (pipe_data.valid) {
-          UnrolledLoop<0, kJoinWinSize>([&](auto j) {
-            SupplierPartSupplierJoined data = pipe_data.data.template get<j>();
+      if (valid_pipe_read && !done) {
+        UnrolledLoop<0, kJoinWinSize>([&](auto j) {
+          SupplierPartSupplierJoined data = pipe_data.data.template get<j>();
 
-            if (data.valid && data.nationkey == nationkey) {
-              // partkeys start at 1
-              DBIdentifier index = data.partkey - 1;
-              DBDecimal val = data.supplycost * (DBDecimal)(data.availqty);
-              partkey_values.Accumulate(index, val);
-            }
-          });
-        }
+          if (data.valid && data.nationkey == nationkey) {
+            // partkeys start at 1
+            DBIdentifier index = data.partkey - 1;
+            DBDecimal val = data.supplycost * (DBDecimal)(data.availqty);
+            auto curr_val = partkey_values.read(index);
+            partkey_values.write(index, curr_val + val);
+          }
+        });
       }
+    }
 
-      // sort the {partkey, partvalue} pairs based on partvalue.
-      // send in first kPartTableSize valid pairs
-      [[intel::initiation_interval(1)]]
-      for (size_t i = 0; i < kPartTableSize; i++) {
-        SortInPipe::write(OutputData(i + 1, partkey_values.Get(i)));
-      }
-
-      // The sort kernel is expecting kSortSize elements, but we only have
-      // kPartTableSize (kPartTableSize <= kSortSize) elements.
-      // So, send it kSortSize-kPartTableSize pieces of invalid data.
-      // We are sorting elements by partvalue in descending order,
-      // so use 'min' for partvalue and 0 for partkey (valid partkeys are in
-      // [1,PARTSIZE]). Using min ensures these elements come out of the
-      // sorter LAST.
-      for (size_t i = 0; i < kSortSize - kPartTableSize; i++) {
-        SortInPipe::write(
-            OutputData(0, std::numeric_limits<DBDecimal>::min()));
-      }
-    });
+    // sort the {partkey, partvalue} pairs based on partvalue.
+    // we will send in kSortSize - kPartTableSize dummy values with a
+    // minimum value so that they are last (sorting from highest to lowest)
+    [[intel::initiation_interval(1)]]
+    for (size_t i = 0; i < kSortSize; i++) {
+      size_t key = (i < kPartTableSize) ? (i + 1) : 0;
+      auto val = (i < kPartTableSize) ? partkey_values.read(i)
+                                      : std::numeric_limits<DBDecimal>::min();
+      SortInPipe::write(OutputData(key, val));
+    }
   });
   ///////////////////////////////////////////////////////////////////////////
 
@@ -223,28 +214,29 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
     accessor values_accessor(values_buf, h, write_only, no_init);
 
     h.single_task<ConsumeSort>([=]() [[intel::kernel_args_restrict]] {
-      // use a ShannonIterator to track how many items
-      // we have seen from the sorter
-      // Using a ShannonIterator sacrifices a (marginal)
-      // amount of area to improve Fmax/II
-      ShannonIterator<int, 3> i(0, kSortSize);
+      int i = 0;
+      bool i_in_range = 0 < kSortSize;
+      bool i_next_in_range = 1 < kSortSize;
+      bool i_in_parttable_range = 0 < kPartTableSize;
+      bool i_next_in_parttable_range = 1 < kPartTableSize;
 
       // grab all kSortSize elements from the sorter
       [[intel::initiation_interval(1)]]
-      while (i.InRange()) {
-        bool valid;
-        OutputData D = SortOutPipe::read(valid);
+      while (i_in_range) {
+        bool pipe_read_valid;
+        OutputData D = SortOutPipe::read(pipe_read_valid);
 
-        if (valid) {
-          // first kPartTableSize elements are valid
-          // i.Index() is the index of the iterator
-          if (i.Index() < kPartTableSize) {
-            partkeys_accessor[i.Index()] = D.partkey;
-            values_accessor[i.Index()] = D.partvalue;
+        if (pipe_read_valid) {
+          if (i_in_parttable_range) {
+            partkeys_accessor[i] = D.partkey;
+            values_accessor[i] = D.partvalue;
           }
 
-          // increment the ShannonIterator
-          i.Step();
+          i_in_range = i_next_in_range;
+          i_next_in_range = i < kSortSize - 2;
+          i_in_parttable_range = i_next_in_parttable_range;
+          i_next_in_parttable_range = i < kPartTableSize - 2;
+          i++;
         }
       }
     });
@@ -253,10 +245,8 @@ bool SubmitQuery11(queue& q, Database& dbinfo, std::string& nation,
 
   ///////////////////////////////////////////////////////////////////////////
   //// FifoSort Kernel
-  auto sort_event = q.submit([&](handler& h) {
-    h.single_task<FifoSort>([=]() [[intel::kernel_args_restrict]] {
-      ihc::sort<SortType, kSortSize, SortInPipe, SortOutPipe>(GreaterThan());
-    });
+  auto sort_event = q.single_task<FifoSort>([=] {
+    ihc::sort<SortType, kSortSize, SortInPipe, SortOutPipe>(GreaterThan());
   });
   ///////////////////////////////////////////////////////////////////////////
 

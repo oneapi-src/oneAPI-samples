@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -23,12 +23,12 @@ int main() {
     auto sg = item.get_sub_group();
     auto i = item.get_global_id(0);
 
-    //# Adds all elements in sub_group using sub_group collectives
-    int sum = reduce_over_group(sg, data[i], plus<>());
+    //# Add all elements in sub_group using sub_group collectives
+    int result = reduce_over_group(sg, data[i], plus<>());
 
     //# write sub_group sum in first location for each sub_group
     if (sg.get_local_id()[0] == 0) {
-      data[i] = sum;
+      data[i] = result;
     } else {
       data[i] = 0;
     }
@@ -36,7 +36,7 @@ int main() {
 
   for (int i = 0; i < N; i++) std::cout << data[i] << " ";
   std::cout << "\n";
+
   free(data, q);
   return 0;
 }
-

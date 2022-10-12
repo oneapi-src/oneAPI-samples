@@ -507,7 +507,7 @@ bool Database::ValidateQ1(std::string db_root_dir,
                           std::array<DBDecimal, 3 * 2>& avg_price,
                           std::array<DBDecimal, 3 * 2>& avg_discount,
                           std::array<DBDecimal, 3 * 2>& count) {
-  std::cout << "Validating query 1 test results\n";
+  std::cout << "Validating query 1 test results" << std::endl;
 
   // populate date row by row (as presented in the file)
   std::string path(db_root_dir + kSeparator + "answers" + kSeparator + "q1.out");
@@ -630,7 +630,7 @@ bool Database::ValidateQ1(std::string db_root_dir,
 //
 bool Database::ValidateQ9(std::string db_root_dir,
                           std::array<DBDecimal, 25 * 2020>& sum_profit) {
-  std::cout << "Validating query 9 test results\n";
+  std::cout << "Validating query 9 test results" << std::endl;
 
   // populate date row by row (as presented in the file)
   std::string path(db_root_dir + kSeparator + "answers" + kSeparator + "q9.out");
@@ -684,7 +684,7 @@ bool Database::ValidateQ9(std::string db_root_dir,
 bool Database::ValidateQ11(std::string db_root_dir,
                            std::vector<DBIdentifier>& partkeys,
                            std::vector<DBDecimal>& partkey_values) {
-  std::cout << "Validating query 11 test results\n";
+  std::cout << "Validating query 11 test results" << std::endl;
 
   // populate date row by row (as presented in the file)
   std::string path(db_root_dir + kSeparator + "answers" + kSeparator + "q11.out");

@@ -13,7 +13,7 @@
 
 # # XGBoost Getting Started Example on Linear Regression
 # ## Importing and Organizing Data
-# In this example we will be predicting prices of houses in Boston based on the features of each house using Intel optimized XGBoost shipped as a part of the oneAPI AI Analytics Toolkit.
+# In this example we will be predicting prices of houses in California based on the features of each house using Intel optimized XGBoost shipped as a part of the oneAPI AI Analytics Toolkit.
 # Let's start by **importing** all necessary data and packages.
 
 # In[3]:
@@ -21,7 +21,7 @@
 
 import xgboost as xgb
 from sklearn.metrics import mean_squared_error
-from sklearn.datasets import load_boston
+from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
@@ -33,14 +33,14 @@ import numpy as np
 
 
 #loading the data
-boston = load_boston()
+california = fetch_california_housing()
 
 #converting data into a pandas dataframe
-data = pd.DataFrame(boston.data)
-data.columns = boston.feature_names
+data = pd.DataFrame(california.data)
+data.columns = california.feature_names
 
 #setting price as value to be predicted
-data['PRICE'] = boston.target
+data['PRICE'] = california.target
 
 #extracting rows
 X, y = data.iloc[:,:-1],data.iloc[:,-1]
@@ -57,7 +57,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 # In[5]:
 
 
-xg_reg = xgb.XGBRegressor(objective ='reg:linear', colsample_bytree = 0.3, learning_rate = 0.1,max_depth = 5, alpha = 10, n_estimators = 10)
+xg_reg = xgb.XGBRegressor(objective ='reg:squarederror', colsample_bytree = 0.3, learning_rate = 0.1,max_depth = 5, alpha = 10, n_estimators = 10)
 
 
 # ## Training and Saving the model

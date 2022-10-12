@@ -1,45 +1,63 @@
 # oneAPI OpenMP Offload Training Jupyter Notebooks
+The content of this repository is a collection of Jupyter Notebooks developed to teach OpenMP* Offload. These Jupyter Notebooks are designed to run on Intel® DevCloud.
 
-The the content of this repo is a collection of Jupyter notebooks that were
-developed to teach OpenMP Offload.
+| Area                  | Description
+|:---                   |:---
+| What you will learn   | How to offload complex computations to a GPU using OpenMP and the  Intel® Fortran Compiler
+| Time to complete      | 2 Hours
 
-The Jupyter notebooks are tested and can be run on the Intel Devcloud. Below
-are the steps to access these Jupyter notebooks on the Intel Devcloud:
-
-1. Register with the Intel Devcloud at
-   https://intelsoftwaresites.secure.force.com/devcloud/oneapi
-
-2. SSH into the Intel Devcloud "terminal"
-
-3. Type the following command to download the oneAPI-essentials series of
-   Jupyter notebooks and OpenMP offload notebooks into your devcloud account
-   `/data/oneapi_workshop/get_jupyter_notebooks.sh`
-
+## Prerequisites
 | Optimized for         | Description
 |:---                   |:---
 | OS                    | Linux*
 | Hardware              | Skylake with GEN9 or newer
-| Software              | Intel&reg; Fortran Compiler
-| License               | Samples licensed under MIT license.
-| What you will learn   | How to offload the computation to GPU using OpenMP with the Intel&reg; Fortran Compiler
-| Time to complete      | 2 Hours
+| Software              | Intel® Fortran Compiler <br> Intel® DevCloud
 
-## Running the Jupyter Notebooks
+## Access Intel® DevCloud
+Download the Jupyter Notebooks on Intel® DevCloud by performing the following steps:
 
-1. Open "OpenMP Welcome.ipynb" with JupyterLab
-2. Start the modules of interest
-3. Follow the instructions in each notebook and execute cells when instructed.
+1. If you do not already have an account, request an Intel® DevCloud account at [Create an Intel® DevCloud Account](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
 
-## License
+2. On a Linux* system, open a terminal.
 
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
-for details.
+3. SSH into Intel® DevCloud.
+   ```
+   ssh DevCloud
+   ```
+   > **Note**: You can find information about configuring your Linux system and connecting to Intel DevCloud at Intel® DevCloud for oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started).
 
-Third party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+4. Download the oneAPI-essentials series of Jupyter Notebooks and OpenMP offload Notebooks into your Intel® DevCloud account.
+   ```
+   /data/oneapi_workshop/get_jupyter_notebooks.sh
+   ```
+   >**Note**: Since this downloads all oneAPI-essential Jupyter Notebooks, this is a one-time task.
+
+## Open the OpenMP Jupyter Notebooks
+1. Open a web browser, and navigate to https://devcloud.intel.com. Select **Work with oneAPI**.
+
+2. From Intel® DevCloud for oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started), locate the ***Connect with Jupyter* Lab*** section (near the bottom).
+
+3. Click **Sign in to Connect** button.
+
+4. From the *Intel® oneAPI HPC Toolkit* section, select **View Training Modules**.
+
+5. Select any OpenMP module, and click **Try it in Jupyter**. (JupyterLab should launch with selected Notebook open.)
+
+### Open the Notebooks Directly
+1. If the correct Notebook did not open, navigate to the home directory.
+
+2. Navigate to **OpenMP Offload** > **Fortran**.
+
+3. Open the Notebook.
+   ```
+   OpenMP Welcome.ipynb
+   ```
+4. Start the module of interest.
+
+5.  Follow the instructions in each Notebook, and execute cells when instructed.
 
 # Summary of the Jupyter Notebook Directories
+The *oneAPI OpenMP* Offload Modules in Fortran* contains training and conceptual information for the following areas in the *Developer Training Modules* section of the Notebook.
 
 [OpenMP Welcome](OpenMP&#32;Welcome.ipynb)
 * Introduce Developer Training Modules
@@ -63,3 +81,13 @@ Third party program Licenses can be found here:
 * OpenMP Constructs and Teams
 * Host Device Concurrency
 * _Lab Exercise_: OpenMP Device Parallelism
+
+[Unified Shared Memory](USM) 
+* Allocating Unified Shared Memory
+* USM Explicit Data Movement
+* _Lab Exercise_: Unified Shared Memory
+
+## License
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).

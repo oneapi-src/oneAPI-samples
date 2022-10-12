@@ -6,14 +6,12 @@
   The main content of this sample is in the README file.
 */
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cmath>
 #include <numeric>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -198,7 +196,7 @@ int main() {
 #endif
 
   try {
-    queue q(device_selector, dpc_common::exception_handler);
+    queue q(device_selector, fpga_tools::exception_handler);
 
     std::vector<float> producer_input(kSize, -1);
     std::vector<float> consumer_output_before(kSize, -1);

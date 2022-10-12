@@ -8,6 +8,14 @@
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": [
+      "ReferenceDesigns/anr",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
@@ -59,5 +67,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Reference Designs and End to End"
 }

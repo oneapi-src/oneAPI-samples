@@ -1,0 +1,53 @@
+{
+  "guid": "BDC6B80E-E764-409D-966B-662CF7EFB072",
+  "name": "Intel Implicit SPMD Program Compiler (Intel ISPC) Getting Started: 05_ispc_gsg",
+  "categories": ["Toolkit/oneAPI Libraries/ISPC"],
+  "description": "This introductory rendering toolkit sample demonstrates how to compile basic programs with Intel ISPC and the system C++ compiler. Use this sample to further explore developing accelerated applications with Intel Embree and Intel Open VKL.",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "os":["linux", "windows", "darwin"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "Intel_ISPC_ispcHelloWorld_lin",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "./simple",
+		    "./simple_multi"
+                 ]
+                 }
+        ],
+        "windows":[
+                {
+                "id": "Intel_ISPC_ispcHelloWorld_win",
+                "steps":[
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . --config Release",
+                    "cd Release",
+                    ".\\simple.exe",
+		    ".\\simple_multi.exe"
+                ]
+
+                }
+        ],
+        "darwin": [
+                {
+                "id": "Intel_ISPC_ispcHelloWorld_mac",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . ",
+                    "./simple",
+		    "./simple_multi"
+                 ]
+                 }
+        ]
+  }
+}

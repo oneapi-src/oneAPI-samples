@@ -1,201 +1,193 @@
 # `Nbody` sample
-An N-body simulation is a simulation of a dynamical system of particles, usually under the influence of physical forces, such as gravity. This nbody sample code is implemented using C++ and DPC++ language for Intel CPU and GPU.
+An N-body simulation is a simulation of a dynamical system of particles, usually under the influence of physical forces, such as gravity. This `Nbody` sample code uses SYCL* standards for CPUs and GPUs.
 
-| Optimized for                       | Description
-|:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04; Windows 10
-| Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; oneAPI DPC++ Compiler;
-| What you will learn               | How to offload the computation to GPU using Intel&reg; oneAPI DPC++ Compiler
-| Time to complete                  | 15 minutes
+| Property             | Description
+|:---                  |:---
+| What you will learn  | How to offload complex computations to GPU
+| Time to complete     | 15 minutes
 
 ## Purpose
-Nbody sample code simulates 16000 particles and for ten integration steps. Each particle's position, velocity and acceleration parameters are dependent on other (N-1) particles. This algorithm is highly data parallel and a perfect candidate to offload to GPU. The code demonstrates how to deal with multiple device kernels, which can be enqueued into a DPC++ queue for execution and how to handle parallel reductions.
+By default, the `Nbody` sample code simulates 16,000 particles over ten integration steps. The position, velocity, and acceleration parameters of each particle are dependent on other (N-1) particles.
+
+This algorithm is highly data parallel, so the code a good candidate to offload to GPU. The code demonstrates how to deal with multiple device kernels, which can be enqueued into a SYCL queue for execution, and the code demonstrates how to handle parallel reductions.
+
+## Prerequisites
+| Optimized for     | Description
+|:---               |:---
+| OS                | Ubuntu* 18.04 <br> Windows* 10
+| Hardware          | Skylake with GEN9 or newer
+| Software          | Intel® oneAPI DPC++ Compiler
 
 ## Key Implementation Details
-The basic DPC++ implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
+The basic SYCL* compliant implementation explained in the code includes device selector, buffer, accessor, kernel, and command groups.
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+## Set Environment Variables
+When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
-## Building the Program for CPU and GPU
-
-### Running Samples In DevCloud
-Running samples in the Intel DevCloud requires you to specify a compute node. For specific instructions, jump to [Run the Nbody sample on the DevCloud](#run-nbody-on-devcloud)
-
-
-### Using Visual Studio Code*  (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
-
-To learn more about the extensions and how to configure the oneAPI environment, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.
+## Build the `Nbody` Program for CPU and GPU
+> **Note**: If you have not already done so, set up your CLI
+> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
+>
+> Linux*:
+> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For private installations: ` . ~/intel/oneapi/setvars.sh`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+>
+> Windows*:
+> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+>
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 ### Include Files
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
+The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You might need to use some of the resources from this location to build the sample.
 
-### On a Linux* System
-Perform the following steps:
-1. Build the program using the following `cmake` commands.
+### Use Visual Studio Code* (VS Code) (Optional)
+You can use Visual Studio Code* (VS Code) extensions to set your environment,
+create launch configurations, and browse and download samples.
+
+The basic steps to build and run a sample using VS Code include:
+ 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
+ 2. Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
+ 3. Open a terminal in VS Code (**Terminal > New Terminal**).
+ 4. Run the sample in the VS Code terminal using the instructions below.
+
+To learn more about the extensions and how to configure the oneAPI environment, see the 
+[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
+
+### On Linux*
+1. Build the program.
+   ```
+   mkdir build
+   cd build
+   cmake ..
+   make
+   ```
+If an error occurs, you can get more details by running `make` with
+the `VERBOSE=1` argument:
 ```
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
-```
-2. Run the program
-    ```
-    make run
-    ```
-
-3. Clean the program
-    ```
-    make clean
-    ```
-
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
-- Build the program using VS2017 or VS2019
-    - Right-click on the solution file and open using either VS2017 or VS2019 IDE.
-    - Right-click on the project in Solution Explorer and select Rebuild.
-    - From the top menu, select Debug -> Start without Debugging.
-
-- Build the program using MSBuild
-     - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run the following command: `MSBuild Hello_World_GPU.sln /t:Rebuild /p:Configuration="Release"`
-
-### Application Parameters
-You can modify the NBody simulation parameters from within GSimulation.cpp. The configurable parameters include:
-- set_npart(__);
-- set_nsteps(__);
-- set_tstep(__);
-- set_sfreq(__);
-
-Below are the default parameters:
-
-* Number of particles (npart) is 16000
-* Number of integration steps (nsteps) is 10
-* Time delta (tstep) is 0.1s
-* Sample frequency (sfreq) is 1
-
-## Example of Output
-    ===============================
-     Initialize Gravity Simulation
-     Target Device: Intel(R) Gen9
-     nPart = 16000; nSteps = 10; dt = 0.1
-    ------------------------------------------------
-     s       dt      kenergy     time (s)    GFLOPS
-    ------------------------------------------------
-     1       0.1     26.405      0.28029     26.488
-     2       0.2     313.77      0.066867    111.03
-     3       0.3     926.56      0.065832    112.78
-     4       0.4     1866.4      0.066153    112.23
-     5       0.5     3135.6      0.065607    113.16
-     6       0.6     4737.6      0.066544    111.57
-     7       0.7     6676.6      0.066403    111.81
-     8       0.8     8957.7      0.066365    111.87
-     9       0.9     11587       0.066617    111.45
-     10      1       14572       0.06637     111.86
-
-    # Total Time (s)     : 0.87714
-    # Average Performance : 112.09 +- 0.56002
-    ===============================
-    Built target run
-
-### Running the Nbody sample in the DevCloud<a name="run-nbody-on-devcloud"></a>
-1.  Open a terminal on your Linux system.
-2.	Log in to DevCloud.
-```
-ssh devcloud
-```
-3.	Download the samples.
-```
-git clone https://github.com/oneapi-src/oneAPI-samples.git
+make VERBOSE=1
 ```
 
-4. Change directories to the Nbody sample directory.
-```
-cd ~/oneAPI-samples/DirectProgramming/DPC++/N-bodyMethods/Nbody
-```
-#### Build and run the sample in batch mode
-The following describes the process of submitting build and run jobs to PBS.
-A job is a script that is submitted to PBS through the qsub utility. By default, the qsub utility does not inherit the current environment variables or your current working directory. For this reason, it is necessary to submit jobs as scripts that handle the setup of the environment variables. In order to address the working directory issue, you can either use absolute paths or pass the -d \<dir\> option to qsub to set the working directory.
+### On Windows* 
+**Using Visual Studio**
 
-#### Create the Job Scripts
-1.	Create a build.sh script with your preferred text editor:
-```
-nano build.sh
-```
-2.	 Add this text into the build.sh file:
-```
-source /opt/intel/inteloneapi/setvars.sh > /dev/null 2>&1
-mkdir build
-cd build
-cmake ..
-make
-```
+Build the program using **Visual Studio 2017** or newer.
+1. Change to the sample directory.
+2. Right-click on the solution file and open the solution in the IDE.
+3. From the top menu, select **Debug** > **Start without Debugging**.
 
-3.	Save and close the build.sh file.
+**Using MSBuild**
 
-4.	Create a run.sh script with with your preferred text editor:
-```
-nano run.sh
-```
+1. Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019" or whatever is appropriate for your Visual Studio* version.
+2. Change to the sample directory.
+3. Run the following command: `MSBuild Nbody.sln /t:Rebuild /p:Configuration="Release"`
 
-5.	 Add this text into the run.sh file:
-```
-source /opt/intel/inteloneapi/setvars.sh > /dev/null 2>&1
-cd build
-make run
-```
-6.	Save and close the run.sh file.
+#### Troubleshooting
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
-#### Build and run
-Jobs submitted in batch mode are placed in a queue waiting for the necessary resources (compute nodes) to become available. The jobs will be executed on a first come basis on the first available node(s) having the requested property or label.
-1.	Build the sample on a gpu node.
+## Run the `Nbody` Program
+### On Linux
+1. Run the program.
+   ```
+   make run
+   ```
+2. Clean the program. (Optional)
+   ```
+   make clean
+   ```
+### On Windows
+1. Change to the output directory.
+2. Run the executable.
+   ```
+   Nbody.exe
+   ```
 
-```
-qsub -l nodes=1:gpu:ppn=2 -d . build.sh
-```
+### Run 'Nbody' Sample in Intel® DevCloud (Optional)
+When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
-Note: -l nodes=1:gpu:ppn=2 (lower case L) is used to assign one full GPU node to the job.
-Note: The -d . is used to configure the current folder as the working directory for the task.
+#### Build and Run Samples in Batch Mode (Optional)
+You can submit build and run jobs through a Portable Bash Script (PBS). A job is a script that submitted to PBS through the `qsub` utility. By default, the `qsub` utility does not inherit the current environment variables or your current working directory, so you might need to submit jobs to configure the environment variables. To indicate the correct working directory, you can use either absolute paths or pass the `-d \<dir\>` option to `qsub`. 
 
-2.	In order to inspect the job progress, use the qstat utility.
-```
-watch -n 1 qstat -n -1
-```
-Note: The watch -n 1 command is used to run qstat -n -1 and display its results every second. If no results are displayed, the job has completed.
+If you choose to use scripts, jobs terminate with writing a couple of files to the disk:
+- `<script_name>.sh.eXXXX` is the job stderr
+- `<script_name>.sh.oXXXX` is the job stdout
 
-3.	After the build job completes successfully, run the sample on a gpu node:
-```
-qsub -l nodes=1:gpu:ppn=2 -d . run.sh
-```
-4.	When a job terminates, a couple of files are written to the disk:
+  Here `XXXX` is the job ID, which gets printed to the screen after each `qsub` command. 
 
-    <script_name>.sh.eXXXX, which is the job stderr
-
-    <script_name>.sh.oXXXX, which is the job stdout
-
-    Here XXXX is the job ID, which gets printed to the screen after each qsub command.
-
-5.	Inspect the output of the sample.
+You can inspect output of the sample.
 ```
 cat run.sh.oXXXX
 ```
-You should see output similar to this:
+#### Build and Run on Intel® DevCloud
+1. Open a terminal on a Linux* system.
+2. Log in to the Intel® DevCloud.
+   ```
+   ssh devcloud
+   ```
+3. Download the samples from GitHub.
+   ```
+   git clone https://github.com/oneapi-src/oneAPI-samples.git
+   ```
+4. Change to the sample directory.
+5. Configure the sample for a GPU node. (This is a single line script.)
+	```
+	qsub  -I  -l nodes=1:gpu:ppn=2 -d .
+	```
+   - `-I` (upper case I) requests an interactive session.
+   - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node. 
+   - `-d .` makes the current folder as the working directory for the task.
 
+> **Note**: To inspect job progress, use the qstat utility.
+>   ```
+>   watch -n 1 qstat -n -1
+>   ```
+> The command displays the results every second. The job is complete when no new results display.
+
+6. Perform build steps you would on Linux. (Including optionally cleaning the project.)
+7. Run the sample.
+8. Disconnect from the Intel® DevCloud.
+	```
+	exit
+	```
+
+## Example Output
+### Application Parameters
+You can modify the `NBody` sample simulation parameters in `GSimulation.cpp`. Configurable parameters include:
+
+|Parameter       | Defaults
+|:---            |:---
+|`set_npart`     | Default number of particles is **16000**
+|`set_nsteps`    | Default number of integration steps is **10**
+|`set_tstep`     | Default time delta is **0.1**
+|`set_sfreq`     | Default sample frequency is **1**
+
+### Example Output on Linux
+```
+===============================
+Initialize Gravity Simulation
+Target Device: Intel(R) Gen9
+nPart = 16000; nSteps = 10; dt = 0.1
+------------------------------------------------
+s       dt      kenergy     time (s)    GFLOPS
+------------------------------------------------
+1       0.1     26.405      0.28029     26.488
+2       0.2     313.77      0.066867    111.03
+3       0.3     926.56      0.065832    112.78
+4       0.4     1866.4      0.066153    112.23
+5       0.5     3135.6      0.065607    113.16
+6       0.6     4737.6      0.066544    111.57
+7       0.7     6676.6      0.066403    111.81
+8       0.8     8957.7      0.066365    111.87
+9       0.9     11587       0.066617    111.45
+10      1       14572       0.06637     111.86
+
+# Total Time (s)     : 0.87714
+# Average Performance : 112.09 +- 0.56002
+===============================
+Built target run
+```
+### Example Output on Intel® DevCloud
 ```
 Scanning dependencies of target run
 ===============================
@@ -220,14 +212,8 @@ Scanning dependencies of target run
 ===============================
 Built target run
 ```
+## License
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-6.	Remove the stdout and stderr files and clean-up the project files.
-```
-rm build.sh.*; rm run.sh.*; make clean
-```
-7.	Disconnect from the Intel DevCloud.
-```
-exit
-```
-### Build and run additional samples
-Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to this sample. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
+Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
