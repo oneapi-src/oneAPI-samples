@@ -172,12 +172,14 @@ int main(int argc, char *argv[]) {
   // the device selector
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector selector;
 #endif
 
   // set the input size based on whether we are in emulation or FPGA hardware
-#if defined(FPGA_EMULATOR)
+#if defined(FPGA_EMULATOR) || defined(FPGA_SIMULATOR)
   int size = 5000;
 #else
   int size = 5000000;
@@ -258,7 +260,7 @@ int main(int argc, char *argv[]) {
   if (success) {
     // the emulator does not accurately represent real hardware performance.
     // Therefore, we don't show performance results when running in emulation.
-#if !defined(FPGA_EMULATOR)
+#if !defined(FPGA_EMULATOR) && !defined(FPGA_SIMULATOR)
     double input_size_bytes = size * sizeof(int);
 
     // only display two decimal points
