@@ -81,6 +81,8 @@ int main(int argc, char *argv[]) {
   // from the command line.
 #if defined(FPGA_EMULATOR)
   int repetitions = argc > 1 ? atoi(argv[1]) : 16;
+#elif defined(FPGA_SIMULATOR)
+  int repetitions = argc > 1 ? atoi(argv[1]) : 1;
 #else
   int repetitions = argc > 1 ? atoi(argv[1]) : 819200;
 #endif
@@ -91,12 +93,18 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+#if defined(FPGA_SIMULATOR)
+  constexpr size_t kMatricesToDecompose = 1;
+#else
   constexpr size_t kMatricesToDecompose = 8;
+#endif
 
   try {
     // SYCL boilerplate
 #if defined(FPGA_EMULATOR)
     sycl::ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+    sycl::ext::intel::fpga_simulator_selector device_selector;
 #else
     sycl::ext::intel::fpga_selector device_selector;
 #endif
