@@ -12,7 +12,7 @@
     "base": "../../../..",
     "include": [
       "README.md",
-      "Tutorials/Features/latency_control",
+      "Tutorials/Features/experimental/latency_control",
       "include"
     ],
     "exclude": []
