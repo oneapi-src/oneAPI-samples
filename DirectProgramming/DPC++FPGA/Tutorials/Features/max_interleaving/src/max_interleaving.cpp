@@ -112,7 +112,11 @@ void Transform(const device_selector &selector, const TwoDimFloatArray &array_a,
   std::cout << "Throughput for kernel with max_interleaving " << interleaving
             << ": ";
   std::cout << std::fixed << std::setprecision(3)
+#if defined(FPGA_SIMULATOR)
+            << ((double)(kTotalOps) / kernel_time) << " KFlops\n";
+#else
             << ((double)(kTotalOps) / kernel_time) / 1e6f << " GFlops\n";
+#endif
 }
 
 // Calculates the expected results. Used to verify that the kernel
@@ -147,6 +151,8 @@ int main() {
 
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector selector;
 #endif

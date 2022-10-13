@@ -194,9 +194,13 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
+     ```
+     make fpga_emu
+     ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization report:
      ```
      make report
@@ -233,6 +237,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
+     ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -277,7 +285,12 @@ You should see a message similar to "Compiler failed to schedule this loop with 
      ./loop_ivdep.fpga_emu     (Linux)
      loop_ivdep.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./loop_ivdep.fpga_sim     (Linux)
+     loop_ivdep.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./loop_ivdep.fpga         (Linux)
      loop_ivdep.fpga.exe       (Windows)

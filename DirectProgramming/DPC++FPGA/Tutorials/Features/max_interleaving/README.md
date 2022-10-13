@@ -101,9 +101,13 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
+     ```
+     make fpga_emu
+     ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Generate the optimization report:
      ```
      make report
@@ -141,6 +145,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
      ```
      nmake fpga_emu
+     ```
+   * Compile for simulation (fast compile time, targets simulator FPGA device):
+     ```
+     nmake fpga_sim
      ```
    * Generate the optimization report:
      ```
@@ -191,7 +199,12 @@ The area usage information can also be accessed on the main report page in the S
      ./max_interleaving.fpga_emu     (Linux)
      max_interleaving.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./max_interleaving.fpga_sim     (Linux)
+     max_interleaving.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./max_interleaving.fpga         (Linux)
      max_interleaving.fpga.exe       (Windows)

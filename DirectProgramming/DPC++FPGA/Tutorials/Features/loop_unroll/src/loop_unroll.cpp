@@ -29,6 +29,8 @@ void VecAdd(const std::vector<float> &summands1,
 
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
@@ -66,7 +68,11 @@ void VecAdd(const std::vector<float> &summands1,
     std::cout << "Throughput for kernel with unroll_factor " << unroll_factor
               << ": ";
     std::cout << std::fixed << std::setprecision(3)
+#if defined(FPGA_SIMULATOR)
+              << ((double)array_size / kernel_time) / 1e3f << " MFlops\n";
+#else
               << ((double)array_size / kernel_time) / 1e6f << " GFlops\n";
+#endif
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
@@ -85,7 +91,11 @@ void VecAdd(const std::vector<float> &summands1,
 }
 
 int main(int argc, char *argv[]) {
+#if defined(FPGA_SIMULATOR)
+  size_t array_size = 1 << 12;
+#else
   size_t array_size = 1 << 26;
+#endif
 
   if (argc > 1) {
     std::string option(argv[1]);
