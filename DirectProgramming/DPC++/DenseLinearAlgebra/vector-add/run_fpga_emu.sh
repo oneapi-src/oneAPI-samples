@@ -9,7 +9,7 @@ echo
 echo start: $(date "+%y/%m/%d %H:%M:%S.%3N")
 echo
 
-make run_emu -f Makefile.fpga
+./build/vector-add-buffers.fpga_emu
 
 echo
 echo end: $(date "+%y/%m/%d %H:%M:%S.%3N")

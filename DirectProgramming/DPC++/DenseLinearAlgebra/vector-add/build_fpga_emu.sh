@@ -9,7 +9,11 @@ echo
 echo start: $(date "+%y/%m/%d %H:%M:%S.%3N")
 echo
 
-make fpga_emu -f Makefile.fpga
+mkdir build
+cd build
+cmake ..
+make fpga_emu
+cd ..
 
 echo
 echo stop: $(date "+%y/%m/%d %H:%M:%S.%3N")

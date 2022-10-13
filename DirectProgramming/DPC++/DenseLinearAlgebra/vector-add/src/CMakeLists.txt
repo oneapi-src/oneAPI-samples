@@ -1,4 +1,4 @@
-if(DEFINED USM)
+if(DEFINED USM AND (NOT(USM EQUAL 0)))
     message(STATUS "Using the USM variant.")
     set(SOURCE_FILE vector-add-usm.cpp)
     set(TARGET_NAME vector-add-usm)
@@ -7,8 +7,23 @@ else()
     set(TARGET_NAME vector-add-buffers)
 endif()
 
-set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
-set(FPGA_TARGET ${TARGET_NAME}.fpga)
+
+set(COMPILE_FLAGS "-Wall -O2 -g -std=c++17")
+set(LINK_FLAGS "")
+
+### CPU/GPU RULES
+
+# To compile in a single command:
+#    dpcpp <file>.cpp -o <file>.fpga_emu
+# CMake executes:
+#    [compile] dpcpp -o <file>.cpp.o -c <file>.cpp
+#    [link]    dpcpp <file>.cpp.o -o <file>.fpga_emu
+add_executable(${TARGET_NAME} ${SOURCE_FILE})
+set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS}")
+set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS "${LINK_FLAGS}")
+add_custom_target(cpu-gpu DEPENDS ${TARGET_NAME})
+
+### FPGA RULES
 
 # FPGA device selection
 if(NOT DEFINED FPGA_DEVICE)
@@ -19,6 +34,9 @@ if(NOT DEFINED FPGA_DEVICE)
 else()
     message(STATUS "Configuring the design to run on FPGA device ${FPGA_DEVICE}")
 endif()
+
+set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
@@ -68,5 +86,3 @@ add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS}")
-
-

@@ -9,7 +9,7 @@ echo
 echo start: $(date "+%y/%m/%d %H:%M:%S.%3N")
 echo
 
-make run_hw -f Makefile.fpga
+./build/vector-add-buffers.fpga
 
 echo
 echo end: $(date "+%y/%m/%d %H:%M:%S.%3N")

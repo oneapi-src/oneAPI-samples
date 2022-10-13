@@ -9,7 +9,11 @@ echo
 echo start: $(date "+%y/%m/%d %H:%M:%S.%3N")
 echo
 
-make hw -f Makefile.fpga
+mkdir build
+cd build
+cmake ..
+make fpga
+cd ..
 
 echo
 echo stop: $(date "+%y/%m/%d %H:%M:%S.%3N")
