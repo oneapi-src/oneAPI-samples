@@ -20,7 +20,7 @@ Review the `main.cpp` source file for help with the header files that you should
 
 | Optimized for            | Description
 |:---                      |:---
-| OS                       | Ubuntu* LTS 18.04 or newer <br> RHEL 8.x <br> CentOS* 8 <br> SUSE* 15 <br> Windows* 10
+| OS                       | Ubuntu* LTS 18.04 or newer <br> RHEL 8.x
 | Hardware                 | Integrated Graphics from Intel (GPU) GEN9 or higher
 | Software                 | Intel® oneAPI DPC++/C++ Compiler
 
@@ -42,11 +42,8 @@ When working with the command-line interface (CLI), you should configure the one
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Windows*:
-> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
-> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
 ### Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
