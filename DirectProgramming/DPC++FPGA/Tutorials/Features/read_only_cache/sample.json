@@ -11,6 +11,7 @@
   "commonFolder": {
     "base": "../../..",
     "include": [
+      "README.md",
       "Tutorials/Features/read_only_cache",
       "include"
     ],

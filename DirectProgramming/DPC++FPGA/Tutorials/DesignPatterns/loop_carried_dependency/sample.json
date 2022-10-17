@@ -11,6 +11,7 @@
   "commonFolder": {
     "base": "../../..",
     "include": [
+      "README.md",
       "Tutorials/DesignPatterns/loop_carried_dependency",
       "include"
     ],
