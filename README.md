@@ -2,9 +2,24 @@
 
 The oneAPI-samples repository contains samples for the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html).
 
+The latest versions of code samples on the master branch are not guaranteed to be stable. Use a [stable release version](https://github.com/oneapi-src/oneAPI-samples/tags) of the repository.
+
+## Get the oneAPI Samples
+
 The version of the repository you use should match the version of the Intel® oneAPI Toolkit you have installed, particularly for the compilers.
 
-The latest versions of code samples on the master branch are not guaranteed to be stable. Use a [stable release version](https://github.com/oneapi-src/oneAPI-samples/tags) of the repository.
+Clone a stable version of the repository using Git by entering a command similar to the following:
+
+`git clone -b <tag> https://github.com/oneapi-src/oneAPI-samples.git`
+
+where \<tag\> is stable version number, like **2022.3.0**.
+
+Alternatively, you can download a zip file containing a stable version of the repository. 
+
+1. Select the appropriate tag.
+2. Click the **Code** button.
+3. Select **Download ZIP** from the menu options.
+4. After downloading the file, unzip the repository contents.
 
 ## Repository Structure
 
