@@ -11,8 +11,8 @@
   "languages": [{"cpp":{}}],
   "commonFolder": {
     "base": "../..",
-      "README.md",
     "include": [
+      "README.md",
       "ReferenceDesigns/mvdr_beamforming",
       "include"
     ],
