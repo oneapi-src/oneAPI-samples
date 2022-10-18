@@ -14,12 +14,17 @@ using namespace sycl;
 // short initialization loop trip count
 constexpr size_t kInitLoopSize = 10;
 // long-running loop trip count
+#if defined(FPGA_SIMULATOR)
+constexpr size_t kLongLoopSize = 100;
+#else
 constexpr size_t kLongLoopSize = 10000;
+#endif
+
 // problem input size
 #if defined(FPGA_EMULATOR)
 constexpr size_t kInputSize = 10000;
 #elif defined(FPGA_SIMULATOR)
-constexpr size_t kInputSize = 10;
+constexpr size_t kInputSize = 1;
 #else
 constexpr size_t kInputSize = 1000000;
 #endif
