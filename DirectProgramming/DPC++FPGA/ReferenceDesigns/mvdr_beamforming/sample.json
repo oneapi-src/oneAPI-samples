@@ -12,6 +12,7 @@
   "commonFolder": {
     "base": "../..",
     "include": [
+      "README.md",
       "ReferenceDesigns/mvdr_beamforming",
       "include"
     ],
