@@ -24,7 +24,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
 set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -Xssimulation -DFPGA_SIMULATOR ${USER_SIMULATOR_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS}")
 # use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
@@ -48,10 +48,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR loop_ivdep.cpp -o loop_ivdep.fpga_sim
+#    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR loop_ivdep.cpp -o loop_ivdep.fpga_sim
 # CMake executes:
 #    [compile] dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o loop_ivdep.cpp.o -c loop_ivdep.cpp
-#    [link]    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> loop_ivdep.cpp.o -o loop_ivdep.fpga_sim
+#    [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> loop_ivdep.cpp.o -o loop_ivdep.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
