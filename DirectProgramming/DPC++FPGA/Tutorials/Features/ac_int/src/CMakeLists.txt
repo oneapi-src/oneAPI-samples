@@ -33,10 +33,9 @@ endif()
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -Wall ${WIN_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
-# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA
 # simulator compilation
-set(SIMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Wall ${WIN_FLAG} ${USER_SIMULATOR_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${AC_TYPES_FLAG} ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Wall ${WIN_FLAG} ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${AC_TYPES_FLAG} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Wall ${WIN_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # We do not need to supply the AC_TYPES_FLAG for the 'report' target's linking stage.
