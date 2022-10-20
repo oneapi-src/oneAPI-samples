@@ -6,6 +6,7 @@ set(TARGET_NAME speculated_iterations)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(REPORTS_TARGET ${TARGET_NAME}_report)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 
 # FPGA board selection
 if(NOT DEFINED FPGA_DEVICE)
@@ -37,6 +38,9 @@ endif()
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_SIMULATOR ${DEVICE_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_SIMULATOR_FLAGS}")
+# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga ${DEVICE_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
@@ -68,6 +72,20 @@ add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus®
+
+###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR -DA10 speculated_iterations.cpp -o speculated_iterations.fpga_sim
+# CMake executes:
+#    [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -DA10 -o speculated_iterations.cpp.o -c speculated_iterations.cpp
+#    [link]    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DA10 speculated_iterations.cpp.o -o speculated_iterations.fpga_sim
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
 
 ###############################################################################
 ### FPGA Hardware
