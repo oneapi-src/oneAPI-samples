@@ -1,7 +1,7 @@
 #ifndef __CONSTANTS_HPP__
 #define __CONSTANTS_HPP__
 
-#include <sycl/ext/intel/ac_types/ac_int.hpp>
+#include <CL/sycl/INTEL/ac_types/ac_int.hpp>
 
 // Included from DirectProgramming/DPC++FPGA/include/
 #include "constexpr_math.hpp"

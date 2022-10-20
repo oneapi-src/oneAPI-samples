@@ -16,8 +16,13 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
 endif()
 
-# Include ac_types headers and link against ac_types emulation libraries
-set(AC_TYPES_FLAG "-qactypes")
+# This is a Windows-specific flag that enables exception handling in host code
+if(WIN32)
+    set(WIN_FLAG "/EHsc")
+    set(AC_TYPES_FLAG "/Qactypes")
+else()
+    set(AC_TYPES_FLAG "-qactypes")
+endif()
 
 # Allow the user to specify the minimum and maximum cache depth, or select a 
 # default value if unspecified
@@ -35,9 +40,9 @@ set(CACHE_DEPTH_FLAG "-DMAX_CACHE_DEPTH=${MAX_CACHE_DEPTH} -DMIN_CACHE_DEPTH=${M
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "${AC_TYPES_FLAG} -fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} ${CACHE_DEPTH_FLAG} ${AC_TYPES_FLAG} -fintelfpga")
 set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${CACHE_DEPTH_FLAG} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation

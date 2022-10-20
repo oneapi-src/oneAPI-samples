@@ -36,8 +36,13 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
 endif()
 
-# Include ac_types headers and link against ac_types emulation libraries
-set(AC_TYPES_FLAG "-qactypes")
+# This is a Windows-specific flag that enables error handling in host code
+if(WIN32)
+    set(WIN_FLAG "/EHsc")
+    set(AC_TYPES_FLAG "/Qactypes")
+else()
+    set(AC_TYPES_FLAG "-qactypes")
+endif()
 
 # ensure a supported query was requested
 if(NOT ${QUERY} EQUAL 1 AND NOT ${QUERY} EQUAL 9 AND NOT ${QUERY} EQUAL 11 AND NOT ${QUERY} EQUAL 12)
@@ -127,11 +132,11 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
-set(REPORT_COMPILE_FLAGS "-Wall -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(REPORT_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
 set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xsboard=${FPGA_BOARD} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 ${SEED} -Xsboard=${FPGA_BOARD} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
