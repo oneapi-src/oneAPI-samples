@@ -82,6 +82,8 @@ Notice that the FPGA emulator and the FPGA are different target devices. It is r
 ### Compiler Options
 This section includes a helpful list of commands and options to compile this design for the FPGA emulator, generate the FPGA early image optimization reports, and compile for FPGA hardware.
 
+**NOTE:** In this sample, the compiler is refered to as `icpx`. On Windows, you should use `icx-cl`.
+
 **FPGA emulator**
 
 `icpx -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu`

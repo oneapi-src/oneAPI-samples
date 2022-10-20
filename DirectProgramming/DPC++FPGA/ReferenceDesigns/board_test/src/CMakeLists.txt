@@ -30,7 +30,7 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "${PLATFORM_SPECIFIC_COMPILE_FLAGS} -fsycl -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "${PLATFORM_SPECIFIC_COMPILE_FLAGS} -fsycl -fintelfpga -DFPGA_EMULATOR -Wformat-security -Werror=format-security -Wall")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "${PLATFORM_SPECIFIC_COMPILE_FLAGS} -fsycl -fintelfpga")
 # By default oneAPI compiler burst interleaves across same memory type, 
