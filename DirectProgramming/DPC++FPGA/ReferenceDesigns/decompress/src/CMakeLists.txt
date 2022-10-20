@@ -39,8 +39,13 @@ endif()
 if(WIN32)
     set(WIN_FLAG "/EHsc")
     set(AC_TYPES_FLAG "/Qactypes")
+    # Increase the allowable constexpr steps for the front end. This allows the
+    # front-end compiler to do more compile-time computation.
+    set(CONSTEXPR_STEPS "/constexpr:steps5084968")
 else()
     set(AC_TYPES_FLAG "-qactypes")
+    set(CONSTEXPR_STEPS "-fconstexpr-steps=5084968")
+
 endif()
 
 # Allow the user to enable hardware profiling
@@ -84,9 +89,6 @@ if(DEFINED LITERALS_PER_CYCLE)
   set(LITERALS_PER_CYCLE_FLAG "-DLITERALS_PER_CYCLE=${LITERALS_PER_CYCLE}")
 endif()
 
-# Increase the allowable constexpr steps for the front end. This allows the
-# front-end compiler to do more compile-time computation.
-set(CONSTEXPR_STEPS "-fconstexpr-steps=5084968")
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
