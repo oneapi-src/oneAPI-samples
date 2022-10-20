@@ -4,11 +4,13 @@
 set(SOURCE_FILE stall_enable.cpp)
 set(STALL_ENABLE_TARGET_NAME stall_enable)
 set(EMULATOR_TARGET ${STALL_ENABLE_TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${STALL_ENABLE_TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET_STALL_ENABLE ${STALL_ENABLE_TARGET_NAME}.fpga)
 
 set(STALL_FREE_TARGET_NAME stall_free)
 set(STALL_FREE_DEFINE -DSTALL_FREE)
 set(STALL_FREE_EMULATOR_TARGET ${STALL_FREE_TARGET_NAME}.fpga_emu)
+set(STALL_FREE_SIMULATOR_TARGET ${STALL_FREE_TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET_STALL_FREE ${STALL_FREE_TARGET_NAME}.fpga)
 
 # FPGA board selection
@@ -32,6 +34,9 @@ endif(${NO_HYPER_OPTIMIZATION})
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-Wall ${HYPER_FLAG} -fintelfpga -Xssimulation -DFPGA_SIMULATOR ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${HYPER_FLAG} ${USER_SIMULATOR_FLAGS}")
+# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
 set(HARDWARE_COMPILE_FLAGS "-Wall ${HYPER_FLAG} -fintelfpga")
 set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${HYPER_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
@@ -53,6 +58,24 @@ target_include_directories(${STALL_FREE_EMULATOR_TARGET} PRIVATE ../../../../inc
 set_target_properties(${STALL_FREE_EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS} ${STALL_FREE_DEFINE}")
 set_target_properties(${STALL_FREE_EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET} ${STALL_FREE_EMULATOR_TARGET})
+###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR triangular_loop.cpp -o triangular_loop.fpga_sim
+# CMake executes:
+#    [compile] dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o triangular_loop.cpp.o -c triangular_loop.cpp
+#    [link]    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> triangular_loop.cpp.o -o triangular_loop.fpga_sim
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_executable(${STALL_FREE_SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${STALL_FREE_SIMULATOR_TARGET} PRIVATE ../../../../include)
+set_target_properties(${STALL_FREE_SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${STALL_FREE_SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${STALL_FREE_SIMULATOR_TARGET})
+
 
 ###############################################################################
 ### Generate Report

@@ -79,14 +79,24 @@ event Optimized(queue &q, const vector<double> &vec_a,
 void PrintTime(const event &e, queue &q, const char *kind) {
   double start_k = e.get_profiling_info<info::event_profiling::command_start>();
   double end_k = e.get_profiling_info<info::event_profiling::command_end>();
-  double kernel_time = (double)(end_k - start_k) * 1e-6;
 
   cout << "Run: " << kind << ":\n";
+#if defined(FPGA_SIMULATOR)
+  double kernel_time = (double)(end_k - start_k) * 1e-9;
+  cout << "kernel time : " << kernel_time << " s\n";
+#else
+  double kernel_time = (double)(end_k - start_k) * 1e-6;
   cout << "kernel time : " << kernel_time << " ms\n";
+#endif
 }
 
 int main(int argc, char *argv[]) {
-  size_t n = 16000;
+#if defined(FPGA_SIMULATOR)
+  constexpr size_t kMaxN = 400;
+#else
+  constexpr size_t kMaxN = 16000;
+#endif
+  size_t n = kMaxN;
 
   if (argc > 1) {
     string option(argv[1]);
@@ -98,7 +108,7 @@ int main(int argc, char *argv[]) {
     }
   }
   // Cap the value of n.
-  n = std::max(std::min((size_t)n, (size_t)16000), (size_t)100);
+  n = std::max(std::min((size_t)n, (size_t)kMaxN), (size_t)100);
   cout << "Number of elements: " << n << '\n';
 
   vector<double> vec_a(n * n);
@@ -124,6 +134,8 @@ int main(int argc, char *argv[]) {
           "performance. The design may need to run on actual hardware "
           "to observe the performance benefit of the optimization "
           "exemplified in this tutorial.\n\n";
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
 #else
   ext::intel::fpga_selector selector;
 #endif
