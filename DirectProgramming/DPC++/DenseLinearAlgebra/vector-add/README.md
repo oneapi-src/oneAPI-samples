@@ -82,102 +82,59 @@ The basic steps to build and run a sample using VS Code include:
 To learn more about the extensions and how to configure the oneAPI environment, see the 
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-### On Linux*
+### On Linux* for CPU and GPU 
+1. Build the program.
+    ```
+    make build_usm
+    ```
+> **Note**: To build everything, use `make all`.
 
-1. Generate the `Makefile` by running `cmake`.
+### On Linux* for FPGA
+1.  Build for FPGA emulation using the following commands:
+    ```
+    # For using the USM version
+    make fpga_emu -f Makefile.fpga
+    # For using the buffers version
+    make fpga_emu -f Makefile.fpga BUFFERS=1
+    ```
+2. Build for FPGA hardware. (Compiling for hardware can take a long
+   time.)
+    ```
+    # For using the USM version
+    make fpga -f Makefile.fpga
+    # For using the buffers version
+    make fpga -f Makefile.fpga BUFFERS=1
+    ```
+3. Generate static optimization reports for design analysis. (The path to the
+    reports is `vector-add_report.prj/reports/report.html`.)
+    ```
+    # For using the USM version
+    make report -f Makefile.fpga
+    # For using the buffers version
+    make report -f Makefile.fpga BUFFERS=1
+    ```
+### On Windows* for CPU and GPU
+1. Open the **Intel oneAPI Command Prompt**.
+2. Build the program.
+    ```
+    nmake -f Makefile.win build_usm
+    ```
+> **Note**: To build everything, use `nmake -f Makefile.win`
 
-   ```
-   mkdir build
-   cd build
-   ```
+### On Windows for FPGA Emulation Only
+> **Note** On Windows*, you can  compile and run on the FPGA 
+emulator only. Generating optimization reports and compiling or running on
+the FPGA hardware is not supported.
 
-   Run `cmake` using the command:
-
-   ```
-   cmake ..
-   ```
-
-   Alternatively, run the following command to compile the USM version:
-
-   ```
-   cmake .. -DUSM=1
-   ```
-
+1. Open the **Intel oneAPI Command Prompt**.
 
 2. Build the program.
-    a. when targetting CPUs and GPUs
-    ```
-    make cpu-gpu
-    ```
-
-    b. when targetting an FPGA
-
-     * Compile for emulation (fast compile time, targets emulated FPGA device).
-
-       ```
-       make fpga_emu
-       ```
-
-    * Generate the optimization report. Find the report in the `<project>.prj/reports/report.html` directory.
-
-       ```
-       make report
-       ```
-
-    * Compile for FPGA hardware (longer compile time, targets FPGA device).
-
-       ```
-       make fpga
-       ```
-
-### On Windows*
-
-1. Generate the `Makefile` by running `cmake`.
-
    ```
-   mkdir build
-   cd build
+   # For using the USM version
+   nmake fpga_emu -f Makefile.win.fpga
+   # For using the buffers version
+   nmake fpga_emu -f Makefile.win.fpga BUFFERS=1
    ```
-
-   Run `cmake` using the command:
-
-   ```
-   cmake -G "NMake Makefiles" ..
-   ```
-
-   Alternatively, run the following command to compile the USM version:
-
-   ```
-   cmake -G "NMake Makefiles" .. -DUSM=1
-   ```
-
-
-2. Build the program.
-    a. when targetting CPUs and GPUs
-    ```
-    nmake cpu-gpu
-    ```
-
-    b. when targetting an FPGA
-
-     * Compile for emulation (fast compile time, targets emulated FPGA device).
-
-       ```
-       nmake fpga_emu
-       ```
-
-    * Generate the optimization report. Find the report in the `<project>.prj/reports/report.html` directory.
-
-       ```
-       nmake report
-       ```
-
-    * Compile for FPGA hardware (longer compile time, targets FPGA device).
-
-       ```
-       nmake fpga
-       ```
-
 ### On Windows Using Visual Studio* 2017 or Newer
 1. Change to the sample directory.
 2. Launch Visual Studio*.
@@ -201,59 +158,45 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
 
 ## Run the Sample
-### On Linux
-
-1. when targetting a CPU/GPU
+### On Linux for CPU and GPU
+1. Run the program.
     ```
-    # if you compiled the buffers version
-    ./vector-add-buffers
-    # if you compiled the USM version
-    ./vector-add-usm
+    make run_usm
     ```
+> **Note**: To run everything, use `make run`.
 
-2. when targetting an FPGA
-
-    a.  Run for FPGA emulation.
-        ```
-        # if you compiled the buffers version
-        ./vector-add-buffers.fpga_emu
-        # if you compiled the USM version
-        ./vector-add-usm.fpga_emu
-        ```
-    b. Run on FPGA hardware. 
-        ```
-        # if you compiled the buffers version
-        ./vector-add-buffers.fpga
-        # if you compiled the USM version
-        ./vector-add-usm.fpga
-        ```
-
-### On Windows
-
-1. when targetting a CPU/GPU
+### On Linux for FPGA
+1.  Run for FPGA emulation.
     ```
-    # if you compiled the buffers version
-    vector-add-buffers.exe
-    # if you compiled the USM version
-    vector-add-usm.exe
+    # For using the USM version
+    make run_emu -f Makefile.fpga
+    # For using the buffers version
+    make run_emu -f Makefile.fpga BUFFERS=1
     ```
-2. when targetting an FPGA
+2. Run on FPGA hardware. 
+    ```
+    # For using the USM version
+    make run_hw -f Makefile.fpga
+    # For using the buffers version
+    make run_hw -f Makefile.fpga BUFFERS=1
+    ```
+### On Windows for CPU and GPU
+1. Open the **Intel oneAPI Command Prompt**.
+2. Run the program using:
+    ```
+    nmake -f Makefile.win run_usm
+    ```
+> **Note**: To run everything, use `nmake -f Makefile.win run`
 
-    a.  Run for FPGA emulation.
-        ```
-        # if you compiled the buffers version
-        vector-add-buffers.fpga_emu.exe
-        # if you compiled the USM version
-        vector-add-usm.fpga_emu.exe
-        ```
-    b. Run on FPGA hardware. 
-        ```
-        # if you compiled the buffers version
-        vector-add-buffers.fpga.exe
-        # if you compiled the USM version
-        vector-add-usm.fpga.exe
-        ```
-        
+## On Windows for FPGA Emulation
+1. Open the **Intel oneAPI Command Prompt**.
+2. Build the program.
+   ```
+   # For using the USM version
+   nmake -f Makefile.win.fpga run_emu
+   # For using the buffers version
+   nmake -f Makefile.win.fpga run_emu BUFFERS=1
+   ```
 ### Run the `Base: Vector Add` Sample in Intel® DevCloud (Optional)
 When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
 
