@@ -20,7 +20,7 @@ buffers that are guaranteed to be constant throughout the execution of a
 kernel. The read-only cache is optimized for high cache hit performance.
 
 To enable the read-only cache, the `-Xsread-only-cache-size<N>` flag should be
-passed to the `dpcpp` command. Each kernel will get its own *private* version
+passed to the `icpx` command. Each kernel will get its own *private* version
 of the cache that serves all reads in the kernel from read-only no-alias
 accessors. Read-only no-alias accessors are accessors that have both the
 `read_only` and the `no_alias` properties:
@@ -50,7 +50,7 @@ This tutorial requires compiling the source code twice: once with the
 `-Xsread-only-cache-size=<N>` flag and once without it. Because the look-up
 table contains 512 integers as indicated by the `kLUTSize` constant, the chosen
 size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
-`-Xsread-only-cache-size=2048` is passed to `dpcpp`.
+`-Xsread-only-cache-size=2048` is passed to `icpx`.
 
 ### Additional Documentation
 - [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.

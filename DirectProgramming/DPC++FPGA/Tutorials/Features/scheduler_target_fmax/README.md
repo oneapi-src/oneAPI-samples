@@ -15,14 +15,14 @@ This tutorial demonstrates how to use the `[[intel::scheduler_target_fmax_mhz(N)
 ### Specifying Schedule fMAX Target for Kernels
 The compiler provides two methods to specify fMAX target for kernels:
 * By using the `[[intel::scheduler_target_fmax_mhz(N)]]` source-level attribute on a given kernel. This is the focus of this tutorial.
-* By using the `-Xsclock=<clock target in Hz/KHz/MHz/GHz or s/ms/us/ns/ps>` option in the dpcpp command to direct the compiler to globally compile all kernels at a specific fMAX target.
+* By using the `-Xsclock=<clock target in Hz/KHz/MHz/GHz or s/ms/us/ns/ps>` option in the icpx command to direct the compiler to globally compile all kernels at a specific fMAX target.
 
 If you use both the command-line option `-Xsclock` and the source-level attribute `[[intel::scheduler_target_fmax_mhz(N)]]`, the attribute takes priority.
 
 ### Use Cases of `intel::scheduler_target_fmax_mhz(N)`
 A bottleneck in a loop is one or more loop-carried dependencies that cause the loop to have either an II greater than one, or a lower fMAX to achieve II of one. By default, the compiler optimizes for the best fMAX-II ratio.
 
-You should use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute if you want to tweak your kernel's throughput and area utilization, as well as the tradeoff between fMAX and II. When you use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute (or the `-Xsclock` dpcpp command option) to specify a desired fMAX, the compiler schedules the design at that specified fMAX value with minimal achievable II. When you use the `[[intel::initiation_interval(N)]]` attribute (refer to the prerequisite tutorial "Loop initiation_interval attribute") to specify a desired II, the compiler lowers fMAX until it achieves the specified II.
+You should use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute if you want to tweak your kernel's throughput and area utilization, as well as the tradeoff between fMAX and II. When you use the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute (or the `-Xsclock` icpx command option) to specify a desired fMAX, the compiler schedules the design at that specified fMAX value with minimal achievable II. When you use the `[[intel::initiation_interval(N)]]` attribute (refer to the prerequisite tutorial "Loop initiation_interval attribute") to specify a desired II, the compiler lowers fMAX until it achieves the specified II.
 
 It is recommended that you use `[[intel::initiation_interval(N)]]` attribute on performance critical loops when using the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute. The `[[intel::initiation_interval(N)]]` attribute takes priority over the `[[intel::scheduler_target_fmax_mhz(N)]]` attribute when they are both used on the same kernel.
 

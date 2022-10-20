@@ -31,7 +31,7 @@ To use the `ac_int` type in your code, you must include the following header:
 ```cpp
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 ```
-Additionally, you must pass the flag `-qactypes` on Linux or `/Qactypes` on Windows to the `dpcpp` command when compiling your SYCL program in order to ensure that the headers are correctly included. In this tutorial, this is done in `src/CMakeLists.txt`.
+Additionally, you must pass the flag `-qactypes` on Linux or `/Qactypes` on Windows to the `icpx` command when compiling your SYCL program in order to ensure that the headers are correctly included. In this tutorial, this is done in `src/CMakeLists.txt`.
 
 ### Basic Operations and Promotion Rules
 

@@ -15,7 +15,7 @@ Computations in an FPGA kernel are normally grouped into *Stall Free Clusters*. 
 
 > **Note**: If you specify `[[intel::use_stall_enable_clusters]]` on one or more kernels, this may reduce the FMax of the generated FPGA bitstream, which may reduce performance on all kernels.
 
-> **Note**: The `use_stall_enable_clusters` attribute is not applicable for designs that target the Stratix&reg; 10 architecture unless the `-Xshyper-optimized-handshaking=off` argument is passed to `dpcpp`
+> **Note**: The `use_stall_enable_clusters` attribute is not applicable for designs that target the Stratix&reg; 10 architecture unless the `-Xshyper-optimized-handshaking=off` argument is passed to `icpx`
 ### Example: Using the `use_stall_enable_clusters` attribute
 ```
 h.single_task<class KernelComputeStallFree>( [=]() [[intel::use_stall_enable_clusters]] {

@@ -132,18 +132,18 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
 <<<<<<< HEAD
-set(REPORT_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xstarget=${FPGA_DEVICE} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
+set(REPORT_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xstarget=${FPGA_DEVICE} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
 =======
-set(REPORT_COMPILE_FLAGS "-Wall -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xstarget=${FPGA_DEVICE} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
+set(REPORT_COMPILE_FLAGS "-Wall -fsycl -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsparallel=2 -Xsseed=2 -Xstarget=${FPGA_DEVICE} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall -fsycl -fintelfpga -DQUERY=${QUERY} ${SF_SMALL_ARG} ${AC_TYPES_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} -DQUERY=${QUERY} ${SF_SMALL_ARG} ${USER_HARDWARE_FLAGS} ${AC_TYPES_FLAG}")
 >>>>>>> 2908bec... FPGA: Switch -Xstarget to -Xstarget for 2023.0 (#1111)
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
