@@ -118,11 +118,11 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    For **Intel® PAC with Intel Arria® 10 GX FPGA**, enter the following:
    ```
-   cmake -DFPGA_DEVICE=intel_a10gx_pac:pac_a10 ..
+   cmake -DFPGA_BOARD=intel_a10gx_pac:pac_a10 ..
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system, and enter a command similar to the following example:
    ```
-   cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> ..
+   cmake -DFPGA_BOARD=<board-support-package>:<board-variant> ..
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -156,11 +156,11 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    To compile for the **Intel® PAC with Intel Arria® 10 GX FPGA**, enter the following:
    ```
-   cmake -G "NMake Makefiles" -DFPGA_DEVICE=intel_a10gx_pac:pac_a10 ..
+   cmake -G "NMake Makefiles" -DFPGA_BOARD=intel_a10gx_pac:pac_a10 ..
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system, and enter a command similar to the following example:
    ```
-   cmake -G "NMake Makefiles" -DFPGA_DEVICE=<board-support-package>:<board-variant> ..
+   cmake -G "NMake Makefiles" -DFPGA_BOARD=<board-support-package>:<board-variant> ..
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
 

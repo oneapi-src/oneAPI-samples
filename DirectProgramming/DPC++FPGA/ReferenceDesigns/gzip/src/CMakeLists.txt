@@ -19,17 +19,17 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_DEVICE was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_BOARD)
+    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_BOARD was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
 endif()
 
 # Set design parameters according to the selected chip
-if(FPGA_DEVICE MATCHES ".*a10.*")
+if(FPGA_BOARD MATCHES ".*a10.*")
     # A10 parameters
     set(NUM_ENGINES 1)
     if(DEFINED LOW_LATENCY)
@@ -39,7 +39,7 @@ if(FPGA_DEVICE MATCHES ".*a10.*")
         set(SEED "-Xsseed=4")
         set(NUM_REORDER "")
     endif()
-elseif(FPGA_DEVICE MATCHES ".*s10.*")
+elseif(FPGA_BOARD MATCHES ".*s10.*")
     # S10 parameters
     set(NUM_ENGINES 2)
     if(DEFINED LOW_LATENCY)
@@ -51,7 +51,7 @@ elseif(FPGA_DEVICE MATCHES ".*s10.*")
         # For Low Latency variant this is not necessary since only one channel of global memory is used (host memory).
         set(NUM_REORDER "-Xsnum-reorder=6")
     endif()
-elseif(FPGA_DEVICE MATCHES ".*agilex.*")
+elseif(FPGA_BOARD MATCHES ".*agilex.*")
     # Agilex™
     set(NUM_ENGINES 2)
     if(DEFINED LOW_LATENCY)
@@ -77,7 +77,7 @@ endif()
 # Presence of USM host allocations (and whether to turn on enable the low-latency target) is detected automatically by
 # looking at the name of the BSP, or manually by the user when running CMake.
 # E.g., cmake .. -DUSER_ENABLE_USM=1
-if(FPGA_DEVICE MATCHES ".*usm.*" OR USER_ENABLE_USM)
+if(FPGA_BOARD MATCHES ".*usm.*" OR USER_ENABLE_USM)
     set(USM_ENABLED 1)
 elseif(LOW_LATENCY)
     # Low latency design requires USM, so error out
@@ -95,7 +95,7 @@ message(STATUS "NUM_REORDER=${NUM_REORDER}")
 set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DNUM_ENGINES=${NUM_ENGINES} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
 set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga -DNUM_ENGINES=${NUM_ENGINES}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg=\"-nocaching\" -Xstarget=${FPGA_DEVICE} -DNUM_ENGINES=${NUM_ENGINES} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsparallel=2 -Xsopt-arg=\"-nocaching\" -Xsboard=${FPGA_BOARD} -DNUM_ENGINES=${NUM_ENGINES} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################

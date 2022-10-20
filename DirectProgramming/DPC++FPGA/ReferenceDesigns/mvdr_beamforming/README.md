@@ -84,7 +84,7 @@ this readme for instructions on how to build and run a sample.
    If instead you are compiling for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 
 2. Compile the design through the generated `Makefile`. The following targets are provided, and they match the recommended development flow:
@@ -121,7 +121,7 @@ this readme for instructions on how to build and run a sample.
    ```
    Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -246,7 +246,7 @@ Use the following commands to generate a Makefile for building both the loopback
 mkdir build
 cd build
 
-cmake .. -DREAL_IO_PIPES=1 -DFPGA_DEVICE=pac_s10_usm_udp
+cmake .. -DREAL_IO_PIPES=1 -DFPGA_BOARD=pac_s10_usm_udp
 ```
 
 The `REAL_IO_PIPES` cmake flag defines a variable that is used *exclusively* in `mvdr_beamforming.cpp` to create a kernel system using real IO pipes, as opposed to the fake IO pipes described earlier in this document.

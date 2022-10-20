@@ -139,7 +139,7 @@ When working with the command-line interface (CLI), you should configure the one
    ```
    For **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -173,7 +173,7 @@ When working with the command-line interface (CLI), you should configure the one
    ```
    To compile for the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_BOARD=intel_s10sx_pac:pac_s10
    ```
 
 3. Compile the design. (The provided targets match the recommended development flow.)
