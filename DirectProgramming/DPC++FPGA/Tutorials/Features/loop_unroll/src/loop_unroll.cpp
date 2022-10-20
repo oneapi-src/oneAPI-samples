@@ -92,7 +92,7 @@ void VecAdd(const std::vector<float> &summands1,
 
 int main(int argc, char *argv[]) {
 #if defined(FPGA_SIMULATOR)
-  size_t array_size = 1 << 12;
+  size_t array_size = 1 << 10;
 #else
   size_t array_size = 1 << 26;
 #endif
