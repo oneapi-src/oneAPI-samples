@@ -11,8 +11,8 @@
 #include <random>
 #include <type_traits>
 
-#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
 
@@ -31,13 +31,16 @@ constexpr double kProbSuccess = 1.0 / kRandRangeMax;
 // Forward declare the kernel names in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
 // Templating allows us to instantiate multiple versions of the kernel.
-template <int version> class Producer;
-template <int version> class Consumer;
+template <int version>
+class Producer;
+template <int version>
+class Consumer;
 
 // Declare the pipe class name globally to reduce name mangling.
-// Templating allows us to instantiate multiple versions of pipes for each 
+// Templating allows us to instantiate multiple versions of pipes for each
 // version of the kernel.
-template <int version> class PipeClass;
+template <int version>
+class PipeClass;
 
 //
 // Submits the kernel, which is templated on the variables:
@@ -51,8 +54,8 @@ template <int version> class PipeClass;
 //                          inner loop
 //
 template <int version, int in_element_upper_bound, int spec_iters>
-void SubmitKernels(const device_selector &selector, std::vector<int> &in,
-                   int &res, double &kernel_time_ms) {
+void SubmitKernels(const ext::intel::fpga_simulator_selector &selector,
+                   std::vector<int> &in, int &res, double &kernel_time_ms) {
   // static asserts: these cause the compiler to fail if the conditions fail
   static_assert(version >= 0, "Invalid kernel version");
   static_assert(spec_iters >= 0, "spec_iters must be positive");
@@ -65,7 +68,7 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
 
   try {
     // create the device queue with profiling enabled
-    auto prop_list = property_list{ property::queue::enable_profiling() };
+    auto prop_list = property_list{property::queue::enable_profiling()};
     queue q(selector, fpga_tools::exception_handler, prop_list);
 
     // The input data buffer
@@ -87,22 +90,23 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
           int val = in_a[i];
 
           // 'in_element_upper_bound' is a constant (a template variable).
-          // Therefore, the condition 'in_element_upper_bound < 0', and therefore
-          // the taken branch of this if-else statement, can be determined at
-          // compile time. This results in the branch that is NOT taken being
-          // optimized away. Both versions of the inner loop apply the
-          // speculated_iterations attribute, where the number of speculated
+          // Therefore, the condition 'in_element_upper_bound < 0', and
+          // therefore the taken branch of this if-else statement, can be
+          // determined at compile time. This results in the branch that is NOT
+          // taken being optimized away. Both versions of the inner loop apply
+          // the speculated_iterations attribute, where the number of speculated
           // iterations is determined by the template variable 'spec_iters'.
           if (in_element_upper_bound < 0) {
             // In this version of the inner loop, we do NOT provide an
             // upperbound on the loop index variable 'j'. While it may be easy
-            // for you to read the code and reason that 'j<in_element_upper_bound'
-            // is always true by looking at the rest of the program, it is much
-            // more difficult for the compiler. As a result, the compiler will
-            // be conservative and assume this inner loop may have a large trip
-            // count and decide to make (or not make) optimizations accordingly.
-            [[intel::speculated_iterations(spec_iters)]]
-            for (int j = 0; j < val; j++) {
+            // for you to read the code and reason that
+            // 'j<in_element_upper_bound' is always true by looking at the rest
+            // of the program, it is much more difficult for the compiler. As a
+            // result, the compiler will be conservative and assume this inner
+            // loop may have a large trip count and decide to make (or not make)
+            // optimizations accordingly.
+            [[intel::speculated_iterations(spec_iters)]] for (int j = 0;
+                                                              j < val; j++) {
               Pipe::write(true);
             }
           } else {
@@ -111,8 +115,10 @@ void SubmitKernels(const device_selector &selector, std::vector<int> &in,
             // 'j<in_element_upper_bound' loop exit condition. This provides the
             // compiler with a constant upperbound on the trip count and allows
             // it to make optimizations accordingly.
-            [[intel::speculated_iterations(spec_iters)]]
-            for (int j = 0; j < val && j <= in_element_upper_bound; j++) {
+            [[intel::speculated_iterations(
+                spec_iters)]] for (int j = 0;
+                                   j < val && j <= in_element_upper_bound;
+                                   j++) {
               Pipe::write(true);
             }
           }
