@@ -1,11 +1,11 @@
 if(UNIX)
-    # Direct CMake to use dpcpp rather than the default C++ compiler/linker
-    set(CMAKE_CXX_COMPILER dpcpp)
+    # Direct CMake to use icpx rather than the default C++ compiler/linker
+    set(CMAKE_CXX_COMPILER icpx)
 else() # Windows
-    # Force CMake to use dpcpp rather than the default C++ compiler/linker
+    # Force CMake to use icx-cl rather than the default C++ compiler/linker
     # (needed on Windows only)
     include (CMakeForceCompiler)
-    CMAKE_FORCE_CXX_COMPILER (dpcpp IntelDPCPP)
+    CMAKE_FORCE_CXX_COMPILER (icx-cl IntelDPCPP)
     include (Platform/Windows-Clang)
 endif()
 

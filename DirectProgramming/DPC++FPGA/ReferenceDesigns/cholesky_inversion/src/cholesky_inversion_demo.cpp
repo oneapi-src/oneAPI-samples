@@ -5,9 +5,7 @@
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 // included from ../../../../include
 #include "cholesky_inversion.hpp"
 
@@ -361,7 +359,7 @@ int main(int argc, char *argv[]) {
 
     // Enable the queue profiling to time the execution
     sycl::queue q = sycl::queue(
-        device_selector, dpc_common::exception_handler,
+        device_selector, fpga_tools::exception_handler,
         sycl::property_list{sycl::property::queue::enable_profiling()});
     sycl::device device = q.get_device();
     std::cout << "Device name: "

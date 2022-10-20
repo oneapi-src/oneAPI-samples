@@ -4,9 +4,7 @@
 
 #include <bitset>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -126,7 +124,7 @@ int main() {
   bool passed = true;
 
   try {
-    queue q(device_selector, dpc_common::exception_handler);
+    queue q(device_selector, fpga_tools::exception_handler);
 
     constexpr int kVal1 = 1000, kVal2 = 2;
 

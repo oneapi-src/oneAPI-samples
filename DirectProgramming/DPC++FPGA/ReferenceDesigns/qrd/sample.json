@@ -3,7 +3,7 @@
   "name": "QRD",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "Reference design demonstrating high-performance QR Decomposition (QRD) of real and complex matrices on a Intel® FPGA",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx -fsycl"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
@@ -11,7 +11,8 @@
   "commonFolder": {
     "base": "../..",
     "include": [
-      "ReferenceDesigns/qri",
+      "README.md",
+      "ReferenceDesigns/qrd",
       "include"
     ],
     "exclude": []
@@ -24,7 +25,7 @@
           "export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
         ],
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -35,7 +36,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -50,7 +51,7 @@
           "set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB"
         ],
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",
@@ -62,7 +63,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",

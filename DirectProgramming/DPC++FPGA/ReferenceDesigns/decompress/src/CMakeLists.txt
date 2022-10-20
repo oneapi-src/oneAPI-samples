@@ -33,8 +33,20 @@ else()
   set(ignoreMe "${GZIP}${SNAPPY}")
 endif()
 
-# Include ac_types headers and link against ac_types emulation libraries
-set(AC_TYPES_FLAG "-qactypes")
+# These are Windows-specific flags:
+# 1. /EHsc This is a Windows-specific flag that enables exception handling in host code
+# 2. /Qactypes Include ac_types headers and link against ac_types emulation libraries
+if(WIN32)
+    set(WIN_FLAG "/EHsc")
+    set(AC_TYPES_FLAG "/Qactypes")
+    # Increase the allowable constexpr steps for the front end. This allows the
+    # front-end compiler to do more compile-time computation.
+    set(CONSTEXPR_STEPS "/constexpr:steps5084968")
+else()
+    set(AC_TYPES_FLAG "-qactypes")
+    set(CONSTEXPR_STEPS "-fconstexpr-steps=5084968")
+
+endif()
 
 # Allow the user to enable hardware profiling
 # Profiling can be enabled when running cmake by adding the flag -DPROFILE_HW=1
@@ -77,20 +89,17 @@ if(DEFINED LITERALS_PER_CYCLE)
   set(LITERALS_PER_CYCLE_FLAG "-DLITERALS_PER_CYCLE=${LITERALS_PER_CYCLE}")
 endif()
 
-# Increase the allowable constexpr steps for the front end. This allows the
-# front-end compiler to do more compile-time computation.
-set(CONSTEXPR_STEPS "-fconstexpr-steps=5084968")
 
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
-set(SIMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG} -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG}")
-set(REPORT_LINK_FLAGS "-fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 ${SEED_FLAG} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fsycl -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG}")
+set(SIMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fsycl -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG} -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fsycl -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG}")
+set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 ${SEED_FLAG} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 

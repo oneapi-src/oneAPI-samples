@@ -6,9 +6,7 @@
 
 #include <list>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 #include "qrd.hpp"
 
@@ -107,7 +105,7 @@ int main(int argc, char *argv[]) {
     sycl::property_list
                     queue_properties{sycl::property::queue::enable_profiling()};
     sycl::queue q = sycl::queue(device_selector,
-                                dpc_common::exception_handler,
+                                fpga_tools::exception_handler,
                                 queue_properties);
 
     sycl::device device = q.get_device();

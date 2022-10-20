@@ -3,7 +3,7 @@
   "name": "Board Test",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "An Intel® FPGA test to check board interfaces and some of the oneAPI shim/BSP metrics like memory bandwidth, kernel clock frequency and kernel latency",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx -fsycl"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
@@ -11,7 +11,9 @@
   "commonFolder": {
     "base": "../..",
     "include": [
-      "ReferenceDesigns/board_test"
+      "README.md",
+      "ReferenceDesigns/board_test",
+      "include"
     ],
     "exclude": []
   },
@@ -20,7 +22,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -31,7 +33,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -43,7 +45,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",
@@ -55,7 +57,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",

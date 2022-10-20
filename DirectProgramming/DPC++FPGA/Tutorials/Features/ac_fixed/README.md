@@ -49,7 +49,7 @@ To use an `ac_fixed` type in your code, include the following header:
 #include <sycl/ext/intel/ac_types/ac_fixed.hpp>
 ```
 
-> *IMPORTANT*: You must pass the  `-qactypes` option on Linux or the `/Qactypes` option on Windows to the `dpcpp` command when building your SYCL program in order to include `ac_types` header files on the include path and link against the AC type libraries. In this tutorial, the options are passed through the `src/CMakeLists.txt` file.
+> *IMPORTANT*: You must pass the  `-qactypes` option to the `icpx` command on Linux or the `/Qactypes` option to the `icx-cl` command on Windows when building your SYCL program in order to include `ac_types` header files on the include path and link against the AC type libraries. In this tutorial, the options are passed through the `src/CMakeLists.txt` file.
 
 ### Recommended Method for Constructing `ac_fixed` Numbers
 
@@ -131,10 +131,6 @@ When you use the `ac_fixed` library, keep the following points in mind:
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
-### Include Files
-
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in Intel&reg; DevCloud
 
@@ -226,7 +222,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cd build
    ```
 
-   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:  
+   To compile for the Intel&reg; PAC with Intel Arria&reg; 10 GX FPGA, run `cmake` using the command:
 
     ```
     cmake -G "NMake Makefiles" ..

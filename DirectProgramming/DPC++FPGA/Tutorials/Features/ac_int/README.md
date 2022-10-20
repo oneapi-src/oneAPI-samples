@@ -33,8 +33,7 @@ To use the `ac_int` type in your code, you must include the following header:
 ```cpp
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 ```
-
-Additionally, you must pass the flag `-qactypes` on Linux or `/Qactypes` on Windows to the `dpcpp` command when compiling your SYCL program in order to ensure that the headers are correctly included. In this tutorial, this is done in `src/CMakeLists.txt`.
+Additionally, you must pass the  `-qactypes` option to the `icpx` command on Linux or the `/Qactypes` option to the `icx-cl` command on Windows when compiling your SYCL program in order to ensure that the headers are correctly included. In this tutorial, this is done in `src/CMakeLists.txt`.
 
 ### Basic Operations and Promotion Rules
 
@@ -112,10 +111,6 @@ Kernel `BitOps` demonstrates bit operations with bit select operator `[]` and bi
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
-### Include Files
-
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in Intel&reg; DevCloud
 
