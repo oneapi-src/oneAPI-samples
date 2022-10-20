@@ -7,7 +7,7 @@ The `Intel® Modin Vs Pandas Performance` code illustrates how to use Modin* to 
 | Time to complete               | Less than 10 minutes
 
 ## Purpose
-Intel® Distribution of Modin* accelerates Pandas operations using Ray or Disk execution engine. The distribution provides compatibility and integration with the existing Pandas code. The sample code demonstrates how to perform some basic dataframe operations using Pandas and Intel® Distribution of Modin. You will be able to compare the performance difference between the two methods.
+Intel® Distribution of Modin* accelerates Pandas operations using Ray or Dask execution engine. The distribution provides compatibility and integration with the existing Pandas code. The sample code demonstrates how to perform some basic dataframe operations using Pandas and Intel® Distribution of Modin. You will be able to compare the performance difference between the two methods.
 
 You can run the sample locally or in Google Colaboratory (Colab).
 
