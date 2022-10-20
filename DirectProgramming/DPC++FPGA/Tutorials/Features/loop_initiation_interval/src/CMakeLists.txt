@@ -34,27 +34,32 @@ if(NOT DEFINED DEVICE_FLAG)
                          -DDEVICE_FLAG=-DAgilex.")
 endif()
 
+# This is a Windows-specific flag that enables exception handling in host code
+if(WIN32)
+    set(WIN_FLAG "/EHsc")
+endif()
+
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
-set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_SIMULATOR ${DEVICE_FLAG}")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_SIMULATOR_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR ${DEVICE_FLAG}")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_SIMULATOR ${DEVICE_FLAG}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_SIMULATOR_FLAGS}")
 # use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
-set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga ${DEVICE_FLAG}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga ${DEVICE_FLAG}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${DEVICE_FLAG} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR -DA10 loop_initiation_interval.cpp -o loop_ii.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR -DA10 loop_initiation_interval.cpp -o loop_ii.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -DA10 -o loop_ii.cpp.o -c loop_initiation_interval.cpp
-#    [link]    dpcpp -fintelfpga loop_ii.cpp.o -o loop_ii.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -DA10 -o loop_ii.cpp.o -c loop_initiation_interval.cpp
+#    [link]    icpx -fsycl -fintelfpga loop_ii.cpp.o -o loop_ii.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -65,7 +70,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 -fsycl-link=early loop_initiation_interval.cpp -o loop_ii_report.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 -fsycl-link=early loop_initiation_interval.cpp -o loop_ii_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 set(FPGA_EARLY_IMAGE_ENABLE_II ${TARGET_NAME_ENABLE_II}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
@@ -84,10 +89,10 @@ set_target_properties(${FPGA_EARLY_IMAGE_ENABLE_II} PROPERTIES LINK_FLAGS "${HAR
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR -DA10 loop_initiation_interval.cpp -o loop_ii.fpga_sim
+#    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR -DA10 loop_initiation_interval.cpp -o loop_ii.fpga_sim
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -DA10 -o loop_ii.cpp.o -c loop_initiation_interval.cpp
-#    [link]    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DA10 loop_ii.cpp.o -o loop_ii.fpga_sim
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -DA10 -o loop_ii.cpp.o -c loop_initiation_interval.cpp
+#    [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DA10 loop_ii.cpp.o -o loop_ii.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 add_executable(${SIMULATOR_TARGET_ENABLE_II} ${SOURCE_FILE})
@@ -102,10 +107,10 @@ set_target_properties(${SIMULATOR_TARGET_ENABLE_II} PROPERTIES LINK_FLAGS "${SIM
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 loop_initiation_interval.cpp -o loop_ii.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 loop_initiation_interval.cpp -o loop_ii.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o loop_ii.cpp.o -DA10 -c loop_initiation_interval.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 loop_ii.cpp.o -o loop_ii.fpga
+#   [compile] icpx -fsycl -fintelfpga -o loop_initiation_interval.cpp.o -DA10 -c loop_initiation_interval.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -DA10 loop_initiation_interval.cpp.o -o loop_ii.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
 add_executable(${FPGA_TARGET_ENABLE_II} EXCLUDE_FROM_ALL ${SOURCE_FILE})
