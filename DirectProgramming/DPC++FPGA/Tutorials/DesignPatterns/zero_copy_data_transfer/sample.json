@@ -3,7 +3,7 @@
   "name": "Zero Copy Data Transfer",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "An Intel® FPGA tutorial demonstrating zero-copy host memory using the SYCL restricted Unified Shared Memory (USM) model",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

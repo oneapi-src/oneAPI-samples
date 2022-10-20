@@ -3,7 +3,7 @@
   "name": "Fast Recompile",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Getting Started Tutorials"],
   "description": "An Intel® FPGA tutorial demonstrating how to separate the compilation of host and device code to save development time",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

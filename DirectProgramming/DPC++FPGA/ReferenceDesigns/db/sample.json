@@ -3,7 +3,7 @@
   "name": "DB",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "An FPGA reference design that demonstrates high-performance Database Query Acceleration on Intel® FPGAs",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

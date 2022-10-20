@@ -3,7 +3,7 @@
   "name": "FPGA Reg",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA advanced tutorial demonstrating how to apply the Data Parallel C++ (DPC++) extension ext::intel::fpga_reg",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
