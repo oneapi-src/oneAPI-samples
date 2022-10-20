@@ -34,7 +34,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_EMULATOR -Wall ${WIN_FLAG}")
 set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG}")
 # simulator compilation
-set(SIMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Wall ${WIN_FLAG} ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Wall ${WIN_FLAG}")
 set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${AC_TYPES_FLAG} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Wall ${WIN_FLAG}")
 set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
