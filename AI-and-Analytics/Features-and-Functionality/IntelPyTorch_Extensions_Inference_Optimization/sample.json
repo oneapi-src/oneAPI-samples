@@ -1,0 +1,23 @@
+{
+	"guid": "54B3F469-1E58-400B-9FCA-8BE08F680DCA",
+	"name": "Optimize PyTorch Models using Intel® Extension for PyTorch* (IPEX)",
+	"categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
+	"description": "Applying IPEX Optimizations to a PyTorch workload in a step-by-step manner to gain performance boost.",
+	"builder": ["cli"],
+	"languages": [{
+		"python": {}
+	}],
+	"os": ["linux"],
+	"targetDevice": ["CPU"],
+	"ciTests": {
+		"linux": [{
+			"id": "ipex_inference_optimization",
+			"steps": [
+				"source activate pytorch",
+				"/opt/intel/oneapi/intelpython/latest/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch",
+				"python scripts/ci_test.py"
+			]
+		}]
+	},
+    "expertise": "Code Optimization"
+}
