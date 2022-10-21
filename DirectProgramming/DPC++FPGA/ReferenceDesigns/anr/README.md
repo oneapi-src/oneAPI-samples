@@ -125,10 +125,6 @@ When working with the command-line interface (CLI), you should configure the one
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Include Files
-
-The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system. You might need to use some of the resources from this location to build the sample. 
-
 >**Note**: You can get the common resources from the [oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples/tree/master/common) GitHub repository.
 
 ### On Linux*
@@ -143,7 +139,7 @@ The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your de
    ```
    For **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 3. Compile the design. (The provided targets match the recommended development flow.)
 
@@ -177,7 +173,7 @@ The include folder is at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your de
    ```
    To compile for the **Intel® FPGA PAC D5005 (with Intel Stratix® 10 SX)**, enter the following:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
 
 3. Compile the design. (The provided targets match the recommended development flow.)

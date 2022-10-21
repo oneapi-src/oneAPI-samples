@@ -4,7 +4,7 @@
   "name": "MVDR Beamforming",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "A reference design demonstrating a high-performance streaming MVDR beamformer",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
@@ -12,8 +12,9 @@
   "commonFolder": {
     "base": "../..",
     "include": [
+      "README.md",
       "ReferenceDesigns/mvdr_beamforming",
-      "include/pipe_utils.hpp"
+      "include"
     ],
     "exclude": []
   },
@@ -22,7 +23,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -33,7 +34,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -45,7 +46,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",
@@ -58,7 +59,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",

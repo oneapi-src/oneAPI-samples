@@ -25,15 +25,15 @@ The following code snippet uses standard SYCL* and C++ language features to extr
 void profiling_example(const std::vector<float>& vec_in,
                              std::vector<float>& vec_out ) {
 
-  // Start the timer (using std::chrono)
-  dpc_common::TimeInterval exec_time;
+  // Start the timer
+  auto start = std::chrono::steady_clock::now();
 
   // Host performs pre-processing of input data
   std::vector<float> vec_pp = PreProcess(vec_in);
 
   // FPGA device performs additional processing
   ext::intel::fpga_selector selector;
-  queue q(selector, dpc_common::exception_handler,
+  queue q(selector, fpga_tools::exception_handler,
           property::queue::enable_profiling{});
 
   buffer buf_in(vec_pp);
@@ -55,7 +55,8 @@ void profiling_example(const std::vector<float>& vec_in,
     e.get_profiling_info<info::event_profiling::command_start>();
 
   // Stop the timer.
-  double total_time_s = exec_time.Elapsed();
+  auto end = std::chrono::steady_clock::now();
+  double total_time_s = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
 
   // Report profiling info
   std::cout << "Kernel compute time:  " << kernel_time_ns * 1e-6 << " ms\n";
@@ -204,8 +205,6 @@ The Intercept Layer for OpenCL™ Applications makes it clear why the double buf
 >
 >For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
-### Include Files
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in DevCloud
 If running a sample in the Intel DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
@@ -243,11 +242,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
    Alternatively, to compile for the Intel&reg; FPGA PAC D5005 (with Intel Stratix&reg; 10 SX), run `cmake` using the command:
 
    ```
-   cmake .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake .. -DFPGA_TARGET=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided:
@@ -256,6 +255,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
       ```
       make fpga_emu
       ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+
+     ```bash
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -283,16 +287,20 @@ You can compile and run this tutorial in the Eclipse* IDE. For instructions, ref
      ```
      ./double_buffering.fpga_emu     (Linux)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./double_buffering.fpga_sim     (Linux)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./double_buffering.fpga         (Linux)
      ```
-3. Follow the instructions in the "[Setting up the Intercept Layer for OpenCL™ Applications](#setting-up-the-intercept-layer-for-opencl-applications)" section to install and configure the `cliloader` tool.
-4. Run the sample using the Intercept Layer for OpenCL™ Applications to obtain system-level profiling information:
+4. Follow the instructions in the "[Setting up the Intercept Layer for OpenCL™ Applications](#setting-up-the-intercept-layer-for-opencl-applications)" section to install and configure the `cliloader` tool.
+5. Run the sample using the Intercept Layer for OpenCL™ Applications to obtain system-level profiling information:
      ```
      cliloader ./double_buffering.fpga   (Linux)
      ```
-5. Follow the instructions in the "[Viewing the Performance Data](#viewing-the-performance-data)" section to visualize the results.
+6. Follow the instructions in the "[Viewing the Performance Data](#viewing-the-performance-data)" section to visualize the results.
 
 ### Example of Output
 __Intercept Layer for OpenCL™ Applications results:__
@@ -321,7 +329,6 @@ Total kernel-only execution time with double buffering = 534 ms
 Throughput = 50.684795 MB/s
 
 Verification PASSED
-```
 
 ## License
 Code samples are licensed under the MIT license. See

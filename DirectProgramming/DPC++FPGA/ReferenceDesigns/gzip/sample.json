@@ -3,7 +3,7 @@
   "name": "GZIP",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "Reference design demonstrating high-performance GZIP compression on Intel® FPGA",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
@@ -11,8 +11,9 @@
   "commonFolder": {
     "base": "../..",
     "include": [
+      "README.md",
       "ReferenceDesigns/gzip",
-      "include/pipe_utils.hpp"
+      "include"
     ],
     "exclude": []
   },
@@ -21,7 +22,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -32,7 +33,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -42,10 +43,10 @@
       {
         "id": "fpga_emu_ll",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake .. -DLOW_LATENCY=1 -DFPGA_TARGET=intel_s10sx_pac:pac_s10_usm",
+          "cmake .. -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
           "make fpga_emu",
           "./gzip.fpga_emu ../src/gzip.cpp -o=test.gz"
         ]
@@ -53,10 +54,10 @@
       {
         "id": "report_ll",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake .. -DLOW_LATENCY=1 -DFPGA_TARGET=intel_s10sx_pac:pac_s10_usm",
+          "cmake .. -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
           "make report"
         ]
       }
@@ -65,7 +66,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",
@@ -78,7 +79,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",
@@ -89,12 +90,12 @@
       {
         "id": "fpga_emu_ll",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",
           "xcopy /E ..\\ReferenceDesigns\\gzip\\src ..\\src\\",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1 -DFPGA_TARGET=intel_s10sx_pac:pac_s10_usm",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
           "nmake fpga_emu",
           "gzip.fpga_emu.exe ../src/gzip.cpp -o=test.gz"
         ]
@@ -102,11 +103,11 @@
       {
         "id": "report_ll",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1 -DFPGA_TARGET=intel_s10sx_pac:pac_s10_usm",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/gzip -DLOW_LATENCY=1 -DFPGA_DEVICE=intel_s10sx_pac:pac_s10_usm",
           "nmake report"
         ]
       }

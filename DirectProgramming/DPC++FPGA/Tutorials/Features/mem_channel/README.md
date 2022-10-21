@@ -49,7 +49,7 @@ Otherwise, the global memory bandwidth utilization may be reduced, which will
 negatively impact the throughput of your design.
 
 To disable burst-interleaving, you need to pass the
-`-Xsno-interleaving=<global_memory_type>` flag to your `dpcpp` command. The
+`-Xsno-interleaving=<global_memory_type>` flag to your `icpx` command. The
 global memory type is indicated in the board specification XML file for the
 Board Support Package (BSP) that you're using. The board specification XML
 file, called `board_spec.xml`, can be found in the root directory of your BSP.
@@ -100,7 +100,7 @@ interleaving to avoid the area overhead imposed by the interleaving logic.
 This tutorial requires compiling the source code twice: once with the
 `-Xsno-interleaving` flag and once without it. In the `CMakeLists.txt` file,
 the macro `NO_INTERLEAVING` is defined when the `-Xsno-interleaving` flag is
-passed to the `dpcpp` command. The macro controls whether the buffers are
+passed to the `icpx` command. The macro controls whether the buffers are
 created with our without the `mem_channel` property.
 
 To decide what channel IDs to select in the source code, the macros
@@ -138,11 +138,6 @@ own) that clearly matches the number of channels available.
 > - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
-
-### Include Files
-The included header `dpc_common.hpp` is located at
-`%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in Intel&reg; DevCloud
 If running a sample in the Intel&reg; DevCloud, remember that you must specify the
@@ -189,13 +184,13 @@ To learn more about the extensions, see the
    10 SX), run `cmake` using the command:
 
    ```
-   cmake .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board
    support package is installed on your system. Then run `cmake` using the
    command:
    ```
-   cmake .. -DFPGA_TARGET=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build
@@ -235,13 +230,13 @@ To learn more about the extensions, see the
    10 SX), run `cmake` using the command:
 
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board
    support package is installed on your system. Then run `cmake` using the
    command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_TARGET=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build

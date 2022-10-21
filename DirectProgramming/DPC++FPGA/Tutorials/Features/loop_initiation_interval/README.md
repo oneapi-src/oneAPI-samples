@@ -135,10 +135,6 @@ The second `intel::initiation_interval` declaration sets an II of 1 for the long
 >
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Include Files
-
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
-
 ### Running Samples in Intel&reg; DevCloud
 If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
@@ -178,11 +174,11 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    Alternatively, to compile for the Intel&reg; PAC D5005 (with Intel Stratix&reg; 10 SX FPGA), run `cmake` using the command:
 
    ```bash
-   cmake .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10
+   cmake .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```bash
-   cmake .. -DFPGA_TARGET=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design using the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -197,6 +193,12 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
      ```bash
      make report
+     ```
+
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+
+     ```bash
+     make fpga_sim
      ```
 
    * Compile for FPGA hardware (longer compile time, targets an FPGA device) using:
@@ -221,11 +223,11 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    Alternatively, to compile for the Intel&reg; PAC D5005 (with Intel Stratix&reg; 10 SX FPGA), run `cmake` using the command:
 
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_TARGET=intel_s10sx_pac:pac_s10
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=intel_s10sx_pac:pac_s10
    ```
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_TARGET=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
@@ -238,6 +240,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data  size):
+     ```
+     nmake fpga_sim
+     ``
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -283,19 +289,28 @@ Compare the results to the report for the version of the design using the `intel
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./loop_ii.fpga_emu    (Linux)
-   loop_ii.fpga_emu.exe  (Windows)
+   ./loop_ii.fpga_emu               (Linux)
+   loop_ii.fpga_emu.exe             (Windows)
    ```
 
-2. Run the sample on the FPGA device
+2. Run the sample on the FPGA simulator device:
+   ```bash
+   # Sample without intel::initiation_interval attribute
+   ./loop_ii.fpga_sim               (Linux)
+   loop_ii.fpga_sim.exe             (Windows)
+   # Sample with intel::initiation_interval attribute
+   ./loop_ii_enable_ii.fpga_sim     (Linux)
+   loop_ii_enable_ii.fpga_sim.exe   (Windows)
+
+3. Run the sample on the FPGA device
 
    ```bash
    # Sample without intel::initiation_interval attribute
-   ./loop_ii.fpga               (Linux)
-   loop_ii.fpga.exe             (Windows)
+   ./loop_ii.fpga                   (Linux)
+   loop_ii.fpga.exe                 (Windows)
    # Sample with intel::initiation_interval attribute
-   ./loop_ii_enable_ii.fpga     (Linux)
-   loop_ii_enable_ii.fpga.exe   (Windows)
+   ./loop_ii_enable_ii.fpga         (Linux)
+   loop_ii_enable_ii.fpga.exe       (Windows)
    ```
 
 ### Example of Output

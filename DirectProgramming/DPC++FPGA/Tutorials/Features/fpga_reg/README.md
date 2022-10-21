@@ -7,7 +7,7 @@ This FPGA tutorial demonstrates how a power user can apply the SYCL*-compliant C
 | Optimized for                     | Description
 ---                                 |---
 | OS                                | Linux* Ubuntu* 18.04/20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10
-| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> *__Note__: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
+| Hardware                          | Intel® Programmable Acceleration Card (PAC) with Intel Arria® 10 GX FPGA <br> Intel® FPGA 3rd party / custom platforms with oneAPI support <br> ***Note**: Intel® FPGA PAC hardware is only compatible with Ubuntu 18.04*
 | Software                          | Intel® oneAPI DPC++ Compiler <br> Intel® FPGA Add-On for oneAPI Base Toolkit
 | What you will learn               | How to use the `ext::intel::fpga_reg` extension <br> How `ext::intel::fpga_reg` can be used to re-structure the compiler-generated hardware <br> Situations in which applying  `ext::intel::fpga_reg` might be beneficial
 | Time to complete                  | 20 minutes
@@ -78,9 +78,10 @@ In this version, the adder tree has been transformed into a vine-like structure.
 Since the outer loop is pipelined and has a high trip count, the inner loop's increased latency has a negligible impact on throughput. The tradeoff pays off, as the f<sub>MAX</sub> improvement yields a higher performing design.
 
 ### Additional Documentation
+
 - [Explore SYCL* Through Intel&reg; FPGA Code Samples](https://software.intel.com/content/www/us/en/develop/articles/explore-dpcpp-through-intel-fpga-code-samples.html) helps you to navigate the samples and build your knowledge of FPGAs and SYCL.
-- [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
-- [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
+* [FPGA Optimization Guide for Intel&reg; oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/oneapi-fpga-optimization-guide) helps you understand how to target FPGAs using SYCL and Intel&reg; oneAPI Toolkits.
+* [Intel&reg; oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide) helps you understand target-independent, SYCL-compliant programming using Intel&reg; oneAPI Toolkits.
 
 ## Key Concepts
 
@@ -88,30 +89,28 @@ Since the outer loop is pipelined and has a high trip count, the inner loop's in
 * How `ext::intel::fpga_reg` can be used to re-structure the compiler-generated hardware.
 * Situations in which applying  `ext::intel::fpga_reg` might be beneficial.
 
-
 ## Building the `fpga_reg` Design
+
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script located in
 > the root of your oneAPI installation.
 >
 > Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: `. ~/intel/oneapi/setvars.sh`
+>
+> * For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> * For private installations: `. ~/intel/oneapi/setvars.sh`
 >
 > Windows*:
-> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+>
+> * `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
 >
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-### Include Files
-
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
-
 ### Running Samples in Intel&reg; DevCloud
+
 If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
 
 When compiling for FPGA hardware, it is recommended to increase the job timeout to 12h.
-
 
 ### Using Visual Studio Code*  (Optional)
 
@@ -119,10 +118,11 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
+
+* Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
+* Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
+* Open a Terminal in VS Code (**Terminal>New Terminal**).
+* Run the sample in the VS Code terminal using the instructions below.
 
 To learn more about the extensions and how to configure the oneAPI environment, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
@@ -143,8 +143,9 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
 
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+
    ```bash
-   cmake .. -DFPGA_TARGET=<board-support-package>:<board-variant>
+   cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design using the generated `Makefile`. The following four build targets are provided that match the recommended development flow:
@@ -161,6 +162,12 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      make report
      ```
 
+   * Compile for simulation (fast compile time, targets simulated FPGA device)
+
+     ```bash
+     make fpga_sim
+     ```
+
    * Compile and run on FPGA hardware (longer compile time, targets an FPGA device) using:
 
      ```bash
@@ -172,31 +179,46 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 ### On a Windows* System
 
 1. Generate the `Makefile` by running `cmake`.
+
      ```
    mkdir build
    cd build
    ```
+
    To compile for the Intel® PAC with Intel Arria® 10 GX FPGA, run `cmake` using the command:
+
     ```
     cmake -G "NMake Makefiles" ..
    ```
 
    You can also compile for a custom FPGA platform. Ensure that the board support package is installed on your system. Then run `cmake` using the command:
+
    ```
-   cmake -G "NMake Makefiles" .. -DFPGA_TARGET=<board-support-package>:<board-variant>
+   cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
+
      ```
      nmake fpga_emu
      ```
+
    * Generate the optimization report:
+
      ```
      nmake report
      ```
+
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced problem size):
+
+     ```
+     nmake fpga_sim
+     ```
+
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
+
      ```
      nmake fpga
      ```
@@ -212,6 +234,7 @@ shorter path, for example c:\samples\build. You can then run cmake from that
 directory, and provide cmake with the full path to your sample directory.
 
 ### Troubleshooting
+
 If an error occurs, you can get more details by running `make` with
 the `VERBOSE=1` argument:
 ``make VERBOSE=1``
@@ -222,7 +245,7 @@ dependencies and permissions errors.
 
 ### In Third-Party Integrated Development Environments (IDEs)
 
-You can compile and run this tutorial in the Eclipse* IDE (in Linux*) and the Visual Studio* IDE (in Windows*).
+You can compile and run this tutorial in the Eclipse*IDE (in Linux*) and the Visual Studio*IDE (in Windows*).
 For instructions, refer to the following link: [FPGA Workflows on Third-Party IDEs for Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-oneapi-dpcpp-fpga-workflow-on-ide.html)
 
 ## Examining the Reports
@@ -245,7 +268,15 @@ Open the reports in Chrome*, Firefox*, Edge*, or Internet Explorer*. Observe the
    fpga_reg.fpga_emu.exe  (Windows)
    ```
 
-2. Run the sample on the FPGA device
+2. Run the sample on the FPGA simulator device
+
+   ```bash
+   ./fpga_reg.fpga_sim                (Linux)
+   ./fpga_reg_registered.fpga_sim     (Linux)
+   fpga_reg.fpga_sim.exe              (Windows)
+   fpga_reg_registered.fpga_sim.exe   (Windows)
+
+3. Run the sample on the FPGA device
 
    ```bash
    ./fpga_reg.fpga                (Linux)
