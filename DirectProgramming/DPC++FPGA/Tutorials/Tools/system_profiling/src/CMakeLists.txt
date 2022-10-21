@@ -21,22 +21,22 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} -Xsprofile ${USER_SIMULATOR_FLAGS}")
-set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall -fsycl -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-Wall -fsycl -fintelfpga -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} -Xsprofile ${USER_SIMULATOR_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall -fsycl -fintelfpga")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR double_buffering.cpp -o double_buffering.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR double_buffering.cpp -o double_buffering.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o double_buffering.cpp.o -c double_buffering.cpp
-#    [link]    dpcpp -fintelfpga double_buffering.cpp.o -o double_buffering.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o double_buffering.cpp.o -c double_buffering.cpp
+#    [link]    icpx -fsycl -fintelfpga double_buffering.cpp.o -o double_buffering.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -47,10 +47,10 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> -DFPGA_SIMULATOR double_buffering.cpp -o double_buffering.fpga_sim
+#    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR double_buffering.cpp -o double_buffering.fpga_sim
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o double_buffering.cpp.o -c double_buffering.cpp
-#   [link]    dpcpp -fintelfpga -Xssimulation -Xsboard=<FPGA_BOARD> double_buffering.cpp.o -o double_buffering.fpga_sim
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o double_buffering.cpp.o -c double_buffering.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> double_buffering.cpp.o -o double_buffering.fpga_sim
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
@@ -61,10 +61,10 @@ add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> double_buffering.cpp -o double_buffering.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> double_buffering.cpp -o double_buffering.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o double_buffering.cpp.o -c double_buffering.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> double_buffering.cpp.o -o double_buffering.fpga
+#   [compile] icpx -fsycl -fintelfpga -o double_buffering.cpp.o -c double_buffering.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> double_buffering.cpp.o -o double_buffering.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})

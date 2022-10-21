@@ -114,7 +114,7 @@ void GSimulation::Start() {
   queue q(default_selector{}, dpc_common::exception_handler);
   // Create SYCL buffer for the Particle array of size "n"
   buffer pbuf(particles_.data(), r,
-              {cl::sycl::property::buffer::use_host_ptr()});
+              {sycl::property::buffer::use_host_ptr()});
   // Allocate energy using USM allocator shared
   RealType *energy = malloc_shared<RealType>(1,q);
   *energy = 0.f;

@@ -127,6 +127,10 @@ To learn more about the extensions, see the
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -163,6 +167,10 @@ To learn more about the extensions, see the
    * Generate the optimization report:
      ```
      nmake report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size:
+     ```
+     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -201,14 +209,21 @@ These results make sense when you recall that the loop exit computation has a la
 ## Running the Sample
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+     ```bash
+     ./speculated_iterations.fpga_emu     (Linux)
+     speculated_iterations.fpga_emu.exe   (Windows)
      ```
-     ./speculated iterations.fpga_emu     (Linux)
-     speculated iterations.fpga_emu.exe   (Windows)
+
+ 2. Run the sample on the FPGA simulator device:
+     ```bash
+     ./speculated_iterations.fpga_sim     (Linux)
+     speculated_iterations.fpga_sim.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
-     ```
-     ./speculated iterations.fpga         (Linux)
-     speculated iterations.fpga.exe       (Windows)
+
+ 3. Run the sample on the FPGA device:
+     ```bash
+     ./speculated_iterations.fpga         (Linux)
+     speculated_iterations.fpga.exe       (Windows)
      ```
 
 ### Example of Output
