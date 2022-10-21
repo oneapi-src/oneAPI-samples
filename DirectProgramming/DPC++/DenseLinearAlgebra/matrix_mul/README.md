@@ -10,7 +10,7 @@ The `Matrix Multiply` is a simple program that multiplies together two large mat
 
 ### Purpose
 
-The `Matrix Multiply` sample program includes SYCL*-compliant and OpenMP C++ implementations. Each implementation is contained in an appropriately named file: `matrix_mul_dpcpp.cpp` and `matrix_mul_omp.cpp`. The separation provides a way to compare existing offload techniques such as OpenMP with SYCL* within a relatively simple sample. 
+The `Matrix Multiply` sample program includes SYCL*-compliant and OpenMP C++ implementations. Each implementation is contained in an appropriately named file: `matrix_mul_sycl.cpp` and `matrix_mul_omp.cpp`. The separation provides a way to compare existing offload techniques such as OpenMP with SYCL* within a relatively simple sample. 
 
 The code will attempt to execute on an available GPU first and fallback to the
 system CPU if a compatible GPU is not detected. The device used for the
@@ -95,7 +95,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 
 1. Build using nmake.
    ```
-   nmake -f Makefile.win build_dpcpp
+   nmake -f Makefile.win build_sycl
    ```
 ### On Windows* Using Visual Studio*
 - Build the program using VS2017 or later.
@@ -121,15 +121,15 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ### On Windows
 1. Run the SYCL version.
    ```
-   nmake -f Makefile.win run_dpcpp
+   nmake -f Makefile.win run_sycl
    ```
 2. Alternatively, change directory to the output folder and run the .exe file. (Depending on the build method you selected, the .exe name could be different from what is shown.)
    ```
-   matrix_mul_dpcpp.exe
+   matrix_mul_sycl.exe
    ```
 
 ### Application Parameters
-You can modify the computation size by adjusting the size parameter in the `matrix_mul_dpcpp.cpp` and `matrix_mul_omp.cpp` files. You can configure the following parameters in both files:
+You can modify the computation size by adjusting the size parameter in the `matrix_mul_sycl.cpp` and `matrix_mul_omp.cpp` files. You can configure the following parameters in both files:
 ```C++
 size = m_size = 150*8; // Must be a multiple of 8.
 M = m_size / 8;

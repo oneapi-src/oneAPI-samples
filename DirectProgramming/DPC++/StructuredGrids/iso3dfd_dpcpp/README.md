@@ -104,7 +104,7 @@ dependencies and permissions errors. See [Diagnostics Utility for Intel&reg; one
 
 - Build the program using MSBuild
      - Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019"
-     - Run the following command: `MSBuild iso3dfd_dpcpp.sln /t:Rebuild /p:Configuration="Release"`
+     - Run the following command: `MSBuild iso3dfd_sycl.sln /t:Rebuild /p:Configuration="Release"`
 
 
 ### Run Samples in Intel&reg; DevCloud
