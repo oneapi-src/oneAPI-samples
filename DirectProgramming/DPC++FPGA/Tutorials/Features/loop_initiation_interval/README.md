@@ -195,6 +195,12 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      make report
      ```
 
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+
+     ```bash
+     make fpga_sim
+     ```
+
    * Compile for FPGA hardware (longer compile time, targets an FPGA device) using:
 
      ```bash
@@ -234,6 +240,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data  size):
+     ```
+     nmake fpga_sim
+     ``
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -279,19 +289,28 @@ Compare the results to the report for the version of the design using the `intel
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
 
    ```bash
-   ./loop_ii.fpga_emu    (Linux)
-   loop_ii.fpga_emu.exe  (Windows)
+   ./loop_ii.fpga_emu               (Linux)
+   loop_ii.fpga_emu.exe             (Windows)
    ```
 
-2. Run the sample on the FPGA device
+2. Run the sample on the FPGA simulator device:
+   ```bash
+   # Sample without intel::initiation_interval attribute
+   ./loop_ii.fpga_sim               (Linux)
+   loop_ii.fpga_sim.exe             (Windows)
+   # Sample with intel::initiation_interval attribute
+   ./loop_ii_enable_ii.fpga_sim     (Linux)
+   loop_ii_enable_ii.fpga_sim.exe   (Windows)
+
+3. Run the sample on the FPGA device
 
    ```bash
    # Sample without intel::initiation_interval attribute
-   ./loop_ii.fpga               (Linux)
-   loop_ii.fpga.exe             (Windows)
+   ./loop_ii.fpga                   (Linux)
+   loop_ii.fpga.exe                 (Windows)
    # Sample with intel::initiation_interval attribute
-   ./loop_ii_enable_ii.fpga     (Linux)
-   loop_ii_enable_ii.fpga.exe   (Windows)
+   ./loop_ii_enable_ii.fpga         (Linux)
+   loop_ii_enable_ii.fpga.exe       (Windows)
    ```
 
 ### Example of Output

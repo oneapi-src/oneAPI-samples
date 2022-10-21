@@ -193,11 +193,17 @@ To learn more about the extensions, see the
    cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
    ```
 
-2. Compile the design through the generated `Makefile`. The following build target is provided to compile for FPGA hardware:
+2. Compile the design through the generated `Makefile`. The following build targets are provided:
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
 
-     ```
-     make fpga
-     ```
+    ```bash
+    make fpga_sim
+    ```
+   *  Compile for FPGA hardware (longer compile time, targets an FPGA device) using:
+
+    ```bash
+    make fpga
+    ```
 3. (Optional) As the above hardware compile may take several hours to complete, FPGA precompiled binaries (compatible with Linux* Ubuntu* 18.04) can be downloaded [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler.fpga.tar.gz).
 Alternatively, if you wish to view the dynamic profiler data in the VTune Profiler, you can download a sample `dynamic_profiler_tutorial.json` file [here](https://iotdk.intel.com/fpga-precompiled-binaries/latest/dynamic_profiler_tutorial.json).
 
@@ -235,11 +241,16 @@ To collect dynamic profiling data, choose one of the following methods:
 ![](profiler_pipe_tutorial_configure_vtune.png)
 
 **At the Command Line**
-1. Run the design using the following build target in the makefile generated in "[On a Linux* System](#on-a-linux-system)":
-     ```
-     make run
-     ```
-    This target runs the executable with the Profiler Runtime Wrapper, creating a `profile.json` data file in the current directory.
+1. Run the design using the makefile targets generated in "[On a Linux* System](#on-a-linux-system)":
+    * Run the design using the simulator:
+      ```
+      make run_sim
+      ```
+    * Run the design on hardware:
+      ```
+      make run
+      ```
+    These targets run the executable with the Profiler Runtime Wrapper, creating a `profile.json` data file in the current directory.
 
 2. Open the Intel&reg; VTune™ Profiler.
 

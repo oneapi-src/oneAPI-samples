@@ -129,12 +129,16 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 2. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
 
    * Compile for emulation (fast compile time, targets emulated FPGA device):
-      ```
-      make fpga_emu
-      ```
+     ```
+     make fpga_emu
+     ```
    * Generate the optimization report:
      ```
      make report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -173,6 +177,10 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -209,7 +217,12 @@ Now, observe that the loop in block `OptKernel.B1` is not marked as _Serialized_
      ./loop_carried_dependency.fpga_emu     (Linux)
      loop_carried_dependency.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./loop_carried_dependency.fpga_sim     (Linux)
+     loop_carried_dependency.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./loop_carried_dependency.fpga         (Linux)
      loop_carried_dependency.fpga.exe       (Windows)

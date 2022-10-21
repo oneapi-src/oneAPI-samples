@@ -47,7 +47,7 @@
  * SLM Padding can be used to eliminate SLM bank conflicts if
  * there are any
  */
-void iso_3dfd_iteration_slm(cl::sycl::nd_item<3> it, float *next, float *prev,
+void iso_3dfd_iteration_slm(sycl::nd_item<3> it, float *next, float *prev,
                             float *vel, const float *coeff, float *tab,
                             size_t nx, size_t nxy, size_t bx, size_t by,
                             size_t z_offset, int full_end_z) {
@@ -185,7 +185,7 @@ void iso_3dfd_iteration_slm(cl::sycl::nd_item<3> it, float *next, float *prev,
  * global work-items.
  *
  */
-void iso_3dfd_iteration_global(cl::sycl::nd_item<3> it, float *next,
+void iso_3dfd_iteration_global(sycl::nd_item<3> it, float *next,
                                float *prev, float *vel, const float *coeff,
                                int nx, int nxy, int bx, int by, int z_offset,
                                int full_end_z) {
@@ -286,7 +286,7 @@ void iso_3dfd_iteration_global(cl::sycl::nd_item<3> it, float *next,
  *
  */
 
-bool iso_3dfd_device(cl::sycl::queue &q, float *ptr_next, float *ptr_prev,
+bool iso_3dfd_device(sycl::queue &q, float *ptr_next, float *ptr_prev,
                      float *ptr_vel, float *ptr_coeff, size_t n1, size_t n2,
                      size_t n3, size_t n1_Tblock, size_t n2_Tblock,
                      size_t n3_Tblock, size_t end_z, unsigned int nIterations) {

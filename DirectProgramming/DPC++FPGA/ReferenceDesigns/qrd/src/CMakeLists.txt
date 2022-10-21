@@ -15,13 +15,15 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
-# Include ac_types headers and link against ac_types emulation libraries
-set(AC_TYPES_FLAG "-qactypes")
-
-# Setting the stack size on Windows as the default one is too small for this program
+# This is a Windows-specific flag that enables error handling in host code
 if(WIN32)
-    set(WIN_LINK_FLAG "-Wl,-stack:12582912")
+    set(PLATFORM_SPECIFIC_COMPILE_FLAGS "/EHsc /Qactypes /Wall")
+    set(PLATFORM_SPECIFIC_LINK_FLAGS "/Qactypes /F 12582912")
+else()
+    set(PLATFORM_SPECIFIC_COMPILE_FLAGS "-qactypes -Wall -fno-finite-math-only")
+    set(PLATFORM_SPECIFIC_LINK_FLAGS "")
 endif()
+
 
 # A10 parameters
 set(ROWS_COMPONENT 128)
@@ -85,14 +87,13 @@ message(STATUS "SEED=${SEED}")
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${AC_TYPES_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -fno-finite-math-only -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} ${WIN_LINK_FLAG}")
-# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA backend compilation
-set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} ${USER_SIMULATOR_FLAGS}")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fbracket-depth=512 -fsycl -fintelfpga -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS}")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -DFPGA_SIMULATOR -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fintelfpga ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Xssimulation -Xsghdl -Xsclock=${CLOCK_TARGET} -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${PLATFORM_SPECIFIC_COMPILE_FLAGS} -Wformat-security -Werror=format-security -fsycl -fintelfpga -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT} -fp-model=precise -Xsfp-relaxed")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga ${PLATFORM_SPECIFIC_LINK_FLAGS} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
-set(HARDWARE_COMPILE_FLAGS "-fintelfpga -Wall ${AC_TYPES_FLAG} -Wformat-security -Werror=format-security -fbracket-depth=512 -DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX} -DROWS_COMPONENT=${ROWS_COMPONENT} -DCOLS_COMPONENT=${COLS_COMPONENT}")
-set(HARDWARE_LINK_FLAGS "-fintelfpga ${AC_TYPES_FLAG} ${WIN_LINK_FLAG} -Xshardware -Xsclock=${CLOCK_TARGET} -Xsparallel=2 ${SEED} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 
 ###############################################################################
 ### FPGA Emulator

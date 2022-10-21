@@ -166,10 +166,10 @@ int main(int argc, char **argv) {
       accessor image_acc(image_buf, h, read_only);
       accessor image_exp_acc(image_buf_exp1, h, write_only);
 
-      // This is the simplest form cl::sycl::handler::parallel_for -
+      // This is the simplest form sycl::handler::parallel_for -
       // - it specifies "flat" 1D ND range(num_pixels), runtime will select
       //   local size
-      // - kernel lambda accepts single cl::sycl::id argument, which has very
+      // - kernel lambda accepts single sycl::id argument, which has very
       //   limited API; see the spec for more complex forms
       // the lambda parameter of the parallel_for is the kernel, which
       // actually executes on device
