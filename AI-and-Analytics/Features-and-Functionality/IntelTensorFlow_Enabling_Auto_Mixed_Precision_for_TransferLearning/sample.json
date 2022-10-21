@@ -1,0 +1,23 @@
+{
+	"guid": "AEB197D8-F4CB-4E9C-8D08-D66CFBB0523C",
+	"name": "Enable Auto-Mixed Precision for Transfer Learning with TensorFlow",
+	"categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
+	"description": "This tutorial guides you through the process of enabling auto-mixed precision to use low-precision datatypes, like bfloat16, for transfer learning with TensorFlow*",
+	"builder": ["cli"],
+	"languages": [{
+		"python": {}
+	}],
+	"os": ["linux"],
+	"targetDevice": ["CPU"],
+	"ciTests": {
+		"linux": [{
+			"id": "tensorflow_AMP_transfer_learning",
+			"steps": [
+				"source activate tensorflow",
+				"/opt/intel/oneapi/intelpython/latest/envs/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
+				"python scripts/ci_test.py"
+			]
+		}]
+	},
+    "expertise": "Code Optimization"
+}
