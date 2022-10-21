@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <cmath>
@@ -21,6 +22,9 @@ using namespace sycl;
 // kTimes = # times to execute the kernel. kTimes must be >= 2
 // kSize = # of floats to process on each kernel execution.
 #if defined(FPGA_EMULATOR)
+constexpr int kTimes = 3;
+constexpr int kSize = 4096;
+#elif defined(FPGA_SIMULATOR)
 constexpr int kTimes = 3;
 constexpr int kSize = 4096;
 #else
@@ -206,6 +210,8 @@ int main() {
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif

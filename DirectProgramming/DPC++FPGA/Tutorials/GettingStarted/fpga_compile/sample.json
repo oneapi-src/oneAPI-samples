@@ -3,7 +3,7 @@
   "name": "FPGA Compile",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Getting Started Tutorials"],
   "description": "Intel® FPGA tutorial introducing how to compile Data Parallel C++ (DPC++) for Intel® FPGA",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
@@ -11,6 +11,7 @@
   "commonFolder": {
     "base": "../../..",
     "include": [
+      "README.md",
       "Tutorials/GettingStarted/fpga_compile",
       "include"
     ],
@@ -21,7 +22,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -32,7 +33,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -44,7 +45,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -56,7 +57,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",

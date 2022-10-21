@@ -42,10 +42,16 @@ template <typename T,       // The datatype for the computation
                             // elements from the pipe with each read
           typename QOut,    // Q matrix output pipe, send pipe_size
                             // elements to the pipe with each write
-          typename ROut     // R matrix output pipe, send pipe_size
+          typename ROut,    // R matrix output pipe, send pipe_size
                             // elements to the pipe with each write.
                             // Only upper-right elements of R are
                             // sent in row order, starting with row 0.
+          bool k_column_order =
+              true  // Default value is true for standard matrix input reads
+                    // (reads the matrix one column at a time). False if read
+                    // order by rows (sweeps the rows by pipe size). Each read
+                    // contains pipe_size samples from the same column, then the
+                    // next read contains samples from the next column.
           >
 struct StreamingQRD {
   void operator()() const {
@@ -177,14 +183,22 @@ struct StreamingQRD {
       for (ac_int<kLoopIterBitSize, false> li = 0; li < kLoopIter; li++) {
         fpga_tools::NTuple<TT, pipe_size> pipe_read = AIn::read();
 
-        int write_idx = li % kLoopIterPerColumn;
+        int write_idx;
+        int a_col_index;
+        if constexpr (k_column_order) {
+          write_idx = li % kLoopIterPerColumn;
+          a_col_index = li / kLoopIterPerColumn;
+        } else {
+          write_idx = li / columns;
+          a_col_index = li % columns;
+        }
+        // int write_idx = li / columns;
 
         fpga_tools::UnrolledLoop<kLoopIterPerColumn>([&](auto k) {
           fpga_tools::UnrolledLoop<pipe_size>([&](auto t) {
             if (write_idx == k) {
               if constexpr (k * pipe_size + t < rows) {
-                a_load[li / kLoopIterPerColumn]
-                    .template get<k * pipe_size + t>() =
+                a_load[a_col_index].template get<k * pipe_size + t>() =
                     pipe_read.template get<t>();
               }
             }
@@ -213,8 +227,8 @@ struct StreamingQRD {
       // Depending on the context, will contain:
       // -> -s[j]: for all the iterations to compute a_j
       // -> ir: for one iteration per j iterations to compute Q_i
-      [[intel::fpga_memory]] [[intel::private_copies(
-          2)]]  // NO-FORMAT: Attribute
+      [[intel::fpga_memory]]        // NO-FORMAT: Attribute
+      [[intel::private_copies(2)]]  // NO-FORMAT: Attribute
       TT s_or_ir[columns];
 
       T pip1, ir;
@@ -232,6 +246,22 @@ struct StreamingQRD {
       [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
       [[intel::ivdep(raw_latency)]]      // NO-FORMAT: Attribute
       for (int s = 0; s < kIterations; s++) {
+        // Pre-compute the next values of i and j
+        ac_int<kIBitSize, true> next_i;
+        ac_int<kJBitSize, true> next_j;
+        if (j == columns - 1) {
+          // If i reached an index at which the j inner loop don't have
+          // enough time to write its result for the next i iteration,
+          // some "dummy" iterations are introduced
+          next_j = (kVariableIterations > i)
+                       ? ac_int<kJBitSize, true>{i + 1}
+                       : ac_int<kJBitSize, true>{kVariableIterations};
+          next_i = i + 1;
+        } else {
+          next_j = j + 1;
+          next_i = i;
+        }
+
         // Two matrix columns for partial results.
         TT col[rows];
         TT col1[rows];

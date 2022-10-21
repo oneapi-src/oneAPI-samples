@@ -255,6 +255,11 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
       ```
       make fpga_emu
       ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+
+     ```bash
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -282,16 +287,20 @@ You can compile and run this tutorial in the Eclipse* IDE. For instructions, ref
      ```
      ./double_buffering.fpga_emu     (Linux)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./double_buffering.fpga_sim     (Linux)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./double_buffering.fpga         (Linux)
      ```
-3. Follow the instructions in the "[Setting up the Intercept Layer for OpenCL™ Applications](#setting-up-the-intercept-layer-for-opencl-applications)" section to install and configure the `cliloader` tool.
-4. Run the sample using the Intercept Layer for OpenCL™ Applications to obtain system-level profiling information:
+4. Follow the instructions in the "[Setting up the Intercept Layer for OpenCL™ Applications](#setting-up-the-intercept-layer-for-opencl-applications)" section to install and configure the `cliloader` tool.
+5. Run the sample using the Intercept Layer for OpenCL™ Applications to obtain system-level profiling information:
      ```
      cliloader ./double_buffering.fpga   (Linux)
      ```
-5. Follow the instructions in the "[Viewing the Performance Data](#viewing-the-performance-data)" section to visualize the results.
+6. Follow the instructions in the "[Viewing the Performance Data](#viewing-the-performance-data)" section to visualize the results.
 
 ### Example of Output
 __Intercept Layer for OpenCL™ Applications results:__
@@ -320,7 +329,6 @@ Total kernel-only execution time with double buffering = 534 ms
 Throughput = 50.684795 MB/s
 
 Verification PASSED
-```
 
 ## License
 Code samples are licensed under the MIT license. See

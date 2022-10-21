@@ -82,25 +82,27 @@ Notice that the FPGA emulator and the FPGA are different target devices. It is r
 ### Compiler Options
 This section includes a helpful list of commands and options to compile this design for the FPGA emulator, generate the FPGA early image optimization reports, and compile for FPGA hardware.
 
+**NOTE:** In this sample, the compiler is refered to as `icpx`. On Windows, you should use `icx-cl`.
+
 **FPGA emulator**
 
-`dpcpp -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu`
+`icpx -fintelfpga -DFPGA_EMULATOR fpga_compile.cpp -o fpga_compile.fpga_emu`
 
 **Optimization report (default FPGA device)**
 
-`dpcpp -fintelfpga -Xshardware -fsycl-link=early fpga_compile.cpp -o fpga_compile_report.a`
+`icpx -fintelfpga -Xshardware -fsycl-link=early fpga_compile.cpp -o fpga_compile_report.a`
 
 **Optimization report (explicit FPGA device)**
 
-`dpcpp -fintelfpga -Xshardware -fsycl-link=early -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile_report.a`
+`icpx -fintelfpga -Xshardware -fsycl-link=early -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile_report.a`
 
 **FPGA hardware (default FPGA device)**
 
-`dpcpp -fintelfpga -Xshardware fpga_compile.cpp -o fpga_compile.fpga`
+`icpx -fintelfpga -Xshardware fpga_compile.cpp -o fpga_compile.fpga`
 
 **FPGA hardware (explicit FPGA device)**
 
-`dpcpp -fintelfpga -Xshardware -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile.fpga`
+`icpx -fintelfpga -Xshardware -Xstarget=intel_s10sx_pac:pac_s10 fpga_compile.cpp -o fpga_compile.fpga`
 
 
 The compiler options used are explained in the table.
