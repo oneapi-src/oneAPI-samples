@@ -7,7 +7,7 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA device selection
-if(NOT DEFINED FPGA_DEVICE)
+if(NOT DEFINED FPGA_BOARD)
     set(FPGA_BOARD "intel_s10sx_pac:pac_s10_usm")
     message(STATUS "FPGA_BOARD was not specified.\
                     \nConfiguring the design to run on the default FPGA device ${FPGA_BOARD} (Intel(R) PAC with Intel Stratix(R) 10 GX FPGA). \
@@ -32,9 +32,9 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-fyscl -Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype")
+set(EMULATOR_COMPILE_FLAGS "-fyscl -Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -Wall ${WIN_FLAG} -fintelfpga -I${SDK_ROOT_PATH}/include -I${SDK_ROOT_PATH}/include/sycl/ext/intel/prototype")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
