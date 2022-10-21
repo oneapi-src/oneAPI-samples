@@ -126,6 +126,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -163,6 +167,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      nmake report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device):
+     ```
+     nmake fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      nmake fpga
@@ -195,12 +203,17 @@ On the main report page, scroll down to the section titled `Compile Estimated Ke
 ## Running the Sample
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
-     ```
+     ```bash
      ./loop_coalesce.fpga_emu     (Linux)
      loop_coalesce.fpga_emu.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
+ 2. Run the sample on the FPGA simulator device:
+     ```bash
+     ./loop_coalesce.fpga_sim     (Linux)
+     loop_coalesce.fpga_sim.exe   (Windows)
      ```
+ 3. Run the sample on the FPGA device:
+     ```bash
      ./loop_coalesce.fpga         (Linux)
      loop_coalesce.fpga.exe       (Windows)
      ```

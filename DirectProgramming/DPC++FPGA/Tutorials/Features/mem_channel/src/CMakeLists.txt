@@ -17,14 +17,19 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
+# This is a Windows-specific flag that enables exception handling in host code
+if(WIN32)
+    set(WIN_FLAG "/EHsc")
+endif()
+
 # A DPC++ ahead-of-time (AoT) compile processes the device code in two stages.
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 set(NO_INTERLEAVING_HARDWARE_COMPILE_FLAGS "-DNO_INTERLEAVING")
@@ -38,10 +43,10 @@ endif()
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR mem_channel.cpp -o mem_channel.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR mem_channel.cpp -o mem_channel.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o mem_channel.cpp.o -c mem_channel.cpp
-#    [link]    dpcpp -fintelfpga mem_channel.cpp.o -o mem_channel.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o mem_channel.cpp.o -c mem_channel.cpp
+#    [link]    icpx -fsycl -fintelfpga mem_channel.cpp.o -o mem_channel.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -52,7 +57,7 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early mem_channel.cpp -o mem_channel_report.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early mem_channel.cpp -o mem_channel_report.a
 set(FPGA_EARLY_IMAGE_INTERLEAVING ${TARGET_NAME}_interleaving_report.a)
 set(FPGA_EARLY_IMAGE_NO_INTERLEAVING ${TARGET_NAME}_no_interleaving_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
@@ -72,10 +77,10 @@ set_target_properties(${FPGA_EARLY_IMAGE_NO_INTERLEAVING} PROPERTIES LINK_FLAGS 
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> mem_channel.cpp -o mem_channel.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> mem_channel.cpp -o mem_channel.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o mem_channel.cpp.o -c mem_channel.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> mem_channel.cpp.o -o mem_channel.fpga
+#   [compile] icpx -fsycl -fintelfpga -o mem_channel.cpp.o -c mem_channel.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> mem_channel.cpp.o -o mem_channel.fpga
 add_executable(${FPGA_TARGET_INTERLEAVING} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 target_include_directories(${FPGA_TARGET_INTERLEAVING} PRIVATE ../../../../include)
 add_executable(${FPGA_TARGET_NO_INTERLEAVING} EXCLUDE_FROM_ALL ${SOURCE_FILE})

@@ -49,7 +49,7 @@ Otherwise, the global memory bandwidth utilization may be reduced, which will
 negatively impact the throughput of your design.
 
 To disable burst-interleaving, you need to pass the
-`-Xsno-interleaving=<global_memory_type>` flag to your `dpcpp` command. The
+`-Xsno-interleaving=<global_memory_type>` flag to your `icpx` command. The
 global memory type is indicated in the board specification XML file for the
 Board Support Package (BSP) that you're using. The board specification XML
 file, called `board_spec.xml`, can be found in the root directory of your BSP.
@@ -100,7 +100,7 @@ interleaving to avoid the area overhead imposed by the interleaving logic.
 This tutorial requires compiling the source code twice: once with the
 `-Xsno-interleaving` flag and once without it. In the `CMakeLists.txt` file,
 the macro `NO_INTERLEAVING` is defined when the `-Xsno-interleaving` flag is
-passed to the `dpcpp` command. The macro controls whether the buffers are
+passed to the `icpx` command. The macro controls whether the buffers are
 created with our without the `mem_channel` property.
 
 To decide what channel IDs to select in the source code, the macros

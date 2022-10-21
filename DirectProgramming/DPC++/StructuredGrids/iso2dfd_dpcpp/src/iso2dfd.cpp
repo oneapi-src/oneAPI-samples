@@ -38,7 +38,7 @@
 
 #include "dpc_common.hpp"
 
-using namespace cl::sycl;
+using namespace sycl;
 using namespace std;
 
 /*
