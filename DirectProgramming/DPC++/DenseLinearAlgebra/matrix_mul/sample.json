@@ -12,7 +12,7 @@
   "ciTests": {
     "linux": [
       {
-        "id": "matrix_mul_dpcpp",
+        "id": "matrix_mul_sycl",
         "steps": [
           "make clean",
           "make all",
@@ -30,10 +30,10 @@
     ],
     "windows": [
       {
-        "id": "matrix_mul_dpcpp",
+        "id": "matrix_mul_sycl",
         "steps": [
-          "nmake -f Makefile.win build_dpcpp",
-          "nmake -f Makefile.win run_dpcpp"
+          "nmake -f Makefile.win build_sycl",
+          "nmake -f Makefile.win run_sycl"
         ]
       }
     ]
