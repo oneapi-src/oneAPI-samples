@@ -20,7 +20,7 @@ For users migrating from OpenCL to SYCL, the sample illustrates interoperability
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 ## Key Implementation Details
-Common OpenCL to SYCL conversion scenarios are illustrated in the code; in `dpcpp_with_opencl_objects.dp.cpp`, the program converts OpenCL objects (Memory Objects, Platform, Context, Program, Kernel) to conform with SYCL standards and executes the program.
+Common OpenCL to SYCL conversion scenarios are illustrated in the code; in `sycl_with_opencl_objects.dp.cpp`, the program converts OpenCL objects (Memory Objects, Platform, Context, Program, Kernel) to conform with SYCL standards and executes the program.
 
 ## Set Environment Variables
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
