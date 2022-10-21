@@ -62,7 +62,7 @@ float calc_pi_cpu_tbb(int num_steps) {
 // a buffer with all the slice calculations and
 // then uses a single_task to combine all the results
 // This is not the highest performing example but shows
-// how to do calculations directly in dpc++ with
+// how to do calculations directly in SYCL with
 // mininmal complexity.
 template <typename Policy>
 float calc_pi_onedpl_native(size_t num_steps, Policy&& policy) {
@@ -547,7 +547,7 @@ float calc_pi_onedpl_onestep(int num_steps, Policy& policy) {
 
 ////////////////////////////////////////////////////////////////////////
 //
-// Each MPI ranks compute the number Pi partially on target device using DPC++.
+// Each MPI ranks compute the number Pi partially on target device using SYCL.
 // The partial result of number Pi is returned in "results".
 //
 ////////////////////////////////////////////////////////////////////////

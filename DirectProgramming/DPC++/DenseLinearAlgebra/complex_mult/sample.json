@@ -1,7 +1,7 @@
 {
   "guid": "D725E06E-0ECE-44F8-910D-AD1A8C89ED89",
   "name": "Complex Mult",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Dense Linear Algebra"],
   "description": "This sample computes Complex Number Multiplication",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
