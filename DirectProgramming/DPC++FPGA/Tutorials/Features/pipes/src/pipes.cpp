@@ -3,8 +3,8 @@
 #include <numeric>
 #include <vector>
 
-#include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include "exception_handler.hpp"
 
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
     // create the device queue with SYCL profiling enabled
     queue q(device_selector, fpga_tools::exception_handler, props);
 
-    // create the
+    // create the producer and consumer buffers
     buffer producer_buffer(producer_input);
     buffer consumer_buffer(consumer_output);
 
