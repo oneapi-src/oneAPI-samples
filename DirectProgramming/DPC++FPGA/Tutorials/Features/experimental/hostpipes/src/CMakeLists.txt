@@ -7,7 +7,7 @@ set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA device selection
-if(NOT DEFINED FPGA_BOARD)
+if(NOT DEFINED FPGA_DEVICE)
     set(FPGA_BOARD "intel_s10sx_pac:pac_s10_usm")
     message(STATUS "FPGA_BOARD was not specified.\
                     \nConfiguring the design to run on the default FPGA device ${FPGA_BOARD} (Intel(R) PAC with Intel Stratix(R) 10 GX FPGA). \
