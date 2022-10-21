@@ -80,6 +80,7 @@ set_target_properties(${FPGA_EARLY_IMAGE_REG} PROPERTIES LINK_FLAGS "${HARDWARE_
 #   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o fpga_reg.cpp.o -c fpga_reg.cpp
 #   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_reg.cpp.o -o fpga_reg.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 add_executable(${SIMULATOR_TARGET_REG} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${SIMULATOR_TARGET_REG})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
