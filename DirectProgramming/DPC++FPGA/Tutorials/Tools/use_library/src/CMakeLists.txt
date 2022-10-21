@@ -17,6 +17,13 @@ else()
     message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
+# These are Windows-specific flags:
+# 1. /EHsc This is a Windows-specific flag that enables exception handling in host code
+# 2. /Qactypes Include ac_types headers and link against ac_types emulation libraries
+if(WIN32)
+    set(WIN_FLAG "/EHsc")
+endif()
+
 # Library source files
 set(RTL_C_MODEL lib_rtl_model.cpp)
 set(RTL_SPEC lib_rtl_spec.xml)
@@ -24,12 +31,12 @@ set(RTL_V lib_rtl.v)
 set(RTL_SOURCE_OBJECT lib_rtl.o)
 
 # Flags
-set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-fintelfpga")
-set(SIMULATOR_LINK_FLAGS "-fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS} -DFPGA_SIMULATOR")
-set(HARDWARE_COMPILE_FLAGS "-fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -DFPGA_EMULATOR$ {WIN_FLAGS}")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga$ {WIN_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -DFPGA_SIMULATOR")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga$ {WIN_FLAGS}")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 # Flag lists for custom commands
@@ -66,11 +73,12 @@ set_target_properties(library_archive PROPERTIES IMPORTED_LOCATION ${CMAKE_ARCHI
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR use_library.cpp lib.a -o use_library.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR use_library.cpp lib.a -o use_library.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o use_library.o -c use_library.cpp
-#    [link]    dpcpp -fintelfpga use_library.cpp.o -o use_library.fpga_emu lib.a lib_sycl.o
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o use_library.o -c use_library.cpp
+#    [link]    icpx -fsycl -fintelfpga use_library.cpp.o -o use_library.fpga_emu lib.a lib_sycl.o
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 target_link_libraries(${EMULATOR_TARGET} library_archive)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
@@ -80,10 +88,11 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early use_library.cpp lib.a -o use_library_report.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early use_library.cpp lib.a -o use_library_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
+target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../../include)
 target_link_libraries(${FPGA_EARLY_IMAGE} library_archive)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
@@ -94,26 +103,30 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xssimulation -Xsghdl -DFPGA_SIMULATOR -Xstarget=<FPGA_DEVICE> use_library.cpp lib.a -o use_library.fpga
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -DFPGA_SIMULATOR -Xstarget=<FPGA_DEVICE> use_library.cpp lib.a -o use_library.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o use_library.cpp.o -c use_library.cpp -DFPGA_SIMULATOR
-#   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
+#   [compile] icpx -fsycl -fintelfpga -o use_library.cpp.o -c use_library.cpp -DFPGA_SIMULATOR
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
-add_custom_target(fpga DEPENDS ${SIMULATOR_TARGET})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
 target_link_libraries(${SIMULATOR_TARGET} library_archive)
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 
 ###############################################################################
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> use_library.cpp lib.a -o use_library.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> use_library.cpp lib.a -o use_library.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o use_library.cpp.o -c use_library.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
+#   [compile] icpx -fsycl -fintelfpga -o use_library.cpp.o -c use_library.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> use_library.cpp.o -o use_library.fpga lib.a  lib_sycl.o
 add_executable(${FPGA_TARGET} ${SOURCE_FILE})
+target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 target_link_libraries(${FPGA_TARGET} library_archive)
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
+# The -reuse-exe flag enables rapid recompilation of host-only code changes.
+# See DPC++FPGA/GettingStarted/fast_recompile for details.

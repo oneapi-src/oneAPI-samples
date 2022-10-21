@@ -37,17 +37,17 @@ To create a library from  source code, use the following steps:
 
 ### Using the library
 
-To use the generated library in your project, simply add the generated library archive file to the list of input source files when invoking `dpcpp`. To compile the `use_library` tutorial, pass both `use_library.cpp` and `lib.a` as inputs.
+To use the generated library in your project, simply add the generated library archive file to the list of input source files when invoking `icpx`. To compile the `use_library` tutorial, pass both `use_library.cpp` and `lib.a` as inputs.
 
 ```bash
 # Compile for FPGA emulator
-dpcpp -fintelfpga use_library.cpp lib.a -o use_library_emu.fpga -DFPGA_EMULATOR
+icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library_emu.fpga -DFPGA_EMULATOR
 
 # Compile for FPGA Simulator
-dpcpp -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xssimulation -DFPGA_SIMULATOR
+icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xssimulation -DFPGA_SIMULATOR
 
 # Compile for FPGA hardware
-dpcpp -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware
+icpx -fsycl -fintelfpga use_library.cpp lib.a -o use_library.fpga -Xshardware
 ```
 
 ## Building the `use_library` Tutorial
