@@ -24,7 +24,7 @@ constexpr size_t kPipeMinCapacity = 8;
 constexpr size_t kReadyLatency = 0;
 constexpr size_t kBitsPerSymbol = 1;
 
-using H2DPipe = cl::sycl::ext::intel::prototype::pipe<
+using H2DPipe = sycl::ext::intel::prototype::pipe<
     // Usual pipe parameters
     H2DPipeID,         // An identifier for the pipe
     ValueT,            // The type of data in the pipe
@@ -38,7 +38,7 @@ using H2DPipe = cl::sycl::ext::intel::prototype::pipe<
         AVALON_STREAMING  // Protocol
     >;
 
-using D2HPipe = cl::sycl::ext::intel::prototype::pipe<
+using D2HPipe = sycl::ext::intel::prototype::pipe<
     // Usual pipe parameters
     D2HPipeID,         // An identifier for the pipe
     ValueT,            // The type of data in the pipe
