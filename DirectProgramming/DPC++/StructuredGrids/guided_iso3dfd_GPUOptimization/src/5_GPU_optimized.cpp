@@ -113,7 +113,7 @@ void iso3dfd(queue& q, float* next, float* prev, float* vel, float* coeff,
               // Copy current data to SLM
               tab[l_idx] = front[0];
 
-              // DPC++ Basic synchronization (barrier function)
+              // SYCL Basic synchronization (barrier function)
               // Force synchronization within a work-group
               // using barrier function to ensure
               // all the work-items have completed reading into the SLM buffer
@@ -145,7 +145,7 @@ void iso3dfd(queue& q, float* next, float* prev, float* vel, float* coeff,
               }
               front[kHalfLength] = prev_acc[idx + kHalfLength * n2n3];
 
-              // DPC++ Basic synchronization (barrier function)
+              // SYCL Basic synchronization (barrier function)
               // Force synchronization within a work-group
               // using barrier function to ensure that SLM buffers
               // are not overwritten by next set of work-items

@@ -166,7 +166,7 @@ If running a sample in the Intel&reg; DevCloud, you must specify the compute nod
 
 4. Change directories to the sample directory.
    ```
-   cd ~/oneAPI-samples/DirectProgramming/DPC++/CombinationalLogic/mandelbrot
+   cd ~/oneAPI-samples/DirectProgramming/C++SYCL/CombinationalLogic/mandelbrot
    ```
 
 ### Build and Run the Sample in Batch Mode (optional)

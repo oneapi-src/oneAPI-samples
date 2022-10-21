@@ -2,7 +2,7 @@
 This sample illustrates incremental migration from OpenCL™ to SYCL* compliant code in two usage scenarios:
 
 1. A program that compiles and runs an OpenCL kernel using SYCL.
-2. A program that converts OpenCL objects using SYCL standards. (For more information, read [Migrating OpenCL™ Designs to DPC++](https://software.intel.com/content/www/us/en/develop/articles/migrating-opencl-designs-to-dpcpp.html).)
+2. A program that converts OpenCL objects using SYCL standards. (For more information, read [Migrating OpenCL™ Designs to SYCL](https://software.intel.com/content/www/us/en/develop/articles/migrating-opencl-designs-to-dpcpp.html).)
 
 | Property               | Description
 |:---                    |:---
