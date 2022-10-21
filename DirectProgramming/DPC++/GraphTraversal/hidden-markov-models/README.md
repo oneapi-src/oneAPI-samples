@@ -253,7 +253,7 @@ git clone https://github.com/oneapi-src/oneAPI-samples.git
 
 4. Change directories to the  Hidden Markov Model sample directory.
 ```
-cd ~/oneAPI-samples/DirectProgramming/DPC++/GraphTraversal/hidden-markov-models
+cd ~/oneAPI-samples/DirectProgramming/C++SYCL/GraphTraversal/hidden-markov-models
 ```
 ### Build and run the sample in batch mode
 

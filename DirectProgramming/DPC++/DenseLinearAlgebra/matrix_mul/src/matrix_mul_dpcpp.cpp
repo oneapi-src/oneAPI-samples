@@ -9,7 +9,7 @@
  * then compares results. If the code executes on both CPU and the offload
  * device, the name of the offload device and a success message are displayed.
  *
- * For comprehensive instructions regarding DPC++ Programming, go to
+ * For comprehensive instructions regarding SYCL Programming, go to
  * https://software.intel.com/en-us/oneapi-programming-guide and search based on
  * relevant terms noted in the comments.
  */
@@ -126,7 +126,7 @@ int main() {
   }
 
   int result;
-  cout << "Result of matrix multiplication using DPC++: ";
+  cout << "Result of matrix multiplication using SYCL: ";
   result = VerifyResult(c_back);
   delete[] c_back;
 

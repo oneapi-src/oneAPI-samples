@@ -124,7 +124,7 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
     ```
 4. Change to the `HSOpticalFlow` directory.
     ```
-    cd ~/oneAPI-samples/DirectProgramming/DPC++/StructuredGrids/HSOpticalFlow
+    cd ~/oneAPI-samples/DirectProgramming/C++SYCL/StructuredGrids/HSOpticalFlow
     ```
 5. Configure the sample for a GPU node using `qsub`.
     ```

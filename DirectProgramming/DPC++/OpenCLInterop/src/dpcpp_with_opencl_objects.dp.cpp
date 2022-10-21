@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
   clEnqueueWriteBuffer(ocl_queue, ocl_buf_b, CL_TRUE, 0, bytes, host_b, 0, NULL,
                        NULL);
 
-  {  // DPC++ Application Scope
+  {  // SYCL Application Scope
     // Construct SYCL versions of the context, queue, kernel, and buffers
     context sycl_context = opencl::make<context>(ocl_context);
     queue sycl_queue = opencl::make<queue>(sycl_context, ocl_queue);

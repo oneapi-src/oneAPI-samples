@@ -1,7 +1,7 @@
 {
   "guid": "6060B7B5-E8F6-4AB8-A43D-75693A9FA158",
   "name": "CMake FPGA",
-  "categories": ["Toolkit/oneAPI Direct Programming/DPC++/Project Templates"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Project Templates"],
   "description": "Project Templates - Linux CMake project for FPGA",
   "toolchain": ["dpcpp"],
   "os": ["linux"],
