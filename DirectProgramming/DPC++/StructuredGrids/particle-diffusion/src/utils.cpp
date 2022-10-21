@@ -13,7 +13,7 @@ using namespace std;
 
 // This function displays correct usage and parameters
 void Usage() {
-  cout << "Particle Diffusion DPC++ code sample help message:\n";
+  cout << "Particle Diffusion SYCL code sample help message:\n";
 #if !WINDOWS
   cout << "\nUsage: ./<binary_name> <flags>"
        << "\n--------------------------------------------------------"

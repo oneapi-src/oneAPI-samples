@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
   // Define device selector as 'default'
   default_selector device_selector;
 
-  // Create a device queue using DPC++ class queue
+  // Create a device queue using SYCL class queue
   queue q(device_selector, dpc_common::exception_handler);
 
   cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";

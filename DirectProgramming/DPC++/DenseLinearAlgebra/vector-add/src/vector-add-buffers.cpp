@@ -2,16 +2,16 @@
 // Vector Add is the equivalent of a Hello, World! sample for data parallel
 // programs. Building and running the sample verifies that your development
 // environment is setup correctly and demonstrates the use of the core features
-// of DPC++. This sample runs on both CPU and GPU (or FPGA). When run, it
+// of SYCL. This sample runs on both CPU and GPU (or FPGA). When run, it
 // computes on both the CPU and offload device, then compares results. If the
 // code executes on both CPU and offload device, the device name and a success
 // message are displayed. And, your development environment is setup correctly!
 //
-// For comprehensive instructions regarding DPC++ Programming, go to
+// For comprehensive instructions regarding SYCL Programming, go to
 // https://software.intel.com/en-us/oneapi-programming-guide and search based on
 // relevant terms noted in the comments.
 //
-// DPC++ material used in the code sample:
+// SYCL material used in the code sample:
 // •	A one dimensional array of data.
 // •	A device queue, buffer, accessor, and kernel.
 //==============================================================
@@ -51,7 +51,7 @@ static auto exception_handler = [](sycl::exception_list e_list) {
 };
 
 //************************************
-// Vector add in DPC++ on device: returns sum in 4th parameter "sum_parallel".
+// Vector add in SYCL on device: returns sum in 4th parameter "sum_parallel".
 //************************************
 void VectorAdd(queue &q, const IntVector &a_vector, const IntVector &b_vector,
                IntVector &sum_parallel) {
@@ -83,7 +83,7 @@ void VectorAdd(queue &q, const IntVector &a_vector, const IntVector &b_vector,
       //    1st parameter is the number of work items.
       //    2nd parameter is the kernel, a lambda that specifies what to do per
       //    work item. The parameter of the lambda is the work item id.
-      // DPC++ supports unnamed lambda kernel by default.
+      // SYCL supports unnamed lambda kernel by default.
       h.parallel_for(num_items, [=](auto i) { sum[i] = a[i] + b[i]; });
     });
   };
@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
               << q.get_device().get_info<info::device::name>() << "\n";
     std::cout << "Vector size: " << a.size() << "\n";
 
-    // Vector addition in DPC++
+    // Vector addition in SYCL
     VectorAdd(q, a, b, sum_parallel);
   } catch (exception const &e) {
     std::cout << "An exception is caught for vector add.\n";

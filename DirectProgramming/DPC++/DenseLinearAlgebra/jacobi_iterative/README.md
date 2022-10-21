@@ -137,7 +137,7 @@ You can submit build and run jobs through a Portable Bash Script (PBS). A job is
 	```
 4. Change to the `jacobi-iterative` directory.
 	```
-	cd ~/oneAPI-samples/DirectProgramming/DPC++/DenseLinearAlgebra/jacobi-iterative
+	cd ~/oneAPI-samples/DirectProgramming/C++SYCL/DenseLinearAlgebra/jacobi-iterative
 	```
 5. Configure the sample for a GPU node using `qsub`. 
 	```

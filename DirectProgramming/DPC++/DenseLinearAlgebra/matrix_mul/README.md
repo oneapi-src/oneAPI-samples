@@ -147,7 +147,7 @@ When running a sample in the Intel&reg; DevCloud, you must specify the compute n
 ```
 Running on device: Intel(R) Gen9 HD Graphics NEO
 Problem size: c(150,600) = a(150,300) * b(300,600)
-Result of matrix multiplication using DPC++: Success - The results are correct!
+Result of matrix multiplication using SYCL: Success - The results are correct!
 ```
 
 ### OpenMP
