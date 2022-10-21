@@ -69,8 +69,14 @@ int main(int argc, char *argv[]) {
   constexpr size_t kRandomSeed = 1138;
   constexpr size_t kRandomMin = 1;
   constexpr size_t kRandomMax = 10;
+#if defined(FPGA_SIMULATOR)
+  std::cout << "Using 32x32 matrices for simulation to reduce runtime" << std::endl;
+  constexpr size_t kRows = 32;
+  constexpr size_t kColumns = 32;
+#else
   constexpr size_t kRows = ROWS_COMPONENT;
   constexpr size_t kColumns = COLS_COMPONENT;
+#endif
   constexpr size_t kAMatrixSize = kRows * kColumns;
   constexpr size_t kQMatrixSize = kRows * kColumns;
   constexpr size_t kRMatrixSize = kColumns * (kColumns + 1) / 2;
