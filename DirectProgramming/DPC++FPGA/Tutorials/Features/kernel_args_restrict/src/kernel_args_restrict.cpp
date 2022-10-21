@@ -109,7 +109,7 @@ void RunKernels(size_t size, std::vector<int> &in, std::vector<int> &nr_out,
 int main(int argc, char* argv[]) {
   // size of vectors to copy, allow user to change it from the command line
 #if defined(FPGA_SIMULATOR)
-  size_t size = 500000; // smaller size to keep the default runtime reasonable
+  size_t size = 5000; // smaller size to keep the default runtime reasonable
 #else
   size_t size = 5000000;
 #endif
