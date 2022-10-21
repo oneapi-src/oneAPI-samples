@@ -8,6 +8,15 @@
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/experimental/hostpipes",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
