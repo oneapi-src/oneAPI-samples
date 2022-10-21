@@ -1,9 +1,7 @@
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 #include "autorun.hpp"
 
@@ -17,6 +15,8 @@ using namespace sycl;
 // we make this a global variable so it can be used by the autorun kernels
 #if defined(FPGA_EMULATOR)
 ext::intel::fpga_emulator_selector ds;
+#elif defined(FPGA_SIMULATOR)
+ext::intel::fpga_simulator_selector ds;
 #else
 ext::intel::fpga_selector ds;
 #endif
@@ -120,7 +120,7 @@ int main() {
 
   try {
     // create the queue
-    queue q(ds, dpc_common::exception_handler);
+    queue q(ds, fpga_tools::exception_handler);
 
     // stream data through the Autorun kernel
     std::cout << "Running the Autorun kernel test\n";

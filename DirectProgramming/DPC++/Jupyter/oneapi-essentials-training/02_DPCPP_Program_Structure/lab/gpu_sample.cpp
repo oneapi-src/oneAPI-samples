@@ -5,7 +5,7 @@
 // =============================================================
 #include <CL/sycl.hpp>
 
-using namespace cl::sycl;
+using namespace sycl;
 
 int main() {
   //# Create a device queue with device selector

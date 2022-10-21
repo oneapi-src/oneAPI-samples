@@ -73,8 +73,6 @@ The design enqueues variants of the kernel with 0, 10, and 27 speculated iterati
 >For more information on environment variables, see **Use the setvars Script** for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
 
-### Include Files
-The included header `dpc_common.hpp` is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
 ### Running Samples in Intel&reg; DevCloud
 If running a sample in the Intel&reg; DevCloud, remember that you must specify the type of compute node and whether to run in batch or interactive mode. Compiles to FPGA are only supported on fpga_compile nodes. Executing programs on FPGA hardware is only supported on fpga_runtime nodes of the appropriate type, such as fpga_runtime:arria10 or fpga_runtime:stratix10.  Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the Intel&reg; oneAPI Base Toolkit Get Started Guide ([https://devcloud.intel.com/oneapi/documentation/base-toolkit/](https://devcloud.intel.com/oneapi/documentation/base-toolkit/)).
@@ -129,6 +127,10 @@ To learn more about the extensions, see the
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -165,6 +167,10 @@ To learn more about the extensions, see the
    * Generate the optimization report:
      ```
      nmake report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size:
+     ```
+     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -203,14 +209,21 @@ These results make sense when you recall that the loop exit computation has a la
 ## Running the Sample
 
  1. Run the sample on the FPGA emulator (the kernel executes on the CPU):
+     ```bash
+     ./speculated_iterations.fpga_emu     (Linux)
+     speculated_iterations.fpga_emu.exe   (Windows)
      ```
-     ./speculated iterations.fpga_emu     (Linux)
-     speculated iterations.fpga_emu.exe   (Windows)
+
+ 2. Run the sample on the FPGA simulator device:
+     ```bash
+     ./speculated_iterations.fpga_sim     (Linux)
+     speculated_iterations.fpga_sim.exe   (Windows)
      ```
-2. Run the sample on the FPGA device:
-     ```
-     ./speculated iterations.fpga         (Linux)
-     speculated iterations.fpga.exe       (Windows)
+
+ 3. Run the sample on the FPGA device:
+     ```bash
+     ./speculated_iterations.fpga         (Linux)
+     speculated_iterations.fpga.exe       (Windows)
      ```
 
 ### Example of Output

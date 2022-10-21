@@ -10,9 +10,7 @@
 #include <string>
 #include <vector>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -31,12 +29,14 @@ void VecAdd(const std::vector<float> &summands1,
 
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
 
   try {
-    queue q(device_selector, dpc_common::exception_handler,
+    queue q(device_selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer buffer_summands1(summands1);
@@ -68,7 +68,11 @@ void VecAdd(const std::vector<float> &summands1,
     std::cout << "Throughput for kernel with unroll_factor " << unroll_factor
               << ": ";
     std::cout << std::fixed << std::setprecision(3)
+#if defined(FPGA_SIMULATOR)
+              << ((double)array_size / kernel_time) / 1e3f << " MFlops\n";
+#else
               << ((double)array_size / kernel_time) / 1e6f << " GFlops\n";
+#endif
 
   } catch (sycl::exception const &e) {
     // Catches exceptions in the host code
@@ -87,7 +91,11 @@ void VecAdd(const std::vector<float> &summands1,
 }
 
 int main(int argc, char *argv[]) {
+#if defined(FPGA_SIMULATOR)
+  size_t array_size = 1 << 10;
+#else
   size_t array_size = 1 << 26;
+#endif
 
   if (argc > 1) {
     std::string option(argv[1]);

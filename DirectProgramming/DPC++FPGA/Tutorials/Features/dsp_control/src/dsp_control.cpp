@@ -6,9 +6,7 @@
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities/include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -27,13 +25,15 @@ void KernelRun(const std::vector<float> &input_data,
 
 #if defined(FPGA_EMULATOR)
   ext::intel::fpga_emulator_selector device_selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
 
   try {
     // Create the SYCL device queue.
-    queue q(device_selector, dpc_common::exception_handler,
+    queue q(device_selector, fpga_tools::exception_handler,
             property::queue::enable_profiling{});
 
     buffer input_buffer(input_data);
@@ -85,7 +85,7 @@ void KernelRun(const std::vector<float> &input_data,
         // The local control library function overrides the global control.
         // Because the Propagate argument is Off, only the addition directly in
         // the lambda is affected by the local control and will be implemented
-        // in DSP. The subtration in the subtract() function call is only
+        // in DSP. The subtraction in the subtract() function call is only
         // affected by the global control so will be implemented in soft-logic.
         ext::intel::math_dsp_control<ext::intel::Preference::DSP,
                                      ext::intel::Propagate::Off>([&] {

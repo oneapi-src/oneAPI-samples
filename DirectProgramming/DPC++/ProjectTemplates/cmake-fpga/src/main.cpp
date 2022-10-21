@@ -10,7 +10,7 @@
 #include <cstdlib>
 #include <iostream>
 
-using namespace cl::sycl;
+using namespace sycl;
 
 // declare the kernel name as a global to reduce name mangling
 class ExampleKernel;
