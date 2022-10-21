@@ -75,10 +75,10 @@ set_target_properties(${FPGA_EARLY_IMAGE_REG} PROPERTIES LINK_FLAGS "${HARDWARE_
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_reg.cpp -o fpga_reg.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_reg.cpp -o fpga_reg.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR -o fpga_reg.cpp.o -c fpga_reg.cpp
-#   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_reg.cpp.o -o fpga_reg.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR -o fpga_reg.cpp.o -c fpga_reg.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_reg.cpp.o -o fpga_reg.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_executable(${SIMULATOR_TARGET_REG} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET} ${SIMULATOR_TARGET_REG})

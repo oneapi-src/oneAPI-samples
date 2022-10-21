@@ -66,10 +66,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> scheduler_target_fmax.cpp -o scheduler_target_fmax.fpga
+#   icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> scheduler_target_fmax.cpp -o scheduler_target_fmax.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o scheduler_target_fmax.cpp.o -c scheduler_target_fmax.cpp
-#   [link]    dpcpp -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> scheduler_target_fmax.cpp.o -o scheduler_target_fmax.fpga
+#   [compile] icpx -fsycl -fintelfpga -o scheduler_target_fmax.cpp.o -c scheduler_target_fmax.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> scheduler_target_fmax.cpp.o -o scheduler_target_fmax.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")

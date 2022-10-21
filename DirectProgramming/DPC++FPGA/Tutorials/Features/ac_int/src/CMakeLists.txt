@@ -74,10 +74,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_F
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_compile.cpp -o fpga_compile.fpga_emu
+#    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_compile.cpp -o fpga_compile.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -o fpga_compile.cpp.o -c fpga_compile.cpp
-#    [link]    dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_compile.cpp.o -o fpga_compile.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -DFPGA_SIMULATOR -o fpga_compile.cpp.o -c fpga_compile.cpp
+#    [link]    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> fpga_compile.cpp.o -o fpga_compile.fpga_emu
 add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")

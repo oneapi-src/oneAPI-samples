@@ -71,10 +71,10 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Simulator
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -DFPGA_SIMULATOR ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> ac_fixed.cpp -o ac_fixed.fpga
+#   icpx -fsycl -fintelfpga -DFPGA_SIMULATOR ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> ac_fixed.cpp -o ac_fixed.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -DFPGA_SIMULATOR ${AC_TYPES_FLAG} -o ac_fixed.cpp.o -c ac_fixed.cpp
-#   [link]    dpcpp -fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> ac_fixed.cpp.o -o ac_fixed.fpga
+#   [compile] icpx -fsycl -fintelfpga -DFPGA_SIMULATOR ${AC_TYPES_FLAG} -o ac_fixed.cpp.o -c ac_fixed.cpp
+#   [link]    icpx -fsycl -fintelfpga ${AC_TYPES_FLAG} -Xssimulation -Xsghdl -Xstarget=<FPGA_DEVICE> ac_fixed.cpp.o -o ac_fixed.fpga
 add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
 add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
