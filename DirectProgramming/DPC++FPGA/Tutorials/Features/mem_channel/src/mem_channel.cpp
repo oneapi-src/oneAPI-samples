@@ -13,7 +13,11 @@
 
 using namespace sycl;
 
+#if defined(FPGA_SIMULATOR)
+constexpr size_t vector_size = 10000; // size of input vectors
+#else
 constexpr size_t vector_size = 1000000; // size of input vectors
+#endif
 constexpr double kNs = 1e9;             // number of nanoseconds in a second
 
 // Forward declare the kernel name in the global scope.
