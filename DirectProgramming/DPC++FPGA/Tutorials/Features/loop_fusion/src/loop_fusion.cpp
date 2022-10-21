@@ -3,14 +3,18 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <sycl/sycl.hpp>
 #include <iomanip>
 #include <iostream>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
 
+#if defined(FPGA_SIMULATOR)
+constexpr size_t kTripCount{100};
+#else
 constexpr size_t kTripCount{10000000};
+#endif
 constexpr size_t kDifferentTripCount{kTripCount + 1};
 constexpr size_t kArraySize{100};
 
@@ -27,6 +31,8 @@ class FusionFunctionKernel;
 
 #if defined(FPGA_EMULATOR)
 ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+ext::intel::fpga_simulator_selector selector;
 #else
 ext::intel::fpga_selector selector;
 #endif

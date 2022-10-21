@@ -162,6 +162,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
      ```
      make report
      ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     make fpga_sim
+     ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
      make fpga
@@ -198,6 +202,10 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    * Generate the optimization report:
      ```
      nmake report
+     ```
+   * Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+     ```
+     nmake fpga_sim
      ```
    * Compile for FPGA hardware (longer compile time, targets FPGA device):
      ```
@@ -241,7 +249,12 @@ Version 2 of the kernel (`Producer<2>`) explicitly bounds the inner loop trip co
      ./optimize_inner_loop.fpga_emu    (Linux)
      optimize_inner_loop.fpga_emu.exe  (Windows)
      ```
-2. Run the sample on the FPGA device:
+2. Run the sample on the FPGA simulator device:
+     ```
+     ./loop_carried_dependency.fpga_sim     (Linux)
+     loop_carried_dependency.fpga_sim.exe   (Windows)
+     ```
+3. Run the sample on the FPGA device:
      ```
      ./optimize_inner_loop.fpga        (Linux)
      optimize_inner_loop.fpga.exe      (Windows)
@@ -250,7 +263,7 @@ Version 2 of the kernel (`Producer<2>`) explicitly bounds the inner loop trip co
 ### Example of Output
 You should see the following output in the console:
 
-1. When running on the FPGA emulator
+1. When running on the FPGA emulator or simulator
     ```
     generating 5000 random numbers in the range [0,3)
     Running kernel 0
