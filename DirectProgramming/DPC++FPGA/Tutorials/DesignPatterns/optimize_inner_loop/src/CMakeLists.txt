@@ -4,16 +4,17 @@
 set(SOURCE_FILE optimize_inner_loop.cpp)
 set(TARGET_NAME optimize_inner_loop)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
@@ -25,33 +26,51 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_COMPILE_FLAGS "-Wall -fintelfpga -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -Wall -fintelfpga -Xssimulation -DFPGA_SIMULATOR ${USER_SIMULATOR_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xstarget=${FPGA_DEVICE} ${USER_SIMULATOR_FLAGS}")
+# use cmake -D USER_SIMULATOR_FLAGS=<flags> to set extra flags for FPGA simulator compilation
+set(HARDWARE_COMPILE_FLAGS "-Wall -fintelfpga")
+set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR optimize_inner_loop.cpp -o optimize_inner_loop.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR optimize_inner_loop.cpp -o optimize_inner_loop.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o optimize_inner_loop.cpp.o -c optimize_inner_loop.cpp
-#    [link]    dpcpp -fintelfpga optimize_inner_loop.cpp.o -o optimize_inner_loop.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o optimize_inner_loop.cpp.o -c optimize_inner_loop.cpp
+#    [link]    icpx -fsycl -fintelfpga optimize_inner_loop.cpp.o -o optimize_inner_loop.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
+###############################################################################
+### FPGA Simulator
+###############################################################################
+# To compile in a single command:
+#    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> -DFPGA_SIMULATOR loop_carried_dependency.cpp -o loop_carried_dependency.fpga_sim
+# CMake executes:
+#    [compile] dpcpp -fintelfpga -Xssimulation -DFPGA_SIMULATOR -o loop_carried_dependency.cpp.o -c loop_carried_dependency.cpp
+#    [link]    dpcpp -fintelfpga -Xssimulation -Xstarget=<FPGA_DEVICE> loop_carried_dependency.cpp.o -o loop_carried_dependency.fpga_sim
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../../include)
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 
 ###############################################################################
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early optimize_inner_loop.cpp -o optimize_inner_loop_report.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early optimize_inner_loop.cpp -o optimize_inner_loop_report.a
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE} ${SOURCE_FILE})
+target_include_directories(${FPGA_EARLY_IMAGE} PRIVATE ../../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
@@ -61,11 +80,12 @@ set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${HARDWARE_LINK
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> optimize_inner_loop.cpp -o optimize_inner_loop.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> optimize_inner_loop.cpp -o optimize_inner_loop.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o optimize_inner_loop.cpp.o -c optimize_inner_loop.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> optimize_inner_loop.cpp.o -o optimize_inner_loop.fpga
+#   [compile] icpx -fsycl -fintelfpga -o optimize_inner_loop.cpp.o -c optimize_inner_loop.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> optimize_inner_loop.cpp.o -o optimize_inner_loop.fpga
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+target_include_directories(${FPGA_TARGET} PRIVATE ../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")

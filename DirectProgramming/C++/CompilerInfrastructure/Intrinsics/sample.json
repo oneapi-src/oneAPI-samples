@@ -13,5 +13,6 @@
             { "id": "standard", "steps": [ "make", "make run", "make clean" ] },
             { "id": "debug", "steps": [ "make debug", "make debug_run", "make clean" ] }
         ]
-    }
+    },
+    "expertise": "Concepts and Functionality"
 }

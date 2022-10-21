@@ -3,16 +3,18 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <iomanip>
 #include <iostream>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
-constexpr size_t kRowLength = 128;
+#if defined(FPGA_SIMULATOR)
+  constexpr size_t kRowLength = 16;
+#else
+  constexpr size_t kRowLength = 128;
+#endif
 constexpr size_t kMinSafelen = 1;
 constexpr size_t kMaxSafelen = kRowLength;
 constexpr size_t kMatrixSize = kRowLength * kRowLength;
@@ -24,12 +26,19 @@ using namespace sycl;
 template <size_t safe_len> class KernelCompute;
 
 template <size_t safe_len>
-void TransposeAndFold(const device_selector &selector,
-                      const std::array<float, kMatrixSize> &m_input,
+void TransposeAndFold(const std::array<float, kMatrixSize> &m_input,
                       std::array<float, kMatrixSize> &m_output) {
+#if defined(FPGA_EMULATOR)
+  ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
+#else
+  ext::intel::fpga_selector selector;
+#endif
+
   double kernel_time = 0;
   try {
-  queue q(selector, dpc_common::exception_handler,
+  queue q(selector, fpga_tools::exception_handler,
           property::queue::enable_profiling{});
 
     buffer buffer_input(m_input);
@@ -106,16 +115,10 @@ int main() {
     A[i] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
   }
 
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
-
   // Instantiate kernel logic with the min and max correct safelen parameter
   // to compare performance.
-  TransposeAndFold<kMinSafelen>(selector, A, B);
-  TransposeAndFold<kMaxSafelen>(selector, A, C);
+  TransposeAndFold<kMinSafelen>(A, B);
+  TransposeAndFold<kMaxSafelen>(A, C);
   // You can also try removing the ivdep from the kernel entirely and
   // recompiling to see what effect this has on performance.
 

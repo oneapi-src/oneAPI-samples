@@ -1,14 +1,12 @@
 #include <math.h>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 
 #include <list>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 #include "qrd.hpp"
 
@@ -107,7 +105,7 @@ int main(int argc, char *argv[]) {
     sycl::property_list
                     queue_properties{sycl::property::queue::enable_profiling()};
     sycl::queue q = sycl::queue(device_selector,
-                                dpc_common::exception_handler,
+                                fpga_tools::exception_handler,
                                 queue_properties);
 
     sycl::device device = q.get_device();
@@ -193,10 +191,9 @@ int main(int argc, char *argv[]) {
     float q_ortho_error_threshold = pow(2.0, -9);
 
     // Check Q and R matrices
-    std::cout << "Verifying results on matrix ";
+    std::cout << "Verifying results...";
     for(int matrix_index = 0; matrix_index < kMatricesToDecompose;
                                                                 matrix_index++){
-      std::cout << matrix_index << std::endl;
 
       // keep track of Q and R element indexes
       size_t r_idx = 0;

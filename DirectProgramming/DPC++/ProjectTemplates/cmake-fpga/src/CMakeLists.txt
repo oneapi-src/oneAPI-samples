@@ -1,6 +1,7 @@
 set(SOURCE_FILE main.cpp)
 set(TARGET_NAME cmake)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 
 
@@ -8,18 +9,20 @@ set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(A10_PAC_BOARD_NAME "intel_a10gx_pac:pac_a10")
 set(S10_PAC_BOARD_NAME "intel_s10sx_pac:pac_s10")
 set(FPGA_DEVICE_NAME ${A10_PAC_BOARD_NAME})
-if (DEFINED FPGA_BOARD)
-    set(FPGA_DEVICE_NAME ${FPGA_BOARD})
+if (DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE_NAME ${FPGA_DEVICE})
 endif()
-# use: cmake -D FPGA_BOARD=<board> to override the default FPGA card
+# use: cmake -D FPGA_DEVICE=<device> to override the default FPGA card
 #      (third party or custom FPGA cards can also be used)
 
 
 # Compile flags
 set(EMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_EMULATOR ")
 set(EMULATOR_LINK_FLAGS    "-fintelfpga ")
+set(SIMULATOR_COMPILE_FLAGS "-fintelfpga -DFPGA_SIMULATOR")
+set(SIMULATOR_LINK_FLAGS    "-fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE_NAME} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-fintelfpga")
-set(HARDWARE_LINK_FLAGS    "-fintelfpga -Xshardware -Xsboard=${FPGA_DEVICE_NAME} ${USER_HARDWARE_FLAGS}")
+set(HARDWARE_LINK_FLAGS    "-fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE_NAME} ${USER_HARDWARE_FLAGS}")
 # use: cmake -D USER_HARDWARE_FLAGS=<flags> to set additional flags for FPGA backend compilation
 
 
@@ -28,7 +31,6 @@ add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS ${EMULATOR_COMPILE_FLAGS})
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS ${EMULATOR_LINK_FLAGS})
-
 
 # Generate report (without compiling all the way to FPGA hardware)
 set(DEVICE_OBJ_FILE ${TARGET_NAME}_report.a)
@@ -40,6 +42,11 @@ add_custom_command(OUTPUT ${DEVICE_OBJ_FILE}
                    COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS_LIST} ${HARDWARE_LINK_FLAGS_LIST} -fsycl-link ${SOURCE_FILE} -o ${CMAKE_BINARY_DIR}/${DEVICE_OBJ_FILE}
                    DEPENDS ${SOURCE_FILE})
 
+# FPGA simulator
+add_executable(${SIMULATOR_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS ${SIMULATOR_COMPILE_FLAGS})
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS ${SIMULATOR_LINK_FLAGS})
 
 # FPGA hardware
 add_executable(${FPGA_TARGET} EXCLUDE_FROM_ALL ${SOURCE_FILE})
@@ -53,7 +60,12 @@ add_custom_target(run_emu
                   COMMAND ../${TARGET_NAME}.fpga_emu
                   DEPENDS ${TARGET_NAME}.fpga_emu)
 
+# Run FPGA simulator
+add_custom_target(run_sim
+                  COMMAND ../${TARGET_NAME}.fpga_sim
+                  DEPENDS ${TARGET_NAME}.fpga_sim)
+
 # Run FPGA hardware
 add_custom_target(run_hw
-                  COMMAND ../${TARGET_NAME}.fpga_emu
-                  DEPENDS ${TARGET_NAME}.fpga_emu)
+                  COMMAND ../${TARGET_NAME}.fpga
+                  DEPENDS ${TARGET_NAME}.fpga)

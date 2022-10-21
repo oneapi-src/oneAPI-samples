@@ -1,6 +1,6 @@
 if(UNIX)
-    # Direct CMake to use dpcpp rather than the default C++ compiler/linker
-    set(CMAKE_CXX_COMPILER dpcpp)
+    # Direct CMake to use icpx rather than the default C++ compiler/linker
+    set(CMAKE_CXX_COMPILER icpx)
     cmake_minimum_required (VERSION 3.4)
     
     project(SystemProfiling CXX)

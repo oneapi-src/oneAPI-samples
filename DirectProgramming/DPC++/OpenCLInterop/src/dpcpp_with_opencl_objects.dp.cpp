@@ -6,8 +6,8 @@
 
 #include <CL/opencl.h>
 #include <stdio.h>
-#include <CL/sycl.hpp>
-#include <CL/sycl/backend/opencl.hpp>
+#include <sycl/sycl.hpp>
+#include <sycl/backend/opencl.hpp>
 using namespace sycl;
 
 constexpr int MAX_SOURCE_SIZE = 0x100000;

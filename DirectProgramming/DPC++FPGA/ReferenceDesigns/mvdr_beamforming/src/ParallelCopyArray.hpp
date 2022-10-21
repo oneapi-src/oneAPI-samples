@@ -1,7 +1,7 @@
 #ifndef __PARALLEL_COPY_ARRAY_HPP__
 #define __PARALLEL_COPY_ARRAY_HPP__
 
-#include "UnrolledLoop.hpp"
+#include "unrolled_loop.hpp"   // DirectProgramming/DPC++FPGA/include
 
 // ParallelCopyArray
 // Defines a struct with a single element data, which is an array of type T.
@@ -17,12 +17,12 @@ struct ParallelCopyArray {
 
   // copy constructor - do a parallel copy
   ParallelCopyArray(const ParallelCopyArray& source) {
-    UnrolledLoop<k_size>([&](auto k) { data[k] = source[k]; });
+    fpga_tools::UnrolledLoop<k_size>([&](auto k) { data[k] = source[k]; });
   }
 
   // assignment operator - do a parallel copy
   ParallelCopyArray& operator=(const ParallelCopyArray& source) {
-    UnrolledLoop<k_size>([&](auto k) { data[k] = source[k]; });
+    fpga_tools::UnrolledLoop<k_size>([&](auto k) { data[k] = source[k]; });
     return *this;
   }
 

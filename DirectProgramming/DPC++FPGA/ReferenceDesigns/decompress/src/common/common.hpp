@@ -1,9 +1,10 @@
 #ifndef __COMMON_HPP__
 #define __COMMON_HPP__
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <functional>
 #include <iostream>
+#include <optional>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
@@ -187,32 +188,11 @@ auto CTZ(const ac_int<bits, is_signed>& in) {
 }
 
 //
-// Selects a SYCL device using a string. This is typically used to select
-// the FPGA simulator device
-//
-class select_by_string : public sycl::default_selector {
- public:
-  select_by_string(std::string s) : target_name(s) {}
-  virtual int operator()(const sycl::device& device) const {
-    std::string name = device.get_info<sycl::info::device::name>();
-    if (name.find(target_name) != std::string::npos) {
-      // The returned value represents a priority, this number is chosen to be
-      // large to ensure high priority
-      return 10000;
-    }
-    return -1;
-  }
-
- private:
-  std::string target_name;
-};
-
-//
 // Reads 'filename' and returns an array of chars (the bytes of the file)
 //
 std::vector<unsigned char> ReadInputFile(const std::string& filename) {
   // open file stream
-  std::ifstream fin(filename);
+  std::ifstream fin(filename, std::ios::binary);
 
   // make sure it opened
   if (!fin.good() || !fin.is_open()) {

@@ -8,13 +8,13 @@ set(FPGA_TARGET_CACHE_DISABLED ${TARGET_NAME}_disabled.fpga)
 set(FPGA_TARGET_CACHE_ENABLED ${TARGET_NAME}_enabled.fpga)
 
 # FPGA board selection
-if(NOT DEFINED FPGA_BOARD)
-    set(FPGA_BOARD "intel_a10gx_pac:pac_a10")
-    message(STATUS "FPGA_BOARD was not specified.\
-                    \nConfiguring the design to run on the default FPGA board ${FPGA_BOARD} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
+if(NOT DEFINED FPGA_DEVICE)
+    set(FPGA_DEVICE "intel_a10gx_pac:pac_a10")
+    message(STATUS "FPGA_DEVICE was not specified.\
+                    \nConfiguring the design to run on the default FPGA board ${FPGA_DEVICE} (Intel(R) PAC with Intel Arria(R) 10 GX FPGA). \
                     \nPlease refer to the README for information on board selection.")
 else()
-    message(STATUS "Configuring the design to run on FPGA board ${FPGA_BOARD}")
+    message(STATUS "Configuring the design to run on FPGA board ${FPGA_DEVICE}")
 endif()
 
 # This is a Windows-specific flag that enables exception handling in host code
@@ -26,21 +26,22 @@ endif()
 # 1. The "compile" stage compiles the device code to an intermediate representation (SPIR-V).
 # 2. The "link" stage invokes the compiler's FPGA backend before linking.
 #    For this reason, FPGA backend flags must be passed as link flags in CMake.
-set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga -DFPGA_EMULATOR")
-set(EMULATOR_LINK_FLAGS "-fintelfpga")
-set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fintelfpga")
-set(HARDWARE_LINK_FLAGS "-fintelfpga -Xshardware -Xsboard=${FPGA_BOARD} ${USER_HARDWARE_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga -DFPGA_EMULATOR")
+set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
+set(HARDWARE_COMPILE_FLAGS "-Wall ${WIN_FLAG} -fsycl -fintelfpga")
+set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
 ###############################################################################
 ### FPGA Emulator
 ###############################################################################
 # To compile in a single command:
-#    dpcpp -fintelfpga -DFPGA_EMULATOR read_only_cache.cpp -o read_only_cache.fpga_emu
+#    icpx -fsycl -fintelfpga -DFPGA_EMULATOR read_only_cache.cpp -o read_only_cache.fpga_emu
 # CMake executes:
-#    [compile] dpcpp -fintelfpga -DFPGA_EMULATOR -o read_only_cache.cpp.o -c read_only_cache.cpp
-#    [link]    dpcpp -fintelfpga read_only_cache.cpp.o -o read_only_cache.fpga_emu
+#    [compile] icpx -fsycl -fintelfpga -DFPGA_EMULATOR -o read_only_cache.cpp.o -c read_only_cache.cpp
+#    [link]    icpx -fsycl -fintelfpga read_only_cache.cpp.o -o read_only_cache.fpga_emu
 add_executable(${EMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${EMULATOR_TARGET} PRIVATE ../../../../include)
 set_target_properties(${EMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${EMULATOR_COMPILE_FLAGS}")
 set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_FLAGS}")
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
@@ -49,12 +50,14 @@ add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 ### Generate Report
 ###############################################################################
 # To compile manually:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> -fsycl-link=early read_only_cache.cpp -o read_only_cache_report.a
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> -fsycl-link=early read_only_cache.cpp -o read_only_cache_report.a
 set(FPGA_EARLY_IMAGE_CACHE_DISABLED ${TARGET_NAME}_disabled_report.a)
 set(FPGA_EARLY_IMAGE_CACHE_ENABLED ${TARGET_NAME}_enabled_report.a)
 # The compile output is not an executable, but an intermediate compilation result unique to DPC++.
 add_executable(${FPGA_EARLY_IMAGE_CACHE_DISABLED} ${SOURCE_FILE})
+target_include_directories(${FPGA_EARLY_IMAGE_CACHE_DISABLED} PRIVATE ../../../../include)
 add_executable(${FPGA_EARLY_IMAGE_CACHE_ENABLED} ${SOURCE_FILE})
+target_include_directories(${FPGA_EARLY_IMAGE_CACHE_ENABLED} PRIVATE ../../../../include)
 add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE_CACHE_DISABLED} ${FPGA_EARLY_IMAGE_CACHE_ENABLED})
 set_target_properties(${FPGA_EARLY_IMAGE_CACHE_DISABLED} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE_CACHE_DISABLED} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -fsycl-link=early")
@@ -67,12 +70,14 @@ set_target_properties(${FPGA_EARLY_IMAGE_CACHE_ENABLED} PROPERTIES LINK_FLAGS "$
 ### FPGA Hardware
 ###############################################################################
 # To compile in a single command:
-#   dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> read_only_cache.cpp -o read_only_cache.fpga
+#   icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> read_only_cache.cpp -o read_only_cache.fpga
 # CMake executes:
-#   [compile] dpcpp -fintelfpga -o read_only_cache.cpp.o -c read_only_cache.cpp
-#   [link]    dpcpp -fintelfpga -Xshardware -Xsboard=<FPGA_BOARD> read_only_cache.cpp.o -o read_only_cache.fpga
+#   [compile] icpx -fsycl -fintelfpga -o read_only_cache.cpp.o -c read_only_cache.cpp
+#   [link]    icpx -fsycl -fintelfpga -Xshardware -Xstarget=<FPGA_DEVICE> read_only_cache.cpp.o -o read_only_cache.fpga
 add_executable(${FPGA_TARGET_CACHE_DISABLED} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+target_include_directories(${FPGA_TARGET_CACHE_DISABLED} PRIVATE ../../../../include)
 add_executable(${FPGA_TARGET_CACHE_ENABLED} EXCLUDE_FROM_ALL ${SOURCE_FILE})
+target_include_directories(${FPGA_TARGET_CACHE_ENABLED} PRIVATE ../../../../include)
 add_custom_target(fpga DEPENDS ${FPGA_TARGET_CACHE_DISABLED} ${FPGA_TARGET_CACHE_ENABLED})
 set_target_properties(${FPGA_TARGET_CACHE_DISABLED} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET_CACHE_DISABLED} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET_CACHE_DISABLED}")

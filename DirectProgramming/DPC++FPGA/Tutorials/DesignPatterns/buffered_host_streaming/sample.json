@@ -3,17 +3,26 @@
   "name": "Buffered Host-Device Streaming",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "An FPGA tutorial demonstrating how to stream data between the host and device with multiple buffers",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/DesignPatterns/buffered_host_streaming",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -24,7 +33,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -36,7 +45,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -48,7 +57,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -57,6 +66,7 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Code Optimization"
 }
 

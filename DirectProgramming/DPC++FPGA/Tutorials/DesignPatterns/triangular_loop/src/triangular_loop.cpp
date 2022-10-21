@@ -3,13 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <chrono>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 using namespace sycl;
 
@@ -26,7 +24,11 @@ constexpr double kNs = 1000000000.0;
 // Number of inputs. Don't set this too large, otherwise
 // computation of the reference solution will take a long time on
 // the host (the time is proportional to kSize^2)
+#if defined(FPGA_SIMULATOR)
+constexpr int kSize = 256;
+#else
 constexpr int kSize = 8 * 1024;
+#endif
 
 // >=1. Minimum number of iterations of the inner loop that must be
 // executed in the optimized implementation. Set this approximately
@@ -130,6 +132,8 @@ int main() {
                "performance. The design may need to run on actual hardware "
                "to observe the performance benefit of the optimization "
                "exemplified in this tutorial.\n\n";
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector device_selector;
 #else
   ext::intel::fpga_selector device_selector;
 #endif
@@ -138,7 +142,7 @@ int main() {
     auto prop_list =
         property_list{property::queue::enable_profiling()};
 
-    sycl::queue q(device_selector, dpc_common::exception_handler, prop_list);
+    sycl::queue q(device_selector, fpga_tools::exception_handler, prop_list);
 
     platform platform = q.get_context().get_platform();
     device device = q.get_device();
@@ -232,10 +236,17 @@ int main() {
             kSize * (kSize + 1) / 2 -
             1;  // One piece of data is processed on each iteration. This
                 // formula is taken from the loop_bound calculation.
+#if defined(FPGA_SIMULATOR)
+        double N_KB = (sizeof(uint32_t) * num_iterations) /
+                      1024;  // Amount of data processed, in kB
+        std::cout << "Throughput " << (i == 0 ? "without" : "with")
+                  << " optimization: " << N_KB / time_kernel << " KB/s\n\n";
+#else
         double N_MB = (sizeof(uint32_t) * num_iterations) /
                       (1024 * 1024);  // Amount of data processed, in mB
         std::cout << "Throughput " << (i == 0 ? "without" : "with")
                   << " optimization: " << N_MB / time_kernel << " MB/s\n\n";
+#endif
       } else {
         std::cout << "Verification FAILED\n";
         return 1;

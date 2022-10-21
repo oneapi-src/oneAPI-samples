@@ -3,17 +3,26 @@
   "name": "Private Copies",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating how to use the private_copies attribute to trade off the resource use and the throughput of a DPC++ FPGA program",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/private_copies",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -24,7 +33,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -36,7 +45,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -48,7 +57,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -57,5 +66,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Concepts and Functionality"
 }

@@ -3,17 +3,26 @@
   "name": "Kernel Args Restrict",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "Explain the kernel_args_restrict attribute and its effect on the performance of Intel® FPGA kernels",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/kernel_args_restrict",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -24,7 +33,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -36,7 +45,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -48,7 +57,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -57,5 +66,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Concepts and Functionality"
 }

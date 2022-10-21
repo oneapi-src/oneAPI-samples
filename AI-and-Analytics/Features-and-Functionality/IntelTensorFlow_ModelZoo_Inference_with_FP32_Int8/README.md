@@ -23,9 +23,9 @@ If you are running this sample on the DevCloud, skip the Pre-requirements and go
 
 ## Pre-requirements (Local or Remote Host Installation)
 
-TensorFlow* is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
+TensorFlow* is ready for use once you finish the Intel® AI Analytics Toolkit (AI Kit) installation and have run the post installation script.
 
-You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Intel&reg; oneAPI AI Analytics Toolkit Get Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
+You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Intel&reg; AI Analytics Toolkit Get Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
 ## Activate conda environment With Root Access<a name="activate-conda"></a>
 
@@ -39,7 +39,7 @@ conda activate tensorflow
 
 ## Activate conda environment Without Root Access (Optional)
 
-By default, the Intel® oneAPI AI Analytics Toolkit (AI Kit) is installed in the `/opt/intel/oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the Intel® AI Analytics Toolkit is installed in the `/opt/intel/oneapi` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### Linux
 ```
@@ -55,7 +55,7 @@ conda activate user_tensorflow
 ## Navigate to Intel Model Zoo
 
 Navigate to the Intel Model Zoo source directory. It's located in your oneapi installation path, typically `/opt/intel/oneapi/modelzoo`.
-You can view the available Model Zoo release versions for the Intel AI Analytics Toolkit:
+You can view the available Model Zoo release versions for the Intel® AI Analytics Toolkit:
 ```
 ls /opt/intel/oneapi/modelzoo
 1.8.0  latest

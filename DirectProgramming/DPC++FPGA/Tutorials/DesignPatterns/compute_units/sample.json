@@ -3,7 +3,7 @@
   "name": "Compute Units",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "Intel® FPGA tutorial showcasing a design pattern to enable the creation of compute units",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
@@ -11,8 +11,9 @@
   "commonFolder": {
     "base": "../../..",
     "include": [
+      "README.md",
       "Tutorials/DesignPatterns/compute_units",
-      "include/pipe_utils.hpp"
+      "include"
     ],
     "exclude": []
   },
@@ -21,7 +22,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -32,7 +33,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "mkdir build",
           "cd build",
           "cmake ..",
@@ -44,7 +45,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -56,7 +57,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -65,5 +66,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Code Optimization"
 }

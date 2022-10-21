@@ -3,17 +3,26 @@
   "name": "Read-Only Cache",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating how to use the read-only cache feature to boost the throughput of a DPC++ FPGA program",
-  "toolchain": ["dpcpp"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],
   "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/read_only_cache",
+      "include"
+    ],
+    "exclude": []
+  },
   "ciTests": {
     "linux": [
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -25,7 +34,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -38,7 +47,7 @@
       {
         "id": "fpga_emu",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -50,7 +59,7 @@
       {
         "id": "report",
         "steps": [
-          "dpcpp --version",
+          "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
@@ -59,5 +68,6 @@
         ]
       }
     ]
-  }
+  },
+  "expertise": "Concepts and Functionality"
 }

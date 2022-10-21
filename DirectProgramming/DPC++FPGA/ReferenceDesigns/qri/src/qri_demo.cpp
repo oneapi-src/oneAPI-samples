@@ -1,14 +1,12 @@
 #include <math.h>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <chrono>
 #include <iomanip>
 #include <list>
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
-// dpc_common.hpp can be found in the dev-utilities include folder.
-// e.g., $ONEAPI_ROOT/dev-utilities//include/dpc_common.hpp
-#include "dpc_common.hpp"
+#include "exception_handler.hpp"
 
 #include "qri.hpp"
 
@@ -205,7 +203,14 @@ int main(int argc, char *argv[]) {
 #else
     sycl::ext::intel::fpga_selector device_selector;
 #endif
-    sycl::queue q = sycl::queue(device_selector, dpc_common::exception_handler);
+
+    // Enable the queue profiling to time the execution
+    sycl::property_list
+                    queue_properties{sycl::property::queue::enable_profiling()};
+    sycl::queue q = sycl::queue(device_selector,
+                                fpga_tools::exception_handler,
+                                queue_properties);
+
     sycl::device device = q.get_device();
     std::cout << "Device name: "
               << device.get_info<sycl::info::device::name>().c_str()
@@ -434,9 +439,8 @@ int main(int argc, char *argv[]) {
     // computed an incorrect value
     constexpr float kErrorThreshold = 1e-4;
 
-    std::cout << "Verifying results on matrix ";
+    std::cout << "Verifying results... ";
     for (int matrix = 0; matrix < kMatricesToInvert; matrix++) {
-      std::cout << matrix << std::endl;
 
       // Read the inverse matrix from the output vector to inv_matrix_op
       size_t idx = 0;

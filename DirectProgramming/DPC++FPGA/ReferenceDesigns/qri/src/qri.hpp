@@ -1,6 +1,6 @@
 #pragma once
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/ext/intel/ac_types/ac_complex.hpp>
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
@@ -74,10 +74,7 @@ void QRIImpl(
   q.memcpy(a_device, a_matrix.data(),
                              kAMatrixSize * matrix_count * sizeof(TT)).wait();
 
-  // Launch the compute kernel and time the execution
-  auto start_time = std::chrono::high_resolution_clock::now();
-
-  q.submit([&](sycl::handler &h) {
+  auto ddr_write_event = q.submit([&](sycl::handler &h) {
     h.single_task<QRIDDRToLocalMem>([=]() [[intel::kernel_args_restrict]] {
       MatrixReadFromDDRToPipe<TT, rows, columns, kNumElementsPerDDRBurst,
                             AMatrixPipe>(a_device, matrix_count, repetitions);
@@ -110,15 +107,21 @@ void QRIImpl(
 
   i_event.wait();
 
-  auto end_time = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double> diff = end_time - start_time;
+  // Compute the total time the execution lasted
+  auto start_time = ddr_write_event.template
+              get_profiling_info<sycl::info::event_profiling::command_start>();
+  auto end_time = i_event.template
+                get_profiling_info<sycl::info::event_profiling::command_end>();
+  double diff = (end_time - start_time) / 1.0e9;
+
+  // Make sure we throw any asynchronous errors if they have occurred during
+  // the computation
   q.throw_asynchronous();
 
-  std::cout << "   Total duration:   " << diff.count() << " s" << std::endl;
+  std::cout << "   Total duration:   " << diff << " s" << std::endl;
   std::cout << "Throughput: "
-            << repetitions * matrix_count / diff.count() * 1e-3
+            << repetitions * matrix_count / diff * 1e-3
             << "k matrices/s" << std::endl;
-
 
   // Copy the Q and R matrices result from the FPGA DDR to the host memory
   q.memcpy(inverse_matrix.data(), i_device,

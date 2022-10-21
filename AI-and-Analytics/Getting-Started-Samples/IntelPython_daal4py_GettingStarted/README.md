@@ -1,6 +1,6 @@
 # Intel® Python daal4py Get Started Sample
 
-This get started sample code shows how to do batch linear regression using the Python API package daal4py powered by the oneAPI Data Analytics Library (oneDAL). It demonstrates how to use software products that are powered by [oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and found in the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+This get started sample code shows how to do batch linear regression using the Python API package daal4py powered by the oneAPI Data Analytics Library (oneDAL). It demonstrates how to use software products that are powered by [oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and found in the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 | Property                          | Description
 | :---                              | :---
@@ -18,26 +18,26 @@ In this sample, you will run a batch Linear Regression model with oneDAL daal4py
 | :---                              | :---
 | OS                                | <ul><li>64-bit Linux\*: Ubuntu\* 18.04 or higher</li><li>64-bit Windows\* 10</li><li>macOS* 10.14 or higher</li></ul>
 | Hardware                          | <ul><li>Intel Atom® processors</li><li>Intel® Core™ processor family</li><li>Intel® Xeon® processor family</li><li>Intel® Xeon® Scalable processor family</li></ul>
-| Software                          | Intel® oneAPI AI Analytics Toolkit
+| Software                          | Intel® AI Analytics Toolkit
 
 ## Key Implementation Details
 
-This get started sample code is implemented for CPUs using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python* as part of the [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).
+This get started sample code is implemented for CPUs using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python* as part of the [Intel® AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).
 
 ## Environment Setup
 
-1. Install Intel® oneAPI AI Analytics Toolkit.
+1. Install Intel® AI Analytics Toolkit.
 
    If you use the Intel&reg; DevCloud, skip this step. The toolkit is
    already installed for you.
 
    The oneAPI Data Analytics Library is ready for use once you finish the
-   Intel® oneAPI AI Analytics Toolkit installation and have run the post
+   Intel® AI Analytics Toolkit installation and have run the post
    installation script.
 
    You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
-2. Set up your Intel&reg; oneAPI AI Analytics Toolkit environment.
+2. Set up your Intel&reg; AI Analytics Toolkit environment.
 
    Source the `setvars` script located in the root of your oneAPI installation.
 
@@ -62,7 +62,7 @@ This get started sample code is implemented for CPUs using the Python language. 
 	 
    - If you do not have the root access to your oneAPI installation path:
 
-     By default, the Intel® oneAPI AI Analytics Toolkit is installed in the ``/opt/intel/oneapi`` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+     By default, the Intel® AI Analytics Toolkit is installed in the ``/opt/intel/oneapi`` folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
      ``` bash
      conda create --name usr_intelpython --clone base
