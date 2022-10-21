@@ -1,6 +1,6 @@
 if(UNIX)
     # Direct CMake to use dpcpp rather than the default C++ compiler/linker
-    set(CMAKE_CXX_COMPILER dpcpp)
+    set(CMAKE_CXX_COMPILER icpx)
 else() # Windows
     # Force CMake to use dpcpp rather than the default C++ compiler/linker 
     # (needed on Windows only)
