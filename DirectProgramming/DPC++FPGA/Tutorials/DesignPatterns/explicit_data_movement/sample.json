@@ -3,7 +3,7 @@
   "name": "Explicit Data Movement",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "An Intel® FPGA tutorial demonstrating an alternative coding style, explicit USM, in which all data movement is controlled explicitly by the author",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

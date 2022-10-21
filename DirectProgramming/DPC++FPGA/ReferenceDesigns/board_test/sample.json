@@ -3,7 +3,7 @@
   "name": "Board Test",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "An Intel® FPGA test to check board interfaces and some of the oneAPI shim/BSP metrics like memory bandwidth, kernel clock frequency and kernel latency",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],

@@ -3,7 +3,7 @@
   "name": "IO streaming with DPC++ IO pipes",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "An FPGA tutorial describing how to stream data to and from DPC++ IO pipes.",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

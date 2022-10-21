@@ -3,7 +3,7 @@
   "name": "Buffered Host-Device Streaming",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "An FPGA tutorial demonstrating how to stream data between the host and device with multiple buffers",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

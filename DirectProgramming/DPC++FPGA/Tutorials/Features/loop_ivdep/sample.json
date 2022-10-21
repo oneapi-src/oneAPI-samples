@@ -3,7 +3,7 @@
   "name": "Loop IVDEP",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "An Intel® FPGA tutorial demonstrating the usage of the loop_ivdep attribute",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

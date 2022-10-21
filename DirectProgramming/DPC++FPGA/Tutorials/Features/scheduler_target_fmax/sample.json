@@ -3,7 +3,7 @@
   "name": "Scheduler Target FMAX",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features"],
   "description": "Explain the scheduler_target_fmax_mhz attribute and its effect on the performance of Intel® FPGA kernels",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

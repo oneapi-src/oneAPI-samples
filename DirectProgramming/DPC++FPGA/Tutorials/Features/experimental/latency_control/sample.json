@@ -3,7 +3,7 @@
   "name": "Latency Control",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Features/experimental"],
   "description": "An Intel® FPGA tutorial demonstrating the Latency control feature",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

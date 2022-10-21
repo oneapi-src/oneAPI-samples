@@ -3,7 +3,7 @@
   "name": "Autorun kernels",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "Intel® FPGA tutorial demonstrating autorun kernels",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],

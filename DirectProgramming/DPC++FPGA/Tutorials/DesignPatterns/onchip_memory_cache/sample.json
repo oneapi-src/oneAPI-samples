@@ -3,7 +3,7 @@
   "name": "On-Chip Memory Cache",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "Intel® FPGA tutorial demonstrating the caching of on-chip memory to reduce loop initiation interval",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

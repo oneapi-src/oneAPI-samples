@@ -3,7 +3,7 @@
   "name": "Adaptive Noise Reduction",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "A highly optimized adaptive noise reduction (ANR) algorithm on an FPGA.",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],

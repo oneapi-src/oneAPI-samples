@@ -3,7 +3,7 @@
   "name": "Double Buffering",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "Intel® FPGA tutorial design to demonstrate overlapping kernel execution with buffer transfers and host-processing to improve system performance",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

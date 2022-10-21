@@ -3,7 +3,7 @@
   "name": "Pipe Array",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Tutorials/Design Patterns"],
   "description": "An Intel® FPGA tutorial showcasing a design pattern to enables the creation of arrays of pipes",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
   "builder": ["ide", "cmake"],

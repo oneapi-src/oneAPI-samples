@@ -3,7 +3,7 @@
   "name": "GZIP",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "Reference design demonstrating high-performance GZIP compression on Intel® FPGA",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],

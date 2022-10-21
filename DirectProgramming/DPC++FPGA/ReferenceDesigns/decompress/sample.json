@@ -3,7 +3,7 @@
   "name": "Decompression",
   "categories": ["Toolkit/oneAPI Direct Programming/DPC++ FPGA/Reference Designs"],
   "description": "Optimized implementations of GZIP and SNAPPY decompression on an FPGA",
-  "toolchain": ["icpx -fsycl"],
+  "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "builder": ["ide", "cmake"],
   "targetDevice": ["FPGA"],
