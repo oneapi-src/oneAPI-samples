@@ -3,7 +3,7 @@ set(HEADER_FILE lib.hpp)
 set(LIBRARY_ARCHIVE lib.a)
 set(TARGET_NAME use_library)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
-set(SIMULATOR ${TARGET_NAME}.fpga_sim)
+set(SIMULATOR_TARGET ${TARGET_NAME}.fpga_sim)
 set(FPGA_TARGET ${TARGET_NAME}.fpga)
 set(REPORT_TARGET ${TARGET_NAME}_report.a)
 
@@ -31,11 +31,11 @@ set(RTL_V lib_rtl.v)
 set(RTL_SOURCE_OBJECT lib_rtl.o)
 
 # Flags
-set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -DFPGA_EMULATOR$ {WIN_FLAGS}")
+set(EMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga -DFPGA_EMULATOR ${WIN_FLAGS}")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga")
-set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga$ {WIN_FLAGS}")
+set(SIMULATOR_COMPILE_FLAGS "-fsycl -fintelfpga ${WIN_FLAGS}")
 set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS} -DFPGA_SIMULATOR")
-set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga$ {WIN_FLAGS}")
+set(HARDWARE_COMPILE_FLAGS "-fsycl -fintelfpga ${WIN_FLAGS}")
 set(HARDWARE_LINK_FLAGS "-fsycl -fintelfpga -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 # use cmake -D USER_HARDWARE_FLAGS=<flags> to set extra flags for FPGA backend compilation
 
