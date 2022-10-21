@@ -79,7 +79,7 @@ else()
       set(SEED 1)
     endif()
   endif()
-  
+
   set(SEED_FLAG "-Xsseed=${SEED}")
 endif()
 
@@ -97,7 +97,7 @@ endif()
 set(EMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fsycl -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG} -DFPGA_EMULATOR")
 set(EMULATOR_LINK_FLAGS "-fsycl -fintelfpga ${AC_TYPES_FLAG}")
 set(SIMULATOR_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fsycl -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG} -DFPGA_SIMULATOR")
-set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation ${SEED_FLAG} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
+set(SIMULATOR_LINK_FLAGS "-fsycl -fintelfpga -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_COMPILE_FLAGS "-Wall ${CONSTEXPR_STEPS} ${WIN_FLAG} -fsycl -fintelfpga ${AC_TYPES_FLAG} ${LITERALS_PER_CYCLE_FLAG} ${DECOMPRESS_FORMAT_FLAG}")
 set(REPORT_LINK_FLAGS "-fsycl -fintelfpga -Xshardware ${PROFILE_FLAG} ${FLAT_COMPILE_FLAG} -Xsparallel=2 ${SEED_FLAG} -Xstarget=${FPGA_DEVICE} ${USER_HARDWARE_FLAGS}")
 set(HARDWARE_LINK_FLAGS "${REPORT_LINK_FLAGS} ${AC_TYPES_FLAG}")
@@ -113,15 +113,6 @@ set_target_properties(${EMULATOR_TARGET} PROPERTIES LINK_FLAGS "${EMULATOR_LINK_
 add_custom_target(fpga_emu DEPENDS ${EMULATOR_TARGET})
 
 ###############################################################################
-### FPGA Simulator
-###############################################################################
-add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
-target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
-set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
-add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
-
-###############################################################################
 ### Generate Report
 ###############################################################################
 set(FPGA_EARLY_IMAGE ${TARGET_NAME}_report.a)
@@ -132,6 +123,15 @@ add_custom_target(report DEPENDS ${FPGA_EARLY_IMAGE})
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_EARLY_IMAGE} PROPERTIES LINK_FLAGS "${REPORT_LINK_FLAGS} -fsycl-link=early")
 # fsycl-link=early stops the compiler after RTL generation, before invoking Quartus
+
+###############################################################################
+### FPGA Simulator
+###############################################################################
+add_executable(${SIMULATOR_TARGET} ${SOURCE_FILE})
+target_include_directories(${SIMULATOR_TARGET} PRIVATE ../../../include)
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
+set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS}")
+add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 
 ###############################################################################
 ### FPGA Hardware

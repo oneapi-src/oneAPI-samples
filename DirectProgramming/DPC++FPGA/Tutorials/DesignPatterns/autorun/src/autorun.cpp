@@ -15,6 +15,8 @@ using namespace sycl;
 // we make this a global variable so it can be used by the autorun kernels
 #if defined(FPGA_EMULATOR)
 ext::intel::fpga_emulator_selector ds;
+#elif defined(FPGA_SIMULATOR)
+ext::intel::fpga_simulator_selector ds;
 #else
 ext::intel::fpga_selector ds;
 #endif

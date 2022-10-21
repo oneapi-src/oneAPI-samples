@@ -63,9 +63,17 @@ vector<int> GoldenResult(vector<int> vec) {
 // This FPGA best practice reduces name mangling in the optimization reports.
 class SimpleMath;
 
-void RunKernel(const device_selector &selector,
-               const std::vector<int> &vec_a,
+void RunKernel(const std::vector<int> &vec_a,
                std::vector<int> &vec_r) {
+  // Run the kernel on either the FPGA emulator, or FPGA simulator, or FPGA
+  // hardware
+#if defined(FPGA_EMULATOR)
+  ext::intel::fpga_emulator_selector selector;
+#elif defined(FPGA_SIMULATOR)
+  ext::intel::fpga_simulator_selector selector;
+#else
+  ext::intel::fpga_selector selector;
+#endif
 
   size_t input_size = vec_a.size();
 
@@ -193,13 +201,7 @@ int main(int argc, char *argv[]) {
   // Kernel result vector
   vector<int> vec_r(input_size);
 
-  // Run the kernel on either the FPGA emulator, or FPGA
-#if defined(FPGA_EMULATOR)
-  ext::intel::fpga_emulator_selector selector;
-#else
-  ext::intel::fpga_selector selector;
-#endif
-  RunKernel(selector, vec_a, vec_r);
+  RunKernel(vec_a, vec_r);
 
   // Test the results.
   vector<int> golden_ref = GoldenResult(vec_a);
