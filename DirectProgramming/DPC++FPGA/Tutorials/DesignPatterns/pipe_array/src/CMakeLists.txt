@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE pipe_array.cpp)
 set(TARGET_NAME pipe_array)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)

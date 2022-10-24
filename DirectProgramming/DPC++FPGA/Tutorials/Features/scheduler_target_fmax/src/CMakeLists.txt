@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE scheduler_target_fmax.cpp)
 set(TARGET_NAME scheduler_target_fmax)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)

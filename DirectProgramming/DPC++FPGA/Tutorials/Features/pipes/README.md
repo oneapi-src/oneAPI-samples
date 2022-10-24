@@ -65,7 +65,7 @@ SYCL*-compliant pipes are defined as a class with static members. To declare a p
 transfers integer data and has  `capacity=4`, use a type alias:
 
 ```c++
-using ProducerToConsumerPipe = pipe<  // Defined in the DPC++ headers.
+using ProducerToConsumerPipe = pipe<  // Defined in the SYCL headers.
   class ProducerConsumerPipe,         // An identifier for the pipe.
   int,                                // The type of data in the pipe.
   4>;                                 // The capacity of the pipe.
@@ -76,7 +76,7 @@ uniqueness of the pipe. This class need not be defined but must be distinct
 for each pipe. Consider another type alias with the exact same parameters:
 
 ```c++
-using ProducerToConsumerPipe2 = pipe<  // Defined in the DPC++ headers.
+using ProducerToConsumerPipe2 = pipe<  // Defined in the SYCL headers.
   class ProducerConsumerPipe,          // An identifier for the pipe.
   int,                                 // The type of data in the pipe.
   4>;                                  // The capacity of the pipe.

@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE zero_copy_data_transfer.cpp)
 set(TARGET_NAME zero_copy_data_transfer)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)

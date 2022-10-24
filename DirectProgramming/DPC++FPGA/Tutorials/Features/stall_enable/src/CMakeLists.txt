@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE stall_enable.cpp)
 set(STALL_ENABLE_TARGET_NAME stall_enable)
 set(EMULATOR_TARGET ${STALL_ENABLE_TARGET_NAME}.fpga_emu)

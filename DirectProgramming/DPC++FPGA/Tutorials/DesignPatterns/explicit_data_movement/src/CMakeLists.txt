@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE explicit_data_movement.cpp)
 set(TARGET_NAME explicit_data_movement)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)

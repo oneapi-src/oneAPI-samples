@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE kernel_args_restrict.cpp)
 set(TARGET_NAME kernel_args_restrict)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)
@@ -76,7 +73,6 @@ add_custom_target(fpga_sim DEPENDS ${SIMULATOR_TARGET})
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES COMPILE_FLAGS "${SIMULATOR_COMPILE_FLAGS}")
 set_target_properties(${SIMULATOR_TARGET} PROPERTIES LINK_FLAGS "${SIMULATOR_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
-# See DPC++FPGA/GettingStarted/fast_recompile for details.
 
 ###############################################################################
 ### FPGA Hardware
@@ -92,4 +88,3 @@ add_custom_target(fpga DEPENDS ${FPGA_TARGET})
 set_target_properties(${FPGA_TARGET} PROPERTIES COMPILE_FLAGS "${HARDWARE_COMPILE_FLAGS}")
 set_target_properties(${FPGA_TARGET} PROPERTIES LINK_FLAGS "${HARDWARE_LINK_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_TARGET}")
 # The -reuse-exe flag enables rapid recompilation of host-only code changes.
-# See DPC++FPGA/GettingStarted/fast_recompile for details.

@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE ac_fixed.cpp)
 set(TARGET_NAME ac_fixed)
 set(EMULATOR_TARGET ${TARGET_NAME}.fpga_emu)

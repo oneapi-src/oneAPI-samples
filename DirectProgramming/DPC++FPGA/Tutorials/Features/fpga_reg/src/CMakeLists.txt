@@ -1,6 +1,3 @@
-# To see a Makefile equivalent of this build system:
-# https://github.com/oneapi-src/oneAPI-samples/blob/master/DirectProgramming/DPC++/ProjectTemplates/makefile-fpga
-
 set(SOURCE_FILE fpga_reg.cpp)
 set(TARGET_NAME fpga_reg)
 set(TARGET_NAME_REG fpga_reg_registered)
